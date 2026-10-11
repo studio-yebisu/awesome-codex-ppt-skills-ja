@@ -1,0 +1,33 @@
+name: ツールの掲載提案
+description: AIエージェント向けのスライド制作ツールを提案する
+title: "掲載提案：所有者/リポジトリ名"
+labels: ["掲載提案"]
+body:
+  - type: markdown
+    attributes:
+      value: この一覧は原版の掲載対象を基準にしています。原版への提案状況もあわせてお知らせください。
+  - type: input
+    id: url
+    attributes:
+      label: GitHubのURL
+      placeholder: https://github.com/owner/repo
+    validations:
+      required: true
+  - type: dropdown
+    id: kind
+    attributes:
+      label: どのような資料を作るツールですか？
+      options:
+        - 総合ツール・フレームワーク
+        - 編集可能なPPTX
+        - 画像形式のスライド
+        - Webスライド
+        - ビジネス・コンサルティング
+        - 文書からスライドへ
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: 特徴と原版への提案状況
+      description: 作例、導入方法、成果物の形式、原版へのIssueなどを記載してください。

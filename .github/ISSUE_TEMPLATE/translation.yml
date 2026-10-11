@@ -1,0 +1,24 @@
+name: 翻訳・説明文の修正
+description: 誤訳、分かりにくい説明、リンク切れを報告する
+title: "修正：対象のツール名"
+labels: ["翻訳修正"]
+body:
+  - type: input
+    id: target
+    attributes:
+      label: 対象のツール・ページ
+      placeholder: ツール名または該当ページのURL
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: 修正したい文章と理由
+      description: 該当する文章と、どこが分かりにくいかを記載してください。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 修正案と出典
+      description: 修正案や、確認に使える公開資料があれば記載してください。
