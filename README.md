@@ -43,7 +43,9 @@ CodexやClaude CodeなどのAIエージェントで利用できる、スライ�
 
 ## ツール一覧の読み方
 
-各一覧表の★は、原版データ取得時点のスター数を示しています。評価欄はAgent Skills HubによるREADMEおよび導入手順の評価結果を日本語表記に置き換えたものであり、ソースコード全体の監査や、動作・安全性を保証するものではありません。
+各一覧表の★は、原版データ取得時点のスター数です。
+
+**導入時のセキュリティ評価**は、元サイトのAgent Skills HubがREADMEや導入手順を自動チェックした結果です。安全性を保証するものではありません。
 
 - 🟢 **問題なし**：原版のSAFEに相当。
 - 🟡 **要注意**：原版のCAUTIONに相当。
@@ -60,7 +62,7 @@ CodexやClaude CodeなどのAIエージェントで利用できる、スライ�
 
 [原版のこの分類を見る](https://agentskillshub.top/best/ppt-presentation/#type-general)
 
-| ツール | ★ | できること | 原版の評価 |
+| ツール | ★ | できること | 導入時のセキュリティ評価 |
 |---|---:|---|---|
 | [wuyoscar/GPT-Image2-Skill](https://github.com/wuyoscar/GPT-Image2-Skill) | 5,708 | GPT Imageによる画像生成・編集のプロンプト集と、エージェント向けスキル・CLI。 | [🟢 問題なし](https://agentskillshub.top/skill/wuyoscar/GPT-Image2-Skill/) |
 | [tfriedel/claude-office-skills](https://github.com/tfriedel/claude-office-skills) | 837 | Claude CodeでPowerPoint、Word、Excel、PDFの作成・編集を行うスキル集。 | [🟢 問題なし](https://agentskillshub.top/skill/tfriedel/claude-office-skills/) |
@@ -93,7 +95,7 @@ PowerPointで文字や図形を編集するための資料制作・変換ツー�
 
 [原版のこの分類を見る](https://agentskillshub.top/best/ppt-presentation/#type-pptx)
 
-| ツール | ★ | できること | 原版の評価 |
+| ツール | ★ | できること | 導入時のセキュリティ評価 |
 |---|---:|---|---|
 | [icip-cas/PPTAgent](https://github.com/icip-cas/PPTAgent) | 5,099 | 生成したスライドを自己評価しながら改善する、PowerPoint作成用エージェントフレームワーク。 | [🟢 問題なし](https://agentskillshub.top/skill/icip-cas/PPTAgent/) |
 | [GordenSun/GordenPPTSkill](https://github.com/GordenSun/GordenPPTSkill) | 3,331 | 17種類の中国語PPTXテンプレートで、レイアウトを保って文字を編集するスキル。利用は個人・研究目的に限定。 | [🟢 問題なし](https://agentskillshub.top/skill/GordenSun/GordenPPTSkill/) |
@@ -189,7 +191,7 @@ PowerPointで文字や図形を編集するための資料制作・変換ツー�
 
 [原版のこの分類を見る](https://agentskillshub.top/best/ppt-presentation/#type-image)
 
-| ツール | ★ | できること | 原版の評価 |
+| ツール | ★ | できること | 導入時のセキュリティ評価 |
 |---|---:|---|---|
 | [ningzimu/codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill) | 6,696 | GPT Imageでスライド全体の画像を生成し、画像形式のPowerPoint資料として構築するスキル。 | [🟢 問題なし](https://agentskillshub.top/skill/ningzimu/codex-ppt-skill/) |
 | [NyxTides/ppt-image-first](https://github.com/NyxTides/ppt-image-first) | 1,225 | Codex、Claude Code、OpenCode環境で、画像主体のプレゼン資料を作成するスキル。 | [🟢 問題なし](https://agentskillshub.top/skill/NyxTides/ppt-image-first/) |
@@ -209,7 +211,7 @@ PowerPointで文字や図形を編集するための資料制作・変換ツー�
 
 [原版のこの分類を見る](https://agentskillshub.top/best/ppt-presentation/#type-html)
 
-| ツール | ★ | できること | 原版の評価 |
+| ツール | ★ | できること | 導入時のセキュリティ評価 |
 |---|---:|---|---|
 | [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) | 30,453 | コーディングエージェントのフロントエンド開発機能を活用し、Web形式のスライドを作成するスキル。 | [🟢 問題なし](https://agentskillshub.top/skill/zarazhangrui/frontend-slides/) |
 | [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) | 27,606 | 雑誌風およびスイススタイルのHTMLスライドを生成。画像用プロンプト、SNS表紙、WebGLや軽量表示に対応。 | [🟢 問題なし](https://agentskillshub.top/skill/op7418/guizang-ppt-skill/) |
@@ -279,7 +281,7 @@ PowerPointで文字や図形を編集するための資料制作・変換ツー�
 
 [原版のこの分類を見る](https://agentskillshub.top/best/ppt-presentation/#type-business)
 
-| ツール | ★ | できること | 原版の評価 |
+| ツール | ★ | できること | 導入時のセキュリティ評価 |
 |---|---:|---|---|
 | [carnot-tech/jinba-consulting-pptx-skill](https://github.com/carnot-tech/jinba-consulting-pptx-skill) | 1,160 | Claude CodeやCodexを用いてコンサルティング向けPPTXを作成するスキル。 | [🟢 問題なし](https://agentskillshub.top/skill/carnot-tech/jinba-consulting-pptx-skill/) |
 | [Pikapika260214/rw-consulting-ppt](https://github.com/Pikapika260214/rw-consulting-ppt) | 473 | コンサルティング用資料を作成するCodex向けスキル。編集可能な形式での出力にも対応。 | [🟢 問題なし](https://agentskillshub.top/skill/Pikapika260214/rw-consulting-ppt/) |
@@ -305,7 +307,7 @@ PowerPointで文字や図形を編集するための資料制作・変換ツー�
 
 [原版のこの分類を見る](https://agentskillshub.top/best/ppt-presentation/#type-convert)
 
-| ツール | ★ | できること | 原版の評価 |
+| ツール | ★ | できること | 導入時のセキュリティ評価 |
 |---|---:|---|---|
 | [hugohe3/ppt-master](https://github.com/hugohe3/ppt-master) | 60,118 | 文書やテーマからPowerPointを制作。標準の図形・図表・アニメーション、音声ナレーション、手持ちテンプレートに対応。 | [🟢 問題なし](https://agentskillshub.top/skill/hugohe3/ppt-master/) |
 | [op7418/NanoBanana-PPT-Skills](https://github.com/op7418/NanoBanana-PPT-Skills) | 3,294 | AIでPPT用画像や動画を生成するスキル。スライド遷移やインタラクティブな再生に対応。 | [🟡 要注意](https://agentskillshub.top/skill/op7418/NanoBanana-PPT-Skills/) |
