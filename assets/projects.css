@@ -53,30 +53,60 @@
 .project-card {
   position: relative; display: grid;
   grid-template-columns: auto minmax(0, 1fr) auto;
-  grid-template-rows: auto auto auto 1fr auto;
-  grid-template-areas: "visual visual visual" "rank owner owner" "rank name name" "desc desc desc" "stars stars open";
+  grid-template-rows: 1fr auto auto;
+  grid-template-areas: "content content content" "trust trust trust" "footer footer footer";
   padding: 0 22px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow);
   overflow: hidden; transition: border-color .25s, box-shadow .25s, transform .25s;
 }
 .project-card:hover { border-color: var(--line-strong); box-shadow: var(--shadow-lift); transform: translateY(-3px); }
-.project-card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-radius: var(--radius); }
+/* The primary link uses display:contents, so its keyboard focus is drawn on the article */
+.project-primary { grid-area: content; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; grid-template-rows: auto auto auto 1fr; grid-template-areas: "visual visual visual" "rank owner owner" "rank name name" "desc desc desc"; color: inherit; }
+.project-primary:focus { outline: none; }
+.project-card:has(.project-primary:focus-visible) { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--ink); }
 .project-card:target { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-wash), var(--shadow-lift); }
 
-.project-visual { grid-area: visual; margin: 0 -22px; aspect-ratio: 16 / 10; padding: 18px 20px 20px; display: flex; align-items: center; justify-content: center; background: var(--paper-deep); background: color-mix(in srgb, var(--genre) 8%, var(--paper-deep)); border-bottom: 1px solid var(--line); }
+.project-visual { position: relative; grid-area: visual; margin: 0 -22px; aspect-ratio: 16 / 10; padding: 18px 20px 20px; display: flex; align-items: center; justify-content: center; background: var(--paper-deep); background: color-mix(in srgb, var(--genre) 8%, var(--paper-deep)); border-bottom: 1px solid var(--line); }
 .project-preview { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 6px 14px rgba(30, 24, 14, .18)); transition: transform .35s cubic-bezier(.2, .7, .2, 1); }
-.project-card:hover .project-preview { transform: translateY(-3px); }
+.project-primary:hover .project-preview { transform: translateY(-3px); }
+/* Truthful source label: project visual vs. GitHub social card. Quiet, never over the image itself */
+.project-image-kind { position: absolute; right: 10px; bottom: 6px; max-width: calc(100% - 20px); padding: 1px 7px; border: 1px solid var(--line); border-radius: 999px; background: rgba(255, 253, 249, .86); color: var(--muted); font-size: 10px; font-weight: 600; line-height: 1.6; letter-spacing: .04em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none; }
+
+/* ===== Trust: upstream installation/security assessment (not quality, not a guarantee) ===== */
+.trust-safe { --trust-color: #2d6b50; --trust-wash: #edf5ef; }
+.trust-caution { --trust-color: #83530b; --trust-wash: #fdf4dc; }
+.trust-unsafe { --trust-color: #a52f2f; --trust-wash: #fcefeb; }
+.trust-pending { --trust-color: #5f6267; --trust-wash: #f0efec; }
+
+.trust-guide { margin: 0 0 24px; padding: 18px 22px 20px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.trust-guide h2 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; margin: 0 0 12px; font-family: var(--sans); font-size: 15px; font-weight: 700; line-height: 1.5; letter-spacing: .02em; color: var(--ink); }
+.trust-guide h2 span { font-size: 12px; font-weight: 500; letter-spacing: .04em; color: var(--muted); }
+.trust-legend { display: flex; flex-wrap: wrap; gap: 8px; font-size: 12px; font-weight: 700; line-height: 1.4; }
+.trust-legend > span { display: inline-flex; align-items: center; gap: 7px; min-height: 28px; padding: 3px 11px 3px 9px; border: 1px solid color-mix(in srgb, var(--trust-color) 22%, transparent); border-radius: 999px; background: var(--trust-wash); color: var(--trust-color); white-space: nowrap; }
+.trust-guide p { margin: 12px 0 0; max-width: 54em; font-size: 12px; line-height: 1.9; color: var(--muted); }
+
+.trust-dot, .trust-legend i { display: block; width: 7px; height: 7px; flex: 0 0 auto; border-radius: 50%; background: var(--trust-color); box-shadow: 0 0 0 3px color-mix(in srgb, var(--trust-color) 16%, transparent); }
+
+.project-trust { grid-area: trust; position: relative; z-index: 1; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 9px; margin: 0 0 16px; min-height: 40px; padding: 7px 12px 7px 13px; border: 1px solid color-mix(in srgb, var(--trust-color) 20%, transparent); border-radius: var(--radius-sm); background: var(--trust-wash); color: var(--trust-color); font-size: 12px; font-weight: 700; line-height: 1.5; transition: border-color .2s, background-color .2s; }
+.trust-label { white-space: nowrap; }
+.trust-action { margin-left: auto; font-size: 11px; font-weight: 600; letter-spacing: .02em; color: var(--ink-soft); white-space: nowrap; }
+.project-trust:hover { border-color: color-mix(in srgb, var(--trust-color) 45%, transparent); }
+.project-trust:hover .trust-action { color: var(--trust-color); text-decoration: underline; text-underline-offset: 3px; }
+.project-trust:focus { outline: none; }
+.project-trust:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-color: var(--trust-color); }
 
 .project-topline { display: contents; }
 .project-rank { grid-area: rank; align-self: start; padding: 18px 14px 0 0; font-family: var(--serif); font-size: 34px; font-weight: 600; line-height: 1; letter-spacing: -.01em; color: var(--ink); font-variant-numeric: lining-nums tabular-nums; }
 .project-owner { grid-area: owner; margin: 18px 0 2px; font-size: 12px; line-height: 1.5; color: var(--muted); overflow-wrap: anywhere; }
 .project-name { grid-area: name; margin: 0; font-family: var(--sans); font-size: 18px; font-weight: 700; line-height: 1.4; letter-spacing: 0; overflow-wrap: anywhere; }
 .project-description { grid-area: desc; align-self: start; margin: 14px 0 20px; font-size: 14px; line-height: 1.85; color: var(--ink-soft); }
-.project-card-footer { display: contents; }
+.project-card-footer { grid-area: footer; display: flex; justify-content: space-between; gap: 12px; border-top: 1px solid var(--line); }
 .project-format { display: none; }
-.project-stars, .project-open { align-self: stretch; display: flex; align-items: center; min-height: 52px; border-top: 1px solid var(--line); }
+.project-stars, .project-open { align-self: stretch; display: flex; align-items: center; min-height: 52px; }
 .project-stars { grid-area: stars; font-size: 13px; font-weight: 600; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .project-open { grid-area: open; justify-content: flex-end; font-size: 13px; font-weight: 700; color: var(--accent-dark); white-space: nowrap; }
-.project-card:hover .project-open { text-decoration: underline; text-underline-offset: 4px; }
+.project-primary:hover .project-open { text-decoration: underline; text-underline-offset: 4px; }
+.project-open:hover { text-decoration: underline; text-underline-offset: 4px; }
+.project-open:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
 
 /* Cards without a published image: an honest text entry, no placeholder art */
 .project-card--text-only { background: color-mix(in srgb, var(--genre) 3%, var(--surface)); border-top: 3px solid var(--genre); }
@@ -119,11 +149,16 @@
   .project-card { padding: 0 18px; }
   .project-visual { margin: 0 -18px; padding: 14px 14px 16px; }
   .project-rank { font-size: 30px; }
+  .project-image-kind { right: 8px; bottom: 4px; }
+  .trust-guide { padding: 16px 16px 18px; border-radius: 12px; }
+  .trust-legend { gap: 6px; }
+  .trust-legend > span { padding: 2px 10px 2px 8px; }
+  .project-trust { padding: 7px 10px 7px 11px; }
   .project-empty { padding: 32px 18px; }
 }
 @media (max-width: 360px) {
   .genre-tabs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .project-card:hover, .project-card:hover .project-preview { transform: none; }
+  .project-card:hover, .project-primary:hover .project-preview { transform: none; }
 }

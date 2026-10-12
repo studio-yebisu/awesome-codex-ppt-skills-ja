@@ -21,6 +21,26 @@ const empty = document.querySelector("#project-empty");
 const error = document.querySelector("#project-error");
 let projects = [];
 let previews = {};
+const trustGrades = {
+  safe: { label: "問題なし", detail: "原版のSAFEに相当します。" },
+  caution: { label: "要注意", detail: "原版のCAUTIONに相当します。導入前に判定内容を確認してください。" },
+  unsafe: { label: "高リスク", detail: "原版のUNSAFEに相当します。導入前に判定内容を確認してください。" },
+  pending: { label: "未評価", detail: "原版に評価がありません。" }
+};
+
+function previewSource(preview) {
+  if (!preview || typeof preview.src !== "string") return null;
+  if (/^assets\/project-previews\/[A-Za-z0-9_.-]+\.jpg$/.test(preview.src)) return preview.src;
+  try {
+    const source = new URL(preview.src);
+    if (source.protocol === "https:" && ["opengraph.githubassets.com", "repository-images.githubusercontent.com"].includes(source.hostname)) {
+      return source.href;
+    }
+  } catch {
+    // Only known local previews and GitHub's social-preview hosts are accepted.
+  }
+  return null;
+}
 
 function element(tag, className, text) {
   const node = document.createElement(tag);
@@ -48,39 +68,57 @@ function render() {
   for (let index = 0; index < shown.length; index += 1) {
     const project = shown[index];
     const [owner, name] = project.repo_full_name.split("/");
-    const card = element("a", "project-card genre-" + activeGenre);
-    card.href = repositoryUrl(project);
-    card.target = "_blank";
-    card.rel = "noopener noreferrer";
+    const card = element("article", "project-card genre-" + activeGenre);
+    const primary = element("a", "project-primary");
+    primary.href = repositoryUrl(project);
+    primary.target = "_blank";
+    primary.rel = "noopener noreferrer";
     card.id = project.repo_full_name.replace("/", "--");
     card.dataset.repo = project.repo_full_name;
     card.dataset.stars = String(project.stars);
-    card.setAttribute("aria-label", project.repo_full_name + "：" + project.description_ja + " 元のGitHubを新しいタブで開く");
+    primary.setAttribute("aria-label", project.repo_full_name + "：" + project.description_ja + " 元のGitHubを新しいタブで開く");
     const topline = element("div", "project-topline");
     topline.append(element("span", "project-rank", String(index + 1).padStart(2, "0")));
     const stars = element("span", "project-stars", "★ " + project.stars.toLocaleString("ja-JP"));
     stars.setAttribute("aria-label", "GitHubスター " + project.stars.toLocaleString("ja-JP") + "件");
-    topline.append(stars);
-    card.append(topline, element("p", "project-owner", owner), element("h2", "project-name", name),
+    primary.append(topline, element("p", "project-owner", owner), element("h2", "project-name", name),
       element("p", "project-description", project.description_ja));
     const preview = previews[project.repo_full_name];
-    if (preview && /^assets\/project-previews\/[A-Za-z0-9_.-]+\.jpg$/.test(preview.src)) {
+    const imageSource = previewSource(preview);
+    if (imageSource) {
       const visual = element("div", "project-visual");
       const image = element("img", "project-preview");
-      image.src = preview.src;
+      image.src = imageSource;
       image.alt = preview.alt;
       image.width = 520;
       image.height = 293;
       image.loading = index < 3 ? "eager" : "lazy";
       image.decoding = "async";
+      image.referrerPolicy = "no-referrer";
       visual.append(image);
-      card.insertBefore(visual, topline);
+      visual.append(element("span", "project-image-kind", preview.kind === "repository" ? "GitHub提供の紹介画像" : "公開作例・紹介画像"));
+      primary.insertBefore(visual, topline);
     } else {
       card.classList.add("project-card--text-only");
     }
+    const grade = Object.hasOwn(trustGrades, project.security_grade) ? project.security_grade : "pending";
+    card.dataset.securityGrade = grade;
+    const assessment = element("a", "project-trust trust-" + grade);
+    assessment.href = "https://agentskillshub.top/skill/" + project.repo_full_name.split("/").map(encodeURIComponent).join("/") + "/";
+    assessment.target = "_blank";
+    assessment.rel = "noopener noreferrer";
+    assessment.title = trustGrades[grade].detail + " READMEと導入手順に対するセキュリティ評価であり、安全保証や作品の品質評価ではありません。";
+    assessment.setAttribute("aria-label", project.repo_full_name + "の導入時の信頼度：" + trustGrades[grade].label + "。Agent Skills Hubの判定を見る（新しいタブ）");
+    const dot = element("span", "trust-dot");
+    dot.setAttribute("aria-hidden", "true");
+    assessment.append(dot, element("span", "trust-label", "信頼度：" + trustGrades[grade].label), element("span", "trust-action", "判定を見る ↗"));
     const footer = element("div", "project-card-footer");
-    footer.append(element("span", "project-format", genres[activeGenre].title), element("span", "project-open", "GitHubを見る ↗"));
-    card.append(footer);
+    const open = element("a", "project-open", "GitHubを見る ↗");
+    open.href = repositoryUrl(project);
+    open.target = "_blank";
+    open.rel = "noopener noreferrer";
+    footer.append(stars, open);
+    card.append(primary, assessment, footer);
     fragment.append(card);
   }
   list.replaceChildren(fragment);
