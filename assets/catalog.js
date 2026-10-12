@@ -1,12 +1,12 @@
 "use strict";
 
 const previews = {
-  pptx: { title: "編集できるPowerPoint", project: "siril9/presentation-skill", caption: "グラフ・表・数値を整理したプレゼン資料の作例。" },
-  image: { title: "見た目で伝える画像スライド", project: "ningzimu/codex-ppt-skill", caption: "手描き風のビジュアルを用いた技術解説スライドの作例。" },
-  html: { title: "動きも使えるWebスライド", project: "code-on-sunday/slide-deck-generator", caption: "ブラウザで表示するプレゼン資料の作例。" },
-  business: { title: "伝わる提案・報告をビジネス資料に", project: "GZPengyuyan/PengyuyanPPT", caption: "青を基調にした企業向け提案資料の作例。" },
-  convert: { title: "論文・文書から発表資料をつくる", project: "M1n-n9/academic-ppt-master", caption: "研究論文を発表用の資料に整理した作例。" },
-  general: { title: "資料制作をまとめる総合ツール", project: "touying-typ/seaslides", caption: "TypstとTouyingで制作したプレゼン資料の作例。" }
+  pptx: { title: "パワーポイント", project: "siril9/presentation-skill", caption: "グラフ・表・数値を整理したプレゼン資料の作例。" },
+  image: { title: "画像スライド", project: "ningzimu/codex-ppt-skill", caption: "手描き風のビジュアルを用いた技術解説スライドの作例。" },
+  html: { title: "ウェブスライド", project: "code-on-sunday/slide-deck-generator", caption: "ブラウザで表示するプレゼン資料の作例。" },
+  business: { title: "ビジネス資料", project: "GZPengyuyan/PengyuyanPPT", caption: "青を基調にした企業向け提案資料の作例。" },
+  convert: { title: "発表資料", project: "M1n-n9/academic-ppt-master", caption: "研究論文を発表用の資料に整理した作例。" },
+  general: { title: "資料制作総合ツール", project: "touying-typ/seaslides", caption: "TypstとTouyingで制作したプレゼン資料の作例。" }
 };
 
 const dialog = document.querySelector(".preview-dialog");

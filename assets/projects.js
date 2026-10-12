@@ -1,12 +1,12 @@
 "use strict";
 
 const genres = {
-  pptx: { title: "編集できるPowerPoint", description: "文字や図形をあとから編集できる、PowerPoint制作のプロジェクト。" },
-  image: { title: "見た目で伝える画像スライド", description: "ページ全体を画像として仕上げる、ビジュアル重視のスライド制作。" },
-  html: { title: "動きも使えるWebスライド", description: "ブラウザで発表できる、アニメーションや演出を使ったスライド制作。" },
-  business: { title: "提案・報告のためのビジネス資料", description: "企画提案、経営報告、ピッチなどの資料制作を支援するプロジェクト。" },
-  convert: { title: "論文・文書から発表資料をつくる", description: "論文、PDF、記事、原稿をもとに、発表用のスライドをつくるプロジェクト。" },
-  general: { title: "資料制作をまとめる総合ツール", description: "構成、デザイン、出力など、資料づくりの流れを支援するツールやフレームワーク。" }
+  pptx: { title: "パワーポイント" },
+  image: { title: "画像スライド" },
+  html: { title: "ウェブスライド" },
+  business: { title: "ビジネス資料" },
+  convert: { title: "発表資料" },
+  general: { title: "資料制作総合ツール" }
 };
 
 const parameters = new URLSearchParams(location.search);
@@ -129,17 +129,15 @@ function render() {
 
 async function loadProjects() {
   if (!activeGenre) {
-    document.querySelector("#project-title").textContent = "ジャンルを選んでください";
-    document.querySelector("#genre-description").textContent = "下の6つのジャンルから、つくりたい資料を選べます。";
-    count.textContent = "ジャンルが指定されていません";
+    document.querySelector("#project-title").textContent = "カテゴリを選択";
+    count.textContent = "カテゴリ未指定";
     list.setAttribute("aria-busy", "false");
     document.querySelector(".project-controls").hidden = true;
     return;
   }
   const genre = genres[activeGenre];
-  document.title = genre.title + "のプロジェクト一覧｜AIスライド制作ガイド";
+  document.title = genre.title + "｜AIスライド制作ガイド";
   document.querySelector("#project-title").textContent = genre.title;
-  document.querySelector("#genre-description").textContent = genre.description;
   document.querySelector('[data-genre="' + activeGenre + '"]').setAttribute("aria-current", "page");
   document.querySelector("#fallback-catalog").href = "https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja#type-" + activeGenre;
   try {
