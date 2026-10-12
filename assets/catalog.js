@@ -4,7 +4,7 @@ const previews = {
   pptx: { title: "パワーポイント", project: "siril9/presentation-skill", caption: "グラフ・表・数値を整理したプレゼン資料の作例。" },
   image: { title: "画像スライド", project: "ningzimu/codex-ppt-skill", caption: "手描き風のビジュアルを用いた技術解説スライドの作例。" },
   html: { title: "ウェブスライド", project: "code-on-sunday/slide-deck-generator", caption: "ブラウザで表示するプレゼン資料の作例。" },
-  business: { title: "ビジネス資料", project: "GZPengyuyan/PengyuyanPPT", caption: "青を基調にした企業向け提案資料の作例。" },
+  business: { title: "ビジネス資料", project: "Pikapika260214/rw-consulting-ppt", caption: "入力資料から構成・スライドにまとめる流れの紹介画像。" },
   convert: { title: "発表資料", project: "M1n-n9/academic-ppt-master", caption: "研究論文を発表用の資料に整理した作例。" },
   general: { title: "資料制作総合ツール", project: "touying-typ/seaslides", caption: "TypstとTouyingで制作したプレゼン資料の作例。" }
 };
