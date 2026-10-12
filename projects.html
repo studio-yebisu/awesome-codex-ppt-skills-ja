@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f5f2ec">
+  <meta name="description" content="AIスライド制作スキルをジャンルごとに比較。日本語の紹介文を読みながら、GitHubスター数の多い順にプロジェクトを探せます。">
+  <link rel="stylesheet" href="assets/catalog.css">
+  <link rel="stylesheet" href="assets/projects.css">
+  <title>プロジェクト一覧｜AIスライド制作ガイド</title>
+  <script src="assets/projects.js" defer></script>
+</head>
+<body class="projects-page">
+  <a class="skip-link" href="#project-list">プロジェクト一覧へ進む</a>
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="./" aria-label="AIスライド制作ガイドのトップ">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+        <span>AIスライド制作ガイド<small>日本語版 / StudioYebisu</small></span>
+      </a>
+      <nav aria-label="メインメニュー">
+        <a href="./#genres">ジャンルから選ぶ</a>
+        <a class="github-link" href="https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja" target="_blank" rel="noopener noreferrer">GitHubで読む <span aria-hidden="true">↗</span></a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="page-width project-main">
+    <a class="back-to-genres" href="./#genres">← 6ジャンルの一覧へ</a>
+    <section class="project-intro" aria-labelledby="project-title">
+      <p class="section-kicker">用途に合うプロジェクトを探す</p>
+      <h1 id="project-title">プロジェクト一覧</h1>
+      <p id="genre-description">ジャンル別のプロジェクトを読み込んでいます。</p>
+      <p class="project-intro-note">できることを見比べて、気になるカードから元のGitHubへ。</p>
+      <p class="project-preview-note">公開作例・紹介画像があるプロジェクトは、画像も掲載しています。<a href="https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja/blob/main/docs/プロジェクト作例の出典.md" target="_blank" rel="noopener noreferrer">画像の出典</a></p>
+    </section>
+
+    <div class="project-toolbar">
+      <nav class="genre-tabs" aria-label="ジャンルを切り替える">
+        <a class="genre-pptx" href="projects.html?genre=pptx" data-genre="pptx">PowerPoint <span data-genre-count="pptx"></span></a>
+        <a class="genre-image" href="projects.html?genre=image" data-genre="image">画像スライド <span data-genre-count="image"></span></a>
+        <a class="genre-html" href="projects.html?genre=html" data-genre="html">Webスライド <span data-genre-count="html"></span></a>
+        <a class="genre-business" href="projects.html?genre=business" data-genre="business">ビジネス資料 <span data-genre-count="business"></span></a>
+        <a class="genre-convert" href="projects.html?genre=convert" data-genre="convert">文書から変換 <span data-genre-count="convert"></span></a>
+        <a class="genre-general" href="projects.html?genre=general" data-genre="general">総合ツール <span data-genre-count="general"></span></a>
+      </nav>
+
+      <section class="project-controls" aria-label="プロジェクトを検索・並べ替え">
+        <div class="project-search"><label for="project-query">このジャンルから探す</label><input id="project-query" type="search" placeholder="ツール名・できることを検索" autocomplete="off"></div>
+        <div class="project-sort"><label for="project-order">並び順</label><select id="project-order"><option value="stars">人気順（スター数）</option><option value="name">名前順</option></select></div>
+      </section>
+    </div>
+    <div class="project-list-heading">
+      <p id="result-count" role="status" aria-live="polite">読み込み中…</p>
+      <p id="star-source">人気順はGitHubのスター数が多い順です。</p>
+    </div>
+    <section id="project-list" class="project-grid" aria-label="プロジェクト一覧" aria-busy="true"></section>
+    <div id="project-empty" class="project-empty" hidden><h2>該当するプロジェクトがありません</h2><p>別の言葉で検索するか、検索欄を空にしてください。</p><button id="clear-search" type="button">検索をクリア</button></div>
+    <div id="project-error" class="project-empty" role="alert" hidden><h2>一覧を読み込めませんでした</h2><p>ページを再読み込みするか、GitHubの日本語一覧をご覧ください。</p><a id="fallback-catalog" href="https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja#catalog" target="_blank" rel="noopener noreferrer">GitHubの日本語一覧を開く ↗</a></div>
+    <noscript><p>この一覧を表示するにはJavaScriptを有効にしてください。<a href="https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja#catalog">GitHubの日本語一覧も利用できます。</a></p></noscript>
+  </main>
+
+  <footer class="site-footer">
+    <div class="page-width footer-inner"><a class="footer-brand" href="./">StudioYebisu <span>日本語版の編集</span></a><p>原作者：<a href="https://github.com/zhuyansen/awesome-codex-ppt-skills" target="_blank" rel="noopener noreferrer">zhuyansen / awesome-codex-ppt-skills ↗</a></p><a href="#project-title">上へ戻る ↑</a></div>
+  </footer>
+</body>
+</html>

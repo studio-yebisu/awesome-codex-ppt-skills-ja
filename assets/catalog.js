@@ -23,7 +23,7 @@ document.querySelectorAll("[data-preview]").forEach((link) => {
     const preview = previews[link.dataset.preview];
     if (!preview) return;
     event.preventDefault();
-    const image = link.querySelector("img");
+    const image = link.closest(".genre-card").querySelector(".preview-image img");
     previewTrigger = link;
     previewTitle.textContent = preview.title;
     largeImage.src = image.src;
