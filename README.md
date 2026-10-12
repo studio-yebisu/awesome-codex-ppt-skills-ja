@@ -10,6 +10,10 @@ CodexやClaude CodeなどのAIエージェントで利用できる、スライ�
 
 [原版の検索・絞り込みページ](https://agentskillshub.top/best/ppt-presentation/)は8時間ごとに更新されます。この日本語版は上記日付時点の内容をまとめたものであり、原版との自動同期は行われません。
 
+**[作例を見ながら、6ジャンルから選ぶ →](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)**
+
+ジャンル別のページでは、代表的なスライド作例・用途・編集できる場所をカードで見比べて、この一覧の気になるジャンルへ進めます。
+
 [用途から選ぶ](#choose) · [全209件を見る](#catalog) · [実測比較](docs/実測比較.md) · [出典とライセンス](docs/出典とライセンス.md)
 
 <a id="choose"></a>
