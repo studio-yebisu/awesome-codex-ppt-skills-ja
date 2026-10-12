@@ -1,3 +1,5 @@
+画像付きの一覧は[ウェブサイト版](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)をご覧ください。用途別に各プロジェクトの画像・説明・信頼度を確認できます。
+
 ![AIスライド制作スキル集 日本語版](assets/banner.svg)
 
 # AIスライド制作スキル集｜日本語版
