@@ -1,6 +1,7 @@
 "use strict";
 
 const genres = {
+  all: { title: "すべてのツール" },
   pptx: { title: "パワーポイント" },
   image: { title: "画像スライド" },
   html: { title: "ウェブスライド" },
@@ -10,7 +11,7 @@ const genres = {
 };
 
 const parameters = new URLSearchParams(location.search);
-const requestedGenre = parameters.get("genre") || "pptx";
+const requestedGenre = parameters.get("genre") || "all";
 const validGenre = Object.hasOwn(genres, requestedGenre);
 const activeGenre = validGenre ? requestedGenre : null;
 const list = document.querySelector("#project-list");
@@ -68,7 +69,7 @@ function render() {
   for (let index = 0; index < shown.length; index += 1) {
     const project = shown[index];
     const [owner, name] = project.repo_full_name.split("/");
-    const card = element("article", "project-card genre-" + activeGenre);
+    const card = element("article", "project-card genre-" + (activeGenre === "all" ? project.kind : activeGenre));
     const primary = element("a", "project-primary");
     primary.href = repositoryUrl(project);
     primary.target = "_blank";
@@ -136,10 +137,10 @@ async function loadProjects() {
     return;
   }
   const genre = genres[activeGenre];
-  document.title = genre.title + "｜AIスライド制作ガイド";
+  document.title = genre.title + "｜YEBISU SLIDE STUDIO";
   document.querySelector("#project-title").textContent = genre.title;
   document.querySelector('[data-genre="' + activeGenre + '"]').setAttribute("aria-current", "page");
-  document.querySelector("#fallback-catalog").href = "https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja#type-" + activeGenre;
+  document.querySelector("#fallback-catalog").href = "https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja#" + (activeGenre === "all" ? "catalog" : "type-" + activeGenre);
   try {
     const response = await fetch("./data/skills.json");
     if (!response.ok) throw new Error("Catalog HTTP " + response.status);
@@ -151,7 +152,7 @@ async function loadProjects() {
     } catch {
       // 紹介文と並び順は、画像データを取得できない場合も使えます。
     }
-    projects = catalog.skills.filter((project) => project.kind === activeGenre);
+    projects = activeGenre === "all" ? catalog.skills : catalog.skills.filter((project) => project.kind === activeGenre);
     for (const project of projects) {
       repositoryUrl(project);
       if (!Number.isFinite(project.stars) || project.stars < 0 || typeof project.description_ja !== "string") {
@@ -159,6 +160,7 @@ async function loadProjects() {
       }
     }
     const counts = Object.create(null);
+    counts.all = catalog.skills.length;
     for (const project of catalog.skills) counts[project.kind] = (counts[project.kind] || 0) + 1;
     document.querySelectorAll("[data-genre-count]").forEach((node) => {
       node.textContent = String(counts[node.dataset.genreCount] || 0);
