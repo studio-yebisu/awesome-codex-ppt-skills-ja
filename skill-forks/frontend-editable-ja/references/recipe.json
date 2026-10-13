@@ -1,0 +1,53 @@
+{
+  "execution_type": "instruction_skill_and_original_editable_runtime",
+  "summary_ja": "ブラウザ内で文字やオブジェクトを動かせるHTMLを制作。原典のSlideDeck/SlideObjectEditor/SlideSidebarで、内容の修正を続けられる。",
+  "requirements": [
+    "ブラウザ",
+    "editor-runtime.mdと参照HTMLを読めるエージェント"
+  ],
+  "commands": [],
+  "steps": [
+    "原典のeditor-runtime.md・html-template.md・参照デッキを読む",
+    "slides-offset直下のsectionと、安定したslide id/data-oidで内容を組む",
+    "フルの編集runtimeを保持する。Eで編集、Ctrl+Sで保存、Undo/Redoで戻す",
+    "ページ一覧と本文を確認し、HTMLとして取得する"
+  ],
+  "limitations": [
+    "今回使用したのは参照HTMLのオブジェクト編集方式。34テンプレートの全移植やPPT/PDF入力は未検証。"
+  ],
+  "fork": "frontend-editable-ja",
+  "repository": "archlizheng/frontend-slides-editable",
+  "example_ids": [
+    "frontend-editable"
+  ],
+  "method_ja": "原典editable-deck-reference.htmlのSlideDeck/SlideObjectEditor/SlideSidebarをそのまま使い、slide-edit-layerとdata-oid付きオブジェクトで日本語6ページを制作。ドラッグ・編集・保存機能のある原典runtimeを保持。",
+  "license": "MIT",
+  "license_review_status": "reviewed_for_example",
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "ed90ca04c58b55ed98cae634c5239017f246095e4d28b51105b3395eb33e3e71",
+      "url": "https://github.com/archlizheng/frontend-slides-editable/blob/e5663e6a0bdc2c2a673198bab3fb61036a7f20ee/SKILL.md"
+    },
+    {
+      "path": "editor-runtime.md",
+      "sha256": "eaeb5a2a2d84605a679249d91e4bb9e26c6451348cb7d4651cfe92968e3f233c",
+      "url": "https://github.com/archlizheng/frontend-slides-editable/blob/e5663e6a0bdc2c2a673198bab3fb61036a7f20ee/editor-runtime.md"
+    },
+    {
+      "path": "html-template.md",
+      "sha256": "ca8f4e13653c78d0b2dd152106650b3c9d9b76f7d507cb42265577fa7ef18749",
+      "url": "https://github.com/archlizheng/frontend-slides-editable/blob/e5663e6a0bdc2c2a673198bab3fb61036a7f20ee/html-template.md"
+    },
+    {
+      "path": "examples/editable-deck-reference.html",
+      "sha256": "5fb5ac2098b8a32493f5563e9b46e133a8811d41428b9c86f9e561a0a84dbf97",
+      "url": "https://github.com/archlizheng/frontend-slides-editable/blob/e5663e6a0bdc2c2a673198bab3fb61036a7f20ee/examples/editable-deck-reference.html"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "057a24c329a4f456b918a420f157ddf2ed5909551d5d9237d943d01edc079cd4",
+      "url": "https://github.com/archlizheng/frontend-slides-editable/blob/e5663e6a0bdc2c2a673198bab3fb61036a7f20ee/LICENSE"
+    }
+  ]
+}

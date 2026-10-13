@@ -1,0 +1,15 @@
+{
+  "title": "Gitの保存・記録・共有",
+  "audience": "Gitを使い始めた人",
+  "facts": [
+    "エディターでファイルを保存すること、Gitで履歴に記録すること、リモートへ共有することを分けて覚えます。保存しただけではコミットされません。コミットしても、まだ他の人へ送ったことにはなりません。まず手元で変更を確かめ、小さな単位で記録してから共有しましょう。",
+    "作業ツリーは編集中のファイルです。git addは次のコミットに含める内容をステージへ選びます。git commitはそのステージの内容をローカルの履歴に記録します。addした後にさらに編集した内容は自動でステージへ入りません。必要ならもう一度addし、git diff --stagedで内容を確かめます。",
+    "最初にgit statusとgit diffで変更の範囲を確認します。対象ファイルだけをaddし、git diff --stagedで記録される差分を読みます。秘密情報や不要なファイルがないことを確かめてcommitします。共有先と作業ブランチを確認し、チームのルールに従ってpushとレビュー依頼を行います。ここでは共有の手順を説明しているだけで、実際のpushは実行しません。"
+  ],
+  "sources": [
+    "https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository",
+    "https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes"
+  ],
+  "source_checked_at": "2026-10-14",
+  "actual_push_executed": false
+}

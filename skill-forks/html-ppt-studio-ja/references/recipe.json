@@ -1,0 +1,66 @@
+{
+  "execution_type": "template_scaffold_and_instruction_skill",
+  "summary_ja": "HTML PPT StudioのTech Sharingテンプレートを実際に展開。Git入門の本文とコードを載せ、8ページの原典runtimeで再生。",
+  "requirements": [
+    "Git for WindowsのBash（scaffold用）",
+    "ブラウザ",
+    "HTMLを書けるエージェント"
+  ],
+  "commands": [
+    "bash scripts/new-deck.sh my-talk ./output -t tech-sharing"
+  ],
+  "steps": [
+    "日本語版スキル一式を取得。原典のテーマとfull-deck一覧を読む",
+    "new-deck.shで用途に合うデッキを展開",
+    "固有の部品・style.css・runtime.jsを保って本文とコード・発表メモを差し替える",
+    "index.htmlを開き矢印キーで移動。Sは原典の発表者ウィンドウ"
+  ],
+  "limitations": [
+    "今回確認したのはTech Sharingの8ページ。全36テーマの実制作・発表者ウィンドウの全機能は未検証。"
+  ],
+  "fork": "html-ppt-studio-ja",
+  "repository": "lewislulu/html-ppt-skill",
+  "example_ids": [
+    "lewis-html-ppt"
+  ],
+  "method_ja": "原典new-deck.shでtech-sharingテンプレートを展開。全8ページの固有レイアウト・style.css・base.css・runtime.jsを保ち、Git入門の本文とコード・発表メモへ差し替え。",
+  "license": "MIT",
+  "license_review_status": "reviewed_for_example",
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "d30ff36b80424e2d19df9bf99f0bd4c9573335740ae8674f046b876c74193d86",
+      "url": "https://github.com/lewislulu/html-ppt-skill/blob/fd1629067909ff55b36b905476de4e5f26062a1f/SKILL.md"
+    },
+    {
+      "path": "scripts/new-deck.sh",
+      "sha256": "e98985243ba73a89656670c4c8cb8bef2ae12b47516d72060a90980b77f1c0a7",
+      "url": "https://github.com/lewislulu/html-ppt-skill/blob/fd1629067909ff55b36b905476de4e5f26062a1f/scripts/new-deck.sh"
+    },
+    {
+      "path": "templates/full-decks/tech-sharing/index.html",
+      "sha256": "972e0750360efc61cfd1887cbce3ae33fdf4b06c521d7db7ebc88b9e77b9e25e",
+      "url": "https://github.com/lewislulu/html-ppt-skill/blob/fd1629067909ff55b36b905476de4e5f26062a1f/templates/full-decks/tech-sharing/index.html"
+    },
+    {
+      "path": "templates/full-decks/tech-sharing/style.css",
+      "sha256": "b5af84ba4c663cc54c9aefb8967908e2885b4dd9231f6c95d2b7acd55340422f",
+      "url": "https://github.com/lewislulu/html-ppt-skill/blob/fd1629067909ff55b36b905476de4e5f26062a1f/templates/full-decks/tech-sharing/style.css"
+    },
+    {
+      "path": "assets/base.css",
+      "sha256": "786791775484fbec5e4e74b3c3280ad8955a848251520008fb9c9d0d5669a9a4",
+      "url": "https://github.com/lewislulu/html-ppt-skill/blob/fd1629067909ff55b36b905476de4e5f26062a1f/assets/base.css"
+    },
+    {
+      "path": "assets/runtime.js",
+      "sha256": "d4a0136ba177f2ede2940bcbf0846f65d1c9f80a8d11c6eee4f503d81c200903",
+      "url": "https://github.com/lewislulu/html-ppt-skill/blob/fd1629067909ff55b36b905476de4e5f26062a1f/assets/runtime.js"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "a5ed4059e25a3ec35e439abd2623753d1f42d4aa4989ffb5c6b7a97b61f6a949",
+      "url": "https://github.com/lewislulu/html-ppt-skill/blob/fd1629067909ff55b36b905476de4e5f26062a1f/LICENSE"
+    }
+  ]
+}

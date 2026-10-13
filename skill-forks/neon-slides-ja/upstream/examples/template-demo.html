@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Neon Slides — Template Demo</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A0A;
+    --bg-2:#121212;
+    --fg:#EDEDED;
+    --muted:#8A8A8A;
+    --orange:#F97316;
+    --orange-soft:rgba(249,115,22,.12);
+    --orange-line:rgba(249,115,22,.35);
+    --blue:#3B82F6;
+    --blue-soft:rgba(59,130,246,.12);
+    --blue-line:rgba(59,130,246,.35);
+    --card:#161616;
+    --card-line:rgba(255,255,255,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:"Noto Sans SC","Space Grotesk",sans-serif;
+    overflow:hidden;
+    background-image:
+      radial-gradient(ellipse 80% 50% at 20% 0%, rgba(249,115,22,.08), transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 100%, rgba(59,130,246,.06), transparent 60%);
+  }
+  .deck{position:relative;width:100vw;height:100vh;overflow:hidden}
+  .slide{
+    position:absolute;inset:0;
+    display:flex;align-items:center;justify-content:center;
+    padding:80px 100px;
+    opacity:0;transform:translateX(40px);
+    transition:opacity .5s ease,transform .5s ease;
+    pointer-events:none;
+  }
+  .slide.active{opacity:1;transform:translateX(0);pointer-events:auto}
+  .inner{width:100%;max-width:1200px}
+
+  /* tag */
+  .tag{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:8px 18px;border-radius:999px;
+    background:var(--orange-soft);border:1px solid var(--orange-line);
+    font-family:"Space Grotesk",sans-serif;font-size:12px;font-weight:500;
+    letter-spacing:.15em;color:var(--orange);
+  }
+  .tag::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 10px var(--orange)}
+
+  h1{
+    font-size:56px;font-weight:900;line-height:1.1;margin:24px 0 18px;
+    letter-spacing:-.01em;
+  }
+  h1 .accent-o{background:linear-gradient(135deg,#FB923C,#F97316);-webkit-background-clip:text;background-clip:text;color:transparent}
+  h1 .accent-b{background:linear-gradient(135deg,#60A5FA,#3B82F6);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .sub{color:var(--muted);font-size:16px;margin-bottom:48px}
+
+  /* steps */
+  .steps{display:flex;align-items:center;gap:18px;margin-bottom:44px;flex-wrap:wrap}
+  .step{
+    flex:1;min-width:160px;
+    padding:20px 22px;border-radius:12px;
+    background:var(--card);border:1px solid var(--card-line);
+    position:relative;
+  }
+  .step.o{border-color:var(--orange-line);background:linear-gradient(180deg,rgba(249,115,22,.08),transparent)}
+  .step.b{border-color:var(--blue-line);background:linear-gradient(180deg,rgba(59,130,246,.08),transparent)}
+  .step .label{font-family:"Space Grotesk",sans-serif;font-size:11px;letter-spacing:.2em;font-weight:700}
+  .step.o .label{color:var(--orange)}
+  .step.b .label{color:var(--blue)}
+  .step .title{font-size:22px;font-weight:700;margin:6px 0 4px}
+  .step .desc{font-size:12px;color:var(--muted)}
+  .arrow{color:var(--muted);font-size:20px;flex:0 0 auto}
+  .arrow.o{color:var(--orange)} .arrow.b{color:var(--blue)}
+
+  /* compare */
+  .compare{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  .cmp{padding:26px 28px;border-radius:12px;background:var(--card);border:1px solid var(--card-line)}
+  .cmp.old{border-color:rgba(255,255,255,.1)}
+  .cmp.new{border-color:var(--orange-line);background:linear-gradient(180deg,rgba(249,115,22,.05),transparent)}
+  .cmp h3{font-size:18px;margin-bottom:10px}
+  .cmp.new h3{color:var(--orange)}
+  .cmp p{font-size:13px;color:var(--muted);line-height:1.7}
+
+  /* slide 2 layers */
+  .layers{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+  .layer{
+    padding:28px;border-radius:14px;
+    background:var(--card);border:1px solid var(--card-line);
+    min-height:340px;display:flex;flex-direction:column;
+    position:relative;overflow:hidden;
+    transition:transform .3s ease,border-color .3s ease;
+  }
+  .layer:hover{transform:translateY(-4px)}
+  .layer.o{border-color:var(--orange-line)}
+  .layer.b{border-color:var(--blue-line)}
+  .layer.o:hover{box-shadow:0 20px 60px -20px rgba(249,115,22,.3)}
+  .layer.b:hover{box-shadow:0 20px 60px -20px rgba(59,130,246,.3)}
+  .icon{
+    width:44px;height:44px;border-radius:10px;
+    display:flex;align-items:center;justify-content:center;
+    background:var(--orange-soft);border:1px solid var(--orange-line);
+    font-size:20px;margin-bottom:18px;
+  }
+  .layer.b .icon{background:var(--blue-soft);border-color:var(--blue-line)}
+  .layer h3{font-size:22px;font-weight:700;margin-bottom:10px}
+  .layer.o h3{color:var(--orange)} .layer.b h3{color:var(--blue)}
+  .layer .meta{font-size:13px;color:var(--muted);line-height:1.7;flex:1}
+  .layer .foot{
+    margin-top:18px;padding:12px 14px;border-radius:8px;
+    font-size:12px;color:var(--muted);
+    background:rgba(255,255,255,.02);border:1px dashed rgba(255,255,255,.08);
+  }
+
+  /* ===== 图片组件 ===== */
+  /* 半屏图文:左文右图 / 左图右文 */
+  .split{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:center;margin-top:32px}
+  .split.reverse{direction:rtl}
+  .split.reverse > *{direction:ltr}
+  .split .text h3{font-size:28px;font-weight:700;margin-bottom:14px}
+  .split .text h3.o{color:var(--orange)}
+  .split .text h3.b{color:var(--blue)}
+  .split .text p{color:var(--muted);font-size:15px;line-height:1.8;margin-bottom:12px}
+  .split .media{
+    position:relative;border-radius:14px;overflow:hidden;
+    border:1px solid var(--card-line);
+    background:var(--card);
+    box-shadow:0 30px 80px -30px rgba(0,0,0,.8);
+  }
+  .split .media img{display:block;width:100%;height:auto}
+  .split .media.o{border-color:var(--orange-line);box-shadow:0 30px 80px -30px rgba(249,115,22,.35)}
+  .split .media.b{border-color:var(--blue-line);box-shadow:0 30px 80px -30px rgba(59,130,246,.35)}
+  .split .caption{
+    position:absolute;bottom:0;left:0;right:0;
+    padding:14px 18px;font-size:12px;color:var(--muted);
+    background:linear-gradient(180deg,transparent,rgba(0,0,0,.85));
+  }
+
+  /* 章节过渡屏 .hero(图 + 超大编号混合款,仅用于章节切换) */
+  .hero{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center}
+  .hero .bg{position:absolute;inset:0;z-index:0}
+  .hero .bg img{width:100%;height:100%;object-fit:cover;opacity:.25}
+  .hero .bg::after{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 70% 80% at 30% 50%, rgba(10,10,10,.4), rgba(10,10,10,.92) 80%),
+      linear-gradient(90deg,rgba(10,10,10,.95) 0%,rgba(10,10,10,.5) 50%,rgba(10,10,10,.9) 100%);
+  }
+  .hero .content{
+    position:relative;z-index:2;width:100%;padding:0 100px;
+    display:grid;grid-template-columns:auto 1fr;gap:70px;align-items:center;
+  }
+  .hero .numeral{
+    font-family:"Space Grotesk",sans-serif;font-weight:700;
+    font-size:280px;line-height:.85;
+    color:transparent;
+    -webkit-text-stroke:2px var(--orange);
+    text-stroke:2px var(--orange);
+    letter-spacing:-.04em;
+    position:relative;
+    filter:drop-shadow(0 0 40px rgba(249,115,22,.35));
+  }
+  .hero .numeral::after{
+    content:attr(data-num);
+    position:absolute;inset:0;
+    color:var(--orange);opacity:.08;
+    -webkit-text-stroke:0;
+  }
+  .hero .chapter-meta{max-width:620px}
+  .hero .chapter-meta .part-label{
+    font-family:"Space Grotesk",sans-serif;
+    font-size:12px;letter-spacing:.3em;font-weight:700;
+    color:var(--orange);margin-bottom:18px;display:block;
+  }
+  .hero .chapter-meta h1{
+    font-size:64px;font-weight:900;line-height:1.1;
+    letter-spacing:-.01em;margin:0 0 22px;
+  }
+  .hero .chapter-meta .long-divider{
+    width:120px;height:2px;background:var(--orange);margin-bottom:22px;
+    box-shadow:0 0 20px rgba(249,115,22,.6);
+  }
+  .hero .chapter-meta p{
+    color:var(--fg);opacity:.8;font-size:17px;line-height:1.7;
+  }
+
+  /* 切换进入时的数字动画 */
+  .slide.active .hero .numeral{animation:numeralIn .8s cubic-bezier(.2,.8,.2,1) both}
+  .slide.active .hero .chapter-meta{animation:metaIn .8s cubic-bezier(.2,.8,.2,1) .15s both}
+  @keyframes numeralIn{
+    0%{opacity:0;transform:scale(.7) translateX(-30px)}
+    100%{opacity:1;transform:scale(1) translateX(0)}
+  }
+  @keyframes metaIn{
+    0%{opacity:0;transform:translateX(30px)}
+    100%{opacity:1;transform:translateX(0)}
+  }
+
+  /* 封面屏(首页专用,居中构图) */
+  .cover{position:absolute;inset:0;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  .cover .bg{position:absolute;inset:0;z-index:0}
+  .cover .bg img{width:100%;height:100%;object-fit:cover;opacity:.35}
+  .cover .bg::after{
+    content:"";position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 60% 60% at 50% 50%, transparent 0%, rgba(10,10,10,.7) 70%, rgba(10,10,10,.95) 100%),
+      linear-gradient(180deg,rgba(10,10,10,.6),rgba(10,10,10,.85));
+  }
+  .cover .center{position:relative;z-index:2;text-align:center;max-width:900px;padding:0 40px}
+  .cover .center .tag{margin-bottom:28px}
+  .cover .center h1{
+    font-size:84px;font-weight:900;line-height:1.08;letter-spacing:-.02em;
+    margin:0 0 24px;
+    text-shadow:0 4px 40px rgba(0,0,0,.6);
+  }
+  .cover .divider{
+    width:60px;height:3px;background:var(--orange);margin:0 auto 24px;
+    box-shadow:0 0 20px rgba(249,115,22,.6);
+  }
+  .cover .center p{font-size:18px;color:var(--fg);opacity:.85;line-height:1.7;max-width:680px;margin:0 auto}
+  .cover .meta{
+    position:absolute;bottom:80px;left:50%;transform:translateX(-50%);
+    font-family:"Space Grotesk",sans-serif;font-size:11px;letter-spacing:.25em;
+    color:var(--muted);text-transform:uppercase;z-index:2;
+  }
+
+  /* Layer 卡内缩略图(替代 icon) */
+  .layer .thumb{
+    width:100%;height:160px;border-radius:10px;overflow:hidden;
+    margin-bottom:20px;border:1px solid var(--card-line);
+    background:#0D0D0D;
+  }
+  .layer .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+
+  /* nav */
+  .nav{position:fixed;bottom:32px;left:50%;transform:translateX(-50%);display:flex;gap:12px;align-items:center;z-index:10}
+  .nav button{
+    width:40px;height:40px;border-radius:50%;
+    background:var(--card);border:1px solid var(--card-line);
+    color:var(--fg);cursor:pointer;font-size:16px;
+    transition:all .2s;
+  }
+  .nav button:hover{border-color:var(--orange);color:var(--orange)}
+  .dots{display:flex;gap:8px;padding:0 12px}
+  .dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.2);transition:all .3s;cursor:pointer}
+  .dot:hover{background:rgba(255,255,255,.5)}
+  .dot.active{background:var(--orange);width:24px;border-radius:4px}
+  .dot.active:hover{background:var(--orange)}
+
+  /* 进度条(多页模式) */
+  .progress{width:160px;height:3px;background:rgba(255,255,255,.1);border-radius:2px;overflow:hidden;cursor:pointer;margin:0 12px}
+  .progress-fill{height:100%;background:var(--orange);transition:width .4s ease;border-radius:2px}
+
+  /* 跳转面板 */
+  .jumper{
+    position:fixed;inset:0;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);
+    display:none;align-items:center;justify-content:center;z-index:100;
+  }
+  .jumper.show{display:flex}
+  .jumper-box{
+    background:var(--bg-2);border:1px solid var(--card-line);border-radius:16px;
+    padding:36px 40px;max-width:720px;width:90%;
+  }
+  .jumper-box h3{font-family:"Space Grotesk",sans-serif;font-size:12px;letter-spacing:.2em;color:var(--muted);margin-bottom:20px;text-transform:uppercase}
+  .jumper-input{
+    width:100%;background:var(--card);border:1px solid var(--card-line);
+    color:var(--fg);padding:14px 18px;border-radius:8px;font-size:16px;
+    font-family:"Space Grotesk",sans-serif;margin-bottom:24px;outline:none;
+  }
+  .jumper-input:focus{border-color:var(--orange)}
+  .jumper-grid{display:grid;grid-template-columns:repeat(10,1fr);gap:8px}
+  .jumper-cell{
+    aspect-ratio:1;border:1px solid var(--card-line);border-radius:6px;
+    background:var(--card);color:var(--muted);cursor:pointer;
+    display:flex;align-items:center;justify-content:center;
+    font-family:"Space Grotesk",sans-serif;font-size:13px;font-weight:500;
+    transition:all .2s;
+  }
+  .jumper-cell:hover{border-color:var(--orange);color:var(--orange);transform:scale(1.08)}
+  .jumper-cell.active{border-color:var(--orange);background:var(--orange-soft);color:var(--orange)}
+  .jumper-hint{margin-top:20px;font-size:12px;color:var(--muted);text-align:center;font-family:"Space Grotesk",sans-serif}
+  .jumper-hint kbd{background:var(--card);padding:2px 8px;border-radius:4px;border:1px solid var(--card-line);font-size:11px}
+  .counter{font-family:"Space Grotesk",sans-serif;color:var(--muted);font-size:12px;letter-spacing:.1em;margin-left:8px}
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <!-- Slide 0: 封面(首页必须用这种,不要用 .hero) -->
+  <section class="slide active">
+    <div class="cover">
+      <div class="bg"><img src="https://placehold.co/1920x1080/0A0A0A/1E3A8A?text=+" alt=""/></div>
+      <div class="center">
+        <span class="tag">AI AGENT REVIEW</span>
+        <h1><span class="accent-o">OpenClaw</span> 已死?<br/>别急着盖棺</h1>
+        <div class="divider"></div>
+        <p>但我确实被 Hermes 圈粉了 —— 一篇来自真实用户的深度测评</p>
+      </div>
+      <div class="meta">林月半子 · 2026</div>
+    </div>
+  </section>
+
+  <!-- Slide 1 -->
+  <section class="slide">
+    <div class="inner">
+      <span class="tag">CORE CONCEPT</span>
+      <h1>闭环学习循环:<span class="accent-o">Hermes</span> 的灵魂</h1>
+      <p class="sub">让经验真正沉淀为能力——不是单次节省 20 分钟,而是让下次、下下次都不必从零开始</p>
+      <div class="steps">
+        <div class="step o"><div class="label">STEP 1</div><div class="title">经验</div><div class="desc">完成任务</div></div>
+        <div class="arrow o">→</div>
+        <div class="step b"><div class="label">STEP 2</div><div class="title">记忆</div><div class="desc">保存关键信息</div></div>
+        <div class="arrow b">→</div>
+        <div class="step o"><div class="label">STEP 3</div><div class="title">技能</div><div class="desc">提炼可复用方法</div></div>
+        <div class="arrow o">→</div>
+        <div class="step b"><div class="label">STEP 4</div><div class="title">更好经验</div><div class="desc">下次更高效</div></div>
+      </div>
+      <div class="compare">
+        <div class="cmp old"><h3>传统 AI</h3><p>每次对话从零开始,经验不沉淀。用完即弃,重复劳动。</p></div>
+        <div class="cmp new"><h3>Hermes Agent</h3><p>记忆自动保存,技能自动创建,跨会话搜索——经验复利增长。</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 2 -->
+  <section class="slide">
+    <div class="inner">
+      <span class="tag">ARCHITECTURE</span>
+      <h1>三层<span class="accent-o">生产力架构</span></h1>
+      <p class="sub">blocmates 的解读框架——Hermes 不像功能堆砌的 Agent,而像一个真正的生产力栈</p>
+      <div class="layers">
+        <div class="layer o">
+          <div class="icon">📖</div>
+          <h3>Knowledge Layer</h3>
+          <div class="meta">内建 memory、会话搜索、skills、可选 Honcho</div>
+          <div class="foot">Agent 不再只是临时聪明,而是能积累认知</div>
+        </div>
+        <div class="layer b">
+          <div class="icon">⚙️</div>
+          <h3>Execution Layer</h3>
+          <div class="meta">Child agents、工具系统、MCP、persistent access</div>
+          <div class="foot">Agent 不只会回答,还能拆解、并行、执行</div>
+        </div>
+        <div class="layer o">
+          <div class="icon">✓</div>
+          <h3>Output Layer</h3>
+          <div class="meta">Cron 定时、Gateway 网关、Slack/Discord/Telegram</div>
+          <div class="foot">结果进入工作流,而不只停在对话框</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 3: 半屏图文示例 -->
+  <section class="slide">
+    <div class="inner">
+      <span class="tag">DEEP DIVE</span>
+      <h1>AGENTS.md 里的<span class="accent-o">脱敏规则</span></h1>
+      <div class="split">
+        <div class="text">
+          <h3 class="o">别让 Agent 把家底说漏了</h3>
+          <p>一条 redact 规则,就能让 sk- 开头的 key、Bearer token、内网 IP 全部从输出里消失。</p>
+          <p>配置写在 AGENTS.md 里跟 Agent 一起走 Git,团队共享同一套规则。</p>
+        </div>
+        <div class="media o">
+          <img src="https://placehold.co/800x500/0D0D0D/F97316?text=AGENTS.md" alt="AGENTS.md 脱敏配置"/>
+          <div class="caption">图示:AGENTS.md 中的 redact 配置段</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Slide 4: 章节过渡示例(仅用于章节切换) -->
+  <section class="slide">
+    <div class="hero">
+      <div class="bg"><img src="https://placehold.co/1920x1080/0A0A0A/F97316?text=+" alt=""/></div>
+      <div class="content">
+        <div class="numeral" data-num="02">02</div>
+        <div class="chapter-meta">
+          <span class="part-label">PART II · 实战篇</span>
+          <h1>从原理到<span class="accent-o">动手</span></h1>
+          <div class="long-divider"></div>
+          <p>前面讲完了防御模型,接下来我们一行一行改配置——AGENTS.md 脱敏、SecretRef 凭证、secrets audit,全部过一遍。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<div class="nav">
+  <button id="prev">←</button>
+  <div class="dots"></div>
+  <button id="next">→</button>
+  <span class="counter" id="counter">01 / 04</span>
+</div>
+
+<div class="jumper" id="jumper">
+  <div class="jumper-box">
+    <h3>Jump to slide</h3>
+    <input class="jumper-input" id="jumper-input" type="number" placeholder="输入页码后回车,如 8" autocomplete="off"/>
+    <div class="jumper-grid" id="jumper-grid"></div>
+    <div class="jumper-hint">按 <kbd>G</kbd> 呼出 · <kbd>Esc</kbd> 关闭 · <kbd>Home</kbd>/<kbd>End</kbd> 首尾页 · <kbd>←</kbd>/<kbd>→</kbd>/<kbd>Space</kbd> 翻页</div>
+  </div>
+</div>
+
+<script>
+  const slides=document.querySelectorAll('.slide');
+  const total=slides.length;
+  const dotsWrap=document.querySelector('.dots');
+  const counter=document.getElementById('counter');
+  const jumper=document.getElementById('jumper');
+  const jumperInput=document.getElementById('jumper-input');
+  const jumperGrid=document.getElementById('jumper-grid');
+  let i=0;
+
+  // 15 页以上自动切换进度条模式
+  const manyMode=total>15;
+  if(manyMode){
+    dotsWrap.outerHTML='<div class="progress" id="progress"><div class="progress-fill" id="progress-fill"></div></div>';
+  }else{
+    dotsWrap.innerHTML='';
+    for(let x=0;x<total;x++){
+      const d=document.createElement('div');
+      d.className='dot'+(x===0?' active':'');
+      d.onclick=()=>go(x);
+      dotsWrap.appendChild(d);
+    }
+  }
+
+  // 构建跳转面板缩略网格
+  for(let x=0;x<total;x++){
+    const c=document.createElement('div');
+    c.className='jumper-cell'+(x===0?' active':'');
+    c.textContent=String(x+1).padStart(2,'0');
+    c.onclick=()=>{go(x);closeJumper()};
+    jumperGrid.appendChild(c);
+  }
+
+  function go(n){
+    i=(n+total)%total;
+    slides.forEach((s,x)=>s.classList.toggle('active',x===i));
+    counter.textContent=String(i+1).padStart(2,'0')+' / '+String(total).padStart(2,'0');
+    if(manyMode){
+      document.getElementById('progress-fill').style.width=((i+1)/total*100)+'%';
+    }else{
+      document.querySelectorAll('.dot').forEach((d,x)=>d.classList.toggle('active',x===i));
+    }
+    document.querySelectorAll('.jumper-cell').forEach((c,x)=>c.classList.toggle('active',x===i));
+  }
+
+  // 进度条点击跳转
+  if(manyMode){
+    document.getElementById('progress').onclick=e=>{
+      const r=e.currentTarget.getBoundingClientRect();
+      go(Math.floor((e.clientX-r.left)/r.width*total));
+    };
+  }
+
+  function openJumper(){jumper.classList.add('show');jumperInput.value='';setTimeout(()=>jumperInput.focus(),50)}
+  function closeJumper(){jumper.classList.remove('show')}
+  jumper.onclick=e=>{if(e.target===jumper)closeJumper()};
+  jumperInput.onkeydown=e=>{
+    if(e.key==='Enter'){
+      const n=parseInt(jumperInput.value,10);
+      if(n>=1&&n<=total){go(n-1);closeJumper()}
+    }
+    if(e.key==='Escape')closeJumper();
+  };
+
+  document.getElementById('prev').onclick=()=>go(i-1);
+  document.getElementById('next').onclick=()=>go(i+1);
+  document.addEventListener('keydown',e=>{
+    if(jumper.classList.contains('show'))return;
+    if(e.key==='ArrowRight'||e.key===' '){e.preventDefault();go(i+1)}
+    else if(e.key==='ArrowLeft')go(i-1);
+    else if(e.key==='Home')go(0);
+    else if(e.key==='End')go(total-1);
+    else if(e.key==='g'||e.key==='G')openJumper();
+  });
+</script>
+</body>
+</html>

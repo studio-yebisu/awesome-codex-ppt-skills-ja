@@ -1,0 +1,143 @@
+{
+  "recommended_threshold": 0.67,
+  "score_denominator": 3,
+  "description_required_concepts": [
+    "bento",
+    "presentation",
+    "authoring_action",
+    "source_material",
+    "qiaomu"
+  ],
+  "prompt_required_any": [
+    "bento",
+    "qiaomu"
+  ],
+  "positive_concepts": {
+    "bento": [
+      "bento",
+      ".bento.html",
+      "bento/slides",
+      "单文件 html",
+      "single file html",
+      "self contained html",
+      "offline editable"
+    ],
+    "presentation": [
+      "presentation",
+      "deck",
+      "slides",
+      "ppt",
+      "演示文稿",
+      "幻灯片",
+      "发布会"
+    ],
+    "authoring_action": [
+      "create",
+      "edit",
+      "make",
+      "turn",
+      "modify",
+      "生成",
+      "创建",
+      "制作",
+      "修改",
+      "改成",
+      "做成"
+    ],
+    "source_material": [
+      "brief",
+      "notes",
+      "report",
+      "data",
+      "existing",
+      "source",
+      "资料",
+      "笔记",
+      "报告",
+      "数据",
+      "这个",
+      "现有"
+    ],
+    "qiaomu": [
+      "qiaomu-bento-ppt",
+      "$qiaomu-bento-ppt",
+      "乔木"
+    ]
+  },
+  "negative_patterns": [
+    "不要 bento",
+    "不用 bento",
+    "只要 pptx",
+    "必须 pptx",
+    "powerpoint 文件",
+    "开发 bento 源码",
+    "修复 bento bug",
+    "bento spaces",
+    "bento dash",
+    "bento vault",
+    "just explain",
+    "只解释"
+  ],
+  "should_trigger": [
+    {
+      "text": "用 qiaomu-bento-ppt 把这份报告做成 12 页演示文稿",
+      "family": "explicit_skill_report"
+    },
+    {
+      "text": "把这个 .bento.html 修改成 10 分钟发布会 deck，保留 docId",
+      "family": "edit_existing"
+    },
+    {
+      "text": "生成一个离线可编辑的单文件 HTML PPT，要有 morph 和演讲者备注",
+      "family": "offline_single_file"
+    },
+    {
+      "text": "用 bento/slides 把这些数据做成图表型 presentation",
+      "family": "data_to_bento"
+    },
+    {
+      "text": "Turn these notes into a self contained HTML bento presentation.",
+      "family": "english_new_deck"
+    },
+    {
+      "text": "Edit this existing .bento.html deck and keep its document identity.",
+      "family": "english_edit"
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "帮我生成一个必须是 pptx 的 PowerPoint 文件，不要 bento",
+      "family": "pptx_required"
+    },
+    {
+      "text": "修复 bento 源码里的 CRDT bug",
+      "family": "source_development"
+    },
+    {
+      "text": "给 bento spaces 增加一个数据库视图",
+      "family": "other_bento_app"
+    },
+    {
+      "text": "只解释一下 bento 是什么，不要制作演示文稿",
+      "family": "explain_only"
+    }
+  ],
+  "near_neighbor": [
+    {
+      "text": "帮我做一份产品发布会 PPT",
+      "family": "generic_ppt_unspecified"
+    },
+    {
+      "text": "把这个 deck 导出成 Keynote",
+      "family": "keynote_export"
+    },
+    {
+      "text": "给现有 PowerPoint 调整一下模板颜色",
+      "family": "powerpoint_edit"
+    },
+    {
+      "text": "先写一个演示文稿大纲，不需要 bento 文件",
+      "family": "outline_only"
+    }
+  ]
+}

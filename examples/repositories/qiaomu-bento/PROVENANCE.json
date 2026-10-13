@@ -1,0 +1,121 @@
+{
+  "repository": "joeseesun/qiaomu-bento-ppt",
+  "upstream_commit": "55c63c836f42bc9175757d077428c395cd93effe",
+  "acquisition": {
+    "repository": "joeseesun/qiaomu-bento-ppt",
+    "commit": "55c63c836f42bc9175757d077428c395cd93effe",
+    "archive_url": "https://codeload.github.com/joeseesun/qiaomu-bento-ppt/zip/55c63c836f42bc9175757d077428c395cd93effe",
+    "archive_sha256": "19e60781c4b9e4bca20c976d998f398923593e3587c0683f1a50a94aa0b23d09",
+    "bytes": 7483341,
+    "checked_at": "2026-10-13T13:36:10.610710+00:00",
+    "root": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\joeseesun__qiaomu-bento-ppt"
+  },
+  "method": "原典の固定Bento shell・文書スキーマを使用。bento_deck.pyでJSONを検証し、シェルを変えずに編集版と再生版の.bento.htmlを構築。検索の同一要素が権限確認から回答へ移るmorphを制作。",
+  "execution_type": "json_document_and_pinned_bento_shell",
+  "references": [
+    {
+      "path": "SKILL.md",
+      "sha256": "c4a017bb4e603374700b2df22674da49dcddf09233b8a9ac1174e8074cd89a17"
+    },
+    {
+      "path": "references/workflow.md",
+      "sha256": "34d621a47db8e6757706f90f628fb2b02a7b19130a9bbd0689249b509a180289"
+    },
+    {
+      "path": "references/upstream-contract.md",
+      "sha256": "205e6e3f6486f38017309dee737ef7b40ff98f2c235392bf0622976c9884acd5"
+    },
+    {
+      "path": "references/upstream/bento-format.md",
+      "sha256": "f7dcae276c11eff125b5a15796666f43cd6b002d284a466c826f5630a06dafcb"
+    },
+    {
+      "path": "references/upstream/bento-agents.md",
+      "sha256": "44329896c4e1b0e5219e8f76e5bbbbd63cb11f0f85f39fde7dfaff6f6b0b5a5c"
+    },
+    {
+      "path": "scripts/bento_deck.py",
+      "sha256": "f2b321ab8f257070626d55080f24235165cb1e4048ff2eb140098be013d603de"
+    },
+    {
+      "path": "upstream.lock.json",
+      "sha256": "5d8c79be08724057f0c1948b0f525b853d8c22282aa113f610a488df2b55af59"
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "e3530196bd0111405fbcb8f82caf88ccde67b6aad967a5fd2a19c6228f1c123b"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "21f530b2b2629e0230ba78c4cd8bd836664d68fda1c3471af6b572e25fcb2650"
+    }
+  ],
+  "commands_executed": [
+    {
+      "argv": [
+        "python",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\joeseesun__qiaomu-bento-ppt\\scripts\\bento_deck.py",
+        "locate"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
+      "exit_code": 0,
+      "stdout_sha256": "0e0def811504ba5277561941c526e63185ad7c158b9d31b96a8211c0b49a2a21"
+    },
+    {
+      "argv": [
+        "python",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\joeseesun__qiaomu-bento-ppt\\scripts\\bento_deck.py",
+        "build",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\deck.json",
+        "--output",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\deck.bento.html",
+        "--identity-source",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\deck.bento.html",
+        "--overwrite",
+        "--report",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\source\\bento-validation.json"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
+      "exit_code": 0,
+      "stdout_sha256": "a7dc9e3dce2ceb977f8b8e7cec664034bc820e0ab774c785d496211d3ebaa092"
+    },
+    {
+      "argv": [
+        "python",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\joeseesun__qiaomu-bento-ppt\\scripts\\bento_deck.py",
+        "extract",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\deck.bento.html",
+        "--output",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\deck.json",
+        "--overwrite"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
+      "exit_code": 0,
+      "stdout_sha256": "b0cb8024d6bd1fd7454100f4e42109d202da199ed45e86390c4cb8eec2c5b38d"
+    },
+    {
+      "argv": [
+        "python",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\joeseesun__qiaomu-bento-ppt\\scripts\\bento_deck.py",
+        "build",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\player.json",
+        "--identity-source",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\deck.bento.html",
+        "--output",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\player.bento.html",
+        "--overwrite",
+        "--report",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\qiaomu-bento\\source\\player-validation.json"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
+      "exit_code": 0,
+      "stdout_sha256": "a5eceb03b6fa7330e276416a820fd33758101d9393e9b3a7ff0653ea86e37f52"
+    }
+  ],
+  "artifact": "examples/repositories/qiaomu-bento/player.bento.html",
+  "artifact_sha256": "ee9ec7c007fb84840aef5e2d2d63e921b859756f791091b634709b0216af296b",
+  "input_sha256": "7f0d15a7c6c608c0d595c7695fa1423d5ab5fbb3661dc8b674a493c8fd8bdbad",
+  "authored_by": "Studio Yebisu / Codex",
+  "scope": "実際に原典の固有方法を使った日本語作例。エージェントが書いた本文を使用。",
+  "checked_at": "2026-10-13T16:29:25.464476+00:00"
+}

@@ -1,0 +1,35 @@
+# Gitの変更を、チームへ届ける
+
+{
+  "title": "新入社員向け Git・レビュー入門",
+  "audience": "Gitを触り始めた新入社員。15分の説明と、20分のローカル演習。",
+  "goal": "作業ブランチで変更し、差分を確認して、小さな変更としてレビューを依頼できる。",
+  "commands": [
+    "git status",
+    "git diff",
+    "git switch -c feature/greeting",
+    "git add README.md",
+    "git diff --staged",
+    "git commit -m \"Add greeting\"",
+    "git restore --staged README.md"
+  ],
+  "review_items": [
+    "変更の目的と対象が説明されている",
+    "意図しないファイルや秘密情報が混ざっていない",
+    "手元で実行・確認した内容が書かれている"
+  ],
+  "conflict_steps": [
+    "git statusで競合ファイルを確認",
+    "両方の変更の意図を読む",
+    "競合マーカーを解消し、結果を実行確認",
+    "解消したファイルだけをaddし、mergeを完了"
+  ],
+  "exercise": "input/trainingのREADME.mdに挨拶を追記。作業用フォルダーへコピーし、git init後に変更前の状態をcommitする。feature/greetingで変更・差分確認・commitを実施。GitHubへの送信は演習の必須条件にしない。",
+  "sources": [
+    "https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository",
+    "https://git-scm.com/book/en/v2/Git-Basics-Undoing-Things",
+    "https://docs.github.com/en/pull-requests/how-tos/create-pull-requests",
+    "https://docs.github.com/en/pull-requests/how-tos/review-pull-requests",
+    "https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/resolving-a-merge-conflict-on-github"
+  ]
+}

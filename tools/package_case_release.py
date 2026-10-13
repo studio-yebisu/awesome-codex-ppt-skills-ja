@@ -6,22 +6,24 @@ sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
 cases=json.loads((ROOT/"data/case-studies.json").read_text(encoding="utf-8"))
 pins=json.loads((ROOT/"data/upstreams.json").read_text(encoding="utf-8"))
 records=[]
-for name in ["ppt-master-ja","frontend-slides-ja","guizang-ppt-skill-ja"]:
+fork_names=sorted({c["fork_id"] for c in cases if c.get("fork_id")})
+for name in fork_names:
     folder=ROOT/"skill-forks"/name
-    for f in (ROOT/"assets/fonts").glob("*"):
-        if f.is_file():shutil.copy2(f,folder/"references/fonts"/f.name)
     source=json.loads((folder/"SOURCE.json").read_text(encoding="utf-8"))
-    source["scope"]="original implementation, maintained Japanese business workflow, local case studies"
-    source["case_studies"]=[c["id"] for c in cases if c["fork_id"]==name]
+    case_ids=[c["id"] for c in cases if c.get("fork_id")==name]
+    source["case_studies"]=case_ids
     source["files"]=[dict(path=f.relative_to(folder).as_posix(),sha256=sha(f)) for f in sorted(folder.rglob("*")) if f.is_file() and f.name!="SOURCE.json" and "__pycache__" not in f.parts and f.suffix!=".pyc"]
     (folder/"SOURCE.json").write_text(json.dumps(source,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
     target=ROOT/"downloads"/(name+".zip")
     with zipfile.ZipFile(target,"w",zipfile.ZIP_DEFLATED) as z:
         for f in sorted(folder.rglob("*")):
-            if f.is_file() and "__pycache__" not in f.parts and f.suffix!=".pyc":z.write(f,(Path(name)/f.relative_to(folder)).as_posix())
+            if f.is_file() and "__pycache__" not in f.parts and f.suffix!=".pyc":
+                info=zipfile.ZipInfo((Path(name)/f.relative_to(folder)).as_posix())
+                info.external_attr=0o100644<<16
+                z.writestr(info,f.read_bytes(),compress_type=zipfile.ZIP_DEFLATED,compresslevel=6)
     records.append(dict(file=target.relative_to(ROOT).as_posix(),sha256=sha(target),bytes=target.stat().st_size,type="skill-source"))
     for pin in pins:
-        if pin["repository"]==source["repository"]:pin["generated_case_ids"]=source["case_studies"]
+        if pin["repository"]==source["repository"]:pin["generated_case_ids"]=case_ids
 for c in cases:
     for key in ["artifact_download","source_download","pdf_download"]:
         value=c.get(key)
@@ -30,4 +32,4 @@ for c in cases:
             records.append(dict(file=value,sha256=sha(path),bytes=path.stat().st_size,type=key))
 (ROOT/"data/case-downloads.json").write_text(json.dumps(records,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
 (ROOT/"data/upstreams.json").write_text(json.dumps(pins,ensure_ascii=False,indent=2)+"\n",encoding="utf-8",newline="\n")
-print("3 maintained forks, "+str(len(records))+" downloadable artifacts, updated source hashes")
+print(str(len(fork_names))+" maintained forks, "+str(len(records))+" downloadable artifacts, updated source hashes")

@@ -1,0 +1,97 @@
+name: Sync bento upstream
+
+on:
+  schedule:
+    - cron: "17 2 * * *"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Official bento release tag, or latest"
+        default: "latest"
+        required: true
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: sync-bento-upstream
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.11"
+
+      - name: Stage the latest coherent release snapshot
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REQUESTED_TAG: ${{ github.event.inputs.tag || 'latest' }}
+        run: |
+          python3 -B scripts/sync_upstream.py \
+            --tag "$REQUESTED_TAG" \
+            --update \
+            --report "$RUNNER_TEMP/upstream-sync.json"
+
+      - name: Stop when the pinned release is already current
+        id: changes
+        run: |
+          if git diff --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            cp "$RUNNER_TEMP/upstream-sync.json" reports/upstream-sync.json
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Regenerate examples and run governed gates
+        if: steps.changes.outputs.changed == 'true'
+        run: |
+          python3 -B examples/build_intro_deck.py
+          python3 -B scripts/bento_deck.py build \
+            examples/qiaomu-bento-ppt-intro.json \
+            --output examples/qiaomu-bento-ppt-intro.bento.html \
+            --new-document --overwrite \
+            --report reports/intro-deck-validation.json
+          python3 -B scripts/bento_deck.py validate \
+            examples/qiaomu-bento-ppt-intro.json \
+            --report reports/intro-deck-json-validation.json
+          python3 -B evals/upstream/run_fixture.py > reports/upstream-sync-eval.json
+          python3 -B evals/output/run_fixture.py --output reports/output-eval.json
+          python3 -B scripts/trigger_eval.py . \
+            --cases evals/trigger_cases.json \
+            --output reports/trigger-eval.json
+          python3 -B scripts/export_skill_ir.py . --output reports/skill-ir.json
+          python3 -B scripts/validate_skill.py .
+          git diff --check
+
+      - name: Open or refresh the upstream sync PR
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=$(python3 -c 'import json; print(json.load(open("reports/upstream-sync.json"))["upstream"]["tag"])')
+          branch="automation/bento-upstream-${tag#v}"
+          if [ "$(gh pr list --state open --head "$branch" --json number --jq 'length')" != "0" ]; then
+            echo "An upstream sync PR for ${tag} is already open."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git checkout -B "$branch"
+          git add --all
+          git commit -m "Sync bento upstream ${tag}"
+          git push --force-with-lease origin "$branch"
+          if ! gh pr view "$branch" >/dev/null 2>&1; then
+            gh pr create \
+              --base main \
+              --head "$branch" \
+              --title "Sync bento upstream ${tag}" \
+              --body "Pins the coherent official ${tag} release snapshot and regenerates the standalone example. Automated structure, identity, rollback, shell and fixture gates passed. Browser visual review remains a required manual merge check."
+          fi

@@ -1,0 +1,92 @@
+{
+  "repository": "carnot-tech/jinba-consulting-pptx-skill",
+  "execution_type": "html_parts_cli",
+  "summary_ja": "公式new_deck.pyでb01,b09,m05,b06,b05,m35,b10を選択し、HTMLを組み直して公式html_to_pptx.pyで変換。",
+  "requirements": [
+    "Python 3.13 / python-pptx / lxml / Pillow",
+    "Microsoft PowerPoint 16.0 と PowerShell 7（PNG/PDF描画）",
+    "Node 22以降 / Google Chrome（原典HTML→PPTX変換）"
+  ],
+  "steps": [
+    "原典を固定commitで取得",
+    "入力と依頼文を用意",
+    "固有パーツまたはテンプレートを選択",
+    "本文と図表を作成",
+    "PowerPoint本体で全ページ描画"
+  ],
+  "commands": [
+    "git clone https://github.com/carnot-tech/jinba-consulting-pptx-skill .build/actual-upstreams/carnot-tech__jinba-consulting-pptx-skill",
+    "git -C .build/actual-upstreams/carnot-tech__jinba-consulting-pptx-skill checkout 692556fb84ba5a0609575a671dff3d346fefa041",
+    "python -m venv .venv",
+    ".venv\\Scripts\\python -m pip install python-pptx lxml Pillow",
+    ".venv\\Scripts\\python tools/build_japanese_repository_examples.py --only jinba --render"
+  ],
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "f6fcc8befd07754218f81b7e5155d41080b0159b8abc09f1bee0c5cbe87d8bf3",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/SKILL.md"
+    },
+    {
+      "path": "references/slide-rules.md",
+      "sha256": "bab9187b79ef30c91905e06e7d7c07032a6a04020a6c100025b0333b678e679e",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/references/slide-rules.md"
+    },
+    {
+      "path": "references/ai-smell-lexicon.md",
+      "sha256": "1406a555d89993f6a1e5e37d751a6259e12513d9993088653912b705abffb4a9",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/references/ai-smell-lexicon.md"
+    },
+    {
+      "path": "references/content-review-prompt.md",
+      "sha256": "1afb023e02d86f6c8b332d8252b0ac5965ffd8687332334c98a45395e6d516d0",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/references/content-review-prompt.md"
+    },
+    {
+      "path": "templates/freeform_parts_16x9.html",
+      "sha256": "7b9829e41fdb0d25c32e70717058410ce93c3c597678d95d5ee6de43e8139083",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/templates/freeform_parts_16x9.html"
+    },
+    {
+      "path": "templates/freeform_parts_more_16x9.html",
+      "sha256": "224e6d946b7c403fd4c1f34277bfff2f25f91df14b73f9de27b4ae490b52ec6e",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/templates/freeform_parts_more_16x9.html"
+    },
+    {
+      "path": "scripts/new_deck.py",
+      "sha256": "efa425a68c539dbe693adf46edf2e20d6add7115817750a3588281bf53f16469",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/scripts/new_deck.py"
+    },
+    {
+      "path": "scripts/check_deck.py",
+      "sha256": "2d07d5c93746547f03a92af8a071a19d874a5fac8a350cc941c8a5c70de0d3bf",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/scripts/check_deck.py"
+    },
+    {
+      "path": "scripts/html_to_pptx.py",
+      "sha256": "7e26cb4f0558d1a73586c0c42f475e5164793a9dc3255d9fc7cbc294399274b7",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/scripts/html_to_pptx.py"
+    },
+    {
+      "path": "scripts/html_dump.mjs",
+      "sha256": "c4d85be0f2df960d2951a4c5720fe1cc7cb83404a16137b65cb477e087dc1421",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/scripts/html_dump.mjs"
+    },
+    {
+      "path": "scripts/lib_cdp.mjs",
+      "sha256": "8af887caaee815461885f94a3910a4184a03352be1e8970eafbbb24d25e5574b",
+      "url": "https://github.com/carnot-tech/jinba-consulting-pptx-skill/blob/692556fb84ba5a0609575a671dff3d346fefa041/scripts/lib_cdp.mjs"
+    }
+  ],
+  "license": "MIT",
+  "example_ids": [
+    "jinba-consulting"
+  ],
+  "limitations": [
+    "HTML図形は編集可能なPPTX要素へ変換。SVG/画像は原典仕様で画像になる。作例の棒グラフはCSS矩形。",
+    "原典converterのCSS zoom未反映を、追加パーツ2枚のPPTX文字サイズ・行間0.8倍で補正。source/conversion-corrections.jsonに記録。",
+    "元check_layout.mjsのブラウザ検査は実行せず、PowerPoint全ページ視認と座標検査で確認。本文の充填率49%・裏表紙15%のWARNを受容。"
+  ],
+  "reproduction": "examples/repositories/jinba-consulting/README.md",
+  "fork": "jinba-consulting-ja"
+}

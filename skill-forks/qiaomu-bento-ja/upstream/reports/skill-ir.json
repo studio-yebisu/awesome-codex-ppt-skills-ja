@@ -1,0 +1,220 @@
+{
+  "schema_version": "2.0.0-qiaomu-lite",
+  "generated_at": "2026-07-27",
+  "package": {
+    "name": "qiaomu-bento-ppt",
+    "version": "1.2.0",
+    "owner": "向阳乔木",
+    "maturity_tier": "governed",
+    "lifecycle_stage": "released",
+    "upstream_inspiration": "https://github.com/nyblnet/bento/tree/main/plugins/bento-slides/skills/bento-slides"
+  },
+  "intent": {
+    "description": "Use the standalone qiaomu-bento-ppt skill to create or edit qiaomu-style bento presentations as self-contained .bento.html files from briefs, notes, reports, URLs, data, or existing bento decks. Use this skill when the user explicitly asks for bento/slides, a .bento.html deck, an offline-editable single-file HTML presentation, or invokes qiaomu-bento-ppt. It applies a proposal-first presentation workflow, ships a pinned official bento shell and authoring references inside the skill, builds through the plaintext #bento-doc contract without requiring the original bento repository, and validates structure, identity, shell integrity, visual heuristics, and rollback boundaries. Do not use for conventional .pptx delivery, generic bento source development, or bento/spaces and bento/dash work.\n",
+    "job_to_be_done": "Turn source material or an existing bento deck into a high-quality, editable, offline-capable single-file bento/slides presentation with proposal-first planning and verifiable format safeguards.",
+    "target_users": [
+      "Qiaomu content creators",
+      "presenters who want a self-contained HTML deck",
+      "agents editing existing .bento.html documents"
+    ],
+    "inputs": [
+      "briefs, notes, reports, URLs, datasets, images, or existing .bento.html files",
+      "bundled pinned bento shell and authoring references"
+    ],
+    "outputs": [
+      "deck-plan.md",
+      "deck.json",
+      "validated .bento.html",
+      "deck validation report"
+    ],
+    "exclusions": [
+      "conventional .pptx delivery",
+      "bento platform source development",
+      "release, signing, deployment, or publishing",
+      "bento/spaces, bento/dash, and bento/vault documents"
+    ]
+  },
+  "triggers": {
+    "should_trigger": [
+      "用 qiaomu-bento-ppt 把这份报告做成 12 页演示文稿",
+      "把这个 .bento.html 修改成 10 分钟发布会 deck，保留 docId",
+      "生成一个离线可编辑的单文件 HTML PPT，要有 morph 和演讲者备注",
+      "用 bento/slides 把这些数据做成图表型 presentation",
+      "Turn these notes into a self contained HTML bento presentation.",
+      "Edit this existing .bento.html deck and keep its document identity."
+    ],
+    "should_not_trigger": [
+      "帮我生成一个必须是 pptx 的 PowerPoint 文件，不要 bento",
+      "修复 bento 源码里的 CRDT bug",
+      "给 bento spaces 增加一个数据库视图",
+      "只解释一下 bento 是什么，不要制作演示文稿"
+    ],
+    "near_neighbor": [
+      "帮我做一份产品发布会 PPT",
+      "把这个 deck 导出成 Keynote",
+      "给现有 PowerPoint 调整一下模板颜色",
+      "先写一个演示文稿大纲，不需要 bento 文件"
+    ]
+  },
+  "workflow": {
+    "proposal_first": true,
+    "official_schema_runtime_source": "bundled pinned snapshots",
+    "standalone": true,
+    "steps": [
+      "route and clarify delivery",
+      "create source-grounded deck plan",
+      "read current official bento guide",
+      "extract or author document JSON",
+      "map content to native bento capabilities",
+      "build into a clean shell",
+      "run structure, shell, identity, and browser gates"
+    ]
+  },
+  "output_contract": [
+    "deck-plan.md",
+    "deck.json",
+    "validated .bento.html",
+    "deck validation report"
+  ],
+  "resources": {
+    "assets": [
+      "assets/bento/Bento_Slides.bento.html",
+      "assets/qiaomu-profile/qiaomu_avatar.jpeg",
+      "assets/qiaomu-profile/qiaomu_reward_qr.png",
+      "assets/qiaomu-profile/qiaomu_wechat_public_account_qr.jpg"
+    ],
+    "references": [
+      "references/upstream/bento-agents.md",
+      "references/upstream/bento-format.md",
+      "references/upstream/bento-official-skill.md",
+      "references/upstream-contract.md",
+      "references/workflow.md"
+    ],
+    "scripts": [
+      "scripts/bento_deck.py",
+      "scripts/export_skill_ir.py",
+      "scripts/sync_upstream.py",
+      "scripts/trigger_eval.py",
+      "scripts/validate_skill.py"
+    ],
+    "evals": [
+      "evals/fixtures/minimal-deck.json",
+      "evals/output/run_fixture.py",
+      "evals/trigger_cases.json",
+      "evals/upstream/run_fixture.py"
+    ],
+    "examples": [
+      "examples/build_intro_deck.py",
+      "examples/qiaomu-bento-ppt-intro-deck-plan.md",
+      "examples/qiaomu-bento-ppt-intro.bento.html",
+      "examples/qiaomu-bento-ppt-intro.json"
+    ],
+    "reports": [
+      "reports/intro-deck-json-validation.json",
+      "reports/intro-deck-validation.json",
+      "reports/output-eval.json",
+      "reports/output_quality_scorecard.md",
+      "reports/publication.md",
+      "reports/skill-ir.json",
+      "reports/trigger-eval.json",
+      "reports/trust.md",
+      "reports/upstream-sync-eval.json",
+      "reports/upstream-sync.json"
+    ],
+    "docs": [
+      "docs/assets/qiaomu-bento-ppt-hero.png"
+    ],
+    "workflows": [
+      ".github/workflows/sync-bento-upstream.yml"
+    ],
+    "third_party_licenses": [
+      "THIRD_PARTY_LICENSES/bento-MIT.txt"
+    ]
+  },
+  "portability": {
+    "canonical_format": "agent-skills",
+    "adapter_targets": [
+      "openai",
+      "claude",
+      "generic",
+      "agent-skills-compatible",
+      "vscode"
+    ],
+    "activation": {
+      "mode": "manual-or-route",
+      "paths": [
+        "**/*.bento.html",
+        "**/deck.json"
+      ]
+    },
+    "execution": {
+      "context": "inline",
+      "shell": "bash"
+    },
+    "trust": {
+      "source_tier": "local skill package with pinned MIT-licensed bento shell and reference snapshots",
+      "remote_inline_execution": "forbid",
+      "remote_metadata_policy": "not required for normal execution; maintainers may sync one coherent official GitHub release through a review PR",
+      "generated_public_claims": "evidence-bound"
+    },
+    "permissions": {
+      "network": "not required for deck generation; maintenance sync is limited to official nyblnet/bento release metadata and files",
+      "file_read": "user-provided sources, existing decks, and bundled skill assets",
+      "file_write": "deck plan, document JSON, reports, and new .bento.html outputs; no source overwrite by default",
+      "subprocess": "Python validation/build scripts and browser launch; optional upstream shell gate",
+      "sensitive_files": "never read signing keys, tokens, cookies, or account credentials"
+    },
+    "degradation": {
+      "openai": "canonical standalone package with bundled shell and references",
+      "claude": "standalone Qiaomu workflow over bundled official bento snapshots",
+      "generic": "follow SKILL.md and scripts; no checkout required; browser review may be manual",
+      "agent-skills-compatible": "canonical source",
+      "vscode": "canonical standalone source"
+    }
+  },
+  "gates": {
+    "scaffold": [
+      "valid frontmatter and routing examples",
+      "explicit .pptx and source-development exclusions"
+    ],
+    "production": [
+      "agents/interface.yaml",
+      "trigger eval",
+      "Skill IR",
+      "fixture build and validation"
+    ],
+    "governed": [
+      "output contract",
+      "rollback boundary",
+      "identity preservation",
+      "shell gate",
+      "release-locked upstream provenance and rollback-tested sync",
+      "browser review or explicit missing evidence",
+      "public claim guard"
+    ]
+  },
+  "evidence_boundary": {
+    "file_backed_fixture": "evals/fixtures/minimal-deck.json",
+    "input_files": [
+      "source material",
+      "optional existing .bento.html",
+      "bundled pinned bento shell"
+    ],
+    "output_contract": [
+      "deck-plan.md",
+      "deck.json",
+      ".bento.html",
+      "validation report"
+    ],
+    "rollback_boundary": "new output by default; overwrite requires explicit flag",
+    "trust_report": "reports/trust.md",
+    "output_quality_scorecard": "reports/output_quality_scorecard.md",
+    "browser_evidence": "docs/assets/qiaomu-bento-ppt-hero.png",
+    "example_deck": "examples/qiaomu-bento-ppt-intro.bento.html",
+    "upstream_lock": "upstream.lock.json",
+    "upstream_sync_evidence": "reports/upstream-sync-eval.json",
+    "missing_evidence": [
+      "cross-platform browser review"
+    ]
+  }
+}

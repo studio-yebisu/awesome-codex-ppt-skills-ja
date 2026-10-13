@@ -1,0 +1,78 @@
+{
+  "status": "qa_complete",
+  "artifact_sha256": "6870ac8fb82d13ad8dbc4641ceca012fdd988cf40ee4f494531a9244fce1e38f",
+  "page_count": 3,
+  "visual_review": {
+    "status": "passed",
+    "reviewer": "production agent /root/astra_spec",
+    "all_pages_reviewed": true,
+    "pages": [
+      1,
+      2,
+      3
+    ],
+    "source_and_powerpoint_reviewed": true,
+    "findings": [
+      "全3頁の日本語本文とGitコマンドに読めない文字・欠けなし。",
+      "状態図は3領域をローカルPC枠内に置き、add/commitの矢印方向を確認。",
+      "3頁目のgit diff --staged、README.md、共有先/作業ブランチの注記を視認。"
+    ]
+  },
+  "images": [
+    {
+      "page": 1,
+      "source": "examples/repositories/codex-image-ppt/origin_image/slide_01.png",
+      "source_sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "render": "examples/repositories/codex-image-ppt/render/slide-01.png",
+      "render_sha256": "051ece80ef857597491ec963279bb228529397e8506c3bda5b54a035c0dc2541",
+      "visually_reviewed": true
+    },
+    {
+      "page": 2,
+      "source": "examples/repositories/codex-image-ppt/origin_image/slide_02.png",
+      "source_sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "render": "examples/repositories/codex-image-ppt/render/slide-02.png",
+      "render_sha256": "9d108301d0c8eed72de1566d8e39a7332531c811f32bbdc7ad9a4cea74608ece",
+      "visually_reviewed": true
+    },
+    {
+      "page": 3,
+      "source": "examples/repositories/codex-image-ppt/origin_image/slide_03.png",
+      "source_sha256": "29165a22ae72402cc5ee4221304c27b2e40a7d21c06ee6ebe9a23c2b1ea6e620",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "render": "examples/repositories/codex-image-ppt/render/slide-03.png",
+      "render_sha256": "3da2288f42fbc1ae8b44c40ea8eabb249611564e955bfbd75bcde4620cd9bd2a",
+      "visually_reviewed": true
+    }
+  ],
+  "powerpoint_render": {
+    "status": "passed",
+    "receipt": "render/powerpoint-render.json",
+    "source_sha256": "6870ac8fb82d13ad8dbc4641ceca012fdd988cf40ee4f494531a9244fce1e38f"
+  },
+  "structure": {
+    "picture_objects": 3,
+    "native_text_objects": 0,
+    "speaker_notes": 3,
+    "original_images_embedded_byte_identically": true
+  },
+  "editability": "raster_slides",
+  "not_claimed": [
+    "本文/図の個別編集",
+    "人による採用",
+    "実モデル名の確認",
+    "Git push実行",
+    "外部公開"
+  ]
+}

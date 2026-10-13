@@ -1,0 +1,406 @@
+{
+  "pages": [
+    {
+      "id": "page-1",
+      "presentation": {
+        "pageIntent": "cover",
+        "coreMessage": "架空EC事業の月次報告",
+        "title": {
+          "full": "EC月次報告",
+          "short": "EC月次報告"
+        },
+        "summary": {
+          "full": "架空EC事業の月次報告",
+          "short": "架空EC事業の月次報告"
+        },
+        "items": [
+          {
+            "id": "period",
+            "label": "対象",
+            "detail": {
+              "full": "説明用の架空データ",
+              "short": "説明用の架空データ"
+            },
+            "value": 1,
+            "displayValue": "月次",
+            "unit": "項目",
+            "required": true,
+            "priority": "high"
+          }
+        ],
+        "chartData": [],
+        "media": []
+      }
+    },
+    {
+      "id": "page-2",
+      "presentation": {
+        "pageIntent": "metric",
+        "coreMessage": "売上1200万円、前年から200万円増",
+        "title": {
+          "full": "売上は前年から20%増えた",
+          "short": "売上は前年から20%増えた"
+        },
+        "summary": {
+          "full": "売上1200万円、前年から200万円増",
+          "short": "売上1200万円、前年から200万円増"
+        },
+        "items": [
+          {
+            "id": "sales",
+            "label": "売上",
+            "detail": {
+              "full": "前年1000万円",
+              "short": "前年1000万円"
+            },
+            "value": 1200,
+            "displayValue": "1,200",
+            "unit": "万円",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "growth",
+            "label": "前年比",
+            "detail": {
+              "full": "増加額200万円",
+              "short": "増加額200万円"
+            },
+            "value": 20,
+            "displayValue": "+20",
+            "unit": "%",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "orders",
+            "label": "注文数",
+            "detail": {
+              "full": "前年3500件",
+              "short": "前年3500件"
+            },
+            "value": 4000,
+            "displayValue": "4,000",
+            "unit": "件",
+            "required": true,
+            "priority": "high"
+          }
+        ],
+        "chartData": [
+          {
+            "id": "sales",
+            "label": "売上",
+            "value": 1200,
+            "displayValue": "1,200",
+            "unit": "万円"
+          }
+        ],
+        "media": []
+      }
+    },
+    {
+      "id": "page-3",
+      "presentation": {
+        "pageIntent": "comparison",
+        "coreMessage": "粗利額は52万円増、率は2ポイント低下",
+        "title": {
+          "full": "粗利額は増え、粗利率は下がった",
+          "short": "粗利額は増え、粗利率は下がった"
+        },
+        "summary": {
+          "full": "粗利額は52万円増、率は2ポイント低下",
+          "short": "粗利額は52万円増、率は2ポイント低下"
+        },
+        "items": [
+          {
+            "id": "current",
+            "label": "当月粗利",
+            "detail": {
+              "full": "売上1200万円の36%",
+              "short": "売上1200万円の36%"
+            },
+            "value": 432,
+            "displayValue": "432",
+            "unit": "万円",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "previous",
+            "label": "前年粗利",
+            "detail": {
+              "full": "売上1000万円の38%",
+              "short": "売上1000万円の38%"
+            },
+            "value": 380,
+            "displayValue": "380",
+            "unit": "万円",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "rate",
+            "label": "当月粗利率",
+            "detail": {
+              "full": "前年38%から低下",
+              "short": "前年38%から低下"
+            },
+            "value": 36,
+            "displayValue": "36",
+            "unit": "%",
+            "required": true,
+            "priority": "high"
+          }
+        ],
+        "chartData": [
+          {
+            "id": "current",
+            "label": "当月粗利",
+            "value": 432,
+            "displayValue": "432",
+            "unit": "万円"
+          },
+          {
+            "id": "previous",
+            "label": "前年粗利",
+            "value": 380,
+            "displayValue": "380",
+            "unit": "万円"
+          }
+        ],
+        "media": []
+      }
+    },
+    {
+      "id": "page-4",
+      "presentation": {
+        "pageIntent": "structure",
+        "coreMessage": "4チャネルの売上合計は1200万円",
+        "title": {
+          "full": "売上の内訳をチャネルで見る",
+          "short": "売上の内訳をチャネルで見る"
+        },
+        "summary": {
+          "full": "4チャネルの売上合計は1200万円",
+          "short": "4チャネルの売上合計は1200万円"
+        },
+        "items": [
+          {
+            "id": "a",
+            "label": "検索",
+            "detail": {
+              "full": "売上構成20%",
+              "short": "売上構成20%"
+            },
+            "value": 240,
+            "displayValue": "240",
+            "unit": "万円",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "b",
+            "label": "広告",
+            "detail": {
+              "full": "売上構成32.5%",
+              "short": "売上構成32.5%"
+            },
+            "value": 390,
+            "displayValue": "390",
+            "unit": "万円",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "c",
+            "label": "メール",
+            "detail": {
+              "full": "売上構成17.5%",
+              "short": "売上構成17.5%"
+            },
+            "value": 210,
+            "displayValue": "210",
+            "unit": "万円",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "d",
+            "label": "直接",
+            "detail": {
+              "full": "売上構成30%",
+              "short": "売上構成30%"
+            },
+            "value": 360,
+            "displayValue": "360",
+            "unit": "万円",
+            "required": true,
+            "priority": "high"
+          }
+        ],
+        "chartData": [
+          {
+            "id": "a",
+            "label": "検索",
+            "value": 240,
+            "displayValue": "240",
+            "unit": "万円"
+          },
+          {
+            "id": "b",
+            "label": "広告",
+            "value": 390,
+            "displayValue": "390",
+            "unit": "万円"
+          },
+          {
+            "id": "c",
+            "label": "メール",
+            "value": 210,
+            "displayValue": "210",
+            "unit": "万円"
+          },
+          {
+            "id": "d",
+            "label": "直接",
+            "value": 360,
+            "displayValue": "360",
+            "unit": "万円"
+          }
+        ],
+        "media": []
+      }
+    },
+    {
+      "id": "page-5",
+      "presentation": {
+        "pageIntent": "risk",
+        "coreMessage": "返品率は4%から6%へ上昇",
+        "title": {
+          "full": "返品率の上昇を先に確認する",
+          "short": "返品率の上昇を先に確認する"
+        },
+        "summary": {
+          "full": "返品率は4%から6%へ上昇",
+          "short": "返品率は4%から6%へ上昇"
+        },
+        "items": [
+          {
+            "id": "returns",
+            "label": "当月返品率",
+            "detail": {
+              "full": "前年から2ポイント上昇",
+              "short": "前年から2ポイント上昇"
+            },
+            "value": 6,
+            "displayValue": "6",
+            "unit": "%",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "previous",
+            "label": "前年返品率",
+            "detail": {
+              "full": "比較対象",
+              "short": "比較対象"
+            },
+            "value": 4,
+            "displayValue": "4",
+            "unit": "%",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "action",
+            "label": "確認項目",
+            "detail": {
+              "full": "商品別と返品理由",
+              "short": "商品別と返品理由"
+            },
+            "value": 1,
+            "displayValue": "原因確認",
+            "unit": "項目",
+            "required": true,
+            "priority": "high"
+          }
+        ],
+        "chartData": [
+          {
+            "id": "returns",
+            "label": "当月返品率",
+            "value": 6,
+            "displayValue": "6",
+            "unit": "%"
+          },
+          {
+            "id": "previous",
+            "label": "前年返品率",
+            "value": 4,
+            "displayValue": "4",
+            "unit": "%"
+          }
+        ],
+        "media": []
+      }
+    },
+    {
+      "id": "page-6",
+      "presentation": {
+        "pageIntent": "ending",
+        "coreMessage": "返品の理由と粗利率を次月の重点へ",
+        "title": {
+          "full": "次月は返品と粗利率を追う",
+          "short": "次月は返品と粗利率を追う"
+        },
+        "summary": {
+          "full": "返品の理由と粗利率を次月の重点へ",
+          "short": "返品の理由と粗利率を次月の重点へ"
+        },
+        "items": [
+          {
+            "id": "returns",
+            "label": "返品",
+            "detail": {
+              "full": "理由と商品別に確認",
+              "short": "理由と商品別に確認"
+            },
+            "value": 1,
+            "displayValue": "確認",
+            "unit": "項目",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "margin",
+            "label": "粗利率",
+            "detail": {
+              "full": "値引きと原価を確認",
+              "short": "値引きと原価を確認"
+            },
+            "value": 1,
+            "displayValue": "分析",
+            "unit": "項目",
+            "required": true,
+            "priority": "high"
+          },
+          {
+            "id": "review",
+            "label": "次月",
+            "detail": {
+              "full": "対策と数値を報告",
+              "short": "対策と数値を報告"
+            },
+            "value": 1,
+            "displayValue": "報告",
+            "unit": "項目",
+            "required": true,
+            "priority": "high"
+          }
+        ],
+        "chartData": [],
+        "media": []
+      }
+    }
+  ]
+}

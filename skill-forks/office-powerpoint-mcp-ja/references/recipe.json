@@ -1,0 +1,71 @@
+{
+  "repository": "GongRzhe/Office-PowerPoint-MCP-Server",
+  "execution_type": "mcp_stdio",
+  "summary_ja": "公式MCP stdioのcreate_presentation_from_template/add_slide/manage_text/add_table/add_chart/save_presentationを実行。表とネイティブチャートを含む日本語PPTX。",
+  "requirements": [
+    "Python 3.13（実測）",
+    "PowerShell 7 / pwsh（描画スクリプト）",
+    "Noto Sans JP",
+    "Microsoft PowerPoint 16.0（PNG/PDF描画用）"
+  ],
+  "steps": [
+    "原典を取得しcommitを固定",
+    "個別環境へ依存を導入",
+    "入力と日本語依頼を用意",
+    "原典の入口から制作",
+    "PowerPoint本体で日本語の表示を確認"
+  ],
+  "commands": [
+    "git clone https://github.com/GongRzhe/Office-PowerPoint-MCP-Server .build/actual-upstreams/GongRzhe__Office-PowerPoint-MCP-Server",
+    "git -C .build/actual-upstreams/GongRzhe__Office-PowerPoint-MCP-Server checkout 3631ba2ec0c24504476f78bf74d329c9be11caaa",
+    "python -m venv .venv",
+    ".venv\\Scripts\\python -m pip install \"mcp[cli]==1.30.0\" python-pptx Pillow fonttools",
+    ".venv\\Scripts\\python tools/build_native_repository_examples.py --only mcp --render"
+  ],
+  "source_refs": [
+    {
+      "path": "README.md",
+      "sha256": "ea9b8946b6604309a1f3504254677af1b546bc826a6ae077287964bf53e9a253",
+      "url": "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server/blob/3631ba2ec0c24504476f78bf74d329c9be11caaa/README.md"
+    },
+    {
+      "path": "ppt_mcp_server.py",
+      "sha256": "fbeeb6d97bd477aed9f61b66d4268b6dafaa1ffe2a4a3746417fcfc45a83c5b8",
+      "url": "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server/blob/3631ba2ec0c24504476f78bf74d329c9be11caaa/ppt_mcp_server.py"
+    },
+    {
+      "path": "tools/presentation_tools.py",
+      "sha256": "27fb64c4115a85e4a5c87325eb5568076d591091a6e1bda50962184159ef325a",
+      "url": "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server/blob/3631ba2ec0c24504476f78bf74d329c9be11caaa/tools/presentation_tools.py"
+    },
+    {
+      "path": "tools/content_tools.py",
+      "sha256": "7de5f436caf131d07e6200773ef8f8b65e1d7961e4710867e87b4e0b970538ba",
+      "url": "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server/blob/3631ba2ec0c24504476f78bf74d329c9be11caaa/tools/content_tools.py"
+    },
+    {
+      "path": "tools/structural_tools.py",
+      "sha256": "6932fc0d90ab625e79c86c42ea5aca3634a1fa792473d29ed2d46a2c39d71a4a",
+      "url": "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server/blob/3631ba2ec0c24504476f78bf74d329c9be11caaa/tools/structural_tools.py"
+    },
+    {
+      "path": "utils/content_utils.py",
+      "sha256": "d27b8e494a71e83f38cf06e440891b020d1eb2062d31d8a4abf5a0c6eaa1a09a",
+      "url": "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server/blob/3631ba2ec0c24504476f78bf74d329c9be11caaa/utils/content_utils.py"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "d87d9422baa40840b3f94aa8be94f120f7e216fbcc458a6f4c0387c298122c09",
+      "url": "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server/blob/3631ba2ec0c24504476f78bf74d329c9be11caaa/requirements.txt"
+    }
+  ],
+  "license": "MIT",
+  "example_ids": [
+    "office-powerpoint-mcp"
+  ],
+  "limitations": [
+    "MCP 2.3ではFastMCP importが削除されるため1.30.0で実行。リポはarchived。原典format_chartはlegend_positionを反映しないため、has_legend=Falseと公式manage_textによる系列表示で重なりを回避。"
+  ],
+  "reproduction": "examples/repositories/office-powerpoint-mcp/README.md",
+  "fork": "office-powerpoint-mcp-ja"
+}

@@ -1,0 +1,50 @@
+{
+  "status": "execution_attempted_generation_not_completed",
+  "repository": "icip-cas/PPTAgent",
+  "upstream_commit": "833cda553b343be0e486a93b0b57cac962cdd566",
+  "checked_at": "2026-10-13T15:01:32.510403+00:00",
+  "requested_pages": 6,
+  "generated_pages": 0,
+  "artifact": null,
+  "failed_stage": "dependency_import",
+  "reason_ja": "原典の固定依存pptagent==1.1.37がWindowsをassertで明示拒否。READMEもLinux（WSL含む）/macOSを要件とする。libreofficeのWindows shimだけでは、このimport条件を解決できない。",
+  "api_calls": 0,
+  "credentials_inspected": false,
+  "upstream_modified": false,
+  "platform_guard_disabled": false,
+  "commands_executed": [
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\pptagent-py311\\Scripts\\python.exe",
+        "-c",
+        "import deeppresenter"
+      ],
+      "exit_code": 1,
+      "log": "source/import-preflight.txt",
+      "log_sha256": "ec17bddb28926366ae786e3bd3c9060063fd3b9213a3bc44f1618e6b5c3a4052"
+    }
+  ],
+  "dependency_evidence": {
+    "distribution": "pptagent==1.1.37",
+    "path": "deeppresenter/__init__.py",
+    "sha256": "437f4218e1e1cfbaa6c62809b0876d6c7ca36e01c90ea154aeffcb8362d895e2",
+    "platform_guard": "assert os.name == \"posix\", \"DeepPresenter only supports Linux and macOS\""
+  },
+  "earlier_setup_observations": [
+    "Project-local Python 3.13 dependency dry-run was stopped; numpy<2 began a source build.",
+    "Project-local Python 3.11.15 venv installed pptagent==1.1.37 with --no-deps to inspect/import the fixed dependency.",
+    "npm ci --ignore-scripts succeeded in the upstream skill directory; no upstream source was edited.",
+    "C:/Program Files/LibreOffice/program/soffice.exe exists; it was not used to create a deck.",
+    "Docker Linux engine initially had no named pipe. One hidden Desktop startup was attempted; a later 8-second engine probe timed out.",
+    "No WSL distribution settings, OS settings, credentials or external APIs were changed or accessed."
+  ],
+  "not_claimed": [
+    "HTML authored",
+    "PPTX generated",
+    "original QA passed",
+    "PowerPoint rendering",
+    "visual approval",
+    "Linux runtime failure"
+  ],
+  "next_step_ja": "利用可能なLinux/WSLまたはmacOS環境で原典依存を用意し、multimodalモードの原典CLIを実行する。"
+}

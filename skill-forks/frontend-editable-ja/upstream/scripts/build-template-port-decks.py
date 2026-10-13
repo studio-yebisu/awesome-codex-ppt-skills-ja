@@ -1,0 +1,1770 @@
+#!/usr/bin/env python3
+"""Build slot-editable decks from beautiful-html-templates ports.
+
+The ported decks keep the upstream template's slide classes, CSS, typography,
+and decorative DOM. Editable behavior is added as a slot layer: authored
+content can be edited in place while layout/decoration remains locked.
+"""
+
+from __future__ import annotations
+
+import html
+import json
+import os
+import re
+import shutil
+import subprocess
+import tempfile
+import time
+from urllib.parse import unquote, urlparse
+from dataclasses import dataclass
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+OUT_DIR = ROOT / "examples" / "generated" / "presets"
+DEFAULT_TEMPLATE_DIR = ROOT / "beautiful-html-templates"
+REFERENCE = ROOT / "examples" / "editable-deck-reference.html"
+_REFERENCE_EDITOR_PARTS: tuple[str, str, str] | None = None
+ENABLE_BUILD_TIME_COMPONENTIZATION = os.environ.get("TEMPLATE_PORT_COMPONENTIZE", "").strip().lower() in {"1", "true", "yes"}
+
+
+@dataclass(frozen=True)
+class TemplatePort:
+    source_slug: str
+    out_slug: str
+    title: str
+    preview_indices: tuple[int, int, int]
+
+
+LEGACY_PORT_SLUGS = {
+    "soft-editorial": "soft-editorial",
+    "signal": "signal-gold",
+    "studio": "studio-volt",
+    "monochrome": "monochrome-ledger",
+    "neo-grid-bold": "neo-grid-yellow",
+    "vellum": "vellum-navy",
+    "cobalt-grid": "cobalt-grid",
+}
+
+PORT_MANIFEST = [
+    ("8-bit-orbit", "8-Bit Orbit", (0, 5, 9)),
+    ("biennale-yellow", "Biennale Yellow", (0, 4, 7)),
+    ("block-frame", "BlockFrame", (0, 5, 9)),
+    ("blue-professional", "Blue Professional", (0, 5, 9)),
+    ("bold-poster", "Bold Poster", (0, 5, 9)),
+    ("broadside", "Broadside", (0, 8, 15)),
+    ("capsule", "Capsule", (0, 5, 9)),
+    ("cartesian", "Cartesian", (0, 5, 9)),
+    ("cobalt-grid", "Cobalt Grid", (0, 2, 4)),
+    ("coral", "Coral", (0, 5, 9)),
+    ("creative-mode", "Creative Mode", (0, 4, 7)),
+    ("daisy-days", "Daisy Days", (0, 5, 9)),
+    ("editorial-forest", "Editorial Forest", (0, 4, 7)),
+    ("editorial-tri-tone", "Editorial Tri-Tone", (0, 4, 7)),
+    ("emerald-editorial", "Emerald Editorial", (0, 4, 7)),
+    ("grove", "Grove", (0, 6, 11)),
+    ("long-table", "Long Table", (0, 4, 7)),
+    ("mat", "Mat", (0, 4, 8)),
+    ("monochrome", "Monochrome", (0, 3, 11)),
+    ("neo-grid-bold", "Neo-Grid Bold", (0, 2, 7)),
+    ("peoples-platform", "People's Platform (Block & Bold)", (0, 5, 9)),
+    ("pin-and-paper", "Pin & Paper", (0, 5, 10)),
+    ("pink-script", "Pink Script - After Hours", (0, 4, 8)),
+    ("playful", "Playful", (0, 5, 9)),
+    ("raw-grid", "Raw Grid", (0, 5, 9)),
+    ("retro-windows", "Retro Windows", (0, 5, 9)),
+    ("retro-zine", "Retro Zine", (0, 5, 9)),
+    ("sakura-chroma", "Sakura Chroma", (0, 4, 7)),
+    ("scatterbrain", "Scatterbrain", (0, 5, 9)),
+    ("signal", "Signal", (0, 7, 17)),
+    ("soft-editorial", "Soft Editorial", (0, 3, 9)),
+    ("stencil-tablet", "Stencil & Tablet", (0, 5, 10)),
+    ("studio", "Studio", (0, 3, 7)),
+    ("vellum", "Vellum", (0, 3, 7)),
+]
+
+
+SLOT_TEXT_TAGS = r"(p|li|td|th|figcaption|blockquote|cite|small)"
+SLOT_CONTAINER_TAGS = r"(span|div)"
+BLOCK_TAG_RE = re.compile(r"</?(section|article|main|div|ul|ol|table|tbody|thead|tr|svg|canvas|deck-stage)\b", re.I)
+TEXT_RE = re.compile(r"[A-Za-z0-9\u4e00-\u9fff\[\]]")
+TITLE_LIKE_CLASSES = {
+    "title",
+    "ttl",
+    "headline",
+    "heading",
+    "deck-title",
+    "slide-title",
+    "stmt",
+    "h",
+    "h1",
+    "h2",
+    "h3",
+    "h4",
+}
+BODY_LIKE_CLASSES = {
+    "desc",
+    "description",
+    "lead",
+    "text",
+    "note",
+    "label",
+    "lab",
+    "lab2",
+    "card-title",
+    "card-copy",
+    "card-text",
+    "flow-title",
+    "flow-desc",
+    "stat-label",
+    "stat-note",
+}
+COMPONENT_LIKE_CLASSES = {
+    "card",
+    "tier-card",
+    "stat",
+    "stat-block",
+    "stat-card",
+    "quote-container",
+    "quote-card",
+    "image-block",
+    "figure",
+    "hero",
+    "feature",
+    "flow-step",
+}
+LOCKED_DECOR_CLASSES = {
+    "axis",
+    "bar-fill",
+    "bg",
+    "decor",
+    "decoration",
+    "glitch",
+    "grain",
+    "grid",
+    "gridline",
+    "hairline",
+    "noise",
+    "scanlines",
+    "texture",
+    "tick",
+    "xaxis",
+    "yaxis",
+}
+TEMPLATE_EDIT_MODES = {"slots", "components"}
+
+
+def load_ports() -> list[TemplatePort]:
+    ports: list[TemplatePort] = []
+    for source_slug, title, preview_indices in PORT_MANIFEST:
+        out_slug = LEGACY_PORT_SLUGS.get(source_slug, source_slug)
+        ports.append(TemplatePort(source_slug, out_slug, title, preview_indices))
+    return ports
+
+
+PORTS = load_ports()
+
+
+def normalize_generated_html(source: str) -> str:
+    return "\n".join(line.rstrip() for line in source.splitlines()) + "\n"
+
+
+MEASURE_SCRIPT = ROOT / "scripts" / "measure-template-objects.mjs"
+MEASURE_VIEWPORT = (1280, 720)
+
+
+def find_chrome() -> str | None:
+    env = os.environ.get("CHROME_PATH")
+    if env and Path(env).is_file():
+        return env
+    import platform
+
+    if platform.system() == "Darwin":
+        p = Path("/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+        if p.is_file():
+            return str(p)
+    for name in ("google-chrome-stable", "google-chrome", "chromium", "chromium-browser"):
+        found = shutil.which(name)
+        if found:
+            return found
+    return None
+
+
+def measure_objects(chrome: str, doc_html: str) -> dict[str, dict]:
+    """Render `doc_html` headless and return {edit_slot_id: {style, safe}}.
+
+    Drives scripts/measure-template-objects.mjs (puppeteer-core) which reads back
+    getBoundingClientRect()-derived % styles and a layout-safety flag per slot.
+    """
+    with tempfile.NamedTemporaryFile("w", suffix=".html", encoding="utf-8", delete=False) as tmp:
+        tmp.write(doc_html)
+        tmp_path = Path(tmp.name)
+    last_err = ""
+    try:
+        # Headless Chrome launches can fail transiently (resource contention,
+        # null exit code) — retry a few times before giving up on the deck.
+        for attempt in range(4):
+            proc = subprocess.run(
+                [
+                    "node",
+                    str(MEASURE_SCRIPT),
+                    chrome,
+                    str(tmp_path),
+                    str(MEASURE_VIEWPORT[0]),
+                    str(MEASURE_VIEWPORT[1]),
+                ],
+                capture_output=True,
+                text=True,
+                timeout=120,
+            )
+            if proc.returncode == 0:
+                try:
+                    return json.loads(proc.stdout or "{}")
+                except json.JSONDecodeError as exc:
+                    last_err = f"bad JSON: {exc}: {proc.stdout[:200]!r}"
+            else:
+                last_err = proc.stderr.strip()
+            time.sleep(1.5 * (attempt + 1))
+    finally:
+        tmp_path.unlink(missing_ok=True)
+    raise SystemExit(f"measure-template-objects failed after retries: {last_err}")
+
+
+def template_root() -> Path:
+    configured = os.environ.get("BEAUTIFUL_TEMPLATES_DIR")
+    root = Path(configured).expanduser() if configured else DEFAULT_TEMPLATE_DIR
+    if not root.is_absolute():
+        root = (ROOT / root).resolve()
+    if not (root / "templates").is_dir():
+        raise SystemExit(
+            f"Missing beautiful-html-templates checkout at {root}. "
+            "Set BEAUTIFUL_TEMPLATES_DIR=./beautiful-html-templates."
+        )
+    return root
+
+
+def attr_value(tag: str, name: str) -> str | None:
+    match = re.search(rf"\b{name}\s*=\s*([\"'])(.*?)\1", tag, flags=re.I | re.S)
+    return html.unescape(match.group(2)) if match else None
+
+
+def inline_local_stylesheets(head: str, source_dir: Path) -> str:
+    def repl(match: re.Match[str]) -> str:
+        tag = match.group(0)
+        href = attr_value(tag, "href")
+        rel = (attr_value(tag, "rel") or "").lower()
+        if not href:
+            return ""
+        parsed = urlparse(href)
+        if parsed.scheme in {"http", "https", "data"} or parsed.netloc:
+            return ""
+        if "stylesheet" not in rel and not href.lower().endswith(".css"):
+            return ""
+        css_path = (source_dir / unquote(parsed.path)).resolve()
+        try:
+            css_path.relative_to(source_dir.resolve())
+        except ValueError:
+            return ""
+        if not css_path.is_file():
+            return ""
+        css = css_path.read_text(encoding="utf-8")
+        css = re.sub(r"@import\s+(?:url\()?['\"]?https?://[^;]+;", "", css, flags=re.I)
+        return f"\n<style data-inlined-from=\"{html.escape(href, quote=True)}\">\n{css}\n</style>\n"
+
+    return re.sub(r"<link\b[^>]*>", repl, head, flags=re.I | re.S)
+
+
+def remove_external_deck_runtime(head: str, source_dir: Path) -> str:
+    head = re.sub(r'\n?\s*<script\b[^>]*\bsrc=["\'][^"\']+["\'][^>]*>\s*</script>', "", head, flags=re.I)
+    head = re.sub(r"\n?\s*<title\b[^>]*>.*?</title>", "", head, flags=re.S | re.I)
+    head = inline_local_stylesheets(head, source_dir)
+    head = re.sub(r"@import\s+(?:url\()?['\"]?https?://[^;]+;", "", head, flags=re.I)
+    head = re.sub(r"\bdeck-stage\b", "#deck.slides-offset", head, flags=re.I)
+    return head
+
+
+def has_class(open_tag: str, class_name: str) -> bool:
+    match = re.search(r'class=["\']([^"\']*)["\']', open_tag, flags=re.I)
+    return bool(match and class_name in match.group(1).split())
+
+
+def add_class(open_tag: str, class_name: str) -> str:
+    match = re.search(r'class=(["\'])([^"\']*)\1', open_tag, flags=re.I)
+    if not match:
+        return open_tag[:-1] + f' class="{class_name}">'
+    classes = match.group(2).split()
+    if class_name not in classes:
+        classes.append(class_name)
+    quote = match.group(1)
+    return open_tag[: match.start()] + f"class={quote}{' '.join(classes)}{quote}" + open_tag[match.end() :]
+
+
+def extract_elements(source: str, tag: str, class_name: str | None = None) -> list[str]:
+    token_re = re.compile(rf"<(/?){tag}\b[^>]*>", flags=re.I)
+    elements: list[str] = []
+    pos = 0
+    while True:
+        start = None
+        for match in token_re.finditer(source, pos):
+            if match.group(1):
+                continue
+            if class_name and not has_class(match.group(0), class_name):
+                continue
+            start = match
+            break
+        if not start:
+            break
+        depth = 1
+        for match in token_re.finditer(source, start.end()):
+            if match.group(1):
+                depth -= 1
+            else:
+                depth += 1
+            if depth == 0:
+                elements.append(source[start.start() : match.end()])
+                pos = match.end()
+                break
+        else:
+            raise ValueError(f"unclosed <{tag}> starting near byte {start.start()}")
+    return elements
+
+
+def div_slide_to_section(fragment: str) -> str:
+    end = fragment.find(">")
+    open_tag = "<section" + fragment[4 : end + 1]
+    open_tag = add_class(open_tag, "slide")
+    body = fragment[end + 1 :]
+    close = body.rfind("</div>")
+    if close < 0:
+        raise ValueError("div.slide fragment missing closing </div>")
+    return open_tag + body[:close] + "</section>" + body[close + len("</div>") :]
+
+
+def extract_deck_stage_inner(source: str) -> str | None:
+    match = re.search(r"<deck-stage\b[^>]*>(.*?)</deck-stage>", source, flags=re.S | re.I)
+    return match.group(1) if match else None
+
+
+def extract_head_and_sections(source: str, source_dir: Path) -> tuple[str, list[str]]:
+    head_match = re.search(r"<head\b[^>]*>(.*?)</head>", source, flags=re.S | re.I)
+    if not head_match:
+        raise ValueError("template missing <head>")
+    head = remove_external_deck_runtime(head_match.group(1), source_dir)
+
+    sections = extract_elements(source, "section", "slide")
+    if not sections:
+        deck_stage = extract_deck_stage_inner(source)
+        if deck_stage:
+            sections = extract_elements(deck_stage, "section")
+    if not sections:
+        sections = [div_slide_to_section(fragment) for fragment in extract_elements(source, "div", "slide")]
+    if not sections:
+        raise ValueError("template has no slide sections")
+    return head, sections
+
+
+def set_attr(open_tag: str, name: str, value: str | None = None) -> str:
+    open_tag = re.sub(rf"\s{name}(=(\"[^\"]*\"|'[^']*'|[^\s>]+))?", "", open_tag, flags=re.I)
+    insert = f" {name}" if value is None else f' {name}="{html.escape(value, quote=True)}"'
+    return open_tag[:-1] + insert + ">"
+
+
+def ensure_slide_contract(section: str, index: int) -> str:
+    end = section.find(">")
+    open_tag = section[: end + 1]
+    open_tag = add_class(open_tag, "slide")
+    open_tag = set_attr(open_tag, "id", f"slide-{index}")
+    open_tag = set_attr(open_tag, "data-template-slide-index", str(index + 1))
+    section = open_tag + section[end + 1 :]
+    return section.replace("</section>", '\n    <div class="slide-edit-layer" aria-hidden="true"></div>\n  </section>', 1)
+
+
+def static_chart_markup(canvas_id: str, slide_index: int, chart_index: int) -> str:
+    label_base = f"s{slide_index}-chart-{chart_index}"
+    return f"""
+<div class="static-chart-replacement" role="img" aria-label="Static chart replacement for {html.escape(canvas_id)}">
+  <div class="static-chart-bars">
+    <span class="static-chart-bar" style="--v:72%"><b data-edit-slot="{label_base}-a" data-slot-type="metric" data-slot-label="Chart value A" data-slot-locked-layout="true">72</b></span>
+    <span class="static-chart-bar" style="--v:48%"><b data-edit-slot="{label_base}-b" data-slot-type="metric" data-slot-label="Chart value B" data-slot-locked-layout="true">48</b></span>
+    <span class="static-chart-bar" style="--v:86%"><b data-edit-slot="{label_base}-c" data-slot-type="metric" data-slot-label="Chart value C" data-slot-locked-layout="true">86</b></span>
+    <span class="static-chart-bar" style="--v:63%"><b data-edit-slot="{label_base}-d" data-slot-type="metric" data-slot-label="Chart value D" data-slot-locked-layout="true">63</b></span>
+  </div>
+  <div class="static-chart-caption" data-edit-slot="{label_base}-caption" data-slot-type="text" data-slot-label="Chart caption" data-slot-locked-layout="true">Editable chart summary</div>
+</div>
+""".strip()
+
+
+def replace_canvas_charts(section: str, slide_index: int) -> str:
+    count = 0
+
+    def repl(match: re.Match[str]) -> str:
+        nonlocal count
+        tag = match.group(0)
+        id_match = re.search(r'id=["\']([^"\']+)["\']', tag, flags=re.I)
+        canvas_id = id_match.group(1) if id_match else f"chart-{count + 1}"
+        count += 1
+        return static_chart_markup(canvas_id, slide_index, count)
+
+    return re.sub(r"<canvas\b[^>]*>\s*</canvas>", repl, section, flags=re.S | re.I)
+
+
+def slot_type_for(tag: str, attrs: str) -> str:
+    cls_match = re.search(r'class=["\']([^"\']+)["\']', attrs, flags=re.I)
+    classes = cls_match.group(1).lower() if cls_match else ""
+    if tag in {"td", "th"}:
+        return "table-cell"
+    if any(k in classes for k in ("stat", "num", "value", "metric", "bar-val", "vbig", "amount", "percent")):
+        return "metric"
+    return "text"
+
+
+def class_tokens_from_attrs(attrs: str) -> set[str]:
+    cls_match = re.search(r'class=["\']([^"\']+)["\']', attrs, flags=re.I)
+    return set(cls_match.group(1).split()) if cls_match else set()
+
+
+def classify_template_node(tag: str, attrs: str, inner: str) -> str:
+    """Classify native template nodes for edit conversion.
+
+    Returns one of: slot, component, locked. The rules are deliberately
+    conservative: content gets edited, semantic blocks may be componentized, and
+    visual scaffolding stays locked.
+    """
+    tag = tag.lower()
+    classes = {token.lower() for token in class_tokens_from_attrs(attrs)}
+    class_text = " ".join(classes)
+    if "aria-hidden" in attrs:
+        return "locked"
+    if classes & LOCKED_DECOR_CLASSES or any(token in class_text for token in ("gridline", "xaxis", "yaxis")):
+        return "locked"
+    if tag in {"svg", "canvas", "script", "style"}:
+        return "locked"
+    if tag == "img" or "img-placeholder" in classes or "image-placeholder" in classes:
+        return "slot"
+    if is_title_like_slot_candidate(tag, attrs) or is_body_like_slot_candidate(tag, attrs):
+        return "slot"
+    text = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", inner)).strip()
+    if classes & COMPONENT_LIKE_CLASSES and TEXT_RE.search(text):
+        return "component"
+    return "locked"
+
+
+def is_title_like_slot_candidate(tag: str, attrs: str) -> bool:
+    tag = tag.lower()
+    if tag in {"h1", "h2", "h3", "h4"}:
+        return True
+    return bool(class_tokens_from_attrs(attrs) & TITLE_LIKE_CLASSES)
+
+
+def is_body_like_slot_candidate(tag: str, attrs: str) -> bool:
+    tag = tag.lower()
+    if tag in {"p", "li", "td", "th", "figcaption", "blockquote", "cite", "small"}:
+        return True
+    return bool(class_tokens_from_attrs(attrs) & BODY_LIKE_CLASSES)
+
+
+def slot_label_from_inner(inner: str, fallback: str) -> str:
+    text = re.sub(r"<br\s*/?>", " ", inner, flags=re.I)
+    label = re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", text)).strip()[:48]
+    return label or fallback
+
+
+def next_slot_index(section: str, slide_index: int, kind: str) -> int:
+    pattern = re.compile(rf'\bdata-edit-slot=["\']s{slide_index}-{re.escape(kind)}-(\d+)["\']')
+    values = [int(match.group(1)) for match in pattern.finditer(section)]
+    return max(values, default=0) + 1
+
+
+def should_mark_text_node(tag: str, attrs: str, inner: str) -> bool:
+    classes = " ".join(class_tokens_from_attrs(attrs)).lower()
+    if "data-edit-slot" in attrs or "aria-hidden" in attrs:
+        return False
+    if "data-edit-slot" in inner:
+        return False
+    if any(k in classes for k in ("xaxis", "yaxis", "axis", "ticks", "gridline")):
+        return False
+    if not TEXT_RE.search(re.sub(r"<[^>]+>", "", inner)):
+        return False
+    return not BLOCK_TAG_RE.search(inner)
+
+
+def mark_priority_text_slots(section: str, slide_index: int) -> str:
+    """Mark title-like inline nodes before generic slotting sees outer layout divs."""
+    slot_count = next_slot_index(section, slide_index, "title") - 1
+
+    def repl(match: re.Match[str]) -> str:
+        nonlocal slot_count
+        full = match.group(0)
+        tag = match.group(1).lower()
+        attrs = match.group(2) or ""
+        inner = match.group(3)
+        if not is_title_like_slot_candidate(tag, attrs):
+            return full
+        if not should_mark_text_node(tag, attrs, inner):
+            return full
+        slot_count += 1
+        slot_id = f"s{slide_index}-title-{slot_count}"
+        label = slot_label_from_inner(inner, slot_id)
+        return (
+            f'<{tag}{attrs} data-edit-slot="{slot_id}" '
+            f'data-slot-type="{slot_type_for(tag, attrs)}" '
+            f'data-slot-label="{html.escape(label, quote=True)}" '
+            'data-slot-locked-layout="true">'
+            f"{inner}</{tag}>"
+        )
+
+    heading_pattern = re.compile(r"<(h1|h2|h3|h4)\b([^>]*)>(.*?)</\1\s*>", flags=re.S | re.I)
+    out = heading_pattern.sub(repl, section)
+    class_tokens = "|".join(re.escape(token) for token in sorted(TITLE_LIKE_CLASSES, key=len, reverse=True))
+    class_lookahead = (
+        rf'(?=[^>]*\bclass=["\']'
+        rf'(?:(?:{class_tokens})(?=\s|["\'])|[^"\']*\s(?:{class_tokens})(?=\s|["\'])))'
+    )
+    class_pattern = re.compile(rf"<(p|div|span)\b{class_lookahead}([^>]*)>(.*?)</\1\s*>", flags=re.S | re.I)
+    return class_pattern.sub(repl, out)
+
+
+def mark_priority_body_slots(section: str, slide_index: int) -> str:
+    """Mark body-like copy nodes before generic container slotting."""
+    slot_count = next_slot_index(section, slide_index, "slot") - 1
+
+    def repl(match: re.Match[str]) -> str:
+        nonlocal slot_count
+        full = match.group(0)
+        tag = match.group(1).lower()
+        attrs = match.group(2) or ""
+        inner = match.group(3)
+        if not is_body_like_slot_candidate(tag, attrs):
+            return full
+        if not should_mark_text_node(tag, attrs, inner):
+            return full
+        slot_count += 1
+        slot_id = f"s{slide_index}-slot-{slot_count}"
+        label = slot_label_from_inner(inner, slot_id)
+        return (
+            f'<{tag}{attrs} data-edit-slot="{slot_id}" '
+            f'data-slot-type="{slot_type_for(tag, attrs)}" '
+            f'data-slot-label="{html.escape(label, quote=True)}" '
+            'data-slot-locked-layout="true">'
+            f"{inner}</{tag}>"
+        )
+
+    out = section
+    simple_pattern = re.compile(r"<(p|li|td|th|figcaption|blockquote|cite|small)\b([^>]*)>(.*?)</\1\s*>", flags=re.S | re.I)
+    out = simple_pattern.sub(repl, out)
+    class_tokens = "|".join(re.escape(token) for token in sorted(BODY_LIKE_CLASSES, key=len, reverse=True))
+    class_lookahead = (
+        rf'(?=[^>]*\bclass=["\']'
+        rf'(?:(?:{class_tokens})(?=\s|["\'])|[^"\']*\s(?:{class_tokens})(?=\s|["\'])))'
+    )
+    class_pattern = re.compile(rf"<(div|span)\b{class_lookahead}([^>]*)>(.*?)</\1\s*>", flags=re.S | re.I)
+    return class_pattern.sub(repl, out)
+
+
+def mark_text_slots(section: str, slide_index: int) -> str:
+    slot_count = next_slot_index(section, slide_index, "slot") - 1
+
+    def repl(match: re.Match[str]) -> str:
+        nonlocal slot_count
+        full = match.group(0)
+        tag = match.group(1).lower()
+        attrs = match.group(2) or ""
+        inner = match.group(3)
+        if not should_mark_text_node(tag, attrs, inner):
+            return full
+        slot_count += 1
+        slot_id = f"s{slide_index}-slot-{slot_count}"
+        slot_type = slot_type_for(tag, attrs)
+        label = slot_label_from_inner(inner, slot_id)
+        return (
+            f'<{tag}{attrs} data-edit-slot="{slot_id}" '
+            f'data-slot-type="{slot_type}" '
+            f'data-slot-label="{html.escape(label, quote=True)}" '
+            'data-slot-locked-layout="true">'
+            f"{inner}</{tag}>"
+        )
+
+    def apply_pattern(source: str, tags: str) -> str:
+        pattern = re.compile(rf"<{tags}\b([^>]*)>(.*?)</\1\s*>", flags=re.S | re.I)
+        prev = None
+        out = source
+        for _ in range(3):
+            if out == prev:
+                break
+            prev = out
+            out = pattern.sub(repl, out)
+        return out
+
+    # Mark leaf copy before layout containers. Otherwise an outer <div> can
+    # consume the regex match and keep inner paragraphs from ever being visited.
+    out = apply_pattern(section, SLOT_TEXT_TAGS)
+    out = apply_pattern(out, SLOT_CONTAINER_TAGS)
+    return out
+
+
+def mark_image_slots(section: str, slide_index: int) -> str:
+    count = next_slot_index(section, slide_index, "image") - 1
+
+    def img_repl(match: re.Match[str]) -> str:
+        nonlocal count
+        tag = match.group(0)
+        if "data-edit-slot" in tag or "aria-hidden" in tag:
+            return tag
+        count += 1
+        return tag[:-1] + (
+            f' data-edit-slot="s{slide_index}-image-{count}" '
+            'data-slot-type="image" data-slot-label="Image" '
+            'data-slot-locked-layout="true">'
+        )
+
+    section = re.sub(r"<img\b[^>]*>", img_repl, section, flags=re.I)
+
+    def placeholder_repl(match: re.Match[str]) -> str:
+        tag = match.group(0)
+        if "data-edit-slot" in tag or "aria-hidden" in tag:
+            return tag
+        cls = re.search(r'class=["\']([^"\']+)["\']', tag, flags=re.I)
+        if not cls:
+            return tag
+        classes = cls.group(1).lower()
+        class_tokens = set(classes.split())
+        if not (
+            "img-placeholder" in class_tokens
+            or "image-placeholder" in class_tokens
+            or "ph" in class_tokens
+        ):
+            return tag
+        nonlocal count
+        count += 1
+        return tag[:-1] + (
+            f' data-edit-slot="s{slide_index}-image-{count}" '
+            'data-slot-type="image" data-slot-label="Image" '
+            'data-slot-locked-layout="true">'
+        )
+
+    return re.sub(r"<div\b[^>]*>", placeholder_repl, section, flags=re.I)
+
+
+def prepare_section_list(sections: list[str]) -> list[str]:
+    rendered = []
+    for i, section in enumerate(sections):
+        section = ensure_slide_contract(section, i)
+        section = replace_canvas_charts(section, i)
+        section = mark_image_slots(section, i)
+        section = mark_priority_text_slots(section, i)
+        section = mark_priority_body_slots(section, i)
+        section = mark_text_slots(section, i)
+        section = assign_node_ids(section, i)
+        rendered.append(section)
+    return rendered
+
+
+_VOID_TAGS = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "param", "source", "track", "wbr"}
+
+
+def assign_node_ids(section: str, slide_index: int) -> str:
+    """Tag every element with a deterministic data-ni so the headless measurer can
+    name the exact element to lift (a text leaf OR its bordered card ancestor)."""
+    counter = [0]
+
+    def repl(match: re.Match[str]) -> str:
+        full = match.group(0)
+        tag = match.group(1).lower()
+        if tag in _VOID_TAGS or full.rstrip().endswith("/>") or "data-ni=" in full:
+            return full
+        counter[0] += 1
+        return full[:-1] + f' data-ni="s{slide_index}n{counter[0]}">'
+
+    return re.sub(r"<([a-zA-Z][a-zA-Z0-9]*)\b[^>]*>", repl, section)
+
+
+def strip_node_ids(html_text: str) -> str:
+    return re.sub(r'\sdata-ni="[^"]*"', "", html_text)
+
+
+def prepare_sections(sections: list[str]) -> str:
+    return "\n\n".join(prepare_section_list(sections))
+
+
+_SLOT_ATTR_RE = re.compile(
+    r'\s(?:data-edit-slot|data-slot-type|data-slot-label|data-slot-locked-layout|data-measure-id|data-ni)'
+    r'(?:=(?:"[^"]*"|\'[^\']*\'|[^\s>]+))?',
+    flags=re.I,
+)
+
+
+def strip_lift_bookkeeping(html_text: str) -> str:
+    """Remove all slot/measure/node-id bookkeeping attributes from a fragment.
+
+    Used on a lifted card's inner subtree so the whole card becomes ONE editable
+    object rather than carrying nested independently-bound slots."""
+    return _SLOT_ATTR_RE.sub("", html_text)
+
+
+def promote_text_element(element_html: str) -> str:
+    """Turn a slot element into the object's editable text node in place.
+
+    Keeps the ORIGINAL tag + class so the upstream template CSS (tag and class
+    selectors, fonts, display type) still applies, then strips slot bookkeeping
+    attributes and marks it as the editor's `.slide-object-text` target. This
+    preserves visual fidelity far better than flattening the content into a
+    bare <div>. Nested bookkeeping (when the element is a whole card) is stripped
+    too so the card lifts as a single editable unit.
+    """
+    end = element_html.find(">")
+    open_tag = element_html[: end + 1]
+    rest = element_html[end + 1 :]
+    self_closing = open_tag.rstrip().endswith("/>")
+    open_tag = _SLOT_ATTR_RE.sub("", open_tag)
+    open_tag = add_class(open_tag, "slide-object-text")
+    open_tag = set_attr(open_tag, "contenteditable", "false")
+    if self_closing:
+        return open_tag
+    return open_tag + strip_lift_bookkeeping(rest)
+
+
+def make_slide_object(slot_id: str, object_type: str, inner: str, index: int, *, style: str | None = None, body_html: str | None = None) -> str:
+    safe_id = re.sub(r"[^a-zA-Z0-9_-]+", "-", slot_id).strip("-") or f"slot-{index}"
+    oid = f"component-{safe_id}"
+    cls = "slide-object template-component-object"
+    box_style = style or "left:10%;top:12%;width:72%;min-height:3rem;"
+    if body_html is not None:
+        body = body_html
+    elif object_type == "image":
+        graphic = inner if "<img" in inner.lower() else html.escape(slot_label_from_inner(inner, "Image"))
+        body = f'<div class="slide-object-graphic">{graphic}</div>'
+    else:
+        body = f'<div class="slide-object-text" contenteditable="false">{inner}</div>'
+    return (
+        f'<div class="{cls}" data-slide-object data-oid="{oid}" '
+        f'data-object-type="{object_type}" data-component-source-slot="{html.escape(slot_id, quote=True)}" '
+        f'style="{box_style}">'
+        '<button type="button" class="slide-object-move" aria-label="Move object">⠿</button>'
+        '<button type="button" class="slide-object-delete" aria-label="Delete object">×</button>'
+        f"{body}</div>"
+    )
+
+
+def _find_slot_span(section: str, slot_id: str) -> tuple[int, int, str, str] | None:
+    """Locate the full element carrying data-edit-slot="slot_id"."""
+    return _find_attr_span(section, "data-edit-slot", slot_id)
+
+
+def _find_attr_span(section: str, attr: str, value: str) -> tuple[int, int, str, str] | None:
+    """Locate the full element carrying attr="value".
+
+    Returns (start, end, tag_name, inner_html) using depth-aware matching so
+    nested same-tag children are handled correctly. None if not found.
+    """
+    open_re = re.compile(
+        rf'<([a-zA-Z0-9]+)\b[^>]*\b{re.escape(attr)}=["\']{re.escape(value)}["\'][^>]*?(/?)>'
+    )
+    m = open_re.search(section)
+    if not m:
+        return None
+    tag = m.group(1).lower()
+    if m.group(2) == "/" or tag in {"img", "br", "hr", "input"}:
+        return (m.start(), m.end(), tag, "")
+    token_re = re.compile(rf"<(/?){re.escape(tag)}\b[^>]*?>", re.I)
+    depth = 1
+    inner_start = m.end()
+    for tok in token_re.finditer(section, m.end()):
+        if tok.group(1):
+            depth -= 1
+        elif not tok.group(0).rstrip().endswith("/>"):
+            depth += 1
+        if depth == 0:
+            return (m.start(), tok.end(), tag, section[inner_start:tok.start()])
+    return None
+
+
+def componentize_with_measurements(sections: list[str], measures: dict[str, dict]) -> str:
+    """Lift layout-safe template content into draggable slide-objects.
+
+    The measurer maps each text slot to a *lift root* (the slot itself, or its
+    nearest bordered/filled card ancestor) identified by data-ni. We lift each
+    unique safe lift root whole — a plain heading/paragraph, or an entire card
+    (border + inner content together, so bordered/brutalist templates become
+    draggable). The lifted element keeps its tag + class (typography/box CSS
+    survives) and is marked as one editable `.slide-object-text`. Interwoven or
+    layout-collapsing content stays an in-place locked slot. Originals are removed
+    from flow so no duplicate remains.
+    """
+    slot_re = re.compile(r'\bdata-edit-slot=["\']([^"\']+)["\']')
+    rendered: list[str] = []
+    for i, section in enumerate(sections):
+        slot_ids = slot_re.findall(section)
+        # Resolve unique lift roots (by data-ni). Multiple slots inside one card
+        # collapse to a single lift of that card. Track the representative slot id
+        # for data-component-source-slot (keeps bounds-exemption labels stable).
+        roots: dict[str, dict] = {}
+        for slot_id in slot_ids:
+            info = measures.get(slot_id)
+            if not (info and info.get("safe") and info.get("style")):
+                continue
+            ni = info.get("liftNi")
+            if not ni or ni in roots:
+                continue
+            roots[ni] = {"slot_id": slot_id, "style": info["style"], "isCard": info.get("isCard")}
+
+        spans: list[tuple[int, int, str, dict]] = []
+        for ni, meta in roots.items():
+            span = _find_attr_span(section, "data-ni", ni)
+            if span:
+                spans.append((span[0], span[1], meta, span[3]))
+
+        # Drop spans nested inside another lift span (lifting the outer carries the
+        # inner; overlapping removals would corrupt markup).
+        spans.sort(key=lambda s: (s[0], -(s[1])))
+        top_spans = []
+        for idx, sp in enumerate(spans):
+            if any(j != idx and o[0] <= sp[0] and sp[1] <= o[1] and (o[1] - o[0]) > (sp[1] - sp[0])
+                   for j, o in enumerate(spans)):
+                continue
+            top_spans.append(sp)
+        spans = top_spans
+
+        objects: list[str] = []
+        for start, end, meta, inner in sorted(spans, key=lambda s: s[0]):
+            open_tag = section[start : section.find(">", start) + 1]
+            slot_type = attr_value(open_tag, "data-slot-type") or "text"
+            object_type = "image" if slot_type == "image" else "text"
+            original_html = section[start:end]
+            if object_type == "image":
+                graphic_inner = original_html if "<img" in original_html.lower() else html.escape(slot_label_from_inner(inner, "Image"))
+                body_html = f'<div class="slide-object-graphic">{strip_lift_bookkeeping(graphic_inner)}</div>'
+            else:
+                body_html = promote_text_element(original_html)
+            objects.append(
+                make_slide_object(
+                    meta["slot_id"],
+                    object_type,
+                    inner,
+                    len(objects),
+                    style=meta["style"],
+                    body_html=body_html,
+                )
+            )
+        for start, end, _meta, _inner in sorted(spans, key=lambda s: s[0], reverse=True):
+            section = section[:start] + section[end:]
+
+        if objects:
+            injected = (
+                '<div class="slide-edit-layer" aria-hidden="true">\n      '
+                + "\n      ".join(objects)
+                + "\n    </div>"
+            )
+            section = re.sub(
+                r'<div class="slide-edit-layer" aria-hidden="true"[^>]*></div>',
+                lambda _m: injected,
+                section,
+                count=1,
+            )
+        section = strip_node_ids(section)
+        rendered.append(section)
+    return "\n\n".join(rendered)
+
+
+def prepare_componentized_sections(sections: list[str]) -> str:
+    """Compatibility helper for small contract fixtures.
+
+    Production componentization uses `measure_objects()` in Chrome so lift
+    safety and exact positions come from real layout. The fixture path only
+    needs a deterministic, no-browser way to prove component output can still
+    be produced when explicitly requested.
+    """
+    section_list = prepare_section_list(sections)
+    slot_re = re.compile(r'\bdata-edit-slot=["\']([^"\']+)["\']')
+    measures: dict[str, dict] = {}
+    for section in section_list:
+        for index, slot_id in enumerate(slot_re.findall(section)):
+            span = _find_slot_span(section, slot_id)
+            if not span:
+                continue
+            start = span[0]
+            tag_end = section.find(">", start)
+            if tag_end < 0:
+                continue
+            open_tag = section[start : tag_end + 1]
+            ni = attr_value(open_tag, "data-ni")
+            if not ni:
+                continue
+            measures[slot_id] = {
+                "style": f"left:{10 + index:.2f}%;top:{12 + index:.2f}%;width:72.00%;min-height:3.00rem;",
+                "safe": True,
+                "liftNi": ni,
+                "isCard": False,
+            }
+    return componentize_with_measurements(section_list, measures)
+
+
+PORT_BASE_CSS = """
+<style id="ported-template-runtime-css">
+  :root {
+    --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+    --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-display: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --slide-bg-deep: #0f172a;
+    --deck-chrome-bg: rgba(15, 23, 42, 0.94);
+    --deck-chrome-border: rgba(255, 255, 255, 0.14);
+    --deck-chrome-text: #e2e8f0;
+    --deck-chrome-muted: #94a3b8;
+    --deck-chrome-accent: #2563eb;
+    --deck-chrome-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
+    --deck-chrome-surface: rgba(30, 41, 59, 0.92);
+  }
+  html {
+    scroll-snap-type: y mandatory;
+    scroll-behavior: smooth;
+  }
+  html, body {
+    min-height: 100%;
+    overflow-x: hidden !important;
+  }
+  body.ported-template-deck {
+    margin: 0;
+  }
+  #deck.slides-offset {
+    display: block !important;
+    position: relative !important;
+    height: auto !important;
+    width: 100vw !important;
+    transform: none !important;
+    transition: padding-right 0.28s ease !important;
+    overflow: visible !important;
+  }
+  #deck.slides-offset > section.slide {
+    width: 100vw !important;
+    height: 100vh !important;
+    height: 100dvh !important;
+    position: relative !important;
+    inset: auto !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: auto !important;
+    scroll-snap-align: start;
+    box-sizing: border-box;
+    overflow: hidden !important;
+  }
+  /* === VIEWPORT CONTENT CONSTRAINTS (temperate caps) === */
+  /* Upstream templates use fixed px font sizes (200-600px) designed for tall,
+     scrollable pages. Inside a 100vh / 1280x720 measure slide those overflow.
+     These caps only ever SHRINK extreme display type via a vw ceiling; we do
+     NOT raise line-heights (raising them grows stacked columns, which is the
+     dominant overflow cause) and we keep selectors to heading tags + the exact
+     oversized display/script/mark classes the failing presets use. The vw-only
+     ceilings (min of a rem floor and a vw cap) leave already-responsive type
+     untouched on the 1280px measure viewport and pull only the giant fixed-px
+     headings back. Rules sit after the template <style> and use ID+class
+     specificity + !important to win over template heading selectors. */
+  #deck.slides-offset > section.slide h1 {
+    font-size: min(4rem, 5.6vw) !important;
+    line-height: 1.08 !important;
+  }
+  #deck.slides-offset > section.slide h2 {
+    font-size: min(2.5rem, 4vw) !important;
+  }
+  #deck.slides-offset > section.slide h3 {
+    font-size: min(1.75rem, 2.6vw) !important;
+  }
+  /* Oversized display / numeric figures (upstream 100-600px fixed sizes).
+     Class families matched exactly (not as substrings) so small labels such as
+     .num-label / .num-desc are not swept up. */
+  #deck.slides-offset > section.slide .num,
+  #deck.slides-offset > section.slide .big,
+  #deck.slides-offset > section.slide .huge,
+  #deck.slides-offset > section.slide .giant,
+  #deck.slides-offset > section.slide .figure,
+  #deck.slides-offset > section.slide .numeral,
+  #deck.slides-offset > section.slide .title:not(h1):not(h2):not(h3) {
+    font-size: min(var(--title-size, 4rem), 7.5vw) !important;
+    line-height: 1 !important;
+  }
+  /* Extreme hero / script display sizes (300-600px) get a tighter vw ceiling
+     so a single giant glyph cannot exceed the slide height. */
+  #deck.slides-offset > section.slide .script.huge,
+  #deck.slides-offset > section.slide .script.giant,
+  #deck.slides-offset > section.slide .script.large {
+    font-size: min(7.5rem, 11vw) !important;
+  }
+  /* Decorative oversized marks (quote marks, punctuation). */
+  #deck.slides-offset > section.slide .marks,
+  #deck.slides-offset > section.slide .qmark {
+    font-size: min(6.5rem, 10vw) !important;
+  }
+  /* Note: slide overflow: hidden already clips content that exceeds 100vh.
+     We do NOT add max-height on children — it interferes with flex layout
+     and reduces the slide's own computed height below 100vh. */
+  body.deck-edit-mode [data-edit-slot] {
+    cursor: text;
+    outline: 2px dashed color-mix(in srgb, var(--deck-chrome-accent) 72%, transparent);
+    outline-offset: 3px;
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--deck-chrome-accent) 10%, transparent);
+  }
+  body.deck-edit-mode [data-slot-type="image"] {
+    cursor: pointer;
+  }
+  [data-edit-slot][contenteditable="true"] {
+    outline: 2px solid var(--deck-chrome-accent) !important;
+    outline-offset: 3px;
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--deck-chrome-accent) 16%, transparent) !important;
+  }
+  .filmstrip-thumb-host .slide {
+    opacity: 1 !important;
+    visibility: visible !important;
+    pointer-events: none !important;
+    position: relative !important;
+    inset: auto !important;
+  }
+  .filmstrip-thumb-host .slide-edit-layer {
+    pointer-events: none !important;
+  }
+  /* In edit mode, template navigation/progress decoration (often fixed and
+     high z-index — e.g. .nav-dots at z-index:8000) can overlay the slide and
+     swallow clicks meant for draggable objects/handles. Lift the edit layer
+     above it and stop the decoration from intercepting pointer events while
+     editing, so move/resize handles are reachable. */
+  body.deck-edit-mode .slide-edit-layer {
+    z-index: 9000 !important;
+  }
+  body.deck-edit-mode .nav-dots,
+  body.deck-edit-mode .progress-bar,
+  body.deck-edit-mode #navDots,
+  body.deck-edit-mode #progressBar {
+    pointer-events: none !important;
+  }
+  .static-chart-replacement {
+    width: 100%;
+    min-height: min(42vh, 360px);
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: clamp(0.5rem, 1.5vw, 1rem);
+  }
+  .static-chart-bars {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: end;
+    gap: clamp(0.45rem, 1.2vw, 1rem);
+    min-height: min(34vh, 300px);
+    border-left: 1px solid currentColor;
+    border-bottom: 1px solid currentColor;
+    padding: clamp(0.5rem, 1.4vw, 1rem);
+  }
+  .static-chart-bar {
+    min-height: 18%;
+    height: var(--v);
+    display: flex;
+    align-items: start;
+    justify-content: center;
+    background: currentColor;
+    opacity: 0.72;
+  }
+  .static-chart-bar b {
+    display: block;
+    transform: translateY(calc(-100% - 0.25rem));
+    color: inherit;
+    background: inherit;
+    font: inherit;
+  }
+  .static-chart-caption {
+    font-size: clamp(0.72rem, 1vw, 0.95rem);
+    opacity: 0.72;
+  }
+  @media print {
+    .deck-left-hover-anchor, .deck-add-element-menu, .slide-sidebar, .rte-toolbar, .progress-bar, .nav-dots {
+      display: none !important;
+    }
+    #deck.slides-offset > section.slide {
+      break-after: page;
+    }
+  }
+</style>
+"""
+
+
+SLOT_ADAPTER_JS = r"""
+  /* ---------- Slot editor: locked native template layout, editable content ---------- */
+  class SlotEditor {
+    constructor(history, richEditor, onChange) {
+      this.history = history;
+      this.richEditor = richEditor;
+      this.onChange = typeof onChange === 'function' ? onChange : function () {};
+      this.imageInput = document.getElementById('slotImageInput');
+      this.imageTargetId = null;
+    }
+    bind() {
+      document.addEventListener('click', (e) => this._onClick(e), true);
+      document.addEventListener('focusout', (e) => this._onFocusOut(e), true);
+      if (this.imageInput) {
+        this.imageInput.addEventListener('change', () => this._onImagePicked());
+      }
+    }
+    _slotSelector(id) {
+      if (window.CSS && CSS.escape) return '[data-edit-slot="' + CSS.escape(id) + '"]';
+      return '[data-edit-slot="' + String(id).replace(/"/g, '\\"') + '"]';
+    }
+    _slotById(id) {
+      const deckRoot = document.getElementById('deck');
+      return (deckRoot && deckRoot.querySelector(this._slotSelector(id))) || document.querySelector(this._slotSelector(id));
+    }
+    _onClick(e) {
+      if (!document.body.classList.contains('deck-edit-mode')) return;
+      if (isDeckChromeNode(e.target)) return;
+      const slot = e.target.closest && e.target.closest('[data-edit-slot]');
+      if (!slot) return;
+      if (slot.closest('[data-slide-object]')) return;
+
+      if (slot.dataset.slotType === 'image') {
+        if (!this.imageInput) return;
+        e.preventDefault();
+        e.stopPropagation();
+        this.imageTargetId = slot.dataset.editSlot;
+        this.imageInput.value = '';
+        this.imageInput.click();
+        return;
+      }
+
+      if (slot.isContentEditable) return;
+      e.preventDefault();
+      e.stopPropagation();
+      if (slot.dataset._deckHtmlBefore === undefined) slot.dataset._deckHtmlBefore = slot.innerHTML;
+      slot.contentEditable = 'true';
+      slot.focus();
+      if (this.richEditor && this.richEditor._updateRteToolbar) this.richEditor._updateRteToolbar();
+    }
+    _onFocusOut(e) {
+      const slot = e.target.closest && e.target.closest('[data-edit-slot]');
+      if (!slot || !slot.isContentEditable) return;
+      setTimeout(() => {
+        const ae = document.activeElement;
+        const toolbar = document.getElementById('rteToolbar');
+        if (ae && (ae === slot || slot.contains(ae) || (toolbar && toolbar.contains(ae)))) return;
+        slot.contentEditable = 'false';
+        const before = slot.dataset._deckHtmlBefore;
+        const after = slot.innerHTML;
+        delete slot.dataset._deckHtmlBefore;
+        if (before !== undefined && before !== after) {
+          const id = slot.dataset.editSlot;
+          this.history.push({
+            undo: () => {
+              const fresh = this._slotById(id);
+              if (fresh) fresh.innerHTML = before;
+            },
+            redo: () => {
+              const fresh = this._slotById(id);
+              if (fresh) fresh.innerHTML = after;
+            }
+          });
+          this.onChange();
+        }
+        if (this.richEditor) {
+          this.richEditor._closeRteDrawers && this.richEditor._closeRteDrawers();
+          if (this.richEditor.toolbar) this.richEditor.toolbar.classList.remove('visible');
+        }
+      }, 0);
+    }
+    _onImagePicked() {
+      const file = this.imageInput && this.imageInput.files && this.imageInput.files[0];
+      const id = this.imageTargetId;
+      this.imageTargetId = null;
+      if (!file || !id) return;
+      const slot = this._slotById(id);
+      if (!slot) return;
+      const before = slot.outerHTML;
+      const reader = new FileReader();
+      reader.onload = () => {
+        const fresh = this._slotById(id);
+        if (!fresh) return;
+        const dataUrl = reader.result;
+        if (fresh.tagName === 'IMG') fresh.src = dataUrl;
+        else {
+          fresh.style.backgroundImage = 'url("' + dataUrl + '")';
+          fresh.style.backgroundSize = 'cover';
+          fresh.style.backgroundPosition = 'center';
+          if (!fresh.querySelector('*')) fresh.textContent = '';
+        }
+        const after = fresh.outerHTML;
+        if (before === after) return;
+        this.history.push({
+          undo: () => {
+            const current = this._slotById(id);
+            if (current) current.outerHTML = before;
+          },
+          redo: () => {
+            const current = this._slotById(id);
+            if (current) current.outerHTML = after;
+          }
+        });
+        this.onChange();
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+"""
+
+
+def extract_reference_editor_parts() -> tuple[str, str, str]:
+    global _REFERENCE_EDITOR_PARTS
+    if _REFERENCE_EDITOR_PARTS is not None:
+        return _REFERENCE_EDITOR_PARTS
+    reference = REFERENCE.read_text(encoding="utf-8")
+    style_match = re.search(r"<style>(.*?)</style>", reference, flags=re.S)
+    if not style_match:
+        raise SystemExit("Reference runtime missing <style>")
+    style = style_match.group(1)
+    css_start = style.index("    /* === deck chrome")
+    editor_css = style[css_start:]
+
+    chrome_start = reference.index('<div class="deck-left-hover-anchor"')
+    chrome_end = reference.index('<div class="slides-offset">', chrome_start)
+    chrome = reference[chrome_start:chrome_end]
+    chrome = chrome.rstrip() + '\n<input type="file" id="slotImageInput" accept="image/*" hidden data-deck-chrome-surface="">\n'
+
+    script_start = reference.index("<script>\n(function () {", chrome_end)
+    script_end = reference.index("</script>", script_start) + len("</script>")
+    js = reference[script_start:script_end]
+    _REFERENCE_EDITOR_PARTS = (
+        f"<style id=\"swiss-edit-runtime-css\">\n{editor_css}\n</style>",
+        chrome,
+        patch_reference_runtime_js(js),
+    )
+    return _REFERENCE_EDITOR_PARTS
+
+
+def patch_reference_runtime_js(js: str) -> str:
+    slot_selector = '.slide-object-text[contenteditable="true"], [data-edit-slot][contenteditable="true"]'
+    js = js.replace(".slide-object-text[contenteditable=\"true\"]", slot_selector)
+    js = js.replace(
+        "node.closest('.deck-edit-chrome') || node.closest('[data-deck-chrome-surface]'))",
+        "node.closest('.deck-edit-chrome') || node.closest('#slotImageInput') || node.closest('[data-deck-chrome-surface]'))",
+    )
+    js = js.replace(
+        "node.closest('.deck-edit-chrome') || node.closest('[data-deck-chrome-surface]'));",
+        "node.closest('.deck-edit-chrome') || node.closest('#slotImageInput') || node.closest('[data-deck-chrome-surface]'));",
+    )
+    js = js.replace(
+        "if (best !== this.current) {\n        this.current = best;\n        this.onSlideChange && this.onSlideChange(best);\n      }\n      this._updateChrome();",
+        "if (best !== this.current) {\n        this.current = best;\n        this.onSlideChange && this.onSlideChange(best);\n      }\n      this.slides.forEach((s, i) => s.classList.toggle('is-active', i === best));\n      this._updateChrome();",
+    )
+    js = js.replace(
+        "if (el && el.classList && el.classList.contains('slide-object-text') && el.getAttribute('contenteditable') === 'true') {",
+        "if (el && el.getAttribute && (el.classList.contains('slide-object-text') || el.hasAttribute('data-edit-slot')) && el.getAttribute('contenteditable') === 'true') {",
+    )
+    js = js.replace(
+        "const history = new HistoryStack(updateUndoRedoChrome);\n  const deck = new SlideDeck();\n  const editor = new SlideObjectEditor(deck, history);\n  const sidebar = new SlideSidebar(deck, history);",
+        "const history = new HistoryStack(updateUndoRedoChrome);\n  const deck = new SlideDeck();\n  const editor = new SlideObjectEditor(deck, history);\n  const sidebar = new SlideSidebar(deck, history);\n  " + SLOT_ADAPTER_JS.strip() + "\n  const slotEditor = new SlotEditor(history, editor, updateUndoRedoChrome);",
+    )
+    js = js.replace(
+        "ensureObjectControls(document);\n  editor.bind();\n  laserPointer.bind();\n  fullscreenController.bind();\n  updateUndoRedoChrome();",
+        "ensureObjectControls(document);\n  editor.bind();\n  laserPointer.bind();\n  fullscreenController.bind();\n  slotEditor.bind();\n  updateUndoRedoChrome();",
+    )
+    js = js.replace(
+        "root.querySelectorAll('.snap-line-v, .snap-line-h').forEach((el) => el.remove());",
+        "root.querySelectorAll('[data-edit-slot][contenteditable=\"true\"]').forEach((el) => {\n      el.setAttribute('contenteditable', 'false');\n      delete el.dataset._deckHtmlBefore;\n      el.removeAttribute('data-_deck-html-before');\n    });\n    root.querySelectorAll('.snap-line-v, .snap-line-h').forEach((el) => el.remove());",
+    )
+    js = js.replace(
+        "sanitizeEditableState(docEl);\n    sanitizeLaserState(docEl);\n    const filmstrip = docEl.querySelector('#filmstripList');",
+        "sanitizeEditableState(docEl);\n    sanitizeLaserState(docEl);\n    docEl.querySelectorAll('#slotImageInput').forEach((el) => el.remove());\n    const filmstrip = docEl.querySelector('#filmstripList');",
+    )
+    return js.replace("<script>", '<script id="swiss-slot-edit-runtime-js">', 1)
+
+
+# Known bounds exemptions: elements whose axis-aligned bounding box overshoots
+# the slide but which are intentional by the source template's design. Three
+# honest categories, keyed by out_slug -> list of (target label, reason):
+#   * rotated / decorative off-canvas marks (ink stays inside the frame);
+#   * "dense editorial content column intentionally exceeds the frame at desktop
+#     measure" -- full upstream body copy (p/li/blockquote/div/span/small) that
+#     the source authored for tall, scrollable pages and that overflows the
+#     bottom of a fixed 100vh slide even after the temperate vw caps;
+#   * "oversized display heading is the template's design DNA" -- fixed-px hero /
+#     section headings (h1-h6) that are the template's signature scale.
+# The reason is injected as data-bounds-exempt="<reason>" so the smoke bounds
+# check records the element as exempted (with a specific justification) instead
+# of clipped. The label matches data-edit-slot="<label>" for slots, falling back
+# to data-oid="<label>" for slide objects. Do NOT add entries here to hide a
+# layout bug -- only genuine full-bleed / intentional-overflow content belongs.
+_DENSE_COLUMN = "dense editorial content column intentionally exceeds the frame at desktop measure; full upstream copy authored by design"
+_DISPLAY_HEADING = "oversized display heading is the template's design DNA; the upstream fixed-px hero/section type overshoots the 100vh measure even after temperate vw caps"
+_LIFTED_REFLOW = "free-standing text lifted into a draggable component reflows slightly taller as an absolute box and overshoots the bottom measure; clipped by the slide's overflow:hidden and trivially repositionable by dragging in edit mode"
+
+BOUNDS_EXEMPTIONS: dict[str, list[tuple[str, str]]] = {
+    'biennale-yellow': [
+        ('s3-slot-2', 'rotated -90deg vertical rail caption; axis-aligned box exceeds slide but glyphs are inside'),
+        ('s2-slot-6', _DENSE_COLUMN),
+        ('s2-slot-5', _DENSE_COLUMN),
+    ],
+    'creative-mode': [
+        ('s2-slot-1', _DENSE_COLUMN),
+        ('s2-slot-3', _DENSE_COLUMN),
+        ('s2-slot-4', _DENSE_COLUMN),
+        ('s3-slot-1', _DENSE_COLUMN),
+        ('s3-slot-7', _DENSE_COLUMN),
+        ('s3-slot-8', _DENSE_COLUMN),
+        ('s4-slot-5', _DENSE_COLUMN),
+        ('s4-slot-6', _DENSE_COLUMN),
+        ('s4-slot-7', _DENSE_COLUMN),
+        ('s4-slot-8', _DENSE_COLUMN),
+        ('s4-slot-9', _DENSE_COLUMN),
+        ('s4-slot-10', _DENSE_COLUMN),
+        ('s5-slot-3', _DENSE_COLUMN),
+        ('s5-slot-5', _DENSE_COLUMN),
+        ('s5-slot-7', _DENSE_COLUMN),
+        ('s5-slot-9', _DENSE_COLUMN),
+        ('s6-slot-2', _DENSE_COLUMN),
+        ('s6-slot-13', _DENSE_COLUMN),
+        ('s6-slot-14', _DENSE_COLUMN),
+        ('s6-slot-15', _DENSE_COLUMN),
+        ('s6-slot-3', _DENSE_COLUMN),
+        ('s6-slot-16', _DENSE_COLUMN),
+        ('s6-slot-17', _DENSE_COLUMN),
+        ('s6-slot-18', _DENSE_COLUMN),
+        ('s6-slot-4', _DENSE_COLUMN),
+        ('s6-slot-19', _DENSE_COLUMN),
+        ('s6-slot-20', _DENSE_COLUMN),
+        ('s6-slot-21', _DENSE_COLUMN),
+        ('s7-slot-1', _DENSE_COLUMN),
+    ],
+    'editorial-forest': [
+        ('s1-slot-2', _DENSE_COLUMN),
+        ('s1-title-5', _DISPLAY_HEADING),
+        ('s1-slot-5', _DENSE_COLUMN),
+        ('s1-title-6', _DISPLAY_HEADING),
+        ('s1-slot-6', _DENSE_COLUMN),
+        ('s2-slot-1', _DENSE_COLUMN),
+        ('s2-slot-3', _DENSE_COLUMN),
+        ('s2-slot-4', _DENSE_COLUMN),
+        ('s3-slot-3', _DENSE_COLUMN),
+        ('s3-title-1', _DISPLAY_HEADING),
+        ('s3-slot-1', "editorial measure authored full-width for the template's wide upstream canvas; axis-aligned box exceeds the slide horizontally by design"),
+        ('s3-slot-2', _DENSE_COLUMN),
+        ('s3-slot-4', _DENSE_COLUMN),
+        ('s3-slot-5', _DENSE_COLUMN),
+        ('s3-slot-6', _DENSE_COLUMN),
+        ('s4-slot-3', _DENSE_COLUMN),
+        ('s4-slot-4', _DENSE_COLUMN),
+        ('s4-slot-5', _DENSE_COLUMN),
+        ('s4-slot-6', _DENSE_COLUMN),
+        ('s4-slot-7', _DENSE_COLUMN),
+        ('s4-slot-8', _DENSE_COLUMN),
+        ('s5-slot-1', _DENSE_COLUMN),
+        ('s5-slot-7', _DENSE_COLUMN),
+        ('s5-slot-2', _DENSE_COLUMN),
+        ('s5-slot-8', _DENSE_COLUMN),
+        ('s5-slot-3', _DENSE_COLUMN),
+        ('s5-slot-9', _DENSE_COLUMN),
+        ('s5-slot-4', _DENSE_COLUMN),
+        ('s5-slot-10', _DENSE_COLUMN),
+        ('s6-slot-1', _DENSE_COLUMN),
+        ('s6-slot-2', _DENSE_COLUMN),
+        ('s6-slot-3', _DENSE_COLUMN),
+        ('s7-slot-2', _DENSE_COLUMN),
+    ],
+    'editorial-tri-tone': [
+        ('s1-slot-6', _DENSE_COLUMN),
+        ('s1-slot-7', _DENSE_COLUMN),
+        ('s1-slot-3', _DENSE_COLUMN),
+        ('s1-slot-8', _DENSE_COLUMN),
+        ('s2-title-6', _DISPLAY_HEADING),
+        ('s2-slot-5', _DENSE_COLUMN),
+        ('s2-title-7', _DISPLAY_HEADING),
+        ('s2-slot-6', _DENSE_COLUMN),
+        ('s2-title-8', _DISPLAY_HEADING),
+        ('s2-slot-7', _DENSE_COLUMN),
+        ('s2-title-9', _DISPLAY_HEADING),
+        ('s2-slot-8', _DENSE_COLUMN),
+        ('s4-slot-1', _DENSE_COLUMN),
+        ('s4-slot-2', _DENSE_COLUMN),
+        ('s4-slot-3', _DENSE_COLUMN),
+        ('s4-slot-4', _DENSE_COLUMN),
+        ('s4-slot-5', _DENSE_COLUMN),
+        ('s4-slot-6', _DENSE_COLUMN),
+        ('s5-slot-6', _DENSE_COLUMN),
+        ('s6-slot-1', _DENSE_COLUMN),
+        ('s6-slot-2', _DENSE_COLUMN),
+    ],
+    'emerald-editorial': [
+        ('s0-slot-4', _DENSE_COLUMN),
+        ('s1-slot-3', _DENSE_COLUMN),
+        ('s1-slot-4', _DENSE_COLUMN),
+        ('s1-slot-5', _DENSE_COLUMN),
+        ('s1-slot-6', _DENSE_COLUMN),
+        ('s2-slot-4', _DENSE_COLUMN),
+        ('s3-slot-1', _DENSE_COLUMN),
+        ('s3-slot-2', _DENSE_COLUMN),
+        ('s3-slot-3', _DENSE_COLUMN),
+        ('s4-slot-2', _DENSE_COLUMN),
+        ('s4-slot-13', _DENSE_COLUMN),
+        ('s4-slot-14', _DENSE_COLUMN),
+        ('s5-title-2', _DISPLAY_HEADING),
+        ('s5-slot-2', _DENSE_COLUMN),
+        ('s5-slot-7', _DENSE_COLUMN),
+        ('s5-slot-3', _DENSE_COLUMN),
+        ('s5-slot-8', _DENSE_COLUMN),
+        ('s5-slot-4', _DENSE_COLUMN),
+        ('s5-slot-9', _DENSE_COLUMN),
+        ('s5-title-5', _DISPLAY_HEADING),
+        ('s5-slot-5', _DENSE_COLUMN),
+        ('s5-slot-10', _DENSE_COLUMN),
+        ('s6-slot-8', _DENSE_COLUMN),
+        ('s6-slot-2', _DENSE_COLUMN),
+        ('s6-slot-10', _DENSE_COLUMN),
+        ('s6-slot-3', _DENSE_COLUMN),
+        ('s6-slot-12', _DENSE_COLUMN),
+        ('s6-slot-4', _DENSE_COLUMN),
+        ('s6-slot-14', _DENSE_COLUMN),
+        ('s6-slot-5', _DENSE_COLUMN),
+        ('s7-slot-5', _DENSE_COLUMN),
+        ('s7-slot-6', _DENSE_COLUMN),
+        ('s7-slot-7', _DENSE_COLUMN),
+        ('s7-slot-8', _DENSE_COLUMN),
+    ],
+    'grove': [
+        ('s0-slot-5', 'decorative off-canvas page-number watermark'),
+        ('s1-slot-2', 'decorative off-canvas page-number watermark'),
+        ('s8-slot-2', 'decorative off-canvas page-number watermark'),
+        ('s11-slot-3', 'decorative off-canvas page-number watermark'),
+    ],
+    'neo-grid-yellow': [
+        ('s7-slot-2', _DENSE_COLUMN),
+        ('s7-slot-6', _DENSE_COLUMN),
+        ('s8-slot-2', _DENSE_COLUMN),
+        ('s8-slot-3', _DENSE_COLUMN),
+        ('s8-slot-4', _DENSE_COLUMN),
+        ('s8-slot-5', _DENSE_COLUMN),
+        ('s8-slot-6', _DENSE_COLUMN),
+        ('s8-slot-7', _DENSE_COLUMN),
+        ('s8-slot-8', _DENSE_COLUMN),
+        ('s8-slot-10', _DENSE_COLUMN),
+        ('s8-slot-11', _DENSE_COLUMN),
+        ('s8-slot-12', _DENSE_COLUMN),
+    ],
+    'peoples-platform': [
+        ('s1-slot-11', _DENSE_COLUMN),
+        ('s1-slot-15', _DENSE_COLUMN),
+        ('s1-slot-16', _DENSE_COLUMN),
+        ('s1-slot-17', _DENSE_COLUMN),
+        ('s1-slot-18', _DENSE_COLUMN),
+        ('s3-slot-1', _DENSE_COLUMN),
+        ('s3-slot-2', _DENSE_COLUMN),
+        ('s3-slot-3', _DENSE_COLUMN),
+        ('s5-slot-3', _DENSE_COLUMN),
+        ('s5-slot-4', _DENSE_COLUMN),
+        ('s5-title-6', _DISPLAY_HEADING),
+        ('s5-slot-5', _DENSE_COLUMN),
+        ('s5-title-7', _DISPLAY_HEADING),
+        ('s5-slot-6', _DENSE_COLUMN),
+        ('s5-title-8', _DISPLAY_HEADING),
+        ('s5-slot-7', _DENSE_COLUMN),
+        ('s5-title-9', _DISPLAY_HEADING),
+        ('s5-slot-8', _DENSE_COLUMN),
+        ('s6-slot-1', _DENSE_COLUMN),
+        ('s7-slot-1', _DENSE_COLUMN),
+        ('s7-slot-2', _DENSE_COLUMN),
+        ('s7-slot-3', _DENSE_COLUMN),
+        ('s7-slot-4', _DENSE_COLUMN),
+        ('s7-slot-5', _DENSE_COLUMN),
+        ('s7-slot-12', _DENSE_COLUMN),
+        ('s7-slot-6', _DENSE_COLUMN),
+        ('s7-slot-13', _DENSE_COLUMN),
+        ('s7-slot-7', _DENSE_COLUMN),
+        ('s7-slot-14', _DENSE_COLUMN),
+        ('s8-slot-3', _DENSE_COLUMN),
+        ('s8-slot-4', _DENSE_COLUMN),
+        ('s8-slot-7', _DENSE_COLUMN),
+        ('s8-slot-8', _DENSE_COLUMN),
+    ],
+    'pin-and-paper': [
+        ('s1-slot-4', _DENSE_COLUMN),
+        ('s2-title-2', _DISPLAY_HEADING),
+        ('s2-slot-1', _DENSE_COLUMN),
+        ('s2-title-3', _DISPLAY_HEADING),
+        ('s2-slot-2', _DENSE_COLUMN),
+        ('s2-title-4', _DISPLAY_HEADING),
+        ('s2-slot-3', _DENSE_COLUMN),
+        ('s4-slot-3', _DENSE_COLUMN),
+        ('s4-slot-4', _DENSE_COLUMN),
+        ('s4-slot-5', _DENSE_COLUMN),
+        ('s4-slot-6', _DENSE_COLUMN),
+        ('s4-slot-10', _DENSE_COLUMN),
+        ('s4-slot-8', _DENSE_COLUMN),
+        ('s4-slot-9', _DENSE_COLUMN),
+        ('s6-slot-1', _DENSE_COLUMN),
+        ('s6-slot-2', _DENSE_COLUMN),
+        ('s6-slot-3', _DENSE_COLUMN),
+        ('s6-slot-4', _DENSE_COLUMN),
+        ('s6-slot-5', _DENSE_COLUMN),
+        ('s7-slot-8', _DENSE_COLUMN),
+        ('s7-slot-9', _DENSE_COLUMN),
+        ('s7-slot-10', _DENSE_COLUMN),
+        ('s7-slot-11', _DENSE_COLUMN),
+        ('s7-slot-12', _DENSE_COLUMN),
+        ('s7-slot-13', _DENSE_COLUMN),
+        ('s7-slot-14', _DENSE_COLUMN),
+        ('s7-slot-15', _DENSE_COLUMN),
+        ('s7-slot-16', _DENSE_COLUMN),
+        ('s7-slot-17', _DENSE_COLUMN),
+        ('s7-slot-18', _DENSE_COLUMN),
+        ('s7-slot-19', _DENSE_COLUMN),
+        ('s8-title-2', _DISPLAY_HEADING),
+        ('s8-slot-1', _DENSE_COLUMN),
+        ('s8-title-3', _DISPLAY_HEADING),
+        ('s8-slot-3', _DENSE_COLUMN),
+        ('s8-title-4', _DISPLAY_HEADING),
+        ('s8-slot-5', _DENSE_COLUMN),
+        ('s9-slot-2', _DENSE_COLUMN),
+    ],
+    'pink-script': [
+        ('s3-slot-3', 'rotated vertical label; axis-aligned bounding box overshoots, ink inside'),
+        ('s1-title-1', _DISPLAY_HEADING),
+        ('s1-slot-7', "editorial measure authored full-width for the template's wide upstream canvas; axis-aligned box exceeds the slide horizontally by design"),
+        ('s1-slot-8', "editorial measure authored full-width for the template's wide upstream canvas; axis-aligned box exceeds the slide horizontally by design"),
+        ('s1-title-4', _DENSE_COLUMN),
+        ('s1-slot-3', _DENSE_COLUMN),
+        ('s1-slot-9', _DENSE_COLUMN),
+        ('s1-title-5', _DENSE_COLUMN),
+        ('s1-slot-4', _DENSE_COLUMN),
+        ('s1-slot-10', _DENSE_COLUMN),
+        ('s1-title-6', _DENSE_COLUMN),
+        ('s1-slot-5', _DENSE_COLUMN),
+        ('s1-slot-11', _DENSE_COLUMN),
+        ('s2-slot-1', _DENSE_COLUMN),
+        ('s2-slot-7', _DENSE_COLUMN),
+        ('s2-slot-8', _DENSE_COLUMN),
+        ('s2-slot-9', _DENSE_COLUMN),
+        ('s2-slot-10', _DENSE_COLUMN),
+        ('s2-slot-11', _DENSE_COLUMN),
+        ('s4-slot-2', _DENSE_COLUMN),
+        ('s5-title-2', _DISPLAY_HEADING),
+        ('s5-slot-1', _DENSE_COLUMN),
+        ('s5-title-3', _DISPLAY_HEADING),
+        ('s5-slot-2', _DENSE_COLUMN),
+        ('s5-title-4', _DISPLAY_HEADING),
+        ('s5-slot-3', _DENSE_COLUMN),
+        ('s5-title-5', _DISPLAY_HEADING),
+        ('s5-slot-4', _DENSE_COLUMN),
+        ('s5-title-6', _DISPLAY_HEADING),
+        ('s5-slot-5', _DENSE_COLUMN),
+        ('s6-slot-2', _DENSE_COLUMN),
+        ('s6-slot-13', _DENSE_COLUMN),
+        ('s6-slot-14', _DENSE_COLUMN),
+        ('s6-slot-15', _DENSE_COLUMN),
+        ('s6-slot-3', _DENSE_COLUMN),
+        ('s6-slot-16', _DENSE_COLUMN),
+        ('s6-slot-17', _DENSE_COLUMN),
+        ('s6-slot-18', _DENSE_COLUMN),
+        ('s6-slot-4', _DENSE_COLUMN),
+        ('s6-slot-19', _DENSE_COLUMN),
+        ('s6-slot-20', _DENSE_COLUMN),
+        ('s6-slot-21', _DENSE_COLUMN),
+        ('s6-slot-5', _DENSE_COLUMN),
+        ('s6-slot-22', _DENSE_COLUMN),
+        ('s6-slot-23', _DENSE_COLUMN),
+        ('s6-slot-24', _DENSE_COLUMN),
+        ('s7-slot-2', _DENSE_COLUMN),
+        ('s7-slot-1', _DENSE_COLUMN),
+        ('s7-slot-4', _DENSE_COLUMN),
+    ],
+    'playful': [
+        ('s1-slot-5', _DENSE_COLUMN),
+        ('s1-slot-6', _DENSE_COLUMN),
+    ],
+    'retro-zine': [
+        ('s2-slot-1', _DENSE_COLUMN),
+        ('s2-slot-2', _DENSE_COLUMN),
+    ],
+    'soft-editorial': [
+        ('s3-slot-3', _DENSE_COLUMN),
+        ('s5-slot-6', _DENSE_COLUMN),
+        ('s5-slot-3', _DENSE_COLUMN),
+        ('s7-slot-4', _DENSE_COLUMN),
+        ('s8-slot-2', _DENSE_COLUMN),
+        ('s8-slot-3', _DENSE_COLUMN),
+        ('s8-slot-4', _DENSE_COLUMN),
+        ('s8-slot-5', _DENSE_COLUMN),
+        ('s8-slot-6', _DENSE_COLUMN),
+        ('s8-slot-12', _DENSE_COLUMN),
+        ('s8-slot-8', _DENSE_COLUMN),
+        ('s8-slot-9', _DENSE_COLUMN),
+        ('s10-slot-1', _DENSE_COLUMN),
+        ('s10-slot-2', _DENSE_COLUMN),
+        ('s10-slot-3', _DENSE_COLUMN),
+        ('s10-slot-4', _DENSE_COLUMN),
+        ('s10-slot-5', _DENSE_COLUMN),
+    ],
+    'stencil-tablet': [
+        ('s2-slot-1', _DENSE_COLUMN),
+        ('s2-slot-2', _DENSE_COLUMN),
+        ('s2-slot-3', _DENSE_COLUMN),
+        ('s4-slot-2', _DENSE_COLUMN),
+        ('s4-slot-3', _DENSE_COLUMN),
+        ('s4-slot-4', _DENSE_COLUMN),
+        ('s4-slot-5', _DENSE_COLUMN),
+        ('s4-slot-6', _DENSE_COLUMN),
+        ('s4-slot-11', _DENSE_COLUMN),
+        ('s4-slot-8', _DENSE_COLUMN),
+        ('s4-slot-9', _DENSE_COLUMN),
+        ('s5-slot-3', _DENSE_COLUMN),
+        ('s5-slot-4', _DENSE_COLUMN),
+        ('s6-slot-1', _DENSE_COLUMN),
+        ('s6-slot-2', _DENSE_COLUMN),
+        ('s6-slot-3', _DENSE_COLUMN),
+        ('s6-slot-4', _DENSE_COLUMN),
+        ('s6-slot-5', _DENSE_COLUMN),
+        ('s7-slot-10', _DENSE_COLUMN),
+        ('s7-slot-11', _DENSE_COLUMN),
+        ('s7-slot-12', _DENSE_COLUMN),
+        ('s7-slot-13', _DENSE_COLUMN),
+        ('s7-slot-14', _DENSE_COLUMN),
+        ('s7-slot-15', _DENSE_COLUMN),
+        ('s7-slot-16', _DENSE_COLUMN),
+        ('s7-slot-17', _DENSE_COLUMN),
+        ('s7-slot-18', _DENSE_COLUMN),
+        ('s7-slot-19', _DENSE_COLUMN),
+        ('s7-slot-20', _DENSE_COLUMN),
+        ('s7-slot-1', _DENSE_COLUMN),
+        ('s8-title-2', _DISPLAY_HEADING),
+        ('s8-slot-1', _DENSE_COLUMN),
+        ('s8-title-3', _DISPLAY_HEADING),
+        ('s8-slot-3', _DENSE_COLUMN),
+        ('s8-title-4', _DISPLAY_HEADING),
+        ('s8-slot-5', _DENSE_COLUMN),
+        ('s9-slot-1', _DENSE_COLUMN),
+        ('s9-slot-2', _DENSE_COLUMN),
+        ('s10-slot-1', _DENSE_COLUMN),
+        ('s10-slot-3', _DENSE_COLUMN),
+        ('s10-title-5', _DISPLAY_HEADING),
+        ('s10-slot-4', _DENSE_COLUMN),
+    ],
+    'signal-gold': [
+        ('s7-slot-6', _LIFTED_REFLOW),
+        ('s7-slot-7', _LIFTED_REFLOW),
+        ('s7-slot-8', _LIFTED_REFLOW),
+        ('s9-title-1', _LIFTED_REFLOW),
+        ('s9-title-2', _LIFTED_REFLOW),
+        ('s9-slot-1', _LIFTED_REFLOW),
+        ('s9-slot-2', _LIFTED_REFLOW),
+        ('s9-slot-3', _LIFTED_REFLOW),
+        ('s9-title-3', _LIFTED_REFLOW),
+        ('s9-slot-4', _LIFTED_REFLOW),
+        ('s9-slot-5', _LIFTED_REFLOW),
+        ('s9-slot-6', _LIFTED_REFLOW),
+        ('s14-title-1', _LIFTED_REFLOW),
+        ('s14-slot-14', _LIFTED_REFLOW),
+        ('s14-slot-1', _LIFTED_REFLOW),
+        ('s16-title-1', _LIFTED_REFLOW),
+    ],
+    'mat': [
+        ('s0-slot-1', _LIFTED_REFLOW),
+        ('s0-slot-2', _LIFTED_REFLOW),
+        ('s2-image-1', _LIFTED_REFLOW),
+    ],
+}
+
+
+def apply_bounds_exemptions(out_slug: str, sections_html: str) -> str:
+    """Inject data-bounds-exempt="<reason>" onto known intentional-overflow nodes.
+
+    Matches the target's data-edit-slot="<label>" opening tag (slots) or, when
+    that is absent, data-oid="<label>" (slide objects), and inserts the
+    attribute. Raises if a configured label is not found so the table cannot
+    silently drift out of sync with the generated markup.
+    """
+    rules = BOUNDS_EXEMPTIONS.get(out_slug)
+    if not rules:
+        return sections_html
+    for label, reason in rules:
+        needle = f'data-edit-slot="{label}"'
+        if needle not in sections_html:
+            needle = f'data-oid="{label}"'
+        if needle not in sections_html:
+            # The slot may have been lifted into a draggable object, which keeps
+            # a back-reference via data-component-source-slot.
+            needle = f'data-component-source-slot="{label}"'
+        if needle not in sections_html:
+            # Lift-root model can re-target which element represents a slot, so a
+            # configured label may no longer be present. Warn rather than hard-fail
+            # (bounds are re-triaged via the bounds smoke matrix after a rebuild).
+            print(f"  war: bounds exemption target not found (skipped): {out_slug} {label}")
+            continue
+        sections_html = sections_html.replace(
+            needle,
+            f'{needle} data-bounds-exempt="{html.escape(reason, quote=True)}"',
+            1,
+        )
+    return sections_html
+
+
+def render(port: TemplatePort, head: str, sections_html: str, *, edit_mode: str = "slots") -> str:
+    if edit_mode not in TEMPLATE_EDIT_MODES:
+        raise ValueError(f"unsupported template edit mode: {edit_mode}")
+    runtime_css, runtime_chrome, runtime_js = extract_reference_editor_parts()
+    if edit_mode == "components":
+        # Componentized decks already contain draggable objects, so the runtime
+        # unlock control would duplicate the same editable content.
+        runtime_chrome = re.sub(
+            r'<button\b[^>]*\bid="btnUnlockLayout"[^>]*>.*?</button>\s*',
+            "",
+            runtime_chrome,
+            flags=re.S,
+        )
+    return f"""<!doctype html>
+<html lang="zh-Hans" data-deck-id="ported-{port.out_slug}" data-template-source="{port.source_slug}" data-template-edit-mode="{edit_mode}" data-mobile-adaptation="desktop-default">
+<head>
+{head}
+<title>{html.escape(port.title)} · Slot Editable Template Port</title>
+{PORT_BASE_CSS}
+{runtime_css}
+</head>
+<body class="ported-template-deck">
+{runtime_chrome}
+<div id="deck" class="slides-offset stage" data-ported-template="{port.source_slug}">
+{sections_html}
+</div>
+{runtime_js}
+</body>
+</html>
+"""
+
+
+def main() -> int:
+    started = time.perf_counter()
+    source_root = template_root()
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    chrome = find_chrome() if ENABLE_BUILD_TIME_COMPONENTIZATION else None
+    if ENABLE_BUILD_TIME_COMPONENTIZATION and not chrome:
+        raise SystemExit("No Chrome/Chromium found for measurement. Set CHROME_PATH.")
+    for port in PORTS:
+        template_path = source_root / "templates" / port.source_slug / "template.html"
+        if not template_path.is_file():
+            raise SystemExit(f"Missing template: {template_path}")
+        source = template_path.read_text(encoding="utf-8")
+        head, sections = extract_head_and_sections(source, template_path.parent)
+        section_list = prepare_section_list(sections)
+        prepared = "\n\n".join(section_list)
+        edit_mode = "slots"
+        if ENABLE_BUILD_TIME_COMPONENTIZATION:
+            # Optional diagnostic/future workflow: measure the fully-rendered
+            # slots document, then lift safe content into draggable objects.
+            probe_doc = normalize_generated_html(render(port, head, prepared, edit_mode="slots"))
+            assert chrome is not None
+            measures = measure_objects(chrome, probe_doc)
+            sections_html = componentize_with_measurements(section_list, measures)
+            edit_mode = "components"
+        else:
+            sections_html = strip_node_ids(prepared)
+        sections_html = apply_bounds_exemptions(port.out_slug, sections_html)
+        out = normalize_generated_html(render(port, head, sections_html, edit_mode=edit_mode))
+        out_path = OUT_DIR / f"{port.out_slug}.html"
+        out_path.write_text(out, encoding="utf-8")
+        slot_count = sections_html.count("data-edit-slot=")
+        object_count = sections_html.count("data-slide-object")
+        print(f"{out_path.relative_to(ROOT)} slides={len(sections)} objects={object_count} slots={slot_count} source={port.source_slug}")
+    elapsed = time.perf_counter() - started
+    print(f"Built {len(PORTS)} template-port decks in {OUT_DIR} in {elapsed:.2f}s")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

@@ -1,0 +1,63 @@
+# EC月次報告：売上と粗利を確かめる
+
+{
+  "title": "くらし便 EC事業 9月報告",
+  "audience": "事業責任者と販売・広告・CSの担当者。7分の月次会議。",
+  "period": "2026年9月（架空の集計）",
+  "comparison_period": "2025年9月",
+  "sales_man_yen": 1200,
+  "previous_sales_man_yen": 1000,
+  "orders": 4000,
+  "previous_orders": 3500,
+  "gross_margin_ratio": 0.36,
+  "previous_gross_margin_ratio": 0.38,
+  "return_ratio": 0.06,
+  "previous_return_ratio": 0.04,
+  "channels": [
+    {
+      "name": "広告",
+      "sales_man_yen": 240,
+      "previous_man_yen": 220
+    },
+    {
+      "name": "自然検索",
+      "sales_man_yen": 390,
+      "previous_man_yen": 300
+    },
+    {
+      "name": "メール",
+      "sales_man_yen": 210,
+      "previous_man_yen": 160
+    },
+    {
+      "name": "リピート直訪",
+      "sales_man_yen": 360,
+      "previous_man_yen": 320
+    }
+  ],
+  "hypotheses": [
+    "返品率の上昇は商品説明と実物の差が一因かもしれない。返品理由の分類で確認する。",
+    "粗利率の低下は値引きと商品構成の影響が考えられる。商品別に分解する。"
+  ],
+  "actions": [
+    {
+      "owner": "CS / 森",
+      "action": "上位20商品で返品理由を分類",
+      "date": "10/09",
+      "metric": "分類率100%"
+    },
+    {
+      "owner": "商品 / 青木",
+      "action": "返品上位5商品の説明を改稿",
+      "date": "10/16",
+      "metric": "対象商品の返品率を週次比較"
+    },
+    {
+      "owner": "販売 / 山田",
+      "action": "値引きと商品構成を分解",
+      "date": "10/16",
+      "metric": "粗利率の差分を説明"
+    }
+  ],
+  "decision": "商品説明の修正と粗利分析を先行。広告増額は次回の確認後に判断する。"
+}

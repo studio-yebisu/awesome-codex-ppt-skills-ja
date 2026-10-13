@@ -1,46 +1,52 @@
-# AIスライド制作スキル集｜日本語で作って、実例から選ぶ
+# AIスライド制作スキル集｜リポジトリごとの日本語実例と使い方
 
-209件・6カテゴリのスキル集を土台に、実際に日本語の資料を制作し、完成作品から使うスキルを選べるコレクションへ育てています。Studio Yebisuが選定・日本語制作・派生スキルの改善・サイト開発を担当します。原典は [zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)です。
+掲載GitHubリポジトリを実際に使い、**そのリポで作った日本語資料 → 全ページ再生 → 日本語の使い方 → 派生スキル・再現用ソースキット**へ進めるガイドです。Studio Yebisuが原典の調査、日本語制作、派生スキルとサイトの開発を担当します。原典カタログは [zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)です。
 
-**今回の改修はローカル実装・未公開です。** [ローカルサイト](http://127.0.0.1:8847/)で制作事例を確認できます。[既存の公開サイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)は更新前の版です。
+**16リポジトリで制作した19冊・128枚を掲載しています。** 元209件・6分類の作者、分類、一覧は保持しています。209件の原典入口を取得・棚卸し済みで、残る193件は未制作です。原典の取得と、実行・生成の成功は別に記録します。
 
-[全209件](#catalog) · [6カテゴリ](#choose) · [製品仕様](docs/PRODUCT_SPEC.md) · [出典と利用条件](docs/出典とライセンス.md)
+今回の改修はローカル実装・未公開です。[ローカルサイト](http://127.0.0.1:8847/)で再生できます。[既存の公開サイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)は更新前の版です。
 
-## 日本語の制作事例：6冊・45枚
+[全209件](#catalog) · [6カテゴリ](#choose) · [製品仕様](docs/PRODUCT_SPEC.md) · [制作台帳](data/production-ledger.json) · [確認記録](docs/QA.md) · [出典と利用条件](docs/出典とライセンス.md)
 
-提案、月次報告、研修、地域企画、業務改善の資料を3つの実在スキルで制作しました。「スライド事例を見る」から全ページをその場で閲覧し、成果物、入力資料、日本語依頼文、使用スキルへ進めます。組織・数値は制作手順を試すための架空サンプルで、実績や外部調査ではありません。
+## 実際に制作した16リポジトリ
 
-| 資料と用途 | 使用スキル・形式 | 枚数 | 制作物・再制作手順 |
-|---|---|---:|---|
-| [喫茶つむぎ 2号店出店提案](http://127.0.0.1:8847/case.html?id=cafe-pptx)／調査開始の社内決裁 | PPT Master／編集可能なPPTX | 8 | [PPTX](examples/cases/cafe-pptx/deck.pptx)・[PDF](examples/cases/cafe-pptx/render/deck.pdf)・[手順](examples/cases/cafe-pptx/README.md) |
-| [くらし便 EC事業 9月報告](http://127.0.0.1:8847/case.html?id=ec-monthly)／数字から改善計画へ | PPT Master／編集可能なPPTX | 7 | [PPTX](examples/cases/ec-monthly/deck.pptx)・[PDF](examples/cases/ec-monthly/render/deck.pdf)・[手順](examples/cases/ec-monthly/README.md) |
-| [喫茶つむぎ 2号店出店提案](http://127.0.0.1:8847/case.html?id=cafe-web)／店内説明会 | Frontend Slides／Bold Signal・HTML | 8 | [HTML](examples/cases/cafe-web/index.html)・[手順](examples/cases/cafe-web/README.md) |
-| [新入社員向け Git・レビュー入門](http://127.0.0.1:8847/case.html?id=git-onboarding)／説明とローカル演習 | Frontend Slides／Terminal Green・HTML | 7 | [HTML](examples/cases/git-onboarding/index.html)・[手順](examples/cases/git-onboarding/README.md) |
-| [週末の汐見港町 回遊企画提案](http://127.0.0.1:8847/case.html?id=port-town)／参加店舗との企画検討 | Guizang／Magazine・HTML | 7 | [HTML](examples/cases/port-town/index.html)・[手順](examples/cases/port-town/README.md) |
-| [社内ナレッジ検索 導入提案](http://127.0.0.1:8847/case.html?id=knowledge-search)／段階導入の判断 | Guizang／Swiss・HTML | 8 | [HTML](examples/cases/knowledge-search/index.html)・[手順](examples/cases/knowledge-search/README.md) |
+| 原典リポジトリ | 出力と冊数 | 全ページ再生 | 使い方と派生 |
+|---|---|---|---|
+| [hugohe3/ppt-master](https://github.com/hugohe3/ppt-master) | 編集可能PPTX／2冊 | [8枚](http://127.0.0.1:8847/case.html?id=cafe-pptx)・[7枚](http://127.0.0.1:8847/case.html?id=ec-monthly) | [日本語ガイド](repository.html?repo=hugohe3/ppt-master)・[派生SKILL](skill-forks/ppt-master-ja/SKILL.md) |
+| [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) | 固有HTML／2冊 | [8枚](http://127.0.0.1:8847/case.html?id=cafe-web)・[7枚](http://127.0.0.1:8847/case.html?id=git-onboarding) | [日本語ガイド](repository.html?repo=zarazhangrui/frontend-slides)・[派生SKILL](skill-forks/frontend-slides-ja/SKILL.md) |
+| [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) | 固有HTML／2冊 | [7枚](http://127.0.0.1:8847/case.html?id=port-town)・[8枚](http://127.0.0.1:8847/case.html?id=knowledge-search) | [日本語ガイド](repository.html?repo=op7418/guizang-ppt-skill)・[派生SKILL](skill-forks/guizang-ppt-skill-ja/SKILL.md) |
+| [ryanbbrown/revealjs-skill](https://github.com/ryanbbrown/revealjs-skill) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=revealjs-skill) | [日本語ガイド](repository.html?repo=ryanbbrown/revealjs-skill)・[派生SKILL](skill-forks/revealjs-skill-ja/SKILL.md) |
+| [lewislulu/html-ppt-skill](https://github.com/lewislulu/html-ppt-skill) | 固有HTML／1冊 | [8枚](http://127.0.0.1:8847/case.html?id=lewis-html-ppt) | [日本語ガイド](repository.html?repo=lewislulu/html-ppt-skill)・[派生SKILL](skill-forks/html-ppt-studio-ja/SKILL.md) |
+| [minorun365/minorun-marp-skill](https://github.com/minorun365/minorun-marp-skill) | 固有HTML／1冊 | [9枚](http://127.0.0.1:8847/case.html?id=minorun-marp) | [日本語ガイド](repository.html?repo=minorun365/minorun-marp-skill)・[派生SKILL](skill-forks/minorun-marp-ja/SKILL.md) |
+| [lqshow/neon-slides](https://github.com/lqshow/neon-slides) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=neon-slides) | [日本語ガイド](repository.html?repo=lqshow/neon-slides)・[派生SKILL](skill-forks/neon-slides-ja/SKILL.md) |
+| [GongRzhe/Office-PowerPoint-MCP-Server](https://github.com/GongRzhe/Office-PowerPoint-MCP-Server) | 編集可能PPTX／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=office-powerpoint-mcp) | [日本語ガイド](repository.html?repo=GongRzhe/Office-PowerPoint-MCP-Server)・[派生SKILL](skill-forks/office-powerpoint-mcp-ja/SKILL.md) |
+| [likaku/Mck-ppt-design-skill](https://github.com/likaku/Mck-ppt-design-skill) | 編集可能PPTX／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=mck-design) | [日本語ガイド](repository.html?repo=likaku/Mck-ppt-design-skill)・[派生SKILL](skill-forks/mck-design-ja/SKILL.md) |
+| [carnot-tech/jinba-consulting-pptx-skill](https://github.com/carnot-tech/jinba-consulting-pptx-skill) | 編集可能PPTX／1冊 | [7枚](http://127.0.0.1:8847/case.html?id=jinba-consulting) | [日本語ガイド](repository.html?repo=carnot-tech/jinba-consulting-pptx-skill)・[派生SKILL](skill-forks/jinba-consulting-ja/SKILL.md) |
+| [gonta223/japanese-corporate-pptx-skill](https://github.com/gonta223/japanese-corporate-pptx-skill) | 編集可能PPTX／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=japanese-corporate) | [日本語ガイド](repository.html?repo=gonta223/japanese-corporate-pptx-skill)・[派生SKILL](skill-forks/japanese-corporate-ja/SKILL.md) |
+| [joeseesun/qiaomu-bento-ppt](https://github.com/joeseesun/qiaomu-bento-ppt) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=qiaomu-bento) | [日本語ガイド](repository.html?repo=joeseesun/qiaomu-bento-ppt)・[派生SKILL](skill-forks/qiaomu-bento-ja/SKILL.md) |
+| [Kuneosu/make-slide](https://github.com/Kuneosu/make-slide) | 固有HTML／1冊 | [8枚](http://127.0.0.1:8847/case.html?id=make-slide) | [日本語ガイド](repository.html?repo=Kuneosu/make-slide)・[派生SKILL](skill-forks/make-slide-ja/SKILL.md) |
+| [archlizheng/frontend-slides-editable](https://github.com/archlizheng/frontend-slides-editable) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=frontend-editable) | [日本語ガイド](repository.html?repo=archlizheng/frontend-slides-editable)・[派生SKILL](skill-forks/frontend-editable-ja/SKILL.md) |
+| [chuspeeism/dashi-ppt-skill](https://github.com/chuspeeism/dashi-ppt-skill) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=dashi-ppt) | [日本語ガイド](repository.html?repo=chuspeeism/dashi-ppt-skill)・[派生SKILL](skill-forks/dashi-ppt-ja/SKILL.md) |
+| [ningzimu/codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill) | 画像主体PPTX／1冊 | [3枚](http://127.0.0.1:8847/case.html?id=codex-image-ppt) | [日本語ガイド](repository.html?repo=ningzimu/codex-ppt-skill)・[派生SKILL](skill-forks/codex-image-ppt-ja/SKILL.md) |
 
-カフェの2冊は同じ入力と数値を共有しています。編集するPPTXと、動きを含めて発表するWebの違いを同じ題材で比較できます。各事例には入力、コピーできる依頼文、講稿、原典コミット・使用ファイルの記録、検証状態を付けています。GitHub上のHTMLリンクはソース表示になるため、再生にはローカルサイトを使ってください。
+編集可能なPPTXは6冊40枚、画像主体のPPTXは1冊3枚、各リポ固有のHTMLは12冊85枚です。PPTX7冊43枚はMicrosoft PowerPointで描画し、プレビューにはそのPNGを使用しています。HTMLは各リポの実装・テンプレートで再生します。全128ページを実表示または実描画画像で目視確認しました。操作・配布などの確認範囲は [QA記録](docs/QA.md) と各冊のQA.jsonを参照してください。
 
-PPTX2冊・15枚はMicrosoft PowerPoint 16.0で実ファイルからPNG／PDFへ出力しました。サイトのPPTXプレビューもその描画結果です。Web4冊・30枚はブラウザーで描画とページ内のはみ出しを確認しています。操作や配布を含む確認範囲は各事例のQA記録を参照してください。技術的な確認と、人による採用判断は別です。
+画像主体のcodex-ppt-skill作例は、native imagegenが生成した全ページ画像を原典assemblerで組み立てたものです。文字・図を個別編集できるPPTXとは区別し、発表者ノートを付けています。実ツールがモデル名を公開していないため、特定の画像モデルを使用したとは断定しません。
 
-## 自分の内容で作る
+各冊に入力、依頼文、講稿、実行環境、原典コミット、使用ファイル、制作・検証記録があります。成果物とソースキットは各事例ページから取得できます。提案・報告の組織や数値は架空サンプルであり、外部調査や実績を示しません。同じカフェ案やEC月次データを複数方式で使い、形式・表現・編集性を比較できます。
 
-1. 用途と制作事例からスキルを選び、資料の中面と編集できる形式を確認します。
-2. 各事例の入力資料とPROMPT.txtを取得し、読者、説明時間、判断事項、原稿・数値を自分の内容に置き換えます。
-3. 下記の日本語派生スキルを利用環境へ配置し、そのSKILL.mdと必要な上流参照に従ってAIエージェントへ制作を依頼します。導入するパッケージの依存・条件も確認します。
-4. 日本語の字形、改行、単位、図表、講稿を実際の出力で確認します。PPTXはPowerPointで、HTMLはブラウザーで開き、編集・保存・印刷など利用する機能を確かめます。
+## 自分の内容で使う
 
-| 日本語派生スキル | 上流から使うもの | 日本語版に加えたもの |
-|---|---|---|
-| [ppt-master-ja](skill-forks/ppt-master-ja/SKILL.md) | [PPT Master](https://github.com/hugohe3/ppt-master)の帰属ガード・チェッカー・native SVG→PPTX変換器 | 提案・報告の入力、数値と単位、講稿、PowerPoint本体での描画確認 |
-| [frontend-slides-ja](skill-forks/frontend-slides-ja/SKILL.md) | [Frontend Slides](https://github.com/zarazhangrui/frontend-slides)のSKILL・プリセット・固定ステージ・編集の契約 | 日本語入力、英数・コード混在の組版、編集保存・配布時の確認 |
-| [guizang-ppt-skill-ja](skill-forks/guizang-ppt-skill-ja/SKILL.md) | [Guizang](https://github.com/op7418/guizang-ppt-skill)のMagazine／Swiss実テンプレート・ページ制御・演出 | 日本語の企画構成、書体、講稿、元テンプレートに沿った検証 |
+1. リポジトリの実例を開き、全ページと編集できる形式を確認します。
+2. 日本語ガイドで環境・依存・原典の実行方法を確認し、派生SKILLまたは事例のソースキットを取得します。
+3. 入力資料と依頼文を自分の読者・原稿・数値へ置き換え、そのリポ固有の手順で制作します。
+4. 出力をPowerPointまたはブラウザーで開き、日本語、改行、単位、図表、講稿と、必要な編集・保存機能を確認します。
 
-当地の実制作とは、それぞれの上流の手順・実装・テンプレートを使って今回の資料を作ったことです。PPT Masterは文字・図形中心の経路で、上流Defaultの全工程を実行した意味ではありません。Frontend Slidesは指示型のスキルを適用して制作し、存在しない上流生成CLIを実行したとは扱いません。
+CLI、MCP、指示型SKILL、テンプレート、変換器をそれぞれの原典に沿って使っています。PPT Masterの作例は文字・図形中心の経路で、上流Defaultの全工程を実行した意味ではありません。指示型スキルにも存在しない生成CLIを付けたとは扱いません。具体的な経路と改変はリポ別ガイド・PROVENANCE.jsonで確認できます。
 
-書体はNoto Sans JP、Noto Serif JP、BIZ UDPGothic等を役割に応じて使います。Webの同梱サブセットとPCに導入する書体は別物で、新しい本文では字形の収録範囲を確認します。出典・条件は [data/fonts.json](data/fonts.json) と各派生スキルの日本語フォント参照にあります。PPTXの受け手にも使用書体が必要です。
+派生スキルは原作者の公式日本語版ではありません。ソースキットには入力と制作ソースを含みますが、依存環境をすべて同梱するものではありません。キットごとのREADMEと再現入口を使い、元の作例を変更する場合は別フォルダーへ保存します。画像PPTXの再現キットは既存画像からの再組立が対象で、native imagegenによる新規生成を自動実行しません。
 
-## ローカルで開く・作例を再生成する
+## ローカルで開く
 
 リポジトリrootから静的サーバーを起動します。
 
@@ -48,31 +54,21 @@ PPTX2冊・15枚はMicrosoft PowerPoint 16.0で実ファイルからPNG／PDFへ
 python -m http.server 8847 --bind 127.0.0.1
 ~~~
 
-[ローカルサイト](http://127.0.0.1:8847/)を開いてください。これはブラウザーで資料を生成するサービスではなく、実例とスキルを選んで自分のAI環境で制作するためのサイトです。
+[ローカルサイト](http://127.0.0.1:8847/)を開いてください。GitHub上のHTMLリンクはソース表示になるため、再生にはHTTPサーバーを使います。ブラウザー内で任意の資料を生成するサービスではなく、実例から使うリポを選び、自分のAI環境で制作するためのサイトです。
 
-今回のHTML4冊と共通の入力・依頼文・制作記録・manifestは、リポジトリ全体を取得し、固定した上流ソースと必要素材を準備した環境で再生成できます。
+制作状態の正本は [製品仕様](docs/PRODUCT_SPEC.md)、[現行方針](docs/PROJECT.md)、[元209件](data/skills.json)、[リポ別工程](data/project-workflows.json)、[制作台帳](data/production-ledger.json)、[19冊の対応データ](data/case-studies.json)、[日本語ガイド](data/repository-guides.json)です。全件の制作を共通の生成スクリプト1本で置き換えず、各キットの手順を使用します。
 
-~~~text
-python tools/build_case_studies.py
-~~~
+## 未制作と利用条件
 
-[build_case_studies.py](tools/build_case_studies.py)は当地の作例組立スクリプトです。原典のSKILL.mdそのものや、任意の資料を生成する汎用CLIとは異なります。PPTX2冊は [make_business_pptx.py](tools/make_business_pptx.py)で先に生成し、[render_powerpoint.ps1](tools/render_powerpoint.ps1)で実PowerPointのPNG／PDFへ出力しておきます。PPT Master用の依存を準備したPython環境と、描画用のWindows版PowerPointが必要です。具体的な条件・コマンドは各作例のREADMEと [PPT Master日本語業務手順](skill-forks/ppt-master-ja/references/japanese-business-workflow.md)を参照してください。
+PPTAgentは実行を試しましたが、固定依存のWindows import時のassertで停止し、生成未達です。成功した16リポには含めません。[試行記録と再開条件](examples/repositories/pptagent/README.md)にLinux（WSL含む）またはmacOS等の必要条件を記録しています。その他の未制作リポの状態は制作台帳で確認できます。
 
-再生成は同じ作例の出力先を更新するため、独自の改稿は別の場所へ保存します。配布ZIPだけに生成環境一式が含まれるわけではありません。最終確認後の配布ZIP作成には次を使います。
+一覧・サイトのCC0を掲載コードへ一括適用しません。原文LICENSE／NOTICEと素材・書体の条件を維持します。Mckとminorun-marpはApache-2.0、GuizangとDashiの対象ソースはAGPLです。Dashiの配布対象は使用したHTML経路で、専有ライセンスのPPTX engineは含めません。詳細は [出典と利用条件](docs/出典とライセンス.md)、各原文通知と派生のSOURCE台帳を参照してください。
 
-~~~text
-python tools/build_case_studies.py --package
-~~~
+Noto Sans JP、Noto Serif JP、BIZ UDPGothic等の書体は用途に応じて使っています。Web同梱サブセットは新しい本文の全文字を収録するとは限りません。PPTXの受け手にも使用書体が必要です。[書体台帳](data/fonts.json)と各事例の条件を確認してください。
 
-正本は [製品仕様](docs/PRODUCT_SPEC.md)、[現行方針](docs/PROJECT.md)、[209件のカタログ](data/skills.json)、[制作入力](data/case-inputs.json)、[6冊の対応データ](data/case-studies.json)です。
+技術QA、制作担当の目視、人による正式採用、外部公開は別の状態です。旧共通renderer試作と自己紹介題材の作例は現行件数に含めません。
 
-## 掲載・条件・確認範囲
-
-209件の掲載は、全件の日本語生成や動作確認が完了したという意味ではありません。今回の初回実装は3派生・6冊45枚です。上流の公開作例、GitHub紹介画像、当地の制作例を区別します。サイト・一覧編集のCC0を各スキルへ一括適用せず、MIT／AGPLなどの原条件、書体のOFL、素材ごとの条件を保持します。日本語派生は原作者の公式日本語版ではありません。
-
-以前の独立5スキル・共通rendererの6デッキ、その後の自己紹介題材3冊12枚は不採用試作の記録で、今回の件数へ含めません。公開更新・正式採用は未実施です。
-
-以下は元の209件と原版の実測比較の記録です。今回の当地制作・検証とは別の結果として掲載します。元データの基準日は2026年10月11日です。
+以下の原版比較と209件一覧は、当地の制作結果とは別の記録です。元データの基準日は2026年10月11日です。
 
 ---
 

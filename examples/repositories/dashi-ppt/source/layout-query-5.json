@@ -1,0 +1,242 @@
+{
+  "theme": "theme05",
+  "role": "risk",
+  "keyword": null,
+  "needsMedia": false,
+  "mediaIntent": null,
+  "mediaCount": null,
+  "mediaKind": null,
+  "requireInitialMedia": false,
+  "limit": 3,
+  "seed": "yebisu-ec:slide-5",
+  "themeDisplayName": "色谱图表风",
+  "themeScenario": "数据报告、市场分析、KPI 复盘、行业研究",
+  "themeAudience": "数据分析师、咨询顾问、研究员、业务负责人",
+  "count": 1,
+  "layouts": [
+    {
+      "layout": "theme05_page016",
+      "theme": "theme05",
+      "pageNumber": 16,
+      "label": "风险 Risk",
+      "slot": "risk",
+      "roles": [
+        "image",
+        "risks"
+      ],
+      "copyKeys": [
+        "copy.eyebrow",
+        "copy.title",
+        "copy.sub",
+        "copy.sheet",
+        "copy.chain[]",
+        "copy.cards[].en"
+      ],
+      "arrayKeys": [],
+      "arrayMeta": [
+        {
+          "key": "copy.chain",
+          "role": "misc",
+          "defaultVisibleCount": 4,
+          "maxCount": 5,
+          "countKey": "chainCount"
+        },
+        {
+          "key": "copy.cards",
+          "role": "list-item",
+          "defaultVisibleCount": 4,
+          "maxCount": 5,
+          "countKey": "cardCount"
+        }
+      ],
+      "mediaSlots": [
+        {
+          "role": "media",
+          "field": "images",
+          "fieldPath": "props.images",
+          "writableProp": "props.images",
+          "countKey": "imageCount",
+          "publicCountKey": "imageCount",
+          "defaultVisibleCount": 1,
+          "max": 2,
+          "maxCount": 2,
+          "acceptedKinds": [
+            "image",
+            "video"
+          ],
+          "acceptedKindsSource": "mediaArrayField",
+          "initialSrcSupported": true,
+          "canPresetMedia": true,
+          "presetProp": "props.images",
+          "emptySlotBehavior": "hiddenByCount"
+        }
+      ],
+      "controls": [
+        {
+          "key": "chainCount",
+          "publicKey": "chainCount",
+          "label": "传导链节点",
+          "type": "range",
+          "default": 4,
+          "min": 3,
+          "max": 5
+        },
+        {
+          "key": "cardCount",
+          "publicKey": "cardCount",
+          "label": "状态卡数量",
+          "type": "range",
+          "default": 4,
+          "min": 2,
+          "max": 5
+        },
+        {
+          "key": "focusEnabled",
+          "publicKey": "focusEnabled",
+          "label": "突出项",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "focusIndex",
+          "publicKey": "focusIndex",
+          "label": "重点状态卡",
+          "type": "range",
+          "default": 1,
+          "min": 1,
+          "max": 5
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "type": "range",
+          "default": 1,
+          "min": 0,
+          "max": 2
+        },
+        {
+          "key": "showChain",
+          "publicKey": "showChain",
+          "label": "传导链",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showLevel",
+          "publicKey": "showStatusLevel",
+          "label": "状态等级",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showGalleryCaption",
+          "publicKey": "showGalleryCaption",
+          "label": "图注",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "accentColor",
+          "publicKey": "accentColor",
+          "label": "强调色",
+          "type": "select",
+          "default": "#d8402e"
+        },
+        {
+          "key": "showConclusion",
+          "publicKey": "showConclusion",
+          "label": "结论文案",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showSheetLabel",
+          "publicKey": "showSheetLabel",
+          "label": "页码标签",
+          "type": "toggle",
+          "default": true
+        }
+      ],
+      "controlKeys": [
+        "chainCount",
+        "cardCount",
+        "focusEnabled",
+        "focusIndex",
+        "imageCount",
+        "showChain",
+        "showLevel",
+        "showGalleryCaption",
+        "accentColor",
+        "showConclusion",
+        "showSheetLabel"
+      ],
+      "publicControlKeys": [
+        "chainCount",
+        "cardCount",
+        "focusEnabled",
+        "focusIndex",
+        "imageCount",
+        "showChain",
+        "showStatusLevel",
+        "showGalleryCaption",
+        "accentColor",
+        "showConclusion",
+        "showSheetLabel"
+      ],
+      "allowedPropKeys": [
+        "accentColor",
+        "cardCount",
+        "chainCount",
+        "copy",
+        "focusEnabled",
+        "focusIndex",
+        "imageCount",
+        "images",
+        "showChain",
+        "showConclusion",
+        "showGalleryCaption",
+        "showLevel",
+        "showSheetLabel",
+        "showStatusLevel"
+      ],
+      "allowedPublicPropKeys": [
+        "accentColor",
+        "cardCount",
+        "chainCount",
+        "copy",
+        "focusEnabled",
+        "focusIndex",
+        "imageCount",
+        "images",
+        "showChain",
+        "showConclusion",
+        "showGalleryCaption",
+        "showSheetLabel",
+        "showStatusLevel"
+      ],
+      "themeDisplayName": "色谱图表风",
+      "copyBudgets": {
+        "copy.eyebrow": {
+          "maxChars": 18
+        },
+        "copy.title": {
+          "maxChars": 18
+        },
+        "copy.sub": {
+          "maxChars": 36
+        },
+        "copy.sheet": {
+          "maxChars": 18
+        },
+        "copy.chain[]": {
+          "maxChars": 18
+        },
+        "copy.cards[].en": {
+          "maxChars": 18
+        }
+      },
+      "queryScore": 0
+    }
+  ]
+}

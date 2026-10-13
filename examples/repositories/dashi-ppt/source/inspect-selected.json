@@ -1,0 +1,1125 @@
+{
+  "layouts": [
+    {
+      "layout": "theme05_page001",
+      "theme": "theme05",
+      "themeDisplayName": "色谱图表风",
+      "themeScenario": "数据报告、市场分析、KPI 复盘、行业研究",
+      "themeAudience": "数据分析师、咨询顾问、研究员、业务负责人",
+      "pageNumber": 1,
+      "label": "封面 精益智造",
+      "slot": "excover1",
+      "roles": [
+        "cover"
+      ],
+      "copyKeys": [
+        "copy.brand",
+        "copy.brandEn",
+        "copy.meta[]",
+        "copy.kicker",
+        "copy.titleTop",
+        "copy.titleBottom",
+        "copy.subtitle",
+        "copy.subtitleEn",
+        "copy.railHead",
+        "copy.specs[].k",
+        "copy.specs[].v",
+        "copy.specs[].vn",
+        "copy.footer"
+      ],
+      "copyBudgets": {
+        "copy.brand": {
+          "maxChars": 18
+        },
+        "copy.brandEn": {
+          "maxChars": 18
+        },
+        "copy.meta[]": {
+          "maxChars": 18
+        },
+        "copy.kicker": {
+          "maxChars": 36
+        },
+        "copy.titleTop": {
+          "maxChars": 18
+        },
+        "copy.titleBottom": {
+          "maxChars": 18
+        },
+        "copy.subtitle": {
+          "maxChars": 36
+        },
+        "copy.subtitleEn": {
+          "maxChars": 42
+        },
+        "copy.railHead": {
+          "maxChars": 18
+        },
+        "copy.specs[].k": {
+          "maxChars": 18
+        },
+        "copy.specs[].v": {
+          "maxChars": 18
+        },
+        "copy.specs[].vn": {
+          "maxChars": 18
+        },
+        "copy.footer": {
+          "maxChars": 22
+        }
+      },
+      "copyRoles": {
+        "copy.brand": "eyebrow",
+        "copy.brandEn": "eyebrow",
+        "copy.meta[]": "eyebrow",
+        "copy.kicker": "eyebrow",
+        "copy.titleTop": "eyebrow",
+        "copy.titleBottom": "eyebrow",
+        "copy.subtitle": "paragraph",
+        "copy.subtitleEn": "eyebrow",
+        "copy.railHead": "eyebrow",
+        "copy.specs[].k": "eyebrow",
+        "copy.specs[].v": "eyebrow",
+        "copy.specs[].vn": "eyebrow",
+        "copy.footer": "eyebrow"
+      },
+      "fieldContracts": [
+        {
+          "key": "copy.subtitle",
+          "role": "body"
+        },
+        {
+          "key": "copy.meta",
+          "role": "misc",
+          "defaultCount": 3,
+          "defaultVisibleCount": 3,
+          "maxCount": 3,
+          "countKey": null
+        },
+        {
+          "key": "copy.specs",
+          "role": "misc",
+          "defaultCount": 4,
+          "defaultVisibleCount": 4,
+          "maxCount": 4,
+          "countKey": "specCount"
+        }
+      ],
+      "fillPlan": {
+        "text": [
+          {
+            "key": "copy.brand",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.brandEn",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.kicker",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 36
+          },
+          {
+            "key": "copy.titleTop",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.titleBottom",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.subtitle",
+            "role": "body",
+            "type": "string",
+            "maxChars": 36
+          },
+          {
+            "key": "copy.subtitleEn",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 42
+          },
+          {
+            "key": "copy.railHead",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.footer",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 22
+          }
+        ],
+        "arrays": [
+          {
+            "key": "copy.meta",
+            "role": "misc",
+            "visibleCount": 3,
+            "maxCount": 3,
+            "countKey": null,
+            "itemShape": "string",
+            "item": {
+              "role": "eyebrow",
+              "maxChars": 18
+            }
+          },
+          {
+            "key": "copy.specs",
+            "role": "misc",
+            "visibleCount": 4,
+            "maxCount": 4,
+            "countKey": "specCount",
+            "itemShape": {
+              "k": "string",
+              "v": "string",
+              "vn": "string"
+            },
+            "itemFields": {
+              "k": {
+                "role": "eyebrow",
+                "type": "string",
+                "maxChars": 18
+              },
+              "v": {
+                "role": "eyebrow",
+                "type": "string",
+                "maxChars": 18
+              },
+              "vn": {
+                "role": "eyebrow",
+                "type": "string",
+                "maxChars": 18
+              }
+            }
+          }
+        ],
+        "media": []
+      },
+      "arrayKeys": [],
+      "arrayMeta": [
+        {
+          "key": "copy.meta",
+          "role": "misc",
+          "defaultCount": 3,
+          "defaultVisibleCount": 3,
+          "countKey": null,
+          "min": null,
+          "max": null,
+          "maxCount": 3
+        },
+        {
+          "key": "copy.specs",
+          "role": "misc",
+          "defaultCount": 4,
+          "defaultVisibleCount": 4,
+          "countKey": "specCount",
+          "min": 1,
+          "max": 4,
+          "maxCount": 4
+        }
+      ],
+      "lengthBindings": [],
+      "propShapes": {
+        "copy": {
+          "brand": "string",
+          "brandEn": "string",
+          "meta": [
+            "string"
+          ],
+          "kicker": "string",
+          "titleTop": "string",
+          "titleBottom": "string",
+          "subtitle": "string",
+          "subtitleEn": "string",
+          "railHead": "string",
+          "specs": [
+            {
+              "k": "string",
+              "v": "string",
+              "vn": "string"
+            }
+          ],
+          "footer": "string"
+        }
+      },
+      "mediaSlots": [],
+      "countBindings": [
+        {
+          "key": "specCount",
+          "publicKey": "specCount",
+          "label": "指标行数",
+          "arrays": [
+            "copy.specs"
+          ],
+          "min": 1,
+          "max": 4
+        }
+      ],
+      "controls": [
+        {
+          "key": "accentColor",
+          "publicKey": "accentColor",
+          "label": "强调色",
+          "type": "select",
+          "default": "#E0301E"
+        },
+        {
+          "key": "showRail",
+          "publicKey": "showRail",
+          "label": "右侧指标栏",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "specCount",
+          "publicKey": "specCount",
+          "label": "指标行数",
+          "type": "range",
+          "default": 4,
+          "min": 1,
+          "max": 4
+        },
+        {
+          "key": "showSwatch",
+          "publicKey": "showSwatch",
+          "label": "色卡",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showFooter",
+          "publicKey": "showFooter",
+          "label": "底部色谱条",
+          "type": "toggle",
+          "default": true
+        }
+      ],
+      "defaultVisibleCounts": {
+        "specCount": 4
+      }
+    },
+    {
+      "layout": "theme05_page009",
+      "theme": "theme05",
+      "themeDisplayName": "色谱图表风",
+      "themeScenario": "数据报告、市场分析、KPI 复盘、行业研究",
+      "themeAudience": "数据分析师、咨询顾问、研究员、业务负责人",
+      "pageNumber": 9,
+      "label": "趋势 Trend",
+      "slot": "trend",
+      "roles": [
+        "data",
+        "trend",
+        "closing"
+      ],
+      "copyKeys": [
+        "copy.eyebrow",
+        "copy.title",
+        "copy.sub",
+        "copy.sheet",
+        "copy.primaryName",
+        "copy.secondaryName",
+        "copy.points[].axis",
+        "copy.points[].v",
+        "copy.points[].s",
+        "copy.conclusion"
+      ],
+      "copyBudgets": {
+        "copy.eyebrow": {
+          "maxChars": 18
+        },
+        "copy.title": {
+          "maxChars": 18
+        },
+        "copy.sub": {
+          "maxChars": 36
+        },
+        "copy.sheet": {
+          "maxChars": 18
+        },
+        "copy.primaryName": {
+          "maxChars": 18
+        },
+        "copy.secondaryName": {
+          "maxChars": 18
+        },
+        "copy.points[].axis": {
+          "maxChars": 18
+        },
+        "copy.points[].v": {
+          "maxChars": 18
+        },
+        "copy.points[].s": {
+          "maxChars": 18
+        },
+        "copy.conclusion": {
+          "maxChars": 36
+        }
+      },
+      "copyRoles": {
+        "copy.eyebrow": "eyebrow",
+        "copy.title": "eyebrow",
+        "copy.sub": "paragraph",
+        "copy.sheet": "eyebrow",
+        "copy.primaryName": "eyebrow",
+        "copy.secondaryName": "eyebrow",
+        "copy.points[].axis": "eyebrow",
+        "copy.points[].v": "eyebrow",
+        "copy.points[].s": "eyebrow",
+        "copy.conclusion": "paragraph"
+      },
+      "fieldContracts": [
+        {
+          "key": "copy.sub",
+          "role": "body"
+        },
+        {
+          "key": "copy.conclusion",
+          "role": "body"
+        },
+        {
+          "key": "copy.points",
+          "role": "list-item",
+          "defaultCount": 4,
+          "defaultVisibleCount": 4,
+          "maxCount": 4,
+          "countKey": "pointCount"
+        }
+      ],
+      "fillPlan": {
+        "text": [
+          {
+            "key": "copy.eyebrow",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.title",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.sub",
+            "role": "body",
+            "type": "string",
+            "maxChars": 36
+          },
+          {
+            "key": "copy.sheet",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.primaryName",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.secondaryName",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.conclusion",
+            "role": "body",
+            "type": "string",
+            "maxChars": 36
+          }
+        ],
+        "arrays": [
+          {
+            "key": "copy.points",
+            "role": "list-item",
+            "visibleCount": 4,
+            "maxCount": 4,
+            "countKey": "pointCount",
+            "itemShape": {
+              "axis": "string",
+              "v": "number",
+              "s": "number"
+            },
+            "itemFields": {
+              "axis": {
+                "role": "eyebrow",
+                "type": "string",
+                "maxChars": 18
+              },
+              "v": {
+                "role": "eyebrow",
+                "type": "number",
+                "numericRange": {
+                  "observedMin": 162,
+                  "observedMax": 318
+                },
+                "numericBounds": {
+                  "min": 0,
+                  "max": 349.8,
+                  "enforced": false
+                },
+                "maxChars": 18
+              },
+              "s": {
+                "role": "eyebrow",
+                "type": "number",
+                "numericRange": {
+                  "observedMin": 18,
+                  "observedMax": 31
+                },
+                "numericBounds": {
+                  "min": 0,
+                  "max": 34.1,
+                  "enforced": false
+                },
+                "maxChars": 18
+              }
+            }
+          }
+        ],
+        "media": []
+      },
+      "arrayKeys": [],
+      "arrayMeta": [
+        {
+          "key": "copy.points",
+          "role": "list-item",
+          "defaultCount": 4,
+          "defaultVisibleCount": 4,
+          "countKey": "pointCount",
+          "min": 2,
+          "max": 4,
+          "maxCount": 4
+        }
+      ],
+      "lengthBindings": [],
+      "propShapes": {
+        "copy": {
+          "eyebrow": "string",
+          "title": "string",
+          "sub": "string",
+          "sheet": "string",
+          "primaryName": "string",
+          "secondaryName": "string",
+          "points": [
+            {
+              "axis": "string",
+              "v": "number",
+              "s": "number"
+            }
+          ],
+          "conclusion": "string"
+        }
+      },
+      "mediaSlots": [],
+      "countBindings": [
+        {
+          "key": "pointCount",
+          "publicKey": "pointCount",
+          "label": "数据点数量",
+          "arrays": [
+            "copy.points"
+          ],
+          "min": 2,
+          "max": 4
+        }
+      ],
+      "controls": [
+        {
+          "key": "chartType",
+          "publicKey": "chartType",
+          "label": "图表类型",
+          "type": "select",
+          "default": "bar"
+        },
+        {
+          "key": "pointCount",
+          "publicKey": "pointCount",
+          "label": "数据点数量",
+          "type": "range",
+          "default": 4,
+          "min": 2,
+          "max": 4
+        },
+        {
+          "key": "focusEnabled",
+          "publicKey": "focusEnabled",
+          "label": "重点标注",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "focusIndex",
+          "publicKey": "focusIndex",
+          "label": "重点数据点",
+          "type": "range",
+          "default": 3,
+          "min": 1,
+          "max": 4
+        },
+        {
+          "key": "showSecondary",
+          "publicKey": "showSecondary",
+          "label": "副数据系列",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showMetrics",
+          "publicKey": "showMetrics",
+          "label": "指标列表",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "accentColor",
+          "publicKey": "accentColor",
+          "label": "强调色",
+          "type": "select",
+          "default": "#d8402e"
+        },
+        {
+          "key": "showConclusion",
+          "publicKey": "showConclusion",
+          "label": "结论文案",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showSheetLabel",
+          "publicKey": "showSheetLabel",
+          "label": "页码标签",
+          "type": "toggle",
+          "default": true
+        }
+      ],
+      "defaultVisibleCounts": {
+        "pointCount": 4
+      }
+    },
+    {
+      "layout": "theme05_page010",
+      "theme": "theme05",
+      "themeDisplayName": "色谱图表风",
+      "themeScenario": "数据报告、市场分析、KPI 复盘、行业研究",
+      "themeAudience": "数据分析师、咨询顾问、研究员、业务负责人",
+      "pageNumber": 10,
+      "label": "占比 Share",
+      "slot": "share",
+      "roles": [
+        "data",
+        "distribution"
+      ],
+      "copyKeys": [
+        "copy.eyebrow",
+        "copy.title",
+        "copy.sub",
+        "copy.sheet",
+        "copy.unit",
+        "copy.segments[].name",
+        "copy.segments[].v",
+        "copy.conclusion"
+      ],
+      "copyBudgets": {
+        "copy.eyebrow": {
+          "maxChars": 18
+        },
+        "copy.title": {
+          "maxChars": 18
+        },
+        "copy.sub": {
+          "maxChars": 36
+        },
+        "copy.sheet": {
+          "maxChars": 18
+        },
+        "copy.unit": {
+          "maxChars": 18
+        },
+        "copy.segments[].name": {
+          "maxChars": 18
+        },
+        "copy.segments[].v": {
+          "maxChars": 18
+        },
+        "copy.conclusion": {
+          "maxChars": 37
+        }
+      },
+      "copyRoles": {
+        "copy.eyebrow": "eyebrow",
+        "copy.title": "eyebrow",
+        "copy.sub": "paragraph",
+        "copy.sheet": "eyebrow",
+        "copy.unit": "eyebrow",
+        "copy.segments[].name": "eyebrow",
+        "copy.segments[].v": "eyebrow",
+        "copy.conclusion": "paragraph"
+      },
+      "fieldContracts": [
+        {
+          "key": "copy.sub",
+          "role": "body"
+        },
+        {
+          "key": "copy.conclusion",
+          "role": "body"
+        },
+        {
+          "key": "copy.segments",
+          "role": "list-item",
+          "defaultCount": 5,
+          "defaultVisibleCount": 5,
+          "maxCount": 5,
+          "countKey": "segmentCount"
+        }
+      ],
+      "fillPlan": {
+        "text": [
+          {
+            "key": "copy.eyebrow",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.title",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.sub",
+            "role": "body",
+            "type": "string",
+            "maxChars": 36
+          },
+          {
+            "key": "copy.sheet",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.unit",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.conclusion",
+            "role": "body",
+            "type": "string",
+            "maxChars": 37
+          }
+        ],
+        "arrays": [
+          {
+            "key": "copy.segments",
+            "role": "list-item",
+            "visibleCount": 5,
+            "maxCount": 5,
+            "countKey": "segmentCount",
+            "itemShape": {
+              "name": "string",
+              "v": "number"
+            },
+            "itemFields": {
+              "name": {
+                "role": "eyebrow",
+                "type": "string",
+                "maxChars": 18
+              },
+              "v": {
+                "role": "eyebrow",
+                "type": "number",
+                "numericRange": {
+                  "observedMin": 5.1,
+                  "observedMax": 43.3
+                },
+                "numericBounds": {
+                  "min": 0,
+                  "max": 100,
+                  "enforced": true,
+                  "semantics": "percent"
+                },
+                "maxChars": 18
+              }
+            }
+          }
+        ],
+        "media": []
+      },
+      "arrayKeys": [],
+      "arrayMeta": [
+        {
+          "key": "copy.segments",
+          "role": "list-item",
+          "defaultCount": 5,
+          "defaultVisibleCount": 5,
+          "countKey": "segmentCount",
+          "min": 3,
+          "max": 5,
+          "maxCount": 5
+        }
+      ],
+      "lengthBindings": [],
+      "propShapes": {
+        "copy": {
+          "eyebrow": "string",
+          "title": "string",
+          "sub": "string",
+          "sheet": "string",
+          "unit": "string",
+          "segments": [
+            {
+              "name": "string",
+              "v": "number"
+            }
+          ],
+          "conclusion": "string"
+        }
+      },
+      "mediaSlots": [],
+      "countBindings": [
+        {
+          "key": "segmentCount",
+          "publicKey": "segmentCount",
+          "label": "分段数量",
+          "arrays": [
+            "copy.segments"
+          ],
+          "min": 3,
+          "max": 5
+        }
+      ],
+      "controls": [
+        {
+          "key": "chartType",
+          "publicKey": "chartType",
+          "label": "图表类型",
+          "type": "select",
+          "default": "donut"
+        },
+        {
+          "key": "segmentCount",
+          "publicKey": "segmentCount",
+          "label": "分段数量",
+          "type": "range",
+          "default": 5,
+          "min": 3,
+          "max": 5
+        },
+        {
+          "key": "focusEnabled",
+          "publicKey": "focusEnabled",
+          "label": "重点分段",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "focusIndex",
+          "publicKey": "focusIndex",
+          "label": "重点分段序号",
+          "type": "range",
+          "default": 1,
+          "min": 1,
+          "max": 5
+        },
+        {
+          "key": "showLegend",
+          "publicKey": "showValueLabels",
+          "label": "图例列表",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showConclusion",
+          "publicKey": "showConclusion",
+          "label": "结论文案",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "accentColor",
+          "publicKey": "accentColor",
+          "label": "强调色",
+          "type": "select",
+          "default": "#d8402e"
+        },
+        {
+          "key": "showSheetLabel",
+          "publicKey": "showSheetLabel",
+          "label": "页码标签",
+          "type": "toggle",
+          "default": true
+        }
+      ],
+      "defaultVisibleCounts": {
+        "segmentCount": 5
+      }
+    },
+    {
+      "layout": "theme05_page018",
+      "theme": "theme05",
+      "themeDisplayName": "色谱图表风",
+      "themeScenario": "数据报告、市场分析、KPI 复盘、行业研究",
+      "themeAudience": "数据分析师、咨询顾问、研究员、业务负责人",
+      "pageNumber": 18,
+      "label": "结论 Conclusion",
+      "slot": "quote",
+      "roles": [
+        "statement",
+        "observation",
+        "result"
+      ],
+      "copyKeys": [
+        "copy.eyebrow",
+        "copy.sheet",
+        "copy.quote",
+        "copy.sub",
+        "copy.points[].n",
+        "copy.points[].t",
+        "copy.points[].d",
+        "copy.source"
+      ],
+      "copyBudgets": {
+        "copy.eyebrow": {
+          "maxChars": 18
+        },
+        "copy.sheet": {
+          "maxChars": 18
+        },
+        "copy.quote": {
+          "maxChars": 36
+        },
+        "copy.sub": {
+          "maxChars": 36
+        },
+        "copy.points[].n": {
+          "maxChars": 18
+        },
+        "copy.points[].t": {
+          "maxChars": 18
+        },
+        "copy.points[].d": {
+          "maxChars": 35
+        },
+        "copy.source": {
+          "maxChars": 42
+        }
+      },
+      "copyRoles": {
+        "copy.eyebrow": "eyebrow",
+        "copy.sheet": "eyebrow",
+        "copy.quote": "eyebrow",
+        "copy.sub": "paragraph",
+        "copy.points[].n": "eyebrow",
+        "copy.points[].t": "eyebrow",
+        "copy.points[].d": "eyebrow",
+        "copy.source": "eyebrow"
+      },
+      "fieldContracts": [
+        {
+          "key": "copy.sub",
+          "role": "body"
+        },
+        {
+          "key": "copy.points",
+          "role": "list-item",
+          "defaultCount": 3,
+          "defaultVisibleCount": 3,
+          "maxCount": 3,
+          "countKey": "conclusionCount"
+        }
+      ],
+      "fillPlan": {
+        "text": [
+          {
+            "key": "copy.eyebrow",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.sheet",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 18
+          },
+          {
+            "key": "copy.quote",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 36
+          },
+          {
+            "key": "copy.sub",
+            "role": "body",
+            "type": "string",
+            "maxChars": 36
+          },
+          {
+            "key": "copy.source",
+            "role": "eyebrow",
+            "type": "string",
+            "maxChars": 42
+          }
+        ],
+        "arrays": [
+          {
+            "key": "copy.points",
+            "role": "list-item",
+            "visibleCount": 3,
+            "maxCount": 3,
+            "countKey": "conclusionCount",
+            "itemShape": {
+              "n": "string",
+              "t": "string",
+              "d": "string"
+            },
+            "itemFields": {
+              "n": {
+                "role": "eyebrow",
+                "type": "string",
+                "maxChars": 18
+              },
+              "t": {
+                "role": "eyebrow",
+                "type": "string",
+                "maxChars": 18
+              },
+              "d": {
+                "role": "eyebrow",
+                "type": "string",
+                "maxChars": 35
+              }
+            }
+          }
+        ],
+        "media": []
+      },
+      "arrayKeys": [],
+      "arrayMeta": [
+        {
+          "key": "copy.points",
+          "role": "list-item",
+          "defaultCount": 3,
+          "defaultVisibleCount": 3,
+          "countKey": "conclusionCount",
+          "min": 0,
+          "max": 3,
+          "maxCount": 3
+        }
+      ],
+      "lengthBindings": [],
+      "propShapes": {
+        "copy": {
+          "eyebrow": "string",
+          "sheet": "string",
+          "quote": "string",
+          "sub": "string",
+          "points": [
+            {
+              "n": "string",
+              "t": "string",
+              "d": "string"
+            }
+          ],
+          "source": "string"
+        }
+      },
+      "mediaSlots": [],
+      "countBindings": [
+        {
+          "key": "conclusionCount",
+          "publicKey": "conclusionCount",
+          "label": "结论点数量",
+          "arrays": [
+            "copy.points"
+          ],
+          "min": 0,
+          "max": 3
+        }
+      ],
+      "controls": [
+        {
+          "key": "theme",
+          "publicKey": "theme",
+          "label": "背景主题",
+          "type": "select",
+          "default": "paper"
+        },
+        {
+          "key": "quoteAlign",
+          "publicKey": "quoteAlign",
+          "label": "金句对齐",
+          "type": "select",
+          "default": "left"
+        },
+        {
+          "key": "conclusionCount",
+          "publicKey": "conclusionCount",
+          "label": "结论点数量",
+          "type": "range",
+          "default": 3,
+          "min": 0,
+          "max": 3
+        },
+        {
+          "key": "showQuoteMark",
+          "publicKey": "showQuoteMark",
+          "label": "引号装饰",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "accentColor",
+          "publicKey": "accentColor",
+          "label": "强调色",
+          "type": "select",
+          "default": "#d8402e"
+        },
+        {
+          "key": "showSource",
+          "publicKey": "showSource",
+          "label": "数据来源",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showColorBand",
+          "publicKey": "showColorBand",
+          "label": "色谱条",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showSheetLabel",
+          "publicKey": "showSheetLabel",
+          "label": "页码标签",
+          "type": "toggle",
+          "default": true
+        }
+      ],
+      "defaultVisibleCounts": {
+        "conclusionCount": 3
+      }
+    }
+  ]
+}

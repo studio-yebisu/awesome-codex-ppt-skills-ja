@@ -1,0 +1,87 @@
+{
+  "repository": "chuspeeism/dashi-ppt-skill",
+  "execution_type": "json_plan_and_original_react_renderer",
+  "summary_ja": "原典のgoal-scaffold --layout-variants 1・inspect-layout・props-safe・validate-goal-spec・React/tsx render-goalを実行。theme05の4種類の実テンプレートで6ページを制作。標準3+1経路の検証不整合を記録し、原典が備える1案経路を採用。 日本語派生theme05では入力値から図形寸法を計算する修正を適用。原典とvalidatorは保全。",
+  "requirements": [
+    "Node.js 20以降（実行時24.18.0）とnpm",
+    "原典projectでnpm ci --ignore-scripts",
+    "このカタログの生成補助はPython / fontTools / Brotliと共通フォント資産を使用"
+  ],
+  "steps": [
+    "固定commitの原典を取得",
+    "goal-scaffold --layout-variants 1で6ページを作る",
+    "inspect-layoutのcopyKeysとfillPlanを読みgoal.jsonのpropsへ日本語を記入",
+    "props:safe → validate:goal-spec → render:goalを実行",
+    "validate:swissとvalidate:goal-copyを実行し、ブラウザで6ページを確認"
+  ],
+  "commands": [
+    "npm --prefix <upstream>/skills/dashi-ppt/project ci --ignore-scripts",
+    "python tools/build_dashi_repository_example.py"
+  ],
+  "source_refs": [
+    {
+      "path": "skills/dashi-ppt/SKILL.md",
+      "sha256": "d4a3e924b643abeab591c3b8875e3bb4c0289e7d2fb65ac8dd710b3c559e43d3",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/SKILL.md"
+    },
+    {
+      "path": "skills/dashi-ppt/project/scripts/goal-scaffold.mjs",
+      "sha256": "7ffcccd0bbdaa389d51859fb7cb61b3121f74a356768bc770adca2420243cb35",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/scripts/goal-scaffold.mjs"
+    },
+    {
+      "path": "skills/dashi-ppt/project/scripts/render-goal-deck.jsx",
+      "sha256": "f5e7b1bd90827d4622fddd8b78be99c1f7e506114af0abd87005aafc9fab1885",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/scripts/render-goal-deck.jsx"
+    },
+    {
+      "path": "skills/dashi-ppt/project/src/deckComposer.jsx",
+      "sha256": "32e9f0c7c57c6921fa6bfc9ae67e61ee46df3b1f65df3c08a79bccf890438733",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/src/deckComposer.jsx"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "0d96a4ff68ad6d4b6f1f30f713b18d5184912ba8dd389f86aa7710db079abcb0",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/LICENSE"
+    },
+    {
+      "path": "skills/dashi-ppt/project/packages/html-deck-to-pptx/LICENSE",
+      "sha256": "071b368a699fa18059f8a295a81618e525258ca9577f8c58db7fcb71a5ebd32b",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/packages/html-deck-to-pptx/LICENSE"
+    },
+    {
+      "path": "skills/dashi-ppt/project/scripts/inspect-layout.mjs",
+      "sha256": "eb300d9d200641ea4a8b133c3cc917ff71131e77997c30d2a515e27bdecc64e2",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/scripts/inspect-layout.mjs"
+    },
+    {
+      "path": "skills/dashi-ppt/project/scripts/write-safe-props.mjs",
+      "sha256": "70f75de76abcc173e32123464002daec25f41a7bccfc747a15dab61115ac2647",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/scripts/write-safe-props.mjs"
+    },
+    {
+      "path": "skills/dashi-ppt/project/scripts/validate-goal-spec.mjs",
+      "sha256": "41cbaf3da1323ad7692443aa642aeb4c744746b1a8cdf8077a4aa981dc0188cb",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/scripts/validate-goal-spec.mjs"
+    },
+    {
+      "path": "skills/dashi-ppt/project/scripts/validate-goal-copy.mjs",
+      "sha256": "b8c87c118f93bd6a8cb50d26c2463650697be3766a7cb43a78ac91e16d085f42",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/scripts/validate-goal-copy.mjs"
+    },
+    {
+      "path": "skills/dashi-ppt/project/scripts/validate-swiss-deck.mjs",
+      "sha256": "35e0991d8cec8c106a669205c0958ec200b19500175eddd1b024d9aa9b6ef8f8",
+      "url": "https://github.com/chuspeeism/dashi-ppt-skill/blob/21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64/skills/dashi-ppt/project/scripts/validate-swiss-deck.mjs"
+    }
+  ],
+  "limitations": [
+    "標準3+1モードは原典の検証不整合があり、本例は原典CLIが提供する1案経路を使用。全3+1機能の検証完了を意味しない。",
+    "派生theme05で入力値がグラフ寸法に反映されるよう修正。原典そのままのruntimeではない。変更差分を同梱。",
+    "HTMLの本文とページ移動が対象。PPTX/PDF書出しは未検証。",
+    "原典はAGPL-3.0、内蔵PPTXエンジンは別の専有条件。エンジンを抽出・再配布していない。",
+    "カタログ内の静的previewでは原典の保存/API書出しは利用できない。編集保存/書出しには原典preview serverを使う。"
+  ],
+  "reproduction": "examples/repositories/dashi-ppt/README.md",
+  "fork": "dashi-ppt-ja"
+}

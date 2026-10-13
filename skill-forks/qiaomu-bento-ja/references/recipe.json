@@ -1,0 +1,77 @@
+{
+  "execution_type": "json_document_and_pinned_bento_shell",
+  "summary_ja": "固定版BentoのJSON文書を生成。編集可能な要素と表を使い、権限確認から出典付き回答へ同じ要素が動いてつながる資料。",
+  "requirements": [
+    "Python 3.13",
+    "スキルに同梱されたBento shell v1.0.10",
+    "ブラウザ"
+  ],
+  "commands": [
+    "python scripts/bento_deck.py locate",
+    "python scripts/bento_deck.py build deck.json --output deck.bento.html --new-document --report validation.json"
+  ],
+  "steps": [
+    "スキル内のworkflow・固定版format/agentsを読む",
+    "入力をJSONのtext/shape/tableと安定したidへ組む",
+    "bento_deck.pyで構築・検証する。文書以外のshellを保持",
+    "編集版で内容を変更し、readonly再生版でmorphとページ移動を確認"
+  ],
+  "limitations": [
+    "編集版と再生版を別ファイルで同梱。既存文書を再構築するときは--identity-sourceでdocIdを保持する。ネット上の最新版へ差し替えない。"
+  ],
+  "fork": "qiaomu-bento-ja",
+  "repository": "joeseesun/qiaomu-bento-ppt",
+  "example_ids": [
+    "qiaomu-bento"
+  ],
+  "method_ja": "原典の固定Bento shell・文書スキーマを使用。bento_deck.pyでJSONを検証し、シェルを変えずに編集版と再生版の.bento.htmlを構築。検索の同一要素が権限確認から回答へ移るmorphを制作。",
+  "license": "MIT",
+  "license_review_status": "reviewed_for_example",
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "c4a017bb4e603374700b2df22674da49dcddf09233b8a9ac1174e8074cd89a17",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/SKILL.md"
+    },
+    {
+      "path": "references/workflow.md",
+      "sha256": "34d621a47db8e6757706f90f628fb2b02a7b19130a9bbd0689249b509a180289",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/references/workflow.md"
+    },
+    {
+      "path": "references/upstream-contract.md",
+      "sha256": "205e6e3f6486f38017309dee737ef7b40ff98f2c235392bf0622976c9884acd5",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/references/upstream-contract.md"
+    },
+    {
+      "path": "references/upstream/bento-format.md",
+      "sha256": "f7dcae276c11eff125b5a15796666f43cd6b002d284a466c826f5630a06dafcb",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/references/upstream/bento-format.md"
+    },
+    {
+      "path": "references/upstream/bento-agents.md",
+      "sha256": "44329896c4e1b0e5219e8f76e5bbbbd63cb11f0f85f39fde7dfaff6f6b0b5a5c",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/references/upstream/bento-agents.md"
+    },
+    {
+      "path": "scripts/bento_deck.py",
+      "sha256": "f2b321ab8f257070626d55080f24235165cb1e4048ff2eb140098be013d603de",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/scripts/bento_deck.py"
+    },
+    {
+      "path": "upstream.lock.json",
+      "sha256": "5d8c79be08724057f0c1948b0f525b853d8c22282aa113f610a488df2b55af59",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/upstream.lock.json"
+    },
+    {
+      "path": "NOTICE.md",
+      "sha256": "e3530196bd0111405fbcb8f82caf88ccde67b6aad967a5fd2a19c6228f1c123b",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/NOTICE.md"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "21f530b2b2629e0230ba78c4cd8bd836664d68fda1c3471af6b572e25fcb2650",
+      "url": "https://github.com/joeseesun/qiaomu-bento-ppt/blob/55c63c836f42bc9175757d077428c395cd93effe/LICENSE"
+    }
+  ]
+}

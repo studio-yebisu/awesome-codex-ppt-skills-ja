@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Frontend Slides · Editable · Pitch</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* === SECTION: VIEWPORT BASE (FULL) === */
+    /* ===========================================
+       VIEWPORT FITTING: MANDATORY BASE STYLES
+       Include this ENTIRE file in every presentation.
+       These styles ensure slides fit exactly in the viewport.
+       =========================================== */
+
+    html, body {
+      height: 100%;
+      overflow-x: hidden;
+    }
+
+    html {
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+    }
+
+    .slide {
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      overflow: hidden;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .slide-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-height: 100%;
+      overflow: hidden;
+      padding: var(--slide-padding);
+    }
+
+    :root {
+      --title-size: clamp(1.5rem, 5vw, 4rem);
+      --h2-size: clamp(1.25rem, 3.5vw, 2.5rem);
+      --h3-size: clamp(1rem, 2.5vw, 1.75rem);
+      --body-size: clamp(0.75rem, 1.5vw, 1.125rem);
+      --small-size: clamp(0.65rem, 1vw, 0.875rem);
+      --slide-padding: clamp(1rem, 4vw, 4rem);
+      --content-gap: clamp(0.5rem, 2vw, 2rem);
+      --element-gap: clamp(0.25rem, 1vw, 1rem);
+    }
+
+    .card, .container, .content-box {
+      max-width: min(90vw, 1000px);
+      max-height: min(80vh, 700px);
+    }
+
+    .feature-list, .bullet-list {
+      gap: clamp(0.4rem, 1vh, 1rem);
+    }
+
+    .feature-list li, .bullet-list li {
+      font-size: var(--body-size);
+      line-height: 1.4;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(min(100%, 250px), 1fr));
+      gap: clamp(0.5rem, 1.5vw, 1rem);
+    }
+
+    img, .image-container {
+      max-width: 100%;
+      max-height: min(50vh, 400px);
+      object-fit: contain;
+    }
+
+    @media (max-height: 700px) {
+      :root {
+        --slide-padding: clamp(0.75rem, 3vw, 2rem);
+        --content-gap: clamp(0.4rem, 1.5vw, 1rem);
+        --title-size: clamp(1.25rem, 4.5vw, 2.5rem);
+        --h2-size: clamp(1rem, 3vw, 1.75rem);
+      }
+    }
+
+    @media (max-height: 600px) {
+      :root {
+        --slide-padding: clamp(0.5rem, 2.5vw, 1.5rem);
+        --content-gap: clamp(0.3rem, 1vw, 0.75rem);
+        --title-size: clamp(1.1rem, 4vw, 2rem);
+        --body-size: clamp(0.7rem, 1.2vw, 0.95rem);
+      }
+
+      .nav-dots, .keyboard-hint, .decorative {
+        display: none;
+      }
+    }
+
+    @media (max-height: 500px) {
+      :root {
+        --slide-padding: clamp(0.4rem, 2vw, 1rem);
+        --title-size: clamp(1rem, 3.5vw, 1.5rem);
+        --h2-size: clamp(0.9rem, 2.5vw, 1.25rem);
+        --body-size: clamp(0.65rem, 1vw, 0.85rem);
+      }
+    }
+
+    @media (max-width: 600px) {
+      :root {
+        --title-size: clamp(1.25rem, 7vw, 2.5rem);
+      }
+
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+      }
+
+      html {
+        scroll-behavior: auto;
+      }
+    }
+
+    /* === SECTION: THEME — BOLD SIGNAL (PRESET) === */
+    :root {
+      --bg-primary: #1a1a1a;
+      --bg-gradient: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #1a1a1a 100%);
+      --card-bg: #ff5722;
+      --text-primary: #ffffff;
+      --text-on-card: #1a1a1a;
+      --font-display: 'Archivo Black', sans-serif;
+      --font-body: 'Space Grotesk', sans-serif;
+      --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+      --duration-normal: 0.55s;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+    }
+
+    /* Full-slide background + grid texture */
+    .slide > .slide-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+      background: var(--bg-gradient);
+    }
+
+    .slide > .slide-bg::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+      background-size: clamp(36px, 6vw, 52px) clamp(36px, 6vw, 52px);
+      opacity: 0.45;
+    }
+
+    /* Signature orange panel (abstract, preset-true) */
+    .slide > .slide-bg::after {
+      content: "";
+      position: absolute;
+      right: clamp(4%, 6vw, 8%);
+      top: clamp(14%, 18vh, 22%);
+      width: min(42vw, 380px);
+      height: min(48vh, 320px);
+      background: var(--card-bg);
+      border-radius: clamp(8px, 1.2vw, 16px);
+      transform: rotate(calc(-1 * clamp(0deg, 1.5deg, 2deg)));
+    }
+
+    .slide-inner {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+    }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      padding: var(--slide-padding) var(--slide-padding) 0;
+      gap: var(--element-gap);
+    }
+
+    .slide-num {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 3rem);
+      line-height: 1;
+      letter-spacing: calc(-1 * clamp(0.02em, 0.2vw, 0.04em));
+      color: var(--text-primary);
+      opacity: 0.95;
+    }
+
+    .slide-crumb {
+      font-size: var(--small-size);
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: color-mix(in srgb, var(--text-primary) 55%, transparent);
+      text-align: right;
+      max-width: min(52vw, 420px);
+    }
+
+    .slide-crumb span {
+      opacity: 0.45;
+    }
+
+    .slide-crumb span.active {
+      opacity: 1;
+      color: var(--card-bg);
+    }
+
+    .slide-content {
+      flex: 1;
+      justify-content: flex-end;
+      align-items: flex-start;
+      padding-top: 0;
+    }
+
+    .slide-content.centered {
+      justify-content: center;
+    }
+
+    h1.hero-title {
+      font-family: var(--font-display);
+      font-size: var(--title-size);
+      line-height: 1.05;
+      max-width: min(18ch, 92vw);
+      text-wrap: balance;
+    }
+
+    p.hero-sub {
+      margin-top: var(--content-gap);
+      font-size: var(--h3-size);
+      font-weight: 500;
+      max-width: min(36ch, 92vw);
+      opacity: 0.88;
+      line-height: 1.35;
+    }
+
+    .signal-card {
+      background: var(--card-bg);
+      color: var(--text-on-card);
+      border-radius: clamp(8px, 1.2vw, 16px);
+      padding: clamp(0.85rem, 2.2vw, 1.35rem) clamp(1rem, 3vw, 1.75rem);
+      max-width: min(92vw, 760px);
+      max-height: min(72vh, 560px);
+      overflow: hidden;
+      box-shadow: 0 clamp(8px, 2vh, 24px) clamp(24px, 5vh, 48px) rgba(0, 0, 0, 0.35);
+    }
+
+    .signal-card h2 {
+      font-family: var(--font-display);
+      font-size: var(--h2-size);
+      margin-bottom: var(--content-gap);
+      line-height: 1.1;
+    }
+
+    .signal-card .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .signal-card .bullet-list li {
+      position: relative;
+      padding-left: clamp(0.85rem, 2vw, 1.1rem);
+      font-weight: 500;
+      color: color-mix(in srgb, var(--text-on-card) 92%, #fff);
+    }
+
+    .signal-card .bullet-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.55em;
+      width: clamp(4px, 0.6vw, 6px);
+      height: clamp(4px, 0.6vw, 6px);
+      border-radius: 50%;
+      background: var(--text-on-card);
+    }
+
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: clamp(0.5rem, 1.2vw, 0.85rem);
+      max-height: min(58vh, 480px);
+      overflow: hidden;
+    }
+
+    .compare-col h3 {
+      font-size: var(--small-size);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: clamp(0.35rem, 1vh, 0.5rem);
+      opacity: 0.75;
+    }
+
+    .compare-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: clamp(0.3rem, 0.9vh, 0.55rem);
+    }
+
+    .compare-col li {
+      font-size: var(--body-size);
+      line-height: 1.35;
+      font-weight: 500;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: clamp(0.35rem, 1vw, 0.5rem);
+      margin-top: var(--content-gap);
+    }
+
+    .tag {
+      font-size: var(--small-size);
+      padding: clamp(0.2rem, 0.6vh, 0.35rem) clamp(0.45rem, 1.2vw, 0.65rem);
+      border-radius: 999px;
+      border: 1px solid color-mix(in srgb, var(--text-on-card) 28%, transparent);
+      font-weight: 600;
+    }
+
+    /* === SECTION: REVEAL ANIMATIONS === */
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition:
+        opacity var(--duration-normal) var(--ease-out-expo),
+        transform var(--duration-normal) var(--ease-out-expo);
+    }
+
+    .slide.visible .reveal {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .slide.visible .reveal:nth-child(1) { transition-delay: 0.06s; }
+    .slide.visible .reveal:nth-child(2) { transition-delay: 0.12s; }
+    .slide.visible .reveal:nth-child(3) { transition-delay: 0.18s; }
+    .slide.visible .reveal:nth-child(4) { transition-delay: 0.24s; }
+    .slide.visible .reveal:nth-child(5) { transition-delay: 0.3s; }
+    .slide.visible .reveal:nth-child(6) { transition-delay: 0.36s; }
+
+    /* === SECTION: PROGRESS + NAV === */
+    .progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--card-bg), #f5a623);
+      width: 0%;
+      z-index: 9000;
+      pointer-events: none;
+    }
+
+    .nav-dots {
+      position: fixed;
+      bottom: clamp(0.5rem, 2vh, 1.25rem);
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 0.45rem;
+      z-index: 9000;
+    }
+
+    .nav-dots button {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      border: none;
+      padding: 0;
+      background: color-mix(in srgb, var(--text-primary) 22%, transparent);
+      cursor: pointer;
+    }
+
+    .nav-dots button.active {
+      background: var(--card-bg);
+      transform: scale(1.12);
+    }
+
+    .keyboard-hint {
+      position: fixed;
+      bottom: clamp(0.5rem, 2vh, 1.25rem);
+      right: var(--slide-padding);
+      font-size: var(--small-size);
+      opacity: 0.35;
+      z-index: 9000;
+      pointer-events: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="progress-bar" id="progressBar" aria-hidden="true"></div>
+  <nav class="nav-dots" id="navDots" aria-label="幻灯片导航"></nav>
+  <p class="keyboard-hint decorative">← → 空格 · 滑动</p>
+
+  <!-- === SLIDE 01 — TITLE === -->
+  <section class="slide" aria-label="封面">
+    <div class="slide-bg"></div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <div class="slide-num reveal">01</div>
+        <div class="slide-crumb reveal"><span class="active">开场</span> <span>/</span> Title</div>
+      </header>
+      <div class="slide-content">
+        <h1 class="hero-title reveal">Frontend Slides · Editable</h1>
+        <p class="hero-sub reveal">单文件 HTML 演示 + 浏览器内完整编辑运行时：拖拽、排版、重排页面、本地保存与导出。</p>
+        <p class="hero-sub reveal" style="font-size: var(--body-size); opacity: 0.65;">Zero-dependency · Pitch distilled from README.md</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SLIDE 02 — PROBLEM === -->
+  <section class="slide" aria-label="问题与机会">
+    <div class="slide-bg"></div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <div class="slide-num reveal">02</div>
+        <div class="slide-crumb reveal">叙事 <span>/</span> <span class="active">Why</span></div>
+      </header>
+      <div class="slide-content centered">
+        <div class="signal-card reveal">
+          <h2>生成不是定稿</h2>
+          <ul class="bullet-list">
+            <li>评审后还要改布局、改措辞、对齐品牌。</li>
+            <li>只读 HTML 交付快，但迭代成本落在「重新生成」上。</li>
+            <li>可编辑分支让第一版即可在浏览器里继续塑形。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SLIDE 03 — WHAT === -->
+  <section class="slide" aria-label="是什么">
+    <div class="slide-bg"></div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <div class="slide-num reveal">03</div>
+        <div class="slide-crumb reveal">产品 <span>/</span> <span class="active">What</span></div>
+      </header>
+      <div class="slide-content centered">
+        <div class="signal-card reveal">
+          <h2>可编辑的 frontend-slides 分支</h2>
+          <ul class="bullet-list">
+            <li>保留父技能的：风格探索、视口纪律、PPT 提取流程。</li>
+            <li>新增：对象级拖拽/缩放、富文本、Pages 侧栏、Undo/Redo。</li>
+            <li>交付仍是单文件；样式仍应按 STYLE_PRESETS 逐套实现。</li>
+          </ul>
+          <div class="tag-row">
+            <span class="tag">localStorage</span>
+            <span class="tag">Export HTML</span>
+            <span class="tag">python-pptx</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SLIDE 04 — COMPARISON === -->
+  <section class="slide" aria-label="对照">
+    <div class="slide-bg"></div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <div class="slide-num reveal">04</div>
+        <div class="slide-crumb reveal"><span class="active">对照</span> <span>/</span> Compare</div>
+      </header>
+      <div class="slide-content centered">
+        <div class="signal-card reveal">
+          <h2>父技能 vs 可编辑</h2>
+          <div class="compare-grid">
+            <div class="compare-col">
+              <h3>frontend-slides</h3>
+              <ul>
+                <li>更轻、更干净的只读输出</li>
+                <li>适合接近定稿、体积敏感</li>
+                <li>无 Pages / 无完整对象历史</li>
+                <li>可选轻量文本编辑（按流程）</li>
+              </ul>
+            </div>
+            <div class="compare-col">
+              <h3>editable fork</h3>
+              <ul>
+                <li>完整编辑运行时（默认）</li>
+                <li>评审后继续改布局与内容</li>
+                <li>侧栏缩略图、重排、删除</li>
+                <li>保存整副 deck 结构并可导出</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SLIDE 05 — FEATURES === -->
+  <section class="slide" aria-label="核心能力">
+    <div class="slide-bg"></div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <div class="slide-num reveal">05</div>
+        <div class="slide-crumb reveal">能力 <span>/</span> <span class="active">Features</span></div>
+      </header>
+      <div class="slide-content centered">
+        <div class="signal-card reveal">
+          <h2>核心特性（节选）</h2>
+          <ul class="bullet-list">
+            <li>零依赖：内联 CSS/JS，无需 npm。</li>
+            <li>Ctrl+点击多选；吸附对齐；撤销/重做。</li>
+            <li>粗体/斜体/字体/字号；文本框缩放自动重排。</li>
+            <li>Pages：缩略图导航、重排、删除幻灯片。</li>
+            <li>Ctrl+S 持久化；导出剥离临时编辑态的 .html。</li>
+            <li>视口安全：每页必须适配，禁止页内滚动。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SLIDE 06 — WHEN === -->
+  <section class="slide" aria-label="使用场景">
+    <div class="slide-bg"></div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <div class="slide-num reveal">06</div>
+        <div class="slide-crumb reveal">场景 <span>/</span> <span class="active">When</span></div>
+      </header>
+      <div class="slide-content centered">
+        <div class="signal-card reveal">
+          <h2>何时选哪一个</h2>
+          <div class="compare-grid">
+            <div class="compare-col">
+              <h3>选 Editable</h3>
+              <ul>
+                <li>生成后仍要微调版式</li>
+                <li>客户/团队反馈迭代密集</li>
+                <li>PPT→网页后仍要改</li>
+              </ul>
+            </div>
+            <div class="compare-col">
+              <h3>选父技能</h3>
+              <ul>
+                <li>只读展示即可</li>
+                <li>追求更小文件体积</li>
+                <li>不需要编辑器界面</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SLIDE 07 — PHILOSOPHY === -->
+  <section class="slide" aria-label="理念">
+    <div class="slide-bg"></div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <div class="slide-num reveal">07</div>
+        <div class="slide-crumb reveal">信念 <span>/</span> <span class="active">Principles</span></div>
+      </header>
+      <div class="slide-content centered">
+        <div class="signal-card reveal">
+          <h2>设计理念</h2>
+          <ul class="bullet-list">
+            <li>用「看见选项」建立审美，而不是抽象问卷。</li>
+            <li>第一版就要能编辑；依赖越少，保质期越长。</li>
+            <li>放不下就拆页，而不是藏起溢出。</li>
+            <li>辨识度优先：精选预设对抗模板感。</li>
+            <li>可编辑是运行时加成，不是统一成套土版式。</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- === SLIDE 08 — CLOSING === -->
+  <section class="slide" aria-label="收尾">
+    <div class="slide-bg"></div>
+    <div class="slide-inner">
+      <header class="slide-header">
+        <div class="slide-num reveal">08</div>
+        <div class="slide-crumb reveal"><span class="active">下一步</span> <span>/</span> Next</div>
+      </header>
+      <div class="slide-content">
+        <h1 class="hero-title reveal">试用与文档</h1>
+        <p class="hero-sub reveal">打开 <code style="font-size: 0.92em;">examples/editable-deck-reference.html</code>；12 套预设各对应 <code style="font-size: 0.92em;">examples/generated/presets/*.html</code>。</p>
+        <p class="hero-sub reveal" style="font-size: var(--body-size); opacity: 0.7;">基于 zarazhangrui/frontend-slides 扩展 · MIT 许可</p>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    /* === SECTION: SLIDE CONTROLLER === */
+    class SlidePresentation {
+      constructor() {
+        this.slides = document.querySelectorAll('.slide');
+        this.currentSlide = 0;
+        this.progressBar = document.getElementById('progressBar');
+        this.navDots = document.getElementById('navDots');
+        this.touchStartY = null;
+        this.initDots();
+        this.setupIntersectionObserver();
+        this.setupKeyboardNav();
+        this.setupWheelNav();
+        this.setupTouchNav();
+        this.updateProgress();
+      }
+
+      initDots() {
+        this.navDots.innerHTML = '';
+        this.slides.forEach((_, i) => {
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.setAttribute('aria-label', '跳转到第 ' + (i + 1) + ' 页');
+          b.addEventListener('click', () => this.goTo(i));
+          this.navDots.appendChild(b);
+        });
+        this.syncDots();
+      }
+
+      syncDots() {
+        const buttons = this.navDots.querySelectorAll('button');
+        buttons.forEach((btn, i) => {
+          btn.classList.toggle('active', i === this.currentSlide);
+        });
+      }
+
+      setupIntersectionObserver() {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                const idx = Array.prototype.indexOf.call(this.slides, entry.target);
+                if (idx !== -1) {
+                  this.currentSlide = idx;
+                  this.updateProgress();
+                  this.syncDots();
+                }
+              }
+            });
+          },
+          { threshold: 0.52 }
+        );
+        this.slides.forEach((s) => observer.observe(s));
+      }
+
+      goTo(index) {
+        const i = Math.max(0, Math.min(index, this.slides.length - 1));
+        this.slides[i].scrollIntoView({ behavior: 'smooth' });
+      }
+
+      next() {
+        this.goTo(this.currentSlide + 1);
+      }
+
+      prev() {
+        this.goTo(this.currentSlide - 1);
+      }
+
+      setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+          if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ' || e.key === 'PageDown') {
+            e.preventDefault();
+            this.next();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+            e.preventDefault();
+            this.prev();
+          } else if (e.key === 'Home') {
+            e.preventDefault();
+            this.goTo(0);
+          } else if (e.key === 'End') {
+            e.preventDefault();
+            this.goTo(this.slides.length - 1);
+          }
+        });
+      }
+
+      setupWheelNav() {
+        let locked = false;
+        document.addEventListener(
+          'wheel',
+          (e) => {
+            if (Math.abs(e.deltaY) < 20) return;
+            if (locked) return;
+            locked = true;
+            if (e.deltaY > 0) this.next();
+            else this.prev();
+            setTimeout(() => {
+              locked = false;
+            }, 600);
+          },
+          { passive: true }
+        );
+      }
+
+      setupTouchNav() {
+        document.addEventListener('touchstart', (e) => {
+          this.touchStartY = e.changedTouches[0].screenY;
+        }, { passive: true });
+        document.addEventListener('touchend', (e) => {
+          if (this.touchStartY === null) return;
+          const dy = this.touchStartY - e.changedTouches[0].screenY;
+          this.touchStartY = null;
+          if (Math.abs(dy) < 50) return;
+          if (dy > 0) this.next();
+          else this.prev();
+        }, { passive: true });
+      }
+
+      updateProgress() {
+        if (!this.progressBar || !this.slides.length) return;
+        const pct = (this.currentSlide / Math.max(1, this.slides.length - 1)) * 100;
+        this.progressBar.style.width = pct + '%';
+      }
+    }
+
+    new SlidePresentation();
+  </script>
+</body>
+</html>

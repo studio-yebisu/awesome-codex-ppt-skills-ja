@@ -1,0 +1,56 @@
+[
+  {
+    "id": "dashi-ppt",
+    "title": "EC月次報告：売上と粗利を確かめる",
+    "use_case": "月次報告",
+    "repository": "chuspeeism/dashi-ppt-skill",
+    "skill_repository": "chuspeeism/dashi-ppt-skill",
+    "upstream_commit": "21dc7e5fc8c3a0d7f6a94948153dd1ee954f4e64",
+    "fork_id": "dashi-ppt-ja",
+    "page_count": 6,
+    "format": "html",
+    "preview_kind": "html",
+    "style": "Dashi / theme05 色譜チャート",
+    "cover": "examples/repositories/dashi-ppt/render/slide-01.png",
+    "interior": "examples/repositories/dashi-ppt/render/slide-03.png",
+    "preview": "examples/repositories/dashi-ppt/index.html",
+    "pages": [
+      "examples/repositories/dashi-ppt/render/slide-01.png",
+      "examples/repositories/dashi-ppt/render/slide-02.png",
+      "examples/repositories/dashi-ppt/render/slide-03.png",
+      "examples/repositories/dashi-ppt/render/slide-04.png",
+      "examples/repositories/dashi-ppt/render/slide-05.png",
+      "examples/repositories/dashi-ppt/render/slide-06.png"
+    ],
+    "artifact_download": "downloads/dashi-ppt-example-ja.zip",
+    "source_download": "downloads/dashi-ppt-example-ja.zip",
+    "input": "examples/repositories/dashi-ppt/input/BRIEF.md",
+    "input_data": "examples/repositories/dashi-ppt/input/data.json",
+    "prompt": "examples/repositories/dashi-ppt/PROMPT.txt",
+    "prompt_text": "chuspeeism/dashi-ppt-skill の原典スキルを読み、添付の入力資料を使って「EC月次報告：売上と粗利を確かめる」を日本語で制作してください。Dashi / theme05 色譜チャートを使用し、そのリポ固有の生成手順・テンプレート・実装を保ってください。完成ファイルを開き、全ページの日本語・図表・ページ移動を確認してください。",
+    "provenance": "examples/repositories/dashi-ppt/PROVENANCE.json",
+    "qa": "examples/repositories/dashi-ppt/QA.json",
+    "fork_download": "downloads/dashi-ppt-ja.zip",
+    "guide": "repository.html?repo=chuspeeism/dashi-ppt-skill",
+    "titles": [
+      "EC月次報告",
+      "売上は前年から20%増えた",
+      "粗利額は増え、粗利率は下がった",
+      "売上の内訳をチャネルで見る",
+      "返品率の上昇を先に確認する",
+      "次月は返品と粗利率を追う"
+    ],
+    "notes": [
+      "架空のEC事業の月次報告です。1200万円の売上を使った説明用サンプルです。",
+      "前年1000万円に対して1200万円、増加額200万円、成長率20%です。",
+      "粗利は前年380万円から432万円へ52万円増加しました。粗利率は38%から36%へ2ポイント低下しています。",
+      "240・390・210・360万円の合計は1200万円です。チャネル別の数字は架空です。",
+      "返品率は前年4%から6%へ2ポイント上昇した設定です。要因はまだ調べていません。",
+      "次月は返品の理由と粗利率の変化を追います。施策の実施や成果を示す報告ではありません。"
+    ],
+    "method": "原典のgoal-scaffold --layout-variants 1・inspect-layout・props-safe・validate-goal-spec・React/tsx render-goalを実行。theme05の4種類の実テンプレートで6ページを制作。標準3+1経路の検証不整合を記録し、原典が備える1案経路を採用。 日本語派生theme05では入力値から図形寸法を計算する修正を適用。原典とvalidatorは保全。",
+    "sample_notice": "この資料は使い方を示す制作例です。企業・人数・金額・目標などの企画条件は架空です。",
+    "license_note": "AGPL-3.0。内蔵PPTXエンジンは個別の専有条件。本作例はHTML生成経路を使用。",
+    "reproduce_script": "reproduce/Reproduce.ps1"
+  }
+]

@@ -1,0 +1,76 @@
+{
+  "repository": "minorun365/minorun-marp-skill",
+  "upstream_commit": "736fd5e9fafb80148a1e6eaa5ae5f9d859431257",
+  "acquisition": {
+    "repository": "minorun365/minorun-marp-skill",
+    "commit": "736fd5e9fafb80148a1e6eaa5ae5f9d859431257",
+    "archive_url": "https://codeload.github.com/minorun365/minorun-marp-skill/zip/736fd5e9fafb80148a1e6eaa5ae5f9d859431257",
+    "archive_sha256": "0c38fc0cffd2daa4f3607c912e72efce04cd18dc210503ea62622c856a8222d1",
+    "bytes": 321935,
+    "checked_at": "2026-10-13T13:35:54.696876+00:00",
+    "root": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\minorun365__minorun-marp-skill"
+  },
+  "method": "原典のslide-story・slide-figures・slide-design-darkを適用。黒地テーマ本体を保持し、作業・ステージ・記録・共有の図を段階的に開示するMarp原稿を制作。Marp CLIで実HTMLを生成。",
+  "execution_type": "instruction_skill_and_marp_cli",
+  "references": [
+    {
+      "path": "skills/slide-story/SKILL.md",
+      "sha256": "cd46b756efacc9ea0c6bf438366fe2e1a7722890c876883dd5aa9c768ba6b047"
+    },
+    {
+      "path": "skills/slide-figures/SKILL.md",
+      "sha256": "7f1ab5af0c469408943234af32541fa3e4d8327a01d735c0adc81f1fd9947a21"
+    },
+    {
+      "path": "skills/slide-design-dark/SKILL.md",
+      "sha256": "efef73c3af233b4c58aa8eebe5a507e67f0f28d65f0a17e1989b3c39a3fbb25e"
+    },
+    {
+      "path": "theme/minorun-dark.css",
+      "sha256": "c9b5c03670b532ce11262ef9c4170709ad2164aa9ce6dfb660ba48865b14b4e6"
+    },
+    {
+      "path": "tools/check-ai-smell.py",
+      "sha256": "7d2095a5bb24aabb598b69115dae93a8611a153bcf72263529a3094ff27afd44"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+    }
+  ],
+  "commands_executed": [
+    {
+      "argv": [
+        "node",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\repository-runtime\\node_modules\\@marp-team\\marp-cli\\marp-cli.js",
+        "--no-stdin",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\minorun-marp\\deck.md",
+        "--html",
+        "--theme",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\minorun-marp\\minorun-dark.css",
+        "--allow-local-files",
+        "-o",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\minorun-marp\\index.html"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
+      "exit_code": 0,
+      "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "python",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\minorun365__minorun-marp-skill\\tools\\check-ai-smell.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\minorun-marp\\deck.md"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
+      "exit_code": 0,
+      "stdout_sha256": "e72ab187ee3009b6089455ca463dccedd53b0559a865c023a9ba601d7772e9ff"
+    }
+  ],
+  "artifact": "examples/repositories/minorun-marp/index.html",
+  "artifact_sha256": "883f5488acb3e247edff5d343032911a9c1fe07a056e2ba661a103d1eb7b6693",
+  "input_sha256": "a70fb3b5bde0ac50d0f7d68225acc100f774dd53d25207fef0ff86e1723cbe93",
+  "authored_by": "Studio Yebisu / Codex",
+  "scope": "実際に原典の固有方法を使った日本語作例。エージェントが書いた本文を使用。",
+  "checked_at": "2026-10-13T15:04:30.341768+00:00"
+}

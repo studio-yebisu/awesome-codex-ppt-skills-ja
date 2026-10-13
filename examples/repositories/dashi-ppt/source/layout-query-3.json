@@ -1,0 +1,538 @@
+{
+  "theme": "theme05",
+  "role": "comparison",
+  "keyword": null,
+  "needsMedia": false,
+  "mediaIntent": null,
+  "mediaCount": null,
+  "mediaKind": null,
+  "requireInitialMedia": false,
+  "limit": 3,
+  "seed": "yebisu-ec:slide-3",
+  "themeDisplayName": "色谱图表风",
+  "themeScenario": "数据报告、市场分析、KPI 复盘、行业研究",
+  "themeAudience": "数据分析师、咨询顾问、研究员、业务负责人",
+  "count": 3,
+  "layouts": [
+    {
+      "layout": "theme05_page091",
+      "theme": "theme05",
+      "pageNumber": 91,
+      "label": "对比大数字 Versus",
+      "slot": "versus",
+      "roles": [
+        "metrics",
+        "comparison"
+      ],
+      "copyKeys": [
+        "copy.eyebrow",
+        "copy.title",
+        "copy.sheet",
+        "copy.left.label",
+        "copy.left.value",
+        "copy.left.unit"
+      ],
+      "arrayKeys": [],
+      "arrayMeta": [
+        {
+          "key": "copy.aux",
+          "role": "misc",
+          "defaultVisibleCount": 3,
+          "maxCount": 3,
+          "countKey": "auxCount"
+        }
+      ],
+      "mediaSlots": [],
+      "controls": [
+        {
+          "key": "operator",
+          "publicKey": "operator",
+          "label": "对比符号",
+          "type": "select",
+          "default": "ratio"
+        },
+        {
+          "key": "emphasize",
+          "publicKey": "emphasize",
+          "label": "强调侧",
+          "type": "select",
+          "default": "left"
+        },
+        {
+          "key": "showBadge",
+          "publicKey": "showBadge",
+          "label": "倍数徽标",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showCaption",
+          "publicKey": "showCaption",
+          "label": "数字说明",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "auxCount",
+          "publicKey": "auxCount",
+          "label": "辅助指标数",
+          "type": "range",
+          "default": 3,
+          "min": 0,
+          "max": 3
+        },
+        {
+          "key": "showClosing",
+          "publicKey": "showClosing",
+          "label": "结语文案",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "accentColor",
+          "publicKey": "accentColor",
+          "label": "强调色",
+          "type": "select",
+          "default": "#d8402e"
+        },
+        {
+          "key": "showWordmark",
+          "publicKey": "showWordmark",
+          "label": "品牌标识",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showColorBand",
+          "publicKey": "showColorBand",
+          "label": "色谱条",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showSheetLabel",
+          "publicKey": "showSheetLabel",
+          "label": "页码标签",
+          "type": "toggle",
+          "default": true
+        }
+      ],
+      "controlKeys": [
+        "operator",
+        "emphasize",
+        "showBadge",
+        "showCaption",
+        "auxCount",
+        "showClosing",
+        "accentColor",
+        "showWordmark",
+        "showColorBand",
+        "showSheetLabel"
+      ],
+      "publicControlKeys": [
+        "operator",
+        "emphasize",
+        "showBadge",
+        "showCaption",
+        "auxCount",
+        "showClosing",
+        "accentColor",
+        "showWordmark",
+        "showColorBand",
+        "showSheetLabel"
+      ],
+      "allowedPropKeys": [
+        "accentColor",
+        "auxCount",
+        "copy",
+        "emphasize",
+        "operator",
+        "showBadge",
+        "showCaption",
+        "showClosing",
+        "showColorBand",
+        "showSheetLabel",
+        "showWordmark"
+      ],
+      "allowedPublicPropKeys": [
+        "accentColor",
+        "auxCount",
+        "copy",
+        "emphasize",
+        "operator",
+        "showBadge",
+        "showCaption",
+        "showClosing",
+        "showColorBand",
+        "showSheetLabel",
+        "showWordmark"
+      ],
+      "themeDisplayName": "色谱图表风",
+      "copyBudgets": {
+        "copy.eyebrow": {
+          "maxChars": 18
+        },
+        "copy.title": {
+          "maxChars": 18
+        },
+        "copy.sheet": {
+          "maxChars": 18
+        },
+        "copy.left.label": {
+          "maxChars": 18
+        },
+        "copy.left.value": {
+          "maxChars": 9
+        },
+        "copy.left.unit": {
+          "maxChars": 18
+        }
+      },
+      "queryScore": 20
+    },
+    {
+      "layout": "theme05_page015",
+      "theme": "theme05",
+      "pageNumber": 15,
+      "label": "象限 Quadrant",
+      "slot": "quad",
+      "roles": [
+        "comparison"
+      ],
+      "copyKeys": [
+        "copy.eyebrow",
+        "copy.title",
+        "copy.sub",
+        "copy.sheet",
+        "copy.axisX",
+        "copy.axisY"
+      ],
+      "arrayKeys": [],
+      "arrayMeta": [
+        {
+          "key": "copy.quads",
+          "role": "misc",
+          "defaultVisibleCount": 4,
+          "maxCount": 4,
+          "countKey": null
+        },
+        {
+          "key": "copy.quads[].items",
+          "role": "list-item",
+          "defaultVisibleCount": 2,
+          "countKey": null
+        }
+      ],
+      "mediaSlots": [],
+      "controls": [
+        {
+          "key": "focusEnabled",
+          "publicKey": "focusEnabled",
+          "label": "突出象限",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "focusIndex",
+          "publicKey": "focusIndex",
+          "label": "重点象限",
+          "type": "range",
+          "default": 1,
+          "min": 1,
+          "max": 4
+        },
+        {
+          "key": "quadrantTint",
+          "publicKey": "quadrantTint",
+          "label": "象限底色",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "key": "showItems",
+          "publicKey": "showItems",
+          "label": "代表方向",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showScatter",
+          "publicKey": "showScatter",
+          "label": "散点标记",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showAxisLabels",
+          "publicKey": "showAxisLabels",
+          "label": "坐标轴标签",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "accentColor",
+          "publicKey": "accentColor",
+          "label": "强调色",
+          "type": "select",
+          "default": "#d8402e"
+        },
+        {
+          "key": "showConclusion",
+          "publicKey": "showConclusion",
+          "label": "结论文案",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showSheetLabel",
+          "publicKey": "showSheetLabel",
+          "label": "页码标签",
+          "type": "toggle",
+          "default": true
+        }
+      ],
+      "controlKeys": [
+        "focusEnabled",
+        "focusIndex",
+        "quadrantTint",
+        "showItems",
+        "showScatter",
+        "showAxisLabels",
+        "accentColor",
+        "showConclusion",
+        "showSheetLabel"
+      ],
+      "publicControlKeys": [
+        "focusEnabled",
+        "focusIndex",
+        "quadrantTint",
+        "showItems",
+        "showScatter",
+        "showAxisLabels",
+        "accentColor",
+        "showConclusion",
+        "showSheetLabel"
+      ],
+      "allowedPropKeys": [
+        "accentColor",
+        "copy",
+        "focusEnabled",
+        "focusIndex",
+        "quadrantTint",
+        "showAxisLabels",
+        "showConclusion",
+        "showItems",
+        "showScatter",
+        "showSheetLabel"
+      ],
+      "allowedPublicPropKeys": [
+        "accentColor",
+        "copy",
+        "focusEnabled",
+        "focusIndex",
+        "quadrantTint",
+        "showAxisLabels",
+        "showConclusion",
+        "showItems",
+        "showScatter",
+        "showSheetLabel"
+      ],
+      "themeDisplayName": "色谱图表风",
+      "copyBudgets": {
+        "copy.eyebrow": {
+          "maxChars": 20
+        },
+        "copy.title": {
+          "maxChars": 18
+        },
+        "copy.sub": {
+          "maxChars": 36
+        },
+        "copy.sheet": {
+          "maxChars": 20
+        },
+        "copy.axisX": {
+          "maxChars": 18
+        },
+        "copy.axisY": {
+          "maxChars": 18
+        }
+      },
+      "queryScore": 20
+    },
+    {
+      "layout": "theme05_page034",
+      "theme": "theme05",
+      "pageNumber": 34,
+      "label": "对照表 Matrix",
+      "slot": "matrix",
+      "roles": [
+        "data",
+        "comparison"
+      ],
+      "copyKeys": [
+        "copy.eyebrow",
+        "copy.title",
+        "copy.sub",
+        "copy.sheet",
+        "copy.lead",
+        "copy.tag"
+      ],
+      "arrayKeys": [],
+      "arrayMeta": [
+        {
+          "key": "copy.headers",
+          "role": "misc",
+          "defaultVisibleCount": 4,
+          "maxCount": 4,
+          "countKey": null
+        },
+        {
+          "key": "copy.rows",
+          "role": "list-item",
+          "defaultVisibleCount": 4,
+          "maxCount": 4,
+          "countKey": "rowCount"
+        }
+      ],
+      "mediaSlots": [],
+      "controls": [
+        {
+          "key": "rowCount",
+          "publicKey": "rowCount",
+          "label": "数据行数",
+          "type": "range",
+          "default": 4,
+          "min": 2,
+          "max": 4
+        },
+        {
+          "key": "showVerdict",
+          "publicKey": "showVerdict",
+          "label": "判断列",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "zebra",
+          "publicKey": "zebra",
+          "label": "斑马纹",
+          "type": "toggle",
+          "default": false
+        },
+        {
+          "key": "focusEnabled",
+          "publicKey": "focusEnabled",
+          "label": "重点行",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "focusIndex",
+          "publicKey": "focusIndex",
+          "label": "重点行序号",
+          "type": "range",
+          "default": 1,
+          "min": 1,
+          "max": 4
+        },
+        {
+          "key": "showIntro",
+          "publicKey": "showIntro",
+          "label": "引导栏",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "accentColor",
+          "publicKey": "accentColor",
+          "label": "强调色",
+          "type": "select",
+          "default": "#2c44a0"
+        },
+        {
+          "key": "showConclusion",
+          "publicKey": "showConclusion",
+          "label": "结论文案",
+          "type": "toggle",
+          "default": true
+        },
+        {
+          "key": "showSheetLabel",
+          "publicKey": "showSheetLabel",
+          "label": "页码标签",
+          "type": "toggle",
+          "default": true
+        }
+      ],
+      "controlKeys": [
+        "rowCount",
+        "showVerdict",
+        "zebra",
+        "focusEnabled",
+        "focusIndex",
+        "showIntro",
+        "accentColor",
+        "showConclusion",
+        "showSheetLabel"
+      ],
+      "publicControlKeys": [
+        "rowCount",
+        "showVerdict",
+        "zebra",
+        "focusEnabled",
+        "focusIndex",
+        "showIntro",
+        "accentColor",
+        "showConclusion",
+        "showSheetLabel"
+      ],
+      "allowedPropKeys": [
+        "accentColor",
+        "copy",
+        "focusEnabled",
+        "focusIndex",
+        "rowCount",
+        "showConclusion",
+        "showIntro",
+        "showSheetLabel",
+        "showVerdict",
+        "zebra"
+      ],
+      "allowedPublicPropKeys": [
+        "accentColor",
+        "copy",
+        "focusEnabled",
+        "focusIndex",
+        "rowCount",
+        "showConclusion",
+        "showIntro",
+        "showSheetLabel",
+        "showVerdict",
+        "zebra"
+      ],
+      "themeDisplayName": "色谱图表风",
+      "copyBudgets": {
+        "copy.eyebrow": {
+          "maxChars": 18
+        },
+        "copy.title": {
+          "maxChars": 18
+        },
+        "copy.sub": {
+          "maxChars": 36
+        },
+        "copy.sheet": {
+          "maxChars": 18
+        },
+        "copy.lead": {
+          "maxChars": 42
+        },
+        "copy.tag": {
+          "maxChars": 31
+        }
+      },
+      "queryScore": 20
+    }
+  ]
+}

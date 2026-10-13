@@ -1,0 +1,24 @@
+{
+  "ok": true,
+  "file-backed fixture": "temporary offline upstream release mirror",
+  "input_files": [
+    "release shell",
+    "official skill",
+    "docs/agents.md",
+    "docs/format.md"
+  ],
+  "output contract": [
+    "upstream.lock.json",
+    "NOTICE.md",
+    "validated pinned assets"
+  ],
+  "rollback boundary": "invalid staged release leaves every previously pinned file unchanged",
+  "checks": {
+    "first_update_succeeded": true,
+    "lock_created": true,
+    "notice_created": true,
+    "second_update_is_noop": true,
+    "invalid_bundle_rejected": true,
+    "rollback_preserved_snapshot": true
+  }
+}

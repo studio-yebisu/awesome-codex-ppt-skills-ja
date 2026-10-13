@@ -1,0 +1,79 @@
+[
+  {
+    "repository": "icip-cas/PPTAgent",
+    "execution_type": "original_cli_preflight",
+    "execution_status": "execution_attempted_generation_not_completed",
+    "case_ids": [],
+    "summary_ja": "原典の固定依存pptagent==1.1.37がWindowsをassertで明示拒否。READMEもLinux（WSL含む）/macOSを要件とする。libreofficeのWindows shimだけでは、このimport条件を解決できない。",
+    "requirements": [
+      "Linux（WSL含む）またはmacOS",
+      "Python>=3.11 / pptagent==1.1.37",
+      "Python/Node Playwright==1.62.0、Chromium、npm依存",
+      "libreofficeコマンド、ホストによる全ページの視認"
+    ],
+    "steps": [
+      "対応OSで原典runtimeを準備",
+      "doctor",
+      "init/scaffoldと日本語HTML執筆",
+      "review-slidesと各頁record-slide-review",
+      "build/review-deck/record-deck-review/finalize",
+      "PowerPointで全ページを再描画して確認"
+    ],
+    "commands": [
+      "python tools/build_pptagent_repository_example.py"
+    ],
+    "source_refs": [
+      {
+        "path": "README.md",
+        "sha256": "24250b7752d9baa93859f109b247bd2a81d8360822270f4eaa857ef05368f202",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/README.md"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "e1faa9265adfb5feb24c4be691b5c39b559dec4f0414d9ec3a1157cf94faaf8b",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/LICENSE"
+      },
+      {
+        "path": "skills/pptagent/SKILL.md",
+        "sha256": "0d790792b14807f471614b985471ae6cd2c96b6dc7c536085f037783687e5c79",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/SKILL.md"
+      },
+      {
+        "path": "skills/pptagent/LICENSE",
+        "sha256": "e1faa9265adfb5feb24c4be691b5c39b559dec4f0414d9ec3a1157cf94faaf8b",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/LICENSE"
+      },
+      {
+        "path": "skills/pptagent/requirements.txt",
+        "sha256": "5a85fdebda19e08cafc695281fe68367af018c620c7e77396a23459ee2cc4437",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/requirements.txt"
+      },
+      {
+        "path": "skills/pptagent/package.json",
+        "sha256": "ade2434e1a4a0a224e22066d9e3866ac19dddd14ccde1c7863fb26110a81f559",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/package.json"
+      },
+      {
+        "path": "skills/pptagent/references/task-contract.md",
+        "sha256": "3617491944196b07e7bd37b081e40f0ada57ceac4919fa21d0c3823aeb5ea3c8",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/references/task-contract.md"
+      },
+      {
+        "path": "skills/pptagent/scripts/pptagent.py",
+        "sha256": "d2ade4a4d0f2c72ffd740764b4bed44d77c2452353d918043763d0f871024daf",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/scripts/pptagent.py"
+      },
+      {
+        "path": "skills/pptagent/scripts/pptagent_runtime/core.py",
+        "sha256": "e0ce089cbd591064018adbf0ed55bcd1ac59ac507326d4a4eded5ba9bb88a0ef",
+        "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/scripts/pptagent_runtime/core.py"
+      }
+    ],
+    "limitations": [
+      "原典の固定依存pptagent==1.1.37がWindowsをassertで明示拒否。READMEもLinux（WSL含む）/macOSを要件とする。libreofficeのWindows shimだけでは、このimport条件を解決できない。",
+      "Linux環境の生成成功は未検証。Windows失敗を全環境の動作不能と一般化しない。"
+    ],
+    "evidence": "examples/repositories/pptagent/ATTEMPT.json",
+    "guide": "examples/repositories/pptagent/README.md"
+  }
+]

@@ -1,0 +1,58 @@
+interface:
+  display_name: "Qiaomu Bento PPT"
+  short_description: "Create governed single-file bento presentations"
+  default_prompt: "Use $qiaomu-bento-ppt to turn my source material into a proposal-first, source-grounded, visually verified bento/slides deck, preserving document identity and producing a validated .bento.html file without overwriting my source."
+  examples:
+    - "用 qiaomu-bento-ppt 把这份报告做成一个离线可编辑的 bento 演示文稿"
+    - "把这个 .bento.html 改成 10 分钟发布会 deck，保留 docId"
+    - "给我做一份单文件 HTML PPT，要有 morph、图表和演讲者备注"
+compatibility:
+  canonical_format: "agent-skills"
+  adapter_targets:
+    - "openai"
+    - "claude"
+    - "generic"
+    - "agent-skills-compatible"
+    - "vscode"
+  activation:
+    mode: "manual-or-route"
+    paths:
+      - "**/*.bento.html"
+      - "**/deck.json"
+  execution:
+    context: "inline"
+    shell: "bash"
+  trust:
+    source_tier: "local skill package with pinned MIT-licensed bento shell and reference snapshots"
+    remote_inline_execution: "forbid"
+    remote_metadata_policy: "not required for normal execution; maintainers may sync one coherent official GitHub release through a review PR"
+    generated_public_claims: "evidence-bound"
+  permissions:
+    network: "not required for deck generation; maintenance sync is limited to official nyblnet/bento release metadata and files"
+    file_read: "user-provided sources, existing decks, and bundled skill assets"
+    file_write: "deck plan, document JSON, reports, and new .bento.html outputs; no source overwrite by default"
+    subprocess: "Python validation/build scripts and browser launch; optional upstream shell gate"
+    sensitive_files: "never read signing keys, tokens, cookies, or account credentials"
+  degradation:
+    openai: "canonical standalone package with bundled shell and references"
+    claude: "standalone Qiaomu workflow over bundled official bento snapshots"
+    generic: "follow SKILL.md and scripts; no checkout required; browser review may be manual"
+    agent-skills-compatible: "canonical source"
+    vscode: "canonical standalone source"
+gates:
+  scaffold:
+    - "valid frontmatter and routing examples"
+    - "explicit .pptx and source-development exclusions"
+  production:
+    - "agents/interface.yaml"
+    - "trigger eval"
+    - "Skill IR"
+    - "fixture build and validation"
+  governed:
+    - "output contract"
+    - "rollback boundary"
+    - "identity preservation"
+    - "shell gate"
+    - "release-locked upstream provenance and rollback-tested sync"
+    - "browser review or explicit missing evidence"
+    - "public claim guard"

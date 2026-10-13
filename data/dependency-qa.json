@@ -1,0 +1,179 @@
+{
+  "checked_at": "2026-10-13T16:47:06.086025+00:00",
+  "command": "npm --prefix .build/repository-runtime audit --json",
+  "counts": {
+    "info": 0,
+    "low": 2,
+    "moderate": 1,
+    "high": 9,
+    "critical": 0,
+    "total": 12
+  },
+  "status": "findings_recorded_not_resolved",
+  "installed_versions": {
+    "@marp-team/marp-cli": "4.4.0",
+    "@marp-team/marp-core": "4.4.0",
+    "@puppeteer/browsers": "2.13.2",
+    "@xmldom/xmldom": "0.9.10",
+    "basic-ftp": "5.3.1",
+    "extract-zip": "2.0.1",
+    "get-uri": "6.0.5",
+    "katex": "0.17.0",
+    "pac-proxy-agent": "7.2.0",
+    "proxy-agent": "6.5.0",
+    "puppeteer-core": "24.43.1",
+    "speech-rule-engine": "4.1.4"
+  },
+  "packages": [
+    {
+      "name": "@marp-team/marp-cli",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "name": "@marp-team/marp-core",
+      "severity": "low",
+      "advisories": []
+    },
+    {
+      "name": "@puppeteer/browsers",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "name": "@xmldom/xmldom",
+      "severity": "high",
+      "advisories": [
+        {
+          "title": "xmldom: XML fragment injection via invalid EntityReference.nodeName during requireWellFormed serialization",
+          "url": "https://github.com/advisories/GHSA-6gmq-8vp8-gcm6",
+          "range": ">=0.9.0 <=0.9.11"
+        },
+        {
+          "title": "xmldom: HTML raw-text closing-tag case mismatch causes output amplification",
+          "url": "https://github.com/advisories/GHSA-6mj3-qw4j-hgrw",
+          "range": ">=0.9.0-beta.1 <=0.9.11"
+        },
+        {
+          "title": "xmldom PI grammar regex ReDoS: quadratic backtracking on unterminated processing instructions",
+          "url": "https://github.com/advisories/GHSA-g53g-w8rj-fmg7",
+          "range": ">=0.9.0-beta.9 <=0.9.10"
+        },
+        {
+          "title": "xmldom: Element name injection via createElement() bypasses requireWellFormed",
+          "url": "https://github.com/advisories/GHSA-w2rr-34g9-rvrj",
+          "range": ">=0.9.0 <=0.9.10"
+        },
+        {
+          "title": "xmldom: Attribute name injection via setAttribute() bypasses requireWellFormed",
+          "url": "https://github.com/advisories/GHSA-4w3w-2rp5-g8jm",
+          "range": ">=0.9.0 <=0.9.10"
+        },
+        {
+          "title": "xmldom: Processing Instruction Target Injection Bypasses requireWellFormed",
+          "url": "https://github.com/advisories/GHSA-c7q8-3ch8-vqpv",
+          "range": ">=0.9.0 <=0.9.11"
+        },
+        {
+          "title": "xmldom: DocType `name` Injection Bypasses requireWellFormed",
+          "url": "https://github.com/advisories/GHSA-27p8-2357-5qqv",
+          "range": ">=0.9.0 <=0.9.11"
+        },
+        {
+          "title": "xmldom: Creation-time XML Name/QName validation is bypassable via an embedded line terminator, allowing injection on the default serialization path",
+          "url": "https://github.com/advisories/GHSA-3px3-54cx-rmw9",
+          "range": ">=0.9.0 <=0.9.11"
+        },
+        {
+          "title": "xmldom: requireWellFormed DocType publicId/systemId validation is bypassable via an embedded line terminator",
+          "url": "https://github.com/advisories/GHSA-vr34-hp96-76pp",
+          "range": ">=0.9.10 <=0.9.11"
+        },
+        {
+          "title": "xmldom: Parser silently accepts a not-well-formed end tag whose name is followed by a line break and trailing content",
+          "url": "https://github.com/advisories/GHSA-6h8r-xr42-gp59",
+          "range": ">=0.9.0 <=0.9.11"
+        },
+        {
+          "title": "xmldom: Quadratic-time attribute deduplication",
+          "url": "https://github.com/advisories/GHSA-8344-3jmq-59r6",
+          "range": ">=0.9.0 <=0.9.11"
+        },
+        {
+          "title": "xmldom: Quadratic-memory consumption",
+          "url": "https://github.com/advisories/GHSA-965w-775f-mr7g",
+          "range": ">=0.9.0 <=0.9.11"
+        },
+        {
+          "title": "xmldom: Quadratic-time parsing via the malformed-input recovery path — `parseElementStartPart` re-scan and `normalize()` adjacent-text merge",
+          "url": "https://github.com/advisories/GHSA-93r5-fhx6-vmg9",
+          "range": ">=0.9.0 <=0.9.11"
+        }
+      ]
+    },
+    {
+      "name": "basic-ftp",
+      "severity": "high",
+      "advisories": [
+        {
+          "title": "basic-ftp: Quadratic-time CPU denial of service in Client.list() Unix directory-listing parser (RE_LINE backtracking)",
+          "url": "https://github.com/advisories/GHSA-c475-qrg2-pj4r",
+          "range": "<=6.2.0"
+        }
+      ]
+    },
+    {
+      "name": "extract-zip",
+      "severity": "high",
+      "advisories": [
+        {
+          "title": "extract-zip unvalidated symlink path traversal",
+          "url": "https://github.com/advisories/GHSA-jmr9-qjv8-65gv",
+          "range": "<=2.0.1"
+        },
+        {
+          "title": "extract-zip allows arbitrary file writes through symlink archive entries",
+          "url": "https://github.com/advisories/GHSA-7pqw-9j4j-h8q3",
+          "range": "<=2.0.1"
+        }
+      ]
+    },
+    {
+      "name": "get-uri",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "name": "katex",
+      "severity": "low",
+      "advisories": [
+        {
+          "title": "KaTeX: Existing prototype pollution can bypass trust restrictions",
+          "url": "https://github.com/advisories/GHSA-238p-pmpm-9mq7",
+          "range": ">=0.11.0 <0.18.2"
+        }
+      ]
+    },
+    {
+      "name": "pac-proxy-agent",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "name": "proxy-agent",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "name": "puppeteer-core",
+      "severity": "high",
+      "advisories": []
+    },
+    {
+      "name": "speech-rule-engine",
+      "severity": "moderate",
+      "advisories": []
+    }
+  ],
+  "scope": "Project-local Marp/reveal reproduction dependencies. No node_modules distribution, HTTP-side CLI execution, remote ZIP/PDF rendering or npm --force downgrade performed. Original instructions, generated HTML and actual fixed source are retained. This is an npm audit snapshot, not independent exploit verification."
+}

@@ -150,6 +150,9 @@ def main():
         print(cid+": "+str(len(roster))+" slides")
     assert sum(r["page_count"] for r in records)==45
     assert records[0]["input_sha256"]==records[2]["input_sha256"]
-    dump(ROOT/"data/case-studies.json",records)
+    existing_path=ROOT/"data/case-studies.json"
+    existing=json.loads(read(existing_path)) if existing_path.exists() else []
+    owned={r["id"] for r in records}
+    dump(existing_path,records+[c for c in existing if c["id"] not in owned])
     print("Manifest ready: 6 cases / 45 slides")
 if __name__=="__main__": main()

@@ -1,0 +1,73 @@
+{
+  "repository": "ningzimu/codex-ppt-skill",
+  "execution_type": "native_image_generation_and_original_packager",
+  "summary_ja": "原典prepare_slide_prompts/dispatch/result/state CLIを使用し、Codex native image_gen.imagegenで全3ページを生成。原典assemble_ppt.pyが画像とspeech.mdからPPTXを構築。",
+  "case_ids": [
+    "codex-image-ppt"
+  ],
+  "requirements": [
+    "Codex native image_gen.imagegen",
+    "Python / python-pptx / Pillow / filelock",
+    "PowerPointとPowerShell 7（実描画QA）"
+  ],
+  "steps": [
+    "原典spec/prompt作成",
+    "native画像3頁生成・視認",
+    "原典dispatch/resultで記録",
+    "原典assemble_ppt.py",
+    "PowerPoint全頁確認"
+  ],
+  "commands": [
+    "python tools/build_codex_image_repository_example.py assemble"
+  ],
+  "source_refs": [
+    {
+      "path": "LICENSE",
+      "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/LICENSE"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/assemble_ppt.py",
+      "sha256": "c4ac18e2aa28d92ecc50299e6267e127c226e041c601bd3c7224ec7278061fe5",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/assemble_ppt.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/prepare_slide_prompts.py",
+      "sha256": "92cc338a85afa463b1faa09035ab5b73b993813ea54ff95c9e47b4788e45ef81",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/prepare_slide_prompts.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/record_slide_dispatch.py",
+      "sha256": "f5ce8806a0aecf24ea3b7c657c8d20507d83b6fd21a81da86d8f6f9da623ed54",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/record_slide_dispatch.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/record_slide_result.py",
+      "sha256": "ae14297acf87991ef0cb4af41bd0a591665f288d25ff5d6f0b9b264e5a59bac1",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/record_slide_result.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/slide_job_status.py",
+      "sha256": "15c90c28b5733275990b162e36c32dd7940465ec7c6522f49aaa8a42c5dbd293",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/slide_job_status.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/slide_run_state.py",
+      "sha256": "b7534c3aec858a5ec4210e5af80693c899dbbe670083093ec1c055d471ba5e42",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/slide_run_state.py"
+    },
+    {
+      "path": "skills/codex-ppt/SKILL.md",
+      "sha256": "dce8b7ef2c3610fba7bf74115904f460ae1f64b54b50c0f4504f66fd65e5d2bb",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/SKILL.md"
+    }
+  ],
+  "limitations": [
+    "本文と図はraster_slidesで個別編集不可",
+    "実モデル名はtool非公開",
+    "sampleは制作agent判断で人の承認ではない",
+    "3頁を同一担当者が制作した運用差分を記録"
+  ],
+  "guide": "examples/repositories/codex-image-ppt/README.md",
+  "fork": "codex-image-ppt-ja"
+}

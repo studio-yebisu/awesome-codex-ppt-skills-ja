@@ -1,0 +1,50 @@
+[
+  {
+    "id": "codex-image-ppt",
+    "title": "Gitの保存・記録・共有",
+    "repository": "ningzimu/codex-ppt-skill",
+    "skill_repository": "ningzimu/codex-ppt-skill",
+    "upstream_commit": "941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c",
+    "fork_id": "codex-image-ppt-ja",
+    "page_count": 3,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "editability": "raster_slides",
+    "use_case": "Git入門・図解",
+    "style": "native画像生成・白/紺/青緑の図解",
+    "cover": "examples/repositories/codex-image-ppt/render/slide-01.png",
+    "interior": "examples/repositories/codex-image-ppt/render/slide-02.png",
+    "preview": "examples/repositories/codex-image-ppt/index.html",
+    "pages": [
+      "examples/repositories/codex-image-ppt/render/slide-01.png",
+      "examples/repositories/codex-image-ppt/render/slide-02.png",
+      "examples/repositories/codex-image-ppt/render/slide-03.png"
+    ],
+    "artifact_download": "examples/repositories/codex-image-ppt/codex-image-ppt.pptx",
+    "source_download": "downloads/codex-image-ppt-example-ja.zip",
+    "pdf_download": "examples/repositories/codex-image-ppt/render/deck.pdf",
+    "input": "examples/repositories/codex-image-ppt/input/BRIEF.md",
+    "input_data": "examples/repositories/codex-image-ppt/input/data.json",
+    "prompt": "examples/repositories/codex-image-ppt/PROMPT.txt",
+    "prompt_text": "Gitの保存・記録・共有を説明する日本語3ページ。表紙、作業ツリー/ステージ/ローカル履歴の3段図、確認して共有する手順。16:9、写真なし、読みやすいベクトル風図解。ningzimu/codex-ppt-skillのnative画像生成と原典packagerを使う。",
+    "provenance": "examples/repositories/codex-image-ppt/PROVENANCE.json",
+    "qa": "examples/repositories/codex-image-ppt/QA.json",
+    "guide": "examples/repositories/codex-image-ppt/README.md",
+    "fork_download": "downloads/codex-image-ppt-ja.zip",
+    "titles": [
+      "Gitの保存・記録・共有",
+      "変更は3つの場所を進む",
+      "確認してから、チームへ共有する"
+    ],
+    "notes": [
+      "エディターでファイルを保存すること、Gitで履歴に記録すること、リモートへ共有することを分けて覚えます。保存しただけではコミットされません。コミットしても、まだ他の人へ送ったことにはなりません。まず手元で変更を確かめ、小さな単位で記録してから共有しましょう。",
+      "作業ツリーは編集中のファイルです。git addは次のコミットに含める内容をステージへ選びます。git commitはそのステージの内容をローカルの履歴に記録します。addした後にさらに編集した内容は自動でステージへ入りません。必要ならもう一度addし、git diff --stagedで内容を確かめます。",
+      "最初にgit statusとgit diffで変更の範囲を確認します。対象ファイルだけをaddし、git diff --stagedで記録される差分を読みます。秘密情報や不要なファイルがないことを確かめてcommitします。共有先と作業ブランチを確認し、チームのルールに従ってpushとレビュー依頼を行います。ここでは共有の手順を説明しているだけで、実際のpushは実行しません。"
+    ],
+    "method": "原典prepare_slide_prompts/dispatch/result/state CLIを使用し、Codex native image_gen.imagegenで全3ページを生成。原典assemble_ppt.pyが画像とspeech.mdからPPTXを構築。",
+    "image_backend": "built-in image_gen.imagegen",
+    "model": null,
+    "sample_notice": "実際のGit送信を行わない入門教材。本文・図は画像であり、個別編集不可。",
+    "reproduce_script": "reproduce/Reproduce.ps1"
+  }
+]

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Gitの変更を、チームへ届ける</title>
+<link href="assets/fonts.css" rel="stylesheet"/>
+<link href="assets/base.css" rel="stylesheet"/>
+<link href="assets/animations/animations.css" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+<style>.tpl-tech-sharing{font-family:'Yebisu Noto Sans JP',sans-serif}.tpl-tech-sharing .lede,.tpl-tech-sharing .card p{font-size:30px;line-height:1.6;color:#b5bfc9}.tpl-tech-sharing .card h4{font-size:32px}.tpl-tech-sharing .terminal{font-size:26px}.tpl-tech-sharing .terminal pre{white-space:pre-wrap;overflow-wrap:anywhere}.tpl-tech-sharing .tag{font-size:22px}.tpl-tech-sharing .agenda-row .t{font:600 32px/1.5 'Yebisu Noto Sans JP',sans-serif}.tpl-tech-sharing .kicker{font-size:20px}.tpl-tech-sharing .h1,.tpl-tech-sharing .h2{line-height:1.3}</style></head>
+<body class="tpl-tech-sharing">
+<div class="deck">
+<!-- 1. Cover -->
+<section class="slide" data-title="Gitの変更を、チームへ届ける">
+<p class="kicker">GIT ONBOARDING / 日本語研修</p>
+<h1 class="h1 anim-fade-up" data-anim="fade-up">Gitの変更を、<br/><span style="background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent">チームへ届ける</span></h1>
+<p class="lede mt-m">保存したファイルが、レビューされるまで。</p>
+<div class="speaker"><div class="av"></div><div><b>社内勉強会</b><span>初めてGitを使う人へ / 8ページ</span></div></div>
+<div class="deck-footer"><span class="mono">STATUS / ADD / COMMIT / PUSH</span><span class="slide-number" data-current="1" data-total="8"></span></div>
+<aside class="notes">初めて使う人向けの練習資料です。チームのリポジトリへ実際にpushする演習は含めません。</aside></section>
+<!-- 2. Agenda -->
+<section class="slide" data-title="小さな変更を、順番に届ける">
+<p class="kicker">変更を届けるまで</p>
+<h2 class="h2">小さな変更を、順番に届ける</h2>
+<div class="stack mt-l">
+<div class="agenda-row"><span class="num">01</span><span class="t">今の変更を見る</span><span class="d"></span></div>
+<div class="agenda-row"><span class="num">02</span><span class="t">記録する変更を選ぶ</span><span class="d"></span></div>
+<div class="agenda-row"><span class="num">03</span><span class="t">変更の理由を残す</span><span class="d"></span></div>
+<div class="agenda-row"><span class="num">04</span><span class="t">共有してレビューする</span><span class="d"></span></div>
+<div class="agenda-row"><span class="num">05</span><span class="t">最初の一歩を試す</span><span class="d"></span></div>
+</div>
+<aside class="notes">一覧を丸暗記せず、変更がどこにあるかを意識して順に進めます。</aside></section>
+<!-- 3. Context -->
+<section class="slide" data-title="保存・記録・共有は別の操作">
+<p class="kicker">保存・記録・共有</p>
+<h2 class="h2">保存・記録・共有は別の操作</h2>
+<div class="grid g3 mt-l">
+<div class="card card-accent"><h4>ファイルの保存</h4><p class="dim">エディターで保存した変更は、作業フォルダにあります。</p><span class="tag mt-s"></span></div>
+<div class="card card-accent"><h4>履歴への記録</h4><p class="dim">commitで、選んだ変更を履歴に残します。</p><span class="tag mt-s"></span></div>
+<div class="card card-accent"><h4>チームへの共有</h4><p class="dim">pushで、リモートへ変更履歴を送ります。</p><span class="tag mt-s"></span></div>
+</div>
+<aside class="notes">保存はcommitでもpushでもありません。この違いを最初に押さえます。</aside></section>
+<!-- 4. Deep dive 1 -->
+<section class="slide" data-title="まず今の変更を確かめる">
+<p class="kicker">今の変更を見る</p>
+<h2 class="h2">まず今の変更を確かめる</h2>
+<div class="grid g2 mt-l" style="align-items:start">
+<div>
+<p class="lede"><span class="mono">git status</span> は変更の場所を、<span class="mono">git diff</span> は変更の中身を示します。まず対象のファイルを確認します。</p>
+<div class="mt-l">
+<span class="tag">作業フォルダ</span> <span class="tag">差分</span> <span class="tag">対象の確認</span>
+</div>
+</div>
+<div class="terminal">
+<div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>変更の確認</span></div>
+<pre>$ git status<br/>modified: README.md<br/><br/>$ git diff<br/>説明文に、新しい手順を追加</pre>
+</div>
+</div>
+<aside class="notes">statusで位置、diffで中身を確かめます。</aside></section>
+<!-- 5. Deep dive 2 -->
+<section class="slide" data-title="記録する変更を選ぶ">
+<p class="kicker">記録する変更を選ぶ</p>
+<h2 class="h2">記録する変更を選ぶ</h2>
+<div class="grid g2 mt-l" style="align-items:start">
+<div>
+<p class="lede">今回届けたいファイルを <span class="mono">git add</span> で選び、<span class="mono">git diff --staged</span> で記録する差分を読みます。</p>
+<div class="stack mt-m"><div class="tag">1. README.mdの変更を読む</div><div class="tag">2. git add README.md</div><div class="tag">3. git diff --staged</div></div>
+</div>
+<div class="card" style="padding:32px"><h4 class="mono">記録の前に見ること</h4><div class="stack mt-m"><p>依頼された変更か</p><p>不要なファイルが混ざっていないか</p><p>何を変えたか説明できるか</p></div></div>
+</div>
+<aside class="notes">addで選んだ変更が、次のcommitの対象になります。</aside></section>
+<!-- 6. Code example -->
+<section class="slide" data-title="変更を説明して、記録する">
+<p class="kicker">履歴に残す</p>
+<h2 class="h2">変更を説明して、記録する</h2>
+<div class="terminal mt-m">
+<div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span>履歴への記録</span></div>
+<pre>$ git diff --staged<br/><br/>$ git commit -m "説明書にセットアップ手順を追加"<br/><br/>$ git log -1 --oneline<br/>変更の記録と、理由を確認</pre>
+</div>
+<aside class="notes">変更を残す前に差分をもう一度読みます。</aside></section>
+<!-- 7. Takeaways -->
+<section class="slide" data-title="チームへ共有し、レビューする">
+<p class="kicker">チームへ届ける</p>
+<h2 class="h2">チームへ共有し、レビューする</h2>
+<div class="grid g3 mt-l">
+<div class="card card-accent"><h4>ブランチ</h4><p class="dim">チームが決めた作業ブランチで変更する。</p></div>
+<div class="card card-accent"><h4>push</h4><p class="dim">送り先とブランチを確認して、履歴を共有する。</p></div>
+<div class="card card-accent"><h4>レビュー</h4><p class="dim">変更の目的・内容・確認方法を説明する。</p></div>
+</div>
+<p class="lede mt-l">参照：git-scm.com/docs / GitHub公式ドキュメント</p>
+<aside class="notes">レビューの目的は、変更をチームが理解して確認できることです。</aside></section>
+<!-- 8. Q&A -->
+<section class="slide center tc" data-title="自分の変更を確かめてみよう">
+<div>
+<div class="mono" style="font-size:120px;color:var(--accent);font-weight:800;letter-spacing:-.04em">?</div>
+<h2 class="h2">自分の変更を確かめてみよう</h2>
+<p class="lede" style="margin:14px auto">練習用フォルダで、git status を実行してみよう。</p>
+<div class="row mt-l" style="justify-content:center"><span class="tag">次の一歩：差分を読む</span><span class="tag">不明な状態は、共有前に確認</span></div>
+</div>
+<aside class="notes">自分の練習用フォルダから一歩始めてください。</aside></section>
+</div>
+<script src="assets/runtime.js"></script>
+<script>
+if(parent!==window){
+document.addEventListener('keydown', e=>{if(e.key==='Escape'){e.preventDefault();e.stopImmediatePropagation();parent.postMessage({type:'yebisu-close'},location.origin)}},true);
+window.addEventListener('message', e=>{if(e.source!==parent||e.origin!==location.origin||e.data?.type!=='yebisu-slide')return;const n=e.data.index; if(!Number.isInteger(n))return;if(window.yebisuNativeGo)window.yebisuNativeGo(n);});
+}
+</script></body></html>

@@ -1,0 +1,40 @@
+{
+  "ok": true,
+  "file-backed fixture": "evals/fixtures/minimal-deck.json",
+  "input_files": [
+    "evals/fixtures/minimal-deck.json",
+    "bundled assets/bento/Bento_Slides.bento.html"
+  ],
+  "output contract": [
+    "new .bento.html",
+    "UUID docId minted once",
+    "structure report",
+    "internal shell gate",
+    "optional upstream project shell gate"
+  ],
+  "rollback boundary": "fixture hash unchanged; output existed only in a temporary directory",
+  "trust report": "reports/trust.md",
+  "checks": {
+    "build_exit_zero": true,
+    "validate_exit_zero": true,
+    "deck_created": true,
+    "fixture_unchanged": true,
+    "doc_id_minted_once": true,
+    "standalone_shell_used": true,
+    "internal_shell_gate": true,
+    "project_shell_gate_optional": true,
+    "output_validation": true,
+    "edit_extract_exit_zero": true,
+    "edit_build_exit_zero": true,
+    "edit_doc_id_preserved": true,
+    "edit_source_deck_unchanged": true
+  },
+  "build_stderr": "",
+  "validate_stderr": "",
+  "extract_stderr": "",
+  "edit_stderr": "",
+  "missing evidence": [
+    "browser visual review",
+    "human-reviewed real-world deck quality"
+  ]
+}

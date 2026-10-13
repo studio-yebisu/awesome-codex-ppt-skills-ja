@@ -1,0 +1,107 @@
+{
+  "title": "Gitの保存・記録・共有",
+  "language": "Japanese",
+  "aspect_ratio": "16:9",
+  "selected_image_backend": "built-in image_gen.imagegen",
+  "max_concurrent_slides": 1,
+  "sample_generation_method": {
+    "backend_used": "built-in image_gen.imagegen",
+    "tool_name": "image_gen.imagegen",
+    "mode": "generate",
+    "model": null,
+    "model_evidence": "Tool does not expose an exact model identifier.",
+    "size": "16:9 requested in prompt; inspect actual raster dimensions",
+    "input_context_preparation": "View generated sample before referencing it as style only",
+    "approval_authority": "production agent under user-authorized autonomous generation; no human visual approval claimed"
+  },
+  "style": {
+    "name": "Japanese clean vector explainer",
+    "visual_direction": "Pure white background; crisp flat vector-like diagrams, deep navy headings, teal accents, pale blue panels; no photo, no texture, no gradients, no 3D. Generous whitespace. All visible copy Japanese except Git commands.",
+    "color_palette": "white #FFFFFF, navy #172B4D, teal #168B87, pale blue #EAF3F8",
+    "typography": "Large legible Japanese sans-serif, bold title, high contrast; all exact text is readable at presentation size."
+  },
+  "deck_context": {
+    "source_summary": "Git basics; saving files, selecting staged content, committing locally, pushing to remote are distinct actions.",
+    "canonical_terms": [
+      "作業ツリー",
+      "ステージ",
+      "ローカル履歴",
+      "リモート"
+    ],
+    "core_claim": "Confirm the exact changes before recording and sharing."
+  },
+  "slides": [
+    {
+      "number": 1,
+      "title": "Gitの保存・記録・共有",
+      "role": "cover",
+      "intent": "Teach the distinction before commands",
+      "key_points": [
+        "保存：ファイルに反映",
+        "記録：手元の履歴に残す",
+        "共有：リモートへ送る"
+      ],
+      "layout": {
+        "composition": "Large bold title upper-left, subtitle directly below. Lower half has three clear horizontally aligned simple vector icons: file, commit/history, shared cloud. Each has its exact label. Minimal cover."
+      },
+      "visual_elements": {
+        "main_visual": "Three distinct concepts, clean flat icons with no extra labels"
+      },
+      "constraints": [
+        "Visible subtitle exactly: はじめてのGit・3分入門",
+        "Visible bottom takeaway exactly: 保存しただけでは、履歴にも共有先にも届かない",
+        "No slide number, no extra English slogans."
+      ]
+    },
+    {
+      "number": 2,
+      "title": "変更は3つの場所を進む",
+      "role": "concept diagram",
+      "intent": "Show working tree, staging area and local repository accurately",
+      "key_points": [
+        "作業ツリー",
+        "ステージ",
+        "ローカル履歴"
+      ],
+      "layout": {
+        "composition": "Large title top. Three large panels left-to-right at same height, connected by rightward arrows. Left panel exact body 編集中のファイル; middle 次に記録する内容; right コミットの記録. Arrow left→middle labeled git add; middle→right labeled git commit. Bottom two short callouts."
+      },
+      "visual_elements": {
+        "main_visual": "Three-stage state diagram with local computer boundary enclosing ALL three panels. No cloud on this page."
+      },
+      "constraints": [
+        "Bottom exact text: git add は記録する内容を選ぶ",
+        "Bottom exact text: git commit で手元の履歴に残す",
+        "Show only these texts and title; do not invent commands or labels."
+      ]
+    },
+    {
+      "number": 3,
+      "title": "確認してから、チームへ共有する",
+      "role": "procedure",
+      "intent": "Check changes, select, inspect staged content, commit and share",
+      "key_points": [
+        "変更を確認",
+        "記録する内容を選ぶ",
+        "差分を確認して記録",
+        "共有先を確認して送る"
+      ],
+      "layout": {
+        "composition": "Four numbered steps in a spacious vertical flow on the left two-thirds; right third a simple local-history arrow to team-cloud illustration. Step1 command git status / git diff. Step2 command git add README.md. Step3 command git diff --staged → git commit. Step4 command git push. Keep all commands visibly aligned and large."
+      },
+      "visual_elements": {
+        "main_visual": "Readable 4-step checklist and small share diagram. No dense terminal screenshot."
+      },
+      "constraints": [
+        "Bottom exact takeaway: 小さく記録して、レビューを依頼する",
+        "Small but readable note exactly: pushの前に、共有先と作業ブランチを確認",
+        "The numbered four steps are process steps, not slide numbers."
+      ]
+    }
+  ],
+  "approved_style_reference": {
+    "path": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt\\origin_image\\slide_01.png",
+    "role": "production-agent selected sample; style only",
+    "fidelity": "Do not copy layout/content"
+  }
+}

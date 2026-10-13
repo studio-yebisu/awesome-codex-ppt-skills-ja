@@ -1,0 +1,834 @@
+{
+  "schema_version": 1,
+  "checked_at": "2026-10-13T14:52:54.178043+00:00",
+  "scope": "10 pinned repositories: source inspection and concrete trial conditions, no generation or API calls; PPTAgent additionally has a recorded Windows runtime attempt",
+  "status_semantics": {
+    "source_review_complete": "入口/条件を原典で確認。実行成功を意味しない。",
+    "not_executed_in_this_readiness_audit": "未実行。failed/blockedと同義ではない。",
+    "api_free_route": "記載scope内だけAPI不要。host AI/image quota無制限を意味しない。",
+    "execution_attempted_generation_not_completed": "具体的な実行失敗を記録。PPTX/HTMLは生成未達。全環境での失敗を意味しない。"
+  },
+  "model_provenance_policy": "Native image_gen.imagegen can be an officially allowed route without proving GPT Image 2 model identity. Report actual backend and unknown model honestly.",
+  "repositories": [
+    {
+      "repository": "ningzimu/codex-ppt-skill",
+      "commit": "941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c",
+      "skill_root": "skills/codex-ppt",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/LICENSE",
+          "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154"
+        },
+        {
+          "path": "skills/codex-ppt/SKILL.md",
+          "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/SKILL.md",
+          "sha256": "dce8b7ef2c3610fba7bf74115904f460ae1f64b54b50c0f4504f66fd65e5d2bb"
+        },
+        {
+          "path": "skills/codex-ppt/docs/backend-selection.md",
+          "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/docs/backend-selection.md",
+          "sha256": "4c288d9eb5d609b195f32c82a2564b4c74a9c278ec8917538cb784c921021364"
+        },
+        {
+          "path": "skills/codex-ppt/docs/project-assembly-and-reporting.md",
+          "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/docs/project-assembly-and-reporting.md",
+          "sha256": "46821aa1a02b10d1d4dfba4c80f81cea793b76c48ed828ff3c369d0756206f33"
+        },
+        {
+          "path": "skills/codex-ppt/scripts/assemble_ppt.py",
+          "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/assemble_ppt.py",
+          "sha256": "c4ac18e2aa28d92ecc50299e6267e127c226e041c601bd3c7224ec7278061fe5"
+        },
+        {
+          "path": "skills/codex-ppt/requirements.txt",
+          "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/requirements.txt",
+          "sha256": "84767f3a6b1e814348b059e0a016ef719fc2ea2d8a16ae17b61408c0f25cf60d"
+        }
+      ],
+      "generation_method_ja": "原典のoutline/style/sample/jobs/stateを経由し、各ページを画像生成。assemble_ppt.pyが全画面画像とspeech.mdのノートをPPTX化。ページ内要素は原則非編集。",
+      "codex_native_image_generation": {
+        "support": "explicit_preferred",
+        "evidence": "docs/backend-selection.md explicitly names Codex image_gen; exact GPT Image model must not be inferred from tool success.",
+        "model_identity": "native tool model unspecified; API fallback default in current source is gpt-image-2.5-flare"
+      },
+      "command_examples": [
+        {
+          "command": "python scripts/assemble_ppt.py M:/work/readiness deck.pptx --aspect-ratio 16:9",
+          "purpose_ja": "M:/work/readiness/deck/origin_image/slide_XX.pngと承認/記録済みstate、speech.mdを原典で組版する。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "Python、python-pptx>=1.0.2、Pillow>=10、openai>=2、filelock>=3.16。",
+        "native image_genはホスト提供。CLI fallbackのみOPENAI_API_KEY/OPENAI_BASE_URL/CODEX_PPT_IMAGE_MODELを使用。",
+        "サンプル以外の画像は使用可能ならslide subagentへ分派する原典契約。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "assembly_only_after_images_exist",
+        "conditions_ja": "全画像・承認・slide_jobs記録が既にある場合、assemble_ppt.pyはAPI不要。新規画像はnativeツールまたはAPIが必要。"
+      },
+      "license": {
+        "declared_id": "MIT",
+        "scope_and_distribution_ja": "原文LICENSEは使用・複製・変更・頒布等を許可し、copyright noticeとpermission noticeを全コピー/重要部分へ残す条件。コードの日本語fork/再配布は当該表示を保持する。外部画像・入力・依存物の権利を一括で保証するものではない。"
+      },
+      "caveats_ja": [
+        "未実行。組版だけを実行して画像生成まで試用済みとは数えない。",
+        "原典のbootstrapはユーザー共通runtimeを作るため、この比較作業では勝手に実行していない。"
+      ]
+    },
+    {
+      "repository": "wuyoscar/GPT-Image2-Skill",
+      "commit": "9f8aa1a44a4a5c0f5a5d6e45eed564b3e2d5b87f",
+      "skill_root": "skills/gpt-image",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/wuyoscar/GPT-Image2-Skill/blob/9f8aa1a44a4a5c0f5a5d6e45eed564b3e2d5b87f/LICENSE",
+          "sha256": "5bd828827069bd30a7adbd25c8a05785af0c5c9545c41634a4101f4b21e0ed2b"
+        },
+        {
+          "path": "skills/gpt-image/SKILL.md",
+          "url": "https://github.com/wuyoscar/GPT-Image2-Skill/blob/9f8aa1a44a4a5c0f5a5d6e45eed564b3e2d5b87f/skills/gpt-image/SKILL.md",
+          "sha256": "e53991d5c9d4a82d648e943c14ff9b7d0882e27f9a93ec22b548a01f0652823e"
+        },
+        {
+          "path": "pyproject.toml",
+          "url": "https://github.com/wuyoscar/GPT-Image2-Skill/blob/9f8aa1a44a4a5c0f5a5d6e45eed564b3e2d5b87f/pyproject.toml",
+          "sha256": "d77f4f194891b4381b7d441482dfea0749351ab26d06546774de631dd533942a"
+        },
+        {
+          "path": "src/gpt_image_cli/cli.py",
+          "url": "https://github.com/wuyoscar/GPT-Image2-Skill/blob/9f8aa1a44a4a5c0f5a5d6e45eed564b3e2d5b87f/src/gpt_image_cli/cli.py",
+          "sha256": "f2f18afb1d7a0fa37eb9da19a56f6cd96edb90aeedc4a5fe8dfeecabd94eb77c"
+        },
+        {
+          "path": "skills/gpt-image/scripts/generate.py",
+          "url": "https://github.com/wuyoscar/GPT-Image2-Skill/blob/9f8aa1a44a4a5c0f5a5d6e45eed564b3e2d5b87f/skills/gpt-image/scripts/generate.py",
+          "sha256": "d662b7e05143e64b1b9f7a34152093ae5f6ce341083b99767b97dac2c39e8724"
+        }
+      ],
+      "generation_method_ja": "画像prompt galleryとOpenAI Images API用CLI。単体画像生成/編集が主機能で、独自のPPTXビルダーではない。",
+      "codex_native_image_generation": {
+        "support": "explicit_optional_host_native",
+        "evidence": "SKILL Key and cost rules explicitly allow host-native generation when requested; standard operating loop executes packaged CLI.",
+        "model_identity": "CLI has explicit model flag; native host tool does not prove GPT Image 2 identity"
+      },
+      "command_examples": [
+        {
+          "command": "python skills/gpt-image/scripts/generate.py --model gpt-image-2 -p \"日本語の16:9説明スライド\" --size wide --quality high -f M:/work/readiness/slide.png",
+          "purpose_ja": "repo rootから原典launcherを実行。API課金があり得るため本監査では実行しない。",
+          "may_call_external_api": true,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "Python>=3.11、openai>=2.32、python-dotenv。",
+        "CLIはOPENAI_API_KEYをprocess env→.env→~/.envから読む。画像生成/編集API利用権と課金条件が必要。",
+        "gpt-image/uv/uvxの入口があり、launcherは必要時transient installに進むため無断実行しない。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "host_native_image_tool_only_not_pptx_builder",
+        "conditions_ja": "ユーザーがnative経路を指定した場合は原典が許可。ただしCLI試用や指定APIモデルの実測とは別。"
+      },
+      "license": {
+        "declared_id": "MIT",
+        "scope_and_distribution_ja": "原文LICENSEは使用・複製・変更・頒布等を許可し、copyright noticeとpermission noticeを全コピー/重要部分へ残す条件。コードの日本語fork/再配布は当該表示を保持する。外部画像・入力・依存物の権利を一括で保証するものではない。"
+      },
+      "caveats_ja": [
+        "固定commitの巨大archiveは取得ツールの200MB上限を超えたため、監査済み文書と同commitの必要なコード3ファイルのみ取得。これは生成失敗ではない。",
+        "現在の原典はImage 2/2.5を扱う。リポジトリ名だけで使用モデルを断定しない。"
+      ]
+    },
+    {
+      "repository": "icip-cas/PPTAgent",
+      "commit": "833cda553b343be0e486a93b0b57cac962cdd566",
+      "skill_root": "skills/pptagent",
+      "inspection_status": "source_review_complete",
+      "execution_status": "execution_attempted_generation_not_completed",
+      "generation_status": "not_generated",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/README.md",
+          "sha256": "24250b7752d9baa93859f109b247bd2a81d8360822270f4eaa857ef05368f202"
+        },
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/LICENSE",
+          "sha256": "e1faa9265adfb5feb24c4be691b5c39b559dec4f0414d9ec3a1157cf94faaf8b"
+        },
+        {
+          "path": "skills/pptagent/LICENSE",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/LICENSE",
+          "sha256": "e1faa9265adfb5feb24c4be691b5c39b559dec4f0414d9ec3a1157cf94faaf8b"
+        },
+        {
+          "path": "skills/pptagent/SKILL.md",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/SKILL.md",
+          "sha256": "0d790792b14807f471614b985471ae6cd2c96b6dc7c536085f037783687e5c79"
+        },
+        {
+          "path": "skills/pptagent/references/task-contract.md",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/references/task-contract.md",
+          "sha256": "3617491944196b07e7bd37b081e40f0ada57ceac4919fa21d0c3823aeb5ea3c8"
+        },
+        {
+          "path": "skills/pptagent/requirements.txt",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/requirements.txt",
+          "sha256": "5a85fdebda19e08cafc695281fe68367af018c620c7e77396a23459ee2cc4437"
+        },
+        {
+          "path": "skills/pptagent/package.json",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/package.json",
+          "sha256": "ade2434e1a4a0a224e22066d9e3866ac19dddd14ccde1c7863fb26110a81f559"
+        },
+        {
+          "path": "skills/pptagent/scripts/pptagent_runtime/core.py",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/scripts/pptagent_runtime/core.py",
+          "sha256": "e0ce089cbd591064018adbf0ed55bcd1ac59ac507326d4a4eded5ba9bb88a0ef"
+        },
+        {
+          "path": "skills/pptagent/scripts/pptagent_runtime/config.py",
+          "url": "https://github.com/icip-cas/PPTAgent/blob/833cda553b343be0e486a93b0b57cac962cdd566/skills/pptagent/scripts/pptagent_runtime/config.py",
+          "sha256": "65e087bc47764ba653d953f9153087c63c89c269eeadaa24641e988d54d41faa"
+        }
+      ],
+      "generation_method_ja": "ホストagentがstatic HTML/CSSスライドを作成。原典CLIがPlaywrightレンダー→可視レビュー記録→pptagentパッケージのNode converterで編集可能PPTX→デッキレビュー→finalizeを担当。",
+      "codex_native_image_generation": {
+        "support": "not_required_not_image_generator",
+        "evidence": "multimodal mode uses host image viewing; text mode uses configurable external visual reviewer. No native image generation dependency."
+      },
+      "command_examples": [
+        {
+          "command": "python scripts/pptagent.py doctor --workspace M:/work/readiness/pptagent",
+          "purpose_ja": "原典依存の診断。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/pptagent.py init --workspace M:/work/readiness/pptagent --slides 6 --aspect-ratio 16:9 --language ja",
+          "purpose_ja": "分離workspaceを初期化。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/pptagent.py scaffold --workspace M:/work/readiness/pptagent",
+          "purpose_ja": "原典starterを生成し、ホストが本文HTMLを書く。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/pptagent.py review-slides --workspace M:/work/readiness/pptagent",
+          "purpose_ja": "multimodal設定ならローカルrender。実画像を確認後record-slide-reviewが必要。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/pptagent.py build --workspace M:/work/readiness/pptagent",
+          "purpose_ja": "全ページの正当なレビュー記録後に原典converterでPPTX構築。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/pptagent.py review-deck --workspace M:/work/readiness/pptagent",
+          "purpose_ja": "LibreOfficeを使う最終PPTX回レンダー。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/pptagent.py finalize --workspace M:/work/readiness/pptagent",
+          "purpose_ja": "record-deck-reviewのpass後にcomplete=trueを検証する。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "原典READMEはLinux（WSL含む）/macOS限定。固定依存pptagent==1.1.37はWindows上のimportでassert os.name == posixにより実際に失敗した。",
+        "Python>=3.11、pptagent==1.1.37、Python/Node Playwright==1.62.0とChromium、PyYAML、Pillow、PyMuPDF、fastmcp>=2.10,<2.14。",
+        "Node依存fast-glob/minimist/pptxgenjs/sharp。原典core.pyがdeeppresenter.utils.webview.SCRIPT_PATHへ委譲。",
+        "review-deckはlibreofficeというコマンド名を直接呼ぶ。Windowsのsoffice.exe/PowerPointへ自動切替なし。",
+        "text modeのみVISUAL_API_KEYとbase_url/modelが必要。multimodalは不要。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "full_original_html_to_editable_pptx_pipeline",
+        "conditions_ja": "Linux（WSL含む）またはmacOSで原典Python/Node依存・Chromium・libreofficeを用意し、ホストが日本語HTMLと視認レビューを行う。Windows nativeでは依存packageが明示拒否。Docker Desktopの一度の起動試行後もengine probeは8秒timeout。Linux生成経路自体は未試行。"
+      },
+      "license": {
+        "declared_id": "MIT",
+        "scope_and_distribution_ja": "原文LICENSEは使用・複製・変更・頒布等を許可し、copyright noticeとpermission noticeを全コピー/重要部分へ残す条件。コードの日本語fork/再配布は当該表示を保持する。外部画像・入力・依存物の権利を一括で保証するものではない。 rootとnested LICENSE双方を保持。"
+      },
+      "caveats_ja": [
+        "CLIのQA stateを捏造せず、各render後の実画像を見てrecord-*を実行する。",
+        "過去のPPTAgent論文実装の条件を、この固定commitのskillへ転記しない。",
+        "Windows importのAssertionErrorをATTEMPT.jsonとsource/import-preflight.txtへ保存。原典guardを無効化せず、HTML/PPTX生成・原典QA・PowerPointレンダーは未実行。"
+      ],
+      "execution_evidence": "examples/repositories/pptagent/ATTEMPT.json"
+    },
+    {
+      "repository": "GordenSun/GordenPPTSkill",
+      "commit": "7d4a61cbd8363b92e4a30784f8ca460a0a2b0a33",
+      "skill_root": ".",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/GordenSun/GordenPPTSkill/blob/7d4a61cbd8363b92e4a30784f8ca460a0a2b0a33/LICENSE",
+          "sha256": "6f52f1baed8c393758ff6e8bf9c515edd6fd377187ae38a64165a330573b7829"
+        },
+        {
+          "path": "NOTICE.md",
+          "url": "https://github.com/GordenSun/GordenPPTSkill/blob/7d4a61cbd8363b92e4a30784f8ca460a0a2b0a33/NOTICE.md",
+          "sha256": "f495a2a5d809c3b72f5095cdf9c951eaab09bd81652ed04037a12189ace220c2"
+        },
+        {
+          "path": "SKILL.md",
+          "url": "https://github.com/GordenSun/GordenPPTSkill/blob/7d4a61cbd8363b92e4a30784f8ca460a0a2b0a33/SKILL.md",
+          "sha256": "f3ecf7a39b0eceef3af62663952227646143834943409862d72efde306205072"
+        },
+        {
+          "path": "references/pptx-edit-schema.md",
+          "url": "https://github.com/GordenSun/GordenPPTSkill/blob/7d4a61cbd8363b92e4a30784f8ca460a0a2b0a33/references/pptx-edit-schema.md",
+          "sha256": "8d3ec50fa22ae8f4598d6bec9001b19a50b4e89492a683b494b76d505690a02d"
+        },
+        {
+          "path": "scripts/build_pptx.py",
+          "url": "https://github.com/GordenSun/GordenPPTSkill/blob/7d4a61cbd8363b92e4a30784f8ca460a0a2b0a33/scripts/build_pptx.py",
+          "sha256": "3ca8d9653a79c6044770d66be763002f0c47142ad7e8a1e4d375952480bd1328"
+        }
+      ],
+      "generation_method_ja": "付属または持込PPTXのselected_slidesとedits.jsonを原典build_pptx.pyへ渡して文字置換。原典mode Cはpython-pptxによる独自デザインも認める。",
+      "codex_native_image_generation": {
+        "support": "not_required",
+        "evidence": "Template/text replacement and original python-pptx mode; no image API required."
+      },
+      "command_examples": [
+        {
+          "command": "python scripts/build_pptx.py M:/work/readiness/owned-template.pptx M:/work/readiness/edits.json M:/work/readiness/result.pptx",
+          "purpose_ja": "権利のある持込templateと明示address（shape_id/paragraph/run）のeditsを使うAPI不要経路。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/render_slides.py M:/work/readiness/result.pptx M:/work/readiness/renders --dpi 144",
+          "purpose_ja": "原典LibreOffice/Popplerレンダー。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "Python/python-pptx。レンダーにはLibreOfficeとpdftoppm。",
+        "原典テンプレslotとshape addressが一致する編集JSON。API不要。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "template_to_edited_pptx",
+        "conditions_ja": "自作/許諾済みtemplateをmode Bで使用。付属templateはNOTICE条件を守る用途に限定。"
+      },
+      "license": {
+        "declared_id": "MIT-source-only + restricted-template-assets",
+        "scope_and_distribution_ja": "LICENSE原文は「source code only」としscripts/references/top-level metadataをMIT対象とする。NOTICEはintro.md/detail.jsonもMITと明記。templates/**/template.pptxとpreview.pngは原作者の著作物で個人研究・非商用教育用途、あらゆる商用（営利企業内利用含む）禁止、NOTICE/原作者帰属削除禁止。maintainerは商用許諾権を持たない。コード/metadata限定forkはMIT条件、template visual assets同梱をMITと表示してはならない。"
+      },
+      "caveats_ja": [
+        "SKILL冒頭の非商用説明は広いがLICENSE/NOTICEはcodeとassetsを明確に分ける。この不一致も保持し、template再配布の一般的許可は推定しない。",
+        "原典CLIの現在のargument parserには--chart-dataがない。SKILL記述だけでその引数を例示しない。"
+      ]
+    },
+    {
+      "repository": "op7418/NanoBanana-PPT-Skills",
+      "commit": "0c18b9abde04ad42f4f62c7e9ead346b7bb39260",
+      "skill_root": ".",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "README.md",
+          "url": "https://github.com/op7418/NanoBanana-PPT-Skills/blob/0c18b9abde04ad42f4f62c7e9ead346b7bb39260/README.md",
+          "sha256": "2a4e9a8fd2006dce5d01fa8ffaab552b7369dd1e08f4036c0e8d87ab36110869"
+        },
+        {
+          "path": "SKILL.md",
+          "url": "https://github.com/op7418/NanoBanana-PPT-Skills/blob/0c18b9abde04ad42f4f62c7e9ead346b7bb39260/SKILL.md",
+          "sha256": "7eed995592ffd0b19f8aaa75d8d5b280b5c112af94b5467772cdc14b9e24b722"
+        },
+        {
+          "path": "generate_ppt.py",
+          "url": "https://github.com/op7418/NanoBanana-PPT-Skills/blob/0c18b9abde04ad42f4f62c7e9ead346b7bb39260/generate_ppt.py",
+          "sha256": "37294140b21e4c49d65b8790257b55862cfeb1b72003ca09b79779a2e1ff1867"
+        }
+      ],
+      "generation_method_ja": "JSONの各slideをGoogle Gemini画像APIで生成し、原典HTML viewerへ配置する。任意のKling動画化経路もある。メインgenerate_ppt.pyはPPTXコンテナを生成しない。",
+      "codex_native_image_generation": {
+        "support": "not_documented",
+        "evidence": "generate_ppt.py directly uses google.genai Client and gemini-3-pro-image-preview. Native image_gen replacement would be a changed backend, not the original path."
+      },
+      "command_examples": [
+        {
+          "command": "python generate_ppt.py --plan M:/work/readiness/slides_plan.json --style styles/gradient-glass.md --resolution 2K --output M:/work/readiness/nanobanana",
+          "purpose_ja": "原典Gemini生成とviewer書出し。API呼出しのため未実行。",
+          "may_call_external_api": true,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "google-genai、Pillow、python-dotenv、GEMINI_API_KEY。modelは固定commitでgemini-3-pro-image-preview。",
+        "動画は別途Kling認証/APIとffmpeg等が必要。今回対象は静止画経路で動画生成しない。"
+      ],
+      "api_free_route": {
+        "available": false,
+        "scope": "no_complete_generation_route_without_image_service_documented",
+        "conditions_ja": "plan/promptの準備はローカルで可能。既存画像viewer再利用と新規Gemini生成は別。"
+      },
+      "license": {
+        "declared_id": "MIT-mentioned-only-no-license-file",
+        "scope_and_distribution_ja": "SKILL末尾にMIT License表記はあるが固定commitのtreeにLICENSE/COPYINGはない。標準MIT本文と著作権表示条件をこのrepo由来の確定許諾として補完しない。日本語解説とリンクを先行し、ソース/画像同梱fork公開の条件は作者へ確認が必要。"
+      },
+      "caveats_ja": [
+        "API未実行は動作不能を意味しない。",
+        "NanoBanana/Gemini出力をGPT Image 2の生成例と扱わない。"
+      ]
+    },
+    {
+      "repository": "ningzimu/image-to-editable-ppt-skill",
+      "commit": "b7be494e31a0ed56ef98716891db5474606b8cdf",
+      "skill_root": "skills/image-to-editable-ppt",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/LICENSE",
+          "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154"
+        },
+        {
+          "path": "README.md",
+          "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/README.md",
+          "sha256": "51aa0d1d9fda94e98b6fafbf0b0edf540c1886ba7504f9010fb158c2e7d66dd1"
+        },
+        {
+          "path": "skills/image-to-editable-ppt/SKILL.md",
+          "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/SKILL.md",
+          "sha256": "899725dfaaadc7ba36f9a4f8864358312f7b4fd5b0ffc39fc09d8cc0be7240c5"
+        },
+        {
+          "path": "skills/image-to-editable-ppt/references/cli-helper.md",
+          "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/references/cli-helper.md",
+          "sha256": "1ef924ad2643d4db447d786ccea772e74dda74d15443d3e3ea7ed492ee5cafce"
+        },
+        {
+          "path": "skills/image-to-editable-ppt/cli/pyproject.toml",
+          "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/pyproject.toml",
+          "sha256": "b9a90cdf26b98e76d28eced7c63375c9ef0cc3bd34ad7a2306b5cfdb822c2cba"
+        }
+      ],
+      "generation_method_ja": "既存画像/PDF/画像PPTXをprepareでページ分割。ホスト/workerがmanifestと画像資産を再構成し、原典editppt page build/record/finalizeが編集可能PPTXを作る。新規内容生成skillではない。",
+      "codex_native_image_generation": {
+        "support": "explicit_preferred",
+        "evidence": "SKILL Image Backend Selection explicitly requires callable image_gen.imagegen first, then editppt image fallback only on recorded conditions.",
+        "model_identity": "built-in tool has no model parameter; OAuth/API fallback model strings do not identify native tool model"
+      },
+      "command_examples": [
+        {
+          "command": "python -m pip install -e ./cli",
+          "purpose_ja": "隔離venv内で原典CLIをinstall。global/user環境へはinstallしない。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "editppt prepare M:/work/readiness/input.png --image-backend builtin-imagegen",
+          "purpose_ja": "正規入口。PaddleOCR tokenが既に設定されていると外部送信するので監査では実行しない。",
+          "may_call_external_api": true,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "editppt page build M:/work/readiness/run/pages/page_001",
+          "purpose_ja": "原典schemaのmanifest/assets準備後の決定的ローカル構築。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "editppt run finalize M:/work/readiness/run",
+          "purpose_ja": "全pageを正当にrecordした後の原典final assembly。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "Python>=3.10、PyMuPDF、Pillow、openai>=2、PyYAML、numpy、requests。",
+        "PaddleOCR-VL tokenはoptional。無しでもoffline geometry detectorがあるが文字認識内容は得ない。料金/無料枠は本監査未確認。",
+        "複雑画像編集はnative image_gen優先、fallbackはCodex OAuth→設定済OpenAI-compatible API。認証ファイル/鍵は未閲覧。",
+        "1ページは親local mode、複数ページは原典がpage workerを要求。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "deterministic_page_build_and_final_assembly",
+        "conditions_ja": "適正なmanifestと必要なassetが存在すればローカル構築可能。画像再構成全体をAPI不要と保証しない。native画像ツール＋offline文字測定でAPI鍵不要の経路を原典が記載。"
+      },
+      "license": {
+        "declared_id": "MIT",
+        "scope_and_distribution_ja": "原文LICENSEは使用・複製・変更・頒布等を許可し、copyright noticeとpermission noticeを全コピー/重要部分へ残す条件。コードの日本語fork/再配布は当該表示を保持する。外部画像・入力・依存物の権利を一括で保証するものではない。"
+      },
+      "caveats_ja": [
+        "画像編集必要箇所を自前の近似図形で置換して原典試用済みにしない。",
+        "prepareはconfigured OCRへの送信があり得るため、無条件にlocal-onlyコマンドと記載しない。"
+      ]
+    },
+    {
+      "repository": "johnson7788/MultiAgentPPT",
+      "commit": "ce8185cee83092290bdb913a528c6e3a72ee879e",
+      "skill_root": ".",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/LICENSE",
+          "sha256": "648179da9ac9466f97cef6676e10729b327b8de1792de95d8f1f32acdf233d6c"
+        },
+        {
+          "path": "frontend/LICENSE",
+          "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/frontend/LICENSE",
+          "sha256": "8db0de12445618a006e1bb91677289cb919503bcd2e59c5f94980e249fe02e55"
+        },
+        {
+          "path": "README.md",
+          "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/README.md",
+          "sha256": "772e5d5b1bbed1014d346e092213723b0260589f13ef253056996e13f7b42309"
+        },
+        {
+          "path": "backend/save_ppt/ppt_generator.py",
+          "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/ppt_generator.py",
+          "sha256": "b81c6172a4322ad896349455d2208ec8d0a939288c09b92c6320e9c15e0347df"
+        },
+        {
+          "path": "backend/simplePPT/create_model.py",
+          "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/simplePPT/create_model.py",
+          "sha256": "c7aeb7c1a1aaf88735f7f46ab82c79562d6697dbab21d3e0d876c727e899a0b6"
+        },
+        {
+          "path": "backend/save_ppt/requirements.txt",
+          "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/requirements.txt",
+          "sha256": "bffafa6d4f47a8f2f1e3a04e8ae26a1e6ea9ec90d1e9ed2fe2499a017563935e"
+        }
+      ],
+      "generation_method_ja": "A2A/Google ADK複数agentがoutline/research/slide内容を生成しNext.jsで編集。backend/save_ppt/ppt_generator.pyに独立したJSON→python-pptx export入口がある。",
+      "codex_native_image_generation": {
+        "support": "not_documented",
+        "evidence": "No Codex skill entry; native image_gen not an integration in inspected execution path."
+      },
+      "command_examples": [
+        {
+          "command": "python main_api.py",
+          "purpose_ja": "backend/simpleOutlineとbackend/simplePPTそれぞれ別shell/cwdで起動する通常経路（設定後）。",
+          "may_call_external_api": true,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python -c \"import json; from ppt_generator import start_generate_presentation; print(start_generate_presentation(json.load(open('M:/work/readiness/slides.json', encoding='utf-8'))))\"",
+          "purpose_ja": "cwd=backend/save_ppt。原典export関数に既存JSONを渡す。画像URLなしの内容ならAPI/ダウンロード不要。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "通常経路はPython3.11+推奨、google-adk/A2A/LiteLLM、Next.js/pnpm、PostgreSQL/Prismaと複数backend port。",
+        "選択LLMに応じGOOGLE_API_KEY/CLAUDE_API_KEY/OPENAI_API_KEY/DEEPSEEK_API_KEY/ALI_API_KEY/DOUBAO_API_KEY。単純経路でもLLMは必要。",
+        "export部分はpython-pptx/Pillow/requestsと原典ppt_template_0717.pptx。remote imageはrequests.getするので無画像JSONならネット不要。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "export_function_only_not_multiagent_generation",
+        "conditions_ja": "原典templateとfrontend由来schema JSON（内容はlist）を用意してstart_generate_presentationを呼ぶ。独立した引数CLIではなくPython関数入口。実行未検証。"
+      },
+      "license": {
+        "declared_id": "MIT",
+        "scope_and_distribution_ja": "原文LICENSEは使用・複製・変更・頒布等を許可し、copyright noticeとpermission noticeを全コピー/重要部分へ残す条件。コードの日本語fork/再配布は当該表示を保持する。外部画像・入力・依存物の権利を一括で保証するものではない。 frontend/LICENSEのALLWEONE Team帰属も保持。"
+      },
+      "caveats_ja": [
+        "READMEは現版を非メンテとしTrainPPTAgentを推奨。archiveフラグと同じ意味ではない。",
+        "調査MCPの内蔵exampleはEVトピックで、本物の調査データへ接続済みとみなさない。",
+        "exportだけを動かしてmultiagent全経路を実証したとは数えない。"
+      ]
+    },
+    {
+      "repository": "JuneYaooo/gpt-image2-ppt-skills",
+      "commit": "2d57ef8127b83e8232a1be4e9515f0b3cc9fc91e",
+      "skill_root": ".",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/JuneYaooo/gpt-image2-ppt-skills/blob/2d57ef8127b83e8232a1be4e9515f0b3cc9fc91e/LICENSE",
+          "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4"
+        },
+        {
+          "path": "SKILL.md",
+          "url": "https://github.com/JuneYaooo/gpt-image2-ppt-skills/blob/2d57ef8127b83e8232a1be4e9515f0b3cc9fc91e/SKILL.md",
+          "sha256": "80fd87d80c11b74905103f7b5988f2d5bbe0b1fd3990538d5eb39b98300aa7b6"
+        },
+        {
+          "path": "requirements.txt",
+          "url": "https://github.com/JuneYaooo/gpt-image2-ppt-skills/blob/2d57ef8127b83e8232a1be4e9515f0b3cc9fc91e/requirements.txt",
+          "sha256": "be79869222bcf9cfbd15570fdb5f79a3f1a46ed09cffd2c5c4d16e5c2d6727dd"
+        },
+        {
+          "path": "scripts/generate_ppt.py",
+          "url": "https://github.com/JuneYaooo/gpt-image2-ppt-skills/blob/2d57ef8127b83e8232a1be4e9515f0b3cc9fc91e/scripts/generate_ppt.py",
+          "sha256": "ad3131cecf6d736e57387874c93f405b91239e2cd856985b798fbca517987548"
+        },
+        {
+          "path": "scripts/md_to_plan.py",
+          "url": "https://github.com/JuneYaooo/gpt-image2-ppt-skills/blob/2d57ef8127b83e8232a1be4e9515f0b3cc9fc91e/scripts/md_to_plan.py",
+          "sha256": "d34db8a57d6d335764f091aed71c1ec692d6091c4c12e2d5ed77eca52f2ac9be"
+        },
+        {
+          "path": "scripts/runtime_profile.py",
+          "url": "https://github.com/JuneYaooo/gpt-image2-ppt-skills/blob/2d57ef8127b83e8232a1be4e9515f0b3cc9fc91e/scripts/runtime_profile.py",
+          "sha256": "c881fd9c407298241391fd675eb0339ea7ffd7faa1d74e70c98e0ad8b48c69c6"
+        }
+      ],
+      "generation_method_ja": "Markdown→原典plan JSON→style/layout bankによるprompt compiler→各ページ画像→PPTX。native Codex経路は--prepare-onlyの出力をホスト画像ツールへ渡し原典packagingを使う。",
+      "codex_native_image_generation": {
+        "support": "explicit_preferred_for_codex_host",
+        "evidence": "SKILL section 219+ explicitly directs native Codex image_generation, discourages spawning codex exec when host already has tool.",
+        "model_identity": "Native route is officially supported but the current host image_gen.imagegen cannot select/prove gpt-image-2; report actual tool name/model unknown."
+      },
+      "command_examples": [
+        {
+          "command": "python scripts/md_to_plan.py M:/work/readiness/slides_plan.md -o M:/work/readiness/slides_plan.json",
+          "purpose_ja": "原典Markdown parser。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/generate_ppt.py --plan M:/work/readiness/slides_plan.json --style styles/initial/editorial-mono.md --prepare-only --output M:/work/readiness/june --slides 1",
+          "purpose_ja": "原典layout router/prompt compilerだけを実行。API/画像生成/PPTXなし。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/generate_ppt.py --plan M:/work/readiness/slides_plan.json --style styles/initial/editorial-mono.md --slides 1",
+          "purpose_ja": "API直連の原典画像生成経路。未実行。",
+          "may_call_external_api": true,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "requests、python-dotenv、python-pptx、jsonschema、PyMuPDF、Pillow、openai>=1.83,<2。",
+        "API直連はOPENAI_API_KEY/OPENAI_BASE_URL。text-only template分析のみVISION_*、ホストmultimodalでは不要。",
+        "native画像ツール、または別の--backend codexがcodex execを起動するfallback。後者は現在会話のnative tool再利用ではない。",
+        "editable mode/template renderにはPowerPoint/Keynote/LibreOfficeの実レンダーと検査が必要。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "prepare_only_and_packaging; native_host_image_route",
+        "conditions_ja": "prepare-onlyはローカル。実画像を生成した後、原典generate_pptx(...,metadata=metadata)またはSKILL記載の単純PNG組版を使える。外部画像objectがある場合はmetadata付き原典packaging必須。"
+      },
+      "license": {
+        "declared_id": "Apache-2.0",
+        "scope_and_distribution_ja": "原文Apache-2.0第4条はLICENSEコピーの提供、変更ファイルの変更表示、関連する著作権・特許・商標・帰属表示の保持、該当するNOTICEの保持を要求。コードの日本語fork/頒布はこれらを満たす範囲。商標権を付与しない。"
+      },
+      "caveats_ja": [
+        "stylesの外部テンプレ由来情報や第三者画像の権利はコードLICENSEだけで解決済みとしない。検証候補はinitial/editorial-mono。",
+        "SKILLが例示するoutput_format等は現host tool schemaへそのまま渡さず、実在する引数と返却方式に合わせる。"
+      ]
+    },
+    {
+      "repository": "NyxTides/ppt-image-first",
+      "commit": "87a300a559a2a55097fab337241218c6557bfa23",
+      "skill_root": ".",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/NyxTides/ppt-image-first/blob/87a300a559a2a55097fab337241218c6557bfa23/LICENSE",
+          "sha256": "e815c918c265620b90610065727b83d4476a03e55d638f9b62750912a66b1c44"
+        },
+        {
+          "path": "README.md",
+          "url": "https://github.com/NyxTides/ppt-image-first/blob/87a300a559a2a55097fab337241218c6557bfa23/README.md",
+          "sha256": "95d8d1f92656aa590c8bce8909620d78128eeab8b2502e187d22d7af15b06e1d"
+        },
+        {
+          "path": "SKILL.md",
+          "url": "https://github.com/NyxTides/ppt-image-first/blob/87a300a559a2a55097fab337241218c6557bfa23/SKILL.md",
+          "sha256": "553a0fc50a961d0cbda7c77dd3f2ecbd0b1b79f7b54e774f08c542eb0ffdf8da"
+        },
+        {
+          "path": "references/workflow.md",
+          "url": "https://github.com/NyxTides/ppt-image-first/blob/87a300a559a2a55097fab337241218c6557bfa23/references/workflow.md",
+          "sha256": "725515b7688dce987f8ea080d80a69bbee3f907a7827d8d069fa525fbd634add"
+        },
+        {
+          "path": "assets/preview_shell/build_preview_html.py",
+          "url": "https://github.com/NyxTides/ppt-image-first/blob/87a300a559a2a55097fab337241218c6557bfa23/assets/preview_shell/build_preview_html.py",
+          "sha256": "d9d96da94d25129271e25aecfbb67c8e57328eb08ac6bd780db21c007aad4140"
+        },
+        {
+          "path": "assets/review_shell/build_review_html.py",
+          "url": "https://github.com/NyxTides/ppt-image-first/blob/87a300a559a2a55097fab337241218c6557bfa23/assets/review_shell/build_review_html.py",
+          "sha256": "3b19f7f47b87745cd0c43d3b855a3fbd47601636715ffae2209208768be65e87"
+        }
+      ],
+      "generation_method_ja": "会話/内容設計→style preview→spec lock→画像生成→原典candidate/review shell→承認後PPTX化するワークフローskill。画像API専用clientやPPTX変換CLIは含まれない。",
+      "codex_native_image_generation": {
+        "support": "generic_environment_image_tool_supported",
+        "evidence": "workflow Stage 4 permits environment tool/MCP/skill; no exact image_gen.imagegen adapter is documented. README names GPT Image 2 as default, not a proven backend."
+      },
+      "command_examples": [
+        {
+          "command": "python assets/preview_shell/build_preview_html.py",
+          "purpose_ja": "同ディレクトリindex.htmlを原典base64 shellから復元するだけ。出力先を受けるdeck builderではないため、固定原本ではなく作業copy内で実行。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        },
+        {
+          "command": "python scripts/render_review_markup.py M:/work/readiness/review_feedback.json --images M:/work/readiness/images --out M:/work/readiness/marked",
+          "purpose_ja": "原典review JSONの座標をレビュー用画像へ復元。最終スライド編集の代用ではない。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "環境の画像生成/編集toolchain、ブラウザ、最終PPTX packaging手段。",
+        "shell復元はPython標準ライブラリ、review markupはPillow。特定API key必須とは記載しない。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "review_shell_and_markup_only",
+        "conditions_ja": "既存画像のレビューUI構築はAPI不要。画像新規作成とPPTX最終出力は環境能力への委譲。"
+      },
+      "license": {
+        "declared_id": "Apache-2.0",
+        "scope_and_distribution_ja": "原文Apache-2.0第4条はLICENSEコピーの提供、変更ファイルの変更表示、関連する著作権・特許・商標・帰属表示の保持、該当するNOTICEの保持を要求。コードの日本語fork/頒布はこれらを満たす範囲。商標権を付与しない。"
+      },
+      "caveats_ja": [
+        "原典3種類のshellは必須。自作viewerへ置換するとそのワークフローの試用にならない。",
+        "内蔵ツールを使えたことをREADME記載のGPT Image 2モデル実証とはしない。"
+      ]
+    },
+    {
+      "repository": "Gabberflast/academic-pptx-skill",
+      "commit": "9f2b703ffe8d1449851617665ab1ffb3516d54ac",
+      "skill_root": ".",
+      "inspection_status": "source_review_complete",
+      "execution_status": "not_executed_in_this_readiness_audit",
+      "generation_status": "not_generated_here",
+      "credential_status": "not_inspected",
+      "paid_api_calls": 0,
+      "source_refs": [
+        {
+          "path": "LICENSE",
+          "url": "https://github.com/Gabberflast/academic-pptx-skill/blob/9f2b703ffe8d1449851617665ab1ffb3516d54ac/LICENSE",
+          "sha256": "20d9c009d0e5d7150da5e081c8d5a81463731dcf338323992a74a0648e6fb542"
+        },
+        {
+          "path": "SKILL.md",
+          "url": "https://github.com/Gabberflast/academic-pptx-skill/blob/9f2b703ffe8d1449851617665ab1ffb3516d54ac/SKILL.md",
+          "sha256": "c321851cd9d9b98d429de4798766207525024f3f28c3fe6dd5932ae79a2efb28"
+        },
+        {
+          "path": "content_guidelines.md",
+          "url": "https://github.com/Gabberflast/academic-pptx-skill/blob/9f2b703ffe8d1449851617665ab1ffb3516d54ac/content_guidelines.md",
+          "sha256": "d9b0351b31995d2aa34ac31550fb430310bf1ba6bfc19e1767eba8f24f807bf1"
+        },
+        {
+          "path": "slide_patterns.md",
+          "url": "https://github.com/Gabberflast/academic-pptx-skill/blob/9f2b703ffe8d1449851617665ab1ffb3516d54ac/slide_patterns.md",
+          "sha256": "f367318f3a9e4b0031e10c179cc673b7a59abeeb3bc0249680e64d3277f18764"
+        }
+      ],
+      "generation_method_ja": "学術発表の論証・action title・証拠/出典・ghost deck testを定める内容設計skill。PPTX生成の技術実装は別のPPTX skillへ委譲し、本repoにはbuilder CLIがない。",
+      "codex_native_image_generation": {
+        "support": "not_required_not_documented",
+        "evidence": "Content/structure guide depends on external PPTX skill, not an image-generation engine."
+      },
+      "command_examples": [
+        {
+          "command": "python -m markitdown M:/work/readiness/deck.pptx",
+          "purpose_ja": "別PPTX skillで作ったdeckの内容QA例。repo独自CLI実行とは数えない。",
+          "may_call_external_api": false,
+          "executed": false,
+          "shell": "PowerShell; python resolves to an isolated dependency environment; cwd is skill_root unless stated"
+        }
+      ],
+      "dependencies_and_external_services_ja": [
+        "別のPPTX skill（pptxgenjs.md/editing.md参照先）はこのrepoに同梱されない。",
+        "原典記載の技術依存はmarkitdown[pptx]、PptxGenJS、LibreOffice、Poppler。"
+      ],
+      "api_free_route": {
+        "available": true,
+        "scope": "instruction_only_with_external_pptx_skill",
+        "conditions_ja": "内容設計はAPI専用依存なし。原典独立CLIは無いので外部skillの技術実装と区別して作例を設計する。"
+      },
+      "license": {
+        "declared_id": "conflicting_MIT_root_and_proprietary_frontmatter",
+        "scope_and_distribution_ja": "root LICENSEはMIT（copyright 2026 Gabberflast）だがSKILL frontmatterは「Proprietary. LICENSE.txt has complete terms」。固定treeにLICENSE.txtはなく、両表示が矛盾する。MITのみで確定扱いせず、日本語fork/全文再配布前に作者へ解消確認。参照リンクと内容分析は公開候補にできる。"
+      },
+      "caveats_ja": [
+        "未実行をblockedとしない。独立生成器ではないという分類。",
+        "生成ツールを勝手に選び、その描画結果をrepo固有rendererの出力と表示しない。"
+      ]
+    }
+  ]
+}

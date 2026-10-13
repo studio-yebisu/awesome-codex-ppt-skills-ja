@@ -1,0 +1,2993 @@
+{
+  "schemaVersion": 2,
+  "variantOutputMode": "selected-only",
+  "title": "EC月次報告：売上と粗利を確かめる",
+  "goal": "架空EC事業の売上・粗利・返品を、日本語で共有する",
+  "themePack": "theme05",
+  "pageCount": 6,
+  "randomSeed": "yebisu-ec",
+  "workflowRunId": "20261013141540197-87e4d091",
+  "slides": [
+    {
+      "id": "page-1",
+      "content": {
+        "presentation": {
+          "pageIntent": "cover",
+          "coreMessage": "架空EC事業の月次報告",
+          "title": {
+            "full": "EC月次報告",
+            "short": "EC月次報告"
+          },
+          "summary": {
+            "full": "架空EC事業の月次報告",
+            "short": "架空EC事業の月次報告"
+          },
+          "items": [
+            {
+              "id": "period",
+              "label": "対象",
+              "detail": {
+                "full": "説明用の架空データ",
+                "short": "説明用の架空データ"
+              },
+              "value": 1,
+              "displayValue": "月次",
+              "unit": "項目",
+              "required": true,
+              "priority": "high"
+            }
+          ],
+          "chartData": [],
+          "media": []
+        }
+      },
+      "selectedVariant": "v1",
+      "variants": [
+        {
+          "id": "v1",
+          "kind": "template",
+          "layout": "theme05_page065",
+          "contentMap": {
+            "copy.quote": "presentation.title.short",
+            "copy.sub": "presentation.coreMessage",
+            "copy.kicker": "presentation.pageIntent",
+            "copy.lead": "presentation.items[0].detail.short",
+            "copy.railCap": "presentation.items[0].label"
+          },
+          "projection": {
+            "chartMode": "none",
+            "contentPaths": [
+              "copy.pillars",
+              "pillarCount",
+              "copy.leadSub",
+              "copy.railUnit",
+              "copy.op",
+              "copy.src",
+              "copy.sheet",
+              "copy.quote",
+              "copy.sub",
+              "copy.kicker",
+              "copy.lead",
+              "copy.railCap"
+            ],
+            "projectedItemIds": [
+              "period"
+            ],
+            "chartBindings": [],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.pillars",
+                  "fields": [
+                    {
+                      "key": "en",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "zh",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "note",
+                      "semantic": "detail"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "period"
+                    },
+                    {
+                      "sourceId": "support:summary"
+                    }
+                  ],
+                  "countPath": "pillarCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.leadSub",
+                  "value": ""
+                },
+                {
+                  "path": "copy.railUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.op",
+                  "value": ""
+                },
+                {
+                  "path": "copy.src",
+                  "value": ""
+                },
+                {
+                  "path": "copy.sheet",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v2",
+          "kind": "template",
+          "layout": "theme05_page037",
+          "contentMap": {
+            "copy.quote": "presentation.title.short",
+            "copy.sub": "presentation.coreMessage",
+            "copy.kicker": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label"
+          },
+          "projection": {
+            "chartMode": "none",
+            "contentPaths": [
+              "copy.keywords",
+              "keywordCount",
+              "copy.index",
+              "copy.leadZh",
+              "copy.leadEn",
+              "copy.quote",
+              "copy.sub",
+              "copy.kicker",
+              "copy.sheet"
+            ],
+            "projectedItemIds": [
+              "period"
+            ],
+            "chartBindings": [],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.keywords",
+                  "fields": [
+                    {
+                      "key": null,
+                      "semantic": "label"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "period"
+                    }
+                  ],
+                  "countPath": "keywordCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.index",
+                  "value": ""
+                },
+                {
+                  "path": "copy.leadZh",
+                  "value": ""
+                },
+                {
+                  "path": "copy.leadEn",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v3",
+          "kind": "template",
+          "layout": "theme05_page028",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.sub": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.caption": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "none",
+            "contentPaths": [
+              "copy.aux",
+              "auxCount",
+              "copy.number",
+              "copy.unit",
+              "copy.message",
+              "copy.title",
+              "copy.sub",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.caption"
+            ],
+            "projectedItemIds": [
+              "period"
+            ],
+            "chartBindings": [],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.aux",
+                  "fields": [
+                    {
+                      "key": "k",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "v",
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": "u",
+                      "semantic": "optional"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "period"
+                    }
+                  ],
+                  "countPath": "auxCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.number",
+                  "value": ""
+                },
+                {
+                  "path": "copy.unit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.message",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v4",
+          "kind": "bespoke",
+          "adjustable": false,
+          "composition": {
+            "designIntent": {
+              "objective": "呈现单页核心信息",
+              "audience": "当前演示文稿受众",
+              "narrativeRole": "推进单页叙事",
+              "emphasis": "突出内容层级与证据关系",
+              "rationale": "metric-1 结构投影"
+            },
+            "background": "default",
+            "elements": [
+              {
+                "id": "bespoke-metric-kicker",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 1,
+                  "width": 3,
+                  "height": 1
+                },
+                "role": "kicker"
+              },
+              {
+                "id": "bespoke-metric-title",
+                "type": "text",
+                "grid": {
+                  "column": 4,
+                  "row": 1,
+                  "width": 9,
+                  "height": 1
+                },
+                "role": "title"
+              },
+              {
+                "id": "bespoke-metric-core",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 2,
+                  "width": 8,
+                  "height": 1
+                },
+                "role": "subtitle"
+              },
+              {
+                "id": "bespoke-metric-summary",
+                "type": "text",
+                "grid": {
+                  "column": 9,
+                  "row": 2,
+                  "width": 4,
+                  "height": 1
+                },
+                "role": "caption"
+              },
+              {
+                "id": "bespoke-metric-value-1",
+                "type": "metric",
+                "grid": {
+                  "column": 1,
+                  "row": 3,
+                  "width": 7,
+                  "height": 5
+                },
+                "tone": "inverse"
+              }
+            ]
+          },
+          "projection": {
+            "itemBindings": [
+              {
+                "id": "period",
+                "target": "elements[4]"
+              }
+            ],
+            "chartBindings": [],
+            "mediaBindings": []
+          },
+          "contentMap": {
+            "elements[0].text": "presentation.pageIntent",
+            "elements[1].text": "presentation.title.short",
+            "elements[2].text": "presentation.coreMessage",
+            "elements[3].text": "presentation.summary.short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "page-2",
+      "content": {
+        "presentation": {
+          "pageIntent": "metric",
+          "coreMessage": "売上1200万円、前年から200万円増",
+          "title": {
+            "full": "売上は前年から20%増えた",
+            "short": "売上は前年から20%増えた"
+          },
+          "summary": {
+            "full": "売上1200万円、前年から200万円増",
+            "short": "売上1200万円、前年から200万円増"
+          },
+          "items": [
+            {
+              "id": "sales",
+              "label": "売上",
+              "detail": {
+                "full": "前年1000万円",
+                "short": "前年1000万円"
+              },
+              "value": 1200,
+              "displayValue": "1,200",
+              "unit": "万円",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "growth",
+              "label": "前年比",
+              "detail": {
+                "full": "増加額200万円",
+                "short": "増加額200万円"
+              },
+              "value": 20,
+              "displayValue": "+20",
+              "unit": "%",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "orders",
+              "label": "注文数",
+              "detail": {
+                "full": "前年3500件",
+                "short": "前年3500件"
+              },
+              "value": 4000,
+              "displayValue": "4,000",
+              "unit": "件",
+              "required": true,
+              "priority": "high"
+            }
+          ],
+          "chartData": [
+            {
+              "id": "sales",
+              "label": "売上",
+              "value": 1200,
+              "displayValue": "1,200",
+              "unit": "万円"
+            }
+          ],
+          "media": []
+        }
+      },
+      "selectedVariant": "v1",
+      "variants": [
+        {
+          "id": "v1",
+          "kind": "template",
+          "layout": "theme05_page087",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.conclusion": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.startCap": "presentation.items[1].label",
+            "copy.endCap": "presentation.items[2].label"
+          },
+          "projection": {
+            "chartMode": "summary",
+            "contentPaths": [
+              "copy.nodes",
+              "nodeCount",
+              "copy.title",
+              "copy.conclusion",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.startCap",
+              "copy.endCap"
+            ],
+            "projectedItemIds": [
+              "sales",
+              "growth",
+              "orders"
+            ],
+            "chartBindings": [
+              {
+                "mode": "summary",
+                "sourceIds": [
+                  "sales"
+                ],
+                "target": "copy.nodes[3]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.nodes",
+                  "fields": [
+                    {
+                      "key": "time",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "title",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "note",
+                      "semantic": "detail"
+                    },
+                    {
+                      "key": "value",
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": "unit",
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "sales"
+                    },
+                    {
+                      "sourceId": "growth"
+                    },
+                    {
+                      "sourceId": "orders"
+                    },
+                    {
+                      "sourceId": "chart-summary",
+                      "sourceIds": [
+                        "sales"
+                      ]
+                    }
+                  ],
+                  "countPath": "nodeCount"
+                }
+              ],
+              "values": []
+            }
+          }
+        },
+        {
+          "id": "v2",
+          "kind": "template",
+          "layout": "theme05_page062",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.marker": "presentation.items[1].label",
+            "copy.locale": "presentation.items[2].label",
+            "copy.conclusion": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "summary",
+            "contentPaths": [
+              "copy.metrics",
+              "metricCount",
+              "copy.mediaCap",
+              "copy.mediaUnit",
+              "copy.mosaicCap",
+              "copy.mosaicUnit",
+              "copy.tags",
+              "tagCount",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.marker",
+              "copy.locale",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "orders",
+              "growth",
+              "sales"
+            ],
+            "chartBindings": [
+              {
+                "mode": "summary",
+                "sourceIds": [
+                  "sales"
+                ],
+                "target": "copy.metrics[3]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "orders"
+                    },
+                    {
+                      "sourceId": "growth"
+                    },
+                    {
+                      "sourceId": "sales"
+                    },
+                    {
+                      "sourceId": "chart-summary",
+                      "sourceIds": [
+                        "sales"
+                      ]
+                    }
+                  ],
+                  "countPath": "metricCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.mediaCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.mediaUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.mosaicCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.mosaicUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.tags",
+                  "value": []
+                },
+                {
+                  "path": "tagCount",
+                  "value": 0
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v3",
+          "kind": "template",
+          "layout": "theme05_page039",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.en": "presentation.items[1].label",
+            "copy.zh": "presentation.items[2].label",
+            "copy.conclusion": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "summary",
+            "contentPaths": [
+              "copy.metrics",
+              "metricCount",
+              "copy.mediaCap",
+              "copy.mediaUnit",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.en",
+              "copy.zh",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "growth",
+              "orders",
+              "sales"
+            ],
+            "chartBindings": [
+              {
+                "mode": "summary",
+                "sourceIds": [
+                  "sales"
+                ],
+                "target": "copy.metrics[0]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "chart-summary",
+                      "sourceIds": [
+                        "sales"
+                      ]
+                    },
+                    {
+                      "sourceId": "growth"
+                    },
+                    {
+                      "sourceId": "orders"
+                    },
+                    {
+                      "sourceId": "sales"
+                    }
+                  ],
+                  "countPath": "metricCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.mediaCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.mediaUnit",
+                  "value": ""
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v4",
+          "kind": "bespoke",
+          "adjustable": false,
+          "composition": {
+            "designIntent": {
+              "objective": "呈现单页核心信息",
+              "audience": "当前演示文稿受众",
+              "narrativeRole": "推进单页叙事",
+              "emphasis": "突出内容层级与证据关系",
+              "rationale": "chart-2 结构投影"
+            },
+            "background": "default",
+            "elements": [
+              {
+                "id": "bespoke-chart-kicker",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 1,
+                  "width": 4,
+                  "height": 1
+                },
+                "role": "kicker"
+              },
+              {
+                "id": "bespoke-chart-title",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 2,
+                  "width": 4,
+                  "height": 2
+                },
+                "role": "title"
+              },
+              {
+                "id": "bespoke-chart-core",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 4,
+                  "width": 4,
+                  "height": 2
+                },
+                "role": "subtitle"
+              },
+              {
+                "id": "bespoke-chart-summary",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 6,
+                  "width": 4,
+                  "height": 1
+                },
+                "role": "caption"
+              },
+              {
+                "id": "bespoke-chart-plot",
+                "type": "chart",
+                "grid": {
+                  "column": 5,
+                  "row": 1,
+                  "width": 8,
+                  "height": 8
+                },
+                "chartType": "line",
+                "showValues": true
+              },
+              {
+                "id": "bespoke-chart-facts",
+                "type": "list",
+                "grid": {
+                  "column": 1,
+                  "row": 7,
+                  "width": 4,
+                  "height": 2
+                },
+                "ordered": true
+              }
+            ]
+          },
+          "projection": {
+            "itemBindings": [
+              {
+                "id": "sales",
+                "target": "elements[5].items[0]"
+              },
+              {
+                "id": "growth",
+                "target": "elements[5].items[1]"
+              },
+              {
+                "id": "orders",
+                "target": "elements[5].items[2]"
+              }
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "sales"
+                ],
+                "target": "elements[4].data[0]"
+              }
+            ],
+            "mediaBindings": []
+          },
+          "contentMap": {
+            "elements[0].text": "presentation.pageIntent",
+            "elements[1].text": "presentation.title.short",
+            "elements[2].text": "presentation.coreMessage",
+            "elements[3].text": "presentation.summary.short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "page-3",
+      "content": {
+        "presentation": {
+          "pageIntent": "comparison",
+          "coreMessage": "粗利額は52万円増、率は2ポイント低下",
+          "title": {
+            "full": "粗利額は増え、粗利率は下がった",
+            "short": "粗利額は増え、粗利率は下がった"
+          },
+          "summary": {
+            "full": "粗利額は52万円増、率は2ポイント低下",
+            "short": "粗利額は52万円増、率は2ポイント低下"
+          },
+          "items": [
+            {
+              "id": "current",
+              "label": "当月粗利",
+              "detail": {
+                "full": "売上1200万円の36%",
+                "short": "売上1200万円の36%"
+              },
+              "value": 432,
+              "displayValue": "432",
+              "unit": "万円",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "previous",
+              "label": "前年粗利",
+              "detail": {
+                "full": "売上1000万円の38%",
+                "short": "売上1000万円の38%"
+              },
+              "value": 380,
+              "displayValue": "380",
+              "unit": "万円",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "rate",
+              "label": "当月粗利率",
+              "detail": {
+                "full": "前年38%から低下",
+                "short": "前年38%から低下"
+              },
+              "value": 36,
+              "displayValue": "36",
+              "unit": "%",
+              "required": true,
+              "priority": "high"
+            }
+          ],
+          "chartData": [
+            {
+              "id": "current",
+              "label": "当月粗利",
+              "value": 432,
+              "displayValue": "432",
+              "unit": "万円"
+            },
+            {
+              "id": "previous",
+              "label": "前年粗利",
+              "value": 380,
+              "displayValue": "380",
+              "unit": "万円"
+            }
+          ],
+          "media": []
+        }
+      },
+      "selectedVariant": "v1",
+      "variants": [
+        {
+          "id": "v1",
+          "kind": "template",
+          "layout": "theme05_page046",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.sub": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.galleryCap": "presentation.items[1].label",
+            "copy.conclusion": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "full",
+            "contentPaths": [
+              "copy.metrics",
+              "copy.cards",
+              "cardCount",
+              "copy.galleryUnit",
+              "imageCount",
+              "copy.title",
+              "copy.sub",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.galleryCap",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "current",
+              "previous",
+              "rate"
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "current"
+                ],
+                "target": "copy.cards[0]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "previous"
+                ],
+                "target": "copy.cards[1]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "current"
+                    },
+                    {
+                      "sourceId": "previous"
+                    },
+                    {
+                      "sourceId": "rate"
+                    }
+                  ]
+                },
+                {
+                  "path": "copy.cards",
+                  "fields": [
+                    {
+                      "key": "en",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "zh",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "code",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "v",
+                      "semantic": "value"
+                    },
+                    {
+                      "key": "unit",
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "chart:current"
+                    },
+                    {
+                      "sourceId": "chart:previous"
+                    }
+                  ],
+                  "countPath": "cardCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.galleryUnit",
+                  "value": ""
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v2",
+          "kind": "template",
+          "layout": "theme05_page043",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.en": "presentation.items[0].label",
+            "copy.zh": "presentation.items[1].label",
+            "copy.sheet": "presentation.items[2].label",
+            "copy.conclusion": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "full",
+            "contentPaths": [
+              "copy.metrics",
+              "metricCount",
+              "copy.dist",
+              "distCount",
+              "copy.mediaCap",
+              "copy.mediaUnit",
+              "copy.distCap",
+              "copy.distUnit",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.en",
+              "copy.zh",
+              "copy.sheet",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "rate",
+              "previous",
+              "current"
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "current"
+                ],
+                "target": "copy.dist[0]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "previous"
+                ],
+                "target": "copy.dist[1]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "rate"
+                    },
+                    {
+                      "sourceId": "previous"
+                    },
+                    {
+                      "sourceId": "current"
+                    }
+                  ],
+                  "countPath": "metricCount"
+                },
+                {
+                  "path": "copy.dist",
+                  "fields": [
+                    {
+                      "key": "k",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "v",
+                      "semantic": "value"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "chart:current"
+                    },
+                    {
+                      "sourceId": "chart:previous"
+                    }
+                  ],
+                  "countPath": "distCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.mediaCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.mediaUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.distCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.distUnit",
+                  "value": ""
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v3",
+          "kind": "template",
+          "layout": "theme05_page061",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.cluster": "presentation.items[1].label",
+            "copy.locale": "presentation.items[2].label",
+            "copy.conclusion": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "summary",
+            "contentPaths": [
+              "copy.metrics",
+              "metricCount",
+              "copy.locator",
+              "copy.mediaCap",
+              "copy.mediaUnit",
+              "copy.tags",
+              "tagCount",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.cluster",
+              "copy.locale",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "previous",
+              "current",
+              "rate"
+            ],
+            "chartBindings": [
+              {
+                "mode": "summary",
+                "sourceIds": [
+                  "current",
+                  "previous"
+                ],
+                "target": "copy.metrics[0]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "chart-summary",
+                      "sourceIds": [
+                        "current",
+                        "previous"
+                      ]
+                    },
+                    {
+                      "sourceId": "previous"
+                    },
+                    {
+                      "sourceId": "current"
+                    },
+                    {
+                      "sourceId": "rate"
+                    }
+                  ],
+                  "countPath": "metricCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.locator",
+                  "value": ""
+                },
+                {
+                  "path": "copy.mediaCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.mediaUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.tags",
+                  "value": []
+                },
+                {
+                  "path": "tagCount",
+                  "value": 0
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v4",
+          "kind": "bespoke",
+          "adjustable": false,
+          "composition": {
+            "designIntent": {
+              "objective": "呈现单页核心信息",
+              "audience": "当前演示文稿受众",
+              "narrativeRole": "推进单页叙事",
+              "emphasis": "突出内容层级与证据关系",
+              "rationale": "chart-3 结构投影"
+            },
+            "background": "default",
+            "elements": [
+              {
+                "id": "bespoke-chart-kicker",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 1,
+                  "width": 3,
+                  "height": 1
+                },
+                "role": "kicker"
+              },
+              {
+                "id": "bespoke-chart-title",
+                "type": "text",
+                "grid": {
+                  "column": 4,
+                  "row": 1,
+                  "width": 9,
+                  "height": 1
+                },
+                "role": "title"
+              },
+              {
+                "id": "bespoke-chart-core",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 2,
+                  "width": 7,
+                  "height": 1
+                },
+                "role": "subtitle"
+              },
+              {
+                "id": "bespoke-chart-summary",
+                "type": "text",
+                "grid": {
+                  "column": 8,
+                  "row": 2,
+                  "width": 5,
+                  "height": 1
+                },
+                "role": "caption"
+              },
+              {
+                "id": "bespoke-chart-plot",
+                "type": "chart",
+                "grid": {
+                  "column": 1,
+                  "row": 3,
+                  "width": 12,
+                  "height": 4
+                },
+                "chartType": "line",
+                "showValues": true
+              },
+              {
+                "id": "bespoke-chart-facts",
+                "type": "list",
+                "grid": {
+                  "column": 1,
+                  "row": 7,
+                  "width": 12,
+                  "height": 2
+                },
+                "ordered": true
+              }
+            ]
+          },
+          "projection": {
+            "itemBindings": [
+              {
+                "id": "current",
+                "target": "elements[5].items[0]"
+              },
+              {
+                "id": "previous",
+                "target": "elements[5].items[1]"
+              },
+              {
+                "id": "rate",
+                "target": "elements[5].items[2]"
+              }
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "current"
+                ],
+                "target": "elements[4].data[0]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "previous"
+                ],
+                "target": "elements[4].data[1]"
+              }
+            ],
+            "mediaBindings": []
+          },
+          "contentMap": {
+            "elements[0].text": "presentation.pageIntent",
+            "elements[1].text": "presentation.title.short",
+            "elements[2].text": "presentation.coreMessage",
+            "elements[3].text": "presentation.summary.short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "page-4",
+      "content": {
+        "presentation": {
+          "pageIntent": "structure",
+          "coreMessage": "4チャネルの売上合計は1200万円",
+          "title": {
+            "full": "売上の内訳をチャネルで見る",
+            "short": "売上の内訳をチャネルで見る"
+          },
+          "summary": {
+            "full": "4チャネルの売上合計は1200万円",
+            "short": "4チャネルの売上合計は1200万円"
+          },
+          "items": [
+            {
+              "id": "a",
+              "label": "検索",
+              "detail": {
+                "full": "売上構成20%",
+                "short": "売上構成20%"
+              },
+              "value": 240,
+              "displayValue": "240",
+              "unit": "万円",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "b",
+              "label": "広告",
+              "detail": {
+                "full": "売上構成32.5%",
+                "short": "売上構成32.5%"
+              },
+              "value": 390,
+              "displayValue": "390",
+              "unit": "万円",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "c",
+              "label": "メール",
+              "detail": {
+                "full": "売上構成17.5%",
+                "short": "売上構成17.5%"
+              },
+              "value": 210,
+              "displayValue": "210",
+              "unit": "万円",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "d",
+              "label": "直接",
+              "detail": {
+                "full": "売上構成30%",
+                "short": "売上構成30%"
+              },
+              "value": 360,
+              "displayValue": "360",
+              "unit": "万円",
+              "required": true,
+              "priority": "high"
+            }
+          ],
+          "chartData": [
+            {
+              "id": "a",
+              "label": "検索",
+              "value": 240,
+              "displayValue": "240",
+              "unit": "万円"
+            },
+            {
+              "id": "b",
+              "label": "広告",
+              "value": 390,
+              "displayValue": "390",
+              "unit": "万円"
+            },
+            {
+              "id": "c",
+              "label": "メール",
+              "value": 210,
+              "displayValue": "210",
+              "unit": "万円"
+            },
+            {
+              "id": "d",
+              "label": "直接",
+              "value": 360,
+              "displayValue": "360",
+              "unit": "万円"
+            }
+          ],
+          "media": []
+        }
+      },
+      "selectedVariant": "v1",
+      "variants": [
+        {
+          "id": "v1",
+          "kind": "template",
+          "layout": "theme05_page087",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.conclusion": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.startCap": "presentation.items[1].label",
+            "copy.endCap": "presentation.items[2].label"
+          },
+          "projection": {
+            "chartMode": "summary",
+            "contentPaths": [
+              "copy.nodes",
+              "nodeCount",
+              "copy.title",
+              "copy.conclusion",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.startCap",
+              "copy.endCap"
+            ],
+            "projectedItemIds": [
+              "a",
+              "b",
+              "c",
+              "d"
+            ],
+            "chartBindings": [
+              {
+                "mode": "summary",
+                "sourceIds": [
+                  "a",
+                  "b",
+                  "c",
+                  "d"
+                ],
+                "target": "copy.nodes[4]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.nodes",
+                  "fields": [
+                    {
+                      "key": "time",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "title",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "note",
+                      "semantic": "detail"
+                    },
+                    {
+                      "key": "value",
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": "unit",
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "a"
+                    },
+                    {
+                      "sourceId": "b"
+                    },
+                    {
+                      "sourceId": "c"
+                    },
+                    {
+                      "sourceId": "d"
+                    },
+                    {
+                      "sourceId": "chart-summary",
+                      "sourceIds": [
+                        "a",
+                        "b",
+                        "c",
+                        "d"
+                      ]
+                    }
+                  ],
+                  "countPath": "nodeCount"
+                }
+              ],
+              "values": []
+            }
+          }
+        },
+        {
+          "id": "v2",
+          "kind": "template",
+          "layout": "theme05_page076",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.sub": "presentation.coreMessage",
+            "copy.brand": "presentation.pageIntent",
+            "copy.boardMeta": "presentation.items[0].detail.short",
+            "copy.eyebrow": "presentation.items[0].label",
+            "copy.sheet": "presentation.items[1].label",
+            "copy.platformLabel": "presentation.items[2].label"
+          },
+          "projection": {
+            "chartMode": "summary",
+            "contentPaths": [
+              "copy.rows",
+              "rowCount",
+              "copy.num",
+              "copy.title",
+              "copy.sub",
+              "copy.brand",
+              "copy.boardMeta",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.platformLabel"
+            ],
+            "projectedItemIds": [
+              "d",
+              "c",
+              "b",
+              "a"
+            ],
+            "chartBindings": [
+              {
+                "mode": "summary",
+                "sourceIds": [
+                  "a",
+                  "b",
+                  "c",
+                  "d"
+                ],
+                "target": "copy.rows[4]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.rows",
+                  "fields": [
+                    {
+                      "key": "code",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "k",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "en",
+                      "semantic": "optional"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "d"
+                    },
+                    {
+                      "sourceId": "c"
+                    },
+                    {
+                      "sourceId": "b"
+                    },
+                    {
+                      "sourceId": "a"
+                    },
+                    {
+                      "sourceId": "chart-summary",
+                      "sourceIds": [
+                        "a",
+                        "b",
+                        "c",
+                        "d"
+                      ]
+                    }
+                  ],
+                  "countPath": "rowCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.num",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v3",
+          "kind": "template",
+          "layout": "theme05_page063",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.cluster": "presentation.items[1].label",
+            "copy.locale": "presentation.items[2].label",
+            "copy.mediaCap": "presentation.items[3].label",
+            "copy.conclusion": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "full",
+            "contentPaths": [
+              "copy.tags",
+              "tagCount",
+              "copy.metrics",
+              "metricCount",
+              "copy.mediaUnit",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.cluster",
+              "copy.locale",
+              "copy.mediaCap",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "c",
+              "a",
+              "b",
+              "d"
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "a"
+                ],
+                "target": "copy.metrics[0]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "b"
+                ],
+                "target": "copy.metrics[1]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "c"
+                ],
+                "target": "copy.metrics[2]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "d"
+                ],
+                "target": "copy.metrics[3]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.tags",
+                  "fields": [
+                    {
+                      "key": null,
+                      "semantic": "label"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "c"
+                    },
+                    {
+                      "sourceId": "a"
+                    },
+                    {
+                      "sourceId": "b"
+                    },
+                    {
+                      "sourceId": "d"
+                    }
+                  ],
+                  "countPath": "tagCount"
+                },
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "chart:a"
+                    },
+                    {
+                      "sourceId": "chart:b"
+                    },
+                    {
+                      "sourceId": "chart:c"
+                    },
+                    {
+                      "sourceId": "chart:d"
+                    }
+                  ],
+                  "countPath": "metricCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.mediaUnit",
+                  "value": ""
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v4",
+          "kind": "bespoke",
+          "adjustable": false,
+          "composition": {
+            "designIntent": {
+              "objective": "呈现单页核心信息",
+              "audience": "当前演示文稿受众",
+              "narrativeRole": "推进单页叙事",
+              "emphasis": "突出内容层级与证据关系",
+              "rationale": "chart-1 结构投影"
+            },
+            "background": "default",
+            "elements": [
+              {
+                "id": "bespoke-chart-kicker",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 1,
+                  "width": 3,
+                  "height": 1
+                },
+                "role": "kicker"
+              },
+              {
+                "id": "bespoke-chart-title",
+                "type": "text",
+                "grid": {
+                  "column": 4,
+                  "row": 1,
+                  "width": 9,
+                  "height": 1
+                },
+                "role": "title"
+              },
+              {
+                "id": "bespoke-chart-core",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 2,
+                  "width": 8,
+                  "height": 1
+                },
+                "role": "subtitle"
+              },
+              {
+                "id": "bespoke-chart-summary",
+                "type": "text",
+                "grid": {
+                  "column": 9,
+                  "row": 2,
+                  "width": 4,
+                  "height": 1
+                },
+                "role": "caption"
+              },
+              {
+                "id": "bespoke-chart-plot",
+                "type": "chart",
+                "grid": {
+                  "column": 5,
+                  "row": 3,
+                  "width": 8,
+                  "height": 6
+                },
+                "chartType": "bar",
+                "showValues": true
+              },
+              {
+                "id": "bespoke-chart-facts",
+                "type": "list",
+                "grid": {
+                  "column": 1,
+                  "row": 3,
+                  "width": 4,
+                  "height": 6
+                },
+                "ordered": true
+              }
+            ]
+          },
+          "projection": {
+            "itemBindings": [
+              {
+                "id": "a",
+                "target": "elements[5].items[0]"
+              },
+              {
+                "id": "b",
+                "target": "elements[5].items[1]"
+              },
+              {
+                "id": "c",
+                "target": "elements[5].items[2]"
+              },
+              {
+                "id": "d",
+                "target": "elements[5].items[3]"
+              }
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "a"
+                ],
+                "target": "elements[4].data[0]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "b"
+                ],
+                "target": "elements[4].data[1]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "c"
+                ],
+                "target": "elements[4].data[2]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "d"
+                ],
+                "target": "elements[4].data[3]"
+              }
+            ],
+            "mediaBindings": []
+          },
+          "contentMap": {
+            "elements[0].text": "presentation.pageIntent",
+            "elements[1].text": "presentation.title.short",
+            "elements[2].text": "presentation.coreMessage",
+            "elements[3].text": "presentation.summary.short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "page-5",
+      "content": {
+        "presentation": {
+          "pageIntent": "risk",
+          "coreMessage": "返品率は4%から6%へ上昇",
+          "title": {
+            "full": "返品率の上昇を先に確認する",
+            "short": "返品率の上昇を先に確認する"
+          },
+          "summary": {
+            "full": "返品率は4%から6%へ上昇",
+            "short": "返品率は4%から6%へ上昇"
+          },
+          "items": [
+            {
+              "id": "returns",
+              "label": "当月返品率",
+              "detail": {
+                "full": "前年から2ポイント上昇",
+                "short": "前年から2ポイント上昇"
+              },
+              "value": 6,
+              "displayValue": "6",
+              "unit": "%",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "previous",
+              "label": "前年返品率",
+              "detail": {
+                "full": "比較対象",
+                "short": "比較対象"
+              },
+              "value": 4,
+              "displayValue": "4",
+              "unit": "%",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "action",
+              "label": "確認項目",
+              "detail": {
+                "full": "商品別と返品理由",
+                "short": "商品別と返品理由"
+              },
+              "value": 1,
+              "displayValue": "原因確認",
+              "unit": "項目",
+              "required": true,
+              "priority": "high"
+            }
+          ],
+          "chartData": [
+            {
+              "id": "returns",
+              "label": "当月返品率",
+              "value": 6,
+              "displayValue": "6",
+              "unit": "%"
+            },
+            {
+              "id": "previous",
+              "label": "前年返品率",
+              "value": 4,
+              "displayValue": "4",
+              "unit": "%"
+            }
+          ],
+          "media": []
+        }
+      },
+      "selectedVariant": "v1",
+      "variants": [
+        {
+          "id": "v1",
+          "kind": "template",
+          "layout": "theme05_page046",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.sub": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.galleryCap": "presentation.items[1].label",
+            "copy.conclusion": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "full",
+            "contentPaths": [
+              "copy.metrics",
+              "copy.cards",
+              "cardCount",
+              "copy.galleryUnit",
+              "imageCount",
+              "copy.title",
+              "copy.sub",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.galleryCap",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "returns",
+              "previous",
+              "action"
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "returns"
+                ],
+                "target": "copy.cards[0]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "previous"
+                ],
+                "target": "copy.cards[1]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "returns"
+                    },
+                    {
+                      "sourceId": "previous"
+                    },
+                    {
+                      "sourceId": "action"
+                    }
+                  ]
+                },
+                {
+                  "path": "copy.cards",
+                  "fields": [
+                    {
+                      "key": "en",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "zh",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "code",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "v",
+                      "semantic": "value"
+                    },
+                    {
+                      "key": "unit",
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "chart:returns"
+                    },
+                    {
+                      "sourceId": "chart:previous"
+                    }
+                  ],
+                  "countPath": "cardCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.galleryUnit",
+                  "value": ""
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v2",
+          "kind": "template",
+          "layout": "theme05_page043",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.en": "presentation.items[0].label",
+            "copy.zh": "presentation.items[1].label",
+            "copy.sheet": "presentation.items[2].label",
+            "copy.conclusion": "presentation.items[0].detail.short"
+          },
+          "projection": {
+            "chartMode": "full",
+            "contentPaths": [
+              "copy.metrics",
+              "metricCount",
+              "copy.dist",
+              "distCount",
+              "copy.mediaCap",
+              "copy.mediaUnit",
+              "copy.distCap",
+              "copy.distUnit",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.en",
+              "copy.zh",
+              "copy.sheet",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "action",
+              "previous",
+              "returns"
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "returns"
+                ],
+                "target": "copy.dist[0]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "previous"
+                ],
+                "target": "copy.dist[1]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "action"
+                    },
+                    {
+                      "sourceId": "previous"
+                    },
+                    {
+                      "sourceId": "returns"
+                    }
+                  ],
+                  "countPath": "metricCount"
+                },
+                {
+                  "path": "copy.dist",
+                  "fields": [
+                    {
+                      "key": "k",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "v",
+                      "semantic": "value"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "chart:returns"
+                    },
+                    {
+                      "sourceId": "chart:previous"
+                    }
+                  ],
+                  "countPath": "distCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.mediaCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.mediaUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.distCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.distUnit",
+                  "value": ""
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v3",
+          "kind": "template",
+          "layout": "theme05_page069",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.en": "presentation.items[1].label",
+            "copy.zh": "presentation.items[2].label",
+            "copy.sub": "presentation.items[0].detail.short",
+            "copy.conclusion": "presentation.items[1].detail.short"
+          },
+          "projection": {
+            "chartMode": "summary",
+            "contentPaths": [
+              "copy.kpis",
+              "copy.galleryCap",
+              "copy.galleryUnit",
+              "copy.rackCap",
+              "copy.rackUnit",
+              "copy.rackReadK",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.en",
+              "copy.zh",
+              "copy.sub",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "action",
+              "previous",
+              "returns"
+            ],
+            "chartBindings": [
+              {
+                "mode": "summary",
+                "sourceIds": [
+                  "returns",
+                  "previous"
+                ],
+                "target": "copy.kpis[0]"
+              }
+            ],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.kpis",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "chart-summary",
+                      "sourceIds": [
+                        "returns",
+                        "previous"
+                      ]
+                    },
+                    {
+                      "sourceId": "action"
+                    },
+                    {
+                      "sourceId": "previous"
+                    },
+                    {
+                      "sourceId": "returns"
+                    }
+                  ]
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.galleryCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.galleryUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.rackCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.rackUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.rackReadK",
+                  "value": ""
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v4",
+          "kind": "bespoke",
+          "adjustable": false,
+          "composition": {
+            "designIntent": {
+              "objective": "呈现单页核心信息",
+              "audience": "当前演示文稿受众",
+              "narrativeRole": "推进单页叙事",
+              "emphasis": "突出内容层级与证据关系",
+              "rationale": "chart-2 结构投影"
+            },
+            "background": "default",
+            "elements": [
+              {
+                "id": "bespoke-chart-kicker",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 1,
+                  "width": 4,
+                  "height": 1
+                },
+                "role": "kicker"
+              },
+              {
+                "id": "bespoke-chart-title",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 2,
+                  "width": 4,
+                  "height": 2
+                },
+                "role": "title"
+              },
+              {
+                "id": "bespoke-chart-core",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 4,
+                  "width": 4,
+                  "height": 2
+                },
+                "role": "subtitle"
+              },
+              {
+                "id": "bespoke-chart-summary",
+                "type": "text",
+                "grid": {
+                  "column": 1,
+                  "row": 6,
+                  "width": 4,
+                  "height": 1
+                },
+                "role": "caption"
+              },
+              {
+                "id": "bespoke-chart-plot",
+                "type": "chart",
+                "grid": {
+                  "column": 5,
+                  "row": 1,
+                  "width": 8,
+                  "height": 8
+                },
+                "chartType": "line",
+                "showValues": true
+              },
+              {
+                "id": "bespoke-chart-facts",
+                "type": "list",
+                "grid": {
+                  "column": 1,
+                  "row": 7,
+                  "width": 4,
+                  "height": 2
+                },
+                "ordered": true
+              }
+            ]
+          },
+          "projection": {
+            "itemBindings": [
+              {
+                "id": "returns",
+                "target": "elements[5].items[0]"
+              },
+              {
+                "id": "previous",
+                "target": "elements[5].items[1]"
+              },
+              {
+                "id": "action",
+                "target": "elements[5].items[2]"
+              }
+            ],
+            "chartBindings": [
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "returns"
+                ],
+                "target": "elements[4].data[0]"
+              },
+              {
+                "mode": "point",
+                "sourceIds": [
+                  "previous"
+                ],
+                "target": "elements[4].data[1]"
+              }
+            ],
+            "mediaBindings": []
+          },
+          "contentMap": {
+            "elements[0].text": "presentation.pageIntent",
+            "elements[1].text": "presentation.title.short",
+            "elements[2].text": "presentation.coreMessage",
+            "elements[3].text": "presentation.summary.short"
+          }
+        }
+      ]
+    },
+    {
+      "id": "page-6",
+      "content": {
+        "presentation": {
+          "pageIntent": "ending",
+          "coreMessage": "返品の理由と粗利率を次月の重点へ",
+          "title": {
+            "full": "次月は返品と粗利率を追う",
+            "short": "次月は返品と粗利率を追う"
+          },
+          "summary": {
+            "full": "返品の理由と粗利率を次月の重点へ",
+            "short": "返品の理由と粗利率を次月の重点へ"
+          },
+          "items": [
+            {
+              "id": "returns",
+              "label": "返品",
+              "detail": {
+                "full": "理由と商品別に確認",
+                "short": "理由と商品別に確認"
+              },
+              "value": 1,
+              "displayValue": "確認",
+              "unit": "項目",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "margin",
+              "label": "粗利率",
+              "detail": {
+                "full": "値引きと原価を確認",
+                "short": "値引きと原価を確認"
+              },
+              "value": 1,
+              "displayValue": "分析",
+              "unit": "項目",
+              "required": true,
+              "priority": "high"
+            },
+            {
+              "id": "review",
+              "label": "次月",
+              "detail": {
+                "full": "対策と数値を報告",
+                "short": "対策と数値を報告"
+              },
+              "value": 1,
+              "displayValue": "報告",
+              "unit": "項目",
+              "required": true,
+              "priority": "high"
+            }
+          ],
+          "chartData": [],
+          "media": []
+        }
+      },
+      "selectedVariant": "v1",
+      "variants": [
+        {
+          "id": "v1",
+          "kind": "template",
+          "layout": "theme05_page071",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.sheet": "presentation.items[0].label",
+            "copy.en": "presentation.items[1].label",
+            "copy.zh": "presentation.items[2].label",
+            "copy.sub": "presentation.items[0].detail.short",
+            "copy.conclusion": "presentation.items[1].detail.short"
+          },
+          "projection": {
+            "chartMode": "none",
+            "contentPaths": [
+              "copy.kpis",
+              "copy.galleryCap",
+              "copy.galleryUnit",
+              "copy.ladderCap",
+              "copy.ladderUnit",
+              "copy.ladder",
+              "showLadder",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.sheet",
+              "copy.en",
+              "copy.zh",
+              "copy.sub",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "returns",
+              "margin",
+              "review"
+            ],
+            "chartBindings": [],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.kpis",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "returns"
+                    },
+                    {
+                      "sourceId": "margin"
+                    },
+                    {
+                      "sourceId": "review"
+                    }
+                  ]
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.galleryCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.galleryUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.ladderCap",
+                  "value": ""
+                },
+                {
+                  "path": "copy.ladderUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.ladder",
+                  "value": []
+                },
+                {
+                  "path": "showLadder",
+                  "value": false
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v2",
+          "kind": "template",
+          "layout": "theme05_page033",
+          "contentMap": {
+            "copy.title": "presentation.title.short",
+            "copy.lead": "presentation.coreMessage",
+            "copy.eyebrow": "presentation.pageIntent",
+            "copy.en": "presentation.items[0].label",
+            "copy.sub": "presentation.items[0].detail.short",
+            "copy.sheet": "presentation.items[1].label",
+            "copy.mediaCap": "presentation.items[2].label",
+            "copy.conclusion": "presentation.items[1].detail.short"
+          },
+          "projection": {
+            "chartMode": "none",
+            "contentPaths": [
+              "copy.metrics",
+              "metricCount",
+              "copy.mediaUnit",
+              "imageCount",
+              "copy.title",
+              "copy.lead",
+              "copy.eyebrow",
+              "copy.en",
+              "copy.sub",
+              "copy.sheet",
+              "copy.mediaCap",
+              "copy.conclusion"
+            ],
+            "projectedItemIds": [
+              "review",
+              "margin",
+              "returns"
+            ],
+            "chartBindings": [],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.metrics",
+                  "fields": [
+                    {
+                      "key": 0,
+                      "semantic": "label"
+                    },
+                    {
+                      "key": 1,
+                      "semantic": "displayValue"
+                    },
+                    {
+                      "key": 2,
+                      "semantic": "unit"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "review"
+                    },
+                    {
+                      "sourceId": "margin"
+                    },
+                    {
+                      "sourceId": "returns"
+                    }
+                  ],
+                  "countPath": "metricCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.mediaUnit",
+                  "value": ""
+                },
+                {
+                  "path": "imageCount",
+                  "value": 0
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v3",
+          "kind": "template",
+          "layout": "theme05_page065",
+          "contentMap": {
+            "copy.quote": "presentation.title.short",
+            "copy.sub": "presentation.coreMessage",
+            "copy.kicker": "presentation.pageIntent",
+            "copy.lead": "presentation.items[0].detail.short",
+            "copy.leadSub": "presentation.items[1].detail.short",
+            "copy.railCap": "presentation.items[0].label",
+            "copy.op": "presentation.items[1].label",
+            "copy.src": "presentation.items[2].label"
+          },
+          "projection": {
+            "chartMode": "none",
+            "contentPaths": [
+              "copy.pillars",
+              "pillarCount",
+              "copy.railUnit",
+              "copy.sheet",
+              "copy.quote",
+              "copy.sub",
+              "copy.kicker",
+              "copy.lead",
+              "copy.leadSub",
+              "copy.railCap",
+              "copy.op",
+              "copy.src"
+            ],
+            "projectedItemIds": [
+              "review",
+              "margin",
+              "returns"
+            ],
+            "chartBindings": [],
+            "structure": {
+              "arrays": [
+                {
+                  "path": "copy.pillars",
+                  "fields": [
+                    {
+                      "key": "en",
+                      "semantic": "label"
+                    },
+                    {
+                      "key": "zh",
+                      "semantic": "optional"
+                    },
+                    {
+                      "key": "note",
+                      "semantic": "detail"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "sourceId": "review"
+                    },
+                    {
+                      "sourceId": "margin"
+                    },
+                    {
+                      "sourceId": "returns"
+                    }
+                  ],
+                  "countPath": "pillarCount"
+                }
+              ],
+              "values": [
+                {
+                  "path": "copy.railUnit",
+                  "value": ""
+                },
+                {
+                  "path": "copy.sheet",
+                  "value": ""
+                }
+              ]
+            }
+          }
+        },
+        {
+          "id": "v4",
+          "kind": "bespoke",
+          "adjustable": false,
+          "composition": {
+            "designIntent": {
+              "objective": "呈现单页核心信息",
+              "audience": "当前演示文稿受众",
+              "narrativeRole": "推进单页叙事",
+              "emphasis": "突出内容层级与证据关系",
+              "rationale": "statement-3 结构投影"
+            },
+            "background": "default",
+            "elements": [
+              {
+                "id": "bespoke-statement-kicker",
+                "type": "text",
+                "grid": {
+                  "column": 9,
+                  "row": 1,
+                  "width": 4,
+                  "height": 1
+                },
+                "role": "kicker"
+              },
+              {
+                "id": "bespoke-statement-title",
+                "type": "text",
+                "grid": {
+                  "column": 4,
+                  "row": 2,
+                  "width": 8,
+                  "height": 1
+                },
+                "role": "title"
+              },
+              {
+                "id": "bespoke-statement-core",
+                "type": "quote",
+                "grid": {
+                  "column": 4,
+                  "row": 3,
+                  "width": 9,
+                  "height": 5
+                }
+              },
+              {
+                "id": "bespoke-statement-facts",
+                "type": "list",
+                "grid": {
+                  "column": 1,
+                  "row": 3,
+                  "width": 3,
+                  "height": 5
+                },
+                "ordered": true
+              }
+            ]
+          },
+          "projection": {
+            "itemBindings": [
+              {
+                "id": "returns",
+                "target": "elements[3].items[0]"
+              },
+              {
+                "id": "margin",
+                "target": "elements[3].items[1]"
+              },
+              {
+                "id": "review",
+                "target": "elements[3].items[2]"
+              }
+            ],
+            "chartBindings": [],
+            "mediaBindings": []
+          },
+          "contentMap": {
+            "elements[0].text": "presentation.pageIntent",
+            "elements[1].text": "presentation.title.short",
+            "elements[2].quote": "presentation.coreMessage",
+            "elements[2].attribution": "presentation.summary.short"
+          }
+        }
+      ]
+    }
+  ],
+  "language": "en"
+}

@@ -1,0 +1,65 @@
+{
+  "status": "qa_complete",
+  "page_count": 6,
+  "artifact_sha256": "45211db34d721b594c1301a26c59b731cda8958372f4cbeff570622bb97a48c6",
+  "browser_review": "verified",
+  "browser": "Codex in-app browser / actual native page controls",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "visual_review": {
+    "method": "全ページを原典の操作で表示し、見出し/現在位置をDOM照合。実キャプチャ全頁のcontact sheetをCodexが視認。",
+    "pages_reviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "result": "日本語の欠落・はみ出し・意図しない重なりなし。架空条件/目標表示、図表と入力を照合。"
+  },
+  "font_review": "実woff2の署名・MIMEとOFLを検査。ブラウザーでdocument.fonts.status=loadedと日本語字形を確認。",
+  "capture_conditions": "ページ収まりの撮影ではprefers-reduced-motion。通常の動きはサイトのプレイヤーで別途確認。",
+  "images": [
+    {
+      "file": "render/slide-01.png",
+      "sha256": "ebd39a39a2bf20978f2c4cd8bb063a52ae802008e2eda2691780c5b6f50ae27b"
+    },
+    {
+      "file": "render/slide-02.png",
+      "sha256": "3dffb5c5875d0da1b9ef7f235452fbf198dc73323cb864b29d7f00a42dd95cf3"
+    },
+    {
+      "file": "render/slide-03.png",
+      "sha256": "17a0c27811a1737c5e77dc15adbd1095080ff909155014e296805e3a8ea100dd"
+    },
+    {
+      "file": "render/slide-04.png",
+      "sha256": "b3d476b8610a978def5d019031da5d91130a221c09d49e07bbc357f15fca0204"
+    },
+    {
+      "file": "render/slide-05.png",
+      "sha256": "9849cce40a0466d30fb3ce33a845f372b8f2cedaee130b559074a622b7af4834"
+    },
+    {
+      "file": "render/slide-06.png",
+      "sha256": "9c3e9f2b329af7572aca12a6eb73108f7e8574c8cd91b6ceb8bc03b921903731"
+    }
+  ],
+  "checked_at": "2026-10-13T15:40:20.863456+00:00",
+  "not_claimed": [
+    "上流の全テーマ・全機能",
+    "人による採用",
+    "外部公開",
+    "全209件の実行"
+  ],
+  "editing_review": {
+    "text_edit": "passed",
+    "save_reload": "passed;確認文字を元へ戻して保存",
+    "export_html": "実ダウンロード確認",
+    "undo_redo": "Undo後にRedoが無効だったため全動作の確認済みとは扱わない",
+    "drag_copy_delete": "not_verified"
+  }
+}

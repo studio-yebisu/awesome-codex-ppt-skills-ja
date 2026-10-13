@@ -1,0 +1,65 @@
+{
+  "name": "qiaomu-bento-ppt",
+  "version": "1.2.0",
+  "owner": "向阳乔木",
+  "updated_at": "2026-07-27",
+  "status": "active",
+  "maturity_tier": "governed",
+  "lifecycle_stage": "released",
+  "context_budget_tier": "production",
+  "review_cadence": "monthly and whenever bento format or official skill changes",
+  "upstream_inspiration": "https://github.com/nyblnet/bento/tree/main/plugins/bento-slides/skills/bento-slides",
+  "intent": {
+    "job_to_be_done": "Turn source material or an existing bento deck into a high-quality, editable, offline-capable single-file bento/slides presentation with proposal-first planning and verifiable format safeguards.",
+    "target_users": [
+      "Qiaomu content creators",
+      "presenters who want a self-contained HTML deck",
+      "agents editing existing .bento.html documents"
+    ],
+    "inputs": [
+      "briefs, notes, reports, URLs, datasets, images, or existing .bento.html files",
+      "bundled pinned bento shell and authoring references"
+    ],
+    "outputs": [
+      "deck-plan.md",
+      "deck.json",
+      "validated .bento.html",
+      "deck validation report"
+    ],
+    "exclusions": [
+      "conventional .pptx delivery",
+      "bento platform source development",
+      "release, signing, deployment, or publishing",
+      "bento/spaces, bento/dash, and bento/vault documents"
+    ]
+  },
+  "qiaomu_defaults": {
+    "proposal_first": true,
+    "copyright": "Copyright (c) 向阳乔木",
+    "x": "https://x.com/vista8",
+    "github": "https://github.com/joeseesun/"
+  },
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible",
+    "vscode"
+  ],
+  "release_gates": [
+    "validate_skill",
+    "export_skill_ir",
+    "trigger_eval",
+    "fixture_output_eval",
+    "standalone_clean_install",
+    "bento_shell_gate",
+    "identity_preservation",
+    "rollback_boundary",
+    "upstream_release_lock",
+    "upstream_sync_fixture",
+    "upstream_sync_pr_only",
+    "browser_review_or_missing_evidence",
+    "secret_scan",
+    "evidence_bound_public_claims"
+  ]
+}

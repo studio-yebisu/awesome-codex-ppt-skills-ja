@@ -1,0 +1,80 @@
+{
+  "repository": "gonta223/japanese-corporate-pptx-skill",
+  "execution_type": "instruction_skill_native_template",
+  "summary_ja": "公式15型PPTXから1・2・11・9・8・14枚目を選択し、SKILLの規約に従ってネイティブ図形・チャート・表を編集。専用生成APIは同梱されていない。",
+  "requirements": [
+    "Python 3.13 / python-pptx / lxml / Pillow",
+    "Microsoft PowerPoint 16.0 と PowerShell 7（PNG/PDF描画）",
+    "同梱の japanese-corporate-ponchi-template.pptx"
+  ],
+  "steps": [
+    "原典を固定commitで取得",
+    "入力と依頼文を用意",
+    "固有パーツまたはテンプレートを選択",
+    "本文と図表を作成",
+    "PowerPoint本体で全ページ描画"
+  ],
+  "commands": [
+    "git clone https://github.com/gonta223/japanese-corporate-pptx-skill .build/actual-upstreams/gonta223__japanese-corporate-pptx-skill",
+    "git -C .build/actual-upstreams/gonta223__japanese-corporate-pptx-skill checkout 05480bfa2d8f097ab397861cbe390429e1dbb824",
+    "python -m venv .venv",
+    ".venv\\Scripts\\python -m pip install python-pptx lxml Pillow",
+    ".venv\\Scripts\\python tools/build_japanese_repository_examples.py --only gonta --render"
+  ],
+  "source_refs": [
+    {
+      "path": "skills/japanese-corporate-pptx/SKILL.md",
+      "sha256": "bc977eaf510f2a9605d3315090d124402ca7fdfe015d88fa3052c4e5fa227d73",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/SKILL.md"
+    },
+    {
+      "path": "skills/japanese-corporate-pptx/references/research-backed-patterns.md",
+      "sha256": "b0c62525a83b3f68e382813f44e9d5fbd714dc4407517cd9ae89cd7ec882928e",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/references/research-backed-patterns.md"
+    },
+    {
+      "path": "skills/japanese-corporate-pptx/references/jtc-authenticity.md",
+      "sha256": "2b6198d4c7fa57485a9967ae0506c01830fdfc3f41afad5355624b5415f60d6f",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/references/jtc-authenticity.md"
+    },
+    {
+      "path": "skills/japanese-corporate-pptx/references/visual-style.md",
+      "sha256": "cee4b7d8e634a4d6cf498d5694329412ce138aab4e2cabb5357f16dfa46b8b2b",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/references/visual-style.md"
+    },
+    {
+      "path": "skills/japanese-corporate-pptx/references/writing-and-density.md",
+      "sha256": "7f23e453688bcdff64ecba6ab47a39c59be53ee28acba8793461b6fd77e12e30",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/references/writing-and-density.md"
+    },
+    {
+      "path": "skills/japanese-corporate-pptx/references/layout-catalog.md",
+      "sha256": "144aa66240789aaa20fe4eda80c5796153a2b53e738840b4f8db48780ba32955",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/references/layout-catalog.md"
+    },
+    {
+      "path": "skills/japanese-corporate-pptx/references/qa-checklist.md",
+      "sha256": "ded3af117aa0a81bbe24983eeb91f03469d48d70d86abc1b1fe177eac6aa7e94",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/references/qa-checklist.md"
+    },
+    {
+      "path": "skills/japanese-corporate-pptx/assets/japanese-corporate-ponchi-template.pptx",
+      "sha256": "3d409d186cb0224632dd09d13e0f59425b0759ce2c2e34787d39ff18989b8012",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/assets/japanese-corporate-ponchi-template.pptx"
+    },
+    {
+      "path": "skills/japanese-corporate-pptx/assets/japanese-corporate-ponchi-layouts.png",
+      "sha256": "26734ac6e57efad2dd50c07c3e0f7aa07f1ec87fbfcf344921ee623a7658ddac",
+      "url": "https://github.com/gonta223/japanese-corporate-pptx-skill/blob/05480bfa2d8f097ab397861cbe390429e1dbb824/skills/japanese-corporate-pptx/assets/japanese-corporate-ponchi-layouts.png"
+    }
+  ],
+  "license": "MIT",
+  "example_ids": [
+    "japanese-corporate"
+  ],
+  "limitations": [
+    "独立した生成プログラムではなく指示SkillとPPTXテンプレートを用いた制作。原典テンプレートの再配布はMIT LICENSEを保持。"
+  ],
+  "reproduction": "examples/repositories/japanese-corporate/README.md",
+  "fork": "japanese-corporate-ja"
+}
