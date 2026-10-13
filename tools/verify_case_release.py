@@ -250,4 +250,3 @@ def main():
     print(json.dumps(report,ensure_ascii=False,indent=2))
     return 1 if ERRORS else 0
 if __name__=="__main__":sys.exit(main())
-

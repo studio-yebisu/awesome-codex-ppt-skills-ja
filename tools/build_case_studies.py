@@ -153,4 +153,3 @@ def main():
     dump(ROOT/"data/case-studies.json",records)
     print("Manifest ready: 6 cases / 45 slides")
 if __name__=="__main__": main()
-
