@@ -1,0 +1,20 @@
+--- upstream/package.json
++++ runtime/package.json
+@@ -3,7 +3,7 @@
+   "version": "0.1.0",
+   "private": true,
+   "type": "module",
+-  "description": "把 guizang-ppt-skill 生成的 HTML deck 转成 PDF + PPTX(图片型)",
++  "description": "\u628a guizang-ppt-skill \u751f\u6210\u7684 HTML deck \u8f6c\u6210 PDF + PPTX(\u56fe\u7247\u578b)",
+   "scripts": {
+     "build": "node build.mjs"
+   },
+@@ -11,5 +11,8 @@
+     "pdf-lib": "^1.17.1",
+     "playwright": "^1.45.0",
+     "pptxgenjs": "^3.12.0"
++  },
++  "overrides": {
++    "image-size": "2.0.3"
+   }
+ }

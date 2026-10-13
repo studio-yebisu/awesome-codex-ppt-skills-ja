@@ -1,15 +1,15 @@
 {
   "status": "passed_for_recorded_scope",
-  "checked_at": "2026-10-13T22:17:14.476535+00:00",
+  "checked_at": "2026-10-13T22:56:04.287750+00:00",
   "baseline": "data/repository-ui-qa.json (16 repositories)",
-  "current_repository_count": 29,
-  "current_case_count": 32,
-  "current_slide_count": 194,
+  "current_repository_count": 31,
+  "current_case_count": 34,
+  "current_slide_count": 207,
   "catalog": {
     "original_count": 209,
-    "produced_filter_count": 29,
-    "gallery_count": 32,
-    "gallery_summary": "32冊 / 194枚",
+    "produced_filter_count": 31,
+    "gallery_count": 34,
+    "gallery_summary": "34冊 / 207枚",
     "console_errors": []
   },
   "new_cases": [
@@ -275,6 +275,40 @@
       "locator_press_timeout": "body.press initially timed out and changed scroll position; subsequently used visible native surface focus plus ArrowLeft, observed actual 4→3 synchronization",
       "scope": "Actual localhost guide and floating player controls; not full native motion/video or mobile QA.",
       "copy_scope": "Copy toast appeared, but browser clipboard readback differed. Copy/readback is not counted as passed in this batch."
+    },
+    {
+      "id": "ppt-design-system",
+      "format": "native-html-template",
+      "counter_checks": [
+        "1 / 6",
+        "5 / 6",
+        "2 / 6",
+        "6 / 6"
+      ],
+      "original_dot_to_parent_counter": "Original dot 2 → parent 2 / 6",
+      "native_end_next_disabled": true,
+      "source_zip_download_sha256": "93f3aae5e657e6b19e801cc2c44cae35626db6cff71e4b4c568ad39b6a4d88b7",
+      "console_errors": [],
+      "scope": "Actual desktop localhost modal, original dot and outer page controls, end state, source ZIP. Mobile and print not exercised."
+    },
+    {
+      "id": "html-to-ppt-pdf",
+      "format": "raster-pptx-with-editable-notes",
+      "counter_checks": [
+        "1 / 7",
+        "3 / 7",
+        "7 / 7"
+      ],
+      "native_end_next_disabled": true,
+      "notes": "Actual Japanese page 3 speaker note visible",
+      "pptx_download_sha256": "b203edf92f3e30484f0d7f382bdf15c68e143eebcdc686bc9b8546e1876087cc",
+      "pdf_download_sha256": "19fdfb26249a9187d3d86c9579a2d597acda59a88a9c2ce32969335ab2123a08",
+      "source_zip_download_sha256": "930e160d791f5d989307751276b00feeb47d9564d6a46cdea7326fff2d90d07d",
+      "original_html_comparison_link_visible": true,
+      "reproduction_kind_copy": "Existing HTML recapture clearly shown, text editing unavailable",
+      "console_errors": [],
+      "historical_pre_asset_filter_source_zip_download_sha256": "5e86d5044a42ff0b23fecc7c6e23435b0d481941d90e0701cf8bdc8b0d5c90f7",
+      "final_source_zip_download_scope": "Final current ZIP after unused promotional picture exclusion; full independent replay passed afterward."
     }
   ],
   "screenshots": [
@@ -401,9 +435,21 @@
     {
       "file": "docs/assets/repository-catalog-29.jpg",
       "sha256": "22acb441e6b141bf8f7f92a84d494d397e5ced8231c4e995370f29426ddebb41"
+    },
+    {
+      "file": "docs/assets/ppt-design-system-float-desktop.jpg",
+      "sha256": "5d6033c4e8fcb596dd329e443252ed600bcd503b19ae131145ebe28edcead203"
+    },
+    {
+      "file": "docs/assets/html-to-ppt-pdf-float-desktop.jpg",
+      "sha256": "502de5ad52c97333cb2ed0f546e41dacbc7b28b93cebd4b3f54770f29712b0f0"
+    },
+    {
+      "file": "docs/assets/repository-catalog-31.jpg",
+      "sha256": "1879e6c5c6460a63a8d32bb64d0266b32534834f067c6dd4a9256266c261dbae"
     }
   ],
-  "scope": "Thirteen added cases and current 29 repository / 32 deck / 194 page catalog counts, together with scoped 16-repository baseline. New batch: actual native Slide-Writer dot 3 to parent 3 / 8; parent last page; Hands-on-deck page 3 notes, end and PPTX/source ZIP downloads; Scrolline parent page 3 and end, actual native surface left 4 to 3, iframe Esc and source ZIP download. Scrolline copy toast only; clipboard readback did not match and is not passed. Cyber source ZIP redownloaded after metadata/document corrections. Does not claim every control in all 32 decks, all motion frames, mobile of the three added cases, or all 209 repositories was tested.",
+  "scope": "Fifteen added case scopes and current 31 repository / 34 deck / 207 page catalog counts, together with the scoped 16-repository baseline. Per-case records preserve original-runtime controls, downloads, historical revisions and limitations. Includes native Forest Ink dot synchronization and HTML-to-image-PPTX conversion notes/end/PPTX/PDF/source ZIP/comparison link. Scrolline clipboard readback did not match and is not counted as passed. Does not claim every control in every deck, all motion frames, mobile/print of the added cases, or all 209 repositories were tested. Private QA tabs closed; temporary viewport/media overrides reset.",
   "local_trial": {
     "repository": "tfriedel/claude-office-skills",
     "guide_label": "ローカル試用済み / 配布条件の確認待ち",

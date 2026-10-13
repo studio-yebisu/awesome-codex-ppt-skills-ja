@@ -11,7 +11,7 @@ def main():
  raster=[c for c in cases if c.get('editability')=='raster_slides'];web=[c for c in cases if c['format']=='html']
  def total(items):return sum(c['page_count'] for c in items)
  p=ROOT/'README.md';s=p.read_text(encoding='utf-8');intro,original=s.split('以下の原版比較と209件一覧は、',1)
- intro=re.sub(r'\*\*\d+リポジトリで制作した\d+冊・\d+枚を掲載しています。\*\*',f'**{n}リポジトリで制作した{books}冊・{pages}枚を掲載しています。**',intro)
+ intro=re.sub(r'\*\*\d+リポジトリで制作した\d+冊・\d+(?:枚|ページ)を掲載しています。\*\*',f'**{n}リポジトリで制作した{books}冊・{pages}ページを掲載しています。**',intro)
  intro=re.sub(r'残る\d+件',f"残る{ledger['remaining_repository_count']}件",intro)
  intro=re.sub(r'## 実際に制作した\d+リポジトリ',f'## 実際に制作した{n}リポジトリ',intro)
  start=intro.index('| 原典リポジトリ |');end=intro.index('\n\n',start)
@@ -19,7 +19,7 @@ def main():
  for repo in dict.fromkeys(c['repository'] for c in cases):
   works=[c for c in cases if c['repository']==repo];c=works[0]
   fmt='画像主体PPTX' if c.get('editability')=='raster_slides' else '編集可能PPTX' if c['format']=='pptx' else '固有HTML'
-  play='・'.join(f"[{w['page_count']}枚](http://127.0.0.1:8847/case.html?id={w['id']})" for w in works)
+  play='・'.join(f"[{w['page_count']}{'停止点' if w.get('page_unit')=='timeline_stop' else '枚'}](http://127.0.0.1:8847/case.html?id={w['id']})" for w in works)
   rows.append(f"| [{repo}](https://github.com/{repo}) | {fmt}／{len(works)}冊 | {play} | [日本語ガイド](repository.html?repo={repo})・[派生SKILL](skill-forks/{c['fork_id']}/SKILL.md) |")
  intro=intro[:start]+'\n'.join(rows)+intro[end:]
  intro=re.sub(r'編集可能なPPTXは\d+冊\d+枚、画像主体のPPTXは\d+冊\d+枚、各リポ固有のHTMLは\d+冊\d+枚',f'編集可能なPPTXは{len(native)}冊{total(native)}枚、画像主体のPPTXは{len(raster)}冊{total(raster)}枚、各リポ固有のHTMLは{len(web)}冊{total(web)}枚',intro)
@@ -29,7 +29,7 @@ def main():
  intro=re.sub(r'成功した\d+リポ',f'成功した{n}リポ',intro)
  p.write_text(intro+'以下の原版比較と209件一覧は、'+original,encoding='utf-8',newline='\n')
  p=ROOT/'docs/QA.md';s=p.read_text(encoding='utf-8')
- s=re.sub(r'\d+リポジトリ、\d+冊、\d+枚。編集可能PPTX \d+冊\d+枚、画像主体PPTX \d+冊\d+枚、固有HTML \d+冊\d+枚。',f'{n}リポジトリ、{books}冊、{pages}枚。編集可能PPTX {len(native)}冊{total(native)}枚、画像主体PPTX {len(raster)}冊{total(raster)}枚、固有HTML {len(web)}冊{total(web)}枚。',s)
+ s=re.sub(r'\d+リポジトリ、\d+冊、\d+(?:枚|ページ)(?:（Scrollineの6停止点を含む）)?。編集可能PPTX \d+冊\d+枚、画像主体PPTX \d+冊\d+枚、固有HTML \d+冊\d+(?:枚|ページ)。',f'{n}リポジトリ、{books}冊、{pages}ページ（Scrollineの6停止点を含む）。編集可能PPTX {len(native)}冊{total(native)}枚、画像主体PPTX {len(raster)}冊{total(raster)}枚、固有HTML {len(web)}冊{total(web)}ページ。',s,count=1)
  s=re.sub(r'残\d+件',f"残{ledger['remaining_repository_count']}件",s)
  start=s.index('| 事例別QA記録 |');end=s.index('\n\n',start)
  qa_rows=['| 事例別QA記録 | 原典リポジトリ | 枚数 | 出力 |','|---|---|---:|---|']
@@ -37,9 +37,9 @@ def main():
   fmt='画像PPTX' if c.get('editability')=='raster_slides' else '編集可能PPTX' if c['format']=='pptx' else 'HTML'
   qa_rows.append(f"| [{c['id']}](../{c['qa']}) | {c['repository']} | {c['page_count']} | {fmt} |")
  s=s[:start]+'\n'.join(qa_rows)+s[end:]
- s=re.sub(r'全\d+ページの目視確認',f'全{pages}ページの目視確認',s)
+ s=re.sub(r'全\d+ページの(?:制作担当による)?目視確認',f'全{pages}ページの制作担当による目視確認',s,count=1)
  s=re.sub(r'PowerPointで開いた\d+枚',f'PowerPointで開いた{total(native)+total(raster)}枚',s)
- s=re.sub(r'HTML\d+枚は固有ランタイム',f'HTML{total(web)}枚は固有ランタイム',s)
+ s=re.sub(r'HTML\d+(?:枚|ページ)は固有ランタイム',f'HTML{total(web)}ページは固有ランタイム',s,count=1)
  s=re.sub(r'先行6冊45枚と追加native PPTX4冊25枚、画像PPTX3枚を.*?合わせて\d+枚となる。','先行6冊45枚に、上表の原典別制作を追加している。新規PPTXは実ファイルのPowerPoint描画、HTMLは原典ランタイムの実表示を確認する。',s)
  s=re.sub(r'\d+派生版と\d+配布ファイル',f"{n}派生版と{len(load('data/case-downloads.json'))}配布ファイル",s)
  kit_tests=load('data/reproduction-kit-qa.json')['tests']

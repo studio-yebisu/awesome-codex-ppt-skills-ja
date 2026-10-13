@@ -2,13 +2,13 @@
 
 掲載GitHubリポジトリを実際に使い、**そのリポで作った日本語資料 → 全ページ再生 → 日本語の使い方 → 派生スキル・再現用ソースキット**へ進めるガイドです。Studio Yebisuが原典の調査、日本語制作、派生スキルとサイトの開発を担当します。原典カタログは [zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)です。
 
-**29リポジトリで制作した29冊・175枚を掲載しています。** 元209件・6分類の作者、分類、一覧は保持しています。209件の原典入口を取得・棚卸し済みで、残る183件は未制作です。原典の取得と、実行・生成の成功は別に記録します。
+**31リポジトリで制作した34冊・207ページを掲載しています。** 元209件・6分類の作者、分類、一覧は保持しています。209件の原典入口を取得・棚卸し済みで、残る178件は未制作です。原典の取得と、実行・生成の成功は別に記録します。
 
 今回の改修はローカル実装・未公開です。[ローカルサイト](http://127.0.0.1:8847/)で再生できます。[既存の公開サイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)は更新前の版です。
 
 [全209件](#catalog) · [6カテゴリ](#choose) · [製品仕様](docs/PRODUCT_SPEC.md) · [制作台帳](data/production-ledger.json) · [確認記録](docs/QA.md) · [出典と利用条件](docs/出典とライセンス.md)
 
-## 実際に制作した29リポジトリ
+## 実際に制作した31リポジトリ
 
 | 原典リポジトリ | 出力と冊数 | 全ページ再生 | 使い方と派生 |
 |---|---|---|---|
@@ -40,11 +40,13 @@
 | [crazyykhllc-bit/CyberPPT](https://github.com/crazyykhllc-bit/CyberPPT) | 編集可能PPTX／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=cyberppt) | [日本語ガイド](repository.html?repo=crazyykhllc-bit/CyberPPT)・[派生SKILL](skill-forks/cyberppt-ja/SKILL.md) |
 | [EveryInc/hands-on-deck](https://github.com/EveryInc/hands-on-deck) | 編集可能PPTX／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=hands-on-deck) | [日本語ガイド](repository.html?repo=EveryInc/hands-on-deck)・[派生SKILL](skill-forks/hands-on-deck-ja/SKILL.md) |
 | [FeeiCN/slide-writer](https://github.com/FeeiCN/slide-writer) | 固有HTML／1冊 | [8枚](http://127.0.0.1:8847/case.html?id=slide-writer) | [日本語ガイド](repository.html?repo=FeeiCN/slide-writer)・[派生SKILL](skill-forks/slide-writer-ja/SKILL.md) |
-| [gongnyang/awesome-html-scrolline-deck](https://github.com/gongnyang/awesome-html-scrolline-deck) | 連続スクロールHTML／1冊 | [6停止点](http://127.0.0.1:8847/case.html?id=html-scrolline) | [日本語ガイド](repository.html?repo=gongnyang/awesome-html-scrolline-deck)・[派生SKILL](skill-forks/html-scrolline-ja/SKILL.md) |
+| [gongnyang/awesome-html-scrolline-deck](https://github.com/gongnyang/awesome-html-scrolline-deck) | 固有HTML／1冊 | [6停止点](http://127.0.0.1:8847/case.html?id=html-scrolline) | [日本語ガイド](repository.html?repo=gongnyang/awesome-html-scrolline-deck)・[派生SKILL](skill-forks/html-scrolline-ja/SKILL.md) |
+| [att6113/ppt-design-system](https://github.com/att6113/ppt-design-system) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=ppt-design-system) | [日本語ガイド](repository.html?repo=att6113/ppt-design-system)・[派生SKILL](skill-forks/ppt-design-system-ja/SKILL.md) |
+| [wangzan101/html-to-ppt-pdf](https://github.com/wangzan101/html-to-ppt-pdf) | 画像主体PPTX／1冊 | [7枚](http://127.0.0.1:8847/case.html?id=html-to-ppt-pdf) | [日本語ガイド](repository.html?repo=wangzan101/html-to-ppt-pdf)・[派生SKILL](skill-forks/html-to-ppt-pdf-ja/SKILL.md) |
 
 MultiAgentPPTは原典のAPI不要exportを実行した4枚を追加。通常のmulti-agent・LLM・画像API経路は未実行です。
 
-編集可能なPPTXは13冊71枚、画像主体のPPTXは1冊3枚、各リポ固有のHTMLは18冊120枚です。PPTX14冊74枚はMicrosoft PowerPointで描画し、プレビューにはそのPNGを使用しています。HTMLは各リポの実装・テンプレートで再生します。全194ページを実表示または実描画画像で目視確認しました。 ai-business-skillsの6枚は原典指定のHTML構成確認プレビューで、SNS公開用の仕上げは別工程です。CyberPPTの5枚は日本語派生の確認済み例で、原典の厳密画像一致は未達のまま記録しています。操作・配布などの確認範囲は [QA記録](docs/QA.md) と各冊のQA.jsonを参照してください。
+編集可能なPPTXは13冊71枚、画像主体のPPTXは2冊10枚、各リポ固有のHTMLは19冊126枚です。PPTX15冊81枚はMicrosoft PowerPointで描画し、プレビューにはそのPNGを使用しています。HTMLは各リポの実装・テンプレートで再生します。全207ページを実表示または実描画画像で目視確認しました。 ai-business-skillsの6枚は原典指定のHTML構成確認プレビューで、SNS公開用の仕上げは別工程です。CyberPPTの5枚は日本語派生の確認済み例で、原典の厳密画像一致は未達のまま記録しています。操作・配布などの確認範囲は [QA記録](docs/QA.md) と各冊のQA.jsonを参照してください。
 
 画像主体のcodex-ppt-skill作例は、native imagegenが生成した全ページ画像を原典assemblerで組み立てたものです。文字・図を個別編集できるPPTXとは区別し、発表者ノートを付けています。実ツールがモデル名を公開していないため、特定の画像モデルを使用したとは断定しません。
 
@@ -71,11 +73,11 @@ python -m http.server 8847 --bind 127.0.0.1
 
 [ローカルサイト](http://127.0.0.1:8847/)を開いてください。GitHub上のHTMLリンクはソース表示になるため、再生にはHTTPサーバーを使います。ブラウザー内で任意の資料を生成するサービスではなく、実例から使うリポを選び、自分のAI環境で制作するためのサイトです。
 
-制作状態の正本は [製品仕様](docs/PRODUCT_SPEC.md)、[現行方針](docs/PROJECT.md)、[元209件](data/skills.json)、[リポ別工程](data/project-workflows.json)、[制作台帳](data/production-ledger.json)、[29冊の対応データ](data/case-studies.json)、[日本語ガイド](data/repository-guides.json)です。全件の制作を共通の生成スクリプト1本で置き換えず、各キットの手順を使用します。
+制作状態の正本は [製品仕様](docs/PRODUCT_SPEC.md)、[現行方針](docs/PROJECT.md)、[元209件](data/skills.json)、[リポ別工程](data/project-workflows.json)、[制作台帳](data/production-ledger.json)、[34冊の対応データ](data/case-studies.json)、[日本語ガイド](data/repository-guides.json)です。全件の制作を共通の生成スクリプト1本で置き換えず、各キットの手順を使用します。
 
 ## 未制作と利用条件
 
-PPTAgentは実行を試しましたが、固定依存のWindows import時のassertで停止し、生成未達です。成功した29リポには含めません。[試行記録と再開条件](examples/repositories/pptagent/README.md)にLinux（WSL含む）またはmacOS等の必要条件を記録しています。その他の未制作リポの状態は制作台帳で確認できます。
+PPTAgentは実行を試しましたが、固定依存のWindows import時のassertで停止し、生成未達です。成功した31リポには含めません。[試行記録と再開条件](examples/repositories/pptagent/README.md)にLinux（WSL含む）またはmacOS等の必要条件を記録しています。その他の未制作リポの状態は制作台帳で確認できます。
 
 一覧・サイトのCC0を掲載コードへ一括適用しません。原文LICENSE／NOTICEと素材・書体の条件を維持します。Mckとminorun-marpはApache-2.0、GuizangとDashiの対象ソースはAGPLです。Dashiの配布対象は使用したHTML経路で、専有ライセンスのPPTX engineは含めません。詳細は [出典と利用条件](docs/出典とライセンス.md)、各原文通知と派生のSOURCE台帳を参照してください。
 

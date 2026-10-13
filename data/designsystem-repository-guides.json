@@ -1,0 +1,82 @@
+[
+  {
+    "repository": "att6113/ppt-design-system",
+    "execution_type": "original_html_template_theme_and_layouts",
+    "execution_status": "generated_and_reviewed",
+    "case_ids": [
+      "ppt-design-system"
+    ],
+    "summary_ja": "原典テンプレートとForest Inkを使った、雨の日の図書館イベント参加案内6ページ。",
+    "requirements": [
+      "Python 3（生成。標準ライブラリのみ）",
+      "Node.js 22+ と Chrome/Edge（任意の描画検証）",
+      "閲覧端末の日本語フォント"
+    ],
+    "steps": [
+      "原典SKILLとテーマ・レイアウトを読む",
+      "input/data.jsonに日本語内容を記入",
+      "原典テンプレートに本文と配色を適用",
+      "ローカルHTTPで原典操作と全ページを確認"
+    ],
+    "commands": [
+      "python source/reproduce.py --input input/data.json --render"
+    ],
+    "source_refs": [
+      {
+        "path": "LICENSE",
+        "sha256": "54347aa632ee657a6503beb5feb6fb5b14cc0c456392ddee27397b3538794128",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/LICENSE"
+      },
+      {
+        "path": "SKILL.md",
+        "sha256": "25cc3c81d396191203c1473c3b1d26fb5956f693088787fcd4fa1c947482edfd",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/SKILL.md"
+      },
+      {
+        "path": "README.md",
+        "sha256": "53b0cd2735244e479474321f6152892c1ed6f8c41e9a235371c233a7b20ff1a0",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/README.md"
+      },
+      {
+        "path": "assets/template.html",
+        "sha256": "23b8b2bad570219981c523ab21ec019f5a1d4acbb01ae8586955f1de376cb1db",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/assets/template.html"
+      },
+      {
+        "path": "references/themes.md",
+        "sha256": "51ee283801c2d04407f128d770dff8151e81c3740dfce2db34868ea45046d92d",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/themes.md"
+      },
+      {
+        "path": "references/layouts.md",
+        "sha256": "77428e91c428f81da961b21ab809e7c1eb8295e90da81d13c535138fa308e2be",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/layouts.md"
+      },
+      {
+        "path": "references/presets.md",
+        "sha256": "b3666ad80be5275b8ba848e7395176426f4ee1ebcec81c7b538be8c987bbc58b",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/presets.md"
+      }
+    ],
+    "local_changes": [
+      "Japanese lang and text",
+      "Forest Ink variables from original themes.md",
+      "Local Japanese fonts instead of Google Fonts",
+      "Larger text and equal comparison opacity",
+      "Separate same-origin catalog message bridge"
+    ],
+    "license": "MIT（原典。通知同梱）",
+    "limitations": [
+      "実行したのはHTML出力経路。PPTX出力は未検証。",
+      "全6ページを1920×1080で確認。スマートフォン縦画面・印刷は未検証。",
+      "日本語フォントは端末依存。フォントファイルは再配布しない。",
+      "原典にHTML生成CLIはなく、同梱Pythonで原典テンプレートを埋める。",
+      "エージェント確認済み。人による正式採用は未承認。"
+    ],
+    "artifact_paths": [
+      "examples/repositories/ppt-design-system/deck.html"
+    ],
+    "fork": "ppt-design-system-ja",
+    "method_ja": "原典HTMLテンプレート・Forest Ink配色・原典ナビゲーション"
+  }
+]

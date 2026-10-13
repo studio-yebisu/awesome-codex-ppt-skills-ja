@@ -1,7 +1,7 @@
 {
   "catalog_count": 209,
-  "case_count": 32,
-  "slide_count": 194,
+  "case_count": 34,
+  "slide_count": 207,
   "history": {
     "withdrawn_examples": "data/actual-examples.json",
     "included_in_current_counts": false
@@ -1970,27 +1970,116 @@
       "license_checked_at": "2026-10-13T13:34:56.898194+00:00",
       "license_evidence": [
         {
-          "path": "README.md",
-          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/README.md",
-          "bytes": 8657
+          "path": "LICENSE",
+          "sha256": "8f18f1dc9a97ecf8208001c6fc32976187822a2e9c643400ae2ba6f1231a500a",
+          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/LICENSE"
         },
         {
           "path": "SKILL.md",
-          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/SKILL.md",
-          "bytes": 7458
+          "sha256": "01b18e6291aea475fcba82bc741db1e66cd20a578798959376b409ddcc72bf23",
+          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/SKILL.md"
         },
         {
-          "path": "LICENSE",
-          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/LICENSE",
-          "bytes": 1075
+          "path": "README.md",
+          "sha256": "0fcd41cb51fb20e1ff708d7f3000979d4a3267bb0d58b3b0603ae9ecf690bca9",
+          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/README.md"
+        },
+        {
+          "path": "scripts/build.mjs",
+          "sha256": "2406070ed463f60921e260c958de2001f8d1eb177d56ad8a6a8000d6f1ecf6c3",
+          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/scripts/build.mjs"
+        },
+        {
+          "path": "scripts/setup.sh",
+          "sha256": "e422354ef2f020e25809f24504599db2a44490a9cbe9b4a3ff0dcfd4d5bbcb79",
+          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/scripts/setup.sh"
+        },
+        {
+          "path": "scripts/package.json",
+          "sha256": "ba288e1f5ea868884dee0de8ad6cfb7f3c26bc21ab208e2120f1ca7481704484",
+          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/scripts/package.json"
+        },
+        {
+          "path": "scripts/package-lock.json",
+          "sha256": "dc56bd5449e57b3cbc251241ea2335397bf6c6b5393a3827519f7e0076bbc10a",
+          "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/scripts/package-lock.json"
         }
       ],
       "upstream_commit": "0ce6f66815fc0c0f6de9c976856213a952dfafe6",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "html-to-ppt-pdf",
+          "title": "週末の汐見港町 ― HTMLからPPTX・PDFへ",
+          "repository": "wangzan101/html-to-ppt-pdf",
+          "skill_repository": "wangzan101/html-to-ppt-pdf",
+          "upstream_commit": "0ce6f66815fc0c0f6de9c976856213a952dfafe6",
+          "fork_id": "html-to-ppt-pdf-ja",
+          "page_count": 7,
+          "format": "pptx",
+          "preview_kind": "powerpoint-render",
+          "style": "既存Guizang / Magazine / Ink Classicを画像として保持",
+          "use_case": "既存HTML資料のオフライン提出用変換",
+          "cover": "examples/repositories/html-to-ppt-pdf/render/slide-01.png",
+          "interior": "examples/repositories/html-to-ppt-pdf/render/slide-05.png",
+          "preview": "examples/repositories/html-to-ppt-pdf/index.html",
+          "artifact_download": "examples/repositories/html-to-ppt-pdf/deck.pptx",
+          "pdf_download": "examples/repositories/html-to-ppt-pdf/deck.pdf",
+          "source_download": "downloads/html-to-ppt-pdf-example-ja.zip",
+          "input": "examples/repositories/html-to-ppt-pdf/input/BRIEF.md",
+          "input_data": "examples/repositories/html-to-ppt-pdf/input/data.json",
+          "input_sha256": "3de69ac5ade883a6e544a8a2e31e22813673b19035c6ca26fd9740d11b16cf48",
+          "prompt": "examples/repositories/html-to-ppt-pdf/PROMPT.txt",
+          "prompt_text": "既存の日本語Guizang作例「週末の汐見港町 回遊企画提案」7ページを、wangzan101/html-to-ppt-pdfの固定原典build.mjsで画像PPTXとPDFへ変換する。本文や構成は追加制作しない。元HTMLと対応ソースを保存し、標準scale3を使う。原典スクリプトは無改変。入力側の700ms連続操作制限をexport.htmlだけで回避する。image-size2.0.3 override以外の主要ライブラリを変えない。日本語発表メモは後処理として加え、原典PPTXと画像が変わらないことを確認する。全7ページの変換とPowerPoint実描画を確認し、本文は画像で編集不可、ノートは編集可能と明記する。\n",
+          "provenance": "examples/repositories/html-to-ppt-pdf/PROVENANCE.json",
+          "qa": "examples/repositories/html-to-ppt-pdf/QA.json",
+          "guide": "repository.html?repo=wangzan101/html-to-ppt-pdf",
+          "method": "原典build.mjsでHTMLを7枚のPNGにしてPPTX・PDFへ梱包",
+          "sample_notice": "既存の架空の港町企画を変換した作例。新規の資料構成制作ではありません。",
+          "editability": "raster_slides",
+          "titles": [
+            "週末の汐見港町",
+            "対象者と体験",
+            "4時間の徒歩行程",
+            "集客と、次の店への案内",
+            "4日間の試行と運営",
+            "試行の測り方",
+            "次の判断"
+          ],
+          "notes": [
+            "架空の汐見港町で行う週末回遊の企画です。商店会の合意を得て、2週末の試行へ進むことを提案します。",
+            "来訪者全員を対象にするのではなく、徒歩で半日過ごせる人へ絞ります。店を点で紹介するだけでは回り方が分かりにくいため、次の行先まで案内します。",
+            "市場での買い物、食堂の昼食、工房見学、灯台の休憩を一本の行程にまとめます。時間と距離は仮の計画で、実施前に実測します。",
+            "回遊カードと各店の案内を揃えます。全店舗で同じ地図と時間案内を使い、営業日を前日に確かめます。",
+            "予算は架空の計画値です。案内物6万円、スタッフ16万円、記録と調整6万円の合計28万円。雨天時の短縮と混雑時の分散をあらかじめ決めます。",
+            "表示した数値は実績ではなく目標です。参加者の回遊をカードで記録し、来街者全体の売上効果とは分けて評価します。",
+            "参加店舗の合意、現地の時間確認、試行日程の決定へ進みます。試行の記録を確認して継続や変更を判断します。"
+          ],
+          "pages": [
+            "examples/repositories/html-to-ppt-pdf/render/slide-01.png",
+            "examples/repositories/html-to-ppt-pdf/render/slide-02.png",
+            "examples/repositories/html-to-ppt-pdf/render/slide-03.png",
+            "examples/repositories/html-to-ppt-pdf/render/slide-04.png",
+            "examples/repositories/html-to-ppt-pdf/render/slide-05.png",
+            "examples/repositories/html-to-ppt-pdf/render/slide-06.png",
+            "examples/repositories/html-to-ppt-pdf/render/slide-07.png"
+          ],
+          "fork_download": "downloads/html-to-ppt-pdf-ja.zip",
+          "reproduce_script": "reproduce/Reproduce.ps1",
+          "preview_notice": "各ページ1枚の画像。本文編集不可・発表ノート編集可。動きは静止画。",
+          "source_example": "case.html?id=port-town",
+          "source_html": "examples/repositories/html-to-ppt-pdf/input/port-town/index.html",
+          "reproduction_kind": "html_capture",
+          "comparison": "case.html?id=port-town",
+          "comparison_label": "元HTMLを再生 →",
+          "content_revision": "b9bfa66ed818d234"
+        }
+      ],
+      "derived_skills": [
+        "html-to-ppt-pdf-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_verified_locally"
     },
     {
       "repository": "prodigeproject/pradaslides",
@@ -2117,27 +2206,109 @@
       "license_checked_at": "2026-10-13T13:35:14.434820+00:00",
       "license_evidence": [
         {
-          "path": "README.md",
-          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/README.md",
-          "bytes": 5270
+          "path": "LICENSE",
+          "sha256": "54347aa632ee657a6503beb5feb6fb5b14cc0c456392ddee27397b3538794128",
+          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/LICENSE"
         },
         {
           "path": "SKILL.md",
-          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/SKILL.md",
-          "bytes": 5880
+          "sha256": "25cc3c81d396191203c1473c3b1d26fb5956f693088787fcd4fa1c947482edfd",
+          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/SKILL.md"
         },
         {
-          "path": "LICENSE",
-          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/LICENSE",
-          "bytes": 1064
+          "path": "README.md",
+          "sha256": "53b0cd2735244e479474321f6152892c1ed6f8c41e9a235371c233a7b20ff1a0",
+          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/README.md"
+        },
+        {
+          "path": "assets/template.html",
+          "sha256": "23b8b2bad570219981c523ab21ec019f5a1d4acbb01ae8586955f1de376cb1db",
+          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/assets/template.html"
+        },
+        {
+          "path": "references/themes.md",
+          "sha256": "51ee283801c2d04407f128d770dff8151e81c3740dfce2db34868ea45046d92d",
+          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/themes.md"
+        },
+        {
+          "path": "references/layouts.md",
+          "sha256": "77428e91c428f81da961b21ab809e7c1eb8295e90da81d13c535138fa308e2be",
+          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/layouts.md"
+        },
+        {
+          "path": "references/presets.md",
+          "sha256": "b3666ad80be5275b8ba848e7395176426f4ee1ebcec81c7b538be8c987bbc58b",
+          "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/presets.md"
         }
       ],
       "upstream_commit": "9f39af607ab82da2827530c38b9dc86eb75768ee",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "ppt-design-system",
+          "title": "雨の日も迷わない、図書館イベント案内",
+          "repository": "att6113/ppt-design-system",
+          "skill_repository": "att6113/ppt-design-system",
+          "upstream_commit": "9f39af607ab82da2827530c38b9dc86eb75768ee",
+          "fork_id": "ppt-design-system-ja",
+          "page_count": 6,
+          "page_unit": "slide",
+          "format": "html",
+          "preview_kind": "html",
+          "style": "Forest Ink / 深緑と象牙色 / 明朝見出し",
+          "use_case": "図書館のイベント参加案内",
+          "cover": "examples/repositories/ppt-design-system/render/slide-01.png",
+          "interior": "examples/repositories/ppt-design-system/render/slide-05.png",
+          "preview": "examples/repositories/ppt-design-system/deck.html",
+          "artifact_download": "downloads/ppt-design-system-example-ja.zip",
+          "source_download": "downloads/ppt-design-system-example-ja.zip",
+          "input": "examples/repositories/ppt-design-system/input/BRIEF.md",
+          "input_data": "examples/repositories/ppt-design-system/input/data.json",
+          "input_sha256": "963e633ba2bd7bfc92292fdbbad3c6a80bc9fa130b87639035d388825482214d",
+          "prompt": "examples/repositories/ppt-design-system/PROMPT.txt",
+          "prompt_text": "att6113/ppt-design-systemの原典SKILLとassets/template.htmlを使い、「雨の日も迷わない、図書館イベント案内」を日本語6ページにする。Forest Ink配色、原典の見出し階層、カバー・数値カード・本文・問い・比較・終わりのレイアウトを使う。本文は架空の読書会への参加案内として役に立つ内容にし、製品の説明書にしない。原典の矢印キー・ドット・横スクロールを保持する。日本語フォントは端末のフォントを使い、外部フォントを不要にする。\n",
+          "provenance": "examples/repositories/ppt-design-system/PROVENANCE.json",
+          "qa": "examples/repositories/ppt-design-system/QA.json",
+          "guide": "repository.html?repo=att6113/ppt-design-system",
+          "method": "原典HTMLテンプレート・Forest Ink配色・原典ナビゲーション",
+          "sample_notice": "図書館名・読書会・時刻・会場は架空の説明例です。実際の開催案内ではありません。",
+          "editability": "original_html_template_and_json_content",
+          "titles": [
+            "雨の日も迷わない、図書館イベント案内",
+            "まず、今日の予定を確認",
+            "出発前に、案内をもう一度",
+            "着いたら、どこへ？",
+            "お知らせに合わせて、次の行動を",
+            "確認するのは、この三つ。"
+          ],
+          "notes": [
+            "架空の図書館と読書会を使った参加案内です。実際の開催情報ではありません。",
+            "日時や会場は説明用の架空の設定です。実際のイベントでは主催者の案内を確認してください。",
+            "予約確認画面や主催者の案内を用意しておくと、出発時と受付で確認しやすくなります。",
+            "館内の配置を想像で決めず、入口の掲示と受付を起点に会場を確認する案内です。",
+            "同じ重さの二つの行動なので、原典Before/Afterの低い不透明度だけを読みやすく調整しました。",
+            "最後に、参加前に覚えておく確認事項を三つに絞ります。架空の案内をそのまま実際の開催情報として使わないでください。"
+          ],
+          "pages": [
+            "examples/repositories/ppt-design-system/render/slide-01.png",
+            "examples/repositories/ppt-design-system/render/slide-02.png",
+            "examples/repositories/ppt-design-system/render/slide-03.png",
+            "examples/repositories/ppt-design-system/render/slide-04.png",
+            "examples/repositories/ppt-design-system/render/slide-05.png",
+            "examples/repositories/ppt-design-system/render/slide-06.png"
+          ],
+          "navigation": "native-runtime-bridge",
+          "fork_download": "downloads/ppt-design-system-ja.zip",
+          "reproduce_script": "reproduce/Reproduce.ps1",
+          "preview_notice": "原典の横スクロール・矢印キー・ドット操作を保持。架空の図書館イベント案内。",
+          "content_revision": "eaf525f120f207b9"
+        }
+      ],
+      "derived_skills": [
+        "ppt-design-system-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_verified_locally"
     },
     {
       "repository": "ThunderOne18/ppt-expert-team",
@@ -10231,6 +10402,8 @@
           "fork_id": "slide-writer-ja",
           "fork_download": "downloads/slide-writer-ja.zip",
           "original_gate_not_passed": true,
+          "reproduce_script": "reproduce/Reproduce.ps1",
+          "reproduce_command": ".\\reproduce\\Reproduce.ps1",
           "content_revision": "1f22aa6051324507"
         }
       ],

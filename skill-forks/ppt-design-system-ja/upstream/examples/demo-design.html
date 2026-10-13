@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工程项目进度报告 · 2026年第二季度</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ===== 主题色：靛蓝瓷 (Indigo Porcelain) ===== */
+  :root {
+    --ink: #0a1f3d;
+    --ink-rgb: 10, 31, 61;
+    --paper: #f1f3f5;
+    --paper-rgb: 241, 243, 245;
+    --paper-tint: #e4e8ec;
+    --ink-tint: #152a4a;
+    --accent: #3b82f6;
+    --accent-rgb: 59, 130, 246;
+    --success: #16a34a;
+    --warning: #d97706;
+    --danger: #dc2626;
+
+    /* 字体家族 */
+    --serif-zh: 'Noto Serif SC', 'Source Han Serif SC', serif;
+    --sans-zh: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+    --sans-en: 'Inter', -apple-system, sans-serif;
+    --mono: 'IBM Plex Mono', 'Cascadia Code', monospace;
+
+    /* 间距 */
+    --space-xs: 0.5rem;
+    --space-sm: 1rem;
+    --space-md: 2rem;
+    --space-lg: 4rem;
+    --space-xl: 8rem;
+  }
+
+  /* ===== 全局重置 ===== */
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html { font-size: 16px; }
+  body {
+    font-family: var(--sans-zh);
+    color: var(--ink);
+    background: var(--paper);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+
+  /* ===== 幻灯片容器 ===== */
+  .deck-wrapper {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .deck-wrapper::-webkit-scrollbar { display: none; }
+
+  /* ===== 单页 ===== */
+  .slide {
+    flex: 0 0 100vw;
+    height: 100vh;
+    scroll-snap-align: start;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: 3vh 5vw;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* ===== 主题变体 ===== */
+  .light {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .dark {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .hero {
+    --hero-bg: linear-gradient(135deg, var(--ink) 0%, var(--ink-tint) 100%);
+  }
+  .hero.light {
+    background: linear-gradient(135deg, var(--paper) 0%, var(--paper-tint) 100%);
+    color: var(--ink);
+  }
+  .hero.dark {
+    background: linear-gradient(135deg, var(--ink) 0%, #0d2b55 50%, var(--ink-tint) 100%);
+    color: var(--paper);
+  }
+
+  /* ===== 页眉 (chrome) ===== */
+  .chrome {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vh 0 2vh;
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.7vw, 14px);
+    letter-spacing: 0.05em;
+    opacity: 0.5;
+    border-bottom: 1px solid currentColor;
+  }
+
+  /* ===== 页脚 ===== */
+  .foot {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2vh 0 1vh;
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.65vw, 13px);
+    opacity: 0.4;
+    border-top: 1px solid currentColor;
+  }
+
+  /* ===== 内容区 ===== */
+  .frame {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 2vh 0;
+    height: 100%;
+  }
+
+  /* ===== 字体层级 ===== */
+  .kicker {
+    font-family: var(--mono);
+    font-size: clamp(11px, 0.8vw, 15px);
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.6;
+    margin-bottom: 1.5vh;
+  }
+
+  .h-hero {
+    font-family: var(--serif-zh);
+    font-weight: 900;
+    font-size: clamp(36px, 6vw, 80px);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  .h-xl {
+    font-family: var(--serif-zh);
+    font-weight: 700;
+    font-size: clamp(28px, 3.5vw, 52px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+  }
+
+  .h-sub {
+    font-family: var(--serif-zh);
+    font-weight: 600;
+    font-size: clamp(20px, 2vw, 32px);
+    line-height: 1.3;
+    opacity: 0.8;
+    margin-top: 0.5vh;
+  }
+
+  .h-md {
+    font-family: var(--sans-en);
+    font-weight: 600;
+    font-size: clamp(16px, 1.3vw, 22px);
+    line-height: 1.4;
+  }
+
+  .lead {
+    font-family: var(--sans-zh);
+    font-weight: 300;
+    font-size: clamp(15px, 1.15vw, 20px);
+    line-height: 1.7;
+    opacity: 0.75;
+    max-width: 55vw;
+    margin-top: 2vh;
+  }
+
+  /* ===== 数据卡片 ===== */
+  .grid-6 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2vw 3vh;
+    margin-top: 3vh;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2vw 3vh;
+    margin-top: 3vh;
+  }
+  .grid-3-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2vw 2vh;
+    margin-top: 3vh;
+  }
+
+  .stat-card {
+    padding: 2.5vh 1.5vw;
+    border-left: 3px solid var(--accent);
+    background: rgba(var(--ink-rgb), 0.03);
+    transition: background 0.2s;
+  }
+  .dark .stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    border-left-color: var(--accent);
+  }
+  .stat-label {
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.7vw, 13px);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    margin-bottom: 0.8vh;
+  }
+  .stat-nb {
+    font-family: var(--sans-en);
+    font-weight: 700;
+    font-size: clamp(32px, 3.5vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.03em;
+  }
+  .stat-unit {
+    font-family: var(--serif-zh);
+    font-weight: 400;
+    font-size: 0.5em;
+    opacity: 0.6;
+    margin-left: 0.15em;
+  }
+  .stat-note {
+    font-family: var(--sans-zh);
+    font-size: clamp(12px, 0.8vw, 15px);
+    opacity: 0.5;
+    margin-top: 0.5vh;
+  }
+
+  /* ===== 两列布局 ===== */
+  .grid-2-7-5 {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: 3vw;
+    align-items: start;
+    height: 100%;
+  }
+  .grid-2-6-6 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3vw;
+    align-items: start;
+  }
+
+  /* ===== 图片容器 ===== */
+  .frame-img {
+    width: 100%;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .frame-img.r-16x10 {
+    aspect-ratio: 16 / 10;
+  }
+  .frame-img.r-3x4 {
+    aspect-ratio: 3 / 4;
+    max-height: 60vh;
+  }
+  .frame-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top center;
+  }
+  .img-cap {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 0.8vh 1vw;
+    background: linear-gradient(transparent, rgba(0,0,0,0.6));
+    font-family: var(--mono);
+    font-size: clamp(9px, 0.6vw, 12px);
+    color: #fff;
+    opacity: 0.8;
+  }
+
+  /* ===== Pipeline 流水线 ===== */
+  .pipeline-section {
+    margin-top: 3vh;
+  }
+  .pipeline-label {
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.7vw, 13px);
+    letter-spacing: 0.1em;
+    opacity: 0.5;
+    margin-bottom: 1.5vh;
+  }
+  .pipeline {
+    display: flex;
+    gap: 1.5vw;
+  }
+  .step {
+    flex: 1;
+    padding: 2vh 1.2vw;
+    border: 1px solid currentColor;
+    opacity: 0.35;
+    transition: opacity 0.3s;
+  }
+  .step.active {
+    opacity: 1;
+    border-color: var(--accent);
+  }
+  .step-nb {
+    font-family: var(--mono);
+    font-size: clamp(12px, 0.8vw, 15px);
+    font-weight: 500;
+    opacity: 0.4;
+  }
+  .step-title {
+    font-family: var(--sans-en);
+    font-weight: 600;
+    font-size: clamp(14px, 1vw, 18px);
+    margin: 0.5vh 0;
+  }
+  .step-desc {
+    font-family: var(--sans-zh);
+    font-size: clamp(11px, 0.7vw, 14px);
+    opacity: 0.6;
+  }
+
+  /* ===== Callout 引用块 ===== */
+  .callout {
+    border-left: 3px solid currentColor;
+    padding: 1.5vh 1.5vw;
+    margin-top: 2vh;
+    font-family: var(--serif-zh);
+    font-size: clamp(14px, 1.1vw, 20px);
+    font-weight: 600;
+    line-height: 1.5;
+    opacity: 0.85;
+    max-width: 40vw;
+  }
+  .callout-src {
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.65vw, 13px);
+    font-weight: 400;
+    opacity: 0.5;
+    margin-top: 0.8vh;
+  }
+
+  /* ===== 元数据行 ===== */
+  .meta-row {
+    display: flex;
+    gap: 0.8vw;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: clamp(11px, 0.7vw, 14px);
+    opacity: 0.55;
+    margin-top: 2vh;
+  }
+
+  /* ===== 大引用页 ===== */
+  blockquote.bq {
+    font-family: var(--serif-zh);
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 64px);
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+    max-width: 65vw;
+  }
+
+  /* ===== 导航 ===== */
+  #nav {
+    position: fixed;
+    bottom: 3vh;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 0.8vw;
+    z-index: 100;
+  }
+  #nav .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.25;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  #nav .dot.active {
+    opacity: 0.8;
+    transform: scale(1.4);
+  }
+
+  /* ===== 动效 ===== */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .anim {
+    animation: fadeUp 0.6s ease-out both;
+  }
+  .anim-d1 { animation-delay: 0.1s; }
+  .anim-d2 { animation-delay: 0.2s; }
+  .anim-d3 { animation-delay: 0.3s; }
+  .anim-d4 { animation-delay: 0.4s; }
+  .anim-d5 { animation-delay: 0.5s; }
+  .anim-d6 { animation-delay: 0.6s; }
+
+  /* ===== 背景装饰 ===== */
+  .bg-ornament {
+    position: absolute;
+    font-family: var(--serif-zh);
+    font-size: clamp(120px, 20vw, 300px);
+    font-weight: 900;
+    opacity: 0.03;
+    right: -2vw;
+    bottom: -5vh;
+    line-height: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+  .hero .bg-ornament {
+    opacity: 0.06;
+  }
+
+  /* ===== 对比页 ===== */
+  .before-col { opacity: 0.5; }
+  .after-col { opacity: 1; }
+  .col-header {
+    font-family: var(--mono);
+    font-size: clamp(10px, 0.7vw, 13px);
+    letter-spacing: 0.15em;
+    opacity: 0.5;
+    margin-bottom: 1.5vh;
+  }
+  .col-list {
+    list-style: none;
+    margin-top: 2vh;
+  }
+  .col-list li {
+    font-family: var(--sans-zh);
+    font-size: clamp(13px, 0.95vw, 17px);
+    line-height: 1.6;
+    padding: 0.6vh 0;
+    border-bottom: 1px solid currentColor;
+    opacity: 0.4;
+  }
+  .col-list li:last-child { border-bottom: none; }
+  .after-col .col-list li { opacity: 0.7; }
+
+  /* ===== 响应式 ===== */
+  @media (max-width: 768px) {
+    .slide { padding: 2vh 4vw; }
+    .h-hero { font-size: clamp(28px, 8vw, 42px); }
+    .h-xl { font-size: clamp(22px, 5vw, 32px); }
+    .lead { max-width: 85vw; }
+    .grid-2-7-5 { grid-template-columns: 1fr; gap: 2vh; }
+    .grid-6 { grid-template-columns: repeat(2, 1fr); gap: 1.5vh; }
+    .grid-3-3 { grid-template-columns: repeat(2, 1fr); }
+    .grid-4 { grid-template-columns: repeat(2, 1fr); }
+    .pipeline { flex-direction: column; gap: 1vh; }
+    .callout { max-width: 85vw; }
+    blockquote.bq { max-width: 85vw; font-size: clamp(22px, 5vw, 36px); }
+    .stat-nb { font-size: clamp(24px, 6vw, 40px); }
+  }
+
+  /* ===== 进度条装饰 ===== */
+  .progress-bar {
+    height: 3px;
+    background: var(--accent);
+    width: 0;
+    transition: width 0.3s;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 200;
+  }
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<div class="deck-wrapper" id="deck">
+
+  <!-- ============ Slide 1: Hero Cover ============ -->
+  <section class="slide hero dark">
+    <div class="chrome">
+      <div>Engineering Report · 2026 Q2</div>
+      <div>Vol.01</div>
+    </div>
+    <div class="frame" style="align-content:center; gap:2vh">
+      <div class="kicker anim anim-d1">内部资料 · 仅供参阅</div>
+      <h1 class="h-hero anim anim-d2" style="font-size:clamp(36px,5.5vw,72px)">
+        工程项目<br>进度报告
+      </h1>
+      <h2 class="h-sub anim anim-d3">2026 年第二季度 · 济南北部新城项目</h2>
+      <p class="lead anim anim-d4" style="max-width:48vw">
+        涵盖工期进度、预算执行、质量验收、安全管理四大板块，
+        本季度累计完成产值 2.86 亿元，整体进度完成 67.3%。
+      </p>
+      <div class="meta-row anim anim-d5">
+        <span>工程技术部</span><span>·</span><span>2026.05.04</span><span>·</span><span>报告编号 EN-2026-Q2-001</span>
+      </div>
+    </div>
+    <div class="foot">
+      <div>济南 · 北部新城项目指挥部</div>
+      <div>— 2026 —</div>
+    </div>
+    <div class="bg-ornament">EN</div>
+  </section>
+
+  <!-- ============ Slide 2: Data Dashboard ============ -->
+  <section class="slide light">
+    <div class="chrome">
+      <div>Quarterly Review · 核心数据</div>
+      <div>02 / 05</div>
+    </div>
+    <div class="frame" style="padding-top:3vh">
+      <div class="kicker anim anim-d1">Key Metrics · Q2 2026</div>
+      <h2 class="h-xl anim anim-d2">本季度关键指标</h2>
+      <p class="lead anim anim-d3" style="margin-bottom:1vh">
+        截至 4 月底，六大考核维度均达成阶段性目标。
+      </p>
+
+      <div class="grid-6" style="margin-top:2vh">
+        <div class="stat-card anim anim-d1">
+          <div class="stat-label">Progress · 工期进度</div>
+          <div class="stat-nb">67.3<span class="stat-unit">%</span></div>
+          <div class="stat-note">较计划超前 2.1%</div>
+        </div>
+        <div class="stat-card anim anim-d2">
+          <div class="stat-label">Output · 完成产值</div>
+          <div class="stat-nb">2.86<span class="stat-unit">亿</span></div>
+          <div class="stat-note">年度目标 42%</div>
+        </div>
+        <div class="stat-card anim anim-d3">
+          <div class="stat-label">Quality · 质量合格率</div>
+          <div class="stat-nb">98.6<span class="stat-unit">%</span></div>
+          <div class="stat-note">超目标 1.1%</div>
+        </div>
+        <div class="stat-card anim anim-d4">
+          <div class="stat-label">Safety · 安全工时</div>
+          <div class="stat-nb">487<span class="stat-unit">天</span></div>
+          <div class="stat-note">无事故记录</div>
+        </div>
+        <div class="stat-card anim anim-d5">
+          <div class="stat-label">Budget · 预算执行</div>
+          <div class="stat-nb">94.2<span class="stat-unit">%</span></div>
+          <div class="stat-note">结余 5.8%</div>
+        </div>
+        <div class="stat-card anim anim-d6">
+          <div class="stat-label">Team · 在岗人数</div>
+          <div class="stat-nb">326<span class="stat-unit">人</span></div>
+          <div class="stat-note">含分包 8 家</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div>数据截止: 2026.04.30</div>
+      <div>数据来源 · 项目管理系统</div>
+    </div>
+    <div class="bg-ornament">02</div>
+  </section>
+
+  <!-- ============ Slide 3: Timeline / Milestones ============ -->
+  <section class="slide dark">
+    <div class="chrome">
+      <div>Schedule · 里程碑节点</div>
+      <div>03 / 05</div>
+    </div>
+    <div class="frame" style="padding-top:3vh">
+      <div class="kicker anim anim-d1">Milestones · 关键路径</div>
+      <h2 class="h-xl anim anim-d2">项目里程碑一览</h2>
+      <p class="lead anim anim-d3" style="margin-bottom:3vh; max-width:50vw">
+        本季度 6 个里程碑中 5 个已按期达成，剩余 1 个预计提前 7 天完成。
+      </p>
+
+      <div class="grid-3-3" style="gap:2vw">
+        <div class="stat-card" style="border-left-color:var(--success); background:rgba(255,255,255,0.06)">
+          <div class="stat-label">✅ 已完成</div>
+          <div class="stat-nb" style="font-size:clamp(18px,1.3vw,24px)">地基工程验收</div>
+          <div class="stat-note">2026.03.15 · 提前 3 天</div>
+        </div>
+        <div class="stat-card" style="border-left-color:var(--success); background:rgba(255,255,255,0.06)">
+          <div class="stat-label">✅ 已完成</div>
+          <div class="stat-nb" style="font-size:clamp(18px,1.3vw,24px)">主体结构封顶</div>
+          <div class="stat-note">2026.04.10 · 按期</div>
+        </div>
+        <div class="stat-card" style="border-left-color:var(--success); background:rgba(255,255,255,0.06)">
+          <div class="stat-label">✅ 已完成</div>
+          <div class="stat-nb" style="font-size:clamp(18px,1.3vw,24px)">外墙保温工程</div>
+          <div class="stat-note">2026.04.22 · 提前 2 天</div>
+        </div>
+        <div class="stat-card" style="border-left-color:var(--accent); background:rgba(255,255,255,0.06)">
+          <div class="stat-label">🔄 进行中</div>
+          <div class="stat-nb" style="font-size:clamp(18px,1.3vw,24px)">机电安装工程</div>
+          <div class="stat-note">进度 58% · 预计 06.15 完成</div>
+        </div>
+        <div class="stat-card" style="border-left-color:var(--warning); background:rgba(255,255,255,0.06)">
+          <div class="stat-label">🔲 待启动</div>
+          <div class="stat-nb" style="font-size:clamp(18px,1.3vw,24px)">室内精装修</div>
+          <div class="stat-note">计划 06.01 进场</div>
+        </div>
+        <div class="stat-card" style="border-left-color:var(--warning); background:rgba(255,255,255,0.06)">
+          <div class="stat-label">🔲 待启动</div>
+          <div class="stat-nb" style="font-size:clamp(18px,1.3vw,24px)">室外景观工程</div>
+          <div class="stat-note">计划 06.20 进场</div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div>关键路径: 地基 → 主体 → 机电 → 精装 → 景观</div>
+      <div>Page 03 · Milestones</div>
+    </div>
+    <div class="bg-ornament">03</div>
+  </section>
+
+  <!-- ============ Slide 4: Pipeline ============ -->
+  <section class="slide light">
+    <div class="chrome">
+      <div>Workflow · 管理流程</div>
+      <div>04 / 05</div>
+    </div>
+    <div class="frame" style="padding-top:2vh">
+      <div class="kicker anim anim-d1">Process · 流水线管理</div>
+      <h2 class="h-xl anim anim-d2">项目管理流程</h2>
+      <p class="lead anim anim-d3" style="margin-bottom:1vh; max-width:50vw">
+        从立项到竣工，五大阶段协同推进。
+      </p>
+
+      <div class="pipeline-section anim anim-d4">
+        <div class="pipeline-label">01 · 前期阶段</div>
+        <div class="pipeline">
+          <div class="step active">
+            <div class="step-nb">01</div>
+            <div class="step-title">可行性研究</div>
+            <div class="step-desc">市场调研 · 经济测算</div>
+          </div>
+          <div class="step active">
+            <div class="step-nb">02</div>
+            <div class="step-title">方案设计</div>
+            <div class="step-desc">规划方案 · 初步设计</div>
+          </div>
+          <div class="step active">
+            <div class="step-nb">03</div>
+            <div class="step-title">施工图审查</div>
+            <div class="step-desc">图纸会审 · 技术交底</div>
+          </div>
+          <div class="step active">
+            <div class="step-nb">04</div>
+            <div class="step-title">招标采购</div>
+            <div class="step-desc">分包招标 · 材料采购</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-section anim anim-d5">
+        <div class="pipeline-label">02 · 施工阶段</div>
+        <div class="pipeline">
+          <div class="step active" style="opacity:1; border-color:var(--accent)">
+            <div class="step-nb">05</div>
+            <div class="step-title">地基与基础</div>
+            <div class="step-desc">已完成 ✅</div>
+          </div>
+          <div class="step active" style="opacity:1; border-color:var(--accent)">
+            <div class="step-nb">06</div>
+            <div class="step-title">主体结构</div>
+            <div class="step-desc">已完成 ✅</div>
+          </div>
+          <div class="step active" style="opacity:0.9">
+            <div class="step-nb">07</div>
+            <div class="step-title">机电安装</div>
+            <div class="step-desc">进行中 58%</div>
+          </div>
+          <div class="step">
+            <div class="step-nb">08</div>
+            <div class="step-title">装饰装修</div>
+            <div class="step-desc">待启动</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pipeline-section anim anim-d6">
+        <div class="pipeline-label">03 · 验收阶段</div>
+        <div class="pipeline">
+          <div class="step">
+            <div class="step-nb">09</div>
+            <div class="step-title">分部分项验收</div>
+            <div class="step-desc">随工程进度同步</div>
+          </div>
+          <div class="step">
+            <div class="step-nb">10</div>
+            <div class="step-title">竣工验收</div>
+            <div class="step-desc">计划 2026.12</div>
+          </div>
+          <div class="step">
+            <div class="step-nb">11</div>
+            <div class="step-title">资料归档</div>
+            <div class="step-desc">全过程同步</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="foot">
+      <div>Page 04 · 管理流程总览</div>
+      <div>Process Map</div>
+    </div>
+    <div class="bg-ornament">04</div>
+  </section>
+
+  <!-- ============ Slide 5: Summary / Closing ============ -->
+  <section class="slide hero dark">
+    <div class="chrome">
+      <div>Takeaway · 总结与计划</div>
+      <div>05 / 05</div>
+    </div>
+    <div class="frame" style="align-content:center; gap:3vh">
+      <div class="kicker anim anim-d1">Next Steps · 下季度展望</div>
+
+      <blockquote class="bq anim anim-d2" style="max-width:55vw">
+        "工程管理不是管结果，<br>是管过程。"
+      </blockquote>
+
+      <div class="grid-2-6-6 anim anim-d3" style="margin-top:2vh; gap:3vw; max-width:55vw">
+        <div>
+          <div style="font-family:var(--mono);font-size:clamp(10px,0.7vw,13px);letter-spacing:0.1em;opacity:0.4">Q2 总结</div>
+          <ul class="col-list">
+            <li>产值 2.86 亿 · 超计划 3.2%</li>
+            <li>质量合格率 98.6%</li>
+            <li>安全事故 0 起</li>
+            <li>预算结余 5.8%</li>
+          </ul>
+        </div>
+        <div>
+          <div style="font-family:var(--mono);font-size:clamp(10px,0.7vw,13px);letter-spacing:0.1em;opacity:0.4">Q3 计划</div>
+          <ul class="col-list">
+            <li>完成机电安装 100%</li>
+            <li>精装修进场 06.01</li>
+            <li>材料采购提前锁价</li>
+            <li>专项安全检查</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="lead anim anim-d4" style="max-width:45vw; margin-top:1vh">
+        感谢各参建单位的通力配合，下季度继续稳扎稳打，确保年底竣工目标。
+      </p>
+    </div>
+    <div class="foot">
+      <div>报告编号 EN-2026-Q2-001 · 工程技术部</div>
+      <div>— END —</div>
+    </div>
+    <div class="bg-ornament">05</div>
+  </section>
+
+</div>
+
+<!-- ===== 导航圆点 ===== -->
+<div id="nav"></div>
+
+<script>
+  (function() {
+    const deck = document.getElementById('deck');
+    const slides = document.querySelectorAll('.slide');
+    const nav = document.getElementById('nav');
+    const progress = document.getElementById('progressBar');
+
+    // 创建导航点
+    slides.forEach((_, i) => {
+      const dot = document.createElement('span');
+      dot.className = 'dot' + (i === 0 ? ' active' : '');
+      dot.addEventListener('click', () => {
+        slides[i].scrollIntoView({ behavior: 'smooth' });
+      });
+      nav.appendChild(dot);
+    });
+
+    // 监听滚动
+    function onScroll() {
+      const scrollLeft = deck.scrollLeft;
+      const totalScroll = deck.scrollWidth - deck.clientWidth;
+      const ratio = totalScroll > 0 ? scrollLeft / totalScroll : 0;
+
+      // 进度条
+      progress.style.width = (ratio * 100) + '%';
+
+      // 当前页
+      let activeIdx = 0;
+      slides.forEach((slide, i) => {
+        const rect = slide.getBoundingClientRect();
+        const mid = rect.left + rect.width / 2;
+        if (mid > 0 && mid < window.innerWidth) {
+          activeIdx = i;
+        }
+      });
+
+      // 高亮导航点
+      document.querySelectorAll('.dot').forEach((d, i) => {
+        d.classList.toggle('active', i === activeIdx);
+      });
+
+      // 触发动画
+      slides.forEach((slide, i) => {
+        const rect = slide.getBoundingClientRect();
+        const isVisible = rect.left < window.innerWidth - 100 && rect.left + rect.width > 100;
+        if (isVisible) {
+          slide.querySelectorAll('.anim').forEach((el, idx) => {
+            el.style.animation = 'none';
+            void el.offsetHeight; // reflow
+            el.style.animation = '';
+          });
+        }
+      });
+    }
+
+    deck.addEventListener('scroll', onScroll);
+    // 键盘左右键
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        const next = slides[Math.min(currentSlide() + 1, slides.length - 1)];
+        next.scrollIntoView({ behavior: 'smooth' });
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        const prev = slides[Math.max(currentSlide() - 1, 0)];
+        prev.scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    function currentSlide() {
+      let idx = 0;
+      slides.forEach((s, i) => {
+        const r = s.getBoundingClientRect();
+        if (r.left < window.innerWidth / 2) idx = i;
+      });
+      return idx;
+    }
+
+    // 初始化
+    onScroll();
+
+    // 第一页初始动画触发
+    setTimeout(() => {
+      document.querySelector('.slide:first-child .anim')?.style.setProperty('animation', '');
+    }, 100);
+  })();
+</script>
+
+</body>
+</html>

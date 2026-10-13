@@ -1,7 +1,7 @@
 """Join the original collection to repository-specific production and usage records."""
 from pathlib import Path
 from urllib.parse import quote
-import hashlib, json
+import hashlib, json, re
 
 ROOT = Path(__file__).resolve().parents[1]
 def load(path):
@@ -14,7 +14,7 @@ def main():
     audit = {r['repository']: r for r in load('data/repository-audit.json')['repositories']}
     cases = load('data/case-studies.json')
     by_id = {c['id']: c for c in cases}
-    for name in ['web-repository-examples', 'native-repository-examples', 'japanese-repository-examples','dashi-repository-examples','codex-image-repository-examples','multiagent-repository-examples','knowledgecat-repository-examples','seaslides-repository-examples','pptdesign-repository-examples','magicslide-repository-examples','imageeditable-repository-examples','reactdeck-repository-examples','slidemaker-repository-examples','businesscarousel-repository-examples','cyberppt-repository-examples','handsondeck-repository-examples','slidewriter-repository-examples','htmlscrolline-repository-examples']:
+    for name in ['web-repository-examples', 'native-repository-examples', 'japanese-repository-examples','dashi-repository-examples','codex-image-repository-examples','multiagent-repository-examples','knowledgecat-repository-examples','seaslides-repository-examples','pptdesign-repository-examples','magicslide-repository-examples','imageeditable-repository-examples','reactdeck-repository-examples','slidemaker-repository-examples','businesscarousel-repository-examples','cyberppt-repository-examples','handsondeck-repository-examples','slidewriter-repository-examples','htmlscrolline-repository-examples','designsystem-repository-examples','htmlconversion-repository-examples']:
         if (ROOT / ('data/' + name + '.json')).exists():
             for c in load('data/' + name + '.json'):
                 by_id[c['id']] = c
@@ -39,7 +39,7 @@ def main():
             'source_refs': r['source_refs'],
             'execution_status': r['execution_status'],
             'steps': ['原典の環境と個別条件を確認する', '記載したコマンドの外部API使用条件を確認する', '入力を用意し、原典の方式で生成する', '完成ファイルを開いて全ページを確認する']}
-    for name in ['native-repository-guides', 'japanese-repository-guides', 'web-repository-guides','dashi-repository-guides','codex-image-repository-guides','pptagent-repository-guides','multiagent-repository-guides','knowledgecat-repository-guides','spacemulti-repository-guides','presenter-repository-guides','starry-repository-guides','seaslides-repository-guides','pptdesign-repository-guides','magicslide-repository-guides','imageeditable-repository-guides','reactdeck-repository-guides','claudeoffice-repository-guides','slidemaker-repository-guides','businesscarousel-repository-guides','cyberppt-repository-guides','handsondeck-repository-guides','slidewriter-repository-guides','htmlscrolline-repository-guides']:
+    for name in ['native-repository-guides', 'japanese-repository-guides', 'web-repository-guides','dashi-repository-guides','codex-image-repository-guides','pptagent-repository-guides','multiagent-repository-guides','knowledgecat-repository-guides','spacemulti-repository-guides','presenter-repository-guides','starry-repository-guides','seaslides-repository-guides','pptdesign-repository-guides','magicslide-repository-guides','imageeditable-repository-guides','reactdeck-repository-guides','claudeoffice-repository-guides','slidemaker-repository-guides','businesscarousel-repository-guides','cyberppt-repository-guides','handsondeck-repository-guides','slidewriter-repository-guides','htmlscrolline-repository-guides','designsystem-repository-guides','htmlconversion-repository-guides']:
         if (ROOT / ('data/' + name + '.json')).exists():
             authored.update({r['repository']: r for r in load('data/' + name + '.json')})
     profiles = []
@@ -79,6 +79,34 @@ def main():
         'case_count': len(cases), 'slide_count': sum(c['page_count'] for c in cases),
         'remaining_repository_count': sum(not p['example_ids'] for p in profiles),
         'states': [{'repository': p['repository'], 'state': p['production_status'], 'examples': p['example_ids']} for p in profiles]})
+    # Preserve original project identity and historical prototypes while joining
+    # current produced examples from the same authoritative case list.
+    workflows = load('data/project-workflows.json')
+    profile_by_repo = {p['repository']: p for p in profiles}
+    for project in workflows['projects']:
+        works = [c for c in cases if c['repository'] == project['repository']]
+        if works:
+            profile = profile_by_repo[project['repository']]
+            project.update(examples=works, derived_skills=sorted({c['fork_id'] for c in works if c.get('fork_id')}),
+                           generation_status='japanese_cases_generated', license_status='reviewed_for_example',
+                           execution_status=profile['execution_status'], upstream_commit=profile['upstream_commit'],
+                           license_evidence=profile.get('source_refs', project.get('license_evidence', [])))
+    workflows.update(catalog_count=len(original), case_count=len(cases), slide_count=sum(c['page_count'] for c in cases))
+    dump('data/project-workflows.json', workflows)
+    index_path = ROOT / 'index.html'
+    index, count = re.subn(r'この環境で制作したリポ \d+件',
+                          'この環境で制作したリポ ' + str(sum(bool(p['example_ids']) for p in profiles)) + '件',
+                          index_path.read_text(encoding='utf-8'))
+    if count != 1:
+        raise ValueError('The site production summary must have one canonical count.')
+    produced_count = sum(bool(p['example_ids']) for p in profiles)
+    for pattern, replacement in [
+            (r'<strong>\d+ / 209</strong>', '<strong>' + str(produced_count) + ' / 209</strong>'),
+            (r'残る\d+件も', '残る' + str(len(original) - produced_count) + '件も')]:
+        index, count = re.subn(pattern, replacement, index)
+        if count != 1:
+            raise ValueError('The site progress must have one canonical count.')
+    index_path.write_text(index, encoding='utf-8', newline='\n')
     print(str(sum(bool(p['example_ids']) for p in profiles)) + '/' + str(len(original)) + ' repositories with local Japanese outputs; ' + str(len(cases)) + ' decks')
 
 if __name__ == '__main__':

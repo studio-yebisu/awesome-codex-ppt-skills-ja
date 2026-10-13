@@ -280,8 +280,150 @@
         "mediaPending": []
       },
       "scope": "原典Node固定lockの新規npm ci・plan・Vite build・HTTP smoke。6停止点。全体CIのWindowsパス3件未達は保持。"
+    },
+    {
+      "repository": "att6113/ppt-design-system",
+      "pages": 6,
+      "method": "配布ZIPを新フォルダーへ展開し新venvからReproduce.ps1 -Renderを実行。原典テンプレートへの配置とHTTP描画・原典操作を再実行。",
+      "zip_sha256": "21cb830cc78c103e42192234804f58b795e42abc96ff2122ade95db2c10f8d5e",
+      "tested_zip_sha256": "21cb830cc78c103e42192234804f58b795e42abc96ff2122ade95db2c10f8d5e",
+      "current_archive_sha256": "93f3aae5e657e6b19e801cc2c44cae35626db6cff71e4b4c568ad39b6a4d88b7",
+      "current_archive_different_members": [
+        "ppt-design-system/QA.json",
+        "ppt-design-system/reproduce/workspace/examples/repositories/ppt-design-system/QA.json",
+        "ppt-design-system/reproduce/workspace/examples/repositories/ppt-design-system/REPRODUCE.md"
+      ],
+      "input_files_match_current_archive": false,
+      "runtime_and_input_members_match": true,
+      "archive_change_after_test": "既存の全ページ目視所見へmethod/resultを付記したQAと、workspace内への再現文書追記だけが差分。原稿・コード・HTML・描画は一致。",
+      "run_log_sha256": "f5cc2f34264dbfc3ba3be11d46285f17bd44247a6d1e9d4b3a7b80cec1ef6677",
+      "html_sha256": "12b3ce50eb8bcc8278a005fd7b3f8dddc87e8ef50a8783e46dd5bf7c19dbd529",
+      "html_bytes_identical": true,
+      "original_navigation_js_preserved": true,
+      "http_browser_checks": {
+        "passed": true,
+        "viewport": {
+          "width": 1920,
+          "height": 1080
+        },
+        "http_only": true,
+        "pages": [
+          {
+            "index": 0,
+            "title": "雨の日も迷わない、図書館イベント案内",
+            "visible": true,
+            "clipped": [],
+            "minFont": 17.28
+          },
+          {
+            "index": 1,
+            "title": "まず、今日の予定を確認",
+            "visible": true,
+            "clipped": [],
+            "minFont": 17.28
+          },
+          {
+            "index": 2,
+            "title": "出発前に、案内をもう一度",
+            "visible": true,
+            "clipped": [],
+            "minFont": 17.28
+          },
+          {
+            "index": 3,
+            "title": "着いたら、どこへ？",
+            "visible": true,
+            "clipped": [],
+            "minFont": 17.28
+          },
+          {
+            "index": 4,
+            "title": "お知らせに合わせて、次の行動を",
+            "visible": true,
+            "clipped": [],
+            "minFont": 17.28
+          },
+          {
+            "index": 5,
+            "title": "確認するのは、この三つ。",
+            "visible": true,
+            "clipped": [],
+            "minFont": 17.28
+          }
+        ],
+        "checks": [
+          {
+            "action": "native ArrowLeft",
+            "passed": true
+          },
+          {
+            "action": "native dot click",
+            "passed": true
+          },
+          {
+            "action": "bridge 0",
+            "index": 0,
+            "notified": true,
+            "passed": true
+          },
+          {
+            "action": "bridge 1",
+            "index": 1,
+            "notified": true,
+            "passed": true
+          },
+          {
+            "action": "bridge 2",
+            "index": 2,
+            "notified": true,
+            "passed": true
+          },
+          {
+            "action": "bridge 3",
+            "index": 3,
+            "notified": true,
+            "passed": true
+          },
+          {
+            "action": "bridge 4",
+            "index": 4,
+            "notified": true,
+            "passed": true
+          },
+          {
+            "action": "bridge 5",
+            "index": 5,
+            "notified": true,
+            "passed": true
+          },
+          {
+            "action": "reject invalid indices",
+            "passed": true
+          },
+          {
+            "action": "Escape close notification",
+            "passed": true
+          }
+        ],
+        "errors": []
+      },
+      "output_review_status": "generated_awaiting_review",
+      "scope": "6ページ・Forest InkのHTML生成とHTTP描画。直接ファイル起動・PPTX・印刷・縦画面は未検証。"
+    },
+    {
+      "repository": "wangzan101/html-to-ppt-pdf",
+      "pages": 7,
+      "zip_sha256": "930e160d791f5d989307751276b00feeb47d9564d6a46cdea7326fff2d90d07d",
+      "input_files_match_current_archive": true,
+      "method": "現配布ZIPを新フォルダーへ展開し新venvからReproduce.ps1 -Renderを実行。新npm ciと公式Chromium導入、原典CLI撮影・PDF/PPTX生成・PowerPoint描画まで実行。",
+      "run_log_sha256": "c158d5838b3e05da17228fa5a9531633b283115f379eb6745855cb8004e906ea",
+      "output_review_status": "generated_awaiting_review",
+      "all_seven_original_capture_png_bytes_identical": true,
+      "all_seven_powerpoint_render_pixels_identical": true,
+      "full_pptx_byte_identity_claimed": false,
+      "scope": "既存7ページの撮影変換。新規資料の構成制作・編集可能な本文・motion保持ではない。元PPTX保持・ノートのみ後処理。AGPL対応ソースの未使用試行2ディレクトリーは除外。"
     }
   ],
-  "scope": "15形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全209リポの再現確認へ読み替えない。SeaSlidesとslides_makerは実行後の文書追記差分を記録。Reactは現配布ZIP全入力とbyte一致。Magic Slideは全入力一致。画像→PPTXは固定manifest/分離済み画像のreplayで、新しい入力への自動抽出ではない。 原典43番の再現はSNS公開用データではなく、構成確認プレビュー。 CyberPPTは保存済み設計見本からの日本語派生再構築。全5枚の日本語文字と描画pixel一致を確認し、原典strict画像一致の未達は保持。",
-  "checked_at": "2026-10-13T22:10:57.355177+00:00"
+  "scope": "17形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全209リポの再現確認へ読み替えない。SeaSlidesとslides_makerは実行後の文書追記差分を記録。Reactは現配布ZIP全入力とbyte一致。Magic Slideは全入力一致。画像→PPTXは固定manifest/分離済み画像のreplayで、新しい入力への自動抽出ではない。 原典43番の再現はSNS公開用データではなく、構成確認プレビュー。 CyberPPTは保存済み設計見本からの日本語派生再構築。全5枚の日本語文字と描画pixel一致を確認し、原典strict画像一致の未達は保持。",
+  "checked_at": "2026-10-13T23:02:31.088744+00:00"
 }

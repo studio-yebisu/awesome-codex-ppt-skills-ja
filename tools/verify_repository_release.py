@@ -199,7 +199,8 @@ def provenance(row):
     acquisition=source/'ACQUISITION.json'
     if acquisition.exists():need(load(acquisition)['commit']==row['upstream_commit'],'Acquisition pin mismatch')
     inp=local(ROOT,row['input_data'])
-    need(data.get('input_sha256') in {sha(inp),canonical(load(inp))},'Provenance input hash absent/stale')
+    input_digest = data.get('input_json_sha256') if data.get('execution_type')=='original_html_screenshot_to_image_pptx_and_pdf' else data.get('input_sha256')
+    need(input_digest in {sha(inp),canonical(load(inp))},'Provenance input hash absent/stale')
     output=local(ROOT,row['artifact_download'] if row['format']=='pptx' else row['preview'])
     for asset in data.get('built_assets',[]):
         need(sha(local(folder,asset['path']))==asset['sha256'],'Built asset hash stale: '+asset['path'])
@@ -263,6 +264,22 @@ def provenance(row):
             for name in ['errors','empty','overlaps','clipped','tinyText','mediaPending']:
                 need(not review.get('browser_smoke',{}).get(name),'Scrolline browser smoke issue: '+name)
             warn(row['id']+':original-gate','Original full CI retains three Windows-path failures; scoped core tests, HTTP smoke and player controls passed.')
+        elif data.get('execution_type')=='original_html_screenshot_to_image_pptx_and_pdf':
+            need(row['repository']=='wangzan101/html-to-ppt-pdf','Unexpected HTML conversion repository')
+            by_log={c['log']:c for c in commands}
+            allowed={'review/original-setup-windows.log','review/original-audit.log','review/first-replay-powershell5-failure/native-powerpoint.log'}
+            failed=[]
+            for c in commands:
+                need(c.get('argv') and isinstance(c.get('exit_code'),int),'Missing converter execution receipt')
+                need(sha(record_path(folder,c['log']))==c.get('log_sha256'),'Converter log hash stale')
+                if c['exit_code']!=0:
+                    recovered=by_log.get(c.get('resolved_by_log'))
+                    need(c['log'] in allowed and recovered and recovered['exit_code']==0 and c.get('resolution_reason'),'Unresolved converter setup/audit/render failure')
+                    failed.append(c['log'])
+            need(set(failed)==allowed,'Converter original failure history missing')
+            audit=load(record_path(folder,data['dependencies']['updated_audit']))
+            need(audit['metadata']['vulnerabilities']['total']==0,'Converter fixed dependency audit has findings')
+            need(data['dependencies']['pptxgenjs']=='3.12.0' and data['dependencies']['image-size']=='2.0.3','Converter dependency scope changed')
         elif row.get('editability')=='raster_slides':
             # Preserve failed attempts; each must have an identical successful retry.
             for i,c in enumerate(commands):
@@ -358,6 +375,24 @@ def raster_evidence(row, folder):
     need(images==q.get('images') and [i.get('page') for i in images]==list(range(1,n+1)),'Raster source/render records missing or mismatched')
     need([record_path(folder,i['render']) for i in images]==[local(ROOT,v) for v in page_paths(row)],'Raster render records differ from manifest pages')
     need(len({i['source_sha256'] for i in images})==n,'Duplicate source images')
+    if p.get('execution_type')=='original_html_screenshot_to_image_pptx_and_pdf':
+        need(row['repository']=='wangzan101/html-to-ppt-pdf' and n==7,'Unexpected converter raster scope')
+        raw=local(folder,'source/upstream/scripts/build.mjs');runtime=local(folder,'source/runtime/build.mjs')
+        need(p.get('original_build_mjs_unmodified') is True and sha(raw)==sha(runtime)==p['original_build_mjs_sha256'],'Original converter changed')
+        need(sha(local(folder,p['input']))==p['input_sha256'] and sha(local(folder,p['adapted_input']))==p['adapted_input_sha256'],'Converter source/adapted HTML hash stale')
+        need(q.get('all_seven_captured') is True and q.get('scale')==3,'Incomplete converter capture')
+        for i in images:
+            need(validate_png(record_path(folder,i['source']))==tuple(i['dimensions'])==(5760,3240),'Converter source PNG size mismatch')
+        need(sha(local(folder,'review/initial-unadapted-output/frames/slide-01.png'))==sha(local(folder,'review/initial-unadapted-output/frames/slide-02.png')),'Original duplicate-page failure evidence missing')
+        with zipfile.ZipFile(local(folder,'original/deck.pptx')) as a,zipfile.ZipFile(local(ROOT,row['artifact_download'])) as b:
+            need(set(a.namelist())==set(b.namelist()),'Notes postprocessing changed PPTX entries')
+            differences=[name for name in a.namelist() if a.read(name)!=b.read(name)]
+            need(sorted(differences)==[f'ppt/notesSlides/notesSlide{i}.xml' for i in range(1,8)],'Converter postprocessing changed content beyond notes')
+        need(q.get('body_text_editable') is False and q.get('notes_editable') is True,'Converter editability scope missing')
+        need(q['raw_pdf']['page_count']==n and q['native_powerpoint']['slide_count']==n,'Converter PDF/PowerPoint page count mismatch')
+        for name in ['MIT-converter.txt','AGPL-3.0-input.txt']:
+            need(local(folder,'licenses/'+name).stat().st_size>100,'Converter/input license missing')
+        return images
     jobs=load(local(folder,'slide_jobs.json'));state=load(local(folder,'slide_run_state.json'))
     need(jobs.get('run_status')==state.get('status')=='slides_recorded','Image jobs not completed')
     need([s.get('to') for s in state.get('history',[])]==['jobs_prepared','slides_dispatched','slides_recorded'],'Incomplete image job state history')
@@ -549,7 +584,16 @@ def archive(row):
                 if current.is_file():need(hashlib.sha256(z.read(item)).hexdigest()==sha(current),'Stale ZIP member: '+p.name+' : '+key)
             source_files=[f for f in (folder/'source').glob('*') if f.is_file() and f.suffix in {'.py','.js','.mjs'}]
             for f in source_files:need(f.relative_to(folder).as_posix() in normalized,'ZIP omits reproduction script '+f.name)
-            if row.get('editability')=='raster_slides':
+            if row.get('reproduction_kind')=='html_capture':
+                need(row['repository']=='wangzan101/html-to-ppt-pdf','Unexpected HTML capture ZIP')
+                required_files=['source/upstream/scripts/build.mjs','source/runtime/build.mjs','source/runtime/package-lock.json',
+                                'input/port-town/index.html','input/port-town/export.html','licenses/MIT-converter.txt',
+                                'licenses/AGPL-3.0-input.txt','review/postprocess-proof.json','render/powerpoint-render.json']
+                required_files += [f'original/frames/slide-{i:02d}.png' for i in range(1,row['page_count']+1)]
+                for required in required_files:need(required in normalized,'Converter ZIP missing '+required)
+                need(any(k.startswith('source/input-corresponding-source/upstreams/') for k in normalized),'Input corresponding source omitted')
+                need(not any('source/input-corresponding-source/.build/' in k or 'source/input-corresponding-source/examples/' in k for k in normalized),'Retained unused source probe outputs included in release')
+            elif row.get('editability')=='raster_slides':
                 for required in ['slide_jobs.json','slide_run_state.json','style.json','deck_spec.json','speech.md','source/native-imagegen-requests.json','render/powerpoint-render.json']:
                     need(required in normalized,'Raster ZIP missing '+required)
                 upstream=ROOT/'.build/actual-upstreams'/row['repository'].replace('/','__')

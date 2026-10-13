@@ -4,7 +4,7 @@
 
 ## 現行の制作範囲
 
-29リポジトリ、32冊、194ページ（Scrollineの6停止点を含む）。編集可能PPTX 13冊71枚、画像主体PPTX 1冊3枚、固有HTML 18冊120ページ。元209件は作者・分類・データを保持し、原典入口を取得・棚卸し済み。残180件は未制作で、取得だけを生成成功に数えない。
+31リポジトリ、34冊、207ページ（Scrollineの6停止点を含む）。編集可能PPTX 13冊71枚、画像主体PPTX 2冊10枚、固有HTML 19冊126ページ。元209件は作者・分類・データを保持し、原典入口を取得・棚卸し済み。残178件は未制作で、取得だけを生成成功に数えない。
 
 各リポのCLI、MCP、指示型スキル、テンプレート、変換器を使用し、実行記録と原典ファイルのハッシュを保存している。旧共通renderer試作・自己紹介題材の試作は現行件数に含めない。
 
@@ -41,15 +41,17 @@
 | [cyberppt](../examples/repositories/cyberppt/QA.json) | crazyykhllc-bit/CyberPPT | 5 | 編集可能PPTX |
 | [hands-on-deck](../examples/repositories/hands-on-deck/QA.json) | EveryInc/hands-on-deck | 5 | 編集可能PPTX |
 | [slide-writer](../examples/repositories/slide-writer/QA.json) | FeeiCN/slide-writer | 8 | HTML |
-| [html-scrolline](../examples/repositories/html-scrolline/QA.json) | gongnyang/awesome-html-scrolline-deck | 6 | HTML・連続スクロールの停止点 |
+| [html-scrolline](../examples/repositories/html-scrolline/QA.json) | gongnyang/awesome-html-scrolline-deck | 6 | HTML |
+| [ppt-design-system](../examples/repositories/ppt-design-system/QA.json) | att6113/ppt-design-system | 6 | HTML |
+| [html-to-ppt-pdf](../examples/repositories/html-to-ppt-pdf/QA.json) | wangzan101/html-to-ppt-pdf | 7 | 画像PPTX |
 
 ## 全ページの描画・目視
 
-全194ページの制作担当による目視確認が完了。PPTXは完成ファイルをMicrosoft PowerPointで開いた74枚のPNGとPDFを生成し、入力SVGや元HTMLだけで代替していない。各冊の描画receiptにPPTXのSHA、ページ順序と出力を記録した。HTML120ページは固有ランタイムで再生し、実表示を確認している。連続スクロールでは6停止点の実表示を確認した範囲であり、全motionの全フレーム確認ではない。
+全207ページの制作担当による目視確認が完了。PPTXは完成ファイルをMicrosoft PowerPointで開いた81枚のPNGとPDFを生成し、入力SVGや元HTMLだけで代替していない。各冊の描画receiptにPPTXのSHA、ページ順序と出力を記録した。HTML126ページは固有ランタイムで再生し、実表示を確認している。連続スクロールでは6停止点の実表示を確認した範囲であり、全motionの全フレーム確認ではない。
 
 今回追加したWeb7冊49枚は全ページを実ブラウザーで再生し、DOMの見出し・ページ位置を照合、実キャプチャを全頁視認した。対象はReveal.js 6枚、Lewis HTML 8枚、minorun Marp 9枚、Neon 6枚、Bento 6枚、make-slide 8枚、Frontend Editable 6枚。Dashi 6枚は別途同じく実ブラウザーで全頁を確認した。先行6冊45枚に、上表の原典別制作を追加している。新規PPTXは実ファイルのPowerPoint描画、HTMLは原典ランタイムの実表示を確認する。
 
-画像PPTXは全3枚の生成画像とPowerPoint描画の両方を目視した。日本語本文、Gitコマンド、状態図の意味と矢印を確認。PPTXの各ページは1画像で、本文・図の個別編集はできない。画像内の日本語確認をXML上の文字検査で代替せず、別途日本語の発表者ノートを確認した。生成画像とPPTX mediaのSHA一致により、後付け文字overlayや画像の差替えを含まないことを検査する。
+codex-image-pptの画像PPTXは全3枚の生成画像とPowerPoint描画の両方を目視した。日本語本文、Gitコマンド、状態図の意味と矢印を確認。PPTXの各ページは1画像で、本文・図の個別編集はできない。画像内の日本語確認をXML上の文字検査で代替せず、別途日本語の発表者ノートを確認した。生成画像とPPTX mediaのSHA一致により、後付け文字overlayや画像の差替えを含まないことを検査する。
 
 全ページ目視は制作担当によるレビューであり、人による正式採用を意味しない。各QA.jsonが対象ファイルと画像のSHA、レビュー範囲を保持する。再生成した場合は、その新しい出力を改めて確認する。
 
@@ -73,9 +75,9 @@ python tools/verify_repository_release.py
 
 この検査は元209件の一致、リポ・冊数・枚数の対応、原典と出力のハッシュ、PNG/PPTX構造、固有HTML runtime、記録された全ページレビュー、ZIPの内容と更新一致を検査する。画像PPTXではjobs/style/state、native生成記録、原典assembler実行、画像media一致、日本語ノートと画像内日本語の目視記録を追加条件とする。失敗した初期コマンドは消さず、同一コマンドの後続成功とログのハッシュで復旧を検証する。
 
-**最終自動検査：194検査合格、問題0件、警告9件。** [実行結果](../data/release-qa.json)を保存。Jinba 7枚・Japanese Corporate 6枚・Image to Editable 2枚・slides_maker 5枚・CyberPPT 5枚・Hands-on-deck 5枚のXML run locale省略、CyberPPT原典画像一致の未達、Slide-Writer直接ファイル起動の未確認、Scrolline原典全体CIの未達を警告として残す。日本語文字列と実描画の字形は別途確認している。検査の成功を、美術品質の自動判定や正式採用として扱わない。
+**最終自動検査：206項目合格、問題0件、警告9件。** [実行結果](../data/release-qa.json)を保存。Jinba 7枚・Japanese Corporate 6枚・Image to Editable 2枚・slides_maker 5枚・CyberPPT 5枚・Hands-on-deck 5枚のXML run locale省略、CyberPPT原典画像一致の未達、Slide-Writer直接ファイル起動の未確認、Scrolline原典全体CIの未達を警告として残す。日本語文字列と実描画の字形は別途確認している。検査の成功を、美術品質の自動判定や正式採用として扱わない。
 
-29派生版と90配布ファイルの内容・SHAを検査。[別フォルダー再現](../data/reproduction-kit-qa.json)では、配布ZIPを新しいフォルダーへ展開し新venvから15形式（minorun-marp-skill9枚、Office-PowerPoint-MCP-Server6枚、MultiAgentPPT4枚、knowledge-cat-ppt-skill5枚、seaslides5枚、PPT-Design-Skill5枚、magic-slide5枚、image-to-editable-ppt-skill2枚、slides_maker5枚、slide-deck-generator5枚、ai-business-skills6枚、CyberPPT5枚、hands-on-deck5枚、slide-writer8枚、HTML Scrolline6停止点）の生成に成功。他キットの独立実行や、全リポの再現確認へ読み替えない。再生成した出力は確認前として扱う。CyberPPTの試験後の差分はQA内の要素数と再現文書の追記だけで、コード・入力・PPTXとの一致を別途記録している。
+31派生版と96配布ファイルの内容・SHAを検査。[別フォルダー再現](../data/reproduction-kit-qa.json)では、配布ZIPを新しいフォルダーへ展開し新venvから17形式（minorun-marp-skill9枚、Office-PowerPoint-MCP-Server6枚、MultiAgentPPT4枚、knowledge-cat-ppt-skill5枚、seaslides5枚、PPT-Design-Skill5枚、magic-slide5枚、image-to-editable-ppt-skill2枚、slides_maker5枚、slide-deck-generator5枚、ai-business-skills6枚、CyberPPT5枚、hands-on-deck5枚、slide-writer8枚、awesome-html-scrolline-deck6枚、ppt-design-system6枚、html-to-ppt-pdf7枚）の生成に成功。他キットの独立実行や、全リポの再現確認へ読み替えない。再生成した出力は確認前として扱う。
 
 ## 現行サイトのUI検証
 
@@ -170,3 +172,19 @@ gongnyang/awesome-html-scrolline-deckは、原典deck CLI・deck.yaml・plan・V
 ![原典Slide-Writerの日本語実例](assets/slide-writer-float-desktop.jpg)
 
 ![原典Scrollineの連続スクロール実例](assets/html-scrolline-float-desktop.jpg)
+
+## 31リポ時点の追加確認
+
+att6113/ppt-design-systemは、原典template.html・Forest Ink・6種のレイアウトで「雨の日も迷わない、図書館イベント案内」を日本語6ページで制作。原典ナビゲーションJSを保持し、日本語の字体・行間・比較欄の同じ重要度を調整した。全6枚の1920×1080 HTTP表示を目視し、切れ0件、原典操作と親連携10チェックを確認。独立ZIPの新venv実行ではHTML byte一致とHTTP描画・操作が成功。試験後の差分はQAの所見書式とworkspaceへの再現文書追記だけで、runtimeと入力は一致を記録した。PPTX・印刷・縦画面は未検証。
+
+wangzan101/html-to-ppt-pdfは、既存Guizangの日本語7ページを無改変build.mjsで撮影し、5760×3240のPNG、画像PPTX、PDFへ変換。原文HTMLと対応ソースを保存した。最初の変換は成功ログ7枚でも2枚目が1枚目と重複しており、初回成果を保持。700msの入力制限と撮影間隔の競合を、別export.htmlのdotからgo(force:true)を呼ぶ補正だけで解消した。元HTML参考・変換PNG・実PowerPoint描画を全7枚比較し、viewport由来の応答する余白差は残ると記録する。
+
+PPTX本文は各ページ1画像で編集不可。発表ノートだけを後処理で追加し、原典PPTXを保持して、mediaとslide XMLのbyte一致を検査した。Windows setup・元npm audit・PowerShell5 receiptの失敗は削除せず、具体的な復旧ログへ結び付けた。PptxGenJS3.12を保持しimage-size2.0.3へ固定、audit 0件。原典MIT、入力ソースAGPL、書体OFLの範囲を分けて収録する。
+
+現配布ZIPを新フォルダーへ展開し新venv・新npm ciから再実行。原典撮影、PDF/PPTX生成、PowerPoint描画が成功し、全7枚の撮影PNG byteとPowerPoint描画pixelが一致。全PPTX byte一致、新規資料構成の制作、本文編集、motion保持は主張しない。対応ソースの再生成でも元HTML byte一致を確認した。初期の未使用重複ソース2ディレクトリーは削除承認が拒否されたためローカルに残し、再生成・Git・配布対象から除外している。
+
+[追加UI記録](../data/repository-ui-qa-additions.json)は、計15追加事例と元16リポ時点の範囲を保持する。最新の元209件・実例あり31件・34冊207ページ、Forest Inkの原典dotと外側カウンター、終端、変換PPTXの3ページ目ノート・終端、実PPTX/PDF/ソースZIP取得のSHAを確認。元HTMLへの比較導線と、本文編集ができない変換方式の案内も実表示で確認した。新2件の全操作・印刷・モバイルを実行したという記録ではない。
+
+![原典デザインシステムで制作した図書館案内](assets/ppt-design-system-float-desktop.jpg)
+
+![原典変換器で制作した画像PPTXと発表ノート](assets/html-to-ppt-pdf-float-desktop.jpg)

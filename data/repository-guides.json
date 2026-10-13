@@ -2001,12 +2001,12 @@
   },
   {
     "repository": "wangzan101/html-to-ppt-pdf",
-    "summary_ja": "guizang-ppt-skillのHTML資料を、オフライン発表用PDFおよび画像形式のPPTXへ変換するスキル。",
+    "summary_ja": "既存日本語HTML7ページを、原典CLIで5760×3240の画像PPTX・PDFへ変換。",
     "kind": "general",
     "upstream_commit": "0ce6f66815fc0c0f6de9c976856213a952dfafe6",
     "checked_at": "2026-10-13T13:34:56.898194+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": "MIT",
+    "license": "変換器MIT / 入力HTML・対応ソースAGPL-3.0 / 埋込書体OFL-1.1",
     "license_paths": [
       "LICENSE"
     ],
@@ -2015,32 +2015,92 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/README.md",
-        "bytes": 8657
+        "path": "LICENSE",
+        "sha256": "8f18f1dc9a97ecf8208001c6fc32976187822a2e9c643400ae2ba6f1231a500a",
+        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/LICENSE"
       },
       {
         "path": "SKILL.md",
-        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/SKILL.md",
-        "bytes": 7458
+        "sha256": "01b18e6291aea475fcba82bc741db1e66cd20a578798959376b409ddcc72bf23",
+        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/SKILL.md"
       },
       {
-        "path": "LICENSE",
-        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/LICENSE",
-        "bytes": 1075
+        "path": "README.md",
+        "sha256": "0fcd41cb51fb20e1ff708d7f3000979d4a3267bb0d58b3b0603ae9ecf690bca9",
+        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/README.md"
+      },
+      {
+        "path": "scripts/build.mjs",
+        "sha256": "2406070ed463f60921e260c958de2001f8d1eb177d56ad8a6a8000d6f1ecf6c3",
+        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/scripts/build.mjs"
+      },
+      {
+        "path": "scripts/setup.sh",
+        "sha256": "e422354ef2f020e25809f24504599db2a44490a9cbe9b4a3ff0dcfd4d5bbcb79",
+        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/scripts/setup.sh"
+      },
+      {
+        "path": "scripts/package.json",
+        "sha256": "ba288e1f5ea868884dee0de8ad6cfb7f3c26bc21ab208e2120f1ca7481704484",
+        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/scripts/package.json"
+      },
+      {
+        "path": "scripts/package-lock.json",
+        "sha256": "dc56bd5449e57b3cbc251241ea2335397bf6c6b5393a3827519f7e0076bbc10a",
+        "url": "https://github.com/wangzan101/html-to-ppt-pdf/blob/0ce6f66815fc0c0f6de9c976856213a952dfafe6/scripts/package-lock.json"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "html-to-ppt-pdf"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python 3（再現ラッパー）",
+      "Node.js 22+ / npm / Playwright Chromium",
+      "初回の依存取得にネット接続",
+      "Microsoft PowerPointとPowerShell 7（任意のネイティブ描画確認）"
+    ],
+    "commands": [
+      "python source/reproduce.py --powerpoint",
+      "python source/reproduce-input.py"
+    ],
+    "steps": [
+      "対応する既存Guizang HTMLと依存を保存",
+      "固定lockでnpm ciとChromium導入",
+      "export.htmlで連続操作制限だけを回避",
+      "無改変build.mjsでPNG・PPTX・PDF生成",
+      "後処理で日本語発表ノート追加",
+      "7ページすべてをPowerPoint実描画して比較"
+    ],
+    "limitations": [
+      "各ページは画像1枚。PPTXの本文・図表を個別編集できない。",
+      "PDFもラスタ画像。検索可能な文字・ベクトルPDFではない。",
+      "動きやブラウザの操作UIは静止画像になる。",
+      "既存HTMLからの変換例であり、新しい資料構成の生成ではない。",
+      "原文直入力の初回では2ページ目が重複したため、入力側の操作互換処理を同梱。"
+    ],
+    "forks": [
+      "html-to-ppt-pdf-ja"
+    ],
+    "execution_type": "original_html_screenshot_to_image_pptx_and_pdf",
+    "execution_status": "generated_verified_locally",
+    "case_ids": [
+      "html-to-ppt-pdf"
+    ],
+    "local_changes": [
+      "原典build.mjsは無改変",
+      "image-size 2.0.3のnpm overrideとlock更新",
+      "入力原文を保持したexport.htmlにgo(force:true)のdot互換処理",
+      "日本語ノートを後処理で追加。全slide XML/mediaバイト一致"
+    ],
+    "artifact_paths": [
+      "examples/repositories/html-to-ppt-pdf/deck.pptx",
+      "examples/repositories/html-to-ppt-pdf/deck.pdf"
+    ],
+    "fork": "html-to-ppt-pdf-ja",
+    "method_ja": "原典build.mjsでHTMLを7枚のPNGにしてPPTX・PDFへ梱包",
     "original_description_ja": "guizang-ppt-skillのHTML資料を、オフライン発表用PDFおよび画像形式のPPTXへ変換するスキル。"
   },
   {
@@ -2146,12 +2206,12 @@
   },
   {
     "repository": "att6113/ppt-design-system",
-    "summary_ja": "5種のテーマと10種のレイアウトを備え、HTMLとPPTXの双方を出力できるデザインシステム。",
+    "summary_ja": "原典テンプレートとForest Inkを使った、雨の日の図書館イベント参加案内6ページ。",
     "kind": "general",
     "upstream_commit": "9f39af607ab82da2827530c38b9dc86eb75768ee",
     "checked_at": "2026-10-13T13:35:14.434820+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": "MIT",
+    "license": "MIT（原典。通知同梱）",
     "license_paths": [
       "LICENSE"
     ],
@@ -2160,32 +2220,88 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/README.md",
-        "bytes": 5270
+        "path": "LICENSE",
+        "sha256": "54347aa632ee657a6503beb5feb6fb5b14cc0c456392ddee27397b3538794128",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/LICENSE"
       },
       {
         "path": "SKILL.md",
-        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/SKILL.md",
-        "bytes": 5880
+        "sha256": "25cc3c81d396191203c1473c3b1d26fb5956f693088787fcd4fa1c947482edfd",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/SKILL.md"
       },
       {
-        "path": "LICENSE",
-        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/LICENSE",
-        "bytes": 1064
+        "path": "README.md",
+        "sha256": "53b0cd2735244e479474321f6152892c1ed6f8c41e9a235371c233a7b20ff1a0",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/README.md"
+      },
+      {
+        "path": "assets/template.html",
+        "sha256": "23b8b2bad570219981c523ab21ec019f5a1d4acbb01ae8586955f1de376cb1db",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/assets/template.html"
+      },
+      {
+        "path": "references/themes.md",
+        "sha256": "51ee283801c2d04407f128d770dff8151e81c3740dfce2db34868ea45046d92d",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/themes.md"
+      },
+      {
+        "path": "references/layouts.md",
+        "sha256": "77428e91c428f81da961b21ab809e7c1eb8295e90da81d13c535138fa308e2be",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/layouts.md"
+      },
+      {
+        "path": "references/presets.md",
+        "sha256": "b3666ad80be5275b8ba848e7395176426f4ee1ebcec81c7b538be8c987bbc58b",
+        "url": "https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/presets.md"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "ppt-design-system"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python 3（生成。標準ライブラリのみ）",
+      "Node.js 22+ と Chrome/Edge（任意の描画検証）",
+      "閲覧端末の日本語フォント"
+    ],
+    "commands": [
+      "python source/reproduce.py --input input/data.json --render"
+    ],
+    "steps": [
+      "原典SKILLとテーマ・レイアウトを読む",
+      "input/data.jsonに日本語内容を記入",
+      "原典テンプレートに本文と配色を適用",
+      "ローカルHTTPで原典操作と全ページを確認"
+    ],
+    "limitations": [
+      "実行したのはHTML出力経路。PPTX出力は未検証。",
+      "全6ページを1920×1080で確認。スマートフォン縦画面・印刷は未検証。",
+      "日本語フォントは端末依存。フォントファイルは再配布しない。",
+      "原典にHTML生成CLIはなく、同梱Pythonで原典テンプレートを埋める。",
+      "エージェント確認済み。人による正式採用は未承認。"
+    ],
+    "forks": [
+      "ppt-design-system-ja"
+    ],
+    "execution_type": "original_html_template_theme_and_layouts",
+    "execution_status": "generated_verified_locally",
+    "case_ids": [
+      "ppt-design-system"
+    ],
+    "local_changes": [
+      "Japanese lang and text",
+      "Forest Ink variables from original themes.md",
+      "Local Japanese fonts instead of Google Fonts",
+      "Larger text and equal comparison opacity",
+      "Separate same-origin catalog message bridge"
+    ],
+    "artifact_paths": [
+      "examples/repositories/ppt-design-system/deck.html"
+    ],
+    "fork": "ppt-design-system-ja",
+    "method_ja": "原典HTMLテンプレート・Forest Ink配色・原典ナビゲーション",
     "original_description_ja": "5種のテーマと10種のレイアウトを備え、HTMLとPPTXの双方を出力できるデザインシステム。"
   },
   {
