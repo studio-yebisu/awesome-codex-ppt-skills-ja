@@ -1,0 +1,83 @@
+{
+  "purpose": "初学者が同じ昇順配列1〜15の探索を独習する静的教材。13は線形13回・二分4回、全15ターゲットの最大は15回・4回、秒数と整列コストは未計測と理解できること。",
+  "rubric_overlay": "teaching / instructional",
+  "coverage": {
+    "slides_opened": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "passes": [
+      "content lens (full deck)",
+      "design lens (full deck)",
+      "fresh whole-deck re-pass after slide 3 explanation repair"
+    ],
+    "stats_block_seen": true,
+    "contract_card_seen": "none-declared"
+  },
+  "plan_audit": null,
+  "plan_audit_reason": "Coordinator explicitly declared no full contract card; reviewed pixels, source data, code and selfread/static declaration. No plan compliance or full upstream gate completion is asserted.",
+  "probes": {
+    "per_slide": [
+      {
+        "slide": 1,
+        "first_read": "13回と4回、同じ15要素の配列",
+        "takeaway_guess": "順番の情報を使うと13を調べる回数を減らせる。"
+      },
+      {
+        "slide": 2,
+        "first_read": "先頭から13まで色がついた並び",
+        "takeaway_guess": "左から一つずつ調べると13回かかる。"
+      },
+      {
+        "slide": 3,
+        "first_read": "4行で範囲が狭まり中央8・12・14・13を選ぶ",
+        "takeaway_guess": "目的値と中央の大小を比較して残す側を選ぶ。"
+      },
+      {
+        "slide": 4,
+        "first_read": "増える茶線と4以下を上下する青線",
+        "takeaway_guess": "全ターゲットでも二分探索は最大4回、先頭付近は線形が少ない場合もある。"
+      },
+      {
+        "slide": 5,
+        "first_read": "昇順という前提と未計測の項目",
+        "takeaway_guess": "比較回数だけで実速度や整列の負担は語れない。"
+      }
+    ],
+    "memory_sentence": "並んだ1〜15なら中央から範囲を絞って13へ4回で届き、全15通りでも最大4回。ただし秒数も並べ替えも測っていない。契約カードのメッセージは未提供のため比較していない。"
+  },
+  "verdict": "consent",
+  "ceiling": "最後に「10を探すと中央はどの順？」という一問と答え8→12→10を添えると、読むだけから自分で追える理解へ進める。",
+  "summary": "全15トレースとネイティブチャートの全30値を照合し、13回/4回および最大15回/4回を確認した。初版では第3頁の範囲選択の理由がノートだけだったが、修正版は大小比較と方向を表示し、独習で追える。保守的な静的デザインは目的に適合し、文字欠け・重なり・数値の誤表示は見当たらない。",
+  "strengths": [
+    "同じ配列と同じ目的値を使う比較を維持し、対象条件を変えずに探索方法の違いを説明している。",
+    "第3頁の4段の図がコードの探索範囲と訪問値に一致し、修正後は分岐理由も見える。",
+    "第4頁は全15ターゲットを省略せず、線形のほうが比較の少ない先頭付近も隠さない。",
+    "第5頁は秒数と整列コストの未計測を明示し、比較削減を速度倍率に読み替えない。",
+    "静的・自己学習用として全状態が見え、チャートのマーカー形も系列を区別する。"
+  ],
+  "findings": [
+    {
+      "id": "s3-method-name",
+      "slide": 3,
+      "severity": "minor",
+      "dimension": "teaching terminology / framing",
+      "issue": "第2頁では線形探索と命名する一方、第3頁の図には二分探索という名称がなく、初めて見えるのは次頁の凡例になる。",
+      "why": "初学者が中央を使う図と次頁の二分探索という系列名を結び付けるため、同じ頁で名前も示すとよい。現在の図と修正後の大小比較だけでも手順は理解可能で、出荷を妨げる問題ではない。",
+      "fix": "第3頁の見出しを「二分探索：真ん中で分けると、4回で届く」にするか、図上に小さく「二分探索」を付ける。",
+      "fix_risk": "low"
+    }
+  ],
+  "advisory_dispositions": {
+    "SIZE_SPRAWL": "Minor token variety is accepted for this small example: footer, array glyphs, chart ticks, body and hero values have distinct roles; typography remains legible and coherent in actual render. Optional consolidation of near-equal body sizes is polish.",
+    "CROWDED_slide4": "71% occupancy mainly reflects a large chart; the actual plot, labels and right takeaway have clear gaps. No overlap or reduced evidence legibility observed.",
+    "RAGGED_LEFT_EDGE": "5–10px offsets are visible only at fine inspection and do not confuse grouping; acceptable minor alignment variation.",
+    "NO_ICONS_ON_CATEGORY_CONTENT": "Array values are literal numeric cells whose positions carry the algorithm, not categories needing icons. Adding icons would obscure the teaching representation.",
+    "CJK_LATIN_SPACING": "Numeric labels and Japanese prose have different contexts; reviewed text remains natural Japanese, with no crowded Latin word boundary.",
+    "NO_BUILDS": "selfread/static explicitly declared, so static is correct.",
+    "font_family": "Yu Gothic is explicitly intended; no substitute or decorative type family required for this conservative Japanese teaching example."
+  }
+}

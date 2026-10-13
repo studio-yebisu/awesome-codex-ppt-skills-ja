@@ -197,6 +197,8 @@ def provenance(row):
     inp=local(ROOT,row['input_data'])
     need(data.get('input_sha256') in {sha(inp),canonical(load(inp))},'Provenance input hash absent/stale')
     output=local(ROOT,row['artifact_download'] if row['format']=='pptx' else row['preview'])
+    for asset in data.get('built_assets',[]):
+        need(sha(local(folder,asset['path']))==asset['sha256'],'Built asset hash stale: '+asset['path'])
     if data.get('artifact_sha256'):need(data['artifact_sha256']==sha(output),'Provenance artifact hash stale')
     elif data.get('output'):need(record_path(folder,data['output'])==output,'Provenance output mismatch')
     else:need(False,'No artifact identity in provenance')
@@ -209,7 +211,7 @@ def provenance(row):
                 need(sha(record_path(folder,c['log']))==c.get('log_sha256'),'Generation log hash stale')
                 if c.get('exit_code')!=0:
                     need(any(later.get('argv')==c['argv'] and later.get('exit_code')==0 for later in commands[i+1:]),'Unresolved failed image generation command')
-        elif row.get('editability')=='native_text_shapes_and_bitmap_icons':
+        elif row.get('editability')=='native_text_shapes_and_bitmap_icons' or data.get('execution_type')=='original_deckkit_native_chart_executed_python_traces_powerpoint_render_independent_critic_and_blind_read':
             # Recovered source-image processing and annotation failures remain
             # visible. Require an actual successful receipt and hashed log.
             by_log={c.get('log'):c for c in commands}
@@ -359,7 +361,17 @@ def powerpoint(row):
                     x,y,cx,cy=[int(v) for v in (off.get('x'),off.get('y'),ext.get('cx'),ext.get('cy'))]
                     need(cx>=0 and cy>=0,'Negative shape dimensions')
                     tolerance=91440 # 0.1 inch for intentional border/bleed
-                    need(x>=-tolerance and y>=-tolerance and x+cx<=w+tolerance and y+cy<=h+tolerance,'Shape beyond slide bounds: '+s)
+                    # This pinned SDK deliberately places the semantic screen-reader
+                    # title above the canvas. Its own lint excludes this exact shape.
+                    marker=shape.find('./p:nvSpPr/p:cNvPr',NS)
+                    placeholder=shape.find('./p:nvSpPr/p:nvPr/p:ph',NS)
+                    a11y=(row['repository']=='addsumtech/slides_maker' and
+                          row['upstream_commit']=='3767cc346d63ef1646082c87f15fbf0be582b152' and
+                          marker is not None and marker.get('name')=='deckkit-a11ytitle' and
+                          placeholder is not None and placeholder.get('type')=='title' and
+                          (x,y,cx,cy)==(0,-914400,w,457200))
+                    if a11y:need(''.join(t.text or '' for t in shape.findall('.//a:t',NS))==row['titles'][page],'Semantic accessibility title differs from page title')
+                    else:need(x>=-tolerance and y>=-tolerance and x+cx<=w+tolerance and y+cy<=h+tolerance,'Shape beyond slide bounds: '+s)
         if missing_locales: warn(row['id']+':language', str(len(missing_locales))+' slides omit ja-JP run locale; Japanese text integrity checked, rendered glyph review remains mandatory in QA')
         for s in notes:
             xml=ET.fromstring(z.read(s));body=[]
@@ -438,8 +450,8 @@ def html(row):
     for mime,payload in re.findall(r'data:font/(woff2|woff|ttf|otf);base64,([A-Za-z0-9+/=]+)',doc):
         need(base64.b64decode(payload)[:4]==font_signatures[mime], 'Embedded font MIME/signature mismatch: '+mime)
     if not frozen_bento:
-        need('yebisu-slide' in doc,'Catalog page-control bridge missing')
-        need('e.source!==parent' in doc and 'e.origin!==location.origin' in doc,'Parent message origin/source checks missing')
+        need('yebisu-slide' in runtime,'Catalog page-control bridge missing')
+        need('e.source!==parent' in runtime and 'e.origin!==location.origin' in runtime,'Parent message origin/source checks missing')
 
 
 def archive(row):

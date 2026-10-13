@@ -1,0 +1,708 @@
+{
+  "title": "並べておくと、探し方が変わる",
+  "titles": [
+    "並べておくと、探し方が変わる",
+    "先頭からなら、13まで13回",
+    "真ん中で分けると、4回で届く",
+    "15個すべてで試すと、最大4回",
+    "使える条件も、いっしょに覚える"
+  ],
+  "notes": [
+    "初めて探索を学ぶ人への短い教材です。同じ昇順の配列から、実際にPythonで13を探しました。ここで数える1回は、調べる要素を1つ選んで目的値と比べることです。CPU命令数や秒数ではありません。",
+    "線形探索では先頭から順に値を確認します。目的値が13なら1から13まで調べます。この方法は、データが未整列でも使えます。今回は両方式で同じ配列を使って条件をそろえました。",
+    "二分探索は昇順という前提を利用します。8より大きいので9〜15、12より大きいので13〜15、14より小さいので13だけを残し、次に13を調べて終了します。中央は添字の小さい側へ切り捨てています。",
+    "1から15の全てを目的値にして実行しました。線形探索は先頭の1なら1回、末尾の15なら15回。二分探索は8なら1回で、最多でも4回でした。存在する値だけを探す15通りの比較であり、未発見時や大規模データの計測は含めていません。",
+    "二分探索の前に整列が必要です。今回の実行では初めから昇順の配列を与えたため、並べ替えの手間は計測していません。途中で並びを変えれば前提が崩れます。配列の中央を直接参照できる条件での教材であり、検索回数の減少をそのまま何倍速いと読み替えないでください。"
+  ],
+  "array": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15
+  ],
+  "unit": "訪問した要素数（目的値と照合した回数）",
+  "timing_measured": false,
+  "sorting_cost_measured": false,
+  "traces": [
+    {
+      "target": 1,
+      "linear": {
+        "index": 0,
+        "visited": [
+          1
+        ],
+        "comparisons": 1
+      },
+      "binary": {
+        "index": 0,
+        "visited": [
+          8,
+          4,
+          2,
+          1
+        ],
+        "comparisons": 4,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 1,
+            "high": 7,
+            "mid": 4
+          },
+          {
+            "low": 1,
+            "high": 3,
+            "mid": 2
+          },
+          {
+            "low": 1,
+            "high": 1,
+            "mid": 1
+          }
+        ]
+      }
+    },
+    {
+      "target": 2,
+      "linear": {
+        "index": 1,
+        "visited": [
+          1,
+          2
+        ],
+        "comparisons": 2
+      },
+      "binary": {
+        "index": 1,
+        "visited": [
+          8,
+          4,
+          2
+        ],
+        "comparisons": 3,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 1,
+            "high": 7,
+            "mid": 4
+          },
+          {
+            "low": 1,
+            "high": 3,
+            "mid": 2
+          }
+        ]
+      }
+    },
+    {
+      "target": 3,
+      "linear": {
+        "index": 2,
+        "visited": [
+          1,
+          2,
+          3
+        ],
+        "comparisons": 3
+      },
+      "binary": {
+        "index": 2,
+        "visited": [
+          8,
+          4,
+          2,
+          3
+        ],
+        "comparisons": 4,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 1,
+            "high": 7,
+            "mid": 4
+          },
+          {
+            "low": 1,
+            "high": 3,
+            "mid": 2
+          },
+          {
+            "low": 3,
+            "high": 3,
+            "mid": 3
+          }
+        ]
+      }
+    },
+    {
+      "target": 4,
+      "linear": {
+        "index": 3,
+        "visited": [
+          1,
+          2,
+          3,
+          4
+        ],
+        "comparisons": 4
+      },
+      "binary": {
+        "index": 3,
+        "visited": [
+          8,
+          4
+        ],
+        "comparisons": 2,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 1,
+            "high": 7,
+            "mid": 4
+          }
+        ]
+      }
+    },
+    {
+      "target": 5,
+      "linear": {
+        "index": 4,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "comparisons": 5
+      },
+      "binary": {
+        "index": 4,
+        "visited": [
+          8,
+          4,
+          6,
+          5
+        ],
+        "comparisons": 4,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 1,
+            "high": 7,
+            "mid": 4
+          },
+          {
+            "low": 5,
+            "high": 7,
+            "mid": 6
+          },
+          {
+            "low": 5,
+            "high": 5,
+            "mid": 5
+          }
+        ]
+      }
+    },
+    {
+      "target": 6,
+      "linear": {
+        "index": 5,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "comparisons": 6
+      },
+      "binary": {
+        "index": 5,
+        "visited": [
+          8,
+          4,
+          6
+        ],
+        "comparisons": 3,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 1,
+            "high": 7,
+            "mid": 4
+          },
+          {
+            "low": 5,
+            "high": 7,
+            "mid": 6
+          }
+        ]
+      }
+    },
+    {
+      "target": 7,
+      "linear": {
+        "index": 6,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "comparisons": 7
+      },
+      "binary": {
+        "index": 6,
+        "visited": [
+          8,
+          4,
+          6,
+          7
+        ],
+        "comparisons": 4,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 1,
+            "high": 7,
+            "mid": 4
+          },
+          {
+            "low": 5,
+            "high": 7,
+            "mid": 6
+          },
+          {
+            "low": 7,
+            "high": 7,
+            "mid": 7
+          }
+        ]
+      }
+    },
+    {
+      "target": 8,
+      "linear": {
+        "index": 7,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8
+        ],
+        "comparisons": 8
+      },
+      "binary": {
+        "index": 7,
+        "visited": [
+          8
+        ],
+        "comparisons": 1,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          }
+        ]
+      }
+    },
+    {
+      "target": 9,
+      "linear": {
+        "index": 8,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "comparisons": 9
+      },
+      "binary": {
+        "index": 8,
+        "visited": [
+          8,
+          12,
+          10,
+          9
+        ],
+        "comparisons": 4,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 9,
+            "high": 15,
+            "mid": 12
+          },
+          {
+            "low": 9,
+            "high": 11,
+            "mid": 10
+          },
+          {
+            "low": 9,
+            "high": 9,
+            "mid": 9
+          }
+        ]
+      }
+    },
+    {
+      "target": 10,
+      "linear": {
+        "index": 9,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "comparisons": 10
+      },
+      "binary": {
+        "index": 9,
+        "visited": [
+          8,
+          12,
+          10
+        ],
+        "comparisons": 3,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 9,
+            "high": 15,
+            "mid": 12
+          },
+          {
+            "low": 9,
+            "high": 11,
+            "mid": 10
+          }
+        ]
+      }
+    },
+    {
+      "target": 11,
+      "linear": {
+        "index": 10,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "comparisons": 11
+      },
+      "binary": {
+        "index": 10,
+        "visited": [
+          8,
+          12,
+          10,
+          11
+        ],
+        "comparisons": 4,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 9,
+            "high": 15,
+            "mid": 12
+          },
+          {
+            "low": 9,
+            "high": 11,
+            "mid": 10
+          },
+          {
+            "low": 11,
+            "high": 11,
+            "mid": 11
+          }
+        ]
+      }
+    },
+    {
+      "target": 12,
+      "linear": {
+        "index": 11,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12
+        ],
+        "comparisons": 12
+      },
+      "binary": {
+        "index": 11,
+        "visited": [
+          8,
+          12
+        ],
+        "comparisons": 2,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 9,
+            "high": 15,
+            "mid": 12
+          }
+        ]
+      }
+    },
+    {
+      "target": 13,
+      "linear": {
+        "index": 12,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13
+        ],
+        "comparisons": 13
+      },
+      "binary": {
+        "index": 12,
+        "visited": [
+          8,
+          12,
+          14,
+          13
+        ],
+        "comparisons": 4,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 9,
+            "high": 15,
+            "mid": 12
+          },
+          {
+            "low": 13,
+            "high": 15,
+            "mid": 14
+          },
+          {
+            "low": 13,
+            "high": 13,
+            "mid": 13
+          }
+        ]
+      }
+    },
+    {
+      "target": 14,
+      "linear": {
+        "index": 13,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "comparisons": 14
+      },
+      "binary": {
+        "index": 13,
+        "visited": [
+          8,
+          12,
+          14
+        ],
+        "comparisons": 3,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 9,
+            "high": 15,
+            "mid": 12
+          },
+          {
+            "low": 13,
+            "high": 15,
+            "mid": 14
+          }
+        ]
+      }
+    },
+    {
+      "target": 15,
+      "linear": {
+        "index": 14,
+        "visited": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ],
+        "comparisons": 15
+      },
+      "binary": {
+        "index": 14,
+        "visited": [
+          8,
+          12,
+          14,
+          15
+        ],
+        "comparisons": 4,
+        "steps": [
+          {
+            "low": 1,
+            "high": 15,
+            "mid": 8
+          },
+          {
+            "low": 9,
+            "high": 15,
+            "mid": 12
+          },
+          {
+            "low": 13,
+            "high": 15,
+            "mid": 14
+          },
+          {
+            "low": 15,
+            "high": 15,
+            "mid": 15
+          }
+        ]
+      }
+    }
+  ]
+}

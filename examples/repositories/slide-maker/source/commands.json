@@ -1,0 +1,146 @@
+[
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\sigs.py",
+      "blank_deck",
+      "add_slide",
+      "text",
+      "box",
+      "native_chart",
+      "title_bar",
+      "footer",
+      "takeaway_rail",
+      "a11y_title",
+      "declare_delivery",
+      "--full"
+    ],
+    "exit_code": 0,
+    "log": "source/logs/helper-signatures.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\lint_deck.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
+      "--json",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\lint.json"
+    ],
+    "exit_code": 0,
+    "log": "source/logs/lint.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\trace_composed.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
+      "--source",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\input\\data.json"
+    ],
+    "exit_code": 0,
+    "log": "source/logs/trace-composed.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
+      "--gate-check"
+    ],
+    "exit_code": 1,
+    "log": "source/logs/gate-check.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\source\\build_slide_maker_repository_example.py",
+      "--upstream-dir",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\source\\upstream",
+      "--output-dir",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-replay"
+    ],
+    "exit_code": 0,
+    "log": "source/logs/replay.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\arc_divergence.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\design\\arc-candidates.json"
+    ],
+    "exit_code": 0,
+    "log": "source/logs/arc-comparison.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\validate_review.py",
+      "critic",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\critic-round1.json",
+      "--record",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker"
+    ],
+    "exit_code": 0,
+    "log": "source/logs/critic-record.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\blind_read.py",
+      "compare",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker",
+      "--render-dir",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-blind",
+      "--answers",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\blind-answers.json",
+      "--write"
+    ],
+    "exit_code": 1,
+    "log": "source/logs/blind-compare.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
+      "--gate-check"
+    ],
+    "exit_code": 1,
+    "log": "source/logs/gate-check-supplemental.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\directions_diversity.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\design\\directions.json"
+    ],
+    "exit_code": 0,
+    "log": "source/logs/direction-diversity.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\blind_read.py",
+      "compare",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker",
+      "--render-dir",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-blind",
+      "--answers",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\blind-answers.json",
+      "--write"
+    ],
+    "exit_code": 1,
+    "log": "source/logs/blind-compare-classified.log"
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
+      "--gate-check"
+    ],
+    "exit_code": 0,
+    "log": "source/logs/gate-check-resolved.log",
+    "executed_at": "2026-10-13T19:27:41.230002+00:00"
+  }
+]

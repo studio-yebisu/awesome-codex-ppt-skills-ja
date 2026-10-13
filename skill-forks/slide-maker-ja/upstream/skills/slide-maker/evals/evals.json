@@ -1,0 +1,133 @@
+{
+  "_comment": [
+    "Evals for the slide-maker SKILL — not for its scripts. The 20 test suites in tests/ all ask",
+    "'does this code work'. Nothing asked 'do these 2109 lines of SKILL.md, 35 references and 5",
+    "agents make the DECK better', so every claim that a change improved the skill has been an",
+    "impression. The repo's own CLAUDE.md says it outright: a lossless refactor can score",
+    "2298/2298 and still degrade the skill, because the regression is in WHEN content reaches",
+    "context, not whether it survives — and the only real test is running it end to end and",
+    "looking at what the output is missing.",
+    "",
+    "Two things this deliberately does NOT do. It does not score taste (no LLM judge, no",
+    "aesthetic composite — that path was examined and rejected: reference similarity rewards",
+    "imitation and closed-form beauty scores fight this skill's own diversity gates). And it does",
+    "not run in PR CI: a run builds a real deck, which is minutes and real tokens.",
+    "",
+    "`reference_reached` is the assertion this file exists for. It answers the one question that",
+    "has burned this repo twice — 'was that reference actually READ during the run' — and it can",
+    "only be answered from a transcript, never from the artifact.",
+    "",
+    "SCENARIO SELECTION. The later scenarios are chosen by BLIND SPOT, not to reach a count. Each",
+    "sits on a defect class this repo has actually shipped and that every existing gate passed",
+    "clean — CJK faces, signed native charts, non-16:9 canvases — and each carries an assertion",
+    "that did not exist before it. That is the test of whether a scenario earns its place: one",
+    "that only re-runs the assertions the earlier scenarios already run measures nothing new, and",
+    "twenty of those are not broader coverage, they are a longer bill.",
+    "",
+    "TWO MORE ARE WANTED AND ARE DELIBERATELY ABSENT: template replication and old-deck",
+    "restructuring. Both need an INPUT artifact (a .pptx to mimic or to rebuild), and this file has",
+    "no mechanism to ship or locate one. An eval whose input does not exist is not reproducible,",
+    "and writing it down anyway would inflate the count while measuring nothing. Building that",
+    "mechanism is the next piece of work — not a line in this file."
+  ],
+  "evals": [
+    {
+      "id": "happy-source-provided",
+      "prompt": "我们有一篇做好的论文要在 ISMRM 上做约 10 分钟的口头报告，帮我做演讲幻灯片。论文要点：提出一种基于隐式神经表示（INR）的动态心脏 MRI 重建方法；在 8 倍加速下相比 L+S 基线，PSNR 提升约 2.1 dB、SSIM 达 0.94；消融实验显示时间正则项是关键。我有方法框架图和一张重建对比图可以用。",
+      "expected": "Interview first (confirm ISMRM track/format, then web-research the venue's rules/aspect/template + style); build a ~6-9 slide talk that reuses the user's two provided figures WHOLE and stays strictly faithful to the given numbers (2.1 dB / 0.94 / time-reg ablation, no invention); run the critic loop to consent.",
+      "assertions": [
+        {"kind": "pptx_exists"},
+        {"kind": "slides_between", "lo": 6, "hi": 12},
+        {"kind": "lint_hard_clean"},
+        {"kind": "gates_present", "keys": ["critic", "design_plan", "delivery"]},
+        {"kind": "text_contains", "values": ["2.1", "0.94"],
+         "why": "the two numbers the user supplied must survive onto the slides verbatim"},
+        {"kind": "no_unsourced_numbers", "allow": ["2.1", "0.94", "8"],
+         "why": "any other figure on a slide was invented — the fidelity floor, mechanised"},
+        {"kind": "notes_coverage", "min_share": 0.8,
+         "why": "a presented deck puts the sentences in the notes, not on the slide"},
+        {"kind": "reference_reached", "paths": ["references/design-principles.md"],
+         "why": "the craft reference the build is supposed to design against"}
+      ]
+    },
+    {
+      "id": "ambiguous-purpose",
+      "prompt": "make me some slides about our Q3 results for the leadership team",
+      "expected": "Identifies purpose = exec/stakeholder readout; interviews (template/source/style); leads with outcome+ask, crisp corporate design (design-by-purpose); critic loop.",
+      "assertions": [
+        {"kind": "pptx_exists"},
+        {"kind": "lint_hard_clean"},
+        {"kind": "gates_present", "keys": ["critic", "design_plan"]},
+        {"kind": "reference_reached", "paths": ["references/interview-protocol.md"],
+         "why": "an under-specified ask is exactly where the interview must not be skipped"}
+      ]
+    },
+    {
+      "id": "no-source",
+      "prompt": "make a teaching deck on diffusion models, no materials, in English",
+      "expected": "No-source branch: drafts outline, web-searches to fact-check incl. current-date grounding, confirms outline; teaching rubric (objectives→build→recap); minimal/diagram-heavy.",
+      "assertions": [
+        {"kind": "pptx_exists"},
+        {"kind": "lint_hard_clean"},
+        {"kind": "gates_present", "keys": ["critic", "design_plan", "provenance"],
+         "why": "a no-source deck is research-sourced, so the PRIMARY-SOURCE GATE owes a record"},
+        {"kind": "text_absent", "values": ["placeholder", "TODO", "AI-generated", "Lorem"],
+         "why": "build residue on a slide ships broken"}
+      ]
+    },
+
+    {
+      "id": "cjk-thesis-defense",
+      "prompt": "我下周要做硕士论文答辩，20 分钟，评审是三位磁共振方向的老师。论文做的是心脏 4D flow MRI 的加速重建：提出一个时空联合的低秩加正则方法，在 12 倍加速下相比 compressed sensing 基线，流速峰值误差从 8.4% 降到 3.1%，重建时间从 6 分钟降到 52 秒。有方法框架图和一张流场对比图。请做答辩幻灯片，中文。",
+      "expected": "Chinese-language defense deck: interview first, defense rubric (contribution → method → validation → limitations → Q&A backup), the user's two figures reused whole, strictly the given numbers. Every CJK run must declare an East-Asian face.",
+      "assertions": [
+        {"kind": "pptx_exists"},
+        {"kind": "lint_hard_clean"},
+        {"kind": "cjk_runs_have_ea_face",
+         "why": "PowerPoint picks the CJK face from <a:ea>, not <a:latin>. A run that sets only the Latin face renders Chinese through a host substitution — a different face, a different width, and tofu on a machine without the fallback. This repo already shipped a geometry bug from the same asymmetry (every width measured against <a:latin> while the glyphs came from <a:ea>, under-reporting Chinese by ~46%), and no lint here reads the file for it."},
+        {"kind": "text_contains", "values": ["8.4", "3.1", "52"],
+         "why": "the three numbers the user supplied must survive onto the slides verbatim"},
+        {"kind": "no_unsourced_numbers", "allow": ["8.4", "3.1", "52", "12", "6", "20", "4"],
+         "why": "any other figure on a slide was invented — the fidelity floor, mechanised"},
+        {"kind": "gates_present", "keys": ["critic", "design_plan"]},
+        {"kind": "reference_reached", "paths": ["references/multilingual.md"],
+         "why": "the CJK type rules live there, and a Chinese deck built without opening them is the run this scenario exists to catch"}
+      ]
+    },
+
+    {
+      "id": "signed-financial-data",
+      "prompt": "Make a 6-slide deck for our board on FY25 segment performance. Revenue by segment vs last year: Cloud +18.2%, Services +4.6%, Hardware -11.9%, Licensing -3.4%. Group operating margin went from 12.1% to 9.7%. Free cash flow was -$42M in H1 and +$61M in H2. The ask is approval to shift 15 headcount from Hardware to Cloud.",
+      "expected": "Exec readout: leads with the outcome and the ask, then justifies. The signed series (two negative growth rates, a negative H1 cash flow) must NOT be drawn as a native bar/column chart.",
+      "assertions": [
+        {"kind": "pptx_exists"},
+        {"kind": "slides_between", "lo": 5, "hi": 8},
+        {"kind": "lint_hard_clean"},
+        {"kind": "no_signed_native_bars",
+         "why": "LibreOffice renders a negative column at its ABSOLUTE height, so a -11.9% bar comes out looking exactly like +11.9%. The .pptx is correct, so every check that reads the deck passes; the render is a plausible chart pointing the wrong way, so every check that reads the PNG passes too. This is the one defect class in this repo with no gate at all, and a board deck reading a decline as growth is the worst case it has."},
+        {"kind": "text_contains", "values": ["18.2", "11.9", "9.7"],
+         "why": "the supplied figures, including the negative ones, must reach the slides"},
+        {"kind": "gates_present", "keys": ["critic", "design_plan"]},
+        {"kind": "reference_reached", "paths": ["references/data-viz.md"],
+         "why": "which chart type, and native-vs-raster, is decided there — and native-vs-raster is exactly what this scenario turns on"}
+      ]
+    },
+
+    {
+      "id": "non-16-9-portrait",
+      "prompt": "帮我做一组小红书图文，讲「为什么心脏 MRI 要做加速采集」，5 张卡片，面向没有医学背景的读者。",
+      "expected": "Portrait 3:4 social cards on the `red` format (7.5 x 10 in), not a 16:9 deck exported sideways: one idea per card, big type, self-read density, the format's safe_top/safe_bottom respected.",
+      "assertions": [
+        {"kind": "pptx_exists"},
+        {"kind": "canvas_is", "w_in": 7.5, "h_in": 10.0,
+         "why": "the whole scenario. Every other canvas assertion in this file is implicitly 16:9, so a pipeline that silently builds 10x5.625 and calls it a 小红书 note passes every existing eval — the format registry exists and nothing tested that it is ever reached."},
+        {"kind": "slides_between", "lo": 4, "hi": 7},
+        {"kind": "lint_hard_clean"},
+        {"kind": "cjk_runs_have_ea_face",
+         "why": "same East-Asian face rule; this one also checks it survives the non-default canvas path"},
+        {"kind": "reference_reached", "paths": ["references/canvas-formats.md"],
+         "why": "the per-surface layout DNA — a portrait card is not a wide slide with a different aspect, and this is where that is written"}
+      ]
+    }
+  ]
+}

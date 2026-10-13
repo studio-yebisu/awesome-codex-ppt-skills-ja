@@ -1,0 +1,110 @@
+# Handoff checklist
+
+## The hand-off note — what it must carry
+
+**Keep the hand-off minimal — caveats + next steps, not a recap.** The note should carry only what
+the user *acts on*: the folder path, the open-the-pptx check, the font/portability caveat, any
+forward-looking content you added, open questions (e.g. a missing real brand asset to supply) —
+**plus, when they apply, these REQUIRED-by-their-owning-rule lines (this list is the ONE
+authoritative hand-off checklist; the owning rules point here):** the `provenance: N checked · N
+confirmed · N fixed · N cut` line (research-sourced decks — the PRIMARY-SOURCE GATE's artifact;
+when the user answered `none` at the post-build question it reads
+`provenance: skipped — user declined post-build review`, never a tally that implies it ran), the
+**capability ledger** (the four host lines from Step 0, plus what was LOST wherever a
+capability was absent — a degraded run must be legible as degraded), the
+**`review:` line** (the tier that ran plus HOW it was reached at the post-build question —
+`fast (post-build default — user confirmed)` / `standard (user chose — defense deck)` /
+`fast (post-build default — auto)` / `none (user declined with the deck visible — user-waived)`) and the **`cost:` line** (subagents · tokens · wall-clock · **web searches planned/spent** · **round-trips**). Searches belong on this line because the cap is per SESSION and shared with every subagent: the deck that exhausts it is rarely the deck that suffers, so the only way the number ever becomes visible is if each deck reports what it took. **Round-trips belong on it for the opposite reason — they are the term that multiplies by context and therefore sets the wall clock, and they are the one number nobody can estimate by feel.** 🔴 **Measure them, never recall them: `python3 scripts/roundtrip_budget.py --slides <N>` reads the session transcript and prints the `cost:` line ready to paste**, together with any over-budget notes (a batching ratio near 1.00, slide PNGs read one message at a time). Paste its notes too when it flags something — a run that cost four times its budget and says nothing has taught the user nothing. The script is a reporter and never fails a build; if it cannot find the transcript, write `round-trips: not measured (<reason>)` rather than a guess. The
+cost line is not bookkeeping: a dial the user sets but never sees the bill for builds no
+intuition, so the next deck's choice is as blind as the last one's. Report both even when the
+tier was derived rather than chosen. Then, as before: **`render_deck.py <deck>.pptx --gate-check` run and reported** (every hand-off gate, no render, under a second — run it whether or not the user wants the PDF, because the gates used to ride on `--deliverables` and that is a decline-able offer), the
+**`.deck-gates.json` written at the deck root** (the record `--deliverables` checks: critic verdict,
+the design plan's **boldness · signature_move · carried_by · form_ledger · icon_family · palette ·
+type_scale · signature_proof · style_pick** — all nine (on `boldness: conservative` with a recorded
+`deliberately restrained:` move, `signature_proof` drops and the other eight still bind; `style_pick`
+is the TOPIC-adapted look choice — `<preset|bespoke> for <domain> · beat <rival> · anti-pick avoided:
+<cliché>`, or `n/a — <locked look>`, `references/design-by-topic.md`);
+`icon_family` was added because a deck shipped with ZERO icons through every automated gate,
+`palette` after contrast failures inside one deck, and `type_scale`/`signature_proof` because
+they had been gated on the Codex path only — and the provenance pass's
+per-claim `claims` list, never a summary tally — or, for any gate deliberately skipped, a written
+`waived` reason — and for the CRITIC gate specifically, **plus its `waived_category`**
+(`no-dispatch-on-host` — which also requires `inline_ran: true|false` —
+`already-reviewed-minor-edit`, `user-waived`, `external-deck`, and `cap-reached-majors-open` —
+which also requires a non-empty `open: [...]` plus `surfaced_to_user: true|false`, and is the one
+to use whenever the loop RAN and did not converge, since the other four all claim it was skipped);
+an unclassified CRITIC waiver is
+rejected, because it is indistinguishable from never having run the loop. The `design_plan`,
+`provenance` and `density` waivers take a written reason only. The
+`critic` block on the CONSENT path is written by `validate_review.py … --record <deck-dir>` from the
+review itself, never typed here; a waiver is always hand-written, which is why it must be
+classified), the
+per-slide **click order** (appear-builds opted in), **image licenses/credits** (sourced photos —
+`fetch_images.py ledger <assets> --credits` prints them, and `check_image_provenance.py` fails the
+hand-off if an attribution-required photo is credited nowhere on the slides), the
+**GIF plays-in-slideshow** note (embedded GIFs), **accepted advisories** one plain-language line
+each, the **`distinctiveness:` line whenever Step 5's bold/experimental escalation fired**
+(`user waived (bold)` or `resolved in round N` — without it, "they accepted it" and "I never asked"
+are indistinguishable afterwards), and on an auto-waiver deck the **delegated-picks recap** the user
+reacts to at hand-off — and —
+optional, exactly one sentence — the critic's `ceiling`, verbatim, as one *"if you want to push it
+further:"* line (the terminal consent's recorded headroom; if the user adopts it, it flows through
+the normal post-delivery feedback loop). Two taste-ecosystem lines ride the same note when they
+apply (`references/user-taste.md`): **(a) the save-this-look offer** — for a freshly-designed look
+(Q1 branch (c), either sub-path) not yet registered, one line: *"save this look to your registry as
+<name>?"*; on an **explicit yes** run **`python3 scripts/save_register.py <deck-dir>`** — it appends
+the register itself (palette, the hues that reached the pixels, the signature move, what the motif
+generates, which slides carry it) to `<registry root>/registers.md`, reading every field out of
+`.deck-gates.json` so nothing is re-described and nothing is re-decided at hand-off — and persist the
+deck's `style.py` + a `profile.md` per the existing registry conventions, distilling the final round's critic `strengths` and any cross-round recurring
+finding dimensions into the profile's existing **Notes** field (hand-off, after the critic loop, is
+when the profile can carry what the vetted deck *proved* — this is collaborative mode's Gate A 7(b)
+persist, re-timed: one save, one owner); **skip the offer entirely under a per-deck auto directive**
+— never an un-consented registry write; **(b) the taste write-back FYI** — whenever the Step-6 close
+below wrote anything to `taste.md`, one line: *"recorded to your taste profile: <X> — say the word
+and I'll drop it"* (visibility + easy veto is what keeps a memory trustworthy). Do
+**not** narrate the deck slide-by-slide, restate what they can see in the render, or self-praise the
+result — a tight hand-off respects their time and reads as senior.
+
+🔴 **Name every file you parked, including the two nobody expects.** `--deliverables` writes
+`<deck>.pdf` **re-exported for accessibility** (PDF/UA, so the alt text the a11y gate demanded is
+in the file a reader receives — the plain export carried none) and, when the deck has notes,
+`<deck>-notes.pdf`, the **speaker handout**: one page per slide, the slide above its own notes, to
+rehearse from and to hand out. A deliverable the user is not told about is one they never open.
+
+🔴 **Report the COVERAGE line, not just the pass.** The gate run ends with
+`COVERAGE: N section(s) ran — X bound, Y NOT CHECKED`. If anything was not checked, say which and
+why in one clause — "the talk-time gate was silent because no time budget was recorded" is a
+sentence the user can act on, and "all gates pass" on its own hides it.
+
+## Speaker notes, editability, and iterating after delivery
+
+**If the deck has speaker notes, tell them how to use the notes.** They render nowhere on
+the slide, so the user may not know they exist: "the spoken script is in the notes — open
+**Presenter View** (PowerPoint: Slide Show → Presenter View; Keynote: Play with a second
+display / rehearse mode) to see it while presenting." Offer to **export the notes** as a
+plain-text rehearsal script with `scripts/export_notes.py deck.pptx` if they'd rather
+rehearse away from the slides.
+
+**Tell them the deck is fully editable — and how to change it without losing work.**
+The `.pptx` is native (real text/shapes/images), so they can edit anything in
+PowerPoint/Keynote and save. But the build script *regenerates the file from scratch*,
+so a later rebuild would overwrite anything they hand-edited — the two don't merge. So
+give them the two non-conflicting lanes in one line: **(a)** take it from here in
+PowerPoint themselves (you won't rebuild over their file), or **(b)** tell you the
+changes and you edit the build script (reproducible, survives future iterations). Note
+the font/portability caveat if relevant. Full guidance — and the rule for iterating
+safely — is in `references/handoff-and-iteration.md`.
+
+Then **fold in the user's feedback** — treat their corrections as the highest-priority
+signal, re-run the build → render → critic loop, and keep going until **the user is
+satisfied**. **One safety rule when iterating after delivery:** before you re-run the
+build, check whether the user has hand-edited the delivered file (ask, or compare its
+mtime to your last build); if they have, **don't regenerate over it** — reconcile first
+(fold their edits back into the script via `scripts/extract_deck.py`, or edit their file
+in place). Never silently clobber edits you didn't make. Each round should make the deck
+more specifically theirs (their emphasis, their wording, their priorities), not just
+generically "better". On each user-feedback round, add one **`user-dials:`** line to the round
+record — `dimension → direction, layer — "verbatim user words"` (e.g. `colour: +vivid, content
+layer — "太素了"`) — WHY the round happened is the datum the taste profile promotes from, and the
+evidence the pendulum-overshoot check cites (`references/handoff-and-iteration.md` "Move the dial").

@@ -1,0 +1,871 @@
+{
+  "repository": "code-on-sunday/slide-deck-generator",
+  "commit": "a6369f31b0cc4dd5830796455326777a8fe4c7c6",
+  "scope": "Japanese entrypoint, repository-specific refinements, original source and actual production recipe",
+  "example_ids": [
+    "react-slide-deck"
+  ],
+  "upstream_preserved": true,
+  "proprietary_export_engine_included": null,
+  "files": [
+    {
+      "path": "references/example-source/build_reactdeck_repository_example.py",
+      "sha256": "d06223eeb1a095d1c264fd591987d306d4236d21e672b471ad4d9da5efef6c83"
+    },
+    {
+      "path": "references/recipe.json",
+      "sha256": "c917358c3fa668b91e4bb1795b21a7be5fedd6f309bea8ef2f98754cb2730dd2"
+    },
+    {
+      "path": "references/WORKFLOW.md",
+      "sha256": "15b59f1874efc5e5ba0cc84959d25f5085eadea1a70eb2b24d4fc58a7584010c"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "ebc365349b5aaafef7c0adc9fc04854af0b15ac5771a33aa1b29bf3bec15bec9"
+    },
+    {
+      "path": "upstream/ACQUISITION.json",
+      "sha256": "54de20418763985f3f7c9749f065f0cd2923dedd2e58cb42899c9ef1c870e743"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/eslint.config.js",
+      "sha256": "4efe97b16d1200fac0eaf07aa00930a8668b1f96a0be1891ace8c1e712ff0ccb"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/index.html",
+      "sha256": "71134480dcd8ab6bcbf98edfaef34e62730f9e76681056cce9131641535d6393"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/package-lock.json",
+      "sha256": "b95ec0e50a9a719e451294eab91c18f13a9282a16e3b0a4042e835af0ad117b8"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/package.json",
+      "sha256": "32f26d1a7e74611a01451c641ff4eaf334bcb4c9b6109a87545f8de76e7a342b"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/README.md",
+      "sha256": "8dc9e0ee2281acb3324624fbe6eb7e1377cc626f616ea4dc90e3a90ae094374d"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/App.tsx",
+      "sha256": "d17822a64a5169faf3542ec55a9fb9759fc1990971db2f30219cb90ad1a2593b"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/assets/react.svg",
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/assets/vite.svg",
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/components/SlideLayout.tsx",
+      "sha256": "620ada9fa2bd4a00c7e5c665df6ae2e0d39e76ab7b8693586d91bba4b51410e8"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/index.css",
+      "sha256": "6e6aaa6918951afcc4d3ef214f43cc85a5ed8b716120e51f11b0c2c11513b09a"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/lib/animations.ts",
+      "sha256": "4b2b58adc4837aef58e24846c67095caaadd480760d8f9b4028a31415cb2593f"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/lib/theme.ts",
+      "sha256": "b8422d5f81286f21e032a1a6122f3214c73ad06e126ebf9a8013c0f893321f8f"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/lib/useSlideScale.ts",
+      "sha256": "fc865989000a94acd2f5baa5b6cb7fe01856808eed49f0213f34fd0af1e5d042"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/main.tsx",
+      "sha256": "6e9e5807fcbd48b75a96db5cbef36c996262196be42e6d4760dc86babbe61ad2"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/01-title.tsx",
+      "sha256": "0bb95adbacb9e71c027ad30e89aedda523e68dc00698ad5e7a2b22ed5cb8bd39"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/02-problem.tsx",
+      "sha256": "81b9d109e38dcf9765ad18607c716a2bc6adde9c843b1cdd25f7ac47d7377c65"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/03-what-if.tsx",
+      "sha256": "ce6aee146a2d554fe7b8b3b55eaec46b473efa69f521805e9c3863260bcd842f"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/04-what-is-skill.tsx",
+      "sha256": "1bbfc9189e03299781013d52d8f23c4ecf8fce847ef9d0b0b93a07d0daeb0287"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/05-how-skills-work.tsx",
+      "sha256": "365c1fc52316578e1b65306829ff9640a987701d5fd7ca4a25c0c114051ebf1a"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/06-anatomy.tsx",
+      "sha256": "51002121bfee597acbfcabf2543333b35511aa203596b3191e9bcff611734d0b"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/07-trigger-system.tsx",
+      "sha256": "bf9012b78332b301ad57ba4c2b8db1aa31c0e1d5a1ff8c2eee780357da7d2602"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/08-builtin-vs-custom.tsx",
+      "sha256": "5a50bc81eb5973fb7d4c9e37d5aab6cc4a9531d4c59be89803f00c4cb0beb2a7"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/09-creating-first.tsx",
+      "sha256": "6cd634b6b1c9ec073d5c1c48a607f7a06b736092d979abcdea45b8710fc79c00"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/10-example-slides.tsx",
+      "sha256": "e8b3ac8ad52f1f36528771f1682e465baab9839bfa033f014c7749379624edb4"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/11-example-screenshots.tsx",
+      "sha256": "44ec6ca3ff54bba5fd772be5d11f18cfd6fa186022538d88f4e68c3f0ea5bf1a"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/12-sharing.tsx",
+      "sha256": "c3a5b72e07186a4488fe912a2265e63f90d408af2942364df2dd5072d52ffbd3"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/13-best-practices.tsx",
+      "sha256": "d8efd351f40082d1e9f56ec7134a6560f19599235e3a41430cb87aecb8555071"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/14-takeaway.tsx",
+      "sha256": "68297e8efa62aca975abb280ca54db4055f2bd1a043b88094bde747aad850a3b"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/15-getting-started.tsx",
+      "sha256": "67e1f513853f883d252705bfdb38caf85508188b91372d4b316852b38f8752b8"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/src/slides/index.ts",
+      "sha256": "d73be1298624574356692afa2e5c0240960c9e0060a3f593c278653e40dc75c4"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/tsconfig.app.json",
+      "sha256": "aa9e68711a716c499b5730aa6664cab7e6a2cb65e9924252cefe2135a4724112"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/tsconfig.json",
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/tsconfig.node.json",
+      "sha256": "c3dd0fb522feba3596713f51b95bd53d781d845d24aedbfa2ac093d8b39c5120"
+    },
+    {
+      "path": "upstream/examples/en-claude-code-skills/vite.config.ts",
+      "sha256": "7b2f3df3a3c90bec9f60a7eeb43d316fda4646976376bba81a90e9ba340292c0"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/eslint.config.js",
+      "sha256": "4efe97b16d1200fac0eaf07aa00930a8668b1f96a0be1891ace8c1e712ff0ccb"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/index.html",
+      "sha256": "57d19f67d1c43802f01caf41ae55aa89b9a427d5e8f255e63cdf865422e94e5b"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/package-lock.json",
+      "sha256": "f39538276d1b8020a69c7e82ccf753cf972272e65f275ce91441df12806ca503"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/package.json",
+      "sha256": "106ec62e82bf2f92a0f0afb1e453a3abe85a72b0118523276a385bb89ae5d20b"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/README.md",
+      "sha256": "8dc9e0ee2281acb3324624fbe6eb7e1377cc626f616ea4dc90e3a90ae094374d"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/App.css",
+      "sha256": "6e25a776d3e8102da5bacb3cb99f4a5fc662a2e01e6143140671a556d28c3d5c"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/App.tsx",
+      "sha256": "367ad8a6f09d1278310f0d20cce0ad71f24c374cf1b01d1b3417aacf773a5019"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/assets/react.svg",
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/assets/vite.svg",
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/components/SlideLayout.tsx",
+      "sha256": "9629dbee11f4557403c0f627978a76e0fb5dd29517f4046928e43fa70d6c3583"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/index.css",
+      "sha256": "e048deae80e7b3e3b1a4df3e64e407e63a76797fbcdce17a840f0d97c044cc14"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/lib/animations.ts",
+      "sha256": "b870a016d6b79c1ae0febad87bfdb3bc862668898f538b9d64e530b0d51b5ce5"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/lib/theme.ts",
+      "sha256": "c6a359d60a8752cb75126f7a2cce835b7d55335778254be3dd5d021ce0972bc8"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/lib/useSlideScale.ts",
+      "sha256": "3621555a3007ce98986413b6a7522f82b44960e5a5b183b2633678ed21f376ea"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/main.tsx",
+      "sha256": "6e9e5807fcbd48b75a96db5cbef36c996262196be42e6d4760dc86babbe61ad2"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/01-title.tsx",
+      "sha256": "217e167e6ba5017e7e3facf6574a2976a133747e93a3b0e560c6d829b8f7609b"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/02-problem.tsx",
+      "sha256": "75bcfee8afd51f8f46eb68ac1f562bb6a81c80703a7a7f35f97012854f7f2a0d"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/03-discussion.tsx",
+      "sha256": "3de90c8d11154779aae6ecbb1bb32adf9ddbb7ef2951e0607d8bff00d1ce47c2"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/04-concept.tsx",
+      "sha256": "e966afba485f02fee5a7dbcb9391bf76ca5723a9faf8fa17d5837e83696fb5bb"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/05-context-window.tsx",
+      "sha256": "76e1009982dc3532012add336ae5ae6bd1296f879c0307b1fb0ebeb7649b3fee"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/06-seven-components.tsx",
+      "sha256": "6f9d8bf9c53184533565b4c18b4b771a1088acfd78a3337475e78055b483b926"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/07-system-vs-user.tsx",
+      "sha256": "b401caa53f4d923fd5f6b6fd3a9cfcd5a4881270d13ca176850b0d2f96aae212"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/08-few-shot.tsx",
+      "sha256": "edb189595780b04d96483cd9b1d570dc3fdd9f5b9c65c90062c60fc80aae9c2e"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/09-rag.tsx",
+      "sha256": "441c952af89affee1f0bab626fbfaf0a3ff097484f369b6713fcadf06dd63504"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/10-tool-use.tsx",
+      "sha256": "b3ad7138fc6d4bcf2f48958ec5081ad1a799aa2763bc896325bea94ffb135a23"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/11-quality-equation.tsx",
+      "sha256": "dbf39accc4759384de586ac9630faff782547b2f8b719badd08b2f93d86f3fc8"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/12-bad-vs-good.tsx",
+      "sha256": "225df87384a47977ca798c50bce11ef0802393a82f5ba37c6b1a19a9a62baff0"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/13-coding-assistant.tsx",
+      "sha256": "29d8cce51990dbe6e6aef3738fe775dc5d5235eee71f25975ccd1e85c1b84275"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/14-takeaway.tsx",
+      "sha256": "b526297224eb10bb2639dfb89b4827b8f3083ca2a2bdb43a3a3711ca27e1d892"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/15-resources.tsx",
+      "sha256": "754bd795978dda59151309298106c681ab387333e755a96bec5d54075220dfc2"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/src/slides/index.ts",
+      "sha256": "06985ff5e797b4eb3c498d666c935a1d2b3fbb90ee8a119897a297a4e02b154e"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/tsconfig.app.json",
+      "sha256": "aa9e68711a716c499b5730aa6664cab7e6a2cb65e9924252cefe2135a4724112"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/tsconfig.json",
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/tsconfig.node.json",
+      "sha256": "c3dd0fb522feba3596713f51b95bd53d781d845d24aedbfa2ac093d8b39c5120"
+    },
+    {
+      "path": "upstream/examples/en-context-engineering/vite.config.ts",
+      "sha256": "7b2f3df3a3c90bec9f60a7eeb43d316fda4646976376bba81a90e9ba340292c0"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/eslint.config.js",
+      "sha256": "4efe97b16d1200fac0eaf07aa00930a8668b1f96a0be1891ace8c1e712ff0ccb"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/index.html",
+      "sha256": "b69794fda3e5d69cc5e9f6ea40d8f1e5eba1b55ed0c814e3e2f5260dff78fd11"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/package-lock.json",
+      "sha256": "c7211c20a15265377f6b98d40dba8ac4451f0fd3bbe438e18234b0d183373a45"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/package.json",
+      "sha256": "2d5aee800164cbbe83f34b0a7c902f6ddae9485d2763e7f5310cd7bdf302f3d2"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/README.md",
+      "sha256": "8dc9e0ee2281acb3324624fbe6eb7e1377cc626f616ea4dc90e3a90ae094374d"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/App.tsx",
+      "sha256": "f083a0e7ae648472ccb9661747384c0120585964da2568670303c0e46a7d5937"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/assets/react.svg",
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/assets/vite.svg",
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/components/SlideLayout.tsx",
+      "sha256": "82e500d07f378abb7bb17bb503673e987f5937dd6b6ae9ff7cb0f6ebe614fccc"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/index.css",
+      "sha256": "bfa174a5dc33b895bd6b9fc21c72c978640a4ae08d16b7648aa8531edaf1a671"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/lib/animations.ts",
+      "sha256": "4d9b20ae9d64b541dbba8cc6dee6e94a8b16b91ef9d4fc5a5bc262251b52d0b9"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/lib/theme.ts",
+      "sha256": "deada61c91b0dda430270d6bac889482a7509c7c9aba5f9f89ea3c7a7a2456b5"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/lib/useSlideScale.ts",
+      "sha256": "9fc2e5fe070ae1dc23a975bdc4bd3b3b2e5f1b459e751ac7be1f259400475938"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/main.tsx",
+      "sha256": "6e9e5807fcbd48b75a96db5cbef36c996262196be42e6d4760dc86babbe61ad2"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/01-title.tsx",
+      "sha256": "5be682343c30a27f67770a073703b9082df83cdf8074b6018d5b681b3d1c11e7"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/02-problem.tsx",
+      "sha256": "219e97aa2557e8f8f74b02d6e43ffc710b1b3d70f94c4aaca636b911405eb92c"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/03-discussion.tsx",
+      "sha256": "0b7c61e799023b628e1ad4aae4b88ecb42ab320283d147a165028fd81712af87"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/04-next-token.tsx",
+      "sha256": "d2eb2fd585e8f7d5ff29a38d3bca35df57de30aadf0a924b861f9ea773062a4d"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/05-tokenization.tsx",
+      "sha256": "b782211a8af312904df2d609510c557cf8b0e1b28f03f9d2eb94aab8988dfa33"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/06-transformer.tsx",
+      "sha256": "b95514b30ed07265af6cbbee4ad41d3e6cac0fb72b3e1545d331a237a2578e18"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/07-attention.tsx",
+      "sha256": "2c7e8489491f2c4ece72fef3a493cb1f20808338777224b50cf48660c096d3c6"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/08-training.tsx",
+      "sha256": "0abe2d45ba94e35bb86e4f19a8cec7257dbea80dc4fd4dce45fbdca0b0fcb91e"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/09-scale.tsx",
+      "sha256": "9f7cb2bd39575bfdd0f200ecdbb8697b8d69a49a105be4ce8cf0fedbcb3a51a4"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/10-finetuning.tsx",
+      "sha256": "5f69f8ff8b630ef3459e92ba8236ff263ad43832abedaf9b0670e3ab9d6fbf9e"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/11-inference.tsx",
+      "sha256": "5400c6f8a0567ec6316e78734913883a5894b757b37d14ef5e55c2b97ba1cc3d"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/12-limitations.tsx",
+      "sha256": "827ef68036401b8c5bca56bc2931081a1f238d5bd41c50e506a78006f91eb095"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/13-example.tsx",
+      "sha256": "9606e2f18ef8a853f062aa4f30eb4e76e7c8c84c309aa8de3f0367019f2fc559"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/14-takeaway.tsx",
+      "sha256": "77c557d0a9575e2e1c0acd0a58474e1996267e21e75768aa90540abf399851e2"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/15-resources.tsx",
+      "sha256": "ed56e8ccc2e39cce7d0006041da49f4f3ae17e1fe382ec3c4fdb6338353cd0a9"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/src/slides/index.ts",
+      "sha256": "dc9869a2b768263a0bf277f68442aa39e0b99b0df0746cec087267c380b2edcf"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/tsconfig.app.json",
+      "sha256": "aa9e68711a716c499b5730aa6664cab7e6a2cb65e9924252cefe2135a4724112"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/tsconfig.json",
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/tsconfig.node.json",
+      "sha256": "c3dd0fb522feba3596713f51b95bd53d781d845d24aedbfa2ac093d8b39c5120"
+    },
+    {
+      "path": "upstream/examples/en-how-llm-works/vite.config.ts",
+      "sha256": "7b2f3df3a3c90bec9f60a7eeb43d316fda4646976376bba81a90e9ba340292c0"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/eslint.config.js",
+      "sha256": "4efe97b16d1200fac0eaf07aa00930a8668b1f96a0be1891ace8c1e712ff0ccb"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/index.html",
+      "sha256": "bac5c7f4c55f45f57d44c9a43143e10b6873092912a07b9ec5aa0ff27960c7e5"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/package-lock.json",
+      "sha256": "2e1831f46355129f5bd75b4a7c176c9ea741baf4d37505cce3f24aa936a83b5f"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/package.json",
+      "sha256": "54aa5af2a9e5f346c25d6d92028d8f4a18de92ab26665720d2d3e104826aa89b"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/README.md",
+      "sha256": "8dc9e0ee2281acb3324624fbe6eb7e1377cc626f616ea4dc90e3a90ae094374d"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/App.tsx",
+      "sha256": "f4aec6ad55ff37390c69b65ba97316b8645ffb7b75dbe25662300fd9c5057873"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/assets/react.svg",
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/assets/vite.svg",
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/components/SlideLayout.tsx",
+      "sha256": "82ea06aebadd8e2e91a7d804ecb40e91f450fcb9b6ccde17c3bed71208515df4"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/index.css",
+      "sha256": "18daa1dc433f2aebd37fe066fe80384449d260f1acf7b5d8598cf83bcee3cdd0"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/lib/animations.ts",
+      "sha256": "29115a2f04baf5afef8dab0697c98d9008f7155958102ed44df703a34afe07ba"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/lib/theme.ts",
+      "sha256": "09fe91479733f20e938a148f075ac6741d8e95ed80094fe64d281913694af9b8"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/lib/useSlideScale.ts",
+      "sha256": "722d76abbfd47d8abe3373f5d0123df81c08c89bf34048740705e18ffbdd64b0"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/main.tsx",
+      "sha256": "6e9e5807fcbd48b75a96db5cbef36c996262196be42e6d4760dc86babbe61ad2"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/index.ts",
+      "sha256": "aa52df9f995db74b394599f3302dd0dcea2a7a432b109c3c7ed9c07423626f99"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide01.tsx",
+      "sha256": "ffa94c9d54902adc3a1ba5dd94b5e9fe0939252314caf5e7e8d69f6a79698518"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide02.tsx",
+      "sha256": "bf905b96562f95d3cb12f49afd56eac1f6c9edf64fadf57491ba4a9ffced8297"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide03.tsx",
+      "sha256": "7a1e7c36e8fad75c7e95c001c1a353ca935ab2b473f17fe7545b13ca1187d343"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide04.tsx",
+      "sha256": "add783d78582a78028298b238e0780be5ec59a07acd91bb3114615e4774d5e34"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide05.tsx",
+      "sha256": "e6f165d03ff35a2780ecaced45e8bb42663e42db433e67446cda849031e1483a"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide06.tsx",
+      "sha256": "b28ebe2f026c4cf942568be24ef6359e0c361977426e5f18bae72e45407f1889"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide07.tsx",
+      "sha256": "bd3c4b1bee2d082456f30f03af230f54f95a982f48b739f847afd2007fde1282"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide08.tsx",
+      "sha256": "3ec54d63e40dc8913e97c88eeab5231fcfb1615aacb738dc4f1b446f3b5709e7"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide09.tsx",
+      "sha256": "0e7a0f2af6fbbe87669881ab5d78b0e8c8672b2df96af77d5faba51eab9645fb"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide10.tsx",
+      "sha256": "b0168e115d9f3b56c6aec41fe2b9b5dde4f49372ff772b7966f53417b59af851"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide11.tsx",
+      "sha256": "883023d9bf1311373b407952834aeb4b0fff2ff18e6ada0508432044ae7a995f"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide12.tsx",
+      "sha256": "7ef347b943406b703b3439f6d499e46f6e53c8b7c84daf6ae50b178ad456c7b0"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide13.tsx",
+      "sha256": "323822fca07df71559ce64741f27b3054cbb570f96348f0580254ecbe3d3f5a5"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide14.tsx",
+      "sha256": "c9f2a8fa1106dd08e0f8572e1384372c309d63a36d945f96eceec665561da7bb"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/src/slides/Slide15.tsx",
+      "sha256": "774db09ad81c8498465f104ea99689c1310fb4279c2e29e8339e999d7c60e043"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/tsconfig.app.json",
+      "sha256": "aa9e68711a716c499b5730aa6664cab7e6a2cb65e9924252cefe2135a4724112"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/tsconfig.json",
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/tsconfig.node.json",
+      "sha256": "c3dd0fb522feba3596713f51b95bd53d781d845d24aedbfa2ac093d8b39c5120"
+    },
+    {
+      "path": "upstream/examples/vi-claude-code-skills/vite.config.ts",
+      "sha256": "0c03207436c9eb3f2f35ec9ff13d17c6ae7e4c8d46ad394a556578cf12c80d74"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/eslint.config.js",
+      "sha256": "4efe97b16d1200fac0eaf07aa00930a8668b1f96a0be1891ace8c1e712ff0ccb"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/index.html",
+      "sha256": "d2dd05626e1eaf29d90cbf3c8889352a24a4697cbf64e928a6885b89026f0baf"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/package-lock.json",
+      "sha256": "093d8c6566aabe0b9300fb1a66bcde8babc227fe048433a6680c088b3ae090b3"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/package.json",
+      "sha256": "794c85fbacfed3c4b048f485138015899c36bb6551facf3b141d3ba2d6c99c3d"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/README.md",
+      "sha256": "8dc9e0ee2281acb3324624fbe6eb7e1377cc626f616ea4dc90e3a90ae094374d"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/App.tsx",
+      "sha256": "b7b714e17728cf6dcb4e3118eef5e820033c2c7006615edea63a5e2be27912f7"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/assets/react.svg",
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/assets/vite.svg",
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/components/SlideLayout.tsx",
+      "sha256": "d5db4cd42f6b6ceeed178344f0f92c62c6a972524534f62113f373c3e4fb321f"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/index.css",
+      "sha256": "32aa5e47d49ebaa7819be2ac0d2c4259211d7d9ca31fde74643a8e38004da75a"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/lib/animations.ts",
+      "sha256": "a192ade318e3c75b241f8a4eb2def6d253b6ff69b080bd67ae17a456444494a8"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/lib/theme.ts",
+      "sha256": "a8d82fae043173d17b04375463e710f9135d7674b6ea96d6fda5259f5b2907be"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/lib/useSlideScale.ts",
+      "sha256": "736c6bb04e0e2c385c6038e56c38b85390c609e615aac80e13db80dea44e49bc"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/main.tsx",
+      "sha256": "6e9e5807fcbd48b75a96db5cbef36c996262196be42e6d4760dc86babbe61ad2"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/01-title.tsx",
+      "sha256": "c0e0d09ca8fc3fdd045e85bdf71b76702072c63b2b9eee2b8938df9d3111a98f"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/02-problem.tsx",
+      "sha256": "d1e87d6a457c1810edb75786ac699e2278ee8e17eadd4b4c09846f3328fdf1d6"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/03-discussion.tsx",
+      "sha256": "095b26bcc64e75818e322b99fecc2d07ba062493fce47a57bfcc5880876fd64e"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/04-concept.tsx",
+      "sha256": "d6aeae9d620196be213ff4da12e9d5c599cbf4253618101345a0f47ac2292584"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/05-context-window.tsx",
+      "sha256": "395c5c70f4f12a5dcc2c9720cf27c546ed123f02e0c84e0a1ba217a57de10ac1"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/06-components.tsx",
+      "sha256": "023ab20b826eba26c283da4208410da3442630ca5f5d4440f05ffdb0bfe5fe2d"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/07-system-vs-user.tsx",
+      "sha256": "d2d1559687e5e03b6ffe06a1fe3b57e063fe97b1c8db9fcf62bfe4369fcee77c"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/08-few-shot.tsx",
+      "sha256": "b53c422541c06df411cd10688e03d97c1c6dc395efdbef01c6f50993e9028516"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/09-rag.tsx",
+      "sha256": "d97ff421f6932769defc819aaac2211c8127ab273a04a60a3bdced0ae172b489"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/10-tool-use.tsx",
+      "sha256": "bbe8c3429bcf47a0823799ee476c57aa03004eba082f529a2f1ddce8fe03f724"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/11-formula.tsx",
+      "sha256": "3c54d84b32d02f33e564ecc2f23293c24b4663d30323feb558ffbcbe4c361a25"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/12-comparison.tsx",
+      "sha256": "e18be1873ba0fbddd6512e3ba027ed403d03d715a8ab6a2f89ec2bb8fa37b66c"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/13-coding-assistant.tsx",
+      "sha256": "decf18782c8381c8f6f01a1d90df6ef534b6925016fe080b3cafcbfe38febe2f"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/14-takeaway.tsx",
+      "sha256": "43c676ffdacc03cb378bf77abdd16272ff5a48768306bc41924ffcb8faf0865a"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/15-resources.tsx",
+      "sha256": "5b91df71d193252a2db76e928471a2721057d546a04d09d26d6d55ae95bcbc59"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/src/slides/index.ts",
+      "sha256": "6ec6854ff378e5e9e144451c2bfb5aa3ca1a7358802ce08647e1b72922fe4f4e"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/tsconfig.app.json",
+      "sha256": "aa9e68711a716c499b5730aa6664cab7e6a2cb65e9924252cefe2135a4724112"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/tsconfig.json",
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/tsconfig.node.json",
+      "sha256": "c3dd0fb522feba3596713f51b95bd53d781d845d24aedbfa2ac093d8b39c5120"
+    },
+    {
+      "path": "upstream/examples/vi-context-engineering/vite.config.ts",
+      "sha256": "7b2f3df3a3c90bec9f60a7eeb43d316fda4646976376bba81a90e9ba340292c0"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/eslint.config.js",
+      "sha256": "4efe97b16d1200fac0eaf07aa00930a8668b1f96a0be1891ace8c1e712ff0ccb"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/index.html",
+      "sha256": "8e3e90ecd858b1b4b04fa170d572b5bc62d5e3d6060bed7bff07e56f378cc513"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/package-lock.json",
+      "sha256": "f3f016f3b5de7b1cfc9e8c871b93fff5bfd10fe51f4dfca248713f472113b294"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/package.json",
+      "sha256": "3132e633dffcbe7484e36e3ad22a14314ca9fcecc7974079c608ba47403efc52"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/README.md",
+      "sha256": "8dc9e0ee2281acb3324624fbe6eb7e1377cc626f616ea4dc90e3a90ae094374d"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/App.tsx",
+      "sha256": "d0627a1ebfa5cf34b339c287199d89f2949b8157f870a4b11ddc1c2889ae91f8"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/assets/react.svg",
+      "sha256": "35ef61ed53b323ae94a16a8ec659b3d0af3880698791133f23b084085ab1c2e5"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/assets/vite.svg",
+      "sha256": "5be21acd42eb7b896e517f4e0f0f11eb5c5d9e54fbbcebe9453f033008fcca6f"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/components/SlideLayout.tsx",
+      "sha256": "24fd77fa38b92976df1e1a46143119a4949d131c620b100c931216bef227db07"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/index.css",
+      "sha256": "459f4ad53cfd291cddbc24a34273f89071b152fa6bc1c6af56bc579da5bc9a70"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/lib/animations.ts",
+      "sha256": "25542b7e38d96ab394202b3c9e648676cdfbf73727b5a284a5b126779d3f15b7"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/lib/theme.ts",
+      "sha256": "030a22c36ccd3c2e136419aea4e26a012d6b7979e8089a1ae608d75b0d0b96ca"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/lib/useSlideScale.ts",
+      "sha256": "9fc2e5fe070ae1dc23a975bdc4bd3b3b2e5f1b459e751ac7be1f259400475938"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/main.tsx",
+      "sha256": "6e9e5807fcbd48b75a96db5cbef36c996262196be42e6d4760dc86babbe61ad2"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/01-title.tsx",
+      "sha256": "964b6ff81f76fcc284cea443b7d18f19d67f8b7cbec5e8a3baf9fb3396303450"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/02-problem.tsx",
+      "sha256": "35374a1bc0111422837782d7301152eb60df25e889da25ba92362ccb0ab50307"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/03-autocomplete.tsx",
+      "sha256": "28370b8a74350b6e82962262e0ae70db89fd6d011ef0e1c0b9743b93874e4dde"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/04-core-idea.tsx",
+      "sha256": "92ce6f533b9b1e7707a00c60a345554d20fc332725b6237ce1632a6c99e37c54"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/05-tokenization.tsx",
+      "sha256": "8f66c9b6376307292fcc6fe3ed3a2945242331e664cc6de8369e0a7ed5497ec8"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/06-transformer.tsx",
+      "sha256": "54adf513ad69210da27cd762844c1b467043d22d9abcd7d0634559728dd2db43"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/07-attention.tsx",
+      "sha256": "c49c4b03e177bb6a6fb2f7638e5d63681b2ac19d579b43dab5e8fc67f6eef400"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/08-training.tsx",
+      "sha256": "487b90701810774c9f85c572467e5c27d3afc91c27cbb68ae5bace88ae9ea6d3"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/09-scale.tsx",
+      "sha256": "d57cc11fe552a4278fb67e15115093359636642c3f359b765393893b149b56f6"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/10-finetuning.tsx",
+      "sha256": "57b78601fc66e85684409edc4adcedb151f5a95e37a7d9666a3bb2dc6be823e3"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/11-inference.tsx",
+      "sha256": "c6196b005667bbd2c152f7c0e62f105867d958ab21c3a8eaf718164e0187992f"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/12-limitations.tsx",
+      "sha256": "9c257e10ff9db96197d5c4abcbf7e94676dd8fafb58aefd75662bf9520d97503"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/13-example.tsx",
+      "sha256": "557bde4d67dca441113be3bcbf8159f64c9524c522baaceadc9cbf65c4bc2d59"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/14-takeaway.tsx",
+      "sha256": "3f2a0b5df748b7f9445163e7a5373f373c0ed637ddd03ceb4c9b56064cb2698b"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/15-resources.tsx",
+      "sha256": "4389154a2499d320cc6b26b941cf330b60bbfa04b51f2aa50501f501a36e7ccb"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/src/slides/index.ts",
+      "sha256": "ae84d4eff097336da6ab71adcc3561beed66682d071e53fe1d37b9a52d3eb759"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/tsconfig.app.json",
+      "sha256": "aa9e68711a716c499b5730aa6664cab7e6a2cb65e9924252cefe2135a4724112"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/tsconfig.json",
+      "sha256": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/tsconfig.node.json",
+      "sha256": "c3dd0fb522feba3596713f51b95bd53d781d845d24aedbfa2ac093d8b39c5120"
+    },
+    {
+      "path": "upstream/examples/vi-how-llm-works/vite.config.ts",
+      "sha256": "7eb2ed9fc3f51a07d57caf7f516cd0c8385a75b0e341f8796d68f1eed6281052"
+    },
+    {
+      "path": "upstream/LICENSE",
+      "sha256": "ee055a6fe6a3db336b6b5181af5d8f9366a2ae347cb9cf4802fe9362555079f2"
+    },
+    {
+      "path": "upstream/README.md",
+      "sha256": "06c838aa4f6b813d3029e2c635b9d3c86d331ff6724a9849d7b8e6b12da936d0"
+    },
+    {
+      "path": "upstream/skills/slide-deck/SKILL.md",
+      "sha256": "bda2dd977b7133d97b2fd38c39b791490eed6c99a8cc911f4bdb1f60a6f57996"
+    },
+    {
+      "path": "upstream/skills/slide-deck/slide-guidelines.md",
+      "sha256": "263d57f616d161734c62248a1dbd1b323d7ae629dc1f597ea59cfbab061d488a"
+    }
+  ],
+  "case_studies": [
+    "react-slide-deck"
+  ]
+}

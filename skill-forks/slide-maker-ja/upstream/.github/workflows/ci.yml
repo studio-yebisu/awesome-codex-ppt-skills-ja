@@ -1,0 +1,1477 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  # A push that changes THIS file did not produce a run — no queued job, no failed job, nothing to
+  # look at, and no way to ask for one. A workflow whose only triggers are events means an absent
+  # run is indistinguishable from a passing one, which is the same silent class the steps below
+  # keep legislating against. This makes "run it now" reachable from the Actions tab.
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30      # the job ran 12.4 min before the native languages' tests; apt alone has taken 13
+    defaults:
+      run:
+        working-directory: skills/slide-maker
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # the lossless guard diffs SKILL.md against the merge base
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      # A SKILL.md slimming PR must LAYER content into references/, not delete it. Both look
+      # identical in review — thousands of removed lines, every one of which *might* have landed
+      # somewhere. This checks that it actually did. Deliberate deletions go in the allowlist
+      # with a written reason; see the script's docstring.
+      - name: SKILL.md refactors are lossless (content moved, not deleted)
+        working-directory: ${{ github.workspace }}
+        run: |
+          git fetch -q origin main
+          BASE=$(git merge-base origin/main HEAD)
+          echo "comparing SKILL.md against merge base $BASE"
+          ALLOW=skills/slide-maker/.skill-lossless-allow.json
+          python skills/slide-maker/scripts/check_skill_lossless.py \
+            --baseline "${BASE}:skills/slide-maker/SKILL.md" \
+            $( [ -f "$ALLOW" ] && echo --allow "$ALLOW" ) \
+            --report /tmp/skill-lost.md
+
+      # Credential scan that discriminates by SHAPE (length + Shannon entropy), not by prefix.
+      # A prefix matcher flags this repo on every run, because the direction-gate preview names its
+      # CSS classes after slide skeletons — sk-body, sk-split, sk-rail. A report that is always
+      # wrong is a report everyone learns to ignore, which is worse than no report. This one
+      # self-tests both directions before it scans, so a rule that stops catching real keys fails
+      # the build rather than passing quietly.
+      # A file can exist on the author's disk, run clean locally, be documented, be invoked by
+      # CI — and still not be in the repo. That is exactly what happened: `.gitignore`'s
+      # `*_secret*` swallowed `scripts/scan_secrets.py`, the credential scanner itself, and every
+      # clone was missing it. No single layer looked wrong; only the intersection was. Runs first
+      # and needs nothing but git, so it reports before anything else can fail confusingly.
+      - name: Repo integrity (no ignored source files, every CI path tracked)
+        working-directory: ${{ github.workspace }}
+        run: python scripts/check_repo_integrity.py
+
+      - name: No credentials by shape (working tree + full history)
+        working-directory: ${{ github.workspace }}
+        run: |
+          python scripts/scan_secrets.py --selftest
+          python scripts/scan_secrets.py
+          python scripts/scan_secrets.py --history
+
+      - name: Version markers match (plugin.json · marketplace.json · CHANGELOG · skills VERSION)
+        working-directory: ${{ github.workspace }}
+        run: python scripts/check_versions.py
+
+      # A documented command must be runnable AS WRITTEN, and CI is the one place that could
+      # never notice this one: `actions/setup-python` puts a `python` on PATH, so 35 bare
+      # `python <script>.py` lines across SKILL.md, its references and the scripts' own printed
+      # usage strings all "worked" here — while /usr/bin/python does not exist on macOS at all.
+      # The reader that breaks on it is an agent copying the line verbatim, which is exactly the
+      # cross-runtime story this skill sells. Runs before the heavy jobs; needs nothing but git.
+      - name: Documented commands are runnable as written (python3, not python)
+        working-directory: ${{ github.workspace }}
+        run: |
+          python3 scripts/check_doc_commands.py --selftest
+          python3 scripts/check_doc_commands.py
+
+      - name: Install system deps (LibreOffice, rsvg, CJK fonts)
+        run: |
+          sudo apt-get update -q
+          sudo apt-get install -y -q libreoffice-impress librsvg2-bin fonts-noto-cjk
+
+      - name: Install python deps
+        run: python -m pip install -r requirements.txt
+
+      - name: Environment check
+        run: python scripts/check_env.py
+
+      - name: deckkit smoke (every public helper)
+        run: python scripts/smoke_deckkit.py
+
+      # Two defect classes a per-slide check structurally cannot see, both found by a human eye on
+      # a delivered deck AFTER both lints reported clean: the same string rendered twice on one
+      # page (an orphaned copy of an earlier layout; a component's own label beside a hand-written
+      # one), and a repeated chrome line that drifts off the slot the rest of the deck uses. Both
+      # directions are asserted, because a check that fires on a legitimate repeat is worse than
+      # no check — a deck may repeat 是/N/A and may re-anchor chrome on a divider.
+      # A motif had no machine-readable existence, so its two stated contracts were unmeasurable:
+      # a hand-rolled register signature drew three INTERLOCKING circles (offset in x, not y) and
+      # shipped to 12 pages, and a subtitle laid straight across the cover motif produced zero
+      # findings because TEXT_OVERLAP measures text against TEXT and a motif is geometry. Tagging
+      # the device is what makes both countable. The silent cases are the load-bearing half: an
+      # untagged deck, a declared overlap, a full-bleed ground and the quiet register signature
+      # must every one of them stay quiet.
+      # The rule was WRONG rather than missing, which is the worse kind: a run tuple's font slot
+      # writes <a:latin> while CJK glyphs render from <a:ea>, so an author following the documented
+      # call shape set a display face that reached zero Chinese characters — measured on a real
+      # build across 6 of 14 slides, silently, for the whole build. text() gained a seventh slot;
+      # this suite holds both the new capability and the backward compatibility that makes it safe,
+      # since every component in the library is built from 5- and 6-element tuples.
+      # Occupancy is a bounding-box union, so a drawn container counts as a full page: measured,
+      # one empty outlined rect with four characters inside scored 49% ink — "full" by every
+      # density check, and therefore exempt from UNDERFILLED too. The suite also pins the BOUNDARY:
+      # a white-filled node box is NOT hollow, because that is the ordinary card form and widening
+      # the rule would fire across a large class of legitimate decks.
+      - name: Hollow ink (a container is not content)
+        run: |
+          set -o pipefail
+          python tests/test_hollow_ink.py | tee /tmp/hollow.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/hollow.log || {
+            echo "::error::hollow-ink suite did not run to completion"; exit 1; }
+
+      - name: CJK face routing (the 7th slot · unreached-face warn · back-compat)
+        run: |
+          set -o pipefail
+          python tests/test_cjk_face_routing.py | tee /tmp/cjkface.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/cjkface.log || {
+            echo "::error::CJK face routing suite did not run to completion"; exit 1; }
+
+      # CJK width measurement read <a:latin>, which python-pptx exposes as run.font.name — but a
+      # Chinese glyph renders from <a:ea>. Every geometry check on a CJK deck was therefore scored
+      # in a Latin face and came out ~46% short.
+      - name: CJK measurement (the face a width is measured in)
+        run: |
+          set -o pipefail
+          python tests/test_cjk_measurement.py | tee /tmp/cjkmeas.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/cjkmeas.log || {
+            echo "::error::CJK measurement suite did not run to completion"; exit 1; }
+
+      # content_band() — the helper SKILL.md offers INSTEAD of hand-picked y-coordinates — returned
+      # a constant tuned for a title with no kicker, so with a kicker the first block landed 0.09in
+      # inside the title rule. It shipped in this skill's own worked example, unseen by every gate.
+      - name: Content band (the safe rect must clear the deck's own chrome)
+        run: |
+          set -o pipefail
+          python tests/test_content_band.py | tee /tmp/band.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/band.log || {
+            echo "::error::content-band suite did not run to completion"; exit 1; }
+
+      # The scaffold is the curriculum: whatever references/examples/build_example_generic.py
+      # demonstrates is what gets written, and whatever it omits effectively does not exist. It
+      # taught hand-picked y-coordinates and zero motif tags, and both showed up in a real build.
+      # "Never hand-pick a y" was unfollowable for the components that grow: 173 public callables,
+      # 4 measure_* helpers. takeaway_rail reserved a fixed 2.0in and put a long body's ink inside
+      # the footer band with the lint clean; a node below 0.5in² is not a "card" to ESCAPES_CARD,
+      # so its label escaped by 0.55in top and bottom with every gate green. Each helper here is
+      # asserted against REAL rendered geometry, never against its own arithmetic.
+      - name: Measure contracts (a block whose height cannot be known cannot be packed)
+        run: |
+          set -o pipefail
+          python tests/test_measure_contracts.py | tee /tmp/measure.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/measure.log || {
+            echo "::error::measure-contract suite did not run to completion"; exit 1; }
+
+      - name: Scaffold teaches (the example is checked like a contract)
+        run: |
+          set -o pipefail
+          python tests/test_scaffold_teaches.py | tee /tmp/scaffold.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/scaffold.log || {
+            echo "::error::scaffold suite did not run to completion"; exit 1; }
+
+      # Which deck this IS was a fact only the operator's memory carried: --gate-check read a
+      # recorded `delivery` key, lint_deck.py read only flags. Measured on a delivered self-read
+      # deck: 20 advisory lines with no flag, 10 with the right one.
+      - name: Delivery record (recorded mode beats a remembered flag)
+        run: |
+          set -o pipefail
+          python tests/test_delivery_record.py | tee /tmp/deliv.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/deliv.log || {
+            echo "::error::delivery-record suite did not run to completion"; exit 1; }
+
+      # TEXT_OVERLAP measures text against TEXT, so a label grazing a bar/chip/node is invisible
+      # to it — the same blindness TEXT_OVER_MOTIF was written for, except that one only sees
+      # TAGGED shapes and nobody tags a bar. Measured on a delivered deck: a row label ran
+      # 0.015in² into the negative bar beside it, both lints clean, found by eye — twice.
+      # The one defect class where the file does not open at all. Every other check here is
+      # geometric, pixel-based or semantic; none asks whether the part is well-formed against
+      # ECMA-376. Measured: two Build(s) on one slide left TWO <p:timing> elements — save() silent,
+      # LibreOffice happy, lint clean, and preflight read the duplicate as MORE compliant.
+      # Every other suite asks whether the CODE works. This one guards the instrument that asks
+      # whether the SKILL works — run_eval.py scores a produced deck against machine-decidable
+      # assertions. Only the SCORER runs here (~1s, no model, no network); producing a deck is
+      # the other half and is developer/nightly-only. An eval harness that scores wrong is worse
+      # than none: it launders a bad build into a number.
+      # A fan-out used to be atomic in the worst way: results returned into the coordinator's
+      # memory, so one dead member cost the whole round. Measured — a critic panel lost its DESIGN
+      # lens to a session limit while the CONTENT lens had already produced a full review that was
+      # never written down, so validate_review --record had nothing to register.
+      # The template/taste registry root was prose naming exactly two hosts, repeated in six
+      # files and one docstring. On any third runtime (Kimi, Gemini, Cursor, Coze, an API
+      # caller) NEITHER root exists, so Q1(a) silently lost the saved-templates option and
+      # taste.md was never read or written -- with no lint, no gate and no message anywhere.
+      # The suite is mostly about the two silent halves: an unknown runtime must still get a
+      # write target, and an existing Claude/Codex install must NOT move (quietly relocating a
+      # user's saved templates would be a worse bug than the one being fixed).
+      # A register has to reach the PIXELS, not just the palette. Measured before this suite:
+      # RULE_W_SCALE was read by hrule() and nothing else (1 of 181 public functions), node()
+      # read RADIUS_SCALE not at all, presets.apply() returned a `bg` it applied nowhere (8 of 18
+      # registers are dark), node()'s own two defaults contradicted each other on every dark
+      # register (paints WHITE, labels in DEEP = that register's LIGHT ink -> 1.09:1 with NO
+      # caller override), and the four registers added last stored colours as lists so the
+      # documented p["accents"][0] raised ValueError on 4 of 18. Nothing reported any of it: the
+      # sameness lint measures monotony WITHIN a deck, never fidelity to the register it chose,
+      # so a brutalist deck rendered with glassmorphism's geometry passed every gate. Asserted
+      # against the built PPTX, which is the level the defect lived at.
+      # The direction-gate preview is an HTML file the USER opens in their browser, built from a
+      # directions.json the agent wrote while reading the user's SOURCE MATERIAL — untrusted input
+      # to a language model. Text was escaped; colours were not, and they land in style="..."
+      # attributes in ~86 places, so a crafted accent closed the attribute and attached an event
+      # handler. Most of this suite is the BOUNDARY: cover_motif/ambient_motif stay raw HTML on
+      # purpose (a bespoke register draws its own signature and the structure gate requires it),
+      # so the sanitiser has to remove behaviour while keeping shape — one that eats the <svg> is
+      # one nobody keeps.
+      - name: Preview injection (untrusted source material must not reach a live page)
+        run: |
+          set -o pipefail
+          python tests/test_preview_injection.py | tee /tmp/inject.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/inject.log || {
+            echo "::error::preview-injection suite did not run to completion"; exit 1; }
+
+      - name: Register expression (a preset must reach the pixels, not just the palette)
+        run: |
+          set -o pipefail
+          python scripts/check_style_applied.py --selftest
+          python tests/test_register_expression.py | tee /tmp/register.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/register.log || {
+            echo "::error::register-expression suite did not run to completion"; exit 1; }
+
+      - name: Register guard (a declared register must be obeyed, not just paletted)
+        run: |
+          set -o pipefail
+          python scripts/check_register_guard.py --selftest
+
+      - name: Photo backdrop (the panel goes where the image measures calmest)
+        run: |
+          set -o pipefail
+          python tests/test_photo_backdrop.py | tee /tmp/photobd.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/photobd.log || {
+            echo "::error::photo-backdrop suite did not run to completion"; exit 1; }
+
+      - name: Direction fidelity (the direction the user PICKED must be the deck that ships)
+        run: |
+          set -o pipefail
+          python scripts/check_direction_applied.py --selftest
+          python tests/test_direction_fidelity.py | tee /tmp/dirfid.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/dirfid.log || {
+            echo "::error::direction-fidelity suite did not run to completion"; exit 1; }
+
+      - name: Register surface (the preset must build its LOOK, not just its colourway)
+        run: |
+          set -o pipefail
+          python scripts/register_surface.py --selftest
+          python tests/test_register_surface.py | tee /tmp/regsurf.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/regsurf.log || {
+            echo "::error::register-surface suite did not run to completion"; exit 1; }
+
+      - name: Interview axes (the answers are an artifact, on both runtimes)
+        run: |
+          set -o pipefail
+          python tests/test_step1_artifacts.py | tee /tmp/step1.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/step1.log || {
+            echo "::error::step-1 artifacts suite did not run to completion"; exit 1; }
+
+      - name: Bespoke kits (an INVENTED register gets a kit, not just prose)
+        run: |
+          set -o pipefail
+          python scripts/bespoke_kits.py --selftest
+
+      - name: Register write-back (an invented look outlives the folder it shipped in)
+        run: |
+          set -o pipefail
+          python scripts/save_register.py --selftest
+
+      - name: Decodability (can a viewer read the marks, measured not claimed)
+        run: |
+          set -o pipefail
+          python tests/test_decodability.py | tee /tmp/decode.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/decode.log || {
+            echo "::error::decodability suite did not run to completion"; exit 1; }
+
+      - name: Design capability (architecture, rhythm, and what a page looks like)
+        run: |
+          set -o pipefail
+          python scripts/plan_rhythm.py --selftest
+          python scripts/composition_cues.py --selftest
+          python tests/test_design_capability.py | tee /tmp/designcap.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/designcap.log || {
+            echo "::error::design-capability suite did not run to completion"; exit 1; }
+
+      - name: A11y floors, print carve, poster proportion, CVD, bento
+        run: |
+          set -o pipefail
+          python tests/test_a11y_and_surface_extras.py | tee /tmp/a11y.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/a11y.log || {
+            echo "::error::a11y/surface-extras suite did not run to completion"; exit 1; }
+
+      - name: Register pixels (the look must arrive, and must not be the last deck's)
+        run: |
+          set -o pipefail
+          python scripts/check_register_pixels.py --selftest
+          python tests/test_register_pixels.py | tee /tmp/regpix.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/regpix.log || {
+            echo "::error::register-pixels suite did not run to completion"; exit 1; }
+
+      - name: Surface contract (a canvas format the registry describes and nothing enforced)
+        run: |
+          set -o pipefail
+          python scripts/check_surface.py --selftest
+          python tests/test_surface_contract.py | tee /tmp/surface.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/surface.log || {
+            echo "::error::surface-contract suite did not run to completion"; exit 1; }
+
+      - name: Registry roots (a runtime nobody enumerated still has a registry)
+        run: |
+          set -o pipefail
+          python tests/test_registry_roots.py | tee /tmp/registry.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/registry.log || {
+            echo "::error::registry-roots suite did not run to completion"; exit 1; }
+
+      - name: Fan-out record (one dead agent costs one agent)
+        run: |
+          set -o pipefail
+          python tests/test_fanout_record.py | tee /tmp/fanout.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/fanout.log || {
+            echo "::error::fanout-record suite did not run to completion"; exit 1; }
+
+      - name: Eval harness (skip is not pass)
+        run: |
+          set -o pipefail
+          python tests/test_run_eval.py | tee /tmp/runeval.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/runeval.log || {
+            echo "::error::run_eval suite did not run to completion"; exit 1; }
+
+      - name: OOXML shape (a file that opens nowhere passes every other gate)
+        run: |
+          set -o pipefail
+          python tests/test_ooxml_shape.py | tee /tmp/ooxml.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/ooxml.log || {
+            echo "::error::ooxml-shape suite did not run to completion"; exit 1; }
+
+      # A real <p:bg> takes the backdrop OUT of the shape tree, and _backing_fill's contract is
+      # "slide bg unknown -> None" with every caller treating None as skip. So the failure mode
+      # of this feature is not a wrong colour, it is 62 contrast checks going quiet while the
+      # deck reports clean. The suite's load-bearing assertion is the equivalence property:
+      # a p:bg deck and the rect deck it replaces must produce the SAME findings, failures
+      # included -- plus a live negative control, so it cannot pass by two silences agreeing.
+      - name: Slide background (p:bg must not blind the contrast checks)
+        run: |
+          set -o pipefail
+          python tests/test_slide_background.py | tee /tmp/slidebg.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/slidebg.log || {
+            echo "::error::slide-background suite did not run to completion"; exit 1; }
+
+      # The non-text contrast check skips `pic`, and this skill's icons ARE pictures (recolored
+      # SVG -> transparent PNG), so icon contrast was never checked on any deck while icons are
+      # default-on for category-rich content. Measured: a gold icon at 2.69:1 passed every
+      # DETERMINISTIC gate; only the design critic caught it, and a model that costs a dispatch is
+      # the wrong home for arithmetic. Most of this suite is NEGATIVE -- photograph,
+      # two-colour art, opaque PNG, unresolvable backdrop must all be SILENT, because inventing
+      # an ink colour an image does not have is worse than the miss it replaces.
+      - name: Icon contrast (icons are pictures, so nothing was checking them)
+        run: |
+          set -o pipefail
+          python tests/test_icon_contrast.py | tee /tmp/iconc.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/iconc.log || {
+            echo "::error::icon-contrast suite did not run to completion"; exit 1; }
+
+      # Nearly not shipped. The first framing flagged 10 of 12 slides on a delivered deck and
+      # MISSED the ragged page a human had complained about; every guard exists because a class
+      # of false positive was measured and removed (nested labels, value labels trailing their
+      # bars, unrelated elements, sub-perceptual 2px slips, deck-wide designed indents). Hence a
+      # suite that is mostly NEGATIVE: a check that cries wolf on a correct deck is worse than no
+      # check, because it teaches the reader to skip the output the real findings live in.
+      - name: Ragged left edge (the guards matter more than the check)
+        run: |
+          set -o pipefail
+          python tests/test_ragged_edge.py | tee /tmp/ragged.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/ragged.log || {
+            echo "::error::ragged-edge suite did not run to completion"; exit 1; }
+
+      # Bar length is a proportion CLAIM. Every other geometric check asks whether a page is
+      # readable; this asks whether it is true, the only failure where a fully passing deck still
+      # misleads the room -- a truncated baseline turns 1.5 vs 2.1 into 1 : 7 while legibility,
+      # overflow and contrast stay green. Preventive rather than corrective: no instance was found
+      # in this skill's own output (two delivered hand-drawn charts held to 1.0003 and 1.0000, and
+      # both are live negative controls in the suite). What it displaces is real -- the design
+      # critic hand-computed a bar ratio on a delivered deck, arithmetic paid for at model prices.
+      # The first version wrapped its parser in a bare `except: continue` that swallowed a
+      # NameError, so the check silently did nothing while looking like it passed; the suite now
+      # asserts a known-bad deck still fires, so that cannot recur quietly.
+      - name: Datum scale (a bar that misstates its own number)
+        run: |
+          set -o pipefail
+          python tests/test_datum_scale.py | tee /tmp/datum.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/datum.log || {
+            echo "::error::datum-scale suite did not run to completion"; exit 1; }
+
+      # A file existing is not proof that acquiring it succeeded. A failed generation writes a
+      # truncated download or a flat placeholder plate; a bad crop writes a transparent frame. All
+      # three embed without complaint and pass every geometric and density check, because the
+      # picture does occupy its box. The load-bearing negatives are the icons: mostly transparent
+      # by construction, so a carelessly written emptiness rule fires on every one in the library.
+      - name: Asset usable (existence is not success)
+        run: |
+          set -o pipefail
+          python tests/test_asset_usable.py | tee /tmp/asset.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/asset.log || {
+            echo "::error::asset-usable suite did not run to completion"; exit 1; }
+
+      # check_skill_lossless.py proves a refactor kept the BYTES. It cannot see two gates merged
+      # into one, a warning promoted to an auto-fix, or a plan field trusted instead of re-tested
+      # -- each keeps every line of text and removes the property the text described, so the
+      # lossless check reports a perfect score while the skill gets worse. This asserts the
+      # negative contracts that a program can decide.
+      - name: Maintenance boundaries (the properties a lossless refactor can still delete)
+        run: |
+          set -o pipefail
+          python tests/test_maintenance_boundaries.py | tee /tmp/bounds.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/bounds.log || {
+            echo "::error::maintenance-boundaries suite did not run to completion"; exit 1; }
+
+      # A deck's wall clock is round-trips, not computation -- 9.1s of deterministic pipeline
+      # inside an 88-minute build. deck_cycle.py and the contact sheet both shorten that, and both
+      # are therefore shortcuts through a checking pipeline, which is how a pipeline stops
+      # checking. The guards ARE the feature, so they are what this suite asserts: findings
+      # verbatim (no --quiet exists), rendering opt-in, a CRITICAL build fault stopping before any
+      # pixels, the sheet written BESIDE every per-slide PNG with the hint still demanding all of
+      # them, and no gate anywhere reading the round-trip metric (a number whose cheapest
+      # improvement is looking at less must never become a target).
+      - name: Deck cycle + contact sheet (the guards are the feature)
+        run: |
+          set -o pipefail
+          python tests/test_deck_cycle.py | tee /tmp/cycle.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/cycle.log || {
+            echo "::error::deck-cycle suite did not run to completion"; exit 1; }
+
+      # Every "record a written reason" floor in this skill was a codepoint count, which made the
+      # bar depend on the writing system: a Chinese sentence saying MORE was refused for using
+      # fewer characters, on the decks this skill most often builds. One shared measure now counts
+      # East-Asian wide characters as 2. Both directions are asserted — substantive CJK reasons
+      # pass, short ones in any language still do not, and every ASCII floor is unchanged.
+      - name: Written reasons are language-fair (CJK floors)
+        run: |
+          set -o pipefail
+          python tests/test_written_reason.py | tee /tmp/reason.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/reason.log || {
+            echo "::error::written-reason suite did not run to completion"; exit 1; }
+
+      # The design step gated a motif's CONCEPT thoroughly and its MATERIAL not at all. Measured:
+      # a deck whose concept was genuinely right — a config row derived from the product's own
+      # cordis.yml, correctly rejecting the plug-socket stereotype — shipped as six grey
+      # rectangles, passed every concept gate, and the repair changed only the material. Step 2
+      # now opens by MAKING one real slide. The second half closes the hole that made the old
+      # evidence mechanism hollow: a 960x540 rectangle of one grey satisfied the ANCHOR PROOF.
+      - name: Material probe (make it before you declare it; a blank PNG is not evidence)
+        run: |
+          set -o pipefail
+          python tests/test_material_probe.py | tee /tmp/probe.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/probe.log || {
+            echo "::error::material-probe suite did not run to completion"; exit 1; }
+
+      # THE COUNTERWEIGHT. Every other blocking signal punishes a deck for being too much or too
+      # same; nothing could hold one for being too SAFE, and a real 12-page build proved the cost —
+      # ten advisory-driven iterations, each one flatter than the last, and no gate said a word.
+      # Both directions matter more here than anywhere: a miscalibrated gate on THIS side would
+      # punish exactly the restrained registers the skill protects, so the suite asserts it blocks
+      # a text-only greyscale deck AND stands down on declared restraint, real protagonists, and
+      # small decks.
+      - name: Timidity gate (a deck can be held for being safe)
+        run: |
+          set -o pipefail
+          python tests/test_timidity_gate.py | tee /tmp/timid.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/timid.log || {
+            echo "::error::timidity suite did not run to completion"; exit 1; }
+
+      # The hand-off gate reports every failure in one run instead of stopping at the first — the
+      # same ping-pong `codex_delivery_gate.py` already avoided and `validate_review.py` names by
+      # name. Batching is only safe if it did not weaken anything, so the suite asserts both
+      # directions: all N problems named in ONE run, and every failure still fatal, unmasked, with
+      # a clean record still passing silently.
+      - name: Hand-off gate batching (one run, every failure)
+        run: |
+          set -o pipefail
+          python tests/test_gate_batching.py | tee /tmp/gatebatch.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/gatebatch.log || {
+            echo "::error::gate-batching suite did not run to completion"; exit 1; }
+
+      # Guard 4, separately: the loop breaker keys faults by (stage, slide, code) so a nudge that
+      # only changes the numbers in the message still counts as the SAME fault, and the third
+      # consecutive failure escalates to "re-derive by measurement" instead of another nudge.
+      # Measured origin: 10+ nudge iterations on one slide; the computed-fit rewrite landed first
+      # try. Both directions are asserted — it fires at 3, and it stays silent on a cleared fault,
+      # below the limit, and across a build-only run that never judged the render-stage keys.
+      - name: Deck cycle loop breaker (the third attempt is never another nudge)
+        run: |
+          set -o pipefail
+          python tests/test_deck_cycle_loop_breaker.py | tee /tmp/cycle_breaker.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/cycle_breaker.log || {
+            echo "::error::loop-breaker suite did not run to completion"; exit 1; }
+
+      # Both checks here came out of VERIFYING a review's claims rather than trusting them: of six
+      # re-measured by hand, three were factually wrong, and two of those nearly became lint checks
+      # built to enforce a defect that did not exist. What survived verification ships; what did
+      # not is recorded as an absence in the suite's own docstring.
+      - name: Review grounding (split page · carried_by device consistency)
+        run: |
+          set -o pipefail
+          python tests/test_review_grounding.py | tee /tmp/ground.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/ground.log || {
+            echo "::error::review-grounding suite did not run to completion"; exit 1; }
+
+      - name: Graze contract (a label running into the bar beside it)
+        run: |
+          set -o pipefail
+          python tests/test_graze_contract.py | tee /tmp/graze.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/graze.log || {
+            echo "::error::graze-contract suite did not run to completion"; exit 1; }
+
+      - name: Motif contract (register_mark · keep-out · loud budget)
+        run: |
+          set -o pipefail
+          python tests/test_motif_contract.py | tee /tmp/motif.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/motif.log || {
+            echo "::error::motif contract suite did not run to completion"; exit 1; }
+
+      # Every image row's evidence token held against the ledger and the built deck, plus the
+      # non-Latin paths that were quietly ASCII-only (a CJK subject collapsed to the bare filename
+      # fallback; a two-character Chinese author could not satisfy a len>=4 credit check).
+      - name: Image sourcing (provenance tokens · QC · the non-Latin paths)
+        run: |
+          set -o pipefail
+          python tests/test_image_sourcing.py | tee /tmp/imgsrc.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/imgsrc.log || {
+            echo "::error::image-sourcing suite did not run to completion"; exit 1; }
+
+      # Six defects found by RUNNING the skill end to end, not by reading it — the six-round-trip
+      # gate sequence, the direction competition nothing required anyone to score, a preset setting
+      # an uninstalled face, a strike-through that could not be built, a builds choice carried by
+      # memory. Each one is a measurement from one real build.
+      - name: Gate ergonomics (deck_gates shapes · direction re-scoring · the three declarations)
+        run: |
+          set -o pipefail
+          python tests/test_gate_ergonomics.py | tee /tmp/gateerg.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/gateerg.log || {
+            echo "::error::gate-ergonomics suite did not run to completion"; exit 1; }
+
+      - name: Deck-level faults (duplicate text · chrome slot drift)
+        run: |
+          set -o pipefail
+          python tests/test_deck_level_faults.py | tee /tmp/decklevel.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/decklevel.log || {
+            echo "::error::deck-level fault suite did not run to completion"; exit 1; }
+
+      # `CJK_NO_EA` is a build BLOCKER whose remedy used to be unreachable at the moment it fired:
+      # it said "set EAFONT before building", but the lint runs at the END of the build, and the
+      # two paths where the fault actually lives -- an opened template's own text, a surgical
+      # fix-pass on a foreign deck -- never route through set_font(), the only reader of EAFONT.
+      # retrofit_ea() is the lever that is connected; this holds it to what the CRITICAL promises.
+      # Both directions: a retrofit that silently fixed nothing, or that overwrote a deliberate
+      # per-run face, would each be worse than the fault it clears.
+      - name: CJK EA retrofit (the CJK_NO_EA remedy actually works)
+        run: |
+          set -o pipefail
+          python tests/test_retrofit_ea.py | tee /tmp/retrofit_ea.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/retrofit_ea.log || {
+            echo "::error::retrofit_ea suite did not run to completion"; exit 1; }
+
+      # The direction gate's own smoke suite. It was not wired in, and a change to the gate's
+      # exit semantics broke two of its divergence assertions with nothing reporting it --
+      # exactly the silent class this repo keeps legislating against.
+      - name: Direction gate smoke (divergence + bespoke requirement)
+        run: python scripts/smoke_directions.py
+
+      - name: Review-contract validator selftest
+        run: python scripts/validate_review.py --selftest
+
+      # `validate_review.py` is the ONLY gate on the critic -- the one judgement a deck cannot
+      # self-certify -- and its entire test suite was --selftest's three inline fixtures, whose
+      # canonical "good critic" set `plan_audit: null`. So the populated-audit path, where the
+      # contract card actually gets audited, was never exercised: a review with `plan_audit: {}`,
+      # `contract_card_seen: true` and no `probes` validated clean and consented, while
+      # agents/critic.md told the critic that exact shape is rejected. Both directions are asserted,
+      # because over-rejecting here stops a per-section critic or a direction preview from filing a
+      # legitimate review, and the first honest failure teaches everyone to bypass the gate.
+      - name: Review contract (plan_audit subfields, lens-scoped probes, both directions)
+        run: |
+          set -o pipefail
+          python tests/test_validate_review.py | tee /tmp/vreview.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/vreview.log || {
+            echo "::error::review-contract suite did not run to completion"; exit 1; }
+
+      - name: Minimal build, lint, render
+        run: |
+          python - <<'EOF'
+          import sys
+          sys.path.insert(0, 'scripts')
+          import deckkit as dk
+          prs = dk.blank_deck()
+          s = dk.add_slide(prs)
+          dk.title_bar(s, "CI smoke deck", kicker="TEST")
+          dk.bullet(s, 0.8, 1.6, 8.4, [("Builds", "deckkit constructs a slide"),
+                                       ("Lints", "geometry gate passes"),
+                                       ("Renders", "LibreOffice produces a PNG")])
+          dk.footer(s, tag="ci", page=1)
+          dk.lint_layout(prs)
+          prs.save('/tmp/ci.pptx')
+          EOF
+          python scripts/render_deck.py /tmp/ci.pptx /tmp/ci_render
+          test -f /tmp/ci_render/slide01.png
+          python scripts/lint_deck.py /tmp/ci.pptx
+
+      # Two-sided lint regression. Both directions are asserted because both have failed in
+      # production: a real deck shipped a hairline painted over its provenance line with the gate
+      # reporting clean, and a deliberate rhymed triptych was flagged as "layout sameness" while
+      # the documented waiver for it was dead code. A rule set that only guards one direction
+      # drifts toward catching craft instead of defects.
+      # Placement matters: it imports deckkit and RENDERS, so it must come after both dep installs
+      # and after the minimal render smoke — it was originally slotted above `pip install` and
+      # every CI run since died on ModuleNotFoundError before reaching any assertion.
+      - name: Lint catches real defects and leaves declared craft alone
+        run: |
+          set -o pipefail
+          python tests/test_lint_regressions.py | tee /tmp/reg.log
+          # The suite exits 0 and prints SKIPPED when a dependency is absent — right on a
+          # developer's laptop, wrong here. In CI everything it needs is installed above, so a
+          # skip means the step order broke again. Assert it actually RAN: a gate that quietly
+          # disables itself is worse than one that fails.
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/reg.log || {
+            echo "::error::regression suite exited 0 without running to completion"; exit 1; }
+
+      # Connector edge-docking (CONNECTOR_IN_BOX now sees axis-aligned + elbow connectors, and
+      # loop_between docks by construction), the import-time dependency backstop (deckkit self-heals
+      # its required pip deps for ANY agent), and TEMPLATE-BOUND — the composition-boldness signal,
+      # RUNTIME-AGNOSTIC by reading boldness from BOTH .deck-gates.json (shared) and
+      # .codex-deck-evidence.json (Codex). Script-style like the rest; same skip-means-broken guard.
+      # test_design_checkpoint_gate — Step 2 (design plan + design checkpoint) is BRANCH-INVARIANT and
+      # ENFORCED: render_deck.py refuses a full render when a content plan is recorded but no design
+      # plan + checkpoint is (reading both .deck-gates.json and .codex-deck-evidence.json); a --slides
+      # probe / no-content-plan / tiny-ask deck stays exempt. Closes the generated-branch regression
+      # where the hero checkpoint stood in for Step 2 and the plan was reconstructed post-hoc.
+      # test_web_research_floors — a WEB-RESEARCHED deck (source_mode: web) must carry the three
+      # research floors (content-planner §2e): coverage (全面) + lifecycle sweep (proactive
+      # live-vs-discontinued) + provenance digest & per-claim confidence (准确). codex_delivery_gate
+      # requires them; provided/none decks are exempt. Closes the thin+outdated no-source failure.
+      - name: Connectors, dependency backstop, composition boldness, design-checkpoint gate, web-research floors
+        run: |
+          set -o pipefail
+          for t in test_connector_in_box test_env_bootstrap test_composition_boldness test_design_checkpoint_gate test_web_research_floors; do
+            python tests/$t.py | tee /tmp/$t.log
+            grep -qE "^[0-9]+ passed, 0 failed" /tmp/$t.log || {
+              echo "::error::$t did not run to completion"; exit 1; }
+          done
+
+      # The two render optimizations (chunked parallel rasterization, pooled LibreOffice
+      # profile) are only legitimate if they are INVISIBLE in the output. This renders the
+      # same deck down every path and compares sha256, and asserts the invariant the old
+      # throwaway profile existed for: concurrent renders must still all produce a PDF.
+      # Same skip-means-broken assertion as above — it renders for real, so a silent SKIPPED
+      # here means LibreOffice went missing, not that the contract holds.
+      - name: Render optimizations are byte-identical (parallel + profile pool)
+        run: |
+          set -o pipefail
+          python tests/test_render_parallel.py | tee /tmp/renderpar.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/renderpar.log || {
+            echo "::error::render-equivalence suite did not run to completion"; exit 1; }
+
+      # A gate CALLED on both runtimes can still be unable to READ either one's record. parity
+      # compares the two gate FILES; this compares BEHAVIOUR, against the real scaffolds that the
+      # two --init tools write. Measured: check_purpose was wired into both paths, parity reported
+      # 0 problems, and it read a key the Codex evidence file does not contain at any level.
+      - name: Schema reach (an extractor must find its field on BOTH runtimes)
+        run: |
+          set -o pipefail
+          python tests/test_schema_reach.py | tee /tmp/reach.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/reach.log || {
+            echo "::error::schema reach suite did not run to completion"; exit 1; }
+
+      # A deck's GENRE declares content it is not finished without — the formats.py/check_surface
+      # mechanism generalised from SURFACES to GENRES. design-by-purpose.md carried nine purpose
+      # recipes that NOTHING consumed, so every rule in it was advisory by construction.
+      - name: Purpose sections (a genre's required content, both record schemas)
+        run: |
+          set -o pipefail
+          python tests/test_purpose_sections.py | tee /tmp/purp.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/purp.log || {
+            echo "::error::purpose sections suite did not run to completion"; exit 1; }
+          python scripts/check_purpose.py --selftest
+
+      # Does the deck fit the slot? The interview ASKS for the time budget in both languages and,
+      # measured by grep before check_talk_time.py, nothing compared the built deck against the
+      # answer — no words per minute, no per-slide budget, nothing. Ending on time is the one thing
+      # an audience always notices, and it is computable from the speaker notes.
+      - name: Talk time (the deck against the slot the interview asked for)
+        run: |
+          set -o pipefail
+          python tests/test_talk_time.py | tee /tmp/talk.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/talk.log || {
+            echo "::error::talk-time suite did not run to completion"; exit 1; }
+          python scripts/check_talk_time.py --selftest
+
+      # A presented deck is NAVIGATED. Measured before deckkit.link existed: `hlinkClick` appeared
+      # in one comment about XML ordering and `click_action` in no file at all, so every "backup
+      # slide" this skill built could only be reached by arrowing past everything in between.
+      - name: Q&A backup (the questions prepared for, against the deck built)
+        run: |
+          set -o pipefail
+          python tests/test_qa_backup.py | tee /tmp/qa.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/qa.log || {
+            echo "::error::Q&A backup suite did not run to completion"; exit 1; }
+          python scripts/check_qa_backup.py --selftest
+
+      # The artifacts that LEAVE the pipeline: the PDF a reader receives, the handout a presenter
+      # rehearses from, and the tally that stops "passed" from being read as "checked".
+      - name: Deliverable accessibility + the coverage ledger
+        run: |
+          set -o pipefail
+          python tests/test_deliverable_accessibility.py | tee /tmp/deliv.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/deliv.log || {
+            echo "::error::deliverable-accessibility suite did not run to completion"; exit 1; }
+
+      # An academic deck's citations were strings somebody typed onto a slide: nothing in this
+      # skill read a bibliography, so nothing could tell a correct year from a remembered one.
+      - name: Citations (markers, reference list and .bib must agree)
+        run: |
+          set -o pipefail
+          python tests/test_citations.py | tee /tmp/cit.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/cit.log || {
+            echo "::error::citation suite did not run to completion"; exit 1; }
+          python scripts/citations.py --selftest
+          python scripts/check_citations.py --selftest
+
+      # The clinical / evidence-synthesis forms. Each owns a rule that is wrong BY DEFAULT when
+      # hand-rolled (a linear axis for ratios, a line instead of a step, a correlation instead of
+      # limits of agreement) — and a wrong chart is a well-formed set of shapes, so no geometry
+      # lint can see one. The estimators are checked against hand-computable answers.
+      - name: Clinical / evidence forms (estimators, guards, routing)
+        run: |
+          set -o pipefail
+          python tests/test_clinical_forms.py | tee /tmp/clin.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/clin.log || {
+            echo "::error::clinical forms suite did not run to completion"; exit 1; }
+
+      # The template BRANCH — roughly half of what this skill builds — had three holes that every
+      # gate reported clean through. All three were found on one real institutional-template deck.
+      # Script-style (matching test_lint_regressions.py), so pytest would collect zero: invoke
+      # directly, and fail loudly if a suite exits 0 without having asserted anything.
+      - name: Template-branch gates (backing fill, template profile, font resolution)
+        run: |
+          set -o pipefail
+          python tests/test_template_branch_gates.py | tee /tmp/tb.log
+          grep -qE "^[0-9]+ passed" /tmp/tb.log || {
+            echo "::error::template-branch suite exited 0 without asserting"; exit 1; }
+          python tests/test_template_profile_and_fonts.py | tee /tmp/tpf.log
+          grep -qE "^[0-9]+ passed" /tmp/tpf.log || {
+            echo "::error::template-profile/fonts suite exited 0 without asserting"; exit 1; }
+          python scripts/check_fonts_resolve.py --selftest
+          python scripts/check_template_profile.py --selftest
+          python scripts/derive_template_contract.py --selftest
+
+      # The Codex delivery gate is the strictest thing in the skill -- it is what stops a Codex
+      # run from calling a deck delivered without two schema-valid critic reviews. It shipped
+      # with 437 lines of tests wired to nothing. Script-style on purpose (matching
+      # test_lint_regressions.py), so pytest would collect zero from them: invoke directly.
+      - name: Codex delivery gate + visual contract
+        run: |
+          set -o pipefail
+          python tests/test_codex_delivery_gate.py | tee /tmp/codex_gate.log
+          grep -q "^ok - " /tmp/codex_gate.log || {
+            echo "::error::codex delivery gate suite exited 0 without asserting"; exit 1; }
+          python tests/test_codex_visual_contract.py | tee /tmp/codex_vc.log
+          grep -q "^ok - " /tmp/codex_vc.log || {
+            echo "::error::codex visual contract suite exited 0 without asserting"; exit 1; }
+
+      # Prose that teaches an API is still an API contract, and nothing used to check it.
+      # Measured: the shared references simultaneously taught `dk.card()` (no such helper),
+      # `icon_tile(tile_color=)` (the param is `fill=`), a dead `deckkit-component-guide.md`
+      # pointer, and `fore_color.alpha = ...` -- which raises nothing, writes nothing, and
+      # renders a 100% opaque shape that erased a cover plate to pure black while every
+      # existing lint reported clean. All four were invisible to CI until this step existed.
+      # A gate without a test regresses the same silent way the bugs it catches do.
+      # Eleven of the twelve PRE-FLIGHT ticks were self-attested: the model wrote twelve
+      # checkmarks and nothing anywhere read them. This suite guards the tool that now decides
+      # the mechanical half — and, just as importantly, that it still refuses to imply it
+      # covered the five genuine judgment items.
+      - name: PRE-FLIGHT mechanical subset
+        run: |
+          set -o pipefail
+          python tests/test_preflight_check.py | tee /tmp/preflight.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/preflight.log || {
+            echo "::error::preflight suite did not run to completion"; exit 1; }
+
+      - name: Critic waiver must be classified (shared path)
+        run: |
+          set -o pipefail
+          python tests/test_critic_waiver_gate.py | tee /tmp/waiver.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/waiver.log || {
+            echo "::error::critic waiver gate suite did not run to completion"; exit 1; }
+
+      - name: Documented deckkit API actually exists
+        run: |
+          set -o pipefail
+          python scripts/check_reference_code.py | tee /tmp/refcode.log
+          grep -qE "^checked [0-9]+ markdown" /tmp/refcode.log || {
+            echo "::error::reference-code checker did not run"; exit 1; }
+
+      # The design pipeline's RULES were sound and its INDEXES had drifted. A whole-skill audit found
+      # the self-verify header claiming "(a-q)" while the list ran to (r) -- and (r) is the density
+      # line, the one self-verify item with a hard deterministic backstop, so an agent sweeping the
+      # declared range stopped one item short of the gated one. Same class: PRE-FLIGHT 12(a) said
+      # ">~40%" where eight other files said "~40-50%", and `interior register:` was required by
+      # self-verify (q), PRE-FLIGHT 6b AND the critic contract card while appearing nowhere in the
+      # file SKILL.md names as the OWNER of the checkpoint's required lines.
+      # None of that is catchable by reading -- they are agreements BETWEEN files, and every one is
+      # decidable by a program. Verified: this check flags all five on the pre-fix tree and is clean
+      # on the fixed one. --selftest runs first so a check that has stopped being able to fail is
+      # itself a build failure.
+      - name: Design stack indexes agree (self-verify letters, shared thresholds, checkpoint owner)
+        run: |
+          set -o pipefail
+          python scripts/check_design_contracts.py --selftest
+          python scripts/check_design_contracts.py | tee /tmp/designcontracts.log
+          grep -qE "^checked [0-9]+ self-verify items" /tmp/designcontracts.log || {
+            echo "::error::design-contract checker did not run"; exit 1; }
+
+      # The five files where the USER'S artifacts enter and leave. The four that produce and police
+      # the skill's OWN output (deckkit, lint_deck, render_deck, codex_delivery_gate) are ~12k lines
+      # with five suites, three meta-checkers and a CI job that asserts its own assertions ran. These
+      # five -- extract_deck (their deck), inspect_template (their template), export_notes (their
+      # rehearsal script), assemble (their sectioned deck), anim (what they actually click through) --
+      # were ~455 lines with NO tests and were never executed by CI at all. Every one of them failed
+      # SILENTLY when run: charts and speaker notes vanished under a success message, a chart-only
+      # slide was reported as "(empty / decorative only)", a real .potx died on a raw library
+      # ValueError with the string "potx" appearing nowhere in the skill, a rehearsal script came out
+      # with no titles, a second deck inherited the first's palette, a requested transition became a
+      # fade. Every gate this skill owns measures the deck against ITSELF, and internal consistency is
+      # exactly the property that cannot detect a wrong input. These assertions face outward.
+      # Mutation-verified: the suite fails on the pre-fix tree.
+      - name: Boundary I/O (their deck, their template, their notes, their sections)
+        run: |
+          set -o pipefail
+          python tests/test_boundary_io.py | tee /tmp/boundary.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/boundary.log || {
+            echo "::error::boundary I/O suite did not run to completion"; exit 1; }
+
+      # The design side has measured direction-candidate divergence for a while; the content side
+      # derived its arc from the primary goal and recorded "which arc I chose and why" -- a reason
+      # written after the fact, against no alternative. The arc is the only decision whose error
+      # invalidates everything downstream, so it now runs a competition, and this measures whether
+      # the candidates are genuinely different (and whether the losers were ever developed).
+      # The CJK cases are load-bearing: a whitespace tokeniser scores every pair of Chinese asks at
+      # 0.0 and switches two of the four axes off on every Chinese deck, silently and forever.
+      - name: Narrative-arc candidate divergence
+        run: |
+          set -o pipefail
+          python tests/test_arc_divergence.py | tee /tmp/arcdiv.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/arcdiv.log || {
+            echo "::error::arc divergence suite did not run to completion"; exit 1; }
+
+      # Step 4's proof was ONE rendered page. It proved the aesthetic risk and nothing else, so a
+      # design approved on the deck's most spacious page could still fail to hold its densest one,
+      # and a palette chosen entirely against text could meet its first native chart at Step 5 --
+      # where the fix is a rebuild. Three anchors now. The second half of this suite is the reason
+      # it exists: both gate paths must IMPORT the shared contract rather than restate it, because
+      # they have already diverged once on this exact field.
+      - name: Anchor proof (three-page contract, and the two gates that must not diverge)
+        run: |
+          set -o pipefail
+          python tests/test_anchor_proof.py | tee /tmp/anchor.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/anchor.log || {
+            echo "::error::anchor proof suite did not run to completion"; exit 1; }
+
+      # A parameter accepted and never read is the quietest defect this library can ship: the caller
+      # writes the call the docs describe, nothing raises, no lint fires, and the setting is simply
+      # discarded. Three were found by hand, in three different files, over three separate audits --
+      # gantt(accents=) drawing every bar in the default blue (a silent breach of SKILL.md's RED
+      # "never ship deckkit's default blue"), anim.slide_transition(kind=) turning every requested
+      # transition into a fade, native_bubble(xlabel=/ylabel=) dropping documented axis titles. One
+      # AST pass over the module bodies found seven MORE, including node(fill=) and
+      # backdrop_motif(kind=) whose own docstring advertised the modes it never implemented.
+      # Whether a parameter is read is decidable by a program, so it belongs here rather than in a
+      # docstring nobody re-reads. Deliberate no-ops go in EXPECTED_UNREAD with a written reason.
+      - name: Every accepted parameter is read by its own body
+        run: |
+          set -o pipefail
+          python scripts/check_param_reach.py | tee /tmp/paramreach.log
+          grep -qE "^checked [0-9]+ module" /tmp/paramreach.log || {
+            echo "::error::param-reach checker did not run"; exit 1; }
+
+      - name: Icon pipeline (fetch, recolor, ink guard)
+        run: |
+          python - <<'EOF'
+          import sys
+          sys.path.insert(0, 'scripts')
+          from icons import icon_png
+          from PIL import Image
+          # bare hex on purpose: must be normalized, not silently transparent
+          icon_png('lucide:rocket', '/tmp/icon.png', color='C2410C', px=128)
+          im = Image.open('/tmp/icon.png').convert('RGBA')
+          assert im.getchannel('A').getbbox(), 'icon rasterized fully transparent'
+          print('icon ok')
+          EOF
+
+      - name: Contrast lint regression (invisible dark-on-dark text must fail)
+        run: |
+          python - <<'EOF'
+          import sys, subprocess
+          sys.path.insert(0, 'scripts')
+          import deckkit as dk
+          from pptx.util import Inches, Pt
+          prs = dk.blank_deck()
+          s = dk.add_slide(prs)
+          dk.box(s, 1, 1, 5, 2, fill=dk.RGBColor(0x14, 0x14, 0x1A))
+          tb = s.shapes.add_textbox(Inches(1.3), Inches(1.5), Inches(4), Inches(0.6))
+          r = tb.text_frame.paragraphs[0].add_run()
+          r.text = "invisible body text"
+          r.font.size = Pt(14)
+          prs.save('/tmp/bad_contrast.pptx')
+          p = subprocess.run(['python', 'scripts/lint_deck.py', '/tmp/bad_contrast.pptx'],
+                             capture_output=True, text=True)
+          assert p.returncode != 0, 'lint must fail on invisible text'
+          assert 'INVISIBLE TEXT' in p.stdout + p.stderr, p.stdout + p.stderr
+          print('contrast guard ok')
+          EOF
+
+      - name: PDF figure extraction (pymupdf API drift canary)
+        run: |
+          python - <<'EOF'
+          import sys
+          sys.path.insert(0, 'scripts')
+          import fitz
+          doc = fitz.open()
+          page = doc.new_page(width=595, height=842)
+          page.insert_text((72, 100), "Figure 1: canary", fontsize=11)
+          page.draw_rect(fitz.Rect(72, 120, 300, 300), color=(0, 0, 1), width=2)
+          doc.save('/tmp/canary.pdf')
+          from extract_pdf import find_figures  # crashes here if pymupdf drifts
+          find_figures('/tmp/canary.pdf', 1)
+          print('extract_pdf ok')
+          EOF
+
+      # 🔴 Sixteen of these had NEVER run in CI — one of them was already red and nothing
+      # reported it. `check_tests_wired.py` below makes the seventeenth impossible to forget.
+      - name: Audience brief (who the deck is FOR, and what they must decide)
+        run: |
+          set -o pipefail
+          python tests/test_audience_brief.py | tee /tmp/audiencebrie.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/audiencebrie.log || {
+            echo "::error::test_audience_brief did not run to completion"; exit 1; }
+
+      - name: Blind read-back (the gate that reads the picture, not the file)
+        run: |
+          set -o pipefail
+          python tests/test_blind_read.py | tee /tmp/blindread.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/blindread.log || {
+            echo "::error::test_blind_read did not run to completion"; exit 1; }
+
+      - name: Taste ledger (what the user already taught; self-limiting)
+        run: |
+          set -o pipefail
+          python tests/test_taste_ledger.py | tee /tmp/tasteledger.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/tasteledger.log || {
+            echo "::error::test_taste_ledger did not run to completion"; exit 1; }
+
+      - name: Shape declarations (four tags that must not erase each other)
+        run: |
+          set -o pipefail
+          python tests/test_shape_declarations.py | tee /tmp/shapedeclara.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/shapedeclara.log || {
+            echo "::error::test_shape_declarations did not run to completion"; exit 1; }
+
+      - name: Uneven card heights (a nested photo is not a sibling card)
+        run: |
+          set -o pipefail
+          python tests/test_uneven_cards_nested.py | tee /tmp/unevennested.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/unevennested.log || {
+            echo "::error::test_uneven_cards_nested did not run to completion"; exit 1; }
+
+      - name: PowerPoint safety (values PowerPoint repairs that LibreOffice renders)
+        run: |
+          set -o pipefail
+          python tests/test_ooxml_safety.py | tee /tmp/ooxmlsafety.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/ooxmlsafety.log || {
+            echo "::error::test_ooxml_safety did not run to completion"; exit 1; }
+
+      - name: Native art (page-clipped, in-range, deterministic)
+        run: |
+          set -o pipefail
+          python tests/test_native_art.py | tee /tmp/nativeart.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/nativeart.log || {
+            echo "::error::test_native_art did not run to completion"; exit 1; }
+
+      - name: Native visual languages (every page x canvas x copy, PowerPoint-safe, on the page)
+        run: |
+          set -o pipefail
+          python tests/test_native_languages.py | tee /tmp/nativelangs.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/nativelangs.log || {
+            echo "::error::test_native_languages did not run to completion"; exit 1; }
+
+      - name: Native languages on untuned input (long copy, small/square/A4 canvases, alternative layouts)
+        run: |
+          set -o pipefail
+          python tests/test_native_generality.py | tee /tmp/nativegen.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/nativegen.log || {
+            echo "::error::test_native_generality did not run to completion"; exit 1; }
+
+      - name: Native visual languages, second set (starlit, broadsheet, journal, tally, chalkboard)
+        run: |
+          set -o pipefail
+          python tests/test_native_languages_p4.py | tee /tmp/nativep4.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/nativep4.log || {
+            echo "::error::test_native_languages_p4 did not run to completion"; exit 1; }
+
+      - name: Native visual languages, third set (interface, wayfinding)
+        run: |
+          set -o pipefail
+          python tests/test_native_languages_p5.py | tee /tmp/nativep5.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/nativep5.log || {
+            echo "::error::test_native_languages_p5 did not run to completion"; exit 1; }
+
+      - name: "Visual languages after the audit (measured with headroom, nothing dropped, upright pictures, clean own pages)"
+        run: |
+          set -o pipefail
+          python tests/test_vl_audit_fixes.py | tee /tmp/vlaudit.log
+          grep -qE "^[0-9]+ passed, 0 failed" /tmp/vlaudit.log || {
+            echo "::error::test_vl_audit_fixes did not run to completion"; exit 1; }
+
+      - name: Review integrity (a consent must name a reviewed artifact)
+        run: |
+          set -o pipefail
+          python tests/test_review_integrity.py | tee /tmp/reviewintegr.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/reviewintegr.log || {
+            echo "::error::test_review_integrity did not run to completion"; exit 1; }
+
+      - name: Icons are a default on categorical content
+        run: |
+          set -o pipefail
+          python tests/test_icon_must.py | tee /tmp/iconmust.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/iconmust.log || {
+            echo "::error::test_icon_must did not run to completion"; exit 1; }
+
+      - name: Design checkpoint gate
+        run: |
+          set -o pipefail
+          python tests/test_design_checkpoint_gate.py | tee /tmp/designcheckp.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/designcheckp.log || {
+            echo "::error::test_design_checkpoint_gate did not run to completion"; exit 1; }
+
+      - name: Composition boldness (a signature move that survives)
+        run: |
+          set -o pipefail
+          python tests/test_composition_boldness.py | tee /tmp/compositionb.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/compositionb.log || {
+            echo "::error::test_composition_boldness did not run to completion"; exit 1; }
+
+      - name: Connector-in-box geometry
+        run: |
+          set -o pipefail
+          python tests/test_connector_in_box.py | tee /tmp/connectorinb.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/connectorinb.log || {
+            echo "::error::test_connector_in_box did not run to completion"; exit 1; }
+
+      - name: Font verifiability (lining figures, real faces)
+        run: |
+          set -o pipefail
+          python tests/test_font_verifiability.py | tee /tmp/fontverifiab.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/fontverifiab.log || {
+            echo "::error::test_font_verifiability did not run to completion"; exit 1; }
+
+      - name: Recordable exceptions (a carve is claimed, not assumed)
+        run: |
+          set -o pipefail
+          python tests/test_recordable_exceptions.py | tee /tmp/recordableex.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/recordableex.log || {
+            echo "::error::test_recordable_exceptions did not run to completion"; exit 1; }
+
+      - name: Research pivot
+        run: |
+          set -o pipefail
+          python tests/test_research_pivot.py | tee /tmp/researchpivo.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/researchpivo.log || {
+            echo "::error::test_research_pivot did not run to completion"; exit 1; }
+
+      - name: Web research floors
+        run: |
+          set -o pipefail
+          python tests/test_web_research_floors.py | tee /tmp/webresearchf.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/webresearchf.log || {
+            echo "::error::test_web_research_floors did not run to completion"; exit 1; }
+
+      - name: Skill fingerprint (installed copy matches main)
+        run: |
+          set -o pipefail
+          python tests/test_skill_fingerprint.py | tee /tmp/skillfingerp.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/skillfingerp.log || {
+            echo "::error::test_skill_fingerprint did not run to completion"; exit 1; }
+
+      - name: Env bootstrap
+        run: |
+          set -o pipefail
+          python tests/test_env_bootstrap.py | tee /tmp/envbootstrap.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/envbootstrap.log || {
+            echo "::error::test_env_bootstrap did not run to completion"; exit 1; }
+
+      - name: Env ensure
+        run: |
+          set -o pipefail
+          python tests/test_env_ensure.py | tee /tmp/envensure.log
+          grep -qE "(^[0-9]+ passed, 0 failed|\\] ok$)" /tmp/envensure.log || {
+            echo "::error::test_env_ensure did not run to completion"; exit 1; }
+
+      - name: Both runtimes gate the same concerns (the guard itself)
+        run: |
+          set -o pipefail
+          python scripts/check_gate_parity.py | tee /tmp/parityguard.log
+          grep -q "0 problem(s)" /tmp/parityguard.log || {
+            echo "::error::the two gate paths have drifted apart"; exit 1; }
+
+      - name: Gate parity (both runtimes gate the same concerns)
+        run: |
+          set -o pipefail
+          python tests/test_gate_parity.py | tee /tmp/parity.log
+          grep -qE "\\] ok$" /tmp/parity.log || {
+            echo "::error::test_gate_parity did not run to completion"; exit 1; }
+
+      - name: Delegated picks (auto mode must say what it decided for the user)
+        run: |
+          set -o pipefail
+          python tests/test_delegated_picks.py | tee /tmp/dpicks.log
+          grep -qE "\\] ok$" /tmp/dpicks.log || {
+            echo "::error::test_delegated_picks did not run to completion"; exit 1; }
+
+      - name: Composition competition (the measure must generalise off its own corpus)
+        run: |
+          set -o pipefail
+          python tests/test_composition_probe.py | tee /tmp/compprobe.log
+          grep -qE "\\] ok$" /tmp/compprobe.log || {
+            echo "::error::test_composition_probe did not run to completion"; exit 1; }
+
+      - name: Reason floors mean the same in every language (len() is twice as strict in CJK)
+        run: |
+          set -o pipefail
+          python scripts/check_reason_width.py
+          python tests/test_reason_width_floors.py | tee /tmp/rwidth.log
+          grep -qE "\\] ok$" /tmp/rwidth.log || {
+            echo "::error::test_reason_width_floors did not run to completion"; exit 1; }
+
+      - name: Cover axis reads the INK, not the text box
+        run: |
+          set -o pipefail
+          python tests/test_cover_ink_not_box.py | tee /tmp/coverink.log
+          grep -qE "\\] ok$" /tmp/coverink.log || {
+            echo "::error::test_cover_ink_not_box did not run to completion"; exit 1; }
+
+      - name: A freshness finding names every near neighbour, not one per round-trip
+        run: |
+          set -o pipefail
+          python tests/test_ground_repeat_names_all.py | tee /tmp/gnear.log
+          grep -qE "\\] (ok|SKIP)" /tmp/gnear.log || {
+            echo "::error::test_ground_repeat_names_all did not run to completion"; exit 1; }
+
+      - name: A hand-typed .deck-gates.json is recognised, and init's own output is not nagged
+        run: |
+          set -o pipefail
+          python tests/test_handwritten_record_hint.py | tee /tmp/hwrec.log
+          grep -qE "\\] ok$" /tmp/hwrec.log || {
+            echo "::error::test_handwritten_record_hint did not run to completion"; exit 1; }
+
+      - name: adopt() is public, and two helper defaults stop colliding
+        run: |
+          set -o pipefail
+          python tests/test_adopt_and_legend_default.py | tee /tmp/adopt.log
+          grep -qE "\\] ok$" /tmp/adopt.log || {
+            echo "::error::test_adopt_and_legend_default did not run to completion"; exit 1; }
+
+      - name: The build-time footer check is a superset of the render-time one
+        run: |
+          set -o pipefail
+          python tests/test_footer_band_superset.py | tee /tmp/fband.log
+          grep -qE "\\] ok$" /tmp/fband.log || {
+            echo "::error::test_footer_band_superset did not run to completion"; exit 1; }
+
+      - name: deckkit can draw a circle, and box(round=True) still cannot
+        run: |
+          set -o pipefail
+          python tests/test_disc_primitive.py | tee /tmp/disc.log
+          grep -qE "\\] ok$" /tmp/disc.log || {
+            echo "::error::test_disc_primitive did not run to completion"; exit 1; }
+
+      - name: Rotated shapes are measured where they paint (both gates)
+        run: |
+          set -o pipefail
+          python tests/test_rotated_geometry.py | tee /tmp/rotgeom.log
+          grep -qE "\\] ok$" /tmp/rotgeom.log || {
+            echo "::error::test_rotated_geometry did not run to completion"; exit 1; }
+
+      - name: picture() masks, rotates and aims its crop (and the render clips)
+        run: |
+          set -o pipefail
+          python tests/test_picture_shapes.py | tee /tmp/picshapes.log
+          grep -qE "\\] ok$" /tmp/picshapes.log || {
+            echo "::error::test_picture_shapes did not run to completion"; exit 1; }
+
+      - name: mark() highlights words natively, and the contrast gate reads the highlight
+        run: |
+          set -o pipefail
+          python tests/test_text_mark.py | tee /tmp/textmark.log
+          grep -qE "\\] ok$" /tmp/textmark.log || {
+            echo "::error::test_text_mark did not run to completion"; exit 1; }
+
+      - name: Ornaments are native, motif-tagged, and visible in the render
+        run: |
+          set -o pipefail
+          python tests/test_ornaments.py | tee /tmp/ornaments.log
+          grep -qE "\\] ok$" /tmp/ornaments.log || {
+            echo "::error::test_ornaments did not run to completion"; exit 1; }
+
+      - name: sticker_outline follows the silhouette and refuses an opaque photo
+        run: |
+          set -o pipefail
+          python tests/test_sticker_outline.py | tee /tmp/sticker.log
+          grep -qE "\\] ok$" /tmp/sticker.log || {
+            echo "::error::test_sticker_outline did not run to completion"; exit 1; }
+
+      - name: frosted_panel blurs the region really under it, or refuses
+        run: |
+          set -o pipefail
+          python tests/test_frosted_panel.py | tee /tmp/frosted.log
+          grep -qE "\\] ok$" /tmp/frosted.log || {
+            echo "::error::test_frosted_panel did not run to completion"; exit 1; }
+
+      - name: image_series plans, prompts, QCs and places an art-directed series
+        run: |
+          set -o pipefail
+          python tests/test_image_series.py | tee /tmp/imageseries.log
+          grep -qE "\\] ok$" /tmp/imageseries.log || {
+            echo "::error::test_image_series did not run to completion"; exit 1; }
+
+      - name: generate_images_codex makes the key first and the series in its style
+        run: |
+          set -o pipefail
+          python tests/test_imagegen_series_flags.py | tee /tmp/imagegenflags.log
+          grep -qE "\\] ok$" /tmp/imagegenflags.log || {
+            echo "::error::test_imagegen_series_flags did not run to completion"; exit 1; }
+
+      - name: generate_images_openai runs a series as faithfully as the Codex path
+        run: |
+          set -o pipefail
+          python tests/test_imagegen_openai_series.py | tee /tmp/imagegenopenai.log
+          grep -qE "\\] ok$" /tmp/imagegenopenai.log || {
+            echo "::error::test_imagegen_openai_series did not run to completion"; exit 1; }
+
+      - name: chroma_cutout keys a flat background or refuses
+        run: |
+          set -o pipefail
+          python tests/test_chroma_cutout.py | tee /tmp/chromacut.log
+          grep -qE "\\] ok$" /tmp/chromacut.log || {
+            echo "::error::test_chroma_cutout did not run to completion"; exit 1; }
+
+      - name: the image-series gate reads planned slots and the people rule from the file
+        run: |
+          set -o pipefail
+          python tests/test_image_series_gate.py | tee /tmp/imageseriesgate.log
+          grep -qE "\\] ok$" /tmp/imageseriesgate.log || {
+            echo "::error::test_image_series_gate did not run to completion"; exit 1; }
+
+      - name: image_fx.feather fades an illustration into the paper
+        run: |
+          set -o pipefail
+          python tests/test_feather.py | tee /tmp/feather.log
+          grep -qE "\\] ok$" /tmp/feather.log || {
+            echo "::error::test_feather did not run to completion"; exit 1; }
+
+      - name: surfaces.grain_background lays a tiled paper ground in the slide background
+        run: |
+          set -o pipefail
+          python tests/test_surfaces.py | tee /tmp/surfaces.log
+          grep -qE "\\] ok$" /tmp/surfaces.log || {
+            echo "::error::test_surfaces did not run to completion"; exit 1; }
+
+      - name: display_type stacks, two-tones and outlines headlines that render as measured
+        run: |
+          set -o pipefail
+          python tests/test_display_type.py | tee /tmp/display_type.log
+          grep -qE "\\] ok$" /tmp/display_type.log || {
+            echo "::error::test_display_type did not run to completion"; exit 1; }
+
+      - name: collage places taped prints with bounded overlap and a text-safe rect
+        run: |
+          set -o pipefail
+          python tests/test_collage.py | tee /tmp/collage.log
+          grep -qE "\\] ok$" /tmp/collage.log || {
+            echo "::error::test_collage did not run to completion"; exit 1; }
+
+      - name: visual_languages builds four complete looks on every canvas and script
+        run: |
+          set -o pipefail
+          python tests/test_visual_languages.py | tee /tmp/visual_languages.log
+          grep -qE "\\] ok$" /tmp/visual_languages.log || {
+            echo "::error::test_visual_languages did not run to completion"; exit 1; }
+
+      - name: the visual-language gate reads the applied look from the file on both runtimes
+        run: |
+          set -o pipefail
+          python tests/test_visual_language_gate.py | tee /tmp/visual_language_gate.log
+          grep -qE "\\] ok$" /tmp/visual_language_gate.log || {
+            echo "::error::test_visual_language_gate did not run to completion"; exit 1; }
+
+      - name: Low-resolution pictures (visible pixels over the frame, WARN < 72 ppi, CRITICAL < 36)
+        run: |
+          set -o pipefail
+          python tests/test_low_res_image.py | tee /tmp/low_res_image.log
+          grep -qE "\\] ok$" /tmp/low_res_image.log || {
+            echo "::error::test_low_res_image did not run to completion"; exit 1; }
+
+      - name: Visual-language grounds (a contrast ground per language, ground='auto' avoids the look history)
+        run: |
+          set -o pipefail
+          python tests/test_vl_ground_variants.py | tee /tmp/vl_ground_variants.log
+          grep -qE "\\] ok$" /tmp/vl_ground_variants.log || {
+            echo "::error::test_vl_ground_variants did not run to completion"; exit 1; }
+
+      - name: render_deck command line (--help, renders beside the deck, --slides of every slide is a full render)
+        run: |
+          set -o pipefail
+          python tests/test_render_cli.py | tee /tmp/render_cli.log
+          grep -qE "\\] ok$" /tmp/render_cli.log || {
+            echo "::error::test_render_cli did not run to completion"; exit 1; }
+
+      - name: Render-time lint corner cases (paragraph spacing, highlighted runs on photos, rotated pairs)
+        run: |
+          set -o pipefail
+          python tests/test_lint_deck_pixels.py | tee /tmp/lint_deck_pixels.log
+          grep -qE "\\] ok$" /tmp/lint_deck_pixels.log || {
+            echo "::error::test_lint_deck_pixels did not run to completion"; exit 1; }
+
+      - name: Small text clears WCAG 1.4.3 (TEXT CONTRAST) and deckkit helpers comply
+        run: |
+          set -o pipefail
+          python tests/test_text_contrast.py | tee /tmp/text_contrast.log
+          grep -qE "\\] ok$" /tmp/text_contrast.log || {
+            echo "::error::test_text_contrast did not run to completion"; exit 1; }
+
+      - name: East-Asian faces follow the script (Hangul/kana under a Han face)
+        run: |
+          set -o pipefail
+          python tests/test_ea_script_face.py | tee /tmp/ea_script_face.log
+          grep -qE "\\] ok$" /tmp/ea_script_face.log || {
+            echo "::error::test_ea_script_face did not run to completion"; exit 1; }
+
+      - name: Deferred minors — state restore, slot hints, overflow total, cut-out refusal
+        run: |
+          set -o pipefail
+          python tests/test_followup_minors.py | tee /tmp/followup_minors.log
+          grep -qE "\\] ok$" /tmp/followup_minors.log || {
+            echo "::error::test_followup_minors did not run to completion"; exit 1; }
+
+      - name: Image-series minors — labels, slot cross-checks, stale qc, paths, size/moderation
+        run: |
+          set -o pipefail
+          python tests/test_image_series_minors.py | tee /tmp/image_series_minors.log
+          grep -qE "\\] ok$" /tmp/image_series_minors.log || {
+            echo "::error::test_image_series_minors did not run to completion"; exit 1; }
+
+      - name: Components measure inside text() insets (node, chip, modbox, callout)
+        run: |
+          set -o pipefail
+          python tests/test_inset_contract.py | tee /tmp/inset_contract.log
+          grep -qE "\\] ok$" /tmp/inset_contract.log || {
+            echo "::error::test_inset_contract did not run to completion"; exit 1; }
+
+      - name: Screen-reader titles (a11y_title) and every visual-language page declares one
+        run: |
+          set -o pipefail
+          python tests/test_a11y_title.py | tee /tmp/a11y_title.log
+          grep -qE "\\] ok$" /tmp/a11y_title.log || {
+            echo "::error::test_a11y_title did not run to completion"; exit 1; }
+
+      - name: Codex gate — a user-named look records design.direction branch user-named
+        run: |
+          set -o pipefail
+          python tests/test_direction_user_named.py | tee /tmp/direction_user_named.log
+          grep -qE "\\] ok$" /tmp/direction_user_named.log || {
+            echo "::error::test_direction_user_named did not run to completion"; exit 1; }
+
+      - name: Soft language number shape holds and centres the figure (circle or pill)
+        run: |
+          set -o pipefail
+          python tests/test_vl_number_disc.py | tee /tmp/vl_number_disc.log
+          grep -qE "\\] ok$" /tmp/vl_number_disc.log || {
+            echo "::error::test_vl_number_disc did not run to completion"; exit 1; }
+
+      - name: A deck with pictures offers a visual language among its directions (both gates)
+        run: |
+          set -o pipefail
+          python tests/test_direction_vl_rule.py | tee /tmp/direction_vl_rule.log
+          grep -qE "\\] ok$" /tmp/direction_vl_rule.log || {
+            echo "::error::test_direction_vl_rule did not run to completion"; exit 1; }
+
+      - name: Data page figure fills its page; storybook portrait illustrations take the tall frame
+        run: |
+          set -o pipefail
+          python tests/test_vl_page_fill.py | tee /tmp/vl_page_fill.log
+          grep -qE "\\] ok$" /tmp/vl_page_fill.log || {
+            echo "::error::test_vl_page_fill did not run to completion"; exit 1; }
+
+      # --- P2 visual languages steps end ---
+
+      - name: The Codex scaffold shows every field the Codex gate requires
+        run: |
+          set -o pipefail
+          python tests/test_codex_scaffold_complete.py | tee /tmp/cxscaf.log
+          grep -qE "\\] ok$" /tmp/cxscaf.log || {
+            echo "::error::test_codex_scaffold_complete did not run to completion"; exit 1; }
+
+      - name: Canon rules that convert into measurements (Mayer / Knaflic / Tufte)
+        run: |
+          set -o pipefail
+          python tests/test_canon_probe.py | tee /tmp/canon.log
+          grep -qE "\\] ok$" /tmp/canon.log || {
+            echo "::error::test_canon_probe did not run to completion"; exit 1; }
+
+      - name: A gate report stays readable when read through `tail`
+        run: |
+          set -o pipefail
+          python tests/test_gate_report_survives_tail.py | tee /tmp/gtail.log
+          grep -qE "\\] ok$" /tmp/gtail.log || {
+            echo "::error::test_gate_report_survives_tail did not run to completion"; exit 1; }
+
+      - name: declare_delivery is called AFTER the save, and a mismatch diagnoses itself
+        run: |
+          set -o pipefail
+          python tests/test_declare_delivery_order.py | tee /tmp/ddorder.log
+          grep -qE "\\] ok$" /tmp/ddorder.log || {
+            echo "::error::test_declare_delivery_order did not run to completion"; exit 1; }
+
+      - name: stat_row sizes its figure block by measurement, at every fig_size
+        run: |
+          set -o pipefail
+          python tests/test_stat_row_measured.py | tee /tmp/statrow.log
+          grep -qE "\\] ok$" /tmp/statrow.log || {
+            echo "::error::test_stat_row_measured did not run to completion"; exit 1; }
+
+      - name: Inventory guard is a detector (attack it, not just run it)
+        run: |
+          set -o pipefail
+          python tests/test_inventory_wired.py | tee /tmp/invwired.log
+          grep -qE "\\] ok$" /tmp/invwired.log || {
+            echo "::error::test_inventory_wired did not run to completion"; exit 1; }
+
+      - name: Every script, agent and reference is in the file inventory
+        run: |
+          set -o pipefail
+          python scripts/check_inventory.py | tee /tmp/inventory.log
+          grep -q "0 problem(s)" /tmp/inventory.log || {
+            echo "::error::a capability exists that references/file-inventory.md never names"; exit 1; }
+
+      - name: Every test file is wired into CI
+        run: |
+          set -o pipefail
+          python scripts/check_tests_wired.py | tee /tmp/wired.log
+          grep -q "0 problem(s)" /tmp/wired.log || {
+            echo "::error::a test file exists that CI never runs"; exit 1; }

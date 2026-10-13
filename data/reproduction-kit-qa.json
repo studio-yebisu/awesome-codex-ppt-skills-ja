@@ -74,8 +74,64 @@
         "failure_log_sha256": "586a658db5d9a5d6b58876e8f70af98dc310fdcafb1e0e20de88793435635410",
         "reason": "Windowsの深い展開先で、原典CLIが起動する子スクリプトの兄弟module importが失敗。再現runner内だけで原典runtimeのPYTHONPATHを明示し、原典コードを変更せず解消。"
       }
+    },
+    {
+      "repository": "addsumtech/slides_maker",
+      "method": "配布ZIPを新しい別フォルダーへ展開し、新venvからReproduce.ps1を実行。原典deckkit/native_chartとPython探索実測の入力から5枚を再生成。PowerPoint/外部AI APIなし。",
+      "pages": 5,
+      "output_review_status": "generated_awaiting_review",
+      "tested_zip_sha256": "3642eff8196e58c7d1a0e26039c71ba766620ba85a03a59de997ee0a9d46d78e",
+      "current_archive_sha256": "7fcb77426cca8b38462c061597fb50dbbc30793d81ea06db0de2b54abbb38cc4",
+      "current_archive_different_members": [
+        "slide-maker/REPRODUCE.md"
+      ],
+      "run_log_sha256": "6c67b491fe54fd53b91d98facd52a42460667714f183b0a9a7c6ff8f4a34d50c",
+      "pptx_sha256": "bb36bc23258ee73e1c649e94820d9a22fbfb247174ac3edce4cb22679426e1e6",
+      "identical_slide_note_chart_xml_parts": 12,
+      "identical_workbook_members": 9,
+      "workbook_variation": "内包XLSXのdocProps/core.xmlの生成・更新時刻だけ異なる。値・数式・style等の他memberはbyte一致。",
+      "input_data_identical": true,
+      "archive_change_after_test": "REPRODUCE.mdのフォント・必要環境の説明だけ修正。実行入力・runnerは試験ZIPと一致。"
+    },
+    {
+      "repository": "code-on-sunday/slide-deck-generator",
+      "method": "配布ZIPの全入力とbyte一致する新しい短いフォルダーに展開し、新venv/fontTools 4.66.1/原典派生npm lock/Node v24.18.0からReproduce.ps1を実行。原典React/Vite build。",
+      "pages": 5,
+      "output_review_status": "generated_awaiting_review",
+      "tested_zip_sha256": "9460ddfd1483a8d3c7080c317f6846052f0060e1dab7fc24ac72311366500cd0",
+      "current_archive_sha256": "9460ddfd1483a8d3c7080c317f6846052f0060e1dab7fc24ac72311366500cd0",
+      "current_archive_different_members": [],
+      "run_log_sha256": "367b3f67eb881a970467c7aaa0fcc1473ff103bc601130b5da11a9fa64ef3ba6",
+      "html_sha256": "3e6f3614db680b2b1387b49c2f808e4910884f1b4da303c4e5a8c4fb72f0be03",
+      "compiled_assets_identical": [
+        "assets/index-DvHAfQ_q.js",
+        "assets/index-DVrqkhIP.css",
+        "fonts/OFL.txt",
+        "index.html"
+      ],
+      "unreferenced_original_public_asset_not_in_replay": [
+        "favicon.svg",
+        "icons.svg"
+      ],
+      "font_variation": {
+        "reproduced_sha256": "7fbc210d0eb4ff64a8d163a5e6cd35daa223896fd9029adfcadf28cd67d8f633",
+        "primary_sha256": "48e2eae9f49b3f74e4fa7f353374cd84754c9d3471d9186f9c531f51322a50cf",
+        "glyphs_and_cmap_identical": true,
+        "differing_tables": [
+          "head"
+        ],
+        "reason": "fontTools subset再生成時刻とchecksumが変わる。描画に使う他tableとglyph mappingはbyte一致。"
+      },
+      "node_version": "v24.18.0",
+      "source_template": "original React/Vite example",
+      "extraction_path_condition": "Windowsでは深い展開先を避ける。短いパスで成功。",
+      "resolved_extraction_condition": {
+        "failure_log_sha256": "dd82f74042763683f8f94496985404951f6e4d9d20f804858b6d862321967e35",
+        "reason": "Windowsの深い展開先でfontToolsのbezierTools DLL importが失敗。同じZIPと固定依存を短い展開先に移して再実行し成功。",
+        "changed_dependencies": false
+      }
     }
   ],
-  "scope": "8形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全リポの再現確認へ読み替えない。SeaSlidesの依存監査文書追記前の入力ZIP SHAを保存し、生成経路は変えない。Magic Slideは試験時展開ファイルと現配布ZIP全入力のbyte一致を確認。画像→PPTXは固定manifest/分離済み画像のreplayを確認し、新しい入力への自動抽出を検証した表示ではない。",
-  "checked_at": "2026-10-13T18:52:42.229178+00:00"
+  "scope": "10形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全209リポの再現確認へ読み替えない。SeaSlidesとslides_makerは実行後の文書追記差分を記録。Reactは現配布ZIP全入力とbyte一致。Magic Slideは全入力一致。画像→PPTXは固定manifest/分離済み画像のreplayで、新しい入力への自動抽出ではない。",
+  "checked_at": "2026-10-13T20:10:22.851729+00:00"
 }

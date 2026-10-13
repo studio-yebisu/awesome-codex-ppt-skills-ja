@@ -1,0 +1,12421 @@
+#!/usr/bin/env python3
+"""deckkit — reusable helpers for building clean slides with python-pptx.
+
+General-purpose: works whether you build ON a user's template (open_template) or
+from scratch when they have none (blank_deck + title_bar/footer). Import this from
+a small per-deck build script rather than copy-pasting primitives every time.
+A brand-free worked example lives at references/examples/build_example_generic.py.
+
+Design intent (see references/design-principles.md — these are the PRESENTED-deck defaults; a
+read-alone / reference / poster deck legitimately runs denser, so flex by delivery mode):
+  - terse, few-word points for a SPOKEN deck (a visual aid, not a document); a read-alone deck
+    carries the fuller sentence a speaker would otherwise say
+  - native diagrams (boxes + arrows) over walls of text
+  - a clear title per slide; results figures always get a legend + a takeaway
+
+The palette/fonts below are sensible DEFAULTS. When building on a template, pull
+the real brand colors from it (inspect_template.py / theme) and set FONT to match;
+when building from scratch, pick colors from the user's brand or pick a clean set.
+
+Equations: NEVER rely on Unicode modifier-letter super/subscripts (ᴴ ᵀ ᵣ) — many
+display fonts lack those glyphs and render tofu/overlap. Use eq_par(), which draws
+real baseline-shifted ASCII in a full-coverage font, so it is crisp anywhere.
+"""
+# ── runtime-dependency backstop ────────────────────────────────────────────────────────────────
+# Ensure the REQUIRED pip deps the moment deckkit is imported — the universal chokepoint EVERY deck
+# build passes through, by ANY code agent, on any host. Step 0's `check_env.py --ensure` is a PROSE
+# instruction an agent can skip; when it is skipped a missing dep otherwise surfaces here as a bare
+# `ModuleNotFoundError` with no pointer to the fix. This makes the auto-install agent-independent.
+# It fires ONLY when a dep is actually missing (`find_spec` is a cheap LOCATE, never a slow import),
+# so it costs nothing on a warm machine; it installs into THIS interpreter with a `--user` fallback
+# for externally-managed (PEP 668) envs, and never `--break-system-packages` (the user's call). Opt
+# out with SLIDE_MAKER_NO_ENV_CHECK=1. Keep the list in lockstep with check_env.REQUIRED_PIP.
+# (import-name, pip-name) — kept in lockstep with check_env.REQUIRED_PIP; test_env_bootstrap.py
+# asserts the two are identical so they can never drift.
+_RUNTIME_DEPS = [("pptx", "python-pptx"), ("fitz", "pymupdf"), ("PIL", "Pillow"),
+                 ("matplotlib", "matplotlib"), ("numpy", "numpy")]
+
+
+def _ensure_runtime_deps():
+    import importlib, importlib.util, os, subprocess, sys
+    if os.environ.get("SLIDE_MAKER_NO_ENV_CHECK"):
+        return
+
+    def _missing():
+        out = []
+        for mod, pkg in _RUNTIME_DEPS:
+            try:
+                if importlib.util.find_spec(mod) is None:
+                    out.append(pkg)
+            except Exception:
+                pass                 # a probe error is not evidence of absence — never install on it
+        return out
+
+    need = _missing()
+    if not need:
+        return
+    sys.stderr.write("[deckkit] required deps missing (%s) — installing into %s …\n"
+                     % (", ".join(need), sys.executable))
+    for extra in ([], ["--user"]):
+        try:
+            if subprocess.run([sys.executable, "-m", "pip", "install", *extra, *need],
+                              timeout=900).returncode == 0:
+                break
+        except Exception:
+            pass
+    importlib.invalidate_caches()
+    still = _missing()
+    if still:
+        raise ModuleNotFoundError(
+            "deckkit needs %s and could not auto-install them. Run:  python3 %s/check_env.py "
+            "--ensure   (or install by hand: %s -m pip install %s)"
+            % (", ".join(still), os.path.dirname(os.path.abspath(__file__)),
+               sys.executable, " ".join(still)))
+
+
+_ensure_runtime_deps()
+
+from pptx import Presentation
+from pptx.util import Inches, Pt
+from pptx.dml.color import RGBColor
+from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+from pptx.enum.shapes import MSO_SHAPE, MSO_CONNECTOR
+from pptx.enum.dml import MSO_FILL
+from pptx.oxml.ns import qn, nsdecls
+from pptx.oxml import parse_xml
+import math
+import re
+import os as _os_rg
+import sys as _sys_rg
+
+_sys_rg.path.insert(0, _os_rg.path.dirname(_os_rg.path.abspath(__file__)))
+import rotgeom  # noqa: E402 — where a rotated shape PAINTS; the one definition lint_deck shares
+
+# ---- default professional palette (a neutral blue scheme). NOT tied to any brand —
+# when building on a template, override these with the template's real theme colours.
+DEEP    = RGBColor(0x00, 0x3C, 0x66)   # deep navy — strong text / dark panels
+BLUE    = RGBColor(0x00, 0x7C, 0xC2)   # accent blue — bullets, primary boxes
+TEAL    = RGBColor(0x00, 0x9F, 0xBD)   # secondary accent
+MAGENTA = RGBColor(0xE3, 0x00, 0x4F)   # highlight / "after" / callout rule
+SLATE   = RGBColor(0x3A, 0x4A, 0x55)   # body text
+MUTE    = RGBColor(0x5A, 0x64, 0x72)   # captions / secondary (clears 4.5:1 on white; code
+                                       # panels use text_c, so this is safe on dark too)
+TINT    = RGBColor(0xEA, 0xF3, 0xFA)   # light callout fill
+LIGHT   = RGBColor(0xF4, 0xF8, 0xFB)   # lighter fill
+PALE    = RGBColor(0xBF, 0xDE, 0xF0)   # pale text on dark panels
+WHITE   = RGBColor(0xFF, 0xFF, 0xFF)
+# secondary accents — for VARIETY so diagrams don't read monotone. The first two
+# are from the template theme (brand-coherent); rotate through ACCENTS for chips.
+GOLD    = RGBColor(0xC0, 0x96, 0x5C)   # theme accent5
+STEEL   = RGBColor(0x6E, 0x90, 0xA6)   # theme accent3
+VIOLET  = RGBColor(0x6A, 0x4C, 0x93)
+GREEN   = RGBColor(0x2E, 0x8B, 0x57)
+ACCENTS = [BLUE, TEAL, GOLD, STEEL, VIOLET, GREEN]   # cycle for multi-item diagrams
+# colour-blind-safe categorical fallback (Okabe-Ito) — swap in for ACCENTS when accessibility is asked for
+OKABE_ITO = ["#E69F00", "#56B4E9", "#009E73", "#F0E442", "#0072B2", "#D55E00", "#CC79A7", "#000000"]
+
+# layout: keep a consistent gutter of whitespace between a figure and any adjacent
+# text/callout/edge. Crowding elements together reads as amateur — give them room.
+GUTTER  = 0.4   # inches
+# the bottom band reserved for footer() chrome (tag + page number sit at h_in - 0.35).
+# content_band()/bottom_callout() keep content out of this zone, so a bottom callout can
+# never grow into the footer — the recurring "callout collided with the footer" failure.
+FOOTER_BAND = 0.5   # inches, measured up from the slide's bottom edge
+
+
+def contrast_ratio(c1, c2):
+    """WCAG contrast ratio between two colours (RGBColor or 'RRGGBB' hex string).
+    Returns a number from 1 (none) to 21 (black-on-white). Body text wants >= 4.5;
+    large/bold text >= 3. Use it to sanity-check a text colour against its fill before
+    you even render — e.g. a pale caption on a tint, or grey body on white.
+        if contrast_ratio(MUTE, WHITE) < 4.5: ...  # too faint, darken it
+    Note: this checks the *colour pair*; the render still tells you about size/overlap."""
+    def lum(c):
+        if isinstance(c, str):
+            c = RGBColor.from_string(c)
+        chans = []
+        for v in (c[0], c[1], c[2]):
+            s = v / 255.0
+            chans.append(s / 12.92 if s <= 0.03928 else ((s + 0.055) / 1.055) ** 2.4)
+        return 0.2126 * chans[0] + 0.7152 * chans[1] + 0.0722 * chans[2]
+    l1, l2 = sorted((lum(c1), lum(c2)), reverse=True)
+    return (l1 + 0.05) / (l2 + 0.05)
+
+
+_BLACK = RGBColor(0x11, 0x11, 0x11)   # near-black escalation ink for the muddy mid-luminance band
+_PURE_BLACK = RGBColor(0, 0, 0)       # the last resort: black or white ALWAYS clears 4.58:1, #111111 does not
+                                      # (4.43:1 on #1F8A70 — a preset's accent, final review 2026-10-04)
+
+
+def _legible_ink(bg, light=None, dark=None):
+    """Pick the on-fill label ink over ``bg``. Prefer the house pair (WHITE vs DEEP navy) so the
+    deck's dark ink stays navy everywhere it works; but if NEITHER clears the 4.5:1 body floor — a
+    mid-luminance fill where navy reads too light and white too dark (the classic mid-blue funnel
+    band / segmented sliver) — escalate the dark side to near-black so the label stays legible. This
+    makes 'contrast-aware' an actual guarantee, not a coin-flip between two candidates that can both
+    lose. Replaces the ``WHITE if contrast_ratio(WHITE,bg) >= contrast_ratio(DEEP,bg) else DEEP`` idiom."""
+    light = WHITE if light is None else light
+    dark = DEEP if dark is None else dark
+    cw, cd = contrast_ratio(light, bg), contrast_ratio(dark, bg)
+    best = light if cw >= cd else dark
+    if contrast_ratio(best, bg) < 4.5:
+        for alt in (_BLACK, _PURE_BLACK, WHITE):        # near-black first (the house escalation), then the poles
+            if contrast_ratio(alt, bg) >= 4.5:
+                return alt
+        return max((best, _BLACK, _PURE_BLACK, WHITE), key=lambda c_: contrast_ratio(c_, bg))
+    return best
+
+
+def on(fill):
+    """The label ink that stays legible ON ``fill`` — the public name for ``_legible_ink``.
+
+    `sigs.py`'s CALL-SHAPE CONTRACTS has told authors for a long time to "keep a token per ground
+    and resolve by ground (`mute_for(bg)`, `on(fill)`), never by name" — and NEITHER function
+    existed. Following the contract card verbatim raised AttributeError. `check_reference_code.py`
+    resolves every deckkit call taught in the skill's prose against the real module, but its scope
+    is SKILL.md + references/*.md + agents/*.md, so the one file whose entire job is stating
+    correct call shapes was the one file outside the checker.
+
+        text(s, x, y, w, h, [[(label, 13, dk.on(card_fill), True, False)]])
+    """
+    return _legible_ink(_as_rgb(fill))
+
+
+def mute_for(bg, target=3.0):
+    """The muted/secondary ink for ``bg`` — the ground-resolved counterpart of ``MUTE``.
+
+    ``MUTE`` is a single token tuned for a light canvas; on a dark register the same grey measures
+    ~2-3:1 and the caption it was meant for goes quiet. This resolves a secondary ink from the
+    ground instead: it starts from the legible ink for ``bg`` and blends it back toward the ground
+    just far enough to read as secondary while still clearing ``target``.
+
+    ``target`` is 3.0 (the non-text / large-text floor) by default. Pass **4.5 for body-size
+    text** — a 9-10pt caption is body size, and a helper that guarantees only 3:1 for it just
+    moves the failure from "unreadable" to "warned about".
+
+        dk.text(s, x, y, w, h, [[(caption, 10, dk.mute_for(deck_bg, 4.5), False, False)]])
+    """
+    g = _as_rgb(bg)
+    ink = _legible_ink(g)
+    best = ink
+    for t in (0.25, 0.32, 0.4, 0.48):
+        cand = _blend(_as_rgbc(ink), _as_rgbc(g), t)
+        if contrast_ratio(cand, g) < target:
+            break
+        best = cand
+    return best
+
+
+def _darken_to(color, bg, target=4.5):
+    """Darken ``color`` toward near-black — KEEPING its hue — until it clears ``target`` contrast on
+    ``bg``. For a same-hue label on a light tint of its own accent (a swimlane header, a tinted chip)
+    where the raw accent reads too faint: the hue survives as the visual key, legibility is guaranteed."""
+    c = _as_rgbc(color)
+    for t in (0.0, 0.15, 0.3, 0.45, 0.6, 0.75, 0.9):
+        cc = _blend(c, _BLACK, t)
+        if contrast_ratio(cc, bg) >= target:
+            return cc
+    return _blend(c, _BLACK, 0.9)
+
+
+def _ink_reaching(color, bg, target=4.5):
+    """``color`` moved the LEAST distance that makes it clear ``target`` on ``bg`` — toward near-black
+    on a light ground, toward white on a dark one — so an accent label keeps its hue as the key and
+    stays legible. A pair that already clears ``target`` comes back unchanged (byte-identical output).
+    For TEXT set in an accent: the accent's own non-text marks (a rule, a bar) keep the exact accent.
+    Raises if neither pole can reach ``target`` (a ground no ink reaches 4.5:1 on cannot carry text)."""
+    c, g = _as_rgbc(color), _as_rgbc(bg)
+    if contrast_ratio(c, g) >= target:
+        return c
+    # toward the pole on the colour's OWN side of the ground (a light accent on a dark card lightens), unless that
+    # pole cannot reach the target there — then the other one (white text on a mid green turns dark). Pure black, not
+    # #111111: black or white always clears 4.58:1, so at 4.5 or 3.0 this never raises.
+    lighter = contrast_ratio(c, _PURE_BLACK) > contrast_ratio(g, _PURE_BLACK)
+    for pole in ((WHITE, _PURE_BLACK) if lighter else (_PURE_BLACK, WHITE)):
+        if contrast_ratio(pole, g) >= target:
+            break
+    else:
+        raise ValueError("no ink reaches %.1f:1 on #%s — the ground itself is too mid-toned for text"
+                         % (target, g))
+    lo, hi = 0.0, 1.0                                    # smallest blend that clears the target
+    for _ in range(20):
+        mid = (lo + hi) / 2
+        if contrast_ratio(_blend(c, pole, mid), g) >= target:
+            hi = mid
+        else:
+            lo = mid
+    out = _blend(c, pole, hi)
+    while contrast_ratio(out, g) < target and hi < 1.0:  # 8-bit rounding can land a hair under
+        hi = min(1.0, hi + 0.01)
+        out = _blend(c, pole, hi)
+    return out
+
+
+def _text_floor(size_pt, bold=False):
+    """The WCAG 1.4.3 contrast floor for text of this size: 3.0 for large text (>=18pt, or >=14pt
+    bold), 4.5 for everything else. The same rule lint_deck's TEXT CONTRAST holds at hand-off."""
+    return 3.0 if (size_pt >= 18 or (size_pt >= 14 and bold)) else 4.5
+
+
+def _numlabel(v):
+    """A HUMAN number label for on-chart values — never scientific notation. ``f"{v:g}"`` renders
+    any magnitude >= 1e6 as '4.58e+06', which is unreadable on a slide; this gives '4.58M' instead
+    (k/M/B/T for big magnitudes, thousands separators for 1e4–1e6, plain ``:g`` for small numbers so
+    existing labels < 1e4 are byte-identical). Non-numeric values pass through as ``str()``."""
+    try:
+        x = float(v)
+    except (TypeError, ValueError):
+        return str(v)
+    if isinstance(v, bool):
+        return str(v)
+    a = abs(x)
+    for div, suf in ((1e12, "T"), (1e9, "B"), (1e6, "M")):
+        if a >= div:
+            return f"{x / div:.2f}".rstrip("0").rstrip(".") + suf
+    if a >= 1e4:                                          # 12,000 / 540,000 — exact, with separators
+        return f"{x:,.0f}" if x == int(x) else f"{x:,.2f}".rstrip("0").rstrip(".")
+    return f"{x:g}"                                       # small numbers unchanged (byte-identical)
+
+
+def _rgb_dist(a, b):
+    """Euclidean RGB distance — a quick proxy for 'are these two fills visually distinct?'.
+    (Use this, NOT contrast_ratio, for category colours: two different hues can share a
+    luminance — cyan vs amber — so contrast_ratio reads ~1 while they're clearly distinct.)"""
+    if isinstance(a, str): a = RGBColor.from_string(a)
+    if isinstance(b, str): b = RGBColor.from_string(b)
+    return sum((a[i] - b[i]) ** 2 for i in range(3)) ** 0.5
+
+
+def palette(n, accents=None):
+    """Return ``n`` DISTINCT categorical fills for a sequence of blocks/chips/cards.
+
+    A sequence of blocks must read as a *thought-through* set of colours, not an accident:
+    each block a deliberate, well-separated hue, **adjacent blocks visibly different**, and
+    **no neutral gray dropped in as a category** (gray reads as disabled/secondary, not a
+    category — reserve it for genuinely de-emphasised items). Pass the deck's own palette
+    (e.g. your style's ``ACCENTS``); defaults to deckkit's ``ACCENTS``. Cycles with a warning
+    if ``n`` exceeds the available hues (extend ``ACCENTS`` rather than repeat a category
+    colour), and warns if any two ADJACENT fills are perceptually too close — so a same-colour
+    or near-duplicate pair surfaces at build time instead of in the render.
+
+        fills = dk.palette(4, ACCENTS)          # 4 distinct, well-separated hues
+        for (x,y,w,h), label, fill in zip(cells, labels, fills):
+            dk.chip(s, x, y, w, h, *label, fill)
+    """
+    pool = list(ACCENTS if accents is None else accents)
+    if not pool:
+        raise ValueError("palette needs a non-empty accents list")
+    if n > len(pool):
+        import warnings
+        warnings.warn(f"palette({n}) exceeds {len(pool)} distinct hues — colours will repeat; "
+                      f"add more entries to ACCENTS rather than reuse a category colour")
+    fills = [pool[i % len(pool)] for i in range(n)]
+    import warnings
+    for a, b in zip(fills, fills[1:]):
+        if _rgb_dist(a, b) < 60:                 # ~perceptually similar / identical
+            warnings.warn("palette: two adjacent category fills are nearly identical — "
+                          "reorder or extend ACCENTS so neighbouring blocks contrast")
+    for c in fills:
+        cc = c if not isinstance(c, str) else RGBColor.from_string(c)
+        if max(cc[0], cc[1], cc[2]) - min(cc[0], cc[1], cc[2]) < 30:   # near-neutral / gray
+            warnings.warn("palette: a near-gray fill is used as a category colour — gray reads "
+                          "as disabled/secondary, not a category; use a saturated hue (reserve "
+                          "gray for genuinely de-emphasised items)")
+    return fills
+
+
+def palette_from_image(path, n=5, *, keep_neutrals=False):
+    """Extract ``n`` representative ACCENT colours from a generated template image, as
+    ``RGBColor``, most-frequent first.
+
+    This is the bridge that makes NATIVE content "fit a generated template": derive the
+    template's palette from its hero/divider image, set your ``style.py`` colours to it, and
+    every native card / chip / heading / motif comes out in the same hues — so the inserted
+    blocks read as part of the generated look rather than pasted on top. By default it skips
+    near-white and near-black (the background/ink, not accents) and the deck's *base* colour;
+    pass ``keep_neutrals=True`` to keep them. Deduplicates perceptually-close hues.
+
+        BASE = palette_from_image("assets/template_bg.png", 6)   # the template's own colours
+        ACCENTS = BASE                                           # native content now matches
+    """
+    from PIL import Image
+    from collections import Counter
+    im = Image.open(path).convert("RGB")
+    im.thumbnail((220, 220))
+    q = im.quantize(colors=64, method=Image.FASTOCTREE).convert("RGB")
+    out = []
+    for (r, g, b), _ in Counter(q.getdata()).most_common():
+        mx, mn = max(r, g, b), min(r, g, b)
+        if not keep_neutrals:
+            if mx > 236 and mn > 226:        # near-white background
+                continue
+            if mx < 30:                      # near-black ink
+                continue
+            if mx - mn < 22:                 # washed/near-gray, not an accent
+                continue
+        c = RGBColor(r, g, b)
+        if all(_rgb_dist(c, o) > 48 for o in out):   # keep hues visibly distinct
+            out.append(c)
+        if len(out) >= n:
+            break
+    return out
+
+FONT    = "Calibri"       # display font — cross-platform default (ships with MS Office,
+                          # renders the same on Windows PowerPoint and macOS/Keynote).
+MONO    = "Consolas"      # code / filenames — Calibri's cross-platform monospace pair.
+EQFONT  = "Arial"         # equations — universal glyph + Greek coverage
+EAFONT  = None            # East-Asian font for CJK text (e.g. "Hiragino Sans GB" — render-loop-safe on macOS;
+                          # PingFang SC / Heiti SC also measure and render correctly where installed:
+                          # _font_file reads font name tables and macOS's asset store
+                          # / "Microsoft YaHei" / "Noto Sans CJK SC"). When set, every run
+                          # ALSO carries an <a:ea> typeface so PowerPoint/Keynote render
+                          # Chinese/Japanese/Korean glyphs with THIS font (not an
+                          # uncontrolled default) while Latin/numbers stay on FONT. Leave
+                          # None for Latin decks. See references/multilingual.md.
+DISPLAY = None            # optional DISPLAY/title font (Latin) — when set, title_bar uses it for
+                          # the title so headings get their own face vs the FONT body. Falls back
+
+# Default face for helpers whose payload is ENTIRELY digits (big_numeral, stat_row figures).
+# It must be a LINING-figure face: those components render nothing but a number, so an old-style
+# default guarantees the wobble every time. (v3.6.0 made this a build gate; v3.7.0 moved the
+# enforcement HERE — prevention in the component — and left the lint as a WARN.)
+# Georgia's italic display look is still available to any caller that passes serif="Georgia".
+# Faces BELIEVED to ship old-style (text) figures. This is only a FALLBACK: whenever the font file
+# can be found we MEASURE it instead, because a hand-maintained list is wrong sooner or later — this
+# one shipped claiming Palatino has text figures when the installed Palatino measures as lining
+# (digit top-spread 2/100pt), which would have force-substituted a deliberately chosen face and
+# hard-failed a hero numeral for a defect that does not exist.
+_OLDSTYLE_FIGURE_FACES = {
+    # Kept: measured old-style here (Georgia, Hoefler Text) or old-style by design (Constantia,
+    # Candara, Calluna). Deliberately NOT listed: Palatino / Palatino Linotype / Baskerville /
+    # Book Antiqua — Palatino and Baskerville measure as LINING on this platform and Book Antiqua
+    # is metric-compatible with Palatino, so listing them blocks a face that has no defect.
+    "Georgia", "Constantia", "Hoefler Text", "Calluna", "Candara",
+}
+_FIGURE_STYLE_CACHE = {}
+
+
+def _numeral_font_file(face):
+    """Best-effort path to an installed font file for `face` (macOS/Linux/Windows dirs)."""
+    import glob
+    import os
+    roots = ("/System/Library/Fonts", "/System/Library/Fonts/Supplemental", "/Library/Fonts",
+             os.path.expanduser("~/Library/Fonts"), "/usr/share/fonts", "/usr/local/share/fonts",
+             os.path.join(os.environ.get("WINDIR", "C:\\Windows"), "Fonts"))
+    stem = face.replace(" ", "")
+    for root in roots:
+        for ext in ("ttf", "ttc", "otf", "TTF", "TTC", "OTF"):
+            for cand in (face, stem):
+                hits = glob.glob(os.path.join(root, "{}.{}".format(cand, ext)))
+                if hits:
+                    return hits[0]
+    return None
+
+
+def has_oldstyle_figures(face):
+    """True when `face`'s digits sit at MIXED heights (old-style / text figures).
+
+    Measured from the installed font when it can be located — digits in a lining face share one
+    baseline and one height, so the bounding-box spread across 0-9 is ~0. Falls back to the curated
+    list only for fonts this machine does not have.
+    """
+    if not face:
+        return False
+    if face in _FIGURE_STYLE_CACHE:
+        return _FIGURE_STYLE_CACHE[face]
+    verdict = None
+    path = _numeral_font_file(face)
+    if path:
+        try:
+            from PIL import ImageFont
+            f = ImageFont.truetype(path, 100)
+            boxes = [f.getbbox(d) for d in "0123456789"]
+            spread = max(max(b[1] for b in boxes) - min(b[1] for b in boxes),
+                         max(b[3] for b in boxes) - min(b[3] for b in boxes))
+            verdict = spread > 8          # ~8% of the em: real text figures spread 18-23
+        except Exception:
+            verdict = None
+    if verdict is None:
+        verdict = face in _OLDSTYLE_FIGURE_FACES
+    _FIGURE_STYLE_CACHE[face] = verdict
+    return verdict
+# Fallback for a digits-only run when the deck's own display face has old-style figures. A SERIF
+# with lining figures, so an editorial deck keeps its register — swapping to a grotesque would
+# silently restyle four shipped presets that deliberately choose a serif display face.
+NUMERAL_SERIF = "Times New Roman"
+
+
+def numeral_run_face(value, preferred=None, fallback=None):
+    """`numeral_face` for a run, but only when the run really is a number.
+
+    A component's value slot takes numbers AND words — a scorecard reads "596,513" or "Excellent".
+    Resolving a lining face for the word case put two typefaces inside one card, with the value in
+    Times New Roman and its label in the deck's own font.
+    """
+    if _digit_share(str(value)) < _OLDSTYLE_NUMERAL_SHARE:
+        return preferred or fallback
+    return numeral_face(preferred, fallback)
+
+
+def numeral_face(preferred=None, fallback=None):
+    """Face for a run that is ENTIRELY digits (big_numeral, stat_row figures).
+
+    Honours the deck's own display face when it has lining figures, so the design is not
+    overridden; substitutes a lining face of the SAME register when the configured face would
+    make the digits wobble. The substitution applies to an explicitly-passed face too — there is
+    deliberately no opt-in, because lint_layout would reject the result anyway, and a helper that
+    renders nothing but digits has no legitimate use for old-style figures.
+    """
+    cand = preferred or fallback or DISPLAY or FONT
+    if cand and not has_oldstyle_figures(cand):
+        return cand
+    return NUMERAL_SERIF
+
+# Shape-name marker for decorative background numerals (ghost_numeral / big_numeral mode='ghost').
+WATERMARK_TAG = "deckkit-watermark"
+# Prefix for a DELIBERATE overlap. The reason travels in the shape name, so the declaration is
+# evidence carried by the artifact rather than a claim in a plan file nobody re-reads.
+OVERLAP_TAG = "deckkit-overlap:"
+DECOR_TAG = "deckkit-decor"      # `decorative()`: pure ornament, exempt from NON-TEXT CONTRAST
+LOWRES_TAG = "deckkit-lowres"    # `low_res_intent()`: the pixels are the point, exempt from LOW_RES_IMAGE
+INITIAL_TAG = "deckkit-initial"  # a raised initial (vl_native2.raise_initial): lint measures its first line apart
+# Prefix for a LENGTH-ENCODED datum: `deckkit-datum:<group>:<value>`. Same idiom as the tags
+# above — the fact travels in the shape name, so it survives the save and a checker can read the
+# author's INTENT (the number) next to the geometry that claims to show it.
+DATUM_TAG = "deckkit-datum:"
+                          # to FONT. Pairing roles (display / body / mono) beats one font for the
+                          # whole deck — see references/font-guidance.md ("Type pairing").
+EADISPLAY = None          # optional CJK DISPLAY/title font (e.g. "Hiragino Sans GB" titles over a
+                          # "Hiragino Sans GB"/"Noto Sans CJK SC" EAFONT body). Falls back to EAFONT.
+# To re-theme a whole deck (e.g. to match a style example): call `deckkit.set_palette(...)`
+# ONCE right after import, before building. FONT/DISPLAY/EAFONT/EADISPLAY/MONO and the ACCENTS
+# cycle resolve at call time, so reassigning those globals directly also works — but the SCALAR
+# colour defaults baked into component signatures (accent=MAGENTA, ink=DEEP, marker=BLUE, …) are
+# bound at import and do NOT follow a bare `deckkit.MAGENTA = ...`; set_palette() rewrites those
+# defaults for you, so a single call re-themes the whole component set. See set_palette below.
+
+
+# ── STRUCTURAL tokens — the register's geometry, as opposed to its colour ─────────────────────
+# Every one is resolved at CALL time and defaults to a no-op, so a deck that never calls
+# set_geometry() renders byte-identically to before these existed.
+#
+# Why they are globals rather than per-call parameters: `presets.py`'s `surface` and `guard`
+# strings are already a fairly complete geometry spec — "NO rounded corners, NO soft shadows"
+# (brutalist), "hairline rules" (swiss/ink_wash/luxury), "THICK black rules/borders" (brutalist),
+# "line-work stays THIN" (blueprint) — and NONE of it was reachable through the component library.
+# A preset was 5 colours, 5 font names and 3 English sentences; the sentences were the part that
+# made a brutalist deck look brutalist, and they were the part nothing implemented. That is the
+# mechanism behind the house style: every register resolved to the same rounded card.
+RADIUS_SCALE = 1.0        # 0 = every corner square (brutalist · swiss · ink_wash · blueprint);
+                          # 1 = today; >1 = softer (memphis · midcentury "rounded organic shapes")
+RULE_W_SCALE = 1.0        # multiplies rule / divider / border weights. brutalist "THICK black
+                          # rules"; blueprint + swiss + editorial + luxury "hairline"
+GROUND = None             # the deck's background colour; add_slide() paints it. None = paint
+                          # nothing (unchanged behaviour). Set via set_ground()/presets.apply().
+
+
+def set_geometry(*, radius=None, rule_w=None):
+    """Set the deck's STRUCTURAL tokens once, after import and before building.
+
+    The twin of :func:`set_palette`, for the half of a register that is not colour. Call it with a
+    preset's own structural intent:
+
+        set_geometry(radius=0, rule_w=2.2)      # brutalist: hard edges, thick rules
+        set_geometry(radius=0, rule_w=0.6)      # swiss / ink_wash: hard edges, hairlines
+        set_geometry(radius=1.6)                # midcentury: rounded organic shapes
+
+    Deliberately NOT implemented the way set_palette is. set_palette rewrites frozen signature
+    defaults keyed on the identity of the old constant, which works for RGBColor objects and would
+    be catastrophic for floats and bools — `id(0.1)` and `id(True)` are shared across the whole
+    interpreter, so remapping by identity would rewrite unrelated parameters. These resolve at call
+    time instead, the pattern `columns()` already uses for GUTTER.
+    """
+    global RADIUS_SCALE, RULE_W_SCALE
+    if radius is not None:
+        if not (0 <= float(radius) <= 4):
+            raise ValueError("set_geometry(radius=%r): expected 0..4 (0 = square, 1 = default). "
+                             "It is a SCALE on each component's own radius, not an inch value."
+                             % (radius,))
+        RADIUS_SCALE = float(radius)
+    if rule_w is not None:
+        if not (0.2 <= float(rule_w) <= 6):
+            raise ValueError("set_geometry(rule_w=%r): expected 0.2..6 (1 = default). A weight of "
+                             "0 would delete every rule rather than thin it." % (rule_w,))
+        RULE_W_SCALE = float(rule_w)
+    return {"radius": RADIUS_SCALE, "rule_w": RULE_W_SCALE}
+
+def set_palette(*, deep=None, blue=None, teal=None, magenta=None, slate=None, mute=None,
+                tint=None,
+                mono=None, font=None, display=None, eadisplay=None, eafont=None, accents=None):
+    """Re-theme the whole deck in ONE call, right after import and before building. Reassigns the
+    palette/font globals AND rewrites every component's colour keyword-default that still points at
+    an OLD constant — so ``accent=``/``ink=``/``marker=`` defaults pick up the new hue instead of
+    silently keeping the built-in navy/blue/magenta. Each component keeps its OWN default ROLE
+    (e.g. scorecard's blue accent vs title_bar's rule) — only the *value* behind that role is
+    remapped. Colours accept an ``RGBColor`` or an ``'RRGGBB'`` hex string; fonts are names.
+
+        deckkit.set_palette(deep='0B1F3A', blue='2563EB', magenta='F97316', mono='Menlo')
+
+    Idempotent-safe; call once. Font-only re-theming can still use bare global reassignment."""
+    global DEEP, BLUE, TEAL, MAGENTA, SLATE, MUTE, TINT, ACCENTS, MONO, FONT, DISPLAY, EADISPLAY, EAFONT
+    remap = {}   # id(old_constant) -> new value, for rewriting frozen signature defaults
+
+    def _c(old, new):
+        if new is None:
+            return old
+        nv = _as_rgbc(new)
+        if nv is not old:
+            remap[id(old)] = nv
+        return nv
+    DEEP = _c(DEEP, deep); BLUE = _c(BLUE, blue); TEAL = _c(TEAL, teal)
+    MAGENTA = _c(MAGENTA, magenta); SLATE = _c(SLATE, slate); MUTE = _c(MUTE, mute)
+    # TINT is the PANEL fill — what `callout()` and `table()` fill with. It was the one
+    # palette global `set_palette` could not reach, so every register drew deckkit's pale
+    # blue: on the eight dark registers, a light-blue card on a near-black page.
+    TINT = _c(TINT, tint)
+    if mono is not None: MONO = mono
+    if font is not None: FONT = font
+    if display is not None: DISPLAY = display
+    if eadisplay is not None: EADISPLAY = eadisplay
+    if eafont is not None: EAFONT = eafont
+    if accents is not None:
+        ACCENTS = [_as_rgbc(c) for c in accents]
+    elif remap:
+        ACCENTS = [remap.get(id(c), c) for c in ACCENTS]   # keep the cycle in sync with the new hues
+    if remap:
+        import types as _types
+        for _obj in list(globals().values()):
+            if isinstance(_obj, _types.FunctionType):
+                kw = _obj.__kwdefaults__
+                if kw:
+                    for k, v in list(kw.items()):
+                        if id(v) in remap:
+                            kw[k] = remap[id(v)]
+                if _obj.__defaults__:
+                    _obj.__defaults__ = tuple(remap.get(id(v), v) for v in _obj.__defaults__)
+
+
+def _state_snapshot():
+    """deckkit's module STATE: its upper-case globals AND the keyword/positional defaults `set_palette` rewrites
+    in place. Restoring only the globals left 38 function defaults on the previous palette (smoke's examples ran
+    in each other's look)."""
+    import types as _types
+    g = {k: v for k, v in globals().items() if k.isupper() and not k.startswith("_")}
+    fn = {n: (dict(f.__kwdefaults__) if f.__kwdefaults__ else None, f.__defaults__)
+          for n, f in globals().items() if isinstance(f, _types.FunctionType)}
+    return g, fn
+
+
+def _state_restore(snap):
+    g, fn = snap
+    globals().update(g)
+    for n, (kw, d) in fn.items():
+        f = globals().get(n)
+        if f is not None and hasattr(f, "__defaults__"):
+            f.__kwdefaults__ = dict(kw) if kw else kw
+            f.__defaults__ = d
+
+
+# ====================================================================== text
+# CT_TextCharacterProperties orders its children, and <a:ea> sits after <a:latin> but BEFORE all of
+# these. Appending to the end is only safe when none of them is present — on a deck we built that is
+# always true, on a FOREIGN deck (an opened template, a redesign fix-pass) a hyperlinked run makes it
+# false, and PowerPoint rejects an out-of-order rPr rather than ignoring it. retrofit_ea() runs on
+# exactly those foreign decks, so the position is computed instead of assumed.
+_EA_FOLLOWERS = ('a:cs', 'a:sym', 'a:hlinkClick', 'a:hlinkMouseOver', 'a:rtl', 'a:extLst')
+
+
+def _ea_face(el):
+    ea = el.find(qn('a:ea')) if el is not None else None
+    return ea.get('typeface') if ea is not None else None
+
+
+def _inherited_ea(r_el):
+    """The East-Asian typeface this `<a:r>` will actually render with, or None.
+
+    OOXML resolves a run's EA face by inheritance, and CJK_NO_EA used to test only the first step
+    of that chain — `run.rPr/a:ea` — so a run that inherits a perfectly good face was reported as a
+    CRITICAL. Measured: on a deck whose paragraphs carry the face in `a:pPr/a:defRPr` and whose
+    shapes carry it in `a:lstStyle`, all such runs flagged, and `strict=True` would have refused to
+    save a deck that renders correctly. That is not a stylistic quibble on the template branch — a
+    supplied CJK template is exactly where the face lives one level up.
+
+    It also matters for retrofit_ea(): stamping the deck's own EAFONT onto a run that inherits the
+    TEMPLATE's CJK face would silently retypeset someone else's deck while clearing a lint line.
+    Both callers ask this one question, so the fix and the finding cannot disagree.
+
+    Deliberately LOCAL — run → paragraph `defRPr` → the shape's `lstStyle` for that paragraph's
+    level. It does NOT cross into the layout, master or theme, which live in other parts: a
+    theme-level `minorFont/ea` still reads as missing here. That is a known remaining
+    over-report, and the honest one to leave: resolving placeholder inheritance means walking the
+    layout/master chain per shape, and under-reporting a genuinely absent EA font costs a silently
+    wrong render, while over-reporting costs one `retrofit_ea(prs)` call.
+    """
+    face = _ea_face(r_el.find(qn('a:rPr')))
+    if face:
+        return face
+    para = r_el.getparent()                      # <a:p>
+    if para is None:
+        return None
+    pPr = para.find(qn('a:pPr'))
+    lvl = 0
+    if pPr is not None:
+        face = _ea_face(pPr.find(qn('a:defRPr')))
+        if face:
+            return face
+        try:
+            lvl = int(pPr.get('lvl') or 0)
+        except (TypeError, ValueError):
+            lvl = 0
+    body = para.getparent()                      # <p:txBody> / <a:txBody>
+    lst = body.find(qn('a:lstStyle')) if body is not None else None
+    if lst is not None:
+        lp = lst.find(qn('a:lvl%dpPr' % (lvl + 1)))
+        face = _ea_face(lp.find(qn('a:defRPr')) if lp is not None else None)
+        if face:
+            return face
+    return None
+
+
+def _stamp_ea(r_el, typeface):
+    """Give ONE `<a:r>` (or `<a:fld>`) a real `<a:ea typeface=…>`, in its schema position.
+
+    Returns True if it set a face, False if the run already carried a real one — a deliberate
+    per-run choice, a cover set in EADISPLAY, a quotation in a second family — which is never
+    overwritten.
+
+    🔴 The guard tests the resolved FACE, not the presence of the element, and that distinction is
+    load-bearing: `<a:ea typeface=""/>` is how OOXML spells "no East-Asian font" (it is literally
+    what the stock Office theme's fontScheme carries, and templates copy it down). A presence guard
+    made the two halves of this feature disagree — `_inherited_ea` correctly read the empty string
+    as NO face, so `CJK_NO_EA` fired and `retrofit_ea` decided the run needed fixing, then this
+    function returned False and stamped nothing. `lint_layout(strict=True)` then raised AFTER the
+    documented remedy had run, on the foreign deck the remedy exists for, with no second lever.
+
+    XML-level rather than python-pptx-level because retrofit_ea() has to reach runs inside groups
+    and table cells, where there is no `_Run` proxy to hand to the paragraph API.
+    """
+    rPr = r_el.find(qn('a:rPr'))
+    if rPr is None:
+        rPr = r_el.makeelement(qn('a:rPr'), {})
+        r_el.insert(0, rPr)                  # <a:r> is (rPr?, t) — rPr is always first
+    return _set_ea(rPr, typeface)
+
+
+def _set_ea(rPr, typeface):
+    """`_stamp_ea`'s body, on a CT_TextCharacterProperties directly.
+
+    Separate because a chart's font lives in `c:txPr/…/a:defRPr` — the same element type, reached
+    without any run — and one implementation of "where does <a:ea> go" is the whole point.
+    """
+    existing = rPr.find(qn('a:ea'))
+    if existing is not None:
+        if existing.get('typeface'):
+            return False
+        existing.set('typeface', typeface)   # an empty slot IS the fault; fill it in place
+        return True
+    ea = rPr.makeelement(qn('a:ea'), {'typeface': typeface})
+    latin = rPr.find(qn('a:latin'))
+    if latin is not None:
+        latin.addnext(ea)
+        return True
+    for tag in _EA_FOLLOWERS:
+        nxt = rPr.find(qn(tag))
+        if nxt is not None:
+            nxt.addprevious(ea)
+            return True
+    rPr.append(ea)
+    return True
+
+
+# East-Asian faces per SCRIPT and register, per platform — one table for deckkit, visual_languages and the lint
+# advice. A Chinese face has no Hangul (Hiragino Sans GB: none in its cmap), so a Korean run under the deck's Han
+# EAFONT fell back to whatever the renderer found. The "win" faces are Microsoft's documented defaults (unverified
+# here: no Windows renderer on the build machine).
+EA_FACES = {
+    "han": {"serif": {"mac": "Songti SC", "win": "SimSun"}, "sans": {"mac": "Hiragino Sans GB", "win": "Microsoft YaHei"}},
+    "kana": {"serif": {"mac": "Hiragino Mincho ProN", "win": "Yu Mincho"}, "sans": {"mac": "Hiragino Sans", "win": "Yu Gothic"}},
+    "hangul": {"serif": {"mac": "AppleMyungjo", "win": "Batang"}, "sans": {"mac": "Apple SD Gothic Neo", "win": "Malgun Gothic"}},
+}
+EA_LINUX = {"han": "Noto Sans CJK SC", "kana": "Noto Sans CJK JP", "hangul": "Noto Sans CJK KR"}
+
+
+def script_of(text):
+    """'hangul' / 'kana' / 'han' for the CJK script a string carries (Hangul or kana win over Han), else None."""
+    t = text or ""
+    if any("가" <= ch <= "힯" or "ᄀ" <= ch <= "ᇿ" for ch in t):
+        return "hangul"
+    if any("぀" <= ch <= "ヿ" for ch in t):
+        return "kana"
+    if any("一" <= ch <= "鿿" for ch in t):
+        return "han"
+    return None
+
+
+_CMAP_CACHE = {}
+
+
+def _face_covers(face, text):
+    """True/False: the INSTALLED file of `face` has a glyph for every non-space character of `text`; None when
+    the face is not installed here (nothing to read — never guess)."""
+    if not face or _font_substituted(face):
+        return None
+    res = _font_face(face)
+    if not res:
+        return None
+    key = tuple(res)
+    if key not in _CMAP_CACHE:
+        try:
+            from fontTools.ttLib import TTFont
+            _CMAP_CACHE[key] = set(TTFont(res[0], fontNumber=res[1] or 0, lazy=True).getBestCmap() or {})
+        except Exception:
+            _CMAP_CACHE[key] = None
+    cmap = _CMAP_CACHE[key]
+    if cmap is None:
+        return None
+    return all(ord(c) in cmap for c in text if not c.isspace())
+
+
+def _serif_face(face):
+    f = str(face or "").lower()
+    return any(k in f for k in ("song", "ming", "mincho", "myungjo", "batang", "serif", "simsun", "kai", "fangsong"))
+
+
+def _ea_for_text(face, text):
+    """The EA face to set on a run of `text`: `face`, unless it is installed here and CANNOT draw the run's CJK
+    (Hangul under a Chinese face) — then that script's face of the same register for this platform."""
+    if not face or not _has_cjk(text or ""):
+        return face
+    cjk = "".join(c for c in text if _has_cjk(c))
+    if _face_covers(face, cjk) is not False:
+        return face
+    scr = script_of(cjk)
+    if scr is None:
+        return face
+    plat = "mac" if _sys_rg.platform == "darwin" else ("win" if _sys_rg.platform.startswith("win") else "linux")
+    alt = EA_LINUX[scr] if plat == "linux" else EA_FACES[scr]["serif" if _serif_face(face) else "sans"][plat]
+    return alt if _face_covers(alt, cjk) is not False else face
+
+
+def _apply_ea(run, typeface):
+    """Set the East-Asian (<a:ea>) typeface so PowerPoint/Keynote render CJK glyphs with
+    the chosen font (Latin chars keep the <a:latin> font). python-pptx only writes
+    <a:latin>, so we add <a:ea> directly, in the correct schema position (after latin)."""
+    rPr = run._r.get_or_add_rPr()
+    ea = rPr.find(qn('a:ea'))
+    if ea is not None:
+        ea.set('typeface', typeface)         # set_font is the AUTHOR speaking — it does overwrite
+    else:
+        _stamp_ea(run._r, typeface)
+
+
+def _cjk_runs_missing_ea(spTree):
+    """Every `<a:r>`/`<a:fld>` under a shape tree whose CJK text resolves no EA face.
+
+    `<a:fld>` is in because a field carries its own `rPr` and its own rendered text — a supplied
+    template's Chinese date or footer field is CJK the author never typed, and it renders in the
+    fallback like any other run. `_stamp_ea` works on it unchanged: its `rPr` is the same
+    CT_TextCharacterProperties and is equally the first child.
+    """
+    for el in spTree.iter(qn('a:r'), qn('a:fld')):
+        t = el.find(qn('a:t'))
+        if t is None or not _has_cjk(t.text or ''):
+            continue
+        if _inherited_ea(el):
+            continue                              # already renders with a controlled face
+        yield el
+
+
+def _chart_ea_parts(slide):
+    """The `c:txPr/a:defRPr` of every chart on a slide — where chart text gets its font.
+
+    A chart's categories and axis labels are `c:pt/c:v` strings in a SEPARATE part, with no runs of
+    their own; they inherit from the chart-space text properties. So `.iter('a:r')` over the slide
+    finds nothing and stamps nothing, and neither lint sees a graphicFrame's text either — a
+    foreign deck's 一月/二月/三月 axis would keep an uncontrolled EA font with every gate reporting
+    clean. deckkit's own `native_chart()` already stamps exactly this slot at build time; this is
+    the same fix on the path retrofit_ea exists for.
+
+    Two things this got wrong first time round, both on FOREIGN charts — the only ones it is for,
+    since a deckkit-built chart already carries a chartSpace `c:txPr`:
+
+    · The insert position. CT_ChartSpace is a SEQUENCE and `c:txPr` is 10th of 14, BEFORE
+      `c:externalData`; appending put it last and the chart part stopped validating. That is the
+      same failure `_EA_FOLLOWERS` exists to prevent for `a:rPr` one screen up — the guard was
+      written for runs and then not applied here. `get_or_add_txPr()` is used instead of hand-rolled
+      XML precisely so the successor list is python-pptx's and not mine.
+    · The CJK guard. Every other branch of the retrofit only touches runs whose text is CJK; this
+      one ran on any chart at all, so an all-Latin deck came back "stamped 1 run(s)" with its chart
+      part rewritten for nothing. A chart's text is in `c:v` cells, so that is where to look.
+    """
+    for sh in slide.shapes:
+        if not getattr(sh, "has_chart", False):
+            continue
+        try:
+            cs = sh.chart._chartSpace
+        except Exception:
+            continue
+        if not any(_has_cjk(v.text or '') for v in cs.iter(qn('c:v'))):
+            continue                   # a Latin chart is not this function's business
+        txPr = cs.find(qn('c:txPr'))
+        if txPr is None:
+            try:
+                txPr = cs.get_or_add_txPr()      # python-pptx owns the CT_ChartSpace child order
+            except Exception:
+                continue                          # cannot place it safely -> leave the part alone
+        para = txPr.find(qn('a:p'))
+        if para is None:
+            para = txPr.makeelement(qn('a:p'), {})
+            txPr.append(para)
+        pPr = para.find(qn('a:pPr'))
+        if pPr is None:
+            pPr = para.makeelement(qn('a:pPr'), {})
+            para.insert(0, pPr)
+        d = pPr.find(qn('a:defRPr'))
+        if d is None:
+            d = pPr.makeelement(qn('a:defRPr'), {})
+            pPr.append(d)
+        yield d
+
+
+def _layout_cjk_without_ea(prs):
+    """CJK runs sitting on LAYOUTS and MASTERS with no EA face — counted, never silently ignored.
+
+    A non-placeholder CJK shape on a layout is composited onto every slide that uses it, and it is
+    invisible to all three gates: `CJK_NO_EA` walks `slide.shapes`, lint_deck's render-time backstop
+    walks the same, and this function's default is not to touch other parts. Saying "layouts are
+    template chrome, leave them alone" made that sound harmless. It is not harmless — it is the one
+    case where a supplied template really does contribute its own CJK text — so the omission is
+    reported rather than assumed away, and `layouts=True` is the lever.
+    """
+    out = []
+    for master in prs.slide_masters:
+        for part in [master] + list(master.slide_layouts):
+            out.extend(_cjk_runs_missing_ea(part.shapes._spTree))
+    return out
+
+
+def retrofit_ea(prs, face=None, *, layouts=False, verbose=True):
+    """Give every CJK run in an ALREADY-BUILT deck the `<a:ea>` font slot it is missing.
+
+    This is the remedy for `lint_layout`'s `CJK_NO_EA` CRITICAL, and it exists because the advice
+    that CRITICAL used to give — "set deckkit.EAFONT before building" — is not something you can do
+    at the moment you read it. `lint_layout` runs at the END of a build script, so by then the runs
+    are already made. Two causes, and they want different follow-ups:
+
+      · the runs went through `set_font()` but `EAFONT` was never set. Setting it at the top of the
+        script makes the NEXT build clean; this call fixes the one in your hand.
+      · the runs never went through `set_font()` at all — a REDESIGN / surgical fix-pass editing a
+        deck this skill did not author, or raw `python-pptx` in the build script. `EAFONT` will not
+        help next time either, because nothing reads it on that path; keep calling this.
+
+    (`open_template()` is NOT a source: it drops every slide, and python-pptx clones layout
+    placeholders empty, so no template-owned run ever lands on a slide. What a template really
+    contributes is LAYOUT chrome — see `layouts=` below.)
+
+        dk.retrofit_ea(prs, "Hiragino Sans GB")   # or set dk.EAFONT first and pass nothing
+        dk.lint_layout(prs, strict=True)
+        prs.save(out)
+
+    `face` defaults to `EAFONT` (then `EADISPLAY`). If neither is set this RAISES rather than
+    quietly doing nothing — a silent no-op here would leave the deck broken while making the lint
+    line disappear, which is worse than the fault. `references/multilingual.md` has the per-OS
+    pairing table (macOS "Hiragino Sans GB" · Windows "Microsoft YaHei" · Linux "Noto Sans CJK SC").
+
+    Reaches every `<a:r>` and `<a:fld>` under each slide's shape tree — so GROUPS, TABLE CELLS and
+    date/footer FIELDS are covered, none of which `CJK_NO_EA` can see (it walks `slide.shapes` and
+    tests `has_text_frame`, and that is False for a group, a table and a graphic frame) — plus each
+    CHART's `c:txPr/a:defRPr`, which lives in another part entirely and is where a chart's category
+    and axis text gets its font. Fixing more than the gate reports is deliberate; those runs render
+    with an uncontrolled fallback just the same.
+
+    `layouts=True` extends the same pass to slide LAYOUTS and MASTERS. It is off by default because
+    rewriting a supplied template's masters is a bigger act than clearing a lint line — but the
+    default is LOUD, not silent: a deck with unfixed CJK on its layouts says so and names the count,
+    because that text composites onto every slide using the layout and no gate anywhere sees it.
+
+    Skips any run that already resolves an EA face — its own, or one inherited from the paragraph
+    or the shape's list style (`_inherited_ea`, the same question the CRITICAL asks). On a supplied
+    CJK template the face usually lives one level up, and overwriting it at run level would
+    retypeset someone else's deck as a side effect of clearing a lint line. An `<a:ea typeface=""/>`
+    is NOT such a face — that is OOXML's way of writing "none" — and is filled in.
+
+    Returns the number of runs stamped.
+    """
+    face = face or EAFONT or EADISPLAY
+    if not face:
+        raise ValueError(
+            "retrofit_ea() needs an East-Asian typeface and none is set. Pass one, or set "
+            "deckkit.EAFONT first — e.g. 'Hiragino Sans GB' (macOS), 'Microsoft YaHei' (Windows), "
+            "'Noto Sans CJK SC' (Linux); see references/multilingual.md. Defaulting to a face "
+            "here would pick one that may not exist on the presenting machine, and returning 0 "
+            "would silence CJK_NO_EA without fixing a single run.")
+    n = 0
+    for slide in prs.slides:
+        for el in _cjk_runs_missing_ea(slide.shapes._spTree):
+            _t = el.find(qn('a:t'))
+            if _stamp_ea(el, _ea_for_text(face, _t.text if _t is not None else "")):
+                n += 1
+        for defrpr in _chart_ea_parts(slide):
+            if _set_ea(defrpr, face):
+                n += 1
+    stranded = _layout_cjk_without_ea(prs)
+    if layouts:
+        for el in stranded:
+            if _stamp_ea(el, face):
+                n += 1
+        stranded = []
+    if verbose:
+        print("[deckkit] retrofit_ea: stamped <a:ea typeface='{}'> on {} run(s)".format(face, n))
+    if stranded:
+        print("[deckkit] retrofit_ea: {} CJK run(s) on LAYOUTS/MASTERS still have no EA font "
+              "(e.g. {!r}). That text composites onto every slide using the layout and NO gate "
+              "sees it — CJK_NO_EA and lint_deck both walk slide shapes only. Pass layouts=True "
+              "to fix them too, or set the face in the template."
+              .format(len(stranded),
+                      (stranded[0].find(qn('a:t')).text or '')[:12]))
+    return n
+
+def set_font(run, size, color, bold=False, italic=False, font=None, ea=None):
+    run.font.name = font or FONT          # resolve FONT at call time so re-theming works
+    run.font.size = Pt(size)
+    run.font.bold = bold
+    run.font.italic = italic
+    run.font.color.rgb = color
+    eaf = ea or EAFONT                     # also tag CJK font when set (mixed CN/EN stays correct)
+    if eaf:
+        _apply_ea(run, _ea_for_text(eaf, getattr(run, "text", "")))   # a face that cannot draw the script yields
+
+
+CJK_LS = 1.12             # default line_spacing (OOXML spcPct — a multiple of SINGLE spacing,
+                          # which renders at ≈1.2× font size) for CJK-bearing paragraphs when the
+                          # caller doesn't force one. 1.12 × 1.2 ≈ **1.34× font size** — inside the
+                          # professional CJK slide band (≈1.3–1.45× font size; mixed EN/Chinese ≈1.35×).
+                          # ⚠ UNITS: python-pptx line_spacing floats are spcPct, NOT em-multiples —
+                          # "1.35 line height" in design terms is line_spacing ≈ 1.12, not 1.35.
+                          # Latin-only paragraphs keep 1.0 (single). Pass an explicit line_spacing
+                          # to override either way (tuned layouts are untouched).
+
+_CJK_ORD = ((0x1100, 0x11FF),   # Hangul Jamo (NFD-decomposed Korean)
+            (0x2E80, 0x9FFF),   # radicals · kana · CJK punctuation · Han
+            (0xAC00, 0xD7AF),   # Hangul syllables
+            (0xF900, 0xFAFF),   # CJK compatibility ideographs
+            (0xFF00, 0xFFEF),   # full-width forms + half-width katakana
+            (0x20000, 0x3134F)) # supplementary ideographic planes (e.g. 𠮷)
+
+
+def _has_cjk(s):
+    """True if the string contains any CJK-context glyph (the leading/EA-font classifier)."""
+    return any(a <= ord(ch) <= b for ch in s for a, b in _CJK_ORD)
+
+
+CJK_SPACING = None        # opt-in 盘古之白 normalizer: None (default — byte-for-byte current
+                          # behaviour, nothing is touched) | 'spaced' (insert ONE ASCII space at
+                          # every CJK↔Latin boundary — 全年 ARR 增长 51%) | 'unspaced' (strip such
+                          # boundary spaces). Set beside EAFONT before building a CJK/bilingual
+                          # deck so the deck-wide convention holds BY CONSTRUCTION instead of by
+                          # per-string discipline (lint's CJK-LATIN SPACING warn stays as the net).
+                          # text() applies it per paragraph (runs AND the seams between adjacent
+                          # runs — the accent-coloured number lockup is its own run) and table()
+                          # applies it per cell; MONO / EQ_MATHFONT runs and URL/path/code strings
+                          # are exempt. See references/multilingual.md.
+
+# ---- shared CJK↔Latin boundary classes — the ONE source of truth for the 盘古之白 convention.
+# lint_deck.py imports BOTH constants for its _SPACED/_UNSPACED counters, so the normalizer and
+# the render lint can never drift. NOTE: the CJK class deliberately starts at U+3040 — CJK
+# punctuation (U+3000–303F) and full-width forms (U+FF00–FFEF) are EXCLUDED, so pangu() never
+# inserts a space next to full-width punctuation (they take no flanking spaces).
+PANGU_CJK_CLASS = "\u3040-\u30ff\u3400-\u4dbf\u4e00-\u9fff\uac00-\ud7af\uf900-\ufaff"
+PANGU_LATIN_CLASS = "A-Za-z0-9%"
+
+_PANGU_INS_A = re.compile(f"([{PANGU_CJK_CLASS}])([{PANGU_LATIN_CLASS}])")
+_PANGU_INS_B = re.compile(f"([{PANGU_LATIN_CLASS}])([{PANGU_CJK_CLASS}])")
+_PANGU_DEL_A = re.compile(f"([{PANGU_CJK_CLASS}]) +([{PANGU_LATIN_CLASS}])")
+_PANGU_DEL_B = re.compile(f"([{PANGU_LATIN_CLASS}]) +([{PANGU_CJK_CLASS}])")
+# operator symmetry: only when whitespace ALREADY exists on both sides of = ≈ → + × ÷ ± and the
+# two space characters differ (the classic full-width-one-side bug) — never insert new spaces.
+_PANGU_OP = re.compile("([ 　])([=≈→+×÷±])([ 　])")
+# never touch URLs / paths / code-looking strings (the exemption is per string, conservative)
+_PANGU_EXEMPT = re.compile(r"://|www\.|`|[\w\)\]]\/[\w\(\[]|\\[A-Za-z]")
+# a bare CJK↔Latin boundary (either direction) — used to judge the SEAM between adjacent runs
+_PANGU_SEAM = re.compile(f"[{PANGU_CJK_CLASS}][{PANGU_LATIN_CLASS}]"
+                         f"|[{PANGU_LATIN_CLASS}][{PANGU_CJK_CLASS}]")
+
+
+def pangu(s, mode=None):
+    """Normalize CJK↔Latin boundary spacing (盘古之白) in one string, per the deck convention.
+
+    ``pangu(s, mode=None)`` — ``mode`` = ``'spaced'`` | ``'unspaced'`` | ``None`` (falls back to
+    the module global ``CJK_SPACING``; both ``None`` → the string is returned untouched).
+    'spaced' inserts ONE ASCII space at each bare CJK↔Latin boundary (Latin class
+    ``[A-Za-z0-9%]`` — the same class the render lint counts); 'unspaced' strips such spaces.
+    Either mode also SYMMETRIZES an operator's existing flanking spaces (``= ≈ → + × ÷ ±``):
+    when a full-width space (U+3000) sits on one side and an ASCII space on the other, both
+    become the convention's space ('spaced' → ASCII, 'unspaced' → full-width, which reads well
+    between CJK terms) — spaces are never *inserted* around operators. Full-width punctuation
+    never gains flanking spaces (excluded from the boundary class by construction), and
+    URL/path/code-looking strings are returned untouched. Idempotent: pangu(pangu(s)) == pangu(s).
+    """
+    mode = mode or CJK_SPACING
+    if not mode or not s or _PANGU_EXEMPT.search(s):
+        return s
+    if mode not in ("spaced", "unspaced"):
+        raise ValueError("pangu(): mode must be 'spaced', 'unspaced', or None")
+    op_sp = " " if mode == "spaced" else "　"
+    s = _PANGU_OP.sub(lambda m: (m.group(0) if m.group(1) == m.group(3)
+                                 else op_sp + m.group(2) + op_sp), s)
+    if mode == "spaced":
+        s = _PANGU_INS_A.sub(r"\1 \2", s)
+        s = _PANGU_INS_B.sub(r"\1 \2", s)
+    else:
+        s = _PANGU_DEL_A.sub(r"\1\2", s)
+        s = _PANGU_DEL_B.sub(r"\1\2", s)
+    return s
+
+
+def _pangu_exempt_run(font_name):
+    """Runs typeset in the code/math faces keep their spacing verbatim."""
+    return font_name is not None and font_name in (MONO, EQ_MATHFONT)
+
+
+def _pangu_para(para):
+    """Apply the CJK_SPACING convention to ONE text() paragraph: each run's string AND each
+    seam between adjacent (non-exempt) runs — the accent-coloured number lockup ('速度' + '3倍'
+    as two runs) is the dominant bilingual pattern, and a per-run pass alone would miss its
+    boundary. The seam space is appended to / stripped from the LEFT run's tail."""
+    out = [list(r) for r in para]
+    for r in out:
+        if not _pangu_exempt_run(r[5] if len(r) > 5 else None):
+            r[0] = pangu(r[0])
+    ins = _PANGU_SEAM
+    for k, (a, b) in enumerate(zip(out, out[1:])):
+        if (_pangu_exempt_run(a[5] if len(a) > 5 else None)
+                or _pangu_exempt_run(b[5] if len(b) > 5 else None) or not a[0] or not b[0]):
+            continue
+        if CJK_SPACING == "spaced":
+            if ins.fullmatch(a[0][-1] + b[0][0]):
+                if (getattr(para[k], "highlight", None) is not None
+                        and getattr(para[k + 1], "highlight", None) is None):
+                    b[0] = " " + b[0]                 # keep the space off the highlighter block
+                else:
+                    a[0] += " "
+        else:
+            while a[0].endswith(" ") and a[0].rstrip(" ") and b[0] \
+                    and ins.fullmatch(a[0].rstrip(" ")[-1] + b[0][0]):
+                a[0] = a[0][:-1]
+            while b[0].startswith(" ") and a[0] and b[0].lstrip(" ") \
+                    and ins.fullmatch(a[0][-1] + b[0].lstrip(" ")[0]):
+                b[0] = b[0][1:]
+    rebuilt = [tuple(r) for r in out]
+    # a `mark()`ed run must survive the rebuild — losing it would silently drop the highlight
+    for i, orig in enumerate(para):
+        hl = getattr(orig, "highlight", None)
+        if hl is not None:
+            rebuilt[i] = _Marked(rebuilt[i])
+            rebuilt[i].highlight = hl
+    return rebuilt
+
+
+class _Marked(tuple):
+    """A run tuple that also carries a highlighter colour. Unpacks exactly like the run it wraps,
+    so every reader of run tuples keeps working; only `text()` looks for `.highlight`."""
+    highlight = None
+
+
+# rPr children that must come AFTER <a:highlight> (CT_TextCharacterProperties sequence)
+_HL_SUCCESSORS = ("uLnTx", "uLn", "uFillTx", "uFill", "latin", "ea", "cs", "sym",
+                  "hlinkClick", "hlinkMouseOver", "rtl", "extLst")
+
+
+def _set_highlight(run, color):
+    """Write <a:highlight> on a python-pptx run, in schema order."""
+    rPr = run._r.get_or_add_rPr()
+    for old in rPr.findall(qn("a:highlight")):
+        rPr.remove(old)
+    h = rPr.makeelement(qn("a:highlight"), {})
+    h.append(h.makeelement(qn("a:srgbClr"), {"val": str(_as_rgb(color))}))
+    nxt = next((ch for ch in rPr if isinstance(ch.tag, str)
+                and ch.tag.rsplit("}", 1)[-1] in _HL_SUCCESSORS), None)
+    if nxt is not None:
+        nxt.addprevious(h)
+    else:
+        rPr.append(h)
+    return run
+
+
+def mark(run, color):
+    """A run set on a HIGHLIGHTER block — the editorial move of putting one or two words of a
+    headline on colour. Native `<a:highlight>`: it follows the glyphs through every wrap, in any
+    script, and stays editable. Use it INSIDE a text() paragraph in place of the plain run:
+
+        dk.text(s, x, y, w, h, [[("BUILD THE SMALLEST ", 54, dk.DEEP, True, False),
+                                 dk.mark(("OBJECT", 54, dk.DEEP, True, False), "D4FF3A"),
+                                 (" THAT ASKS A QUESTION", 54, dk.DEEP, True, False)]])
+
+    CJK works the same; give the run its East-Asian face in the SEVENTH slot (or set `dk.EAFONT`),
+    or `lint_layout` reports CJK_NO_EA: `dk.mark(("最小", 54, dk.DEEP, True, False, None, "PingFang SC"), "D4FF3A")`.
+    Colours: 'RRGGBB' / '#RRGGBB' hex, an RGBColor, or an (r, g, b) tuple.
+
+    A separate shape behind the word has to be positioned by guesswork and drifts off it when the
+    line wraps (measured 2026-10-03: a guessed block covered half of "NEED ROOM").
+
+    RAISES ValueError when the ink fails WCAG on the highlight (4.5:1, or 3:1 for text >= 18pt or
+    bold >= 14pt) — pick the ink with `dk.on(color)`. The render gate also reads the highlight as
+    the run's backing, so a pair written by hand is caught there."""
+    if not isinstance(run, tuple) or len(run) < 5:
+        raise TypeError("mark(): pass a run tuple (text, size, color, bold, italic[, font[, ea]])")
+    txt, size, ink, bold = run[0], run[1], run[2], run[3]
+    if size is not None and (isinstance(size, bool) or not isinstance(size, (int, float))):
+        raise TypeError("mark(): {!r} size must be a number of points, got {!r}".format(
+            str(txt)[:24], size))
+    if size is None:
+        raise TypeError("mark(): {!r} has no explicit size — a highlight's contrast floor depends "
+                        "on it (4.5:1, or 3:1 from 18pt); pass the size in the run".format(str(txt)[:24]))
+    if ink is None:
+        raise TypeError("mark(): {!r} has no explicit colour — its contrast against the highlight "
+                        "cannot be checked; pass the ink in the run (dk.on(color))".format(str(txt)[:24]))
+    hl = _as_rgb(color)
+    need = 3.0 if (size >= 18 or (bold and size >= 14)) else 4.5
+    ratio = contrast_ratio(_as_rgb(ink), hl)
+    if ratio < need:
+        raise ValueError("mark(): {!r} ink on its highlight is {:.2f}:1, under {}:1 — use "
+                         "dk.on({!r}) for the ink".format(str(txt)[:24], ratio, need, str(hl)))
+    out = _Marked(run)
+    out.highlight = hl
+    return out
+
+
+TEXT_INSET_LR = 4 / 72.0     # text() sets 2pt left + 2pt right insets: the width its words actually get is w - this
+
+
+def text(slide, x, y, w, h, runs, align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.TOP,
+         space_after=6, line_spacing=None, wrap=True):
+    """runs = list of paragraphs; each paragraph = list of run tuples
+    (txt, size, color, bold, italic[, font]).
+
+    line_spacing=None (default) resolves PER PARAGRAPH: Latin-only → 1.0, CJK-bearing →
+    ``CJK_LS`` (renders ≈1.34× font size) — the script-aware leading a bilingual deck needs
+    (CJK glyphs fill the em-box, so single spacing reads denser than the same setting in
+    Latin). Pass a number to force one value for every paragraph, exactly as before.
+
+    wrap=True (default) word-wraps to the box width. Pass **wrap=False for a single HERO
+    NUMERAL / integral number / one-word display** that must stay on ONE line — a big "2026"
+    or "€15亿" must never break into "202"/"6". With wrap off the run overflows the box
+    instead of wrapping (size the box wide enough, or let a ghost bleed off-canvas); the
+    build-time lint still flags a real off-canvas overflow.
+
+    Vertical centring: to centre text inside a filled box/card, pass anchor=MSO_ANCHOR.MIDDLE
+    AND give this textbox the SAME (x, y, w, h) as the box. A y-offset (e.g. y+0.07) combined
+    with the box's full height pushes the centre below the box's true middle — text then reads
+    "a bit low". Want top padding? Use margin_top, not a y-offset with unchanged height.
+
+    RAISES ValueError when w or h is <= 0. A derived box that collapses is always a bug (the
+    text overflows a box with no interior and no geometry check can see it, because there is
+    nothing to overlap), so it fails at the call site where the arithmetic lives rather than in
+    the render. Reserve the fixed elements first and derive the rest from what is left."""
+    if w <= 0 or h <= 0:
+        # A derived box can collapse to zero or NEGATIVE size when the arithmetic that sized
+        # it is wrong — `h = card_h - 1.42` with card_h = 1.30 gives -0.12. python-pptx accepts
+        # that silently, the run then overflows a box with no interior, and every geometry
+        # check stays green because there is nothing to overlap. Measured: it shipped a tier
+        # card whose body text spilled straight through the rule below it, and the defect
+        # survived to the render loop. Fail at the call instead: the traceback names the
+        # slide function, which is where the bad arithmetic lives.
+        raise ValueError(
+            f"text(): non-positive box {w:.3f}x{h:.3f}in at ({x:.2f}, {y:.2f}) — the size was "
+            f"derived from arithmetic that came out <= 0. Reserve the fixed elements first, "
+            f"then derive this box from what is LEFT (see SKILL.md 'never hand-pick a y')."
+        )
+    tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+    tf = tb.text_frame
+    tf.word_wrap = bool(wrap)
+    tf.vertical_anchor = anchor
+    tf.margin_left = tf.margin_right = Pt(2)
+    tf.margin_top = tf.margin_bottom = Pt(2)
+    for i, para in enumerate(runs):
+        if CJK_SPACING:                     # opt-in 盘古之白 normalizer (default None = untouched)
+            para = _pangu_para(para)
+        p = tf.paragraphs[0] if i == 0 else tf.add_paragraph()
+        p.alignment = align
+        p.space_after = Pt(space_after)
+        p.space_before = Pt(0)
+        if line_spacing is not None:
+            p.line_spacing = line_spacing
+        else:
+            p.line_spacing = CJK_LS if any(_has_cjk(t) for (t, *_rest) in para) else 1.0
+        for _run in para:
+            (txt, size, color, bold, italic, *rest) = _run
+            r = p.add_run(); r.text = txt
+            # rest = [latin_face, ea_face] — the SEVENTH slot is the East-Asian face, and it
+            # exists because the sixth one cannot do that job. A run tuple's font goes to
+            # <a:latin>, and CJK glyphs render from <a:ea>, so on a Chinese deck a display face
+            # named in slot 6 reached only the Latin characters. Measured by pixels: swapping
+            # EAFONT changed 25,570 px of a rendered CJK title while swapping the run tuple's
+            # font changed none of the CJK glyphs at all. Omitting it (the default) keeps the
+            # old behaviour exactly — set_font falls back to EAFONT — so every existing call
+            # is unaffected.
+            set_font(r, size, color, bold, italic,
+                     rest[0] if rest else None,
+                     ea=rest[1] if len(rest) > 1 else None)
+            if getattr(_run, "highlight", None) is not None:
+                _set_highlight(r, _run.highlight)     # a `mark()`ed run
+    return tb
+
+
+# ===================================================================== shapes
+_INK_CACHE = {}
+def _png_dominant_ink(path):
+    """The representative INK colour of an icon PNG = alpha-weighted mean of its opaque pixels.
+    For a monochrome glyph this IS the glyph colour; for a duotone it's close enough to decide
+    contrast. Returns an RGBColor, or None if the file can't be read. Lets icon_tile guarantee
+    glyph↔tile contrast automatically, without the caller having to declare the ink."""
+    if path in _INK_CACHE:
+        return _INK_CACHE[path]
+    ink = None
+    try:
+        from PIL import Image
+        im = Image.open(path).convert("RGBA")
+        im.thumbnail((64, 64))
+        rs = gs = bs = ws = 0.0
+        for r, g, b, a in im.getdata():
+            if a > 40:
+                w = a / 255.0
+                rs += r * w; gs += g * w; bs += b * w; ws += w
+        if ws > 0:
+            ink = RGBColor(int(rs / ws), int(gs / ws), int(bs / ws))
+    except Exception:
+        ink = None
+    _INK_CACHE[path] = ink
+    return ink
+
+
+def _looks_color(v):
+    """True if v is a single colour spec — 'RRGGBB' / RGBColor / an (r,g,b) int triple.
+    RGBColor subclasses tuple, so this is how we tell a colour from a (pos, colour, alpha) stop."""
+    if isinstance(v, str):
+        return True
+    if isinstance(v, RGBColor):
+        return True
+    return isinstance(v, (tuple, list)) and len(v) == 3 and all(isinstance(z, int) for z in v)
+
+
+def _norm_stops(grad):
+    """Accept EITHER a two-colour shorthand `(c0, c1)` OR a full stop-list
+    `[(pos, colour[, alpha]), ...]` and return normalised `[(pos, colour, alpha), ...]`.
+    The shorthand is detected robustly: a 2-element sequence whose BOTH elements look like
+    colours. (RGBColor subclasses tuple, so a naive `isinstance(grad[0], tuple)` misfires and
+    treats `(RGBColor, RGBColor)` as a raw stop-list — the bug this guards against.)"""
+    if grad is None:
+        return None
+    if len(grad) == 2 and _looks_color(grad[0]) and _looks_color(grad[1]):
+        return [(0.0, grad[0], 1.0), (1.0, grad[1], 1.0)]
+    out = []
+    for st in grad:
+        if len(st) == 2:
+            out.append((st[0], st[1], 1.0))      # (pos, colour) → alpha 1.0
+        else:
+            out.append((st[0], st[1], st[2]))
+    return out
+
+
+def _grad_fill(shape, stops, angle=90.0, radial=False):
+    """Apply a gradient fill WITH PER-STOP ALPHA to a shape (python-pptx solid fills can't do
+    this). `stops` = a two-colour shorthand `(c0, c1)` OR a list of (pos 0..1, colour as
+    'RRGGBB'/RGBColor, alpha 0..1). `angle` is the linear direction in degrees (0=→, 90=↓);
+    `radial=True` makes a centre-out radial (for glows). This is the enabler for glass cards,
+    soft glows, and graduated photo scrims."""
+    stops = _norm_stops(stops)
+    sp = shape._element.spPr
+    for tag in ("a:noFill", "a:solidFill", "a:gradFill", "a:blipFill", "a:pattFill", "a:grpFill"):
+        e = sp.find(qn(tag))
+        if e is not None:
+            sp.remove(e)
+    gs = "".join(
+        f'<a:gs pos="{int(round(max(0.0,min(1.0,p))*100000))}">'
+        f'<a:srgbClr val="{_hex(c)}"><a:alpha val="{int(round(max(0.0,min(1.0,a))*100000))}"/></a:srgbClr></a:gs>'
+        for (p, c, a) in stops)
+    direction = ('<a:path path="circle"><a:fillToRect l="50000" t="50000" r="50000" b="50000"/></a:path>'
+                 if radial else f'<a:lin ang="{int(round((angle % 360) * 60000))}" scaled="1"/>')
+    el = parse_xml(f'<a:gradFill {nsdecls("a")}><a:gsLst>{gs}</a:gsLst>{direction}</a:gradFill>')
+    geom = sp.find(qn("a:prstGeom"))
+    if geom is None:
+        geom = sp.find(qn("a:custGeom"))
+    ln = sp.find(qn("a:ln"))
+    if geom is not None:
+        geom.addnext(el)
+    elif ln is not None:
+        ln.addprevious(el)
+    else:
+        sp.append(el)
+    return shape
+
+
+
+def _flat(shape):
+    """Remove the inherited theme <p:style> from a generated shape.
+
+    python-pptx stamps every autoshape / connector / freeform with
+    `<p:style><a:effectRef idx="2">`, which resolves to the theme's soft drop shadow. Setting
+    `shadow.inherit = False` writes an empty `<a:effectLst/>` into spPr — PowerPoint honours that,
+    **LibreOffice does not**, and LibreOffice is what the render loop and the visual critic look at.
+    Measured under a plain box: a ~10px grey gradient (185,185,185) -> white below every edge.
+
+    The result was a soft shadow under every card, chip, callout, tile, node and island in every
+    deck this skill has produced — the single artifact that most separates "2010 SmartArt" from
+    "flat editorial". Shadows are still available, but only when a caller ASKS: `offset_shadow()`
+    draws a deliberate hard shadow, and `elevation=` writes a real `<a:outerShdw>`.
+    """
+    try:
+        el = shape._element.find(qn("p:style"))
+        if el is not None:
+            el.getparent().remove(el)
+    except Exception:
+        pass
+    return shape
+
+def disc(slide, x, y, d, h=None, fill=None, line=None, line_w=1.0,
+         grad=None, grad_angle=90.0, grad_radial=False):
+    """A CIRCLE — or an ellipse when `h` differs from `d`. Same fill/line grammar as :func:`box`.
+
+    🔴 THIS EXISTS BECAUSE `box(round=True)` CANNOT DRAW ONE, AT ANY RADIUS. Measured, on a real
+    deck whose signature motif was a two-state ring: `box(round=True)` renders a rounded
+    rectangle, `r=d/2` renders a rounded rectangle, and the deck shipped three rendered
+    iterations with a green SQUARE where its device was supposed to be — with no error, no lint
+    finding, and nothing in the library to reach for instead. deckkit uses `MSO_SHAPE.OVAL`
+    seventeen times internally (icon tiles, badges, `concentric_rings`, node discs) and exposed
+    it nowhere, so every author who wanted a circle found the rounded-rectangle switch and
+    believed it.
+
+    Geometry follows `box`: `(x, y)` is the TOP-LEFT of the bounding square, not the centre, so a
+    disc drops into a `columns()`/`rows()` rect the same way every other primitive does. Pass
+    `h=` for an ellipse.
+
+        dk.disc(s, x, y, 2.2, line=GREEN, line_w=7)          # a ring
+        dk.disc(s, x, y, 0.3, fill=GREEN)                    # a dot
+        dk.disc(s, x, y, 1.4, fill=PANEL, line=HAIR)         # a filled disc with an edge
+
+    Like `box` it is `_flat()`ed, so it carries no inherited theme shadow — the second half of
+    the same trap: a shape added with `slide.shapes.add_shape` outside deckkit keeps the theme
+    `<p:style>` and LibreOffice draws a soft drop shadow under it (`INHERITED_EFFECT`), whose
+    only cure was the private `_flat`.
+
+    Returns the shape, so `tag_motif` / `alt_text` / `bleed_intent` compose with it.
+    """
+    if d <= 0 or (h is not None and h <= 0):
+        raise ValueError("disc: diameter must be positive, got d=%r h=%r" % (d, h))
+    s = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(x), Inches(y),
+                                     Inches(d), Inches(h if h is not None else d)))
+    if grad is not None:
+        _grad_fill(s, grad, angle=grad_angle, radial=grad_radial)
+    elif fill is not None:
+        s.fill.solid()
+        s.fill.fore_color.rgb = fill if isinstance(fill, RGBColor) else RGBColor.from_string(str(fill).lstrip("#"))
+    else:
+        s.fill.background()
+    if line is not None:
+        s.line.color.rgb = line if isinstance(line, RGBColor) else RGBColor.from_string(str(line).lstrip("#"))
+        s.line.width = Pt(line_w)
+    else:
+        s.line.fill.background()
+    return s
+
+
+def adopt(shape):
+    """Make a shape added OUTSIDE deckkit behave like one added through it. Returns the shape.
+
+    🔴 WHY IT IS PUBLIC. python-pptx's `add_shape` leaves the theme `<p:style>` on the shape and
+    LibreOffice draws a soft drop shadow under it — `lint_layout` reports `INHERITED_EFFECT`, and
+    the only cure was `_flat`, a PRIVATE function an author has to read the source to find.
+    Measured on a real build: the author hit the finding, went looking, and called the underscore
+    name in a deck script. Every primitive deckkit lacks arrives this way, so the escape hatch is
+    part of the contract rather than an implementation detail.
+
+        from pptx.enum.shapes import MSO_SHAPE
+        sh = dk.adopt(slide.shapes.add_shape(MSO_SHAPE.CHEVRON, ...))
+
+    Prefer a real helper where one exists — `disc` for a circle, `box` for a rectangle. This is for
+    the shapes the library genuinely does not have.
+    """
+    return _flat(shape)
+
+
+def box(slide, x, y, w, h, fill=None, line=None, line_w=1.0, round=False, corners="all", r=None,
+        grad=None, grad_angle=90.0, grad_radial=False):
+    """A rectangle. `round=True` rounds all four corners (radius = 8% of the shorter side,
+    or `r` inches if given). For a colored HEADER BAND sitting on top of a rounded card,
+    use `corners='top'` and pass `r=<the card's corner radius in inches>` so the band's
+    curve MATCHES the card — a square band over a rounded card (corners poking out) is the
+    tell to avoid. `corners='bottom'` rounds the bottom two. (A thin accent strip can
+    instead be inset by the radius so its square ends fall on the card's straight edge.)
+
+    `grad` gives a GRADIENT fill with per-stop alpha instead of a solid `fill`: a list of
+    (pos 0..1, colour, alpha 0..1); `grad_angle` sets linear direction (deg), `grad_radial=True`
+    a centre-out radial. Powers glass/glow/scrim — usually via the `glass_card`/`glow`/
+    `scrim_overlay` helpers rather than called directly."""
+    # RADIUS_SCALE, resolved at CALL time (the `columns()`/GUTTER pattern, not set_palette's
+    # id()-keyed default remap — that mechanism cannot carry floats, whose identity is shared).
+    # At 0 every rounded component squares off, which is the only way to reach three registers the
+    # library ships prose for and could not draw: brutalist "NO rounded corners", swiss "no rounded
+    # cards", east-asian "No rounded 'SaaS cards'". 55 components pass round=True through here, so
+    # this one line is the whole switch — before it, honouring those guards meant abandoning the
+    # component library and hand-rolling with box(), which is a plausible CAUSE of the measured
+    # 3-of-59 form-component usage rather than a coincidence with it.
+    if RADIUS_SCALE <= 0:
+        round, r, corners = False, None, "all"
+    if not (round or r is not None or corners != "all"):
+        t = MSO_SHAPE.RECTANGLE
+    elif corners in ("top", "bottom"):
+        t = MSO_SHAPE.ROUND_2_SAME_RECTANGLE   # rounds the two top corners (rotate for bottom)
+    else:
+        t = MSO_SHAPE.ROUNDED_RECTANGLE
+    s = _flat(slide.shapes.add_shape(t, Inches(x), Inches(y), Inches(w), Inches(h)))
+    if grad is not None: _grad_fill(s, grad, angle=grad_angle, radial=grad_radial)
+    elif fill is None: s.fill.background()
+    else: s.fill.solid(); s.fill.fore_color.rgb = _as_rgb(fill)
+    if line is None: s.line.fill.background()
+    # RULE_W_SCALE, resolved at CALL time like RADIUS_SCALE below. It used to be read by `hrule`
+    # and NOTHING else — 1 of 181 public functions — so a register's border weight reached its
+    # horizontal dividers and no card, node, tile or table rule anywhere. Measured: the same
+    # content in brutalist (rule_w 3.0), bauhaus (2.6) and swiss (0.6) produced byte-identical
+    # 1.4pt outlines. "THICK black rules/borders" is half of what makes brutalist look brutalist,
+    # and it was the half the library could not draw. No-op at the 1.0 default, so a deck that
+    # never calls set_geometry is unchanged.
+    else: s.line.color.rgb = _as_rgb(line); s.line.width = Pt(line_w * RULE_W_SCALE)
+    s.shadow.inherit = False
+    if t != MSO_SHAPE.RECTANGLE:
+        adj = ((r / min(w, h)) if r is not None else 0.08) * RADIUS_SCALE
+        adj = max(0.0, min(0.5, adj))
+        try: s.adjustments[0] = adj
+        except Exception: pass
+        if corners == "bottom":
+            s.rotation = 180
+    return s
+
+
+def glow(slide, cx, cy, w, h, color, alpha=0.5):
+    """A soft radial colour GLOW (centre-out) for depth/atmosphere on a DARK slide — place 1-2
+    off-centre behind glass cards so a flat black slide gets dimensional lighting. Invisible on
+    light decks; don't use there. (cx,cy) is the glow centre in inches."""
+    o = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(cx - w / 2), Inches(cy - h / 2), Inches(w), Inches(h)))
+    o.line.fill.background(); o.shadow.inherit = False
+    _grad_fill(o, [(0.0, color, alpha), (1.0, color, 0.0)], radial=True)
+    return o
+
+
+def scrim_overlay(slide, x, y, w, h, *, stops=((0.0, 0.0), (1.0, 0.75)), color="000000", angle=90.0):
+    """A GRADUATED alpha scrim over a photo so overlaid text stays legible WHERE THE TEXT IS,
+    while the image stays bright elsewhere — far better than a flat dark overlay. `stops` =
+    (position, alpha) pairs; aim the gradient toward the text via `angle` (90 = darker at bottom,
+    270 = darker at top). Size the rect to the text's zone, not always the whole slide."""
+    return box(slide, x, y, w, h, grad=[(p, color, a) for (p, a) in stops], grad_angle=angle)
+
+
+def glass_card(slide, x, y, w, h, tint, *, accent=None, r=0.14, rim=1.0):
+    """A frosted-glass card (UI glassmorphism) rebuilt natively in three layers: (1) a low-alpha
+    `tint` gradient body, (2) a white diagonal sheen, (3) a 1px white rim. It only reads as glass
+    on a DARK / glowing / photographic background — pair with `glow()` on a dark base. Optional
+    `accent` adds a colored top header band. Returns the body shape (place content on top)."""
+    body = box(slide, x, y, w, h, round=True, r=r,
+               grad=[(0.0, tint, 0.46), (1.0, tint, 0.20)], grad_angle=120)
+    body.line.color.rgb = WHITE; body.line.width = Pt(rim)
+    sheen = box(slide, x, y, w, h, round=True, r=r,
+                grad=[(0.0, "FFFFFF", 0.20), (0.45, "FFFFFF", 0.05), (1.0, "FFFFFF", 0.0)], grad_angle=120)
+    sheen.line.fill.background()
+    if accent is not None:
+        box(slide, x, y, w, 0.58, corners="top", r=r,
+            grad=[(0.0, accent, 0.95), (1.0, accent, 0.70)], grad_angle=0)
+    return body
+
+
+_GLASS_ALPHAS = (0.20, 0.28, 0.36, 0.45, 0.55, 0.65, 0.75, 0.85)
+
+
+class _Glass(tuple):
+    """frosted_panel's ``(x, y, w, h, ink)`` — it unpacks to five, and carries the wash it used
+    as ``.alpha`` (a ladder that climbed to 0.85 is a white card, not glass: say so)."""
+    alpha = None
+
+
+def frosted_panel(slide, backdrop, x, y, w, h, *, tint="FFFFFF", alpha=None, blur=0.18, r=0.16,
+                  rim=True):
+    """REAL frosted glass over a photo: the blurred crop of exactly the part of `backdrop` (a
+    picture placed by `picture()`) that lies under the panel, a translucent `tint` wash and a thin
+    rim. Returns ``(x, y, w, h, ink)`` — the content rect (inset 0.18in) and the ink to set on it,
+    chosen against the panel's own pixels: it clears 4.5:1 against both the dark (10th percentile)
+    and light (90th percentile) ends of the glass, or this RAISES and tells you to raise `alpha`.
+    `blur` is the blur radius as a fraction of the panel's shorter side; `alpha` is the tint's share.
+    `alpha=None` (default) uses the LIGHTEST wash that lets an ink clear 4.5:1 — a real mid-tone
+    photo region refused a fixed 30% wash (measured 2026-10-03: glass from luminance 111 to 140,
+    best ink 3.76:1), so a fixed default would refuse the commonest case. Pass a number to fix it;
+    a number that cannot work is refused, never quietly raised.
+
+        W, H = prs.slide_width / 914400, prs.slide_height / 914400   # this deck's canvas
+        bd = dk.picture(s, "field.jpg", 0, 0, W, H, fit="cover", alt="…")
+        g = dk.frosted_panel(s, bd, W * 0.55, H * 0.16, W * 0.39, H * 0.35)
+        x, y, w, h, ink = g                     # g.alpha = the wash it used
+        dk.text(s, x, y, w, h, [[("The claim", 26, ink, True, False)]],
+                anchor=dk.MSO_ANCHOR.MIDDLE)
+
+    Page chrome (`footer`, `title_bar`) assumes a light ground and has no ink of its own: over a
+    full-bleed photo, put it on the glass or on a panel too — the render gate reports TEXT NOT
+    VISIBLE otherwise (measured by an agent following these docs, 2026-10-03).
+
+    `glass_card` is the vector fake for dark UI grounds; this one is for photography. A blurred
+    crop of the WRONG region reads as a grey slab with illegible text (measured 2026-10-03), so the
+    region is computed from the backdrop's placement and crop. It refuses a rotated or shape-masked
+    backdrop and a panel not wholly over the IMAGE (a `fit="contain"` letterbox is not image) —
+    in each case the blurred region would not be what the viewer sees behind the glass."""
+    import io as _io
+    from PIL import Image, ImageFilter
+    if not hasattr(backdrop, "image"):
+        raise TypeError("frosted_panel(): the backdrop must be a PICTURE placed by picture() — the "
+                        "glass is a blur of its pixels; got a {}".format(type(backdrop).__name__))
+    if _shape_rot(backdrop):
+        raise ValueError("frosted_panel(): the backdrop is rotated — place it unrotated")
+    spPr = backdrop._element.spPr
+    g = spPr.find(qn("a:prstGeom"))
+    if spPr.find(qn("a:custGeom")) is not None or (g is not None and g.get("prst") not in ("rect", "roundRect")):
+        raise ValueError("frosted_panel(): the backdrop is masked to a shape — glass needs a "
+                         "rectangular image behind it")
+    if not (w > 0 and h > 0):
+        raise ValueError("frosted_panel(): non-positive panel {}x{}".format(w, h))
+    if alpha is not None and not 0.0 <= alpha <= 1.0:
+        raise ValueError("frosted_panel(): alpha must be within [0, 1]")
+    im = Image.open(_io.BytesIO(backdrop.image.blob)).convert("RGB")
+    iw, ih = im.size
+    cl, cr = backdrop.crop_left or 0.0, backdrop.crop_right or 0.0
+    ct, cb = backdrop.crop_top or 0.0, backdrop.crop_bottom or 0.0
+    bx, by = backdrop.left / 914400.0, backdrop.top / 914400.0
+    bw, bh = backdrop.width / 914400.0, backdrop.height / 914400.0
+    sides = [n for n, c in (("left", x < bx - 1e-6), ("top", y < by - 1e-6),
+                            ("right", x + w > bx + bw + 1e-6), ("bottom", y + h > by + bh + 1e-6)) if c]
+    if sides:
+        raise ValueError("frosted_panel(): the panel runs outside the image on the {} — keep it "
+                         "wholly over the picture".format(", ".join(sides)))
+    vx0, vy0 = cl * iw, ct * ih                                  # the visible source window (px)
+    vw, vh = (1.0 - cl - cr) * iw, (1.0 - ct - cb) * ih
+    sx0, sy0 = vx0 + (x - bx) / bw * vw, vy0 + (y - by) / bh * vh
+    sx1, sy1 = vx0 + (x + w - bx) / bw * vw, vy0 + (y + h - by) / bh * vh
+    crop = im.crop((int(sx0), int(sy0), max(int(round(sx1)), int(sx0) + 1),
+                    max(int(round(sy1)), int(sy0) + 1)))
+    frosted = crop.filter(ImageFilter.GaussianBlur(max(1.0, blur * min(crop.size))))
+    # the glass the reader sees: blur blended with the tint at `alpha`; judge the ink on its ENDS
+    t_rgb = tuple(_as_rgb(tint))
+
+    def _judge(a_):
+        comp = Image.blend(frosted, Image.new("RGB", frosted.size, t_rgb), a_).convert("L")
+        lum = sorted(comp.getdata())
+        lo_, hi_ = lum[int(0.10 * (len(lum) - 1))], lum[int(0.90 * (len(lum) - 1))]
+        ends = (RGBColor(lo_, lo_, lo_), RGBColor(hi_, hi_, hi_))
+        ink_ = max((WHITE, _BLACK), key=lambda c: min(contrast_ratio(c, e) for e in ends))
+        return ink_, min(contrast_ratio(ink_, e) for e in ends), lo_, hi_
+
+    for a_ in ((alpha,) if alpha is not None else _GLASS_ALPHAS):
+        best, worst, lo, hi = _judge(a_)
+        if worst >= 4.5:
+            alpha = a_
+            break
+    else:
+        raise ValueError("frosted_panel(): no ink clears 4.5:1 on this glass (best {:.2f}:1 — it "
+                         "runs from luminance {} to {}{}); raise alpha= or move the panel onto a "
+                         "calmer region (image_fx.quiet_region)".format(
+                             worst, lo, hi, "" if alpha is not None else
+                             ", even at the heaviest automatic wash"))
+    probe = frosted.convert("RGBA")
+    if max(probe.size) > 64:
+        probe = probe.resize((64, 64), Image.NEAREST)          # sampled as ASSET NOT USABLE does
+    probe_px = list(probe.getdata())
+    if _flat_bucket(probe_px, len(probe_px)):
+        # A blur of a calm region can come out ONE colour — then it is a plate, not a picture,
+        # and ASSET NOT USABLE (rightly) says so. Draw it as the box it is; it looks identical.
+        mr, mg, mb = (sum(c[i] for c in probe_px) // len(probe_px) for i in range(3))
+        box(slide, x, y, w, h, fill=RGBColor(mr, mg, mb), round=True, r=r)
+    else:
+        buf = _io.BytesIO()
+        frosted.save(buf, format="PNG")
+        buf.seek(0)
+        plate = slide.shapes.add_picture(buf, Inches(x), Inches(y), Inches(w), Inches(h))
+        _round_pic_geom(plate, r, w, h)
+        alt_text(plate, "")                                      # decorative: the photo has the alt
+    wash = box(slide, x, y, w, h, round=True, r=r, grad=[(0.0, tint, alpha), (1.0, tint, alpha)])
+    if rim:
+        wash.line.color.rgb = WHITE
+        wash.line.width = Pt(0.75)
+    else:
+        wash.line.fill.background()
+    if alpha >= 0.65:
+        print("frosted_panel: the wash climbed to {:.2f} — at that opacity the panel reads as a "
+              "tinted card, not glass; a calmer region of the photo (image_fx.quiet_region) keeps "
+              "the frost".format(alpha), file=_sys_rg.stderr)
+    pad = 0.18
+    out = _Glass((x + pad, y + pad, w - 2 * pad, h - 2 * pad, best))
+    out.alpha = alpha
+    return out
+
+
+def offset_shadow(slide, x, y, w, h, fill, *, dx=0.06, dy=0.06, shadow=None,
+                  line=None, line_w=2.0, round=True, r=0.1):
+    """A HARD offset 'sticker' / letterpress shadow (riso / print look): a crisp solid shadow
+    copy behind the shape, offset by (dx,dy) — NOT a soft blur. Returns the top shape so you can
+    place text on it. Use for bold/editorial/retro-print decks; skip in minimal/scientific ones."""
+    sh = shadow if shadow is not None else RGBColor(0x1B, 0x1B, 0x1B)
+    box(slide, x + dx, y + dy, w, h, fill=sh, round=round, r=r)
+    return box(slide, x, y, w, h, fill=fill, line=line, line_w=line_w, round=round, r=r)
+
+
+_GOOD = RGBColor(0x1F, 0x9D, 0x55)    # positive delta (green) — bright, for glass/dark tiles
+_BAD = RGBColor(0xE0, 0x3A, 0x2E)     # negative delta (red)   — bright, for glass/dark tiles
+_GOOD_D = RGBColor(0x15, 0x80, 0x3D)  # darker green (5.0:1 on white) — for the light tile
+_BAD_D = RGBColor(0xC4, 0x2E, 0x22)   # darker red  (5.6:1 on white)  — for the light tile
+
+def scorecard(slide, x, y, w, h, label, value, *, delta=None, caption=None, good_up=True,
+              ink=DEEP, accent=BLUE, glass_tint=None, size=None):
+    """A KPI scorecard tile: small-caps label · oversized value · colored ▲/▼ delta · tiny
+    caption — the 'current state in numbers' building block. `value`/`label` may be numbers or
+    strings (coerced). The value AUTO-FITS the tile width (it never wraps into the delta chip in a
+    tight 4-up band — that was a real collision); pass `size` to force a point size. `delta` is a
+    string ('+3.2pp' / '-18%'); an unsigned value reads as an increase, so **a sign is required to
+    mark a decrease**. Its colour is auto-set GREEN/RED by direction vs `good_up` (a falling cost
+    with good_up=False is green), and DARKENED on the light tile so it clears the 4.5:1 body floor.
+    `glass_tint` makes it a glass tile (use on dark decks). Lay out 3-6 with columns()."""
+    if glass_tint is not None:
+        glass_card(slide, x, y, w, h, glass_tint); lab_c, val_c, cap_c = WHITE, WHITE, RGBColor(0xCF, 0xD7, 0xE6)
+        good_c, bad_c = _GOOD, _BAD                                        # bright reads on the dark tint
+    else:
+        box(slide, x, y, w, h, fill=WHITE, line=RGBColor(0xE3, 0xE8, 0xEE), line_w=1.0, round=True, r=0.1)
+        box(slide, x, y, 0.1, h, fill=accent, round=True, r=0.05)          # accent spine
+        lab_c, val_c, cap_c = MUTE, ink, MUTE
+        good_c, bad_c = _GOOD_D, _BAD_D                                    # darker so it clears 4.5:1 on white
+    px = x + 0.28
+    text(slide, px, y + 0.22, w - 0.5, 0.3, [[(str(label).upper(), 11, lab_c, True, False)]], space_after=0)
+    # value auto-fits: fit_text_size handles multi-word values, and a WIDTH check via _natural_width_in
+    # shrinks a wide single-token number (fit_text_size sees a 1-token value as 1 line at any width).
+    vsz = size if size is not None else fit_text_size([(str(value), True)], w - 0.5, 0.8, 33, min_size=16)
+    nat = _natural_width_in([(str(value), True)], vsz, None)
+    if nat > (w - 0.5):
+        vsz = max(16, vsz * (w - 0.5) / nat)
+    delta_h = 0.30 if delta else 0.0
+    # caption height is MEASURED, not assumed (the recurring "caption runs past the card
+    # bottom" bug): wrap-count the real text at its size, and adapt until it fits.
+    cap_size = 10.5
+    cap_h = (measure_text([(str(caption), False)], w - 0.5, cap_size, pad=0.12)
+             if caption else 0.0)
+    # shrink the value (down to 14pt) so label + value + delta + caption ALL fit the card height —
+    # a short 4-up tile can't hold a 33pt value AND a delta AND a caption without them colliding.
+    while vsz > 14 and (0.5 + vsz / 72.0 * 1.2 + 0.08 + delta_h + cap_h) > (h - 0.10):
+        vsz -= 1.0
+    # still tight? shrink the caption itself (floor 8.5pt) before letting anything escape the card
+    while caption and cap_size > 8.5 and (0.5 + vsz / 72.0 * 1.2 + 0.08 + delta_h + cap_h) > (h - 0.10):
+        cap_size -= 0.5
+        cap_h = measure_text([(str(caption), False)], w - 0.5, cap_size, pad=0.12)
+    if caption and (0.5 + vsz / 72.0 * 1.2 + 0.08 + delta_h + cap_h) > (h - 0.02):
+        print("[deckkit] scorecard: caption doesn't fit the tile even at 8.5pt — shorten the "
+              "caption or grow the card (h)")
+    # the value is a FIGURE: resolve a lining face rather than inheriting a body font whose
+    # digits sit at mixed heights (a Georgia body face made this tile fail its own build gate)
+    tbv = text(slide, px, y + 0.5, w - 0.5, 0.8,
+               [[(str(value), vsz, val_c, True, False,
+                  numeral_run_face(value, fallback=FONT))]], space_after=0)
+    tbv.text_frame.word_wrap = False                                      # never char-break the number
+    cy = max(y + 1.32, y + 0.5 + vsz / 72.0 * 1.2 + 0.08)                 # airy floor when there's room
+    if cy + delta_h + cap_h > y + h - 0.04:                              # ...compressed only when tight
+        cy = max(y + 0.5 + vsz / 72.0 * 1.2 + 0.08, y + h - 0.10 - delta_h - cap_h)
+    if delta:
+        d = str(delta).strip()
+        up = not d.startswith(("-", "▼"))            # unsigned / '+' = increase; sign required for a decrease
+        dc = good_c if (up == good_up) else bad_c
+        text(slide, px, cy, w - 0.5, 0.28, [[(("▲ " if up else "▼ ") + d.lstrip("+-▲▼ "), 12, dc, True, False)]], space_after=0)
+        cy += delta_h
+    if caption:
+        text(slide, px, cy, w - 0.5, cap_h, [[(caption, cap_size, cap_c, False, False)]], space_after=0)
+
+
+def leaderboard(slide, x, y, w, rows, *, row_h=0.5, gap=0.1, ink=DEEP):
+    """Ranked / part-to-whole list keyed to a chart: each row = a colored left swatch (matching a
+    chart wedge/series) + name + right-aligned value (+ optional sub). Pass the SAME colour list
+    you built the chart with so legend and chart stay in sync. rows = [(color, name, value[, sub])]."""
+    cy = y
+    for row in rows:
+        color = row[0]; name = str(row[1]); value = str(row[2]) if len(row) > 2 else ""
+        sub = str(row[3]) if len(row) > 3 else None
+        box(slide, x, cy, 0.12, row_h, fill=color, round=True, r=0.04)
+        if sub:                                              # name + sub both stay INSIDE this row
+            text(slide, x + 0.28, cy + 0.02, w - 2.0, row_h * 0.58, [[(name, 13, ink, True, False)]],
+                 anchor=MSO_ANCHOR.BOTTOM, space_after=0)
+            text(slide, x + 0.28, cy + row_h * 0.56, w - 2.0, row_h * 0.42, [[(sub, 9, MUTE, False, False)]], space_after=0)
+        else:
+            text(slide, x + 0.28, cy, w - 2.0, row_h, [[(name, 13, ink, True, False)]],
+                 anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        text(slide, x + w - 1.9, cy, 1.9, row_h, [[(value, 14, ink, True, False)]],
+             align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        cy += row_h + gap
+        hrule(slide, x, cy - gap / 2, w, color=RGBColor(0xE6, 0xE9, 0xEE), weight=0.01)
+    return cy
+
+
+def takeaway_rail(slide, x, y, w, label, hero, body, *, accent=MAGENTA, ink=DEEP, body_c=SLATE):
+    """The narrative 'so-what' rail beside a chart (the ~35% right column): small caps accent
+    label → one restated hero stat → a 2-3 line interpretation. Pair with a chart in the left
+    ~65% (content_band). Every designed chart should carry one of these."""
+    # Every band is MEASURED — the label and hero can each wrap, and the body box was a fixed
+    # 2.0in. See measure_takeaway_rail for both defects. Returns the bottom y, so a caller can
+    # place under the rail or hand it to vstack.
+    lab_h = max(0.30, _measure_lines([(label.upper(), True)], 11, w - TEXT_INSET_LR) * 11 / 72.0 * _LINT_LINE_H)
+    hero_h = max(0.90, _measure_lines([(hero, True)], 34, w - TEXT_INSET_LR) * 34 / 72.0 * _LINT_LINE_H)
+    body_h = measure_text([(body, False)], w, 14, line_h_factor=_LINT_LINE_H * 1.2)
+    text(slide, x, y, w, lab_h, [[(label.upper(), 11, accent, True, False)]], space_after=0)
+    text(slide, x, y + lab_h + 0.04, w, hero_h, [[(hero, 34, ink, True, False)]], space_after=0)
+    text(slide, x, y + lab_h + 0.04 + hero_h + 0.06, w, body_h,
+         [[(body, 14, body_c, False, False)]], space_after=0, line_spacing=1.2)
+    return round(y + lab_h + 0.04 + hero_h + 0.06 + body_h + 0.03, 4)
+
+
+# ============================================ layout patterns (editorial / diagram / wayfinding)
+def editorial_header(slide, eyebrow, title, *, x=0.6, y=0.55, w=None, accent=MAGENTA, ink=DEEP,
+                     serif=None, size=28, rule_w=1.2, rule=True):
+    """Editorial header lockup: a caps eyebrow, a large title, and a short accent hairline beneath.
+    The premium/showcase alternative to title_bar. The title uses the **DISPLAY** face by default
+    (falls back to FONT), and EADISPLAY for CJK; pass `serif=` to override per call."""
+    if w is None:
+        sw, _ = _slide_size(slide); w = sw - 2 * x
+    disp = serif if serif is not None else (DISPLAY or FONT)
+    text(slide, x, y, w, 0.3, [[(eyebrow.upper(), 12, accent, True, False)]], space_after=0)
+    # line_spacing pinned to 1.0: the rule position below is single-spacing math, and a
+    # one-line display headline needs no body leading (the CJK default would push the
+    # glyphs down onto the rule — LibreOffice adds the extra leading ABOVE the line).
+    # MEASURE the wrapped title so the hairline sits below the LAST line — a hardcoded
+    # one-line rule y strikes a 2-line title through.
+    nlines = measure_lines([(title, True)], size, w, font=disp)
+    lh = size / 72.0 * 1.18
+    tb = text(slide, x, y + 0.34, w, max(0.8, nlines * lh), [[(title, size, ink, True, False, disp)]],
+              space_after=0, line_spacing=1.0)
+    if EADISPLAY:
+        for p in tb.text_frame.paragraphs:
+            for r in p.runs:
+                _apply_ea(r, EADISPLAY)
+    rule_y = y + 0.34 + max(lh, nlines * lh)          # floor = one-line render (byte-identical)
+    if rule:
+        box(slide, x + 0.02, rule_y, rule_w, 0.05, fill=accent)
+    return rule_y + 0.18
+
+
+def big_numeral(slide, x, y, n, *, mode="marker", color=MAGENTA, size=None, w=None,
+                italic=True, serif=None):
+    """An oversized index figure as wayfinding/rhythm. mode='marker' (solid accent, ~44pt) for a
+    numbered item; 'ghost' (very large, near-bg) as a watermark behind a title. The box is sized
+    GENEROUSLY WIDE so a short token like '01' / '04' never wraps to two stacked glyphs (the bug
+    seen in the Swiss deck — LibreOffice ignores word-wrap=off, so we prevent it by width)."""
+    s = size or (44 if mode == "marker" else 132)
+    c = color if mode == "marker" else RGBColor(0xE8, 0xE8, 0xE8)
+    if w is None:
+        sw, _ = _slide_size(slide)
+        w = min(len(str(n)) * s / 72.0 * 1.0 + 0.5, sw - x - 0.1)   # wide enough to stay one line, but on-canvas
+    tb = text(slide, x, y, w, s / 72.0 * 1.35,
+              [[(str(n), s, c, True, italic,
+                 numeral_face(serif, fallback=DISPLAY or FONT or NUMERAL_SERIF))]],
+              space_after=0)
+    tb.text_frame.word_wrap = False
+    if mode != "marker":
+        tb.name = WATERMARK_TAG        # near-bg decoration, not a figure anyone reads
+    return tb
+
+
+def stat_row(slide, x, y, w, items, *, ink=DEEP, accent=MAGENTA, serif=None, dividers=True,
+             fig_size=34, label_c=MUTE, divider_c=None):
+    """Editorial big-number row: items = [(figure, unit, label), ...] in 2-4 equal columns with
+    optional vertical hairline dividers. For 2-4 standout numbers with no trend to plot.
+    BY CONSTRUCTION: a figure never wraps mid-number (an over-wide one scales down, floor 15pt),
+    and BOTH the figure's height and the caption's height are MEASURED — returns the real bottom y.
+
+    🔴 The figure block used to be a hardcoded 0.7in box with the caption pinned at y+0.66, while
+    `fig_size` was a parameter. MEASURED: a 44pt figure is 0.684in of ink, so the caption's TOP sat
+    inside the figure's last line — `TEXT COLLISION` on every column, at render time only, for any
+    `fig_size` above about 43. Identical in Chinese and Latin, so it was never a CJK issue. Both
+    numbers now come from `measure_text` at the size actually used, floored at the old constants so
+    every deck at fig_size <= 40 lands byte-identically where it did before.
+
+    `divider_c` colours the hairlines (default #DDDDDD). The old hardcoded value is 1.13:1 on a
+    cream ground and fails WCAG 1.4.11 there, which left `dividers=False` as the only way out.
+    """
+    if not items:
+        return y
+    n = len(items); gap = 0.4; cw = (w - (n - 1) * gap) / n
+    bottom = y + 1.1
+    for i, item in enumerate(items):
+        fig, unit, label = item if len(item) == 3 else (item[0], "", item[1])  # unit is optional
+        cx = x + i * (cw + gap)
+        fsz = fig_size
+        mruns = [(str(fig), True)] + ([(" " + str(unit), True)] if unit else [])
+        _nface = numeral_run_face(fig, serif, fallback=FONT)   # only when the figure IS a number
+        nat = _natural_width_in(mruns, fsz, _nface)
+        if nat > cw:                              # the "-0.9 million" mid-number split bug
+            fsz = max(15.0, fig_size * cw / nat * 0.98)
+        runs = [(str(fig), fsz, ink, True, False, _nface)]
+        if unit:
+            runs.append((" " + str(unit), fsz * 0.42, accent, True, False, _nface))
+        # 🔴 Measured from the SAME model the linter reads — `_ink_rect`, not `measure_text`.
+        # `measure_text` defaults to line_h_factor 1.12 while the renderer lays out at 1.2, so it
+        # under-reports a big figure by ~7% (0.622in reported vs 0.667in of ink at 40pt) and the
+        # caption still landed inside the figure at 52pt after a first fix that used it. Two
+        # geometry models disagreeing by a constant is exactly what this helper exists to prevent,
+        # so the box is placed generously, the real ink is read back, and the box is then trimmed.
+        tb = text(slide, cx, y, cw, max(0.7, fsz / 72.0 * 2.0), [runs], space_after=0)
+        tb.text_frame.word_wrap = False
+        _r = _ink_rect(tb, _bbox_in(tb))
+        fig_h = _r[0][3] if _r else measure_text(mruns, cw, fsz, font=_nface, pad=0.0)
+        box_h = max(0.7, fig_h + 0.02)
+        cap_y = max(0.66, fig_h + 0.02)
+        tb.height = Inches(box_h)
+        cap_h = max(0.4, measure_text([(str(label), False)], cw, 12, pad=0.04))
+        text(slide, cx, y + cap_y, cw, cap_h, [[(str(label), 12, label_c, False, False)]], space_after=0)
+        bottom = max(bottom, y + cap_y + cap_h + 0.04)
+        if dividers and i > 0:
+            box(slide, cx - gap / 2, y + 0.06, 0.014, max(0.9, cap_y + 0.24),
+                fill=divider_c if divider_c is not None else RGBColor(0xDD, 0xDD, 0xDD))
+    return bottom
+def _set_baseline(run, pct):
+    """Raise (or lower, if negative) a run by `pct` percent of its font size via the OOXML baseline
+    shift — used to vertically centre a small run beside a much larger one WITHOUT splitting them
+    into separate boxes (so natural, equal spacing around the operator is preserved)."""
+    run._r.get_or_add_rPr().set("baseline", str(int(round(pct * 1000))))
+
+
+def change_stat(slide, x, y, w, h, before, after, *, accent=MAGENTA, ink=DEEP, before_size=16,
+                after_size=26, arrow="→", font=None, align=None):
+    """A 'before → after' change stat with the AFTER value emphasized large. It is **one text box**
+    — so the spaces around the arrow are natural and EQUAL on both sides, and it packs into a narrow
+    column like a normal line — and the small `before + arrow` run is **baseline-shifted UP** to
+    vertically centre on the big AFTER value (mixing sizes in a line otherwise baseline-aligns them,
+    sinking the small prefix/arrow below the big number). Returns the textbox."""
+    al = align if align is not None else PP_ALIGN.LEFT
+    tb = text(slide, x, y, w, h,
+              [[(f"{before} {arrow} ", before_size, ink, False, False,
+                 numeral_run_face(before, font, fallback=FONT)),
+                (str(after), after_size, accent, True, False,
+                 numeral_run_face(after, font, fallback=FONT))]],
+              align=al, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    pct = max(0.0, 0.36 * (after_size - before_size) / max(1, before_size) * 100)  # centre small on big
+    runs = tb.text_frame.paragraphs[0].runs
+    if runs:
+        _set_baseline(runs[0], pct)
+    return tb
+
+
+def quadrant(slide, x, y, w, h, *, x_labels=("", ""), y_labels=("", ""), gap=0.35, axis_c=MUTE):
+    """A 2×2 matrix whose AXES carry meaning (e.g. frequency × severity). Draws edge axis captions
+    and returns the four cell rects (TL, TR, BL, BR) to fill with cards/scorecards. Use only when
+    items truly classify on two independent dimensions; else use a plain grid. Leave ≈1.4in of left
+    margin (place at x≈1.5) when using `y_labels`, so they sit in the margin without clipping."""
+    cw = (w - gap) / 2; ch = (h - gap) / 2
+    if x_labels[0] or x_labels[1]:
+        text(slide, x, y - 0.32, cw, 0.28, [[(x_labels[0].upper(), 10.5, axis_c, True, False)]], space_after=0)
+        text(slide, x + cw + gap, y - 0.32, cw, 0.28, [[(x_labels[1].upper(), 10.5, axis_c, True, False)]], space_after=0)
+    if y_labels[0] or y_labels[1]:
+        lx = max(0.05, x - 1.35); lw = max(0.5, x - lx - 0.1)
+        text(slide, lx, y + ch * 0.42, lw, 0.3, [[(y_labels[0].upper(), 10.5, axis_c, True, False)]], align=PP_ALIGN.RIGHT, space_after=0)
+        text(slide, lx, y + ch + gap + ch * 0.42, lw, 0.3, [[(y_labels[1].upper(), 10.5, axis_c, True, False)]], align=PP_ALIGN.RIGHT, space_after=0)
+    return [(x, y, cw, ch), (x + cw + gap, y, cw, ch), (x, y + ch + gap, cw, ch), (x + cw + gap, y + ch + gap, cw, ch)]
+
+
+def _connector(slide, x0, y0, x1, y1, color, w=1.5, dash=False):
+    c = _flat(slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x0), Inches(y0), Inches(x1), Inches(y1)))
+    c.line.color.rgb = color; c.line.width = Pt(w); c.shadow.inherit = False
+    if dash:
+        ln = c.line._get_or_add_ln()
+        ln.append(parse_xml(f'<a:prstDash {nsdecls("a")} val="dash"/>'))
+    return c
+
+
+def hub_spoke(slide, cx, cy, radius, center, spokes, *, hub=(1.7, 1.0), node=(1.8, 0.78),
+              accent=BLUE, ink=DEEP, fill=None):
+    """Radial 'one core, many peers' diagram: a hub at (cx,cy) with N spoke cards evenly angled on
+    a circle of `radius`, connectors drawn behind. `center`='label', spokes=['a','b',...] or
+    [(title,sub)]. Use for a platform+modules / metric+drivers; not for sequences (use a pipeline)."""
+    n = len(spokes); pts = []
+    # build-time collision guard (fail loud like timeline/vstack, don't silently overlap): a spoke
+    # card clears the hub iff it separates on EITHER axis, so the min radius for spoke i is
+    # min(A/|cosθ|, B/|sinθ|); the layout needs the MAX of that over all spokes.
+    gap = 0.08
+    A = (hub[0] + node[0]) / 2 + gap
+    B = (hub[1] + node[1]) / 2 + gap
+    need = 0.0
+    for i in range(n):
+        ang = math.radians(-90 + i * 360.0 / n)
+        ca, sa = abs(math.cos(ang)), abs(math.sin(ang))
+        need = max(need, min(A / ca if ca > 1e-6 else float("inf"),
+                             B / sa if sa > 1e-6 else float("inf")))
+    if radius < need - 1e-6:
+        raise ValueError(f"hub_spoke(): radius {radius:.2f}in is too small — the hub and spoke cards "
+                         f"overlap; need radius >= {need:.2f}in (or shrink hub=/node=).")
+    if n > 1:
+        arc = 2 * radius * math.sin(math.pi / n)
+        if arc < node[0] + gap - 1e-6:
+            raise ValueError(f"hub_spoke(): {n} spokes on radius {radius:.2f}in land {arc:.2f}in apart "
+                             f"but each card is {node[0]:.2f}in wide — adjacent cards overlap; widen "
+                             f"radius, reduce spokes, or shrink node=.")
+    for i in range(n):
+        ang = math.radians(-90 + i * 360.0 / n)
+        pts.append((cx + radius * math.cos(ang), cy + radius * math.sin(ang)))
+    for (sx, sy) in pts:                       # connectors first (behind the nodes)
+        _connector(slide, cx, cy, sx, sy, RGBColor(0xC8, 0xCE, 0xDA), w=1.4, dash=True)
+    for (sx, sy), sp in zip(pts, spokes):
+        title, sub = (sp if isinstance(sp, (tuple, list)) else (sp, ""))
+        chip(slide, sx - node[0] / 2, sy - node[1] / 2, node[0], node[1], title, sub,
+             fill if fill is not None else WHITE, tcolor=ink)
+    chip(slide, cx - hub[0] / 2, cy - hub[1] / 2, hub[0], hub[1], center, "", accent)
+    return pts
+
+
+def spaced_centers(x, w, n, *, label_w=2.0, total_w=10.0, margin=0.05):
+    """Center x's for n evenly-spaced markers across [x, x+w], **inset at the ends** so a
+    `label_w`-wide caption CENTERED on each end marker still fits the canvas [margin, total_w-margin].
+    Returns (centers, axis_x0, axis_w). Use for ANY row of markers carrying centered captions —
+    a timeline, tick row, numbered steps, a stat row under dots. The end inset is what keeps each
+    caption **co-centered with its marker**: the failure to avoid is clamping a caption to the margin
+    *independently* of its marker, which desyncs them near a slide edge (the classic "first/last label
+    sits off to the side of its dot" bug). With this, place each caption at `center - label_w/2` and it
+    is guaranteed to land on-canvas AND centered under the marker — no per-caption clamp needed."""
+    if n <= 1:
+        return ([x + w / 2.0], x, w)
+    pad = max(0.0, label_w / 2.0 - (x - margin), label_w / 2.0 - ((total_w - margin) - (x + w)))
+    pad = min(pad, w / 2.0 - 0.3)
+    x0 = x + pad
+    aw = w - 2 * pad
+    step = aw / (n - 1)
+    return ([x0 + i * step for i in range(n)], x0, aw)
+
+
+def mark_datum(shape, value, *, group="bars"):
+    """Record that this shape's LENGTH encodes `value`, so a checker can verify the claim.
+
+    Use it on a bar you drew yourself. `bar_scale()` below does it for you and is the better
+    route, because it also computes the geometry that this tag then re-checks.
+    """
+    # 🔴 COMPOSES — see `_compose_tag`. Assigning outright erased a motif tag on the same shape
+    # (and the reverse order produced `deckkit-motif-loud:bars:12.0`, a name that parses as a
+    # motif whose "reason" is the lost datum record). A motif page drawn AS bars uses both.
+    _payload = "%s:%s" % (str(group).replace(":", "-")[:40], repr(float(value)))
+    _compose_tag(shape, flag="+datum", reason=_payload)
+    return shape
+
+
+def bar_scale(span, values, *, group="bars"):
+    """The ONE value→LENGTH mapper for bars — zero-based by construction, sign-aware, and it
+    tags what it draws.
+
+    `axis_scale()` above is its sibling and answers a different question. That one maps a value to
+    a POSITION on a track (dot strips, dumbbells, value-spaced timelines), where any `lo` is
+    legitimate: a dot at 47 sits between 40 and 50 and reads correctly. This one maps a value to a
+    LENGTH, where a non-zero baseline is not a scaling choice but a false statement — two bars of
+    1.5 and 2.1 drawn from a baseline of 1.4 look like 1 : 7. There is no `lo` parameter here, and
+    that absence is the point.
+
+    Two things it removes from the caller, both of which have gone wrong in real builds:
+      · the hand-rolled `w = v * SCALE`, where SCALE is derived once and then quietly reused for a
+        second group of bars that is not on the same scale;
+      · the sign. `max(abs(v))` reads naturally and picks the largest POSITIVE value when the
+        negatives are smaller, which sizes the chart wrongly and puts the zero line in the wrong
+        place. Here the extent covers `[min(0, min(values)), max(0, max(values))]`, so zero is
+        always on the axis and negatives always draw on the far side of it.
+
+        sc = dk.bar_scale(4.0, [67.98, 17.61, 17.08, -2.68], group="gdp")
+        for i, v in enumerate(vals):
+            sc.bar(s, X0, y0 + i * 0.5, 0.32, v, fill=INK)      # x, y, thickness, value
+
+    `sc.zero` is the distance from the span's start to the zero line; `sc.length(v)` is the bare
+    magnitude in inches. `bar()` takes the span's START (not the zero line) as `x`/`y` and draws
+    horizontally by default, `vertical=True` for columns growing upward from the baseline.
+
+    Every bar it draws carries `DATUM_TAG`, so `lint_layout` can confirm that the drawn geometry
+    is still proportional to the numbers — which catches a truncated baseline, a second scale
+    leaking into one group, and a magnitude drawn where a signed value belongs. A bar you draw
+    without this helper is simply unchecked; tag it with `mark_datum()` to opt it in.
+    """
+    vals = [float(v) for v in values]
+    lo, hi = min(0.0, min(vals)) if vals else 0.0, max(0.0, max(vals)) if vals else 0.0
+    rng = (hi - lo) or 1.0
+    k = float(span) / rng
+
+    class _Scale(object):
+        __slots__ = ("k", "zero", "span", "group")
+
+        def __init__(self):
+            self.k, self.span, self.group = k, float(span), group
+            self.zero = (0.0 - lo) * k          # offset of the zero line inside the span
+
+        def length(self, v):
+            return abs(float(v)) * self.k
+
+        def bar(self, slide, x, y, thickness, value, *, vertical=False, **kw):
+            v = float(value)
+            ext = self.length(v)
+            if vertical:
+                # y is the span's BOTTOM edge; the axis runs upward, so zero sits `zero` above it
+                zy = y - self.zero
+                top = zy - ext if v >= 0 else zy
+                shp = box(slide, x, top, thickness, ext, **kw)
+            else:
+                zx = x + self.zero
+                left = zx if v >= 0 else zx - ext
+                shp = box(slide, left, y, ext, thickness, **kw)
+            return mark_datum(shp, v, group=self.group)
+
+    return _Scale()
+
+
+def axis_scale(x, w, lo, hi):
+    """The ONE value→x mapper for every horizontal VALUE axis (dumbbell rows, dot strips,
+    value-spaced timelines). ``axis_scale(x, w, lo, hi)`` returns ``(X, draw_axis)``:
+
+        X, draw_axis = dk.axis_scale(x0, span_w, lo, hi)
+        draw_axis(slide, ay)                      # the muted axis track, centred on ay
+        cx = X(v)                                 # value v mapped linearly onto [x, x+w]
+
+    ``X(v) = x + (v - lo) / (hi - lo) * w``; a degenerate ``hi == lo`` uses span 1.0 instead of
+    dividing by zero (``dumbbell_board``'s historic behaviour, which this replaces inline).
+    ``draw_axis(slide, y, *, color=None, weight=0.024)`` draws the track as a thin bar centred
+    on ``y`` (default colour: the same muted gray ``timeline`` uses). Components SHARE this
+    mapper instead of re-deriving ``(v - lo) / span`` inline, so value geometry can never drift
+    between forms — ``dumbbell_board``, ``dot_strip`` and ``timeline(spacing='value')`` all call
+    it, and any new value-mapped form must too."""
+    span = float(hi - lo) or 1.0
+    def X(v):
+        return x + (float(v) - lo) / span * w
+    def draw_axis(slide, y, *, color=None, weight=0.024):
+        box(slide, x, y - weight / 2.0, w, weight,
+            fill=color if color is not None else RGBColor(0x9A, 0xA0, 0xAE))
+    return X, draw_axis
+
+
+def mid(*vals):
+    """Midpoint of the given coordinates — e.g. centre a connector endpoint on a block:
+    `connector(s, (ax, mid(by, by+bh)), ...)`, or a hub between two block centres."""
+    return sum(vals) / len(vals)
+
+
+def span_center(boxes, size):
+    """Top-left coord that centres a shape of length `size` on the COMBINED SPAN of `boxes`
+    (each box = (start, length) on the SAME axis). The one rule for a **converge / fan-out / hub**
+    node: a many→one, one→many, or hub-and-spoke node must sit on the geometric centre of the nodes
+    it links — never eyeballed to one member's level. Compute it:
+        hub_y = span_center([(y_top,h_top), (y_bot,h_bot), ...], hub_h)   # then place the hub at hub_y
+    so the hub's centre = (topmost member's top + bottommost member's bottom) / 2. Anchor every
+    connector at each member's centre via `mid(y, y+h)`. (Mirrors `spaced_centers` for the across-axis
+    case — both exist so diagram nodes are placed by computation, not by eye.)"""
+    starts = [b[0] for b in boxes]
+    ends = [b[0] + b[1] for b in boxes]
+    return (min(starts) + max(ends)) / 2.0 - size / 2.0
+
+
+def timeline(slide, x, y, w, events, *, orientation="h", highlight=None, accent=MAGENTA,
+             ink=DEEP, axis_c=RGBColor(0x9A, 0xA0, 0xAE), h=1.4, polarity="below",
+             spacing="even", label_w=2.0):
+    """Native timeline. events = [(when, title[, caption]), ...]. orientation='h' (axis L→R, 3-6
+    evenly-weighted events) or 'v' (top→bottom spine, when each event needs 2+ lines). One node is
+    recolored `accent` via `highlight` index. For chronology/roadmaps/evolution — not comparisons.
+    End nodes are inset (via `spaced_centers`) so the first/last captions stay centered on their dots.
+
+    Horizontal-only kwargs (defaults reproduce the classic geometry exactly):
+      ``polarity`` = 'below' (all captions under the axis — the classic) | **'alternate'**
+        (captions whipsaw above/below: even indices below, odd above — doubles the same-side
+        step, so ~2× the events fit at the same width; budget ~2.7in tall, returns ay+1.35).
+      ``spacing`` = 'even' (equal steps via ``spaced_centers``) | **'value'** (each dot at its
+        TRUE position on the date/value axis via ``axis_scale`` — uneven gaps become visible
+        information; requires a NUMERIC ``when`` per event, e.g. 1979, 2024.5).
+      ``label_w`` = the centered caption-box width (default 2.0in; captions use +0.2).
+    **Never silent overlap:** after computing centers, if any SAME-SIDE adjacent pair sits
+    closer than ``label_w`` the call raises ``ValueError`` with the measured min step (the
+    ``vstack`` errors-at-build-time precedent) — switch to ``polarity='alternate'``, widen
+    ``w``, cut events, lower ``label_w``, or use ``dot_strip`` (whose label engine nudges
+    with leader ticks and cannot collide)."""
+    n = len(events)
+    if orientation == "h":
+        if polarity not in ("below", "alternate"):
+            raise ValueError("timeline(): polarity must be 'below' or 'alternate'")
+        if spacing not in ("even", "value"):
+            raise ValueError("timeline(): spacing must be 'even' or 'value'")
+        ay = y + (1.35 if polarity == "alternate" else 0.2)
+        sw, _sh = _slide_size(slide)
+        def _lx(cx, lw):                                  # keep a centered label box on-canvas
+            return max(0.05, min(cx - lw / 2, sw - lw - 0.05))
+        if spacing == "value":
+            whens = [ev[0] for ev in events]
+            if not all(isinstance(t, (int, float)) and not isinstance(t, bool) for t in whens):
+                raise ValueError("timeline(spacing='value') needs a NUMERIC `when` per event "
+                                 "(e.g. 1979, 2024.5) — got " + repr(whens))
+            # end-inset by the same rule spaced_centers uses, so end captions stay co-centered
+            pad = max(0.0, label_w / 2.0 - (x - 0.05),
+                      label_w / 2.0 - ((sw - 0.05) - (x + w)))
+            pad = min(pad, w / 2.0 - 0.3)
+            ax0, axw = x + pad, w - 2 * pad
+            X, _draw = axis_scale(ax0, axw, min(whens), max(whens))
+            centers = [X(t) for t in whens]
+        else:
+            centers, ax0, axw = spaced_centers(x, w, n, label_w=label_w, total_w=sw)
+        # never silent overlap: same-side adjacent captions must clear label_w (fail loudly)
+        if n > 1:
+            groups = ([centers[0::2], centers[1::2]] if polarity == "alternate" else [centers])
+            steps = [b - a for g in groups for a, b in zip(sorted(g), sorted(g)[1:])]
+            min_step = min(steps) if steps else None
+            if min_step is not None and min_step < label_w - 1e-9:
+                raise ValueError(
+                    f"timeline(): adjacent same-side captions land {min_step:.2f}in apart but each "
+                    f"caption box is {label_w:.2f}in wide — they would overlap. "
+                    + ("Use polarity='alternate' (doubles the same-side step), widen w, cut events, "
+                       "or lower label_w." if polarity == "below" else
+                       "Widen w, cut events, lower label_w, or switch to dot_strip() — its label "
+                       "engine nudges labels with leader ticks and cannot collide."))
+        box(slide, ax0, ay - 0.012, axw, 0.024, fill=axis_c)
+        for i, ev in enumerate(events):
+            ex = centers[i] if n > 1 else (x + w / 2)
+            when, title = ev[0], ev[1]; cap = ev[2] if len(ev) > 2 else ""
+            em = (highlight is None or i == highlight)
+            dc = accent if em else axis_c            # DOT/graphic colour — may de-emphasise to grey
+            tc = accent if em else MUTE              # DATE TEXT colour — floors at MUTE (6:1) so a
+            box(slide, ex - 0.09, ay - 0.09, 0.18, 0.18, fill=dc, round=True, r=0.09)  # dimmed date stays legible
+            above = (polarity == "alternate" and i % 2 == 1)
+            if above:                                     # mirrored stack: when nearest the dot
+                text(slide, _lx(ex, label_w), ay - 0.48, label_w, 0.3, [[(str(when), 13, tc, True, False)]], align=PP_ALIGN.CENTER, space_after=0)
+                text(slide, _lx(ex, label_w), ay - 0.80, label_w, 0.3, [[(title, 12, ink, True, False)]], align=PP_ALIGN.CENTER, space_after=0)
+                if cap:
+                    text(slide, _lx(ex, label_w + 0.2), ay - 1.30, label_w + 0.2, 0.5, [[(cap, 10.5, MUTE, False, False)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM, space_after=0)
+            else:
+                text(slide, _lx(ex, label_w), ay + 0.18, label_w, 0.3, [[(str(when), 13, tc, True, False)]], align=PP_ALIGN.CENTER, space_after=0)
+                text(slide, _lx(ex, label_w), ay + 0.5, label_w, 0.3, [[(title, 12, ink, True, False)]], align=PP_ALIGN.CENTER, space_after=0)
+                if cap:
+                    text(slide, _lx(ex, label_w + 0.2), ay + 0.78, label_w + 0.2, 0.5, [[(cap, 10.5, MUTE, False, False)]], align=PP_ALIGN.CENTER, space_after=0)
+    else:
+        ax = x + 0.12
+        box(slide, ax - 0.012, y, 0.024, h, fill=axis_c)
+        step = h / max(1, n)
+        for i, ev in enumerate(events):
+            ey = y + i * step + 0.1
+            when, title = ev[0], ev[1]; cap = ev[2] if len(ev) > 2 else ""
+            em = (highlight is None or i == highlight)
+            dc = accent if em else axis_c; tc = accent if em else MUTE   # dot may grey; date text floors at MUTE
+            box(slide, ax - 0.09, ey - 0.09, 0.18, 0.18, fill=dc, round=True, r=0.09)
+            text(slide, ax + 0.35, ey - 0.16, w - 0.5, 0.3, [[(str(when) + "  ", 13, tc, True, False), (title, 13, ink, True, False)]], space_after=0)
+            if cap:
+                text(slide, ax + 0.35, ey + 0.16, w - 0.5, 0.4, [[(cap, 10.5, MUTE, False, False)]], space_after=0)
+    if orientation == "h" and polarity == "alternate":
+        return y + 2.7                                    # ay + 1.35 (the below-side extent)
+    return y + (h if orientation == "v" else 1.4)
+
+
+def dot_strip(slide, x, y, w, points, lo, hi, *, label_w=None, stagger="auto",
+              accent=MAGENTA, ink=DEEP, axis_c=RGBColor(0x9A, 0xA0, 0xAE),
+              highlight=None, unit="", size=11, dot_r=0.07, font=None):
+    """N labelled points on ONE shared value axis — "where everyone sits on one scale"
+    (benchmark scores, cost/latency positions, maturity ratings) with **anti-collision labels
+    by construction**. The editable native form for a labelled 1-D dot plot: reach for it
+    before ``native_bubble`` (no per-point text) or a hand-rolled row of dots.
+
+    ``dot_strip(slide, x, y, w, points, lo, hi, *, label_w=None, stagger='auto',
+    accent=MAGENTA, ink=DEEP, axis_c=<muted gray>, highlight=None, unit='', size=11,
+    dot_r=0.07, font=None)`` — ``points = [(label, value), ...]``; ``lo``/``hi`` fix the axis
+    (pad ~10%); ``highlight`` = index of the ONE emphasised point (its dot + value keep
+    ``accent``, the rest mute to ``axis_c``/ink); ``unit`` suffixes every value. Value→x runs
+    through the shared ``axis_scale`` mapper. Returns the bottom y (budget ~1.0in tall).
+
+    LABEL ENGINE (deterministic, collision-impossible for ARBITRARY value distributions):
+    each point carries one line "label value" whose width is **measured from real glyph ink**
+    (``label_w`` overrides the measurement with a fixed width — rarely needed). ``stagger=``
+      'auto'      — one row above the axis when every neighbour clears; else alternate
+                    above/below in value order; a dense CLUSTER that defeats alternation too
+                    is NUDGED along x to the measured minimum separation (0.08in) with a thin
+                    leader tick joining each nudged label to its dot;
+      'none'      — force the single row (still nudges rather than collides);
+      'alternate' — force the whipsaw (ditto).
+    End labels are CLAMPED on-canvas (the ``spaced_centers`` end-inset guarantee, applied to
+    measured widths), and if the labels physically cannot fit on the canvas at all the call
+    raises ``ValueError`` — fail loudly, never silent overlap."""
+    if stagger not in ("auto", "none", "alternate"):
+        raise ValueError("dot_strip(): stagger must be 'auto', 'none', or 'alternate'")
+    if not points:
+        raise ValueError("dot_strip() needs at least one (label, value) point")
+    sw, _sh = _slide_size(slide)
+    ay = y + 0.5
+    X, draw_axis = axis_scale(x, w, lo, hi)
+    draw_axis(slide, ay, color=axis_c)
+    fmt = _numlabel
+    meta = []                                             # value-sorted layout records
+    for i in sorted(range(len(points)), key=lambda k: float(points[k][1])):
+        label, v = str(points[i][0]), points[i][1]
+        val = fmt(v) + ((" " + unit) if unit else "")
+        mruns = ([(label + "  ", False)] if label else []) + [(val, True)]
+        wi = (label_w if label_w is not None else _natural_width_in(mruns, size, font)) + 0.06
+        meta.append({"i": i, "cx": X(v), "w": wi, "label": label, "val": val})
+    GAP, LO, HI = 0.08, 0.05, sw - 0.05
+
+    def _clears(items):
+        return all(b["cx"] - a["cx"] >= (a["w"] + b["w"]) / 2 + GAP
+                   for a, b in zip(items, items[1:]))
+
+    def _solve(items):
+        """1-D anti-collision sweep: desired centre = the dot's x; a forward pass enforces the
+        measured min separation, a backward pass pulls the row back on-canvas. Deterministic;
+        raises only when the row genuinely cannot fit between the canvas margins."""
+        if sum(it["w"] for it in items) + GAP * (len(items) - 1) > (HI - LO) + 1e-9:
+            raise ValueError(f"dot_strip(): {len(items)} labels need "
+                             f"{sum(it['w'] for it in items) + GAP * (len(items) - 1):.1f}in on one "
+                             f"side but only {HI - LO:.1f}in of canvas exists — cut points, shorten "
+                             f"labels, or lower size")
+        pos = []
+        for k, it in enumerate(items):
+            p = max(it["cx"], LO + it["w"] / 2)
+            if pos:
+                p = max(p, pos[-1] + (items[k - 1]["w"] + it["w"]) / 2 + GAP)
+            pos.append(p)
+        if pos[-1] > HI - items[-1]["w"] / 2:             # pull back inside the right margin
+            pos[-1] = HI - items[-1]["w"] / 2
+            for k in range(len(pos) - 2, -1, -1):
+                pos[k] = min(pos[k], pos[k + 1] - (items[k]["w"] + items[k + 1]["w"]) / 2 - GAP)
+        return pos
+
+    if stagger == "none" or (stagger == "auto" and _clears(meta)):
+        rows_ = [meta, []]
+    else:
+        rows_ = [meta[0::2], meta[1::2]]
+    for items, row_y, is_above in ((rows_[0], ay - 0.46, True), (rows_[1], ay + 0.18, False)):
+        if not items:
+            continue
+        for it, px in zip(items, _solve(items)):
+            em = (highlight is None or it["i"] == highlight)
+            dc = accent if em else axis_c
+            box(slide, it["cx"] - dot_r, ay - dot_r, 2 * dot_r, 2 * dot_r, fill=dc, round=True, r=dot_r)
+            if abs(px - it["cx"]) > 0.04:                 # nudged → leader tick from dot to label
+                connector(slide, (it["cx"], ay + (-dot_r if is_above else dot_r)),
+                          (px, ay + (-0.20 if is_above else 0.20)),
+                          color=axis_c, width=1.0, arrow=False)
+            runs = ([(it["label"] + "  ", size, ink, False, False, font)] if it["label"] else [])
+            runs.append((it["val"], size, (accent if em else ink), True, False, font))
+            text(slide, px - it["w"] / 2 - 0.02, row_y, it["w"] + 0.04, 0.28, [runs],
+                 align=PP_ALIGN.CENTER, space_after=0)
+    return y + 1.0
+
+
+def image_tab(slide, x, y, text_str, *, color=DEEP, tcolor=WHITE, size=10.5):
+    """A small solid corner label-tab that belongs to a photo (EXTERIOR / BEFORE / 第一). Place at
+    the image's corner so the label reads as part of it, not floating beside it."""
+    wpt = 0.16 + 0.085 * len(text_str)
+    box(slide, x, y, wpt, 0.32, fill=color)
+    text(slide, x, y, wpt, 0.32, [[(text_str.upper(), size, tcolor, True, False)]],
+         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+
+
+def before_after(slide, x, y, w, h, img_a, img_b, label_a="BEFORE", label_b="AFTER", *,
+                 accent=MAGENTA, gap=0.7):
+    """Two equal image cards with corner label-tabs and a connecting accent arrow — for old↔new /
+    v1↔v2 / renovation comparisons (exactly two)."""
+    cw = (w - gap) / 2
+    picture(slide, img_a, x, y, cw, h, fit="cover"); image_tab(slide, x + 0.12, y + 0.12, label_a, color=accent)
+    picture(slide, img_b, x + cw + gap, y, cw, h, fit="cover"); image_tab(slide, x + cw + gap + 0.12, y + 0.12, label_b, color=accent)
+    arrow(slide, x + cw + 0.08, y + h / 2 - 0.13, gap - 0.16, 0.26, color=accent)
+
+
+def photo_triptych(slide, imgs, *, x=0.0, y=1.1, w=None, h=4.4, scrim=False):
+    """Three full-height image columns as one hero band (zero gutter). For one subject with several
+    strong views / a 'scale & grandeur' message. Optional bottom scrim for an overlaid caption."""
+    if w is None:
+        sw, _ = _slide_size(slide); w = sw - 2 * x if x else sw
+    cw = w / 3
+    for i, im in enumerate(imgs[:3]):
+        picture(slide, im, x + i * cw, y, cw, h, fit="cover")
+    if scrim:
+        scrim_overlay(slide, x, y + h - 1.4, w, 1.4, stops=((0.0, 0.0), (1.0, 0.7)), angle=90)
+
+
+def corner_frame(slide, *, corners=("tl", "br"), color=MAGENTA, length=0.9, weight=0.04, inset=0.5):
+    """Decorative L-corner brackets to frame a sparse closing/quote slide so it reads as composed,
+    not unfinished. Use on one slide, not throughout."""
+    sw, sh = _slide_size(slide)
+    for c in corners:
+        if c == "tl":   px, py, hx, vy = inset, inset, inset, inset
+        elif c == "tr": px, py, hx, vy = sw - inset, inset, sw - inset - length, inset
+        elif c == "bl": px, py, hx, vy = inset, sh - inset, inset, sh - inset - length
+        else:           px, py, hx, vy = sw - inset, sh - inset, sw - inset - length, sh - inset - length
+        box(slide, hx, py - weight / 2, length, weight, fill=color)   # horizontal arm
+        box(slide, px - weight / 2, vy, weight, length, fill=color)   # vertical arm
+
+
+def accent_one(items, featured_idx, accent, neutral=RGBColor(0xC2, 0xC6, 0xD2)):
+    """One-accent discipline as a list: return a colour per item with ONLY `featured_idx` in the
+    accent and every other item on `neutral`. Pass to chips/cards/series so the eye goes to the
+    one thing that matters (the Swiss/data decks' restraint). Featured=None → all neutral."""
+    return [accent if (featured_idx is not None and i == featured_idx) else neutral for i in range(len(items))]
+
+
+# ================================== publication templates · editorial chrome · self-demo · texture
+def _set_spc(shape, pts):
+    """Letter-spacing (tracking) in points on every run of a textbox — for tracked caps eyebrows."""
+    for p in shape.text_frame.paragraphs:
+        for r in p.runs:
+            r._r.get_or_add_rPr().set("spc", str(int(pts * 100)))
+    return shape
+
+
+def part_eyebrow(slide, x, y, text_str, *, w=6.0, color=MUTE, font=None, size=11, track=1.5):
+    """A small TRACKED caps eyebrow in the chrome (usually mono) font — the editorial/technical
+    'part label'. Route every kicker/eyebrow through one chrome font for a quiet signature.
+    ``font`` resolves to the CURRENT module ``MONO`` at call time, so reassigning ``deckkit.MONO``
+    re-themes it (a def-time default would freeze the import-time value → Consolas tofu).
+    The default ``w`` is CLAMPED to the actual canvas so the box never extends off a narrow
+    (portrait/story) deck — on the standard 16:9 canvas the clamp never engages."""
+    font = font or MONO
+    sw, _sh = _slide_size(slide)
+    w = min(w, max(0.5, sw - x - 0.05))
+    tb = text(slide, x, y, w, 0.3, [[(text_str.upper(), size, color, True, False, font)]], space_after=0)
+    return _set_spc(tb, track)
+
+
+def page_marker(slide, page, total=None, *, font=None, color=MUTE, size=9):
+    """A tiny mono page marker at bottom-right ('03 / 14') — chrome, not content. ``font`` resolves
+    to the current ``MONO`` at call time (reassigning ``deckkit.MONO`` re-themes it)."""
+    font = font or MONO
+    sw, sh = _slide_size(slide)
+    label = f"{int(page):02d} / {int(total):02d}" if total else f"{int(page):02d}"
+    text(slide, sw - 1.6, sh - 0.42, 1.2, 0.3, [[(label, size, color, True, False, font)]],
+         align=PP_ALIGN.RIGHT, space_after=0)
+
+
+# ---- navigation: a long deck has to be NAVIGABLE live, not just readable in order ------------
+# A defense, a committee meeting or a board readout is answered from its APPENDIX, and until these
+# existed this library could not make a deck jump: `grep hlinkClick` found the string only in an
+# XML-ordering comment. So a prepared backup slide could only be reached by arrowing past every
+# slide between here and there, in front of the room — which is why people stop preparing them.
+_LINK_SCHEMES = ("http://", "https://", "mailto:", "doi:")
+
+
+def _serialize_part(root):
+    """An edited theme element back to the bytes python-pptx will write into the .pptx."""
+    from lxml import etree
+    return etree.tostring(root, xml_declaration=True, encoding="UTF-8", standalone=True)
+
+
+def set_link_color(obj, color):
+    """Give the DECK its own hyperlink colour, instead of the renderer's default blue-and-underline.
+
+    🔴 MEASURED, on a rendered reference list. A linked run carries an explicit `<a:solidFill>` —
+    and LibreOffice (and PowerPoint) still paint it in the THEME's `<a:hlink>` colour, so a
+    references page came out with two visual treatments: the entries that happened to have a DOI in
+    bright blue, the ones that did not in the deck's ink. The run's own fill cannot win that fight;
+    the theme is where a link's colour lives, so that is what this sets.
+
+    Deck-wide by design and by necessity (there is one theme): call it once, beside `set_palette`.
+    `obj` is a Presentation or any slide from it.
+
+        dk.set_link_color(prs, dk.DEEP)     # links in the deck's ink, not in Word-blue
+    """
+    rgb = _as_rgb(color)
+    pkg = getattr(getattr(obj, "part", None), "package", None) or getattr(obj, "part", None)
+    if pkg is None:
+        raise ValueError("set_link_color(): pass the Presentation or one of its slides")
+    n = 0
+    for part in pkg.iter_parts():
+        if "theme" not in str(getattr(part, "partname", "")):
+            continue
+        # python-pptx keeps a theme as an opaque `Part` (bytes), not a parsed element — so this
+        # parses, edits and writes the blob back rather than mutating a live tree.
+        try:
+            root = parse_xml(part.blob)
+        except Exception:
+            continue
+        hit = 0
+        for tag in ("a:hlink", "a:folHlink"):
+            for el in root.findall(".//" + qn("a:clrScheme") + "/" + qn(tag)):
+                for child in list(el):
+                    el.remove(child)
+                el.append(parse_xml('<a:srgbClr %s val="%02X%02X%02X"/>'
+                                    % (nsdecls("a"), rgb[0], rgb[1], rgb[2])))
+                hit += 1
+        if hit:
+            part._blob = _serialize_part(root)
+            n += hit
+    if not n:
+        raise ValueError("set_link_color(): this deck has no theme colour scheme to set — it was "
+                         "not built from a template that carries one")
+    return n
+
+
+def link(obj, target):
+    """Make a SHAPE jump to another slide, or a shape/run open a URL. Returns `obj`.
+
+    `target` is a slide object (an in-deck jump, written as a real PowerPoint slide action) or a
+    string URL. A run can carry a URL but not a slide jump — PowerPoint has no run-level jump — and
+    asking for one says so rather than silently doing nothing.
+
+    🔴 The URL is checked against a scheme allowlist. A link target can arrive from the material the
+    deck was built from, which is untrusted input, and `javascript:` / `file:` / `data:` in a
+    delivered deck is someone else's machine, not a citation.
+    """
+    if isinstance(target, str):
+        url = target.strip()
+        if not any(url.lower().startswith(s) for s in _LINK_SCHEMES):
+            raise ValueError("link(): %r is not an allowed link target — use %s. A deck's links "
+                             "come from its material, and that material is untrusted."
+                             % (url[:40], ", ".join(_LINK_SCHEMES)))
+        if hasattr(obj, "hyperlink") and not hasattr(obj, "click_action"):
+            obj.hyperlink.address = url                 # a text run
+        else:
+            obj.click_action.hyperlink.address = url
+        return obj
+    try:
+        obj.click_action.target_slide = target
+    except AttributeError:
+        raise ValueError("link(): a slide JUMP has to hang off a shape, not a text run — pass the "
+                         "shape (a chip, a row, a box), or link the run to a URL instead")
+    return obj
+
+
+def agenda(slide, x, y, w, items, *, active=None, targets=None, numeral_style="pad2", accent=None,
+           ink=None, muted=None, row_h=0.52, gap=0.1, rule=True, font=None, chrome=None):
+    """The deck's MAP: a numbered contents page, optionally a live jump table.
+
+    `items` = ["Where we were", "What changed", …]. `active` accents one row, so the same helper is
+    the section-progress page a long deck repeats between parts. `targets` = the slides each row
+    jumps to (`link`), which is what makes an agenda usable while presenting rather than decorative.
+
+    Returns the bottom y, like every other stacked form here.
+    """
+    accent = _as_rgb(accent) if accent is not None else MAGENTA
+    ink = _as_rgb(ink) if ink is not None else DEEP
+    page = GROUND if GROUND is not None else WHITE      # GROUND is None until set_ground()
+    muted = _as_rgb(muted) if muted is not None else _blend(ink, page, 0.45)
+    face = font or FONT
+    chrome_face = chrome or MONO
+    if targets is not None and len(targets) != len(items):
+        raise ValueError("agenda(): %d items but %d targets — one target per row, or none at all; "
+                         "a half-wired contents page is the one that fails live"
+                         % (len(items), len(targets)))
+    cur = y
+    for i, item in enumerate(items):
+        on = (active is not None and i == active)
+        num = ("%02d" % (i + 1)) if numeral_style == "pad2" else (
+            cjk_numeral(i + 1) if numeral_style == "cjk" else str(i + 1))
+        row = box(slide, x, cur, w, row_h, fill=None, line=None)
+        text(slide, x, cur + 0.04, 0.6, row_h - 0.08,
+             [[(num, 11, accent if on else muted, True, False, chrome_face)]], space_after=0)
+        text(slide, x + 0.72, cur + 0.02, w - 0.82, row_h - 0.04,
+             [[(str(item), 16 if on else 15, ink if on else muted, on, False, face)]], space_after=0)
+        if on and rule:
+            hrule(slide, x, cur + row_h - 0.02, min(w, 1.2), color=accent, weight=0.022)
+        if targets is not None:
+            link(row, targets[i])
+        cur += row_h + gap
+    return cur - gap
+
+
+def _chip_caption_width(caption, size_pt, face):
+    """One unwrapped line's width, with CJK glyphs credited to their OWN metrics.
+
+    `_natural_width_in` measures the whole string in one face. A chip's caption is chrome, so that
+    face is MONO — a Latin face — and 返回目录 measured 0.50in there, the same as "Back": four
+    full-width glyphs priced as four narrow ones. The rule that fixes it needs no installed font,
+    because it is typographic rather than empirical: a CJK glyph is full-width, i.e. exactly 1em.
+    This is the same failure `_measuring_face` documents for body text (Chinese measured with Latin
+    metrics reads ~54% of its true width), at the one place a fixed-size chip cannot absorb it.
+    """
+    cjk = sum(1 for ch in caption if _has_cjk(ch))
+    rest = "".join(ch for ch in caption if not _has_cjk(ch))
+    return _natural_width_in([(rest, False)], size_pt, face) + cjk * size_pt / 72.0
+
+
+def back_link(slide, target, *, label="Back", x=None, y=None, w=None, h=0.34, size=10, accent=None,
+              ink=None, font=None):
+    """A small linked chip that returns to `target` — the other half of a jump.
+
+    A backup slide you can reach and cannot leave is worse than one you never jumped to: the room
+    watches you arrow backwards. Defaults to the bottom-left corner, inside the margin.
+
+    🔴 The width is MEASURED from the label, never assumed. Built with a fixed 1.25in pill, "Back to
+    agenda" wrapped to a second line that hung straight through the chip's own bottom edge — the
+    library's own rule (measure or anchor, never hand-pick a size) applied to itself. The
+    measurement is SCRIPT-AWARE (`_chip_caption_width`): a CJK glyph is full-width, so 返回目录
+    measured exactly like "Back" until it was credited at 1em per character.
+
+    A label too long for its chip — or for the canvas — RAISES rather than being clamped: the
+    caption is set unwrapped, so a clamped chip runs its text off the slide instead of saying so.
+    """
+    accent = _as_rgb(accent) if accent is not None else MAGENTA
+    ink = _as_rgb(ink) if ink is not None else DEEP
+    _sw, _sh = _slide_size(slide)
+    face = font or MONO
+    caption = "\u2190 " + str(label)
+    pad = max(0.18, h * 0.5)                          # the rounded ends eat the corners
+    natural = _chip_caption_width(caption, size, face)
+    if _font_substituted(face):
+        # 🔴 Measured in a STAND-IN, so the number is not the renderer's. On this machine, with the
+        # shipped MONO ('Consolas', absent from macOS): deckkit measured 3.10in and LibreOffice
+        # rendered 3.58in — 15% wider — and the label wrapped through the chip's own bottom edge.
+        # The same caption in a face that DOES resolve measured 2.53 against 2.50 rendered, i.e. 1%.
+        # So the slack is the substitution's, not the formula's, and check_fonts_resolve reports the
+        # underlying condition at the gate.
+        natural *= 1.20
+    room = _sw - 2 * GUTTER
+    if w is None:
+        w = min(room, natural + 2 * pad)
+    if natural + 2 * pad > w + 1e-6:
+        raise ValueError("back_link(): %r needs %.2fin at %gpt and the chip is %.2fin — the caption "
+                         "is set unwrapped, so it would run out through the chip and off the slide. "
+                         "Shorten the label (a back link is a chip, not a sentence)%s."
+                         % (label, natural + 2 * pad, size, w,
+                            "" if w < room - 1e-6 else " — %.2fin is the whole canvas" % room))
+    x = GUTTER if x is None else x
+    y = (_sh - GUTTER - h) if y is None else y
+    page = GROUND if GROUND is not None else WHITE
+    chip_shape = box(slide, x, y, w, h, fill=None, line=_blend(ink, page, 0.6), line_w=0.8,
+                     round=True, r=h / 2)
+    text(slide, x, y + 0.04, w, h - 0.08,
+         [[(caption, size, accent, False, False, face)]],
+         align=PP_ALIGN.CENTER, space_after=0, wrap=False)
+    return link(chip_shape, target)
+
+
+def cover(slide, title, *, issue_label=None, subtitle=None, mode_caption=None, x=0.7, y=None,
+          accent=MAGENTA, ink=DEEP, bg=None, display=None, chrome=None, caption_c=None, rule=True):
+    """A publication-style COVER (issue label + big display title + accent rule + subtitle + a
+    date/mode caption) designed to be mirrored by colophon() as a bookend. Stronger than a plain
+    title slide for editorial/report/zine decks. A long title is auto-fit and MEASURED so the
+    accent rule + subtitle flow below its real bottom (never bisecting a 2-3-line title). On a
+    DARK cover (a light ``ink``), the bottom caption auto-switches to a legible muted grey; pass
+    ``caption_c`` to force it. ``chrome`` resolves to the current ``MONO`` at call time."""
+    chrome = chrome or MONO
+    sw, sh = _slide_size(slide)
+    if bg is not None:
+        box(slide, 0, 0, sw, sh, fill=bg)
+    yy = (sh / 2 - 1.1) if y is None else y
+    if issue_label:
+        part_eyebrow(slide, x + 0.02, yy - 0.5, issue_label, color=accent, font=chrome)
+    tw = sw - 2 * x
+    tsz = fit_text_size([(title, True)], tw, 1.4, 46, font=display, min_size=30)   # cap runaway titles
+    n = measure_lines([(title, True)], tsz, tw, font=display)
+    lh = tsz / 72.0 * 1.2
+    text(slide, x, yy, tw, max(1.4, n * lh), [[(title, tsz, ink, True, False, display)]],
+         space_after=2, line_spacing=1.0)
+    rule_y = max(yy + 1.5, yy + n * lh + 0.14)          # floor keeps 1-2 line covers byte-identical
+    if rule:
+        box(slide, x + 0.02, rule_y, 1.4, 0.06, fill=accent)
+    if subtitle:
+        text(slide, x, rule_y + 0.20, tw, 0.5, [[(subtitle, 16, ink, False, False)]], space_after=0)
+    if mode_caption:
+        mc = caption_c if caption_c is not None else (
+            RGBColor(0x8A, 0x93, 0xA6) if contrast_ratio(ink, WHITE) < 3.0 else MUTE)
+        part_eyebrow(slide, x + 0.02, sh - 0.7, mode_caption, color=mc, font=chrome)
+
+
+def colophon(slide, tagline, *, credits=None, tooling=None, x=0.7, accent=MAGENTA, ink=DEEP,
+             bg=None, display=None, chrome=None, credits_label="credits", tooling_label="made with",
+             tooling_c=None):
+    """A closing COLOPHON mirroring the cover: a payoff tagline + small mono credits/tooling. A
+    stronger close than 'Thanks'; the credits slot doubles as a research deck's sources note.
+    `credits`/`tooling` may be a string or a list (joined with ' · '). A wrapped tagline is
+    MEASURED so the rule + credits flow below it. Pass ``credits_label``/``tooling_label`` to
+    translate the chrome captions on a non-English deck (推荐/团队/制作). On a dark closing (light
+    ``ink``) the tooling line auto-switches to a legible muted grey; ``tooling_c`` forces it."""
+    chrome = chrome or MONO
+    if isinstance(credits, (list, tuple)):
+        credits = " · ".join(map(str, credits))
+    if isinstance(tooling, (list, tuple)):
+        tooling = " · ".join(map(str, tooling))
+    sw, sh = _slide_size(slide)
+    if bg is not None:
+        box(slide, 0, 0, sw, sh, fill=bg)
+    yy = sh / 2 - 0.9
+    tw = sw - 2 * x
+    n = measure_lines([(tagline, True)], 40, tw, font=display)
+    lh = 40 / 72.0 * 1.2
+    text(slide, x, yy, tw, max(1.4, n * lh), [[(tagline, 40, ink, True, False, display)]],
+         space_after=2, line_spacing=1.0)
+    rule_y = max(yy + 1.4, yy + n * lh + 0.12)          # floor keeps the one-line close byte-identical
+    box(slide, x + 0.02, rule_y, 1.4, 0.06, fill=accent)
+    cy = rule_y + 0.32
+    tc = tooling_c if tooling_c is not None else (
+        RGBColor(0x8A, 0x93, 0xA6) if contrast_ratio(ink, WHITE) < 3.0 else MUTE)
+    if credits:
+        part_eyebrow(slide, x + 0.02, cy, credits_label, color=accent, font=chrome)
+        text(slide, x, cy + 0.28, tw, 0.6, [[(credits, 12, ink, False, False, chrome)]], space_after=0)
+        cy += 0.92
+    if tooling:
+        part_eyebrow(slide, x + 0.02, cy, tooling_label, color=accent, font=chrome)
+        text(slide, x, cy + 0.28, tw, 0.4, [[(tooling, 11, tc, False, False, chrome)]], space_after=0)
+
+
+def sources_page(slide, sources, *, title="Sources", cols=2, x=0.7, y=1.4, accent=MAGENTA, ink=DEEP, chrome=None, rule=True):
+    """Render references as mono numbered columns under an accent header — a research deck's
+    colophon / a credible 'where this came from' close. ``chrome`` resolves to the current
+    ``MONO`` at call time. ``rule=False`` suppresses the accent hairline under the title."""
+    chrome = chrome or MONO
+    sw, sh = _slide_size(slide)
+    part_eyebrow(slide, x, 0.6, title, color=accent, font=chrome, size=13)
+    if rule:
+        box(slide, x, 1.02, 1.2, 0.05, fill=accent)
+    w = (sw - 2 * x - 0.4 * (cols - 1)) / cols
+    per = (len(sources) + cols - 1) // cols
+    for ci in range(cols):
+        cx = x + ci * (w + 0.4); cy = y
+        for i in range(ci * per, min((ci + 1) * per, len(sources))):
+            text(slide, cx, cy, w, 0.5, [[(f"{i+1:02d}  ", 9, accent, True, False, chrome),
+                                          (sources[i], 9, ink, False, False, chrome)]], space_after=0, line_spacing=1.1)
+            cy += 0.46
+
+
+def source_note(slide, sources, *, as_of=None, label="Source", x=None, y=None, w=None,
+                size=8.5, ink=None, font=None, sep="  ·  ", align=None):
+    """The PROVENANCE LINE for one slide — where THIS slide's numbers came from, on the slide.
+
+    `sources_page` is a colophon: it defends the deck. This defends the SLIDE, which is the unit
+    that actually travels -- screenshotted into a chat, pasted into a memo, shown out of order.
+    A chart whose source lives 14 pages away is unsourced at the moment anyone doubts it, and
+    "where's this from?" from the floor is the question that ends a briefing badly.
+
+    DEFAULT ON for the `briefing` density register and for any slide carrying numbers a reader
+    could act on; skip it on concept/section slides that assert nothing. `sources` is a string or
+    a list (joined with `sep`); `as_of` appends the data date -- pass it whenever a number moves
+    with time, since a stale figure with no date reads as a current one.
+
+    Sits in the bottom band and automatically lifts clear of anything already there (a `footer`
+    tag, a caption), so it can be called last without geometry bookkeeping. Returns the y used.
+
+    Set `label=""` for a bare line, or `label="来源"` on a Chinese deck.
+    """
+    sw, sh = _slide_size(slide)
+    fnt = font or FONT
+    ink_c = ink if ink is not None else MUTE
+    if isinstance(sources, str):
+        sources = [sources]
+    body = sep.join(str(s).strip() for s in sources if str(s).strip())
+    if not body:
+        raise ValueError("source_note(): no source text — an empty provenance line is worse than "
+                         "none, it looks sourced")
+    if as_of:
+        body = f"{body}{sep}as of {as_of}" if label else f"{body}{sep}{as_of}"
+    runs = ([(f"{label}: ", size, ink_c, True, False, fnt)] if label else []) + \
+           [(body, size, ink_c, False, False, fnt)]
+    lx = 0.62 if x is None else x
+    lw = (sw - lx - 0.55) if w is None else w
+    h = max(0.24, size / 54.0 + 0.10)
+    if y is None:
+        yy = sh - 0.30 - h
+        for _ in range(4):                       # lift clear of the footer / caption band
+            clash = False
+            for sh_ in slide.shapes:
+                if not getattr(sh_, "has_text_frame", False) or not sh_.text_frame.text.strip():
+                    continue
+                top = sh_.top / 914400.0
+                bot = top + sh_.height / 914400.0
+                if bot > yy - 0.02 and top < yy + h + 0.02:
+                    clash = True
+                    break
+            if not clash:
+                break
+            yy -= h + 0.06
+    else:
+        yy = y
+    text(slide, lx, yy, lw, h, [runs], space_after=0,
+         align=align if align is not None else PP_ALIGN.LEFT)
+    return yy
+
+
+def venn(slide, x, y, w, h, sets, *, zones=None, accents=None, ink=None, mute=None,
+         label_size=13, zone_size=10.5, font=None, alpha=0.30, overlap=0.62, outline=True):
+    """OVERLAP between 2 or 3 groups — what is shared, what is only one group's.
+
+    `sets` = 2 or 3 set names. `zones` labels the regions, keyed by the 1-based indices of the sets
+    that region belongs to: `{"1": "只有旧系统", "12": "两边都要", "123": "全部满足"}`. Any key may
+    be omitted. The classic use is the *sweet spot*: the small centre region is the argument.
+
+    **The circles are equal and schematic — area encodes NOTHING.** That is deliberate, not a
+    shortcut: area-proportional Venns are impossible to draw exactly for most 3-set data, so a
+    scaled-looking one would assert magnitudes it cannot honour. If you have counts, put them in the
+    `zones` text, where they read as labels rather than as areas. If the sizes ARE the story, a Venn
+    is the wrong form — use `segmented_bar` or `stat_row`.
+
+    Zone label positions are **derived**, not tuned: for each region the label lands on the point
+    furthest inside it (max distance to every circle edge), so a label can never drift into a
+    neighbouring region when `overlap` changes. `overlap` (0.3–0.9) sets how far the circles sit
+    from the shared centre — lower overlaps more. `alpha` is the fill translucency, which is what
+    makes an intersection read as an intersection.
+
+    Returns {"centers": [(cx, cy, r), ...], "zones": {key: (x, y)}} in inches.
+    """
+    import math
+    acc = list(accents or ACCENTS)
+    ink_c = ink if ink is not None else DEEP
+    mute_c = mute if mute is not None else MUTE
+    fnt = font or FONT
+    n = len(sets)
+    if n not in (2, 3):
+        raise ValueError(f"venn(): {n} sets. A Venn reads at 2 or 3; at 4+ the regions stop being "
+                         f"visually findable — use eval_matrix (options x criteria) or heat_matrix")
+    if not (0.3 <= overlap <= 0.9):
+        raise ValueError(f"venn(): overlap={overlap} is outside 0.3–0.9; below that the circles "
+                         f"separate and there is no intersection, above it they nearly coincide")
+
+    # unit layout: circles of r=1 whose centres sit `d` from the shared origin
+    d = overlap
+    if n == 2:
+        cen = [(-d, 0.0), (d, 0.0)]
+    else:
+        cen = [(math.cos(math.radians(a)) * d * 1.1547, math.sin(math.radians(a)) * d * 1.1547)
+               for a in (90, 210, 330)]
+    x0 = min(c[0] for c in cen) - 1.0
+    x1 = max(c[0] for c in cen) + 1.0
+    y0 = min(c[1] for c in cen) - 1.0
+    y1 = max(c[1] for c in cen) + 1.0
+    # reserve room for the OUTER set labels, then fit the figure in what is left
+    pad_t = 0.30 if n == 3 else 0.0
+    pad_b = 0.30
+    fw, fh = w, h - pad_t - pad_b
+    if fw <= 0.4 or fh <= 0.4:
+        raise ValueError(f"venn(): {w:.2f}x{h:.2f}in leaves no room for the diagram plus its labels")
+    k = min(fw / (x1 - x0), fh / (y1 - y0))
+    r = k
+    ox = x + (w - (x1 - x0) * k) / 2.0 - x0 * k
+    oy = y + pad_t + (fh - (y1 - y0) * k) / 2.0 + y1 * k      # flip: unit +y is UP, slide +y is DOWN
+    C = [(ox + cx * k, oy - cy * k, r) for cx, cy in cen]
+
+    for i, (cx, cy, rr) in enumerate(C):
+        col = acc[i % len(acc)]
+        o = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(cx - rr), Inches(cy - rr),
+                                         Inches(2 * rr), Inches(2 * rr)))
+        _grad_fill(o, [(0.0, col, alpha), (1.0, col, alpha)])
+        if outline:
+            o.line.color.rgb = _as_rgb(col)
+            o.line.width = Pt(1.25)
+        else:
+            o.line.fill.background()
+
+    # zone anchors: the point furthest inside each region (max distance to EVERY circle edge)
+    best = {}
+    steps = 130
+    for gi in range(steps + 1):
+        for gj in range(steps + 1):
+            px = x0 + (x1 - x0) * gi / steps
+            py = y0 + (y1 - y0) * gj / steps
+            dist = [math.hypot(px - cx, py - cy) for cx, cy in cen]
+            key = "".join(str(i + 1) for i, dd in enumerate(dist) if dd <= 1.0)
+            if not key:
+                continue
+            score = min(abs(dd - 1.0) for dd in dist)
+            if score > best.get(key, (-1.0, 0, 0))[0]:
+                best[key] = (score, px, py)
+    anchors = {kk: (ox + pv[1] * k, oy - pv[2] * k) for kk, pv in best.items()}
+    # Each region's usable BOX, not just its centre. A pair region is a thin lens: a text box sized
+    # by a constant overflows it sideways into the neighbouring regions, which is how a Venn label
+    # ends up sitting on top of the centre label. So walk out from the anchor along +/-x and +/-y
+    # while still inside the same region, and let THAT be the box.
+    def _region(px, py):
+        dd = [math.hypot(px - cx, py - cy) for cx, cy in cen]
+        return "".join(str(i + 1) for i, v in enumerate(dd) if v <= 1.0)
+
+    extent = {}
+    for kk, (_sc, px, py) in best.items():
+        step = (x1 - x0) / steps
+        half = []
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            reach = 0.0
+            while reach < 2.2:
+                if _region(px + dx * (reach + step), py + dy * (reach + step)) != kk:
+                    break
+                reach += step
+            half.append(reach)
+        hx = min(half[0], half[1])
+        hy = min(half[2], half[3])
+        # The independent reaches describe a CROSS, not a rectangle: a pair region is a lens, and the
+        # corners of hx-by-hy poke out through its curved sides. Shrink jointly until all four
+        # corners (and the edge midpoints, which a concave boundary can cut) are genuinely inside.
+        for _ in range(24):
+            pts = [(px + sx * hx, py + sy * hy) for sx in (-1, 1) for sy in (-1, 1)] + \
+                  [(px + sx * hx, py) for sx in (-1, 1)] + [(px, py + sy * hy) for sy in (-1, 1)]
+            if all(_region(qx, qy) == kk for qx, qy in pts):
+                break
+            hx *= 0.9
+            hy *= 0.9
+        extent[kk] = (hx * 2 * k * 0.94, hy * 2 * k * 0.94)
+
+    for i, name in enumerate(sets):
+        cx, cy, rr = C[i]
+        # the set NAME goes outside its own circle, on the side facing away from the others
+        vx = cx - sum(c[0] for c in C) / n
+        vy = cy - sum(c[1] for c in C) / n
+        m = math.hypot(vx, vy) or 1.0
+        lx = cx + vx / m * (rr + 0.16)
+        ly = cy + vy / m * (rr + 0.16)
+        bw = min(1.9, max(0.9, w / 2.6))
+        al = PP_ALIGN.CENTER
+        if abs(vx) > abs(vy):
+            al = PP_ALIGN.LEFT if vx > 0 else PP_ALIGN.RIGHT
+            lx = lx - (0 if vx > 0 else bw)
+            ly = ly - 0.14
+        else:
+            lx = lx - bw / 2
+            ly = ly - (0.30 if vy > 0 else 0.0)
+        # the region handed in is a promise: clamp the outer label inside it rather than letting a
+        # bottom-left set label walk off the canvas (which the render lint catches as OVERFLOW)
+        lx = min(max(lx, x), x + w - bw)
+        ly = min(max(ly, y), y + h - 0.28)
+        text(slide, lx, ly, bw, 0.28, [[(str(name), label_size, ink_c, True, False, fnt)]],
+             align=al, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+
+    for kk, lab in (zones or {}).items():
+        key = "".join(sorted(str(kk)))
+        if key not in anchors:
+            raise ValueError(f"venn(): zone {kk!r} is not a region of a {n}-set diagram "
+                             f"(regions here: {', '.join(sorted(anchors))})")
+        ax_, ay_ = anchors[key]
+        ew, eh = extent[key]
+        # no floors here: a floor would let the box exceed the region again, which is the whole bug
+        zw = min(ew, r * 1.7)
+        zh = min(eh, 1.05)
+        sz = fit_text_size([(str(lab), len(key) > 1)], zw, zh, zone_size, font=fnt, min_size=7.5)
+        # fit_text_size returns the FLOOR when nothing fits, so re-measure AT the size actually used
+        _lh = max(_LINT_LINE_H, 1.2 * CJK_LS) if _has_cjk(str(lab)) else _LINT_LINE_H
+        need = _measure_lines([(str(lab), len(key) > 1)], sz, zw - TEXT_INSET_LR, font=fnt) * (sz / 72.0 * _lh)
+        if need > zh + 0.004:
+            raise ValueError(
+                f"venn(): zone {kk!r} label {str(lab)[:24]!r} cannot fit its region "
+                f"({zw:.2f}x{zh:.2f}in available) even at 7.5pt. A Venn region is a lens, not a "
+                f"card — shorten it to a word or two, lower `overlap` to widen the lenses, or move "
+                f"the explanation to a takeaway_rail beside the diagram.")
+        text(slide, ax_ - zw / 2, ay_ - zh / 2, zw, zh,
+             [[(str(lab), sz, (ink_c if len(key) > 1 else mute_c), len(key) > 1, False, fnt)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0, line_spacing=1.0)
+    return {"centers": C, "zones": anchors}
+
+
+def specimen_card(slide, x, y, w, h, specimen, label, *, accent=MAGENTA, ink=DEEP, featured=False, serif=None):
+    """A rule-on-top SPEC CARD with a giant specimen (a glyph 'Aa', a monogram, a number) as the
+    hero — for comparing fonts / brands / metrics. The featured card's rule + specimen recolor to
+    the accent. A lighter, more Swiss alternative to a boxed icon-card."""
+    rc = accent if featured else RGBColor(0xDD, 0xDD, 0xDD)
+    sc = accent if featured else ink
+    box(slide, x, y, w, 0.06, fill=rc)                                  # top rule
+    text(slide, x, y + 0.14, w, 0.3, [[(label.upper(), 11, MUTE, True, False)]], space_after=0)
+    text(slide, x, y + 0.5, w, max(0.3, h - 0.6), [[(specimen, 64, sc, True, False, serif)]],
+         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+
+
+def wireframe_grid(slide, x, y, w, h, cells, *, cols=4, rows=3, highlight=None, line=None, ink=DEEP, accent=MAGENTA):
+    """A SELF-DEMONSTRATING annotated wireframe — labeled outline cells over a cols×rows grid, for
+    decks ABOUT layout/design/systems (show the scaffolding). cells = [(label, c0, cspan, r0, rspan)];
+    `highlight` recolors one cell. Pair with spec_list() for the 'derived = base × n' math."""
+    if cols < 1 or rows < 1:
+        raise ValueError("wireframe_grid needs cols >= 1 and rows >= 1")
+    ln = line or RGBColor(0xCC, 0xCC, 0xCC)
+    cw = w / cols; ch = h / rows
+    for i in range(cols + 1): box(slide, x + i * cw - 0.005, y, 0.01, h, fill=ln)
+    for j in range(rows + 1): box(slide, x, y + j * ch - 0.005, w, 0.01, fill=ln)
+    for k, (label, c0, cspan, r0, rspan) in enumerate(cells):
+        cx = x + c0 * cw; cy = y + r0 * ch
+        em = (highlight == k)
+        box(slide, cx + 0.04, cy + 0.04, cspan * cw - 0.08, rspan * ch - 0.08,
+            fill=None, line=accent if em else ink, line_w=2 if em else 1)
+        text(slide, cx + 0.12, cy + 0.1, cspan * cw - 0.24, 0.3,
+             [[(label.upper(), 10, accent if em else ink, True, False, MONO)]], space_after=0)
+
+
+def spec_list(slide, x, y, lines, *, font=None, color=DEEP, size=12, gap=0.32):
+    """Monospace 'derived = base × n' spec lines — pairs with wireframe_grid for a systems deck.
+    ``font`` resolves to the current ``MONO`` at call time (reassigning ``deckkit.MONO`` re-themes it)."""
+    font = font or MONO
+    cy = y
+    for ln in lines:
+        text(slide, x, cy, 6.0, 0.3, [[(ln, size, color, False, False, font)]], space_after=0); cy += gap
+    return cy
+
+
+def photo_backdrop(slide, path, *, alt, panel="quiet", width=0.46, alpha=1.0, fill=None,
+                   pad=0.34, credit=None, band=0.42):
+    """A photo FULL-BLEED with the content on a near-opaque panel over the image's CALMEST region.
+
+    THE FORM. A sourced photograph carrying a page, with the words on a solid block rather than
+    floating on the picture. It is one of the three placements `image-generation.md` names for a
+    content image (full-bleed background · side panel · inline figure), it was the only one with no
+    component, and every part of it existed while the composition did not: `picture(fit="cover")`,
+    `slide_background`, `scrim_overlay`, `photo_card`, `bottom_callout`. Hand-rolled, the same three
+    things go wrong each time — the panel lands where the picture is busiest, the ink is chosen by
+    eye against a photograph rather than against the panel, and the panel is made translucent enough
+    to look elegant and too translucent to read.
+
+    WHERE THE PANEL GOES IS MEASURED, not picked. `image_fx.quiet_region()` scores the image by
+    local luminance variance and returns its calmest rectangle; the panel is snapped to the clean
+    architectural shape nearest that region — a left band, a right band, or a lower band — so the
+    words sit over the least informative part of the photograph and the subject stays visible.
+    `panel="left"|"right"|"bottom"` overrides it, `panel="none"` returns the full safe rect for a
+    page whose text sits directly on the picture (then YOU own the contrast).
+
+    🔴 THE ALPHA FLOOR IS THE RULE, NOT A DEFAULT. SKILL.md's render self-check says a scrim only
+    DIMS a bright line — it does not remove it — so text over image linework needs a near-opaque
+    panel (alpha >= 0.88). Passing less raises here rather than shipping a page whose title has a
+    balustrade running through it; for a deliberate gradient wash, `scrim_overlay` is the component
+    that means that, and it says so in its own name.
+
+    Returns `(x, y, w, h, ink)` — the content rect INSIDE the panel, and the ink colour resolved
+    against the panel's own fill (`on()`), never against the photograph.
+
+    `alt` is required: a photograph is informative content, and a missing alt-text is a BLOCKING
+    accessibility finding at hand-off, so the component will not let a deck acquire one.
+    `credit="Photographer / CC BY-SA"` places the attribution line an attribution-required licence
+    needs ON THE SLIDE, which is what `check_image_provenance` looks for.
+
+    🔴 WHEN NOT TO USE THE PANEL AT ALL. This puts an opaque block over the calmest part of the
+    picture — which is right when the photograph is busy everywhere and the words have nowhere to
+    stand, and wrong when that calm part is the best thing in the frame. A wide clean sky covered
+    by a panel throws the sky away and keeps the clutter. There, `panel="none"` is the stronger
+    page: it returns the safe rect and an ink chosen from the image's own measured luminance, and
+    the words sit ON the photograph. Look at the render and decide; the measurement can tell you
+    WHERE the picture is calmest and cannot tell you whether it is calm enough to write on.
+    """
+    if not str(alt or "").strip():
+        raise ValueError(
+            "photo_backdrop(): `alt` is required. A full-bleed photograph is informative content, "
+            "and MISSING ALT-TEXT is a blocking accessibility finding at hand-off — pass one "
+            "sentence describing what the photograph shows.")
+    if panel not in ("quiet", "left", "right", "top", "bottom", "none"):
+        raise ValueError("photo_backdrop(): panel must be quiet / left / right / top / bottom / "
+                         "none, got {!r}".format(panel))
+    if panel != "none" and alpha < 0.88:
+        raise ValueError(
+            "photo_backdrop(): alpha={:.2f} is under the 0.88 floor. A scrim only DIMS the image's "
+            "linework, it does not remove it, so a title over a photograph needs a near-opaque "
+            "panel (SKILL.md render self-check, 'Text over an image'). For a deliberate gradient "
+            "wash use `scrim_overlay()`, which is the component that means that.".format(alpha))
+
+    W, H = _slide_size(slide)
+    pic = picture(slide, path, 0, 0, W, H, fit="cover")
+    alt_text(pic, alt)
+
+    lum = None
+    if panel in ("quiet", "none"):
+        try:
+            import image_fx
+            fx, fy, fw, fh, lum = image_fx.quiet_region(path)
+            if panel == "quiet":
+                cx, cy = fx + fw / 2.0, fy + fh / 2.0
+                # Snap the measured region to a clean architectural shape: a raw grid rectangle is
+                # an awkward block, a band is a composition. A WIDE calm region becomes the band on
+                # its own side — top or bottom — and a TALL one becomes the side band. An earlier
+                # version had no top band at all, so a picture that was calm across the sky pushed
+                # the words onto a side, which is the opposite of what the measurement said.
+                if fw >= 0.62 and fh <= 0.55:
+                    panel = "bottom" if cy > 0.5 else "top"
+                else:
+                    panel = "left" if cx < 0.5 else "right"
+        except Exception as exc:                       # unreadable image, no Pillow, odd mode
+            print("[deckkit] photo_backdrop: could not measure the image's calm region ({}: {}) — "
+                  "falling back to a left band. That is a guess, not a measurement."
+                  .format(exc.__class__.__name__, exc))
+            if panel == "quiet":
+                panel = "left"
+
+    if panel == "none":
+        # No panel, so the ink cannot come from one: it comes from the image's own measured
+        # luminance, which is the whole reason `quiet_region` returns it.
+        x, y, w, h = content_band(slide)
+        bright = (lum if lum is not None else 255) > 150
+        return (x, y, w, h, RGBColor(0x14, 0x14, 0x14) if bright else RGBColor(0xF5, 0xF5, 0xF5))
+
+    pw = max(2.0, W * float(width))
+    # A side band has to hold a COLUMN of text. On a narrow canvas it cannot: at width=0.46 a
+    # portrait 9:16 page leaves 1.9in of usable measure, which is a caption, not a page. Fall back
+    # to the horizontal band on the calm side and say so, rather than returning a rect the caller
+    # will discover is too thin only when the text wraps to one word a line.
+    if panel in ("left", "right") and (pw - 2 * pad) < 2.6:
+        panel = "bottom"
+        print("[deckkit] photo_backdrop: a {:.1f}in side band would leave {:.1f}in of measure on "
+              "this canvas — using the lower band instead, which is the shape that holds a column "
+              "here.".format(pw, pw - 2 * pad))
+    if panel == "left":
+        px, py, pw_, ph = 0.0, 0.0, pw, H
+    elif panel == "right":
+        px, py, pw_, ph = W - pw, 0.0, pw, H
+    elif panel == "top":
+        bh = max(1.2, H * float(band))
+        px, py, pw_, ph = 0.0, 0.0, W, bh
+    else:                                              # bottom band
+        bh = max(1.2, H * float(band))
+        px, py, pw_, ph = 0.0, H - bh, W, bh
+
+    ground = fill if fill is not None else (GROUND if GROUND is not None else WHITE)
+    if alpha >= 1.0:
+        box(slide, px, py, pw_, ph, fill=ground, line=None)
+    else:
+        # A FLAT gradient is how a solid fill carries alpha here: both stops the same colour, both
+        # at the requested opacity. `pic_alpha` sets a PICTURE's opacity and cannot tint a shape,
+        # and a second overlay rectangle would double the ink the contrast checks measure.
+        box(slide, px, py, pw_, ph, grad=[(0.0, ground, alpha), (1.0, ground, alpha)], line=None)
+    ink = on(ground)
+
+    if credit:
+        # INSIDE the panel, in the panel's own ink. The first version put it on the photograph and
+        # picked its colour from the CALM region's luminance — so a credit sitting on the dark
+        # buildings at the foot of a bright-sky picture was set in dark ink and vanished. The panel
+        # is the one surface on this page whose contrast is known.
+        # Aligned to the panel's SHAPE: a side band reads down its left edge, a horizontal band
+        # reads across, so the credit tucks into the inner corner rather than stranding itself at
+        # the foot of a tall band with nothing beside it.
+        _al = PP_ALIGN.RIGHT if panel in ("top", "bottom") else PP_ALIGN.LEFT
+        text(slide, px + pad, py + ph - pad - 0.24, max(1.2, pw_ - 2 * pad), 0.24,
+             [[(str(credit), 8.5, ink, False, False)]], align=_al)
+
+    foot = (0.34 if credit else 0.0)      # the credit lives inside the panel, so it reserves space
+    return (px + pad, py + pad, pw_ - 2 * pad, ph - 2 * pad - foot, ink)
+
+
+def photo_card(slide, x, y, w, h, *, role="info", accent=MAGENTA, r=0.1, alpha=0.92):
+    """A translucent tinted card to hold text ON a photo (keeps the image visible behind). `role`:
+    'info' (light), 'primary' (dark), 'accent' (accent tint). Returns the text colour to use on it."""
+    fc, tc = {"info": ("FFFFFF", DEEP), "primary": ("141414", WHITE),
+              "accent": (_hex(accent), WHITE)}.get(role, ("FFFFFF", DEEP))
+    box(slide, x, y, w, h, round=True, r=r, grad=[(0.0, fc, alpha), (1.0, fc, alpha)])
+    return tc
+
+
+MOTIF_TAG = "deckkit-motif"
+# The deck's signature device, TAGGED so it has a machine-readable existence. Before this, a motif
+# lived only in prose: the design plan named one, gave it a meaning, budgeted it at <=3 loud
+# appearances and promised `carried_by` slides where it does structural work — and NOTHING could
+# tell whether a built deck's motif appeared 3 times, 11 times, or never. Measured on a real build:
+# the register signature was drawn by hand, drawn WRONG (offset in x but not y, so it rendered as
+# three interlocking circles rather than concentric rings), and shipped to 12 pages before a human
+# looked at a PNG. Two things follow from the tag and cannot be had without it:
+#   · the loud-motif budget becomes countable;
+#   · TEXT_OVER_MOTIF can ask "is this text crossing the deck's device?", which TEXT_OVERLAP
+#     structurally cannot — it measures text against TEXT, and a motif is geometry.
+# `LOUD` marks a hero appearance (the cover figure); `QUIET` marks the chrome-level register
+# signature that is MEANT to repeat on every page, so the budget must not count it.
+MOTIF_LOUD = MOTIF_TAG + "-loud"
+MOTIF_QUIET = MOTIF_TAG + "-quiet"
+
+CHROME_TITLE = "deckkit-chrome-title"
+# Resolved once: qn() is a dict lookup plus string formatting, and _chrome_bottom calls it per
+# shape per slide on every build.
+_QN_CNVPR, _QN_OFF, _QN_EXT = qn("p:cNvPr"), qn("a:off"), qn("a:ext")
+# The title chrome, tagged for the same reason the motif is: so a measurement can ask "where does
+# the title actually END on THIS slide?" instead of assuming. `content_band()` is the caller — see
+# the note there for the 0.09in overlap this replaced.
+
+
+def _tag_chrome(shape):
+    """Mark a shape as title chrome so `content_band()` can measure where the title ends."""
+    try:
+        shape.name = CHROME_TITLE
+    except Exception:
+        pass
+    return shape
+
+
+_GEN_RE = re.compile(r"(?:^deckkit-gen\.|\+gen\.)([a-z0-9][a-z0-9-]*)")
+_VL_RE = re.compile(r"(?:^deckkit-vl\.|\+vl\.)([a-z0-9][a-z0-9-]*)")
+
+
+def _compose_tag(shape, tier=None, flag=None, reason=None, gen=None, vl=None):
+    """Write a declaration into the shape NAME without erasing the ones already there.
+
+    🔴 THREE functions record a decision in `shape.name` — `tag_motif`, `bleed_intent`,
+    `overlap_intent` — and each of them used to assign it outright, so whichever ran LAST won and
+    the others vanished. An erased declaration reads exactly like one that was never made, so
+    nothing reported it. Measured on a delivered deck whose whole design is a hand-drawn motif:
+    its surface kit called `tag_motif` and then `overlap_intent` on every piece of furniture, and
+    the saved file contained ZERO tagged motif shapes — MOTIF_BUDGET counted none,
+    TEXT_OVER_MOTIF and MOTIF_UNEXPLAINED saw none, and the `icon_family: none — motif-dominant`
+    waiver could not be checked against the file it made a claim about.
+
+    The name is parsed back to a SET of declarations and re-rendered, so call ORDER cannot matter —
+    which is the point: an author has no reason to know that it would.
+
+        deckkit-motif-loud+bleed+overlap:<why>     a loud motif that bleeds and is ridden by type
+        deckkit-bleed:<why>                        a bleed and nothing else
+        deckkit-bleed+overlap:<why>                both declarations, no motif
+        deckkit-motif-quiet+overlap+gen.hero       a generated series picture (slot 'hero'), a FLAG:
+                                                   it never takes the one reason slot
+        deckkit-vl.collage                         composed by a visual language (visual_languages)
+    """
+    cur = str(getattr(shape, "name", "") or "")
+    head, _, why = cur.partition(":")
+    have_tier = have_bleed = have_overlap = None
+    if head.startswith(MOTIF_TAG):
+        have_tier = MOTIF_LOUD if "-loud" in head.split("+", 1)[0] else MOTIF_QUIET
+    if head.startswith(BLEED_TAG) or "+bleed" in head:
+        have_bleed = True
+    if head.startswith(OVERLAP_TAG.rstrip(":")) or "+overlap" in head:
+        have_overlap = True
+    have_datum = head.startswith(DATUM_TAG.rstrip(":")) or "+datum" in head
+    have_decor = head.startswith(DECOR_TAG) or "+decor" in head
+    have_lowres = head.startswith(LOWRES_TAG) or "+lowres" in head
+    have_initial = head.startswith(INITIAL_TAG) or "+initial" in head
+    m = _GEN_RE.search(head)
+    have_gen = m.group(1) if m else None
+    mv = _VL_RE.search(head)
+    have_vl = mv.group(1) if mv else None
+    if not head.startswith("deckkit-"):
+        why = ""
+    if tier:
+        have_tier = tier
+    if flag == "+bleed":
+        have_bleed = True
+    elif flag == "+overlap":
+        have_overlap = True
+    elif flag == "+datum":
+        have_datum = True
+    elif flag == "+decor":
+        have_decor = True
+    elif flag == "+lowres":
+        have_lowres = True
+    elif flag == "+initial":
+        have_initial = True
+    if reason is not None:
+        why = reason
+    if gen:
+        have_gen = gen
+    if vl:
+        have_vl = vl
+    on = (("+bleed", have_bleed), ("+overlap", have_overlap), ("+datum", have_datum),
+          ("+decor", have_decor), ("+lowres", have_lowres), ("+initial", have_initial))
+    if have_tier:
+        base, flags = have_tier, [f for f, v in on if v]
+    elif have_bleed:
+        base, flags = BLEED_TAG, [f for f, v in on if v and f != "+bleed"]
+    elif have_overlap:
+        base, flags = OVERLAP_TAG.rstrip(":"), [f for f, v in on if v and f != "+overlap"]
+    elif have_datum:
+        base, flags = DATUM_TAG.rstrip(":"), [f for f, v in on if v and f in ("+decor", "+lowres", "+initial")]
+    elif have_decor:
+        base, flags = DECOR_TAG, [f for f, v in on if v and f in ("+lowres", "+initial")]
+    elif have_lowres:
+        base, flags = LOWRES_TAG, (["+initial"] if have_initial else [])
+    elif have_initial:
+        base, flags = INITIAL_TAG, []
+    else:
+        base, flags = "", []
+    if have_gen:
+        if base:
+            flags = flags + ["+gen." + have_gen]
+        else:
+            base = "deckkit-gen." + have_gen
+    if have_vl:
+        if base:
+            flags = flags + ["+vl." + have_vl]
+        else:
+            base = "deckkit-vl." + have_vl
+    shape.name = base + "".join(flags) + ((":" + str(why)) if why else "")
+    return shape
+
+
+def vl_name(shape):
+    """The visual language a shape was composed by (`visual_languages`), or None."""
+    head = str(getattr(shape, "name", "") or "").split(":", 1)[0]
+    m = _VL_RE.search(head)
+    return m.group(1) if m else None
+
+
+def generated_slot(shape):
+    """The image-series slot a picture was placed for (`image_series.slot_picture`), or None."""
+    head = str(getattr(shape, "name", "") or "").split(":", 1)[0]
+    m = _GEN_RE.search(head)
+    return m.group(1) if m else None
+
+
+def tag_motif(shape, loud=False):
+    """Mark a shape as part of the deck's signature device. Returns the shape.
+
+    Reach for this on any motif you draw by hand — `register_mark()` does it for you. An untagged
+    motif is invisible to the budget count and to TEXT_OVER_MOTIF, which is the state every deck
+    was in before the tag existed. COMPOSES with `bleed_intent` / `overlap_intent` in any order
+    (see `_compose_tag`).
+    """
+    try:
+        return _compose_tag(shape, tier=(MOTIF_LOUD if loud else MOTIF_QUIET))
+    except Exception:
+        return shape
+
+
+def _is_motif(sh, loud=None):
+    n = getattr(sh, "name", "") or ""
+    n = n.split(":", 1)[0]                       # drop a declaration's reason ("…+bleed:<why>")
+    if not n.startswith(MOTIF_TAG):
+        return False
+    if n.startswith(MOTIF_LEGEND):
+        # The KEY that explains the device is not the device. Caught by its own test: the legend
+        # tag starts with MOTIF_TAG, so it counted as motif GEOMETRY — which would have let a
+        # legend trip TEXT_OVER_MOTIF against the caption beside it, and would have made the thing
+        # that satisfies the stranger test look like another appearance of the motif.
+        return False
+    if loud is None:
+        return True
+    # `in`, not `endswith`: a motif that also declares a deliberate bleed carries "+bleed" after
+    # its tier, and a tier test that could not see past that would drop the shape out of the <=3
+    # budget — which is the count the whole tagging scheme exists to make possible.
+    return ("-loud" in n) if loud else ("-quiet" in n)
+
+
+# The quiet register vocabulary. The first five are GRAPHIC-NEUTRAL (rules, ticks, grids) and every
+# deck that reached for them produced the same corner — which is the sameness the direction gate
+# exists to prevent. The six after them are drawn from SUBJECT WORLDS instead: a stamp, a stitched
+# seam, a signal trace, contour lines, a scale bar, hand hatching. A register borrowed from the
+# subject's own objects carries meaning before it carries taste (bespoke-registers.md).
+_REGISTER_KINDS = ("arcs", "rule", "ticks", "ordinal", "grid",
+                   "seal", "stitch", "trace", "contour", "caliper", "hatch")
+
+
+def register_mark(slide, kind="arcs", *, corner="tr", color=None, size=1.55, weight=0.9,
+                  rings=3, count=5, text="", font=None, inset=0.30, loud=False):
+    """The QUIET register signature — the chrome-level cue that carries a deck's style onto every
+    ordinary interior page. Correct by construction, and TAGGED.
+
+    This exists because a bespoke register is mandatory at the direction gate while deckkit had no
+    primitive to draw one, so every deck hand-rolls its signature in raw boxes and lines. Measured
+    on a real build, that hand-rolled helper was eight lines long, offset each ring in x but not in
+    y, and therefore drew THREE INTERLOCKING CIRCLES — a Venn diagram — in the corner of twelve
+    pages. Nothing caught it: no lint knows what a motif is supposed to look like, and a human only
+    saw it because they opened a PNG. The failure was not carelessness; it was that "draw three
+    concentric arcs" is arithmetic nobody should be re-deriving per deck.
+
+    `kind`:
+      ``arcs``    concentric rings sharing ONE centre (`rings` of them). The centre is computed,
+                  never offset per ring — the bug above is unrepresentable here.
+      ``rule``    a thin edge rule inset from the page edge — the quietest possible signature.
+      ``ticks``   `count` evenly-spaced short ticks along the edge (a scale, a gallery, a ruler).
+      ``ordinal`` a small numeral/character set in the corner (a section index, a page cue).
+      ``grid``    a small square field of hairlines (graph/plate register).
+
+    `corner` is one of tl / tr / bl / br, or a literal (x, y) in inches for full control.
+    `loud=True` marks this a HERO appearance and puts it in the <=3 budget; the default is the
+    quiet register signature, which the motif budget deliberately does NOT count because the skill
+    permits it on every page.
+
+    Returns the list of shapes it drew, all tagged.
+    """
+    if kind not in _REGISTER_KINDS:
+        # Raise rather than fall back: a wrong name that silently draws something else is exactly
+        # how a deck ends up with a register nobody chose (see backdrop_motif's own note).
+        raise ValueError("register_mark(kind={!r}): unknown mark. One of: {}."
+                         .format(kind, " · ".join(_REGISTER_KINDS)))
+    sw, sh_h = _slide_size(slide)
+    c = color if color is not None else RGBColor(0xD8, 0xD0, 0xBF)
+    out = []
+
+    if isinstance(corner, (tuple, list)):
+        ax, ay = float(corner[0]), float(corner[1])
+        right = ax > sw / 2.0
+        low = ay > sh_h / 2.0
+    else:
+        if corner not in ("tl", "tr", "bl", "br"):
+            raise ValueError("register_mark(corner={!r}): one of tl · tr · bl · br, or (x, y)."
+                             .format(corner))
+        right, low = corner[1] == "r", corner[0] == "b"
+        ax = (sw - inset - size) if right else inset
+        ay = (sh_h - inset - size) if low else inset
+
+    if kind == "arcs":
+        # ONE centre for every ring — that is the whole point of the helper.
+        cx, cy = ax + size / 2.0, ay + size / 2.0
+        for i in range(max(1, rings)):
+            r = (size / 2.0) * (1.0 - i * (0.30 if rings > 1 else 0.0))
+            out.append(box(slide, cx - r, cy - r, r * 2, r * 2, fill=None, line=c,
+                           line_w=weight, round=True, r=r))
+    elif kind == "rule":
+        y = ay if not low else ay + size
+        out.append(box(slide, inset, y, sw - 2 * inset, max(0.008, weight / 72.0), fill=c))
+    elif kind == "ticks":
+        span = sw - 2 * inset
+        for i in range(max(2, count)):
+            x = inset + span * (i / float(max(1, count - 1)))
+            out.append(box(slide, x, ay, max(0.008, weight / 72.0), size * 0.34, fill=c))
+    elif kind == "ordinal":
+        t = str(text or "")
+        if not t:
+            raise ValueError("register_mark(kind='ordinal') needs `text` — the numeral or "
+                             "character the corner carries.")
+        tb = slide.shapes.add_textbox(Inches(ax), Inches(ay), Inches(size), Inches(size * 0.5))
+        tb.text_frame.word_wrap = False
+        p0 = tb.text_frame.paragraphs[0]
+        r0 = p0.add_run(); r0.text = t
+        set_font(r0, 13, c, bold=True, font=font or FONT)
+        p0.alignment = PP_ALIGN.RIGHT if right else PP_ALIGN.LEFT
+        out.append(tb)
+    elif kind == "grid":
+        step = size / 4.0
+        for i in range(5):
+            out.append(box(slide, ax + i * step, ay, max(0.006, weight / 96.0), size, fill=c))
+            out.append(box(slide, ax, ay + i * step, size, max(0.006, weight / 96.0), fill=c))
+    elif kind == "seal":
+        # A stamp: the mark a document, a permit, a certificate carries. Reads as authority.
+        out.append(box(slide, ax, ay, size * 0.72, size * 0.72, fill=None, line=c,
+                       line_w=weight, round=True, r=size * 0.10))
+        inner = size * 0.26
+        out.append(box(slide, ax + (size * 0.72 - inner) / 2, ay + (size * 0.72 - inner) / 2,
+                       inner, inner, fill=c))
+    elif kind == "stitch":
+        # Perforation / seam-stitch along the edge — a made object's join, not a screen grid.
+        span, pitch = sw - 2 * inset, 0.19
+        k = int(span / pitch)
+        for i in range(k):
+            out.append(box(slide, inset + i * pitch, ay, pitch * 0.42,
+                           max(0.008, weight / 96.0), fill=c))
+    elif kind == "trace":
+        # A signal trace: bars of alternating height along a baseline. For anything MEASURED —
+        # instruments, monitoring, telemetry, sound.
+        wsteps = (0.30, 0.72, 0.18, 0.95, 0.42, 0.62, 0.24)
+        bw = size / float(len(wsteps) * 1.6)
+        for i, hfrac in enumerate(wsteps):
+            bh = size * 0.52 * hfrac
+            out.append(box(slide, ax + i * bw * 1.6, ay + size * 0.52 - bh,
+                           max(0.01, bw * 0.9), bh, fill=c))
+    elif kind == "contour":
+        # Isolines: nested rounded rects. Terrain, gradients, fields, anything with level sets.
+        for i in range(max(2, min(rings + 1, 5))):
+            f = i / float(max(2, min(rings + 1, 5)))
+            iw, ih = size * (0.34 + 0.62 * f), size * (0.22 + 0.5 * f)
+            out.append(box(slide, ax + (size - iw) / 2, ay + (size * 0.72 - ih) / 2, iw, ih,
+                           fill=None, line=c, line_w=weight * 0.8, round=True, r=min(iw, ih) / 2))
+    elif kind == "caliper":
+        # A scale bar with end serifs — the mark of anything MEASURED to size: maps, microscopy,
+        # engineering drawings, product dimensions.
+        t = max(0.008, weight / 96.0)
+        out.append(box(slide, ax, ay + size * 0.34, size * 0.86, t, fill=c))
+        for dx in (0.0, size * 0.86 - t):
+            out.append(box(slide, ax + dx, ay + size * 0.34 - size * 0.12, t, size * 0.24, fill=c))
+        out.append(box(slide, ax + size * 0.43, ay + size * 0.34 - size * 0.07, t, size * 0.14,
+                       fill=c))
+    else:                                                   # hatch
+        # Woven / drawn shading — a hand register, the counterpart to `grid`'s machine one.
+        t = max(0.006, weight / 96.0)
+        for i in range(6):
+            hb = box(slide, ax + i * (size / 5.5), ay, t, size * 0.8, fill=c)
+            try:
+                hb.rotation = 24.0
+            except Exception:
+                pass
+            out.append(hb)
+
+    for shp in out:
+        tag_motif(shp, loud=loud)
+    return out
+
+
+MOTIF_LEGEND = MOTIF_TAG + "-legend"
+BLEED_TAG = "deckkit-bleed"
+
+
+def bleed_intent(shape, reason):
+    """Declare that this shape LEAVES THE CANVAS on purpose. Returns the shape.
+
+    `OFF_CANVAS` is a CRITICAL that refuses to save, and it is right to be: a card or a headline
+    off the page is the commonest way a build ships something nobody can read. But a signature
+    device that runs off the edge is ordinary design — a ray fan from an origin outside the frame,
+    a weave that continues past the trim, an orbit whose centre is off-page — and the ONLY way to
+    ship one was `lint_layout(strict=False)`, which switches the check off for the whole deck.
+    That is the same "invent a risk or abandon all gating" trap the design gate's restraint carve
+    was written to remove: measured here, three of `motif_page`'s eight kinds could not be saved by
+    the standard build path at all.
+
+    So this is the narrow, recorded escape — per shape, with a reason, readable from the saved file
+    by both linters. An UNdeclared shape off the canvas still fails, which is the whole point: the
+    check keeps catching the accident and stops refusing the composition.
+
+    The declaration rides in the shape NAME (the idiom `overlap_intent`, the motif tags and the
+    watermark tag all use, because a name survives the save), and it COMPOSES with a motif tag
+    rather than overwriting it — a motif that bleeds must stay countable as a motif."""
+    try:
+        _compose_tag(shape, flag="+bleed", reason=" ".join(str(reason).strip().split())[:120])
+    except Exception:
+        pass
+    return shape
+
+
+def _declared_bleed(sh):
+    n = str(getattr(sh, "name", "") or "")
+    return n.startswith(BLEED_TAG) or "+bleed" in n.split(":", 1)[0]
+
+
+def _declared_initial(sh):
+    """A text box whose first paragraph opens on a raised initial (an enlarged first letter in its own line)."""
+    head = str(getattr(sh, "name", "") or "").split(":", 1)[0]
+    return head.startswith(INITIAL_TAG) or "+initial" in head
+
+
+def motif_legend(slide, label, *, x=None, y=None, w=4.4, color=None, ink=None, size=9.5,
+                 font=None, glyph="rule", glyph_c=None):
+    """The STRANGER TEST, drawn — a small key that says what the device MEANS, at first appearance.
+
+    The skill requires a motif to be legible to someone who has never seen the deck: label it, key
+    it, or make it figurative. That requirement lived entirely in prose, so it was satisfiable by
+    intending to satisfy it. A legend is a shape; a shape can be counted. `_motif_faults` reports
+    MOTIF_UNEXPLAINED when a deck carries a LOUD motif and no legend anywhere, and the tag on this
+    text is how it knows one exists.
+
+    `glyph` draws a tiny sample of the device beside the words (`rule` · `dot` · `arc` · `none`),
+    because "CROSSING = the bet" next to nothing is a caption, while the same words next to a
+    2-pixel sample of the actual mark is a key.
+
+    Deliberately NOT tagged as the motif itself: a legend must not spend the <=3 loud budget, and
+    it must not trip TEXT_OVER_MOTIF against the device it is explaining."""
+    if glyph not in ("rule", "dot", "arc", "none"):
+        raise ValueError("motif_legend(glyph={!r}): one of rule · dot · arc · none.".format(glyph))
+    sw, sh_h = _slide_size(slide)
+    x = 0.7 if x is None else x
+    c = ink if ink is not None else MUTE
+    g = glyph_c if glyph_c is not None else (color if color is not None else MAGENTA)
+    gw = {"rule": 0.46, "dot": 0.26, "arc": 0.32, "none": 0.0}[glyph]
+    # MEASURE, then place, then draw — in that order. Sized to the TEXT, not to a guess: the first
+    # render of this helper clipped every legend at two lines ("…narrowing to an opening — focus,
+    # filt"), which is the one failure a key cannot survive, because a truncated explanation still
+    # looks explained.
+    body = max(0.8, w - gw)
+    h = max(0.3, measure_text([(str(label), False)], body, size))
+    if y is None:
+        # Against the deck's OWN safe band, never a hand-picked coordinate — the rule the rest of
+        # the kit follows, and one this helper broke twice: a fixed y put a two-line key inside the
+        # reserved footer band, and a fixed MARGIN only moved the same guess.
+        try:
+            _bx, _by, _bw, _bh = content_band(slide)
+            y = (_by + _bh) - h
+            # 🔴 `bottom_callout` anchors to the SAME line, so two helpers left on their defaults
+            #    collide — measured: a deck put a legend and a callout on one slide and the build
+            #    died on TEXT_OVERLAP, with nothing naming the cause. Step over anything already
+            #    sitting in that strip rather than drawing into it.
+            for _o in slide.shapes:
+                try:
+                    if not getattr(_o, "has_text_frame", False) or not _o.text_frame.text.strip():
+                        continue
+                    _ob = _bbox_in(_o)
+                    if _ob and _ob[1] < y + h and _ob[1] + _ob[3] > y:
+                        y = min(y, _ob[1] - h - 0.12)
+                except Exception:
+                    continue
+            y = max(_by, y)
+        except Exception:
+            y = sh_h - 0.62 - h
+    if glyph == "rule":
+        box(slide, x, y + 0.085, 0.34, 0.022, fill=g)
+    elif glyph == "dot":
+        box(slide, x, y + 0.03, 0.14, 0.14, fill=g, round=True, r=0.07)
+    elif glyph == "arc":
+        box(slide, x, y - 0.01, 0.2, 0.2, fill=None, line=g, line_w=1.4, round=True, r=0.1)
+    tb = text(slide, x + gw, y - 0.02, body, h,
+              [[(str(label), size, c, False, False, font or FONT)]], space_after=0)
+    try:
+        tb.name = MOTIF_LEGEND
+    except Exception:
+        pass
+    return tb
+
+
+# The LOUD tier. `register_mark` fixed the QUIET signature — the chrome cue that carries a style
+# onto ordinary pages — and the loud half was left hand-rolled: `motif_generates.page` asks every
+# deck for "the slide whose GEOMETRY is the motif", and every deck built that geometry from raw
+# boxes, which is the exact situation that produced a Venn diagram where three concentric arcs were
+# meant (see register_mark). These are the generative geometries that recur across subjects; the
+# MATERIAL is yours to swap (bespoke-registers.md: keep the method, swap the material).
+_MOTIF_PAGE_KINDS = {
+    "seam":     "two registers meeting at a hinge — a crossing from one state to another",
+    "conduit":  "a spine crossing the page with tap-offs — accumulation along a line",
+    "strata":   "stacked layers of unequal weight — depth, hierarchy, sedimented history",
+    "radial":   "rays from one origin — dispersion, reach, broadcast, divergence",
+    "lattice":  "interwoven members — coupling, network, mutual dependence",
+    "orbit":    "concentric paths with a rider — cycles, iteration, return",
+    "aperture": "frames narrowing to an opening — focus, filtering, a funnel",
+    "terrace":  "ascending steps — progression, escalation, staged advance",
+}
+
+
+def _device_segments(shapes):
+    """Rotated members as SEGMENTS (centre ± half-length along the rotation), plus thin unrotated
+    bars as their own rect. Grounds are excluded: text on a painted colour field is fine."""
+    segs, rects = [], []
+    for sh in shapes:
+        try:
+            l, t = sh.left / 914400.0, sh.top / 914400.0
+            w, h = sh.width / 914400.0, sh.height / 914400.0
+            rot = float(getattr(sh, "rotation", 0.0) or 0.0)
+        except Exception:
+            continue
+        if abs(rot) > 0.01:
+            cx, cy = l + w / 2.0, t + h / 2.0
+            rad = math.radians(rot)
+            dx, dy = (w / 2.0) * math.cos(rad), (w / 2.0) * math.sin(rad)
+            segs.append(((cx - dx, cy - dy), (cx + dx, cy + dy)))
+        elif min(w, h) < 0.5:                       # a rule / bar: a device, not a field
+            rects.append((l, t, w, h))
+    return segs, rects
+
+
+def _legend_anchor(slide, shapes, sw, sh_h, *, box_w=4.4, box_h=0.5, ink_w=None):
+    """The quietest spot of the safe band for a key, MEASURED against the device.
+
+    The four corners are tried first, in the old order, so a page that already had a clear corner
+    is unchanged. When EVERY corner touches the device, positions along the two rows are tried too,
+    scored with the key's real ink width (`ink_w`) rather than a fixed 4.4in box: on a 16:9 `radial`
+    fan all four corners touch a ray, the least-bad one put the key on a ray, and the render showed
+    the lowest ray striking through the key's words (measured 2026-10-03, caught by the tilted-rule
+    check once CI's wider fallback face made the crossing long enough to count)."""
+    segs, rects = _device_segments(shapes)
+    try:
+        bx, by, bw, bh = content_band(slide)
+    except Exception:
+        bx, by, bw, bh = 0.5, 1.0, sw - 1.0, sh_h - 1.6
+    cands = [bx + 0.2, max(bx + 0.2, bx + bw - box_w - 0.2)]
+    # Bottom row first (y=None lets motif_legend measure its own height against the safe band);
+    # the top row is the escape when the device owns the bottom of the page.
+    ys = [(by + bh - box_h, None), (by + 0.1, by + 0.1)]
+    best, best_score = (cands[0], None), None
+    kw = ink_w if ink_w else box_w
+    # the slide-along positions keep the key's FRAME (>= 2.2in, motif_legend's floor) on the band
+    x_hi = max(bx + 0.2, bx + bw - max(kw, 2.2) - 0.2)
+    slide_xs = [bx + 0.2 + (x_hi - bx - 0.2) * i / 8.0 for i in range(1, 9)]
+    trials = [(y, y_out, x, box_w) for y, y_out in ys for x in cands] + \
+             [(y, y_out, x, kw) for y, y_out in ys for x in slide_xs]
+    for y, y_out, x, w_ in trials:
+        r = (x, y, w_, box_h)
+        # exact clipping, not sampling: a narrow key box can slip between samples on a steep ray
+        score = sum(1 for a, b in segs if rotgeom.seg_in_rect(a, b, r) > 0.0)
+        for q in rects:
+            if not (q[0] > r[0] + r[2] or q[0] + q[2] < r[0]
+                    or q[1] > r[1] + r[3] or q[1] + q[3] < r[1]):
+                score += 1
+        if best_score is None or score < best_score:
+            best, best_score = (x, y_out), score
+        if best_score == 0 and (y, x) == (ys[0][0], cands[0]):
+            return best                              # bottom-left keeps the tie-break
+    return best
+
+
+def motif_page(slide, kind, *, color=None, second=None, accent=None, faint=False, weight=2.4,
+               at=0.5, orient="v", count=5, legend=None, legend_at=None, full_bleed=True,
+               inset=0.0):
+    """Build the ONE page whose geometry IS the deck's motif. Correct by construction, and TAGGED.
+
+    Every shape it draws is tagged LOUD, so the page spends exactly one of the <=3 budgeted loud
+    appearances and `MOTIF_BUDGET` can see it. Pass `legend="<what the device MEANS>"` on the
+    device's FIRST appearance and the key is drawn with it — the STRANGER TEST satisfied where the
+    device is, not in a note nobody reads.
+
+    kinds (each is a GENERATIVE relation, not an ornament — pick the one whose relation is your
+    content's relation, then swap the material):
+      ``aperture``  frames narrowing to an opening — focus, filtering, a funnel
+      ``conduit``   a spine crossing the page with tap-offs — accumulation along a line
+      ``lattice``   interwoven members — coupling, network, mutual dependence
+      ``orbit``     concentric paths with a rider — cycles, iteration, return
+      ``radial``    rays from one origin — dispersion, reach, broadcast, divergence
+      ``seam``      two registers meeting at a hinge — a crossing from one state to another
+      ``strata``    stacked layers of unequal weight — depth, hierarchy, sedimented history
+      ``terrace``   ascending steps — progression, escalation, staged advance
+
+    `faint=True` drops the device to a ground the page's own content can sit on; the default is a
+    hero strength, because this page is the one where the idea is allowed to be the subject.
+    `at` positions the seam/spine (0-1 of the canvas), `orient` is 'v' or 'h' where that means
+    something, `count` is how many members (taps, rays, layers, steps).
+
+    Returns the list of shapes drawn (the legend, when asked for, is NOT in it — a key is not part
+    of the device's budget)."""
+    if kind not in _MOTIF_PAGE_KINDS:
+        # Raise rather than fall back to a default: a wrong name that silently draws a different
+        # device is how a deck ends up with a signature nobody chose.
+        raise ValueError("motif_page(kind={!r}): unknown device. One of: {}."
+                         .format(kind, " · ".join(sorted(_MOTIF_PAGE_KINDS))))
+    if orient not in ("v", "h"):
+        raise ValueError("motif_page(orient={!r}): 'v' or 'h'.".format(orient))
+    sw, sh_h = _slide_size(slide)
+    x0, y0 = (0.0, 0.0) if full_bleed else (inset, inset)
+    W, H = (sw, sh_h) if full_bleed else (sw - 2 * inset, sh_h - 2 * inset)
+    base = color if color is not None else DEEP
+    two = second if second is not None else BLUE
+    acc = accent if accent is not None else MAGENTA
+    if faint:
+        base, two, acc = (_blend(base, WHITE, 0.86), _blend(two, WHITE, 0.86),
+                          _blend(acc, WHITE, 0.72))
+    lw = max(0.012, weight / 72.0)
+    n = max(2, int(count))
+    out = []
+    # Shapes this device runs OFF the page on purpose (radial's origin, lattice's weave, orbit's
+    # off-canvas centre). Declared per shape with a reason so OFF_CANVAS keeps catching the
+    # accidental case — see bleed_intent().
+    bleeders = []
+    # Paint order, recorded: (rect, fill) for every SOLID shape drawn. A legend laid on a device
+    # that painted its own ground has to take its ink from what is under it — the first render put
+    # a navy key on the navy half of a `seam` and it was effectively invisible. Last painted wins,
+    # exactly as the renderer resolves it.
+    grounds = []
+
+    def _solid(x, y, w_, h_, fill, **kw):
+        shp = box(slide, x, y, w_, h_, fill=fill, **kw)
+        grounds.append(((x, y, w_, h_), fill))
+        return shp
+
+    if kind == "seam":
+        if orient == "v":
+            cut = x0 + W * at
+            out.append(_solid(x0, y0, cut - x0, H, base))
+            out.append(_solid(cut, y0, x0 + W - cut, H, two))
+            out.append(box(slide, cut - lw / 2, y0, lw, H, fill=acc))
+            out.append(box(slide, cut - 0.13, y0 + H / 2 - 0.13, 0.26, 0.26, fill=acc,
+                           round=True, r=0.13))
+        else:
+            cut = y0 + H * at
+            out.append(_solid(x0, y0, W, cut - y0, base))
+            out.append(_solid(x0, cut, W, y0 + H - cut, two))
+            out.append(box(slide, x0, cut - lw / 2, W, lw, fill=acc))
+            out.append(box(slide, x0 + W / 2 - 0.13, cut - 0.13, 0.26, 0.26, fill=acc,
+                           round=True, r=0.13))
+    elif kind == "conduit":
+        spine = y0 + H * at
+        out.append(box(slide, x0, spine - lw / 2, W, lw, fill=base))
+        span = W * 0.82
+        for i in range(n):
+            cx = x0 + W * 0.09 + span * (i / float(n - 1))
+            up = i % 2 == 0
+            drop = H * (0.20 + 0.06 * (i % 3))
+            ty = spine - drop if up else spine
+            out.append(box(slide, cx - lw / 3, ty, max(0.008, lw * 0.66), drop, fill=two))
+            ny = (ty - 0.11) if up else (ty + drop - 0.11)
+            out.append(box(slide, cx - 0.11, ny, 0.22, 0.22,
+                           fill=acc if i == n // 2 else two, round=True, r=0.11))
+    elif kind == "strata":
+        # Unequal weights, so the stack reads as sediment rather than a chart's gridlines.
+        weights = [0.32, 0.18, 0.24, 0.11, 0.15, 0.09, 0.13, 0.07]
+        ws = weights[:n]
+        ws = [w / sum(ws) for w in ws]
+        y = y0
+        hot = max(range(n), key=lambda i: ws[i]) if n > 1 else 0
+        for i, w in enumerate(ws):
+            h = H * w
+            out.append(_solid(x0, y, W, h,
+                              acc if i == hot else _blend(base, WHITE, 0.10 + 0.11 * i)))
+            y += h
+    elif kind == "radial":
+        # An origin OFF the canvas: rays that all meet inside it read as starburst clip-art.
+        #
+        # 🔴 A shape ROTATES ABOUT ITS OWN CENTRE, not about the point you place its left edge on.
+        # The first version put the frame's left edge at the origin and rotated — so every ray
+        # pivoted around its own midpoint and swung AWAY from the origin. On 16:9 that still looked
+        # like a fan and hid the error; on a 9:16 story canvas the whole device swung off the page
+        # and the slide rendered EMPTY, with every lint clean. So the frame is positioned from the
+        # ray's MIDPOINT, which is the only placement that makes `rotation` mean what it looks like.
+        ox, oy = x0 - W * 0.05, y0 + H * 1.02
+        reach = math.hypot(W, H) * 1.3
+        for i in range(n + 2):
+            ang = -78.0 + (70.0 * (i / float(n + 1)))
+            rad = math.radians(ang)
+            mx = ox + (reach / 2.0) * math.cos(rad)
+            my = oy + (reach / 2.0) * math.sin(rad)
+            sh_r = box(slide, mx - reach / 2.0, my - lw / 2, reach, lw,
+                       fill=acc if i == (n + 2) // 2 else base)
+            try:
+                sh_r.rotation = ang
+            except Exception:
+                pass
+            out.append(sh_r)
+            bleeders.append(sh_r)
+    elif kind == "lattice":
+        step = max(0.55, W / float(n * 2))
+        k = int((W + H) / step) + 2
+        for i in range(k):
+            for ang in (45.0, -45.0):
+                m = box(slide, x0 - H + i * step, y0 + H / 2 - lw / 2, H * 1.5, lw * 0.8,
+                        fill=_blend(base, WHITE, 0.35))
+                try:
+                    m.rotation = ang
+                except Exception:
+                    pass
+                out.append(m)
+                bleeders.append(m)
+        for i in range(n):
+            cx = x0 + W * (0.12 + 0.76 * (i / float(max(1, n - 1))))
+            out.append(box(slide, cx - 0.09, y0 + H * 0.5 - 0.09, 0.18, 0.18,
+                           fill=acc if i == n // 2 else base, round=True, r=0.09))
+    elif kind == "orbit":
+        cx, cy = x0 + W * 1.02, y0 + H * 0.5
+        for i in range(max(2, min(n, 5))):
+            r = (W * 0.34) * (1.0 + 0.42 * i)
+            ring = box(slide, cx - r, cy - r, r * 2, r * 2, fill=None,
+                       line=base if i else acc, line_w=weight * (1.4 if i == 0 else 0.8),
+                       round=True, r=r)
+            out.append(ring)
+            bleeders.append(ring)
+        rr = (W * 0.34) * 1.42
+        out.append(box(slide, cx - rr - 0.13, cy - H * 0.30, 0.26, 0.26, fill=acc,
+                       round=True, r=0.13))
+    elif kind == "aperture":
+        for i in range(n):
+            f = i / float(n)
+            iw, ih = W * (1.0 - 0.62 * f), H * (1.0 - 0.62 * f)
+            out.append(box(slide, x0 + (W - iw) / 2, y0 + (H - ih) / 2, iw, ih, fill=None,
+                           line=acc if i == n - 1 else _blend(base, WHITE, 0.25 + 0.12 * i),
+                           line_w=weight * (1.0 + 0.5 * f)))
+    else:                                                       # terrace
+        step_w = W / float(n)
+        for i in range(n):
+            h = H * (0.22 + 0.72 * ((i + 1) / float(n)))
+            out.append(_solid(x0 + i * step_w, y0 + H - h, step_w, h,
+                              acc if i == n - 1 else _blend(base, WHITE, 0.55 - 0.07 * i)))
+
+    for shp in out:
+        tag_motif(shp, loud=True)
+    # After tagging, so the declaration COMPOSES with the motif tag instead of replacing it.
+    _why = {"radial": "the ray fan's origin sits outside the frame — rays that all meet inside it "
+                      "read as starburst clip-art",
+            "lattice": "the weave continues past the trim; members that stop at the edge read as a "
+                       "drawn box, not a fabric",
+            "orbit": "the orbital centre is off-page — that is what makes these read as arcs of a "
+                     "much larger circle rather than as rings"}.get(kind, "")
+    for shp in bleeders:
+        bleed_intent(shp, _why or "this device is drawn to run off the canvas")
+    if legend:
+        # `ly=None` on purpose: motif_legend measures the key and places it against the deck's own
+        # safe band. Passing a coordinate here is what kept the two-line key inside the reserved
+        # footer band even after motif_legend learned to place itself — the caller's guess simply
+        # overrode the measurement.
+        #
+        # WHERE it goes is measured too, against the device's own ink. Bottom-left was a guess that
+        # happened to work on 16:9 and failed the moment the canvas changed shape: on a 9:16 story
+        # page a `radial` ray runs straight through the key (RULE_THROUGH_TEXT, correctly). So the
+        # four corners of the safe band are scored against the DEVICE geometry — rotated members
+        # reconstructed as real segments, since a shape rotates about its own centre and its frame
+        # says nothing about where the drawn line is — and the quietest corner wins, with
+        # bottom-left keeping its tie-break.
+        # the key's real ink: glyph + gap (~0.45in) + its words at motif_legend's 9.5pt, in the
+        # deck face — measured the same way the gate measures it, substituted face included
+        _kw = 0.45 + _natural_width_in([(str(legend), False)], 9.5, FONT)
+        lx, ly = legend_at if legend_at else _legend_anchor(slide, out, sw, sh_h, ink_w=_kw)
+        probe_y = ly if ly is not None else sh_h - 0.55
+        ink, lw_avail = None, sw - lx - 0.6
+        for (rx, ry, rw, rh), fill in reversed(grounds):
+            if rx - 0.01 <= lx <= rx + rw + 0.01 and ry - 0.01 <= probe_y <= ry + rh + 0.01:
+                ink = _legible_ink(fill)
+                # A key that runs off its own colour field reads as two half-legends and trips
+                # ESCAPES_CARD — measured on the scaffold's `seam`, where the default 4.4in width
+                # crossed the seam into the other register. Fit it to the field it sits on.
+                lw_avail = min(lw_avail, (rx + rw) - lx - 0.25)
+                break
+        if lw_avail < 2.2:
+            lw_avail = sw - lx - 0.6                  # too narrow to be a key: let it span instead
+        motif_legend(slide, legend, x=lx, y=ly, w=max(2.2, min(4.4, lw_avail)), color=acc, ink=ink,
+                     glyph="rule")
+    return out
+
+
+def backdrop_motif(slide, *, kind="grid", color=None, spacing=0.6, accent_disc=None,
+                   disc_at=None, disc_r=0.7):
+    """A FAINT full-bleed texture + optional accent disc, to bookend a deck on its cover and closer
+    as one object. Keep it faint (≈#EEE) so it never fights body content.
+
+    `kind='grid'` (default) = evenly-weighted rules at `spacing`. `kind='graph'` = graph paper:
+    the same rules with every 5th one drawn heavier, so the surface reads as squared paper rather
+    than a screen grid. `kind='rule'` = horizontal rules only (a ledger/manuscript ground)."""
+    if kind not in ("grid", "graph", "rule"):
+        # Raise rather than default to 'grid'. `kind` sat in the signature unread while the
+        # docstring advertised "grid / graph-paper", so a deck that asked for graph paper got a
+        # screen grid and nothing said so. A wrong name is now louder than a wrong texture.
+        raise ValueError("backdrop_motif(kind={!r}): unknown motif. One of: grid · graph · rule."
+                         .format(kind))
+    sw, sh = _slide_size(slide)
+    c = color or RGBColor(0xEE, 0xEE, 0xEE)
+    major = _blend(c, DEEP, 0.28)                   # graph paper's every-5th rule, a touch darker
+    if kind != "rule":
+        for i in range(int(sw / spacing) + 1):
+            hv = kind == "graph" and i % 5 == 0
+            box(slide, i * spacing - 0.004, 0, 0.014 if hv else 0.008, sh, fill=major if hv else c)
+    for j in range(int(sh / spacing) + 1):
+        hv = kind == "graph" and j % 5 == 0
+        box(slide, 0, j * spacing - 0.004, sw, 0.014 if hv else 0.008, fill=major if hv else c)
+    if accent_disc is not None:
+        cx, cy = disc_at or (sw - 1.6, 1.4)
+        o = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(cx - disc_r), Inches(cy - disc_r), Inches(2 * disc_r), Inches(2 * disc_r)))
+        o.fill.solid(); o.fill.fore_color.rgb = accent_disc; o.line.fill.background(); o.shadow.inherit = False
+
+
+_ARROW_SHAPE = {"right": MSO_SHAPE.RIGHT_ARROW, "left": MSO_SHAPE.LEFT_ARROW,
+                "up": MSO_SHAPE.UP_ARROW, "down": MSO_SHAPE.DOWN_ARROW}
+
+def arrow(slide, x, y, w, h, color=BLUE, direction="right"):
+    """A solid block arrow. **Point it in the direction the flow actually moves.**
+    `direction` is "right" (default), "left", "up", or "down". For a vertical flow —
+    e.g. two stacked boxes (problem on top, solution below) — use "down" (or "up"), NOT a
+    sideways arrow: a left/right arrow between vertically-stacked blocks reads as wrong.
+    For an up/down arrow give it a tall, narrow box (small w, larger h); for left/right a
+    wide, short box. The arrow fills the (w, h) box you pass."""
+    shape = _ARROW_SHAPE.get(direction.lower(), MSO_SHAPE.RIGHT_ARROW)
+    a = _flat(slide.shapes.add_shape(shape, Inches(x), Inches(y), Inches(w), Inches(h)))
+    a.fill.solid(); a.fill.fore_color.rgb = color
+    a.line.fill.background(); a.shadow.inherit = False
+    try: a.adjustments[0] = 0.55; a.adjustments[1] = 0.55
+    except Exception: pass
+    return a
+
+
+def arrow_label(slide, x, y, w, h, label, color=BLUE, size=9, lab_c=None, box_w=1.3, bold=True,
+                direction="right"):
+    """An arrow with its label snug against it — so connector labels (a verb, a transform
+    name, a step — e.g. 'encode', 'train', 'merge', 'step 2') stay tight to the arrow rather
+    than drifting. **Pass `direction` to match the flow** (right/left/up/down, same as
+    `arrow`): for a horizontal arrow the label sits centred just above it; for a **vertical**
+    (up/down) arrow it sits centred just to the **right** of it (placing it above a vertical
+    arrow would read as belonging to the box above). `box_w` is the (transparent) label-box
+    width; shrink it when the arrow sits in a narrow gap. Returns the arrow."""
+    lab_c = lab_c or color
+    th = size / 72.0 * 1.3
+    if direction.lower() in ("up", "down"):
+        text(slide, x + w + 0.06, y + h / 2.0 - th / 2.0, box_w, th + 0.04,
+             [[(label, size, lab_c, bold, False)]], align=PP_ALIGN.LEFT,
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    else:
+        text(slide, x + w / 2.0 - box_w / 2.0, y - th - 0.04, box_w, th + 0.04,
+             [[(label, size, lab_c, bold, False)]], align=PP_ALIGN.CENTER, space_after=0)
+    return arrow(slide, x, y, w, h, color=color, direction=direction)
+
+
+# ====================================================================== images
+def _round_pic_geom(pic, radius_in, w_in, h_in):
+    """Give a placed picture rounded corners (so an image matches a rounded card/frame around it).
+    `radius_in` is the corner radius in inches, applied to the picture's ACTUAL placed size."""
+    ss = max(0.01, min(w_in, h_in))
+    adj = int(max(0.0, min(0.5, radius_in / ss)) * 100000)
+    g = pic._element.spPr.find(qn('a:prstGeom'))
+    if g is None:
+        return
+    g.set('prst', 'roundRect')
+    av = g.find(qn('a:avLst'))
+    if av is None:
+        av = g.makeelement(qn('a:avLst'), {}); g.append(av)
+    for gd in list(av):
+        av.remove(gd)
+    av.append(av.makeelement(qn('a:gd'), {'name': 'adj', 'fmla': f'val {adj}'}))
+
+
+PIC_SHAPES = ("ellipse", "arch", "snip", "notch", "blob")
+_A_NS = "http://schemas.openxmlformats.org/drawingml/2006/main"
+
+
+def _pic_geom(pic, shape, w_in, h_in, seed=0):
+    """Clip a picture to `shape`. prstGeom where OOXML has one (ellipse, arch, snip); custGeom for
+    the two it lacks (notch: a rect with a concave quarter-circle bite at the top-right; blob: a
+    smooth closed outline, varied by `seed`). Verified 2026-10-03: LibreOffice clips pictures to
+    both kinds, so the mask reaches the render, not just the XML."""
+    import random
+    spPr = pic._element.spPr
+    old = spPr.find(qn("a:prstGeom"))
+    if old is None:
+        old = spPr.find(qn("a:custGeom"))
+    if shape in ("ellipse", "arch", "snip"):
+        prst, adj = {"ellipse": ("ellipse", {}),
+                     "arch": ("round2SameRect", {"adj1": 50000, "adj2": 0}),
+                     "snip": ("snip2DiagRect", {"adj1": 0, "adj2": 16667})}[shape]
+        g = spPr.makeelement(qn("a:prstGeom"), {"prst": prst})
+        av = g.makeelement(qn("a:avLst"), {})
+        g.append(av)
+        for k, v in adj.items():
+            av.append(av.makeelement(qn("a:gd"), {"name": k, "fmla": "val {}".format(v)}))
+    else:
+        W, H = int(Inches(w_in)), int(Inches(h_in))
+        if shape == "notch":
+            n = int(0.24 * min(W, H))
+            path = ('<a:path w="{W}" h="{H}"><a:moveTo><a:pt x="0" y="0"/></a:moveTo>'
+                    '<a:lnTo><a:pt x="{x0}" y="0"/></a:lnTo>'
+                    '<a:arcTo wR="{n}" hR="{n}" stAng="10800000" swAng="-5400000"/>'
+                    '<a:lnTo><a:pt x="{W}" y="{H}"/></a:lnTo><a:lnTo><a:pt x="0" y="{H}"/></a:lnTo>'
+                    '<a:close/></a:path>').format(W=W, H=H, n=n, x0=W - n)
+        else:                                               # blob
+            rnd = random.Random(seed)
+            N = 8
+            pts = []
+            for i in range(N):
+                a = 2 * math.pi * i / N
+                rho = 1.0 - 0.14 * rnd.random()
+                pts.append((W / 2 + W / 2 * rho * math.cos(a), H / 2 + H / 2 * rho * math.sin(a)))
+
+            def cl(v, hi):                                  # keep every point inside the frame
+                return int(min(max(v, 0), hi))
+            segs = []
+            for i in range(N):
+                p0, p1, p2, p3 = pts[i - 1], pts[i], pts[(i + 1) % N], pts[(i + 2) % N]
+                c1 = (p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6)
+                c2 = (p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6)
+                segs.append('<a:cubicBezTo><a:pt x="{}" y="{}"/><a:pt x="{}" y="{}"/>'
+                            '<a:pt x="{}" y="{}"/></a:cubicBezTo>'.format(
+                                cl(c1[0], W), cl(c1[1], H), cl(c2[0], W), cl(c2[1], H),
+                                cl(p2[0], W), cl(p2[1], H)))
+            path = ('<a:path w="{W}" h="{H}"><a:moveTo><a:pt x="{x}" y="{y}"/></a:moveTo>{s}'
+                    '<a:close/></a:path>').format(W=W, H=H, x=cl(pts[0][0], W),
+                                                  y=cl(pts[0][1], H), s="".join(segs))
+        g = parse_xml(
+            '<a:custGeom xmlns:a="{ns}"><a:avLst/><a:gdLst/><a:ahLst/><a:cxnLst/>'
+            '<a:rect l="0" t="0" r="r" b="b"/><a:pathLst>{p}</a:pathLst></a:custGeom>'.format(
+                ns=_A_NS, p=path))
+    if old is not None:
+        old.addprevious(g)
+        spPr.remove(old)
+    else:
+        xfrm = spPr.find(qn("a:xfrm"))
+        if xfrm is not None:
+            xfrm.addnext(g)
+        else:
+            spPr.insert(0, g)
+
+
+def picture(slide, path, x, y, w, h, fit="contain", alt=None, round=False, r=None, *,
+            shape=None, rotation=0.0, focus=(0.5, 0.5), seed=0):
+    """Place an image in a frame without distorting it.
+
+    `fit="contain"` shows the whole image inside the frame, letterboxed by whitespace.
+    Use it for source figures, charts, screenshots, and anything whose edges/labels matter.
+    `fit="cover"` fills the frame and crops evenly from the long dimension. Use it for
+    decorative plates, photo panels, and generated atmosphere where edge crop is acceptable.
+
+    `round=True` (or `r=<inches>`) gives the image ROUNDED corners — match this to the deck's
+    cards/panels so a square photo doesn't sit among rounded blocks (a consistency tell). For an
+    image inside a rounded frame, use a radius ≈ the frame's radius minus the border so the curves
+    stay concentric. Default radius is 8% of the image's shorter side.
+
+    `shape=` masks / clips the image to an editorial form: "ellipse" (a circle in a square frame),
+    "arch" (rounded top), "snip" (two chamfered corners), "notch" (a concave bite at the
+    top-right — room for a badge or arrow chip), "blob" (an organic outline; `seed=` varies it).
+    Use `fit="cover"` with a shape — the frame is filled and the crop keeps the image's aspect;
+    `focus=(fx, fy)` (0..1) aims the crop window (0 = keep the left/top edge), so a face is not
+    cut off. `shape` and `round`/`r` are mutually exclusive. `rotation=` tilts the picture
+    clockwise in degrees (a pinned print, a tilted polaroid); both gates measure it where it paints.
+
+    Pass `alt` for informative images; pass `alt=""` for decorative plates. Returns the
+    picture shape. Requires Pillow for reliable aspect-ratio reads, matching the rest of
+    deckkit's image/equation helpers.
+    """
+    import os
+    from PIL import Image
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"picture(): image not found: {path} — generate it first, or fix the path")
+    with Image.open(path) as im:
+        iw, ih = im.size
+    if iw <= 0 or ih <= 0:
+        raise ValueError(f"cannot read image dimensions for {path}")
+
+    if shape is not None and shape not in PIC_SHAPES:
+        raise ValueError("picture(): shape must be one of {} (got {!r})".format(PIC_SHAPES, shape))
+    if shape is not None and (round or r is not None):
+        raise ValueError("picture(): pass shape= OR round=/r=, not both")
+    try:
+        fx, fy = (float(v) for v in focus)
+    except (TypeError, ValueError):
+        raise ValueError("picture(): focus must be a pair (fx, fy) of numbers 0..1, e.g. (0.5, 0.0) "
+                         "keeps the top edge; got {!r}".format(focus)) from None
+    if not (0.0 <= fx <= 1.0 and 0.0 <= fy <= 1.0):
+        raise ValueError("picture(): focus must be within (0..1, 0..1), got {!r}".format(focus))
+
+    img_ar = iw / ih
+    frame_ar = w / h
+    fit = fit.lower()
+    if fit == "contain":
+        if frame_ar > img_ar:
+            ph = h
+            pw = h * img_ar
+            px = x + (w - pw) / 2
+            py = y
+        else:
+            pw = w
+            ph = w / img_ar
+            px = x
+            py = y + (h - ph) / 2
+        pic = slide.shapes.add_picture(path, Inches(px), Inches(py), width=Inches(pw), height=Inches(ph))
+    elif fit == "cover":
+        pic = slide.shapes.add_picture(path, Inches(x), Inches(y), width=Inches(w), height=Inches(h))
+        if img_ar > frame_ar:                 # the crop window is aimed by `focus` (0.5 = centred)
+            crop = 1.0 - frame_ar / img_ar
+            pic.crop_left, pic.crop_right = crop * fx, crop * (1.0 - fx)
+        elif img_ar < frame_ar:
+            crop = 1.0 - img_ar / frame_ar
+            pic.crop_top, pic.crop_bottom = crop * fy, crop * (1.0 - fy)
+    else:
+        raise ValueError("fit must be 'contain' or 'cover'")
+
+    if round or r is not None:
+        pwp, php = (pw, ph) if fit == "contain" else (w, h)
+        _round_pic_geom(pic, r if r is not None else 0.08 * min(pwp, php), pwp, php)
+    if shape is not None:
+        pwp, php = (pw, ph) if fit == "contain" else (w, h)
+        _pic_geom(pic, shape, pwp, php, seed=seed)
+    if rotation:
+        pic.rotation = float(rotation)
+    if alt is not None:
+        alt_text(pic, alt)
+    return pic
+
+
+def choropleth(slide, x, y, w, h, data, mapname="europe", *, title=None, accent=None, accent2=None,
+               scale="seq", vmin=None, vmax=None, unit=None, source=None, legend=True, dark=False,
+               no_data=None, img_path=None):
+    """A value-shaded MAP — the right form for a value PER GEOGRAPHIC REGION (per country / per
+    province), where a `dot_strip` or bar loses the spatial story. Renders a real base map
+    (``mapname`` = 'europe' | 'world' | 'china') from public-domain geometry via ``scripts/maps.py``,
+    colours each region by ``data`` on a light→``accent`` ramp, and draws a NATIVE title + gradient
+    legend (so titles/units render in any language, CJK included, unlike text baked into the raster).
+
+    ``data`` = ``{region: value}``. Keys: ISO-3166 alpha-2/alpha-3 or the English name for
+    europe/world (``{"DE": 3.1, "FR": 7.3}``); the province name or adcode for china
+    (``{"广东省": 100, "北京市": 95}``). Regions with no datum take the neutral ``no_data`` fill;
+    unmatched keys AND non-finite/None values are reported and drawn as no-data (a blank region means
+    NO DATA, not zero — check the printed notice and fix any typo/ISO before shipping).
+
+    **Shade a RATE / share / per-capita / index — not a raw COUNT** (a total just re-draws population/
+    area; big regions always go dark). ``scale='seq'`` (default, one-directional magnitude) or ``'div'``
+    (signed / around a reference — the ramp is zero-centred so the neutral colour == 0, unless you pass
+    explicit symmetric ``vmin``/``vmax``; ``accent2`` sets the opposite pole). ``vmin``/``vmax`` fix the
+    range; ``unit`` labels the legend; ``source`` adds a caption. Requires matplotlib (already a deck
+    dependency); geometry is fetched once and cached like icons. Returns the bottom y.
+    See references/data-viz.md (choropleth + the counts-not-rates anti-pattern) and form-selection.md."""
+    import os
+    import tempfile
+    import maps as _maps
+    import math as _math
+    acc = BLUE if accent is None else accent
+    acc_hex = (acc if isinstance(acc, str) else str(acc)).lstrip("#").upper()   # bare 'RRGGBB'
+    vals = [v for v in data.values() if isinstance(v, (int, float)) and _math.isfinite(v)]
+    lo = vmin if vmin is not None else (min(vals) if vals else 0.0)
+    hi = vmax if vmax is not None else (max(vals) if vals else 1.0)
+    if scale == "div" and vmin is None and vmax is None:      # zero-centre so neutral == 0 (matches map)
+        m = max(abs(lo), abs(hi), 1e-9); lo, hi = -m, m
+    if hi <= lo:
+        hi = lo + 1.0
+    nd = no_data if no_data is not None else ("2A2E38" if dark else "E7E9F0")
+    ink = WHITE if dark else DEEP
+    # 1) render the language-agnostic map (geometry only — title/legend are native, below)
+    tmp = img_path or tempfile.NamedTemporaryFile(suffix=".png", delete=False).name
+    _maps.choropleth_png(tmp, data, mapname, accent="#" + acc_hex, accent2=accent2, scale=scale,
+                         vmin=lo, vmax=hi, no_data="#" + str(nd).lstrip("#"),
+                         title=None, legend=False, dark=dark)
+    ty = y
+    if title:
+        text(slide, x, ty, w, 0.4, [[(title, 16, ink, True, False, DISPLAY or FONT)]], space_after=0)
+        ty += 0.52
+    leg_h = (0.62 if unit else 0.5) if legend else (0.24 if source else 0.0)
+    map_bottom = y + h - leg_h
+    # too short to fit a map AND a legend → drop the legend rather than overlap it silently
+    if legend and (map_bottom - ty) < 0.6:
+        legend = False; leg_h = 0.24 if source else 0.0; map_bottom = y + h - leg_h
+    picture(slide, tmp, x, ty, w, max(0.4, map_bottom - ty), fit="contain")
+    if img_path is None:
+        try:
+            os.remove(tmp)                 # python-pptx already embedded the bytes
+        except OSError:
+            pass
+    # 2) native gradient legend (CJK-safe) — matches the map ramp: light→accent (seq) or pole↔pole (div)
+    if legend:
+        lw, lh = min(2.4, w * 0.42), 0.16
+        lx = x
+        lyy = y + h - leg_h + (0.22 if unit else 0.06)
+        if scale == "div":
+            neg, pos = _maps._div_poles("#" + acc_hex, accent2)
+            stops = [(0.0, neg.lstrip("#"), 1.0), (0.5, "F5F5F7", 1.0), (1.0, pos.lstrip("#"), 1.0)]
+        else:
+            _r, _g, _b = (int(acc_hex[i:i + 2], 16) for i in (0, 2, 4))
+            light = "%02X%02X%02X" % tuple(int(c + 0.88 * (255 - c)) for c in (_r, _g, _b))
+            stops = [(0.0, light, 1.0), (1.0, acc_hex, 1.0)]
+        box(slide, lx, lyy, lw, lh, grad=stops, grad_angle=0.0, round=True, r=0.03)  # box() disables shadow
+
+        def _f(v):
+            return f"{v:.0f}" if (abs(v) >= 10 or float(v).is_integer()) else f"{v:.1f}"
+        text(slide, lx, lyy + lh + 0.02, lw, 0.2, [[(_f(lo), 9.5, MUTE, False, False, FONT)]], space_after=0)
+        if scale == "div":                                    # mid (0) tick so the neutral point is labelled
+            text(slide, lx, lyy + lh + 0.02, lw, 0.2, [[(_f((lo + hi) / 2), 9.5, MUTE, False, False, FONT)]],
+                 align=PP_ALIGN.CENTER, space_after=0)
+        text(slide, lx, lyy + lh + 0.02, lw, 0.2, [[(_f(hi), 9.5, MUTE, False, False, FONT)]],
+             align=PP_ALIGN.RIGHT, space_after=0)
+        if unit:
+            text(slide, lx, lyy - 0.24, w - lx, 0.22, [[(unit, 9.5, MUTE, False, False, FONT)]], space_after=0)
+    if source:
+        text(slide, x, y + h - 0.20, w, 0.2, [[(source, 8.5, MUTE, False, False, FONT)]],
+             align=(PP_ALIGN.RIGHT if legend else PP_ALIGN.LEFT), space_after=0)
+    return y + h
+
+
+def icon(slide, png, x, y, size, *, alt=None, disc=None, disc_pad=None):
+    """Place a square icon PNG (use `scripts/icons.py`'s `icon_png()` to fetch+recolor+rasterize
+    an open-licensed SVG first). `size` is the icon's edge in inches — keep it small and consistent
+    (≈0.32–0.5 in; an icon should read at ~heading size, never bigger than the title).
+
+    `disc=<hex>` draws a soft rounded **tinted tile** behind the icon (a common, tidy treatment —
+    an accent-tinted square with the icon centred); `disc_pad` is the inset of the icon inside the
+    tile. Pass `alt` for a screen-reader label (icons are decorative-ish, but if it carries meaning
+    give it alt text AND a visible text label — never rely on the icon alone). Returns the picture
+    shape. The icon must sit in ONE consistent family/size/colour across the deck (see icons.md)."""
+    if disc:
+        if isinstance(disc, str):
+            disc = disc.lstrip("#")
+        pad = disc_pad if disc_pad is not None else 0.22 * size   # icon ≈56% of the tile
+        box(slide, x, y, size, size, fill=disc, round=True, r=0.11 * size)
+        return picture(slide, png, x + pad, y + pad, size - 2 * pad,
+                       size - 2 * pad, fit="contain", alt=alt)
+    return picture(slide, png, x, y, size, size, fit="contain", alt=alt)
+
+
+def icon_card(slide, x, y, w, h, png, title, body="", *, fill=None, line=None,
+              icon_size=0.42, accent=BLUE, ink=DEEP, body_c=SLATE, disc=None, pad=0.26):
+    """A card with the **icon in the UPPER-LEFT corner**, then a title and optional body below —
+    the clean "feature card" pattern. Use a row of these (built from one `columns(n)` grid) to label
+    categories/features/sections; keep the SAME icon family, size, and colour across every card so
+    they read as a system (CRAP Repetition).
+
+    `png` is a placed icon PNG (recolour it to `accent` via icons.py first); `disc=<hex>` puts the
+    icon in a tinted tile. `fill`/`line` style the card (defaults to a hairline-bordered light card).
+    Title sits at ~heading size, body smaller — never let the icon exceed the title. Returns the
+    card's bottom y."""
+    box(slide, x, y, w, h, fill=fill if fill is not None else WHITE,
+        line=line if line is not None else RGBColor(0xE3, 0xE8, 0xEE), line_w=1.0, round=True)
+    icon(slide, png, x + pad, y + pad, icon_size, disc=disc)
+    ty = y + pad + icon_size + 0.16
+    text(slide, x + pad, ty, w - 2 * pad, 0.34,
+         [[(title, 15, ink, True, False, DISPLAY or FONT)]], space_after=0)
+    if body:
+        text(slide, x + pad, ty + 0.34, w - 2 * pad, h - (ty + 0.34 - y) - pad * 0.5,
+             [[(body, 12, body_c, False, False)]], space_after=0, line_spacing=1.02)
+    return y + h
+
+
+def icon_tile(slide, x, y, size, png, *, shape="circle", fill=None, grad=None, grad_angle=120.0,
+              ring=None, ring_w=1.6, glass=False, sheen=False, pad=None, alt=None, glyph=None):
+    """Place an icon inside a STYLED TILE — the versatile alternative to a bare monochrome drop.
+    The same recolored icon reads very differently by container, so vary the treatment to fit the
+    deck instead of always using a flat glyph (see references/icons.md "treatments"):
+
+      shape : "circle" (disc), "squircle" (rounded square), or "square".
+      fill  : a solid tile colour (hex/RGBColor). Omit for no fill (pair with `ring`/`glass`).
+      grad  : a two-stop gradient tile — `(c0, c1)` or a full `[(pos,colour,alpha),…]` list —
+              overriding `fill`. Gives depth a flat fill lacks (the glassy header-disc look);
+              `grad_angle` is the linear direction in degrees (0=→, 90=↓).
+      ring  : an accent OUTLINE colour → a badge (icon inside a thin coloured ring).
+      glass : True → a frosted translucent tile (low-alpha tint of `fill` + white rim) for
+              dark / glowing / photographic backgrounds (pair with `glow()`).
+      sheen : True → a soft top highlight (the glassy edge in modern decks).
+      glyph : the icon's INK colour (what you passed to `icon_png(..., color=)`). Pass it and the
+              tile is GUARANTEED to clear WCAG non-text 3:1 against the glyph — the tile is auto-
+              nudged away from the glyph's luminance only as far as needed (prints a one-line notice
+              if it adjusts). ALWAYS pass it: a dark glyph on a dark tile (or a same-hue pair, e.g.
+              a teal glyph on an aqua tile) is invisible, and this is the one place that's caught by
+              construction rather than only at render (`references/icons.md` "contrast").
+
+    `size` is the tile edge in inches; the icon is inset by `pad` (default ≈26% so the glyph sits
+    at ~50-55% of the tile — the tidy proportion). For a ROW of icons keep size/shape/treatment
+    IDENTICAL across siblings (CRAP Repetition); colour-code per category by varying only the hue
+    (its tile + its label), as polished decks do. Returns the icon picture shape."""
+    if isinstance(grad, str):
+        grad = None
+    sh_kind = {"circle": MSO_SHAPE.OVAL, "squircle": MSO_SHAPE.ROUNDED_RECTANGLE,
+               "square": MSO_SHAPE.RECTANGLE}.get(shape, MSO_SHAPE.OVAL)
+    t = _flat(slide.shapes.add_shape(sh_kind, Inches(x), Inches(y), Inches(size), Inches(size)))
+    # CONTRAST GUARD — when the caller declares the glyph's ink colour, guarantee the tile it sits
+    # ON clears the WCAG non-text 3:1 bar, auto-nudging the tile away from the glyph's luminance
+    # (toward white for a dark glyph, toward near-black for a light one) only as far as needed. This
+    # makes a low-contrast icon-on-tile impossible by construction, not just flagged after the fact.
+    if glyph is None and not glass:
+        glyph = _png_dominant_ink(png)   # auto-read the icon's ink so the guard always runs
+    if glyph is not None and not glass:
+        g = _as_rgbc(glyph)
+        to_end = WHITE if contrast_ratio(g, WHITE) >= contrast_ratio(g, _BLACK) else _BLACK
+        def _guard(cols):
+            cols = [_as_rgbc(c) for c in cols]
+            if all(contrast_ratio(g, c) >= 3.0 for c in cols):
+                return cols, False
+            for tt in (0.25, 0.5, 0.75, 1.0):
+                adj = [_blend(c, to_end, tt) for c in cols]
+                if all(contrast_ratio(g, c) >= 3.0 for c in adj):
+                    return adj, True
+            return [_blend(c, to_end, 1.0) for c in cols], True
+        if grad is not None:
+            stops = _norm_stops(grad)
+            cols, fixed = _guard([s[1] for s in stops])
+            grad = [(stops[i][0], cols[i], stops[i][2]) for i in range(len(stops))]
+        elif fill is not None:
+            cols, fixed = _guard([fill]); fill = cols[0]
+        else:
+            fixed = False
+        if fixed:
+            print(f"[deckkit] icon_tile: tile nudged for glyph contrast (glyph #{_hex(g)} needed ≥3:1)")
+    if glass:
+        tint = _as_rgb(fill) if fill is not None else WHITE
+        _grad_fill(t, [(0.0, tint, 0.20), (1.0, tint, 0.06)], angle=grad_angle)
+    elif grad is not None:
+        _grad_fill(t, grad, angle=grad_angle)
+    elif fill is not None:
+        t.fill.solid(); t.fill.fore_color.rgb = _as_rgb(fill)
+    else:
+        t.fill.background()
+    if ring is not None:
+        t.line.color.rgb = _as_rgb(ring); t.line.width = Pt(ring_w)
+    elif glass:
+        t.line.color.rgb = WHITE; t.line.width = Pt(1.0)
+    else:
+        t.line.fill.background()
+    t.shadow.inherit = False
+    if shape == "squircle":
+        try: t.adjustments[0] = 0.24
+        except Exception: pass
+    if sheen:
+        # a faint white highlight across the top — sells the glassy edge
+        hh = size * 0.5
+        sh = _flat(slide.shapes.add_shape(
+            MSO_SHAPE.OVAL if shape == "circle" else MSO_SHAPE.ROUNDED_RECTANGLE,
+            Inches(x + size * 0.12), Inches(y + size * 0.06), Inches(size * 0.76), Inches(hh)))
+        _grad_fill(sh, [(0.0, WHITE, 0.40), (1.0, WHITE, 0.0)], angle=90.0)
+        sh.line.fill.background(); sh.shadow.inherit = False
+    pad = pad if pad is not None else 0.26 * size
+    return picture(slide, png, x + pad, y + pad, size - 2 * pad, size - 2 * pad,
+                   fit="contain", alt=alt)
+
+
+def icon_badge(slide, x, y, size, png, *, ring=MAGENTA, ring_w=1.8, fill=None, alt=None):
+    """An icon inside a thin accent RING — a light, outlined treatment that reads as a badge
+    (good on a light deck where a solid tile would feel heavy). Thin wrapper over `icon_tile`."""
+    return icon_tile(slide, x, y, size, png, shape="circle", fill=fill, ring=ring,
+                     ring_w=ring_w, alt=alt)
+
+
+def icon_ghost(slide, png, x, y, size, *, alt=""):
+    """An OVERSIZED, FAINT icon used as a watermark behind a card's content (the ghost-glyph
+    treatment that adds texture without clutter). Place it FIRST, then draw text/blocks on top.
+    Recolor the PNG to a very light tint (icons.py `color=<pale hue>`) so it never competes with
+    the text — this helper only sizes/places it big; the faintness comes from the recolor. Pass a
+    big `size` (it may bleed past the card edge for effect). Decorative → `alt=""` by default."""
+    return picture(slide, png, x, y, size, size, fit="contain", alt=alt)
+
+
+def cjk_numeral(n, style="formal"):
+    """CJK numeral string for n (1–99) — for East-Asian section markers (壹·贰·叁 …).
+    style='formal' (壹贰叁肆伍陆柒捌玖拾, 大写) or 'simple' (一二三…). Use as a numeral marker on an
+    ink/traditional CJK deck instead of Latin "01/02" (see references/east-asian-aesthetic.md)."""
+    d = "〇一二三四五六七八九" if style == "simple" else "〇壹贰叁肆伍陆柒捌玖"
+    ten = "十" if style == "simple" else "拾"
+    n = int(n)
+    if n < 0 or n > 99:
+        return str(n)
+    if n < 10:
+        return d[n]
+    if n < 20:
+        return ten + (d[n - 10] if n > 10 else "")
+    return d[n // 10] + ten + (d[n % 10] if n % 10 else "")
+
+
+def seal(slide, x, y, size, char, *, fill=None, tcolor=None, shape="square",
+         rounded=True, border=True):
+    """A red SEAL / chop stamp with a 1–2 char CJK mark — the signature East-Asian accent
+    (印章). Filled vermilion square with a light char by default (阴文); on a warm-paper ink
+    deck it's the single spot of red. `shape="circle"` for a round seal; `border=True` adds the
+    classic thin inner rule. Pass `fill` to override the seal colour, `tcolor` the char colour.
+    Keep it SMALL (≈0.45–0.8 in) and use ONE per slide — it's a signature, not a sticker.
+    Set deckkit.EADISPLAY (e.g. 'KaiTi') so the mark renders in a brush face, not tofu."""
+    f = fill if fill is not None else RGBColor(0xA5, 0x2A, 0x2A)
+    tc = tcolor if tcolor is not None else RGBColor(0xF5, 0xF1, 0xE8)
+    if shape == "circle":
+        sh = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(x), Inches(y), Inches(size), Inches(size)))
+        sh.fill.solid(); sh.fill.fore_color.rgb = f; sh.line.fill.background()
+    else:
+        box(slide, x, y, size, size, fill=f, round=rounded, r=0.1 * size)
+    if border:
+        inset = 0.1 * size
+        if shape == "circle":
+            b = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(x + inset), Inches(y + inset),
+                                       Inches(size - 2 * inset), Inches(size - 2 * inset)))
+            b.fill.background(); b.line.color.rgb = tc; b.line.width = Pt(1.0)
+        else:
+            box(slide, x + inset, y + inset, size - 2 * inset, size - 2 * inset,
+                fill=None, line=tc, line_w=1.0, round=rounded, r=0.08 * size)
+    fs = max(10, int(size * 72 * (0.42 if len(char) > 1 else 0.5)))
+    fam = EADISPLAY or EAFONT or DISPLAY or FONT
+    text(slide, x, y, size, size, [[(char, fs, tc, True, False, fam)]],
+         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0, line_spacing=0.9)
+    return x + size
+
+
+def make_gif(frames, out_path, *, fps=12, loop=0, max_px=None, optimize=True):
+    """GENERATE an optimised, looping animated GIF from frames — the build-step that FEEDS `gif()`
+    (embed) and `gif_poster()` (review). Use it for a COMPUTED result whose *motion is the point*:
+    a simulation, a k-space fill, a denoising / training trajectory, a chart that builds up, a rotating
+    model. Compute the frames in the deck's asset step (like the static figures), stitch them here,
+    then place with `gif()`.
+
+    `frames` = a list where each frame is a `PIL.Image`, a NumPy array (`HxW` grey or `HxWx3/4`;
+    float arrays are read as 0..1, uint8 as 0..255), or a path to a frame PNG. `fps` sets speed
+    (per-frame duration = 1000/fps ms). `loop=0` loops forever. `max_px` caps the LONGER side
+    (downscale) — the #1 lever on file size — and `optimize` + palette quantisation shrink it further.
+
+    Keep it SMALL so it stays well under `gif()`'s `max_mb` and doesn't bloat the .pptx: a few-second
+    loop at ~10–15 fps with the longest side ~720–960px is plenty for a slide. **The GIF encode is a
+    second or two for a short clip; the real cost is COMPUTING / rendering your frames** (a matplotlib
+    animation, a sim) — so a GIF slide is only as time-consuming as the animation you draw, and fits the
+    same compute-it-in-the-asset-step rhythm as the static figures. Returns `out_path`.
+    """
+    import os
+    from PIL import Image
+    def _to_img(fr):
+        if isinstance(fr, Image.Image):
+            return fr.convert("RGB")
+        if isinstance(fr, (str, os.PathLike)):
+            with Image.open(fr) as im:
+                return im.convert("RGB")
+        # NumPy array (or anything array-like Pillow accepts)
+        try:
+            import numpy as _np
+            a = _np.asarray(fr)
+            if a.dtype.kind == "f":
+                a = (_np.clip(a, 0.0, 1.0) * 255.0).round().astype("uint8")
+            elif a.dtype != _np.uint8:
+                a = a.astype("uint8")
+            if a.ndim == 2:
+                return Image.fromarray(a, "L").convert("RGB")
+            if a.ndim == 3 and a.shape[2] == 4:
+                return Image.fromarray(a, "RGBA").convert("RGB")
+            return Image.fromarray(a, "RGB")
+        except Exception as exc:
+            raise TypeError(f"make_gif(): unsupported frame type {type(fr)} ({exc})")
+    imgs = [_to_img(f) for f in frames]
+    if not imgs:
+        raise ValueError("make_gif(): no frames given")
+    if max_px:
+        w, h = imgs[0].size
+        s = max_px / float(max(w, h))
+        if s < 1.0:
+            size = (max(1, round(w * s)), max(1, round(h * s)))
+            imgs = [im.resize(size, Image.LANCZOS) for im in imgs]
+    # quantise to a shared palette (from the most-varied frame) to keep colours stable + the file small
+    pal_src = max(imgs, key=lambda im: len(im.getcolors(maxcolors=1 << 24) or [0]))
+    pal = pal_src.convert("P", palette=Image.ADAPTIVE, colors=256)
+    pframes = [im.quantize(palette=pal, dither=Image.FLOYDSTEINBERG) for im in imgs]
+    out_path = str(out_path)
+    pframes[0].save(out_path, save_all=True, append_images=pframes[1:],
+                    duration=max(20, int(round(1000.0 / max(1, fps)))), loop=loop,
+                    optimize=optimize, disposal=2)
+    return out_path
+
+
+def gif_poster(path, out_png=None, frame="first"):
+    """Extract ONE representative frame of an animated GIF to a PNG — for the render/critic
+    (which see only a static image) and as a check on what the deck shows when NOT in slideshow.
+
+    Why this matters: a `.gif` placed on a slide loops only in **slideshow**. In the editor,
+    in a PDF/print export, in the LibreOffice render, and to the static critic, the GIF shows
+    its **first frame**. A cine / 4D / training-run GIF often starts on a blank, black, or
+    "loading" frame — so the slide looks broken everywhere except live playback. Use this to
+    SEE that frame and verify it reads:
+
+      `frame="first"` (default) — frame 0, i.e. exactly what the static views show. View it; if
+        it's blank/unrepresentative, get a source GIF that *starts* on a meaningful frame (there
+        is no separate poster-frame for GIFs in pptx — the first frame IS the poster).
+      `frame="auto"` — the frame with the most visual content (highest pixel variance), i.e. a
+        good representative still to hand the critic for a legibility judgement.
+      `frame="middle"` or an int index — a specific frame.
+
+    Returns the output PNG path (defaults to `<gif>.<frame>.png`). Pillow-based; raises if the
+    file isn't a readable (animated) image.
+    """
+    import os
+    from PIL import Image, ImageSequence
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"gif_poster(): file not found: {path}")
+    frames = []
+    with Image.open(path) as im:
+        for fr in ImageSequence.Iterator(im):
+            frames.append(fr.convert("RGB").copy())
+    if not frames:
+        raise ValueError(f"gif_poster(): no frames read from {path}")
+    if frame == "first":
+        idx = 0
+    elif frame == "middle":
+        idx = len(frames) // 2
+    elif frame == "auto":
+        # most visual content = largest per-channel variance (skips blank/loading frames)
+        def score(fr):
+            stat = fr.resize((64, 64))
+            px = list(stat.getdata())
+            n = len(px)
+            mean = [sum(c) / n for c in zip(*px)]
+            return sum((c - mean[i]) ** 2 for p in px for i, c in enumerate(p))
+        idx = max(range(len(frames)), key=lambda i: score(frames[i]))
+    else:
+        idx = int(frame)
+    idx = max(0, min(idx, len(frames) - 1))
+    if out_png is None:
+        base, _ = os.path.splitext(path)
+        out_png = f"{base}.{frame if isinstance(frame, str) else 'f%d' % idx}.png"
+    frames[idx].save(out_png)
+    return out_png
+
+
+def gif(slide, path, x, y, w, h, *, fit="contain", alt=None, max_mb=8.0, warn=True):
+    """Place an **animated GIF** as live content — it stays animated and loops in PowerPoint /
+    Keynote slideshow. Use for any result whose *motion is the point*: a cine / 4D / time-resolved
+    sequence, a segmentation-over-time, an optimisation/training trajectory, a rotating 3D model,
+    a UI/interaction loop, a physics sim.
+
+    This is a thin, GIF-aware wrapper over `picture()`: it places the GIF **whole and undistorted**
+    (`fit="contain"` — preserves the real aspect, never stretches a square cine clip to 16:9; the
+    original file bytes are embedded so EVERY frame survives), sets alt-text, and adds two checks
+    that catch the real failure modes:
+      • **size/perf** — warns if the file exceeds `max_mb` (a heavy cine GIF bloats the .pptx and
+        can stutter live; palette-optimise / downsample fps or dimensions if so);
+      • **animation** — warns if the file is a *single-frame* GIF (then it's just a still — use
+        `picture()`), and reports the frame count.
+    It does NOT rasterise the GIF (that would freeze it). Pair with `gif_poster()` to verify the
+    first frame (what the render / a PDF export shows) is representative, and label it with a deck-
+    font caption + a one-line "what to watch" like any figure. Returns the picture shape.
+    """
+    import os
+    from PIL import Image, ImageSequence
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"gif(): file not found: {path} — fix the path or generate it first")
+    n_frames = 1
+    try:
+        with Image.open(path) as im:
+            n_frames = getattr(im, "n_frames", 1)
+    except Exception:
+        pass
+    if warn:
+        mb = os.path.getsize(path) / 1e6
+        if mb > max_mb:
+            print(f"gif(): WARNING {os.path.basename(path)} is {mb:.1f} MB (> {max_mb} MB) — "
+                  f"palette-optimise or downsample fps/size so the .pptx stays light and plays smoothly.")
+        if n_frames <= 1:
+            print(f"gif(): WARNING {os.path.basename(path)} has 1 frame — it's a still, not an "
+                  f"animation; use picture() instead.")
+    if fit == "cover":
+        # cover crops each frame's edges — rarely right for a scientific GIF; allow but flag.
+        if warn:
+            print("gif(): note fit='cover' crops the GIF's edges every frame — use 'contain' unless "
+                  "the GIF is edge-tolerant texture.")
+    return picture(slide, path, x, y, w, h, fit=fit, alt=alt)
+
+
+def columns(n=2, *, slide=None, w_in=None, h_in=None, top=1.15, bottom=0.55, margin=None, gap=None,
+            weights=None):
+    """Return ``n`` equal-width content-column rects ``(x, y, w, h)`` with **symmetric**
+    outer margins and equal gutters between columns — or, with ``weights=``, a **measured
+    asymmetric split** with the same symmetric margins.
+
+    Use this for any split slide — text+figure, two-up, three-up, image+caption — so the
+    left and right regions (and the white margins flanking them) come out the SAME width.
+    The most common lopsided-slide tell is a left panel and right panel of different
+    widths, or a wider white margin on one side than the other; that happens when x/w are
+    eyeballed per panel. Deriving every panel from one grid makes the layout balanced by
+    construction:
+
+        L, R = dk.columns(2, slide=s)         # two equal halves, equal flanking margins
+        dk.bullet(s, *L[:3], items)           # text in the left half
+        dk.picture(s, fig, *R, fit="contain") # figure in the right half (same width)
+
+    **Pass ``slide=`` so the grid matches the deck's REAL size** — the width/height are then
+    read from the presentation, so it stays symmetric on a 16:9, a widescreen 13.333×7.5, or
+    a poster. Only the no-arg call falls back to the standard 10×5.625 deck; if you call it
+    without ``slide=`` on a differently-sized deck, pass the same ``w_in``/``h_in`` you gave
+    ``blank_deck`` (otherwise the right margin will be wrong — the very lopsidedness this
+    helper exists to prevent).
+
+    ``weights=`` (keyword-only, one positive number per column, ``len == n``) divides the
+    usable span **proportionally** instead of equally — the constructive form of two rules
+    that otherwise live only as prose: *"an intentional asymmetric split still keeps equal
+    outer margins"* and the fix for *"don't strand a narrow element in a too-wide panel"*
+    (give the narrow timeline/list a genuinely narrower column). Reach for it as a
+    **remedy** when the plan states a split/rail ratio, not as decoration::
+
+        rail, main = dk.columns(2, slide=s, weights=(1, 2))     # a 1/3–2/3 split (rail + main)
+        L, R      = dk.columns(2, slide=s, weights=(1, 1.618))  # a golden split
+
+    Margin/gap/slide-size logic is untouched, so equal outer margins are inherited by
+    construction; a mis-sized ``weights`` tuple raises ``ValueError`` (like ``n < 1``).
+    Default ``weights=None`` keeps today's equal split exactly.
+
+    ``margin`` (outer left == outer right) and ``gap`` (between columns) default to
+    ``GUTTER``. ``top``/``bottom`` reserve room for the title bar and footer. Returns a
+    list of ``(x, y, w, h)`` tuples in inches, left to right.
+    """
+    if slide is not None:
+        prs = slide.part.package.presentation_part.presentation
+        if w_in is None:
+            w_in = prs.slide_width / 914400
+        if h_in is None:
+            h_in = prs.slide_height / 914400
+    w_in = 10.0 if w_in is None else w_in
+    h_in = 5.625 if h_in is None else h_in
+    margin = GUTTER if margin is None else margin
+    gap = GUTTER if gap is None else gap
+    if n < 1:
+        raise ValueError("columns(n) needs n >= 1")
+    if weights is not None:
+        weights = list(weights)
+        if len(weights) != n:
+            raise ValueError(f"columns(weights=) needs exactly n={n} weights, got {len(weights)}")
+        if any(wt <= 0 for wt in weights):
+            raise ValueError("columns(weights=) needs every weight > 0")
+    usable = w_in - 2 * margin - (n - 1) * gap
+    if usable <= 0:
+        raise ValueError("margins/gap leave no room for columns; reduce margin or gap")
+    y = top
+    h = h_in - top - bottom
+    if weights is None:
+        cw = usable / n
+        return [(margin + i * (cw + gap), y, cw, h) for i in range(n)]
+    tot = float(sum(weights))
+    out, cx = [], margin
+    for wt in weights:
+        cw = usable * wt / tot
+        out.append((cx, y, cw, h))
+        cx += cw + gap
+    return out
+
+
+def rows(n=2, *, slide=None, w_in=None, h_in=None, x=None, y=None, w=None, top=1.15, bottom=0.55, gap=None,
+         weights=None):
+    """Return ``n`` equal-**height** row rects ``(x, y, w, h)`` stacked top-to-bottom with
+    equal gaps — the vertical counterpart of :func:`columns`.
+
+    ``weights=`` (keyword-only, one positive number per row, ``len == n``) divides the
+    stack's usable height **proportionally** — e.g. ``rows(2, slide=s, weights=(2, 1))``
+    for a tall figure band over a short caption band — with gaps and the top/bottom
+    reserves unchanged, exactly like :func:`columns`; a mis-sized tuple raises
+    ``ValueError``. Default ``weights=None`` keeps the equal split.
+
+    Use it for a **vertical stack** of boxes (problem→solution, before→after, a list of
+    cards) so the gaps — and any ``arrow(..., direction="down")`` connectors you drop between
+    them — are **equal by construction** rather than eyeballed. Pass ``x``/``w`` to confine the
+    stack to one column (e.g. the left half from ``columns``); they default to a full-width
+    band inset by ``GUTTER`` (derived from the deck's real width when ``slide=`` is given)::
+
+        L, R = dk.columns(2, slide=s)
+        top_box, bot_box = dk.rows(2, slide=s, x=L[0], w=L[2], top=1.5, bottom=1.3)
+        dk.chip(s, *top_box, "abandon", "used once", STEEL)
+        gap_mid = bot_box[1] - (top_box[1] + top_box[3])          # the equal gap between rows
+        dk.arrow(s, top_box[0] + top_box[2] / 2 - 0.11, top_box[1] + top_box[3] + (gap_mid - 0.3) / 2,
+                 0.22, 0.3, direction="down")                     # centred in that gap
+        dk.chip(s, *bot_box, "reuse", "flies again", ORANGE)
+
+    Pass ``slide=`` so it matches the deck's real size. Returns ``(x, y, w, h)`` tuples,
+    top to bottom.
+    """
+    if slide is not None:
+        prs = slide.part.package.presentation_part.presentation
+        if w_in is None:
+            w_in = prs.slide_width / 914400
+        if h_in is None:
+            h_in = prs.slide_height / 914400
+    w_in = 10.0 if w_in is None else w_in
+    h_in = 5.625 if h_in is None else h_in
+    gap = GUTTER if gap is None else gap
+    x = GUTTER if x is None else x
+    w = (w_in - 2 * GUTTER) if w is None else w
+    y = top
+    if n < 1:
+        raise ValueError("rows(n) needs n >= 1")
+    if weights is not None:
+        weights = list(weights)
+        if len(weights) != n:
+            raise ValueError(f"rows(weights=) needs exactly n={n} weights, got {len(weights)}")
+        if any(wt <= 0 for wt in weights):
+            raise ValueError("rows(weights=) needs every weight > 0")
+    usable = h_in - top - bottom - (n - 1) * gap
+    if usable <= 0:
+        raise ValueError("top/bottom/gap leave no room for rows; reduce them")
+    if weights is None:
+        rh = usable / n
+        return [(x, y + i * (rh + gap), w, rh) for i in range(n)]
+    tot = float(sum(weights))
+    out, cy = [], y
+    for wt in weights:
+        rh = usable * wt / tot
+        out.append((x, cy, w, rh))
+        cy += rh + gap
+    return out
+
+
+CHROME_GAP = 0.05      # breathing room between the title chrome and the first content block
+TITLE_BAND_DEFAULT = 1.15   # the fallback top when a slide carries no measurable title chrome
+
+
+def _chrome_bottom(slide):
+    """The bottom edge (inches) of this slide's TITLE chrome, or None if it has none.
+
+    Only shapes :func:`title_bar` tagged are measured. Measuring "whatever is near the top"
+    instead would be wrong on exactly the decks that matter: a `register_mark(corner="tr")` is
+    chrome-height geometry in the title zone but is NOT a title, and letting it set the band top
+    would push every page's content down by however large the register mark happens to be.
+
+    Reads the XML directly rather than iterating ``slide.shapes``. That is not premature: this
+    runs once per `content_band()` call, i.e. at least once per slide on every build, and
+    python-pptx builds a proxy object for every shape on the slide just to expose ``.name`` —
+    measured at 886us per call against 43us here, on the same slide, for the same answer. On a
+    14-page build that was +8% wall-clock for a lookup of one attribute.
+
+    A shape with no explicit ``<a:xfrm>`` (a placeholder inheriting its geometry from the layout)
+    is skipped. `title_bar` always places its own chrome explicitly, so this cannot miss a title
+    it tagged; a supplied template's placeholder title is not tagged and was never measured here.
+    """
+    best = None
+    for sp in slide.shapes._spTree:
+        nv = sp.find(".//" + _QN_CNVPR)
+        if nv is None or nv.get("name") != CHROME_TITLE:
+            continue
+        off, ext = sp.find(".//" + _QN_OFF), sp.find(".//" + _QN_EXT)
+        if off is None or ext is None:
+            continue
+        b = (int(off.get("y")) + int(ext.get("cy"))) / 914400.0
+        if best is None or b > best:
+            best = b
+    return best
+
+
+def chrome_band(slide, *, gap=CHROME_GAP, footer_gap=0.15):
+    """The safe content rect ``(x, y, w, h)`` below whatever chrome is ALREADY on this slide.
+
+    🔴 Call it immediately after drawing the chrome and before any content — at that moment
+    every shape on the slide IS chrome, which is what makes the measurement exact.
+
+    :func:`content_band` measures the chrome `title_bar` tagged, so it only knows deckkit's own
+    title. This one knows nothing and measures anyway, which is what a deck with its OWN title
+    treatment needs — a multi-section `style.py`, or `archetypes.py`, which builds preview slides
+    for direction modules whose title geometry is unknown by construction. Those had no honest
+    option but a hand-picked number: `archetypes.py` opened its content at y=1.55 for every
+    direction, and a direction with a taller title, a larger kicker or a two-line title collides
+    with it — on the preview slide the user approves the whole deck from.
+
+    What it deliberately ignores, because none of it constrains where content starts:
+      · anything with no explicit geometry (a placeholder inheriting from the layout);
+      · a full-bleed ground — a background box is not a ceiling to sit under;
+      · the deck's motif (`register_mark` / `tag_motif`) — a corner device is chrome-height
+        geometry that is emphatically NOT a title, and letting it set the top would push every
+        page's content down by however large the mark happens to be;
+      · anything starting in the lower half — the footer is chrome too, and measuring it would
+        collapse the band to nothing.
+    """
+    w_in, h_in = _slide_size(slide)
+    lower = h_in * 0.45
+    best = None
+    for sh in slide.shapes:
+        if _is_motif(sh):
+            continue
+        try:
+            t, hh = sh.top, sh.height
+            ww = sh.width
+        except Exception:
+            continue
+        if t is None or hh is None or ww is None:
+            continue
+        t, hh, ww = t / 914400.0, hh / 914400.0, ww / 914400.0
+        if t >= lower:                       # footer and other bottom chrome
+            continue
+        if hh >= h_in * 0.6 or (ww >= w_in * 0.98 and hh >= h_in * 0.35):
+            continue                         # a full-bleed ground, not a ceiling
+        b = t + hh
+        if best is None or b > best:
+            best = b
+    top = TITLE_BAND_DEFAULT if best is None else round(best + gap, 4)
+    bottom_y = h_in - FOOTER_BAND - footer_gap
+    return (GUTTER, top, w_in - 2 * GUTTER, bottom_y - top)
+
+
+def content_band(slide, *, top=None, footer_gap=0.15):
+    """The one authoritative SAFE content rect ``(x, y, w, h)`` — below the title bar and
+    **above the footer band** — read from the deck's REAL size.
+
+    Use it instead of hand-picking 'somewhere above the footer' y-coordinates (the magic
+    numbers like 4.3 / 5.05 that drift and let auto-growing blocks collide with the footer).
+    The bottom edge is ``h_in - FOOTER_BAND - footer_gap``, so anything placed within the
+    returned rect clears ``footer()``. Pair with :func:`vstack` / :func:`bottom_callout`.
+
+    The TOP edge is MEASURED from the slide's own title chrome. It used to be the constant
+    1.15, which is `title_bar()`'s bottom (1.100) plus a 0.05 gap — but only for a title with
+    NO kicker. Add a kicker and the same call returns 1.15 for chrome that ends at 1.240, so the
+    first block lands 0.09in INSIDE the title rule. That was shipping in this skill's own worked
+    example, in the helper SKILL.md offers as the cure for hand-picked y-coordinates: the safe
+    helper was unsafe against the deck's own default chrome. Measuring reproduces 1.15 exactly
+    in the case the constant was tuned for, and is correct in the case it was not.
+
+    Pass ``top=`` explicitly when the deck has its OWN title treatment (a custom `style.py`), or
+    to override; a slide with no tagged chrome yet falls back to ``TITLE_BAND_DEFAULT``.
+    """
+    w_in, h_in = _slide_size(slide)
+    if top is None:
+        cb = _chrome_bottom(slide)
+        top = TITLE_BAND_DEFAULT if cb is None else round(cb + CHROME_GAP, 4)
+    y = top
+    bottom_y = h_in - FOOTER_BAND - footer_gap
+    return (GUTTER, y, w_in - 2 * GUTTER, bottom_y - y)
+
+
+def vstack(slide, x, y, w, blocks, *, gap=GUTTER, bottom=None, anchor="top"):
+    """Measured vertical packer — **equal gaps and no overlap, guaranteed by construction**.
+
+    Unlike :func:`rows` (which returns equal *fixed*-height cells), ``vstack`` respects each
+    block's CONTENT-driven height, so a callout/bullet-list/chip that auto-grows can't overflow
+    its cell and collide with the block below (the recurring "raised callout overlapped the
+    bullets above it" failure).
+
+    ``blocks`` = list of ``(height_in, draw)`` where ``draw(x, y, w)`` renders the block at that
+    top-left and width. Measure each height first with :func:`measure_callout` /
+    :func:`measure_bullets` / :func:`measure_text` (or a figure's known aspect).
+
+    With ``bottom`` given (e.g. from ``content_band``): raises a located error if the blocks
+    can't fit (so a collision surfaces at BUILD time, not at render); ``anchor='center'`` centres
+    the stack in the band and ``anchor='justify'`` spreads equal gaps to fill it — both kill the
+    "too much dead-white on the bottom" tell. Returns the placed ``(x, y, w, h)`` rects.
+    """
+    n = len(blocks)
+    if n == 0:
+        return []
+    heights = [h for h, _ in blocks]
+    content = sum(heights)
+    total = content + gap * (n - 1)
+    if bottom is not None:
+        avail = bottom - y
+        if total > avail + 1e-6:
+            raise ValueError(
+                f"vstack overflow: blocks need {total:.2f}in but the band is only {avail:.2f}in "
+                f"— shorten text, drop a block, or raise the top. (Surfaced at build time on purpose.)")
+        if anchor == "center":
+            y += (avail - total) / 2
+        elif anchor == "justify" and n > 1:
+            gap = (avail - content) / (n - 1)
+    cy = y
+    rects = []
+    for h, draw in blocks:
+        draw(x, cy, w)
+        rects.append((x, cy, w, h))
+        cy += h + gap
+    return rects
+
+
+# ================================================================= components
+def _is_wide(o):
+    """True for CJK / full-width code points — their glyph advance is ≈ one em."""
+    return (0x1100 <= o <= 0x115F or 0x2E80 <= o <= 0xA4CF or 0xAC00 <= o <= 0xD7A3
+            or 0xF900 <= o <= 0xFAFF or 0xFE30 <= o <= 0xFE4F or 0xFF00 <= o <= 0xFF60
+            or 0xFFE0 <= o <= 0xFFE6 or 0x20000 <= o <= 0x3FFFD)
+
+
+def _is_hangul(o):
+    """Hangul syllables and jamo. Korean wraps at SPACES (LibreOffice renders, 2026-10-04: "옥상에서도 /
+    채소가 자란다") — so a Hangul run is measured as a WORD, not as a row of ideographs; a word wider than
+    the whole line breaks between syllables ("인공지능기반의 / 료영상재구성")."""
+    return (0xAC00 <= o <= 0xD7A3 or 0x1100 <= o <= 0x11FF or 0x3130 <= o <= 0x318F
+            or 0xA960 <= o <= 0xA97F or 0xD7B0 <= o <= 0xD7FF)
+
+
+def _disp_len(s):
+    """Display width in 'Latin-char' units: CJK / full-width glyphs count as 2. Used only by
+    the heuristic FALLBACK in `_measure_lines`; the primary path measures real glyph
+    advances. Counting wide glyphs as 2 keeps that fallback safe for CJK text."""
+    return sum(2 if _is_wide(ord(ch)) else 1 for ch in s)
+
+
+# Chars-per-line estimates over-count narrow glyphs (ASCII digits/spaces/dashes, CJK
+# punctuation), so an item one char over the wrap threshold gets a phantom extra line. This
+# slack absorbs that bias. It is now only used by the heuristic FALLBACK below — the primary
+# path (`_measure_lines`) measures real glyph advances and needs no slack.
+_WRAP_SLACK = 2
+
+# ---- accurate text measurement (real glyph metrics, with a heuristic fallback) ----
+_MEAS_PREC = 4                 # load fonts at size*PREC px for sub-point precision
+_PIL_FONT_CACHE = {}
+
+
+def _norm_family(name):
+    return "".join(ch for ch in str(name or "").lower() if ch.isalnum())
+
+
+def _extra_font_files():
+    """Font files the OS renders from but matplotlib never scans.
+
+    macOS downloads some system faces on demand into `/System/Library/AssetsV2/…/AssetData/` —
+    PingFang, the default Chinese face on every modern Mac, among them. CoreText renders them;
+    matplotlib's scan never looks there, so a deck set in PingFang SC was measured in DejaVu Sans,
+    which has no CJK glyphs at all: 24 CJK characters at 60% of their true width, measured.
+    """
+    import glob as _glob
+    out = []
+    for pat in ("/System/Library/AssetsV2/com_apple_MobileAsset_Font*/*.asset/AssetData/*",):
+        out.extend(f for f in _glob.glob(pat) if f.lower().endswith((".ttf", ".otf", ".ttc", ".otc")))
+    return out
+
+
+_NAME_INDEX = None
+_NAME_INDEX_SOURCE = None          # "cache" | "built" — which path the index came from, for tests
+
+
+def _font_index_cache_path():
+    """Where the name-table index is kept between processes — the same host-agnostic location the
+    icon cache uses (override with SLIDE_MAKER_CACHE), so every runtime on the machine shares it."""
+    import os as _os
+    import sys as _sys
+    env = _os.environ.get("SLIDE_MAKER_CACHE")
+    if env:
+        base = env
+    elif _sys.platform == "win32":
+        base = _os.path.join(_os.environ.get("LOCALAPPDATA") or _os.path.expanduser(r"~\AppData\Local"),
+                             "slide-maker")
+    elif _sys.platform == "darwin":
+        base = _os.path.join(_os.path.expanduser("~/Library/Caches"), "slide-maker")
+    else:
+        base = _os.path.join(_os.environ.get("XDG_CACHE_HOME") or _os.path.expanduser("~/.cache"),
+                             "slide-maker")
+    return _os.path.join(base, "fonts", "name-index-v1.json")
+
+
+def _name_table_index():
+    """{normalised family: [(path, face_index, style)]} read from every font file's NAME TABLE.
+
+    🔴 matplotlib indexes ONE name per file — face 0 of a collection, under whatever FreeType
+    reports for it — so a family a file registers anywhere else is invisible to name lookup.
+    Measured on macOS: `STHeiti Light.ttc` registers "Heiti TC" (face 0) and "Heiti SC" (face 1)
+    and is indexed as "STHeiti"; five shipped presets set ea="Heiti SC", so every CJK line in them
+    was measured in a stand-in at 60% of its width. Every family record (nameIDs 1 and 16, every
+    platform and language) is read, so localised names resolve too.
+
+    Built only when a name MISSES in matplotlib, and kept on disk between processes: building it
+    costs 0.5s for ~675 files, and one missing face is enough to trigger it — deckkit's own default
+    MONO, Consolas, is absent from macOS — so without the cache every build paid it (measured on the
+    example build: 0.75s -> 1.3s). The cache is keyed on every candidate file's path, size and
+    mtime, so installing or removing a font rebuilds it; an unreadable, stale or unwritable cache is
+    never an error, only a rebuild in memory.
+    """
+    global _NAME_INDEX, _NAME_INDEX_SOURCE
+    if _NAME_INDEX is not None:
+        return _NAME_INDEX
+    import hashlib as _hashlib
+    import json as _json
+    import os as _os
+    idx = {}
+    try:
+        from matplotlib import font_manager as _fm
+        from fontTools.ttLib import TTCollection, TTFont
+        files = {f.fname for f in _fm.fontManager.ttflist} | set(_extra_font_files())
+    except Exception:
+        _NAME_INDEX, _NAME_INDEX_SOURCE = idx, "built"
+        return idx
+
+    stamp = []
+    for path in sorted(str(f) for f in files):
+        try:
+            st = _os.stat(path)
+            stamp.append("%s|%d|%d" % (path, st.st_size, st.st_mtime_ns))
+        except OSError:
+            stamp.append("%s|-" % path)
+    sig = _hashlib.sha1("\n".join(stamp).encode("utf-8", "surrogatepass")).hexdigest()
+    cache = _font_index_cache_path()
+    try:
+        with open(cache, encoding="utf-8") as fh:
+            data = _json.load(fh)
+        if data.get("sig") == sig:
+            _NAME_INDEX = {k: [tuple(h) for h in v] for k, v in data["index"].items()}
+            _NAME_INDEX_SOURCE = "cache"
+            return _NAME_INDEX
+    except Exception:
+        pass
+
+    def english(names, nid):
+        for r in names:
+            if r.nameID == nid and ((r.platformID == 3 and r.langID == 0x409)
+                                    or (r.platformID == 1 and r.langID == 0)):
+                try:
+                    return r.toUnicode()
+                except Exception:
+                    continue
+        return ""
+
+    for path in sorted(str(f) for f in files):
+        try:
+            faces = (TTCollection(path, lazy=True).fonts if path.lower().endswith((".ttc", ".otc"))
+                     else [TTFont(path, lazy=True)])
+        except Exception:
+            continue
+        for i, font in enumerate(faces):
+            try:
+                names = font["name"].names
+            except Exception:
+                continue
+            style = (english(names, 17) or english(names, 2)).strip().lower()
+            fams = set()
+            for r in names:
+                if r.nameID in (1, 16):
+                    try:
+                        fams.add(_norm_family(r.toUnicode()))
+                    except Exception:
+                        pass
+            for fam in fams - {""}:
+                idx.setdefault(fam, []).append((path, i, style))
+    _NAME_INDEX, _NAME_INDEX_SOURCE = idx, "built"
+    try:                                  # atomic: a reader never sees half a file
+        _os.makedirs(_os.path.dirname(cache), exist_ok=True)
+        tmp = "%s.%d.tmp" % (cache, _os.getpid())
+        with open(tmp, "w", encoding="utf-8") as fh:
+            _json.dump({"sig": sig, "index": idx}, fh)
+        _os.replace(tmp, cache)
+    except Exception:
+        pass
+    return idx
+
+
+# ---- which FACE of a family to measure: read from the font's own metadata --------------------
+# Style NAMES are not a weight scale. A rule keyed on "Regular"/"Bold"/"Semibold" measured Hoefler
+# Text in its Ornaments face, Phosphate in Inline, Xingkai's regular in Bold, and missed that Marker
+# Felt's bold is called "Wide". The OS/2 table carries what the OS itself matches on — a weight
+# class, a width class, the bold/italic flags — so the choice is made from those, by the CSS
+# weight-matching order. Checked against the faces LibreOffice embeds for the same runs, on 48
+# macOS families whose faces are not simply Regular + Bold: this rule agrees on 67 of 78
+# comparable runs, the style-name rule on 49. The runs it still differs on are LibreOffice's own
+# choices, e.g. it sets REGULAR Futura and Yu Gothic text in their Bold faces.
+_FACE_META_CACHE = {}
+_WEIGHT_WORDS = (("extralight", 200), ("ultralight", 200), ("hairline", 100), ("thin", 100),
+                 ("semibold", 600), ("demibold", 600), ("extrabold", 800), ("ultrabold", 800),
+                 ("light", 300), ("book", 400), ("roman", 400), ("regular", 400), ("normal", 400),
+                 ("text", 400), ("medium", 500), ("bold", 700), ("heavy", 900), ("black", 900))
+_REGULAR_NAMES = ("regular", "roman", "book", "text", "normal", "plain")
+_DECORATIVE = ("ornament", "inline", "outline", "shadow", "swash", "dingbat")
+
+
+def _weight_from_name(*names):
+    import re as _re
+    s = _re.sub(r"[^a-z0-9]", "", " ".join(n or "" for n in names).lower())
+    m = _re.search(r"w([0-9])$", s)                   # Japanese grades: Hiragino W3, W6 …
+    if m:
+        return max(100, int(m.group(1)) * 100)
+    return next((w for tok, w in _WEIGHT_WORDS if tok in s), 400)
+
+
+def _face_meta(path):
+    """Per-face metadata of one font file (cached by path): families, names, OS/2 weight + width,
+    and the bold / italic flags (OS/2 fsSelection, head.macStyle)."""
+    path = str(path)
+    if path in _FACE_META_CACHE:
+        return _FACE_META_CACHE[path]
+    out = []
+    try:
+        from fontTools.ttLib import TTCollection, TTFont
+        faces = (TTCollection(path, lazy=True).fonts if path.lower().endswith((".ttc", ".otc"))
+                 else [TTFont(path, lazy=True)])
+        for i, f in enumerate(faces):
+            try:
+                n = f["name"]
+                os2 = f["OS/2"] if "OS/2" in f else None
+                fs = os2.fsSelection if os2 is not None else 0
+                mac = f["head"].macStyle if "head" in f else 0
+                style = n.getDebugName(17) or n.getDebugName(2) or ""
+                fams = set()
+                for r in n.names:
+                    if r.nameID in (1, 16):
+                        try:
+                            fams.add(_norm_family(r.toUnicode()))
+                        except Exception:
+                            pass
+                out.append({"i": i, "families": fams - {""}, "style": style,
+                            "full": n.getDebugName(4) or "", "ps": n.getDebugName(6) or "",
+                            "weight": os2.usWeightClass if os2 is not None else 0,
+                            "width": os2.usWidthClass if os2 is not None else 5,
+                            "bold_flag": bool(fs & 0x20 or mac & 1),
+                            "italic": bool(fs & 1 or mac & 2 or "italic" in style.lower()
+                                           or "oblique" in style.lower())})
+            except Exception:
+                continue
+    except Exception:
+        out = []
+    _FACE_META_CACHE[path] = out
+    return out
+
+
+def _choose_face(faces, bold):
+    """The face a renderer draws for regular (bold=False) or bold text, among one family's faces.
+
+    Regular: upright, normal width, not bold-flagged (Heiti TC's Medium is weight 400 AND flagged
+    bold — it is the family's bold), nearest weight 400 in CSS order (400, 500, lighter, heavier),
+    never a decorative face while a plain one exists. Bold: the nearest weight to 700 among faces
+    HEAVIER than that regular — heavier first, as CSS does; the bold flag only breaks ties, because
+    Charter's 700 "Bold" carries no bold flag while its 900 "Black" does, and the renderer draws
+    Bold. No heavier face -> the regular face, which is what a renderer synthesises bold from.
+    Where every face declares the same OS/2 weight (Lantinghei declares 400 for ExtraLight, DemiBold
+    and Heavy alike) the weight is read from the style name instead.
+    """
+    up = [f for f in faces if not f["italic"]] or list(faces)
+    if not up:
+        return None
+    by_os2 = {f["weight"] for f in up}
+    by_name = {_weight_from_name(f["style"], f["full"], f["ps"]) for f in up}
+    if len(by_os2) == 1 and len(by_name) > 1:
+        ew = lambda f: _weight_from_name(f["style"], f["full"], f["ps"])
+    else:
+        ew = lambda f: f["weight"] or _weight_from_name(f["style"], f["full"], f["ps"])
+    deco = lambda f: any(t in (f["style"] + f["full"] + f["ps"]).lower() for t in _DECORATIVE)
+    named = lambda f: next((k for k, nm in enumerate(_REGULAR_NAMES)
+                            if nm == f["style"].strip().lower()), len(_REGULAR_NAMES))
+
+    def css(w, target):
+        if w == target:
+            return (0, 0)
+        if target == 400:
+            return (1, 0) if w == 500 else (2, 400 - w) if w < 400 else (3, w - 500)
+        return (1, w - target) if w > target else (2, target - w)
+
+    normal = [f for f in up if f["width"] == 5] or up
+    pool = [f for f in normal if not f["bold_flag"]] or normal
+    reg = min(pool, key=lambda f: (deco(f), css(ew(f), 400), named(f), f["i"]))
+    if not bold:
+        return reg
+    heavier = [f for f in up if ew(f) > ew(reg) and not deco(f)]
+    if not heavier:
+        return reg
+    pool = [f for f in heavier if f["width"] == 5] or heavier
+    return min(pool, key=lambda f: (css(ew(f), 700), not f["bold_flag"], f["i"]))
+
+
+def _name_lookup(name, bold=False):
+    """(path, face_index) for a family found only through the name tables, or None.
+
+    Chooses across EVERY file that registers the family — Heiti SC's Light and Medium live in two
+    different .ttc files."""
+    fam = _norm_family(name)
+    paths = sorted({p for p, _i, _st in _name_table_index().get(fam, ())})
+    cands = [dict(f, path=p) for p in paths for f in _face_meta(p) if fam in f["families"]]
+    pick = _choose_face(cands, bold) if cands else None
+    return (pick["path"], pick["i"]) if pick else None
+
+
+_FONT_FACE_CACHE = {}
+
+
+def _font_face(name, bold=False):
+    """(path, face_index) that draws `name` at this weight — the ONE resolution measuring uses.
+
+    matplotlib first; the family's faces are then chosen by `_choose_face` across EVERY file
+    matplotlib associates with that family, because a family's weights can sit in different files
+    (Heiti TC's Light and Medium; Hoefler Text's Regular and its Ornaments), and choosing inside the
+    one file matplotlib happened to return measured Hoefler Text in Ornaments. On a miss, the font
+    files' own name tables (`_name_lookup`); only then matplotlib's default face — a STAND-IN, which
+    `_font_substituted` reports as such.
+    """
+    key = (name, bold)
+    if key in _FONT_FACE_CACHE:
+        return _FONT_FACE_CACHE[key]
+    res = None
+    try:
+        from matplotlib import font_manager as _fm
+        props = _fm.FontProperties(family=name, weight=("bold" if bold else "normal"))
+        try:
+            path = _fm.findfont(props, fallback_to_default=False)
+        except Exception:
+            path = None
+        if path:
+            fam = _norm_family(name)
+            files = {str(path)} | {str(e.fname) for e in _fm.fontManager.ttflist
+                                   if _norm_family(e.name) == fam}
+            cands = [dict(f, path=fp) for fp in sorted(files) for f in _face_meta(fp)
+                     if fam and fam in f["families"]]
+            pick = _choose_face(cands, bold) if cands else None
+            res = (pick["path"], pick["i"]) if pick else (str(path), _face_index(path, bold, name))
+        else:
+            res = _name_lookup(name, bold) if name else None
+            if res is None:
+                stand_in = _fm.findfont(props)
+                res = (stand_in, _face_index(stand_in, bold, None))
+    except Exception:
+        res = None
+    _FONT_FACE_CACHE[key] = res
+    return res
+
+
+def _font_file(name, bold=False):
+    """Resolve a font family name to a file path (see `_font_face`). None only if nothing loads."""
+    res = _font_face(name, bold)
+    return res[0] if res else None
+
+
+_FONT_SUB_CACHE = {}
+def _font_substituted(name):
+    """True when `name` is NOT actually installed and measurement silently falls back to a
+    metric-INcompatible face (matplotlib → DejaVu, which is wider than Calibri/Arial). Wrap
+    counts measured under substitution can be ~1 line off, so the linter must not assert a
+    CRITICAL on near-threshold geometry from a fabricated extra line."""
+    if name not in _FONT_SUB_CACHE:
+        try:
+            from matplotlib import font_manager as _fm
+            _fm.findfont(_fm.FontProperties(family=name), fallback_to_default=False)
+            _FONT_SUB_CACHE[name] = False
+        except Exception:
+            _FONT_SUB_CACHE[name] = _name_lookup(name) is None
+    return _FONT_SUB_CACHE[name]
+
+
+def font_health():
+    """Which of the module's DECLARED faces are not installed on this machine.
+
+    Returns [(attr, face), ...] — empty when every declared face is present.
+
+    This matters more than it looks. The shipped defaults are FONT='Calibri' and MONO='Consolas',
+    chosen for Office portability; NEITHER ships with macOS, which is the primary platform for the
+    agents this skill runs inside. So a default macOS build measures every string in a
+    metric-incompatible substitute, and `_measure_lines` — which every fit/wrap/overflow guard is
+    built on — carries about a line of slack on all of it. Measured consequence: an install command
+    that fit its panel by 10% on paper still broke across three lines in the render, and copied as
+    a repo path that 404s.
+
+    The defaults are deliberately NOT changed here: FONT drives the look of every deck ever built
+    from this library, and silently re-theming them would be a worse bug than the one being fixed.
+    Instead the condition is made loud (lint_layout names it) and one call fixes it per deck.
+    """
+    out = []
+    for attr in ("FONT", "MONO", "DISPLAY", "EAFONT", "EADISPLAY", "EQ_MATHFONT"):
+        face = globals().get(attr)
+        if isinstance(face, str) and face and _font_substituted(face):
+            out.append((attr, face))
+    return out
+
+
+# Installed, metric-sane stand-ins per platform. Same register as the declared default: a
+# neo-grotesque body face and a fixed-advance mono, so switching changes measurement fidelity
+# rather than the deck's visual register.
+_PLATFORM_FONTS = {
+    "darwin": {"FONT": "Helvetica Neue", "MONO": "Menlo"},
+    "linux":  {"FONT": "DejaVu Sans",    "MONO": "DejaVu Sans Mono"},
+    "win32":  {"FONT": "Calibri",        "MONO": "Consolas"},
+}
+
+
+def use_platform_fonts(*, verbose=True):
+    """Point FONT/MONO at faces this machine actually has, and say what moved.
+
+    Call it once near the top of a build script when `font_health()` is non-empty. Only the
+    Latin body and mono faces are touched — CJK faces stay the caller's decision, because
+    `EAFONT` carries the deck's script register and there is no safe generic substitute.
+    """
+    import sys as _sys
+    key = ("darwin" if _sys.platform == "darwin"
+           else "win32" if _sys.platform.startswith("win") else "linux")
+    changed = []
+    for attr, face in _PLATFORM_FONTS[key].items():
+        cur = globals().get(attr)
+        if cur != face and not _font_substituted(face):
+            globals()[attr] = face
+            changed.append(f"{attr}: {cur} -> {face}")
+    if verbose and changed:
+        print("[deckkit] use_platform_fonts(" + key + "): " + " · ".join(changed))
+    return changed
+
+
+_FACE_IDX_CACHE = {}
+
+
+def _face_index(path, bold, family=None):
+    """Which face inside a font COLLECTION (.ttc/.otc) to measure with.
+
+    macOS ships whole families as one .ttc — matplotlib resolves "Helvetica Neue" bold and
+    regular to the SAME file, and ``ImageFont.truetype(path, size)`` with no ``index=`` always
+    loads face 0, the Regular. Every bold run in such a family was therefore measured at
+    REGULAR width: ~3.9% narrow for Helvetica Neue (face 0 = 3871.9pt vs face 1 = 4022.9pt on
+    the same string). Under-measuring is the dangerous direction — a measure-then-place guard
+    silently passes and the renderer wraps the line anyway, which is how a caption sized for
+    one line landed a second line on top of a footer. Families with separate files per weight
+    (Arial.ttf / Arial Bold.ttf) were never affected, which is why this hid for so long.
+
+    🔴 A collection can also hold several FAMILIES — `PingFang.ttc` is HK, MO, TC, SC × six weights
+    (PingFang SC Regular is face 3, not 0) and `STHeiti Light.ttc` is Heiti TC then Heiti SC — so
+    the choice is made among the requested family's own faces, from their metadata
+    (`_choose_face`). A file whose faces do not name that family is chosen among as a whole.
+    """
+    if not path or not str(path).lower().endswith((".ttc", ".otc")):
+        return 0
+    fam = _norm_family(family)
+    key = (str(path), bold, fam)
+    if key in _FACE_IDX_CACHE:
+        return _FACE_IDX_CACHE[key]
+    faces = _face_meta(path)
+    mine = [f for f in faces if fam and fam in f["families"]] or faces
+    pick = _choose_face(mine, bold) if mine else None
+    idx = pick["i"] if pick else 0
+    _FACE_IDX_CACHE[key] = idx
+    return idx
+
+
+def _pil_font(name, size_pt, bold=False):
+    """A cached Pillow font for `name` at `size_pt` (loaded at size*PREC px).
+
+    Picks the right FACE inside a collection — see :func:`_face_index`."""
+    key = (name, bold, round(size_pt, 2))
+    f = _PIL_FONT_CACHE.get(key)
+    if f is None:
+        from PIL import ImageFont
+        path, idx = _font_face(name, bold) or (None, 0)
+        px = max(1, int(round(size_pt * _MEAS_PREC)))
+        try:
+            f = ImageFont.truetype(path, px, index=idx)
+        except Exception:
+            f = ImageFont.truetype(path, px)
+        _PIL_FONT_CACHE[key] = f
+    return f
+
+
+def _lines_heuristic(text, size_pt, avail_in):
+    """Chars-per-line line-count estimate — the fallback when measurement isn't available."""
+    cpl = max(6, int(avail_in * 136.0 / size_pt))
+    eff = max(1, _disp_len(text) - _WRAP_SLACK)
+    return max(1, -(-eff // cpl))
+
+
+# Where a Latin token wider than the whole line can break: after these marks (URLs, identifiers, compounds).
+_OVERWIDE_SPLIT = re.compile(r"[^/._\-?&=]*[/._\-?&=]?")
+# CJK line ends as LibreOffice sets them under the deck default hangingPunct="1" (probed 2026-10-03: six
+# ideographs + one mark in a box six ideographs wide): these marks HANG past the measure, one line ...
+_CJK_HANG = "，。、；：！？．"
+# ... but only when the DECK declares hanging punctuation: with hangingPunct="0", or absent everywhere in the
+# inheritance chain, LibreOffice does not hang (final review, 2026-10-04). python-pptx's default template
+# declares "1". lint_layout() sets this from the deck it lints; visual_languages.use() from the deck it builds.
+HANG_PUNCT = True
+# ... but only ONE: a closing bracket never starts a line, and neither does a second mark — the ideograph
+# before it (and a hung mark) moves down WITH it ("一二三四五 / 六）", "/ 六。」", "/ 六！？")
+_CJK_CLOSE = "）」』》】〉〕"
+# ... and an opening bracket never ENDS a line: it moves down to the text it opens ("意度很高 / （详见附")
+_CJK_OPEN = "（「『《【〈〔"
+
+
+def deck_hangs_punct(prs):
+    """True when `prs` declares hanging punctuation (hangingPunct="1") at level 1 of its default text style or
+    a master's text styles, and nothing there says "0". Absent everywhere = no hanging, as LibreOffice renders."""
+    vals = []
+    try:
+        roots = [prs.part._element.find(qn("p:defaultTextStyle"))]
+        for m in prs.slide_masters:
+            tx = m._element.find(qn("p:txStyles"))
+            if tx is not None:
+                roots += [tx.find(qn(t)) for t in ("p:titleStyle", "p:bodyStyle", "p:otherStyle")]
+        for r in roots:
+            lv = r.find(qn("a:lvl1pPr")) if r is not None else None
+            if lv is not None and lv.get("hangingPunct") is not None:
+                vals.append(lv.get("hangingPunct"))
+    except Exception:
+        return False
+    return "0" not in vals and "1" in vals
+
+
+def _as_runs(runs):
+    """`runs` as [(text, bold), ...]: a plain string is one regular run, a single (text, bold) pair one run.
+    A string was iterated character by character and died on an unpacking error that named nothing
+    (measured: the first call any of us made with a string, twice). Anything else malformed says what it needs."""
+    if isinstance(runs, str):
+        return [(runs, False)]
+    if isinstance(runs, tuple) and len(runs) == 2 and isinstance(runs[0], str) and not isinstance(runs[1], str):
+        return [runs]
+    out = list(runs)
+    for r in out:
+        if not (isinstance(r, (tuple, list)) and len(r) == 2 and isinstance(r[0], str)):
+            raise TypeError("runs must be a string or a list of (text, bold) pairs, e.g. [(\"Bring it broken\", "
+                            "True)] — a text() run (text, size, colour, bold, italic) is not one; got {!r}".format(r))
+    return out
+
+
+def _measure_lines(runs, size_pt, avail_in, font=None):
+    """How many lines styled text wraps to — MEASURED, not estimated.
+
+    `runs` = [(text, bold), ...] set at `size_pt` within `avail_in` inches of usable width.
+    Narrow runs are measured with the REAL Latin font's glyph advances (Pillow, the bold
+    parts measured bold); CJK / full-width glyphs are one em (= size_pt) by definition.
+    A greedy line-breaker then counts wraps, breaking at spaces, between CJK glyphs, and at
+    CJK↔Latin boundaries (Latin words — and Korean words that fit a line, see `_is_hangul` — stay
+    whole); a closing CJK mark hangs at the line end
+    (_CJK_HANG), a closing bracket takes the ideograph before it down (_CJK_CLOSE) and an opening
+    bracket never ends a line (_CJK_OPEN). Text that also carries Latin or digits never hangs: the
+    renderer puts autospace between the scripts, which this does not model, so mixed lines are fuller
+    than measured and the old extra line hid that — a hang there under-counted 11 of 12 rendered
+    cases (corpus vs LibreOffice, 2026-10-03). Hanging is the one rule that LOWERS a count, so it is
+    kept to pure CJK text, where it matched the render in 37 of 40 changed cases. Because it uses the same font metrics the
+    renderer does, the count matches the rendered layout far more closely than a chars-per-
+    line guess. Falls back to `_lines_heuristic` if Pillow or the font can't be loaded — so a
+    build never breaks over measurement. Lazy-imports Pillow/matplotlib."""
+    fontname = font or FONT
+    runs = _as_runs(runs)
+    flat = "".join(t for t, _ in runs)
+    if not flat:
+        return 1
+    avail = max(1.0, avail_in * 72.0)                       # usable width, in points
+    try:
+        fonts = {b: _pil_font(fontname, size_pt, b) for b in (False, True)}
+        getlen = lambda s, b: fonts[b].getlength(s) / _MEAS_PREC
+        getlen("x", False)                                  # probe — raises if unusable
+    except Exception:
+        return _lines_heuristic(flat, size_pt, avail_in)
+
+    items = []                                              # (width_pt, kind): 'w'ord 's'pace 'c'jk
+    _chw = {}                                               # one glyph's width, per (char, bold): an over-wide
+    def chw(ch, b):                                         # word breaks per character, and characters repeat
+        k_ = (ch, b)
+        if k_ not in _chw:
+            _chw[k_] = getlen(ch, b)
+        return _chw[k_]
+    for text, bold in runs:
+        word = []                                           # the current word's characters, in order
+        hw = [0]                                            # how many of them are Hangul
+
+        def _flush():
+            # Korean wraps at spaces (a Hangul run is part of the word, one em a syllable) — but a word wider
+            # than the WHOLE line breaks between syllables ("인공지능기반의 / 료영상재구성"), so it goes in
+            # as syllables. A word with no Hangul is measured exactly as it always was (and as fast).
+            if not hw[0]:
+                if word:
+                    wtxt = "".join(word)
+                    ww = getlen(wtxt, bold)
+                    if ww > avail and len(wtxt) > 1:
+                        # wider than the whole line: the renderer breaks it — after / . _ - ? & = where it can,
+                        # mid-word where it must (40 rendered cases: 28 exact, 10 over, 2 a URL one line short;
+                        # the old ONE line was right once). Pieces join without a space, so they go in as "c";
+                        # the word first moves to a fresh line ("n"), as the renderer moves it before breaking it.
+                        items.append((0.0, "n"))
+                        for seg in _OVERWIDE_SPLIT.findall(wtxt):
+                            if not seg:
+                                continue
+                            sgw = getlen(seg, bold)
+                            if sgw <= avail:
+                                items.append((sgw, "c"))
+                            else:
+                                items.extend((chw(ch, bold), "c") for ch in seg)
+                    else:
+                        items.append((ww, "w"))
+                    word.clear()
+                return
+            hang_n, hw[0] = hw[0], 0
+            latin = "".join(c for c in word if not _is_hangul(ord(c)))
+            wd = (getlen(latin, bold) if latin else 0.0) + hang_n * float(size_pt)
+            if hang_n and wd > avail:
+                buf = ""
+                for c in word:
+                    if _is_hangul(ord(c)):
+                        if buf:
+                            items.append((getlen(buf, bold), "w")); buf = ""
+                        items.append((float(size_pt), "c"))
+                    else:
+                        buf += c
+                if buf:
+                    items.append((getlen(buf, bold), "w"))
+            elif word:
+                items.append((wd, "w"))
+            word.clear()
+        for ch in text:
+            if ch == " ":
+                _flush()
+                items.append((getlen(" ", bold), "s"))
+            elif ord(ch) < 0x1100:                          # nothing below U+1100 is Hangul or wide: the
+                word.append(ch)                             # common Latin case pays one compare
+            elif _is_hangul(ord(ch)):
+                word.append(ch)                             # Korean wraps at spaces: part of the word
+                hw[0] += 1
+            elif _is_wide(ord(ch)):
+                _flush()
+                items.append((float(size_pt), "h" if ch in _CJK_HANG else ("b" if ch in _CJK_CLOSE else
+                                                                     ("o" if ch in _CJK_OPEN else "c"))))
+            else:
+                word.append(ch)
+        _flush()
+
+    # pure CJK only (see the docstring), and a line of at least two ideographs: in a one-ideograph
+    # column the renderer cannot hang (it would leave the line empty) — 3 under-counts in the corpus
+    may_hang = (HANG_PUNCT and not any(k_ == "w" for _w, k_ in items) and avail >= 2 * size_pt
+                and not any(c.isascii() and c.isalnum() for c in flat))   # an over-wide Latin word goes in as "c"
+    x = 0.0
+    lines = 1
+    line = []                                               # the current line's items, for a bracket's push
+    for w, kind in items:
+        if kind == "n":                                     # an over-wide word starts its own line
+            if x > 0:
+                lines += 1
+                x, line = 0.0, []
+            continue
+        if kind == "s":                                     # a space never forces a wrap
+            if x > 0:
+                x += w
+                line.append((w, kind))
+            continue
+        if kind == "h" and may_hang and x > 0 and x <= avail + 1e-9:   # ONE mark hangs past the measure
+            x += w
+            line.append((w, kind))
+            continue
+        if kind in ("b", "h") and x + w > avail and x > 0:
+            # a bracket — or a second mark — takes the hung mark before it and the ideograph before
+            # that down with it ("开 / 始。」", "五 / 六！？")
+            carry = []
+            while line and line[-1][1] == "h":
+                carry.insert(0, line.pop())
+            if line and line[-1][1] == "c" and len(line) > 1:
+                carry.insert(0, line.pop())
+            lines += 1
+            line = carry + [(w, kind)]
+            x = sum(c[0] for c in line)
+            continue
+        if w > avail:                                       # a token wider than the whole line BREAKS
+            if x > 0:                                        # mid-word in a wrap-on box (LibreOffice renders,
+                lines += 1                                   # 2026-10-04: "99.9%" 40pt in 1.2in, an identifier,
+            extra = int(-(-w // avail)) - 1                  # a URL, "Donaudampfschifffahrtsgesellschaft" —
+            lines += extra                                   # all counted 1 line, rendered 2-3). A wrap-OFF box
+            x = w - extra * avail                            # stays one line: that caller does not measure lines
+            line = [(x, kind)]                               # (lint_layout passes the box's own wrap; a value
+            continue                                         # box that sets word_wrap=False is never measured)
+        if x + w > avail and x > 0:
+            lines += 1
+            carry = [line.pop()] if line and line[-1][1] == "o" and len(line) > 1 else []
+            line = carry                                    # an opening bracket goes down with its text
+            x = sum(c[0] for c in line)
+        x += w
+        line.append((w, kind))
+    return max(1, lines)
+
+
+# ---- public "measure before you place" helpers (so a build knows a block's true height
+#      at a given width BEFORE choosing its y — measure-then-place, not place-and-pray) ----
+def measure_lines(runs, size_pt, avail_in, font=None):
+    """Public wrapper: how many lines ``runs`` = [(text, bold), ...] wrap to at ``size_pt``
+    within ``avail_in`` inches. Same metric the renderer/`bullet`/`callout` use."""
+    return _measure_lines(runs, size_pt, avail_in, font=font)
+
+
+def measure_callout(label, body, w):
+    """Height (inches) :func:`callout` will draw for this ``label``+``body`` at width ``w``.
+    Measure it BEFORE placing so the box can be positioned to clear the footer / the block
+    below — the single source of truth for the callout height formula."""
+    nlines = _measure_lines([(label + "  ", True), (body, False)], 12.5, w - 0.44 - TEXT_INSET_LR)
+    return 0.30 + 0.245 * nlines   # 0.30 = top+bottom padding: snug to the text but not cramped
+
+
+def _stacked_text_h(lines, w, *, pad=0.0, line_h_factor=1.12):
+    """Minimum inner height for a stack of ``(text, size_pt, bold, font)`` lines at width ``w``.
+
+    The shared arithmetic behind `measure_chip` / `measure_modbox` / `measure_node`, so the three
+    cannot drift apart or from the components that enforce them.
+    """
+    total = 0.0
+    for txt, size, bold, font in lines:
+        if not txt:
+            continue
+        # `w` is the text() frame; the words are set in it minus its 2pt insets (TEXT_INSET_LR) — measured at the
+        # frame, a word between the two widths counted one line short and the node was built too small
+        n = max(1, _measure_lines([(txt, bool(bold))], size, max(0.05, w - TEXT_INSET_LR), font=font))
+        total += size / 72.0 * line_h_factor * n
+    return total + pad
+
+
+def measure_chip(title, sub="", w=1.9, *, title_size=14, sub_size=10.5):
+    """Minimum height (inches) a :func:`chip` needs for this text at width ``w``.
+
+    `chip` enforces it (``h = max(h, measure_chip(...))``), the same way `callout` enforces
+    `measure_callout` — so the formula lives in ONE place and a chip cannot be built too small
+    for its own label. Call it first when a row of chips must share one height:
+    ``ch = max(measure_chip(t, s, cw) for t, s in stages)``.
+    """
+    lines = [(title, title_size, True, None)]
+    lines += [(ln, sub_size, False, None) for ln in (sub.split("\n") if sub else [])]
+    return round(_stacked_text_h(lines, w - 0.26, pad=0.16, line_h_factor=0.98 * 1.12), 4)
+
+
+def measure_modbox(role, fname, w):
+    """Minimum height (inches) a :func:`modbox` needs: the role block (16pt, one line per ``\\n``)
+    plus the mono filename strip it pins to the bottom edge. Enforced by `modbox`.
+
+    ``fname`` is measured, not assumed to be one line: it is set in MONO, which is markedly wider
+    than the body face, so a long module path wraps in a narrow box and the strip needs the room.
+    """
+    role_h = _stacked_text_h([(ln, 16, True, None) for ln in role.split("\n")],
+                             w - 0.1, line_h_factor=0.92 * 1.12)
+    fname_h = max(0.30, _measure_lines([(fname, False)], 9.5, w - 0.1 - TEXT_INSET_LR, font=MONO)
+                  * 9.5 / 72.0 * _LINT_LINE_H)
+    return round(0.12 + max(0.55, role_h) + fname_h + 0.04, 4)
+
+
+def measure_node(label, sub="", w=1.6, *, label_size=13, sub_size=9.5):
+    """Minimum height (inches) a :func:`node` needs for its label (+ optional mono ``sub``).
+
+    Enforced by `node`, which is why it matters more than it looks: a node smaller than 0.5 in²
+    is not treated as a card by the ESCAPES_CARD check (that threshold exists to exclude accent
+    rails, icon tiles and badges), so a label on a 1.2 x 0.35in node escaped its box by 0.55in
+    above AND below with every gate reporting clean. A component that knows its own text can
+    simply refuse to be too small, which beats detecting the mistake afterwards.
+    """
+    lines = [(label, label_size, True, None)]
+    if sub:
+        lines.append((sub, sub_size, False, MONO))
+    return round(_stacked_text_h(lines, w - 0.12, pad=0.10), 4)
+
+
+def measure_table(rows, *, row_h=0.34):
+    """Height (inches) :func:`table` will occupy for ``rows`` — the same ``row_h * nrow`` the
+    component uses, so a table can go into a `vstack` or be cleared by a block below.
+
+    There is deliberately no ``header`` argument, though `table` takes one: row 0 IS the header,
+    so it is already counted in ``rows`` and the flag cannot change the height. Accepting it for
+    call-site symmetry would be a parameter that silently does nothing, which is the trap
+    `check_param_reach.py` exists to catch.
+
+    A cell long enough to WRAP grows its row beyond ``row_h`` — python-pptx does that at render
+    time and it cannot be measured here, so keep cells terse and check the PNG (the same caveat
+    `table` documents).
+    """
+    return round(row_h * len(rows), 4)
+
+
+def measure_takeaway_rail(label, hero, body, w):
+    """Height (inches) a :func:`takeaway_rail` occupies: label + hero + the MEASURED body.
+
+    The rail had no ``h`` parameter and no return value, and reserved a hard-coded 2.0in for the
+    body. Measured: a 2.1in body overflowed that box by 0.10in, putting its ink at y=5.45 —
+    inside the footer band, which starts at 5.12 — while `lint_layout` reported clean. Nothing
+    downstream could even ask where the rail ended. `takeaway_rail` now sizes its body from this
+    and returns its bottom y.
+
+    🔴 The factor is ``_LINT_LINE_H * 1.2``, not ``1.2``. Those are two multipliers, not one: the
+    ink model uses ``_LINT_LINE_H`` (=1.2) as the base line height and the rail's `text()` call
+    multiplies it again by ``line_spacing=1.2``. Passing only the spacing under-measured the body
+    by exactly 1.20x — the first version of this helper returned 4.57in for a rail whose ink
+    really ended at 5.45in, i.e. it "fixed" the constant and kept the bug. Measured, per line at
+    14pt: spacing 1.0 -> 1.2000 x pt/72, 1.08 -> 1.2960, 1.2 -> 1.4400, 1.4 -> 1.6800.
+
+    The trailing 0.03 is the text frame's own top inset. Measured as a CONSTANT 0.028in across
+    2-, 4- and 8-line bodies, i.e. an offset and not a scaling error — carried so the returned
+    bottom is never under the real ink bottom, which is the whole contract.
+
+    🔴 `label` and `hero` are MEASURED, not assumed to be one line. An earlier version folded them
+    into a 1.30in constant, which `check_param_reach.py` caught as "accepted and never read" —
+    correctly, because it was a bug and not a no-op: a 34pt hero wrapping to 4 lines overflowed
+    its 0.9in box by 1.394in and its ink ran to y=4.03, straight through a body that starts at
+    y+1.30. For a one-line label and hero the arithmetic below is 0.30 + 0.04 + 0.90 + 0.06 =
+    1.30 exactly, so the common case is unchanged byte for byte.
+    """
+    lab_h = max(0.30, _measure_lines([(label.upper(), True)], 11, w - TEXT_INSET_LR) * 11 / 72.0 * _LINT_LINE_H)
+    hero_h = max(0.90, _measure_lines([(hero, True)], 34, w - TEXT_INSET_LR) * 34 / 72.0 * _LINT_LINE_H)
+    body_h = measure_text([(body, False)], w, 14, line_h_factor=_LINT_LINE_H * 1.2)
+    return round(lab_h + 0.04 + hero_h + 0.06 + body_h + 0.03, 4)
+
+
+def measure_timeline(events, *, orientation="h", h=1.4, polarity="below"):
+    """Height (inches) a :func:`timeline` occupies — mirrors the extent `timeline` returns, so a
+    caller can reserve the space BEFORE placing (which is what `vstack` needs) instead of only
+    learning it afterwards."""
+    if orientation == "v":
+        return round(float(h), 4)
+    return 2.7 if polarity == "alternate" else 1.4     # alternate is ay+1.35 either side of the axis
+
+
+def measure_bullets(items, w, size=17, gap=0.26):
+    """Height (inches) :func:`bullet` will occupy for ``items`` at width ``w`` (no trailing
+    gap), using the same per-item line measurement — so a build can place the next block
+    below the list (or hand the list to :func:`vstack`) without overlap."""
+    line_h = size / 72.0 * 1.12
+    total = 0.0
+    for i, (lead, rest) in enumerate(items):
+        nlines = _measure_lines([(lead, True), (rest, False)], size, w - 0.22 - TEXT_INSET_LR)
+        total += line_h * nlines
+        if i < len(items) - 1:
+            total += gap
+    return total
+
+
+def measure_text(runs, w, size, *, line_h_factor=1.12, pad=0.0, font=None,
+                 line_spacing=None):
+    """Height (inches) a plain :func:`text` block of ``runs`` = [(text, bold), ...] needs at
+    ``size`` within width ``w``. ``pad`` adds top+bottom slack. CJK-aware: when the runs carry
+    CJK, the per-line factor rises to ``1.2 × CJK_LS`` (the pitch text()'s script-aware default
+    actually renders), so measure-then-place callers reserve enough height.
+
+    🔴 ``font`` is the face the text will actually be PLACED in — pass it whenever that is not
+    the deck default, above all for ``MONO``. Without it this measures in ``FONT`` and a
+    monospace line comes back far too short: measured here, the same command string is 4.04in
+    in Helvetica and 5.44in in Courier — **26% narrow**, enough to report a 9.2in line as
+    fitting an 8.25in box. Nothing downstream can catch that, because the box is then built to
+    the wrong size and every later check agrees with the box. ``fit_text_size`` has always
+    taken ``font``; this signature was the asymmetry.
+
+    🔴 ``line_spacing`` is the THIRD member of that family, and the quietest. :func:`text` takes
+    a ``line_spacing`` the caller may set to anything; this function assumed ``line_h_factor``
+    and nothing tied the two together — so ``h = measure_text(...)`` placed into
+    ``text(..., line_spacing=1.16)`` reserves the height of 1.12 and renders 1.16, about 4%
+    short. Measured on a real deck: a divider derived from that return was drawn straight
+    through the last line of the block above it, and BOTH linters called the page clean,
+    because the geometry they check is computed from the same short number. Pass the SAME value
+    to both — ``measure_text(runs, w, size, line_spacing=1.16)`` beside
+    ``text(..., line_spacing=1.16)`` — and the pair cannot drift. The CJK floor still applies:
+    a CJK-bearing block never measures below the pitch its script-aware default renders."""
+    # text() sets the words in the box MINUS its 2pt left/right insets; measured at the full width, a title exactly
+    # as wide as its box came back one line and rendered two (2026-10-04)
+    runs = _as_runs(runs)
+    nlines = _measure_lines(runs, size, max(0.05, w - TEXT_INSET_LR), font=font)
+    # `line_spacing` is an OOXML spcPct MULTIPLIER on the face's natural line height, not the
+    # em-per-line itself — so it COMPOSES with `line_h_factor`, it does not replace it. Getting
+    # this wrong is optimistic in the direction the whole module forbids: replacing gave 1.16
+    # where the truth is 1.12 x 1.16 = 1.30, an 11% under-reservation that still looked like a
+    # fix because it happened to be bigger than the default. deckkit's own `callout` shows the
+    # correct shape — it passes `line_h_factor=_LINT_LINE_H * 1.2` beside `line_spacing=1.2`.
+    factor = line_h_factor if line_spacing is None else line_h_factor * float(line_spacing)
+    if any(_has_cjk(t) for (t, *_r) in runs):
+        # The CJK floor takes the LARGER of what was asked for and text()'s own CJK default,
+        # because the realistic drift is measuring tight and then placing at the default.
+        cjk_pct = CJK_LS if line_spacing is None else max(float(line_spacing), CJK_LS)
+        factor = max(factor, 1.2 * cjk_pct)
+    return nlines * (size / 72.0 * factor) + pad
+
+
+def bullet(slide, x, y, w, items, size=17, gap=0.26, marker=BLUE, lead_c=DEEP, body_c=SLATE):
+    """Square-marker bullets. items = list of (lead, rest); keep both terse.
+    Returns the bottom y, so a caller can place the next element (e.g. a callout)
+    below the list without overlapping it.
+
+    EVEN RHYTHM depends on every item occupying the SAME line count. Each marker is placed
+    by advancing the cursor `line_h * nlines + gap`, where `nlines` is now MEASURED from the
+    real font's glyph advances (`_measure_lines` — Latin runs via Pillow, the bold lead
+    measured bold, CJK as one em), so it matches what the renderer actually lays out. This
+    removes the old heuristic's two failure modes near the wrap boundary — undershoot
+    (next bullet OVERLAPS the wrapped text) and overshoot (a PHANTOM blank line is reserved,
+    so the gap before the next bullet looks uneven). If Pillow/the font can't load, it falls
+    back to the chars-per-line heuristic. STILL TRUE regardless: an item that genuinely wraps
+    to 2 lines takes more vertical space than its 1-line peers, so for an even-looking list
+    keep items to a CONSISTENT line count (ideally each comfortably on one line). As always,
+    verify the PNG. (At the default size=17 this matches the prior behaviour.)"""
+    cy = y
+    line_h = size / 72.0 * 1.12              # line height in inches, scaled to font size
+    for lead, rest in items:
+        box(slide, x, cy + 0.07, 0.09, 0.09, fill=marker)
+        text(slide, x + 0.22, cy - 0.02, w - 0.22, 0.6,
+             [[(lead, size, lead_c, True, False), (rest, size, body_c, False, False)]],
+             space_after=0, line_spacing=1.02)
+        # MEASURED line count (real glyph metrics; bold lead measured bold) so the marker
+        # advance matches the renderer's layout — no phantom or missing lines.
+        nlines = _measure_lines([(lead, True), (rest, False)], size, w - 0.22 - TEXT_INSET_LR)
+        cy += line_h * nlines + gap
+    return cy
+
+
+def callout(slide, x, y, w, h, label, body, label_c=MAGENTA, fill=TINT, body_c=DEEP):
+    # auto-grow height so the body never spills outside the box. Height comes from
+    # measure_callout (MEASURED glyph metrics, label measured bold) — the ONE place the
+    # formula lives, so a build can call measure_callout()/bottom_callout() and get the
+    # identical height it will render.
+    h = max(h, measure_callout(label, body, w))
+    box(slide, x, y, w, h, fill=fill, round=True)
+    rad = 0.08 * min(w, h)                                   # inset the accent bar so its square
+    box(slide, x, y + rad, 0.07, h - 2 * rad, fill=label_c)  # ends fall on the card's straight edge
+    # text box spans the card's full height so MSO_ANCHOR.MIDDLE centres on the card's true
+    # centre (y + h/2). A y-offset here with the same height would push the text below centre.
+    text(slide, x + 0.24, y, w - 0.44, h,
+         [[(label + "  ", 11, label_c if fill is None else _ink_reaching(label_c, fill, _text_floor(11, True)), True, False),
+           (body, 12.5, body_c, False, False)]],
+         anchor=MSO_ANCHOR.MIDDLE, space_after=0, line_spacing=1.08)
+    return y + h   # bottom edge, so callers can keep a margin below
+
+
+def bottom_callout(slide, x, w, label, body, *, footer_gap=0.15, **kw):
+    """A footer-SAFE bottom callout — **never collides with the footer**, whatever the body
+    length. It MEASURES its own height (:func:`measure_callout`), anchors its BOTTOM just above
+    the footer band, and grows UPWARD. Returns its TOP y, so the caller keeps content above it.
+
+    This replaces the failure-prone pattern of hand-picking a low ``y`` and passing it to
+    :func:`callout` (which grows DOWN into the footer when the text wraps). Use this for every
+    bottom takeaway / WHY / NOTE bar::
+
+        top = dk.bottom_callout(s, 0.6, W-1.2, "TAKEAWAY", "...")
+        # ...place the slide's content within [title, top].
+    """
+    _, h_in = _slide_size(slide)
+    ch = measure_callout(label, body, w)
+    y = h_in - FOOTER_BAND - footer_gap - ch
+    callout(slide, x, y, w, ch, label, body, **kw)
+    return y
+
+
+def chip(slide, x, y, w, h, title, sub, fill, tcolor=None):
+    """A labelled box for pipeline stages. `sub` may contain '\\n' for line breaks.
+    If `tcolor` is None the text colour is auto-picked (white or dark ink) for the better
+    contrast against `fill` — so a chip on a light accent (gold/teal) gets dark text
+    instead of unreadable white. Pass `tcolor` explicitly to override."""
+    if tcolor is None:
+        tcolor = _legible_ink(fill)
+    h = max(h, measure_chip(title, sub, w))     # never smaller than its own text — see measure_chip
+    box(slide, x, y, w, h, fill=fill, round=True)
+    runs = [[(title, 14, tcolor, True, False)]]
+    if sub:
+        for line in sub.split("\n"):
+            runs.append([(line, 10.5, tcolor, False, False)])
+    # generous side padding so text never crowds the rounded edge
+    text(slide, x + 0.13, y, w - 0.26, h, runs, align=PP_ALIGN.CENTER,
+         anchor=MSO_ANCHOR.MIDDLE, space_after=1, line_spacing=0.98)
+
+
+def repeat_row(slide, x, y, w, h, n, label_fmt="{i}", *, sub="", show=2, fill=BLUE,
+               gap=0.3, ellipsis="…", badge=True, caption=None, caption_c=None,
+               tcolor=None):
+    """Show N identical-except-index parallel units as a **pattern**, NOT N duplicate cards.
+
+    The anti-pattern this prevents: rendering many units that are identical except for an index as
+    N full blocks (e.g. 8 "unit k / <same caption>" cards) — repeating the same content N× adds zero
+    information, eats the whole canvas, and buries the actual message. Instead this draws ``show``
+    representative chips (``label_fmt.format(i=1..show)``), an **ellipsis** cell, the **Nth** chip,
+    and a ``× N`` badge — and states the shared detail common to every unit **once** (``caption``,
+    defaulting to ``sub``) centered under the row.
+
+    Domain-agnostic — use whenever units differ only by an index and N is large: parallel
+    model/compute units (attention heads, stacked layers), service replicas / nodes / microservices,
+    an M-model ensemble, N regional teams running one playbook, repeated pipeline stages, any long
+    set of same-shaped items. ``label_fmt`` uses ``{i}`` for the index, e.g. ``"head {i}"`` →
+    "head 1", "head 2", or ``"replica {i}"`` / ``"L{i}"``. When N is small (``n <= show + 2``) it
+    just draws all N chips (no ellipsis/badge) — showing every one is fine there. Build the *flow*
+    the units feed into (how they combine/aggregate) below the returned y; that structure, not the
+    enumeration of clones, is the slide's real content.
+
+    Returns the **bottom y** of the group (row + shared caption) in inches — anchor the next
+    element (a down-arrow, the combine/aggregate block) there.
+    """
+    badge_w = 0.66 if (badge and n > show + 2) else 0.0
+    if n <= show + 2:                                   # small N → just show them all
+        labels = [label_fmt.format(i=i) for i in range(1, n + 1)]
+        cells = [("chip", lbl) for lbl in labels]
+    else:
+        cells = [("chip", label_fmt.format(i=i)) for i in range(1, show + 1)]
+        cells.append(("ellipsis", ellipsis))
+        cells.append(("chip", label_fmt.format(i=n)))
+    avail = w - (badge_w + gap if badge_w else 0.0)
+    ncell = len(cells)
+    cw = (avail - gap * (ncell - 1)) / ncell
+    for k, (kind, val) in enumerate(cells):
+        cx = x + k * (cw + gap)
+        if kind == "chip":
+            chip(slide, cx, y, cw, h, val, "", fill, tcolor=tcolor)
+        else:                                            # ellipsis — a glyph, no box
+            text(slide, cx, y, cw, h, [[(val, 26, MUTE, True, False)]],
+                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    if badge_w:                                          # the "× N" count badge at the right
+        bh = min(h, 0.5)
+        by = y + (h - bh) / 2
+        bx = x + avail + gap
+        box(slide, bx, by, badge_w, bh, fill=fill, round=True)
+        bc = _legible_ink(fill)
+        text(slide, bx, by, badge_w, bh, [[("× %d" % n, 16, bc, True, False)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    cap = caption if caption is not None else sub
+    bottom = y + h
+    if cap:                                              # shared detail — stated ONCE
+        text(slide, x, bottom + 0.1, w, 0.34, [[(cap, 12.5, caption_c or MUTE, False, False)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.TOP, space_after=0)
+        bottom += 0.44
+    return bottom
+
+
+def modbox(slide, x, y, w, h, role, fname, fill, tcolor=None, check=False):
+    """Module box for a code/architecture diagram: big role word + mono filename.
+    `tcolor=None` auto-picks white/dark ink for contrast against `fill` (see chip)."""
+    if tcolor is None:
+        tcolor = _legible_ink(fill)
+    h = max(h, measure_modbox(role, fname, w))          # see measure_modbox
+    box(slide, x, y, w, h, fill=fill, round=True)
+    role_runs = [[(line, 16, tcolor, True, False)] for line in role.split("\n")]
+    text(slide, x + 0.05, y + 0.12, w - 0.1, 0.55, role_runs, align=PP_ALIGN.CENTER,
+         anchor=MSO_ANCHOR.MIDDLE, space_after=0, line_spacing=0.92)
+    text(slide, x + 0.05, y + h - 0.32, w - 0.1, 0.3, [[(fname, 9.5, tcolor, False, False, MONO)]],
+         align=PP_ALIGN.CENTER, space_after=0)
+    if check:
+        box(slide, x + w - 0.34, y - 0.12, 0.24, 0.24, fill=TEAL)
+        text(slide, x + w - 0.34, y - 0.16, 0.24, 0.28, [[("✓", 12, WHITE, True, False)]],
+             align=PP_ALIGN.CENTER, space_after=0)
+
+
+# ============================================================= equations
+def equation_png(latex_lines, out_path, color="FFFFFF", fontsize=28, dpi=300, mathfont="cm"):
+    """Render LaTeX-style math lines to a transparent PNG (proper italics, \\odot,
+    real subscripts/superscripts, fractions, Greek...) for a genuinely FORMAL look —
+    this is the PREFERRED way to put equations on a slide. The ASCII eq_par() below is
+    only a quick fallback; baseline-shifted ASCII never looks as good as real typeset
+    math, so reach for equation_png whenever the audience will read the formula.
+
+    Pass mathtext strings, e.g. r"\\hat{x} = \\mathrm{arg\\,min}_{x}\\,\\|Ax-y\\|_2^2 +
+    \\lambda R(x)". Returns (w_px, h_px); place with add_picture, then scale to a target
+    HEIGHT in inches (height = target_h; width = target_h * w_px/h_px) so glyph size is
+    consistent across slides. Lazy-imports matplotlib.
+
+    `mathfont` picks the math typeface (matplotlib mathtext.fontset):
+      'cm'        — Computer Modern, the classic LaTeX look (default; formal & elegant)
+      'stixsans' / 'dejavusans' — upright SANS math, to sit better next to a sans deck
+      'stix'      — Times-like serif math
+    Pick 'cm' for a formal/classical feel (academic, defense, any serif deck); a sans set to match a crisp corporate deck.
+    `color` is an RRGGBB hex string (a leading '#' is tolerated; e.g. '202A37' for dark
+    text on a light deck, 'FFFFFF' for light text on a dark panel).
+
+    mathtext quirks (it is NOT full LaTeX — some control words differ, and older matplotlib
+    is stricter, so prefer the safe forms below and you won't hit version differences):
+      • use \\leq \\geq \\neq \\times (NOT \\le \\ge \\ne — these reliably raise ParseException);
+      • write upright text as \\mathrm{...} (don't rely on \\text{}); use \\, \\; \\ for
+        spacing inside it (e.g. \\mathrm{arg\\,min});
+      • \\| gives the norm bars; \\hat \\mathcal \\Psi \\lambda \\epsilon \\Delta all work;
+      • keep prose annotations OUT of the math (render them as a separate deck-font label),
+        so the PNG stays pure math and font-independent."""
+    import os
+    import tempfile
+    if not os.environ.get("MPLCONFIGDIR"):
+        default = os.path.join(os.path.expanduser("~"), ".matplotlib")
+        if not (os.path.isdir(default) and os.access(default, os.W_OK)):
+            path = os.path.join(tempfile.gettempdir(), "slide-maker-matplotlib")
+            os.makedirs(path, exist_ok=True)
+            os.environ["MPLCONFIGDIR"] = path
+    import matplotlib; matplotlib.use("Agg")
+    matplotlib.rcParams["mathtext.fontset"] = mathfont   # math typeface (see docstring)
+    import matplotlib.pyplot as plt
+    from PIL import Image
+    n = len(latex_lines)
+    fig = plt.figure(figsize=(8, 0.66 * n + 0.15)); fig.patch.set_alpha(0)
+    ax = fig.add_axes([0, 0, 1, 1]); ax.axis("off")
+    col = "#" + color.lstrip("#")   # tolerate a leading '#' (a natural mistake)
+    for i, ln in enumerate(latex_lines):
+        m = ln if ln.strip().startswith("$") else f"${ln}$"   # math mode
+        ax.text(0.01, 1 - (i + 0.5) / n, m, color=col, fontsize=fontsize, va="center")
+    fig.savefig(out_path, dpi=dpi, transparent=True, bbox_inches="tight", pad_inches=0.05)
+    plt.close(fig)
+    return Image.open(out_path).size
+
+
+def hrule(slide, x, y, w, color=MUTE, weight=0.012):
+    """A thin horizontal rule — for real table lines / separators.
+
+    `weight` is scaled by ``RULE_W_SCALE`` (see :func:`set_geometry`), so one call switches a deck
+    between brutalist "THICK black rules" and swiss / ink-wash / editorial "hairline". At the
+    default 1.0 the rendered weight is unchanged.
+    """
+    return box(slide, x, y, w, weight * RULE_W_SCALE, fill=color)
+
+
+# ================================================================= native (editable) charts
+def series_from_csv(path, x_col, y_cols, *, delimiter=None, encoding="utf-8"):
+    """Read a CSV/TSV into ``(categories, series)`` ready to hand straight to :func:`native_chart` /
+    :func:`native_dual_axis` — so a deck built from a spreadsheet doesn't re-parse columns by hand
+    every run. stdlib ``csv`` only (no pandas dependency).
+
+    ``x_col`` = the category column (its header NAME or a 0-based index). ``y_cols`` = a list of value
+    columns (names or indices). Returns ``(categories: [str, ...], series: [(name, [float, ...]), ...])``.
+    Non-numeric / blank cells become ``0.0`` (thousands commas, %, and a leading currency symbol are
+    stripped first). ``delimiter`` is auto-sniffed (``, \\t ;``) when not given. Example::
+
+        cats, series = dk.series_from_csv("q3.csv", "month", ["new", "returning"])
+        dk.native_chart(s, 0.6, 1.4, 8, 3.4, cats, series, kind="column", highlight=0)
+    """
+    import csv, os
+    if not os.path.exists(path):
+        raise FileNotFoundError(f"series_from_csv(): file not found: {path}")
+    with open(path, newline="", encoding=encoding) as fh:
+        sample = fh.read(4096); fh.seek(0)
+        if delimiter is None:
+            try: delimiter = csv.Sniffer().sniff(sample, delimiters=",\t;").delimiter
+            except Exception: delimiter = "\t" if "\t" in sample.splitlines()[0] else ","
+        rows = list(csv.reader(fh, delimiter=delimiter))
+    rows = [r for r in rows if any(c.strip() for c in r)]          # drop blank lines
+    if len(rows) < 2:
+        raise ValueError(f"series_from_csv(): need a header + at least one data row in {path}")
+    header = [h.strip() for h in rows[0]]
+    def _idx(col):
+        if isinstance(col, int): return col
+        try: return header.index(col)
+        except ValueError:
+            raise ValueError(f"series_from_csv(): column {col!r} not in header {header}")
+    xi = _idx(x_col); yis = [_idx(c) for c in y_cols]
+    def _num(v):
+        s = (v or "").strip().lstrip("$€£¥").replace(",", "").rstrip("%").strip()
+        try: return float(s)
+        except ValueError: return 0.0
+    cats = [ (r[xi].strip() if xi < len(r) else "") for r in rows[1:] ]
+    series = [ (header[yi] if yi < len(header) else f"col{yi}",
+                [ _num(r[yi] if yi < len(r) else "") for r in rows[1:] ]) for yi in yis ]
+    return cats, series
+
+
+def native_chart(slide, x, y, w, h, categories, series, *, kind="line_markers",
+                 palette=None, dark=False, font=None, highlight=None, legend=True,
+                 value_fmt=None, smooth=True, zero_base=True, emphasize=None):
+    """An **EDITABLE native PowerPoint chart** (a real chart object: click to edit data/labels in
+    PowerPoint, and **any non-Latin labels — CJK · Cyrillic · Greek · …** — render via PowerPoint's own
+    fonts, **no tofu**, unlike the rasterised designed_charts recipes). Prefer this whenever editability
+    or non-Latin labels matter. Pass ``font=`` your deck's text font for the script (e.g. your EAFONT
+    for CJK; a Cyrillic/Greek deck's FONT already covers those).
+
+    `series` = [(name, [v, v, ...]), ...]; `categories` = the x labels. Themed to the deck (palette,
+    dark). `kind`: 'line' | 'line_markers' | 'column' | 'bar' — plus the **composition** kinds for a
+    total AND its component mix (e.g. revenue mix across quarters): 'column_stacked' |
+    'column_stacked_100' (share of 100%) | 'bar_stacked' | 'bar_stacked_100' | 'area' | 'area_stacked' |
+    'area_stacked_100'. On a stacked kind each series gets its OWN palette colour — omit `highlight`
+    (which greys the rest) so the mix reads; use '…_100' when the SHARE matters more than the total
+    (but keep the total visible elsewhere — a 100%-stack can hide a collapsing total). Stacked/area
+    kinds assume **NON-NEGATIVE, same-sign parts of ONE whole** (a negative segment crosses zero and
+    the height stops meaning the total — a printed notice fires) and read cleanly to **~4–5 series**
+    (more reuse palette colours and blur — group the tail into 'Other'). `highlight` = index of the
+    one series to keep in the accent (others dropped to grey) — for CLUSTERED charts, not stacked. For
+    a two-scale 'A↑ vs B↓' chart use `native_dual_axis` instead.
+
+    **`zero_base=True` (default) forces a ZERO value-axis baseline for column/bar charts** so bar
+    LENGTH encodes the value itself, not ``value − auto_min``. Without it PowerPoint auto-crops the
+    axis on clustered-high data (scores 85/88/92, revenue 210/220/230) and a bar reading ~3× taller
+    is only 1.09× larger — the classic 'cropped-axis drama' that MISREPRESENTS magnitude. It fires
+    only for column/bar with all-non-negative data; line/line_markers keep auto-scale (a trend line
+    legitimately wants a cropped axis). Pass ``zero_base=False`` only for a *deliberate* zoomed
+    magnitude axis, and say why.
+
+    **`emphasize=<category index>`** foregrounds ONE bar in a SINGLE-series column/bar chart (that
+    bar keeps the accent, the rest drop to grey) — the per-category form of the single-highlight
+    rule, since `highlight` selects a whole SERIES and so can't pick one bar on a one-series chart."""
+    from pptx.chart.data import CategoryChartData
+    from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
+    KIND = {"line": XL_CHART_TYPE.LINE, "line_markers": XL_CHART_TYPE.LINE_MARKERS,
+            "column": XL_CHART_TYPE.COLUMN_CLUSTERED, "bar": XL_CHART_TYPE.BAR_CLUSTERED,
+            # composition-over-time / part-to-whole (a total AND its component mix):
+            "column_stacked": XL_CHART_TYPE.COLUMN_STACKED,
+            "column_stacked_100": XL_CHART_TYPE.COLUMN_STACKED_100,
+            "bar_stacked": XL_CHART_TYPE.BAR_STACKED,
+            "bar_stacked_100": XL_CHART_TYPE.BAR_STACKED_100,
+            "area": XL_CHART_TYPE.AREA, "area_stacked": XL_CHART_TYPE.AREA_STACKED,
+            "area_stacked_100": XL_CHART_TYPE.AREA_STACKED_100}
+    cd = CategoryChartData()
+    cd.categories = [str(c) for c in categories]
+    for name, vals in series:
+        cd.add_series(str(name), tuple(vals))
+    # a STACKED/area chart's height encodes the TOTAL — negative segments cross zero and the stack no
+    # longer reads as a sum, so the total is misrepresented. Warn (don't block): signed data wants a
+    # clustered or diverging form.
+    if kind.startswith(("column_stacked", "bar_stacked", "area")) and any(
+            isinstance(v, (int, float)) and v < 0 for _, vals in series for v in vals):
+        print("[deckkit] native_chart: a STACKED/area chart with NEGATIVE values misrepresents the total "
+              "(segments cross zero) — use a clustered ('column'/'bar') or a diverging form for signed data.")
+    gf = slide.shapes.add_chart(KIND.get(kind, XL_CHART_TYPE.LINE_MARKERS),
+                                Inches(x), Inches(y), Inches(w), Inches(h), cd)
+    ch = gf.chart
+    _theme_chart(ch, series, palette=palette, dark=dark, font=font, highlight=highlight,
+                 legend=legend, value_fmt=value_fmt, smooth=smooth, kind=kind,
+                 categories=categories)
+    # honest magnitude: a column/bar's LENGTH must encode value, so pin the axis to 0 (a non-zero
+    # auto-min makes a bar encode value−min — the 'cropped-axis drama' that misreads magnitude).
+    if zero_base and kind in ("column", "bar", "column_stacked", "bar_stacked"):
+        try:
+            allv = [float(v) for _, vals in series for v in vals]
+            if allv and min(allv) >= 0:
+                ch.value_axis.minimum_scale = 0
+        except Exception:
+            pass
+    # single-highlight for a ONE-series bar/column chart: colour points per-category so one bar pops
+    if emphasize is not None and kind in ("column", "bar") and len(series) == 1:
+        pal = [_as_rgb(c) for c in (palette or ACCENTS)]
+        muted = RGBColor(0x8A, 0x93, 0xA6) if dark else RGBColor(0xB8, 0xBE, 0xCC)
+        try:
+            pts = ch.series[0].points
+            for i, pt in enumerate(pts):
+                pt.format.fill.solid()
+                pt.format.fill.fore_color.rgb = pal[0] if i == emphasize else muted
+        except Exception:
+            pass
+    return ch
+
+
+def _theme_chart(ch, series, *, palette, dark, font, highlight, legend, value_fmt, smooth, kind,
+                 categories=None):
+    from pptx.enum.chart import XL_LEGEND_POSITION
+    ink = RGBColor(0xEA, 0xF2, 0xFF) if dark else RGBColor(0x22, 0x2A, 0x37)
+    grid = RGBColor(0x2A, 0x35, 0x55) if dark else RGBColor(0xE7, 0xE9, 0xF0)
+    muted = RGBColor(0x8A, 0x93, 0xA6) if dark else RGBColor(0xB8, 0xBE, 0xCC)
+    pal = [_as_rgb(c) for c in (palette or ACCENTS)]
+    fname = font or EAFONT or FONT          # the deck's script font → non-Latin labels render (no tofu)
+    # Lining figures inside the chart. lint_deck's OLDSTYLE_FIGURES warn is structurally blind here
+    # (a chart is a GraphicFrame — has_text_frame is False), so this is the "prevented at the source"
+    # half of that rule, and it has to live in the component. Resolve the numeric slots and the word
+    # slots SEPARATELY: the value axis and the data labels are always numbers, the category axis only
+    # sometimes (years/quarters yes, month names no), and the legend/series names never. A deck on a
+    # serif display face therefore keeps its register on the words and stops bobbing on the digits.
+    nfname = numeral_face(font, fallback=fname)
+    cfname = numeral_run_face("".join(str(c) for c in (categories or [])), font, fallback=fname)
+    try:
+        ch.font.name = fname; ch.font.size = Pt(11); ch.font.color.rgb = ink
+    except Exception:
+        pass
+    ch.has_title = False
+    multi = len(series) > 1
+    ch.has_legend = bool(legend and multi)
+    if ch.has_legend:
+        ch.legend.position = XL_LEGEND_POSITION.TOP; ch.legend.include_in_layout = False
+        ch.legend.font.color.rgb = ink; ch.legend.font.name = fname
+    for ax, axface in ((ch.category_axis, cfname), (ch.value_axis, nfname)):
+        try:
+            ax.tick_labels.font.color.rgb = ink; ax.tick_labels.font.name = axface; ax.tick_labels.font.size = Pt(10)
+            ax.format.line.color.rgb = grid
+        except Exception:
+            pass
+    try:                                    # data labels, when a caller turned them on, are numbers
+        for plot in ch.plots:
+            if plot.has_data_labels:
+                plot.data_labels.font.name = nfname
+    except Exception:
+        pass
+    try:
+        ch.value_axis.major_gridlines.format.line.color.rgb = grid
+        ch.value_axis.major_gridlines.format.line.width = Pt(0.5)
+        ch.category_axis.has_major_gridlines = False
+    except Exception:
+        pass
+    if value_fmt:
+        if "{" in str(value_fmt):
+            raise ValueError(
+                "native_chart(value_fmt={!r}): that is the PYTHON format dialect. This parameter is "
+                "written straight into the chart's EXCEL number-format code ('0.0%', '#,##0', "
+                "'0.0\"x\"'), so PowerPoint would print it raw onto the slide. The Python "
+                "'{{:...}}' dialect belongs to iso_bars/designed_charts, not here.".format(value_fmt))
+        try:
+            ch.value_axis.tick_labels.number_format = value_fmt
+            ch.value_axis.tick_labels.number_format_is_linked = False
+        except Exception:
+            pass
+    for i, ser in enumerate(ch.series):
+        col = pal[i % len(pal)]
+        if highlight is not None:
+            col = pal[0] if i == highlight else muted
+        try:
+            ser.format.line.color.rgb = col; ser.format.line.width = Pt(2.5); ser.smooth = smooth
+        except Exception:
+            pass
+        try:
+            ser.marker.format.fill.solid(); ser.marker.format.fill.fore_color.rgb = col
+            ser.marker.format.line.color.rgb = col
+        except Exception:
+            pass
+        if kind and (kind.startswith("column") or kind.startswith("bar") or kind.startswith("area")):
+            try:
+                ser.format.fill.solid(); ser.format.fill.fore_color.rgb = col
+            except Exception:
+                pass
+    # python-pptx writes font names into <a:latin> only, but PowerPoint renders CJK glyphs
+    # (category/series labels like 一月/营收) from the <a:ea> slot — without this, a Chinese
+    # deck's chart labels fall back to the theme's uncontrolled EA default font.
+    try:
+        for defrpr in ch._chartSpace.iter(qn('a:defRPr')):
+            if defrpr.find(qn('a:ea')) is None:
+                ea = defrpr.makeelement(qn('a:ea'), {'typeface': fname})
+                latin = defrpr.find(qn('a:latin'))
+                if latin is not None:
+                    latin.addnext(ea)
+                else:
+                    defrpr.insert(0, ea)
+    except Exception:
+        pass
+    return ch
+
+
+def native_dual_axis(slide, x, y, w, h, categories, left, right, *, left_name="A", right_name="B",
+                     palette=None, dark=False, font=None):
+    """An **editable** two-scale line chart (real PowerPoint combo chart): `left` values on the left
+    axis, `right` values on a SECONDARY right axis — the 'A↑ vs B↓' story (e.g. share % vs cost index).
+    Click-to-edit and **any-language-safe**: non-Latin labels (CJK · Cyrillic · Greek · …) render via
+    PowerPoint's fonts, no tofu (pass ``font=`` your deck's text font). The editable, non-rasterised
+    replacement for ``designed_charts.dual_axis`` — especially for non-Latin labels."""
+    from pptx.chart.data import CategoryChartData
+    from pptx.enum.chart import XL_CHART_TYPE
+    cd = CategoryChartData(); cd.categories = [str(c) for c in categories]
+    cd.add_series(str(left_name), tuple(left)); cd.add_series(str(right_name), tuple(right))
+    gf = slide.shapes.add_chart(XL_CHART_TYPE.LINE_MARKERS, Inches(x), Inches(y), Inches(w), Inches(h), cd)
+    ch = gf.chart
+    _theme_chart(ch, [(left_name, 1), (right_name, 1)], palette=palette, dark=dark, font=font,
+                 highlight=None, legend=True, value_fmt=None, smooth=True, kind="line_markers")
+    _chart_to_secondary(ch, dark=dark, font=font)
+    return ch
+
+
+def _chart_to_secondary(ch, *, dark, font):
+    """Move the LAST series of a 2-series chart onto a SECONDARY right-hand value axis, drawn as a
+    line (builds the combo-chart OOXML python-pptx has no public API for). Works whether the primary
+    plot is a line or a bar chart — so it powers both dual-axis and Pareto (bars + cumulative line)."""
+    ink = "EAF2FF" if dark else "222A37"
+    fname = font or EAFONT or FONT
+    pa = ch._chartSpace.xpath('.//c:plotArea')[0]
+    prim = (pa.xpath('./c:lineChart') or pa.xpath('./c:barChart'))[0]
+    axids = [int(e.get('val')) for e in prim.xpath('./c:axId')]
+    cat2, val2 = max(axids) + 111, max(axids) + 222
+    ser1 = prim.xpath('./c:ser')[-1]; prim.remove(ser1)
+    txpr = (f'<c:txPr><a:bodyPr/><a:lstStyle/><a:p><a:pPr><a:defRPr sz="1000">'
+            f'<a:solidFill><a:srgbClr val="{ink}"/></a:solidFill><a:latin typeface="{fname}"/>'
+            f'</a:defRPr></a:pPr><a:endParaRPr lang="en-US"/></a:p></c:txPr>')
+    lc2 = parse_xml(f'<c:lineChart {nsdecls("c")}><c:grouping val="standard"/><c:varyColors val="0"/>'
+                    f'<c:marker val="1"/><c:axId val="{cat2}"/><c:axId val="{val2}"/></c:lineChart>')
+    lc2.insert(2, ser1); prim.addnext(lc2)
+    pa.append(parse_xml(f'<c:valAx {nsdecls("c", "a")}><c:axId val="{val2}"/><c:scaling>'
+                        f'<c:orientation val="minMax"/></c:scaling><c:delete val="0"/><c:axPos val="r"/>'
+                        f'{txpr}<c:crossAx val="{cat2}"/><c:crosses val="max"/></c:valAx>'))
+    pa.append(parse_xml(f'<c:catAx {nsdecls("c")}><c:axId val="{cat2}"/><c:scaling>'
+                        f'<c:orientation val="minMax"/></c:scaling><c:delete val="1"/><c:axPos val="b"/>'
+                        f'<c:crossAx val="{val2}"/></c:catAx>'))
+
+
+def native_donut(slide, x, y, w, h, segments, center_value="", center_label="", *,
+                 palette=None, dark=False, font=None):
+    """Editable part-to-whole **DOUGHNUT** + an optional headline KPI in the hole (native chart;
+    click-to-edit; any-language-safe). segments = [(label, value), ...]. Editable replacement for
+    designed_charts.donut_kpi. (The KPI is a separate native textbox — nudge it onto the hole if needed.)"""
+    from pptx.chart.data import CategoryChartData
+    from pptx.enum.chart import XL_CHART_TYPE, XL_LEGEND_POSITION
+    from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+    if not segments:
+        raise ValueError("native_donut needs at least one segment")
+    cd = CategoryChartData(); cd.categories = [str(s[0]) for s in segments]
+    cd.add_series("", tuple(s[1] for s in segments))
+    gf = slide.shapes.add_chart(XL_CHART_TYPE.DOUGHNUT, Inches(x), Inches(y), Inches(w), Inches(h), cd)
+    ch = gf.chart
+    ink = RGBColor(0xEA, 0xF2, 0xFF) if dark else RGBColor(0x22, 0x2A, 0x37)
+    mute = RGBColor(0x8A, 0x93, 0xA6) if dark else RGBColor(0x9A, 0xA0, 0xAE)
+    fname = font or EAFONT or FONT
+    pal = [_as_rgb(c) for c in (palette or ACCENTS)]
+    ch.has_title = False
+    try:
+        ch.font.name = fname; ch.font.color.rgb = ink; ch.font.size = Pt(11)
+        ch.has_legend = True; ch.legend.position = XL_LEGEND_POSITION.BOTTOM
+        ch.legend.include_in_layout = False; ch.legend.font.color.rgb = ink; ch.legend.font.name = fname
+    except Exception:
+        pass
+    for i, pt in enumerate(ch.series[0].points):
+        try:
+            pt.format.fill.solid(); pt.format.fill.fore_color.rgb = pal[i % len(pal)]
+        except Exception:
+            pass
+    if center_value or center_label:
+        runs = []
+        if center_value:
+            runs.append([(str(center_value), 28, ink, True, False, fname)])
+        if center_label:
+            runs.append([(str(center_label), 12, mute, False, False, fname)])
+        text(slide, x + w * 0.18, y + h * 0.32, w * 0.64, h * 0.30, runs,
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    return ch
+
+
+def native_pareto(slide, x, y, w, h, items, *, palette=None, dark=False, font=None,
+                  count_name="Count", cum_name="Cumulative %"):
+    """Editable **Pareto**: ranked columns + a cumulative-% line on a secondary axis (native combo
+    chart; click-to-edit; any-language-safe). items = [(label, value), ...] (sorted desc by you).
+    `count_name`/`cum_name` are the legend series names — CJK decks pass e.g. 数量 / 累计 %.
+    Editable replacement for designed_charts.pareto."""
+    from pptx.chart.data import CategoryChartData
+    from pptx.enum.chart import XL_CHART_TYPE
+    if not items:
+        raise ValueError("native_pareto needs at least one item")
+    vals = [float(v) for _, v in items]
+    tot = sum(vals) or 1.0
+    cum, run = [], 0.0
+    for v in vals:
+        run += v; cum.append(round(100.0 * run / tot, 1))
+    cd = CategoryChartData(); cd.categories = [str(k) for k, _ in items]
+    cd.add_series(count_name, tuple(vals)); cd.add_series(cum_name, tuple(cum))
+    gf = slide.shapes.add_chart(XL_CHART_TYPE.COLUMN_CLUSTERED, Inches(x), Inches(y), Inches(w), Inches(h), cd)
+    ch = gf.chart
+    pal = [_as_rgb(c) for c in (palette or ACCENTS)]
+    _theme_chart(ch, [(count_name, 1), (cum_name, 1)], palette=pal, dark=dark, font=font,
+                 highlight=0, legend=True, value_fmt=None, smooth=False, kind="column")
+    _chart_to_secondary(ch, dark=dark, font=font)
+    # count bars sit on the primary axis — pin it to 0 so bar length reads as count, not count−min
+    if all(v >= 0 for v in vals):
+        try:
+            ch.value_axis.minimum_scale = 0
+        except Exception:
+            pass
+    return ch
+
+
+def native_bubble(slide, x, y, w, h, points, *, palette=None, dark=False, font=None,
+                  xlabel="", ylabel=""):
+    """Editable **bubble** chart — x vs y with a third (size) dimension (native; click-to-edit;
+    any-language-safe). points = [(x, y, size[, label]), ...]. Editable cousin of designed_charts.bubble_trend."""
+    from pptx.chart.data import BubbleChartData
+    from pptx.enum.chart import XL_CHART_TYPE
+    if not points:
+        raise ValueError("native_bubble needs at least one point")
+    bcd = BubbleChartData()
+    ser = bcd.add_series("")
+    for p in points:
+        ser.add_data_point(float(p[0]), float(p[1]), float(p[2]))
+    gf = slide.shapes.add_chart(XL_CHART_TYPE.BUBBLE, Inches(x), Inches(y), Inches(w), Inches(h), bcd)
+    ch = gf.chart
+    ink = RGBColor(0xEA, 0xF2, 0xFF) if dark else RGBColor(0x22, 0x2A, 0x37)
+    grid = RGBColor(0x2A, 0x35, 0x55) if dark else RGBColor(0xE7, 0xE9, 0xF0)
+    fname = font or EAFONT or FONT
+    pal = [_as_rgb(c) for c in (palette or ACCENTS)]
+    ch.has_title = False; ch.has_legend = False
+    try:
+        ch.font.name = fname; ch.font.color.rgb = ink; ch.font.size = Pt(11)
+        ch.series[0].format.fill.solid(); ch.series[0].format.fill.fore_color.rgb = pal[0]
+    except Exception:
+        pass
+    for ax in (ch.category_axis, ch.value_axis):
+        try:
+            ax.tick_labels.font.color.rgb = ink; ax.tick_labels.font.name = numeral_face(font, fallback=fname)
+            ax.format.line.color.rgb = grid
+            ax.major_gridlines.format.line.color.rgb = grid; ax.major_gridlines.format.line.width = Pt(0.5)
+        except Exception:
+            pass
+    # `xlabel`/`ylabel` were accepted, documented, and discarded — a scatter with no axis titles is
+    # unreadable ("bubble size = what? x = what?"), and the caller who passed them had no way to
+    # know they had been dropped. Written as real axis titles in the deck's own font.
+    for ax, lab in ((ch.category_axis, xlabel), (ch.value_axis, ylabel)):
+        try:
+            if lab:
+                ax.has_title = True
+                ax.axis_title.text_frame.text = lab
+                f = ax.axis_title.text_frame.paragraphs[0].runs[0].font
+                f.size = Pt(10); f.bold = False; f.name = fname; f.color.rgb = ink
+        except Exception:
+            pass
+    return ch
+
+
+# ================================================================= tables & code
+def _hex(c):
+    return c if isinstance(c, str) else str(c)   # RGBColor.__str__ -> 'RRGGBB'
+
+def _as_rgb(c):
+    """Accept a colour as an RGBColor, a hex string ('RRGGBB' or '#RRGGBB'), or an (r, g, b) tuple
+    of whole numbers 0-255 — one convention everywhere, tolerant of a leading '#'.
+
+    A plain tuple used to pass through unchanged, and a caller that wrote it into XML produced
+    `val="(212, 255, 58)"` — a corrupt file, silently (measured 2026-10-03 through `mark()`). And a
+    word like "yellow" died as `invalid literal for int() with base 16: 'ye'`, which names nothing
+    the caller wrote. Both now come back as an RGBColor or a message that says what a colour is."""
+    if isinstance(c, RGBColor) or c is None:
+        return c
+    if isinstance(c, str):
+        s = c.strip().lstrip("#")
+        if len(s) != 6 or any(ch not in "0123456789abcdefABCDEF" for ch in s):
+            raise ValueError("colour {!r} is not 'RRGGBB' hex — pass e.g. 'D4FF3A' or '#D4FF3A', an "
+                             "RGBColor, or an (r, g, b) tuple".format(c))
+        return RGBColor.from_string(s.upper())
+    if (isinstance(c, (tuple, list)) and len(c) == 3
+            and all(isinstance(v, int) and not isinstance(v, bool) and 0 <= v <= 255 for v in c)):
+        return RGBColor(*c)
+    return c
+
+def _clear_table_style(tbl):
+    """Strip PowerPoint's default banded-blue table theme so WE control every fill and
+    rule (the default theme looks nothing like the deck). Sets the built-in 'No Style,
+    No Grid' style and turns off first-row/banding emphasis."""
+    NO_STYLE = '{2D5ABB26-0587-4C30-8999-92F81FD0307C}'
+    el = tbl._tbl
+    tblPr = el.find(qn('a:tblPr'))
+    if tblPr is None:
+        tblPr = el.makeelement(qn('a:tblPr'), {}); el.insert(0, tblPr)
+    tblPr.set('firstRow', '0'); tblPr.set('bandRow', '0')
+    sid = tblPr.find(qn('a:tableStyleId'))
+    if sid is None:
+        sid = tblPr.makeelement(qn('a:tableStyleId'), {}); tblPr.append(sid)
+    sid.text = NO_STYLE
+
+_FILLISH = {qn('a:noFill'), qn('a:solidFill'), qn('a:gradFill'), qn('a:blipFill'),
+            qn('a:pattFill'), qn('a:grpFill'), qn('a:cell3D'), qn('a:headers')}
+
+def _cell_rules(cell, top=None, bottom=None):
+    """Add booktabs horizontal rules to a table cell. top/bottom = (color, weight_pt) or
+    None. Inserts <a:lnT>/<a:lnB> in the correct schema position (before the fill)."""
+    tcPr = cell._tc.get_or_add_tcPr()
+    for tag in ('a:lnL', 'a:lnR', 'a:lnT', 'a:lnB'):
+        for old in tcPr.findall(qn(tag)):
+            tcPr.remove(old)
+    anchor = next((ch for ch in tcPr if ch.tag in _FILLISH), None)
+    def make(tag, spec):
+        color, w = spec
+        ln = tcPr.makeelement(qn(tag), {'w': str(int(w * 12700)), 'cap': 'flat',
+                                        'cmpd': 'sng', 'algn': 'ctr'})
+        sf = ln.makeelement(qn('a:solidFill'), {})
+        sf.append(ln.makeelement(qn('a:srgbClr'), {'val': _hex(color)}))
+        ln.append(sf)
+        return ln
+    for tag, spec in (('a:lnT', top), ('a:lnB', bottom)):   # lnT before lnB (schema order)
+        if spec is None:
+            continue
+        ln = make(tag, spec)
+        (anchor.addprevious(ln) if anchor is not None else tcPr.append(ln))
+
+
+def table(slide, x, y, w, rows, col_w=None, header=True, highlight=None,
+          numeric_cols=None, size=13, row_h=0.34, head_c=DEEP, body_c=SLATE,
+          rule_c=MUTE, hi_fill=TINT, hi_c=MAGENTA, font=None):
+    """A clean booktabs-style data table — for a dense comparison a chart can't carry
+    (many methods × many metrics). `rows` = list of rows of cell strings; row 0 is the
+    header when header=True.
+
+    Foreground the comparison the AUTHORS make (see step 1): pass `highlight=<i>` (0-based
+    over the BODY rows) to bold + tint the proposed method's row, so the eye lands on the
+    one row that matters — a results table exists to make ONE comparison obvious, not to be
+    read cell by cell. `numeric_cols` = column indices to right-align (numbers read better
+    right-aligned). `col_w` = column widths in inches (defaults to an equal split of `w`).
+
+    Styled with NO PowerPoint theme — no banded blue, no gridlines: just a top rule, a rule
+    under the header, and a bottom rule, so it reads like a paper table. Returns the bottom
+    y so the caller keeps a GUTTER below it.
+
+    NOTE: on a *presented* slide keep cells terse and highlight one row — it's a slide, not a
+    spreadsheet. A **read-alone reference / appendix** table can legitimately be denser (more rows,
+    smaller `row_h`, per-column rules) since the reader studies it without a narrator. A cell long
+    enough to wrap past `row_h` will grow the row, so verify the render. For a *trend*, prefer a chart
+    (`equation_png`/matplotlib or a dedicated figure-making workflow, if available);
+    a table is for exact values."""
+    ncol = max(len(r) for r in rows)
+    nrow = len(rows)
+    if col_w is None:
+        # content-aware default: size each column to its widest cell (so a text label column isn't
+        # starved into widows while numeric columns waste space), then normalise to span w.
+        pad = 0.24                                     # cell L+R margins + a little breathing room
+        natw = []
+        for j in range(ncol):
+            mx = 0.0
+            for i in range(nrow):
+                txt = rows[i][j] if j < len(rows[i]) else ""
+                mx = max(mx, _natural_width_in([(txt, header and i == 0)], size, font))
+            natw.append(max(mx, 0.4) + pad)
+        tot_w = sum(natw) or w
+        col_w = [nw * w / tot_w for nw in natw]
+    h = row_h * nrow
+    tbl = slide.shapes.add_table(nrow, ncol, Inches(x), Inches(y), Inches(w), Inches(h)).table
+    _clear_table_style(tbl)
+    for j, cw in enumerate(col_w):
+        tbl.columns[j].width = Inches(cw)
+    numeric = set(numeric_cols or [])
+    hi_row = (highlight + (1 if header else 0)) if highlight is not None else None
+    for i in range(nrow):
+        tbl.rows[i].height = Inches(row_h)
+        is_head = header and i == 0
+        is_hi = (i == hi_row)
+        for j in range(ncol):
+            cell = tbl.cell(i, j)
+            raw = rows[i][j] if j < len(rows[i]) else ""
+            # table cells count toward lint's 盘古之白 tally, so the opt-in CJK_SPACING
+            # normalizer covers them too (pangu() is a no-op when the flag is unset)
+            cell.text = pangu(raw)
+            cell.margin_left = cell.margin_right = Pt(7)
+            cell.margin_top = cell.margin_bottom = Pt(2)
+            cell.vertical_anchor = MSO_ANCHOR.MIDDLE
+            if is_hi:
+                cell.fill.solid(); cell.fill.fore_color.rgb = hi_fill
+            else:
+                cell.fill.background()
+            p = cell.text_frame.paragraphs[0]
+            p.alignment = PP_ALIGN.RIGHT if j in numeric else PP_ALIGN.LEFT
+            col = head_c if is_head else (hi_c if is_hi else body_c)
+            # A results table is mostly digits, and lint_deck's OLDSTYLE_FIGURES warn cannot see
+            # into a table (has_text_frame is False on a GraphicFrame), so the guard has to be here.
+            # Per CELL, not per table: "0.9153" gets a lining face while the "method" column keeps
+            # the deck's own font, so a serif deck stays a serif deck and only the numbers stop bobbing.
+            cfont = numeral_run_face(raw, font, fallback=font or FONT)
+            for r in p.runs:
+                set_font(r, size, col, bold=is_head or is_hi, font=cfont)
+    # booktabs rules: \toprule, \midrule (under header), \bottomrule — nothing else
+    spec = {}
+    for j in range(ncol):
+        spec.setdefault((0, j), {})['top'] = (head_c, 1.4)
+        if header and nrow > 1:
+            spec.setdefault((0, j), {})['bottom'] = (rule_c, 0.8)
+        spec.setdefault((nrow - 1, j), {})['bottom'] = (head_c, 1.4)
+    for (i, j), s in spec.items():
+        _cell_rules(tbl.cell(i, j), top=s.get('top'), bottom=s.get('bottom'))
+    return y + h
+
+
+def code_block(slide, x, y, w, code, size=12, lang=None, highlight_lines=None,
+               panel=DEEP, text_c=PALE, hi_c=WHITE, hi_fill=None, line_numbers=False,
+               pad=0.16, line_h=None):
+    """A monospace code panel — preserved indentation, optional per-line highlighting.
+    `code` = a string with real newlines (or a list of lines); leading/trailing blank
+    lines are trimmed. Renders on a dark rounded panel by default (for a LIGHT deck pass
+    panel=LIGHT or a tint + text_c=DEEP). `highlight_lines` = 1-based line numbers to
+    emphasise (brighter, bold; pass hi_fill=<color> for a highlight band too).
+
+    Keep snippets SHORT — a slide shows the 5 lines that carry the idea, not a file; elide
+    the rest with '# ...'. Uses MONO so indentation and columns line up. Returns bottom y."""
+    lines = code.split("\n") if isinstance(code, str) else list(code)
+    lines = [ln.expandtabs(4) for ln in lines]   # tabs -> spaces so indentation is real
+    while lines and not lines[0].strip():
+        lines.pop(0)
+    while lines and not lines[-1].strip():
+        lines.pop()
+    if not lines:
+        lines = [""]
+    hl = set(highlight_lines or [])
+    line_h = line_h or size / 72.0 * 1.42
+    gutter_w = (size / 72.0 * 0.62 * (len(str(len(lines))) + 1)) if line_numbers else 0.0
+    h = pad * 2 + line_h * len(lines)
+    box(slide, x, y, w, h, fill=panel, round=True)
+    if hi_fill is not None:
+        for k in hl:
+            if 1 <= k <= len(lines):
+                box(slide, x + 0.05, y + pad + (k - 1) * line_h - line_h * 0.06,
+                    w - 0.10, line_h, fill=hi_fill)
+    runs = [[(ln if ln.strip() else " ", size, (hi_c if k in hl else text_c),
+              k in hl, False, MONO)]
+            for k, ln in enumerate(lines, start=1)]
+    tb = text(slide, x + pad + gutter_w, y + pad, w - 2 * pad - gutter_w, h, runs,
+              space_after=0, line_spacing=1.0)
+    tb.text_frame.word_wrap = False   # a long line clips instead of wrapping (which would
+    #                                   break indentation and the height estimate) — the
+    #                                   docstring's "keep snippets short" is the real fix.
+    # ...but a clip is INVISIBLE to every gate: word_wrap=False means the height model stays
+    # right, the box stays on canvas, and lint_layout sees a well-behaved shape while the end of
+    # the line simply is not on the slide. That is the same silent class as a mis-measured mono
+    # width, so measure it here — in MONO, the face it is actually set in — and say so.
+    _avail = w - 2 * pad - gutter_w
+    _over = []
+    for _k, _ln in enumerate(lines, start=1):
+        if not _ln.strip():
+            continue
+        if _measure_lines([(_ln, _k in hl)], size, _avail - TEXT_INSET_LR, font=MONO) > 1:
+            _over.append(_k)
+    if _over:
+        _shown = ", ".join(str(k) for k in _over[:4]) + ("…" if len(_over) > 4 else "")
+        print("[deckkit] code_block: line(s) {} exceed {:.2f}in at {}pt and will CLIP "
+              "(word_wrap is off so indentation survives) — shorten the line, lower `size`, "
+              "widen `w`, or elide with '# ...'".format(_shown, _avail, size))
+    if line_numbers:
+        nruns = [[(str(k), size, text_c, False, False, MONO)] for k in range(1, len(lines) + 1)]
+        text(slide, x + pad - 0.02, y + pad, gutter_w, h, nruns,
+             align=PP_ALIGN.RIGHT, space_after=0, line_spacing=1.0)
+    if lang:
+        text(slide, x + w - 1.3, y + 0.06, 1.2, 0.22,
+             [[(lang, 9, text_c, False, False, MONO)]], align=PP_ALIGN.RIGHT, space_after=0)
+    return y + h
+
+
+# ----- lightweight ASCII equation fallback (editable text; use when matplotlib
+#       isn't available or the equation is trivial) -----
+N   = lambda t: (t, 'n')      # normal run
+SUP = lambda t: (t, 'sup')    # superscript run
+SUB = lambda t: (t, 'sub')    # subscript run
+
+def eq_par(tf, tokens, base, color, first=False, italic=False, font=None):
+    """One equation line inside a text frame. tokens = list of N()/SUP()/SUB().
+    Uses real baseline shifts + ASCII letters, so it renders crisply in any font.
+    `font` resolves to EQFONT at call time (so reassigning deckkit.EQFONT re-themes math).
+    Example:  eq_par(tf, [N('A'),SUP('H'),N(' y = '),N('D'),SUB('r'),SUP('T')], 14, WHITE)"""
+    font = font or EQFONT          # resolve at call time so re-theming EQFONT takes effect
+    p = tf.paragraphs[0] if first else tf.add_paragraph()
+    p.space_after = Pt(2); p.space_before = Pt(0); p.line_spacing = 1.12
+    p.alignment = PP_ALIGN.LEFT
+    for txt, kind in tokens:
+        r = p.add_run(); r.text = txt
+        size = base if kind == 'n' else base * 0.62
+        set_font(r, size, color, italic=italic, font=font)
+        if kind in ('sup', 'sub'):
+            r._r.get_or_add_rPr().set('baseline', '30000' if kind == 'sup' else '-22000')
+    return p
+
+
+# ============================================================ editable native math
+# A LaTeX-subset → real TEXT RUNS renderer: italic variables, upright operators, true
+# sub/superscripts, math symbols, in a math font. The result is CLICK-EDITABLE native
+# text that renders identically in PowerPoint / Keynote / LibreOffice / PDF — unlike
+# equation_png (a flat raster) and unlike an OMML equation object (invisible in the
+# LibreOffice render/PDF). Use this for LINEAR formulas (sums, norms, sub/superscripts,
+# Greek, operators); 2-D math (fractions, matrices, stacked limits) raises — use
+# equation_png there. See SKILL §4 "Equations".
+_EQ_GREEK = {'alpha':'α','beta':'β','gamma':'γ','delta':'δ','epsilon':'ε','varepsilon':'ε',
+'zeta':'ζ','eta':'η','theta':'θ','vartheta':'ϑ','iota':'ι','kappa':'κ','lambda':'λ','mu':'μ',
+'nu':'ν','xi':'ξ','pi':'π','rho':'ρ','sigma':'σ','tau':'τ','upsilon':'υ','phi':'φ','varphi':'φ',
+'chi':'χ','psi':'ψ','omega':'ω','Gamma':'Γ','Delta':'Δ','Theta':'Θ','Lambda':'Λ','Xi':'Ξ',
+'Pi':'Π','Sigma':'Σ','Upsilon':'Υ','Phi':'Φ','Psi':'Ψ','Omega':'Ω'}
+_EQ_SYM = {'sum':'Σ','prod':'Π','int':'∫','oint':'∮','partial':'∂','nabla':'∇','infty':'∞',
+'cdot':'·','times':'×','div':'÷','pm':'±','mp':'∓','ast':'∗','star':'⋆','circ':'∘','bullet':'∙',
+'leq':'≤','le':'≤','geq':'≥','ge':'≥','neq':'≠','ne':'≠','approx':'≈','sim':'∼','simeq':'≃',
+'equiv':'≡','cong':'≅','propto':'∝','ll':'≪','gg':'≫','in':'∈','notin':'∉','subset':'⊂',
+'subseteq':'⊆','supset':'⊃','cup':'∪','cap':'∩','forall':'∀','exists':'∃','rightarrow':'→',
+'to':'→','Rightarrow':'⇒','leftarrow':'←','Leftarrow':'⇐','leftrightarrow':'↔','mapsto':'↦',
+'odot':'⊙','oplus':'⊕','otimes':'⊗','langle':'⟨','rangle':'⟩','ldots':'…','cdots':'⋯','dots':'…',
+'top':'⊤','perp':'⊥','angle':'∠','prime':'′','hbar':'ℏ','ell':'ℓ','Re':'ℜ','Im':'ℑ'}
+_EQ_MCAL = {'A':'𝒜','B':'ℬ','C':'𝒞','D':'𝒟','E':'ℰ','F':'ℱ','G':'𝒢','H':'ℋ','I':'ℐ','J':'𝒥',
+'K':'𝒦','L':'ℒ','M':'ℳ','N':'𝒩','O':'𝒪','P':'𝒫','Q':'𝒬','R':'ℛ','S':'𝒮','T':'𝒯','U':'𝒰',
+'V':'𝒱','W':'𝒲','X':'𝒳','Y':'𝒴','Z':'𝒵'}
+_EQ_BB = {'R':'ℝ','N':'ℕ','Z':'ℤ','Q':'ℚ','C':'ℂ','E':'𝔼','P':'ℙ'}
+_EQ_ACC = {'hat':'̂','widehat':'̂','tilde':'̃','widetilde':'̃','bar':'̄',
+'vec':'⃗','dot':'̇','ddot':'̈','check':'̌','breve':'̆','acute':'́',
+'grave':'̀'}
+_EQ_2D = {'frac','dfrac','tfrac','sqrt','begin','overline','underline','binom','matrix','pmatrix',
+'bmatrix','vmatrix','overbrace','underbrace','substack'}
+# log-like operator names render as UPRIGHT roman text (correct LaTeX) — spelling their letters is right
+_EQ_OPNAMES = {'min','max','arg','sup','inf','lim','limsup','liminf','log','ln','lg','exp','sin','cos',
+'tan','cot','sec','csc','sinh','cosh','tanh','arcsin','arccos','arctan','det','dim','ker','deg','gcd',
+'hom','Pr','mod','bmod'}
+
+def _eq_read_group(s, i):
+    depth = 0; j = i
+    while j < len(s):
+        if s[j] == '{': depth += 1
+        elif s[j] == '}':
+            depth -= 1
+            if depth == 0: return s[i+1:j], j+1
+        j += 1
+    return s[i+1:], len(s)
+
+def _eq_resolve(s):
+    """Resolve a LaTeX chunk (no top-level _/^) → list of (display_char, italic_bool)."""
+    out = []; i = 0
+    while i < len(s):
+        c = s[i]
+        if c == '\\':
+            j = i+1; name = ''
+            while j < len(s) and s[j].isalpha(): name += s[j]; j += 1
+            if name == '':                                   # escaped symbol: \|  \{  \}  \%
+                sym = s[j] if j < len(s) else ''
+                out.append(('‖' if sym == '|' else sym, False)); i = j+1; continue
+            if name in _EQ_ACC:                              # accents: \hat{x} → x̂
+                if j < len(s) and s[j] == '{': inner, j = _eq_read_group(s, j)
+                else: inner = s[j] if j < len(s) else ''; j += 1
+                u = _eq_resolve(inner)
+                if u: u[0] = (u[0][0] + _EQ_ACC[name], u[0][1])
+                out.extend(u); i = j; continue
+            if name in ('mathcal','mathbf','mathrm','mathbb','mathit','text','operatorname','boldsymbol'):
+                if j < len(s) and s[j] == '{': inner, j = _eq_read_group(s, j)
+                else: inner = s[j] if j < len(s) else ''; j += 1
+                if name == 'mathcal':
+                    for ch in inner: out.append((_EQ_MCAL.get(ch, ch), ch not in _EQ_MCAL))
+                elif name == 'mathbb':
+                    for ch in inner: out.append((_EQ_BB.get(ch, ch), ch not in _EQ_BB))
+                elif name in ('mathrm','text','operatorname'):
+                    for ch in inner: out.append((ch, False))
+                else:
+                    for ch in inner: out.append((ch, ch.isalpha()))
+                i = j; continue
+            if name in _EQ_2D:
+                raise NotImplementedError(f"\\{name} needs 2-D layout — use equation_png for this formula")
+            if name in _EQ_GREEK: out.append((_EQ_GREEK[name], False)); i = j; continue
+            if name in _EQ_SYM:   out.append((_EQ_SYM[name], False)); i = j; continue
+            if name in ('left','right','displaystyle','textstyle','limits','nolimits','bigl','bigr','Bigl','Bigr'):
+                i = j; continue
+            if name in ('quad','qquad'): out.append(('  ', False)); i = j; continue
+            if name in _EQ_OPNAMES:                           # log-like operator (\min \arg \log …) → upright roman
+                for ch in name: out.append((ch, False))
+                i = j; continue
+            # any OTHER unknown command (\mathscr \overrightarrow \stackrel \models …) is unsupported by
+            # the LINEAR parser — FAIL LOUD rather than spell its letters as garbage; the caller switches
+            # that one formula to equation_png.
+            raise NotImplementedError(f"\\{name} not supported by native math — use equation_png for this formula")
+        if c in '{}': i += 1; continue
+        if c == '|': out.append(('‖', False)); i += 1; continue
+        if c == ' ': out.append((' ', False)); i += 1; continue
+        out.append((c, c.isalpha())); i += 1
+    return out
+
+def latex_to_runs(latex):
+    """LaTeX-subset string → list of (text, kind) tokens; kind ∈ n/i/sub/sup/isub/isup.
+    Raises NotImplementedError on 2-D constructs (\\frac, matrices, …)."""
+    s = latex.strip()
+    for a, b in (('\\,',' '),('\\;',' '),('\\:',' '),('\\!',''),('~',' '),('\\ ',' ')):
+        s = s.replace(a, b)
+    out = []; i = 0
+    def push(units, lvl):
+        for ch, ital in units:
+            kind = ('isup' if ital else 'sup') if lvl > 0 else \
+                   ('isub' if ital else 'sub') if lvl < 0 else ('i' if ital else 'n')
+            out.append((ch, kind))
+    while i < len(s):
+        c = s[i]
+        if c in '_^':
+            lvl = 1 if c == '^' else -1; j = i+1
+            if j < len(s) and s[j] == '{':
+                inner, j = _eq_read_group(s, j); push(_eq_resolve(inner), lvl)
+            elif j < len(s) and s[j] == '\\':
+                k = j+1
+                while k < len(s) and s[k].isalpha(): k += 1
+                push(_eq_resolve(s[j:k]), lvl); j = k
+            else:
+                push(_eq_resolve(s[j:j+1]) if j < len(s) else [], lvl); j = j+1
+            i = j; continue
+        if c == '\\':
+            j = i+1
+            while j < len(s) and s[j].isalpha(): j += 1
+            if j == i+1 and j < len(s):            # escaped NON-alpha symbol (\| \{ \% …) — consume the symbol char
+                j += 1
+            if j < len(s) and s[j] == '{': _, j = _eq_read_group(s, j)
+            push(_eq_resolve(s[i:j]), 0); i = j; continue
+        push(_eq_resolve(c), 0); i += 1
+    return [(t, k) for t, k in out if t != '']   # drop any spurious empty runs (lone '\\', escaped delimiters)
+
+EQ_MATHFONT = "STIX Two Math"   # math font with ℒ Σ ‖ … ; 'Cambria Math' is the Office-portable alt
+
+def equation_native(slide, x, y, w, h, latex, *, size=20, color=DEEP, font=None,
+                    align=PP_ALIGN.LEFT, anchor=MSO_ANCHOR.MIDDLE):
+    """EDITABLE native math — the PREFERRED way to put a formula the user may edit on a slide.
+    Renders a LaTeX-subset (or a pre-tokenised list) as real, click-editable PowerPoint TEXT
+    RUNS (italic variables · upright operators · true sub/superscripts · math glyphs) in a math
+    `font`, so it renders identically in PowerPoint / Keynote / LibreOffice / PDF AND stays
+    editable — unlike `equation_png` (a flat raster) and unlike an OMML equation object (which is
+    invisible in the LibreOffice render & PDF export). For LINEAR formulas; 2-D math (fractions,
+    matrices, stacked limits) raises NotImplementedError → use `equation_png` for those.
+
+    `latex` e.g. r"\\mathcal{L} = \\sum_i \\|A x_i - y_i\\|_2^2 + \\lambda R(x_i)" (or a list of
+    (text, kind) tokens). `font` defaults to a math font (`EQ_MATHFONT` = 'STIX Two Math'; set it
+    to 'Cambria Math' for Office portability — flag the dependency at hand-off). `size` is the
+    base point size; keep it ≈ the deck's body size, consistent across slides. Returns the textbox."""
+    toks = latex if isinstance(latex, list) else latex_to_runs(latex)
+    fnt = font or EQ_MATHFONT
+    tb = slide.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h))
+    tf = tb.text_frame; tf.word_wrap = True
+    try: tf.vertical_anchor = anchor
+    except Exception: pass
+    for m in ('left','right','top','bottom'):
+        setattr(tf, 'margin_' + m, Inches(0.02))
+    p = tf.paragraphs[0]; p.alignment = align
+    for txt, k in toks:
+        r = p.add_run(); r.text = txt
+        sz = size * (0.62 if k in ('sub','sup','isub','isup') else 1.0)
+        set_font(r, sz, color, italic=(k in ('i','isub','isup')), font=fnt)
+        if k in ('sup','isup'): r._r.get_or_add_rPr().set('baseline', '30000')
+        if k in ('sub','isub'): r._r.get_or_add_rPr().set('baseline', '-22000')
+    return tb
+
+
+# ================================================================ template reuse
+_TEMPLATE_CT = b"presentationml.template.main+xml"
+_DECK_CT = b"presentationml.presentation.main+xml"
+
+
+def open_presentation(path):
+    """`Presentation(path)`, but a real .potx opens instead of raising.
+
+    Institutions distribute their template as a .potx — that is what a university or a company
+    hands you — and python-pptx refuses it outright: `ValueError: file '...' is not a PowerPoint
+    file, content type is '...presentationml.template.main+xml'`. The difference is ONE string in
+    [Content_Types].xml; the parts, masters, layouts and theme are identical. Every entry point
+    into a supplied template (`inspect_template.py`, `extract_deck.py`, `open_template`,
+    `render_deck.py`) died on the same raw library traceback, and the string "potx" appeared
+    nowhere in the skill — no FAQ row, no shim, no mention — so the first command of the template
+    branch failed with an error that reads like a corrupt file rather than an unsupported wrapper.
+
+    Rewrites the content type into a temp copy and opens that; the caller's file is never touched.
+    """
+    try:
+        return Presentation(path)
+    except ValueError as exc:
+        if "template.main" not in str(exc):
+            raise
+    import os as _os
+    import tempfile as _tf
+    import zipfile as _zf
+    tmp = _tf.NamedTemporaryFile(suffix=".pptx", delete=False)
+    tmp.close()
+    with _zf.ZipFile(path) as zin, _zf.ZipFile(tmp.name, "w", _zf.ZIP_DEFLATED) as zout:
+        for item in zin.infolist():
+            data = zin.read(item.filename)
+            if item.filename == "[Content_Types].xml":
+                data = data.replace(_TEMPLATE_CT, _DECK_CT)
+            zout.writestr(item, data)
+    try:
+        return Presentation(tmp.name)
+    finally:
+        try:
+            _os.unlink(tmp.name)
+        except OSError:
+            pass
+
+
+def open_template(path):
+    """Open the user's deck and delete its slides while KEEPING masters/layouts.
+    A template's branding (header band, logos, footer) lives on the layouts, so new
+    slides added afterwards inherit all of it automatically. Dropping the slide
+    relationships also prunes the old slides' heavy media (e.g. GIFs) on save.
+
+    Accepts a .potx as well as a .pptx — see :func:`open_presentation`."""
+    prs = open_presentation(path)
+    sldIdLst = prs.slides._sldIdLst
+    for sldId in list(sldIdLst):
+        prs.part.drop_rel(sldId.get(qn('r:id')))
+        sldIdLst.remove(sldId)
+    return prs
+
+
+def drop_placeholders(slide, keep_idx):
+    """Remove inherited placeholders whose idx is not in keep_idx (set)."""
+    for ph in list(slide.placeholders):
+        if ph.placeholder_format.idx not in keep_idx:
+            ph._element.getparent().remove(ph._element)
+
+
+def content_slide(prs, layout_idx, title_txt, size=23, footer="", date="",
+                  title_color=WHITE, body_idx=1):
+    """Add a content slide on the template's 'Title and Content with Logo' layout.
+    Sets a WHITE title on the band, removes the empty body placeholder, fills the
+    footer/date placeholders. Returns the slide for you to draw on.
+
+    NOTE: layout_idx and placeholder types are template-specific — confirm them by
+    inspecting the template once (inspect_template.py) and save them to the template's
+    profile.md in the active template registry — resolve its root with scripts/registry.py
+    (~/.claude/ or ~/.codex/slide-templates/<name>/, else host-neutral
+    ~/.slide-maker/slide-templates/<name>/); do not hardcode a two-host list here."""
+    s = prs.slides.add_slide(prs.slide_layouts[layout_idx])
+    tf = s.shapes.title.text_frame; tf.text = title_txt
+    for r in tf.paragraphs[0].runs:
+        set_font(r, size, title_color, bold=True)
+    # remove the empty body content placeholder so it doesn't show a prompt
+    for ph in list(s.placeholders):
+        if ph.placeholder_format.idx == body_idx:
+            ph._element.getparent().remove(ph._element)
+    # fill footer (type 15) and date (type 16) placeholders if present
+    for ph in list(s.placeholders):
+        t = ph.placeholder_format.type
+        if t == 15 and footer:
+            ph.text = footer
+            for r in ph.text_frame.paragraphs[0].runs: set_font(r, 9, MUTE)
+        elif t == 16 and date:
+            ph.text = date
+            for r in ph.text_frame.paragraphs[0].runs: set_font(r, 9, MUTE)
+    return s
+
+
+# ===================================== no-template branch (build chrome yourself)
+def blank_deck(w_in=10.0, h_in=5.625):
+    """A fresh 16:9 deck when the user has NO template to match. Use add_slide() +
+    title_bar()/footer() to give it simple, consistent branding you define from
+    their brand colors (set the palette constants above) or a clean default."""
+    prs = Presentation()
+    prs.slide_width = Inches(w_in); prs.slide_height = Inches(h_in)
+    return prs
+
+
+def slide_background(slide, color):
+    """Paint the slide's REAL background (`<p:bg>`) instead of laying a full-canvas rectangle.
+
+    Every deck this skill builds opens its pages with `box(s, 0, 0, W, H, fill=…)`. That works,
+    and the lint has always excluded it from ink coverage (shapes covering ≥95% of the canvas are
+    tagged `bg`), so the density numbers were never wrong. What it costs is in the file the USER
+    edits: a full-canvas rectangle is a selectable object, so click-dragging anywhere on an empty
+    part of the slide grabs the backdrop and moves it, and Select-All picks it up with everything
+    else. `<p:bg>` is not in the shape tree at all — it cannot be selected, moved or deleted by
+    accident, which is what a background is supposed to be.
+
+    🔴 It is placed as the FIRST child of `<p:cSld>` because CT_CommonSlideData orders `bg?`
+    before `spTree` — appending would produce a schema-invalid part, the one defect class where
+    PowerPoint refuses to open the file (`OOXML_SHAPE` is the net under that).
+
+    🔴 And `lint_deck._backing_fill` was taught to read it in the same change. That resolver
+    looked for the topmost solid SHAPE under a run and documented "Slide bg unknown -> None", so
+    moving the backdrop out of the shape tree would have made the colour behind ordinary text
+    unknowable — silently switching off every contrast check on the deck (62 call sites resolve a
+    backing fill). A background that no longer participates in contrast checking is a worse deck
+    than a selectable rectangle.
+
+    Returns the slide, so it composes: `slide_background(add_slide(prs), PAPER)`.
+    """
+    from pptx.oxml.ns import nsdecls as _nsdecls
+    hexv = _hex(_as_rgb(color)).upper()           # RGBColor or 'RRGGBB'/'#RRGGBB', one convention
+    cSld = slide._element.find(qn("p:cSld"))
+    for old in cSld.findall(qn("p:bg")):          # idempotent: repaint rather than stack
+        cSld.remove(old)
+    cSld.insert(0, parse_xml(
+        '<p:bg %s><p:bgPr><a:solidFill><a:srgbClr val="%s"/></a:solidFill>'
+        '<a:effectLst/></p:bgPr></p:bg>' % (_nsdecls("p", "a"), hexv)))
+    return slide
+
+
+def set_ground(color):
+    """Set the deck's GROUND — the colour every later ``add_slide()`` paints itself.
+
+    The third structural token, beside ``set_palette`` (colour) and ``set_geometry`` (form).
+    ``presets.apply()`` could not carry a register's background because it runs ONCE, before any
+    slide exists, and ``slide_background()`` needs a slide. So every preset returned a ``bg`` that
+    nothing applied: 8 of the 18 registers are dark, and a caller who did exactly what
+    ``apply()``'s docstring said got the register's LIGHT ink on a white canvas. Measured on
+    ``dark_tech``: #E8EDF5 body text at 1.18:1, caught only by the render-time lint — one
+    build -> render -> diagnose round trip for a fact known before the first slide was added.
+
+    ``None`` (the default) paints nothing, so a deck that never calls this is unchanged, and a
+    deck that wants a per-slide ground still calls ``slide_background()`` directly — this only
+    supplies the default.
+    """
+    global GROUND
+    GROUND = None if color is None else _as_rgb(color)
+    return GROUND
+
+
+def add_slide(prs):
+    """Add a truly blank slide (layout 6) to draw on from scratch.
+
+    Paints the deck's ``GROUND`` (see ``set_ground`` / ``presets.apply``) when one is set, so a
+    dark register is dark from the first slide rather than from wherever the author remembered.
+    """
+    s = prs.slides.add_slide(prs.slide_layouts[6])
+    if GROUND is not None:
+        slide_background(s, GROUND)
+    return s
+
+
+def _slide_size(slide):
+    """Return the slide's real width/height in inches."""
+    prs = slide.part.package.presentation_part.presentation
+    return prs.slide_width / 914400, prs.slide_height / 914400
+
+
+def title_bar(slide, title, kicker="", accent=BLUE, title_c=DEEP, w_in=None):
+    """Lightweight slide chrome for the no-template branch: optional kicker, title,
+    and a short accent rule. Pair with footer(). Returns the content-top y (just below the
+    accent rule) so a caller can flow the body beneath a title that wrapped to 2 lines.
+
+    By default this reads the actual deck width from ``slide`` so it works on
+    widescreen templates, custom ``blank_deck(w_in, h_in)`` sizes, and posters.
+    Pass ``w_in`` only when deliberately overriding that geometry. The kicker and the accent
+    rule share the ONE ``accent`` hue (default BLUE, the primary accent) — pass ``accent=MAGENTA``
+    for a deliberate callout. A long (assertion-style) title is auto-fit to a ≤2-line budget and
+    the rule is MEASURED to sit below the LAST line, so it never strikes a wrapped title through."""
+    if w_in is None:
+        w_in, _ = _slide_size(slide)
+    tw = w_in - 1.1
+    if kicker:
+        kb = text(slide, 0.55, 0.30, tw, 0.3, [[(kicker.upper(), 11, accent, True, False)]],
+                  space_after=0)
+        _tag_chrome(kb)
+        ty = 0.54
+    else:
+        ty = 0.40
+    disp = DISPLAY or FONT
+    # auto-fit into a ≤2-line budget (floor 18pt) so a sentence-length title can't run the body off
+    # the fixed content band, then measure the real line count to place the rule below the last line.
+    tsz = fit_text_size([(title, True)], tw, 26 / 72.0 * _LINT_LINE_H * 2 + 0.02, 26,
+                        font=disp, min_size=18)
+    nlines = measure_lines([(title, True)], tsz, tw, font=disp)
+    lh = tsz / 72.0 * _LINT_LINE_H
+    tb = text(slide, 0.55, ty, tw, max(0.7, nlines * lh),
+              [[(title, tsz, title_c, True, False, disp)]], space_after=0)  # title gets the DISPLAY face
+    if EADISPLAY:                                    # ...and a distinct CJK display face if set
+        for p in tb.text_frame.paragraphs:
+            for r in p.runs:
+                _apply_ea(r, EADISPLAY)
+    _tag_chrome(tb)
+    rule_y = max(ty + 0.62, ty + nlines * lh + 0.06)   # floor keeps the one-line render byte-identical
+    _tag_chrome(box(slide, 0.57, rule_y, 1.1, 0.045, fill=accent))
+    return rule_y + 0.20
+
+
+def footer(slide, tag="", page=None, w_in=None, h_in=None):
+    """Footer tag (left) + optional page number (right) for the no-template branch.
+
+    Defaults to the actual deck size, so custom-sized decks don't end up with a
+    page number stranded at the old 10x5.625 coordinate."""
+    if w_in is None or h_in is None:
+        sw, sh = _slide_size(slide)
+        w_in = sw if w_in is None else w_in
+        h_in = sh if h_in is None else h_in
+    if tag:
+        text(slide, 0.55, h_in - 0.35, 6.0, 0.3, [[(tag, 8, MUTE, False, False)]], space_after=0)
+    if page is not None:
+        text(slide, w_in - 1.0, h_in - 0.35, 0.6, 0.3,
+             [[(str(page), 9, MUTE, True, False)]], align=PP_ALIGN.RIGHT, space_after=0)
+
+
+def wordmark(text, out_path, *, font=None, color=None, size=180, rule=False, monogram=False, pad=0.12):
+    """Render a clean typographic WORDMARK — the entity's name set in the deck's DISPLAY face —
+    to a TRANSPARENT PNG, and return `out_path`. This is the SANCTIONED stand-in when a real
+    logo can't be found (see references/image-generation.md): type done *well*, NOT an
+    illustration or an AI-imagined mark. Build it in the asset step, then place it exactly like
+    a real logo — `logo(slide, out_path, ...)` treats it as chrome and holds its aspect ratio.
+
+    `font` picks the face (defaults to the deck's DISPLAY, then FONT); `color` is the ink
+    (RGBColor or 'RRGGBB'/'#RRGGBB' hex, default DEEP). `size` is the cap size in px — the PNG is
+    cropped tight to the glyphs, so this only sets rasterisation crispness; `logo()`'s `h`
+    controls the on-slide height. `rule=True` adds a thin baseline rule under the name (a
+    restrained divider, not a box). `monogram=True` prefixes a simple square block holding the
+    first letter (pass `monogram="disc"` for a circle) — a minimal lockup, still just type.
+    `pad` is transparent margin as a fraction of `size`. Keep it restrained: a wordmark, not a
+    logo redraw."""
+    from PIL import Image, ImageDraw, ImageFont
+    ink = _as_rgb(color) if color is not None else DEEP
+    ink_rgba = tuple(int(v) for v in ink) + (255,)
+    # CJK-aware: a Chinese/Japanese/Korean entity name must take an EA-capable face, or PIL
+    # resolves a Latin face with no CJK cmap and the deck's logo stand-in ships as tofu chrome.
+    # 🔴 `_font_file` falls back to a stand-in rather than returning None, so "is fp None?" never
+    # fired and an unresolvable EA face went straight to a Latin stand-in — tofu. Ask whether the
+    # NAMED face resolves, which is the question the fallback was written to ask.
+    if _has_cjk(str(text)):
+        chosen = font or EADISPLAY or EAFONT
+        fp = _font_file(chosen) if chosen and not _font_substituted(chosen) else None
+        if fp is None:                           # no usable EA face chosen — pick a CJK-capable one
+            for cand in ("Hiragino Sans GB", "PingFang SC", "Microsoft YaHei",
+                         "Noto Sans CJK SC", "SimHei"):
+                if not _font_substituted(cand):
+                    chosen, fp = cand, _font_file(cand)
+                    break
+        if fp is None:
+            chosen = DISPLAY or FONT
+            fp = _font_file(chosen) or _font_file(FONT)
+    else:
+        chosen = font or DISPLAY or FONT
+        fp = _font_file(chosen) or _font_file(FONT)
+    try:
+        face = _font_face(chosen) if chosen else None
+        if not face or face[0] != fp:                # fp came from a fallback — choose inside it
+            face = (fp, _face_index(fp, False, chosen))
+        f = ImageFont.truetype(face[0], int(size), index=face[1])
+    except Exception:
+        f = ImageFont.load_default()
+    s = str(text)
+
+    pad_px = max(1, int(round(size * pad)))
+    probe = ImageDraw.Draw(Image.new("RGBA", (1, 1)))
+    tb = probe.textbbox((0, 0), s, font=f)
+    tw, th = tb[2] - tb[0], tb[3] - tb[1]
+
+    mono_side = int(round(th * 1.30)) if monogram else 0
+    mono_gap = int(round(size * 0.16)) if monogram else 0
+    rule_gap = max(2, int(round(size * 0.12))) if rule else 0
+    rule_h = max(1, int(round(size * 0.035))) if rule else 0
+
+    band_h = max(th, mono_side)
+    W = pad_px * 2 + mono_side + mono_gap + tw
+    H = pad_px * 2 + band_h + rule_gap + rule_h
+    img = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+    dr = ImageDraw.Draw(img)
+
+    x = pad_px
+    top = pad_px
+    if monogram:
+        my = top + (band_h - mono_side) // 2
+        rect = [x, my, x + mono_side, my + mono_side]
+        if str(monogram).lower() == "disc":
+            dr.ellipse(rect, fill=ink_rgba)
+        else:
+            try:
+                dr.rounded_rectangle(rect, radius=max(2, int(round(mono_side * 0.16))), fill=ink_rgba)
+            except (AttributeError, TypeError):
+                dr.rectangle(rect, fill=ink_rgba)
+        ch = (s.strip()[:1] or "•").upper()
+        cf = ImageFont.truetype(fp, max(1, int(mono_side * 0.60))) if fp else f
+        cb = dr.textbbox((0, 0), ch, font=cf)
+        dr.text((x + (mono_side - (cb[2] - cb[0])) / 2 - cb[0],
+                 my + (mono_side - (cb[3] - cb[1])) / 2 - cb[1]), ch, font=cf, fill=(255, 255, 255, 255))
+        x += mono_side + mono_gap
+
+    ty = top + (band_h - th) // 2
+    dr.text((x - tb[0], ty - tb[1]), s, font=f, fill=ink_rgba)
+    if rule:
+        ry = top + band_h + rule_gap
+        dr.rectangle([x, ry, x + tw, ry + rule_h], fill=ink_rgba)
+
+    out_path = str(out_path)
+    img.save(out_path)
+    return out_path
+
+
+def logo(slide, path, *, corner="tr", h=0.42, margin=0.3, w_in=None, h_in=None, alt=None):
+    """Place a brand / institution / product logo as PERSISTENT chrome — the SAME mark in the
+    SAME spot on every slide. For a deck that is *about* a company, institution, or product,
+    the entity's real logo belongs on every content slide (top-right by convention) so the
+    audience always knows whose deck this is and the brand stays present; in the no-template /
+    generated branch there are no layouts to carry it, so call this once per slide (after the
+    background, before content) — and on the hero/cover too. It's chrome, not content: keep `h`
+    small (~0.35-0.5 in) so it never competes with the title, and keep `corner`/`margin`
+    identical across slides so it doesn't jump. The logo holds its aspect ratio (a wide wordmark
+    and a square mark both sit right). `corner` is "tr" (default), "tl", "br", or "bl".
+
+    Use the REAL logo (see references/image-generation.md's real-asset hierarchy). Fallback
+    order when it's missing: a real logo image -> a designed **wordmark** (call `wordmark()` to
+    set the entity name in the deck's DISPLAY face as a transparent PNG, then pass that PNG here
+    — the sanctioned stand-in) -> if even the wordmark doesn't fit, ask the user for the asset —
+    never ship "logo here" placeholder text (a meta-annotation blocker). NEVER an
+    AI-imagined or recolored look-alike. On a busy/dark background, give the logo a small scrim
+    or light plate behind it so it stays legible. Returns the picture shape."""
+    from PIL import Image
+    sw, sh = _slide_size(slide)
+    w_in = sw if w_in is None else w_in
+    h_in = sh if h_in is None else h_in
+    with Image.open(path) as im:
+        iw, ih = im.size
+    w = h * (iw / ih) if ih else h
+    top = "t" in corner.lower()
+    left = "l" in corner.lower()
+    x = margin if left else (w_in - margin - w)
+    y = margin if top else (h_in - margin - h)
+    return picture(slide, path, x, y, w, h, fit="contain", alt=("" if alt is None else alt))
+
+
+# ===================================================================== notes
+def org_tree(slide, x, y, w, h, root, *, accent=None, node_h=0.42, gap_y=0.42,
+             label_size=11, font=None, line_c=None):
+    """A tidy HIERARCHY tree (org chart / taxonomy / decision ownership) — parent drop,
+    horizontal bus, even child drops.
+
+    root — ("label", [child, ...]) nested tuples; a leaf is ("label", []) or just "label".
+    Layout is the classic two-pass tidy-tree: post-order assigns each leaf the next slot and
+    each parent the CENTROID of its children (the part that stops being hand-placeable at
+    depth 3); then the slot grid scales to fit w. Raises when depth/width can't fit legibly.
+    """
+    def norm(n):
+        if isinstance(n, str):
+            return (n, [])
+        return (str(n[0]), [norm(c) for c in (n[1] if len(n) > 1 else [])])
+    root = norm(root)
+
+    slots = {"next": 0}
+    pos = {}                                             # id(node) -> (slot_x, depth)
+    def layout(node, depth):
+        label, kids = node
+        if not kids:
+            sx = slots["next"]; slots["next"] += 1
+        else:
+            xs = [layout(k, depth + 1) for k in kids]
+            sx = sum(xs) / len(xs)
+        pos[id(node)] = (sx, depth)
+        return sx
+    layout(root, 0)
+    n_slots = max(slots["next"], 1)
+    depth_max = max(d for _, d in pos.values())
+    node_w = min(1.9, (w - 0.2 * (n_slots - 1)) / n_slots)
+    if node_w < 0.85:
+        raise ValueError(f"org_tree(): {n_slots} leaves need node width {node_w:.2f}in (<0.85) — "
+                         f"split the tree or go wider")
+    if (depth_max + 1) * (node_h + gap_y) - gap_y > h + 0.01:
+        raise ValueError(f"org_tree(): depth {depth_max + 1} needs "
+                         f"{(depth_max + 1) * (node_h + gap_y) - gap_y:.1f}in (> {h:.1f}) — "
+                         f"shrink node_h/gap_y or split")
+    acc = accent if accent is not None else BLUE
+    lc = _as_rgb(line_c) if line_c is not None else _as_rgb(MUTE)
+    pitch = (w - node_w) / max(n_slots - 1, 1)
+    def draw(node):
+        label, kids = node
+        sx, depth = pos[id(node)]
+        nx = x + sx * pitch
+        ny = y + depth * (node_h + gap_y)
+        b = box(slide, nx, ny, node_w, node_h, fill=(acc if depth == 0 else WHITE),
+                line=(None if depth == 0 else acc), line_w=1.1, round=True, r=0.08)
+        text(slide, nx, ny, node_w, node_h,
+             [[(label, label_size if depth == 0 else label_size - 1,
+                _as_rgb(_legible_ink(_as_rgbc(acc))) if depth == 0 else _as_rgb(DEEP), depth == 0, False,
+                font or FONT)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        if kids:
+            busy = ny + node_h + gap_y / 2
+            box(slide, nx + node_w / 2 - 0.008, ny + node_h, 0.016, gap_y / 2, fill=lc)
+            kxs = [x + pos[id(k)][0] * pitch + node_w / 2 for k in kids]
+            box(slide, min(kxs) - 0.008, busy - 0.008, max(kxs) - min(kxs) + 0.016, 0.016, fill=lc)
+            for k, kx in zip(kids, kxs):
+                box(slide, kx - 0.008, busy, 0.016, gap_y / 2, fill=lc)
+                draw(k)
+        return b
+    draw(root)
+    return y + (depth_max + 1) * (node_h + gap_y) - gap_y
+
+
+def annotated_figure(slide, x, y, w, h, img, callouts, *, rail="right", rail_w=2.5,
+                     accent=None, label_size=10.5, font=None, inset=None, alt=None):
+    """A real figure with NUMBERED markers + a numbered caption rail — the guided walkthrough.
+
+    callouts — [(fx, fy, "caption"), ...] with fx/fy FRACTIONAL (0-1) positions on the image.
+    The skill's own philosophy leans hardest on real figures ("use the source's own figures,
+    WHOLE"), yet marker placement + caption routing was re-derived by hand per deck and failed
+    invisibly until render. One call: place the figure, drop numbered discs at the named spots,
+    and list the same numbers in a caption rail beside it (rail="right"|"bottom").
+
+    inset — optional (fx, fy, frac) magnified detail: crops the SAME image around that point
+    (via Picture.crop_*, no image processing) into a corner panel with a hairline link.
+    Returns the figure's placed rect (px, py, pw, ph).
+    """
+    if not callouts:
+        raise ValueError("annotated_figure(): no callouts — use picture() for a plain figure")
+    if len(callouts) > 8:
+        raise ValueError("annotated_figure(): %d callouts — past ~8 the figure reads as a diagram "
+                         "of markers; split the walkthrough" % len(callouts))
+    acc = _as_rgb(accent) if accent is not None else _as_rgb(MAGENTA)
+    if rail == "right":
+        fw, fh = w - rail_w - 0.25, h
+        rx0, ry0, rw0 = x + fw + 0.25, y, rail_w
+    else:
+        rail_h = min(0.42 * h, 0.30 + 0.34 * len(callouts))
+        fw, fh = w, h - rail_h - 0.15
+        rx0, ry0, rw0 = x, y + fh + 0.15, w
+    pic = picture(slide, img, x, y, fw, fh, fit="contain", alt=alt or "annotated figure")
+    # the CONTAINED image's real rect (letterboxed inside the frame)
+    px, py = pic.left / 914400.0, pic.top / 914400.0
+    pw, ph = pic.width / 914400.0, pic.height / 914400.0
+    d = 0.26
+    for i, (fx, fy, _cap) in enumerate(callouts, 1):
+        cx, cy = px + float(fx) * pw, py + float(fy) * ph
+        o = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(cx - d / 2), Inches(cy - d / 2),
+                                         Inches(d), Inches(d)))
+        o.fill.solid(); o.fill.fore_color.rgb = acc
+        o.line.color.rgb = _as_rgb(WHITE); o.line.width = Pt(1.2); o.shadow.inherit = False
+        tf = o.text_frame; tf.word_wrap = False
+        tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = Pt(0)
+        r = tf.paragraphs[0].add_run(); r.text = str(i)
+        set_font(r, 11, _as_rgb(WHITE), True, False, font or FONT)
+        tf.paragraphs[0].alignment = PP_ALIGN.CENTER
+        tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+    yy = ry0
+    for i, (_fx, _fy, cap) in enumerate(callouts, 1):
+        o = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(rx0), Inches(yy + 0.01),
+                                         Inches(0.2), Inches(0.2)))
+        o.fill.solid(); o.fill.fore_color.rgb = acc; o.line.fill.background(); o.shadow.inherit = False
+        tf = o.text_frame; tf.margin_left = tf.margin_right = tf.margin_top = tf.margin_bottom = Pt(0)
+        r = tf.paragraphs[0].add_run(); r.text = str(i)
+        set_font(r, 9, _as_rgb(WHITE), True, False, font or FONT)
+        tf.paragraphs[0].alignment = PP_ALIGN.CENTER; tf.vertical_anchor = MSO_ANCHOR.MIDDLE
+        cap_h = max(0.24, measure_text([(str(cap), False)], rw0 - 0.32, label_size))
+        text(slide, rx0 + 0.30, yy, rw0 - 0.32, cap_h,
+             [[(str(cap), label_size, _as_rgb(DEEP), False, False, font or FONT)]],
+             space_after=0, line_spacing=1.12)
+        yy += cap_h + 0.10
+    if inset is not None:
+        ifx, ify, frac = inset
+        iw = min(0.34 * fw, 1.9)
+        ih = iw * ph / pw
+        # place the inset in the first CORNER that covers no callout marker (a corner panel
+        # sitting on top of marker 2 defeats the walkthrough it magnifies)
+        corners = [(px + pw - iw - 0.08, py + 0.08), (px + 0.08, py + 0.08),
+                   (px + pw - iw - 0.08, py + ph - ih - 0.08), (px + 0.08, py + ph - ih - 0.08)]
+        def _covers(cx0, cy0):
+            return any(cx0 - 0.15 <= px + float(fx_) * pw <= cx0 + iw + 0.15
+                       and cy0 - 0.15 <= py + float(fy_) * ph <= cy0 + ih + 0.15
+                       for fx_, fy_, _c in callouts)
+        ix0, iy0 = next(((cx0, cy0) for cx0, cy0 in corners if not _covers(cx0, cy0)), corners[0])
+        ipic = picture(slide, img, ix0, iy0, iw, ih,
+                       fit="cover", alt="magnified detail")
+        ipic.crop_left = max(0.0, min(1 - frac, float(ifx) - frac / 2))
+        ipic.crop_right = max(0.0, 1 - (ipic.crop_left + frac))
+        ipic.crop_top = max(0.0, min(1 - frac, float(ify) - frac / 2))
+        ipic.crop_bottom = max(0.0, 1 - (ipic.crop_top + frac))
+        ipic.line.color.rgb = acc; ipic.line.width = Pt(1.4)
+    return (px, py, pw, ph)
+
+
+def position_map(slide, x, y, w, h, points, *, x_labels=("low", "high"), y_labels=("low", "high"),
+                 accent=None, highlight=None, dot=0.14, label_size=10.5, font=None, ink=None):
+    """N LABELLED items on two continuous axes — the form quadrant() cannot express.
+
+    points — [(label, xv, yv)] or [(label, xv, yv, hex_colour)]; xv/yv on any numeric scale
+    (normalised internally, 8% padding). quadrant() returns four cells to fill with cards, which
+    throws away the WITHIN-cell position that is the whole argument; native_bubble drops labels.
+    This is the "where does each option actually sit" exhibit.
+
+    Labels: greedy anti-collision — right of the dot, flipped left near the right edge, nudged
+    down on overlap; raises ValueError naming the pair only when two dots truly coincide.
+    highlight — index drawn in the accent with a bold label; others in muted ink.
+    """
+    if len(points) < 2:
+        raise ValueError("position_map(): needs >=2 points")
+    ik = _as_rgb(ink) if ink is not None else _as_rgb(DEEP)
+    acc = _as_rgb(accent) if accent is not None else _as_rgb(MAGENTA)
+    xs = [float(p[1]) for p in points]; ys = [float(p[2]) for p in points]
+    x0v, x1v = min(xs), max(xs); y0v, y1v = min(ys), max(ys)
+    xsp = (x1v - x0v) or 1.0; ysp = (y1v - y0v) or 1.0
+    for (la, xa, ya, *_), (lb, xb2, yb, *_) in (
+            (points[i], points[j]) for i in range(len(points)) for j in range(i + 1, len(points))):
+        if abs(xa - xb2) / xsp < 0.015 and abs(ya - yb) / ysp < 0.015:
+            raise ValueError(f"position_map(): '{la}' and '{lb}' coincide — the map cannot "
+                             f"separate them; jitter one or merge the rows")
+    # axes: hairline cross with end labels
+    ax0, ay0 = x + 0.05, y + h - 0.3                    # origin (bottom-left of plot area)
+    aw, ah = w - 0.1, h - 0.55
+    box(slide, ax0, ay0, aw, 0.016, fill=MUTE)
+    box(slide, ax0, ay0 - ah, 0.016, ah, fill=MUTE)
+    text(slide, ax0, ay0 + 0.06, 1.8, 0.2, [[(str(x_labels[0]), 9, _as_rgb(MUTE), False, False, font or FONT)]], space_after=0)
+    text(slide, ax0 + aw - 1.8, ay0 + 0.06, 1.8, 0.2,
+         [[(str(x_labels[1]), 9, _as_rgb(MUTE), False, False, font or FONT)]],
+         align=PP_ALIGN.RIGHT, space_after=0)
+    text(slide, ax0 + 0.06, ay0 - 0.24, 1.8, 0.2, [[(str(y_labels[0]), 9, _as_rgb(MUTE), False, False, font or FONT)]], space_after=0)
+    text(slide, ax0 + 0.06, ay0 - ah, 1.8, 0.2, [[(str(y_labels[1]), 9, _as_rgb(MUTE), False, False, font or FONT)]], space_after=0)
+    placed = []                                          # label rects for greedy collision nudge
+    lab_w, lab_h = 1.35, 0.21
+    # the HERO's label claims its spot first — greedy order otherwise lets a neighbour push the
+    # one label that matters most into the worst position
+    order = list(range(len(points)))
+    if highlight is not None and 0 <= highlight < len(points):
+        order.remove(highlight); order.insert(0, highlight)
+    for i in order:
+        p = points[i]
+        name, xv, yv = str(p[0]), float(p[1]), float(p[2])
+        hue = _as_rgb(p[3]) if len(p) > 3 else (acc if (highlight is None or i == highlight) else RGBColor(0x9A, 0xA1, 0xAE))
+        fx = 0.08 + 0.84 * (xv - x0v) / xsp
+        fy = 0.08 + 0.84 * (yv - y0v) / ysp
+        cx = ax0 + fx * aw
+        cy = ay0 - fy * ah
+        d = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(cx - dot / 2), Inches(cy - dot / 2),
+                                         Inches(dot), Inches(dot)))
+        d.fill.solid(); d.fill.fore_color.rgb = hue; d.line.color.rgb = _as_rgb(WHITE); d.line.width = Pt(1.0)
+        d.shadow.inherit = False
+        lx = cx + dot / 2 + 0.05
+        al = PP_ALIGN.LEFT
+        if lx + lab_w > x + w - 0.05:                    # flip left near the right edge
+            lx = cx - dot / 2 - 0.05 - lab_w
+            al = PP_ALIGN.RIGHT
+        ly = cy - lab_h / 2
+        for _try in range(6):                            # nudge down past earlier labels
+            if not any(abs(ly - py_) < lab_h and not (lx + lab_w < px_ or px_ + lab_w < lx)
+                       for px_, py_ in placed):
+                break
+            ly += lab_h + 0.02
+        placed.append((lx, ly))
+        is_hero = (highlight is not None and i == highlight)
+        # the hero's label takes the DOT's hue — colour is what binds a floating label to its
+        # point when the anti-collision nudge separates them
+        lab_c = hue if is_hero else (ik if highlight is None else _as_rgb(MUTE))
+        text(slide, lx, ly, lab_w, lab_h,
+             [[(name, label_size, lab_c, is_hero, False, font or FONT)]], align=al, space_after=0)
+    return y + h
+
+
+def image_grid(slide, x, y, w, h, images, col_labels, *,
+               row_labels=None, metrics=None,
+               highlight_col=None, highlight_row=None, caption=None,
+               accent=None, ink=None, mute=None,
+               label_size=10.0, metric_size=None, font=None,
+               ar_tol=0.06, max_cells=16, min_cell=0.80, gap=None, alt=None):
+    """An N×M LABELLED IMAGE COMPARISON GRID — methods across the columns, cases down the rows.
+
+    The results slide of an image-reconstruction talk: reference · zero-filled · baseline · ours,
+    over two or three cases, each cell carrying its own metric. `images[row][col]` are paths;
+    `col_labels` is POSITIONAL because an unlabelled comparison grid says nothing about what is
+    being compared (the same reason `unit_grid` demands its unit label).
+
+    Two things it guarantees that a hand-rolled grid does not, both measured on a real hand-roll:
+
+    **Every label is placed from the image's REAL rect**, read back after placement, never from the
+    cell frame. The hand-roll put every column header and every per-cell metric 0.672in from the
+    panel it named — and no lint could catch it: `CAPTION NOT ALIGNED` bails on a multi-row grid,
+    because the next image row falls inside its caption scan band.
+
+    **One aspect ratio governs the whole grid** — the median of the images' own. The cell is then
+    built at that ratio, so `fit="contain"` and `fit="cover"` coincide and there is ZERO letterbox
+    and ZERO crop by construction; neither operation is ever performed. The hand-roll wasted 65% of
+    every cell to letterbox; `photo_triptych` takes the other branch and silently crops 12–24% off
+    scientific data. Images that do not share that ratio are REFUSED rather than fudged (`ar_tol`):
+    mixed aspect ratios cannot align rows AND columns, and the honest fix is a common FOV crop.
+
+    Returns the grid's ACTUALLY USED rect `(x, y, w, h)` in inches — it is aspect-locked, so it
+    rarely fills a 16:9 region, and the caller wants the leftover for the so-what (`takeaway_rail`).
+
+    `metrics` are pre-formatted STRINGS ("34.6", never 34.6): a float would need a `value_fmt`
+    parameter and re-open the format-dialect bug class. Keep them ≤11pt so a dozen per-cell numbers
+    stay chrome and do not drag the deck's body median into `SMALL TYPE`.
+    """
+    import os as _os
+    import statistics as _stats
+
+    acc = accent if accent is not None else MAGENTA
+    ic = ink if ink is not None else DEEP
+    mc = mute if mute is not None else MUTE
+    ms = float(label_size if metric_size is None else metric_size)
+    fnt = font or FONT
+
+    # ── validate EVERYTHING before drawing a single shape: a refusal must never leave a
+    #    half-drawn slide behind for the author to clean up.
+    if not isinstance(images, (list, tuple)) or not images or \
+            not all(isinstance(r, (list, tuple)) and r for r in images):
+        raise ValueError("image_grid(): images must be nested rows — images[row][col], e.g. "
+                         "[[a, b], [c, d]]. A flat list has no row structure to align.")
+    nr = len(images)
+    widths = {len(r) for r in images}
+    if len(widths) != 1:
+        raise ValueError("image_grid(): ragged rows (%s) — every row needs the same N cells; a "
+                         "ragged grid cannot align columns." % (sorted(widths),))
+    nc = len(images[0])
+    if not col_labels or len(col_labels) != nc or not all(str(c).strip() for c in col_labels):
+        raise ValueError("image_grid(): col_labels is required and must have %d non-blank entries "
+                         "— an unlabelled comparison grid says nothing about what is being "
+                         "compared." % nc)
+    if row_labels is not None and len(row_labels) != nr:
+        raise ValueError("image_grid(): row_labels must have %d entries, one per row, got %d."
+                         % (nr, len(row_labels)))
+    if metrics is not None and (len(metrics) != nr or any(len(m) != nc for m in metrics)):
+        raise ValueError("image_grid(): metrics must match images cell-for-cell (%dx%d), got %s."
+                         % (nr, nc, [len(m) for m in metrics]))
+    if nr * nc > max_cells:
+        raise ValueError("image_grid(): %dx%d = %d cells is a contact sheet, not a comparison "
+                         "(cap %d). Cut methods, or split across two slides."
+                         % (nr, nc, nr * nc, max_cells))
+    if ms > 11.0:
+        raise ValueError("image_grid(): metric_size %.1f exceeds 11pt, which puts %d per-cell "
+                         "numbers into the deck's BODY type tier and will drag the body median. "
+                         "Keep per-cell metrics as chrome (<=11pt)." % (ms, nr * nc))
+    flat = [p for row in images for p in row]
+    missing = [p for p in flat if not _os.path.isfile(str(p))]
+    if missing:
+        raise FileNotFoundError("image_grid(): %d image(s) do not exist, e.g. %r — nothing was "
+                                "drawn." % (len(missing), missing[0]))
+    _sw, _sh = _slide_size(slide)
+    floor_y = _sh - FOOTER_BAND - 0.15
+    if y + h > floor_y + 1e-6:
+        raise ValueError("image_grid(): the region bottom (%.2fin) enters the reserved footer band "
+                         "(content must stay above %.2fin). Derive the region from content_band()."
+                         % (y + h, floor_y))
+
+    # ── ONE aspect ratio for the grid: the median of the images' own.
+    from PIL import Image as _Im
+    ars = []
+    for p in flat:
+        with _Im.open(str(p)) as im:
+            iw, ih = im.size
+        ars.append(float(iw) / float(ih) if ih else 1.0)
+    ar = _stats.median(ars)
+    worst = max(range(len(ars)), key=lambda i: abs(ars[i] - ar))
+    if abs(ars[worst] - ar) / ar > ar_tol:
+        raise ValueError("image_grid(): %s has aspect ratio %.3f against the grid's %.3f (tol "
+                         "%.2f). Mixed aspect ratios cannot align rows AND columns — crop to a "
+                         "common FOV with scripts/crop_helper.py."
+                         % (_os.path.basename(str(flat[worst])), ars[worst], ar, ar_tol))
+
+    # ── reserve the label bands, all deterministic (no circularity with the cell size)
+    lh = label_size / 72.0 * _LINT_LINE_H
+    col_band = lh + 0.08
+    metric_band = (ms / 72.0 * _LINT_LINE_H + 0.05) if metrics is not None else 0.0
+    cap_band = (measure_text([(str(caption), False)], w, label_size) + 0.10) if caption else 0.0
+    row_gutter = 0.0
+    if row_labels is not None:
+        row_gutter = 1.40
+        for g in [round(0.50 + 0.05 * k, 2) for k in range(19)]:
+            if all(measure_lines([(str(l), False)], label_size, g - 0.10, fnt) <= 2
+                   for l in row_labels):
+                row_gutter = g
+                break
+
+    gw = w - row_gutter
+    gh = h - col_band - cap_band
+    if gap is None:
+        gap = max(0.05, min(0.18, 0.055 * (gw / float(nc))))
+    cw_a = (gw - (nc - 1) * gap) / float(nc)
+    ch_b = (gh - (nr - 1) * gap - nr * metric_band) / float(nr)
+    cw = min(cw_a, ch_b * ar)
+    ch = cw / ar
+    if min(cw, ch) < min_cell:
+        raise ValueError("image_grid(): a %dx%d grid in %.1fx%.1fin gives %.2fx%.2fin cells (floor "
+                         "%.2fin) — a thumbnail that small cannot show the artefact you are "
+                         "comparing. Drop a column, drop a row, or give the grid the full content "
+                         "band." % (nr, nc, w, h, cw, ch, min_cell))
+    if metrics is not None:
+        for r_i, row in enumerate(metrics):
+            for c_i, m in enumerate(row):
+                if measure_lines([(str(m), False)], ms, cw, fnt) > 1:
+                    raise ValueError("image_grid(): metric %r wraps at the %.2fin cell width — "
+                                     "shorten it ('34.6', not 'PSNR = 34.6 dB') and put the unit "
+                                     "in the column header." % (str(m), cw))
+
+    grid_w = nc * cw + (nc - 1) * gap
+    grid_h = nr * (ch + metric_band) + (nr - 1) * gap
+    ux = x + row_gutter + max(0.0, (gw - grid_w) / 2.0)
+    uy = y + col_band
+
+    # ── draw, then derive EVERY label from the rect the picture actually got
+    for r_i in range(nr):
+        cy = uy + r_i * (ch + metric_band + gap)
+        for c_i in range(nc):
+            cx = ux + c_i * (cw + gap)
+            hot = (c_i == highlight_col) or (r_i == highlight_row)
+            lbl = str(col_labels[c_i]) + (", " + str(row_labels[r_i]) if row_labels else "")
+            pic = picture(slide, str(images[r_i][c_i]), cx, cy, cw, ch, fit="contain",
+                          alt="%s: %s" % (alt or "comparison", lbl))
+            px = pic.left / 914400.0
+            py = pic.top / 914400.0
+            pw = pic.width / 914400.0
+            ph = pic.height / 914400.0
+            if hot:
+                box(slide, px - 0.035, py - 0.035, pw + 0.07, ph + 0.07,
+                    fill=None, line=acc, line_w=1.5)
+            if r_i == 0:
+                text(slide, px, y, pw, col_band,
+                     [[(str(col_labels[c_i]), label_size,
+                        acc if c_i == highlight_col else ic, True, False, fnt)]],
+                     align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM, space_after=0)
+            if c_i == 0 and row_labels is not None:
+                # anchored to the GRID (ux), not to the region's left edge. The grid is centred in
+                # what the gutter leaves, so anchoring to `x` strands the label a centring-offset
+                # away from the row it names — the exact floating-label defect this component
+                # exists to prevent, reintroduced by its own label placement. Caught by looking.
+                text(slide, ux - row_gutter, py + ph / 2.0 - lh, row_gutter - 0.10, 2 * lh,
+                     [[(str(row_labels[r_i]), label_size,
+                        acc if r_i == highlight_row else mc, False, False, fnt)]],
+                     align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+            if metrics is not None:
+                text(slide, px, py + ph + 0.03, pw, metric_band,
+                     [[(str(metrics[r_i][c_i]), ms, acc if hot else mc, hot, False,
+                        numeral_run_face(str(metrics[r_i][c_i]), fnt, fallback=fnt))]],
+                     align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.TOP, space_after=0)
+    if caption:
+        text(slide, x, uy + grid_h + 0.10, w, cap_band,
+             [[(str(caption), label_size, mc, False, False, fnt)]], space_after=0)
+    return (ux, uy, grid_w, grid_h)
+
+
+def small_multiples(slide, x, y, w, h, panels, *, categories=None, cols=None, kind="line",
+                    accent=None, highlight=None, gap=0.28, label_size=10.5, shared_scale=True,
+                    font=None):
+    """A grid of IDENTICAL mini charts with a SHARED value axis — the small-multiples form.
+
+    panels     — [(title, values), ...]; every panel shares `categories` (x labels).
+    highlight  — index of the ONE panel that carries the story (its series gets the accent;
+                 the rest render muted) — small multiples argue by comparison, one protagonist.
+    shared_scale — pin every panel's value axis to the same [lo, hi]. This is the POINT of the
+                 form: `data-viz.md` and `form-selection.md` both prescribe shared scales, but
+                 composing native_chart() by hand lets PowerPoint auto-scale each panel, so a
+                 small bump and a huge bump look identical — a silent correctness failure
+                 invisible to the geometry lint. Building them through ONE call closes it.
+
+    Returns the bottom y. Grid math via columns()-style symmetric packing; ~2-12 panels.
+    """
+    if not panels:
+        raise ValueError("small_multiples(): no panels")
+    n = len(panels)
+    if cols is None:
+        cols = 2 if n <= 4 else 3 if n <= 9 else 4
+    rows_n = (n + cols - 1) // cols
+    pw = (w - gap * (cols - 1)) / cols
+    ph = (h - gap * (rows_n - 1) - 0.24 * rows_n) / rows_n     # 0.24in per-panel title band
+    if pw < 1.2 or ph < 0.8:
+        raise ValueError(f"small_multiples(): {n} panels don't fit {w:.1f}x{h:.1f}in — "
+                         f"panel would be {pw:.2f}x{ph:.2f}in (need >=1.2x0.8); enlarge or cut panels")
+    acc = _as_rgb(accent) if accent is not None else _as_rgb(MAGENTA)
+    mut = RGBColor(0xB8, 0xBE, 0xCC)
+    lo = min(float(v) for _, vals in panels for v in vals)
+    hi = max(float(v) for _, vals in panels for v in vals)
+    lo = min(0.0, lo)                                          # honest magnitude: include zero
+    span = (hi - lo) or 1.0
+    hi = hi + 0.06 * span
+    cats = categories or [str(i + 1) for i in range(max(len(v) for _, v in panels))]
+    for i, (ptitle, vals) in enumerate(panels):
+        px = x + (i % cols) * (pw + gap)
+        py = y + (i // cols) * (ph + gap + 0.24)
+        is_hero = (highlight is not None and i == highlight)
+        col = acc if (is_hero or highlight is None) else mut
+        text(slide, px + 0.02, py, pw - 0.04, 0.22,
+             [[(str(ptitle), label_size, _as_rgb(DEEP) if is_hero or highlight is None else _as_rgb(MUTE),
+                bool(is_hero), False, font or FONT)]], space_after=0)
+        ch = native_chart(slide, px, py + 0.24, pw, ph, cats, [(str(ptitle), list(vals))],
+                          kind=kind, palette=[col], legend=False, font=font, zero_base=True)
+        if shared_scale:
+            try:
+                ch.value_axis.minimum_scale = lo
+                ch.value_axis.maximum_scale = hi
+            except Exception:
+                pass
+            if i % cols != 0:                                  # inner panels drop the duplicate axis
+                try:
+                    ch.value_axis.visible = False
+                except Exception:
+                    pass
+    return y + rows_n * (ph + 0.24) + (rows_n - 1) * gap
+
+
+A11Y_TITLE_TAG = "deckkit-a11ytitle"
+
+
+def a11y_title(slide, text, *, ea=None):
+    """Give `slide` a title for screen readers and the outline — a TITLE placeholder FIRST in reading order, placed
+    wholly ABOVE the canvas so nothing is drawn. For a statement page, or a page whose visible title is set below a
+    kicker or low on the page (lint_deck's NO SLIDE TITLE / READING ORDER read only a TITLE placeholder, or the first
+    large text in the top 28%). Returns the shape. Refuses empty text, and a slide that already has a title placeholder
+    (put the text in that one). `ea`: the East-Asian face for CJK text (a visual language passes its own); default
+    EAFONT as set_font applies it, else the script's face for this platform.
+
+    The docs called an off-canvas title "the sanctioned trick for statement slides" and nothing made one: a docs-only
+    agent's plain text box above the canvas tripped OFF_CANVAS and DUPLICATE_TEXT and blocked the build (2026-10-04).
+    Both checks skip this shape by its tag.
+
+        dk.a11y_title(s, "How an evening runs")
+    """
+    from pptx.enum.shapes import PP_PLACEHOLDER as _PPH
+    from xml.sax.saxutils import escape as _esc
+    from pptx.oxml import parse_xml as _parse
+    t = " ".join(str(text or "").split())
+    if not t:
+        raise ValueError("a11y_title(): the title text is empty — a screen reader would announce nothing")
+    for sh in slide.shapes:
+        try:
+            if sh.is_placeholder and sh.placeholder_format.type in (_PPH.TITLE, _PPH.CENTER_TITLE):
+                raise ValueError("a11y_title(): this slide already has a title placeholder ({!r}) — put the text in "
+                                 "it".format(sh.name))
+        except (AttributeError, KeyError):
+            continue
+    W, H = _slide_size(slide)
+    h = 0.5
+    sid = slide.shapes._next_shape_id
+    sp = _parse(
+        '<p:sp xmlns:p="http://schemas.openxmlformats.org/presentationml/2006/main" '
+        'xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main">'
+        '<p:nvSpPr><p:cNvPr id="{id}" name="{tag}"/><p:cNvSpPr><a:spLocks noGrp="1"/></p:cNvSpPr>'
+        '<p:nvPr><p:ph type="title"/></p:nvPr></p:nvSpPr>'
+        '<p:spPr><a:xfrm><a:off x="0" y="{y}"/><a:ext cx="{cx}" cy="{cy}"/></a:xfrm></p:spPr>'
+        '<p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:r><a:rPr sz="1000"/><a:t>{t}</a:t></a:r></a:p></p:txBody>'
+        '</p:sp>'.format(id=sid, tag=A11Y_TITLE_TAG, y=-int((h + 0.5) * 914400), cx=int(W * 914400),
+                         cy=int(h * 914400), t=_esc(t)))
+    tree = slide.shapes._spTree
+    tree.insert(2, sp)                                   # after nvGrpSpPr + grpSpPr: first in reading order
+    for sh in slide.shapes:
+        if sh.shape_id == sid:
+            # a lining face: the deck's, unless it sets old-style figures (Georgia) — the lining-digits rule reads
+            # every run, drawn or not
+            face = FONT if not has_oldstyle_figures(FONT) else "Arial"
+            for r in sh.text_frame.paragraphs[0].runs:
+                set_font(r, 10, DEEP, font=face)
+                if ea and _has_cjk(t):
+                    _apply_ea(r, ea)
+                elif _has_cjk(t) and r._r.find(".//" + qn("a:ea")) is None:   # EAFONT unset: still a face for its script
+                    scr = script_of(t) or "han"
+                    plat = "mac" if _sys_rg.platform == "darwin" else ("win" if _sys_rg.platform.startswith("win") else "linux")
+                    _apply_ea(r, EA_LINUX[scr] if plat == "linux" else EA_FACES[scr]["sans"][plat])
+            return sh
+    raise RuntimeError("a11y_title(): the title shape was not found after inserting it")
+
+
+def _is_a11y_title(sh):
+    """The off-canvas title a11y_title() made: never content, never a layout fault."""
+    return str(getattr(sh, "name", "") or "").startswith(A11Y_TITLE_TAG)
+
+
+def decorative(shape, reason):
+    """Declare a shape PURE DECORATION — nothing a viewer needs to read rides on seeing it — so the
+    render gate's NON-TEXT CONTRAST (WCAG 1.4.11, a hard floor at hand-off) does not hold it.
+
+    WCAG 1.4.11 exempts decoration, but no check can tell a washi-tape strip from a status dot that
+    carries meaning; a blanket exemption for every ornament would let a meaningful mark through
+    unread. So the author decides, per shape, with a sentence (language-fair floor, CJK counts
+    double) — and the lint PRINTS every exemption with its reason, so a deck that declares its way
+    out of everything is visible. Decided by the user, 2026-10-03.
+
+        t = orn.tape(s, 6.0, 1.2, 1.6, 0.42, "F2D16B", holds=pic)
+        dk.decorative(t, "washi tape is ornament; no meaning rides on seeing it")
+
+    Composes with the motif tag and with `overlap_intent` / `bleed_intent` in any order. It waives
+    NON-TEXT CONTRAST only — text contrast, OCCLUSION and every geometry check still apply."""
+    try:
+        from written_reason import reason_width
+    except Exception:                                    # a missing helper must not loosen the floor
+        def reason_width(s):
+            return len(s.strip()) if isinstance(s, str) else 0
+    if reason_width(reason) < 16:
+        raise ValueError("decorative(reason=%r): say why nothing rides on seeing this shape, in a "
+                         "sentence someone can disagree with later (>=16 Latin-equivalent; a CJK "
+                         "character counts 2)." % (reason,))
+    _reason = " ".join(str(reason).strip().split())[:120]
+    try:
+        _compose_tag(shape, flag="+decor", reason=_reason)
+    except Exception:
+        pass
+    return shape
+
+
+def low_res_intent(shape, reason):
+    """Declare a picture whose PIXELS ARE THE POINT — pixel art, a screenshot of a low-resolution screen, a
+    deliberately blown-up detail — so LOW_RES_IMAGE does not hold it. Returns the shape.
+
+    LOW_RES_IMAGE measures what a viewer gets: the source pixels that stay visible after the crop, spread over
+    the frame's inches (a 13.33in slide on a 1080p screen is ~144 ppi; under 72 it reads soft, under 36 the
+    pixels show as blocks). It cannot tell a thumbnail stretched by accident from a sprite enlarged on purpose,
+    so the author says which, per picture, with a sentence (>=16 Latin-equivalent, CJK counts 2). Composes
+    with the other declarations in any order; waives LOW_RES_IMAGE only."""
+    try:
+        from written_reason import reason_width
+    except Exception:                                    # a missing helper must not loosen the floor
+        def reason_width(s):
+            return len(s.strip()) if isinstance(s, str) else 0
+    if reason_width(reason) < 16:
+        raise ValueError("low_res_intent(reason=%r): say why the visible pixels are the point, in a sentence "
+                         "someone can disagree with later (>=16 Latin-equivalent; a CJK character counts 2)."
+                         % (reason,))
+    try:
+        _compose_tag(shape, flag="+lowres", reason=" ".join(str(reason).strip().split())[:120])
+    except Exception:
+        pass
+    return shape
+
+
+def _declared_lowres(sh):
+    n = str(getattr(sh, "name", "") or "")
+    head = n.split(":", 1)[0]
+    return head.startswith(LOWRES_TAG) or "+lowres" in head or head.startswith(DECOR_TAG) or "+decor" in head
+
+
+LOW_RES_WARN_PPI = 72.0      # 2x upscale on a 1080p screen (~144 ppi for a 13.33in slide): visibly soft
+LOW_RES_HARD_PPI = 36.0      # 4x: the pixels show as blocks
+LOW_RES_MIN_SIDE = 1.5       # inches — a smaller picture (an icon, an avatar) is not checked
+
+
+def _low_res_findings(slide, n):
+    """(n, severity, "LOW_RES_IMAGE", msg) for each raster picture on `slide` whose VISIBLE source pixels (after
+    its crop) are spread under LOW_RES_WARN_PPI over its frame. Vector images (SVG, EMF/WMF) and declared
+    pictures (low_res_intent, decorative) are skipped."""
+    out = []
+    from pptx.shapes.picture import Picture as _Pic
+
+    def _grp_scale(g):
+        """How much a group draws its children larger than their own size (its ext over its chExt)."""
+        try:
+            x = g._element.grpSpPr.find(qn("a:xfrm"))
+            ext, ch = x.find(qn("a:ext")), x.find(qn("a:chExt"))
+            return (int(ext.get("cx")) / max(1, int(ch.get("cx"))), int(ext.get("cy")) / max(1, int(ch.get("cy"))))
+        except Exception:
+            return (1.0, 1.0)
+
+    def walk(shapes, sx=1.0, sy=1.0):
+        for sh in shapes:
+            if sh.shape_type == 6:                       # a group: its pictures count too, at the size it DRAWS them
+                gx, gy = _grp_scale(sh)
+                yield from walk(sh.shapes, sx * gx, sy * gy)
+            elif isinstance(sh, _Pic):                   # a picture, or a picture PLACEHOLDER holding the user's photo
+                yield sh, sx, sy
+    for sh, sx, sy in walk(slide.shapes):
+        try:
+            if _declared_lowres(sh):
+                continue
+            if sh._element.xpath(".//*[local-name()='svgBlip']"):
+                continue                                 # PowerPoint draws the vector, not the fallback PNG
+            im = sh.image
+            if im.content_type in ("image/x-emf", "image/x-wmf", "image/emf", "image/wmf", "image/svg+xml"):
+                continue
+            w_in, h_in = sh.width / 914400.0 * sx, sh.height / 914400.0 * sy
+            if max(w_in, h_in) < LOW_RES_MIN_SIDE or min(w_in, h_in) <= 0:
+                continue
+            pw, ph = im.size
+            vis_w = pw * max(0.0, 1.0 - (sh.crop_left or 0) - (sh.crop_right or 0))
+            vis_h = ph * max(0.0, 1.0 - (sh.crop_top or 0) - (sh.crop_bottom or 0))
+            ppi = min(vis_w / w_in, vis_h / h_in)
+        except Exception:
+            continue
+        if ppi >= LOW_RES_WARN_PPI:
+            continue
+        alt = ""
+        try:
+            alt = sh._element.nvPicPr.cNvPr.get("descr") or sh.name
+        except Exception:
+            pass
+        need = int(round(max(w_in, h_in) * 144))
+        out.append((n, "CRITICAL" if ppi < LOW_RES_HARD_PPI else "WARN", "LOW_RES_IMAGE",
+                    "picture '{}' shows {:.0f}x{:.0f} source px over {:.1f}x{:.1f}in = {:.0f} ppi (a 13.33in slide on a "
+                    "1080p screen is ~144 ppi; under {:.0f} it reads soft, under {:.0f} the pixels show as blocks) — use a "
+                    "larger source (~{} px on its long side for this size), place it smaller, or, if the pixels are the "
+                    "point, declare deckkit.low_res_intent(pic, why)".format(
+                        str(alt)[:40], vis_w, vis_h, w_in, h_in, ppi, LOW_RES_WARN_PPI, LOW_RES_HARD_PPI, need)))
+    return out
+
+
+def overlap_intent(shape, reason):
+    """Declare that THIS element is meant to sit under (or over) other text — a composed overlap.
+
+    `lint_layout`'s TEXT_OVERLAP is a CRITICAL that refuses to save, and it is right to be: two text
+    blocks colliding is the single most common way a build ships unreadable. But it also blocks two
+    moves that are ordinary editorial design — a giant display word with a small line riding it, and
+    background geometry running through a paragraph — and there was no way to say "this one is on
+    purpose". Measured: both compositions were refused at build time, so the deck could not be saved
+    at all.
+
+    The escape is a TAG, not a threshold, and that decision is already made in this file:
+    `ghost_numeral` is excluded from the old-style-figures check by an exact tag, with the reason
+    written beside it — "Guessing from size either waves through a real defect or blocks a legitimate
+    watermark." The same logic holds here. A size or opacity heuristic would wave through a real
+    collision on the day a title happened to be large.
+
+    `reason` is required and must be a sentence someone can disagree with later, because that is what
+    separates a decision from a reflex — and the count of declared overlaps is printed by the lint,
+    so a deck that declares its way out of everything is visible (the INTENT INFLATION lesson).
+
+        big = dk.text(s, 0.4, 1.2, 9.2, 2.4, [[("SCALE", 150, dk.TINT, True, False, dk.DISPLAY)]])
+        dk.overlap_intent(big, "the display word is the ground the caption rides — scale contrast")
+        dk.text(s, 1.2, 2.6, 5.0, 0.5, [[("a caption on the giant", 13, dk.DEEP, False, False)]])
+
+    Legibility is NOT waived by this. The declaration says the geometry is intended; contrast,
+    TEXT NOT VISIBLE and the render-time occlusion checks still apply, and they are the floor.
+    """
+    if not isinstance(reason, str) or len(reason.strip()) < 16:
+        raise ValueError("overlap_intent(reason=%r): write why this overlap is composed, in a "
+                         "sentence someone can disagree with later (>=16 chars). An undeclared "
+                         "collision and a declared composition must not read the same." % (reason,))
+    # 🔴 COMPOSE, never overwrite. This wrote `shape.name = OVERLAP_TAG + reason` outright, and
+    # the declaration therefore ERASED any motif tag already on the shape — the exact failure
+    # `bleed_intent`'s docstring says it composes to avoid ("a motif that bleeds must stay
+    # countable as a motif"). Two declarations sharing one field, and the second one silently won.
+    #
+    # Measured on a delivered deck whose entire design is a hand-drawn motif: its surface kit
+    # called `tag_motif(sh, loud=False)` and then `overlap_intent(sh, …)` on every piece of
+    # furniture, and the saved file contained ZERO tagged motif shapes. MOTIF_BUDGET could not
+    # count them, TEXT_OVER_MOTIF and MOTIF_UNEXPLAINED could not see them, and the
+    # `icon_family: none — motif-dominant` waiver could not be verified against the file it was
+    # making a claim about. Nothing reported any of it, because an absent tag looks exactly like
+    # a deck that never drew a motif.
+    _reason = " ".join(str(reason).strip().split())[:120]
+    try:
+        _compose_tag(shape, flag="+overlap", reason=_reason)
+    except Exception:
+        shape.name = OVERLAP_TAG + _reason
+    return shape
+
+DELIVERY_MODES = ("presented", "textheavy", "selfread", "surface")
+
+
+def declare_delivery(where, mode, builds=None, notes=None):
+    """Record HOW this deck will be consumed, in `<deck dir>/.deck-gates.json`, from the build
+    script — so the lint's budgets do not depend on an operator remembering a CLI flag.
+
+    `render_deck.py --gate-check` has always read this key; `lint_deck.py` reads it too now. What
+    the flag-only world cost, measured on a delivered 14-page self-read deck: 20 `[stats]` lines
+    with no flags, 10 with `--selfread`. The extra ten were the wrong budget applied to the wrong
+    deck — seven TEXT WALLs against the ~40-word *presented* budget instead of ~90, a SMALL TYPE
+    against the read-from-the-back floor, and "14 of 14 slides have empty speaker notes" on a deck
+    nobody speaks. Advisory noise is not harmless: it is what teaches people to skim the gates.
+
+    🔴 Call it AFTER ``prs.save(OUT)``, never before — it hashes the file on disk::
+
+        dk.lint_layout(prs, strict=True)
+        prs.save(str(OUT))
+        dk.declare_delivery(OUT, "selfread")     # OUT is the .pptx path, or its directory
+
+    Called before the save it records no hash at all (or, on a rebuild, the PREVIOUS build's), and
+    every later ``--gate-check`` reports ``EDITED SINCE BUILD`` on a file nobody touched.
+
+    `where` may be the .pptx path or the deck directory. Merges into any existing gates file —
+    the critic block `validate_review.py --record` writes is preserved. Returns the file path.
+    """
+    import json as _json
+    import os as _os                     # deckkit has no module-level `os` — see _ea_face et al.
+    if isinstance(mode, str) and mode.replace("-", "").replace("_", "") in DELIVERY_MODES:
+        mode = mode.replace("-", "").replace("_", "")   # the prose writes "self-read"; the mode is selfread (case kept:
+                                                        # "Presented" stays refused, as test_delivery_record pins)
+    if mode not in DELIVERY_MODES:
+        raise ValueError("delivery must be one of %s, got %r" % (", ".join(DELIVERY_MODES), mode))
+    # 🔴 AFTER the save, never before: this hashes the file ON DISK. Called first, it records a
+    # record with no hash (or, on a rebuild, the PREVIOUS build's hash) and every later
+    # `--gate-check` reports `EDITED SINCE BUILD` — a false alarm that sends the reader to
+    # extract_deck.py to reconcile edits nobody made. Measured: it cost a real build a round-trip
+    # and the wrong diagnosis. The missing file is the half that can be caught here; the stale
+    # hash is diagnosed by render_deck, which can read the build script's call order.
+    if not _os.path.isdir(where) and not _os.path.exists(where):
+        raise FileNotFoundError(
+            "declare_delivery({!r}): the deck does not exist yet. It hashes the file on disk, so "
+            "it must be called AFTER prs.save(OUT) — not before it:\n"
+            "    dk.lint_layout(prs, strict=True)\n"
+            "    prs.save(str(OUT))\n"
+            "    dk.declare_delivery(str(OUT), \"presented\")   # <- here".format(str(where)))
+    d = where if _os.path.isdir(where) else _os.path.dirname(_os.path.abspath(where))
+    path = _os.path.join(d, ".deck-gates.json")
+    try:
+        with open(path, encoding="utf-8") as fh:
+            gates = _json.load(fh)
+        if not isinstance(gates, dict):
+            gates = {}
+    except (OSError, ValueError):
+        gates = {}
+    gates["delivery"] = mode
+    if builds is not None:
+        # The BUILDS choice is a user decision exactly like the mode, and it was the one still
+        # carried by memory: with the user opted OUT of appear-builds, `--static` had to be typed
+        # on every lint run or NO BUILDS fired on a deck that is static BY THEIR CHOICE. Same
+        # argument that produced this function; the flag was simply never given a home.
+        if builds not in ("static", "builds"):
+            raise ValueError("builds must be 'static' (the user opted out) or 'builds' (opted "
+                             "in), got %r" % (builds,))
+        gates["builds"] = builds
+    if notes is not None:
+        # The SAME argument, one rule later. `NO NOTES` fires on a presented deck with empty
+        # speaker notes, and a user who asks for the spoken script to be removed has made a
+        # decision — but there was nowhere to record it, so the warning fired on every lint run
+        # forever and was waived by hand each time. `builds="static"` exists for exactly this
+        # shape; this is its twin.
+        # 🔴 It records the CHOICE only. It does NOT move the word budget: the skill's position is
+        # that sentences belong in the notes, so a deck without them carrying more text is a real
+        # tension worth seeing, not one to silence by raising the ceiling.
+        if notes not in ("none", "notes"):
+            raise ValueError("notes must be 'none' (the user declined the spoken script) or "
+                             "'notes' (the deck carries them), got %r" % (notes,))
+        gates["notes"] = notes
+    # THE BUILD FINGERPRINT. `handoff-and-iteration.md` documents how to reconcile a user's
+    # hand-edits before regenerating — and nothing anywhere DETECTED that a reconcile was needed.
+    # Measured: a user edited a delivered deck in PowerPoint and saved it beside the built one;
+    # it was invisible to every tool, and was noticed only because the folder had moved. Recording
+    # what the build produced turns "remember to check" into a check: the deck is untouched while
+    # this hash matches, and a mismatch means somebody edited it after the last build.
+    if not _os.path.isdir(where):
+        try:
+            import hashlib as _hl
+            _h = _hl.sha256()
+            with open(where, "rb") as _fh:
+                for _chunk in iter(lambda: _fh.read(1 << 20), b""):
+                    _h.update(_chunk)
+            gates["deck_sha256"] = _h.hexdigest()
+            gates["deck_file"] = _os.path.basename(where)
+        except OSError:
+            pass                      # never let bookkeeping fail a build that already succeeded
+    with open(path, "w", encoding="utf-8") as fh:
+        _json.dump(gates, fh, ensure_ascii=False, indent=1)
+        fh.write("\n")
+    return path
+
+
+def design_intent(slide, *, envelope=None, rhyme=None, weight=None, role=None, reason=""):
+    """Declare a slide's DELIBERATE design register so the render-time lint can tell intent
+    from accident (three of its messages say "record the quiet-register exception" — this is
+    where it gets recorded).
+
+    envelope: "upper" — content stops high ON PURPOSE, real void below (a statement/pivot beat);
+              "lower" — content rides the baseline; "bleed" — content deliberately reaches the edge.
+    rhyme:    an int group id — consecutive slides sharing it are an intentional visual rhyme
+              (a Speed/Cost/Risk triptych), not layout sameness.
+    weight:   "left" | "right" | "asymmetric" — the composition is deliberately weighted to one
+              side, with the opposite half held as real air. This is the editorial/asymmetric
+              layout an art director reaches for on a statement beat, and it is the one register
+              whose lint advice ("rebalance") would actively destroy the design, so it has to be
+              declarable rather than argued with. It silences LOPSIDED for that slide only.
+    role:     "appendix" — this slide STARTS the backup/appendix run, and every slide after it is
+              reference material read on demand. A defense is told to "plan for backup/appendix
+              slides for Q&A", and those are dense ON PURPOSE; judged as presented content they draw
+              TEXT WALL and CROWDED on every one (measured: 6 findings on 3 backup slides). It also
+              restores the closing slide's exemption, which a trailing appendix otherwise steals by
+              making some backup slide the last one.
+    reason:   one clause, for the human reading the lint output later.
+
+    Implemented as an invisible zero-ink tag shape (name="deckkit-intent:{json}") so the intent
+    travels INSIDE the .pptx to the render-time lint — no side-channel file to lose. Abuse is
+    audited: lint warns INTENT INFLATION when most slides declare exceptions.
+    """
+    import json as _json
+    if weight is not None and weight not in ("left", "right", "asymmetric"):
+        raise ValueError(f"design_intent(): weight={weight!r} is not 'left' | 'right' | 'asymmetric'")
+    if role is not None and role != "appendix":
+        raise ValueError(f"design_intent(): role={role!r} is not 'appendix' (the only role that "
+                         f"changes how the lint reads a slide)")
+    payload = {k: v for k, v in (("envelope", envelope), ("rhyme", rhyme), ("weight", weight),
+                                 ("role", role), ("reason", reason)) if v}
+    tag = slide.shapes.add_textbox(Inches(0), Inches(0), Inches(0.01), Inches(0.01))
+    tag.name = "deckkit-intent:" + _json.dumps(payload, ensure_ascii=False)
+    tag.text_frame.word_wrap = False
+    return tag
+
+
+def pic_alpha(picture, pct):
+    """Set a picture's OWN opacity (0-100), via <a:alphaModFix> on its blip.
+
+    The native way to make a faint interior plate: the image keeps its own hues (a scrim overlay
+    tints everything toward the scrim colour — the A/B is unambiguous), there is no second
+    full-bleed shape, and the result is editable in PowerPoint. python-pptx has no API for this;
+    the element is one line of DrawingML.
+    """
+    blip = picture._element.blipFill.find(qn("a:blip"))
+    if blip is None:
+        raise ValueError("pic_alpha(): shape has no image fill")
+    for old in blip.findall(qn("a:alphaModFix")):
+        blip.remove(old)
+    blip.append(blip.makeelement(qn("a:alphaModFix"), {"amt": str(int(pct * 1000))}))
+    return picture
+
+
+def speaker_notes(slide, notes):
+    """Attach speaker notes — the SPOKEN script — to a slide, off the visible canvas.
+    The slide should show the phrase; the full sentences the presenter says live here.
+    Notes do NOT render to the slide or the PNG (the critic won't see them); they appear
+    in PowerPoint/Keynote Presenter View and print on Notes Pages. This is the right
+    place to move full sentences OFF a slide for a talk/defense/lecture the user will
+    rehearse — keeping the slide a clean visual aid while preserving the narration."""
+    tf = slide.notes_slide.notes_text_frame
+    tf.text = notes
+    return slide.notes_slide
+
+
+# The eight PAGE ARCHITECTURES `lint_deck`'s SKELETON VARIETY names — statement · split · island ·
+# dashboard · band · full_bleed · rail · gallery. Until this existed the lint DEMANDED at least four
+# distinct skeletons on an 8+-slide deck and the toolkit offered no way to make one: 190 helpers for
+# what goes ON a page, none for how a page is COMPOSED, so every architecture was hand-rolled out of
+# box+text, every deck, from zero. A required rule with no tool to meet it is the asymmetry this
+# skill's own enforcement invariant warns about.
+#
+# These return NAMED RECTS and paint nothing, exactly like `columns()`/`bento()` — the architecture
+# is the product, the content stays yours. They are also cheaper than hand-rolling: one call
+# replaces the block of arithmetic that a build script otherwise repeats per page, and the geometry
+# it returns is derived from the real canvas rather than remembered 16:9 numbers.
+SKELETONS = ("statement", "split", "island", "dashboard", "band", "full_bleed", "rail", "gallery")
+
+
+def skeleton(slide, kind, *, band=None, weight=0.62, gap=0.4, n=3, flip=False):
+    """One of the eight page ARCHITECTURES, as a dict of named rects. Paints nothing.
+
+        statement  {"stage"}                 one block, centred, air around it
+        split      {"lead", "support"}       a dominant column + its support (`weight` = lead share)
+        island     {"island", "caption"}     a panel floating clear of the edges
+        dashboard  {"cells": [...]}          an n x 2 grid of equal cells
+        band       {"bands": [...]}          full-width horizontal registers
+        full_bleed {"bleed", "well"}         edge-to-edge stage + an inset text well. `bleed` is
+                                            the WHOLE canvas and paints over the title band and
+                                            footer — put the page's words in `well`, or draw the
+                                            bleed FIRST and the title on top of it.
+        rail       {"rail", "body"}          a narrow side rail beside the body
+        gallery    {"tiles": [...], "strip"} a row of equal tiles over a caption strip
+
+    `band=` overrides the source rect (default `content_band(slide)`, so the title bar and footer
+    are already respected). `flip=True` mirrors the asymmetric kinds — split, rail, full_bleed —
+    which is what keeps two split pages in one deck from sharing a skeleton fingerprint.
+
+    Raises on an unknown kind rather than guessing: a typo silently returning a default is how a
+    deck ends up with one architecture repeated under eight names.
+    """
+    if kind not in SKELETONS:
+        raise ValueError("skeleton: unknown kind {!r} — one of: {}. (`flip=True` mirrors split, "
+                         "rail and full_bleed.)".format(kind, ", ".join(SKELETONS)))
+    if band is None:
+        band = content_band(slide)
+    x, y, w, h = band
+    try:
+        sw, sh = _slide_size(slide)
+    except Exception:
+        sw, sh = x + w, y + h
+
+    # A division that cannot fit must SAY so. Measured before this existed: `n=99` cells, a gap
+    # wider than the band, `weight` at 0 or 1, or a tiny source rect each returned NEGATIVE widths,
+    # which python-pptx accepts and renders as garbage — and `bento()`, this helper's sibling,
+    # already raises on exactly this. A geometry helper that hands back an impossible rect makes
+    # the caller's page wrong somewhere else, far from the cause.
+    def _fits(count, extent, axis):
+        need = gap * max(0, count - 1)
+        if count < 1 or extent - need <= 0.05:
+            raise ValueError(
+                "skeleton({!r}): {} slot(s) with a {:.2f}in gap need more than the {:.2f}in of {} "
+                "available. Ask for fewer slots, a smaller gap, or a bigger band."
+                .format(kind, count, gap, extent, axis))
+
+    if gap < 0:
+        raise ValueError("skeleton: gap must be >= 0, not {}".format(gap))
+    if w <= 0.05 or h <= 0.05:
+        raise ValueError("skeleton({!r}): the source band is {:.2f}x{:.2f}in — there is nothing to "
+                         "divide. Pass a real `band=` or use a slide with a content band."
+                         .format(kind, w, h))
+
+    if kind == "statement":
+        pad = min(w * 0.12, 1.2)
+        return {"stage": (x + pad, y + h * 0.18, w - 2 * pad, h * 0.64)}
+    if kind == "split":
+        if not 0.05 <= weight <= 0.95:
+            raise ValueError("skeleton('split'): weight must be between 0.05 and 0.95, not {} — "
+                             "at the extremes one column has no width.".format(weight))
+        _fits(2, w, "width")
+        lead = (w - gap) * (1.0 - weight if flip else weight)
+        rest = w - gap - lead
+        a = (x, y, lead, h)
+        b = (x + lead + gap, y, rest, h)
+        return {"lead": b if flip else a, "support": a if flip else b}
+    if kind == "island":
+        inset = min(w * 0.10, 1.1)
+        cap = 0.62
+        return {"island": (x + inset, y, w - 2 * inset, max(0.8, h - cap - 0.2)),
+                "caption": (x + inset, y + max(0.8, h - cap - 0.2) + 0.2, w - 2 * inset, cap)}
+    if kind == "dashboard":
+        cols_n = max(2, int(n))
+        rows_n = 2
+        _fits(cols_n, w, "width")
+        _fits(rows_n, h, "height")
+        cw = (w - gap * (cols_n - 1)) / cols_n
+        ch = (h - gap) / rows_n
+        return {"cells": [(x + c * (cw + gap), y + r * (ch + gap), cw, ch)
+                          for r in range(rows_n) for c in range(cols_n)]}
+    if kind == "band":
+        k = max(2, int(n))
+        _fits(k, h, "height")
+        bh = (h - gap * (k - 1)) / k
+        return {"bands": [(x, y + i * (bh + gap), w, bh) for i in range(k)]}
+    if kind == "full_bleed":
+        well_h = min(h * 0.34, 2.0)
+        well_w = min(w * 0.56, 6.4)
+        wx = (sw - well_w - x) if flip else x
+        return {"bleed": (0.0, 0.0, sw, sh),
+                "well": (wx, y + h - well_h, well_w, well_h)}
+    if kind == "rail":
+        _fits(2, w, "width")
+        rw = min(w * 0.26, 2.6)
+        r = (x + w - rw, y, rw, h) if flip else (x, y, rw, h)
+        b = (x, y, w - rw - gap, h) if flip else (x + rw + gap, y, w - rw - gap, h)
+        return {"rail": r, "body": b}
+    # gallery
+    k = max(2, int(n))
+    _fits(k, w, "width")
+    strip = min(0.55, h * 0.35)
+    th = max(0.8, h - strip - 0.18)
+    tw = (w - gap * (k - 1)) / k
+    return {"tiles": [(x + i * (tw + gap), y, tw, th) for i in range(k)],
+            "strip": (x, y + th + 0.18, w, strip)}
+
+
+def bento(slide, x, y, w, h, tiles, *, gap=0.18, cols=4, rows=None):
+    """A MODULAR grid of unequal tiles on one shared rhythm — the layout `columns()` cannot make.
+
+    `columns`/`rows` give equal-weight strips, and `columns(weights=…)` varies width but keeps one
+    row. A bento grid varies BOTH axes against a single module, so one message can be split into
+    related units of honestly different importance: the biggest tile is the point, the small ones
+    are the support, and the reader learns the ranking from the geometry before reading a word.
+
+    `tiles` is a list of ``(span_cols, span_rows)`` or ``(span_cols, span_rows, label)``; they are
+    packed left-to-right, top-to-bottom into the first free cell that fits. Returns a list of
+    ``(x, y, w, h)`` rects in the SAME order as `tiles`, so a caller draws its own content into
+    them — this places geometry and paints nothing, exactly like `columns()`.
+
+    The gutter is ONE number for the whole grid on purpose: unequal gutters are what makes a
+    modular layout read as an accident rather than a system, and it is the single most common way
+    this shape is got wrong. `rows` defaults to as many as the tiles need.
+
+    Raises rather than overflowing when the tiles cannot fit the row count — a grid that silently
+    drops its last tile is worse than one that will not build.
+    """
+    if not tiles:
+        return []
+    # `slide` is read: the grid is validated against the CANVAS it will be drawn on. Without this
+    # the parameter was accepted and discarded — CI's `check_param_reach.py` caught exactly that —
+    # and a grid placed past the edge produced tiles the caller then filled, off-canvas, for lint
+    # to report one shape at a time instead of naming the rect that was wrong.
+    try:
+        sw, sh = _slide_size(slide)
+        if x < -0.01 or y < -0.01 or x + w > sw + 0.01 or y + h > sh + 0.01:
+            raise ValueError(
+                "bento: the grid rect ({:.2f}, {:.2f}, {:.2f}x{:.2f}) falls outside the "
+                "{:.2f}x{:.2f}in canvas. Take it from the content band — "
+                "`dk.content_band(slide)` or `formats.band(FMT)` — rather than from remembered "
+                "16:9 numbers.".format(x, y, w, h, sw, sh))
+    except ValueError:
+        raise
+    except Exception:
+        pass                                       # no real slide (a geometry-only call)
+    spans = [(int(t[0]), int(t[1])) for t in tiles]
+    if any(c < 1 or r < 1 for c, r in spans):
+        raise ValueError("bento: every tile needs span_cols >= 1 and span_rows >= 1")
+    if any(c > cols for c, _r in spans):
+        raise ValueError("bento: a tile spans {} of {} columns — widen `cols` or narrow the tile"
+                         .format(max(c for c, _ in spans), cols))
+    need = rows or (sum(c * r for c, r in spans) + cols - 1) // cols + max(r for _c, r in spans)
+    grid = [[False] * cols for _ in range(need)]
+    placed = []
+    for (sc, sr) in spans:
+        spot = None
+        for gy in range(need - sr + 1):
+            for gx in range(cols - sc + 1):
+                if all(not grid[gy + dy][gx + dx] for dy in range(sr) for dx in range(sc)):
+                    spot = (gx, gy)
+                    break
+            if spot:
+                break
+        if spot is None:
+            raise ValueError(
+                "bento: {} tile(s) do not fit in {} column(s) x {} row(s). Give it more rows, "
+                "fewer tiles, or smaller spans — silently dropping a tile would look finished."
+                .format(len(spans) - len(placed), cols, need))
+        gx, gy = spot
+        for dy in range(sr):
+            for dx in range(sc):
+                grid[gy + dy][gx + dx] = True
+        placed.append((gx, gy, sc, sr))
+    used = max(gy + sr for _gx, gy, _sc, sr in placed)
+    cw = (w - gap * (cols - 1)) / float(cols)
+    ch = (h - gap * (used - 1)) / float(used) if used else h
+    return [(x + gx * (cw + gap), y + gy * (ch + gap),
+             sc * cw + (sc - 1) * gap, sr * ch + (sr - 1) * gap)
+            for gx, gy, sc, sr in placed]
+
+
+def qr_panel(slide, x, y, size, url, *, caption="Scan for the preprint", contact=None,
+             scan_ft=None, image=None, ink=None, font=None, quiet=True):
+    """A QR code WITH the three things a bare QR code is missing, sized for its scan distance.
+
+    A code on its own is the common failure, and it fails in three ways at once: nobody knows what
+    it points at, anyone who photographs the poster instead of scanning it leaves with nothing, and
+    a code shrunk to fit does not scan from where people stand. So this draws the code, a caption
+    saying what it links to, and the URL in PLAIN TEXT beneath it (plus an optional contact —
+    email or ORCID), and it holds the code to the 10:1 rule of thumb: a code read from 5ft wants
+    about 6in, i.e. ``size >= scan_ft * 12 / 10``. Under that it raises rather than drawing a code
+    that will not scan, because a QR code is verified by a phone at the venue or not at all.
+
+    ``image`` is a pre-rendered QR PNG. Without one this generates the matrix via ``qrcode`` or
+    ``segno`` if either is installed, and otherwise raises with the two ways to supply it — this
+    library does not implement QR encoding, and silently drawing a placeholder square would be the
+    worst outcome available (it looks finished and scans as nothing).
+
+    ``quiet=True`` keeps the mandatory light margin around the code (4 modules); switch it off only
+    when your PNG already carries one. Returns the picture shape.
+    """
+    # `scan_ft` defaults from the SURFACE. 5ft is a poster assumption — a hall, someone deciding
+    # from a distance — and applying it to a handout demanded a 6in code on an 8.3in page, which
+    # this refused. A held sheet or a phone screen is read at arm's length.
+    if scan_ft is None:
+        scan_ft = 1.5
+        try:
+            import formats                          # noqa: PLC0415 - optional, canvas-dependent
+            sw, sh = _slide_size(slide)
+            fmt = formats.match(sw, sh)
+            if fmt is not None and fmt.w_in * fmt.h_in >= 300.0:
+                scan_ft = 5.0                       # a large-format board, read across a room
+        except Exception:
+            pass
+    need = scan_ft * 12.0 / 10.0
+    if size < need - 1e-6:
+        raise ValueError(
+            "qr_panel: {:.2f}in is too small to scan from {:.0f}ft — the 10:1 rule wants >= {:.2f}in. "
+            "Give it the space or state a shorter scan_ft; a code that does not scan is furniture."
+            .format(size, scan_ft, need))
+    # A block of KNOWN size must not be placed where it cannot fit. The caption and the URL live
+    # BELOW the code, so the footprint is taller than `size` and the obvious placement — flush to
+    # a bottom margin — runs off the canvas. Measured on a real A0 board: the code and its caption
+    # overflowed by 2.3in and 3.6in and every gate still passed, because off-canvas is lint's
+    # department and the gates had been run without it.
+    try:
+        sw, sh = _slide_size(slide)
+        need_h = size + 0.12 + 1.0                # code + gap + a conservative caption block
+        if x < -0.01 or y < -0.01 or x + size > sw + 0.01 or y + need_h > sh + 0.01:
+            raise ValueError(
+                "qr_panel: a {:.2f}in code at ({:.2f}, {:.2f}) does not fit a {:.2f}x{:.2f}in "
+                "canvas — the caption and URL sit BELOW the code, so it needs about {:.2f}in of "
+                "height. Move it up, or give it a column of its own."
+                .format(size, x, y, sw, sh, need_h))
+    except ValueError:
+        raise
+    except Exception:
+        pass                                       # not a real slide (a unit test); nothing to check
+
+    path = image
+    if path is None:
+        mod = None
+        for name in ("segno", "qrcode"):
+            try:
+                mod = __import__(name)
+                break
+            except ImportError:
+                continue
+        if mod is None:
+            raise RuntimeError(
+                "qr_panel: no QR encoder available and no `image=` given. Either pass a "
+                "pre-rendered PNG (image='qr.png') or install one of `segno` / `qrcode`. This "
+                "library will not draw a placeholder square: it would look finished and scan as "
+                "nothing.")
+        import tempfile
+        fd, path = tempfile.mkstemp(prefix="qr-", suffix=".png")
+        os.close(fd)
+        border = 4 if quiet else 0
+        if mod.__name__ == "segno":
+            mod.make(url, error="h").save(path, scale=12, border=border)
+        else:
+            q = mod.QRCode(error_correction=mod.constants.ERROR_CORRECT_H, border=border, box_size=12)
+            q.add_data(url)
+            q.make(fit=True)
+            q.make_image(fill_color="black", back_color="white").save(path)
+
+    ink = ink or DEEP
+    font = font or FONT
+    # The caption sizes itself against the CANVAS, not against the code. Sizing it from `size`
+    # alone produced an 11pt URL on an A0 board — under the 24pt floor `check_surface.py` holds
+    # for a printed poster, i.e. this helper generating a violation of this repo's own rule on the
+    # exact surface it was written for. Where the format declares printed floors, they win.
+    body_pt, cap_pt = 11.0, 13.0
+    try:
+        import formats                              # noqa: PLC0415 - optional, canvas-dependent
+        sw, sh = _slide_size(slide)
+        fmt = formats.match(sw, sh)
+        floors = formats.floors(fmt) if fmt else {}
+        if floors.get("body"):
+            body_pt = float(floors["body"])
+            cap_pt = max(body_pt, float(floors.get("section", body_pt)) * 0.8)
+        else:
+            body_pt = max(11.0, sw * 1.4)          # projected: scale with the canvas as usual
+            cap_pt = body_pt * 1.25
+    except Exception:
+        pass
+    pic = picture(slide, path, x, y, size, size, fit="contain",
+                  alt="QR code linking to {}".format(url))
+    cap_y = y + size + 0.12
+    # The URL is the FALLBACK for anyone who photographs the poster instead of scanning it, so it
+    # is the last text on the board that may be hard to read. `mute_for()` measured 2.71:1 against
+    # a pale stock — under the 3:1 floor for text at any size — so the mute is used only when it
+    # actually clears; otherwise the URL keeps the full ink. A muted fallback nobody can read is
+    # the same as no fallback.
+    sub = mute_for(ink)
+    try:
+        ground = _ground_rgb(slide) if "_ground_rgb" in globals() else None
+    except Exception:
+        ground = None
+    try:
+        if ground is not None and contrast_ratio(sub, ground) < 4.5:
+            sub = ink
+        elif ground is None and contrast_ratio(sub, (0xFF, 0xFF, 0xFF)) < 4.5:
+            sub = ink
+    except Exception:
+        sub = ink
+    lines = [[(caption, cap_pt, ink, True, False, font)],
+             [(url, body_pt, sub, False, False, MONO)]]
+    if contact:
+        lines.append([(contact, body_pt, sub, False, False, font)])
+    # The caption box takes the width it can HAVE, not a fixed multiple of the code: a code placed
+    # near the right edge would otherwise hang its caption off the canvas, which lint reports as an
+    # overflow the author never asked for.
+    tw = max(size, 2.0)
+    try:
+        tw = max(size, min(size * 1.9, _slide_size(slide)[0] - x - 0.2))
+    except Exception:
+        pass
+    h = (measure_text([(caption, True)], tw, cap_pt, font=font)
+         + measure_text([(url, False)], tw, body_pt, font=MONO)
+         + (measure_text([(contact, False)], tw, body_pt, font=font) if contact else 0.0))
+    text(slide, x, cap_y, tw, h, lines, space_after=2)
+    return pic
+
+
+def alt_text(shape, description):
+    """Set a shape's ACCESSIBILITY alt-text (the screen-reader description). Call it after
+    add_picture() — and on any informative figure/diagram — so assistive tech can describe
+    the visual. Alt-text does NOT render (it won't appear in the PNG or to the pixel
+    critic); it lives in PowerPoint's accessibility metadata (the cNvPr 'descr' attribute)
+    and shows in the Selection/Accessibility pane. Give a one-line factual description,
+    e.g. alt_text(pic, "ROC curve: proposed method (pink) above baseline (grey)")."""
+    cNvPr = shape._element.find(".//" + qn("p:cNvPr"))
+    if cNvPr is not None:
+        cNvPr.set("descr", description)
+        if not cNvPr.get("title"):
+            cNvPr.set("title", description[:120])
+    return shape
+
+
+# ════════════════════════════════════════════════════════════════════════════════════════
+# Design-pattern components mined from professional sample decks (ppt-master gallery).
+# See references/design-gallery.md + semantic-color-contract.md for when/why.
+# ════════════════════════════════════════════════════════════════════════════════════════
+
+def _blend(c, other, t):
+    """Blend RGBColor c toward `other` by fraction t (0..1). For tints / faint watermarks."""
+    if isinstance(c, str):
+        c = RGBColor.from_string(c.lstrip("#"))
+    if isinstance(other, str):
+        other = RGBColor.from_string(other.lstrip("#"))
+    return RGBColor(*(int(round(a + (b - a) * t)) for a, b in zip(c, other)))
+
+
+def highlight(s, size, base_c, accent_c, *, key_bold=True, font=None):
+    """Split a string with <k>…</k> tags into a text() RUN PARAGRAPH where tagged spans are
+    recolored to `accent_c` (and bolded). Gives a sentence/headline a scannable second layer —
+    recolor exactly ONE phrase per headline, a few per body line.
+        text(s, x,y,w,h, [highlight("the <k>one phrase</k> that matters", 16, INK, ACCENT)])
+    Returns a list of run tuples (a single paragraph)."""
+    import re
+    runs = []
+    for i, seg in enumerate(re.split(r"<k>(.*?)</k>", s)):
+        if not seg:
+            continue
+        key = (i % 2 == 1)
+        runs.append((seg, size, accent_c if key else base_c, key and key_bold, False, font) if font
+                    else (seg, size, accent_c if key else base_c, key and key_bold, False))
+    return runs
+
+
+def node(slide, x, y, w, h, label, *, shape="roundrect", fill=None, line=None, line_w=1.4,
+         tcolor=None, sub="", dashed=False, hub=False, accent=None, sub_font=None):
+    """One diagram NODE (box/connector kit — the general architecture/flowchart builder).
+    `shape`='roundrect'|'rect'|'pill'|'circle'|'diamond'|'parallelogram'|'cylinder' — the last
+    three carry standard flowchart notation (diamond=decision, parallelogram=input/output,
+    cylinder=data store; see the "Standard notation" crib in design-gallery.md). By default a
+    thin-outline pale node; `hub=True` promotes it to a SOLID accent fill (the ONE focal node —
+    keep every other node thin-outline, exactly one hub; hub optional in the system-architecture
+    recipe — the focal path can carry emphasis instead). `dashed=True` marks an optional/inferred
+    node. Returns the node's CENTER (cx, cy) in inches so connector() can join it. Pair with
+    connector() + the stroke-semantics convention (solid=required · dashed=optional ·
+    dotted=feedback). Z-ORDER: assemble freeform diagrams in fixed order — region/group boundaries
+    first, then ALL connectors, then nodes, then any floating labels — so shapes always sit above
+    lines (hub_spoke does this internally).
+
+    REGISTER-AWARE: a roundrect node takes the deck's ``RADIUS_SCALE`` (``set_geometry(radius=0)``
+    squares it, for brutalist/swiss/ink_wash/blueprint) and its outline takes ``RULE_W_SCALE``.
+    ``sub`` is set in the deck's BODY face (``FONT``/``EAFONT``), so a caption reads in the
+    register's own typography and mixed CJK+Latin stays on one type system; pass
+    ``sub_font=MONO`` when the caption genuinely is code, a path or an id."""
+    acc = accent if accent is not None else BLUE
+    ln = line if line is not None else acc
+    # A node is never smaller than its own label — see measure_node for the measured defect this
+    # closes. NB this is the RECTANGULAR floor; a circle/diamond has less usable interior than its
+    # bounding box, so those still want headroom beyond the minimum.
+    h = max(h, measure_node(label, sub, w))
+    sh = {"pill": MSO_SHAPE.ROUNDED_RECTANGLE, "roundrect": MSO_SHAPE.ROUNDED_RECTANGLE,
+          "rect": MSO_SHAPE.RECTANGLE, "circle": MSO_SHAPE.OVAL,
+          "diamond": MSO_SHAPE.DIAMOND, "parallelogram": MSO_SHAPE.PARALLELOGRAM,
+          "cylinder": MSO_SHAPE.CAN}.get(shape, MSO_SHAPE.ROUNDED_RECTANGLE)
+    o = _flat(slide.shapes.add_shape(sh, Inches(x), Inches(y), Inches(w), Inches(h)))
+    o.shadow.inherit = False
+    # `fill` was in the signature and never read: the body picked WHITE (or the hub accent) no
+    # matter what the caller passed, so node(fill=<colour>) drew a white node and said nothing.
+    # An explicit fill now wins over both defaults, and the label ink is derived from the colour
+    # actually painted — otherwise a dark custom fill would take DEEP text and vanish.
+    if hub:
+        ground = fill if fill is not None else acc
+        o.fill.solid(); o.fill.fore_color.rgb = _as_rgb(ground); o.line.fill.background()
+        tc = tcolor if tcolor is not None else _legible_ink(_as_rgb(ground))
+    else:
+        ground = _as_rgb(fill) if fill is not None else WHITE
+        o.fill.solid(); o.fill.fore_color.rgb = ground
+        o.line.color.rgb = ln; o.line.width = Pt(line_w * RULE_W_SCALE)
+        # Resolve the ink from the ground ACTUALLY PAINTED, in both branches. The fill=None branch
+        # used to take DEEP, and the node's own two defaults then contradicted each other on every
+        # dark register: the node is painted WHITE while set_palette has rebound DEEP to that
+        # register's LIGHT ink. Measured with no caller override at all — glassmorphism 1.09:1,
+        # synthwave 1.16:1, i.e. an invisible label from the component's own defaults.
+        tc = tcolor if tcolor is not None else _legible_ink(ground)
+    if dashed and not hub:
+        el = o.line._get_or_add_ln(); el.append(parse_xml(f'<a:prstDash {nsdecls("a")} val="dash"/>'))
+    if shape == "pill":
+        try: o.adjustments[0] = 0.5
+        except Exception: pass
+    elif sh == MSO_SHAPE.ROUNDED_RECTANGLE:
+        # RADIUS_SCALE, the same call-time resolution box() uses. node() is the general
+        # architecture/flowchart builder and it did not read the token at all: measured, the same
+        # diagram in brutalist, swiss, bauhaus and ink_wash (every one of them radius=0, and three
+        # of the four named in SKILL.md as the registers this feature exists to unlock) came out
+        # roundRect adj=0.1667 — python-pptx's untouched default. A register whose own guard
+        # forbids rounded cards was drawing rounded nodes, and no gate could see it.
+        # `pill` is exempt above: its 0.5 adjustment IS the shape, not a corner style.
+        adj = max(0.0, min(0.5, 0.08 * RADIUS_SCALE))
+        try: o.adjustments[0] = adj
+        except Exception: pass
+    runs = [[(label, 13, tc, True, False)]]
+    if sub:
+        # The sub-label follows the DECK's body face, not MONO. It was hardcoded to MONO in all 18
+        # registers: on ink_wash / editorial_paper / eastern_traditional — registers whose whole
+        # identity is calligraphic or serif warmth — every diagram caption came out in Menlo. It is
+        # worse in CJK, where MONO carries no Chinese glyphs at all, so the Latin ran monospaced
+        # while the Chinese fell back to another face and the mixed line rendered visibly ragged.
+        # Pass `sub_font=MONO` to get the old behaviour where a caption really is code/an id.
+        # The sub ink is resolved against the ground the node ACTUALLY paints, and is only allowed
+        # to be secondary while it still clears the 3:1 floor. The old rule was blind to the fill:
+        # `_blend(tc, WHITE, 0.25)` on a hub, `MUTE` otherwise. A hub is a SOLID ACCENT — measured,
+        # that blend landed #4C4C4C on #5B8DEF (2.66:1) and on #FF2D95 (2.48:1) — and `MUTE` is one
+        # token tuned for a light canvas. `MUTE` is kept wherever it already passes, so a deck that
+        # was fine stays pixel-identical; only the cases that were failing move.
+        # 4.5, not 3.0: the sub sets at 9.5pt, which IS body size, so the 3:1 non-text floor would
+        # only downgrade an unreadable caption to a warned-about one.
+        sub_ground = (fill if fill is not None else acc) if hub else (fill if fill is not None else WHITE)
+        sub_c = MUTE if contrast_ratio(MUTE, _as_rgb(sub_ground)) >= 4.5 else mute_for(sub_ground, 4.5)
+        runs.append([(sub, 9.5, sub_c, False, False,
+                      sub_font if sub_font is not None else FONT)])
+    text(slide, x + 0.06, y, w - 0.12, h, runs, align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE,
+         space_after=1, line_spacing=0.96)
+    return (x + w / 2, y + h / 2)
+
+
+def connector(slide, p0, p1, *, style="solid", color=None, width=1.5, label="", arrow=True,
+              label_c=None, head="triangle"):
+    """Join two node points (cx,cy tuples from node()) with a connector. `style`='solid'
+    (required) | 'dashed' (optional) | 'dotted' (feedback/inferred) — the stroke SEMANTICS that
+    make a technical diagram readable. `label` = an on-shaft mono edge label (centred at midpoint).
+    `arrow=True` adds an arrowhead at p1; `head`='triangle' (filled, the default) | 'open' (open V
+    — async/return per UML convention, see the "Standard notation" crib in design-gallery.md) |
+    'none'. Z-ORDER (freeform assembly): add ALL connectors BEFORE the nodes they join (region
+    boundaries → connectors → nodes → floating labels) so shapes sit above lines — plan the
+    geometry first and derive centres as (x + w/2, y + h/2), then create shapes in z-order
+    (node() returning the centre is a convenience, not an ordering requirement); a connector joins
+    node edges/centres and must never be visible crossing a box interior.
+
+    EDGE-DOCK BY DEFAULT: an endpoint must land ON a block's boundary, not inside it. Passing a
+    block's CENTRE as `p0`/`p1` draws a line out of the block's middle — if that connector is above
+    the block in z-order the line shows crossing the interior (across the block's own label). Reach
+    for `connect_boxes(slide, rectA, rectB, ...)` / `hub_spokes(...)` (they compute the edge docks
+    for you), or `edge_point(rect, toward)` for a single end. The build-time CONNECTOR_IN_BOX lint
+    flags a centre-anchored endpoint drawn above its block. The one time a centre endpoint is OK is
+    the covered pattern — connector added BEFORE the node so the node paints over the interior seam."""
+    col = color if color is not None else MUTE
+    c = _flat(slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(p0[0]), Inches(p0[1]),
+                                   Inches(p1[0]), Inches(p1[1])))
+    c.line.color.rgb = col; c.line.width = Pt(width); c.shadow.inherit = False
+    if style in ("dashed", "dotted"):
+        ln = c.line._get_or_add_ln()
+        ln.append(parse_xml(f'<a:prstDash {nsdecls("a")} val="{"dash" if style == "dashed" else "sysDot"}"/>'))
+    if arrow and head != "none":
+        ln = c.line._get_or_add_ln()
+        _ht = "arrow" if head == "open" else "triangle"
+        ln.append(parse_xml(f'<a:tailEnd {nsdecls("a")} type="{_ht}" w="med" len="med"/>'))
+    if label:
+        mx, my = (p0[0] + p1[0]) / 2, (p0[1] + p1[1]) / 2
+        text(slide, mx - 0.8, my - 0.16, 1.6, 0.3, [[(label, 9, label_c or col, False, False, MONO)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    return c
+
+
+def edge_point(rect, toward, *, inset=0.0):
+    """The point on `rect`'s BOUNDARY along the ray from its centre toward `toward` — i.e. where a
+    line aimed at `toward` crosses the block's edge. `rect`=(x,y,w,h) inches; `toward`=(tx,ty) inches
+    (usually the OTHER block's centre). `inset`>0 pulls the dock inward (into the block); `inset`<0
+    pushes it outward (a small standoff so an arrowhead doesn't kiss the edge). This is the primitive
+    behind edge-docked connectors: use it (or `connect_boxes`) so an arrow starts/ends ON a block's
+    boundary instead of emerging from its centre and visibly crossing the interior."""
+    x, y, w, h = rect
+    cx, cy = x + w / 2.0, y + h / 2.0
+    dx, dy = toward[0] - cx, toward[1] - cy
+    if abs(dx) < 1e-9 and abs(dy) < 1e-9:
+        return (cx, y + h)                       # degenerate (concentric) — dock at the bottom edge
+    hw, hh = w / 2.0, h / 2.0
+    sx = hw / abs(dx) if abs(dx) > 1e-9 else float("inf")
+    sy = hh / abs(dy) if abs(dy) > 1e-9 else float("inf")
+    s = min(sx, sy)                              # scale to the nearest (vertical|horizontal) edge
+    ex, ey = cx + dx * s, cy + dy * s
+    if inset:
+        L = (dx * dx + dy * dy) ** 0.5
+        ux, uy = dx / L, dy / L                  # unit centre→edge direction
+        ex -= ux * inset; ey -= uy * inset
+    return (ex, ey)
+
+
+def connect_boxes(slide, a, b, *, style="solid", color=None, width=1.5, label="", arrow=True,
+                  label_c=None, head="triangle", gap=0.0):
+    """Connector DOCKED on the facing EDGES of two blocks — the safe default for any
+    architecture/flow/topology diagram, because BOTH ends land on a block boundary and never inside
+    a block. `a`, `b` are (x,y,w,h) rects (the same tuple you passed to `box`); the connector runs
+    from a's edge facing b to b's edge facing a. `gap` (inches) adds a small standoff OUTSIDE each
+    edge (breathing room before the arrowhead). Every other argument matches `connector`. Prefer this
+    over hand-computing centres — passing a block's centre as an endpoint is the #1 cause of the
+    "arrow emerges from the middle of a box" defect the CONNECTOR_IN_BOX lint flags. For one hub to
+    many blocks, see `hub_spokes`."""
+    ca = (a[0] + a[2] / 2.0, a[1] + a[3] / 2.0)
+    cb = (b[0] + b[2] / 2.0, b[1] + b[3] / 2.0)
+    p0 = edge_point(a, cb, inset=-gap)
+    p1 = edge_point(b, ca, inset=-gap)
+    return connector(slide, p0, p1, style=style, color=color, width=width, label=label,
+                     arrow=arrow, label_c=label_c, head=head)
+
+
+def hub_spokes(slide, hub, spokes, *, style="solid", color=None, width=1.6, arrow=True,
+               head="open", gap=0.0):
+    """One central `hub` rect → many `spokes` (each an (x,y,w,h) rect), every connector edge-docked
+    via `connect_boxes`: it leaves the hub's edge facing that spoke and lands on the spoke's facing
+    edge, so nothing emanates from the hub's centre across its own label. This is the exact shape of
+    a 'one Gateway, everything connects to it' topology slide. Returns the list of connectors."""
+    return [connect_boxes(slide, hub, sp, style=style, color=color, width=width, arrow=arrow,
+                          head=head, gap=gap) for sp in spokes]
+
+
+def elbow_connector(slide, pts, *, style="solid", color=None, width=1.5, arrow=True, label="", label_c=None,
+                    head="triangle"):
+    """A multi-segment ELBOW / U-shaped connector through `pts` (list of (x,y) inch tuples) — the right
+    arrow when a STRAIGHT line would be wrong or cross other shapes: a **feedback / repeat loop** that
+    drops below a row and returns, a **return path**, or a link between **non-adjacent** nodes. Don't
+    default every arrow to straight — straight is for direct adjacent flow; an elbow reads as
+    'goes back / around'. Same stroke SEMANTICS as `connector` (solid=required · dashed=optional ·
+    dotted=feedback), and the same `head`='triangle'|'open'|'none' arrowhead choice (open = async/return
+    per UML convention). Arrowhead on the FINAL segment only. Helper `loop_path(...)` builds a common U.
+    Example (a repeat-loop under a 4-node row at y≈3.1, dropping to 3.5):
+        dk.elbow_connector(s, dk.loop_path(x_last, x_first, 3.1, 3.5), style="dotted", color=CYAN)"""
+    col = color if color is not None else MUTE
+    segs = []
+    for i in range(len(pts) - 1):
+        a, b = pts[i], pts[i + 1]
+        c = _flat(slide.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(a[0]), Inches(a[1]), Inches(b[0]), Inches(b[1])))
+        c.line.color.rgb = col; c.line.width = Pt(width); c.shadow.inherit = False
+        if style in ("dashed", "dotted"):
+            ln = c.line._get_or_add_ln()
+            ln.append(parse_xml(f'<a:prstDash {nsdecls("a")} val="{"dash" if style == "dashed" else "sysDot"}"/>'))
+        segs.append(c)
+    if arrow and segs and head != "none":
+        ln = segs[-1].line._get_or_add_ln()
+        _ht = "arrow" if head == "open" else "triangle"
+        ln.append(parse_xml(f'<a:tailEnd {nsdecls("a")} type="{_ht}" w="med" len="med"/>'))
+    if label and len(pts) >= 2:
+        mid = pts[len(pts) // 2]
+        text(slide, mid[0] - 0.9, mid[1] - 0.16, 1.8, 0.3, [[(label, 9, label_c or col, False, False, MONO)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    return segs
+
+
+def loop_path(x_from, x_to, y_row, y_drop):
+    """Waypoints for a U-shaped feedback/repeat loop: from (x_from, y_row) DOWN to y_drop, across to
+    x_to, and UP to (x_to, y_row). Feed to `elbow_connector`. y_drop should clear the row's content.
+
+    Low-level. Prefer `loop_between(a_rect, b_rect)` for a loop between two BLOCKS — it derives the
+    docks from the rects so both ends land on an EDGE, whereas passing a block's CENTRE as `y_row`
+    here draws the loop out of the block's middle (the defect CONNECTOR_IN_BOX catches)."""
+    return [(x_from, y_row), (x_from, y_drop), (x_to, y_drop), (x_to, y_row)]
+
+
+def loop_between(slide, a, b, *, side="bottom", drop=None, clearance=0.5, style="dotted",
+                 color=None, width=1.5, label="", label_c=None, head="triangle"):
+    """A U-shaped FEEDBACK / return loop between two block RECTS, EDGE-DOCKED by construction — the
+    rect-aware sibling of `loop_path`, and the loop counterpart to `connect_boxes`/`hub_spokes`.
+
+    It leaves block `a`'s edge (bottom-centre by default), drops to a clear channel, runs across, and
+    the arrowhead lands on block `b`'s edge — so NEITHER end can sit in a block's interior. This is
+    the safe-by-construction path for the commonest feedback-loop mistake: `loop_path(x, x, y_row,
+    …)` with a node CENTRE as `y_row`, which starts the loop inside the box and shows it crossing the
+    interior. `CONNECTOR_IN_BOX` now flags that, but the ergonomic fix is to make the safe way the
+    easy way — hand `loop_between` the same `(x, y, w, h)` rects you gave `box`/`node` and the docks
+    are computed for you.
+
+    `a`, `b` = (x, y, w, h) rects. `side`='bottom' (loop drops BELOW both blocks and returns — the
+    usual feedback loop) | 'top' (rises above — a return path over a row). `drop` = the channel's
+    absolute y in inches; defaults to `clearance` past the lower (or, for side='top', upper) of the
+    two blocks so it always clears their content. `label` sits in the OPEN middle of the U, never on
+    the line. Stroke semantics + arrowhead match `elbow_connector` (dotted=feedback is the default
+    here). Returns the segment list."""
+    ax, ay, aw, ah = a
+    bx, by, bw, bh = b
+    acx, bcx = ax + aw / 2.0, bx + bw / 2.0
+    if side == "top":
+        a_edge, b_edge = ay, by
+        chan = drop if drop is not None else min(ay, by) - clearance
+    elif side == "bottom":
+        a_edge, b_edge = ay + ah, by + bh
+        chan = drop if drop is not None else max(ay + ah, by + bh) + clearance
+    else:
+        raise ValueError("loop_between(): side must be 'bottom' or 'top', got %r" % (side,))
+    pts = [(acx, a_edge), (acx, chan), (bcx, chan), (bcx, b_edge)]
+    segs = elbow_connector(slide, pts, style=style, color=color, width=width, arrow=True, head=head)
+    if label:
+        col = color if color is not None else MUTE
+        midx = (acx + bcx) / 2.0
+        ly = chan - 0.28 if side == "bottom" else chan + 0.06   # inside the open U, off the line
+        text(slide, midx - 1.1, ly, 2.2, 0.26, [[(label, 9, label_c or col, False, False, MONO)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    return segs
+
+
+_ALGO_KW = {"input", "output", "require", "ensure", "initialize", "for", "while", "repeat",
+            "until", "if", "else", "elif", "endfor", "endif", "endwhile", "end", "then", "do",
+            "return", "break", "continue", "function", "procedure", "foreach"}
+
+def _algo_runs(text_s, size, ink, kwc, font):
+    """Split a pseudocode line into runs, bolding + colouring control-flow keywords."""
+    import re
+    out = []
+    for tok in re.split(r"(\s+)", text_s):
+        key = tok.strip().lower().rstrip(":")
+        if tok.strip() and key in _ALGO_KW:
+            out.append((tok, size, kwc, True, False, font))
+        else:
+            out.append((tok, size, ink, False, False, font))
+    return out or [(text_s, size, ink, False, False, font)]
+
+def algorithm_block(slide, x, y, w, lines, *, title="Algorithm 1", caption=None, size=10.5,
+                    ink=None, kw_color=None, rule_c=None, font=None, indent=0.20, gutter=0.30,
+                    pad=0.16, number=True, boxed=False, fill=None):
+    """Render a pseudocode ALGORITHM block — LaTeX `algorithm`/`algorithmic`-environment style, for
+    describing a CS/AI method, training loop, or optimization procedure as exact, skimmable steps.
+
+    `lines` = list of entries, each either:
+        "text"                      → indent level 0, auto-numbered
+        (text, indent_level)        → indent_level * indent of left padding
+        (text, indent_level, False) → not numbered (e.g. a Input:/Output: header or a sub-note)
+    Control-flow KEYWORDS (Input, Output, for, while, if, else, then, do, return, end…) are auto-bolded
+    and tinted `kw_color`. Lines auto-number 1..N (skip with the per-entry flag). Default look is academic
+    **booktabs rules** (a thick top rule, a hairline under the title, a thick bottom rule, no side
+    borders); pass `boxed=True` (or a `fill`) for a full rounded card instead. Use a MONO `font` for the
+    classic pseudocode feel. Pair the block with one prose line of intuition — the block gives the exact
+    procedure, the prose gives the why. Returns the block height H (so you can place a caption below).
+    See references/form-selection.md ('an algorithm / procedure') and design-gallery.md."""
+    ink = DEEP if ink is None else ink
+    kwc = ink if kw_color is None else kw_color
+    rc = ink if rule_c is None else rule_c
+    f = font or MONO or FONT
+    lh = size * 1.66 / 72.0
+    th = size * 2.0 / 72.0
+    norm = []
+    for e in lines:
+        if isinstance(e, (tuple, list)):
+            t = e[0]; ind = e[1] if len(e) > 1 else 0; nm = e[2] if len(e) > 2 else True
+        else:
+            t = e; ind = 0; nm = True
+        norm.append((t, ind, nm))
+    # estimate wrapped visual-line count per entry (mono char-width ≈ 0.62·size) so long lines
+    # don't collide with the next step; keep lines short (one display line) for the cleanest look.
+    cw = 0.66 * size / 72.0
+    counts = []
+    for (t, ind, nm) in norm:
+        lx0 = pad + gutter + 0.09 + ind * indent
+        cpl = max(6, int((w - pad - lx0) / cw))
+        counts.append(max(1, -(-len(t) // cpl)))
+    H = pad + th + 0.06 + sum(counts) * lh + pad * 0.7
+    framed = boxed or fill is not None
+    if framed:
+        box(slide, x, y, w, H, fill=(fill if fill is not None else WHITE), line=rc, line_w=1.1, round=True)
+    else:
+        box(slide, x, y, w, 0.020, fill=rc)            # thick top rule
+        box(slide, x, y + H, w, 0.020, fill=rc)        # thick bottom rule
+    # title row ("Algorithm N: caption")
+    cap = (":  " + caption) if caption else ""
+    text(slide, x + pad, y + pad * 0.7, w - 2 * pad, th,
+         [[(title, size + 0.5, ink, True, False, f), (cap, size + 0.5, ink, False, False, f)]],
+         space_after=0)
+    ry_mid = y + pad * 0.7 + th + 0.02
+    box(slide, x, ry_mid, w, 0.010, fill=rc)           # hairline under title
+    # numbered, indented lines (advance by each entry's wrapped height)
+    yy = ry_mid + 0.05
+    i = 0
+    for (t, ind, nm), c in zip(norm, counts):
+        i += 1
+        if number and nm:
+            text(slide, x + pad, yy, gutter, lh, [[(str(i) + ":", size, ink, False, False, f)]],
+                 align=PP_ALIGN.RIGHT, space_after=0)
+        lx = x + pad + gutter + 0.09 + ind * indent
+        text(slide, lx, yy, x + w - pad - lx, c * lh, [_algo_runs(t, size, ink, kwc, f)],
+             space_after=0, line_spacing=1.32)
+        yy += c * lh
+    return H
+
+
+def flow_chain(slide, x, y, w, h, labels, *, accent=None, gap=None, subs=None, hub_idx=None,
+               vertical=False, hub_accent=None):
+    """Convenience over node()+connector(): a CHAIN of nodes joined by arrows (a pipeline).
+    `labels` = list of node titles; `subs` optional same-length sub-labels; `hub_idx` promotes
+    one node to a solid fill. `hub_accent` colours that hub differently from the chain `accent`
+    (e.g. a coral 'Generate' hub among cyan retrieval nodes — keeps a semantic-colour contract).
+    Horizontal by default; `vertical=True` stacks + down-arrows. Returns the list of node centers."""
+    acc = accent if accent is not None else BLUE
+    hubacc = hub_accent if hub_accent is not None else acc
+    n = len(labels); g = gap if gap is not None else 0.34
+    centers = []
+    if vertical:
+        nh = (h - g * (n - 1)) / n
+        for i, lab in enumerate(labels):
+            ny = y + i * (nh + g)
+            c = node(slide, x, ny, w, nh, lab, sub=(subs[i] if subs else ""),
+                     hub=(i == hub_idx), accent=(hubacc if i == hub_idx else acc))
+            if i: connector(slide, (x + w / 2, ny - g + 0.02), (x + w / 2, ny - 0.02), color=_blend(acc, WHITE, 0.3))
+            centers.append(c)
+    else:
+        nw = (w - g * (n - 1)) / n
+        for i, lab in enumerate(labels):
+            nx = x + i * (nw + g)
+            c = node(slide, nx, y, nw, h, lab, sub=(subs[i] if subs else ""),
+                     hub=(i == hub_idx), accent=(hubacc if i == hub_idx else acc))
+            if i: connector(slide, (nx - g + 0.02, y + h / 2), (nx - 0.02, y + h / 2), color=_blend(acc, WHITE, 0.3))
+            centers.append(c)
+    return centers
+
+
+def step_list(slide, x, y, w, items, *, orientation="vertical", accent=None, ink=None,
+              body_c=None, numeral_style="arabic", active_idx=None, gap=None):
+    """A NUMBERED process / step list. items = [(title, body), …]. orientation='vertical'
+    (numbered spine, title+body rows) or 'horizontal' (connected pill steps with arrows).
+    `numeral_style`='arabic'|'pad2' (01) |'cjk'. `active_idx` accents one step (terminal/current).
+    Returns the bottom y (vertical)."""
+    acc = accent if accent is not None else BLUE
+    ic = ink if ink is not None else DEEP
+    bc = body_c if body_c is not None else SLATE
+    def numr(i):
+        if numeral_style == "cjk": return cjk_numeral(i + 1)
+        if numeral_style == "pad2": return f"{i + 1:02d}"
+        return str(i + 1)
+    if orientation == "horizontal":
+        n = len(items); g = gap if gap is not None else 0.3
+        cw = (w - g * (n - 1)) / n
+        for i, (title, body) in enumerate(items):
+            cx = x + i * (cw + g); on = (active_idx == i)
+            d = 0.5
+            box(slide, cx + cw / 2 - d / 2, y, d, d, fill=acc if on else WHITE,
+                line=None if on else acc, line_w=1.4, round=True, r=d / 2)
+            tc = (_legible_ink(acc)) if on else acc
+            text(slide, cx + cw / 2 - d / 2, y, d, d, [[(numr(i), 15, tc, True, False)]],
+                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+            if i: connector(slide, (cx - g + 0.02, y + d / 2), (cx - 0.02, y + d / 2), color=_blend(acc, WHITE, 0.4))
+            text(slide, cx, y + d + 0.12, cw, 0.34, [[(title, 13, ic, True, False)]], align=PP_ALIGN.CENTER, space_after=0)
+            if body:
+                text(slide, cx, y + d + 0.46, cw, 0.5, [[(body, 11, bc, False, False)]], align=PP_ALIGN.CENTER, space_after=0)
+        return y + d + 1.0
+    # vertical
+    g = gap if gap is not None else 0.2
+    cy = y
+    for i, (title, body) in enumerate(items):
+        d = 0.42; on = (active_idx == i)
+        solid = on or active_idx is None      # inactive discs mirror the horizontal branch: outlined, not solid
+        box(slide, x, cy, d, d, fill=acc if solid else WHITE,
+            line=None if solid else acc, line_w=1.4, round=True, r=d / 2)
+        tc = _legible_ink(acc) if solid else acc
+        text(slide, x, cy, d, d, [[(numr(i), 14, tc, True, False)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        text(slide, x + d + 0.18, cy - 0.02, w - d - 0.18, 0.32, [[(title, 14.5, ic, True, False)]], space_after=0)
+        bh = 0.3
+        if body:
+            text(slide, x + d + 0.18, cy + 0.3, w - d - 0.18, 0.6, [[(body, 11.5, bc, False, False)]], space_after=0, line_spacing=1.02)
+            bh = 0.62
+        cy += max(d, bh) + g
+    return cy
+
+
+def consort_flow(slide, x, y, w, h, stages, *, accent=None, ink=None, mute=None, fill=None,
+                 excl_fill=None, unit="", font=None, box_w=0.56, size=12, label_size=10):
+    """A PARTICIPANT-FLOW diagram (CONSORT / PRISMA / any funnel with documented losses) whose
+    ARITHMETIC IS ENFORCED.
+
+    ``stages = [(label, n, [(reason, k), ...]), ...]`` — a main box per stage carrying its count,
+    with the exclusions between it and the next stage branching to the right.
+
+    🔴 THE POINT IS THE CHECK, not the boxes. Every stage's count minus its documented exclusions
+    must equal the next stage's count, and this RAISES with the arithmetic spelled out when it
+    does not. A flow diagram whose numbers do not balance is the commonest error in trial and
+    review reporting and the first thing a referee adds up by hand — and it is invisible to every
+    other gate in this skill, because a wrong number is a perfectly well-formed shape. Nothing
+    else here can check a claim of this kind: the lint measures geometry, the critic reads pixels,
+    and both would pass a diagram that loses fourteen patients between two boxes.
+
+    Native shapes, so the counts stay editable when a reviewer asks for one more exclusion.
+    """
+    acc = accent if accent is not None else MAGENTA
+    ic = ink if ink is not None else DEEP
+    mc = mute if mute is not None else MUTE
+    fl = fill if fill is not None else LIGHT
+    ex = excl_fill if excl_fill is not None else TINT
+    if not stages:
+        raise ValueError("consort_flow needs at least one stage")
+
+    norm = []
+    for st in stages:
+        if len(st) < 2:
+            raise ValueError("each stage is (label, n[, [(reason, k), ...]]); got %r" % (st,))
+        label, n = str(st[0]), int(st[1])
+        excl = list(st[2]) if len(st) > 2 and st[2] else []
+        excl = [(str(r), int(k)) for r, k in excl]
+        if n < 0 or any(k < 0 for _r, k in excl):
+            raise ValueError("consort_flow: counts cannot be negative (stage %r)" % label)
+        norm.append((label, n, excl))
+
+    for i in range(len(norm) - 1):
+        label, n, excl = norm[i]
+        nxt_label, nxt_n, _e = norm[i + 1]
+        lost = sum(k for _r, k in excl)
+        if n - lost != nxt_n:
+            detail = " + ".join("%s %d" % (r, k) for r, k in excl) or "no exclusions listed"
+            raise ValueError(
+                "consort_flow: the flow does not balance between %r and %r — %d minus (%s) = %d, "
+                "but the next stage says %d. A participant-flow diagram whose counts do not add up "
+                "is the first thing a referee checks by hand; fix the numbers or document the "
+                "missing %+d."
+                % (label, nxt_label, n, detail, n - lost, nxt_n, nxt_n - (n - lost)))
+
+    nst = len(norm)
+    bw = w * box_w
+    gap = 0.42
+    bh = (h - gap * (nst - 1)) / nst
+    if bh <= 0.28:
+        raise ValueError(
+            "consort_flow: %d stages do not fit in %.2fin — each box would be %.2fin tall. Give it "
+            "more height, or merge stages." % (nst, h, bh))
+    ex_x, ex_w = x + bw + w * 0.07, w - bw - w * 0.07
+
+    for i, (label, n, excl) in enumerate(norm):
+        by = y + i * (bh + gap)
+        box(slide, x, by, bw, bh, fill=fl, line=None, round=True)
+        text(slide, x + 0.16, by, bw - 0.32, bh,
+             [[(label, size, ic, True, False, font or FONT)],
+              [("n = %s%s" % (f"{n:,}", (" " + unit) if unit else ""), size, ic, False, False,
+                font or FONT)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=1)
+        if i == nst - 1:
+            break
+        ay = by + bh
+        arrow(slide, x + bw / 2 - 0.09, ay + 0.04, 0.18, gap - 0.08, color=mc, direction="down")
+        if excl:
+            lost = sum(k for _r, k in excl)
+            rows = [("Excluded  n = %s" % f"{lost:,}", label_size,
+                     _ink_reaching(acc, ex, _text_floor(label_size, True)), True, False, font or FONT)]
+            eh = 0.30 + 0.20 * len(excl)
+            ey = ay + gap / 2 - eh / 2
+            box(slide, ex_x, ey, ex_w, eh, fill=ex, line=None, round=True)
+            rc = _ink_reaching(mc, ex, _text_floor(label_size - 0.5, False))   # the reasons are small text too
+            paras = [[rows[0]]] + [[("  %s  (%s)" % (r, f"{k:,}"), label_size - 0.5, rc, False,
+                                     False, font or FONT)] for r, k in excl]
+            text(slide, ex_x + 0.14, ey, ex_w - 0.28, eh, paras, space_after=0, line_spacing=1.04)
+            connector(slide, (x + bw / 2, ay + gap / 2), (ex_x, ey + eh / 2), color=mc)
+    return y + h
+
+
+def ghost_numeral(slide, x, y, w, h, text_str, *, color=None, bg=None, opacity=0.12, font=None,
+                  align=PP_ALIGN.LEFT):
+    """A giant FAINT index/ordinal/year numeral sitting BEHIND content as silent wayfinding +
+    texture (8–18% strength). Draw it FIRST (behind the card/title). The **bg-aware successor to
+    `big_numeral(mode='ghost')`** — it blends `color` toward `bg` by (1-opacity), so unlike that
+    light-only watermark it works on a DARK deck too (pass the deck's `bg`). For a *foreground* hero
+    figure use `big_numeral` / `stat_row` instead. No alpha needed."""
+    c = _blend(color if color is not None else MUTE, bg if bg is not None else WHITE, 1 - opacity)
+    sz = int(min(h * 72 * 1.05, 220))
+    tb = text(slide, x, y, w, h, [[(str(text_str), sz, c, True, False, font or DISPLAY or FONT)]],
+              align=align, anchor=MSO_ANCHOR.MIDDLE, space_after=0, line_spacing=0.9)
+    # Tagged so lint checks can recognise a decorative watermark EXACTLY. Guessing from size
+    # cannot work: a ghost and a hero numeral are both "large and short", so a size heuristic
+    # either waves through a real defect or blocks a legitimate watermark.
+    tb.name = WATERMARK_TAG
+    return tb
+
+
+def insight_banner(slide, x, y, w, body, *, label="INSIGHT", fill=None, accent=None,
+                   tcolor=None, h=0.62):
+    """The consulting 'so-what' BANNER — a full-width dark rounded bar under a slide's action
+    title carrying the one-sentence implication (label caps in accent + the sentence). Returns
+    bottom y."""
+    f = fill if fill is not None else DEEP
+    acc = accent if accent is not None else GOLD
+    tc = tcolor if tcolor is not None else WHITE
+    # BY-CONSTRUCTION fit (the recurring "banner body cramped/overflowing its bar" bug): measure
+    # the real wrapped height; a too-long body first drops one size step, then the BAR GROWS to
+    # hold it — text never escapes the shape. A fitting call is byte-identical.
+    body_size = 13.5
+    need = measure_text([(label + "   ", True), (str(body), False)], w - 0.5, body_size, pad=0.24)
+    if need > h:
+        body_size = 12.5
+        need = measure_text([(label + "   ", True), (str(body), False)], w - 0.5, body_size, pad=0.24)
+    if need > h:
+        print(f"[deckkit] insight_banner: grew {need - h:.2f}in to hold the body (shorten it to "
+              "keep the compact bar)")
+        h = need
+    box(slide, x, y, w, h, fill=f, round=True)
+    box(slide, x, y + 0.1, 0.06, h - 0.2, fill=acc)
+    runs = [(label + "   ", 11, acc, True, False), (body, body_size, tc, False, False)]
+    text(slide, x + 0.28, y, w - 0.5, h, [runs], anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    return y + h
+
+
+def bilingual_lockup(slide, x, y, w, zh, en, *, zh_size=30, en_size=11, ink=None, accent=None,
+                     rule=True, zh_font=None, en_font=None):
+    """A CJK (or any) heavy display headline auto-paired with a wide-tracked ALL-CAPS Latin/pinyin
+    strap line beneath — the most universal 'instantly professional' lockup. Optional short accent
+    rule between. Returns bottom y."""
+    ic = ink if ink is not None else DEEP
+    acc = accent if accent is not None else MAGENTA
+    # line_spacing pinned to 1.0: the rule offset below (zh_size/72 + 0.12) is single-spacing
+    # math — the CJK default would drop the headline onto its own accent rule.
+    tb = text(slide, x, y, w, 0.7, [[(zh, zh_size, ic, True, False, zh_font or EADISPLAY or DISPLAY or FONT)]],
+              space_after=0, line_spacing=1.0)
+    eaface = zh_font or EADISPLAY      # CJK glyphs render from <a:ea> — set the DISPLAY face there too
+    if eaface:
+        for p in tb.text_frame.paragraphs:
+            for r in p.runs:
+                _apply_ea(r, eaface)
+    yy = y + zh_size / 72.0 + 0.12
+    if rule:
+        box(slide, x + 0.02, yy, 0.9, 0.035, fill=acc); yy += 0.14
+    text(slide, x + 0.01, yy, w, 0.3,
+         [[(" ".join(en.upper()) if len(en) < 26 else en.upper(), en_size, MUTE, True, False, en_font or FONT)]],
+         space_after=0)
+    return yy + 0.3
+
+
+def _as_rgbc(c):
+    """Coerce hex-str / tuple / RGBColor to RGBColor."""
+    if isinstance(c, RGBColor):
+        return c
+    r, g, b = _as_rgb(c)
+    return RGBColor(r, g, b)
+
+
+def tint(color, frac=0.12, base=None):
+    """Mix `color` toward `base` (default white) — the pastel TINT behind icon chips, delta
+    pills, and conclusion strips (an accent at ~10-16% reads as a soft branded surface)."""
+    b = _as_rgb(base) if base is not None else (0xFF, 0xFF, 0xFF)
+    c = _as_rgb(color)
+    return RGBColor(int(c[0] * frac + b[0] * (1 - frac)),
+                    int(c[1] * frac + b[1] * (1 - frac)),
+                    int(c[2] * frac + b[2] * (1 - frac)))
+
+
+def icon_chip(slide, x, y, size, png, accent, *, frac=0.14):
+    """Tinted SQUIRCLE icon chip — accent-tinted soft square, accent-coloured icon centred
+    (recolor the PNG to `accent` via icons.py first). The modern-SaaS card marker; one per
+    card, identical size across siblings."""
+    return icon_tile(slide, x, y, size, png, shape="squircle", fill=tint(accent, frac))
+
+
+def conclusion_strip(slide, x, y, w, text_str, accent, *, h=0.36, size=11, font=None):
+    """Tinted CONCLUSION STRIP — the rounded accent-tinted bar that closes a card with its
+    one-line so-what. Accent text on accent tint; place INSIDE the card with padding above
+    the card's bottom edge. Returns bottom y."""
+    box(slide, x, y, w, h, fill=tint(accent, 0.12), round=True, r=0.07)
+    text(slide, x + 0.16, y, w - 0.32, h, [[(text_str, size, _as_rgbc(accent), True, False, font)]],
+         anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    return y + h
+
+
+def kpi_card(slide, x, y, w, h, label, value, *, unit="", delta=None, delta_color=None,
+             sub=None, icon=None, accent=None, fill=None, line=None, ink=None, mute=None,
+             value_size=30, label_size=11, font=None, value_font=None, strip=None):
+    """LAYERED KPI RESULT CARD — hairline card with an optional tinted icon-chip + label row,
+    an optional DELTA CHIP top-right (the change IS the story: '+51%' / '-72%' / '+19pt';
+    pass delta_color its semantic hue), the big value+unit, a muted sub, and an optional
+    accent-tinted conclusion `strip` at the bottom. One call = the modern result-card
+    pattern; grid several for a KPI dashboard — or prefer `dumbbell_board` when the
+    before->after MAGNITUDE should be shown spatially. Returns bottom y.
+
+    `fill="glass"` swaps the opaque body for a frosted `glass_card` (low-alpha tint of the
+    accent) — REQUIRED on image-backed pages (the generated-template branch bans flat opaque
+    panels over its interior plates; also the right call on any dark/photographic canvas).
+    On glass, pass a light `ink`/`mute` so the text clears 4.5:1 against the imagery."""
+    ic_ = ink if ink is not None else DEEP
+    mc = mute if mute is not None else MUTE
+    acc = _as_rgbc(accent) if accent is not None else BLUE
+    if fill == "glass":
+        glass_card(slide, x, y, w, h, tint(acc, 0.30), r=0.09)
+    else:
+        box(slide, x, y, w, h, fill=fill if fill is not None else WHITE,
+            line=line if line is not None else RGBColor(0xE3, 0xE8, 0xEE), line_w=1.0, round=True, r=0.09)
+    tx = x + 0.22
+    if icon:
+        icon_chip(slide, x + 0.2, y + 0.18, 0.38, icon, acc)
+        tx = x + 0.72
+    text(slide, tx, y + 0.2, w - (tx - x) - 0.98, 0.34,
+         [[(label, label_size, ic_, True, False, font)]], anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    if delta:
+        dc = _as_rgbc(delta_color) if delta_color is not None else acc
+        dw = max(0.6, 0.18 + 0.082 * len(str(delta)))
+        box(slide, x + w - dw - 0.16, y + 0.21, dw, 0.3, fill=tint(dc, 0.12), round=True, r=0.15)
+        text(slide, x + w - dw - 0.16, y + 0.21, dw, 0.3,
+             [[(str(delta), 10, dc, True, False, font)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    _vface = numeral_run_face(value, value_font or font, fallback=FONT)
+    vparts = [(str(value), value_size, acc, True, False, _vface)]
+    if unit:
+        vparts.append((" " + unit, int(value_size * 0.5), acc, True, False, value_font or font))
+    text(slide, x + 0.2, y + 0.5, w - 0.4, value_size / 72.0 + 0.2, [vparts],
+         anchor=MSO_ANCHOR.BOTTOM, space_after=0)
+    sub_y = y + 0.62 + value_size / 72.0 + 0.14
+    strip_top = (y + h - 0.52) if strip else None
+    if sub:
+        if strip_top is not None and sub_y + 0.3 > strip_top:
+            print(f"kpi_card: '{label}' — sub dropped: card too short for value+sub+strip "
+                  f"(need h ≥ ~{sub_y + 0.3 + 0.56 - y:.2f}, got {h}). Grow h or drop one layer.")
+        else:
+            text(slide, x + 0.2, sub_y, w - 0.4, 0.26,
+                 [[(sub, 10, mc, False, False, font)]], space_after=0)
+    if strip:
+        conclusion_strip(slide, x + 0.14, y + h - 0.52, w - 0.28, strip, acc)
+    return y + h
+
+
+def flow_compare(slide, x, y, w, old_stages, new_stages, *, old_label="OLD", new_label="NEW",
+                 old_sub="", new_sub="", old_result="", new_result="", old_accent=None,
+                 new_accent=None, highlight_old=None, highlight_new=None, note=None,
+                 transition_label="", ink=None, mute=None, font=None, row_gap=1.32):
+    """OLD-vs-NEW PROCESS COMPARISON — two parallel rows of stage chips with arrows, one stage
+    per row optionally HIGHLIGHTED (the bottleneck / the redefinition), a result chip at each
+    row's right edge (27 天 vs 7.5 天), an optional red `note` under the old row's highlight,
+    and a transition marker between the rows. THE form for a process-REBUILD story (交付重构 /
+    redefined pipeline / migration): before/after of a *procedure*, where `dumbbell_board` is
+    before/after of *metrics*. Keep stages <=5 and stage text <=6 CJK glyphs. `old_label`/
+    `new_label` default to OLD/NEW — CJK decks pass 旧流程/新流程 explicitly. Returns bottom y."""
+    oc = _as_rgbc(old_accent) if old_accent is not None else RGBColor(0xC8, 0x8A, 0x2B)
+    nc = _as_rgbc(new_accent) if new_accent is not None else RGBColor(0x1B, 0x7F, 0x5C)
+    ic_ = ink if ink is not None else DEEP
+    mc = mute if mute is not None else MUTE
+    lab_w, res_w = 1.05, 1.6
+    span = w - lab_w - res_w - 0.3
+    rows = [(old_stages, old_label, old_sub, old_result, oc, highlight_old, True),
+            (new_stages, new_label, new_sub, new_result, nc, highlight_new, False)]
+    for r, (stages, lab, sub, result, acc, hi, is_old) in enumerate(rows):
+        ry = y + r * row_gap
+        text(slide, x, ry + 0.03, lab_w, 0.3, [[(lab, 13, acc, True, False, font)]], space_after=0)
+        if sub:
+            text(slide, x, ry + 0.34, lab_w, 0.24, [[(sub, 9.5, mc, False, False, font)]], space_after=0)
+        n = max(1, len(stages))
+        cw = (span - (n - 1) * 0.3) / n
+        for i, st in enumerate(stages):
+            sx = x + lab_w + i * (cw + 0.3)
+            hi_this = (hi == i)
+            box(slide, sx, ry, cw, 0.5, fill=tint(acc, 0.14) if hi_this else None,
+                line=acc, line_w=1.3, round=True, r=0.08)
+            text(slide, sx, ry, cw, 0.5, [[(st, 12, acc if hi_this else ic_, hi_this, False, font)]],
+                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+            if i < n - 1:
+                arrow(slide, sx + cw + 0.075, ry + 0.2, 0.15, 0.1, color=acc, direction="right")
+            if hi_this and is_old and note:
+                text(slide, sx - 0.3, ry + 0.56, cw + 0.6, 0.24,
+                     [[(note, 9.5, RGBColor(0xC2, 0x40, 0x2A), True, False, font)]],
+                     align=PP_ALIGN.CENTER, space_after=0)
+        if result:
+            box(slide, x + lab_w + span + 0.3, ry - 0.05, res_w, 0.6, fill=tint(acc, 0.12), round=True, r=0.08)
+            text(slide, x + lab_w + span + 0.3, ry - 0.05, res_w, 0.6,
+                 [[(result, 15, acc, True, False, font)]],
+                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    if transition_label:
+        text(slide, x + lab_w, y + row_gap - 0.44, span, 0.24,
+             [[("▼  " + transition_label, 9.5, nc, True, False, font)]], space_after=0)
+    return y + row_gap + 0.62
+
+
+
+def cycle_diagram(slide, cx, cy, nodes, *, rx=1.5, ry=1.0, node_size=0.42, ring_c=None,
+                  arrow_c=None, node_fill=None, node_line=None, icons=None, ink=None, sub_c=None,
+                  center=None, center_c=None, feedback=None, feedback_label=None, feedback_c=None,
+                  label_w=1.95, label_size=14, sub_size=10, start_deg=-45.0, font=None):
+    """A CYCLE / LOOP / FLYWHEEL diagram — 3–6 nodes on an ellipse, arrows between consecutive
+    nodes, labels placed COLLISION-FREE (the geometry that repeatedly needed hand-debugging:
+    top/bottom labels colliding with nodes, side labels running off-canvas, subs dipping into the
+    footer). Use for any circular process: lifecycle, feedback system, operating rhythm, flywheel.
+
+    nodes = [(label, sub_or_""), ...] · `icons` = optional parallel list of icon-PNG paths (or None
+    per node) drawn centred in each node disc · `center` = optional hub label · `feedback` =
+    optional (from_idx, to_idx) drawn as a DASHED elbow routed OVER the top of the ring (the
+    "reinforcing loop" arrow), with `feedback_label` above it.
+
+    Layout rule: `start_deg=-45` (default) places 4 nodes DIAGONALLY so every label sits BESIDE its
+    node (the safest layout — prefer it). Angles with |cos|≥0.5 get side labels (left/right,
+    right-aligned on the left side); near-vertical nodes stack label+sub fully above (top) or below
+    (bottom) the disc. Keep cy-ry ≥ ~1.6 and cy+ry ≤ ~4.2 on a 5.625in canvas so stacked labels
+    clear the title and footer. Returns the list of node-centre (x, y) points."""
+    rc = ring_c if ring_c is not None else RGBColor(0xD9, 0xCD, 0xB4)
+    ac = arrow_c if arrow_c is not None else MUTE
+    nf = node_fill if node_fill is not None else WHITE
+    nl = node_line if node_line is not None else GOLD
+    ic_ = ink if ink is not None else DEEP
+    sc = sub_c if sub_c is not None else MUTE
+    n = len(nodes)
+    o = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(cx - rx), Inches(cy - ry),
+                               Inches(2 * rx), Inches(2 * ry)))
+    o.fill.background(); o.line.color.rgb = rc; o.line.width = Pt(2.0); o.shadow.inherit = False
+    import math as _m
+    pts = []
+    for i in range(n):
+        ang = _m.radians(start_deg + i * 360.0 / n)
+        pts.append((cx + rx * _m.cos(ang), cy + ry * _m.sin(ang), _m.cos(ang), _m.sin(ang)))
+    for i in range(n):                                   # arrows between consecutive nodes
+        p0, p1 = pts[i], pts[(i + 1) % n]
+        connector(slide, (p0[0] + (p1[0] - p0[0]) * 0.30, p0[1] + (p1[1] - p0[1]) * 0.30),
+                  (p0[0] + (p1[0] - p0[0]) * 0.72, p0[1] + (p1[1] - p0[1]) * 0.72),
+                  color=ac, width=1.5, arrow=True)
+    hs = node_size / 2.0
+    for i, ((px, py, c, s_), (lb, sub)) in enumerate(zip(pts, nodes)):
+        box(slide, px - hs, py - hs, node_size, node_size, fill=nf, line=nl, line_w=1.4,
+            round=True, r=hs)
+        if icons and i < len(icons) and icons[i]:
+            icon(slide, icons[i], px - hs * 0.62, py - hs * 0.62, node_size * 0.62)
+        if abs(c) >= 0.5:                                # side label (the safe default)
+            if c > 0:
+                text(slide, px + hs + 0.11, py - 0.26, label_w, 0.3,
+                     [[(lb, label_size, ic_, True, False, font)]], space_after=0)
+                if sub:
+                    text(slide, px + hs + 0.11, py + 0.04, label_w, 0.26,
+                         [[(sub, sub_size, sc, False, False, font)]], space_after=0)
+            else:
+                text(slide, px - hs - 0.11 - label_w, py - 0.26, label_w, 0.3,
+                     [[(lb, label_size, ic_, True, False, font)]], align=PP_ALIGN.RIGHT, space_after=0)
+                if sub:
+                    text(slide, px - hs - 0.11 - label_w, py + 0.04, label_w, 0.26,
+                         [[(sub, sub_size, sc, False, False, font)]], align=PP_ALIGN.RIGHT, space_after=0)
+        else:                                            # stacked above (top) / below (bottom)
+            if s_ < 0:
+                yy = py - hs - 0.14 - (0.26 if sub else 0) - 0.30
+                text(slide, px - label_w / 2, yy, label_w, 0.3,
+                     [[(lb, label_size, ic_, True, False, font)]], align=PP_ALIGN.CENTER, space_after=0)
+                if sub:
+                    text(slide, px - label_w / 2, yy + 0.30, label_w, 0.26,
+                         [[(sub, sub_size, sc, False, False, font)]], align=PP_ALIGN.CENTER, space_after=0)
+            else:
+                yy = py + hs + 0.12
+                text(slide, px - label_w / 2, yy, label_w, 0.3,
+                     [[(lb, label_size, ic_, True, False, font)]], align=PP_ALIGN.CENTER, space_after=0)
+                if sub:
+                    text(slide, px - label_w / 2, yy + 0.30, label_w, 0.26,
+                         [[(sub, sub_size, sc, False, False, font)]], align=PP_ALIGN.CENTER, space_after=0)
+    if center:
+        text(slide, cx - 0.75, cy - 0.19, 1.5, 0.38,
+             [[(center, label_size, center_c if center_c is not None else ic_, True, False,
+                EADISPLAY or font)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    if feedback:
+        fi, ti = feedback
+        fc = feedback_c if feedback_c is not None else RGBColor(0x2E, 0x7D, 0x57)
+        fx_, fy_ = pts[fi][0], pts[fi][1]; tx_, ty_ = pts[ti][0], pts[ti][1]
+        top_y = cy - ry - hs - 0.34
+        elbow_connector(slide, [(fx_, fy_ - hs - 0.05), (fx_, top_y), (tx_, top_y),
+                                (tx_, ty_ - hs - 0.05)], style="dashed", color=fc, width=1.6, arrow=True)
+        if feedback_label:
+            text(slide, cx - 0.9, top_y - 0.28, 1.8, 0.24,
+                 [[(feedback_label, sub_size, fc, True, False, font)]],
+                 align=PP_ALIGN.CENTER, space_after=0)
+    return [(p[0], p[1]) for p in pts]
+
+
+def dumbbell_board(slide, x, y, w, rows, *, row_h=0.52, label_w=None, accent=None, before_c=None,
+                   track_c=None, ink=None, mute=None, hero=None, hero_c=None, threshold=None,
+                   regress=None, value_font=None, label_size=14, sub_size=10, value_size=14,
+                   before_size=10, font=None):
+    """A BEFORE→AFTER evidence board — one dumbbell row per metric, each on ITS OWN scale, with
+    the collision-free geometry that otherwise needs hand-debugging (value labels above the dots,
+    single-line name+sub so proximity reads correctly, per-row lo/hi so direction is honest and
+    magnitude is never faked across incompatible units). The strongest form for a results /
+    scoreboard slide: the GAP is the message (`form-selection.md`).
+
+    rows = [(name, sub_or_"", v_before, v_after, scale_lo, scale_hi, unit), ...] — set lo/hi per
+    row (pad ~10%); improvements where lower-is-better simply have v_after left of v_before.
+    An optional **8th element** per row, ``v_mid``, draws a small neutral mid dot on the track
+    (an intermediate checkpoint — e.g. an interim release between before and after) with its
+    value labelled above the dot when it clears the end labels, else below the track.
+    **Value labels are direction-aware and always placed OUTWARD** of the dumbbell span: a
+    rightward row keeps the classic before-left / after-right geometry; a leftward
+    (lower-is-better) row mirrors it, so the labels cannot collide at any span.
+    `hero` = row index to emphasise (left accent bar + bold name) · `threshold` = optional
+    (row_idx, value, tick_label) drawing a vertical reference tick on that row (e.g. the 100%
+    line NRR must cross). **`regress`** = a set/list of row indices that got WORSE — their after-dot,
+    connector, and value recolour to the risk red and the value gets a ▾ mark, so a mixed board
+    doesn't paint a regression in the celebratory 'improved' accent (colour is never the only
+    signal — the number and the ▾ carry it too). `label_w` defaults to the MEASURED widest row
+    label (capped), so short metric names don't strand a huge empty gutter — pass it for very long
+    names. Budget ~0.52in/row + margins; keep w ≥ ~8 so value labels clear. Returns the bottom y."""
+    acc = accent if accent is not None else RGBColor(0x4C, 0xC3, 0x8A)
+    bc = before_c if before_c is not None else MUTE
+    tc = track_c if track_c is not None else RGBColor(0xE3, 0xE6, 0xEC)
+    ic_ = ink if ink is not None else DEEP
+    mc = mute if mute is not None else MUTE
+    reg = set(regress or ())
+    acc_text = _darken_to(acc, WHITE)                  # the accent VALUE label darkened to stay legible
+    #                                                    on white (the bright dot/connector keep `acc`)
+    if label_w is not None:
+        lw = label_w
+    else:                                              # measure the widest label so the gutter fits it
+        measured = 0.0
+        for row in rows:
+            nw = _natural_width_in([(str(row[0]), False)], label_size, font)
+            if row[1]:
+                nw += _natural_width_in([("   " + str(row[1]), False)], sub_size, font)
+            measured = max(measured, nw)
+        lw = min(max(measured + 0.15, 1.0), min(0.42 * w, 2.4))
+    bx0, bx1 = x + lw + 0.15, x + w - 1.02
+    for i, row in enumerate(rows):
+        name, sub, v0, v1, lo, hi, unit = row[:7]
+        v_mid = row[7] if len(row) > 7 else None       # optional mid-point (8-element row form)
+        ry = y + i * row_h
+        is_hero = (hero == i)
+        if is_hero:
+            box(slide, x - 0.22, ry - 0.06, 0.06, 0.52,
+                fill=hero_c if hero_c is not None else acc, round=True, r=0.03)
+        parts = [(name, label_size, ic_, is_hero, False, font)]
+        if sub:
+            parts.append(("   " + sub, sub_size, mc, False, False, font))
+        text(slide, x, ry - 0.02, lw + 0.1, 0.4, [parts], anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        box(slide, bx0, ry + 0.14, bx1 - bx0, 0.018, fill=tc)
+        X, _draw = axis_scale(bx0, bx1 - bx0, lo, hi)   # the ONE shared value→x mapper
+        x0, x1 = X(v0), X(v1)
+        if threshold and threshold[0] == i:
+            xk = X(threshold[1])
+            box(slide, xk, ry - 0.10, 0.014, 0.5, fill=RGBColor(0x9A, 0xA5, 0x96))
+            if len(threshold) > 2 and threshold[2]:
+                text(slide, xk + 0.06, ry + 0.20, 0.7, 0.22,
+                     [[(str(threshold[2]), sub_size, mc, False, False, font)]], space_after=0)
+        is_reg = i in reg                              # a regressed row: risk red + ▾, never the accent
+        row_acc = _BAD_D if is_reg else acc            # dot + connector (bright graphic)
+        val_acc = _BAD_D if is_reg else acc_text       # value TEXT (legible on white)
+        connector(slide, (x0, ry + 0.15), (x1, ry + 0.15), color=row_acc, width=2.2, arrow=True)
+        box(slide, x0 - 0.05, ry + 0.10, 0.10, 0.10, fill=bc, round=True, r=0.05)
+        box(slide, x1 - 0.06, ry + 0.09, 0.12, 0.12, fill=row_acc, round=True, r=0.06)
+        fmt = _numlabel
+        after_txt = ("▾ " if is_reg else "") + fmt(v1) + (" " + unit if unit else "")
+        # Direction-aware OUTWARD labels: rightward rows keep the original geometry byte-for-byte;
+        # a leftward (lower-is-better) row mirrors it — after-label LEFT of x1, before-label RIGHT
+        # of x0 — so end labels can never collide with each other at any span. (Known latent limit,
+        # deliberately unchanged here: the after-label box is a fixed 0.98in, so an unusually long
+        # value+unit can still wrap to two lines.)
+        if x1 >= x0:
+            text(slide, x0 - 0.62, ry - 0.185, 0.6, 0.24,
+                 [[(fmt(v0), before_size, mc, False, False, value_font or font)]],
+                 align=PP_ALIGN.RIGHT, space_after=0)
+            text(slide, x1 + 0.10, ry - 0.21, 0.98, 0.28,
+                 [[(after_txt, value_size, val_acc, True, False,
+                    value_font or font)]], space_after=0)
+        else:
+            text(slide, x0 + 0.10, ry - 0.185, 0.6, 0.24,
+                 [[(fmt(v0), before_size, mc, False, False, value_font or font)]],
+                 space_after=0)
+            text(slide, x1 - 1.08, ry - 0.21, 0.98, 0.28,
+                 [[(after_txt, value_size, val_acc, True, False,
+                    value_font or font)]], align=PP_ALIGN.RIGHT, space_after=0)
+        if v_mid is not None:
+            xm = X(v_mid)
+            box(slide, xm - 0.04, ry + 0.11, 0.08, 0.08, fill=mc, round=True, r=0.04)
+            mtxt = fmt(v_mid)
+            # place the mid value ABOVE its dot only when its measured natural width clears BOTH
+            # end-label ink extents by >= 0.08in horizontally; otherwise drop it BELOW the track
+            # (ry + 0.30 — the shelf the threshold tick label uses), so it can never collide.
+            w_m = _natural_width_in([(mtxt, False)], before_size, value_font or font)
+            w_b = _natural_width_in([(fmt(v0), False)], before_size, value_font or font)
+            w_a = _natural_width_in([(after_txt, True)], value_size, value_font or font)
+            if x1 >= x0:
+                b_lo, b_hi = (x0 - 0.02) - w_b, (x0 - 0.02)
+                a_lo, a_hi = x1 + 0.10, x1 + 0.10 + w_a
+            else:
+                b_lo, b_hi = x0 + 0.10, x0 + 0.10 + w_b
+                a_lo, a_hi = (x1 - 0.10) - w_a, (x1 - 0.10)
+            m_lo, m_hi = xm - w_m / 2, xm + w_m / 2
+            clear = ((m_lo >= b_hi + 0.08 or m_hi <= b_lo - 0.08) and
+                     (m_lo >= a_hi + 0.08 or m_hi <= a_lo - 0.08))
+            my = (ry - 0.185) if clear else (ry + 0.30)
+            text(slide, xm - 0.35, my, 0.7, 0.22,
+                 [[(mtxt, before_size, mc, False, False, value_font or font)]],
+                 align=PP_ALIGN.CENTER, space_after=0)
+    return y + len(rows) * row_h
+
+
+def concept_equation(slide, x, y, w, h, terms, *, op="=", accent=None, ink=None, highlight_idx=None,
+                     term_size=30, op_size=34, font=None, term_colors=None):
+    """A word-EQUATION headline device (not LaTeX math): big display terms joined by oversized
+    accent operators — 'ZINE = MAGAZINE', 'A ≠ B ≠ C', 'Answer = Retrieve + Generate'. `op` is the
+    joiner: a single string ('='|'≠'|'×'|'+'|'→') for all gaps, OR a **list** of operators (one per
+    gap, len == len(terms)-1) for a MIXED equation like Answer = Retrieve + Generate (op=['=','+']).
+    `highlight_idx` recolors one term to the accent; `term_colors` (a list aligned to `terms`,
+    `None` per slot = default) overrides per-term colour for a semantic palette. Centred row."""
+    acc = accent if accent is not None else MAGENTA
+    ic = ink if ink is not None else DEEP
+    ops = list(op) if isinstance(op, (list, tuple)) else [op] * (len(terms) - 1)
+    runs = []
+    for i, t in enumerate(terms):
+        col = (term_colors[i] if term_colors and i < len(term_colors) and term_colors[i] is not None
+               else (acc if i == highlight_idx else ic))
+        runs.append((t, term_size, col, True, False, font or DISPLAY or FONT))
+        if i < len(terms) - 1:
+            runs.append(("  " + ops[i] + "  ", op_size, acc, True, False, font or DISPLAY or FONT))
+    tb = text(slide, x, y, w, h, [runs], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    eaface = font or EADISPLAY        # honor the CJK display face for any CJK terms
+    if eaface:
+        for p in tb.text_frame.paragraphs:
+            for r in p.runs:
+                _apply_ea(r, eaface)
+    return y + h
+
+
+def cta_button(slide, x, y, w, h, label, *, variant="primary", accent=None, tcolor=None,
+               arrow=True, mono=False, bg=None):
+    """A call-to-action button: filled `variant='primary'` (accent fill) or `variant='secondary'`
+    (outline). Optional trailing → arrow / mono command label. Use on closing/cover masters. The
+    outline (`secondary`) label defaults to the accent, which can be too faint on the SLIDE
+    background it sits on — pass `bg=` your closing-slide colour and, if the accent doesn't clear
+    4.5:1 on it, the label recolours to a legible ink (the outline stays accent). `tcolor` overrides."""
+    acc = accent if accent is not None else BLUE
+    if variant == "primary":
+        box(slide, x, y, w, h, fill=acc, round=True, r=min(h / 2, 0.16))
+        tc = tcolor if tcolor is not None else (_legible_ink(acc))
+    else:
+        box(slide, x, y, w, h, fill=None, line=acc, line_w=1.4, round=True, r=min(h / 2, 0.16))
+        if tcolor is not None:
+            tc = tcolor
+        elif bg is not None and contrast_ratio(acc, bg) < 4.5:
+            tc = _legible_ink(bg)                    # accent too faint on this slide bg → legible ink
+        else:
+            tc = acc
+    lab = label + ("  →" if arrow else "")
+    text(slide, x, y, w, h, [[(lab, 13, tc, True, False, MONO if mono else None)]],
+         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+
+
+def cta_pair(slide, x, y, w, h, primary, secondary, *, accent=None, gap=0.2, bg=None):
+    """Primary (filled) + secondary (outline) CTA buttons side by side, equal height. Pass `bg=`
+    the slide background so the outline button's label stays legible on a dark closing."""
+    bw = (w - gap) / 2
+    cta_button(slide, x, y, bw, h, primary, variant="primary", accent=accent)
+    cta_button(slide, x + bw + gap, y, bw, h, secondary, variant="secondary", accent=accent, bg=bg)
+
+
+def status_stamp(slide, x, y, text_str, *, color=None, size=0.95, rotation=-12):
+    """A rotated state STAMP ('SOLD OUT', 'CONFIDENTIAL') — a bordered caps mark attached to a
+    card/footer. Independent of the CJK `seal`."""
+    c = color if color is not None else MAGENTA
+    sh = _flat(slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(x), Inches(y), Inches(size * 1.7), Inches(size * 0.5)))
+    sh.fill.background(); sh.line.color.rgb = c; sh.line.width = Pt(1.6); sh.rotation = rotation
+    sh.shadow.inherit = False
+    text(slide, x, y, size * 1.7, size * 0.5, [[(text_str.upper(), 13, c, True, False)]],
+         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    return sh
+
+
+def corner_tab(slide, card_x, card_y, card_w, label, *, fill=None, tcolor=None, w=1.6, h=0.32):
+    """A 'RECOMMENDED' / 'MOST POPULAR' tab sitting ON the top edge of a card (centred on it). Its
+    bottom meets the card's top edge so it reads as attached WITHOUT overlapping into the card (no
+    false overlap lint). Build the card first, then call this with the card's x/y/w."""
+    f = fill if fill is not None else MAGENTA
+    tc = tcolor if tcolor is not None else _legible_ink(_as_rgbc(f))   # 9.5pt bold is normal text: 4.5:1
+    bx = card_x + card_w / 2 - w / 2
+    ty = card_y - h            # bottom edge meets the card top — attached, not overlapping
+    box(slide, bx, ty, w, h, fill=f, round=True, r=h / 2)
+    text(slide, bx, ty, w, h, [[(label.upper(), 9.5, tc, True, False)]],
+         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+
+
+def concentric_rings(slide, cx, cy, layers, *, accent=None, ink=None, r0=1.6, ring=0.62):
+    """A nested-containment / synthesis diagram (core → ring → ring) with leader labels — for a
+    qualitative framework (e.g. CMT — colour, material, texture). layers = [outer…inner] labels."""
+    acc = accent if accent is not None else GOLD
+    ic = ink if ink is not None else DEEP
+    n = len(layers)
+    for i in range(n):
+        r = r0 - i * ring
+        col = _blend(acc, WHITE, 0.75 - 0.22 * i)
+        o = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(cx - r), Inches(cy - r), Inches(2 * r), Inches(2 * r)))
+        o.fill.solid(); o.fill.fore_color.rgb = col; o.line.color.rgb = acc; o.line.width = Pt(1.2); o.shadow.inherit = False
+    for i, lab in enumerate(layers):
+        r = r0 - i * ring
+        ly = cy - r + ring / 2 if i < n - 1 else cy
+        text(slide, cx - 1.3, ly - 0.16, 2.6, 0.32, [[(lab, 13 if i < n - 1 else 14, ic, True, False)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+
+
+def pull_quote(slide, x, y, w, quote, *, attribution="", accent=None, ink=None, serif=None, size=20):
+    """An italic-serif PULL QUOTE with an oversized accent quote-mark and attribution — turns a
+    statement into an argument. Returns bottom y."""
+    acc = accent if accent is not None else MAGENTA
+    ic = ink if ink is not None else DEEP
+    f = serif or DISPLAY or "Georgia"
+    text(slide, x, y - 0.1, 0.7, 0.7, [[("“", 54, acc, True, False, f)]], space_after=0)
+    # MEASURE the wrapped quote (char-count estimates undercount wide quotes and the attribution
+    # then rides up into the ink). Match the real render height: _LINT_LINE_H × the 1.1 line_spacing.
+    nl = measure_lines([(quote, False)], size, w, font=f)
+    qh = nl * (size / 72.0) * _LINT_LINE_H * 1.1
+    text(slide, x + 0.05, y + 0.5, w, max(0.5, qh), [[(quote, size, ic, False, True, f)]], space_after=2, line_spacing=1.1)
+    yy = y + 0.5 + qh + 0.12
+    if attribution:
+        text(slide, x + 0.05, yy, w, 0.3, [[("— " + attribution, 12, MUTE, False, False)]], space_after=0)
+        yy += 0.3
+    return yy
+
+
+def standfirst(slide, x, y, w, text_str, *, ink=None, serif=None, size=15):
+    """An italic-serif STANDFIRST / dekker — the one-line editorial gloss under a headline.
+    Returns bottom y."""
+    text(slide, x, y, w, 0.5, [[(text_str, size, ink if ink is not None else SLATE, False, True, serif or DISPLAY or "Georgia")]],
+         space_after=0, line_spacing=1.05)
+    return y + size / 72.0 * 1.05 + 0.1
+
+
+def dot_meter(slide, x, y, n, total, *, accent=None, off=None, d=0.13, gap=0.07):
+    """A ●●○ complexity/level meter — n filled of `total` dots."""
+    acc = accent if accent is not None else BLUE
+    of = off if off is not None else _blend(acc, WHITE, 0.72)
+    for i in range(total):
+        box(slide, x + i * (d + gap), y, d, d, fill=acc if i < n else of, round=True, r=d / 2)
+
+
+def tradeoff_list(slide, x, y, w, plus, minus, *, pos=None, neg=None):
+    """A +/− trade-off list: green '+' pros and red '−' cons. plus/minus = lists of strings."""
+    pc = pos if pos is not None else GREEN
+    nc = neg if neg is not None else RGBColor(0xD0, 0x3A, 0x2E)
+    cy = y
+    for sign, col, items in (("+", pc, plus), ("−", nc, minus)):
+        for it in items:
+            text(slide, x, cy, 0.3, 0.28, [[(sign, 14, col, True, False)]], space_after=0)
+            text(slide, x + 0.32, cy, w - 0.32, 0.3, [[(it, 12, SLATE, False, False)]], space_after=0)
+            cy += 0.3
+    return cy
+
+
+def unit_grid(slide, x, y, w, h, total, unit_label, *, filled=None, cols=None, gap_frac=0.22,
+              fill=None, empty=None, ink=None, label_size=10.5, font=None, max_cells=400,
+              alt=None):
+    """A UNIT / waffle chart: ``total`` identical cells, ``filled`` of them highlighted.
+
+    THE FORM. One square = one thing. It is how you make a count *felt* rather than read — "34
+    paintings" is a number, thirty-four squares is a quantity you can see is small. It is also the
+    honest way to show a tiny share: a 1%-of-1000 sliver on a bar is a hairline, but one dark cell
+    in a field of a hundred is unmistakable. Reach for it when the count IS the point (a lifetime's
+    output, survivors, 3 of 12 experiments) and for the "N in 100" framing. Do NOT use it when the
+    total is large and arbitrary — 8,412 cells is a texture, not a count.
+
+    WHY IT IS HERE. This was the one editorial form the catalogue lacked, and its absence was
+    measured: a narrative deck hand-rolled a 34-square grid out of `box` in a loop with a literal
+    stride, which is the exact geometry defect `check_handrolled_pitch` exists to catch. The
+    catalogue skewed to business/data forms (leaderboard, funnel, scorecard), so a humanities deck
+    fell out of it entirely and back onto primitives.
+
+    ``unit_label`` IS POSITIONAL AND REQUIRED, on purpose. A field of identical squares is
+    meaningless until the viewer is told what one square is, and that sentence has to be on the
+    slide, not in the caption below or in the speaker's mouth. Passing an empty one raises: a
+    decorative grid of squares is precisely the un-decodable "frame furniture" this skill treats as
+    a defect. Write the unit, e.g. ``"一个方块 = 一幅公认真迹"`` / ``"1 square = 1 shipped feature"``.
+
+    Cells are square and sized to the LARGEST that fits ``w`` x ``h`` (the label's line included in
+    the budget), sweeping every column count rather than guessing one. Cell size and stride are
+    DERIVED from the region, never constants. Returns bottom y, always <= ``y + h``.
+    """
+    if not isinstance(total, int) or total <= 0:
+        raise ValueError(f"unit_grid: total must be a positive int, got {total!r}")
+    if total > max_cells:
+        raise ValueError(
+            f"unit_grid: {total} cells is a texture, not a countable quantity (cap {max_cells}). "
+            f"Either scale the unit so one cell = many things (say so in unit_label), or use a bar.")
+    if not (unit_label or "").strip():
+        raise ValueError(
+            "unit_grid: unit_label is required — a grid of identical squares means nothing until "
+            "the slide says what one square is. Pass e.g. '1 square = 1 painting'.")
+    if filled is not None and not (0 <= filled <= total):
+        raise ValueError(f"unit_grid: filled={filled} outside 0..{total}")
+
+    # The region is w x h MINUS the unit label's own line — the label is part of the component, so
+    # it must be budgeted, not added on afterwards. Deriving the cell from w alone was the first
+    # cut's bug: 34 cells across 8.8in produced a 5.4in-tall grid that ran off a 5.625in canvas and
+    # drew five OVERFLOW findings. A form component that can overflow guarantees nothing.
+    lab_h = label_size / 72.0 * 1.9
+    grid_h = max(0.2, h - 0.14 - lab_h)
+
+    def _fit(nc):
+        """cell size and row count for nc columns, respecting BOTH w and the grid's height."""
+        nc = max(1, min(int(nc), total))
+        nr = int(math.ceil(total / float(nc)))
+        c_w = w / (nc + gap_frac * (nc - 1))                  # widest cell this many columns allows
+        c_h = grid_h / (nr + gap_frac * (nr - 1))             # tallest cell this many rows allows
+        return nc, nr, min(c_w, c_h)                          # square cells: the binding limit wins
+
+    if cols:
+        ncol, nrow, cell = _fit(cols)
+    else:
+        # pick the column count that yields the LARGEST square cell inside w x grid_h. Sweeping is
+        # exact and cheap (total <= max_cells), and beats a sqrt guess that ignores the height.
+        cands = [_fit(nc) for nc in range(1, total + 1)]
+        best = max(c[2] for c in cands)
+        # …then prefer a COUNTABLE row length among the near-largest cells. The point of a unit
+        # chart is that the viewer reads the quantity off the grid: 10+10+10+4 is read at a glance,
+        # 12+12+10 has to be counted square by square. Preference order, best first:
+        #   0  a multiple of ten   — decades count themselves
+        #   1  a multiple of five  — the same trick, coarser
+        #   2  an exact divisor    — no ragged row at all; the block is a clean rectangle
+        #   3  anything else
+        # Ties inside a tier go to the LARGEST cell. An earlier cut broke ties on column count
+        # instead, and in a short wide band (8.4 x 1.5in) that picked 19 columns — 19+15, the least
+        # countable option available — over 17, which is both a divisor (two full rows) and the
+        # biggest cell. Countability was the entire reason for this block, and the tie-break was
+        # quietly discarding it.
+        def _rank(c):
+            nc = c[0]
+            tier = 0 if nc % 10 == 0 else 1 if nc % 5 == 0 else 2 if total % nc == 0 else 3
+            return (tier, -c[2])
+        near = [c for c in cands if c[2] >= best * 0.88]
+        ncol, nrow, cell = min(near, key=_rank)
+    gap = cell * gap_frac
+    fc = fill if fill is not None else ACCENTS[0]
+    ec = empty if empty is not None else "D9D5CE"
+    for k in range(total):
+        r, c = divmod(k, ncol)
+        on = True if filled is None else (k < filled)
+        box(slide, x + c * (cell + gap), y + r * (cell + gap), cell, cell,
+            fill=(fc if on else ec), round=False)
+    yb = y + nrow * cell + (nrow - 1) * gap
+    text(slide, x, yb + 0.14, w, lab_h,
+         [[(unit_label, label_size, (ink if ink is not None else MUTE), False, False, font)]],
+         space_after=0)
+    if alt:
+        try:
+            alt_text(slide.shapes[-1], alt)
+        except Exception:
+            pass
+    return yb + 0.14 + lab_h
+
+
+def segmented_bar(slide, x, y, w, h, parts, *, labels=None, accents=None, show_pct=True, legend="auto"):
+    """A cumulative 100% SEGMENTED bar. parts = list of values (auto-normalised). Distinct hues.
+    On-bar labels AUTO-FIT their segment; a segment too thin to carry a label (< 0.5in) is NOT
+    silently dropped — with ``legend='auto'`` its name+% appears in a compact swatch legend below,
+    so no category is lost (the previous behaviour dropped the sliver's label entirely). Returns
+    bottom y (past the legend if one was drawn)."""
+    tot = sum(parts) or 1
+    cols = accents or palette(len(parts), ACCENTS)
+    cx = x
+    dropped = []
+    for i, v in enumerate(parts):
+        seg = w * v / tot
+        box(slide, cx, y, seg, h, fill=cols[i], round=False)
+        pct = f"{round(100 * v / tot)}%"
+        name = labels[i] if labels else ""
+        if show_pct and seg > 0.5:
+            tc = _legible_ink(cols[i])
+            lab = (name + " " if name else "") + pct
+            lsz = fit_text_size([(lab, True)], seg - 0.1, h - 0.04, 10.5, min_size=7)   # shrink to fit
+            text(slide, cx, y, seg, h, [[(lab, lsz, tc, True, False)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        elif show_pct:
+            dropped.append((cols[i], name if name else pct, pct if name else ""))
+        cx += seg
+    yb = y + h
+    if show_pct and legend and dropped:
+        leaderboard(slide, x, yb + 0.12, min(w, 4.2), dropped, row_h=0.34, gap=0.06)  # never lose the sliver's %
+        yb = yb + 0.12 + len(dropped) * 0.40
+    return yb
+
+
+def bullet_graph(slide, x, y, w, rows, *, bands=(0.6, 0.85), accent=None, row_h=0.5,
+                 label_w=None, value_w=0.95, gap=0.14, ink=None, band_colors=None,
+                 target_c=None, font=None, unit="", higher_better=True):
+    """Stephen Few's BULLET GRAPH — a compact 'actual vs TARGET, in context' KPI bar, one row per metric.
+    Each row scales to its OWN maximum (KPIs carry different units, so a shared axis would crush the
+    small ones — CSAT 0–5 next to Revenue 0–150), with qualitative BANDS (poor / ok / good) shaded
+    behind a MEASURE bar (accent) to ``actual`` and a TARGET tick — so gap-to-goal AND 'which band it
+    lands in' read as geometry, not a caption.
+
+    ``rows = [(label, actual, target), ...]`` — or ``(label, actual, target, [b1, b2])`` with per-row
+    ABSOLUTE band thresholds. Otherwise ``bands`` gives the zone edges as FRACTIONS of each row's max
+    (default ``(0.6, 0.85)`` → <60% poor / 60–85% ok / >85% good); ``bands=None`` draws a plain track.
+    ``higher_better=False`` reverses the band shading for 'lower is better' KPIs (churn, latency).
+    Returns the bottom y. The dashboard bar ``scorecard``/``meter_bar`` can't give — those carry a
+    value(+delta) but no plan line and no thresholds. Reuses ``axis_scale`` per row so the measure bar
+    always fits its track. Only reach for it when each KPI has a REAL target/plan line (without one use
+    ``scorecard``/``meter_bar``). Assumes non-negative actual/target; on a DARK deck pass ``band_colors``
+    (light-gray defaults wash out), ``ink`` and ``target_c``. See references/data-viz.md (IBCS plan-vs-actual)."""
+    acc = accent if accent is not None else BLUE
+    ink_ = ink if ink is not None else DEEP
+    tc = target_c if target_c is not None else ink_
+    lw = label_w if label_w is not None else min(2.6, max(1.15, w * 0.24))
+    bx = x + lw
+    bw = w - lw - value_w
+    bc = list(band_colors or ["D8DBE2", "E6E9EE", "F2F4F7"])
+    if not higher_better:
+        bc = list(reversed(bc))
+    yy = y
+    for r in rows:
+        label, actual, target = str(r[0]), float(r[1]), float(r[2])
+        if len(r) > 3 and r[3]:
+            rb = [float(b) for b in r[3]]                     # per-row ABSOLUTE thresholds
+        elif bands is None:
+            rb = []                                           # plain track
+        else:
+            rb = [f * max(actual, target) for f in bands]     # fractions of THIS row's max
+        rb = sorted(rb)                                       # monotone zone edges (guard unsorted input)
+        rmax = (max([actual, target] + rb) * 1.12) or 1.0     # each row auto-scales to its own max
+        X, _ = axis_scale(bx, bw, 0.0, rmax)
+        cy = yy + row_h / 2.0
+        band_h = row_h * 0.72
+        by = cy - band_h / 2.0
+        edges = [0.0] + rb + [rmax]
+        for i in range(len(edges) - 1):
+            box(slide, X(edges[i]), by, max(0.02, X(edges[i + 1]) - X(edges[i])), band_h,
+                fill=bc[min(i, len(bc) - 1)])
+        mh = band_h * 0.42                                    # measure bar (accent), thinner, centred
+        box(slide, X(0.0), cy - mh / 2.0, max(0.02, X(actual) - X(0.0)), mh, fill=acc, round=True, r=mh * 0.35)
+        tk_h = band_h * 1.14                                  # target tick, taller than the bands
+        box(slide, X(target) - 0.012, cy - tk_h / 2.0, 0.024, tk_h, fill=tc)
+        text(slide, x, yy, lw - 0.1, row_h, [[(label, 11, ink_, True, False, font or FONT)]],
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        text(slide, bx + bw + 0.06, yy, value_w - 0.08, row_h,
+             [[(f"{actual:g}{unit}", 11.5, ink_, True, False, font or FONT)]],
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        yy += row_h + gap
+    return yy
+
+
+def range_bars(slide, x, y, w, rows, lo=None, hi=None, *, accent=None, row_h=0.5, label_w=None,
+               point_c=None, ink=None, label_c=None, font=None, unit="", show_ends=True):
+    """A 'FOOTBALL FIELD' — a value RANGE per category as floating min–max bars on ONE shared axis
+    (valuation / estimate / forecast ranges). ``rows = [(label, low, high[, point]), ...]``; an optional
+    ``point`` marks a base/mid case with a tick. ``lo``/``hi`` fix the shared scale (default: a padded
+    data range). Returns the bottom y. The RANGE cousin of ``dot_strip``/``dumbbell_board`` — it calls
+    the same ``axis_scale`` mapper, so value geometry never drifts between forms. This is the component
+    behind form-selection's recipe-only 'football field' note."""
+    acc = accent if accent is not None else BLUE
+    ink_ = ink if ink is not None else DEEP
+    lc = label_c if label_c is not None else MUTE
+    pc = point_c if point_c is not None else ink_
+    los = [float(r[1]) for r in rows]
+    his = [float(r[2]) for r in rows]
+    pts = [float(r[3]) for r in rows if len(r) > 3 and r[3] is not None]
+    dlo = min(los + pts) if (los or pts) else 0.0        # include base-case points so a tick never
+    dhi = max(his + pts) if (his or pts) else 1.0        # falls off the shared axis
+    pad = (dhi - dlo) * 0.10 or 1.0
+    lo = lo if lo is not None else dlo - pad
+    hi = hi if hi is not None else dhi + pad
+    lw = label_w if label_w is not None else min(2.6, max(1.15, w * 0.24))
+    bx = x + lw
+    bw = w - lw
+    X, draw_axis = axis_scale(bx, bw, lo, hi)
+    yy = y
+    bar_h = row_h * 0.44
+    for r in rows:
+        label, low, high = str(r[0]), float(r[1]), float(r[2])
+        point = r[3] if len(r) > 3 else None
+        cy = yy + row_h / 2.0
+        box(slide, X(low), cy - bar_h / 2.0, max(0.05, X(high) - X(low)), bar_h, fill=acc,
+            round=True, r=bar_h * 0.4)
+        if show_ends:
+            text(slide, X(low) - 0.92, cy - 0.13, 0.86, 0.26,
+                 [[(f"{low:g}{unit}", 9.5, lc, False, False, font or FONT)]],
+                 align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+            text(slide, X(high) + 0.06, cy - 0.13, 0.92, 0.26,
+                 [[(f"{high:g}{unit}", 9.5, lc, False, False, font or FONT)]],
+                 anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        if point is not None:
+            box(slide, X(float(point)) - 0.012, cy - bar_h * 0.92, 0.024, bar_h * 1.84, fill=pc)
+        text(slide, x, yy, lw - 0.1, row_h, [[(label, 11, ink_, True, False, font or FONT)]],
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        yy += row_h + 0.12
+    draw_axis(slide, yy + 0.03)
+    return yy + 0.32
+
+
+def meter_bar(slide, x, y, w, frac, *, label=None, value=None, value_unit=None,
+              accent=None, track=None, h=0.28, gap_above=0.34, value_pos="right",
+              value_pad=0.2, value_w=2.6, label_size=12.5, value_size=18, unit_size=11,
+              ink=None, label_c=None, font=None, value_font=None):
+    """A horizontal METER / progress bar with a value label that is **always vertically
+    centered on the bar** (never floating above or below it) — the correct, reusable form of
+    the hand-built "track + fill + number" row. Use for percentile / share / progress / "want
+    vs have" rows (e.g. ``第10百分位``, ``95%``).
+
+    Draws: an optional caption ``label`` ABOVE the bar, a rounded ``track``, an ``accent`` fill
+    to ``frac`` (0..1), and ``value`` (+ optional ``value_unit``) set on the bar's centerline.
+
+    ``value_pos``:
+      - ``"right"`` (default) — value sits just past the END OF THE TRACK, so a column of
+        meter_bars shares one value column and reads aligned. Never overlaps the fill.
+      - ``"end"`` — value sits just past the FILL (tied to the bar length); good for a single
+        bar, but for a short fill it floats over the empty track, so prefer ``"right"`` in a
+        stack.
+
+    Colours default to deckkit's light palette; on a DARK deck pass ``track=`` your panel
+    colour, ``ink=`` your body colour, ``label_c=`` your muted colour, and ``accent=``.
+    CANVAS-SAFE BY CONSTRUCTION: the value's real width is measured, the value box clamps to
+    it, and if the footprint would leave the canvas the BAR shortens (with a printed note) —
+    a fitting call is unchanged; an impossible one raises. Returns the bar's BOTTOM y."""
+    acc = accent if accent is not None else BLUE
+    tr = track if track is not None else RGBColor(0xE6, 0xE9, 0xEE)
+    vink = ink if ink is not None else DEEP
+    lc = label_c if label_c is not None else MUTE
+    f = max(0.0, min(1.0, frac))
+    # BY-CONSTRUCTION canvas guard (the recurring OFF_CANVAS bug this kills: a right-side value
+    # label pushed past the slide edge by the roomy default value_w). Measure the value's REAL
+    # one-line width, clamp the value box to it, and if the footprint still leaves the canvas,
+    # shorten the BAR — a correct call is byte-identical; only an overflowing one is adjusted.
+    vw = value_w
+    if value is not None:
+        vruns = [(str(value), True)]
+        if value_unit:
+            vruns.append((" " + str(value_unit), True))
+        natural = _natural_width_in(vruns, value_size, value_font or font) + 0.10
+        vw = min(value_w, max(0.45, natural))
+        sw, _sh = _slide_size(slide)
+        overhang = (x + w + value_pad + vw) - (sw - 0.06)   # worst case: value_pos="right"
+        if overhang > 0:
+            if w - overhang < 0.5:
+                raise ValueError(
+                    "meter_bar(): no room for the value label on-canvas — reduce x, w, or value_size")
+            print(f"[deckkit] meter_bar: bar shortened {overhang:.2f}in so the value stays on-canvas")
+            w -= overhang
+    yt = y + (gap_above if label else 0.0)
+    if label:
+        text(slide, x, y, w, gap_above, [[(str(label), label_size, lc, False, False, font)]],
+             anchor=MSO_ANCHOR.BOTTOM, space_after=0)
+    box(slide, x, yt, w, h, fill=tr, round=True, r=h / 2)
+    if f > 0:
+        # FIDELITY over the pill. The fill used to be floored at `h` so a rounded cap never
+        # degenerated — which silently overstated every small fraction: measured, frac=0.01 on a
+        # 9.7in bar drew 0.46in, 4.7x the true width, and the render read as ~7%. A bar that
+        # overstates its own value is a fidelity defect, and fidelity is a floor taste does not
+        # override. Draw the true width and shrink the corner radius to match; a thin sliver ends
+        # up effectively square, which is correct — a 1% mark SHOULD look like a 1% mark.
+        fw = w * f
+        box(slide, x, yt, fw, h, fill=acc, round=True, r=min(h, fw) / 2)
+    if value is not None:
+        vx = (x + w + value_pad) if value_pos == "right" else (x + w * f + value_pad)
+        runs = [(str(value), value_size, vink, True, False, value_font or font)]
+        if value_unit:
+            runs.append((" " + str(value_unit), unit_size, lc, True, False, value_font or font))
+        # value box shares the bar's y/h with MIDDLE anchor → text on the bar's centerline
+        tbv = text(slide, vx, yt, vw, h, [runs], anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        tbv.text_frame.word_wrap = False           # a value never wraps mid-number
+    return yt + h
+
+
+def year_badge(slide, x, y, text_str, *, fill=None, tcolor=None, w=0.95, h=0.4):
+    """A small year/date PILL badge (anchors chronology on timelines/cards)."""
+    f = fill if fill is not None else GOLD
+    tc = tcolor if tcolor is not None else (_legible_ink(f))
+    box(slide, x, y, w, h, fill=f, round=True, r=h / 2)
+    text(slide, x, y, w, h, [[(str(text_str), 12, tc, True, False)]], align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+
+
+def spec_card(slide, x, y, w, h, rows, *, ink=None, accent=None, fill=None, title=""):
+    """A mono key→value PLACARD (Rendering / Palette / Layout; a CAD title-block) that documents a
+    figure/layout as a recipe. rows = [(key, value), …]."""
+    ic = ink if ink is not None else DEEP
+    box(slide, x, y, w, h, fill=fill if fill is not None else LIGHT, line=_blend(ic, WHITE, 0.82), line_w=1.0, round=True)
+    cy = y + 0.16
+    if title:
+        text(slide, x + 0.18, cy, w - 0.36, 0.3, [[(title.upper(), 10.5, accent if accent is not None else MAGENTA, True, False, MONO)]], space_after=0)
+        cy += 0.32
+    for k, v in rows:
+        text(slide, x + 0.18, cy, w * 0.42, 0.26, [[(str(k).upper(), 9.5, MUTE, False, False, MONO)]], space_after=0)
+        text(slide, x + w * 0.44, cy, w * 0.54 - 0.18, 0.26, [[(str(v), 10.5, ic, True, False, MONO)]], space_after=0)
+        cy += 0.28
+    return y + h
+
+
+def diagram_island(slide, x, y, w, h, *, caption="", bezel=None, fill=None, cap_c=None, pad=0.3):
+    """A bright rounded device-bezel PANEL hosting a flowchart/figure on a DARK slide (the 'white
+    island' move). Draw the island, then build your diagram inside the returned inner rect. Adds an
+    optional 'Figure N' caption below."""
+    bz = bezel if bezel is not None else WHITE
+    f = fill if fill is not None else WHITE
+    box(slide, x, y, w, h, fill=bz, round=True, r=0.14)
+    inner = (x + pad, y + pad, w - 2 * pad, h - 2 * pad)
+    if f != bz:
+        box(slide, *inner, fill=f, round=True, r=0.08)
+    if caption:
+        text(slide, x, y + h + 0.08, w, 0.3, [[(caption, 11, cap_c if cap_c is not None else MUTE, False, False)]],
+             align=PP_ALIGN.CENTER, space_after=0)
+    return inner
+
+
+def gradient_rule(slide, x, y, w, c0, c1, *, h=0.05, angle=0):
+    """A thin two-stop GRADIENT rule (navy→emerald, amber→blue) — a brand signature under a title
+    or along an edge."""
+    sh = _flat(slide.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(x), Inches(y), Inches(w), Inches(h)))
+    sh.line.fill.background(); sh.shadow.inherit = False
+    sh.fill.gradient()
+    try:
+        stops = sh.fill.gradient_stops
+        stops[0].color.rgb = c0 if not isinstance(c0, str) else RGBColor.from_string(c0.lstrip("#"))
+        stops[0].position = 0.0
+        stops[1].color.rgb = c1 if not isinstance(c1, str) else RGBColor.from_string(c1.lstrip("#"))
+        stops[1].position = 1.0
+        sh.fill.gradient_angle = angle
+    except Exception:
+        sh.fill.solid(); sh.fill.fore_color.rgb = c0 if not isinstance(c0, str) else RGBColor.from_string(c0.lstrip("#"))
+    return sh
+
+
+def catalogue_frame(slide, *, inset=0.32, gap=0.06, color=None, line_w=1.0, slide_obj=None,
+                    w_in=None, h_in=None):
+    """A thin DOUBLE-LINE full-bleed frame inset from the slide edges — the printed-specimen /
+    exhibition-catalogue look (pair with the museum_memorial / eastern presets). Draw it as a
+    background element (before content). Reads the slide's real size when possible."""
+    if w_in is None or h_in is None:
+        s = slide_obj or slide
+        try:
+            prs = s.part.package.presentation_part.presentation
+            w_in = prs.slide_width / 914400 if w_in is None else w_in
+            h_in = prs.slide_height / 914400 if h_in is None else h_in
+        except Exception:
+            w_in = 10.0 if w_in is None else w_in
+            h_in = 5.625 if h_in is None else h_in
+    c = color if color is not None else GOLD
+    for k in (0, gap):
+        box(slide, inset + k, inset + k, w_in - 2 * (inset + k), h_in - 2 * (inset + k),
+            fill=None, line=c, line_w=line_w)
+
+
+# ===================================================================== build-time layout lint
+# A GEOMETRY self-check you run in-process right before prs.save() — so the mechanical layout
+# faults (overflow, off-canvas, collisions) surface in the terminal in milliseconds, BEFORE the
+# slow render + visual-critic round. It is a NET, not a replacement for the actor-critic loop:
+# it clears the geometric errors so the critic spends its attention on meaning and design.
+#
+# The one idea that keeps it QUIET (low false positives) and therefore TRUSTED: it reasons about
+# each text box's INK rectangle — where the glyphs actually land, given the measured line count,
+# the vertical anchor, and the alignment — NOT the text frame, which is routinely drawn taller
+# and wider than its text (top-anchored boxes with slack below, wide title boxes). Comparing
+# frames flags collisions that don't exist; comparing ink flags only the ones that do.
+# Below this, old-style figures inside running prose are a legitimate typographic choice;
+# at or above it a NUMERAL-DOMINANT run is a display number and the wobble is a defect.
+_OLDSTYLE_DISPLAY_PT = 20.0
+# Share of non-space characters that must be digits before a run counts as a DISPLAY NUMERAL.
+# This separates "596,513" / "¥4,508,824,075" (the defect: a big number visibly bobbing) from
+# "2026 Roadmap" (an ordinary title that merely contains a year, where old-style figures are a
+# normal typographic choice). Hard-failing the latter would break perfectly good decks.
+# Measured separation on a spread of real strings: word-bearing headings top out around 0.5
+# ("2026年展望" = 0.40, "Q3 results" = 0.30), while genuine display numerals sit at 0.86-1.00.
+# 0.6 falls in the empty gap, so neither class lands on the boundary.
+_OLDSTYLE_NUMERAL_SHARE = 0.6
+
+
+def _digit_share(txt):
+    """Fraction of a run that is DIGITS, weighted by visual width.
+
+    A CJK glyph occupies about twice the advance of a Latin one, so counting characters raw makes
+    the same heading read as numeral-dominant in Chinese and word-dominant in English: "2026
+    Roadmap" scored 0.36 (a warning) while "2026 年路线图" scored 0.50 (a build failure). Counting
+    CJK at 2 restores the intent — the metric is asking "is this mostly a number?", which is a
+    question about what the eye sees, not about codepoints.
+    """
+    total = 0.0
+    digits = 0.0
+    for c in (txt or ""):
+        if c.isspace():
+            continue
+        w = 2.0 if _has_cjk(c) else 1.0
+        total += w
+        if c.isdigit():
+            digits += w
+    return (digits / total) if total else 0.0
+
+RULE_MAX_THICK = 0.075   # a shape thinner than this on one axis is a RULE, not a panel
+RULE_MIN_LEN = 0.25      # ...and longer than this on the other, so a dot/marker never qualifies
+RULE_INSIDE_PAD = 0.045  # the rule's centre must clear both ink edges by this, so an underline
+                         # hugging a descender (the legitimate case) never fires
+RULE_MIN_CROSS = 0.25    # and the crossing must be visible along the rule, not a tangent
+
+_LINT_LINE_H = 1.20     # DETECTION line-height factor — the real LibreOffice render height (≈1.2×em).
+                        # Deliberately > the 1.12 PLACEMENT estimate the measure_*/vstack helpers use:
+                        # the lint models what actually renders (conservative), while those helpers pack
+                        # with their own built-in padding. The gap (~7%/line) stays under the lint's
+                        # +0.06 / escape_tol tolerances, so a measure_*-sized block is NOT false-flagged
+                        # (verified). For a FILLED/tight text box, size with fit_text_size (also 1.20).
+
+def _bbox_in(sh):
+    """(left, top, width, height) of a shape in inches, or None if unsized."""
+    try:
+        b = (sh.left/914400.0, sh.top/914400.0, sh.width/914400.0, sh.height/914400.0)
+        return b if (b[2] > 0 and b[3] > 0) else None
+    except Exception:
+        return None
+
+class _Placed(tuple):
+    """A placed (l, t, w, h) that also carries the rotated CORNERS when the shape is tilted, so
+    `_overlap_area` / `_contains` can be exact while every edge comparison still reads the tuple."""
+    poly = None
+
+
+def _shape_rot(sh):
+    """The shape's rotation in degrees, [0, 360); 0 for anything that has none."""
+    try:
+        return rotgeom.norm(sh.rotation)
+    except Exception:
+        return 0.0
+
+
+def _placed(bb, rot):
+    """Where frame `bb` rotated by `rot` actually paints (exact at 90deg multiples). OOXML stores a
+    rotated shape as its UNROTATED frame plus `rot`; measuring the frame made a correct vertical
+    margin label a CRITICAL OFF_CANVAS (measured 2026-10-03), so placement checks read this."""
+    if bb is None or not rotgeom.is_rotated(rot):
+        return bb
+    out = _Placed(rotgeom.placed(bb[0], bb[1], bb[2], bb[3], rot))
+    if not rotgeom.is_axis(rot):
+        out.poly = rotgeom.corners(bb[0], bb[1], bb[2], bb[3], rot)
+    return out
+
+
+def _placed_box(sh):
+    """`_bbox_in` for GEOMETRY questions: where the shape paints, not its unrotated frame."""
+    return _placed(_bbox_in(sh), _shape_rot(sh))
+
+
+def _placed_ink(sh, bb, ink):
+    """Ink rect `ink`, measured inside FRAME `bb`, turned with the frame about the frame centre."""
+    rot = _shape_rot(sh)
+    if ink is None or bb is None or not rotgeom.is_rotated(rot):
+        return ink
+    pts = rotgeom.rotate(rotgeom.rect_poly(ink[0], ink[1], ink[2], ink[3]),
+                         bb[0] + bb[2] / 2.0, bb[1] + bb[3] / 2.0, rot)
+    out = _Placed(rotgeom.bbox(pts))
+    if not rotgeom.is_axis(rot):
+        out.poly = pts
+    return out
+
+
+def _overlap_area(a, b):
+    pa, pb = getattr(a, "poly", None), getattr(b, "poly", None)
+    if pa is None and pb is None:
+        ox = max(0.0, min(a[0]+a[2], b[0]+b[2]) - max(a[0], b[0]))
+        oy = max(0.0, min(a[1]+a[3], b[1]+b[3]) - max(a[1], b[1]))
+        return ox * oy
+    A, _ = rotgeom.overlap(pa or rotgeom.rect_poly(a[0], a[1], a[2], a[3]),
+                           pb or rotgeom.rect_poly(b[0], b[1], b[2], b[3]))
+    return A
+
+def _inter_xy(a, b):
+    """(x-extent, y-extent) of the overlap of two placed rects — the inline `ix, iy` the motif and
+    graze checks always computed, unchanged when neither is tilted. When either carries a polygon,
+    ix is the overlap's real horizontal span and ix * iy its EXACT area (iy = area / ix)."""
+    if getattr(a, "poly", None) is None and getattr(b, "poly", None) is None:
+        return (max(0.0, min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])),
+                max(0.0, min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])))
+    A, bb = rotgeom.overlap(getattr(a, "poly", None) or rotgeom.rect_poly(a[0], a[1], a[2], a[3]),
+                            getattr(b, "poly", None) or rotgeom.rect_poly(b[0], b[1], b[2], b[3]))
+    if not A or bb is None or bb[2] <= 0:
+        return (0.0, 0.0)
+    return (bb[2], A / bb[2])
+
+
+def _area_of(r):
+    """A placed rect's TRUE area — its polygon's when tilted (the axis box over-states it)."""
+    poly = getattr(r, "poly", None)
+    return rotgeom.area(poly) if poly is not None else r[2] * r[3]
+
+
+def _contains(outer, pt):
+    poly = getattr(outer, "poly", None)
+    if poly is not None:
+        return rotgeom.contains_point(poly, pt)
+    return (outer[0] <= pt[0] <= outer[0]+outer[2]) and (outer[1] <= pt[1] <= outer[1]+outer[3])
+
+def _natural_width_in(runs, size_pt, font):
+    """Width (inches) the text would occupy on ONE unwrapped line, via the real font metrics."""
+    try:
+        fonts = {b: _pil_font(font or FONT, size_pt, b) for b in (False, True)}
+        return sum(fonts[b].getlength(t) for t, b in runs) / _MEAS_PREC / 72.0
+    except Exception:
+        flat = "".join(t for t, _ in runs)
+        return len(flat) * size_pt * 0.5 / 72.0
+
+# Run-scoped, id(shape)-keyed. Advisory TEXT ONLY — it never changes a verdict, so a stale
+# entry from a reused id can at worst print an unhelpful sentence, never mis-gate a deck.
+_MIXED_HINTS = {}
+
+
+def _measuring_face(run):
+    """The face a run's glyphs will ACTUALLY be set in — which is not always `run.font.name`.
+
+    python-pptx's `font.name` reads `<a:latin>`. CJK glyphs render from `<a:ea>`, which is where
+    `_apply_ea`/`set_font` put the East-Asian face. So on a Chinese deck every geometry check measured
+    Chinese text with the deck's LATIN metrics, and Latin metrics are roughly half as wide as a
+    full-width glyph:
+
+        「给准备申请的人——学位、博士、岗位，三扇门分别长什么样」 at 13pt, true width 4.875in
+            Hiragino Sans GB  4.8750in   (exact)
+            Songti SC         4.8750in   (exact)
+            Helvetica Neue    2.6181in   (54% — what every check was using)
+
+    The width model was never wrong; the FACE handed to it was. That under-measurement is why a
+    CJK page can collide after a generous-looking margin was left, and why nudging coordinates
+    gives feedback that does not match intuition — the ruler is short, so the operator blames
+    their own arithmetic. It reaches `TEXT_OVERLAP`, `OFF_CANVAS`, `ESCAPES_CARD`, `FOOTER` and
+    every `measure_*` helper, i.e. essentially all of this file's geometry on a Chinese deck.
+
+    Resolved through `_inherited_ea` rather than `run.font.name`'s ea twin, because a supplied CJK
+    template normally sets the face one level up (paragraph `defRPr` / the shape's `lstStyle`) —
+    the same chain `retrofit_ea` and `CJK_NO_EA` already walk, so all three agree by construction.
+    A Latin run is unaffected: it returns `font.name` exactly as before.
+    """
+    try:
+        if not _has_cjk(run.text or ""):
+            return run.font.name
+        return _inherited_ea(run._r) or EAFONT or run.font.name
+    except Exception:
+        try:
+            return run.font.name
+        except Exception:
+            return None
+
+
+def _ink_rect(sh, bb):
+    """The rectangle the GLYPHS actually fill inside a text frame `sh` (bbox `bb`), accounting for
+    measured wraps, the frame's inner margins, the vertical anchor and the paragraph alignment.
+    Returns ``((x, y, w, h), (natural_w, natural_h), (size, lines, wrapped, align_x))`` with every
+    length in inches — NOT the bare rect: `r[0]` is the ink rectangle, and indexing `r[2]` for a
+    width silently reads the metadata tuple instead. Returns None if there's no measurable text.
+    The ink box can be SHORTER/NARROWER than the frame (the common case) or, when text overflows,
+    TALLER than it."""
+    try:
+        tf = sh.text_frame
+    except Exception:
+        return None
+    def _m(attr, d):
+        try:
+            v = getattr(tf, attr); return v/914400.0 if v is not None else d
+        except Exception:
+            return d
+    ml, mr, mt, mb = _m("margin_left",0.1), _m("margin_right",0.1), _m("margin_top",0.05), _m("margin_bottom",0.05)
+    inner_w = max(0.1, bb[2]-ml-mr); inner_h = max(0.05, bb[3]-mt-mb)
+    wrap = tf.word_wrap if tf.word_wrap is not None else True
+    lines_total, ink_w, max_sz = 0, 0.0, 0.0
+    mixed_hint = None
+    _initial_decl = _declared_initial(sh)
+    _first_p = next((p_ for p_ in tf.paragraphs if any((r_.text or "") for r_ in p_.runs)), None)
+    ink_h_acc = 0.0
+    align = None; subbed = False
+    for p in tf.paragraphs:
+        runs, sz, fn = [], 0.0, None
+        per_run = []                                    # (text, bold, size, font) — see below
+        for r in p.runs:
+            t = r.text or ""
+            if not t: continue
+            runs.append((t, bool(r.font.bold)))
+            _rsz = None
+            try:
+                if r.font.size is not None:
+                    _rsz = r.font.size.pt; sz = max(sz, _rsz)
+            except Exception: pass
+            _face = _measuring_face(r)      # <a:ea> for CJK — see _measuring_face
+            if fn is None and _face: fn = _face
+            per_run.append((t, bool(r.font.bold), _rsz, _face))
+        if not runs: continue
+        if align is None: align = p.alignment
+        if sz <= 0: sz = 18.0
+        max_sz = max(max_sz, sz)
+        if _font_substituted(fn or FONT): subbed = True
+        # A DECLARED raised initial (vl_native2.raise_initial): the paragraph's first run is ONE enlarged letter. It
+        # renders as one taller first line and body-sized lines after it, so measure it that way — the conservative
+        # every-line-at-the-largest-run model below read a 3-line column with a 41pt initial as 8 lines (2026-10-08).
+        # Still conservative where it can be: the lines wrap in the width LESS the initial's extra width.
+        if (_initial_decl and _first_p is not None and p._p is _first_p._p and len(per_run) >= 2 and len(per_run[0][0]) == 1 and per_run[0][2]
+                and per_run[1][2] and per_run[0][2] > 1.3 * per_run[1][2]):
+            big, rest = per_run[0][2], per_run[1][2]
+            f_big, f_rest = per_run[0][3] or fn, per_run[1][3] or fn
+            extra_w = max(0.0, _natural_width_in([(per_run[0][0], True)], big, f_big)
+                          - _natural_width_in([(per_run[0][0], per_run[0][1])], rest, f_rest))
+            rest_runs = [(per_run[0][0], per_run[0][1])] + [(t_, b_) for t_, b_, _s, _f in per_run[1:]]
+            nat = _natural_width_in(rest_runs, rest, f_rest) + extra_w
+            if wrap:
+                nl = _measure_lines(rest_runs, rest, max(0.1, inner_w - extra_w), font=f_rest)
+                ink_w = max(ink_w, inner_w if nl > 1 else nat)
+            else:
+                nl = 1
+                ink_w = max(ink_w, nat)
+            lines_total += nl
+            try:
+                _ls = p.line_spacing
+            except Exception:
+                _ls = None
+            _lsf = _ls if isinstance(_ls, float) and _ls > 1.0 else 1.0
+            ink_h_acc += ((nl - 1) * rest + big) / 72.0 * _LINT_LINE_H * _lsf
+            continue
+        # MIXED-SIZE DIAGNOSIS — measured, but deliberately NOT used to shrink the ink.
+        # Summing each run at its own size is the width the runs themselves occupy; it is NOT
+        # the width the renderer produces, because PowerPoint and LibreOffice both insert
+        # CJK/Latin boundary spacing that no width model here accounts for. Measured: a box
+        # sized to the exact per-run sum still wrapped, and a 11-boundary line still wrapped at
+        # +20%. So the conservative max-size model STAYS (over-counting lines, never under-),
+        # and the per-run sum is carried only to EXPLAIN a finding — see `mixed_hint` below.
+        nat_true = 0.0
+        for _t, _b, _rs, _rf in per_run:
+            nat_true += _natural_width_in([(_t, _b)], _rs if _rs else sz, _rf or fn)
+        _sizes = [s2 for (_t, _b, s2, _rf) in per_run if s2]
+        if len(set(_sizes)) > 1 and nat_true <= inner_w:
+            mixed_hint = (max(_sizes), min(_sizes), nat_true, inner_w)
+        nat = _natural_width_in(runs, sz, fn)
+        if wrap:
+            nl = _measure_lines(runs, sz, inner_w, font=fn)
+            ink_w = max(ink_w, inner_w if nl > 1 else nat)
+        else:
+            nl = 1
+            ink_w = max(ink_w, nat)                     # may exceed inner_w → horizontal overflow
+        lines_total += nl
+        # spacing-aware: _LINT_LINE_H models the SINGLE-spacing render (~1.2×em); a paragraph's
+        # spcPct multiplies it (text()'s CJK default writes 1.12 → true pitch ≈1.34×em). Floor
+        # at 1.0 so sub-single tuned helpers keep the conservative old model.
+        try:
+            _ls = p.line_spacing
+        except Exception:
+            _ls = None
+        _lsf = _ls if isinstance(_ls, float) and _ls > 1.0 else 1.0
+        ink_h_acc += nl * (sz / 72.0) * _LINT_LINE_H * _lsf
+    if max_sz <= 0:
+        return None
+    line_h = max_sz/72.0 * _LINT_LINE_H
+    ink_h = ink_h_acc if ink_h_acc > 0 else lines_total * line_h
+    ink_w = min(ink_w, inner_w) if wrap else ink_w
+    # vertical placement by anchor
+    try: anc = str(tf.vertical_anchor)
+    except Exception: anc = "TOP"
+    fx, fy = bb[0]+ml, bb[1]+mt
+    if "MIDDLE" in anc:   iy = bb[1] + (bb[3]-ink_h)/2.0
+    elif "BOTTOM" in anc: iy = bb[1]+bb[3]-mb-ink_h
+    else:                 iy = fy
+    # horizontal placement by alignment
+    if   align == PP_ALIGN.CENTER: ix = bb[0] + (bb[2]-ink_w)/2.0
+    elif align == PP_ALIGN.RIGHT:  ix = bb[0]+bb[2]-mr-ink_w
+    else:                          ix = fx
+    # measurement slack: when the text's font isn't installed (wrap count is ~1 line approximate),
+    # never let a single fabricated line trip a CRITICAL — tolerate ~0.9 line-height on height checks
+    slack = (0.9 * line_h) if subbed else 0.0
+    if mixed_hint:
+        _MIXED_HINTS[id(sh)] = mixed_hint
+    return (ix, iy, ink_w, ink_h), (inner_w, inner_h), (max_sz, lines_total, wrap, slack)
+
+def _has_fill(sh):
+    # a VISIBLE fill only: solid/patterned/gradient/textured/picture — NOT BACKGROUND(5)/None
+    # (a plain textbox reports fill.type == BACKGROUND, which must not read as a filled panel)
+    try: return int(sh.fill.type) in (1, 2, 3, 4, 6)
+    except Exception: return False
+
+def _has_line(sh):
+    try: return int(sh.line.fill.type) in (1, 2, 3, 4, 6) and sh.line.width is not None
+    except Exception: return False
+
+def _is_text(sh):
+    try: return sh.has_text_frame and sh.text_frame.text.strip() != ""
+    except Exception: return False
+
+def _snip(s, n=30):
+    return " ".join(str(s).split())[:n]
+
+def _rectish(sh):
+    # a card/panel is a RECTANGLE-family auto-shape — NOT an oval/glow/arrow (those aren't containers)
+    try: return "RECT" in str(sh.auto_shape_type).upper()
+    except Exception: return False
+
+def _is_watermark(sh):
+    # a giant faint index/ordinal numeral drawn BEHIND content (ghost_numeral / big_numeral mode='ghost')
+    # — decorative, not body text, so it must not register as a text collision or escape. Keyed on BOTH
+    # a huge size AND a short token (an index/ordinal/year: "01", "3", "2024") so a genuinely-large
+    # HEADING (>50pt but many chars) is still geometry-checked, not waved through.
+    try:
+        szs = [r.font.size.pt for p in sh.text_frame.paragraphs for r in p.runs if r.font.size is not None]
+        short = len("".join(sh.text_frame.text.split())) <= 4
+        return bool(szs) and max(szs) >= 50.0 and short
+    except Exception:
+        return False
+
+
+
+
+# Faces that exist to set CJK glyphs. A face in this set, named as a run's LATIN font on a run that
+# contains CJK, is almost certainly an author believing they set the CJK face — because that is the
+# only reason to reach for one. Kept as a NAME list rather than a metric probe on purpose: reading
+# a font's glyph coverage requires the font to be installed, and the whole point is to catch this
+# on a machine where it may not be.
+_CJK_FACES = (
+    "songti", "simsun", "simhei", "simkai", "fangsong", "kaiti", "heiti", "yahei", "microsoft ya",
+    "pingfang", "hiragino", "yu gothic", "yu mincho", "meiryo", "ms gothic", "ms mincho",
+    "noto sans cjk", "noto serif cjk", "source han", "nanum", "malgun", "batang", "gulim",
+    "wenquanyi", "lisu", "youyuan", "stsong", "stkaiti", "stheiti", "sthei", "apple ligothic",
+)
+
+
+def _is_cjk_face(name):
+    n = (name or "").strip().lower()
+    return any(k in n for k in _CJK_FACES)
+
+
+def _cjk_face_faults(prs):
+    """A CJK face named where it cannot reach a single CJK glyph.
+
+    A run tuple carries ONE font slot in position 6, and it writes `<a:latin>`. CJK glyphs render
+    from `<a:ea>`, which takes EAFONT unless a run says otherwise. So on a Chinese deck an author who
+    writes `(title, 40, INK, True, False, "Songti SC")` has set the Latin face of a run whose Latin
+    content is a stray acronym, and every Chinese character in it still renders in EAFONT. Measured
+    by pixels on a real build: swapping EAFONT changed 25,570 px of a rendered CJK title while
+    swapping the run tuple's font changed none of the CJK glyphs. The declared display face reached
+    zero of the characters it was chosen for, and nothing said a word — the deck LOOKED right only
+    because EADISPLAY happened to be set to the same face for the components that read it.
+
+    This is the rule being WRONG rather than missing, which is the worse kind: the author followed
+    the documented call shape and got a silent no-op. deckkit.text() now accepts a SEVENTH slot for
+    the East-Asian face; this check is what makes the sixth-slot mistake audible.
+
+    Silent on: a Latin-only run (no CJK to reach), a run whose ea already equals the named face
+    (the author set both, deliberately), and any deck that never names a CJK face in slot 6.
+    """
+    out = []
+    for n, slide in enumerate(prs.slides, 1):
+        for sh in slide.shapes:
+            if not getattr(sh, "has_text_frame", False):
+                continue
+            for para in sh.text_frame.paragraphs:
+                for run in para.runs:
+                    try:
+                        t = run.text or ""
+                        if not _has_cjk(t):
+                            continue
+                        rPr = run._r.find(qn("a:rPr"))
+                        if rPr is None:
+                            continue
+                        lat = rPr.find(qn("a:latin"))
+                        ea = rPr.find(qn("a:ea"))
+                        latf = lat.get("typeface") if lat is not None else None
+                        eaf = ea.get("typeface") if ea is not None else None
+                        if not _is_cjk_face(latf):
+                            continue
+                        if eaf and eaf.strip().lower() == (latf or "").strip().lower():
+                            continue                      # both set to it — deliberate
+                        out.append((n, "WARN", "CJK_FACE_UNREACHED",
+                                    f"{latf!r} is a CJK face but it is set as this run's LATIN font, "
+                                    f"so it reaches none of {t.strip()[:12]!r} — those glyphs render "
+                                    f"in {eaf or 'EAFONT'}. A run tuple's 6th slot is the Latin face; "
+                                    "pass the East-Asian face as the SEVENTH: "
+                                    "(text, size, colour, bold, italic, latin_face, ea_face)"))
+                    except Exception:
+                        pass
+    return out
+
+
+def _motif_faults(prs):
+    """What the deck's own signature device is doing — countable only because motifs are TAGGED.
+
+    Two things no other check can see, both measured on a real build:
+
+    TEXT_OVER_MOTIF — a title or caption crossing the motif. `TEXT_OVERLAP` measures text against
+    TEXT and a motif is geometry, so a subtitle laid straight across a decorative ring produced
+    ZERO findings at build time. The same defect was caught once by a human, written down as a
+    build rule, and then recurred on the very next page — which is the signature of a rule with no
+    gate. WARN, never CRITICAL: text ON a device is ordinary editorial design (a display word over
+    a rule, a caption riding a plate), so this reports a collision and lets the author declare it
+    rather than refusing to save.
+
+    MOTIF_BUDGET — the skill budgets the LOUD motif at <=3 appearances (a device stamped on every
+    page is the opposite failure to a device that never recurs) and nothing counted it. Only shapes
+    tagged `loud` count; the quiet register signature is MEANT to repeat on every page and is
+    deliberately excluded, which is why the tag carries the distinction rather than the counter
+    guessing from size.
+
+    Silent by construction on: a deck with no tagged motif (nothing is claimed, so nothing is
+    checked — the check cannot punish a deck for not using this vocabulary), a declared
+    `overlap_intent` (the author said the overlap is the composition), and a full-bleed motif,
+    which is a ground rather than an object and cannot be "crossed".
+    """
+    out = []
+    W, H = prs.slide_width / 914400.0, prs.slide_height / 914400.0
+    loud_pages = []
+    legend_pages = []
+    for n, slide in enumerate(prs.slides, 1):
+        motifs, texts = [], []
+        for sh in slide.shapes:
+            if str(getattr(sh, "name", "") or "") == MOTIF_LEGEND:
+                legend_pages.append(n)
+            bb = _bbox_in(sh)
+            if bb is None:
+                continue
+            if _is_motif(sh):
+                if _is_motif(sh, loud=True):
+                    loud_pages.append(n)
+                pb = _placed(bb, _shape_rot(sh))          # where a tilted mark (tape) PAINTS
+                if not _is_motif_ground(sh, pb, W, H):
+                    motifs.append((sh, pb))
+            elif _is_text(sh) and not _is_watermark(sh):
+                r = _ink_rect(sh, bb)                     # measured in the frame, then placed
+                if r and r[0]:
+                    texts.append((sh, _placed_ink(sh, bb, r[0])))
+        for tsh, tr in texts:
+            if _declared_overlap(tsh):
+                continue
+            for msh, mb in motifs:
+                ix, iy = _inter_xy(tr, mb)
+                if ix > 0.04 and iy > 0.04:
+                    txt = (tsh.text_frame.text or "").strip().replace("\n", " ")[:26]
+                    out.append((n, "WARN", "TEXT_OVER_MOTIF",
+                                f"text {txt!r} crosses the deck's signature motif "
+                                f"({ix * iy:.2f}in\u00b2) — a motif is geometry, so TEXT_OVERLAP "
+                                "cannot see this. Move the text out of the device's region, move "
+                                "the device, or declare it with deckkit.overlap_intent(shape, "
+                                "'<why the overlap IS the composition>')"))
+                    break
+    # UNNAMED_REPEATED_MARK — a shape family that RECURS and is never named anywhere.
+    #
+    # The motif checks above only see shapes the author tagged. Measured on a real deck: a cover
+    # carried nine identical horizontal rules, untagged, and the first reader asked "what are these
+    # lines?" — the author meant "twelve floors" and had written nothing. Every existing check was
+    # blind to it: it is not text (so the text checks skip it), it is not tagged (so the motif
+    # checks skip it), and it clears contrast and overlap easily because it is just some lines.
+    #
+    # The rule this makes countable is `references/design-principles.md`'s: an element a viewer
+    # cannot decode in about a second is noise, whatever the author meant by it. So: a set of >=4
+    # near-identical marks on ONE page, with no text within a hand's reach of the set, is reported.
+    # Deliberately conservative — texture and rules that back text are excluded, because a page's
+    # ground is not asking to be read.
+    for n, sl in enumerate(prs.slides, 1):
+        W2, H2 = W, H
+        marks, texts2 = [], []
+        _slide_ground = None                       # the page's own ground, for the texture test
+        for sh in sl.shapes:
+            bb0 = _bbox_in(sh)
+            if bb0 and bb0[2] >= W2 * 0.97 and bb0[3] >= H2 * 0.97:
+                try:
+                    if sh.fill.type == 1:
+                        _slide_ground = tuple(sh.fill.fore_color.rgb)
+                except Exception:
+                    pass
+        for sh in sl.shapes:
+            bb = _bbox_in(sh)
+            if not bb or bb[2] <= 0 or bb[3] <= 0:
+                continue
+            if _is_text(sh) and (getattr(sh, "text_frame", None)
+                                 and (sh.text_frame.text or "").strip()):
+                sz = 0.0
+                for para in sh.text_frame.paragraphs:
+                    for r_ in para.runs:
+                        if r_.font.size is not None:
+                            sz = max(sz, r_.font.size.pt)
+                texts2.append((bb, sz))
+            elif not _is_text(sh) and bb[2] * bb[3] < W2 * H2 * 0.55:
+                # TEXTURE is excluded, and the test for texture is CONTRAST, not a count. A
+                # backdrop is faint by definition — `backdrop_motif`'s own docstring says keep it
+                # near #EEE "so it never fights body content" — and a viewer is not asked to read
+                # it. Anything faint enough to be texture is under the 3:1 non-text floor, where
+                # `NON-TEXT CONTRAST` already owns it if it was meant to be read. So the two checks
+                # divide the space cleanly instead of both firing on a ground.
+                try:
+                    f = sh.fill
+                    rgb = tuple(f.fore_color.rgb) if f.type == 1 else None
+                except Exception:
+                    rgb = None
+                faint = True
+                if rgb is None or _slide_ground is None:
+                    faint = False
+                else:
+                    try:
+                        faint = contrast_ratio(rgb, _slide_ground) < 3.0
+                    except Exception:
+                        faint = False
+                # The faint ones stay IN the group and only lose their vote on whether the group is
+                # texture. An isotype grid's group is all 100 cells, not the 62 that happen to be
+                # filled: dropping the pale ones shrank the bounding box, moved its own caption out
+                # of reach, and reported a chart that was labelled all along.
+                marks.append((round(bb[2], 2), round(bb[3], 2), bb, faint))
+        groups = {}
+        for w_, h_, bb, faint in marks:
+            groups.setdefault((w_, h_), []).append((bb, faint))
+        for (w_, h_), members in groups.items():
+            bbs = [b for b, _f in members]
+            if len(bbs) < 4 or w_ * h_ > 6.0:
+                continue
+            if all(f for _b, f in members):
+                continue                       # every member is texture-faint — a ground, not a set
+            x0 = min(b[0] for b in bbs); y0 = min(b[1] for b in bbs)
+            x1 = max(b[0] + b[2] for b in bbs); y1 = max(b[1] + b[3] for b in bbs)
+            # A LABEL, not merely nearby text. Two things separate them, and the first version
+            # had neither: a label sits CLOSE (a hand's reach, not half a page), and it is SMALL —
+            # a page title is not naming your diagram, it is titling the page. Measured on the
+            # cover this check was written for: nine unlabelled rules sat 0.22in above a 28pt
+            # headline, and "there is text nearby" cleared them.
+            biggest = max([sz for _b, sz in texts2] or [0.0])
+            near = any(sz <= max(16.0, biggest * 0.6)
+                       and not (t[0] > x1 + 0.55 or t[0] + t[2] < x0 - 0.55
+                                or t[1] > y1 + 0.40 or t[1] + t[3] < y0 - 0.40)
+                       for t, sz in texts2)
+            if not near:
+                out.append((n, "WARN", "UNNAMED_REPEATED_MARK",
+                            "{} identical marks form a group on slide {} with no text within reach "
+                            "of it — a reader cannot decode what the set IS. Whatever it means to "
+                            "you, unlabelled repetition reads as texture. Name it (a bracket and a "
+                            "word beside the group is usually enough), or drop it."
+                            .format(len(bbs), n)))
+                break
+
+    # MOTIF_UNEXPLAINED — the STRANGER TEST, made countable. The skill requires a motif to be
+    # readable by someone who has never seen the deck: LABEL it, KEY it, or make it FIGURATIVE.
+    # Two of those three are shapes and were still unmeasurable, so the requirement was satisfiable
+    # by intending to satisfy it — and an unexplained constructed device is the failure mode the
+    # test is named for: the author knows what the three arcs mean and nobody else can.
+    # WARN, like its two siblings: the figurative answer is legitimate and leaves no legend behind,
+    # so this reports the absence and lets the author own it rather than refusing to save.
+    # 🔴 FIRST APPEARANCE, not "anywhere". SKILL.md's stranger test says in as many words that "a
+    # reading that defers to a later slide is a FAILED test written as a passing sentence", and
+    # this check tested the opposite: any legend anywhere cleared it. Measured on a real deck — a
+    # loud motif debuted on the COVER with nothing to read it by, the legend arrived four slides
+    # later, the check passed, and the first human reader asked what the marks meant. That is the
+    # exact sentence the rule was written to prevent, and the gate was agreeing with the deck.
+    if loud_pages and legend_pages and min(legend_pages) > min(loud_pages):
+        first, keyed = min(loud_pages), min(legend_pages)
+        out.append((first, "WARN", "MOTIF_UNEXPLAINED_AT_FIRST_USE",
+                    "the LOUD motif debuts on slide {} and is not explained until slide {} — a "
+                    "reader meets the device {} slide(s) before anything tells them what it means. "
+                    "The stranger test is about FIRST appearance: key it where it debuts "
+                    "(deckkit.motif_legend on slide {}, or motif_page(..., legend='…')), or do not "
+                    "use the loud register until the page that can explain it."
+                    .format(first, keyed, keyed - first, first)))
+    if loud_pages and not legend_pages:
+        first = sorted(set(loud_pages))[0]
+        out.append((first, "WARN", "MOTIF_UNEXPLAINED",
+                    "the deck carries a LOUD motif (first on slide {}) and no legend anywhere — a "
+                    "stranger has no way to read what the device MEANS. Three sanctioned answers: "
+                    "LABEL it, KEY it (deckkit.motif_legend(slide, '<what it means>') at its first "
+                    "appearance, or motif_page(..., legend='…') which draws one with the device), "
+                    "or make it FIGURATIVE — if the shape reads on its own, this warning is the "
+                    "expected one and the plan's motif line says so.".format(first)))
+    if len(set(loud_pages)) > 3:
+        pages = ", ".join(str(x) for x in sorted(set(loud_pages)))
+        out.append((sorted(set(loud_pages))[3], "WARN", "MOTIF_BUDGET",
+                    f"the LOUD motif appears on {len(set(loud_pages))} slides ({pages}) — the "
+                    "budget is <=3, because a device stamped on every page reads as a template "
+                    "tell rather than a signature. Demote the extras to the quiet register "
+                    "signature (register_mark(..., loud=False)), which may repeat on every page"))
+    return out
+
+
+def _is_motif_ground(sh, bb, W, H):
+    """Is this motif shape a GROUND (text is meant to sit on it) or a DEVICE (text crossing it is
+    the defect)? Full-bleed was the original carve; a solid FIELD is the same thing at smaller
+    scale, and leaving it out made the loud tier unusable — measured the moment `motif_page` went
+    into the scaffold: a `seam` paints two half-page colour fields, neither of them full-bleed, so
+    every word on the page (both headlines, the footer, the page number, and the motif's OWN
+    legend) was reported as crossing the motif. Six findings on a page whose composition was
+    exactly right.
+
+    The distinction that holds: a shape that PAINTS AN AREA is a canvas — text on a colour field
+    is ordinary design, the same as text on a card. A shape that draws a LINE or a RING is a
+    device, and a subtitle laid across it is the defect this check was written for (a hand-rolled
+    register drew three interlocking circles and a subtitle ran straight through them). Area, not
+    fill colour, is what separates them: the conduit's spine and the seam's hinge are filled too,
+    and both are well under the floor."""
+    if bb[2] >= W * 0.92 and bb[3] >= H * 0.92:
+        return True
+    if _area_of(bb) < (W * H) * 0.03:                 # TRUE area: a tilted bar's axis box is not it
+        return False                                  # rules, rings, nodes: devices, whatever fill
+    try:
+        return sh.fill.type == MSO_FILL.SOLID
+    except Exception:
+        return False
+
+
+def _declared_overlap(sh):
+    """overlap_intent() records the declaration in the shape NAME (the same idiom as the watermark
+    and motif tags), so read it there rather than from a side table keyed on object identity —
+    python-pptx yields fresh proxies per iteration, so an id()-keyed table would silently miss.
+
+    🔴 Reads BOTH spellings, because the declaration composes: on a plain shape the name is
+    `deckkit-overlap:<why>`, and on a shape that is already a motif it is
+    `deckkit-motif-quiet+overlap:<why>` — the same `+` idiom `bleed_intent` uses. Checking only
+    the prefix made composition a trade: the motif tag survived and the overlap declaration was
+    lost, which is the same defect one field over."""
+    n = str(getattr(sh, "name", "") or "")
+    head = n.split(":", 1)[0]
+    # …and a THIRD: `_compose_tag` writes the base WITHOUT its colon when other flags follow, so a
+    # kit-stamped print reads `deckkit-overlap+vl.collage:<why>` (measured 2026-10-04: twelve declared
+    # collage-cover overlaps refused at render time only). Parse the head's `+` tokens, not a prefix.
+    return head.split("+", 1)[0] == OVERLAP_TAG.rstrip(":") or "+overlap" in head
+
+
+def _deep_shapes(shapes, container=None):
+    """Every shape on a slide INCLUDING the ones inside groups, paired with its container id.
+
+    `slide.shapes` stops at the group: a bar or a picture composed into one is invisible to a
+    plain loop, and composing related marks into a group is ordinary practice, not an edge case.
+    Measured: a mis-scaled bar pair and a flat placeholder picture both went unreported the
+    moment they were grouped.
+
+    The container id travels with the shape because a group's children are measured in the
+    GROUP's coordinate space, not the slide's. Ratios inside one container stay valid under any
+    group scaling (every child scales the same way along a given axis), so the callers compare
+    within a container and refuse to compare across containers rather than comparing wrongly.
+    """
+    from pptx.enum.shapes import MSO_SHAPE_TYPE
+    for shp in shapes:
+        if getattr(shp, "shape_type", None) == MSO_SHAPE_TYPE.GROUP:
+            for pair in _deep_shapes(shp.shapes, container=id(shp)):
+                yield pair
+        else:
+            yield shp, container
+
+
+def _datum_faults(prs):
+    """DATUM SCALE — a bar whose LENGTH no longer matches the number it claims to show.
+
+    Every other geometric check in this file asks whether the page is readable. This one asks
+    whether it is TRUE, which is a different question and the only one where a passing deck can
+    still mislead the room. Bar length is a proportion claim: if two bars sit in one group, the
+    reader reads their ratio, and a truncated baseline turns 1.5 vs 2.1 into 1 : 7 while every
+    legibility, overflow and contrast check stays green.
+
+    Nothing here needs judgment — `extent / |value|` is either constant across the group or it is
+    not. Measured on a delivered 12-page deck whose two hand-drawn charts were correct, the
+    constant held to 1.0003 and 1.0000, so the 2% tolerance below is not a tuned threshold with a
+    deck sitting near it; it is two orders of magnitude of headroom over the rounding a correct
+    build produces.
+
+    🔴 This is PREVENTIVE, and that is worth saying plainly: unlike the other checks added
+    recently, no instance of this defect has been found in this skill's own output. What is real
+    is the effort it displaces — the design critic hand-computed a bar ratio on a delivered deck
+    (`1.5 bar 198px / 2.1 bar 279px = 0.710 ≈ 1.5/2.1`), which is arithmetic paid for at model
+    prices, in a dispatch that might not do it next time.
+
+    It sees only what is TAGGED, via `bar_scale()` or `mark_datum()`. An untagged bar is
+    unchecked, not assumed correct — the check cannot recover a number the author never wrote
+    down, and guessing which printed number belongs to which rectangle produced garbage pairings
+    on 4 of 6 real chart pages when it was tried.
+    """
+    out = []
+    for n, slide in enumerate(prs.slides, 1):
+        groups = {}
+        for shp, _cont in _deep_shapes(slide.shapes):
+            name = str(getattr(shp, "name", "") or "")
+            # head tokens, not a prefix: `_compose_tag` drops the colon when flags follow, so a datum
+            # that is also decorative or kit-stamped reads `deckkit-datum+decor:<g>:<v>`
+            _head = name.split(":", 1)[0]
+            if not (_head.split("+", 1)[0] == DATUM_TAG.rstrip(":") or "+datum" in _head):
+                continue
+            # A ROTATED bar's width and height are its unrotated box, so neither is the length the
+            # reader sees and the encoding axis cannot be inferred. Bars are essentially never
+            # rotated; measuring one anyway would compare the wrong dimension, which is worse than
+            # the silence, and the shape stays visible to every other check.
+            if abs(float(getattr(shp, "rotation", 0.0) or 0.0)) > 0.01:
+                continue
+            # 🔴 NOT wrapped in a bare `except: continue`. The first version was, and it swallowed
+            # a NameError (this module has no `EMU` constant) so the whole check silently did
+            # nothing while its tests looked like they passed — the exact "green because it
+            # stopped looking" failure this check exists to prevent, committed inside the check
+            # itself. A tag this module WROTE must parse; if it does not, that is a bug here.
+            body = name.partition(":")[2]                # the record after the head, either spelling
+            if ":" not in body:
+                continue                                 # foreign shape borrowing the prefix
+            g, raw = body.rsplit(":", 1)
+            try:
+                v = float(raw)
+            except ValueError:
+                continue
+            w, h = shp.width / 914400.0, shp.height / 914400.0
+            groups.setdefault(g, []).append((v, w, h, shp, _cont))
+        for g, rows in sorted(groups.items()):
+            live = [r for r in rows if abs(r[0]) > 1e-9]
+            if len(live) < 2:
+                continue
+            # A group's children are measured in the GROUP's coordinate space. Ratios inside one
+            # container stay valid under any group scaling; across containers they are not
+            # comparable, so say so rather than compare wrongly.
+            if len({r[4] for r in live}) > 1:
+                out.append((n, "CRITICAL", "DATUM SCALE",
+                            f"datum group '{g}' spans a group boundary, so its bars are measured "
+                            f"in different coordinate spaces and their lengths cannot be compared. "
+                            f"Keep one datum group inside one container."))
+                continue
+            # Which dimension carries the value? The other one is the bar's THICKNESS and is
+            # constant across a group by construction, so the varying dimension is the encoding.
+            ws = [r[1] for r in live]
+            hs = [r[2] for r in live]
+            w_const = (max(ws) - min(ws)) <= 0.01
+            h_const = (max(hs) - min(hs)) <= 0.01
+            if w_const == h_const:                       # both or neither constant: cannot tell
+                out.append((n, "CRITICAL", "DATUM SCALE",
+                            f"datum group '{g}' has {len(live)} bars but no single dimension "
+                            f"varies with the value, so which one encodes it is unknowable. "
+                            f"Bars in one group must share a thickness and differ only along the "
+                            f"value axis — draw them through one bar_scale()."))
+                continue
+            # SIGN. A magnitude drawn where a signed value belongs is proportional and still
+            # wrong: -2.68 rendered as a bar growing the same way as +17.61 says the economy
+            # gained. Length alone cannot see it, so the direction is checked separately —
+            # positives and negatives in one group must sit on OPPOSITE sides of a shared zero.
+            pos = [r for r in live if r[0] > 0]
+            neg = [r for r in live if r[0] < 0]
+            if pos and neg:
+                if w_const:                              # vertical columns: zero is a y line
+                    base = min(r[3].top / 914400.0 + r[2] for r in pos)
+                    same = [r for r in neg
+                            if abs((r[3].top / 914400.0 + r[2]) - base) <= 0.02]
+                else:                                    # horizontal bars: zero is an x line
+                    base = min(r[3].left / 914400.0 for r in pos)
+                    same = [r for r in neg if abs(r[3].left / 914400.0 - base) <= 0.02]
+                if same:
+                    out.append((n, "CRITICAL", "DATUM SCALE",
+                                f"datum group '{g}': {len(same)} negative value(s) "
+                                f"({', '.join('%g' % r[0] for r in same[:3])}) start from the same "
+                                f"edge as the positive bars, so a decline is drawn as growth. A "
+                                f"signed group needs a zero line with the negatives on the far "
+                                f"side of it — bar_scale() places that line for you (this is the "
+                                f"`max(abs(v))` slip, which reads naturally and picks the largest "
+                                f"POSITIVE value whenever the negatives are smaller)."))
+            ks = [(r[0], (r[2] if w_const else r[1]) / abs(r[0])) for r in live]
+            kk = [k for _v, k in ks]
+            if min(kk) > 0 and max(kk) / min(kk) > 1.02:
+                worst = max(ks, key=lambda t: t[1])[0], min(ks, key=lambda t: t[1])[0]
+                out.append((n, "CRITICAL", "DATUM SCALE",
+                            f"datum group '{g}' is not proportional to its own numbers: "
+                            f"{max(kk) / min(kk):.2f}x spread between the inches-per-unit of "
+                            f"{worst[0]:g} and {worst[1]:g}. A bar's LENGTH is a proportion claim, "
+                            f"so a truncated baseline or a second scale leaking into the group "
+                            f"misstates the data while every other check stays green. Draw the "
+                            f"whole group through ONE bar_scale(), which is zero-based by "
+                            f"construction."))
+    return out
+
+
+def _flat_bucket(opaque, total):
+    """True when one colour bucket (5 bits/channel) covers >= 99.5% of `total` sampled pixels.
+
+    ONE definition of "a flat plate", shared by ASSET NOT USABLE and `frosted_panel` — the latter
+    draws a flat glass as a box() instead of a picture, which is this check's own advice, so the
+    two cannot disagree about what flat means. `opaque` is an iterable of RGBA tuples."""
+    counts, top = {}, 0
+    for r, g, b, _a in opaque:
+        k = (r // 8, g // 8, b // 8)
+        c = counts[k] = counts.get(k, 0) + 1
+        top = max(top, c)
+    return top >= 0.995 * total
+
+
+def _asset_faults(prs):
+    """ASSET NOT USABLE — a picture that arrived but cannot carry anything.
+
+    Every asset gate in this skill so far asks whether a planned asset was USED (the icon waiver,
+    form reach, carried_by, palette drift). None asks whether the file that got used is any good,
+    and a file existing is not proof that acquiring it succeeded: a failed generation commonly
+    returns a truncated download or a flat placeholder plate, and a cropped export can come back
+    fully transparent. All three embed without complaint, render as a blank rectangle, and pass
+    every geometric, contrast and density check — the picture occupies its box, so nothing even
+    reads the page as underfilled.
+
+    Three states, each unusable for a different reason:
+      · the blob does not decode — PowerPoint shows a broken-image placeholder;
+      · every pixel is transparent — the shape is a hole in the layout with a caption under it;
+      · one colour covers effectively the whole frame — a generation placeholder or an empty
+        canvas. A genuinely flat image is not a picture anyone needs: `box()` draws that.
+
+    Sampled at 64x64 NEAREST, so a pure colour stays pure and a photograph cannot be flattened
+    into one by resampling. Icons are the case to NOT break: they are mostly transparent by
+    construction, so the transparency rule asks for FULL transparency, and the flat-colour rule
+    measures the opaque pixels only.
+    """
+    out = []
+    try:
+        from PIL import Image
+        import io as _io
+    except ImportError:
+        return out
+    for n, slide in enumerate(prs.slides, 1):
+        for shp, _c in _deep_shapes(slide.shapes):
+            if not str(getattr(shp, "shape_type", "")).startswith("PICTURE"):
+                continue
+            try:
+                blob = shp.image.blob
+                ext = str(getattr(shp.image, "ext", "") or "").lower()
+            except Exception:
+                continue                                 # linked/OLE picture: nothing to read
+            # A METAFILE or SVG is a legitimate asset that Pillow simply cannot open. Reporting
+            # "does not decode" on one would be a confident wrong finding on somebody's template,
+            # which is the failure mode this check is otherwise built to avoid — and this path DOES
+            # meet foreign decks, because the redesign route lints a file this skill did not build.
+            if ext in ("emf", "wmf", "svg", "eps", "pdf"):
+                continue
+            nm = str(getattr(shp, "name", "") or "")
+            try:
+                im = Image.open(_io.BytesIO(blob))
+                # A full-frame photo costs ~38ms to decode, and a photo-led deck has a dozen.
+                # draft() lets the JPEG decoder emit a reduced image directly instead of decoding
+                # 2400x1350 and throwing it away (measured 55ms -> 33ms); it is a no-op for PNG.
+                try:
+                    im.draft("RGB", (64, 64))
+                except Exception:
+                    pass
+                im.load()
+                im = im.convert("RGBA")
+                if max(im.size) > 64:
+                    im = im.resize((64, 64), Image.NEAREST)
+                px = list(im.getdata())
+            except Exception as exc:
+                out.append((n, "CRITICAL", "ASSET NOT USABLE",
+                            f"picture '{nm[:40] or '(unnamed)'}' does not decode ({type(exc).__name__})"
+                            f" — it will render as a broken-image placeholder. The file exists, so "
+                            f"every path that only checks existence passed it; re-acquire it."))
+                continue
+            op = [q for q in px if q[3] > 8]
+            if not op:
+                out.append((n, "CRITICAL", "ASSET NOT USABLE",
+                            f"picture '{nm[:40] or '(unnamed)'}' is fully transparent — the shape "
+                            f"is a hole in the layout. A crop or export that produced an empty "
+                            f"frame still writes a valid file."))
+                continue
+            if _flat_bucket(op, len(px)):                # vs the FULL frame, so icons are safe
+                out.append((n, "CRITICAL", "ASSET NOT USABLE",
+                            f"picture '{nm[:40] or '(unnamed)'}' is one flat colour across the "
+                            f"whole frame — the shape of a failed generation or an empty canvas. "
+                            f"If a flat plate is what the page wants, draw it with box(); if an "
+                            f"image was meant to be here, the acquisition did not succeed."))
+    return out
+
+
+def _ooxml_shape_faults(prs):
+    """OOXML_SHAPE — the produced XML violates the part's own schema.
+
+    Every other check in this file is geometric, pixel-based or semantic. NONE of them looks at
+    whether the part is well-formed against ECMA-376, and this library writes OOXML by hand in
+    ~11 places (`parse_xml`), plus `anim.py` composing `<p:timing>` as a string. That leaves one
+    failure mode no gate could see: **the file opens nowhere**.
+
+    Measured: two `Build(s)` on one slide each calling `apply()` produced
+    `['cSld', 'clrMapOvr', 'timing', 'timing']`. CT_Slide allows ONE `<p:timing>`. `prs.save()`
+    raised nothing, LibreOffice rendered it, `lint_layout` reported clean, and
+    `preflight_check.py` — which asks only whether the string `p:timing` occurs — read the
+    duplicate as *more* compliant. The first human signal would have been PowerPoint offering to
+    repair the file. `anim.apply()` now refuses outright; this check is the net under it, because
+    the next hand-written element will not have its own guard.
+
+    🔴 Deliberately NOT a schema validator. Shipping ECMA-376's XSD set means carrying the
+    schemas, filtering the noise a real template already contains, and maintaining an
+    auto-repair path — cost out of proportion to what it would catch here. This asserts only the
+    CARDINALITY AND ORDER of the elements this toolkit writes itself, which is exactly where its
+    own bugs land. When it starts missing things it does not model, that is the moment to
+    reconsider the full validator, not before.
+    """
+    out = []
+    # CT_Slide: cSld, clrMapOvr?, transition?, timing?, extLst?  (ECMA-376 §19.3.1.38)
+    ORDER = ["cSld", "clrMapOvr", "transition", "timing", "extLst"]
+    ONCE = {"cSld", "clrMapOvr", "transition", "timing", "extLst"}
+    for n, slide in enumerate(prs.slides, 1):
+        kids = [e.tag.split("}")[-1] for e in slide._element]
+        seen = {}
+        for k in kids:
+            seen[k] = seen.get(k, 0) + 1
+        for k, c in seen.items():
+            if k in ONCE and c > 1:
+                out.append((n, "CRITICAL", "OOXML_SHAPE",
+                            f"the slide part carries {c} <p:{k}> elements — the schema allows "
+                            f"one. PowerPoint refuses to open the file while python-pptx, "
+                            f"LibreOffice and every geometric check here stay silent, so this is "
+                            f"the one defect class that reaches the user as 'needs repair'. "
+                            f"Build ONE of it per slide."))
+        ranked = [ORDER.index(k) for k in kids if k in ORDER]
+        if ranked != sorted(ranked):
+            out.append((n, "CRITICAL", "OOXML_SHAPE",
+                        "the slide part's children are out of schema order (%s) — expected %s. "
+                        "Insert before the following element rather than appending, the way "
+                        "slide_transition() does." % (", ".join(kids), ", ".join(ORDER))))
+        # CT_CommonSlideData: bg?, spTree, custDataLst?, controls?, extLst?  (§19.3.1.16).
+        # Modelled for the same reason as CT_Slide: slide_background() hand-writes <p:bg> into
+        # this element, and `bg` must precede `spTree` — appending it produces a file PowerPoint
+        # offers to repair while every check here stays green.
+        C_ORDER = ["bg", "spTree", "custDataLst", "controls", "extLst"]
+        cSld = slide._element.find(qn("p:cSld"))
+        if cSld is not None:
+            ckids = [e.tag.split("}")[-1] for e in cSld]
+            if ckids.count("bg") > 1:
+                out.append((n, "CRITICAL", "OOXML_SHAPE",
+                            "the slide carries %d <p:bg> elements — the schema allows one. "
+                            "slide_background() replaces rather than stacks; a hand-written one "
+                            "must too." % ckids.count("bg")))
+            cranked = [C_ORDER.index(k) for k in ckids if k in C_ORDER]
+            if cranked != sorted(cranked):
+                out.append((n, "CRITICAL", "OOXML_SHAPE",
+                            "<p:cSld>'s children are out of schema order (%s) — expected %s. "
+                            "<p:bg> goes FIRST, before <p:spTree>."
+                            % (", ".join(ckids), ", ".join(C_ORDER))))
+    return out
+
+
+def _graze_faults(prs):
+    """TEXT_GRAZES_SHAPE — a label's ink running INTO a filled shape it is not inside.
+
+    `TEXT_OVERLAP` measures text against TEXT, so a caption grazing a bar, a chip, a node or a
+    table swatch is invisible to it — the same structural blindness `TEXT_OVER_MOTIF` was written
+    for, except that one only sees shapes the author remembered to TAG. Measured on a delivered
+    12-page deck: a right-aligned row label ran 0.09in into the negative bar beside it, and BOTH
+    the build-time gate and the render-time lint reported clean. It was found by eye, twice —
+    the first repair shortened the text and the label still grazed, because the fix has to move
+    the COLUMN EDGE, not the string.
+
+    🔴 The whole difficulty is the ordinary case this must stay silent on: a value printed INSIDE
+    its own bar (`3.2%` on the interest column) is text over a filled shape too, and it is correct
+    design — this library's own components do it. So containment is the discriminator, not
+    overlap: ink mostly INSIDE the shape is a label ON it; ink mostly OUTSIDE with a corner
+    dipping in is a collision. `CONTAINED` is deliberately generous (0.80) because a centred
+    label can overhang a snug chip by a hair and still be the intended composition.
+    """
+    out = []
+    W, H = prs.slide_width / 914400.0, prs.slide_height / 914400.0
+    CONTAINED, MIN_DIP = 0.80, 0.02
+    for n, slide in enumerate(prs.slides, 1):
+        # TWO passes on purpose: marks first, and only measure text ink if any mark exists.
+        # `_ink_rect` is the expensive call in this file (it measures every run against real font
+        # metrics) and a page with no filled mark has nothing for a label to collide with.
+        #
+        # Measured honestly: on an ordinary deck this saves nothing, because `title_bar` draws an
+        # accent rule and that rule is a filled mark, so the early-out never fires. It pays only
+        # on pages built from type alone. The check costs ~53ms on a 14-page deck either way —
+        # about a fifth of lint_layout, and 1.7% of a build round once the ~2.8s render is counted,
+        # which is why the real saving (sharing ink rects with _motif_faults, which recomputes the
+        # same ones) has NOT been taken: it is a risky refactor of two working checks for 50ms
+        # nobody waits on.
+        marks, texts = [], []
+        for sh in slide.shapes:
+            if _is_text(sh):
+                continue
+            bb = _bbox_in(sh)
+            if bb is None or bb[2] <= 0 or bb[3] <= 0:
+                continue
+            # a filled, non-bleed mark: the class a label can collide with
+            if _is_motif(sh):
+                continue                      # TEXT_OVER_MOTIF owns those, with its own message
+            if not _has_fill(sh):
+                continue
+            if bb[2] >= W * 0.92 and bb[3] >= H * 0.92:
+                continue                      # a full-bleed ground is not something to graze
+            if bb[2] * bb[3] >= W * H * 0.5:
+                continue                      # a half-canvas panel is a ground, not a mark
+            marks.append(_placed(bb, _shape_rot(sh)))
+        if not marks:
+            continue                          # nothing to collide with — never measure the ink
+        for sh in slide.shapes:
+            if not _is_text(sh) or _is_watermark(sh) or _declared_overlap(sh):
+                continue
+            bb = _bbox_in(sh)
+            if bb is None or bb[2] <= 0 or bb[3] <= 0:
+                continue
+            r = _ink_rect(sh, bb)
+            if r and r[0]:
+                texts.append((sh, _placed_ink(sh, bb, r[0])))
+        for tsh, tr in texts:
+            ink_a = _area_of(tr)
+            if ink_a <= 0:
+                continue
+            for mb in marks:
+                ix, iy = _inter_xy(tr, mb)
+                a = ix * iy
+                if a <= MIN_DIP * MIN_DIP:
+                    continue
+                if a / ink_a >= CONTAINED:
+                    continue                  # the label is ON the mark — ordinary, and correct
+                txt = (tsh.text_frame.text or "").strip().replace("\n", " ")[:26]
+                # TWO different faults share this signature, and the message used to name only
+                # the first — which sent an author looking along the wrong axis. Measured on a
+                # delivered deck: this fired on exactly the three pages whose real defect was
+                # VERTICAL (a two-line title growing down onto an accent rule), and its advice
+                # was about label column edges, so the diagnosis pointed sideways.
+                # `tr` is the text's INK rect, `mb` the mark's box. Vertical when the overlap is
+                # taller-than-wide relative to how the two sit: the text is entering the mark from
+                # above or below rather than from the side.
+                _vert = iy < ix
+                _fix = ("Vertical here — the text sits above or below the shape's middle, so this "
+                        "is a block that GREW into a mark placed at a fixed y (a title wrapping to "
+                        "a second line is the usual cause). Derive the y from the block's MEASURED "
+                        "end, not a coordinate; see HEADLINE_CROWDED, which measures that gap "
+                        "directly."
+                        if _vert else
+                        "Horizontal here — derive the label column's edge from the DATA (the "
+                        "furthest the mark can reach), not from the axis; shortening the string "
+                        "only moves the collision.")
+                out.append((n, "WARN", "TEXT_GRAZES_SHAPE",
+                            f"text {txt!r} runs {a:.3f}in² into a filled shape it is not "
+                            "inside — TEXT_OVERLAP measures text against TEXT, so a label "
+                            f"grazing a bar/chip/node is invisible to it. {_fix} "
+                            "Deliberate? declare it with deckkit.overlap_intent(shape, '<why>')"))
+                break
+    return out
+
+
+# The build-time twin of lint_deck's FOOTER-ZONE check. See _footer_band_faults.
+FOOTER_BAND_PAD = 0.06     # calibrated below; the render-time check adds 0.04 to a model that
+                           # already reads 0.02-0.04 lower than _ink_rect
+
+
+def _footer_band_faults(prs):
+    """Text whose INK dips into the reserved footer band — checked at BUILD time.
+
+    🔴 WHY THIS EXISTS. `lint_layout`'s other footer check asks whether a CARD reaches the actual
+    footer chrome row. `lint_deck`'s asks whether any TEXT's ink dips into the reserved BAND
+    (`h - FOOTER_BAND`). Those are different questions, so a low text block passed the cheap
+    build-time loop BY CONSTRUCTION and failed the expensive render-time one — measured on a real
+    build: five consecutive build+render rounds where the build said clean and the render said
+    FOOTER-ZONE intrusion, three of them refused by the LOOP BREAKER for nudging constants at a
+    fault the fast loop could not see.
+
+    🔴 AND THE TWO INK MODELS DISAGREE, in the direction that hurts. Measured across five strings
+    and sizes: `lint_deck._rbox` reads 0.020-0.040in LOWER than `deckkit._ink_rect`, and the
+    render-time check then adds a further 0.04 pad — so an author who designs to `_ink_rect`,
+    which this skill explicitly tells them to do, lands inside the render-time failure band with
+    room to spare. `FOOTER_BAND_PAD` closes that: this check fires slightly EARLIER than the
+    render-time one, never later, so a build-time pass implies a render-time pass on this class.
+    An estimate that is correct is not the same as one with margin.
+
+    The carves mirror lint_deck's exactly — a declared lower/bleed envelope, a small textless
+    mark, an edge-to-edge motif ground — because a check that fires where its twin stays silent
+    would be a new false positive, not a closed loop.
+    """
+    import json as _json
+    out = []
+    for n, slide in enumerate(prs.slides, 1):
+        sw, sh_in = _slide_size(slide)
+        # 🔴 The limit is NOT the fixed band. lint_deck keys it to where the footer chrome
+        # ACTUALLY sits on THIS slide — `min(footer tops) - 0.08` — so a deck whose footer rides
+        # higher has a higher limit, and a fixed `h - FOOTER_BAND` misses exactly those pages.
+        # Measured: a delivered deck where the render-time check fired on slides 3, 4 and 12 with
+        # limits of 5.10, 5.02 and 5.10; against the fixed band this check found 3 and 12 and let
+        # 4 through, so it was not yet the conservative superset it claims to be.
+        limit = sh_in - FOOTER_BAND
+        # the declared envelope, read the way lint_deck reads it: design_intent() stores the
+        # declaration in the shape NAME, so both linters see the same record
+        env = None
+        for _sh in slide.shapes:
+            _nm = getattr(_sh, "name", "") or ""
+            if _nm.startswith("deckkit-intent:"):
+                try:
+                    env = (_json.loads(_nm.split(":", 1)[1]) or {}).get("envelope")
+                except Exception:
+                    pass
+        if env in ("lower", "bleed"):
+            continue
+        # where the FOOTER CHROME actually sits, the same rule lint_deck uses: short text whose
+        # ink hugs the bottom edge. Those lines ARE the footer; they are not intruding on it.
+        # 🔴 lint_deck's OWN rule, read from its source rather than approximated: a footer is any
+        #    text whose FRAME TOP sits below `sh - 0.6`. Not the ink bottom, and with no height
+        #    limit. Two approximations of it were tried first — an absolute 0.14in from the bottom
+        #    edge and then a 4%-of-canvas version — and both missed the same real intrusion on a
+        #    10x5.62in deck, because they were tuned against a different ink model. Tuning a
+        #    threshold toward a rule you have not read is the loop this repo's LOOP BREAKER exists
+        #    to stop, and it applies to the person writing the checker too.
+        foot_tops = []
+        for _sh in slide.shapes:
+            try:
+                if not getattr(_sh, "has_text_frame", False) or not _sh.text_frame.text.strip():
+                    continue
+                _bb = _placed_box(_sh)
+                if _bb and _bb[1] > sh_in - 0.6:
+                    foot_tops.append(_bb[1])
+            except Exception:
+                continue
+        if foot_tops:
+            limit = min(limit, min(foot_tops) - 0.08)
+        for sh in slide.shapes:
+            try:
+                if not getattr(sh, "has_text_frame", False) or not sh.text_frame.text.strip():
+                    continue
+                if _is_watermark(sh):
+                    continue
+                fb = _bbox_in(sh)                 # the FRAME: what the text wraps inside
+                if fb is None:
+                    continue
+                bb = _placed(fb, _shape_rot(sh))  # where it PAINTS (a no-op unrotated)
+                if bb[2] >= sw * 0.92 and bb[3] >= sh_in * 0.92:
+                    continue                      # a full-bleed ground, not a content block
+                r = _ink_rect(sh, fb)
+                if not r:
+                    continue
+                _ink = _placed_ink(sh, fb, r[0])
+                ink_b = _ink[1] + _ink[3]
+                if bb[1] > sh_in - 0.6:
+                    continue                      # this line IS the footer chrome (same rule)
+                if bb[1] < limit - 0.04 and ink_b + FOOTER_BAND_PAD > limit:
+                    txt = " ".join(sh.text_frame.text.split())[:26]
+                    out.append((n, "WARN", "FOOTER BAND",
+                                "text ink reaches %.2fin and the reserved footer band starts at "
+                                "%.2fin (this fires %.2fin early ON PURPOSE — the render-time check "
+                                "measures ~0.06in lower than this one, so clearing it here is what "
+                                "makes the render-time one pass too). Anchor it with "
+                                "content_band()/bottom_callout() rather than a hand-picked y: '%s'"
+                                % (ink_b, limit, FOOTER_BAND_PAD, txt)))
+            except Exception:
+                continue
+    return out
+
+
+def _deck_level_faults(prs):
+    """Faults that are invisible one slide at a time — both measured on a real delivered deck.
+
+    `lint_layout`'s other checks all reason about ONE slide's geometry, and these two cannot be
+    seen that way: the first is about two shapes on a page saying the same thing, the second is
+    about a page disagreeing with the REST of the deck. Both are WARN rather than CRITICAL, which
+    is the honest severity for a new check — a legitimate repeat (a comparison whose labels rhyme,
+    a deliberately re-anchored chrome line on one divider) must never block a build.
+
+    DUPLICATE TEXT — the same non-trivial string rendered by two separate top-level shapes on one
+    slide. Measured causes, all real: a build script patched repeatedly left an ORPHANED copy of a
+    layout drawing over the new one, so the page ran two layouts at once and its coordinates never
+    moved however the source was edited; a component's own auto-label printed beside a hand-written
+    one, so a single quantity appeared twice at two different roundings; a programme named in a
+    list and then again as the hub of a diagram beneath it. None of these is visible in a
+    per-shape check, and every one of them shipped past a clean lint.
+
+    CHROME SLOT DRIFT — a repeated chrome line (the per-slide source note) that does not sit where
+    the rest of the deck puts it. Measured: 11 source lines, 8 pinned to one slot and 3 placed
+    wherever their page's last block happened to end — one of them rendering "as of <date>" inside
+    a diagram box. The rule "pin the chrome" was prose; prose held 8 times out of 11.
+    """
+    import statistics
+    out = []
+
+    def _cjk_n(t):
+        return sum(1 for c in t if "\u2e80" <= c <= "\u9fff")
+
+    for n, slide in enumerate(prs.slides, 1):
+        seen = {}
+        for sh in slide.shapes:
+            if not getattr(sh, "has_text_frame", False) or _is_a11y_title(sh):
+                continue                                 # the screen-reader title repeats the visible one by design
+            t = " ".join((sh.text_frame.text or "").split())
+            # long enough to be content rather than a shared token ("是", "N/A", an axis tick)
+            if not t or (len(t) < 8 and _cjk_n(t) < 4):
+                continue
+            seen.setdefault(t, []).append(sh)
+        for t, shapes in seen.items():
+            if len(shapes) > 1:
+                out.append((n, "WARN", "DUPLICATE_TEXT",
+                            f"{len(shapes)} separate shapes render the same text {t[:34]!r} — "
+                            "usually an orphaned copy of an earlier layout, a component's own "
+                            "label printed beside a hand-written one, or a name repeated in both "
+                            "a list and a diagram. Delete one, or let the component own the label"))
+
+    rows = []
+    for n, slide in enumerate(prs.slides, 1):
+        for sh in slide.shapes:
+            if not getattr(sh, "has_text_frame", False):
+                continue
+            t = (sh.text_frame.text or "").strip()
+            if t.startswith(("来源", "Source", "Bron", "出典", "출처")):
+                rows.append((n, sh.top / 914400.0, t))
+    if len(rows) >= 3:                     # fewer than 3 does not establish a slot
+        med = statistics.median(r[1] for r in rows)
+        for n, y, t in rows:
+            if abs(y - med) > 0.15:
+                out.append((n, "WARN", "CHROME_SLOT_DRIFT",
+                            f"this slide's source line sits at {y:.2f}in while the deck's other "
+                            f"source lines sit at {med:.2f}in — pin it to one slot, or the reader "
+                            "reads it as content on the pages where it floats"))
+    return out
+
+
+def lint_layout(prs, *, verbose=True, strict=False, overlap_tol=0.05, escape_tol=0.07, edge_tol=0.03):
+    global HANG_PUNCT
+    prev = HANG_PUNCT
+    HANG_PUNCT = deck_hangs_punct(prs)          # the deck being linted decides how its CJK line ends break
+    try:
+        return _lint_layout_impl(prs, verbose=verbose, strict=strict, overlap_tol=overlap_tol,
+                                 escape_tol=escape_tol, edge_tol=edge_tol)
+    finally:
+        HANG_PUNCT = prev
+
+
+def _lint_layout_impl(prs, *, verbose=True, strict=False, overlap_tol=0.05, escape_tol=0.07, edge_tol=0.03):
+    """Build-time GEOMETRY self-check. Walk every shape on every slide — HOWEVER it was placed,
+    manual coords or the grid/stack helpers — and report the high-signal faults that otherwise
+    cost a whole visual-critic round. Reasons about each text box's INK rectangle (where glyphs
+    land), so it stays quiet on the generously-sized frames real builds use:
+
+      OFF_CANVAS   — a text box's INK, or a card/table, extends past the slide edge. Full-bleed
+                     PICTURES (and giant watermark numerals) are exempt — they're meant to bleed.
+      OVERFLOW     — a VISIBLE (filled/outlined) text box whose ink needs more height/width than it has.
+      ESCAPES_CARD — a text box's ink / a figure / a labelled node pokes outside the FILLED card or
+                     panel that encloses its centre (the "bullet ran past the bottom of its card" bug).
+                     The host is the SMALLEST filled rect-panel that contains the child and is bigger
+                     than it; full-bleed backgrounds and picture/outline-only cards are never hosts.
+      TEXT_OVERLAP — two text boxes' INK rectangles overlap materially (real text-on-text). Text
+                     layered over a fill/photo is fine and NOT flagged; faint watermark numerals
+                     (>=50pt, e.g. ghost_numeral) are excluded as the decorative background they are.
+      FOOTER       — a content text's ink, or a card, reaches the actual footer chrome row (keyed to
+                     the real footer; a footer-less slide relies on OFF_CANVAS + the Step-5 lint_deck).
+      OFFCENTER    — a card whose ONLY content is a single line of text leaves a lopsided top/bottom
+                     gap (one line in a block reads best vertically centred — anchor it MIDDLE).
+      SLIVER_GAP   — two panels (or a panel and a picture) NEARLY touch: their projections overlap
+                     on one axis and the edge gap on the other is a sliver (0.005–0.10in — clearly
+                     below the documented ~0.12in "≥ ~⅓ GUTTER" floor, so rule-compliant gaps never
+                     warn). The classic cause is a hand-picked stack pitch that barely clears the
+                     block height (pitch 1.04, height 1.02 → a ~0.02in seam). Flush/contained/
+                     overlapping pairs (g ≤ 0) stay lint_deck.py's domain.
+
+    Returns findings = [(slide_no, severity, code, msg)]. `verbose` prints a compact report;
+    `strict=True` raises if any CRITICAL remains (headless / CI). Stays deliberately silent on what
+    needs PIXELS not geometry (text on a busy image, contrast, balance, z-order, a figure smothering
+    bullets) and on shapes inside GROUPS — all the visual critic's / lint_deck.py's job.
+
+    Low false positives is the whole point (a noisy gate adds reviewer burden). The caveat: the
+    wrap-dependent checks measure with the text's font, so when that font ISN'T installed and
+    measurement falls back to a wider face, near-threshold flags carry ~1 line of slack and a one-time
+    note is printed — i.e. every CRITICAL it prints is real WHEN the deck's fonts are available, and
+    conservative (may under-flag a 1-line overrun) when they're substituted."""
+    _MIXED_HINTS.clear()
+    W, H = prs.slide_width/914400.0, prs.slide_height/914400.0
+    findings = []; subbed_any = False
+    for n, slide in enumerate(prs.slides, 1):
+        info = []   # (sh, bb, st, ink_or_None, r_full_or_None)  — watermark numerals carry ink=None (decorative)
+        zof = {}    # id(sh)->z-order; keyed on the SAME sh objects held alive in `info` (python-pptx
+                    # yields fresh proxies per iteration, so a separate comprehension's id()s wouldn't match)
+        conns = []  # (z, [(bx,by),(ex,ey)]) for EVERY connector segment — captured here, NOT from `info`,
+                    # because a VERTICAL or HORIZONTAL connector has zero width/height and `_bbox_in`
+                    # returns None for it, so it never reached `info` and CONNECTOR_IN_BOX was blind to
+                    # the commonest case: a flow / feedback-loop connector (incl. every elbow_connector
+                    # segment) docked on a box CENTRE. The check needs the ENDPOINTS, never a bbox.
+        for zi, sh in enumerate(slide.shapes):
+            bb = _bbox_in(sh)
+            st = str(getattr(sh, "shape_type", ""))
+            if "CONNECTOR" in st or "LINE" in st:
+                try:
+                    conns.append((zi, [(sh.begin_x/914400.0, sh.begin_y/914400.0),
+                                       (sh.end_x/914400.0, sh.end_y/914400.0)]))
+                except Exception:
+                    pass
+            if bb is None: continue
+            r = _ink_rect(sh, bb) if (_is_text(sh) and not _is_watermark(sh)) else None
+            # `bb` above is the FRAME — what the text wraps inside — and `r` stays frame-space
+            # (OVERFLOW compares r[0] with r[1], both frame-relative). The bbox and ink every
+            # PLACEMENT check reads become where the shape paints (a no-op when unrotated).
+            ink = _placed_ink(sh, bb, r[0]) if r else None
+            info.append((sh, _placed(bb, _shape_rot(sh)), st, ink, r)); zof[id(sh)] = zi
+        # CJK runs with no <a:ea> font — fully detectable from the in-memory pptx, so fail at
+        # BUILD time instead of after the expensive render round-trip (lint_deck re-checks as the
+        # backstop): without the EA slot, PowerPoint/LibreOffice pick an uncontrolled fallback
+        # font and kinsoku (避头尾) never engages.
+        # Asks _inherited_ea, not `rPr/a:ea` directly. This read the run's own slot only, so a run
+        # inheriting a face from its paragraph's defRPr or its shape's lstStyle — where a supplied
+        # CJK template normally puts it — was reported as a CRITICAL and strict=True refused to save
+        # a deck that renders correctly. retrofit_ea() asks the same question, so the finding and
+        # its fix cannot drift apart.
+        bad_ea = []
+        for sh in slide.shapes:
+            if not getattr(sh, "has_text_frame", False):
+                continue
+            for para in sh.text_frame.paragraphs:
+                for run in para.runs:
+                    try:
+                        if _has_cjk(run.text) and not _inherited_ea(run._r):
+                            bad_ea.append(run.text.strip()[:12])
+                    except Exception:
+                        pass
+        # OLDSTYLE_FIGURES — digits set in a face whose numerals are OLD-STYLE (text) figures:
+        # 0/1/2 sit at x-height, 6/8 ascend, 3/4/5/7/9 descend. Lovely in running prose, WRONG on a
+        # display numeral, where the number visibly bobs up and down and misaligns with adjacent
+        # CJK/Latin. This rule was documented in five reference files and still shipped repeatedly —
+        # prose is advisory, so it is a deterministic gate now (SKILL.md's enforcement invariant).
+        # LOW_RES_IMAGE — a raster whose visible pixels are spread too thin over its frame (user's decision,
+        # 2026-10-04: < 72 ppi WARN, < 36 ppi CRITICAL, long side >= 1.5in). A 12x8 px source filled a 4in frame
+        # with every gate green; nothing measured the pixels a viewer actually gets.
+        findings.extend(_low_res_findings(slide, n))
+        # INHERITED_EFFECT — a shape still carrying the theme <p:style>. python-pptx stamps it on
+        # every autoshape/connector/freeform, and LibreOffice renders its soft drop shadow even
+        # when spPr says <a:effectLst/>. deckkit strips it via _flat(); a shape that still has one
+        # came from raw python-pptx and will render with a shadow nobody asked for.
+        stray = [getattr(sh, "name", "?") for sh in slide.shapes
+                 if getattr(sh, "_element", None) is not None
+                 and sh._element.find(qn("p:style")) is not None]
+        if stray:
+            findings.append((n, "WARN", "INHERITED_EFFECT",
+                             f"{len(stray)} shape(s) still carry the theme <p:style> (e.g. "
+                             f"'{stray[0]}') — LibreOffice will draw a soft drop shadow under them. "
+                             "Create shapes through deckkit, or pass them through deckkit._flat()"))
+
+        bad_fig = []
+        for sh in slide.shapes:
+            if not getattr(sh, "has_text_frame", False):
+                continue
+            if (getattr(sh, "name", "") or "") == WATERMARK_TAG:
+                continue      # ghost_numeral / big_numeral(mode='ghost') — decorative, sitting
+                              # behind content at ~12% opacity; nobody reads its baselines
+            for para in sh.text_frame.paragraphs:
+                for run in para.runs:
+                    try:
+                        nm = (run.font.name or "").strip()
+                        if not has_oldstyle_figures(nm):
+                            continue
+                        if not any(ch.isdigit() for ch in (run.text or "")):
+                            continue
+                        pts = run.font.size.pt if run.font.size is not None else None
+                        if pts is None or pts < _OLDSTYLE_DISPLAY_PT:
+                            # Below the display threshold old-style figures are correct typography;
+                            # and an INHERITED size (template placeholder / paragraph default) is
+                            # unknown, not large. Blocking a save on a size we cannot read would
+                            # break the registered-template branch and contradicts the documented
+                            # ">=20pt" scope.
+                            continue
+                        if _digit_share(run.text) >= _OLDSTYLE_NUMERAL_SHARE:
+                            # a display NUMERAL. A heading that merely contains a digit is not a
+                            # fault at all, so it is not reported — warning about a non-fault is
+                            # noise, and the message would have said as much.
+                            bad_fig.append((nm, run.text.strip()[:18], pts))
+                    except Exception:
+                        pass
+        if bad_fig:
+            nm, txt, pts = bad_fig[0]
+            sz = f"{pts:.0f}pt" if pts else "unsized"
+            # WARN, not CRITICAL. Four audit rounds showed this rule cannot be made safe as a
+            # build blocker: its false-positive surface is every component x every font x every
+            # string shape ("7" and "10x" are digit-dominant; a cover whose title IS a year has no
+            # fix), and it is structurally blind to tables and native charts (has_text_frame is
+            # False), so blocking could never be consistent anyway. The defect is PREVENTED at the
+            # source instead — and because that prevention is the ONLY cover for the blind spot, the
+            # components are NAMED here rather than waved at as "every component that emits a figure":
+            #   big_numeral · stat_row · scorecard · change_stat · meter_bar ·
+            #   table (per cell) · native_chart (value axis · data labels · numeric category axis)
+            # Add a component to the blind class (a table, a chart, anything with no text frame) and
+            # it must be added to that list too. The sentence that used to stand here claimed the
+            # coverage was universal; it was false for table() and native_chart() the entire time it
+            # stood, and a results deck puts almost all of its digits through exactly those two. A
+            # named list makes the next gap visible; an adjective did not.
+            # This finding covers hand-set runs, where a warning is the honest severity for a taste
+            # call. A project that wants it fatal can assert over its own finished file, as the
+            # Tokyo build script does.
+            findings.append((n, "WARN", "OLDSTYLE_FIGURES",
+                             f"{len(bad_fig)} display numeral run(s) set in {nm}, an OLD-STYLE figure "
+                             f"face (e.g. '{txt}' at {sz}) — its digits sit at different heights, so the "
+                             "number bobs. Route runs containing digits to a LINING-figure face "
+                             "(Helvetica Neue / Arial / Cambria); see references/font-guidance.md"))
+        if bad_ea:
+            _scr = script_of("".join(bad_ea)) or "han"           # advise a face for THIS deck's script
+            _fm, _fw, _fl = EA_FACES[_scr]["sans"]["mac"], EA_FACES[_scr]["sans"]["win"], EA_LINUX[_scr]
+            findings.append((n, "CRITICAL", "CJK_NO_EA",
+                             f"{len(bad_ea)} CJK run(s) carry no <a:ea> font (e.g. '{bad_ea[0]}') — the "
+                             "renderer picks an uncontrolled fallback and 避头尾 never engages. FIX "
+                             "THIS DECK, one line above this lint: "
+                             f"deckkit.retrofit_ea(prs, '{_fm}')  ({_fw} on "
+                             f"Windows, {_fl} on Linux — the face is REQUIRED unless "
+                             "EAFONT is already set, and it also reaches groups, table cells, "
+                             "fields and charts, which this check cannot see). THEN set "
+                             "deckkit.EAFONT at the top of the script: if these runs came from "
+                             "deckkit helpers that makes the NEXT build clean, and if they never "
+                             "went through set_font() — a fix-pass, or raw python-pptx — EAFONT "
+                             "will not help next time either, so keep calling retrofit_ea"))
+        # candidate CARD/PANEL/CHIP containers a label should sit inside: filled, boxy auto-shapes —
+        # wide AND tall enough to be a panel (so thin accent rails, icon tiles and badges are excluded),
+        # and not a full-bleed background. Chip/node-sized boxes count, so their labels get escape-checked.
+        containers = []; containers_z = []
+        for sh, bb, st, ink, r in info:
+            full_bleed = bb[2] >= W*0.92 and bb[3] >= H*0.92
+            if _has_fill(sh) and "AUTO_SHAPE" in st and _rectish(sh) and not full_bleed \
+                    and bb[2] >= 0.8 and bb[3] >= 0.35 and 0.5 <= bb[2]*bb[3] <= W*H*0.85:
+                containers.append(bb); containers_z.append((bb, zof.get(id(sh), 0)))
+        # ---- CONNECTOR_IN_BOX: an arrow/line endpoint that lands in a block's CENTRAL zone AND is
+        #      drawn ABOVE that block (so the stroke shows crossing the interior, across its own
+        #      label) — the "spokes emanate from the hub's centre" defect. Runs over `conns` (EVERY
+        #      connector segment, incl. the axis-aligned + elbow ones `_bbox_in` drops), so a vertical
+        #      feedback loop docked on a box centre is caught, not just a diagonal one. Endpoints docked
+        #      on an edge (connect_boxes/edge_point/hub_spokes) sit near the boundary → never flagged; a
+        #      connector drawn BELOW the block (the node paints over it) → never flagged; chart grid/
+        #      axis lines end near a border, not centre → never flagged. The central-zone + z-order
+        #      pair keeps this false-positive-free.
+        for czi, ends in conns:
+            hit = False
+            for (ex, ey) in ends:
+                for (cb, pzi) in containers_z:
+                    if czi <= pzi:                          # behind the block → block covers it → ok
+                        continue
+                    pcx, pcy = cb[0]+cb[2]/2.0, cb[1]+cb[3]/2.0
+                    if abs(ex-pcx) < 0.33*cb[2] and abs(ey-pcy) < 0.33*cb[3]:
+                        findings.append((n, "CRITICAL", "CONNECTOR_IN_BOX",
+                            "a connector endpoint sits in a block's interior (drawn above the block, so "
+                            "the line crosses it) — dock both ends on the block EDGE with "
+                            "connect_boxes()/hub_spokes()/edge_point(), or add the connector BEFORE the "
+                            "block so the block covers the seam"))
+                        hit = True; break
+                if hit: break
+        # ---- RULE_THROUGH_TEXT: a thin decorative rule crossing a text block's INK.
+        #      A divider is normally placed at a hand-picked y computed from how long the text
+        #      above it happened to be; when that text is later edited and grows, the rule ends up
+        #      drawn straight through it. The rule must pass BETWEEN blocks, so a crossing is always
+        #      a defect — and the geometry is fully known at build time.
+        #      Deliberately narrow so title underlines and axis lines never fire: the rule's thin
+        #      axis must land strictly INSIDE the ink (RULE_INSIDE_PAD clear of both edges), and the
+        #      crossing must be visible along the rule (>= RULE_MIN_CROSS).
+        for sh_r, bb_r, st_r, ink_r, _r in info:
+            if ink_r is not None or "PICTURE" in st_r:
+                continue                                   # text and pictures are other checks
+            if _declared_overlap(sh_r):
+                # DECLARED. Its two siblings already honour this — TEXT_OVERLAP since it was
+                # written, OFF_CANVAS via bleed_intent — and this one refused a composition with
+                # no way to say "on purpose": a STRIKE-THROUGH is a rule crossing its own text,
+                # which is what the mark MEANS, and a deck that wanted one had to abandon it.
+                # Measured on a real build. The declaration waives the GEOMETRY only; the pixel
+                # checks (TEXT NOT VISIBLE, contrast, occlusion) still run, so a rule that
+                # actually erases its text is still caught.
+                continue
+            rw, rh = bb_r[2], bb_r[3]
+            _poly_r = getattr(bb_r, "poly", None)
+            # a TILTED rule: its thickness is the FRAME's (its axis box at 2deg is 7x thicker —
+            # measured, final review 2026-10-03, a 5.6 x 0.03 strike rule stopped counting as one)
+            _fr = _bbox_in(sh_r) if _poly_r is not None else bb_r
+            thin, long_ = min(_fr[2], _fr[3]), max(_fr[2], _fr[3])
+            if thin > RULE_MAX_THICK or long_ < RULE_MIN_LEN:
+                continue                                   # not a rule: a panel, a chip, a dot
+            try:
+                if sh_r.fill.type is None:
+                    continue                               # unfilled outline, draws nothing solid
+            except Exception:
+                pass
+            horiz = rw >= rh
+            for sh_t, bb_t, st_t, ink_t, _t in info:
+                if ink_t is None or sh_t is sh_r:
+                    continue
+                ix0, iy0, iw, ih = ink_t
+                if _poly_r is not None:
+                    # its centreline, clipped to the ink inset by the same pad on every side
+                    p_, q_ = rotgeom.centreline(_poly_r, _fr[2], _fr[3])
+                    cross = rotgeom.seg_in_rect(p_, q_, (ix0 + RULE_INSIDE_PAD, iy0 + RULE_INSIDE_PAD,
+                                                         iw - 2 * RULE_INSIDE_PAD, ih - 2 * RULE_INSIDE_PAD))
+                elif horiz:
+                    cy = bb_r[1] + rh / 2.0
+                    if not (iy0 + RULE_INSIDE_PAD < cy < iy0 + ih - RULE_INSIDE_PAD):
+                        continue                           # above or below the ink — the normal case
+                    cross = min(bb_r[0] + rw, ix0 + iw) - max(bb_r[0], ix0)
+                else:
+                    cx = bb_r[0] + rw / 2.0
+                    if not (ix0 + RULE_INSIDE_PAD < cx < ix0 + iw - RULE_INSIDE_PAD):
+                        continue
+                    cross = min(bb_r[1] + rh, iy0 + ih) - max(bb_r[1], iy0)
+                if cross >= RULE_MIN_CROSS:
+                    findings.append((n, "CRITICAL", "RULE_THROUGH_TEXT",
+                        'a {} rule crosses the text "{}" ({:.2f}in of it) — derive the rule\'s '
+                        "position from the text block below/above it (its y + measured height), "
+                        "never a hand-picked coordinate".format(
+                            "horizontal" if horiz else "vertical",
+                            _snip(sh_t.text_frame.text, 26), cross)))
+                    break
+
+        # ---- SLIVER_GAP: near-touching panels (panel–panel or panel–picture; picture–picture is
+        #      skipped). A gap that exists but reads as touching clips rounded corners and looks
+        #      cramped even though nothing overlaps; overlap/flush (g <= 0) stays lint_deck's domain.
+        pics_bb = [bb for sh, bb, st, ink, r in info
+                   if "PICTURE" in st and not (bb[2] >= W*0.92 and bb[3] >= H*0.92)]
+        gap_boxes = [(cb, "panel") for cb in containers] + [(pb, "picture") for pb in pics_bb]
+        for gi in range(len(gap_boxes)):
+            for gj in range(gi+1, len(gap_boxes)):
+                (ga, ka), (gb, kb) = gap_boxes[gi], gap_boxes[gj]
+                if ka == "picture" and kb == "picture":
+                    continue
+                ox = min(ga[0]+ga[2], gb[0]+gb[2]) - max(ga[0], gb[0])
+                oy = min(ga[1]+ga[3], gb[1]+gb[3]) - max(ga[1], gb[1])
+                if ox >= 0.60 * min(ga[2], gb[2]):            # stacked vertically → check the y gap
+                    g = max(ga[1], gb[1]) - min(ga[1]+ga[3], gb[1]+gb[3])
+                    if 0.005 < g < 0.10:
+                        findings.append((n, "WARN", "SLIVER_GAP",
+                            f"panels nearly touch (gap {g:.2f}in) — derive the stack pitch from "
+                            f"rows()/vstack()"))
+                        continue
+                if oy >= 0.60 * min(ga[3], gb[3]):            # side by side → check the x gap
+                    g = max(ga[0], gb[0]) - min(ga[0]+ga[2], gb[0]+gb[2])
+                    if 0.005 < g < 0.10:
+                        findings.append((n, "WARN", "SLIVER_GAP",
+                            f"panels nearly touch (gap {g:.2f}in) — widen the gap (grow the diagram "
+                            f"radius/pitch or shrink the blocks)"))
+        # where the FOOTER chrome actually sits this slide (short text inks hugging the bottom edge),
+        # so the footer check flags a REAL collision with it — not the conservative reserved band
+        foot_inks = [ink for sh, bb, st, ink, r in info if ink is not None and ink[1]+ink[3] >= H-0.14 and ink[3] < 0.45]
+        footer_top = min((ik[1] for ik in foot_inks), default=None)
+        text_inks = []
+        for sh, bb, st, ink, r in info:
+            is_pic  = "PICTURE" in st
+            is_wm   = _is_text(sh) and _is_watermark(sh)
+            is_conn = "CONNECTOR" in st or st == "LINE (4)" or "FREEFORM" in st
+            full_bleed = bb[2] >= W*0.92 and bb[3] >= H*0.92
+            slack = (r[2][3] if r else 0.0)           # ~0.9 line-height IF the font was substituted, else 0
+            if slack > 0: subbed_any = True
+            # ---- OFF_CANVAS (ink for text; frame for cards/tables; pictures & watermarks get a bleed budget)
+            ext = ink if ink is not None else bb
+            if not is_conn:
+                budget = 0.30 if (is_pic or is_wm) else edge_tol
+                off = [s for s, c in (("left", ext[0] < -budget), ("top", ext[1] < -budget),
+                                      ("right", ext[0]+ext[2] > W+budget+slack),
+                                      ("bottom", ext[1]+ext[3] > H+budget+slack)) if c]
+                if off and (_declared_bleed(sh) or _is_a11y_title(sh)):
+                    off = []                     # declared, per shape, with a written reason (or a11y_title's own)
+                if off and not ((is_pic or is_wm) and full_bleed):
+                    findings.append((n, "CRITICAL", "OFF_CANVAS",
+                        f"{'text' if ink is not None else ('image' if is_pic else 'shape')} extends past the "
+                        f"{', '.join(off)} edge — move/shrink it to stay inside the canvas "
+                        f"(full-bleed images: picture(..., fit='cover') at exact canvas size)"))
+            if ink is not None:
+                # overlap-deflation budget: only a MULTI-line box can carry a fabricated extra wrapped
+                # line under a substituted font; a single measured line can't, so it isn't deflated
+                ov_dfl = slack if (r and r[2][1] >= 2) else 0.0
+                text_inks.append((sh, ink, bb, ov_dfl))
+                # ---- OVERFLOW of a VISIBLE box only (filled/outlined text box whose ink exceeds it)
+                if r and (_has_fill(sh) or _has_line(sh)):
+                    _ir, (inner_w, inner_h), _meta = r
+                    if _ir[3] > inner_h + 0.06 + slack:
+                        findings.append((n, "CRITICAL", "OVERFLOW",
+                            f"text overflows its filled box (~{_ir[3]:.2f}in of text in {inner_h:.2f}in): "
+                            f"\"{_snip(sh.text_frame.text)}…\" → shorten / shrink / grow box"))
+                    elif _ir[2] > inner_w + 0.06 + slack:   # no-wrap line wider than the visible box → clips
+                        findings.append((n, "CRITICAL", "OVERFLOW",
+                            f"no-wrap text wider than its box (~{_ir[2]:.2f}in in {inner_w:.2f}in): "
+                            f"\"{_snip(sh.text_frame.text)}…\" → shorten or widen the box"))
+                # ---- FOOTER intrusion: CONTENT text colliding with the actual footer chrome row
+                if footer_top is not None and ink not in foot_inks \
+                        and ink[1]+ink[3] > footer_top + 0.02 and ink[1] < footer_top + 0.10:
+                    findings.append((n, "WARN", "FOOTER",
+                        f"text collides with the footer row: \"{_snip(sh.text_frame.text)}…\""))
+        # ---- ESCAPES_CARD: child (text ink / figure / filled node) pokes outside its enclosing
+        #      panel; also record each card's children so the centering check below can run
+        kids = {}   # container index -> list of (kind, child_rect, sh, n_lines)
+        for sh, bb, st, ink, r in info:
+            is_pic = "PICTURE" in st
+            full_bleed = bb[2] >= W*0.92 and bb[3] >= H*0.92
+            if full_bleed:
+                continue
+            if ink is not None:
+                child, kind = ink, "text"
+            elif is_pic:
+                child, kind = bb, "figure"
+            elif _has_fill(sh) and "AUTO_SHAPE" in st and _rectish(sh) and not _is_motif(sh):
+                # A TAGGED motif element is a device the author placed in the composition, not a
+                # labelled box that belongs inside a band — a `seam`'s hinge STRADDLES the join by
+                # construction, which is the whole point of it, and ESCAPES_CARD read that as the
+                # node escaping the colour field beside it. The motif has its own checks
+                # (TEXT_OVER_MOTIF · MOTIF_BUDGET · MOTIF_UNEXPLAINED); this is not one of them.
+                child, kind = bb, "node"          # a labelled box that should sit inside a band
+            else:
+                continue
+            etol = escape_tol + (r[2][3] if r else 0.0)        # tolerate ~1 fabricated line on substituted fonts
+            ctr = (bb[0]+bb[2]/2.0, bb[1]+bb[3]/2.0)          # FRAME centre (where the author placed it),
+            frame_a = bb[2]*bb[3]                              # so overflow that makes the INK huge can't hide the host
+            host, ha, hidx = None, 1e9, -1
+            for ci, cb in enumerate(containers):
+                if cb is bb: continue
+                if abs(cb[0]-bb[0])<1e-4 and abs(cb[1]-bb[1])<1e-4 and abs(cb[2]-bb[2])<1e-4: continue
+                a = cb[2]*cb[3]
+                if _contains(cb, ctr) and a < ha and a > frame_a*1.02:
+                    host, ha, hidx = cb, a, ci
+            if host is None:
+                continue
+            nlines = (r[2][1] if (kind == "text" and r) else None)
+            kids.setdefault(hidx, []).append((kind, child, sh, nlines))
+            sides = [s for s, c in (("left", child[0] < host[0]-etol), ("top", child[1] < host[1]-etol),
+                                    ("right", child[0]+child[2] > host[0]+host[2]+etol),
+                                    ("bottom", child[1]+child[3] > host[1]+host[3]+etol)) if c]
+            if sides:
+                lbl = f"\"{_snip(sh.text_frame.text,24)}…\" " if kind == "text" else ""
+                findings.append((n, "WARN", "ESCAPES_CARD",
+                    f"{kind} {lbl}pokes past the {', '.join(sides)} of its card "
+                    f"— inset it or grow the card"))
+        # ---- OFFCENTER: a card whose ONLY content is a single line of text, sitting clearly off the
+        #      vertical middle (decorative accent rails are 'node' children and ignored). One line in
+        #      a block reads best centred — top/bottom-anchored leaves a lopsided gap.
+        for ci, lst in kids.items():
+            texts = [k for k in lst if k[0] == "text"]
+            figs  = [k for k in lst if k[0] == "figure"]
+            # a thin accent rail is a 'node' but decorative; a real sub-box (a diagram node, a header
+            # band's sibling) is content that means the line is a HEADER, not the card's sole occupant
+            solid_nodes = [k for k in lst if k[0] == "node" and min(k[1][2], k[1][3]) > 0.25]
+            if len(texts) != 1 or figs or solid_nodes:        # the card's ONLY content is this one line
+                continue
+            _kind, child, sh, nlines = texts[0]
+            if nlines != 1:                                   # the rule is about a SINGLE line
+                continue
+            host = containers[ci]
+            if not (0.35 <= host[3] <= 3.5):
+                continue
+            top_gap = child[1] - host[1]
+            bot_gap = (host[1]+host[3]) - (child[1]+child[3])
+            if top_gap < -0.02 or bot_gap < -0.02:            # overflow/escape — handled elsewhere
+                continue
+            big, small = max(top_gap, bot_gap), max(0.0, min(top_gap, bot_gap))
+            if abs(top_gap-bot_gap) > 0.14 and big > 2.2*small + 0.02:
+                findings.append((n, "WARN", "OFFCENTER",
+                    f"single line sits {'high' if top_gap < bot_gap else 'low'} in its card — anchor it "
+                    f"MIDDLE to vertically centre: \"{_snip(sh.text_frame.text,26)}…\""))
+        # ---- TEXT_OVERLAP: two text INK rects overlapping materially. Deflate each ink by its own
+        #      substitution slack first, so a fabricated extra line (wider fallback font) can't fabricate
+        #      a phantom overlap — keeping the "never fabricates when fonts are substituted" promise.
+        def _deflate(t):
+            ink, s = t[1], t[3]
+            poly = getattr(ink, "poly", None)
+            if poly is None:
+                return (ink[0], ink[1]+s/2.0, ink[2], max(0.03, ink[3]-s))
+            # A TILTED ink keeps its polygon (dropping it made the axis box the overlap, and a
+            # tilted kicker clear of the body copy read as a CRITICAL TEXT_OVERLAP — final review
+            # 2026-10-03). The substituted-font slack shrinks it along its OWN vertical.
+            if not s:
+                return ink
+            tl, tr, br, bl = poly
+            hx, hy = bl[0] - tl[0], bl[1] - tl[1]
+            hl = math.hypot(hx, hy) or 1.0
+            d = min(s / 2.0, max(0.0, (hl - 0.03) / 2.0))
+            ux, uy = hx / hl * d, hy / hl * d
+            npoly = [(tl[0]+ux, tl[1]+uy), (tr[0]+ux, tr[1]+uy), (br[0]-ux, br[1]-uy), (bl[0]-ux, bl[1]-uy)]
+            out = _Placed(rotgeom.bbox(npoly))
+            out.poly = npoly
+            return out
+        def _declared(t):
+            return _declared_overlap(t[0])           # every spelling, as the render-time gate reads it
+        for i in range(len(text_inks)):
+            for j in range(i+1, len(text_inks)):
+                # a DECLARED overlap is a composition, not a collision. Either side may carry it —
+                # the giant display word or the line riding it. Legibility is unaffected: contrast
+                # and the render-time occlusion checks are floors and still apply.
+                if _declared(text_inks[i]) or _declared(text_inks[j]):
+                    continue
+                a, b = _deflate(text_inks[i]), _deflate(text_inks[j])
+                ov = _overlap_area(a, b)
+                if ov > overlap_tol and ov > 0.22*min(_area_of(a), _area_of(b)):
+                    ta = _snip(text_inks[i][0].text_frame.text,18)
+                    tb = _snip(text_inks[j][0].text_frame.text,18)
+                    _hint = ""
+                    for _t in (text_inks[i], text_inks[j]):
+                        _h = _MIXED_HINTS.get(id(_t[0]))
+                        if _h:
+                            _bg, _sm, _true, _inner = _h
+                            _hint = (f" — NOTE: one of these paragraphs mixes {_sm:g}pt with {_bg:g}pt. "
+                                     f"A paragraph's ink is measured at its LARGEST run size, so this "
+                                     f"scores as multi-line {_bg:g}pt text even though its runs sum to "
+                                     f"{_true:.2f}in in a {_inner:.2f}in box. Split it into separate "
+                                     f"blocks, ONE type size each — do not just add a gap.")
+                            break
+                    findings.append((n, "CRITICAL", "TEXT_OVERLAP",
+                        f"text ink overlaps ({ov:.2f}in²): \"{ta}…\" ✕ \"{tb}…\"{_hint}"))
+        # ---- HEADLINE_CROWDED: the deck's biggest text and the first block under it, nearly or
+        #      actually touching. THE MEASURED GAP, and why this is a distinct check:
+        #
+        #      A title box is sized for ONE line and the content below it is placed at a picked y.
+        #      The moment the title wraps to TWO, its ink grows down into a block that never moved.
+        #      Nothing here saw that. `TEXT_OVERLAP` needs the inks to actually cross and these
+        #      merely graze; `RULE_THROUGH_TEXT` needs a rule to be crossed, not approached; and
+        #      `SLIVER_GAP` measures panel against panel, never text against text. Measured on a
+        #      delivered 12-slide deck: three pages with title-to-body gaps of 0.01in, 0.05in and
+        #      -0.12in (overlapping) reported ZERO criticals, and the author found all three by eye.
+        #
+        #      Scoped to the HEADLINE only — the largest text starting in the top third — because a
+        #      general "two text blocks are close" rule would fire on every list, caption pair and
+        #      stat block in every deck, which is how a check gets ignored. The headline is where
+        #      the growth actually happens, since it is the one block whose length nobody controls.
+        #      🔴 A DECLARED overlap is exempt, on the same terms as TEXT_OVERLAP. `overlap_intent`
+        #      exists for exactly the composition this would otherwise refuse — a giant display word
+        #      with a small line riding it, where a near-zero gap IS the design. The first cut of
+        #      this check omitted that and broke smoke_deckkit's "a DECLARED composed overlap must
+        #      build" assertion, which exists to catch a new rule making a documented escape
+        #      unreachable. Both sides skip a declared shape: the headline, and the block under it.
+        _head = None
+        for t in text_inks:
+            _sh, _ink, _sz = t[0], t[1], t[2] if len(t) > 2 else 0
+            if _ink[1] > H*0.34:                      # not a headline if it starts mid-page
+                continue
+            if _declared(t):                          # deliberately composed — not a collision
+                continue
+            if _shape_rot(_sh):
+                continue                              # a rotated margin label is not the headline
+                                                      # (it stole the slot and silenced the check)
+            _fs = _max_font_pt(_sh) if "_max_font_pt" in dir() else None
+            _key = _fs if _fs else _ink[3]            # font size when known, else ink height
+            if _head is None or _key > _head[0]:
+                _head = (_key, t)
+        if _head is not None:
+            _ht = _deflate(_head[1])
+            _hbot = _ht[1] + _ht[3]
+            _below = None
+            for t in text_inks:
+                if t[0] is _head[1][0] or _declared(t):
+                    continue
+                d = _deflate(t)
+                # must start below the headline's ink AND share horizontal extent with it,
+                # so a side rail parallel to the title is not read as "the block underneath"
+                if d[1] >= _ht[1] and not (d[0] > _ht[0]+_ht[2] or d[0]+d[2] < _ht[0]):
+                    if _below is None or d[1] < _below[1]:
+                        _below = d
+            if _below is not None:
+                _gap = _below[1] - _hbot
+                _txt = _snip(_head[1][0].text_frame.text, 22)
+                if _gap < 0.06:
+                    findings.append((n, "CRITICAL", "HEADLINE_CROWDED",
+                        f"only {_gap:.2f}in between the headline \"{_txt}…\" and the block under it"
+                        f" — derive that block's y from the headline's MEASURED end "
+                        f"(dk.measure_text(...) + a gap token), never a fixed coordinate. A title "
+                        f"sized for one line grows into whatever sits below it the moment it wraps "
+                        f"to two."))
+                elif _gap < 0.18:
+                    findings.append((n, "WARN", "HEADLINE_CROWDED",
+                        f"{_gap:.2f}in between the headline \"{_txt}…\" and the block under it reads "
+                        f"as cramped (aim >= ~0.18in, the spacing scale's group gap) — derive it "
+                        f"from the headline's measured end rather than a picked y"))
+        # ---- FOOTER intrusion for CARDS (a filled panel reaching the actual footer row)
+        if footer_top is not None:
+            for sh, bb, st, ink, r in info:
+                if ink is None and _has_fill(sh) and "AUTO_SHAPE" in st and bb[2]*bb[3] >= 1.3 \
+                        and not (bb[2] >= W*0.92 and bb[3] >= H*0.92):
+                    if bb[1]+bb[3] > footer_top+0.02 and bb[1] < footer_top+0.10:
+                        findings.append((n, "WARN", "FOOTER",
+                            f"a card/panel reaches the footer row (bottom {bb[1]+bb[3]:.2f}in vs footer at {footer_top:.2f}in)"))
+    findings.extend(_footer_band_faults(prs))
+    findings.extend(_deck_level_faults(prs))
+    findings.extend(_motif_faults(prs))
+    findings.extend(_graze_faults(prs))
+    findings.extend(_ooxml_shape_faults(prs))
+    findings.extend(_datum_faults(prs))
+    findings.extend(_asset_faults(prs))
+    findings.extend(_cjk_face_faults(prs))
+    if verbose:
+        crit = sum(1 for f in findings if f[1] == "CRITICAL")
+        warn = len(findings) - crit
+        if subbed_any:
+            # Named, not a footnote. This condition degrades EVERY fit/wrap/overflow guard in the
+            # library at once, because they all sit on _measure_lines. It was previously printed
+            # as a "note" and read as boilerplate: a deck shipped an install command that fit its
+            # panel by 10% under substituted metrics and still broke across three lines in the
+            # render. The fix is one call, so the message names it.
+            miss = font_health()
+            if miss:
+                print("[lint] FONT NOT INSTALLED  " + ", ".join(f"{a}={f!r}" for a, f in miss)
+                      + " — measurement falls back to a metric-INcompatible face, so every wrap "
+                        "and fit check below carries ~1 line of slack. Fix it for this deck with "
+                        "deckkit.use_platform_fonts(), or set the faces yourself.")
+            else:
+                print("[lint] note: a text font isn't installed for measurement (substituted) — wrap "
+                      "counts are approximate, so near-threshold flags carry ~1 line of slack")
+        if not findings:
+            print(f"[lint] ✓ no layout faults across {len(prs.slides._sldIdLst)} slides")
+        else:
+            for n, sev, code, msg in sorted(findings, key=lambda f: (f[0], f[1] != "CRITICAL")):
+                print(f"[lint] {'✗' if sev=='CRITICAL' else '•'} slide {n:>2} {code:<13} {msg}")
+            print(f"[lint] {crit} critical, {warn} warning(s) — clear the criticals before rendering")
+            print("[lint] what each code means + first fix: references/troubleshooting-faq.md §4")
+    if strict and any(f[1] == "CRITICAL" for f in findings):
+        raise RuntimeError(f"lint_layout: {sum(1 for f in findings if f[1]=='CRITICAL')} critical layout fault(s)"
+                           + (" — each is listed above with its slide and fix" if verbose
+                              else " — rerun with verbose=True to list each")
+                           + "; plain-language dictionary: references/troubleshooting-faq.md §4")
+    return findings
+
+
+lint_layout.__doc__ = _lint_layout_impl.__doc__     # the public name carries the documented contract
+
+
+def fit_text_size(runs, w, h, start_size, *, font=None, min_size=9.0, line_h=_LINT_LINE_H, pad=0.0):
+    """Largest point size ≤ `start_size` at which `runs` = [(text, bold), ...] fits a `w`×`h`in box
+    — so 'if it doesn't fit, shrink the font' is one call, not a guess. Measures with the real font
+    metrics; returns `min_size` if even that overflows (then shorten the text or grow the box).
+    CJK-aware: CJK runs are measured at the pitch text()'s script-aware default renders
+    (``1.2 × CJK_LS``), so the returned size actually fits."""
+    runs = _as_runs(runs)
+    aw, ah = max(0.2, w - pad - TEXT_INSET_LR), max(0.1, h-pad)   # text()'s own 2pt insets come off the width
+    if any(_has_cjk(t) for (t, *_r) in runs):
+        line_h = max(line_h, 1.2 * CJK_LS)
+    s = start_size
+    while s > min_size:
+        if _measure_lines(runs, s, aw, font=font) * (s/72.0*line_h) <= ah:
+            return round(s, 1)
+        s -= 0.5
+    return min_size
+
+
+# ============================================ isometric 2.5D (native — no generated image)
+#
+# DESIGN DECISIONS, fixed here so every 2.5D element in a deck reads as one system:
+#   PROJECTION — true isometric (30 degrees), parallel not perspective. x = width -> right-and-down,
+#     y = depth -> left-and-down, z = height -> straight up. Parallel projection is the right call
+#     for slides: it is deterministic, tiles cleanly, and never distorts a value (a perspective bar
+#     chart would foreshorten the far bars and lie about the data).
+#   FACE SHADING — top = the base colour (brightest, catches the light); the right face (y=0) at
+#     x0.80; the left face (x=0) at x0.55. One light source, upper-front. These three ratios are the
+#     whole "3D" illusion; keep them fixed so a prism on slide 3 matches a slab on slide 9.
+#   TEXT — python-pptx cannot shear text onto an isometric face, so labels sit BESIDE the geometry,
+#     never on it. A value/label is placed at the shape's top-centre or to its side in flat type.
+#     This is a hard limit of the medium, not a style choice; do not fake sheared text with rotation.
+#   DOSE — 2.5D is eye-catching and cheap to overuse. It earns its place on a stack/hierarchy/one
+#     hero chart, not on every slide (the same discipline as generated imagery). iso_bars is FAITHFUL
+#     (height is linear in the value, zero-based) so it never becomes decoration that distorts data.
+
+_ISO_COS30 = 0.8660254037844387
+_ISO_SIN30 = 0.5
+
+
+def _iso_shade(color, f):
+    """Multiply an RGB colour toward black by f (the face-shading ratios above)."""
+    c = _as_rgb(color)
+    return RGBColor(max(0, min(255, int(c[0] * f))),
+                    max(0, min(255, int(c[1] * f))),
+                    max(0, min(255, int(c[2] * f))))
+
+
+def _iso_pt(x, y, z, ox, oy):
+    """3D (x=width, y=depth, z=height), in inches, -> 2D inches, offset to screen (ox, oy)."""
+    return (ox + (x - y) * _ISO_COS30, oy + (x + y) * _ISO_SIN30 - z)
+
+
+def _iso_poly(slide, pts, fill, *, line=None, lw=0.75):
+    """A filled polygon from inch coordinates, via python-pptx freeform. The theme shadow is
+    stripped (_flat) so an isometric face never carries a soft drop shadow that fights the
+    hand-shaded depth."""
+    fb = slide.shapes.build_freeform(Inches(pts[0][0]), Inches(pts[0][1]), scale=1)
+    fb.add_line_segments([(Inches(px), Inches(py)) for px, py in pts[1:]], close=True)
+    sh = fb.convert_to_shape()
+    _flat(sh)
+    sh.fill.solid(); sh.fill.fore_color.rgb = _as_rgb(fill)
+    if line is not None:
+        sh.line.color.rgb = _as_rgb(line); sh.line.width = Pt(lw)
+    else:
+        sh.line.fill.background()
+    return sh
+
+
+def _bez(p0, p1, p2, p3, n=24):
+    """Cubic bezier sampled to n points (python-pptx freeforms take line segments only)."""
+    out = []
+    for i in range(n + 1):
+        s = i / float(n)
+        m = 1.0 - s
+        out.append((m*m*m*p0[0] + 3*m*m*s*p1[0] + 3*m*s*s*p2[0] + s*s*s*p3[0],
+                    m*m*m*p0[1] + 3*m*m*s*p1[1] + 3*m*s*s*p2[1] + s*s*s*p3[1]))
+    return out
+
+
+def sankey(slide, x, y, w, h, links, *, node_w=0.26, gap=0.14, accents=None, ink=None,
+           mute=None, value_fmt="{:.0f}", label_size=10.5, font=None, col_labels=None,
+           node_fill=None, curve=0.55, label_w=1.45):
+    """FLOW RIBBONS between staged nodes — where a quantity GOES, with width = how much.
+
+    `links` = [(source_label, target_label, value), ...]. Columns are derived from the link
+    graph (a node with no inbound link starts column 0), so a 1 -> N -> 1 shape such as
+    "$40B of equity out -> five AI labs -> compute committed back" needs no column bookkeeping.
+
+    The one rule that makes this a chart rather than decoration: **every width uses ONE scale.**
+    `units_per_inch` is derived from the BUSIEST column, so a ribbon twice as thick carries twice
+    the value, everywhere in the diagram. A flow picture whose widths do not match its numbers is
+    not a stylistic choice, it is a false chart -- the same class of defect as a bar chart with a
+    cropped axis, and harder to catch because nobody thinks to check it.
+
+    `x, y, w, h` is the WHOLE region including labels, so it can be handed a region straight from
+    `content_band`/`columns`/`rows` and nothing lands outside. `label_w` is reserved at each side for the first
+    and last columns' labels; middle columns are labelled in the gap ABOVE each node (which is
+    why `gap` and the top headroom are widened automatically when middle columns exist) -- text
+    over a ribbon would be unreadable, and a chip behind it would hide the flow it sits on.
+
+    Reach for it when the story is CIRCULATION (money out and back, a supply chain, a budget
+    split, attrition through stages). For a simple part-of-whole use `segmented_bar`; for a
+    taper use `tier_stack`; for who-connects-to-whom without volume use `hub_spoke`.
+
+    Returns {"nodes": {label: (x, y, w, h)}, "scale": units_per_inch, "columns": [[labels]]}.
+    """
+    acc = list(accents or ACCENTS)
+    ink_c = ink if ink is not None else DEEP
+    mute_c = mute if mute is not None else MUTE
+    fnt = font or FONT
+
+    # ---- graph -> columns ------------------------------------------------------------------
+    src, dst, order = {}, {}, []
+    for a, b, v in links:
+        if v is None or v <= 0:
+            raise ValueError(f"sankey(): link {a!r}->{b!r} has value {v!r}; the widths ENCODE "
+                             f"value, so every link needs a positive one")
+        for nd in (a, b):
+            if nd not in order:
+                order.append(nd)
+        src.setdefault(a, []).append((b, float(v)))
+        dst.setdefault(b, []).append((a, float(v)))
+    col = {nd: 0 for nd in order if nd not in dst}
+    if not col:
+        raise ValueError("sankey(): every node has an inbound link -- the graph is cyclic, so "
+                         "there is no first column to lay out")
+    changed, guard = True, 0
+    while changed and guard < 64:
+        changed, guard = False, guard + 1
+        for a, outs in src.items():
+            if a not in col:
+                continue
+            for b, _v in outs:
+                if col.get(b, -1) < col[a] + 1:
+                    col[b], changed = col[a] + 1, True
+    if len(col) != len(order):
+        missing = [nd for nd in order if nd not in col]
+        raise ValueError(f"sankey(): {missing} are unreachable from any source node (a cycle "
+                         f"feeds them); flow diagrams need a direction")
+    ncol = max(col.values()) + 1
+    columns = [[nd for nd in order if col.get(nd) == c] for c in range(ncol)]
+
+    # ---- reserve the labels FIRST, derive the flow area from what is left -------------------
+    mid_labelled = any(columns[c] for c in range(1, ncol - 1))
+    lab_h = 0.26 if mid_labelled else 0.0
+    if mid_labelled:
+        gap = max(gap, lab_h + 0.04)
+    head = (0.32 if col_labels else 0.0) + lab_h
+    fx = x + label_w
+    fw = w - 2 * label_w
+    fy = y + head
+    fh = h - head
+    if fw < 1.0:
+        raise ValueError(f"sankey(): w={w:.2f}in leaves only {fw:.2f}in for ribbons after two "
+                         f"{label_w:.2f}in label gutters -- widen the region or lower label_w")
+
+    total = {nd: max(sum(v for _b, v in src.get(nd, [])),
+                     sum(v for _a, v in dst.get(nd, []))) for nd in order}
+    busiest = max(sum(total[nd] for nd in cl) for cl in columns if cl)
+    tallest = max(len(cl) for cl in columns)
+    avail = fh - gap * max(0, tallest - 1)
+    if avail <= 0.2:
+        raise ValueError(f"sankey(): {tallest} nodes at gap={gap:.2f} do not fit in "
+                         f"h={h:.2f}in (only {avail:.2f}in left for the bars themselves)")
+    upi = busiest / avail                                  # ONE scale for the whole diagram
+
+    # ---- node rects ------------------------------------------------------------------------
+    step = (fw - node_w) / max(1, ncol - 1) if ncol > 1 else 0.0
+    rects = {}
+    for c, cl in enumerate(columns):
+        used = sum(total[nd] / upi for nd in cl) + gap * max(0, len(cl) - 1)
+        cy = fy + (fh - used) / 2.0                        # centre each column
+        for nd in cl:
+            nh = total[nd] / upi
+            rects[nd] = (fx + c * step, cy, node_w, nh)
+            cy += nh + gap
+
+    # ---- ribbons (drawn first, so the nodes sit on top of their ends) ----------------------
+    key_col = columns[1] if ncol > 2 else columns[-1]
+    colour = {nd: acc[i % len(acc)] for i, nd in enumerate(key_col)}
+    out_cur = {nd: rects[nd][1] for nd in order}
+    in_cur = {nd: rects[nd][1] for nd in order}
+    # Stack each node's links in the order of the OTHER end's vertical position. This is the
+    # standard crossing-minimising rule: ribbons only cross when the graph forces them to, so a
+    # crossing that survives is information ("this money went somewhere out of order"), not noise.
+    ordered = sorted(links, key=lambda L: (col[L[0]], rects[L[0]][1], rects[L[1]][1]))
+    seam = min(0.02, node_w / 3.0)   # tuck the ends UNDER the node; abutting edges render a hairline
+    for a, b, v in ordered:
+        vh = float(v) / upi
+        ax = rects[a][0] + node_w - seam
+        bx = rects[b][0] + seam
+        a0, b0 = out_cur[a], in_cur[b]
+        out_cur[a] += vh
+        in_cur[b] += vh
+        cx = (bx - ax) * curve
+        top = _bez((ax, a0), (ax + cx, a0), (bx - cx, b0), (bx, b0))
+        bot = _bez((ax, a0 + vh), (ax + cx, a0 + vh), (bx - cx, b0 + vh), (bx, b0 + vh))
+        _iso_poly(slide, top + bot[::-1], colour.get(b) or colour.get(a) or acc[0])
+
+    # ---- nodes + labels --------------------------------------------------------------------
+    for nd in order:
+        nx, ny, nw, nh = rects[nd]
+        box(slide, nx, ny, nw, nh, fill=node_fill or colour.get(nd, mute_c))
+        lab = f"{nd}  {value_fmt.format(total[nd])}" if value_fmt else str(nd)
+        c = col[nd]
+        if c == 0:
+            text(slide, nx - label_w, ny, label_w - 0.12, max(nh, 0.24),
+                 [[(lab, label_size, ink_c, True, False, fnt)]],
+                 align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE)
+        elif c == ncol - 1:
+            text(slide, nx + nw + 0.12, ny, label_w - 0.12, max(nh, 0.24),
+                 [[(lab, label_size, ink_c, True, False, fnt)]], anchor=MSO_ANCHOR.MIDDLE)
+        else:
+            text(slide, nx - 1.1, ny - lab_h, 2.2 + nw, lab_h,
+                 [[(lab, label_size, ink_c, True, False, fnt)]],
+                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM)
+
+    if col_labels:
+        for c, cl in enumerate(col_labels[:ncol]):
+            text(slide, fx + c * step - 0.5, y, node_w + 1.0, 0.28,
+                 [[(str(cl), 9.5, mute_c, True, False, fnt)]], align=PP_ALIGN.CENTER)
+    return {"nodes": rects, "scale": upi, "columns": columns}
+
+
+def iso_prism(slide, ox, oy, w, d, h, base, *, line=None):
+    """One extruded isometric box (a 2.5D bar / block / building).
+
+    (ox, oy) is the box's NEAR-BOTTOM corner in inches — the point closest to the viewer, which
+    sits at the bottom of the drawn shape. w/d/h are width/depth/height IN INCHES of projected
+    space (h is the extrusion — for a bar, h encodes the value). Draws three visible faces
+    (top, right, left) in the fixed shading ratios so it reads as lit from the upper front.
+    Returns (cx, y) — the horizontal centre and a y ABOVE THE ENTIRE TOP FACE (cleared of the
+    rhombus), so a flat label seated at this point sits above the block, never on it. (Placing a
+    label at the face *centre* lands it on the top face — muted text there is invisible.)
+    """
+    def P(x, y, z):
+        return _iso_pt(x, y, z, ox, oy)
+    top = [P(0, 0, h), P(w, 0, h), P(w, d, h), P(0, d, h)]
+    right = [P(0, 0, 0), P(w, 0, 0), P(w, 0, h), P(0, 0, h)]
+    left = [P(0, 0, 0), P(0, d, 0), P(0, d, h), P(0, 0, h)]
+    _iso_poly(slide, left, _iso_shade(base, 0.55), line=line)
+    _iso_poly(slide, right, _iso_shade(base, 0.80), line=line)
+    _iso_poly(slide, top, base, line=line)
+    cx = ox + (w - d) * _ISO_COS30 / 2.0
+    # the top face's HIGHEST screen point is its far-back corner P(0,d,h); a label must clear THAT,
+    # not the face centre — returning the centre and saying "put a label above it" lands text ON
+    # the rhombus (measured 1.33:1, invisible). Return the cleared apex.
+    apex_y = oy + 0.0 * _ISO_SIN30 - h                 # near-top corner P(0,0,h) screen y
+    far_top_y = oy - d * _ISO_COS30 * 0.0 + d * _ISO_SIN30 - h   # not used; keep the math explicit
+    top_hi = min(P(0, 0, h)[1], P(0, d, h)[1], P(w, 0, h)[1], P(w, d, h)[1])
+    return (cx, top_hi - 0.06)
+
+
+def iso_bars(slide, x, y, w, h, values, *, labels=None, base=None, highlight=None,
+             hi_color=None, depth=0.42, gap=0.30, font=None, label_size=11, value_fmt="{:g}"):
+    """A FAITHFUL isometric bar chart — bar height is linear in the value and zero-based, so the
+    2.5D never distorts the data (that is why perspective is refused above).
+
+    values — list of numbers. labels — optional per-bar captions (placed BELOW, flat). base —
+    fill (defaults to the theme BLUE); highlight — index drawn in MAGENTA/accent. The bars share
+    one z-scale; (x, y, w, h) is the footprint the whole chart is fitted into. Value labels sit
+    ABOVE each bar's top face in flat type (text cannot be sheared onto a face)."""
+    base = _as_rgb(base) if base is not None else BLUE
+    # highlight uses the caller's BOUND emphasis hue when given, so a deck whose semantic accent
+    # isn't MAGENTA is respected; MAGENTA (re-themed by set_palette) is only the default.
+    hi = _as_rgb(hi_color) if hi_color is not None else _as_rgb(MAGENTA)
+    n = len(values)
+    if n == 0:
+        raise ValueError("iso_bars needs at least one value")
+    if any(v < 0 for v in values):
+        raise ValueError("iso_bars is for non-negative MAGNITUDES — an extrusion height cannot be "
+                         "negative without lying about the value. For signed/before-after data use "
+                         "native_chart(kind='column') or designed_charts.waterfall.")
+    if n > 9:
+        raise ValueError("iso_bars gets cramped past ~9 bars (the isometric depth eats horizontal "
+                         "room). Use native_chart for a dense series, or split the data.")
+    vmax = max(values) or 1.0
+    bw = max(0.30, min(0.58, (w - (n - 1) * gap) / n * 0.62))
+    hmax = h * 0.60                       # 0.60 not 0.72: reserve real headroom for value labels
+    pitch = bw + gap                      # bars step by this in SCREEN x -> a clean row
+    row_w = (n - 1) * pitch + bw
+    ox0 = x + (w - row_w) / 2.0 + depth * _ISO_COS30 * 0.5
+    oy0 = y + h - depth * _ISO_SIN30 - 0.30
+    for i, v in enumerate(values):
+        bh = hmax * (v / vmax)
+        ox, oy = ox0 + i * pitch, oy0
+        cx, cy = iso_prism(slide, ox, oy, bw, depth, max(bh, 0.02),
+                           hi if highlight == i else base)
+        # the top face's highest screen point is its far-back corner, ~ (bw+depth)/2*SIN30 above cy;
+        # clear the label above ALL of it, not just the centre, or it lands on the face.
+        top_apex = oy - bh - depth * _ISO_SIN30
+        text(slide, ox - 0.7, top_apex - 0.34, bw + 1.4, 0.3,
+             [[(value_fmt.format(v), label_size + 2, hi if highlight == i else _as_rgb(DEEP),
+                True, False, font or FONT)]], align=PP_ALIGN.CENTER, space_after=0, wrap=False)
+        if labels and i < len(labels):
+            base_y = oy + depth * _ISO_SIN30 + 0.08
+            text(slide, ox - 0.6, base_y, bw + 1.2, 0.3,
+                 [[(labels[i], label_size, _as_rgb(MUTE), False, False, font or FONT)]],
+                 align=PP_ALIGN.CENTER, space_after=0, wrap=False)
+    return y + h
+
+
+def iso_stack(slide, x, y, w, h, layers, *, base=None, accents=None, slab=0.14, gap=0.30,
+              font=None, label_size=12):
+    """An isometric LAYERED STACK — a tech stack, a disclosure ladder, a decision hierarchy, an
+    architecture in tiers. Each layer is a thin isometric slab; layers float with a gap so depth
+    reads. Labels sit to the RIGHT of each slab in flat type (never on the face).
+
+    layers — list of str (label) or (label, sub) tuples, BOTTOM-first (drawn bottom-up so the top
+    layer overlaps correctly). accents — per-layer fills (defaults to cycling ACCENTS); base
+    overrides to one hue. Returns the y just below the lowest slab."""
+    items = [(l if isinstance(l, tuple) else (l, None)) for l in layers]
+    n = len(items)
+    if n == 0:
+        raise ValueError("iso_stack needs at least one layer")
+    if n > 6:
+        raise ValueError("iso_stack reads clearly up to ~6 layers; %d slabs overflow the canvas and "
+                         "blur together. Group them, or use a flat step_list / tier_stack." % n)
+    cols = ([_as_rgb(base)] * n if base is not None
+            else [_as_rgb(c) for c in accents] if accents
+            else palette(n, ACCENTS))
+    sw = min(w * 0.30, 1.7)               # slab footprint width in projected inches
+    sd = sw * 0.64
+    pitch = slab + max(gap, 0.58)         # vertical screen gap between slab tops (fits two lines)
+    # ONE slab's true screen extent: highest point is the top-face front corner (oy - slab);
+    # LOWEST is the bottom-face FAR corner P(w,d,0) at oy + (sw+sd)*SIN30 — this is the corner the
+    # first version forgot, which pushed the bottom slab off-canvas.
+    far = (sw + sd) * _ISO_SIN30
+    total = (n - 1) * pitch + far + slab            # full stack screen height
+    ox = x + sd * _ISO_COS30 + 0.25
+    oy_top = y + max(0.4, (h - total) / 2.0) + slab    # top slab (min top margin for a label)'s near corner
+    lx = ox + sw * _ISO_COS30 + 0.28        # tighter to the slabs so a label can't drift to a neighbour
+    for i in range(n):
+        idx = n - 1 - i                     # top slab first; lower (front) slabs overpaint
+        label, sub = items[idx]
+        oy = oy_top + i * pitch
+        iso_prism(slide, ox, oy, sw, sd, slab, _as_rgb(cols[idx]))
+        # a slab's OWN visible band (before the next slab overpaints it) is only ~one pitch tall,
+        # centred a bit above oy. Seat BOTH label lines inside that band so the sub-caption never
+        # falls into the trough beside the NEXT slab (the decodability bug the review found).
+        band_mid = oy - slab - (sw + sd) * _ISO_SIN30 * 0.12
+        two = 0.30 if sub else 0.0
+        text(slide, lx, band_mid - 0.02 - two / 2, w - (lx - x) - 0.15, 0.3,
+             [[(label, label_size, _as_rgb(DEEP), True, False, font or FONT)]],
+             space_after=0, wrap=False)
+        if sub:
+            text(slide, lx, band_mid + 0.20, w - (lx - x) - 0.15, 0.28,
+                 [[(sub, label_size - 2.5, _as_rgb(MUTE), False, False, font or FONT)]],
+                 space_after=0, wrap=False)
+    return y + h
+
+
+# ============================================ taper stacks · roadmaps · rating grids · frames
+def tier_stack(slide, x, y, w, h, tiers, *, mode="pyramid", direction=None, accents=None,
+               ink=None, values=None, labels="inside", font=None):
+    """A FUNNEL or PYRAMID from one taper core (they are geometric siblings) — centered horizontal
+    bands whose width tapers across the stack, an editorial part-to-whole ladder, NOT a SmartArt
+    gradient. ``tiers`` = label strings TOP→BOTTOM.
+
+    ``mode='pyramid'`` (narrow top → wide base — a foundation/hierarchy) or ``'funnel'`` (wide top →
+    narrow — stage-by-stage drop-off). ``direction`` = ``'up'``/``'down'`` overrides which end is the
+    narrow one (default follows ``mode``). Each band gets a colour from a semantic RAMP — tints of one
+    accent, light at the top → full accent at the base — or the explicit per-tier ``accents`` list.
+    ``values`` (optional, aligned to ``tiers``) is DISPLAYED (conversion %/counts); when numeric it
+    ALSO drives band width value-proportionally — width tracks ``value/max`` with only a hairline
+    floor, so a real funnel's deep drop-off is HONEST geometry (a 5%-of-max tier is drawn at 5%
+    width, not clamped up to a fixed minimum that would contradict its own label). ``labels='inside'``
+    sets the label (auto-fit) ON the band, contrast-aware — but a band too thin to hold its label
+    (a value-mode sliver) auto-routes to a RIGHT-side leader so honest geometry stays legible;
+    ``labels='side'`` draws every tier in the left ~half and calls each label out to the RIGHT with a
+    thin leader. ``ink`` is the side-label colour (default DEEP). Returns the bottom y.
+
+    Ship ``pyramid(...)`` / ``funnel(...)`` as the two obvious entry points over this core."""
+    if not tiers:
+        raise ValueError("tier_stack() needs at least one tier")
+    if mode not in ("pyramid", "funnel"):
+        raise ValueError("tier_stack(): mode must be 'pyramid' or 'funnel'")
+    if labels not in ("inside", "side"):
+        raise ValueError("tier_stack(): labels must be 'inside' or 'side'")
+    if direction is not None and direction not in ("up", "down"):
+        raise ValueError("tier_stack(): direction must be 'up', 'down', or None")
+    ic = ink if ink is not None else DEEP
+    n = len(tiers)
+    # narrow-end: pyramid apex-up (narrow top); funnel wide-top (narrow bottom) — direction overrides
+    narrow_top = (direction == "up") if direction is not None else (mode == "pyramid")
+    # widths: value-proportional when values are numeric (an honest funnel), else a linear taper
+    numeric_vals = None
+    if values is not None:
+        try:
+            numeric_vals = [float(v) for v in values]
+        except (TypeError, ValueError):
+            numeric_vals = None
+    MINF = 0.20            # decorative-taper floor ONLY (no values) — keeps the narrow end visible
+    SLIVER = 0.02          # value-mode floor: a near-zero tier shows as a hairline, NOT inflated
+    if numeric_vals is not None and max(abs(v) for v in numeric_vals) > 0:
+        # value-proportional: width MUST track value/max honestly (a funnel's deep drop-off is the
+        # story). Only a hairline SLIVER floor so a sub-1% tier stays visible — never the 0.20 floor,
+        # which would draw a 5%-of-max tier at 20% width and contradict its own label.
+        mx = max(abs(v) for v in numeric_vals)
+        fracs = [max(SLIVER, abs(v) / mx) for v in numeric_vals]
+    else:
+        fracs = []
+        for i in range(n):
+            t = (i / (n - 1)) if n > 1 else 1.0
+            fracs.append(MINF + (1 - MINF) * (t if narrow_top else (1 - t)))
+    # colour ramp light(top)→full accent(base), or an explicit semantic list
+    if accents is not None:
+        cols = [_as_rgbc(c) for c in accents[:n]]
+        cols += [BLUE] * (n - len(cols))
+    else:
+        cols = [tint(BLUE, 0.30 + 0.70 * ((i / (n - 1)) if n > 1 else 1.0)) for i in range(n)]
+    w_area = w if labels == "inside" else w * 0.52
+    band_h = h / n                                     # flush bands (a funnel/pyramid's classic look)
+    cy = y
+    for i, lab in enumerate(tiers):
+        band_w = w_area * fracs[i]
+        bx = x + (w_area - band_w) / 2.0
+        box(slide, bx, cy, band_w, band_h, fill=cols[i], round=True, r=min(0.06, band_h / 4.0))
+        val_str = None
+        if values is not None and i < len(values) and values[i] not in (None, ""):
+            v = values[i]
+            val_str = _numlabel(v) if isinstance(v, (int, float)) and not isinstance(v, bool) else str(v)
+        band_cy = cy + band_h / 2.0
+        # a value-proportional band can now be a thin sliver — too narrow to hold a label INSIDE.
+        # auto-route those to a side leader so the honest geometry stays legible (never inflate the
+        # band just to fit its text).
+        too_thin = labels == "inside" and band_w < 0.85
+        if labels == "inside" and not too_thin:
+            tc = _legible_ink(cols[i])
+            lsize = fit_text_size([(str(lab), True)], max(0.4, band_w - 0.24), band_h - 0.06, 14,
+                                  font=font, min_size=8)
+            runs = [[(str(lab), lsize, tc, True, False, font)]]
+            if val_str:
+                runs.append([(val_str, max(8.0, lsize - 2), tc, False, False, font)])
+            text(slide, bx, cy, band_w, band_h, runs, align=PP_ALIGN.CENTER,
+                 anchor=MSO_ANCHOR.MIDDLE, space_after=0, line_spacing=0.98)
+        elif too_thin:
+            lx = bx + band_w + 0.16
+            connector(slide, (bx + band_w, band_cy), (lx - 0.04, band_cy),
+                      color=MUTE, width=1.0, arrow=False)
+            runs = [(str(lab), 11.5, ic, True, False, font)]
+            if val_str:
+                runs.append(("   " + val_str, 11.5, MUTE, False, False, font))
+            text(slide, lx, cy, max(0.6, x + w - lx), band_h, [runs],
+                 anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        else:
+            lx = x + w_area + 0.22
+            connector(slide, (bx + band_w, band_cy), (lx - 0.06, band_cy),
+                      color=MUTE, width=1.0, arrow=False)
+            runs = [(str(lab), 12.5, ic, True, False, font)]
+            if val_str:
+                runs.append(("   " + val_str, 12.5, MUTE, False, False, font))
+            text(slide, lx, cy, max(0.6, x + w - lx), band_h, [runs],
+                 anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        cy += band_h
+    return cy
+
+
+def pyramid(slide, x, y, w, h, tiers, **kw):
+    """A PYRAMID (narrow top → wide base) — the foundation/hierarchy taper. Thin wrapper over
+    :func:`tier_stack` (``mode='pyramid'``)."""
+    return tier_stack(slide, x, y, w, h, tiers, mode="pyramid", **kw)
+
+
+def funnel(slide, x, y, w, h, tiers, **kw):
+    """A FUNNEL (wide top → narrow) — the stage-by-stage drop-off taper. Thin wrapper over
+    :func:`tier_stack` (``mode='funnel'``)."""
+    return tier_stack(slide, x, y, w, h, tiers, mode="funnel", **kw)
+
+
+def gantt(slide, x, y, w, tasks, *, axis_min=None, axis_max=None, ticks=None, tick_labels=None,
+          lanes=None, today=None, today_label="TODAY", row_h=0.42, label_w=2.4,
+          accents=None, highlight=None, font=None):
+    """A dated task-bar / swimlane ROADMAP — a left label column, a quarter/month tick grid, and one
+    rounded bar per task row, all keyed to the SHARED ``axis_scale`` value→x mapper so bar geometry
+    can never drift. ``tasks = [(label, start, end)]`` or ``(label, start, end, lane_or_accent_idx)``
+    with numeric ``start``/``end`` on the same axis (dates as ordinals or quarter numbers).
+
+    ``axis_min``/``axis_max`` fix the axis (default: span the tasks). ``ticks`` + ``tick_labels`` draw
+    the vertical grid (e.g. quarter boundaries labelled ``Q1 Q2 …`` — the categorical roadmap-board
+    mode uses this SAME path). ``lanes`` (a list of lane names) groups rows into faintly-tinted,
+    labelled swimlane bands — then a task's 4th element is its LANE index; without ``lanes`` the 4th
+    element is an ACCENT index into ``accents``. ``today`` drops a vertical marker line, captioned ``today_label`` (default "TODAY" — set it
+    on a non-English deck, e.g. ``today_label="今天"``; it was the library's only hardcoded UI string); ``highlight``
+    (a flat task index) recolours one bar. **Fails loudly** (``ValueError``) if a bar falls off the
+    axis, on the ``timeline``/``vstack`` precedent.
+
+    **VERTICAL BUDGET (size your region for it — the height is DERIVED, not fitted):** the board is
+    ``header_h(≈0.5) + Σ tasks·row_h + Σ lanes·(lane_head + band pad)`` tall ≈ ``0.5 + n_tasks·row_h
+    + n_lanes·0.5`` at the default ``row_h=0.42``. A 3-lane / 9-task board is ≈ 5.3in — near a full
+    content band. If that overflows your slide, lower ``row_h`` (~0.34), split lanes across two
+    slides, or drop a lane; there is no auto-shrink. Returns the bottom y."""
+    if not tasks:
+        raise ValueError("gantt() needs at least one task")
+    lo = axis_min if axis_min is not None else min(t[1] for t in tasks)
+    hi = axis_max if axis_max is not None else max(t[2] for t in tasks)
+    if hi <= lo:
+        hi = lo + 1
+    x0 = x + label_w
+    chart_w = w - label_w
+    if chart_w <= 0.5:
+        raise ValueError("gantt(): label_w leaves no room for bars — reduce label_w or grow w")
+    X, _draw = axis_scale(x0, chart_w, lo, hi)         # the ONE shared value→x mapper
+    ink = DEEP
+    header_h = 0.34 if (ticks or tick_labels) else 0.06
+    lane_head_h = 0.30
+    lane_gap = 0.12
+    pool = [_as_rgbc(c) for c in accents] if accents else list(ACCENTS)
+    # ---- lay rows out (grouped by lane if given), recording every bar's y first
+    groups = []
+    if lanes:
+        for li, lname in enumerate(lanes):
+            groups.append((li, lname, [(ti, t) for ti, t in enumerate(tasks)
+                                       if len(t) > 3 and t[3] == li]))
+    else:
+        groups.append((None, None, list(enumerate(tasks))))
+    rows_out, lane_bands = [], []
+    cy = y + header_h
+    for li, lname, lt in groups:
+        band_top = cy
+        if lname is not None:
+            cy += lane_head_h
+        for ti, t in lt:
+            rows_out.append((ti, t, cy, li))
+            cy += row_h
+        if lname is not None:
+            lane_bands.append((li, lname, band_top, cy - band_top))
+        cy += lane_gap
+    chart_bottom = cy - lane_gap
+    grid_top = y + header_h
+    # ---- lane band backgrounds (behind), then gridlines, then bars/labels on top
+    for li, lname, bt, bh in lane_bands:
+        box(slide, x, bt, w, bh, fill=tint(pool[li % len(pool)], 0.06))
+    if ticks:
+        # gridlines/today are CONNECTORS (not filled boxes) so a full-height line crossing the
+        # swimlane band containers is never mis-flagged as escaping one of them
+        tls = tick_labels if tick_labels is not None else [_numlabel(t) for t in ticks]
+        sw, _sh = _slide_size(slide)
+        for t, lbl in zip(ticks, tls):
+            gx = X(t)
+            connector(slide, (gx, grid_top), (gx, chart_bottom),
+                      color=RGBColor(0xE4, 0xE7, 0xEC), width=1.0, arrow=False)
+            lxp = max(0.05, min(gx - 0.6, sw - 1.25))
+            text(slide, lxp, y, 1.2, header_h - 0.02, [[(str(lbl), 10, MUTE, True, False, font)]],
+                 align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM, space_after=0)
+    if today is not None:
+        tx = X(today)
+        connector(slide, (tx, grid_top), (tx, chart_bottom), style="dashed",
+                  color=MAGENTA, width=1.4, arrow=False)
+    for li, lname, bt, bh in lane_bands:
+        # keep the lane's HUE as its key, but darken it until the header clears contrast on the
+        # light same-hue band (raw GOLD/TEAL on their own 6%-tint read ~3:1 otherwise).
+        lc = _darken_to(pool[li % len(pool)], tint(pool[li % len(pool)], 0.06))
+        text(slide, x, bt + 0.01, label_w - 0.12, lane_head_h,
+             [[(str(lname).upper(), 10, lc, True, False, font)]],
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    for ti, t, row_top, li in rows_out:
+        lab, s0, e0 = t[0], t[1], t[2]
+        bx0, bx1 = X(s0), X(e0)
+        if bx1 < bx0 or bx0 < x0 - 1e-6 or bx1 > x0 + chart_w + 1e-6:
+            raise ValueError(f"gantt(): task '{lab}' [{s0}, {e0}] falls outside the axis "
+                             f"[{lo}, {hi}] — widen axis_min/axis_max or fix the dates")
+        bar_h = row_h * 0.56
+        by = row_top + (row_h - bar_h) / 2.0
+        if highlight is not None and ti == highlight:
+            col = MAGENTA
+        elif lanes is not None:
+            col = pool[(li or 0) % len(pool)]
+        elif len(t) > 3 and t[3] is not None:
+            col = pool[int(t[3]) % len(pool)]
+        else:
+            # `pool`, not BLUE. A plain 3-tuple task took the hardcoded default while `accents=`
+            # was honoured only on the lane / 4th-element paths, so gantt(accents=[<deck accent>])
+            # with ordinary tasks drew every bar in deckkit's default blue — a silent breach of
+            # SKILL.md's 🔴 "never ship deckkit's default blue", with no backstop anywhere.
+            # Behaviour is unchanged when nothing is passed: ACCENTS[0] IS BLUE, so an un-themed
+            # deck renders byte-identically and a themed one finally gets its own colour.
+            col = pool[0]
+        box(slide, bx0, by, max(bx1 - bx0, 0.06), bar_h, fill=col, round=True, r=bar_h / 2.0)
+        text(slide, x, row_top, label_w - 0.12, row_h,
+             [[(str(lab), 11.5, ink, ti == highlight, False, font)]],
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    bottom = chart_bottom
+    if today is not None:
+        text(slide, X(today) - 0.6, chart_bottom + 0.04, 1.2, 0.24,
+             [[(str(today_label), 8, MAGENTA, True, False, font)]],
+             align=PP_ALIGN.CENTER, space_after=0)
+        bottom = chart_bottom + 0.3
+    return bottom
+
+
+def harvey_ball(slide, cx, cy, level, *, d=0.24, accent=None, track=None):
+    """A HARVEY-BALL rating glyph — an empty ring outline with a filled wedge swept ``level/4`` of
+    360° (``level`` 0..4; 0 empty, 4 full), the compact "how much" mark for a scorecard cell.
+    Drawn as an ``MSO_SHAPE.PIE`` whose swept angle is set through the shape's ``adjustments`` (start
+    12 o'clock, clockwise); ``level==4`` is a solid disc and ``level==0`` just the ring, so the pie
+    never hits its degenerate full-turn. ``(cx, cy)`` is the CENTRE and ``d`` the diameter (inches).
+    ``accent`` fills the wedge; ``track`` colours the ring — contrast-aware, so the outline stays
+    visible on white. Returns the wedge shape (pie/disc), or the ring when empty."""
+    acc = _as_rgbc(accent) if accent is not None else DEEP
+    tr = _as_rgbc(track) if track is not None else RGBColor(0xB6, 0xBC, 0xC8)
+    lvl = max(0, min(4, int(round(level))))
+    r = d / 2.0
+    x0, y0 = cx - r, cy - r
+    outline = tr if contrast_ratio(tr, WHITE) >= 1.25 else _blend(acc, WHITE, 0.5)
+    ring = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(x0), Inches(y0), Inches(d), Inches(d)))
+    ring.fill.solid(); ring.fill.fore_color.rgb = WHITE
+    ring.line.color.rgb = outline; ring.line.width = Pt(1.1); ring.shadow.inherit = False
+    wedge = None
+    if lvl >= 4:
+        wedge = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(x0), Inches(y0), Inches(d), Inches(d)))
+        wedge.fill.solid(); wedge.fill.fore_color.rgb = acc
+        wedge.line.color.rgb = outline; wedge.line.width = Pt(1.1); wedge.shadow.inherit = False
+    elif lvl >= 1:
+        # sweep clockwise from 12 o'clock (270° in DrawingML, where 0°=east). BOTH angles must stay
+        # in [0, 360): LibreOffice CLAMPS an end angle past 360°, so we wrap it with mod and let the
+        # renderer sweep clockwise from start to end (sweep = (end-start) mod 360 = level/4·360°).
+        start = 270.0
+        end = (start + (lvl / 4.0) * 360.0) % 360.0
+        wedge = _flat(slide.shapes.add_shape(MSO_SHAPE.PIE, Inches(x0), Inches(y0), Inches(d), Inches(d)))
+        wedge.fill.solid(); wedge.fill.fore_color.rgb = acc
+        wedge.line.fill.background(); wedge.shadow.inherit = False
+        # python-pptx pie adj values are angle_deg × 0.6 (the default 0..270° pie reads [0.0, 162.0])
+        try:
+            wedge.adjustments[0] = start * 0.6
+            wedge.adjustments[1] = end * 0.6
+        except Exception:
+            pass
+    return wedge if wedge is not None else ring
+
+
+_EVAL_MARKS = {"yes": ("✓", RGBColor(0x1F, 0x9D, 0x55)), "y": ("✓", RGBColor(0x1F, 0x9D, 0x55)),
+               "true": ("✓", RGBColor(0x1F, 0x9D, 0x55)),
+               "no": ("✕", RGBColor(0xC6, 0x3A, 0x33)), "n": ("✕", RGBColor(0xC6, 0x3A, 0x33)),
+               "false": ("✕", RGBColor(0xC6, 0x3A, 0x33)),
+               "partial": ("◐", RGBColor(0xD9, 0x8A, 0x1E)), "maybe": ("◐", RGBColor(0xD9, 0x8A, 0x1E))}
+
+def _eval_mark(slide, cx, cy, val, *, font=None, size=15):
+    """Draw a semantic check/cross/partial glyph (✓ green · ✕ red · ◐ amber) centred at (cx, cy)."""
+    glyph, col = _EVAL_MARKS.get(str(val).strip().lower(), ("◐", RGBColor(0xD9, 0x8A, 0x1E)))
+    text(slide, cx - 0.3, cy - 0.18, 0.6, 0.36, [[(glyph, size, col, True, False, font)]],
+         align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+
+
+def eval_matrix(slide, x, y, w, options, criteria, cells, *, mark="ball", recommend=None,
+                row_h=0.42, legend=True, accents=None, ink=None, font=None,
+                recommend_label="Recommended", scale_label="SCALE"):
+    """A decision / OPTION-vs-CRITERIA scoring grid: a header row of option names (columns), a left
+    column of criteria labels (rows), and a cell grid. ``cells`` is a 2-D list ``cells[row][col]``:
+    ``0..4`` for ``mark='ball'`` (a :func:`harvey_ball` per cell) or ``'yes'``/``'no'``/``'partial'``
+    for ``mark='mark'`` (semantic ✓/✕/◐). ``recommend=<col idx>`` tints that column and drops a
+    ``corner_tab`` "RECOMMENDED" on it — foreground the ONE option the analysis picks. ``legend=True``
+    adds a small on-canvas 0–100 % harvey-ball key (ball mode only). ``accents[0]`` sets the
+    recommend/ball hue; ``ink`` the label colour. Pass ``recommend_label``/``scale_label`` to
+    translate the chrome on a non-English deck (推荐方案 / 评分). Returns the bottom y."""
+    ic = ink if ink is not None else DEEP
+    nopt, ncrit = len(options), len(criteria)
+    if nopt == 0 or ncrit == 0:
+        raise ValueError("eval_matrix() needs at least one option and one criterion")
+    crit_w = min(3.0, max(1.4, w * 0.30))
+    col_w = (w - crit_w) / nopt
+    head_h = 0.5
+    acc = _as_rgbc(accents[0]) if accents else BLUE
+    if recommend is not None and 0 <= recommend < nopt:
+        rx = x + crit_w + recommend * col_w
+        box(slide, rx, y + head_h, col_w, ncrit * row_h, fill=tint(acc, 0.10), round=True, r=0.06)
+        corner_tab(slide, rx, y, col_w, recommend_label, fill=acc, w=min(1.7, col_w + 0.3))
+    for c, opt in enumerate(options):
+        ox = x + crit_w + c * col_w
+        emph = (recommend == c)
+        text(slide, ox, y, col_w, head_h, [[(str(opt), 12, acc if emph else ic, True, False, font)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    # separators are CONNECTORS (not filled boxes) so a full-width rule crossing the tinted
+    # recommend column is never mis-flagged as a node escaping it
+    connector(slide, (x, y + head_h), (x + w, y + head_h),
+              color=RGBColor(0xD9, 0xDD, 0xE4), width=1.2, arrow=False)
+    for r in range(ncrit):
+        ry = y + head_h + r * row_h
+        text(slide, x, ry, crit_w - 0.12, row_h, [[(str(criteria[r]), 11.5, ic, False, False, font)]],
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        for c in range(nopt):
+            ccx = x + crit_w + c * col_w + col_w / 2.0
+            ccy = ry + row_h / 2.0
+            val = cells[r][c]
+            if mark == "ball":
+                harvey_ball(slide, ccx, ccy, val, d=min(row_h * 0.55, col_w * 0.42), accent=acc)
+            else:
+                _eval_mark(slide, ccx, ccy, val, font=font)
+        if r < ncrit - 1:
+            connector(slide, (x, ry + row_h), (x + w, ry + row_h),
+                      color=RGBColor(0xEE, 0xF0, 0xF3), width=0.8, arrow=False)
+    bottom = y + head_h + ncrit * row_h
+    if legend and mark == "ball":
+        ly = bottom + 0.2
+        lx = x + crit_w
+        text(slide, x, ly, crit_w - 0.12, 0.24, [[(scale_label, 9, MUTE, True, False, font)]],
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        for k in range(5):
+            hx = lx + k * 0.92
+            harvey_ball(slide, hx + 0.11, ly + 0.11, k, d=0.2, accent=acc)
+            text(slide, hx + 0.26, ly, 0.62, 0.24, [[(f"{k * 25}%", 9, MUTE, False, False, font)]],
+                 anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        bottom = ly + 0.32
+    return bottom
+
+
+def _heat_color(v, vmin, vmax, scale, accent, *, div_zero=False):
+    """Map a value to a cell fill for :func:`heat_matrix`. ``scale='seq'`` light→accent · ``'div'``
+    blue↔red through a neutral midpoint · ``'risk'`` green→amber→red (a risk grid). ``div_zero`` pins
+    the diverging neutral at the VALUE 0 (two-slope: 0→neutral, using full contrast on each sign)
+    so a signed delta reads its sign correctly — set by heat_matrix when no explicit range is given."""
+    span = (vmax - vmin) or 1.0
+    t = max(0.0, min(1.0, (float(v) - vmin) / span))
+    acc = _as_rgbc(accent) if accent is not None else BLUE
+    if scale == "div":
+        cool, mid, warm = RGBColor(0x2C, 0x6F, 0xBB), RGBColor(0xF2, 0xF3, 0xF5), RGBColor(0xC6, 0x3A, 0x33)
+        if div_zero:
+            # anchor neutral at 0, not the range midpoint — a true 0 must read neutral, positives warm,
+            # negatives cool. Two-slope keeps full contrast on each sign for asymmetric ranges.
+            hi_pos = vmax if vmax > 0 else 1.0
+            lo_neg = vmin if vmin < 0 else -1.0
+            fv = float(v)
+            t = 0.5 + 0.5 * (fv / hi_pos) if fv >= 0 else 0.5 - 0.5 * (fv / lo_neg)
+            t = max(0.0, min(1.0, t))
+        return _blend(cool, mid, t / 0.5) if t < 0.5 else _blend(mid, warm, (t - 0.5) / 0.5)
+    if scale == "risk":
+        green, amber, red = RGBColor(0x2E, 0x8B, 0x57), RGBColor(0xE0, 0xA3, 0x2E), RGBColor(0xC6, 0x3A, 0x33)
+        return _blend(green, amber, t / 0.5) if t < 0.5 else _blend(amber, red, (t - 0.5) / 0.5)
+    return tint(acc, 0.14 + 0.86 * t)                  # 'seq' (default): light → full accent
+
+
+def heat_matrix(slide, x, y, w, h, values, row_labels, col_labels, *, scale="seq",
+                cell_labels=None, legend=True, vmin=None, vmax=None, accent=None, font=None):
+    """A category×category HEAT MATRIX — solid-filled cells coloured by value, with two-edge axis
+    labels (``col_labels`` across the top, ``row_labels`` down the left). ``values`` is a 2-D list
+    ``values[row][col]``. The value→colour mapper is ``scale='seq'`` (light→accent), ``'div'``
+    (blue↔red through neutral — signed deltas: the neutral is pinned at the VALUE 0, so a 0 reads
+    neutral, positives warm, negatives cool; pass an explicit ``vmin``/``vmax`` to instead fix the
+    range and its midpoint), or ``'risk'`` (green→amber→red — a 5×5 risk grid);
+    ``vmin``/``vmax`` fix the range (default data min/max). ``cell_labels`` prints values in the cells
+    — pass ``True`` to show the numbers, or a 2-D list of strings — in a CONTRAST-AWARE colour
+    (``contrast_ratio`` picks dark-on-light / light-on-dark). ``legend=True`` adds a colour-bar strip
+    with the min/max. Returns the bottom y."""
+    nr, nc = len(row_labels), len(col_labels)
+    if nr == 0 or nc == 0:
+        raise ValueError("heat_matrix() needs non-empty row_labels and col_labels")
+    flat = [float(v) for row in values for v in row]
+    lo = vmin if vmin is not None else min(flat)
+    hi = vmax if vmax is not None else max(flat)
+    # diverging + no caller range → anchor neutral at 0 so signed deltas read their sign correctly
+    div_zero = (scale == "div" and vmin is None and vmax is None)
+    rlab_w = min(2.2, max(1.0, w * 0.2))
+    clab_h = 0.3
+    leg_h = 0.5 if legend else 0.0
+    gx, gy = x + rlab_w, y + clab_h
+    grid_w, grid_h = w - rlab_w, h - clab_h - leg_h
+    cw, ch = grid_w / nc, grid_h / nr
+    for c, cl in enumerate(col_labels):
+        text(slide, gx + c * cw, y, cw, clab_h, [[(str(cl), 10.5, MUTE, True, False, font)]],
+             align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.BOTTOM, space_after=0)
+    for r in range(nr):
+        text(slide, x, gy + r * ch, rlab_w - 0.1, ch, [[(str(row_labels[r]), 10.5, DEEP, True, False, font)]],
+             align=PP_ALIGN.RIGHT, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+        for c in range(nc):
+            col = _heat_color(values[r][c], lo, hi, scale, accent, div_zero=div_zero)
+            box(slide, gx + c * cw, gy + r * ch, cw, ch, fill=col)
+            lbl = None
+            if cell_labels is True:
+                lbl = _numlabel(values[r][c])
+            elif cell_labels is not None:
+                lbl = str(cell_labels[r][c])
+            if lbl is not None:
+                tc = _legible_ink(col)
+                text(slide, gx + c * cw, gy + r * ch, cw, ch, [[(lbl, 10.5, tc, True, False, font)]],
+                     align=PP_ALIGN.CENTER, anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    bottom = gy + grid_h
+    if legend:
+        lgy = bottom + 0.16
+        bar_w = min(2.6, max(1.4, grid_w * 0.6))
+        nseg = 24
+        for i in range(nseg):
+            vv = lo + (i / (nseg - 1)) * (hi - lo)
+            box(slide, gx + i * bar_w / nseg, lgy, bar_w / nseg + 0.006, 0.14,
+                fill=_heat_color(vv, lo, hi, scale, accent, div_zero=div_zero))
+        text(slide, gx, lgy + 0.16, 1.2, 0.2, [[(_numlabel(lo), 9, MUTE, False, False, font)]],
+             align=PP_ALIGN.LEFT, space_after=0)
+        text(slide, gx + bar_w - 1.2, lgy + 0.16, 1.2, 0.2, [[(_numlabel(hi), 9, MUTE, False, False, font)]],
+             align=PP_ALIGN.RIGHT, space_after=0)
+        bottom = lgy + 0.38
+    return bottom
+
+
+def device_frame(slide, path, x, y, w, h, *, chrome="browser", url=None, accent=None,
+                 dark=False, round=True):
+    """Place a screenshot in a DEVICE / BROWSER bezel so a product shot reads as a real UI, not a bare
+    rectangle. ``chrome='browser'`` = a rounded window + a top chrome bar with 3 traffic-light dots and
+    a URL pill (``url`` text); ``chrome='phone'`` = a dark rounded bezel with a notch. The real
+    screenshot is placed with ``picture(fit='cover', round=...)`` clipped to the inner rounded rect
+    (via :func:`_round_pic_geom`). ``dark=True`` themes the browser chrome dark. ``accent`` is
+    ACCEPTED AND CURRENTLY UNUSED — the bezel is deliberately neutral so the screenshot inside it
+    is the only coloured thing on the slide; it is kept in the signature for call-compatibility
+    with the other framing helpers. Returns the inner picture rect ``(x, y, w, h)``."""
+    if chrome == "phone":
+        bezel = RGBColor(0x14, 0x16, 0x1C)
+        box(slide, x, y, w, h, fill=bezel, round=True, r=min(0.28, w * 0.12, h * 0.12))
+        pad = max(0.06, min(w, h) * 0.045)
+        ix, iy, iw, ih = x + pad, y + pad, w - 2 * pad, h - 2 * pad
+        picture(slide, path, ix, iy, iw, ih, fit="cover", round=round, r=(0.12 if round else None))
+        nw, nh = w * 0.36, 0.16                        # the top notch, over the screen
+        box(slide, x + w / 2.0 - nw / 2.0, iy, nw, nh, fill=bezel, round=True, r=nh / 2.0)
+        return (ix, iy, iw, ih)
+    if chrome not in ("browser",):
+        raise ValueError("device_frame(): chrome must be 'browser' or 'phone'")
+    body_c = RGBColor(0x1E, 0x22, 0x2B) if dark else WHITE
+    chrome_c = RGBColor(0x2A, 0x2E, 0x37) if dark else RGBColor(0xED, 0xEE, 0xF1)
+    border = RGBColor(0x3A, 0x40, 0x4C) if dark else RGBColor(0xD7, 0xDB, 0xE2)
+    r_out = 0.12
+    box(slide, x, y, w, h, fill=body_c, line=border, line_w=1.0, round=True, r=r_out)
+    ch_h = min(0.34, h * 0.16)                          # < 0.35 so the chrome bar isn't a lint container
+    box(slide, x, y, w, ch_h, corners="top", r=r_out, fill=chrome_c)
+    dr = min(0.062, ch_h * 0.26)
+    for i, lc in enumerate((RGBColor(0xFF, 0x5F, 0x57), RGBColor(0xFE, 0xBC, 0x2E), RGBColor(0x28, 0xC8, 0x40))):
+        o = _flat(slide.shapes.add_shape(MSO_SHAPE.OVAL, Inches(x + 0.14 + i * (dr * 2 + 0.06)),
+                                         Inches(y + ch_h / 2.0 - dr), Inches(2 * dr), Inches(2 * dr)))
+        o.fill.solid(); o.fill.fore_color.rgb = lc; o.line.fill.background(); o.shadow.inherit = False
+    pill_x = x + 0.14 + 3 * (dr * 2 + 0.06) + 0.14
+    pill_w = max(0.9, w - (pill_x - x) - 0.5)
+    pill_h = ch_h * 0.62
+    box(slide, pill_x, y + ch_h / 2.0 - pill_h / 2.0, pill_w, pill_h,
+        fill=(RGBColor(0x14, 0x18, 0x20) if dark else WHITE), line=border, line_w=0.8,
+        round=True, r=pill_h / 2.0)
+    if url:
+        text(slide, pill_x + 0.14, y + ch_h / 2.0 - pill_h / 2.0, pill_w - 0.28, pill_h,
+             [[(str(url), 9.5, (PALE if dark else MUTE), False, False, MONO)]],
+             anchor=MSO_ANCHOR.MIDDLE, space_after=0)
+    pad = 0.06
+    ix, iy = x + pad, y + ch_h + 0.02
+    iw, ih = w - 2 * pad, h - ch_h - 0.02 - pad
+    picture(slide, path, ix, iy, iw, ih, fit="cover", round=round,
+            r=(max(0.03, r_out - 0.06) if round else None))
+    return (ix, iy, iw, ih)
+
+
+if __name__ == "__main__":          # `python3 deckkit.py deck.pptx` → lint a finished file
+    import sys
+    if len(sys.argv) > 1:
+        lint_layout(Presentation(sys.argv[1]))

@@ -24,8 +24,10 @@ SPECS = {
  'ppt-design-skill': ('ppt-design-skill-ja','build_ppt_design_repository_example.py',['--input','examples/repositories/ppt-design-skill/input/data.json']),
  'magic-slide': ('magic-slide-ja','build_magic_slide_repository_example.py',['--input','examples/repositories/magic-slide/input/data.json']),
  'image-to-editable': ('image-to-editable-ppt-ja','build_image_editable_repository_example.py',['--replay','--source-dir','.build/recorded-image-editable','--output-dir','examples/repositories/image-to-editable','--upstream-dir','.build/actual-upstreams/ningzimu__image-to-editable-ppt-skill']),
+ 'react-slide-deck': ('react-slide-deck-ja','build_reactdeck_repository_example.py',['--input','examples/repositories/react-slide-deck/input/data.json']),
+ 'slide-maker': ('slide-maker-ja','build_slide_maker_repository_example.py',[]),
 }
-FRAGMENTS = ['web','native','japanese','dashi','codex-image','multiagent','knowledgecat','seaslides','pptdesign','magicslide','imageeditable']
+FRAGMENTS = ['web','native','japanese','dashi','codex-image','multiagent','knowledgecat','seaslides','pptdesign','magicslide','imageeditable','reactdeck','slidemaker']
 CODE_SUFFIXES = {'.py','.js','.mjs','.cjs','.jsx','.ts','.tsx','.css','.html','.json','.yaml','.yml','.md','.txt','.toml','.xml','.csv','.svg','.sh','.ps1','.psm1','.ini','.cfg','.in','.sql','.ttf','.woff','.woff2'}
 SKIP_PARTS = {'.git','node_modules','__pycache__','.venv','venv','.pytest_cache','.cache','releases','public'}
 SPECIAL = {
@@ -34,6 +36,8 @@ SPECIAL = {
  'johnson7788/MultiAgentPPT': ['backend/save_ppt/ppt_template_0717.pptx'],
 }
 NOTES = {
+ 'slide-maker':'原典deckkit/native_chartでnative図とグラフを作る。入力のPython実探索、1〜15の全15通り、グラフ全30値、PowerPoint全5枚と独立critic/blind readを照合する。計画比較は制作後に追加した記録。完成例はselfread用途で、人による正式採用・投影可読性・全時系列工程の完走を主張しない。',
+ 'react-slide-deck':'原典en-context-engineeringのReact App、SlideLayout、useSlideScale、Motion variantsで制作する。training-cycleとBold Signalを保持し、CJK字体、reduced-motion、週別タブ、ページ同期を補う。原典依存のVite8/Tailwind4.2.1衝突はTailwind4.2.2への最小補正で解消し、元lockと差分と固定再現lockを保存。HTTPで表示する。',
  'office-powerpoint-mcp':'原典のstdio MCPへ実際にツール呼び出しを送る。mcp 1.30.0を使う。文字、テーブル、ネイティブチャートを生成し、PowerPoint本体で確認する。サーバーはアーカイブ済み。',
  'mck-design':'原典DeckBuilderとMckEngineを使う。原典の存在しないlayouts参照を前提にせず、同梱engine-apiと実コードを読む。今回のS3/S4検査はPASS、98点。自動採点をデザイン承認とは扱わない。',
  'jinba-consulting':'原典new_deckで固有パーツを展開してから日本語を組み、原典html_to_pptxで変換する。追加パーツ2ページの文字サイズ・行間の0.8補正は作例のconversion-corrections.jsonに記録。原典の検査を削除しない。',
@@ -164,15 +168,19 @@ def make_kit(case,fork):
    copy(folder/name,workspace/'examples/repositories'/cid/name)
  if cid=='ppt-design-skill':copy(folder/'input/data.json',workspace/'examples/repositories'/cid/'input/data.json')
  if cid=='magic-slide':copy(folder/'input/data.json',workspace/'examples/repositories'/cid/'input/data.json')
+ if cid=='react-slide-deck':
+  for name in ['data.json','package-lock.json']:copy(folder/'input'/name,workspace/'examples/repositories'/cid/'input'/name)
  if cid=='image-to-editable':
   for p in files(folder):copy(p,workspace/'.build/recorded-image-editable'/p.relative_to(folder))
  if cid=='seaslides':
   for p in files(folder):copy(p,workspace/'examples/repositories'/cid/p.relative_to(folder))
  requirements=['python-pptx==1.0.2','Pillow==12.3.0','lxml==6.1.3','fonttools==4.63.0','brotli==1.2.0','beautifulsoup4==4.15.0','filelock==4.1.1']
+ if cid=='react-slide-deck':requirements=[r.replace('fonttools==4.63.0','fonttools==4.66.1')for r in requirements]
  if cid=='office-powerpoint-mcp':requirements.append('mcp[cli]==1.30.0')
  if cid=='multiagent-ppt':requirements.append('requests==2.34.2')
  if cid=='seaslides':requirements.append('pypdf==6.20.1')
  if cid=='ppt-design-skill':requirements.append('pptx-designer==1.0.0b11')
+ if cid=='slide-maker':requirements+=['PyMuPDF==1.28.2','numpy==2.5.4','matplotlib==3.11.2']
  if cid=='image-to-editable':requirements+=['PyMuPDF==1.28.2','openai==3.29.0','numpy==2.5.4','requests==2.34.2','PyYAML==6.0.3']
  write(workspace/'requirements-reproduce.txt','\n'.join(requirements)+'\n')
  font=load(ROOT/'data/fonts.json')[0]
@@ -187,10 +195,14 @@ def make_kit(case,fork):
  generation='    & $taskPy tools/'+generator+' '+' '.join(args)+'\n'
  if case['format']=='pptx' and cid!='codex-image-ppt':
   generation='    $taskArgs = @('+','.join('"'+a+'"' for a in args)+')\n    if ($Render) { $taskArgs += "--render" }\n    & $taskPy tools/'+generator+' @taskArgs\n'
+ if cid=='slide-maker':
+  generation='    & $taskPy tools/'+generator+'\n    if ($LASTEXITCODE) { throw "Slide maker generation failed" }\n    if ($Render) { & pwsh -NoProfile -File tools/render_powerpoint.ps1 -PresentationPath examples/repositories/slide-maker/deck.pptx -OutputDirectory examples/repositories/slide-maker/render }\n'
  if cid=='knowledge-cat':
   generation='    $taskArgs = @("--node",$NodePath,"--workspace",$ArtifactWorkspace)\n    if ($Render) { $taskArgs += "--render" }\n    & $taskPy tools/'+generator+' @taskArgs\n'
  if cid=='image-to-editable':
   generation='    & $taskPy tools/'+generator+' '+' '.join(args)+'\n    if ($LASTEXITCODE) { throw "Recorded image reconstruction replay failed" }\n    if ($Render) { & pwsh -NoProfile -File tools/render_powerpoint.ps1 -PresentationPath examples/repositories/image-to-editable/deck.pptx -OutputDirectory examples/repositories/image-to-editable/render }\n'
+ if cid=='react-slide-deck':
+  generation='    & $taskPy tools/'+generator+' '+' '.join(args)+' --node $NodePath\n'
  if cid=='codex-image-ppt':
   generation+='    if ($Render) { & pwsh -NoProfile -File tools/render_powerpoint.ps1 -PresentationPath examples/repositories/codex-image-ppt/codex-image-ppt.pptx -OutputDirectory examples/repositories/codex-image-ppt/render }\n'
  fontsetup=''
@@ -199,6 +211,7 @@ def make_kit(case,fork):
  script='param([switch]$Render)\n$ErrorActionPreference = "Stop"\n$taskRoot = Join-Path $PSScriptRoot "workspace"\nPush-Location -LiteralPath $taskRoot\ntry {\n    & python -m venv .build/ppt-master-venv\n    if ($LASTEXITCODE) { throw "Python environment failed" }\n    $taskPy = Join-Path $taskRoot ".build/ppt-master-venv/Scripts/python.exe"\n    & $taskPy -m pip install -r requirements-reproduce.txt\n    if ($LASTEXITCODE) { throw "Python dependencies failed" }\n'+fontsetup+setup+generation+'    if ($LASTEXITCODE) { throw "Generation failed" }\n    & $taskPy tools/mark_reproduced.py\n    Write-Host "Generated: $taskRoot/examples/repositories/'+cid+'"\n    Write-Host "Open the actual output and review all pages before using it."\n} finally { Pop-Location }\n'
  if cid=='knowledge-cat':
   script=script.replace('param([switch]$Render)','param([switch]$Render, [Parameter(Mandatory=$true)][string]$ArtifactWorkspace, [string]$NodePath="node")')
+ if cid=='react-slide-deck':script=script.replace('param([switch]$Render)','param([string]$NodePath="node")')
  write(kit/'reproduce/Reproduce.ps1',script)
  mark="from pathlib import Path\nimport json, hashlib\np=Path('examples/repositories/"+cid+"')\nartifact=p/"+repr(Path(case['artifact_download']).name if case['format']=='pptx' else Path(case['preview']).name)+"\n(p/'QA.json').write_text(json.dumps({'status':'generated_awaiting_review','artifact_sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),'visual_review':'Review your reproduced output; the original catalog QA is not transferred to a new run.'},ensure_ascii=False,indent=2),encoding='utf-8')\n"
  write(workspace/'tools/mark_reproduced.py',mark)
@@ -220,6 +233,14 @@ def make_kit(case,fork):
   readme+='\n表示・編集・保存には、生成フォルダーで `python source/ja-runtime/scripts/serve.py index.html --no-open` を実行し、表示された /deck/ のURLを開きます。静的サイトのフロートは表示とページ移動の確認用です。原典の人によるrevision/adoptionはpendingとして残し、今回のagent QAを人の承認とは扱いません。\n'
  if cid=='image-to-editable':
   readme+='\nこの再出力は保存済みのpage manifestと分離済みアイコンを原典CLIで組み直します。新しい画像編集やworkerを再実行するものではありません。新規入力は日本語SKILLと原典のbuiltin-imagegen/worker契約から制作します。本文・図形とbitmapの編集範囲を区別し、元画像と比較してください。原典CLIのPyMuPDF等には個別の依存ライセンスがあります。\n'
+ if cid=='react-slide-deck':
+  readme=readme.replace('PowerPoint本体でPNG/PDFを描画する場合は、Noto Sans JPをインストール済みのWindows / PowerPoint / pwshを使用し、-Renderを指定します。HTMLは生成したファイルを開き、原典のページ操作を使います。','React版はHTTPで表示します。生成先へ移動して `python -m http.server 8000 --bind 127.0.0.1` を実行し、表示されたlocalhostのURLを開いてください。PPTX・PowerPoint描画の-Renderには対応しません。')
+  readme+='\nWindowsではフォント用のnative DLLが深いパスで読み込めないことがあります。ZIPを短いパス（例 M:\\slides\\react-deck）へ展開してください。NodeがPATHにない場合は `-NodePath "node.exeの絶対パス"` を指定します。元Vite8を保持し、互換性のあるTailwind4.2.2と記録したlockでnpm ciを実行します。\n'
+ if cid=='slide-maker':
+  readme=readme.replace('Python 3.13、Node.js、必要に応じてGit Bashを用意。','Python 3.13を用意。PowerPoint描画を行う場合はPowerPointとpwshも必要。')
+  readme=readme.replace('次を実行（project内venv・固定npm依存・公式固定commitの書体を取得します）。','次を実行（キット内の原典と新しいPython仮想環境で生成します）。')
+  readme=readme.replace('HTMLは生成したファイルを開き、原典のページ操作を使います。','生成したdeck.pptxをPowerPointで開きます。')
+  readme=readme.replace('Noto Sans JPをインストール済みのWindows / PowerPoint / pwsh','游ゴシック（Yu Gothic）が利用できるWindows / PowerPoint / pwsh')
  write(kit/'REPRODUCE.md',readme);write(folder/'REPRODUCE.md',readme)
  zip_folder(kit,ROOT/'downloads'/(cid+'-example-ja.zip'),cid)
  return 'downloads/'+cid+'-example-ja.zip'

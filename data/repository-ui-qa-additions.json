@@ -1,14 +1,14 @@
 {
   "status": "passed_for_recorded_scope",
-  "checked_at": "2026-10-13T18:52:42.229178+00:00",
+  "checked_at": "2026-10-13T20:12:25.947153+00:00",
   "baseline": "data/repository-ui-qa.json (16 repositories)",
-  "current_repository_count": 22,
-  "current_case_count": 25,
-  "current_slide_count": 154,
+  "current_repository_count": 24,
+  "current_case_count": 27,
+  "current_slide_count": 164,
   "catalog": {
     "original_count": 209,
-    "produced_filter_count": 22,
-    "gallery_count": 25,
+    "produced_filter_count": 24,
+    "gallery_count": 27,
     "console_errors": []
   },
   "new_cases": [
@@ -108,6 +108,47 @@
         "dialog_inside_viewport": true,
         "comparison_scroll_width": 378
       }
+    },
+    {
+      "id": "react-slide-deck",
+      "format": "html",
+      "source_zip_download_sha256": "9460ddfd1483a8d3c7080c317f6846052f0060e1dab7fc24ac72311366500cd0",
+      "counter_checks": [
+        "1 / 5",
+        "3 / 5",
+        "4 / 5",
+        "5 / 5"
+      ],
+      "native_next_disabled_at_end": true,
+      "notes": "Japanese per-page notes visible",
+      "original_navigation_to_parent_counter": "Original React next button moved native and outer counter from 2 to 3.",
+      "interactive_tab": "W3 tab shows 初めて読む人に試す; native and parent counters stay at 4 / 5.",
+      "native_runtime_next_disabled_at_end": true,
+      "mobile": {
+        "viewport": 393,
+        "scroll_width": 378,
+        "dialog_left": 8.5,
+        "dialog_right": 369.5,
+        "frame_width": 339,
+        "dialog_inside_viewport": true
+      },
+      "console_errors": []
+    },
+    {
+      "id": "slide-maker",
+      "format": "powerpoint-render",
+      "source_zip_download_sha256": "7fcb77426cca8b38462c061597fb50dbbc30793d81ea06db0de2b54abbb38cc4",
+      "counter_checks": [
+        "1 / 5",
+        "3 / 5",
+        "5 / 5"
+      ],
+      "native_next_disabled_at_end": true,
+      "notes": "Japanese per-page notes visible",
+      "pptx_download_sha256": "3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f",
+      "pdf_download_sha256": "b7bae7855fbfbd38d31ecdd7b9d59354642e8c63c73723ecd1dc6d1e9ee12ba7",
+      "whole_slide_visibility": "Dialog scrolled to top after notes focus; complete page 3 visible. All 5 original PowerPoint renders separately reviewed.",
+      "guide_copy": "Japanese method, actual Python runtime requirements, independently reviewed scope."
     }
   ],
   "screenshots": [
@@ -186,7 +227,30 @@
     {
       "file": "docs/assets/magic-slide-current-05.jpg",
       "sha256": "0ab1e0eae8f5a44e37f3e92f51472031c1dde0f9bbf60136a21aafdad8e7ed97"
+    },
+    {
+      "file": "docs/assets/reactdeck-float-desktop.jpg",
+      "sha256": "1aba59b10af5777b65440da3b7b2821f0959398f1656784ba8cfb40556524211"
+    },
+    {
+      "file": "docs/assets/reactdeck-float-mobile.png",
+      "sha256": "439fe007649074faaa5ea7fde354778b24b243929a34922b3e388c0e3b11c6cc"
+    },
+    {
+      "file": "docs/assets/slidemaker-float-desktop.jpg",
+      "sha256": "dc5ff4c618f179cca5e9d3db43b1731afed657257a5cd81110aa11a10675111f"
+    },
+    {
+      "file": "docs/assets/repository-catalog-24.jpg",
+      "sha256": "f651e59f5608b390c5de939945ef85bd005417ff708979d55c5c18d0e2172922"
     }
   ],
-  "scope": "Six added cases and current 22 repository / 25 deck catalog counts, together with scoped 16-repository baseline. Does not claim every control in all 25 decks or all 209 repositories was executed. Temporary viewport metrics and media overrides were reset."
+  "scope": "Eight added cases and current 24 repository / 27 deck / 164 page catalog counts, together with scoped 16-repository baseline. Does not claim every control in all 27 decks or all 209 repositories was executed. React normal motion, native navigation and W3 tab exercised; 393px modal inspected. PowerPoint slide-maker page 3 / end / notes and actual downloads inspected. Trial guide has no download. Temporary viewport, cache and media overrides reset; QA tab closed.",
+  "local_trial": {
+    "repository": "tfriedel/claude-office-skills",
+    "guide_label": "ローカル試用済み / 配布条件の確認待ち",
+    "download_links": 0,
+    "evidence_link_visible": true,
+    "placeholder": "ローカル試用 / 配布条件を確認中"
+  }
 }

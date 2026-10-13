@@ -4,7 +4,7 @@
 
 ## 現行の制作範囲
 
-22リポジトリ、25冊、154枚。編集可能PPTX 10冊56枚、画像主体PPTX 1冊3枚、固有HTML 14冊95枚。元209件は作者・分類・データを保持し、原典入口を取得・棚卸し済み。残187件は未制作で、取得だけを生成成功に数えない。
+24リポジトリ、27冊、164枚。編集可能PPTX 11冊61枚、画像主体PPTX 1冊3枚、固有HTML 15冊100枚。元209件は作者・分類・データを保持し、原典入口を取得・棚卸し済み。残185件は未制作で、取得だけを生成成功に数えない。
 
 各リポのCLI、MCP、指示型スキル、テンプレート、変換器を使用し、実行記録と原典ファイルのハッシュを保存している。旧共通renderer試作・自己紹介題材の試作は現行件数に含めない。
 
@@ -35,10 +35,12 @@
 | [ppt-design-skill](../examples/repositories/ppt-design-skill/QA.json) | sunchaokun/PPT-Design-Skill | 5 | 編集可能PPTX |
 | [magic-slide](../examples/repositories/magic-slide/QA.json) | daniel-style/magic-slide | 5 | HTML |
 | [image-to-editable](../examples/repositories/image-to-editable/QA.json) | ningzimu/image-to-editable-ppt-skill | 2 | 編集可能PPTX |
+| [react-slide-deck](../examples/repositories/react-slide-deck/QA.json) | code-on-sunday/slide-deck-generator | 5 | HTML |
+| [slide-maker](../examples/repositories/slide-maker/QA.json) | addsumtech/slides_maker | 5 | 編集可能PPTX |
 
 ## 全ページの描画・目視
 
-全154ページの目視確認が完了。PPTXは完成ファイルをMicrosoft PowerPointで開いた59枚のPNGとPDFを生成し、入力SVGや元HTMLだけで代替していない。各冊の描画receiptにPPTXのSHA、ページ順序と出力を記録した。HTML95枚は固有ランタイムで再生し、実表示を確認している。
+全164ページの目視確認が完了。PPTXは完成ファイルをMicrosoft PowerPointで開いた64枚のPNGとPDFを生成し、入力SVGや元HTMLだけで代替していない。各冊の描画receiptにPPTXのSHA、ページ順序と出力を記録した。HTML100枚は固有ランタイムで再生し、実表示を確認している。
 
 今回追加したWeb7冊49枚は全ページを実ブラウザーで再生し、DOMの見出し・ページ位置を照合、実キャプチャを全頁視認した。対象はReveal.js 6枚、Lewis HTML 8枚、minorun Marp 9枚、Neon 6枚、Bento 6枚、make-slide 8枚、Frontend Editable 6枚。Dashi 6枚は別途同じく実ブラウザーで全頁を確認した。先行6冊45枚に、上表の原典別制作を追加している。新規PPTXは実ファイルのPowerPoint描画、HTMLは原典ランタイムの実表示を確認する。
 
@@ -66,9 +68,9 @@ python tools/verify_repository_release.py
 
 この検査は元209件の一致、リポ・冊数・枚数の対応、原典と出力のハッシュ、PNG/PPTX構造、固有HTML runtime、記録された全ページレビュー、ZIPの内容と更新一致を検査する。画像PPTXではjobs/style/state、native生成記録、原典assembler実行、画像media一致、日本語ノートと画像内日本語の目視記録を追加条件とする。失敗した初期コマンドは消さず、同一コマンドの後続成功とログのハッシュで復旧を検証する。
 
-**最終自動検査：152項目通過、問題0件。** [実行結果](../data/release-qa.json)を保存。Jinba 7枚・Japanese Corporate 6枚のXML run locale省略は警告として残し、日本語文字列と実PowerPointの全ページ字形を別途確認している。検査の成功を、画像内の美術品質の自動判定や正式採用として扱わない。
+**最終自動検査：164項目通過、問題0件。** [実行結果](../data/release-qa.json)を保存。Jinba 7枚・Japanese Corporate 6枚のXML run locale省略は警告として残し、日本語文字列と実PowerPointの全ページ字形を別途確認している。検査の成功を、画像内の美術品質の自動判定や正式採用として扱わない。
 
-22派生版と70配布ファイルの内容・SHAを検査。[別フォルダー再現](../data/reproduction-kit-qa.json)では、配布ZIPを新しいフォルダーへ展開し新venvから8形式（minorun-marp-skill9枚、Office-PowerPoint-MCP-Server6枚、MultiAgentPPT4枚、knowledge-cat-ppt-skill5枚、seaslides5枚、PPT-Design-Skill5枚、magic-slide5枚、image-to-editable-ppt-skill2枚）の生成に成功。他キットの独立実行や、全リポの再現確認へ読み替えない。再生成した出力は確認前として扱う。
+24派生版と76配布ファイルの内容・SHAを検査。[別フォルダー再現](../data/reproduction-kit-qa.json)では、配布ZIPを新しいフォルダーへ展開し新venvから10形式（minorun-marp-skill9枚、Office-PowerPoint-MCP-Server6枚、MultiAgentPPT4枚、knowledge-cat-ppt-skill5枚、seaslides5枚、PPT-Design-Skill5枚、magic-slide5枚、image-to-editable-ppt-skill2枚、slides_maker5枚、slide-deck-generator5枚）の生成に成功。他キットの独立実行や、全リポの再現確認へ読み替えない。再生成した出力は確認前として扱う。
 
 ## 現行サイトのUI検証
 
@@ -82,7 +84,7 @@ python tools/verify_repository_release.py
 
 ## 未制作の試行と利用条件
 
-[PPTAgent](../examples/repositories/pptagent/README.md)は固定依存pptagent 1.1.37のWindows import assertにより停止。実際のtraceと環境を保存し、PPTX・完成HTML・レンダー画像は生成していない。22リポの成功数には含めない。原典が要求するLinux（WSL含む）/macOS等を用意することが再開条件で、Windowsでの停止をLinuxでの失敗とは扱わない。
+[PPTAgent](../examples/repositories/pptagent/README.md)は固定依存pptagent 1.1.37のWindows import assertにより停止。実際のtraceと環境を保存し、PPTX・完成HTML・レンダー画像は生成していない。24リポの成功数には含めない。原典が要求するLinux（WSL含む）/macOS等を用意することが再開条件で、Windowsでの停止をLinuxでの失敗とは扱わない。
 
 Mckとminorun-marpはApache-2.0。GuizangとDashiの対象ソースはAGPLの条件を保持する。Dashiの専有PPTX engineはこのHTML経路の配布に含めない。原文LICENSE／NOTICE、書体・素材条件を保持し、サイト編集のCC0を上流へ一括適用しない。
 
@@ -113,3 +115,19 @@ Image to Editableは原典prepare・page worker・build/validate・record・fina
 SeaSlidesの原典npm lockでは[別の依存監査](../data/seaslides-dependency-qa.json)にHigh 1件を記録。原典source/visual gateと実制作の成功は、その依存の解消を意味しない。固定lockを保持し、監査記録をキットへ同梱した。
 
 Space Multi DesignとPresenterは原典ライセンスの不在を確認し、実制作の試行出力はローカルだけに保存。サイトには条件と実行記録を案内し、配布物や22件の成功数に含めない。Starry Slidesは現行MCPプラグインのローカル検査と日本語原稿を準備した段階で、新しいOAuth接続・スライド生成は未実施。これらも未制作の187件に含める。
+
+## 24リポ時点の追加確認
+
+code-on-sunday/slide-deck-generatorは、原典のReact App・SlideLayout・useSlideScale・Framer Motion variantsとVite buildで「FAQを育てる4週間」5枚を制作。原典の構成順とBold Signalを使い、公式OFLのNoto Sans JP、動きを減らす設定、実操作できる週別タブを加えた。原典Vite 8とTailwind 4.2.1のpeer衝突を実行ログに保存し、Tailwind 4.2.2と固定lockへの最小変更でビルドした。TypeScript検査、原典のdev server起動、通常の図の演出・ページ移動・W3切り替え、全5枚のPNGを確認。定量的な60fps計測の合格とは扱わない。
+
+addsumtech/slides_makerは、原典deckkit・native_chartで「並べておくと、探し方が変わる」5枚を制作。Pythonで1〜15の全15ターゲットの線形探索・二分探索を実行し、図とnative chartの全30値へ接続。全5枚をPowerPoint本体で描画し、原典lint、別エージェントの内容・表示レビュー、制作の経緯を知らせない読み取りレビューを実施。構成・デザインの比較を制作後に補完した時刻と経緯を保存し、原典の制作前全工程の完走とは区別する。引き渡しgateは実記録と明示された入力出典の例外で通過した。読んで学ぶ教材としての確認で、投影可読性と人による正式採用は未確認。
+
+deckkit固有の、画面外に置くアクセシビリティ用タイトルは、固定原典・名前・title placeholder・座標・本文一致の全条件で共通検査から識別する。その他の画面外要素は引き続き不具合として検査。slides_makerのja-JP run locale省略5枚も警告として保持し、実際の日本語字形をPowerPoint描画で確認した。
+
+[追加UI記録](../data/repository-ui-qa-additions.json)を24リポ・27冊・164枚へ更新。Reactの原典内「次へ」と外側カウンターの同期、W3タブ、終端、日本語メモ、393pxのフロートを実操作。PowerPoint例の3ページ目・終端・メモ・PPTX/PDF/ZIP取得を確認し、実ダウンロードのSHAを現配布物と照合。一般案内の環境表示を各リポの必要環境へ結び、ローカル試用済みカードを「制作前」と誤表示しない。
+
+配布ZIPの独立実行は10形式。Reactは現ZIP全入力から短い展開先・新venvで成功。深い展開先でfontTools DLL importが停止するWindowsの条件を保存し、同じ固定依存で短い展開先から成功したことを案内する。JS/CSS/HTMLは現出力と一致し、フォントは字形・文字対応とhead以外のtableが一致。再生成時刻とchecksumによるbyte差分、今回未使用のpublic SVG 2ファイルの除外を記録。slides_makerはslide・note・chart XML 12partと内包XLSXのデータ等9memberが一致し、XLSX内の作成時刻だけ変わる。試験後のREPRODUCE.mdの説明追記をZIP差分として保持。新しい出力のQAは確認前とする。
+
+tfriedel/claude-office-skillsも固定原典html2pptx-local.cjsから日本語4枚をローカル生成し、native chart・表・ノートとPowerPoint描画を確認した。明示的な再配布条件が未確認のため、原典コード・PPTX・描画画像・派生版は配布せず、[試行の事実と再開条件](../examples/repositories/claude-office/ATTEMPT.json)だけを案内する。これは24リポの配布対象に数えない。全体の残件は185件。
+
+![React原典を浮遊プレイヤーで再生](assets/reactdeck-float-desktop.jpg)
