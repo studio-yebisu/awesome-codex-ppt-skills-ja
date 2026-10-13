@@ -1,0 +1,40 @@
+{
+  "repository": "zarazhangrui/frontend-slides",
+  "commit": "9906a34d640d2111f724544cbc50f7f130569ae1",
+  "license": "MIT",
+  "method": "指示型スキルのSKILL.mdを適用。Bold Signalの色・書体・大きな色面・番号・パンくずを使用し、html-template.mdのHTMLとSlidePresentationクラスを土台に制作。viewport-base.cssは全文を挿入。上流に生成CLIはないため「元のCLIを実行した」とは表記しません。",
+  "used_files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "832994fe1dfcce2aa7ceca9a1b7b708eca94becef242713999855f4e946cf4d5"
+    },
+    {
+      "path": "STYLE_PRESETS.md",
+      "sha256": "b0093ae6f9c295e561c7d4a9ddf69d0edfd2810b1721ba1c2022a1ad9681c82c"
+    },
+    {
+      "path": "viewport-base.css",
+      "sha256": "7424eb3fca809d85eedb3019a7b5bff571dc553c7b73b02120d068e12b2a6a03"
+    },
+    {
+      "path": "html-template.md",
+      "sha256": "893ab49200ed5c3186d3b031333f5b61916b179dad2dafd5572ff8f66cd0b91a"
+    },
+    {
+      "path": "animation-patterns.md",
+      "sha256": "1b7b7409893b68c09effb04f20a4603a5168e4956d76c3999c2ba8f86c4bbc8f"
+    }
+  ],
+  "changes": [
+    "1920×1080の固定ステージと全体の等比縮小を維持。",
+    "元プリセットのArchivo Black / Space Groteskを維持し、日本語用Noto Sans JPを追加。",
+    "日本語の内容、改行、キーボード・タッチ・ホイール、E編集・自動保存・Ctrl+S出力を実装。",
+    "カタログ用のpostMessage接続を追加。書体を埋め込んで外部CDNを不要にした。"
+  ],
+  "commands": [
+    "python tools/build_actual_examples.py",
+    "python tools/verify_actual_examples.py"
+  ],
+  "qa_status": "browser_preview_reviewed",
+  "browser_qa": "QA.json"
+}

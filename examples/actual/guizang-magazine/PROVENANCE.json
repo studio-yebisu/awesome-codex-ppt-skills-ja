@@ -1,0 +1,48 @@
+{
+  "repository": "op7418/guizang-ppt-skill",
+  "commit": "c91369c449d34755d320a8b81d0734000d99d1ab",
+  "license": "AGPL-3.0",
+  "method": "元の assets/template.html をコピーし、Layout 1・3・8・2 の構造を使って日本語を挿入。元のCSS、WebGL、Motion、go()、発表者モードの実装を保持。独自の共通スライドレンダラーは使用していません。",
+  "used_files": [
+    {
+      "path": "SKILL.md",
+      "sha256": "57f046e2c8600bb9d5de9dafc6ff1860d13e28eb0d94c6790c58e8ca8ca5e839"
+    },
+    {
+      "path": "assets/template.html",
+      "sha256": "e97ae73269d34afa683bb051c85957d68cd6447b26e3a192f96fea382174488e"
+    },
+    {
+      "path": "assets/motion.min.js",
+      "sha256": "45615c1e7639fb9828942d0689c897e745690b0f6df13022223c9409fc01557c"
+    },
+    {
+      "path": "references/layouts.md",
+      "sha256": "d156d1763d9838cfed4fcca83246ac902d9e722e97b9cceddfe1eeeda9f168ac"
+    },
+    {
+      "path": "references/themes.md",
+      "sha256": "a4bee3ef7b22d56fb904b0643a117368d85f0265ceccdf5111ad497fe22cc656"
+    },
+    {
+      "path": "references/presenter-mode.md",
+      "sha256": "30b93637e96459ba70c5011e0c46ef5bb5763e5a3c8de317a85dffa7b3a09426"
+    },
+    {
+      "path": "references/checklist.md",
+      "sha256": "8a7f55634ce113f4932d5cc835e17b81ce479c91953cf7ff1d28b979714b42b9"
+    }
+  ],
+  "changes": [
+    "中国語用Notoの指定をNoto JPへ変更。英字のPlayfair Display / Source Serif 4 / IBM Plex Monoを維持。",
+    "日本語の見出しの改行・字号・フレーム高・データの余白を調整。",
+    "スライドIDと日本語講稿を挿入し、親のプレイヤーとのpostMessage接続を追加。",
+    "書体をOFL原文とともに同梱。Motionは元のローカルファイルを保持。Lucideを0.468.0のローカル版へ固定し、両ライブラリーの原文を保存。"
+  ],
+  "commands": [
+    "python tools/build_actual_examples.py",
+    "node skill-forks/guizang-ppt-skill-ja/scripts/validate-presenter-mode.mjs examples/actual/guizang-magazine/index.html"
+  ],
+  "qa_status": "browser_preview_reviewed",
+  "browser_qa": "QA.json"
+}

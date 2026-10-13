@@ -1,0 +1,48 @@
+{
+  "repository": "hugohe3/ppt-master",
+  "commit": "ca04346de145ed6462ddf34682848e71df5e20a2",
+  "license": "MIT",
+  "method": "日本語版のカタログ作例経路として、上流の閉じたSVG仕様に従ってSVGを制作し、フォークに同梱した元の品質チェッカーとSVG→DrawingML変換器を実行。日本語版の専用経路は --quick-generate を使用します。上流Default GenerateのStrategistや確認UIまで実行したという主張ではありません。文字と図形を持つネイティブPPTXを出力し、画像スライドへ置き換えるフォールバックは使用していません。ブラウザーはPPTXへの入力SVGを表示します。PowerPointアプリ内での視聴検証は未実施。Noto Sans JPを受け手側にも導入する必要があり、上流チェッカーの書体警告を制作記録に保持しています。",
+  "used_files": [
+    {
+      "path": "skills/ppt-master/SKILL.md",
+      "sha256": "4b0f576b482a447a35967df230398baf888550b3e3f2243ca0982c59cb8c61db"
+    },
+    {
+      "path": "skills/ppt-master/references/shared-standards-core.md",
+      "sha256": "658bf3ede7e0d16ed28fa6722f3ba451ae6a83325e04f5c4fea4f72915f40770"
+    },
+    {
+      "path": "skills/ppt-master/references/executor-base.md",
+      "sha256": "6a87f6dddd317478a1baedc08e59bd96cc943f148de4f09fb5a4516d3be0cf5b"
+    },
+    {
+      "path": "skills/ppt-master/references/semantic-svg.md",
+      "sha256": "18ea79e380060ec58b856260de79dde1145da2819eed5d262a323117e0664c1b"
+    },
+    {
+      "path": "skills/ppt-master/workflows/profiles/quick-generate.md",
+      "sha256": "0953958921062f862c772acaf43288ed1e34a34370514efb4d367d965da48f9c"
+    },
+    {
+      "path": "skills/ppt-master/scripts/svg_quality_checker.py",
+      "sha256": "cf8f21be001a30c9f8212ad80c34f4e657741b9186a79213808f0bcef045a482"
+    },
+    {
+      "path": "skills/ppt-master/scripts/svg_to_pptx.py",
+      "sha256": "030fac5181fffbbaee09f6af6b8fa93b7561ce08ba8d40ded3368900bcbefb01"
+    }
+  ],
+  "changes": [
+    "日本語版フォークのカタログ作例用経路を追加。上流の変換器・チェッカー本体は無改変。",
+    "日本語内容、Noto Sans JP、1280×720の意味グループ付きSVG、各ページの日本語講稿を制作。",
+    "PowerPointの校正言語をja-JPに指定し、元のネイティブfadeトランジションを使用。"
+  ],
+  "commands": [
+    "python tools/build_actual_examples.py",
+    "python <PPT_MASTER>/scripts/svg_quality_checker.py <EXAMPLE> --quick-generate --canonical-authoring --stage final --json",
+    "python <PPT_MASTER>/scripts/svg_to_pptx.py <EXAMPLE> --quick-generate --primary-language ja-JP --with-notes -t fade -o ppt-master-ja.pptx"
+  ],
+  "qa_status": "browser_preview_reviewed",
+  "browser_qa": "QA.json"
+}

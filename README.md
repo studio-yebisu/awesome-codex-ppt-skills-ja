@@ -1,58 +1,42 @@
-# YEBISU SLIDE STUDIO
+# AIスライドスキル集 / 209件を日本語で選ぶ
 
-**日本語でつくる、伝わるスライド。** Studio Yebisuが企画・編集・制作する、日本語のAIスライド制作プロジェクトです。
+元の209件のスキル・作者・分類を主役にした、日本語の作例カタログ。Studio Yebisuが編集・制作・サイト開発しています。
 
-**[ウェブサイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)** · [使い方](guide.html) · [出典と利用条件](licenses.html) · [制作記録](制作記録.md)
+[ウェブサイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/) · [使い方](guide.html) · [出典と利用条件](licenses.html)
 
-カタログの翻訳を出発点に、日本語の作例、実行できる派生スキル、フォントの案内を独立して開発しています。原作者による公式日本語版・推奨ではありません。URLとリポジトリ名は既存のものを維持しています。
+現在の改修版はローカルでレビュー可能。公開サイトの更新はまだ実施していません。
 
-- 6つのオリジナルデッキ、計24枚。SVG・再生HTML・講稿・編集可能PPTXを収録。
-- 作例を浮かぶプレイヤーで再生。用途で絞り込み、キー操作、講稿、プロンプトのコピー。
-- MIT 3種、AGPL 1種の日本語派生スキルと、CC0の共通スキルを配布。
-- Noto Sans JP、BIZ UDPGothic、Noto Serif JPの選び方と公式OFLの出典。
-- PPT Master、Frontend Slides、Baoyu、Guizang、Slidev、Marp、reveal.js、PptxGenJSなどの固定コミットを確認。
-- 従来の209件カタログと個別画像の帰属は継承。
+- 209件の元プロジェクトを検索・6分類・作者・個別ライセンスから選択。
+- カードから浮かぶ作例ビューアー。日本語の実制作は再生、ページ送り、講稿に対応。
+- 3つの該当スキルで日本語作例を12枚制作。原テンプレートや指定スタイル、上流変換器を実際に使用。
+- 原作者の公開画像、GitHub紹介画像、未制作を実制作と区別。
+- 日本語版フォークは元実装・著作権・個別のLICENSEを保持。原作者の公式日本語版ではありません。
 
-## 作例とスキル
+## 実制作の対応
 
-|用途|作例|派生スキル|利用条件|
+| 掲載スキル | 適用したもの | 日本語作例 | 日本語版 |
 |---|---|---|---|
-|社内提案|[週次レポート](examples/team-report/index.html)|[yebisu-pptx](skills/yebisu-pptx/SKILL.md)|MIT|
-|企画|[コーヒースタンド](examples/local-coffee/index.html)|[yebisu-editorial-slides](skills/yebisu-editorial-slides/SKILL.md)|AGPL-3.0-only|
-|教材|[生成AIのしくみ](examples/ai-classroom/index.html)|[yebisu-story-slides](skills/yebisu-story-slides/SKILL.md)|MIT|
-|技術・登壇|[AIの答えの検証](examples/evidence-talk/index.html)|[yebisu-web-slides](skills/yebisu-web-slides/SKILL.md)|MIT|
-|製品説明|[プロダクト説明](examples/product-story/index.html)|[yebisu-pptx](skills/yebisu-pptx/SKILL.md)|MIT|
-|動き|[動くタイポグラフィ](examples/motion-manifesto/index.html)|[yebisu-web-slides](skills/yebisu-web-slides/SKILL.md)|MIT|
+| [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) | 元のHTMLテンプレートを使用 | [4枚](examples/actual/guizang-magazine/index.html) / [制作記録](examples/actual/guizang-magazine/PROVENANCE.html) | [guizang-ppt-skill-ja](skill-forks/guizang-ppt-skill-ja/SKILL.md) |
+| [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) | 元のSKILL・指定プリセットを適用 | [4枚](examples/actual/frontend-bold-signal/index.html) / [制作記録](examples/actual/frontend-bold-signal/PROVENANCE.html) | [frontend-slides-ja](skill-forks/frontend-slides-ja/SKILL.md) |
+| [hugohe3/ppt-master](https://github.com/hugohe3/ppt-master) | 元の変換器でPPTX出力 · SVGプレビュー | [4枚](examples/actual/ppt-master-native/index.html) / [制作記録](examples/actual/ppt-master-native/PROVENANCE.html) | [ppt-master-ja](skill-forks/ppt-master-ja/SKILL.md) |
 
-まずは [yebisu-japanese-slides](skills/yebisu-japanese-slides/SKILL.md) を使えます。Node.js 22以上を推奨し、SVG / HTML生成に追加ライブラリ・APIキーは不要です。
+PPT Masterはフォークに同梱した元のチェッカーと変換器でネイティブPPTXを出力。ブラウザーは入力SVGを表示します。PowerPointアプリ内の表示検証は未実施で、Noto Sans JPの導入が必要です。Guizangの発表者モードの全機能、209件すべての生成は検証済みと扱いません。
 
-```text
-node skills/yebisu-japanese-slides/scripts/render-deck.mjs skills/yebisu-japanese-slides/assets/example.json new-deck
-```
-
-同梱PPTX exporterはPptxGenJSを使います。各スキルフォルダで `npm install --ignore-scripts` してから利用してください。文字・図形・線は編集可能、自由形状pathはSVG画像です。既存PPTXの修復・データchart・tableの制作はこの簡易CLIの対応範囲外です。
-
-## 開発
-
-サイトは静的HTML/CSS/ES modulesで、ビルド不要です。
+## 開発と正本
 
 ```text
 python -m http.server 8847 --bind 127.0.0.1
-node --test tests/content-contracts.test.mjs
+node tools/build_site.mjs
 python tools/verify_release.py
 ```
 
-`data/decks.json` が作例の正本。`tools/make_examples.py` はその制作コード、`tools/build_site.mjs` はHTML/SVGの生成、`tools/package_skills.py` と `tools/package_downloads.py` は配布物を生成します。フォント再生成は `tools/build_fonts.py`（fontTools / brotliが必要）。
+`data/skills.json`が元の209件、`data/actual-examples.json`が実制作、`data/project-workflows.json`がその対応です。サイトは静的HTML/CSS/ES modules。実制作の再生成は`tools/build_actual_examples.py`、日本語版の配布は`tools/package_actual_forks.py`。元ソースの取得は`tools/acquire_real_skill.py`。元コミットの全アーカイブはビルド用キャッシュへ保存し、各作例に使用ファイルのハッシュを記録しています。
 
-作例PPTXはOpenAI Artifact Toolで別途制作しています。PowerPointの実アプリでの表示確認は、パッケージ検査・レンダリング確認とは別です。HTMLの出現演出はPPTXに含めず、フォントは埋め込んでいません。上流プログラムの実行結果・品質保証・Opus 5.5による制作とは表示しません。
+サイト・カタログの独自部分はCC0。各フォークはMIT / AGPL、フォントはOFL、公開画像は原典ごとの条件です。CC0を掲載物へ一括適用しません。
 
-## ライセンスと出典
+前回作った独立5スキル・共通レンダラーの6デッキは、今回の意図に合わない不採用試作として保全。[記録](docs/withdrawn-prototypes.md)。現在の実制作の件数や制作手段に含めません。
 
-独自サイト・文章・作例・制作CLIはCC0-1.0を継続。派生スキルは各MIT / AGPLを継承し、元の著作権表示・原文・改修内容・対応範囲を同梱。Webフォントは各OFL。旧カタログの第三者画像には、各原典の条件が適用されます。ルートのCC0はこれらを再許諾しません。
-
-AnthropicのPPTXスキルは改変・再配布を制限する記述があるためフォーク対象から除外しました。確認結果と原典URLのみ掲載し、スキル実装を収録していません。
-
-原カタログ：[zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)（CC0）。以下の一覧と原版の実測比較は2026年10月11日の取得内容を継承した記録です。現在の派生スキルの検証結果ではありません。
+以下は元の209件と原版の実測比較の記録であり、今回の制作検証結果とは別です。
 
 ---
 

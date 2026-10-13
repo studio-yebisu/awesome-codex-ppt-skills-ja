@@ -1,0 +1,50 @@
+
+[SCAN] Checking 4 SVG file(s)...
+
+[WARN] 01_slide.svg - Passed (with warnings)
+   viewBox: 0 0 1280 720
+   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP
+
+[WARN] 02_slide.svg - Passed (with warnings)
+   viewBox: 0 0 1280 720
+   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP
+
+[WARN] 03_slide.svg - Passed (with warnings)
+   viewBox: 0 0 1280 720
+   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP
+
+[WARN] 04_slide.svg - Passed (with warnings)
+   viewBox: 0 0 1280 720
+   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP
+
+================================================================================
+[SUMMARY] Check Summary
+================================================================================
+
+Total files: 4
+  [OK] Fully passed: 0 (0%)
+  [WARN] With warnings: 4 (100%)
+  [ERROR] With errors: 0 (0%)
+
+Provenance categories:
+  blocking: 0          hard findings; gate also requires exit 0
+  introduced: 4        advisory; new or changed
+  inherited: 0         informational; prototype-identical
+  source-import: 0     informational; source-conversion loss
+
+[CARRIERS] Actual-use receipt (informational; not a quota)
+  Pages: 4 | text: 36 | images: 0 | icons: 0
+  Geometry: SVG elements 10 | native presets 0 | page-frame elements 4 | marker uses 0
+  Effects: inline emphasis 0 (pages 0) | gradients 0 (pages 0) | filters 0 (pages 0) | text effects 0 (pages 0)
+  Native objects: charts 0 | tables 0 | formulas 0
+  Presets: (none)
+  Pages carrying a preset or connector: 0
+
+[TIP] Common fixes:
+  1. XML well-formedness: write typography as raw Unicode (—, ©, →, NBSP); escape XML reserved chars as &amp; &lt; &gt; &quot; &apos; — never use HTML named entities like &nbsp; &mdash; &copy;
+  2. viewBox issues: root viewBox is the canvas authority (see references/canvas-formats.md)
+  3. Paint recommendation: generated SVG prefers uppercase #RRGGBB plus channel-specific opacity; compatible alternatives remain non-blocking
+  4. foreignObject: Use <text> + <tspan> for manual line breaks
+  5. Font issues: use PPT-safe exported typefaces (e.g. Arial / Consolas, with the CJK face of the deck language)
+
+[REPORT] JSON quality report exported: M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\actual\ppt-master-native\validation\svg_quality_report.json

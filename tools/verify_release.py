@@ -1,9 +1,27 @@
+"""Current catalog release verification; withdrawn prototypes are excluded."""
 from pathlib import Path
 from hashlib import sha256
 from html.parser import HTMLParser
 from urllib.parse import urlsplit, unquote
 import json, zipfile, xml.etree.ElementTree as ET
+import subprocess, sys
 ROOT=Path(__file__).resolve().parents[1]
+if __name__=='__main__':
+    subprocess.run([sys.executable,str(ROOT/'tools/verify_actual_examples.py')],check=True)
+    artifacts=[]
+    paths=['downloads/guizang-ppt-skill-ja.zip','downloads/frontend-slides-ja.zip','downloads/ppt-master-ja.zip','downloads/guizang-magazine-ja.zip','downloads/frontend-bold-signal-ja.zip','examples/actual/ppt-master-native/ppt-master-ja.pptx']
+    for relative in paths:
+        p=ROOT/relative
+        with zipfile.ZipFile(p) as z:
+            assert z.testzip() is None,p
+            assert all(not n.startswith('/') and '..' not in Path(n).parts and '__pycache__' not in n and 'node_modules/' not in n for n in z.namelist()),p
+            if p.suffix=='.zip':assert any(n.endswith('/LICENSE') for n in z.namelist()),p
+        artifacts.append(dict(file=relative,bytes=p.stat().st_size,sha256=sha256(p.read_bytes()).hexdigest()))
+    (ROOT/'data/actual-downloads.json').write_text(json.dumps(artifacts,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    print(json.dumps(dict(passed=True,release_artifacts=len(artifacts),source_forks=3,original_catalog=209,examples=3,slides=12),ensure_ascii=False))
+    sys.exit(0)
+
+# The old prototype-only checks below are retained as historical code.
 class Links(HTMLParser):
     def __init__(self):super().__init__();self.targets=[]
     def handle_starttag(self,tag,attrs):

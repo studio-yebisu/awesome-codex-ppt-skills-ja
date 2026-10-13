@@ -20,10 +20,10 @@ if __name__=='__main__':
     else:
         commit=subprocess.check_output(['gh','api','repos/google/fonts/commits/main','--jq','.sha'],text=True).strip();marker.write_text(commit)
     content=''.join(chr(i) for i in range(32,127))+'←→↑↓↗↺Ⅱ×≠①②③▶–—·…'
-    for folder in ['data','assets','skills']:
+    for folder in ['data','assets','skills','examples/actual']:
         if not (ROOT/folder).exists():continue
         for file in (ROOT/folder).rglob('*'):
-            if file.suffix in ['.json','.mjs','.js','.md']:content+=file.read_text(encoding='utf-8')
+            if file.suffix in ['.json','.mjs','.js','.md','.html','.svg']:content+=file.read_text(encoding='utf-8')
     for file in ROOT.glob('*.html'):content+=file.read_text(encoding='utf-8')
     records=[]
     for family,filename,stem,renamed in FONTS:

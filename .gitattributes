@@ -1,8 +1,8 @@
-# Keep pinned license and upstream evidence byte-for-byte across Windows checkouts.
-sources/** -text -whitespace
-skills/**/LICENSE* -text -whitespace
-skills/**/references/SKILL.upstream.md -text -whitespace
-assets/fonts/*-OFL.txt -text -whitespace
-*.woff2 binary
-*.pptx binary
-*.zip binary
+# Preserve source hashes across Windows checkouts; binary assets stay binary.
+skill-forks/** -text
+examples/actual/** -text
+sources/browser-dependencies/** -text
+assets/fonts/presets/*OFL.txt -text
+tools/*.py text eol=lf
+tools/*.mjs text eol=lf
+assets/catalog-studio.* text eol=lf
