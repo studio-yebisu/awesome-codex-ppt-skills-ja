@@ -1,0 +1,1 @@
+架空の小チーム「青葉制作」向けに、週次報告を短く伝える日本語5ページを準備する。各ページは一論点とし、原典Skillに従ってcontentMarkdownとdesignBriefを分離する。外部API禁止のためHosted MCPへの投入・生成・exportは行わない。

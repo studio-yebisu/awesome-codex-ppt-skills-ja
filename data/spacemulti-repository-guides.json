@@ -1,0 +1,60 @@
+[
+  {
+    "repository": "SpaceZephyr/space-multi-design-ppt",
+    "execution_type": "original_html_builder_and_exporter_local_trial",
+    "execution_status": "local_trial_generated_not_packaged",
+    "production_status": "blocked",
+    "case_ids": [],
+    "summary_ja": "原典のHTML結合・Chromium書き出しで日本語5ページをローカル生成。固定commitに配布ライセンスがなく、原典runtimeを含むHTMLと再現ZIPは公開しない。",
+    "requirements": [
+      "Python / Playwright 1.63.0 / Chromium 1243 / Pillow",
+      "配布条件の確認と許諾が必要"
+    ],
+    "steps": [
+      "固定commitの原典をローカル取得",
+      "原典の1280×720規約と同梱トークンから日本語HTMLを執筆",
+      "原典build_deck.pyとexport_deck.pyを実行",
+      "全ページを視認。配布条件未確認のためローカル試作として保管"
+    ],
+    "commands": [
+      "python tools/build_space_multidesign_repository_example.py"
+    ],
+    "source_refs": [
+      {
+        "path": "SKILL.md",
+        "sha256": "78cbc68cc27c5a55136f29e47ef8dd0fb4237425167ea6f6c95ff0c1231c404f",
+        "url": "https://github.com/SpaceZephyr/space-multi-design-ppt/blob/44c2f34b1d83022ca1d0dd5e28d772beea1184bd/SKILL.md"
+      },
+      {
+        "path": "README.md",
+        "sha256": "26218b5da63817ff931acf17238dcc84d865b3744ed3e9dbe0e01e0bc409d9e1",
+        "url": "https://github.com/SpaceZephyr/space-multi-design-ppt/blob/44c2f34b1d83022ca1d0dd5e28d772beea1184bd/README.md"
+      },
+      {
+        "path": "scripts/build_deck.py",
+        "sha256": "c3b2487abdf0d353961dd4983909ec02226667d362914b50df8fce412f1040ad",
+        "url": "https://github.com/SpaceZephyr/space-multi-design-ppt/blob/44c2f34b1d83022ca1d0dd5e28d772beea1184bd/scripts/build_deck.py"
+      },
+      {
+        "path": "scripts/export_deck.py",
+        "sha256": "32801e5e6a83347ffc498802499e3e60a30e31421884e2a9dc158c37e68478cd",
+        "url": "https://github.com/SpaceZephyr/space-multi-design-ppt/blob/44c2f34b1d83022ca1d0dd5e28d772beea1184bd/scripts/export_deck.py"
+      },
+      {
+        "path": "references/slide-html-guide.md",
+        "sha256": "2fe048ebb6866f40ece3369d64a69d2fbddc672f5e8b74172e2ac987d3d072ba",
+        "url": "https://github.com/SpaceZephyr/space-multi-design-ppt/blob/44c2f34b1d83022ca1d0dd5e28d772beea1184bd/references/slide-html-guide.md"
+      },
+      {
+        "path": "examples/chengzhou-coffee-claude/design-tokens.md",
+        "sha256": "2b1e18f1d2d563cda4c9331f60d25ba4fd2019a5ac6e7362838c775dd84a9547",
+        "url": "https://github.com/SpaceZephyr/space-multi-design-ppt/blob/44c2f34b1d83022ca1d0dd5e28d772beea1184bd/examples/chengzhou-coffee-claude/design-tokens.md"
+      }
+    ],
+    "evidence": "examples/repositories/space-multidesign/ATTEMPT.json",
+    "limitations": [
+      "公開・配布できる成功例には数えない。",
+      "著作物を含む原典viewer、画像、PDF、HTMLは.buildのローカル試作だけに保管。"
+    ]
+  }
+]

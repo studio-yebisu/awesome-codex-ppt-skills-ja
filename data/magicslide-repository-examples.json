@@ -1,0 +1,59 @@
+[
+  {
+    "id": "magic-slide",
+    "title": "朝の支度を10分短くする企画",
+    "use_case": "生活改善・実験企画",
+    "repository": "daniel-style/magic-slide",
+    "skill_repository": "daniel-style/magic-slide",
+    "upstream_commit": "e29d87cb315eb0afc939820b100d870eabf43f89",
+    "fork_id": "magic-slide-ja",
+    "page_count": 5,
+    "format": "html",
+    "preview_kind": "html",
+    "style": "Magic Slide / Morning Tray",
+    "cover": "examples/repositories/magic-slide/render/slide-01.png",
+    "interior": "examples/repositories/magic-slide/render/slide-03.png",
+    "preview": "examples/repositories/magic-slide/index.html",
+    "preview_options": {
+      "ms_no_presenter": "1"
+    },
+    "preview_notice": "このプレビューでは動きとページ移動を確認できます。本文の編集・保存は、ZIPを展開して専用プレビューを起動してください。",
+    "artifact_download": "downloads/magic-slide-example-ja.zip",
+    "source_download": "downloads/magic-slide-example-ja.zip",
+    "input": "examples/repositories/magic-slide/input/BRIEF.md",
+    "input_data": "examples/repositories/magic-slide/input/data.json",
+    "prompt": "examples/repositories/magic-slide/PROMPT.txt",
+    "prompt_text": "原典Magic Slideで「朝の支度を10分短くする企画」を日本語5枚にする。架空の5日間実験案、40分→30分と4+3+3分は仮定、効果は未検証と明示。服・鍵・バッグのカードと時間の数字を、隣接ページへ意味のあるMagic Moveとして受け渡す。原典merge/serveと認証関数のscopeを修正した日本語派生injectorを使い、原典のUIと動きを保持する。写真・外部APIは使わない。講稿を各頁に付け、原典Overviewを先に確認した後、サイト実例用に全頁・motion・移動をagent QAする。人間の正式レビューはpendingのまま残す。",
+    "provenance": "examples/repositories/magic-slide/PROVENANCE.json",
+    "qa": "examples/repositories/magic-slide/QA.json",
+    "guide": "examples/repositories/magic-slide/README.md",
+    "titles": [
+      "朝に、余白を。",
+      "10分を、前夜へ移す。",
+      "前夜に、3つだけ。",
+      "朝は、確認して出る。",
+      "5日間、測って決める。"
+    ],
+    "notes": [
+      "朝の支度を急ぐのではなく、前夜へ選択と準備を移す企画です。40分から30分という目標は仮定で、短縮効果の実績はありません。",
+      "服を選ぶ4分、鍵を探す3分、バッグを詰める3分を短縮候補と仮定します。合計10分ですが、各値は測定結果ではありません。",
+      "前夜の準備は服・鍵・バッグの3つに限定します。カードの内容が次のページへ移動し、夜と朝の役割分担につながります。",
+      "夜は選ぶ・置く・詰める、朝は確認する役割に分けます。朝だけでなく、前夜に増えた準備時間も必ず記録し、合計負担が増えていないか確認します。",
+      "5日間、起床から出発までの時間と前夜の準備時間、忘れ物、負担感を記録します。記録はまだありません。朝の短縮と一日の負担の両方を見て継続・変更を決めます。"
+    ],
+    "pages": [
+      "examples/repositories/magic-slide/render/slide-01.png",
+      "examples/repositories/magic-slide/render/slide-02.png",
+      "examples/repositories/magic-slide/render/slide-03.png",
+      "examples/repositories/magic-slide/render/slide-04.png",
+      "examples/repositories/magic-slide/render/slide-05.png"
+    ],
+    "input_sha256": "fd094c61ddfa2adc0c7bdd6d2dc1d605df6910fc5be2c7bfc102325596acdb72",
+    "method": "原典merge-slides / auth scopeのみ派生injector / original serve / native Magic Move",
+    "sample_notice": "架空の5日間実験案。40分・30分・短縮内訳は仮定値。効果は未検証。",
+    "editability": "html_source",
+    "navigation": "native-runtime-bridge",
+    "fork_download": "downloads/magic-slide-ja.zip",
+    "reproduce_script": "reproduce/Reproduce.ps1"
+  }
+]

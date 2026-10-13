@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{{TITLE}} -- Editorial Magazine Deck</title>
+
+<!-- ============ Google Fonts ============ -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,500;0,8..60,600;1,8..60,400&family=IBM+Plex+Mono:wght@300;400;500;600&family=Noto+Serif+SC:wght@300;400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+<!-- MathJax SVG -->
+<script>
+window.MathJax = {
+  startup: { typeset: false },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  svg: { fontCache: 'none' },
+  options: { skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'] }
+};
+</script>
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+
+<!-- KaTeX core is used only as the math backend for pseudocode.js. -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+
+<!-- ============ Prism.js (syntax highlighting) ============ -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/themes/prism.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+
+<!-- ============ pseudocode.js (algorithm pseudocode) ============ -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/pseudocode@2.4.1/build/pseudocode.min.js"></script>
+
+<!-- ============ Template CSS ============ -->
+<link rel="stylesheet" href="template.css">
+</head>
+<body>
+
+<script>
+window.__typesetMath = async function(root) {
+  if (!window.MathJax?.typesetPromise) return;
+  const target = root || document.body;
+  if (target?.dataset?.mathTypesetDone === '1') return;
+  if (window.__mathTypesetPromise) return window.__mathTypesetPromise;
+  window.__mathTypesetPromise = (async () => {
+    await window.MathJax.startup.promise;
+    await window.MathJax.typesetPromise([target]);
+    if (target?.dataset) target.dataset.mathTypesetDone = '1';
+  })();
+  try {
+    await window.__mathTypesetPromise;
+  } finally {
+    window.__mathTypesetPromise = null;
+  }
+};
+window.renderMathInElement = function(root) {
+  return window.__typesetMath(root || document.body);
+};
+window.__renderDynamicContent = async function(root) {
+  const target = root || document.body;
+  try { await window.__typesetMath(target); } catch (e) { console.warn('MathJax typeset error', e); }
+  if (window.Prism) window.Prism.highlightAllUnder ? window.Prism.highlightAllUnder(target) : window.Prism.highlightAll();
+  if (window.pseudocode) {
+    target.querySelectorAll('pre.pseudocode, .ps-algorithm').forEach((el) => {
+      try { window.pseudocode.renderElement(el); } catch (e) { console.warn('pseudocode render error', e); }
+    });
+    target.querySelectorAll('.pseudocode-source').forEach((el) => {
+      const out = el.nextElementSibling;
+      if (out && out.classList.contains('pseudocode-render')) {
+        try { window.pseudocode.renderElement(el, out); } catch (e) { console.warn('pseudocode render error', e); }
+      }
+    });
+  }
+  if (window.lucide?.createIcons) window.lucide.createIcons();
+};
+window.__dynamicContentReady = new Promise((resolve) => {
+  const run = async () => {
+    try { await window.__renderDynamicContent(document.body); }
+    finally { resolve(); }
+  };
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', run, { once: true });
+  } else {
+    run();
+  }
+});
+</script>
+<script>
+/* ============ Early low-power detection ============ */
+(function(){
+  const KEY = 'editorial-mag-low-power';
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const stored = localStorage.getItem(KEY);
+  window.__lowPowerMode = stored === '1' || (stored === null && reduced);
+  function updateHint(){
+    const hint = document.getElementById('hint');
+    if(hint) hint.textContent = '\u2190 \u2192 Navigate \u00B7 B ' + (window.__lowPowerMode ? 'Dynamic' : 'Static') + ' \u00B7 ESC Overview';
+  }
+  window.__setLowPowerMode = function(on, opts={}){
+    window.__lowPowerMode = !!on;
+    document.body.classList.toggle('low-power', window.__lowPowerMode);
+    if(opts.persist !== false) localStorage.setItem(KEY, window.__lowPowerMode ? '1' : '0');
+    if(window.__lowPowerMode && document.getAnimations){
+      document.getAnimations().forEach(a => a.cancel());
+    }
+    updateHint();
+    dispatchEvent(new CustomEvent('deck-low-power-change', {detail:{on:window.__lowPowerMode}}));
+    if(window.__playSlide) window.__playSlide(window.__currentSlideIndex || 0);
+  };
+  document.body.classList.toggle('low-power', window.__lowPowerMode);
+  addEventListener('DOMContentLoaded', updateHint, {once:true});
+})();
+</script>
+
+<!-- ============ WebGL Dual Backgrounds ============ -->
+<canvas id="c-dark" class="bg"></canvas>
+<canvas id="c-light" class="bg"></canvas>
+<div id="hint"></div>
+
+<!-- ============ Deck Container ============ -->
+<div id="deck">
+{{CONTENT}}
+</div>
+
+<!-- ============ Navigation ============ -->
+<div id="nav"></div>
+
+<!-- ============ Overview Panel ============ -->
+<div id="overview"></div>
+
+<script>
+/* ================================================================
+   WebGL Dual Background Shaders
+   Dark:  Holographic Dispersion (titanium iridescence + mouse ripple)
+   Light: Spiral Vortex (FBM domain warp, silver pearl, no center)
+   ================================================================ */
+const VS = `attribute vec2 position;void main(){gl_Position=vec4(position,0.0,1.0);}`;
+
+const FS_DARK = `precision highp float;
+uniform vec2 u_resolution;uniform float u_time;uniform vec2 u_mouse;
+vec3 palette(float t,vec3 a,vec3 b,vec3 c,vec3 d){return a+b*cos(6.28318*(c*t+d));}
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_resolution.xy;
+  vec2 p=uv*2.0-1.0;p.x*=u_resolution.x/u_resolution.y;
+  vec2 m=u_mouse*2.0-1.0;m.x*=u_resolution.x/u_resolution.y;
+  float md=length(p-m);
+  float mr=sin(md*15.0-u_time*4.0)*exp(-md*3.0);p+=mr*0.08;
+  vec2 p0=p;
+  for(float i=1.0;i<4.0;i++){
+    p.x+=0.1/i*sin(i*3.0*p.y+u_time*0.4)+0.05;
+    p.y+=0.1/i*cos(i*2.0*p.x+u_time*0.3)-0.05;
+  }
+  float r=length(p);float ang=atan(p.y,p.x);
+  vec3 a=vec3(0.12,0.12,0.13);
+  vec3 b=vec3(0.03,0.04,0.05);
+  vec3 c=vec3(1.0,1.0,1.0);
+  vec3 d=vec3(0.1,0.2,0.4);
+  vec3 col=palette(r*1.5+p0.x*0.5+u_time*0.1,a,b,c,d);
+  float disp=sin(r*25.0-u_time*1.5+ang*2.0)*0.5+0.5;
+  col+=vec3(disp*0.015,disp*0.01,disp*0.02);
+  float hi=pow(sin(p.x*4.0+p.y*3.0+u_time)*0.5+0.5,8.0);
+  col+=hi*0.08;
+  vec3 base=vec3(0.05,0.05,0.06);
+  col=mix(base,col,0.85);
+  gl_FragColor=vec4(col,1.0);
+}`;
+
+const FS_LIGHT = `precision highp float;
+uniform vec2 u_resolution;uniform float u_time;uniform vec2 u_mouse;
+float hash(vec2 p){return fract(sin(dot(p,vec2(127.1,311.7)))*43758.5453);}
+float noise(vec2 p){
+  vec2 i=floor(p),f=fract(p);
+  float a=hash(i),b=hash(i+vec2(1,0));
+  float c=hash(i+vec2(0,1)),d=hash(i+vec2(1,1));
+  vec2 u=f*f*(3.0-2.0*f);
+  return mix(a,b,u.x)+(c-a)*u.y*(1.0-u.x)+(d-b)*u.x*u.y;
+}
+float fbm(vec2 p){
+  float v=0.0,a=0.5;
+  mat2 m=mat2(0.80,0.60,-0.60,0.80);
+  for(int i=0;i<5;i++){v+=a*noise(p);p=m*p*2.02;a*=0.5;}
+  return v;
+}
+void main(){
+  vec2 uv=gl_FragCoord.xy/u_resolution.xy;
+  vec2 p=uv;p.x*=u_resolution.x/u_resolution.y;
+  vec2 m=u_mouse;m.x*=u_resolution.x/u_resolution.y;
+  vec2 md=p-m;float dl=length(md);
+  p+=normalize(md+vec2(0.0001))*exp(-dl*5.0)*0.03;
+  vec2 q=vec2(fbm(p*1.8+u_time*0.07),fbm(p*1.8+vec2(5.2,1.3)+u_time*0.06));
+  vec2 r=vec2(fbm(p*2.0+q*1.3+vec2(1.7,9.2)+u_time*0.05),
+              fbm(p*2.0+q*1.3+vec2(8.3,2.8)+u_time*0.04));
+  float f=fbm(p*2.2+r*1.5);
+  vec3 silverDark=vec3(0.86,0.85,0.84);
+  vec3 paper=vec3(0.955,0.945,0.925);
+  vec3 col=mix(silverDark,paper,f);
+  float ph=r.x*2.2+u_time*0.35;
+  col+=vec3(0.78,0.62,0.92)*sin(ph)*0.055;
+  col+=vec3(0.55,0.72,0.95)*sin(ph*0.8+2.0)*0.05;
+  float hl=smoothstep(0.48,0.92,f);
+  col+=hl*0.06;
+  gl_FragColor=vec4(col,1.0);
+}`;
+
+const mouse = {x:0.5, y:0.5};
+addEventListener('mousemove', e => { mouse.x = e.clientX/innerWidth; mouse.y = e.clientY/innerHeight; });
+
+function bootGL(canvasId, fsSrc){
+  const canvas = document.getElementById(canvasId);
+  if(!canvas) return () => false;
+  const gl = canvas.getContext('webgl', {alpha:false, antialias:true});
+  if(!gl) return () => false;
+  const mk = (t,s) => { const sh = gl.createShader(t); gl.shaderSource(sh,s); gl.compileShader(sh); return sh; };
+  const prog = gl.createProgram();
+  gl.attachShader(prog, mk(gl.VERTEX_SHADER, VS));
+  gl.attachShader(prog, mk(gl.FRAGMENT_SHADER, fsSrc));
+  gl.linkProgram(prog); gl.useProgram(prog);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(prog, 'position');
+  gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+  const lRes = gl.getUniformLocation(prog, 'u_resolution');
+  const lT   = gl.getUniformLocation(prog, 'u_time');
+  const lM   = gl.getUniformLocation(prog, 'u_mouse');
+  const resize = () => {
+    const d = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = innerWidth * d; canvas.height = innerHeight * d;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+  };
+  addEventListener('resize', resize); resize();
+  return (tSec) => {
+    gl.uniform2f(lRes, canvas.width, canvas.height);
+    gl.uniform1f(lT, tSec);
+    gl.uniform2f(lM, mouse.x, 1 - mouse.y);
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    return true;
+  };
+}
+
+let drawDark = null, drawLight = null, glRAF = 0, glT0 = Date.now();
+function startGL(){
+  if(window.__lowPowerMode || glRAF) return;
+  if(!drawDark)  drawDark  = bootGL('c-dark',  FS_DARK);
+  if(!drawLight) drawLight = bootGL('c-light', FS_LIGHT);
+  glT0 = Date.now();
+  function loop(){
+    if(window.__lowPowerMode){ glRAF = 0; return; }
+    const t = (Date.now() - glT0) / 1000;
+    drawDark(t); drawLight(t);
+    glRAF = requestAnimationFrame(loop);
+  }
+  glRAF = requestAnimationFrame(loop);
+}
+function stopGL(){ if(glRAF) cancelAnimationFrame(glRAF); glRAF = 0; }
+startGL();
+addEventListener('deck-low-power-change', e => { e.detail.on ? stopGL() : startGL(); });
+</script>
+
+<script>
+/* ================================================================
+   Navigation: Deck paging, keyboard, wheel, touch, dots, overview
+   ================================================================ */
+(function(){
+  const deck = document.getElementById('deck');
+  let slides = deck.querySelectorAll('.slide');
+  const nav = document.getElementById('nav');
+  let idx = 0, total = slides.length, lock = false;
+
+  /* Correct deck width */
+  deck.style.width = (total * 100) + 'vw';
+
+  /* Build nav dots */
+  function buildDots(){
+    nav.innerHTML = '';
+    slides.forEach((s, i) => {
+      const b = document.createElement('button');
+      b.className = 'dot'; b.dataset.i = i;
+      b.setAttribute('aria-label', 'Page ' + (i + 1));
+      b.onclick = () => go(i);
+      nav.appendChild(b);
+    });
+  }
+  buildDots();
+
+  function go(n){
+    if(lock || total === 0) return;
+    idx = Math.max(0, Math.min(total - 1, n));
+    window.__currentSlideIndex = idx;
+    deck.style.transform = 'translateX(' + (-idx * 100) + 'vw)';
+    nav.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+    /* Theme switch */
+    const el = slides[idx];
+    const th = el.dataset.theme || (el.classList.contains('light') ? 'light' : 'dark');
+    document.body.classList.toggle('light-bg', th === 'light');
+    /* Trigger entrance animation mid-transition */
+    if(window.__playSlide) setTimeout(() => window.__playSlide(idx), 450);
+    lock = true; setTimeout(() => lock = false, 700);
+  }
+
+  /* ---- Rebuild navigation (called by Content Loader after injecting slides) ---- */
+  window.__rebuildNav = function(){
+    slides = deck.querySelectorAll('.slide');
+    total = slides.length;
+    idx = 0;
+    lock = false;
+    deck.style.width = (total * 100) + 'vw';
+    buildDots();
+    go(0);
+  };
+
+  /* Expose go for external callers */
+  window.__go = go;
+
+  /* ---- ESC Overview ---- */
+  let overviewOn = false;
+  const ov = document.getElementById('overview');
+
+  function buildOverview(){
+    ov.innerHTML = '';
+    const grid = document.createElement('div');
+    grid.className = 'grid';
+    slides.forEach((s, i) => {
+      const card = document.createElement('div');
+      card.className = 'card' + (i === idx ? ' active' : '');
+      const wrap = document.createElement('div');
+      wrap.style.cssText = 'width:100%;aspect-ratio:16/9;overflow:hidden;position:relative;pointer-events:none;background:' + (s.classList.contains('light') ? 'var(--paper)' : 'var(--ink)');
+      const clone = s.cloneNode(true);
+      clone.style.cssText = 'width:100vw;height:100vh;transform:scale(' + (1/4.5) + ');transform-origin:top left;position:absolute;top:0;left:0;pointer-events:none';
+      wrap.appendChild(clone);
+      const label = document.createElement('div');
+      label.className = 'card-label';
+      label.textContent = (i + 1) + ' / ' + total;
+      card.appendChild(wrap); card.appendChild(label);
+      card.onclick = () => { toggleOverview(); go(i); };
+      grid.appendChild(card);
+    });
+    ov.appendChild(grid);
+  }
+
+  function toggleOverview(){
+    overviewOn = !overviewOn;
+    if(overviewOn){ buildOverview(); ov.style.display = 'block'; }
+    else { ov.style.display = 'none'; }
+  }
+
+  /* ---- Keyboard ---- */
+  addEventListener('keydown', e => {
+    if(e.key === 'Escape'){ e.preventDefault(); toggleOverview(); return; }
+    if(e.key && e.key.toLowerCase() === 'b' && !e.metaKey && !e.ctrlKey && !e.altKey){
+      e.preventDefault();
+      window.__setLowPowerMode(!window.__lowPowerMode);
+      return;
+    }
+    if(overviewOn) return;
+    if(e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ' || e.key === 'ArrowDown'){
+      if(window.__pipeAdvance && window.__pipeAdvance()) return;
+      go(idx + 1); return;
+    }
+    if(e.key === 'ArrowLeft' || e.key === 'PageUp' || e.key === 'ArrowUp') go(idx - 1);
+    if(e.key === 'Home') go(0);
+    if(e.key === 'End') go(total - 1);
+  });
+
+  /* ---- Wheel ---- */
+  let wheelTO = null, wheelAcc = 0;
+  addEventListener('wheel', e => {
+    wheelAcc += e.deltaY + e.deltaX;
+    if(Math.abs(wheelAcc) > 50){
+      if(wheelAcc > 0 && window.__pipeAdvance && window.__pipeAdvance()){
+        wheelAcc = 0;
+      } else {
+        go(idx + (wheelAcc > 0 ? 1 : -1)); wheelAcc = 0;
+      }
+    }
+    clearTimeout(wheelTO); wheelTO = setTimeout(() => wheelAcc = 0, 150);
+  }, {passive:true});
+
+  /* ---- Touch ---- */
+  let tx = 0, ty = 0;
+  addEventListener('touchstart', e => { tx = e.touches[0].clientX; ty = e.touches[0].clientY; }, {passive:true});
+  addEventListener('touchend', e => {
+    const dx = e.changedTouches[0].clientX - tx;
+    const dy = e.changedTouches[0].clientY - ty;
+    if(Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy)){
+      if(dx < 0 && window.__pipeAdvance && window.__pipeAdvance()) return;
+      go(idx + (dx < 0 ? 1 : -1));
+    }
+  }, {passive:true});
+
+  go(0);
+})();
+</script>
+
+<!-- ============ Lucide Icons ============ -->
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+<script>if(window.lucide) lucide.createIcons();</script>
+
+<!-- ============ Motion One Animation Engine ============ -->
+<script type="module">
+let motion;
+try {
+  motion = await import('./motion.min.js');
+} catch(e1) {
+  try {
+    motion = await import('https://cdn.jsdelivr.net/npm/motion@11.11.17/+esm');
+  } catch(e2) {
+    console.warn('[motion] local + CDN both failed, disabling animations', e1, e2);
+    document.querySelectorAll('[data-anim]').forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
+    document.querySelectorAll('[data-animate="pipeline"] [data-anim]').forEach(el => el.style.opacity = '1');
+  }
+}
+
+if(motion){
+  const { animate, stagger } = motion;
+  document.body.classList.add('motion-ready');
+  const EASE = [.22, 1, .36, 1];
+  const slides = [...document.querySelectorAll('.slide')];
+  let pipeStep = -1;
+  let lastIdx = -1;
+
+  function resetAnims(slide){
+    slide.querySelectorAll('[data-anim]').forEach(el => {
+      el.style.opacity = ''; el.style.transform = '';
+    });
+  }
+
+  function revealStatic(slide){
+    resetAnims(slide);
+    document.getAnimations?.().forEach(a => a.cancel());
+    slide.querySelectorAll('[data-anim]').forEach(el => {
+      el.style.opacity = '1'; el.style.transform = 'none';
+    });
+  }
+
+  function playSlide(i){
+    const slide = slides[i];
+    if(!slide) return;
+    lastIdx = i;
+    const recipe = slide.dataset.animate || (slide.classList.contains('hero') ? 'hero' : 'cascade');
+
+    if(window.__lowPowerMode){ revealStatic(slide); return; }
+
+    if(recipe === 'pipeline'){
+      pipeStep = -1;
+      slide.querySelectorAll('[data-anim]').forEach(el => {
+        el.style.opacity = '0.15'; el.style.transform = 'none';
+      });
+      return;
+    }
+
+    resetAnims(slide);
+    const all = [...slide.querySelectorAll('[data-anim]')];
+    if(!all.length) return;
+
+    if(recipe === 'directional'){
+      const lefts  = all.filter(el => el.dataset.anim === 'left');
+      const divs   = all.filter(el => el.dataset.anim === 'divider');
+      const rights = all.filter(el => el.dataset.anim === 'right');
+      const others = all.filter(el => !['left','right','divider'].includes(el.dataset.anim));
+      if(others.length) animate(others, {opacity:[0,1], y:[12,0]}, {duration:.6, delay:stagger(.1, {start:.15}), easing:EASE});
+      if(lefts.length)  animate(lefts,  {opacity:[0,1], x:[-24,0]}, {duration:.8, delay:.35, easing:EASE});
+      if(divs.length)   animate(divs,   {opacity:[0,.25]},          {duration:.5, delay:.9});
+      if(rights.length) animate(rights, {opacity:[0,1], x:[24,0]},  {duration:.8, delay:1.0, easing:EASE});
+      return;
+    }
+
+    if(recipe === 'quote'){
+      const lines  = all.filter(el => el.dataset.anim === 'line');
+      const others = all.filter(el => el.dataset.anim !== 'line');
+      if(others.length) animate(others, {opacity:[0,1], y:[8,0]},    {duration:.6, delay:stagger(.12, {start:.2}), easing:EASE});
+      if(lines.length)  animate(lines,  {opacity:[.35,1], y:[10,0]}, {duration:.8, delay:stagger(.55, {start:.5}), easing:EASE});
+      return;
+    }
+
+    if(recipe === 'hero'){
+      animate(all, {opacity:[0,1], y:[14,0]}, {duration:.9, delay:stagger(.16, {start:.2}), easing:EASE});
+      return;
+    }
+
+    /* default: cascade */
+    animate(all, {opacity:[0,1], y:[16,0]}, {duration:.75, delay:stagger(.1, {start:.15}), easing:EASE});
+  }
+
+  function pipeAdvance(){
+    if(window.__lowPowerMode) return false;
+    const slide = slides[lastIdx];
+    if(!slide || slide.dataset.animate !== 'pipeline') return false;
+    const steps  = [...slide.querySelectorAll('[data-anim="step"]')];
+    const arrows = [...slide.querySelectorAll('[data-anim="arrow"]')];
+    if(pipeStep >= steps.length - 1) return false;
+    pipeStep++;
+    animate(steps[pipeStep], {opacity:[0.15,1], y:[8,0]}, {duration:.5, easing:EASE});
+    if(pipeStep > 0 && arrows[pipeStep-1]){
+      animate(arrows[pipeStep-1], {opacity:[0.15,.7]}, {duration:.3, delay:.15});
+    }
+    return true;
+  }
+
+  window.__playSlide = playSlide;
+  window.__pipeAdvance = pipeAdvance;
+  playSlide(0);
+}
+</script>
+
+<!-- ============ Content Loader (fallback: load from content.html or demo.html) ============ -->
+<script>
+(function(){
+  const deck = document.getElementById('deck');
+  if(deck.querySelectorAll('.slide').length > 0) return;
+  /* No inline slides found, try loading external content */
+  const tryLoad = async (url) => {
+    try {
+      const res = await fetch(url);
+      if(!res.ok) return false;
+      const html = await res.text();
+      deck.innerHTML = html;
+      /* Rebuild full navigation (dots, deck width, go(0)) */
+      if(window.__rebuildNav) window.__rebuildNav();
+      /* Re-init Lucide icons */
+      if(window.lucide) lucide.createIcons();
+      /* Re-run MathJax */
+      if(window.renderMathInElement) renderMathInElement(document.body, {
+        delimiters: [{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+        throwOnError: false
+      });
+      /* Re-highlight Prism */
+      if(window.Prism) Prism.highlightAll();
+      /* Render pseudocode blocks */
+      if(window.pseudocode) {
+        document.querySelectorAll('.pseudocode-source').forEach(el => {
+          const target = el.nextElementSibling;
+          if(target && target.classList.contains('pseudocode-render')){
+            pseudocode.renderElement(el, target);
+          }
+        });
+      }
+      /* Re-trigger slide entrance animation for the first slide */
+      if(window.__playSlide) window.__playSlide(0);
+      return true;
+    } catch(e) { return false; }
+  };
+  tryLoad('content.html').then(ok => { if(!ok) tryLoad('demo.html'); });
+})();
+</script>
+
+</body>
+</html>

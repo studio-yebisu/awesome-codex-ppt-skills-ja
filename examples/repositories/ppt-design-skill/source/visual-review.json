@@ -1,0 +1,27 @@
+{
+  "artifact_sha256": "efbcf9d9f8df268ff29f6716ac1e0b60b7d80724ec3a6177fd36a1976975ed69",
+  "renderer": "Microsoft PowerPoint 16.0",
+  "pages_reviewed": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "method": "All five final 1600x900 PNGs individually viewed",
+  "findings": [
+    "All titles and body text readable and within slide bounds.",
+    "Native editable coffee-cup shapes and terracotta colors visible.",
+    "Sales: 15*650=9750, 25*650=16250, 35*650=22750; clearly hypothetical revenue, not profit.",
+    "All record-table values labeled uncollected.",
+    "Five Japanese speaker notes match page intent."
+  ],
+  "corrected_attempts": [
+    {
+      "evidence": "source/attempt1/slide-01.png",
+      "issue": "Unrecognized hyphenated semantic-role aliases fell back to black; engine body CJK font overrode heading face.",
+      "fix": "Pass resolved theme hex values into original public helpers; assign chosen Japanese heading font to output eastAsian runs. Upstream unchanged."
+    }
+  ],
+  "human_adoption": "not_requested"
+}

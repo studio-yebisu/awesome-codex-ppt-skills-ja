@@ -1,0 +1,55 @@
+[
+  {
+    "id": "knowledge-cat",
+    "title": "迷わない議事録のまとめ方",
+    "use_case": "研修・共有",
+    "repository": "gnipbao/knowledge-cat-ppt-skill",
+    "skill_repository": "gnipbao/knowledge-cat-ppt-skill",
+    "upstream_commit": "889c3dc00b356607fa9af935eb807056c3394886",
+    "fork_id": "knowledge-cat-ppt-ja",
+    "page_count": 5,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "style": "Knowledge Cat固有native builder",
+    "cover": "examples/repositories/knowledge-cat/render/slide-01.png",
+    "interior": "examples/repositories/knowledge-cat/render/slide-03.png",
+    "preview": "examples/repositories/knowledge-cat/index.html",
+    "artifact_download": "examples/repositories/knowledge-cat/deck.pptx",
+    "source_download": "downloads/knowledge-cat-example-ja.zip",
+    "input": "examples/repositories/knowledge-cat/input/BRIEF.md",
+    "input_data": "examples/repositories/knowledge-cat/input/data.json",
+    "prompt": "examples/repositories/knowledge-cat/PROMPT.txt",
+    "prompt_text": "gnipbao/knowledge-cat-ppt-skillのnative-pptx laneと原典build_native_pptx.mjsを使い、架空の青葉企画向け「迷わない議事録のまとめ方」を日本語5枚で制作してください。決定事項・担当と期限・未決事項を分け、架空の記入例と会議末尾の確認方法を示します。入力計画を正本にし、本文・表・図形・講稿を編集可能にします。外部APIを呼ばず、原典validator・editability/probeとPowerPoint描画・目視で確かめてください。\n",
+    "provenance": "examples/repositories/knowledge-cat/PROVENANCE.json",
+    "qa": "examples/repositories/knowledge-cat/QA.json",
+    "guide": "examples/repositories/knowledge-cat/README.md",
+    "titles": [
+      "議事録には、\n次の行動を残す",
+      "記録を3つに分ける",
+      "曖昧なメモを具体的な記録へ",
+      "記録して、確認して、共有する",
+      "会議の最後に、\n担当と期限を確かめる"
+    ],
+    "notes": [
+      "これは架空の青葉企画向けの研修サンプルです。発言を全て書き写すより、決定事項と次の作業が追える記録を目指します。",
+      "決まったこと、これから行うこと、まだ決まっていないことを分けます。単なる提案を決定事項として書かないよう、合意の有無を確認します。",
+      "人物名と日付は架空です。文案作成の担当と期限が未定なら、勝手に補わず未決として残します。ここでは11月2日までの文案と、11月6日の公開が合意済みと仮定しています。",
+      "会議中は簡潔に記録し、終了前に決定と担当と期限を読み上げます。確認後に共有し、修正が入った場合は更新箇所が追えるようにします。",
+      "次の会議では、最後に次の行動を一つずつ確認するところから始めてください。未決事項は確認先と次に判断するタイミングも記録します。"
+    ],
+    "pages": [
+      "examples/repositories/knowledge-cat/render/slide-01.png",
+      "examples/repositories/knowledge-cat/render/slide-02.png",
+      "examples/repositories/knowledge-cat/render/slide-03.png",
+      "examples/repositories/knowledge-cat/render/slide-04.png",
+      "examples/repositories/knowledge-cat/render/slide-05.png"
+    ],
+    "pdf_download": "examples/repositories/knowledge-cat/render/deck.pdf",
+    "input_sha256": "5005be752ef27f1f221ba6656e428d6fcffa3f26a57ff788788a4080f22ae3aa",
+    "method": "原典deck-plan validator→build_native_pptx.mjs(@oai/artifact-tool)→再importと原典preview/inspection→出力日本語局所化→原典text/editability/probe。",
+    "sample_notice": "架空の企業・人物・日程による研修サンプル。外部調査・実在企業の規則ではない。",
+    "fork_download": "downloads/knowledge-cat-ppt-ja.zip",
+    "reproduce_script": "reproduce/Reproduce.ps1",
+    "reproduce_command": ".\\reproduce\\Reproduce.ps1 -ArtifactWorkspace \"artifact-tool workspaceのパス\" -NodePath \"node.exeのパス\""
+  }
+]

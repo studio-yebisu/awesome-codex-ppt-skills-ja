@@ -1,0 +1,71 @@
+{
+  "repository": "johnson7788/MultiAgentPPT",
+  "upstream_commit": "ce8185cee83092290bdb913a528c6e3a72ee879e",
+  "references": [
+    {
+      "path": "LICENSE",
+      "sha256": "648179da9ac9466f97cef6676e10729b327b8de1792de95d8f1f32acdf233d6c",
+      "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/LICENSE"
+    },
+    {
+      "path": "frontend/LICENSE",
+      "sha256": "8db0de12445618a006e1bb91677289cb919503bcd2e59c5f94980e249fe02e55",
+      "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/frontend/LICENSE"
+    },
+    {
+      "path": "README.md",
+      "sha256": "772e5d5b1bbed1014d346e092213723b0260589f13ef253056996e13f7b42309",
+      "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/README.md"
+    },
+    {
+      "path": "backend/save_ppt/README.md",
+      "sha256": "39692923a83d79b9d489f12a3aad1989831e9d95ffcca9982d92bca6b16ef362",
+      "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/README.md"
+    },
+    {
+      "path": "backend/save_ppt/ppt_generator.py",
+      "sha256": "b81c6172a4322ad896349455d2208ec8d0a939288c09b92c6320e9c15e0347df",
+      "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/ppt_generator.py"
+    },
+    {
+      "path": "backend/save_ppt/ppt_template_0717.pptx",
+      "sha256": "8f80468c6396ac17cbebb33eb81e77a2215869768d58c22de92202d67064009c",
+      "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/ppt_template_0717.pptx"
+    },
+    {
+      "path": "backend/save_ppt/requirements.txt",
+      "sha256": "bffafa6d4f47a8f2f1e3a04e8ae26a1e6ea9ec90d1e9ed2fe2499a017563935e",
+      "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/requirements.txt"
+    }
+  ],
+  "execution_type": "original_export_function_only",
+  "method": "原典start_generate_presentation(dict)と同梱PPTX templateのlocal export。LLM/研究agent/画像API/通常Web frontendは未実行。",
+  "commands_executed": [
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "-X",
+        "utf8",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\multiagent-ppt\\source\\run_export.py"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/multiagent-ppt/source/export-corrected.log",
+      "log_sha256": "8ee6c098a28a976e268be6634762f84e84a8cfe084ef8fec1938db1bc065db48"
+    }
+  ],
+  "artifact_sha256": "329e62fc76099192da883a5986cd9ebfd798684f5cdc03d5dbc3ef7a60694b39",
+  "input_sha256": "7b287b975883d66f4955f090ff41d13514179317fbf63aad0957c1ced9af208e",
+  "generator": "tools/build_multiagent_repository_example.py",
+  "render_report": "render/powerpoint-render.json",
+  "local_changes": [
+    "原典コードとPPTX templateはbyte同一でコピー。SlideConfigのデータだけを実templateのplaceholder IDへ補正: TITLE_PAGE_DATE 9→3、SUBCHAPTER_TITLE 5→2、3項目 [2,3,4]→[3,5,4]。",
+    "生成後のPPTX文字をNoto Sans JP/ja-JPへ設定。内容に無関係で本文に隠れるmasterのTRANSPORTラベルを空にし、基本信息を青葉デザインへ置換。元のレイアウトと装飾は維持。",
+    "原典終了pageは文字がlayout上にしかないため同じshapeをpageへ移し、Thanksをまずは相談からへ翻訳。表紙の日付欄を架空サンプル表示へ変更。ページ別日本語ノートを追加。",
+    "原典generate_presentationはlistを受け付けずdict(title/sections)を要求。最初のsectionは表紙扱い、内容処理はindex1/2のみ。一般的な多頁exportとして紹介しない。",
+    "最初のrequests依存不足と題名改行によるWindows filename失敗は初期ログに保持。requestsをproject venvへ追加し、題名から改行を除いて再実行。"
+  ],
+  "upstream_source_modified": false,
+  "external_api_calls": 0,
+  "network_guard": "requests.Session.request is blocked in the runner; input has no image URLs",
+  "checked_at": "2026-10-13T16:56:33.829037+00:00"
+}

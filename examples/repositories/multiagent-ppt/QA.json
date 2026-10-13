@@ -1,0 +1,70 @@
+{
+  "status": "qa_complete",
+  "page_count": 4,
+  "artifact_sha256": "329e62fc76099192da883a5986cd9ebfd798684f5cdc03d5dbc3ef7a60694b39",
+  "structure": {
+    "slides": 4,
+    "native_text_shapes": 9,
+    "picture_shapes": 0,
+    "speaker_notes": 4
+  },
+  "images": [
+    {
+      "page": 1,
+      "file": "examples/repositories/multiagent-ppt/render/slide-01.png",
+      "sha256": "12592cbfa961b7ca6cc3b3ea9ae6538f013226c0949ef92ff8a6b67627991500",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "page": 2,
+      "file": "examples/repositories/multiagent-ppt/render/slide-02.png",
+      "sha256": "02e26b1c06d899f46a41817d824b65c10edb6d210b23960cc1234f418a18f897",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "page": 3,
+      "file": "examples/repositories/multiagent-ppt/render/slide-03.png",
+      "sha256": "d0d775fc8e86f8c8c68b6c118c52d13750804d77065e436dc99921a8c302a71c",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "page": 4,
+      "file": "examples/repositories/multiagent-ppt/render/slide-04.png",
+      "sha256": "f93916d7aed526eaab29a930cfadeb93e2e0e1448c0b454b002084a6d889ef7b",
+      "dimensions": [
+        1600,
+        900
+      ]
+    }
+  ],
+  "editability_check": {
+    "status": "passed",
+    "method": "一時的なメモリーコピーでnative文字を変更、PPTX保存・再読込して変更の保持を確認。完成原本は変更していない。",
+    "powerpoint_interactive_edit_test": "not_run"
+  },
+  "visual_review": {
+    "pages": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "method": "完成PPTXをMicrosoft PowerPoint16.0で1600×900PNGへ描画し、全4枚を実画像で視認。",
+    "result": "日本語本文・3列の順序・末尾の相談案内・文字の収まりを確認。編集可能なnativeテキストを保持。"
+  },
+  "not_claimed": [
+    "通常のmulti-agent生成",
+    "LLM/画像API生成",
+    "人による正式採用",
+    "外部公開"
+  ]
+}

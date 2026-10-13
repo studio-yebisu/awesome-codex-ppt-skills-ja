@@ -1,0 +1,152 @@
+{
+  "status": "qa_complete",
+  "page_count": 5,
+  "artifact_sha256": "b0fad0f050f81f4c4c7cac30c60f610b6c5d44a57db0d42a37c00cd5be6d5ae4",
+  "images": [
+    {
+      "page": 1,
+      "file": "examples/repositories/knowledge-cat/render/slide-01.png",
+      "sha256": "0068315a039d9e6610982c44b5d307f4cb26d2a9de425dcc936cfd21cb096662",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "page": 2,
+      "file": "examples/repositories/knowledge-cat/render/slide-02.png",
+      "sha256": "e06f40cb57d496a26a509230727c08c0cfde16bb30791737497004dfbfc81747",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "page": 3,
+      "file": "examples/repositories/knowledge-cat/render/slide-03.png",
+      "sha256": "65fd489b60ce4d3bf4e82bdd7022966cb452355170781eb0837a75b5d0aabc3c",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "page": 4,
+      "file": "examples/repositories/knowledge-cat/render/slide-04.png",
+      "sha256": "34abcca0882d243a5c39895357059f805452c1d2edf1573cfc3c68b86ccbdec1",
+      "dimensions": [
+        1600,
+        900
+      ]
+    },
+    {
+      "page": 5,
+      "file": "examples/repositories/knowledge-cat/render/slide-05.png",
+      "sha256": "9c09df7dff302b9f38180acb0ea8131b45fad31fad409e9801703d0aa8c7d65c",
+      "dimensions": [
+        1600,
+        900
+      ]
+    }
+  ],
+  "structure": {
+    "slides": 5,
+    "native_tables": 1,
+    "native_text_shapes": 31,
+    "speaker_notes": 5
+  },
+  "visual_review": {
+    "pages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "method": "原典再import previewの初回確認後、固定技術デモ文を修正。完成PPTXをMicrosoft PowerPoint16.0で全5枚PNG/PDFへ描画し全頁を実画像で視認。",
+    "result": "決定・担当と期限・未決の意味、native表の例、日本語文字と行間・図形・余白を確認。"
+  },
+  "upstream_editability": {
+    "path": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\deck.pptx",
+    "slide_count": 5,
+    "notes_count": 5,
+    "chart_parts": 0,
+    "media_parts": 0,
+    "totals": {
+      "text_shapes": 31,
+      "text_runs": 43,
+      "shapes": 39,
+      "pictures": 0,
+      "charts": 0,
+      "tables": 1
+    },
+    "slides": [
+      {
+        "slide": 1,
+        "text_shapes": 5,
+        "text_runs": 9,
+        "shapes": 6,
+        "pictures": 0,
+        "charts": 0,
+        "tables": 0
+      },
+      {
+        "slide": 2,
+        "text_shapes": 6,
+        "text_runs": 9,
+        "shapes": 7,
+        "pictures": 0,
+        "charts": 0,
+        "tables": 0
+      },
+      {
+        "slide": 3,
+        "text_shapes": 4,
+        "text_runs": 4,
+        "shapes": 4,
+        "pictures": 0,
+        "charts": 0,
+        "tables": 1
+      },
+      {
+        "slide": 4,
+        "text_shapes": 12,
+        "text_runs": 15,
+        "shapes": 16,
+        "pictures": 0,
+        "charts": 0,
+        "tables": 0
+      },
+      {
+        "slide": 5,
+        "text_shapes": 4,
+        "text_runs": 6,
+        "shapes": 6,
+        "pictures": 0,
+        "charts": 0,
+        "tables": 0
+      }
+    ],
+    "passed": true,
+    "errors": []
+  },
+  "upstream_edit_probe": {
+    "passed": true,
+    "method": "copy PPTX -> mutate one native a:t text object -> reopen ZIP/XML -> verify replacement",
+    "search": "記録を3つに分ける",
+    "replacement": "記録を3つに分ける・編集確認",
+    "changed_slide_part": "ppt/slides/slide2.xml",
+    "replacement_count": 1,
+    "probe_package_valid": true,
+    "probe_file_retained": false,
+    "original_unchanged": true,
+    "original_sha256": "b0fad0f050f81f4c4c7cac30c60f610b6c5d44a57db0d42a37c00cd5be6d5ae4",
+    "probe_sha256": "c56d4677b2cf7a0fd494d2e512eb1d37e9b287bc5ebb2ead3cbd31b156264fae"
+  },
+  "not_claimed": [
+    "人による正式採用",
+    "外部公開",
+    "外部情報の事実調査",
+    "LLM/画像APIによる生成"
+  ]
+}

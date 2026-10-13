@@ -1,0 +1,189 @@
+[
+  {
+    "repository": "daniel-style/magic-slide",
+    "execution_type": "original_modular_html_with_authenticated_qa_scope_fix",
+    "execution_status": "generated_and_reviewed",
+    "case_ids": [
+      "magic-slide"
+    ],
+    "summary_ja": "原典Magic Moveで時間と準備品を隣接頁へ受け渡す、日本語5枚の生活実験案。",
+    "requirements": [
+      "Python3 / 原典serve.py",
+      "Node（injectorのJS構文検査）",
+      "Playwright（表示QA）"
+    ],
+    "steps": [
+      "outline/briefとsourcesを編集",
+      "原典merge-slides.py",
+      "認証scopeのみ修正した派生inject-runtime.py",
+      "原典serve.py→Overview→依頼範囲のagent QA"
+    ],
+    "commands": [
+      "python tools/build_magic_slide_repository_example.py --output-dir morning-regenerated"
+    ],
+    "source_refs": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "f8cea76ce6f8d49eeb7ee8643a8cb64297fffd3623c1c5f0e68640efc272f634",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/AGENTS.md"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "241e69f23408edf2b0261ab00a42a51299cb517289712f979e0539a6f38b96f6",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "sha256": "a796004cf3ba88d7ff1bb5edfdbb78bae52b03142654fc725e47bb0bfcbf4f2f",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/README.md"
+      },
+      {
+        "path": "references/design-system.md",
+        "sha256": "d9e6d26bfb378645e0c5a03324c3663f798478c4632af44f326a130976f1794f",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/design-system.md"
+      },
+      {
+        "path": "references/flip-engine.md",
+        "sha256": "1d819c1e3bc47b049ba2f3c849fb28b5951c2d80476876752b8363b66e3c0a2a",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/flip-engine.md"
+      },
+      {
+        "path": "references/generation-guide.md",
+        "sha256": "c9b80863d2575a10cbb9169e51bbb080624424ad81236647401c83cce5f5b3f5",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/generation-guide.md"
+      },
+      {
+        "path": "references/html-contract.md",
+        "sha256": "d31da2b6e16b7f32585dc19cf913617a640a8821091f73a2fc8d6f7d89e8f023",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/html-contract.md"
+      },
+      {
+        "path": "references/images.md",
+        "sha256": "23c9e2587015d4ee4d1bdcb5f3109fc0a6fe278ffa94faeea4f998e32f628edf",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/images.md"
+      },
+      {
+        "path": "references/layout-guide.md",
+        "sha256": "d8525e6f0369e3fa97e97250112f92446140d9011d8d674783ffd7cbe212c6d4",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/layout-guide.md"
+      },
+      {
+        "path": "references/layouts/primitives.md",
+        "sha256": "5a0f438a0b064cf8390c6e2cf8954a1f85d3fa997dfbeadc587ab2562658d4eb",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/layouts/primitives.md"
+      },
+      {
+        "path": "references/workflows/step-01-requirements.md",
+        "sha256": "5ef7c6e76602000d7a7e281c67d66f4b0759faee6d9b8b6bc20cf5a75c273eee",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-01-requirements.md"
+      },
+      {
+        "path": "references/workflows/step-02-websearch.md",
+        "sha256": "6d994412a14f127cd1bdfc2a8b2db1dd2b7d6384c353308bc85a7e399ed904bc",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-02-websearch.md"
+      },
+      {
+        "path": "references/workflows/step-03-outline.md",
+        "sha256": "203a2c0503bddc61738ac2a27a4d6044d7f7dde68d8d0b450530a5771ea88e1a",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-03-outline.md"
+      },
+      {
+        "path": "references/workflows/step-04-design-brief.md",
+        "sha256": "3cc6d2a42b486137a90e17da4b43a3ad7bc3c3cf635435c829f6f664ddb87c52",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-04-design-brief.md"
+      },
+      {
+        "path": "references/workflows/step-05-prototype.md",
+        "sha256": "8a4690e7de5d2498e40cc66c701ea0e5d8a60b8c607beb664c12e9dbfb4c6523",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-05-prototype.md"
+      },
+      {
+        "path": "references/workflows/step-06-visual-gate.md",
+        "sha256": "c791e51ce2532bc04eec0412ae1fbe76e3d44f35c117e256c9091c96ea88c76e",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-06-visual-gate.md"
+      },
+      {
+        "path": "references/workflows/step-07-generate.md",
+        "sha256": "1a2093b4cd50e5aac9f80123eccebbfb21f4cc82d634cd1f4ce6d7b61ef6642b",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-07-generate.md"
+      },
+      {
+        "path": "references/workflows/step-08-merge.md",
+        "sha256": "dab0ca3e4ee2823aac36c570c61204f7ed3d3d4e5d97a642df2079e4935de5ab",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-08-merge.md"
+      },
+      {
+        "path": "references/workflows/step-09-inject.md",
+        "sha256": "153c07957c61db2cd8cc01db0b8afe332ee451f8844b94f6c7f1d0c789278e94",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-09-inject.md"
+      },
+      {
+        "path": "references/workflows/step-10-preview.md",
+        "sha256": "e944abd3f2c9cbdea8ac54eedb0aea9ad7eee4a85db7dcfebc6cbda320e1f274",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/step-10-preview.md"
+      },
+      {
+        "path": "references/workflows/text-question-templates.md",
+        "sha256": "cfd47a44b30edf82d931351dc2800ae6bca11be9a0b1aca58be669af259d82c7",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/references/workflows/text-question-templates.md"
+      },
+      {
+        "path": "scripts/check-magic-text-wrap.py",
+        "sha256": "249610deac60f8f9fc49092703f39b775fb0546bf7f6a2a9a16c756c8d815d3f",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/check-magic-text-wrap.py"
+      },
+      {
+        "path": "scripts/check-runtime-canvas-fit.py",
+        "sha256": "6fe878fb53ea4272162893dae41fd4c78fd3e96d910252b104b6df2341316b65",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/check-runtime-canvas-fit.py"
+      },
+      {
+        "path": "scripts/extract-slides.py",
+        "sha256": "fb220eb585ec83c93cd8b2da3e52f05226e72a9a7840171c6e879db723c2f4fc",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/extract-slides.py"
+      },
+      {
+        "path": "scripts/generate-image.py",
+        "sha256": "aed59435ea5f9d99870b44e4b8bb05663f4e539daffe87fca697419f3ec2f1f6",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/generate-image.py"
+      },
+      {
+        "path": "scripts/inject-runtime.py",
+        "sha256": "31cc92d791334a5028150e55107b406134290eaa17428da60a49438e7bcdeeb4",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/inject-runtime.py"
+      },
+      {
+        "path": "scripts/mark-qa-repaired.py",
+        "sha256": "44cd13766c291ca6884e8d21ba2f176ae8b273fd5142d6741faf97116473e84b",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/mark-qa-repaired.py"
+      },
+      {
+        "path": "scripts/merge-slides.py",
+        "sha256": "3a93aa565c4ca5d1d27726991b342a365eee835d3e07b3ad335f666bf7b9b93f",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/merge-slides.py"
+      },
+      {
+        "path": "scripts/serve.py",
+        "sha256": "3455ada5e4ef34c8d66e70028956f0806291ff3c1090fe7bcc09a1614767d7b2",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/serve.py"
+      },
+      {
+        "path": "scripts/websearch.py",
+        "sha256": "cb4557c6fc01b618ff6e53ba9cfbbea2ca236def8411c13b785894cacf5b9544",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/scripts/websearch.py"
+      },
+      {
+        "path": "SKILL.md",
+        "sha256": "72d731419a46ceab762abaee45c19e13c713b963476858f1ebc005dffdad3ab1",
+        "url": "https://github.com/daniel-style/magic-slide/blob/e29d87cb315eb0afc939820b100d870eabf43f89/SKILL.md"
+      }
+    ],
+    "limitations": [
+      "架空の試行計画で短縮効果は未検証。",
+      "静的iframeは表示用。編集・保存には原典serve.pyが必要。",
+      "Agent QA完了でも原典human revision/adoption gateはpending。"
+    ],
+    "guide": "examples/repositories/magic-slide/README.md",
+    "fork": "magic-slide-ja"
+  }
+]

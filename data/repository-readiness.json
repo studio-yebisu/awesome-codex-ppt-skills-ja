@@ -520,8 +520,8 @@
       "commit": "ce8185cee83092290bdb913a528c6e3a72ee879e",
       "skill_root": ".",
       "inspection_status": "source_review_complete",
-      "execution_status": "not_executed_in_this_readiness_audit",
-      "generation_status": "not_generated_here",
+      "execution_status": "local_export_generated_verified; multi-agent/API not executed",
+      "generation_status": "generated_by_original_export_4_pages",
       "credential_status": "not_inspected",
       "paid_api_calls": 0,
       "source_refs": [
@@ -594,8 +594,11 @@
       "caveats_ja": [
         "READMEは現版を非メンテとしTrainPPTAgentを推奨。archiveフラグと同じ意味ではない。",
         "調査MCPの内蔵exampleはEVトピックで、本物の調査データへ接続済みとみなさない。",
-        "exportだけを動かしてmultiagent全経路を実証したとは数えない。"
-      ]
+        "exportだけを動かしてmultiagent全経路を実証したとは数えない。",
+        "実制作でdict(title/sections)入力が必要と確認。index1/2だけ本文処理。同梱templateに合わせたshape IDのconfig補正と日本語局所化を記録。",
+        "4枚の実PowerPoint描画・全ページ目視を完了。通常のmulti-agent生成・外部APIは未実行。"
+      ],
+      "local_production_evidence": "examples/repositories/multiagent-ppt/PROVENANCE.json"
     },
     {
       "repository": "JuneYaooo/gpt-image2-ppt-skills",

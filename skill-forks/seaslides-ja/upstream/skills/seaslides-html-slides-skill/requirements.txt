@@ -1,0 +1,62 @@
+# SeaSlides HTML Slides Skill Python Dependencies
+# Install: pip install -r requirements.txt
+#
+# Node.js dependencies for browser HTML -> SVG/PNG rendering live in:
+#   scripts/html_to_svg/package.json
+# Install them separately with:
+#   cd scripts/html_to_svg && npm install
+#   npx playwright install chromium
+
+# ─────────────────────────────────────────────────────────────
+# HTML/SVG/PNG/PPTX export pipeline
+# ─────────────────────────────────────────────────────────────
+Pillow>=10.0.0         # Image inspection, PNG output, SVG image embedding
+python-pptx>=0.6.23    # Native PPTX assembly from SVG/DrawingML
+pypdf>=5.0.0           # Semantic PDF page-tree and delivery-roster validation
+
+# Optional but recommended for SVG raster fallbacks inside PPTX media handling.
+# CairoSVG has better SVG feature support; svglib/reportlab is the fallback.
+cairosvg>=2.7.0
+svglib>=1.5.1
+reportlab>=4.0.0
+
+# ─────────────────────────────────────────────────────────────
+# PDF to Markdown (scripts/source_to_md/pdf_to_md.py)
+# ─────────────────────────────────────────────────────────────
+# MinerU backend (default) plus PyMuPDF fallback.
+PyMuPDF>=1.24.0
+aiohttp>=3.9.0
+
+# ─────────────────────────────────────────────────────────────
+# Document to Markdown (scripts/source_to_md/doc_to_md.py)
+# ─────────────────────────────────────────────────────────────
+#   .docx -> mammoth
+#   .html -> markdownify (+ beautifulsoup4)
+#   .epub -> ebooklib (+ markdownify)
+#   .ipynb -> nbconvert
+mammoth>=1.6.0
+markdownify>=0.13.0
+ebooklib>=0.18
+nbconvert>=7.0.0
+
+# ─────────────────────────────────────────────────────────────
+# Excel to Markdown (scripts/source_to_md/excel_to_md.py)
+# ─────────────────────────────────────────────────────────────
+openpyxl>=3.1.0
+
+# ─────────────────────────────────────────────────────────────
+# Web to Markdown and image search/download
+# ─────────────────────────────────────────────────────────────
+requests>=2.31.0
+beautifulsoup4>=4.12.0
+# Optional — TLS fingerprint impersonation for sites that block Python's
+# default TLS fingerprint (e.g., WeChat mp.weixin.qq.com).
+curl_cffi>=0.7.0
+
+# ─────────────────────────────────────────────────────────────
+# AI image generation backends
+# ─────────────────────────────────────────────────────────────
+# backend_openai.py
+openai>=1.0.0
+# backend_gemini.py
+google-genai>=1.0.0

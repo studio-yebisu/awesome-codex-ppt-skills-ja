@@ -1,0 +1,52 @@
+[
+  {
+    "id": "image-to-editable",
+    "title": "画像から編集できるGit入門へ",
+    "use_case": "画像スライドの編集可能化",
+    "repository": "ningzimu/image-to-editable-ppt-skill",
+    "skill_repository": "ningzimu/image-to-editable-ppt-skill",
+    "upstream_commit": "b7be494e31a0ed56ef98716891db5474606b8cdf",
+    "fork_id": "image-to-editable-ppt-ja",
+    "page_count": 2,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "style": "Git入門 / Native text and cards",
+    "pdf_download": "examples/repositories/image-to-editable/render/deck.pdf",
+    "input_data": "examples/repositories/image-to-editable/input/data.json",
+    "input_sha256": "e35e17387a7adf6ca2e7066952fe32de18ed26acbc05220d79364b72efb16db8",
+    "notes": [
+      "このページでは、エディターでの保存、Gitへの記録、リモートへの共有を区別します。保存だけでは履歴に残らず、コミットだけでは共有先へ送られません。この作例は元画像から文字とカードを編集可能に再構成し、アイコンは画像として保持しています。この案内ノートはカタログ制作時に新規追加したもので、元画像から抽出したものではありません。",
+      "変更は作業ツリー、ステージ、ローカル履歴の順に進みます。git addで次に記録する内容を選び、git commitでその内容を手元の履歴に残します。add後の追加編集は自動でステージへ入らないため、必要なら再度addして確認します。この案内ノートはカタログ制作時に新規追加したものです。"
+    ],
+    "cover": "examples/repositories/image-to-editable/render/slide-01.png",
+    "interior": "examples/repositories/image-to-editable/render/slide-02.png",
+    "preview": "examples/repositories/image-to-editable/index.html",
+    "artifact_download": "examples/repositories/image-to-editable/deck.pptx",
+    "source_download": "downloads/image-to-editable-example-ja.zip",
+    "input": "examples/repositories/image-to-editable/input/slide_01.png",
+    "prompt": "examples/repositories/image-to-editable/PROMPT.txt",
+    "prompt_text": "既存の日本語Git入門画像2枚を、原典image-to-editable-pptのCLIとページworkerで編集可能なPowerPointへ再構成。文字、カード、単純な矢印はnative要素。アイコンはCodex内蔵image_genによる元画像の編集で分離し、画像として配置。第三者API、購入、外部OCRは使わない。元画像と完成PowerPointの全ページを視認し、編集できる部分と画像部分を明示する。",
+    "provenance": "examples/repositories/image-to-editable/PROVENANCE.json",
+    "qa": "examples/repositories/image-to-editable/QA.json",
+    "guide": "examples/repositories/image-to-editable/README.md",
+    "pages": [
+      "examples/repositories/image-to-editable/render/slide-01.png",
+      "examples/repositories/image-to-editable/render/slide-02.png"
+    ],
+    "method": "Original editppt CLI + page workers + built-in image editing",
+    "editability": "native_text_shapes_and_bitmap_icons",
+    "sample_notice": "既存の画像2枚から再構成。文字・カードは編集可能、アイコンは画像。",
+    "titles": [
+      "保存・履歴・共有を分ける",
+      "変更は3つの場所を通る"
+    ],
+    "comparison": "examples/repositories/image-to-editable/comparison.html",
+    "before_pages": [
+      "examples/repositories/image-to-editable/input/slide_01.png",
+      "examples/repositories/image-to-editable/input/slide_02.png"
+    ],
+    "fork_download": "downloads/image-to-editable-ppt-ja.zip",
+    "reproduce_script": "reproduce/Reproduce.ps1",
+    "preview_notice": "文字・カード・矢印は編集可能。アイコンは分離した画像です。日本語の案内ノートを追加しています。"
+  }
+]

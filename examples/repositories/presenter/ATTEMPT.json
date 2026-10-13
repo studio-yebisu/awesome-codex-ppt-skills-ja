@@ -1,0 +1,105 @@
+{
+  "repository": "rsrohan99/presenter",
+  "commit": "6a4534d65bf3e053df16a1f5cb060de6d98b6a2b",
+  "production_status": "blocked",
+  "execution_status": "local_trial_generated_not_packaged",
+  "license": null,
+  "blocker": "No LICENSE or redistribution grant at fixed commit; renderer trial only, no public example or source kit.",
+  "local_trial_path": ".build/local-trials/presenter",
+  "pages": 5,
+  "execution_scope": "Original utils.get_presentation_config/sanitize_markdown plus workflow.py specified mdslides CLI. Manually supplied Japanese content/narration; original multi-agent/OpenAI workflow, Mermaid, DeckTape, ElevenLabs and video were not executed.",
+  "original_source_modified": false,
+  "external_api_calls": 0,
+  "source_refs": [
+    {
+      "path": "README.md",
+      "sha256": "8ae796231cf79b3499d7731be06e3ef63bd6b5a9927717eeed524e090cd31070",
+      "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/README.md"
+    },
+    {
+      "path": "run.py",
+      "sha256": "24f69b55a4eb21dc8f74d5773080d298c6cc6991b8140e08bedbbd59e9f41813",
+      "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/run.py"
+    },
+    {
+      "path": "workflow.py",
+      "sha256": "e3db881c4e3596b458a6f0e43a544a64385e2f9c7d1c039a34e5fbc17ddd4562",
+      "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/workflow.py"
+    },
+    {
+      "path": "utils.py",
+      "sha256": "0d8d68a218df43b7740639e76e4799744c9e8cebdb8cd3577267201103ab56a9",
+      "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/utils.py"
+    },
+    {
+      "path": "models.py",
+      "sha256": "c20f29e878b040ad48f6a9ad0d70415aebc7fe555ccaf9cf389c12d3aedde5bb",
+      "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/models.py"
+    },
+    {
+      "path": "agents/slide_maker.py",
+      "sha256": "e6882c810687a0f2cb1767bb82e49d31c060ab67ddc2ad7f0cf0bf7b3bc2465d",
+      "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/agents/slide_maker.py"
+    },
+    {
+      "path": "requirements.txt",
+      "sha256": "dd071bbe6be92763b3a2a110a0290732f8ab6a373c6ea45d83fa1f638dec44ce",
+      "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/requirements.txt"
+    }
+  ],
+  "dependencies": {
+    "MarkdownSlides": "GitLab da_doomer/markdown-slides fd27dd09cf90f00093a393338e08953c8d65d68e",
+    "playwright": "1.63.0",
+    "chromium_revision": "1243"
+  },
+  "qa": {
+    "status": "local_visual_review_complete",
+    "all_pages_visually_reviewed": true,
+    "browser": {
+      "status": "passed",
+      "page_count": 5,
+      "notes_count": 5,
+      "keyboard_navigation": true,
+      "page_errors": [],
+      "blocked_remote_assets": [
+        "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full"
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "text": "週次報告を短く伝える\n\n結論 → 変化 → 相談",
+          "notes": "架空の小チーム「青葉制作」の報告例です。聞き手が次の判断をできるよう、結論、前週からの変化、相談の順に伝えます。\n"
+        },
+        {
+          "page": 2,
+          "text": "最初に、今の状態\n\n予定どおり / 遅れあり / 判断待ち",
+          "notes": "今週の状態を短い言葉で伝えます。架空例では「遅れあり」です。経緯の説明より先に、何を知ってほしいかを示します。\n"
+        },
+        {
+          "page": 3,
+          "text": "前週からの変化だけ\n\n完了：画面案の確認\n\n未完了：素材の受け取り",
+          "notes": "今回の架空例では、画面案の確認は完了し、素材の受け取りが残っています。作業履歴をすべて読む代わりに、前週との差を説明します。\n"
+        },
+        {
+          "page": 4,
+          "text": "相談は、期限と選択肢で\n\n木曜までに、仮素材で進めるか決めたい",
+          "notes": "素材待ちが続くため、木曜までの判断を依頼します。選択肢は仮素材で進めるか、素材を待って日程を見直すかです。\n"
+        },
+        {
+          "page": 5,
+          "text": "次の行動で、報告を閉じる\n\n担当・期限・確認方法をそろえる",
+          "notes": "判断が出たら、誰がいつまでに何をするかを記録します。報告を短くすることだけを目的にせず、次の行動が分かることを目指します。\n"
+        }
+      ]
+    },
+    "artifact_hashes": {
+      "output\\index.html": "86fff9b0282c2c36617503f99b3ab76e78f9f8498ad57a1d408cd5cec31af36b",
+      "presentation.md": "cc5413ea2f3bb5cea158b20433c82bf84380d6bc3a494d40a0662bad087a6358",
+      "render\\slide01.png": "efa9e10d23ea54749cacf7898a36f93d8272fc5d543801dc667319fc1b552013",
+      "render\\slide02.png": "e7a090a8d2cbc321a1d224ecb68bf042328894e6c75ba6deda55861bb65f10aa",
+      "render\\slide03.png": "9ca27ea9787b60750e7e5cf42a5b5359b1cf61f6cf8abf94f731a3faced83e22",
+      "render\\slide04.png": "0b2946134083645c89c61fe4f3cd09777cdce1aa3012b92b8975121802ab5e7b",
+      "render\\slide05.png": "b125abf056d44eae552dd87a5a66af5b0bb198edb3b0f7db9692f8d8596c6b4f"
+    }
+  }
+}

@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; }
+    html, body, #deck { width: 1280px; height: 720px; margin: 0; overflow: hidden; }
+    #deck { position: relative; }
+    .slide {
+      width: 1280px;
+      height: 720px;
+      padding: 72px;
+      background: white;
+      color: #111;
+      --seaslides-audit-font-min-body: 18px;
+    }
+    h1 { font: 600 42px/1.2 sans-serif; }
+    p { margin-top: 40px; font: 400 20px/1.5 sans-serif; }
+    .body-role { --seaslides-audit-font-role: body; }
+    .too-small { font-size: 14px; }
+  </style>
+</head>
+<body>
+  <main id="deck">
+    <section class="slide">
+      <h1><span>Operational risk.</span><span>Decision gates</span></h1>
+      <p class="body-role too-small">This role is intentionally below its theme threshold.</p>
+    </section>
+    <section class="slide">
+      <h1><span>Operational risk.</span> <span>Decision gates</span></h1>
+      <p class="body-role">This role meets its theme threshold.</p>
+    </section>
+  </main>
+</body>
+</html>

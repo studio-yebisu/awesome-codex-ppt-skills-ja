@@ -1,0 +1,15 @@
+Execution receipts (2026-10-14 JST)
+Python: M:/Codex/Projects/awesome-codex-ppt-skills-ja/.build/ppt-master-venv/Scripts/python.exe
+Entry: -m editppt.cli from original installed upstream.
+Environment: EDITPPT_CONFIG_HOME=<example>/source/offline-config; CODEX_AUTH_FILE=<same>/no-auth.json; CODEX_PPT_HOME=<same>/no-codex-ppt; removed OPENAI_API_KEY, OPENAI_BASE_URL, PADDLE_OCR_TOKEN.
+Built-in call: image_gen.imagegen; referenced_image_paths=[page source.png absolute path]; transparent_background=false; exact prompt in asset-sheet.prompt.txt.
+Returned local output: M:/Codex/home/generated_images/01a13676-80b6-77c0-9cab-7642d16bb48d/exec-a8b58b27-f2bf-47fa-be55-334185e401be.png
+Commands below use page directory as <page>.
+image import <page> --job-id icon-sheet --source-image <returned local output> --dest assets/icon-sheet.png --role asset_sheet --backend builtin-imagegen => import.log, success
+image process-sheet <page> --job-id icon-sheet --asset-sheet-source assets/icon-sheet.png --regions assets/asset-regions.json --assets-dir assets/icons => process-sheet.log, failed because right region exceeded actual sheet width 2046 by 2px.
+Corrected right region to width 716, preserving all foreground.
+image process-sheet <page> --job-id icon-sheet --skip-chroma --regions assets/asset-regions.json --assets-dir assets/icons => process-sheet-repair.log, success
+page build <page> => build.log, success
+page contact-sheet <page> => contact-sheet.log, success
+page validate <page> --report <page>/validation.json => validate.log, passed=true
+Visual inspection: source, generated sheet, preview, origin-versus-preview contact. 9 native text boxes, 9 native structural shapes and 3 separated image assets. Human approval not asserted. PowerPoint application rendering handled separately by parent.

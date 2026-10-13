@@ -1,0 +1,244 @@
+[
+  {
+    "repository": "ningzimu/image-to-editable-ppt-skill",
+    "execution_type": "original_editppt_cli_and_page_workers_builtin_image_edit",
+    "execution_status": "generated_and_reviewed",
+    "case_ids": [
+      "image-to-editable"
+    ],
+    "summary_ja": "日本語Git入門画像2枚を編集可能な文字・カードと画像アイコンに分離。",
+    "requirements": [
+      "Python3.10+ / 原典editppt CLI",
+      "新規入力には内蔵画像編集とpage worker対応エージェント",
+      "PowerPoint（今回の表示QA）"
+    ],
+    "steps": [
+      "prepareとpage prompt",
+      "workerでforeground分離とnative再構成",
+      "page build/validateとrun record",
+      "run finalizeとPowerPoint全頁視認"
+    ],
+    "commands": [
+      "python source/build_image_editable_repository_example.py --replay --source-dir . --output-dir ../replayed --upstream-dir source/upstream"
+    ],
+    "source_refs": [
+      {
+        "path": "AGENTS.md",
+        "sha256": "cb595dec23644359c4bfc7066be0f30e4ab469a6dd641091e47529b512c6edc3",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/AGENTS.md"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "sha256": "51aa0d1d9fda94e98b6fafbf0b0edf540c1886ba7504f9010fb158c2e7d66dd1",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/README.md"
+      },
+      {
+        "path": "README_en.md",
+        "sha256": "dbfd1650b5ca4fdb08864a1c018dfdc16135209829fd418c48900e0396c49148",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/README_en.md"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/agents/openai.yaml",
+        "sha256": "bd4f362b6b02ed889053e3519e82a96f69b16cec6468c4ea44872c148c33d4e2",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/agents/openai.yaml"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/__init__.py",
+        "sha256": "a7833154ef22876fa19e1ec8355064aea30a04319390cb28d4b11b33a9b1de38",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/__init__.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/cli.py",
+        "sha256": "7a1fef4e8c9e9bdcb877e05d5191f3d0daf1d884449fa944602107c1dda699ac",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/cli.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/__init__.py",
+        "sha256": "3ca19eef7cca8923807c80dc0ecd6d67b262f45c889ae761edd9b5c1dc5c4e54",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/__init__.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/_input_normalization.py",
+        "sha256": "aea66757f8a7bcee2b2751443a98f74f413e1d67ae405a6653ea85ece2d06c65",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/_input_normalization.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/_page_artifacts.py",
+        "sha256": "2f141c8837c82b5074e0ec886d308d15228c99135df979b0c6f4ffc056eb3695",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/_page_artifacts.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/build_pptx_from_manifest.py",
+        "sha256": "856e86fc59e73ad591b6e13d7e2eae318c5a46f5e4e4ecee907367cf5c275571",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/build_pptx_from_manifest.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/configure_image_backend.py",
+        "sha256": "ab93885fb5984d090644acc4c248bd8083f27a14508436360052d4b84c70ebd0",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/configure_image_backend.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/deck_run_state.py",
+        "sha256": "f23da1f111e711f36e1f4ac3244bd64e38a50d9591f4a23b2380bb31891f04e9",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/deck_run_state.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/deck_text_hints.py",
+        "sha256": "2f267a49504992ce3829683daa7f4a8bd54cf70912ab61263393f792099feda6",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/deck_text_hints.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/finalize_deck_run.py",
+        "sha256": "d3d2df4e58d440edf45fb69317c190103c4cb09fa27d07df1a131bc9d9c960b2",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/finalize_deck_run.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/formula_renderer.py",
+        "sha256": "65f4c0883d3457f67fcc1f13ba8bcfe001216641839bacd9b6affea30f86202e",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/formula_renderer.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/image_gen.py",
+        "sha256": "c04d8688bcf5e514fe51a5b39df93044c72019efef5313f5fdb5e87b7ea8d1e6",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/image_gen.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/main.py",
+        "sha256": "a18eba1b84147203a13fc1b509045052e24c652cf9e3dbd2304f3ae521a63bba",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/main.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/make_page_contact_sheet.py",
+        "sha256": "b205774265de2fcca2c3ea3228cb1b9e3da82b394f320255f5d82c3fe67a4412",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/make_page_contact_sheet.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/native_tables.py",
+        "sha256": "915c329163991e3b63b6c63cd42bfe00e62edfcb87942dd8eeaf37ce787c1ec8",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/native_tables.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/paddle_text_hints.py",
+        "sha256": "1f9647acc267863c693bc9284bcf1bbb6a4eceb572f2a8a63d6ed214a323377d",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/paddle_text_hints.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/page_job_status.py",
+        "sha256": "01e8effade4c3ab6719341c60490cb874f6c9d780e1fdbe00088696362d8703b",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/page_job_status.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/page_text_metrics.py",
+        "sha256": "683948879b666ea47eb12fb10bc2371be52f271cf531e3802d759fc6398a1595",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/page_text_metrics.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/path_geometry.py",
+        "sha256": "7a4550b89bbc82ace904bdf5fc6dc5f2e5e0fba32dc3860a7dbf4d13c0af7a99",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/path_geometry.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/prepare_deck_run.py",
+        "sha256": "b0f96ea60479cb62f001d49c5384739e13187e8a8605a871de00b7cc3c8d3cf7",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/prepare_deck_run.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/process_asset_sheet.py",
+        "sha256": "cf4e34db733a3093ecb725bf5020e86c8a88165263ee145349ed699329213088",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/process_asset_sheet.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/record_imagegen_result.py",
+        "sha256": "fc959b5809ccd59c4b58ba5bf1e705dff18895046b818dc928776c217a3242fb",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/record_imagegen_result.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/record_page_dispatch.py",
+        "sha256": "d91b45281c0eafa10801b1344f3c423712b5aeae0aea0231d2243003176f0522",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/record_page_dispatch.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/record_page_result.py",
+        "sha256": "34f73bcc70da439e6a547f2737148812485fee130df6c49ce33e58721643eb55",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/record_page_result.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/remove_chroma_key.py",
+        "sha256": "68b018feee3e97f140daa3216b05cfb09f79efb58c305f2bf8656f1ff751939d",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/remove_chroma_key.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/reset_page_job.py",
+        "sha256": "787a05361c69f114a9177633eac2556833c711a1bd16da6bd6ad6c0b9ab7e63b",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/reset_page_job.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/runtime_env.py",
+        "sha256": "2b289ab00d6ebbe95c85d783c638519ba352f0661f631af79188bbae6a341025",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/runtime_env.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/split_alpha_components.py",
+        "sha256": "732908babf636659e60a2572cd5b73c178db4ffd889200bb7c306627d98119cd",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/split_alpha_components.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/text_hints.py",
+        "sha256": "07daccc89a847bf9c481fa8f2f2044cc7924e59389e12e0a36eff0a43b45001d",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/text_hints.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/editppt/runtime/validate_pptx.py",
+        "sha256": "536721ac565c589d54f09b6c21dd29d751c8babe6be0017ef895d13429b60e1a",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/validate_pptx.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/cli/pyproject.toml",
+        "sha256": "b9a90cdf26b98e76d28eced7c63375c9ef0cc3bd34ad7a2306b5cfdb822c2cba",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/pyproject.toml"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/prompts/page-worker.md",
+        "sha256": "8b30866caeacef3209324bb6b4cbb11c3d52623dec06242d8bf8d709bc2deacc",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/prompts/page-worker.md"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/references/cli-helper.md",
+        "sha256": "1ef924ad2643d4db447d786ccea772e74dda74d15443d3e3ea7ed492ee5cafce",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/references/cli-helper.md"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/references/manifest-schema.md",
+        "sha256": "006cfaab11a03a7e559e0aaa3b82bb8f6ab70615e3f3ad9a2b4a19b9e54b5d2e",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/references/manifest-schema.md"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/references/page-decision-tree.md",
+        "sha256": "fa1ccfb5489b81c93068c1e2900663a031319cca26e7073e18dcbebc9fce517f",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/references/page-decision-tree.md"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/scripts/build-page-worker-prompt.py",
+        "sha256": "8a92d0cea004f7b41c55b105128ec846510be0cd036c24e700e2c9c27af2fc7c",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/scripts/build-page-worker-prompt.py"
+      },
+      {
+        "path": "skills/image-to-editable-ppt/SKILL.md",
+        "sha256": "899725dfaaadc7ba36f9a4f8864358312f7b4fd5b0ffc39fc09d8cc0be7240c5",
+        "url": "https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/SKILL.md"
+      }
+    ],
+    "limitations": [
+      "アイコンはbitmapで個別の線を編集できない",
+      "OCR外部APIは未使用",
+      "元画像の画素を完全一致させる変換ではない"
+    ],
+    "guide": "examples/repositories/image-to-editable/README.md",
+    "fork": "image-to-editable-ppt-ja"
+  }
+]

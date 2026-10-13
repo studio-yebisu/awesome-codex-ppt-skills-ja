@@ -1,0 +1,1140 @@
+/* ================================================================
+   EDITORIAL MAGAZINE  --  Template CSS
+   Aesthetic: Editorial Magazine x Electronic Ink
+   Inspired by guizang-ppt-skill Style A
+   ================================================================
+   Table of Contents:
+   1.  Design Tokens (CSS Custom Properties)
+   2.  Color Theme Variants (5 themes)
+   3.  Reset & Base Typography
+   4.  WebGL Dual Background
+   5.  Deck Container & Slide System
+   6.  Slide Overlays (hero vs regular)
+   7.  Typography Scale (12 classes)
+   8.  Chrome & Foot (magazine header/footer)
+   9.  Layout API (frame + grids)
+   10. Stat Component
+   11. Callout Component
+   12. Platform Card Component
+   13. Rowline Component
+   14. Pillar Component
+   15. Pipeline Component
+   16. Ghost Background Text
+   17. Highlight Component
+   18. Tag & Kicker
+   19. Image System (frame-img + ratios + heights)
+   20. Image Placeholder (img-slot)
+   21. Icons (Lucide)
+   22. Navigation Dots (#nav)
+   23. Overview Mode (ESC)
+   24. Animation System (Motion One)
+   25. Low-Power / Static Mode
+   26. KaTeX / Prism / Pseudocode Overrides
+   27. Responsive Fallbacks
+   ================================================================ */
+
+
+/* ================================================================
+   1. DESIGN TOKENS (CSS Custom Properties)
+   ================================================================ */
+:root {
+  /* Canvas metadata read by html_compiler.py. */
+  --slide-width: 1280px;
+  --slide-height: 720px;
+
+  /* -- Default theme: Ink Classic -- */
+  --ink:         #0a0a0b;
+  --ink-rgb:     10, 10, 11;
+  --paper:       #f1efea;
+  --paper-rgb:   241, 239, 234;
+  --paper-tint:  #e8e5de;
+  --ink-tint:    #18181a;
+
+  /* -- Font stacks (cross-theme, fixed) -- */
+  --serif-display: "Playfair Display", "Source Serif 4", Georgia, serif;
+  --serif-body:    "Source Serif 4", Georgia, serif;
+  --serif-zh:      "Noto Serif SC", source-han-serif-sc, serif;
+  --sans-zh:       "Noto Sans SC", source-han-sans-sc, sans-serif;
+  --mono:          "IBM Plex Mono", ui-monospace, "Cascadia Code", monospace;
+
+  /* -- Spacing tokens -- */
+  --slide-pad-x:  6vw;
+  --slide-pad-top: 6vh;
+  --slide-pad-bot: 10vh;
+
+  /* -- Transition timing -- */
+  --ease-deck: cubic-bezier(.77, 0, .175, 1);
+  --dur-deck:  0.9s;
+}
+
+
+/* ================================================================
+   2. COLOR THEME VARIANTS
+   ================================================================
+   Apply to <html> or <body>:
+     class="ink-classic"      (default, no class needed)
+     class="indigo-porcelain"
+     class="forest-ink"
+     class="kraft-paper"
+     class="dune"
+   ================================================================ */
+
+/* -- Ink Classic (default) -- */
+/* Already set in :root above */
+
+/* -- Indigo Porcelain -- */
+.indigo-porcelain {
+  --ink:         #0a1f3d;
+  --ink-rgb:     10, 31, 61;
+  --paper:       #f1f3f5;
+  --paper-rgb:   241, 243, 245;
+  --paper-tint:  #e4e8ec;
+  --ink-tint:    #152a4a;
+}
+
+/* -- Forest Ink -- */
+.forest-ink {
+  --ink:         #1a2e1f;
+  --ink-rgb:     26, 46, 31;
+  --paper:       #f5f1e8;
+  --paper-rgb:   245, 241, 232;
+  --paper-tint:  #ece7da;
+  --ink-tint:    #253d2c;
+}
+
+/* -- Kraft Paper -- */
+.kraft-paper {
+  --ink:         #2a1e13;
+  --ink-rgb:     42, 30, 19;
+  --paper:       #eedfc7;
+  --paper-rgb:   238, 223, 199;
+  --paper-tint:  #e0d0b6;
+  --ink-tint:    #3a2a1d;
+}
+
+/* -- Dune -- */
+.dune {
+  --ink:         #1f1a14;
+  --ink-rgb:     31, 26, 20;
+  --paper:       #f0e6d2;
+  --paper-rgb:   240, 230, 210;
+  --paper-tint:  #e3d7bf;
+  --ink-tint:    #2d2620;
+}
+
+
+/* ================================================================
+   3. RESET & BASE TYPOGRAPHY
+   ================================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  width: 100%; height: 100%;
+  overflow: hidden;
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--sans-zh);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+em { font-style: italic; font-family: var(--serif-display); }
+.en { font-family: var(--serif-display); font-style: italic; font-weight: 500; }
+
+
+/* ================================================================
+   4. WEBGL DUAL BACKGROUND
+   ================================================================ */
+canvas.bg {
+  position: fixed; inset: 0;
+  width: 100vw; height: 100vh;
+  z-index: 0; display: block;
+  transition: opacity 1.2s ease;
+}
+canvas#c-dark  { opacity: 1; }
+canvas#c-light { opacity: 0; }
+
+body.light-bg canvas#c-light { opacity: 1; }
+body.light-bg canvas#c-dark  { opacity: 0; }
+
+body.low-power canvas.bg { display: none !important; }
+
+
+/* ================================================================
+   5. DECK CONTAINER & SLIDE SYSTEM
+   ================================================================ */
+#deck {
+  position: fixed; inset: 0;
+  width: 10000vw; height: 100vh;
+  display: flex; flex-wrap: nowrap;
+  transition: transform var(--dur-deck) var(--ease-deck);
+  z-index: 10;
+  will-change: transform;
+}
+
+.slide {
+  width: 100vw; height: 100vh;
+  flex: 0 0 100vw;
+  position: relative;
+  padding: var(--slide-pad-top) var(--slide-pad-x) var(--slide-pad-bot);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+
+.slide.light { color: var(--ink);   background: var(--paper); }
+.slide.dark  { color: var(--paper); background: var(--ink);   }
+
+
+/* ================================================================
+   6. SLIDE OVERLAYS (hero vs regular)
+   ================================================================ */
+
+/* Regular slides: thick overlay for text readability */
+.slide::before {
+  content: ""; position: absolute; inset: 0;
+  z-index: -1; pointer-events: none;
+  transition: background .7s ease;
+}
+.slide.light::before { background: rgba(var(--paper-rgb), .78); backdrop-filter: blur(3px); }
+.slide.dark::before  { background: rgba(var(--ink-rgb), .78);   backdrop-filter: blur(3px); }
+
+/* Hero slides: thin overlay, WebGL shines through */
+.slide.hero.light::before { background: rgba(var(--paper-rgb), .16); backdrop-filter: none; }
+.slide.hero.dark::before  { background: rgba(var(--ink-rgb), .12);   backdrop-filter: none; }
+
+/* Hero top/bottom fade for chrome/foot readability */
+.slide.hero::after {
+  content: ""; position: absolute; inset: 0;
+  z-index: -1; pointer-events: none;
+}
+.slide.hero.light::after {
+  background: linear-gradient(180deg,
+    rgba(var(--paper-rgb), .28) 0%,
+    rgba(var(--paper-rgb), 0) 14%,
+    rgba(var(--paper-rgb), 0) 86%,
+    rgba(var(--paper-rgb), .28) 100%);
+}
+.slide.hero.dark::after {
+  background: linear-gradient(180deg,
+    rgba(var(--ink-rgb), .32) 0%,
+    rgba(var(--ink-rgb), 0) 14%,
+    rgba(var(--ink-rgb), 0) 86%,
+    rgba(var(--ink-rgb), .32) 100%);
+}
+
+
+/* ================================================================
+   7. TYPOGRAPHY SCALE (12 classes)
+   ================================================================
+   Hierarchy:
+     .display       11vw    Playfair Display    Hero English headlines
+     .display-zh    7.8vw   Noto Serif SC       Hero Chinese headlines
+     .h1            4.6vw   Noto Serif SC       Page main title
+     .h2            3.2vw   Noto Serif SC       Subtitle
+     .h3            1.9vw   Noto Serif SC       Section / step titles
+     .lead          1.75vw  Noto Serif SC       Lead paragraph (serif)
+     .body          1.22vw  Noto Sans SC        Body text (sans-serif)
+     .body-serif    1.3vw   Noto Serif SC       Body text (serif alt)
+     .big-num       10vw    Playfair Display    Giant metric number
+     .mid-num       5.5vw   Playfair Display    Medium metric number
+     .kicker        12px    IBM Plex Mono       Pre-title label
+     .meta          0.88vw  IBM Plex Mono       Meta info tags
+   ================================================================ */
+
+.display {
+  font-family: var(--serif-display);
+  font-weight: 700; font-size: 11vw;
+  line-height: .92; letter-spacing: -.025em;
+}
+
+.display-zh {
+  font-family: var(--serif-zh);
+  font-weight: 700; font-size: 7.8vw;
+  line-height: 1.04; letter-spacing: -.005em;
+}
+
+.h1 {
+  font-family: var(--serif-zh);
+  font-weight: 700; font-size: 4.6vw;
+  line-height: 1.12; letter-spacing: -.005em;
+}
+
+.h2 {
+  font-family: var(--serif-zh);
+  font-weight: 600; font-size: 3.2vw;
+  line-height: 1.2; letter-spacing: 0;
+}
+
+.h3 {
+  font-family: var(--serif-zh);
+  font-weight: 500; font-size: 1.9vw;
+  line-height: 1.35;
+}
+
+.lead {
+  font-family: var(--serif-zh);
+  font-weight: 400; font-size: 1.75vw;
+  line-height: 1.5; opacity: .86;
+}
+
+.body {
+  font-family: var(--sans-zh);
+  font-weight: 400; font-size: max(15px, 1.22vw);
+  line-height: 1.75; opacity: .82;
+  letter-spacing: .01em;
+}
+
+.body-serif {
+  font-family: var(--serif-zh);
+  font-weight: 400; font-size: max(15px, 1.3vw);
+  line-height: 1.65; opacity: .88;
+}
+
+.big-num {
+  font-family: var(--serif-display);
+  font-weight: 800; font-size: 10vw;
+  line-height: .85; letter-spacing: -.03em;
+  font-feature-settings: "tnum";
+  display: flex; flex-direction: row; align-items: baseline;
+}
+
+.mid-num {
+  font-family: var(--serif-display);
+  font-weight: 700; font-size: 5.5vw;
+  line-height: .88; letter-spacing: -.02em;
+  font-feature-settings: "tnum";
+  display: flex; flex-direction: row; align-items: baseline;
+}
+
+.kicker {
+  font-family: var(--mono);
+  font-size: 12px; letter-spacing: .3em;
+  text-transform: uppercase; opacity: .6;
+  margin-bottom: 2.6vh;
+}
+
+.meta {
+  font-family: var(--mono);
+  font-size: max(11px, .88vw);
+  letter-spacing: .16em;
+  text-transform: uppercase; opacity: .6;
+}
+
+/* -- Layout-API heading aliases (from guizang layouts.md) -- */
+.h-hero {
+  font-family: var(--serif-zh);
+  font-weight: 900; font-size: 7vw;
+  line-height: .96; letter-spacing: -.02em;
+  display: flex; flex-direction: column;
+}
+.h-xl {
+  font-family: var(--serif-zh);
+  font-weight: 700; font-size: 4.2vw;
+  line-height: 1.08; letter-spacing: -.01em;
+  margin-bottom: 1vh;
+}
+.h-sub {
+  font-family: var(--serif-zh);
+  font-weight: 500; font-size: 3.1vw;
+  line-height: 1.25; letter-spacing: 0; opacity: .7;
+}
+.h-md {
+  font-family: var(--serif-zh);
+  font-weight: 600; font-size: 2.3vw;
+  line-height: 1.3;
+}
+
+/* English heading overrides */
+.h-hero-en, .h-xl-en {
+  font-family: var(--serif-display);
+  letter-spacing: -.025em;
+}
+
+/* -- meta-row -- */
+.meta-row {
+  display: flex; gap: 1.2em;
+  align-items: baseline; flex-wrap: wrap;
+  font-family: var(--mono);
+  font-size: max(12px, .92vw);
+  letter-spacing: .16em;
+  text-transform: uppercase; opacity: .6;
+}
+
+
+/* ================================================================
+   8. CHROME & FOOT (magazine header/footer)
+   ================================================================ */
+.chrome {
+  display: flex; justify-content: space-between;
+  align-items: flex-start;
+  font-family: var(--mono);
+  font-size: max(11px, .78vw);
+  letter-spacing: .2em;
+  text-transform: uppercase; opacity: .62;
+}
+.chrome .left, .chrome .right {
+  display: flex; gap: 2.4em; align-items: center;
+}
+.chrome .sep {
+  width: 40px; height: 1px;
+  background: currentColor; opacity: .4;
+}
+
+.foot {
+  margin-top: auto;
+  display: flex; justify-content: space-between;
+  align-items: flex-end;
+  font-family: var(--mono);
+  font-size: max(11px, .78vw);
+  letter-spacing: .18em;
+  text-transform: uppercase; opacity: .5;
+}
+.foot .title {
+  font-family: var(--serif-zh);
+  font-weight: 400; letter-spacing: .05em;
+  text-transform: none; opacity: .75;
+  font-size: 13px;
+}
+
+/* -- Decorative rules -- */
+.rule   { width: 100%; height: 1px; background: currentColor; opacity: .25; margin: 3vh 0; }
+.rule.v { width: 1px; height: 100%; margin: 0; }
+
+
+/* ================================================================
+   9. LAYOUT API (frame + grids)
+   ================================================================ */
+
+/* -- .frame: main content container per slide -- */
+.frame {
+  flex: 1; display: flex; flex-direction: column;
+  min-height: 0; overflow: hidden;
+}
+/* When .frame has a layout class, override default flex-direction: column */
+.frame.grid-2-7-5,
+.frame.grid-2-6-6,
+.frame.grid-2-8-4 { display: flex; flex-direction: row; }
+.frame.grid-3-3 { display: flex; flex-wrap: wrap; }
+.frame.grid-6 { display: flex; }
+
+/* -- Grid templates (use flex row for stable SVG export; grid for browser fallback) -- */
+.grid-2-7-5 { display: flex; flex-direction: row; gap: 4vw; align-items: flex-start; }
+.grid-2-6-6 { display: flex; flex-direction: row; gap: 4vw; align-items: flex-start; }
+.grid-2-8-4 { display: flex; flex-direction: row; gap: 4vw; align-items: flex-start; }
+
+.grid-3-3 {
+  display: flex;
+  flex-direction: row; flex-wrap: wrap;
+  gap: 2.4vh 2vw;
+}
+
+.grid-6 {
+  display: flex;
+  flex-direction: column;
+  gap: 4vw;
+  flex: 1; justify-content: center;
+  padding: 2vh 0;
+}
+.grid-9 {
+  display: flex;
+  flex-direction: row; flex-wrap: wrap;
+  gap: 3vh 4vw;
+  flex: 1; align-content: center;
+}
+.grid-4 {
+  display: flex;
+  flex-direction: row; flex-wrap: wrap;
+  gap: 4vh 6vw;
+  flex: 1; align-content: center;
+}
+.grid-3 {
+  display: flex;
+  flex-direction: row;
+  gap: 4vw; flex: 1; align-items: flex-start;
+}
+
+/* -- .stat-row: explicit flex row for grid-6 browser SVG export stability -- */
+.stat-row {
+  display: flex; gap: 6vw; flex: 1;
+}
+.stat-row .stat-card {
+  flex: 1;
+}
+
+/* -- Flex-sizing fallbacks for browser DOM SVG exporter grid→flex conversion -- */
+/* grid-3: 3 equal columns */
+.grid-3 .pillar { flex: 1; min-width: 0; }
+.grid-3 .stat-card { flex: 1; min-width: 0; }
+
+/* grid-2-7-5: 7:5 ratio columns */
+.grid-2-7-5 .col { min-width: 0; }
+.grid-2-7-5 .col-major { flex: 7; min-width: 0; }
+.grid-2-7-5 .col-minor { flex: 5; min-width: 0; }
+
+/* grid-2-6-6: 1fr 1fr → equal columns */
+.grid-2-6-6 .col { flex: 1; min-width: 0; }
+
+/* pipeline steps: equal columns within pipeline */
+.pipeline .step { flex: 1; min-width: 0; }
+
+/* rowline: 1fr 2fr 1fr → 25% / 50% / 25% */
+.rowline .k { flex: 0 0 22%; min-width: 0; }
+.rowline .v { flex: 1; min-width: 0; }
+.rowline .m { flex: 0 0 20%; min-width: 0; text-align: right; }
+
+/* -- Flex utilities -- */
+.col  { display: flex; flex-direction: column; gap: 2.4vh; }
+.row  { display: flex; align-items: center; gap: 3vw; }
+.split { display: flex; flex-direction: row; gap: 4vw; flex: 1; align-items: center; }
+.fill  { flex: 1; }
+.center { align-items: center; justify-content: center; text-align: center; }
+
+/* -- Compact heading (for dense slides) -- */
+.h-xl-compact {
+  font-size: 2.8vw; margin-bottom: 1vh; min-height: 5vh;
+}
+
+/* -- Positional helpers -- */
+.bottom-left  { position: absolute; left: 6vw;  bottom: 9vh; max-width: 50vw; }
+.bottom-right { position: absolute; right: 6vw; bottom: 9vh; max-width: 50vw; text-align: right; }
+.top-right    { position: absolute; right: 6vw; top: 6vh;    text-align: right; }
+
+
+/* ================================================================
+   10. STAT COMPONENT
+   ================================================================ */
+.stat {
+  display: flex; flex-direction: column;
+  gap: 1vh; align-items: flex-start;
+}
+.stat .n {
+  font-family: var(--serif-display);
+  font-weight: 800; font-size: 8vw;
+  line-height: .88; letter-spacing: -.03em;
+  font-feature-settings: "tnum";
+  display: flex; flex-direction: row; align-items: baseline;
+}
+.stat .l {
+  font-family: var(--sans-zh);
+  font-size: max(13px, 1.05vw); opacity: .7;
+  margin-top: 1vh; font-weight: 400; line-height: 1.5;
+}
+.stat .m {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .22em;
+  text-transform: uppercase; opacity: .5;
+  margin-bottom: .2vh;
+}
+
+/* -- stat-card (layout API variant) -- */
+.stat-card {
+  display: flex; flex-direction: column;
+  gap: .8vh; align-items: flex-start;
+  padding-top: 1.6vh;
+  border-top: 1px solid currentColor;
+  border-color: rgba(127, 127, 127, .3);
+}
+.stat-card .stat-label {
+  font-family: var(--mono);
+  font-size: max(10px, .78vw);
+  letter-spacing: .24em;
+  text-transform: uppercase; opacity: .55;
+}
+.stat-card .stat-nb {
+  font-family: var(--serif-display);
+  font-weight: 800; font-size: 5.2vw;
+  line-height: 1.0; letter-spacing: -.03em;
+  font-feature-settings: "tnum"; margin-top: .4vh;
+  white-space: nowrap;
+  display: flex; flex-direction: row; align-items: baseline;
+}
+.stat-card .stat-nb .stat-unit {
+  font-family: var(--serif-zh);
+  font-weight: 500; font-size: .35em;
+  letter-spacing: 0; opacity: .72;
+  margin-left: .14em;
+}
+.stat-card .stat-note {
+  font-family: var(--sans-zh);
+  font-weight: 400; font-size: max(13px, 1.0vw);
+  line-height: 1.5; opacity: .72; margin-top: .4vh;
+}
+.grid-4 .stat-card .stat-nb { font-size: 4.5vw; }
+.grid-3 .stat-card .stat-nb { font-size: 6vw; }
+
+
+/* ================================================================
+   11. CALLOUT COMPONENT (quote box)
+   ================================================================ */
+.callout {
+  padding: 3vh 2.4vw;
+  border-left: 3px solid currentColor;
+  position: relative;
+  font-family: var(--serif-zh);
+  font-size: max(15px, 1.2vw);
+  line-height: 1.55; opacity: .92;
+}
+.slide.light .callout { background: rgba(var(--ink-rgb), .05); }
+.slide.dark  .callout { background: rgba(var(--paper-rgb), .06); }
+
+.callout .cite, .callout-src {
+  display: block; margin-top: 1.6vh;
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .2em;
+  text-transform: uppercase; opacity: .6;
+}
+.callout .q-big {
+  font-family: var(--serif-zh);
+  font-weight: 600; font-size: max(17px, 1.6vw);
+  line-height: 1.42;
+}
+
+
+/* ================================================================
+   12. PLATFORM CARD COMPONENT (.plat)
+   ================================================================ */
+.plat {
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 2vh 0;
+  border-top: 1px solid currentColor;
+  border-color: rgba(127, 127, 127, .35);
+}
+.plat .name {
+  font-family: var(--serif-zh);
+  font-weight: 700; font-size: 1.8vw;
+  margin-bottom: .6vh;
+}
+.plat .nb {
+  font-family: var(--serif-display);
+  font-weight: 700; font-size: 3.2vw;
+  letter-spacing: -.02em; line-height: 1;
+  font-feature-settings: "tnum";
+}
+.plat .sub {
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .18em;
+  text-transform: uppercase; opacity: .55;
+  margin-top: .6vh;
+}
+
+
+/* ================================================================
+   13. ROWLINE COMPONENT (table row)
+   ================================================================ */
+.rowline {
+  display: flex;
+  flex-direction: row;
+  gap: 2vw; padding: 2.2vh 0;
+  border-top: 1px solid currentColor;
+  align-items: center;
+  border-color: rgba(127, 127, 127, .25);
+}
+.rowline:last-child {
+  border-bottom: 1px solid currentColor;
+  border-color: rgba(127, 127, 127, .25);
+}
+.rowline .k {
+  font-family: var(--serif-zh);
+  font-weight: 700; font-size: 1.7vw;
+}
+.rowline .v {
+  font-family: var(--sans-zh);
+  font-weight: 400; font-size: max(14px, 1.2vw);
+  opacity: .85; line-height: 1.55;
+}
+.rowline .m {
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .2em;
+  text-transform: uppercase; opacity: .6;
+  justify-self: end;
+}
+
+
+/* ================================================================
+   14. PILLAR COMPONENT (three-column cards)
+   ================================================================ */
+.pillar {
+  display: flex; flex-direction: column; gap: 1vh;
+}
+.pillar .ic {
+  font-family: var(--serif-display);
+  font-style: italic; font-size: 2.2vw;
+  opacity: .45; font-weight: 400;
+  line-height: 1.2;
+}
+.pillar .ic svg {
+  width: 2.8vw; height: 2.8vw;
+  stroke-width: 1.2; opacity: .7;
+}
+.pillar .t {
+  font-family: var(--serif-zh);
+  font-weight: 700; font-size: 2vw;
+  line-height: 1.2;
+}
+.pillar .d {
+  font-family: var(--sans-zh);
+  font-weight: 400; font-size: max(12px, 0.9vw);
+  opacity: .76; line-height: 1.55;
+}
+
+
+/* ================================================================
+   15. PIPELINE COMPONENT
+   ================================================================ */
+.pipeline-section {
+  margin-top: 4.4vh; padding-top: 2.8vh;
+  border-top: 1px dashed rgba(127, 127, 127, .32);
+}
+.pipeline-section:first-of-type {
+  border-top: 0; padding-top: 0; margin-top: 3vh;
+}
+.pipeline-label {
+  font-family: var(--mono);
+  font-size: max(11px, .85vw);
+  letter-spacing: .24em;
+  text-transform: uppercase; opacity: .62;
+  margin-bottom: 2.2vh;
+}
+
+.pipeline {
+  display: flex;
+  flex-direction: row;
+  gap: 1.2vw;
+}
+
+.step {
+  display: flex; flex-direction: column;
+  gap: .8vh; padding-top: 1.4vh;
+  border-top: 1px solid currentColor;
+  border-color: rgba(127, 127, 127, .35);
+}
+.step-nb {
+  font-family: var(--serif-display);
+  font-style: italic; font-weight: 500;
+  font-size: 1.15vw; opacity: .45;
+}
+.step-title {
+  font-family: var(--sans-zh);
+  font-weight: 700; font-size: 1.55vw;
+  letter-spacing: .01em; line-height: 1.2;
+}
+.step-desc {
+  font-family: var(--sans-zh);
+  font-weight: 400; font-size: max(12px, .95vw);
+  line-height: 1.45; opacity: .72;
+}
+
+
+/* ================================================================
+   16. GHOST BACKGROUND TEXT
+   ================================================================ */
+.ghost {
+  font-family: var(--serif-display);
+  font-weight: 900; font-size: 34vw;
+  line-height: .8; opacity: .06;
+  letter-spacing: -.04em;
+  position: absolute;
+  font-feature-settings: "tnum";
+  pointer-events: none;
+  user-select: none;
+}
+
+
+/* ================================================================
+   17. HIGHLIGHT COMPONENT (.hi)
+   ================================================================ */
+.hi { position: relative; display: inline; }
+.slide.dark .hi::after {
+  content: ""; position: absolute;
+  left: -.1em; right: -.1em; bottom: -.05em;
+  height: .28em;
+  background: rgba(var(--paper-rgb), .15);
+  z-index: -1;
+}
+.slide.light .hi::after {
+  content: ""; position: absolute;
+  left: -.1em; right: -.1em; bottom: -.05em;
+  height: .28em;
+  background: rgba(var(--ink-rgb), .08);
+  z-index: -1;
+}
+
+
+/* ================================================================
+   18. TAG & KICKER
+   ================================================================ */
+.tag {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .24em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border: 1px solid currentColor;
+  opacity: .85;
+}
+/* .kicker already defined in Typography section */
+
+.sign {
+  font-family: var(--serif-display);
+  font-style: italic; font-weight: 500;
+  font-size: 2vw; opacity: .7;
+}
+
+
+/* ================================================================
+   19. IMAGE SYSTEM (frame-img + ratios + heights)
+   ================================================================ */
+
+/* -- frame-img container -- */
+.frame-img {
+  overflow: hidden; position: relative;
+  background: rgba(0, 0, 0, .04);
+  box-sizing: border-box; width: 100%;
+  border-radius: 4px;
+}
+.slide.dark .frame-img {
+  background: rgba(255, 255, 255, .04);
+  border-color: rgba(255, 255, 255, .12);
+}
+.frame-img > img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+.frame-img.fit-contain > img {
+  object-fit: contain;
+  object-position: center center;
+}
+
+/* -- Aspect ratio classes (single main images only) -- */
+.frame-img.r-16x9  { aspect-ratio: 16/9;  max-height: 64vh; }
+.frame-img.r-16x10 { aspect-ratio: 16/10; max-height: 56vh; }
+.frame-img.r-4x3   { aspect-ratio: 4/3;   max-height: 56vh; }
+.frame-img.r-3x2   { aspect-ratio: 3/2;   max-height: 46vh; }
+.frame-img.r-3x4   { aspect-ratio: 3/4;   max-height: 60vh; }
+.frame-img.r-1x1   { aspect-ratio: 1/1;   max-height: 50vh; }
+
+/* -- Fixed height classes (for grids -- never use aspect-ratio in grids) -- */
+.frame-img.h-16 { height: 16vh; }
+.frame-img.h-18 { height: 18vh; }
+.frame-img.h-20 { height: 20vh; }
+.frame-img.h-22 { height: 22vh; }
+.frame-img.h-24 { height: 24vh; }
+.frame-img.h-26 { height: 26vh; }
+.frame-img.h-28 { height: 28vh; }
+
+/* -- frame-cap: image caption -- */
+.frame-cap {
+  display: flex; justify-content: space-between;
+  align-items: baseline; gap: 1vw;
+  margin-top: .8vh;
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .22em;
+  text-transform: uppercase; opacity: .72;
+}
+.frame-cap .pf {
+  font-family: var(--serif-zh);
+  font-weight: 600; font-size: max(13px, 1vw);
+  letter-spacing: .04em; text-transform: none; opacity: .94;
+}
+.frame-cap .nb {
+  font-family: var(--serif-display);
+  font-style: italic; font-size: max(15px, 1.2vw);
+  letter-spacing: .02em; text-transform: none; opacity: .88;
+}
+.frame-cap .idx {
+  font-family: var(--mono); opacity: .5;
+}
+
+/* -- img-cap alias -- */
+.img-cap {
+  display: block; margin-top: .8vh;
+  font-family: var(--mono);
+  font-size: max(10px, .8vw);
+  letter-spacing: .22em;
+  text-transform: uppercase; opacity: .6;
+}
+
+/* -- figure.tile wrapper -- */
+figure.tile { display: flex; flex-direction: column; margin: 0; min-width: 0; }
+figure.tile > .frame-img { flex: 0 0 auto; }
+
+/* -- figure.frame-img as standalone figure -- */
+figure.frame-img { margin: 0; display: flex; flex-direction: column; min-width: 0; }
+
+
+/* ================================================================
+   20. IMAGE PLACEHOLDER (.img-slot)
+   ================================================================ */
+.img-slot {
+  border: 1.5px dashed rgba(127, 127, 127, .4);
+  display: flex; align-items: center; justify-content: center;
+  flex-direction: column; gap: 1vh;
+  padding: 2vh 2vw;
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .28em;
+  text-transform: uppercase; opacity: .55;
+  position: relative;
+  aspect-ratio: 16/9; width: 100%;
+  max-height: 56vh; margin-inline: auto;
+  box-sizing: border-box;
+}
+.img-slot::before {
+  content: ""; position: absolute; inset: 8px;
+  border: 1px solid currentColor; opacity: .2;
+}
+.img-slot .plus  { font-size: 2vw; font-weight: 300; opacity: .5; letter-spacing: 0; }
+.img-slot .label { position: relative; z-index: 2; text-align: center; }
+.img-slot.r-4x3  { aspect-ratio: 4/3; }
+.img-slot.r-3x2  { aspect-ratio: 3/2; }
+.img-slot.r-1x1  { aspect-ratio: 1/1; }
+.img-slot.r-16x10 { aspect-ratio: 16/10; }
+
+
+/* ================================================================
+   21. ICONS (Lucide via CDN)
+   ================================================================ */
+.ico {
+  width: 1em; height: 1em;
+  display: inline-block; vertical-align: -.12em;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.4; stroke-linecap: round;
+  stroke-linejoin: round; flex-shrink: 0;
+}
+.ico-lg { width: 2.6vw; height: 2.6vw; stroke-width: 1.2; display: inline-block; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+.ico-md { width: 1.8vw; height: 1.8vw; stroke-width: 1.3; display: inline-block; vertical-align: -.4em; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+.ico-sm { width: 1.1vw; height: 1.1vw; stroke-width: 1.4; display: inline-block; vertical-align: -.15em; opacity: .7; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; }
+
+
+/* ================================================================
+   22. NAVIGATION DOTS (#nav)
+   ================================================================ */
+#nav {
+  position: fixed; left: 50%; bottom: 2.6vh;
+  transform: translateX(-50%); z-index: 30;
+  display: flex; gap: 10px;
+  padding: 8px 14px; border-radius: 999px;
+  background: rgba(0, 0, 0, .18);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+#nav .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: rgba(255, 255, 255, .3);
+  cursor: pointer; transition: all .3s ease;
+  border: 0; padding: 0;
+}
+#nav .dot:hover { background: rgba(255, 255, 255, .5); transform: scale(1.15); }
+#nav .dot.active { background: rgba(255, 255, 255, .95); width: 22px; border-radius: 999px; }
+
+body.light-bg #nav { background: rgba(255, 255, 255, .25); }
+body.light-bg #nav .dot { background: rgba(var(--ink-rgb), .25); }
+body.light-bg #nav .dot.active { background: rgba(var(--ink-rgb), .9); }
+
+/* -- Hint label -- */
+#hint {
+  position: fixed; bottom: 3vh; right: 3vw;
+  z-index: 30;
+  font-family: var(--mono);
+  font-size: 10px; letter-spacing: .2em;
+  text-transform: uppercase; opacity: .4;
+  mix-blend-mode: difference; color: #aaa;
+}
+body.low-power #hint { opacity: .72; color: var(--paper); mix-blend-mode: normal; }
+body.light-bg.low-power #hint { color: var(--ink); }
+
+
+/* ================================================================
+   23. OVERVIEW MODE (ESC toggle)
+   ================================================================ */
+#overview {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(var(--ink-rgb), .92);
+  backdrop-filter: blur(12px);
+  display: none; overflow-y: auto;
+  padding: 4vh 4vw;
+}
+#overview .grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2vh 1.6vw;
+  max-width: 90vw; margin: 0 auto;
+}
+#overview .card {
+  cursor: pointer; border-radius: 6px;
+  overflow: hidden; transition: border-color .2s;
+  border: 2px solid rgba(var(--paper-rgb), .15);
+}
+#overview .card:hover { border-color: rgba(var(--paper-rgb), .6); }
+#overview .card.active { border-color: rgba(var(--paper-rgb), .8); }
+#overview .card-label {
+  padding: 6px 10px;
+  font-family: var(--mono);
+  font-size: 11px; letter-spacing: .18em;
+  text-transform: uppercase;
+  color: var(--paper); opacity: .7;
+}
+
+
+/* ================================================================
+   24. ANIMATION SYSTEM (Motion One driven)
+   ================================================================
+   data-anim     : marks an element for entrance animation
+   data-animate  : on <section>, selects recipe
+     cascade     : (default) stagger 120ms fade+y
+     hero        : slower stagger 180ms
+     quote       : line-by-line 600ms
+     directional : left -> divider -> right
+     pipeline    : Space/Arrow manual advance
+   ================================================================ */
+[data-anim] { opacity: 1; }
+
+body.motion-ready [data-anim]              { opacity: 0; }
+body.motion-ready [data-anim="left"]       { transform: translateX(-24px); }
+body.motion-ready [data-anim="right"]      { transform: translateX(24px); }
+body.motion-ready [data-anim="line"]       { opacity: 0; transform: translateY(10px); }
+body.motion-ready [data-animate="pipeline"] [data-anim] { opacity: .15; }
+
+
+/* ================================================================
+   25. LOW-POWER / STATIC MODE
+   ================================================================ */
+body.low-power #deck { transition: none !important; }
+body.low-power *,
+body.low-power *::before,
+body.low-power *::after {
+  animation: none !important;
+  transition: none !important;
+}
+body.low-power.motion-ready [data-anim],
+body.low-power [data-anim] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+
+/* ================================================================
+   26. KATEX / PRISM / PSEUDOCODE OVERRIDES
+   ================================================================
+   Ensure code blocks and math formulas respect the magazine aesthetic.
+   ================================================================ */
+
+/* -- KaTeX math -- */
+.katex-display {
+  margin: 2vh 0;
+  font-size: max(16px, 1.3vw);
+}
+.katex { font-size: 1.1em; }
+
+/* -- Prism.js code blocks -- */
+pre[class*="language-"] {
+  font-family: var(--mono) !important;
+  font-size: max(13px, .95vw) !important;
+  line-height: 1.6 !important;
+  border-radius: 4px;
+  padding: 2.4vh 2vw !important;
+  margin: 2vh 0;
+  max-height: 50vh;
+  overflow: auto;
+}
+code[class*="language-"] {
+  font-family: var(--mono) !important;
+}
+.slide.light pre[class*="language-"] {
+  background: rgba(var(--ink-rgb), .04) !important;
+  border: 1px solid rgba(var(--ink-rgb), .08);
+}
+.slide.dark pre[class*="language-"] {
+  background: rgba(var(--paper-rgb), .06) !important;
+  border: 1px solid rgba(var(--paper-rgb), .08);
+}
+
+/* -- Technical showcase: dark-mode inversion without changing global code scale -- */
+.technical-showcase pre[class*="language-"],
+.technical-showcase code[class*="language-"],
+.technical-showcase .token {
+  color: var(--paper) !important;
+  text-shadow: none !important;
+}
+.technical-showcase .token.comment,
+.technical-showcase .token.prolog,
+.technical-showcase .token.doctype,
+.technical-showcase .token.cdata,
+.technical-showcase .token.string {
+  color: var(--paper-tint) !important;
+  opacity: .72;
+}
+.technical-showcase .token.keyword,
+.technical-showcase .token.function {
+  font-weight: 600;
+}
+.technical-showcase .token.operator,
+.technical-showcase .token.entity,
+.technical-showcase .token.url {
+  background: none !important;
+}
+
+/* -- pseudocode.js -- */
+.ps-root {
+  font-family: var(--serif-body) !important;
+  font-size: max(14px, 1.05vw) !important;
+  margin: 2vh 0;
+}
+.ps-root .ps-keyword {
+  font-weight: 700;
+}
+.technical-showcase .ps-algorithm,
+.technical-showcase .ps-algorithm.with-caption > .ps-line:first-child {
+  border-color: rgba(var(--paper-rgb), .32) !important;
+}
+
+/* -- inline code -- */
+code:not([class]) {
+  font-family: var(--mono);
+  font-size: .88em;
+  padding: .15em .4em;
+  border-radius: 3px;
+}
+.slide.light code:not([class]) { background: rgba(var(--ink-rgb), .06); }
+.slide.dark  code:not([class]) { background: rgba(var(--paper-rgb), .1); }
+
+
+/* ================================================================
+   27. RESPONSIVE FALLBACKS
+   ================================================================ */
+@media (max-width: 900px) {
+  .display    { font-size: 16vw; }
+  .display-zh { font-size: 12vw; }
+  .h1         { font-size: 7vw; }
+  .h-hero     { font-size: 14vw; }
+  .h-xl       { font-size: 9vw; }
+  .pipeline   { flex-wrap: wrap; }
+  .grid-2-7-5,
+  .grid-2-6-6,
+  .grid-2-8-4 { flex-direction: column; }
+}
+
+@media print {
+  canvas.bg { display: none !important; }
+  #nav, #hint, #overview { display: none !important; }
+  .slide { break-after: page; height: auto; min-height: 100vh; }
+  .slide::before, .slide::after { display: none; }
+}
+
+/* ============ MathJax SVG export ============ */
+mjx-container[jax="SVG"] {
+  display: inline-block;
+  max-width: 100%;
+  overflow: visible;
+  vertical-align: middle;
+}
+mjx-container[jax="SVG"][display="true"] {
+  display: block;
+  margin: 0.8em 0;
+  text-align: center;
+}
+mjx-container[jax="SVG"] > svg {
+  overflow: visible;
+}

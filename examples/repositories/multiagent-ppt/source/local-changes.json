@@ -1,0 +1,7 @@
+[
+  "原典コードとPPTX templateはbyte同一でコピー。SlideConfigのデータだけを実templateのplaceholder IDへ補正: TITLE_PAGE_DATE 9→3、SUBCHAPTER_TITLE 5→2、3項目 [2,3,4]→[3,5,4]。",
+  "生成後のPPTX文字をNoto Sans JP/ja-JPへ設定。内容に無関係で本文に隠れるmasterのTRANSPORTラベルを空にし、基本信息を青葉デザインへ置換。元のレイアウトと装飾は維持。",
+  "原典終了pageは文字がlayout上にしかないため同じshapeをpageへ移し、Thanksをまずは相談からへ翻訳。表紙の日付欄を架空サンプル表示へ変更。ページ別日本語ノートを追加。",
+  "原典generate_presentationはlistを受け付けずdict(title/sections)を要求。最初のsectionは表紙扱い、内容処理はindex1/2のみ。一般的な多頁exportとして紹介しない。",
+  "最初のrequests依存不足と題名改行によるWindows filename失敗は初期ログに保持。requestsをproject venvへ追加し、題名から改行を除いて再実行。"
+]

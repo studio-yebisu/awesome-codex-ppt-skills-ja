@@ -18,13 +18,20 @@ SPECS = {
  'japanese-corporate': ('japanese-corporate-ja','build_japanese_repository_examples.py',['--only','gonta']),
  'dashi-ppt': ('dashi-ppt-ja','build_dashi_repository_example.py',[]),
  'codex-image-ppt': ('codex-image-ppt-ja','build_codex_image_repository_example.py',['assemble']),
+ 'multiagent-ppt': ('multiagent-ppt-ja','build_multiagent_repository_example.py',[]),
+ 'knowledge-cat': ('knowledge-cat-ppt-ja','build_knowledge_cat_repository_example.py',[]),
+ 'seaslides': ('seaslides-ja','build_seaslides_repository_example.py',[]),
+ 'ppt-design-skill': ('ppt-design-skill-ja','build_ppt_design_repository_example.py',['--input','examples/repositories/ppt-design-skill/input/data.json']),
+ 'magic-slide': ('magic-slide-ja','build_magic_slide_repository_example.py',['--input','examples/repositories/magic-slide/input/data.json']),
+ 'image-to-editable': ('image-to-editable-ppt-ja','build_image_editable_repository_example.py',['--replay','--source-dir','.build/recorded-image-editable','--output-dir','examples/repositories/image-to-editable','--upstream-dir','.build/actual-upstreams/ningzimu__image-to-editable-ppt-skill']),
 }
-FRAGMENTS = ['web','native','japanese','dashi','codex-image']
+FRAGMENTS = ['web','native','japanese','dashi','codex-image','multiagent','knowledgecat','seaslides','pptdesign','magicslide','imageeditable']
 CODE_SUFFIXES = {'.py','.js','.mjs','.cjs','.jsx','.ts','.tsx','.css','.html','.json','.yaml','.yml','.md','.txt','.toml','.xml','.csv','.svg','.sh','.ps1','.psm1','.ini','.cfg','.in','.sql','.ttf','.woff','.woff2'}
 SKIP_PARTS = {'.git','node_modules','__pycache__','.venv','venv','.pytest_cache','.cache','releases','public'}
 SPECIAL = {
  'gonta223/japanese-corporate-pptx-skill': ['skills/japanese-corporate-pptx/assets/'],
  'carnot-tech/jinba-consulting-pptx-skill': ['assets/SlideCatalog_16x9.pdf','assets/SuperTemplate_62type.pptx'],
+ 'johnson7788/MultiAgentPPT': ['backend/save_ppt/ppt_template_0717.pptx'],
 }
 NOTES = {
  'office-powerpoint-mcp':'原典のstdio MCPへ実際にツール呼び出しを送る。mcp 1.30.0を使う。文字、テーブル、ネイティブチャートを生成し、PowerPoint本体で確認する。サーバーはアーカイブ済み。',
@@ -40,6 +47,12 @@ NOTES = {
  'frontend-editable':'原典のSlideDeck、SlideObjectEditor、SlideSidebarを保つ。data-oidを全ページで一意にする。文字の編集・保存・再読込とHTML書き出しを確認する。Undo/Redo全機能の確認済み表示はしない。',
  'dashi-ppt':'原典の1案経路でJSON→React/tsx→HTMLを実行する。theme05の日本語派生ではcopy値を図形寸法計算へ反映する。3+1経路のcopy検証不整合を記録し、検査を弱めて回避しない。PPTXエンジンは専有条件を持ち、別製品へ抽出しない。',
  'codex-image-ppt':'原典spec/style/jobs/stateを経てCodex native image_genで各ページを実生成し、原典assemble_ppt.pyで組む。画像を個別編集可能なPPTXと呼ばない。toolが公開していないモデル名を推測しない。sample採用は制作エージェントの判断と記録し、人の承認と偽らない。',
+ 'multiagent-ppt':'原典のstart_generate_presentationと同梱templateのAPI不要exportを実行する。実関数はdict入力を要求し、本文処理はsectionのindex1/2に限定。通常のmulti-agent、LLM、画像API経路の成功を示さない。shape IDの設定補正、Noto Sans JP・講稿・固定ラベルの局所化を記録する。',
+ 'knowledge-cat':'原典native-pptx laneの専用build_native_pptx.mjsと原典plan/text/editability/probeを実行する。Codexのartifact-tool作業環境を指定し、本体は複製しない。日本語action-title警告を消さず、本文の命題を実読する。出力の固定デモラベルとNoto Sans JPを局所化。',
+ 'seaslides':'原典のHTML lane、TCS、editorial-magazineテーマを使い、source gate→固有compiler --all→visual gateで生成する。Windowsのreceipt相対パスをPOSIX表記へ直す2ファイルの派生差分を保持し、validatorは変更しない。原典Motion・WebGL・ナビゲーションを保持し、日本語OFL書体と講稿を収録する。HTML表示はローカルHTTP経由。PPTXは今回の出力に含めない。',
+ 'ppt-design-skill':'原典Build Modeのtask初期化、ThemeComposer、strict Presentationと公開text/shapes/bar_chartを使う。日本語の色名aliasと見出しフォントを明示解決し、入力JSON・テーマlock・講稿を残す。売上試算と利益、未収集とゼロを区別する。原典と公開engineは無改変。編集可能な本文と図形をPowerPoint本体で描画して確認する。',
+ 'magic-slide':'原典のoutline/Brief Lite、モジュールHTML/CSS、merge、inject、serveとMagic Moveを使う。隣接ページで数字・準備品を意味に沿って受け渡す。認証関数のscopeだけを修正した日本語派生injectorを使い、原典と差分を保持する。cursor、dock、Overview、動き、serverの認証と保存先制限を保持する。表示用iframeと、原典serverでの編集・保存を案内し、agent QAと人のrevision/adoptionを区別する。',
+ 'image-to-editable':'原典editpptのprepare→page worker→build/validate→record→finalizeで画像を再構成する。Codex内蔵image_genで分離したアイコンはbitmapとして保持し、本文・カード・単純な矢印をnative要素にする。新規案内ノートは元画像からの抽出と区別し、本文XMLと画像を保って追加する。再出力kitは保存済みmanifest・分離済み画像の再利用で、新規画像編集ではない。元画像との比較と実PowerPoint描画、編集範囲を確認する。',
 }
 
 def load(p): return json.loads(Path(p).read_text(encoding='utf-8-sig'))
@@ -57,6 +70,22 @@ def files(folder):
 def source_files(folder,repo):
  for p in files(folder):
   name=p.relative_to(folder).as_posix()
+  if repo=='johnson7788/MultiAgentPPT' and not (name in {'ACQUISITION.json','LICENSE','README.md','frontend/LICENSE'} or name.startswith('backend/save_ppt/')): continue
+  if repo=='gnipbao/knowledge-cat-ppt-skill':
+   refs=load(ROOT/'data/knowledgecat-repository-guides.json')[0]['source_refs']
+   if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
+  if repo=='touying-typ/seaslides':
+   refs=load(ROOT/'data/seaslides-repository-guides.json')[0]['source_refs']
+   if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
+  if repo=='sunchaokun/PPT-Design-Skill':
+   refs=load(ROOT/'data/pptdesign-repository-guides.json')[0]['source_refs']
+   if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
+  if repo=='daniel-style/magic-slide':
+   refs=load(ROOT/'data/magicslide-repository-guides.json')[0]['source_refs']
+   if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
+  if repo=='ningzimu/image-to-editable-ppt-skill':
+   refs=load(ROOT/'data/imageeditable-repository-guides.json')[0]['source_refs']
+   if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
   # The dedicated proprietary export engine is fetched only inside the original
   # integrated Dashi skill at reproduction time. Never publish a separated copy.
   if repo=='chuspeeism/dashi-ppt-skill' and '/packages/html-deck-to-pptx/' in '/'+name and p.name!='LICENSE': continue
@@ -127,23 +156,49 @@ def make_kit(case,fork):
   up=ROOT/'.build/actual-upstreams'/repo.replace('/','__')
   for p in (up/'skills/codex-ppt/scripts').glob('*.py'):
    copy(p,kit/'source/upstream/skills/codex-ppt/scripts'/p.name)
+ if cid=='multiagent-ppt':
+  for name in ['source/run_export.py','input/data.json']:
+   copy(folder/name,workspace/'examples/repositories'/cid/name)
+ if cid=='knowledge-cat':
+  for name in ['input/data.json','input/BRIEF.md']:
+   copy(folder/name,workspace/'examples/repositories'/cid/name)
+ if cid=='ppt-design-skill':copy(folder/'input/data.json',workspace/'examples/repositories'/cid/'input/data.json')
+ if cid=='magic-slide':copy(folder/'input/data.json',workspace/'examples/repositories'/cid/'input/data.json')
+ if cid=='image-to-editable':
+  for p in files(folder):copy(p,workspace/'.build/recorded-image-editable'/p.relative_to(folder))
+ if cid=='seaslides':
+  for p in files(folder):copy(p,workspace/'examples/repositories'/cid/p.relative_to(folder))
  requirements=['python-pptx==1.0.2','Pillow==12.3.0','lxml==6.1.3','fonttools==4.63.0','brotli==1.2.0','beautifulsoup4==4.15.0','filelock==4.1.1']
  if cid=='office-powerpoint-mcp':requirements.append('mcp[cli]==1.30.0')
+ if cid=='multiagent-ppt':requirements.append('requests==2.34.2')
+ if cid=='seaslides':requirements.append('pypdf==6.20.1')
+ if cid=='ppt-design-skill':requirements.append('pptx-designer==1.0.0b11')
+ if cid=='image-to-editable':requirements+=['PyMuPDF==1.28.2','openai==3.29.0','numpy==2.5.4','requests==2.34.2','PyYAML==6.0.3']
  write(workspace/'requirements-reproduce.txt','\n'.join(requirements)+'\n')
  font=load(ROOT/'data/fonts.json')[0]
  setup=''
  if cid in {'minorun-marp','revealjs-skill'}:setup+='    & npm --prefix .build/repository-runtime ci --ignore-scripts\n    if ($LASTEXITCODE) { throw "npm ci failed" }\n'
+ if cid=='seaslides':
+  setup+='    $taskRenderer = ".build/actual-upstreams/touying-typ__seaslides/skills/seaslides-html-slides-skill/scripts/html_to_svg"\n    & npm --prefix $taskRenderer ci --ignore-scripts\n    if ($LASTEXITCODE) { throw "SeaSlides renderer dependencies failed" }\n    & npm --prefix $taskRenderer exec -- playwright install chromium --only-shell\n    if ($LASTEXITCODE) { throw "SeaSlides browser setup failed" }\n'
  if cid=='dashi-ppt':
   setup+='    & $taskPy tools/acquire_repository.py chuspeeism/dashi-ppt-skill\n    if ($LASTEXITCODE) { throw "Pinned upstream acquisition failed" }\n    & npm --prefix .build/actual-upstreams/chuspeeism__dashi-ppt-skill/skills/dashi-ppt/project ci --ignore-scripts\n    if ($LASTEXITCODE) { throw "Dashi dependencies failed" }\n'
+ if cid=='image-to-editable':
+  setup+='    & $taskPy -m pip install -e .build/actual-upstreams/ningzimu__image-to-editable-ppt-skill/skills/image-to-editable-ppt/cli\n    if ($LASTEXITCODE) { throw "Original editppt CLI installation failed" }\n'
  generation='    & $taskPy tools/'+generator+' '+' '.join(args)+'\n'
  if case['format']=='pptx' and cid!='codex-image-ppt':
   generation='    $taskArgs = @('+','.join('"'+a+'"' for a in args)+')\n    if ($Render) { $taskArgs += "--render" }\n    & $taskPy tools/'+generator+' @taskArgs\n'
+ if cid=='knowledge-cat':
+  generation='    $taskArgs = @("--node",$NodePath,"--workspace",$ArtifactWorkspace)\n    if ($Render) { $taskArgs += "--render" }\n    & $taskPy tools/'+generator+' @taskArgs\n'
+ if cid=='image-to-editable':
+  generation='    & $taskPy tools/'+generator+' '+' '.join(args)+'\n    if ($LASTEXITCODE) { throw "Recorded image reconstruction replay failed" }\n    if ($Render) { & pwsh -NoProfile -File tools/render_powerpoint.ps1 -PresentationPath examples/repositories/image-to-editable/deck.pptx -OutputDirectory examples/repositories/image-to-editable/render }\n'
  if cid=='codex-image-ppt':
   generation+='    if ($Render) { & pwsh -NoProfile -File tools/render_powerpoint.ps1 -PresentationPath examples/repositories/codex-image-ppt/codex-image-ppt.pptx -OutputDirectory examples/repositories/codex-image-ppt/render }\n'
  fontsetup=''
  if cid!='codex-image-ppt':
   fontsetup='    $taskFont = Join-Path $taskRoot ".build/fonts/NotoSansJP[wght].ttf"\n    if (-not (Test-Path -LiteralPath $taskFont)) {\n        New-Item -ItemType Directory -Path (Split-Path $taskFont) -Force | Out-Null\n        Invoke-WebRequest -Uri "'+font['source_url']+'" -OutFile $taskFont\n    }\n    if ((Get-FileHash -LiteralPath $taskFont -Algorithm SHA256).Hash.ToLower() -ne "'+font['source_sha256']+'") { throw "Pinned font hash mismatch" }\n'
  script='param([switch]$Render)\n$ErrorActionPreference = "Stop"\n$taskRoot = Join-Path $PSScriptRoot "workspace"\nPush-Location -LiteralPath $taskRoot\ntry {\n    & python -m venv .build/ppt-master-venv\n    if ($LASTEXITCODE) { throw "Python environment failed" }\n    $taskPy = Join-Path $taskRoot ".build/ppt-master-venv/Scripts/python.exe"\n    & $taskPy -m pip install -r requirements-reproduce.txt\n    if ($LASTEXITCODE) { throw "Python dependencies failed" }\n'+fontsetup+setup+generation+'    if ($LASTEXITCODE) { throw "Generation failed" }\n    & $taskPy tools/mark_reproduced.py\n    Write-Host "Generated: $taskRoot/examples/repositories/'+cid+'"\n    Write-Host "Open the actual output and review all pages before using it."\n} finally { Pop-Location }\n'
+ if cid=='knowledge-cat':
+  script=script.replace('param([switch]$Render)','param([switch]$Render, [Parameter(Mandatory=$true)][string]$ArtifactWorkspace, [string]$NodePath="node")')
  write(kit/'reproduce/Reproduce.ps1',script)
  mark="from pathlib import Path\nimport json, hashlib\np=Path('examples/repositories/"+cid+"')\nartifact=p/"+repr(Path(case['artifact_download']).name if case['format']=='pptx' else Path(case['preview']).name)+"\n(p/'QA.json').write_text(json.dumps({'status':'generated_awaiting_review','artifact_sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),'visual_review':'Review your reproduced output; the original catalog QA is not transferred to a new run.'},ensure_ascii=False,indent=2),encoding='utf-8')\n"
  write(workspace/'tools/mark_reproduced.py',mark)
@@ -153,6 +208,18 @@ def make_kit(case,fork):
   copy(ROOT/'data/dependency-qa.json',kit/'source/dependency-qa.json')
   readme+='\n固定npm依存の監査記録はsource/dependency-qa.jsonです。Marp CLI側の依存に未修正の検出項目があります。今回の再現は同梱した原稿のHTML生成を対象とし、サイトのHTTPサーバーではこのCLIを実行していません。\n'
  if cid=='dashi-ppt':readme+='\nDashi専有エンジンを分離再配布しません。スクリプトは完全な原典を固定commitで取得し、そのDashi skill内のHTML生成を実行します。PPTX/PDFエンジンの動作検証は今回の作例に含みません。\n'
+ if cid=='knowledge-cat':
+  readme=readme.replace('.\\reproduce\\Reproduce.ps1','.\\reproduce\\Reproduce.ps1 -ArtifactWorkspace "artifact-tool workspaceのパス" -NodePath "node.exeのパス"')
+  readme+='\n原典native出力には、Codexに同梱される@oai/artifact-toolを解決できる既存workspaceが必要です。Codexのload_workspace_dependenciesで確認し、node_modules/@oai/artifact-toolを持つNode workspaceを指定してください。本体・node_modulesはZIPに複製していません。任意のpublic npm installで代替する案内ではありません。\n'
+ if cid=='seaslides':
+  readme+='\n原典package-lockからPlaywright 1.60とChromium headless shell 1223を使用します。Motion11.11.17はMIT表示とともにローカルbundleを同梱。生成HTMLはES moduleを使うため、出力フォルダーを `python -m http.server 8000` 等で配信して開きます。書き換え後も原典source/visual gateを通し、全ページを実表示して確認してください。\n'
+  readme+='\n固定renderer依存のnpm audit記録はsource/dependency-qa.jsonです。form-dataのHigh 1件を未解消として記録しています。この実例の再現は同梱原稿のローカル描画で、外部AI APIは呼びません。依存の検出記録と再現成功を区別します。\n'
+ if cid=='ppt-design-skill':
+  readme=readme.replace('この再現スクリプトは比較用の固定原稿を作るもので、input/data.jsonだけを変えれば全ページの文章が自動で変わる汎用アプリではありません。','reproduce/workspace/examples/repositories/ppt-design-skill/input/data.jsonの価格、日数、仮定販売数、見出し、講稿を変えて再実行できます。別の構成や題材には、原典Build Modeのbrief/page-plan/theme-lockを作り、公開部品でページを配置します。')
+ if cid=='magic-slide':
+  readme+='\n表示・編集・保存には、生成フォルダーで `python source/ja-runtime/scripts/serve.py index.html --no-open` を実行し、表示された /deck/ のURLを開きます。静的サイトのフロートは表示とページ移動の確認用です。原典の人によるrevision/adoptionはpendingとして残し、今回のagent QAを人の承認とは扱いません。\n'
+ if cid=='image-to-editable':
+  readme+='\nこの再出力は保存済みのpage manifestと分離済みアイコンを原典CLIで組み直します。新しい画像編集やworkerを再実行するものではありません。新規入力は日本語SKILLと原典のbuiltin-imagegen/worker契約から制作します。本文・図形とbitmapの編集範囲を区別し、元画像と比較してください。原典CLIのPyMuPDF等には個別の依存ライセンスがあります。\n'
  write(kit/'REPRODUCE.md',readme);write(folder/'REPRODUCE.md',readme)
  zip_folder(kit,ROOT/'downloads'/(cid+'-example-ja.zip'),cid)
  return 'downloads/'+cid+'-example-ja.zip'
@@ -177,6 +244,8 @@ def main():
    fork=make_fork(c,profiles[c['repository']]);kit=make_kit(c,fork)
    c['fork_id']=fork.name;c['fork_download']='downloads/'+fork.name+'.zip';c['source_download']=kit
    c['reproduce_script']='reproduce/Reproduce.ps1'
+   if c['id']=='knowledge-cat':c['reproduce_command']='.\\reproduce\\Reproduce.ps1 -ArtifactWorkspace "artifact-tool workspaceのパス" -NodePath "node.exeのパス"'
+   if c['id']=='image-to-editable':c['preview_notice']='文字・カード・矢印は編集可能。アイコンは分離した画像です。日本語の案内ノートを追加しています。'
    if c['format']=='html':c['artifact_download']=kit
    profiles[c['repository']]['fork']=fork.name
    packaged+=1

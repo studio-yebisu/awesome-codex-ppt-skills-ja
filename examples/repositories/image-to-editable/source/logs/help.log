@@ -1,0 +1,42 @@
+["M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe", "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__image-to-editable-ppt-skill\\skills\\image-to-editable-ppt\\cli\\editppt\\cli.py", "--help"]
+usage: editppt [-h] command ...
+
+CLI for preparing, rebuilding, validating, and finalizing editable PPTX runs.
+
+positional arguments:
+  command
+    setup     Initialize local config and run doctor.
+    doctor    Check CLI dependencies and config status.
+    config    Write or update ~/.editppt/config.yaml.
+    prepare   Prepare a run directory from image/PDF/PPTX input.
+    run       Manage run state, dispatch records, result records, and
+              finalization.
+    formula   Render LaTeX formulas into PPT image assets.
+    page      Deterministic page-local tools: text measurement, manifest
+              build, contact sheet, validation.
+    image     Generate/edit images and process image assets.
+
+options:
+  -h, --help  show this help message and exit
+
+Command groups:
+  - setup/doctor/config manage the local editppt environment and API fallback config.
+  - prepare creates a run directory and writes the selected image backend contract.
+  - run manages deterministic workflow state, dispatch records, result records, and finalization.
+  - page measures text geometry: hints reports text line boxes and font sizes from source ink.
+  - image is the Codex OAuth/OpenAI-compatible CLI fallback and processes image files.
+  - formula renders LaTeX formulas into PPT image assets and manifest fragments.
+
+Examples:
+  editppt setup
+  editppt prepare deck.pdf
+  editppt run next <run> --json
+  editppt run finalize <run>
+  editppt formula render-latex pages/page_001 --tex "\frac{a}{b}" --out assets/formula.svg --box 100,100,300,80 --fragment formula-fragment.json
+
+Use '<command> --help' for exact arguments:
+  editppt prepare --help
+  editppt run --help
+  editppt image --help
+  editppt formula render-latex --help
+

@@ -14,7 +14,68 @@
       "pptx_sha256": "7256e937b3beb4b3125b1224691d52c7bc61a4bb23f2123e859f8c7f11351c96",
       "tables": 2,
       "charts": 1
+    },
+    {
+      "repository": "johnson7788/MultiAgentPPT",
+      "method": "配布ZIPを新しい別フォルダーへ展開し、新venvからReproduce.ps1を実行。PowerPoint/外部AI APIなし。",
+      "pages": 4,
+      "pptx_sha256": "2b19c0b734cfebd6f03cc21f59cec9ca2620ed952ce7f7f66d1065f25329168e",
+      "output_review_status": "generated_awaiting_review",
+      "zip_sha256": "2122c8f83ad97a4bd81d3ffefafc301c7e28589718ce62ba3d886556b8d290aa"
+    },
+    {
+      "repository": "gnipbao/knowledge-cat-ppt-skill",
+      "method": "配布ZIPを新しい別フォルダーへ展開し、新venvからReproduce.ps1を実行。PowerPoint/外部AI APIなし。",
+      "pages": 5,
+      "pptx_sha256": "3eaa1c0df1794a2ba632d43c5a55665adef7feb412d673a8ef0244a8e0c391d9",
+      "output_review_status": "generated_awaiting_review",
+      "zip_sha256": "56a57b849f207eab1672f7915f959353071235942ebd42e800c485d1905f3564",
+      "required_runtime": "既存のCodex artifact-tool workspaceとNodeを明示指定。本体は配布しない。"
+    },
+    {
+      "repository": "touying-typ/seaslides",
+      "method": "配布ZIPを新しい別フォルダーへ展開し、新venv/原典npm lock/ChromiumからReproduce.ps1を実行。原典source/visual gate通過。",
+      "pages": 5,
+      "html_sha256": "c66d9dbd349061ebaa05cdd779ada3d6cf2f5a90283472ac42d1389912fe4ecb",
+      "output_review_status": "generated_awaiting_review",
+      "tested_zip_sha256": "389f65869cafda781a787bd080ebc923eb4a29896f45be40b50f2a347b3aa4c9",
+      "dependency_audit": "High 1件を別記録。依存監査の合格と生成成功を混同しない。"
+    },
+    {
+      "repository": "sunchaokun/PPT-Design-Skill",
+      "method": "配布ZIPを新しいフォルダーへ展開し、新venvからReproduce.ps1を実行。原典Build Modeの公開engine、initializer、inspectを実行。PowerPoint/外部AI APIなし。",
+      "pages": 5,
+      "pptx_sha256": "5619b6c613e0054115e1e0139b3b0fd9760a998bdacd94fd58fbbdc07337033f",
+      "zip_sha256": "85f8ac7b6da9945e28f2a47fab7edef1f1a90fb3d63577a09984740c65c74cba",
+      "output_review_status": "generated_awaiting_review",
+      "engine": "pptx-designer==1.0.0b11"
+    },
+    {
+      "repository": "daniel-style/magic-slide",
+      "method": "配布ZIPを新しい別フォルダーへ展開し、新venvからReproduce.ps1を実行。原典mergeと、認証closureを公開する1行補正を加えたinjectorを使用。外部AI APIなし。",
+      "pages": 5,
+      "html_sha256": "f7ad90944cdcfc65757a0f2bf68e268ae8c8f85bf734e41a99d0beff3e163a42",
+      "current_archive_sha256": "bb1f413093b0f0925fc5364146207352ef376bdf31e431ebd9bbb0d47a5b1a0a",
+      "input_files_match_current_archive": true,
+      "output_review_status": "generated_awaiting_review",
+      "run_log_sha256": "0239793b07402e97b5ae8255586234852d8bba6cb447980d3dbacaa3ebde5901"
+    },
+    {
+      "repository": "ningzimu/image-to-editable-ppt-skill",
+      "method": "修正後の配布ZIPを新しい別フォルダーへ展開し、新venvからReproduce.ps1を実行。固定manifestと内蔵画像編集で分離済みの7画像を、原典CLIで再結合。新規画像生成ではない。",
+      "pages": 2,
+      "pptx_sha256": "6da432ab26aa7ad3f3ff4975c6da82ab792059f7a98b5ba776fced4d3aea1449",
+      "zip_sha256": "1eacb74a74a63bae81ed679096b57e461f9113f08f38f8f752583730dd93d0ff",
+      "output_review_status": "generated_awaiting_review",
+      "slide_xml_and_media_preserved_parts": 9,
+      "japanese_notes_preserved": true,
+      "run_log_sha256": "b0cfc98b77853a945c4a044191da3d613bd4be45e3cac73eb7793c2fb0935d08",
+      "resolved_packaging_issue": {
+        "failure_log_sha256": "586a658db5d9a5d6b58876e8f70af98dc310fdcafb1e0e20de88793435635410",
+        "reason": "Windowsの深い展開先で、原典CLIが起動する子スクリプトの兄弟module importが失敗。再現runner内だけで原典runtimeのPYTHONPATHを明示し、原典コードを変更せず解消。"
+      }
     }
   ],
-  "scope": "この2形式の配布キット独立実行。他11キットの新venv実行とは読み替えない。"
+  "scope": "8形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全リポの再現確認へ読み替えない。SeaSlidesの依存監査文書追記前の入力ZIP SHAを保存し、生成経路は変えない。Magic Slideは試験時展開ファイルと現配布ZIP全入力のbyte一致を確認。画像→PPTXは固定manifest/分離済み画像のreplayを確認し、新しい入力への自動抽出を検証した表示ではない。",
+  "checked_at": "2026-10-13T18:52:42.229178+00:00"
 }

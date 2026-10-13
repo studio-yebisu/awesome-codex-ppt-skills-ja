@@ -1,0 +1,67 @@
+[
+  {
+    "repository": "rsrohan99/presenter",
+    "production_status": "blocked",
+    "execution_status": "local_trial_generated_not_packaged",
+    "execution_type": "original_utils_and_documented_renderer_only",
+    "case_ids": [],
+    "summary_ja": "原典utilsと指定mdslidesで日本語5枚をローカル生成。OpenAIを使うMulti-agent本体は未実行。固定commitにライセンスがなく、公開例・再現ZIPは配布しない。",
+    "requirements": [
+      "原典をローカル取得",
+      "README指定GitLab版MarkdownSlides（同名PyPIパッケージとは異なる）",
+      "公開配布には原典の許諾確認が必要"
+    ],
+    "steps": [
+      "日本語本文と講稿を入力",
+      "原典の設定・Markdown整形関数を実行",
+      "原典workflow指定mdslidesでHTML生成",
+      "全ページとspeaker notesをブラウザ確認"
+    ],
+    "commands": [
+      "python tools/build_presenter_repository_example.py"
+    ],
+    "source_refs": [
+      {
+        "path": "README.md",
+        "sha256": "8ae796231cf79b3499d7731be06e3ef63bd6b5a9927717eeed524e090cd31070",
+        "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/README.md"
+      },
+      {
+        "path": "run.py",
+        "sha256": "24f69b55a4eb21dc8f74d5773080d298c6cc6991b8140e08bedbbd59e9f41813",
+        "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/run.py"
+      },
+      {
+        "path": "workflow.py",
+        "sha256": "e3db881c4e3596b458a6f0e43a544a64385e2f9c7d1c039a34e5fbc17ddd4562",
+        "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/workflow.py"
+      },
+      {
+        "path": "utils.py",
+        "sha256": "0d8d68a218df43b7740639e76e4799744c9e8cebdb8cd3577267201103ab56a9",
+        "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/utils.py"
+      },
+      {
+        "path": "models.py",
+        "sha256": "c20f29e878b040ad48f6a9ad0d70415aebc7fe555ccaf9cf389c12d3aedde5bb",
+        "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/models.py"
+      },
+      {
+        "path": "agents/slide_maker.py",
+        "sha256": "e6882c810687a0f2cb1767bb82e49d31c060ab67ddc2ad7f0cf0bf7b3bc2465d",
+        "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/agents/slide_maker.py"
+      },
+      {
+        "path": "requirements.txt",
+        "sha256": "dd071bbe6be92763b3a2a110a0290732f8ab6a373c6ea45d83fa1f638dec44ce",
+        "url": "https://github.com/rsrohan99/presenter/blob/6a4534d65bf3e053df16a1f5cb060de6d98b6a2b/requirements.txt"
+      }
+    ],
+    "evidence": "examples/repositories/presenter/ATTEMPT.json",
+    "limitations": [
+      "OpenAIによる構成・本文生成、Mermaid図、音声、動画、原典DeckTape PDFは未実施。",
+      "原典コードおよび生成HTMLは.buildローカル試作に限定。",
+      "本リポジトリに固有SKILLやテンプレートは存在しない。"
+    ]
+  }
+]

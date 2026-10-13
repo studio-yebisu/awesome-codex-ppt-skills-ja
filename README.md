@@ -2,13 +2,13 @@
 
 掲載GitHubリポジトリを実際に使い、**そのリポで作った日本語資料 → 全ページ再生 → 日本語の使い方 → 派生スキル・再現用ソースキット**へ進めるガイドです。Studio Yebisuが原典の調査、日本語制作、派生スキルとサイトの開発を担当します。原典カタログは [zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)です。
 
-**16リポジトリで制作した19冊・128枚を掲載しています。** 元209件・6分類の作者、分類、一覧は保持しています。209件の原典入口を取得・棚卸し済みで、残る193件は未制作です。原典の取得と、実行・生成の成功は別に記録します。
+**22リポジトリで制作した25冊・154枚を掲載しています。** 元209件・6分類の作者、分類、一覧は保持しています。209件の原典入口を取得・棚卸し済みで、残る187件は未制作です。原典の取得と、実行・生成の成功は別に記録します。
 
 今回の改修はローカル実装・未公開です。[ローカルサイト](http://127.0.0.1:8847/)で再生できます。[既存の公開サイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)は更新前の版です。
 
 [全209件](#catalog) · [6カテゴリ](#choose) · [製品仕様](docs/PRODUCT_SPEC.md) · [制作台帳](data/production-ledger.json) · [確認記録](docs/QA.md) · [出典と利用条件](docs/出典とライセンス.md)
 
-## 実際に制作した16リポジトリ
+## 実際に制作した22リポジトリ
 
 | 原典リポジトリ | 出力と冊数 | 全ページ再生 | 使い方と派生 |
 |---|---|---|---|
@@ -28,8 +28,16 @@
 | [archlizheng/frontend-slides-editable](https://github.com/archlizheng/frontend-slides-editable) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=frontend-editable) | [日本語ガイド](repository.html?repo=archlizheng/frontend-slides-editable)・[派生SKILL](skill-forks/frontend-editable-ja/SKILL.md) |
 | [chuspeeism/dashi-ppt-skill](https://github.com/chuspeeism/dashi-ppt-skill) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=dashi-ppt) | [日本語ガイド](repository.html?repo=chuspeeism/dashi-ppt-skill)・[派生SKILL](skill-forks/dashi-ppt-ja/SKILL.md) |
 | [ningzimu/codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill) | 画像主体PPTX／1冊 | [3枚](http://127.0.0.1:8847/case.html?id=codex-image-ppt) | [日本語ガイド](repository.html?repo=ningzimu/codex-ppt-skill)・[派生SKILL](skill-forks/codex-image-ppt-ja/SKILL.md) |
+| [johnson7788/MultiAgentPPT](https://github.com/johnson7788/MultiAgentPPT) | 編集可能PPTX／1冊 | [4枚](http://127.0.0.1:8847/case.html?id=multiagent-ppt) | [日本語ガイド](repository.html?repo=johnson7788/MultiAgentPPT)・[派生SKILL](skill-forks/multiagent-ppt-ja/SKILL.md) |
+| [gnipbao/knowledge-cat-ppt-skill](https://github.com/gnipbao/knowledge-cat-ppt-skill) | 編集可能PPTX／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=knowledge-cat) | [日本語ガイド](repository.html?repo=gnipbao/knowledge-cat-ppt-skill)・[派生SKILL](skill-forks/knowledge-cat-ppt-ja/SKILL.md) |
+| [touying-typ/seaslides](https://github.com/touying-typ/seaslides) | 固有HTML／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=seaslides) | [日本語ガイド](repository.html?repo=touying-typ/seaslides)・[派生SKILL](skill-forks/seaslides-ja/SKILL.md) |
+| [sunchaokun/PPT-Design-Skill](https://github.com/sunchaokun/PPT-Design-Skill) | 編集可能PPTX／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=ppt-design-skill) | [日本語ガイド](repository.html?repo=sunchaokun/PPT-Design-Skill)・[派生SKILL](skill-forks/ppt-design-skill-ja/SKILL.md) |
+| [daniel-style/magic-slide](https://github.com/daniel-style/magic-slide) | 固有HTML／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=magic-slide) | [日本語ガイド](repository.html?repo=daniel-style/magic-slide)・[派生SKILL](skill-forks/magic-slide-ja/SKILL.md) |
+| [ningzimu/image-to-editable-ppt-skill](https://github.com/ningzimu/image-to-editable-ppt-skill) | 編集可能PPTX／1冊 | [2枚](http://127.0.0.1:8847/case.html?id=image-to-editable) | [日本語ガイド](repository.html?repo=ningzimu/image-to-editable-ppt-skill)・[派生SKILL](skill-forks/image-to-editable-ppt-ja/SKILL.md) |
 
-編集可能なPPTXは6冊40枚、画像主体のPPTXは1冊3枚、各リポ固有のHTMLは12冊85枚です。PPTX7冊43枚はMicrosoft PowerPointで描画し、プレビューにはそのPNGを使用しています。HTMLは各リポの実装・テンプレートで再生します。全128ページを実表示または実描画画像で目視確認しました。操作・配布などの確認範囲は [QA記録](docs/QA.md) と各冊のQA.jsonを参照してください。
+MultiAgentPPTは原典のAPI不要exportを実行した4枚を追加。通常のmulti-agent・LLM・画像API経路は未実行です。
+
+編集可能なPPTXは10冊56枚、画像主体のPPTXは1冊3枚、各リポ固有のHTMLは14冊95枚です。PPTX11冊59枚はMicrosoft PowerPointで描画し、プレビューにはそのPNGを使用しています。HTMLは各リポの実装・テンプレートで再生します。全154ページを実表示または実描画画像で目視確認しました。操作・配布などの確認範囲は [QA記録](docs/QA.md) と各冊のQA.jsonを参照してください。
 
 画像主体のcodex-ppt-skill作例は、native imagegenが生成した全ページ画像を原典assemblerで組み立てたものです。文字・図を個別編集できるPPTXとは区別し、発表者ノートを付けています。実ツールがモデル名を公開していないため、特定の画像モデルを使用したとは断定しません。
 
@@ -56,11 +64,11 @@ python -m http.server 8847 --bind 127.0.0.1
 
 [ローカルサイト](http://127.0.0.1:8847/)を開いてください。GitHub上のHTMLリンクはソース表示になるため、再生にはHTTPサーバーを使います。ブラウザー内で任意の資料を生成するサービスではなく、実例から使うリポを選び、自分のAI環境で制作するためのサイトです。
 
-制作状態の正本は [製品仕様](docs/PRODUCT_SPEC.md)、[現行方針](docs/PROJECT.md)、[元209件](data/skills.json)、[リポ別工程](data/project-workflows.json)、[制作台帳](data/production-ledger.json)、[19冊の対応データ](data/case-studies.json)、[日本語ガイド](data/repository-guides.json)です。全件の制作を共通の生成スクリプト1本で置き換えず、各キットの手順を使用します。
+制作状態の正本は [製品仕様](docs/PRODUCT_SPEC.md)、[現行方針](docs/PROJECT.md)、[元209件](data/skills.json)、[リポ別工程](data/project-workflows.json)、[制作台帳](data/production-ledger.json)、[25冊の対応データ](data/case-studies.json)、[日本語ガイド](data/repository-guides.json)です。全件の制作を共通の生成スクリプト1本で置き換えず、各キットの手順を使用します。
 
 ## 未制作と利用条件
 
-PPTAgentは実行を試しましたが、固定依存のWindows import時のassertで停止し、生成未達です。成功した16リポには含めません。[試行記録と再開条件](examples/repositories/pptagent/README.md)にLinux（WSL含む）またはmacOS等の必要条件を記録しています。その他の未制作リポの状態は制作台帳で確認できます。
+PPTAgentは実行を試しましたが、固定依存のWindows import時のassertで停止し、生成未達です。成功した22リポには含めません。[試行記録と再開条件](examples/repositories/pptagent/README.md)にLinux（WSL含む）またはmacOS等の必要条件を記録しています。その他の未制作リポの状態は制作台帳で確認できます。
 
 一覧・サイトのCC0を掲載コードへ一括適用しません。原文LICENSE／NOTICEと素材・書体の条件を維持します。Mckとminorun-marpはApache-2.0、GuizangとDashiの対象ソースはAGPLです。Dashiの配布対象は使用したHTML経路で、専有ライセンスのPPTX engineは含めません。詳細は [出典と利用条件](docs/出典とライセンス.md)、各原文通知と派生のSOURCE台帳を参照してください。
 

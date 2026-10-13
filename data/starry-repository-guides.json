@@ -1,0 +1,72 @@
+[
+  {
+    "repository": "StarryKit/starry-slides",
+    "production_status": "blocked",
+    "execution_status": "preflight_complete_generation_not_run",
+    "execution_type": "original_plugin_integrity_test_only",
+    "case_ids": [],
+    "summary_ja": "固定版はMITのHosted MCP用プラグイン。原典テストと日本語5ページ原稿を準備済みだが、外部API必須のため生成0ページ。",
+    "requirements": [
+      "StarryKit Hosted MCP接続とユーザーOAuth",
+      "外部サービスの利用許可と利用条件確認",
+      "ユーザーによるPage Draftの受諾"
+    ],
+    "steps": [
+      "get_profile_catalogで現行形式を取得",
+      "create_document/read_document",
+      "ページ別contentMarkdown/designBriefをinsert_pagesへ渡す",
+      "jobをterminalまで追跡し全ページpreview、ユーザーDraft受諾後にexport"
+    ],
+    "commands": [
+      "python tools/build_starry_repository_example.py（ローカル原典テストと原稿の準備のみ）"
+    ],
+    "source_refs": [
+      {
+        "path": "LICENSE",
+        "sha256": "67676946ce18424abe7fdbc8ab0541987a010ceb43bfd90434dd3abe1cc2b40f",
+        "url": "https://github.com/StarryKit/starry-slides/blob/0e57d121ac2f1b70cd8c1b7b65d603f4e2f21816/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "sha256": "05b3923fb429f121ddffa9f13ad1a2c2f8b02e0194e6ac2600bf0b369bbdf8fe",
+        "url": "https://github.com/StarryKit/starry-slides/blob/0e57d121ac2f1b70cd8c1b7b65d603f4e2f21816/README.md"
+      },
+      {
+        "path": "package.json",
+        "sha256": "078cffb4255deffe638b715553277dded9b5fabbc4abe152e15cda597f22dea4",
+        "url": "https://github.com/StarryKit/starry-slides/blob/0e57d121ac2f1b70cd8c1b7b65d603f4e2f21816/package.json"
+      },
+      {
+        "path": "mcp.json",
+        "sha256": "27fb17667ad7fe19af99d4a58953826c61059b66a8e734d9450e71c70792d566",
+        "url": "https://github.com/StarryKit/starry-slides/blob/0e57d121ac2f1b70cd8c1b7b65d603f4e2f21816/mcp.json"
+      },
+      {
+        "path": "docs/development.md",
+        "sha256": "654972605385113e44823774fade7e42b9e23175f9334a3d81ce070a9432d320",
+        "url": "https://github.com/StarryKit/starry-slides/blob/0e57d121ac2f1b70cd8c1b7b65d603f4e2f21816/docs/development.md"
+      },
+      {
+        "path": "skills/starrykit/SKILL.md",
+        "sha256": "b397bbd34761d6b74e5801ee05700105a4ce2966e75e888fe301f2419ea90f3e",
+        "url": "https://github.com/StarryKit/starry-slides/blob/0e57d121ac2f1b70cd8c1b7b65d603f4e2f21816/skills/starrykit/SKILL.md"
+      },
+      {
+        "path": "skills/starrykit/references/mcp-workflow.md",
+        "sha256": "5f3cc666ce0b0a31b0bbc8e028911fd7f4f531ebeb972c86efb61037b96592dc",
+        "url": "https://github.com/StarryKit/starry-slides/blob/0e57d121ac2f1b70cd8c1b7b65d603f4e2f21816/skills/starrykit/references/mcp-workflow.md"
+      },
+      {
+        "path": "tests/plugin.test.mjs",
+        "sha256": "a4cec7d7ce3007f7bffc46dccce3109f4171b18c9b924c1dc32f2764b45a60ab",
+        "url": "https://github.com/StarryKit/starry-slides/blob/0e57d121ac2f1b70cd8c1b7b65d603f4e2f21816/tests/plugin.test.mjs"
+      }
+    ],
+    "evidence": "examples/repositories/starry-slides/ATTEMPT.json",
+    "limitations": [
+      "ローカルrenderer/テンプレート/生成CLIは固定commitに含まれない。",
+      "原典テストの成功は生成・再生・exportの成功を示さない。",
+      "旧archive branchは指定原典の代用にしない。"
+    ]
+  }
+]

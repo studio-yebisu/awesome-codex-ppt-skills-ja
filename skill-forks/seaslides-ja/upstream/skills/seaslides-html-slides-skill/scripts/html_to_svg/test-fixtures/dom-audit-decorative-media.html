@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <style>
+    html, body, #deck { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+    .slide { position: relative; width: 1280px; height: 720px; overflow: visible; }
+    h1 { margin: 0; padding: 80px; font: 48px sans-serif; }
+    .outside { position: absolute; left: 1240px; top: 620px; width: 160px; height: 160px; }
+  </style>
+</head>
+<body>
+  <main id="deck">
+    <section class="slide active" data-notes="decorative media">
+      <h1>Decorative media stays out of semantic bounds</h1>
+      <svg class="outside" viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="red"/></svg>
+      <canvas class="outside" width="160" height="160"></canvas>
+    </section>
+    <section class="slide" data-notes="meaningful media">
+      <h1>Meaningful media remains auditable</h1>
+      <svg class="outside" data-audit-meaningful aria-label="Key chart" viewBox="0 0 100 100"><rect width="100" height="100" fill="blue"/></svg>
+    </section>
+  </main>
+</body>
+</html>

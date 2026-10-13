@@ -1,0 +1,69 @@
+[
+  {
+    "repository": "johnson7788/MultiAgentPPT",
+    "example_ids": [
+      "multiagent-ppt"
+    ],
+    "production_status": "qa_complete",
+    "requirements": [
+      "Python + python-pptx/Pillow/requests",
+      "Noto Sans JP",
+      "描画検証にはWindows版PowerPoint"
+    ],
+    "steps": [
+      "原典のdict入力に合わせてinput/data.jsonを用意。",
+      "source/run_export.pyで原典export関数を実行。",
+      "日本語固定ラベル・書体・講稿を局所化。",
+      "PowerPointで全頁描画し、本人の原稿へ変更した場合も目視する。"
+    ],
+    "source_refs": [
+      {
+        "path": "LICENSE",
+        "sha256": "648179da9ac9466f97cef6676e10729b327b8de1792de95d8f1f32acdf233d6c",
+        "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/LICENSE"
+      },
+      {
+        "path": "frontend/LICENSE",
+        "sha256": "8db0de12445618a006e1bb91677289cb919503bcd2e59c5f94980e249fe02e55",
+        "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/frontend/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "sha256": "772e5d5b1bbed1014d346e092213723b0260589f13ef253056996e13f7b42309",
+        "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/README.md"
+      },
+      {
+        "path": "backend/save_ppt/README.md",
+        "sha256": "39692923a83d79b9d489f12a3aad1989831e9d95ffcca9982d92bca6b16ef362",
+        "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/README.md"
+      },
+      {
+        "path": "backend/save_ppt/ppt_generator.py",
+        "sha256": "b81c6172a4322ad896349455d2208ec8d0a939288c09b92c6320e9c15e0347df",
+        "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/ppt_generator.py"
+      },
+      {
+        "path": "backend/save_ppt/ppt_template_0717.pptx",
+        "sha256": "8f80468c6396ac17cbebb33eb81e77a2215869768d58c22de92202d67064009c",
+        "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/ppt_template_0717.pptx"
+      },
+      {
+        "path": "backend/save_ppt/requirements.txt",
+        "sha256": "bffafa6d4f47a8f2f1e3a04e8ae26a1e6ea9ec90d1e9ed2fe2499a017563935e",
+        "url": "https://github.com/johnson7788/MultiAgentPPT/blob/ce8185cee83092290bdb913a528c6e3a72ee879e/backend/save_ppt/requirements.txt"
+      }
+    ],
+    "limitations": [
+      "API不要のexport関数のみ実行。multi-agent生成/画像APIの証明ではない。",
+      "原典の処理対象sectionに制約があり、任意枚数を保証しない。",
+      "同梱templateへのshape ID対応はrunnerで補正。原典は非メンテナンス。"
+    ],
+    "guide_markdown": "# MultiAgentPPT：日本語のローカルexport作例\n\n架空の青葉デザインの新入社員向け4枚。原典の`backend/save_ppt/ppt_generator.py`の`start_generate_presentation`と同梱templateを実行した。JSONの原稿は制作担当が準備しており、multi-agent・調査・LLM・画像APIが生成した原稿ではない。\n\n原典: johnson7788/MultiAgentPPT、固定commit ce8185cee83092290bdb913a528c6e3a72ee879e。READMEは現版の非メンテナンスを明記する。\n\n## 自分の内容へ置き換える\n\n1. Python、python-pptx、Pillow、requestsを用意する。確認バージョンはenvironment.json。キー・API・Web server・DBは不要。\n2. input/data.jsonのtitleとsectionsを変更する。各sectionのcontentはh1/p/bulletsのblock。実装はdictを要求するため、原典末尾のlist形式exampleをそのまま渡さない。\n3. `python source/run_export.py`で同梱した原典exportを実行する。出力はsource/upstream/backend/save_ppt/output_ppts/内。題名は出力ファイル名になるためWindowsで使えない文字や改行を避ける。\n4. 日本語の書体・ノート・固定ラベルの局所化を行い、PowerPointで全ページ確認する。今回の補助コードのlocalize関数が実際の変更内容。新規原稿は別途目視が必要。\n\n原典のcontent処理は最初の3sectionに限定される。今回の4頁は表紙、3項目、本文、終了頁。4番目以降のsectionを追加しても内容が出力されるとは限らない。この作例を通常のmulti-agent全経路・任意枚数の汎用生成の実証として扱わない。\n\n原典のshape ID指定が同梱templateと一致しなかったため、run_export.pyがconfigデータを実placeholder対応へ補正する。元コードファイルの改変なし。ネットワーク要求はrunnerで拒否し、画像URLのない入力を使う。\n\n## カタログ内での再制作\n\n`python tools/build_multiagent_repository_example.py --render`\n\n上記はカタログroot、.build/actual-upstreamsの固定原典、依存導入済みPython、Windows版PowerPoint、tools/render_powerpoint.ps1に依存する。画像を全頁確認してから`--finalize-only --reviewed`で確認記録を更新する。スクリプトの--reviewedは実視認を代行しない。\n\n初期失敗・成功ログとraw-export.pptx、変更台帳はsource/。出力の本文はnative textで編集可能。背景・装飾は原典templateの要素で、画像化したページを貼ったものではない。Noto Sans JPは受け手にも必要。\n\nroot LICENSEはMIT Copyright 2025 johnson7788。frontend LICENSEはMIT Copyright 2024 ALLWEONE Team。両原文表示を保持する。原典templateも同梱リポ由来で、別の第三者素材の権利まで保証するものではない。外部画像は取得・使用していない。\n",
+    "commands": [
+      "python tools/build_multiagent_repository_example.py",
+      "python tools/build_multiagent_repository_example.py --render"
+    ],
+    "method_ja": "日本語のJSON原稿を原典のexport関数へ渡し、同梱テンプレートで4枚の編集可能PPTXを作成。今回の実行範囲は書き出し経路です。",
+    "fork": "multiagent-ppt-ja"
+  }
+]

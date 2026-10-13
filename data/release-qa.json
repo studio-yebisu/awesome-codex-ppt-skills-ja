@@ -1,11 +1,11 @@
 {
   "status": "passed",
   "catalog_count": 209,
-  "produced_repository_count": 16,
-  "case_count": 19,
-  "slide_count": 128,
-  "checked_case_count": 19,
-  "passed_checks": 116,
+  "produced_repository_count": 22,
+  "case_count": 25,
+  "slide_count": 154,
+  "checked_case_count": 25,
+  "passed_checks": 152,
   "issues": [],
   "warnings": [
     {
@@ -15,17 +15,17 @@
     {
       "check": "japanese-corporate:language",
       "detail": "6 slides omit ja-JP run locale; Japanese text integrity checked, rendered glyph review remains mandatory in QA"
+    },
+    {
+      "check": "image-to-editable:language",
+      "detail": "2 slides omit ja-JP run locale; Japanese text integrity checked, rendered glyph review remains mandatory in QA"
     }
   ],
   "scope": "Read-only integrity, provenance and recorded review audit. Does not synthesize missing evidence, assess artistic quality or approve publication.",
-  "checked_at": "2026-10-13T16:53:14.301157+00:00",
-  "ui_report": {
-    "file": "data/repository-ui-qa.json",
-    "sha256": "b671e191b54ac2c193324a34aa49c5daf682122208fd62c41157fb66a742c67e"
-  },
-  "reproduction_kit_report": {
-    "file": "data/reproduction-kit-qa.json",
-    "sha256": "a805deef6eb6abadde0de28d0933cab5412346c87becbbbe1b94b68ba8b95440"
-  },
-  "dependency_audit": "data/dependency-qa.json"
+  "ui_proof_refs": [
+    "data/repository-ui-qa.json",
+    "data/repository-ui-qa-additions.json"
+  ],
+  "reproduction_kit_qa_sha256": "909cb34bedd2196be07767098918a5caf8e7ec12ff08cf080f820c19fd0d129c",
+  "checked_at": "2026-10-13T18:54:15.185559+00:00"
 }

@@ -1,0 +1,100 @@
+[
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\gnipbao__knowledge-cat-ppt-skill\\scripts\\validate_deck_plan.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\input\\data.json"
+    ],
+    "exit_code": 0,
+    "log": "examples/repositories/knowledge-cat/source/validate-plan.log",
+    "log_sha256": "e81cad123dcdc244a0a233c79ddd8e358363058e6ee257a4755d4a56aac72127"
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node\\bin\\node.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\gnipbao__knowledge-cat-ppt-skill\\scripts\\build_native_pptx.mjs",
+      "--plan",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\input\\data.json",
+      "--output",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\source\\original-export.pptx",
+      "--workspace",
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\node",
+      "--preview-dir",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\source\\artifact-previews",
+      "--inspection",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\source\\inspection.ndjson"
+    ],
+    "exit_code": 0,
+    "log": "examples/repositories/knowledge-cat/source/build-native.log",
+    "log_sha256": "188c5db8b9d985f4bb0175e3bd5104492fde5ab595d1fd221697e5e96e9433cd"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\gnipbao__knowledge-cat-ppt-skill\\scripts\\extract_pptx_text.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\deck.pptx",
+      "--fail-on-placeholders",
+      "--format",
+      "json"
+    ],
+    "exit_code": 0,
+    "log": "examples/repositories/knowledge-cat/source/extract-text.log",
+    "log_sha256": "a799f6b9fdcc1fd07a57dec0e054b7a9ef45bebc20e8d46538feee644841a320"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\gnipbao__knowledge-cat-ppt-skill\\scripts\\check_pptx_editability.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\deck.pptx",
+      "--expected-slides",
+      "5",
+      "--require-native-table",
+      "--require-notes",
+      "--fail-on-image-only-slides",
+      "--json-output",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\source\\editability.json"
+    ],
+    "exit_code": 0,
+    "log": "examples/repositories/knowledge-cat/source/editability.log",
+    "log_sha256": "287ea7aee5c010165d1df3478f0cb948a6cd3c6342014e23e73a5d1481f5baff"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-X",
+      "utf8",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\gnipbao__knowledge-cat-ppt-skill\\scripts\\probe_pptx_editability.py",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\deck.pptx",
+      "--search",
+      "記録を3つに分ける",
+      "--replacement",
+      "記録を3つに分ける・編集確認",
+      "--json-output",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\source\\edit-probe.json"
+    ],
+    "exit_code": 0,
+    "log": "examples/repositories/knowledge-cat/source/edit-probe.log",
+    "log_sha256": "27ddbf6f9ec6d0bc1cb9af6147d76ad614c38be886f818630d2418049fea31b9"
+  },
+  {
+    "argv": [
+      "pwsh",
+      "-NoProfile",
+      "-File",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\tools\\render_powerpoint.ps1",
+      "-PresentationPath",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\deck.pptx",
+      "-OutputDirectory",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\knowledge-cat\\render"
+    ],
+    "exit_code": 0,
+    "log": "examples/repositories/knowledge-cat/source/powerpoint.log",
+    "log_sha256": "4a75c9292b8a1894f21244df33c8392f8dbde6216e1cdc88d4310a6cfc24c0b7"
+  }
+]

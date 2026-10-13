@@ -209,6 +209,16 @@ def provenance(row):
                 need(sha(record_path(folder,c['log']))==c.get('log_sha256'),'Generation log hash stale')
                 if c.get('exit_code')!=0:
                     need(any(later.get('argv')==c['argv'] and later.get('exit_code')==0 for later in commands[i+1:]),'Unresolved failed image generation command')
+        elif row.get('editability')=='native_text_shapes_and_bitmap_icons':
+            # Recovered source-image processing and annotation failures remain
+            # visible. Require an actual successful receipt and hashed log.
+            by_log={c.get('log'):c for c in commands}
+            for c in commands:
+                need(c.get('argv'),'Missing generation command')
+                need(sha(record_path(folder,c['log']))==c.get('log_sha256'),'Generation log hash stale')
+                if c.get('exit_code')!=0:
+                    recovered=by_log.get(c.get('resolved_by_log'))
+                    need(recovered and recovered.get('exit_code')==0 and recovered.get('argv') and c.get('resolution_reason'),'Unresolved failed reconstruction command')
         else:
             need(all(c.get('exit_code')==0 and c.get('argv') for c in commands),'Missing/failed generation command')
     elif data.get('execution_log'):

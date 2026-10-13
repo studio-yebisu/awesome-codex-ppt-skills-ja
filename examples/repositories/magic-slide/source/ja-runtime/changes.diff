@@ -1,0 +1,10 @@
+--- upstream/scripts/inject-runtime.py
++++ ja-runtime/scripts/inject-runtime.py
+@@ -4738,6 +4738,7 @@
+     if(token)headers.set('X-Magic-Slide-Token',token);
+     return fetch(url,Object.assign({},options,{headers:headers}));
+   }
++  window.msAuthFetch=msAuthFetch; // Share the existing authenticated closure with QA.
+   var deckBadge=document.getElementById('ms-deck-badge');
+   if(deckBadge&&window.location.protocol!=='file:'){
+     var deckLabel=getDeckLabel();

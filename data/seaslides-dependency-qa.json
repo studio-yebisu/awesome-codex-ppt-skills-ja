@@ -1,0 +1,60 @@
+{
+  "checked_at": "2026-10-14",
+  "status": "known_unresolved_dependency_finding",
+  "repository": "touying-typ/seaslides",
+  "runtime": "Original fixed html_to_svg npm lock",
+  "lock_sha256": "cbb12f8378e914ab13c497354b9bf3e6c8608f1a95063b552e113c6483709433",
+  "audit": {
+    "auditReportVersion": 2,
+    "vulnerabilities": {
+      "form-data": {
+        "name": "form-data",
+        "severity": "high",
+        "isDirect": false,
+        "via": [
+          {
+            "source": 1120743,
+            "name": "form-data",
+            "dependency": "form-data",
+            "title": "form-data: CRLF injection in form-data via unescaped multipart field names and filenames",
+            "url": "https://github.com/advisories/GHSA-hmw2-7cc7-3qxx",
+            "severity": "high",
+            "cwe": [
+              "CWE-93"
+            ],
+            "cvss": {
+              "score": 7.5,
+              "vectorString": "CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:N/I:H/A:N"
+            },
+            "range": ">=4.0.0 <4.0.6"
+          }
+        ],
+        "effects": [],
+        "range": "4.0.0 - 4.0.5",
+        "nodes": [
+          "node_modules/form-data"
+        ],
+        "fixAvailable": true
+      }
+    },
+    "metadata": {
+      "vulnerabilities": {
+        "info": 0,
+        "low": 0,
+        "moderate": 0,
+        "high": 1,
+        "critical": 0,
+        "total": 1
+      },
+      "dependencies": {
+        "prod": 113,
+        "dev": 0,
+        "optional": 1,
+        "peer": 0,
+        "peerOptional": 0,
+        "total": 113
+      }
+    }
+  },
+  "scope": "Recorded npm metadata. Local render of included authored input; no external AI API used. Does not establish independent exploitability or security approval."
+}
