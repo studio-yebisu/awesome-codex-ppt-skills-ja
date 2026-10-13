@@ -1,0 +1,12 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body,[data-composition-id],canvas{margin:0;width:100%;height:100%;overflow:hidden;background:#050506}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"}}</script></head><body>
+<div data-composition-id="minute-lockup" data-no-timeline data-width="1920" data-height="1080" data-duration="0.2"><canvas id="three-layer"></canvas></div>
+<script type="module">
+import * as THREE from 'three';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import { createMinute } from '../scene.js';
+RectAreaLightUniformsLib.init();
+const minute = createMinute({ THREE, canvas:document.querySelector('#three-layer'), width:1920, height:1080 });
+const state = { elev:90, yaw:0, halo:1, haloArc:0, scale:0.652, center:{x:0.5,y:0.42} };
+window.addEventListener('hf-seek', () => minute.renderAt(state)); minute.renderAt(state);
+</script></body></html>

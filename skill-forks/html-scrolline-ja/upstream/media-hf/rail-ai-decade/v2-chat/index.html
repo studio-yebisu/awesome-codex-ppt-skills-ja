@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>질문과 답</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Pretendard"; src: url("fonts/Pretendard-Medium.otf") format("opentype"); font-weight: 500; font-style: normal; }
+      @font-face { font-family: "Pretendard"; src: url("fonts/Pretendard-SemiBold.otf") format("opentype"); font-weight: 600; font-style: normal; }
+      :root { background: #e6eaee; color: #17140f; }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #e6eaee; }
+      body { font-family: "Pretendard", sans-serif; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #e6eaee; }
+      .sheet { position: absolute; left: 160px; top: 170px; width: 1600px; }
+      .prompt { height: 132px; font-size: 104px; font-weight: 600; letter-spacing: -0.03em; line-height: 132px; white-space: nowrap; color: #17140f; }
+      .char { display: inline-block; opacity: 0; }
+      .rule { width: 1600px; height: 2px; margin-top: 26px; background: #17140f; }
+      .answer { width: 1600px; margin-top: 92px; font-size: 72px; font-weight: 500; letter-spacing: -0.02em; line-height: 1.38; color: #17140f; }
+      .word { display: inline-block; opacity: 0; margin-right: 0.26em; }
+      .word:last-child { margin-right: 0; }
+      .cursor { position: absolute; left: 0; top: 0; width: 5px; height: 120px; background: #1f4fbf; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="v2-chat" data-start="0" data-width="1920" data-height="1080" data-duration="6" data-fps="30">
+      <main id="question-answer" aria-label="질문을 쓰면 답이 문장으로 흘러나온다">
+        <div class="sheet" id="sheet">
+          <div class="prompt" id="question" aria-label="질문 입력"></div>
+          <div class="rule" aria-hidden="true"></div>
+          <div class="answer" id="answer" aria-label="답변"></div>
+          <i id="cursor" class="cursor" aria-hidden="true"></i>
+        </div>
+      </main>
+    </div>
+    <script>
+      const question = "트랜스포머를 한 문장으로 설명해 줘";
+      const answer = "문장 속 모든 단어가 서로를 얼마나 참고할지 한 번에 계산해 읽는 신경망 구조입니다.";
+      const questionHost = document.getElementById("question");
+      const answerHost = document.getElementById("answer");
+      const cursor = document.getElementById("cursor");
+      const characters = Array.from(question).map((character) => {
+        const span = document.createElement("span");
+        span.className = "char";
+        span.textContent = character === " " ? " " : character;
+        questionHost.appendChild(span);
+        return span;
+      });
+      const words = answer.split(" ").map((word) => {
+        const span = document.createElement("span");
+        span.className = "word";
+        span.textContent = word;
+        answerHost.appendChild(span);
+        return span;
+      });
+
+      function build() {
+        const sheetBox = document.getElementById("sheet").getBoundingClientRect();
+        const rel = (el) => {
+          const b = el.getBoundingClientRect();
+          return { left: b.left - sheetBox.left, top: b.top - sheetBox.top, right: b.right - sheetBox.left, bottom: b.bottom - sheetBox.top };
+        };
+        const qBox = rel(questionHost);
+        const qCursorH = 120;
+        const qTop = qBox.top + (132 - qCursorH) / 2;
+        const aLine = 72 * 1.38;
+        const aCursorH = 90;
+
+        const tl = gsap.timeline({ paused: true });
+        // Cursor starts at the empty input line.
+        tl.set(cursor, { x: 0, y: qTop, height: qCursorH }, 0);
+
+        // Question: typed character by character, 0.15 s → 1.95 s.
+        const qStart = 0.15, qEnd = 1.95;
+        const qStep = (qEnd - qStart) / (characters.length - 1);
+        characters.forEach((ch, i) => {
+          const t = qStart + i * qStep;
+          const r = rel(ch);
+          tl.set(ch, { opacity: 1 }, t);
+          tl.set(cursor, { x: r.right + 6 }, t);
+        });
+
+        // Answer: word by word (어절), 2.4 s → 5.6 s, rising 12 px and fading in.
+        const wordRects = words.map(rel);
+        const aStart = 2.4, aEnd = 5.6, wDur = 0.35;
+        const wStep = (aEnd - wDur - aStart) / (words.length - 1);
+        const first = wordRects[0];
+        tl.set(cursor, { x: first.left, y: first.top + (aLine - aCursorH) / 2, height: aCursorH }, aStart);
+        words.forEach((w, i) => {
+          const t = aStart + i * wStep;
+          const r = wordRects[i];
+          tl.fromTo(w, { opacity: 0, y: 12 }, { opacity: 1, y: 0, duration: wDur, ease: "power2.out", immediateRender: false }, t);
+          tl.set(cursor, { x: r.right + 8, y: r.top + (aLine - aCursorH) / 2 }, t + 0.05);
+        });
+        tl.set({}, {}, 6);
+        window.__timelines["v2-chat"] = tl;
+      }
+      Promise.all([
+        document.fonts.load('600 104px "Pretendard"', question),
+        document.fonts.load('500 72px "Pretendard"', answer),
+      ]).then(() => document.fonts.ready).then(build);
+    </script>
+  </body>
+</html>

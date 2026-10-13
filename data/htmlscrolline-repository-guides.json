@@ -1,0 +1,157 @@
+[
+  {
+    "repository": "gongnyang/awesome-html-scrolline-deck",
+    "execution_type": "original_scrolline_engine_rail_moves_and_vite_build",
+    "execution_status": "generated_and_reviewed",
+    "case_ids": [
+      "html-scrolline"
+    ],
+    "summary_ja": "原典の連続スクロール・レール移動・handoffを使った日本語6停止点。原典全体CIはWindowsパス3件で未通過。",
+    "requirements": [
+      "Node.js 22+ / npm",
+      "Python 3（再実行CLI）",
+      "ChromeまたはEdge / ffmpeg（smoke描画）",
+      "日本語フォント（WindowsではYu Mincho / Yu Gothic）"
+    ],
+    "steps": [
+      "原典CLIでrail deck作成",
+      "日本語deck.yamlを作成",
+      "原典planで6停止点を検証",
+      "原典Vite buildと単一HTML梱包",
+      "原典smoke派生と実キー・ホイール操作をHTTP表示で確認"
+    ],
+    "commands": [
+      "python source/reproduce.py --input input/data.json --render"
+    ],
+    "source_refs": [
+      {
+        "path": "LICENSE",
+        "sha256": "61da86f74b91c3433a8a0632bb94bf0cdc34ff31b100472e6bfd7569817a39bf",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/LICENSE"
+      },
+      {
+        "path": "SKILL.md",
+        "sha256": "06b1d797d20dd73bd9966cf46332587ae62422e6f1cbdb769950910835ec5936",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/SKILL.md"
+      },
+      {
+        "path": "README.md",
+        "sha256": "ed89f3d00b0dbbe96a79407c138fdaaf2cef9631123def8ba22b691ccdfd7c85",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/README.md"
+      },
+      {
+        "path": "plan/CONTRACTS.md",
+        "sha256": "27d4f0a526b8c1735dc1228956f765eb0922b48958db5057e8843542d08f0383",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/plan/CONTRACTS.md"
+      },
+      {
+        "path": "docs/writing-a-deck.md",
+        "sha256": "fcd1f51d2019f35de0ce918fa0cf67832ce2de74b6787b86cc5b0b089167c2d5",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/docs/writing-a-deck.md"
+      },
+      {
+        "path": "docs/getting-started.md",
+        "sha256": "9dd133ea55c78f078a0567fcf0ac10edb094340a3aefd8489b7a6913cc93ef74",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/docs/getting-started.md"
+      },
+      {
+        "path": "docs/export.md",
+        "sha256": "fa8d4d2b453e606b64b4b771504a563e9b21f41f43c29f8511fcb38485b886c9",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/docs/export.md"
+      },
+      {
+        "path": "package.json",
+        "sha256": "c3195ff9582d6e138824b82b1671939a14b01de246727482429049307e8de148",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/package.json"
+      },
+      {
+        "path": "package-lock.json",
+        "sha256": "365909bcff86d35aa7185d983394cdb85ab59a02588bb2d21e8d930ab9084da8",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/package-lock.json"
+      },
+      {
+        "path": "vite.config.js",
+        "sha256": "2158b1d8ee27e87e1e7ca5d22283c0e91a2c72ae894403d165a50c2f9eaf1764",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/vite.config.js"
+      },
+      {
+        "path": "engine/boot.js",
+        "sha256": "a6a8f15ab3c9f1aeb051aca380f52f9616ae6d716c34b3f79cfe7d9e3a9906dc",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/engine/boot.js"
+      },
+      {
+        "path": "engine/deck-schema.js",
+        "sha256": "31a7ef4467773370e103a77fcce34c3cd5fd2bcc5711a608b86e37afbb78e3b3",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/engine/deck-schema.js"
+      },
+      {
+        "path": "engine/presenter.js",
+        "sha256": "f9d1e9c75955efe8edc5061547e1932b3795bc37ad9c987426a4e7017cf4bd87",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/engine/presenter.js"
+      },
+      {
+        "path": "tools/cli.mjs",
+        "sha256": "c5ae864ea5ece7085b4adf4152ec74eb68a5c1d1ae0c7b1a3d78c0bf489943b0",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/tools/cli.mjs"
+      },
+      {
+        "path": "tools/smoke.mjs",
+        "sha256": "b7bf843056f161bf2273a465885d89323f5ecdec0abe80652beb7be7a3789a4a",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/tools/smoke.mjs"
+      },
+      {
+        "path": "concepts/rail/concept.json",
+        "sha256": "9482a6756915f1504502a9011b981eed826dbd56f5a6033be6044068bcd4e09e",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/concepts/rail/concept.json"
+      },
+      {
+        "path": "concepts/rail/tokens.css",
+        "sha256": "0da640e99ea0de4a33dea13a24c167c110f91f9acf6312d11a57d99061985db4",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/concepts/rail/tokens.css"
+      },
+      {
+        "path": "concepts/rail/layout.css",
+        "sha256": "0a225e91c1fe722e0f6644a07513afa29c09302a0b915f0a142c1404337539d4",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/concepts/rail/layout.css"
+      },
+      {
+        "path": "moves/rail/rail-advance.js",
+        "sha256": "91870a07e28d5f3116cc3f44ff46fbe100c1d1291f36d0a18a807c29be0e87df",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/moves/rail/rail-advance.js"
+      },
+      {
+        "path": "moves/rail/era-shift.js",
+        "sha256": "f45eab14bfbb9cd51f18c31eb0688406355e63a539ed2c451fec3374b9930154",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/moves/rail/era-shift.js"
+      },
+      {
+        "path": "moves/rail/rail-surface.js",
+        "sha256": "efb60e3bc232e7e81f3564d6d7509e406a348340d30a8625435450a73712a251",
+        "url": "https://github.com/gongnyang/awesome-html-scrolline-deck/blob/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc/moves/rail/rail-surface.js"
+      }
+    ],
+    "local_changes": [
+      "原典CLIでrail deckを新設し、日本語6停止点のdeck.yamlを作成。",
+      "内部lang=enを保持し、HTML lang=ja、端末の日本語フォント、最初の停止点への移動をdeck側で指定。",
+      "原典のrail-advanceとera-shiftを実行。handoff後に0.15uの静止余裕を追加。",
+      "Vite出力のJS/CSSを単一HTMLへ梱包。レイアウトや動きを別実装に置換しない。",
+      "ChromeパスとHTTP表示URLを渡すsmoke派生を作り、原文と差分を保持。",
+      "Viteが除くMIT/GSAPライセンス通知を配布JSと単一HTMLへ原文復元。"
+    ],
+    "license": "MIT（原典） / GSAPは独自の無償標準条件 / LenisはMIT",
+    "limitations": [
+      "原典全体CIはWindowsのパス検査3件で不合格。原典の全ゲート完了ではない。",
+      "日本語フォントの見た目は閲覧端末に依存。フォントファイルは同梱しない。",
+      "現在の確認範囲はlocalhost HTTP表示。IABのfile://表示確認ではない。",
+      "MP4書き出し・印刷・スマートフォン縦画面は未検証。",
+      "原典内部localeはenのまま。日本語locale機能を追加したものではない。",
+      "エージェント確認済み。人による採用は未承認。"
+    ],
+    "artifact_paths": [
+      "examples/repositories/html-scrolline/deck.html"
+    ],
+    "fork": "html-scrolline-ja",
+    "method_ja": "原典deck CLI・Scrolline engine・rail-advance・era-shift・Vite build・smoke",
+    "original_gate_not_passed": true
+  }
+]

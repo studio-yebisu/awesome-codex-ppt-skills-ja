@@ -1,0 +1,263 @@
+/* launch 배치(C11 layout.css): 어둠 속 고정 무대. 제품 축 (0.62w, 0.52h)은 렌더 영상이 이미 잡아 두고,
+   글자는 두 자리에만 앉는다 — 제품 장면의 카피 칼럼(x 120–760, 제품 왼쪽)과 글자 장면의 중앙 무대.
+   text·number·prompt beat는 place slot full로 두고 여기서 가운데 정렬(슬롯 left:50% 축소 폭 문제 회피).
+   규칙: 모든 선택자는 .sl-concept-launch 범위, 색은 var(--sl-*)만, !important·@import 금지(tools/check-concepts.mjs). */
+
+.sl-concept-launch {
+  --launch-u: calc(var(--px) * 1px);
+  --launch-col-x: calc(120 * var(--launch-u));
+  --launch-col-w: calc(600 * var(--launch-u));
+  --launch-copy: calc(72 * var(--launch-u));
+  --launch-hero: calc(334 * var(--launch-u));
+}
+
+/* ── text: 중앙 무대 한 덩어리. 줄은 덱이 준 lines 그대로(접지 않음) ──────── */
+.sl-concept-launch .sl-beat--text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sl-concept-launch .sl-text__block {
+  max-width: calc(1680 * var(--launch-u));
+  text-align: center;
+  word-break: keep-all;
+}
+.sl-concept-launch .sl-text__line {
+  white-space: nowrap;
+}
+.sl-concept-launch .sl-text--l {
+  font-size: calc(92 * var(--launch-u));
+  line-height: 1.14;
+}
+.sl-concept-launch .sl-text--m {
+  font-size: calc(80 * var(--launch-u));
+  line-height: 1.18;
+}
+.sl-concept-launch .sl-text__em {
+  background: none;
+  color: var(--sl-accent);
+}
+
+/* ── video·photo 공통: 캡션 = 그 화면의 L1 문장 ─────────────────────── */
+.sl-concept-launch .sl-video__caption,
+.sl-concept-launch .sl-photo__caption {
+  z-index: 2;
+  margin: 0;
+  font-family: var(--sl-font-display);
+  font-size: var(--launch-copy);
+  font-weight: var(--sl-weight-display);
+  line-height: 1.12;
+  letter-spacing: var(--sl-tracking-display);
+  word-break: keep-all;
+}
+/* 제품 스크럽(frame sequence): 제품 왼쪽 카피 칼럼, 제품 축 높이에 맞춤 */
+.sl-concept-launch .sl-beat--video:has(.sl-frame-sequence) .sl-video__caption {
+  top: auto;
+  bottom: 40%;
+}
+/* 장면 안 재생 영상(실사): 화면 아래 넓은 칼럼 + 아래 40% scrim */
+.sl-concept-launch .sl-beat--video:has(.sl-video__media-host) .sl-video__caption {
+  bottom: calc(96 * var(--launch-u));
+  width: calc(1280 * var(--launch-u));
+  font-size: calc(64 * var(--launch-u));
+  line-height: 1.2;
+}
+.sl-concept-launch .sl-beat--video:has(.sl-video__media-host) .sl-video__frame::after {
+  content: '';
+  position: absolute;
+  inset: 60% 0 0;
+  z-index: 1;
+  background: linear-gradient(to bottom, transparent, var(--sl-scrim));
+  pointer-events: none;
+}
+/* 마스크 단계(글자 「회의」 안 영상)에는 scrim이 글자 아래쪽을 덮지 않게 */
+.sl-concept-launch .sl-beat--video:has(.sl-mask) .sl-video__frame::after {
+  display: none;
+}
+
+/* 마지막 공개(lockup 사진): 제품을 1.22배로 키우고 조금 내려(중심 0.45h) 화면 주인공으로(사진은 정수리 제품 폭 30%로 렌더됨),
+   media 박스 자체를 키우고 넘친 부분은 frame이 자른다(transform은 move 몫이라 안 씀) */
+.sl-concept-launch .sl-beat--photo .sl-photo__frame {
+  overflow: hidden;
+}
+.sl-concept-launch .sl-beat--photo .sl-photo__media {
+  position: absolute;
+  top: -6%;
+  left: -11%;
+  width: 122%;
+  height: 122%;
+}
+/* 캡션: 제품 아래 가운데 한 줄 */
+.sl-concept-launch .sl-photo__caption {
+  left: 0;
+  bottom: calc(110 * var(--launch-u));
+  width: 100%;
+  text-align: center;
+}
+
+/* ── number: 숫자 한 방. 가운데, 조건(label)은 바로 아래 ─────────────── */
+.sl-concept-launch .sl-beat--number {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.sl-concept-launch .sl-number__value {
+  font-size: var(--launch-hero);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+  font-variant-numeric: tabular-nums;
+}
+.sl-concept-launch .sl-number__unit {
+  margin-inline-start: 0.06em;
+  font-size: 0.36em;
+  letter-spacing: 0;
+}
+.sl-concept-launch .sl-number__label {
+  max-width: calc(1200 * var(--launch-u));
+  margin-block-start: calc(56 * var(--launch-u));
+  color: var(--sl-fg-muted);
+  font-size: calc(44 * var(--launch-u));
+  font-weight: var(--sl-weight-text);
+  text-align: center;
+}
+
+/* ── prompt: 실시간 기록. 상자 없이 대화가 찍히고, 같은 자리에서 결과 두 줄로 응축 ── */
+.sl-concept-launch .sl-beat--prompt {
+  display: grid;
+  grid-template-columns: calc(1560 * var(--launch-u));
+  grid-template-rows: auto auto;
+  align-content: center;
+  justify-content: center;
+  row-gap: calc(48 * var(--launch-u));
+}
+.sl-concept-launch .sl-prompt__label {
+  grid-area: 1 / 1;
+  color: var(--sl-accent);
+  font-family: var(--sl-font-text);
+  font-size: calc(30 * var(--launch-u));
+  font-weight: var(--sl-weight-text);
+}
+.sl-concept-launch .sl-prompt__field,
+.sl-concept-launch .sl-prompt__result {
+  grid-area: 2 / 1;
+  align-self: start;
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: keep-all;
+}
+.sl-concept-launch .sl-prompt__field {
+  max-width: none;
+  padding: 0;
+  border: 0;
+  font-family: var(--sl-font-text);
+  font-size: calc(58 * var(--launch-u));
+  font-weight: var(--sl-weight-text);
+  line-height: 1.5;
+}
+.sl-concept-launch .sl-prompt__char {
+  display: inline;
+}
+.sl-concept-launch .sl-prompt__caret {
+  display: none;
+}
+.sl-concept-launch .sl-prompt__result {
+  font-family: var(--sl-font-display);
+  font-size: var(--launch-copy);
+  font-weight: var(--sl-weight-display);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+
+/* ── scrub-callouts(분해 콜아웃): 층 이름 L2 + 한 줄 설명 L3, 지시선 끝에서 오른쪽 정렬 ── */
+.sl-concept-launch .sl-scrub-callouts__label,
+.sl-concept-launch .sl-scrub-callouts__note {
+  white-space: nowrap;
+  text-align: right;
+}
+.sl-concept-launch .sl-scrub-callouts__label {
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+  font-size: calc(40 * var(--launch-u));
+  font-weight: var(--sl-weight-display);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+.sl-concept-launch .sl-scrub-callouts__note {
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-text);
+  font-size: calc(26 * var(--launch-u));
+  font-weight: var(--sl-weight-text);
+  line-height: 1.3;
+}
+.sl-concept-launch .sl-scrub-callouts__dot {
+  width: calc(12 * var(--launch-u));
+  height: calc(12 * var(--launch-u));
+  margin: calc(-6 * var(--launch-u)) 0 0 calc(-6 * var(--launch-u));
+  border-radius: 50%;
+  background: var(--sl-accent);
+}
+
+/* ── 세로 화면: 제품 프레임은 16:9 그대로 위쪽에(제품 축이 가운데 오게 1.4배), 카피는 아래 ─────── */
+@media (max-aspect-ratio: 1/1) {
+  .sl-concept-launch {
+    --launch-copy: calc(52 * var(--launch-u));
+    --launch-hero: calc(240 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-video__caption {
+    left: calc(48 * var(--launch-u));
+    width: calc(100% - 96 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-frame-sequence {
+    position: absolute;
+    top: 8%;
+    left: -36.8%;
+    width: 140%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+  }
+  .sl-concept-launch .sl-beat--video:has(.sl-frame-sequence) .sl-video__caption {
+    bottom: 14%;
+  }
+  .sl-concept-launch .sl-beat--video:has(.sl-video__media-host) .sl-video__caption {
+    width: calc(100% - 96 * var(--launch-u));
+    font-size: var(--launch-copy);
+  }
+  .sl-concept-launch .sl-text__line {
+    white-space: normal;
+  }
+  .sl-concept-launch .sl-text--xl {
+    font-size: calc(108 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-text--l {
+    font-size: calc(68 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-text--m {
+    font-size: calc(60 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-text__block {
+    max-width: calc(100% - 96 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-number__label {
+    max-width: calc(640 * var(--launch-u));
+    font-size: calc(34 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-beat--prompt {
+    grid-template-columns: calc(660 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-prompt__field {
+    font-size: calc(40 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-prompt__result {
+    font-size: calc(48 * var(--launch-u));
+  }
+  .sl-concept-launch .sl-beat--photo .sl-photo__media {
+    top: 0;
+    left: -50%;
+    width: 200%;
+    height: 72%;
+  }
+  .sl-concept-launch .sl-photo__caption {
+    bottom: 16%;
+  }
+}

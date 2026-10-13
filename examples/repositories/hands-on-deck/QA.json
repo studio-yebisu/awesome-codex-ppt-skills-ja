@@ -1,0 +1,82 @@
+{
+  "status": "qa_complete",
+  "page_count": 5,
+  "render_engine": "Microsoft PowerPoint 16.0",
+  "all_pages_visually_reviewed": true,
+  "human_adoption": "pending",
+  "production_adoption": false,
+  "publication": false,
+  "artifact_sha256": "242c7f3ecc6f26ed81bf6f3b19517c9134a55f5b277b6b8accdb6ca705b8de14",
+  "input_sha256": "e9c7bb7bc83e0daba698e1ceecc6f1ffdf1f079fd8154aaed5cae117bdeb9dea",
+  "editability": {
+    "native_text_shapes": 90,
+    "pictures": 3,
+    "full_slide_raster_images": 0,
+    "tables_implementation": "native text boxes and rules",
+    "native_shapes_total": 154,
+    "native_graphic_shapes": 64,
+    "counting_rule": "Text shapes have at least one nonempty a:t run. Other native shapes exclude those text shapes. Total is 154, not 90 + 154."
+  },
+  "visual_review": {
+    "pages_reviewed": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "method": "Two independent agent batches viewed actual PowerPoint renders.",
+    "result": "pass",
+    "evidence": [
+      "review/independent-visual-review.json",
+      "render/powerpoint-render.json"
+    ]
+  },
+  "original_fix": {
+    "exit_code": 0,
+    "fixed": 0,
+    "residue": 0,
+    "advisories": "slide 2 (0-based): s38/s39 intentionally outside table alignment; independent visual review found no defect.",
+    "report": "review/fix.log"
+  },
+  "portable_reproduction": {
+    "passed": true,
+    "command": "python source/reproduce.py --input input/data.json --render --libreoffice-render",
+    "isolated_case_copy": true,
+    "native_text_identical": true,
+    "render_pixels_identical": true,
+    "whole_pptx_bytes_identical": false,
+    "pages": [
+      {
+        "page": 1,
+        "pixels_identical": true
+      },
+      {
+        "page": 2,
+        "pixels_identical": true
+      },
+      {
+        "page": 3,
+        "pixels_identical": true
+      },
+      {
+        "page": 4,
+        "pixels_identical": true
+      },
+      {
+        "page": 5,
+        "pixels_identical": true
+      }
+    ]
+  },
+  "font_dependency": [
+    "Yu Gothic",
+    "Yu Mincho",
+    "Times New Roman"
+  ],
+  "limitations": [
+    "エージェントのレビュー済み。人による採用は未承認。",
+    "架空の運用案であり実際の公開・確認・利用者テストは未実施。",
+    "新しい本文で再実行した場合は全ページの再レビューが必要。"
+  ]
+}

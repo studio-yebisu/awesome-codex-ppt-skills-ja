@@ -1,0 +1,142 @@
+{
+  "id": "data",
+  "name": "데이터 저널리즘",
+  "axis": "free",
+  "camera": {
+    "mode": "fixed",
+    "perspective": 2400
+  },
+  "timing": {
+    "unit": 0.6,
+    "hold": 0.9,
+    "overlap": 0.15,
+    "tail": 1.0
+  },
+  "eases": {
+    "in": "power2.in",
+    "out": "power3.out",
+    "inout": "sine.inOut",
+    "scrub": "none",
+    "settle": "power4.out"
+  },
+  "beats": {
+    "allow": [
+      "text",
+      "chart",
+      "number",
+      "compare",
+      "video",
+      "quote",
+      "photo"
+    ]
+  },
+  "moves": {
+    "allow": [
+      "iris-to-dot",
+      "dot-seed",
+      "dot-multiply",
+      "dots-pour",
+      "annotation-pin",
+      "mark-morph",
+      "line-to-waffle",
+      "waffle-recount",
+      "recede",
+      "aggregate-split",
+      "rank-reorder",
+      "threshold-line",
+      "line-draw",
+      "mask-word-in",
+      "glyph-to-bar",
+      "baseline-grow",
+      "diverge-grow",
+      "ink-in",
+      "forecast-extend",
+      "line-mask-rise",
+      "divider-split",
+      "video-scrub",
+      "count-roll",
+      "engine:fade-in",
+      "engine:fade-out",
+      "engine:crossfade",
+      "engine:none"
+    ],
+    "signature": [
+      "dot-multiply",
+      "mark-morph",
+      "annotation-pin"
+    ]
+  },
+  "defaults": {
+    "enter": "line-mask-rise",
+    "exit": "engine:fade-out",
+    "byType": {
+      "chart": {
+        "enter": "baseline-grow",
+        "exit": "recede"
+      },
+      "number": {
+        "enter": "count-roll",
+        "exit": "recede"
+      },
+      "compare": {
+        "enter": "divider-split",
+        "exit": "engine:fade-out"
+      },
+      "video": {
+        "enter": "mask-word-in"
+      },
+      "quote": {
+        "enter": "line-mask-rise"
+      }
+    }
+  },
+  "slots": {
+    "center": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "left": {
+      "x": 0.3,
+      "y": 0.52
+    },
+    "right": {
+      "x": 0.66,
+      "y": 0.52
+    },
+    "top": {
+      "x": 0.5,
+      "y": 0.22
+    },
+    "lower-third": {
+      "x": 0.0625,
+      "y": 0.8
+    },
+    "full": {
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  "tokens": {
+    "stagger": 0.04,
+    "dotRadius": 9,
+    "dotGap": 6,
+    "maxDots": 2400,
+    "noteOffset": 28,
+    "noteSlide": 12,
+    "leaderWidth": 1.5,
+    "ruleWidth": 1,
+    "markWidth": 2.5,
+    "mutedAlpha": 0.35,
+    "recedeDrift": 0.06,
+    "headlineRise": 1.05,
+    "tickRoll": 1,
+    "plotTop": 0.3,
+    "plotBottom": 0.88,
+    "plotLeft": 0.0625,
+    "plotRight": 0.9375,
+    "waffleCols": 10,
+    "waffleCell": 44,
+    "glyphBright": 1.15,
+    "hatchGap": 10
+  }
+}

@@ -1,0 +1,259 @@
+# canvas-pitch — 캔버스 플라이스루 컨셉 견본 덱
+# 가상 스타트업 「서릿길」 시드 투자 피치(표본). 회사·제품·수치·인용은 전부 가상(sample: true).
+# 지도 배치(world 단위 = 화면 1장, 타일 왼쪽 위 좌표):
+#   출발(0,0) → 문제(1.5,0.5) → 해법(3.0,0.15 / 3.0,1.25) → 제품(4.6,0.8) → 데이터(4.8,2.1)
+#   → 시장(4.4,3.3) → 트랙션(2.9,3.4 / 2.9,2.3) → 팀(1.4,3.5 / 1.3,2.3) → 투자 요청(0,2.2) → 전체 지도
+# persist: true = 계약 제안 중(C6 build ⑥ 끝 숨김 생략). 근거·대안은 docs/concepts.md」.
+id: canvas-pitch
+title: "서릿길 — 냉장 배송의 마지막 1km를 기록합니다"
+lang: ko
+concept: canvas
+sample: true
+timing:
+  unit: 0.75
+  hold: 0.8
+  overlap: 0.25
+export:
+  secondsPerUnit: 0.55
+
+beats:
+  # ── 지형: 지도 바닥 전체(등고선·격자 좌표·지명·점선 경로·표본 표제). 덱 내내 남는다 ──
+  - id: b-ground
+    type: sequence
+    use: ground
+    place: { world: { x: -0.6, y: -0.6, z: 0, s: 1 } }
+    persist: true
+    stop: false
+    hold: 0
+    data:
+      size: { w: 6.6, h: 5.2 }
+      seed: 1849
+      sheet: { cols: "ABCDEFG", rows: 5 }
+      regions:
+        - { id: start,    name: "출발",      x: 0.0, y: 0.0 }
+        - { id: problem,  name: "문제",      x: 1.5, y: 0.5 }
+        - { id: solution, name: "해법",      x: 3.0, y: 0.15 }
+        - { id: product,  name: "제품",      x: 4.6, y: 0.8 }
+        - { id: data,     name: "데이터",    x: 4.8, y: 2.1 }
+        - { id: market,   name: "시장",      x: 4.4, y: 3.3 }
+        - { id: traction, name: "트랙션",    x: 2.9, y: 2.3 }
+        - { id: team,     name: "팀",        x: 1.3, y: 2.3 }
+        - { id: ask,      name: "투자 요청", x: 0.0, y: 2.2 }
+      route: [start, problem, solution, product, data, market, traction, team, ask]
+      cartouche:
+        at: { x: 0.72, y: 0.1 }
+        lines: ["서릿길 시드 투자 제안", "2026년 10월", "가상 회사 표본"]
+
+  # ── 출발: 오프닝 크레인, 지도 조각에서 솟아올라 회사 이름에 선다 ──
+  - id: b-title
+    type: text
+    text: "서릿길 냉장 배송의 마지막 1km를 기록합니다"
+    lines: ["서릿길", "냉장 배송의 마지막 1km를 기록합니다"]
+    emphasis: ["서릿길"]
+    size: xl
+    place: { world: { x: 0, y: 0, z: 80 } }
+    camera: { move: establish-crane, params: { duration: 2.4, tilt: 10, startScale: 1.6 } }
+    enter: { move: map-label-settle, params: { duration: 1.3 }, at: 1.0 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+    exportHold: 2.4
+
+  # ── 문제 ──
+  - id: b-problem
+    type: text
+    text: "상자를 열기 전까지, 배송 중 온도는 아무도 모릅니다"
+    lines: ["상자를 열기 전까지,", "배송 중 온도는 아무도 모릅니다"]
+    emphasis: ["배송", "중", "온도"]
+    size: l
+    place: { world: { x: 1.5, y: 0.5, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 2.0 } }
+    enter: { move: focus-pull, at: 1.4 }
+    link: { move: headline-to-caption, params: { fromPart: block, toPart: caption } }
+    repeat: intended
+
+  - id: b-melt
+    type: video
+    mode: scrub
+    src: assets/melt/melt.mp4
+    poster: assets/melt/poster.webp
+    frames: assets/melt/frames.json
+    alt: "스테인리스 판 위 얼음 조각이 녹아 물웅덩이가 되는 타임랩스"
+    caption: "상자를 열기 전까지, 배송 중 온도는 아무도 모릅니다"
+    place: { world: { x: 1.5, y: 0.5, z: 80 } }
+    enter: { move: "engine:none" }
+    steps:
+      - { name: arrival, move: frame-scrub, params: { duration: 2.6 } }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  # ── 해법 ──
+  - id: b-solution
+    type: text
+    text: "태그 한 장이 배송 경로 전체의 온도를 기억합니다"
+    lines: ["태그 한 장이", "배송 경로 전체의 온도를 기억합니다"]
+    emphasis: ["태그", "한", "장이"]
+    size: l
+    place: { world: { x: 3.0, y: 0.15, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 2.0 } }
+    enter: { move: focus-pull, at: 1.4 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  - id: b-compare
+    type: compare
+    items:
+      - { label: "지금", text: "도착할 때 한 번 재고, 이탈한 구간은 모릅니다" }
+      - { label: "서릿길", text: "5분마다 기록하고, 이탈한 시간과 위치까지 남깁니다" }
+    verdict: "반품 다툼이 느낌에서 기록으로 바뀝니다"
+    place: { world: { x: 3.0, y: 1.25, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 1.3, altitude: 0, bank: 0 } }
+    enter: { move: divider-split, at: 0.8 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  # ── 제품: 지도 위 지역이 제품 데모 영상 창으로 열린다 ──
+  - id: b-product
+    type: video
+    mode: loop
+    src: assets/demo/demo.mp4
+    poster: assets/demo/poster.webp
+    alt: "휴대폰을 태그에 대자 배송 경로 지도와 온도 선이 뜨고, 14시 20분부터 32분까지 9.4도로 이탈한 구간이 붉게 표시되는 앱 화면"
+    caption: "휴대폰을 대는 순간, 이탈 12분이 지도에 찍힙니다"
+    place: { world: { x: 4.6, y: 0.8, z: 60 } }
+    camera: { move: arc-flight, params: { duration: 2.0 } }
+    enter: { move: window-open, at: 1.4 }
+    steps:
+      - { name: full, move: window-takeover }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+    exportHold: 4.0
+
+  # ── 데이터 ──
+  - id: b-moat
+    type: text
+    text: "기록이 쌓일수록 경로마다 위험 지도가 생깁니다"
+    lines: ["기록이 쌓일수록", "경로마다 위험 지도가 생깁니다"]
+    emphasis: ["위험", "지도가"]
+    size: l
+    place: { world: { x: 4.8, y: 2.1, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 1.7 } }
+    enter: { move: map-label-settle, at: 1.1 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  # ── 시장 ──
+  - id: b-market
+    type: number
+    value: 43
+    from: 0
+    format: { suffix: "억 원" }
+    label: "1차 시장: 수도권 식자재 유통사 180곳의 연간 태그 수요(표본 가정)"
+    place: { world: { x: 4.4, y: 3.3, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 1.7 } }
+    enter: { move: count-roll, at: 1.1 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  # ── 트랙션 ──
+  - id: b-traction-num
+    type: number
+    value: 19200
+    from: 1200
+    format: { suffix: "상자" }
+    label: "9월 한 달 동안 태그를 붙여 보낸 상자, 1월의 16배"
+    place: { world: { x: 2.9, y: 3.4, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 1.9 } }
+    enter: { move: count-roll, at: 1.3 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  - id: b-traction-chart
+    type: chart
+    kind: line
+    categories: ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월"]
+    series:
+      - { name: "태그 부착 상자", values: [1200, 2000, 3100, 4400, 6000, 8300, 11000, 14600, 19200] }
+    unit: "상자/월"
+    highlight: { series: "태그 부착 상자", index: 8 }
+    place: { world: { x: 2.9, y: 2.3, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 1.2, altitude: 0, bank: 0 } }
+    enter: { move: line-draw, at: 0.7 }
+    steps:
+      - { name: sep, move: point-focus, params: { index: 8 } }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  # ── 팀 ──
+  - id: b-team
+    type: compare
+    items:
+      - { label: "운영", text: "냉동 물류센터 운영 9년" }
+      - { label: "하드웨어", text: "센서 태그 양산 2회" }
+      - { label: "영업", text: "식자재 유통사 70곳과 거래" }
+    verdict: "이 길을 직접 걸어 본 세 사람이 만듭니다"
+    place: { world: { x: 1.4, y: 3.5, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 1.9 } }
+    enter: { move: pin-drop, at: 1.3 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  - id: b-quote
+    type: quote
+    text: "기록을 같이 보니까, 반품 다툼이 사라졌어요"
+    by: "파일럿 거래처 구매 담당"
+    role: "식자재 유통사 · 가상 인용"
+    place: { world: { x: 1.3, y: 2.3, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 1.3, altitude: 0, bank: 0 } }
+    enter: { move: focus-pull, at: 0.8 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+
+  # ── 투자 요청 ──
+  - id: b-ask
+    type: number
+    value: 20
+    format: { suffix: "억 원" }
+    label: "시드 라운드 · 18개월 동안 수도권 유통사 180곳으로 넓힙니다"
+    place: { world: { x: 0, y: 2.2, z: 80 } }
+    camera: { move: arc-flight, params: { duration: 1.9 } }
+    enter: { move: focus-pull, at: 1.3 }
+    exit: { move: recede }
+    persist: true
+    repeat: intended
+    exportHold: 2.4
+
+  # ── 전체 지도: 카메라가 물러나며 지나온 길 전체가 드러난다 ──
+  - id: b-atlas
+    type: sequence
+    use: atlas
+    place: { world: { x: -0.6, y: -0.6, z: 0, s: 1 } }
+    camera: { move: atlas-pullback, params: { duration: 3.2, bounds: { x0: -0.6, y0: -0.6, x1: 6.0, y1: 4.6 }, tilt: 6, offsetY: 0.1 } }
+    exit: { move: "engine:none" }
+    persist: true
+    exportHold: 3.0
+    data:
+      route: [start, problem, solution, product, data, market, traction, team, ask]
+      light: 0.12
+
+  # ── 닫는 문장: 화면 고정(카메라 영향 없음) ──
+  - id: b-close
+    type: text
+    text: "마지막 1km에 기록을 남깁니다 서릿길 · 시드 20억 원"
+    lines: ["마지막 1km에 기록을 남깁니다", "서릿길 · 시드 20억 원"]
+    emphasis: ["기록"]
+    size: l
+    place: { slot: lower-third }
+    enter: { move: map-label-settle, params: { duration: 1.2 } }
+    repeat: intended
+    exportHold: 3.0

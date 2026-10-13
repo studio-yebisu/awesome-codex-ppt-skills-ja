@@ -1,0 +1,72 @@
+{
+  "passed": true,
+  "url": "http://127.0.0.1:5195/review/bridge-harness.html",
+  "transport": "HTTP parent iframe and postMessage",
+  "checks": [
+    {
+      "action": "parent-goto",
+      "index": 0,
+      "target": "opening",
+      "time": 0.8,
+      "notified": 0,
+      "passed": true
+    },
+    {
+      "action": "parent-goto",
+      "index": 1,
+      "target": "prepare",
+      "time": 2.5000642,
+      "notified": 1,
+      "passed": true
+    },
+    {
+      "action": "parent-goto",
+      "index": 2,
+      "target": "prepare/venue",
+      "time": 4.0001027,
+      "notified": 2,
+      "passed": true
+    },
+    {
+      "action": "parent-goto",
+      "index": 3,
+      "target": "deliver",
+      "time": 7.0001797,
+      "notified": 3,
+      "passed": true
+    },
+    {
+      "action": "parent-goto",
+      "index": 4,
+      "target": "deliver/opening-day",
+      "time": 8.5002182,
+      "notified": 4,
+      "passed": true
+    },
+    {
+      "action": "parent-goto",
+      "index": 5,
+      "target": "closing",
+      "time": 10.2994097,
+      "notified": 5,
+      "passed": true
+    },
+    {
+      "action": "reject-invalid-index-type-source-origin",
+      "origin_test": "synthetic MessageEvent with real parent source and deliberately mismatched origin",
+      "before": 10.2994097,
+      "after": 10.2994097,
+      "passed": true
+    },
+    {
+      "action": "native-key-syncs-parent",
+      "expectedIndex": 4,
+      "notified": 4,
+      "passed": true
+    },
+    {
+      "action": "escape-close",
+      "passed": true
+    }
+  ]
+}

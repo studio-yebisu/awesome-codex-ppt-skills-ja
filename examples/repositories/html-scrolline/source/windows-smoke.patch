@@ -1,0 +1,32 @@
+--- tools/smoke.mjs
++++ tools/smoke.windows.mjs
+@@ -289,6 +289,10 @@
+ })();`;
+ 
+ function deckUrl(opts) {
++  if (process.env.SCROLLINE_URL) {
++    if (!/^https?:\/\//.test(process.env.SCROLLINE_URL)) throw new Error("SCROLLINE_URL must use HTTP(S)");
++    return process.env.SCROLLINE_URL;
++  }
+   return `http://${opts.host}:${opts.port}/decks/${opts.deck}/index.html`;
+ }
+ 
+@@ -347,6 +351,7 @@
+ }
+ 
+ export function chromePath() {
++  if (process.env.SCROLLINE_CHROME && existsSync(process.env.SCROLLINE_CHROME)) return process.env.SCROLLINE_CHROME;
+   // Cached headless shell first: concurrent `npx hyperframes` calls race on the npx cache and print nothing.
+   const cache = path.join(os.homedir(), '.cache', 'hyperframes', 'chrome', 'chrome-headless-shell');
+   if (existsSync(cache)) {
+@@ -400,6 +405,10 @@
+     const cdp = await cdpConnect(target.webSocketDebuggerUrl);
+     await cdp.send('Emulation.setDeviceMetricsOverride', { width: 1920, height: 1080, deviceScaleFactor: 1, mobile: false });
+     await cdp.send('Page.enable');
++    if (process.env.SCROLLINE_OFFLINE === '1') {
++      await cdp.send('Network.enable');
++      await cdp.send('Network.setBlockedURLs', { urls: ['http://*', 'https://*'] });
++    }
+     await cdp.send('Page.addScriptToEvaluateOnNewDocument', { source: HMR_FREEZE });
+     await cdp.send('Page.navigate', { url: deckUrl(opts) });
+     const until = Date.now() + 30000;

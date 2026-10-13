@@ -1,0 +1,22 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body,[data-composition-id],canvas{margin:0;width:100%;height:100%;overflow:hidden;background:#050506}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"}}</script></head><body>
+<div data-composition-id="minute-turntable" data-no-timeline data-width="1920" data-height="1080" data-duration="5"><canvas id="three-layer"></canvas></div>
+<script type="module">
+import * as THREE from 'three';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import { createMinute } from './scene.js';
+RectAreaLightUniformsLib.init();
+const canvas = document.querySelector('#three-layer');
+const minute = createMinute({ THREE, canvas, width:1920, height:1080 });
+const ease = (p) => 0.5 - 0.5 * Math.cos(Math.PI * Math.max(0, Math.min(1,p)));
+const mix = (a,b,p) => a+(b-a)*ease(p);
+function stateAt(t) {
+ const f = Math.min(120, Math.max(1, Math.floor(t * 24) + 1));
+ if (f <= 22) return { elev:22, yaw:mix(0,40,(f-1)/21), halo:0, haloArc:0 };
+ if (f <= 50) return { elev:mix(22,64,(f-23)/27), yaw:mix(40,110,(f-23)/27), halo:0, haloArc:0 };
+ if (f <= 84) return { elev:mix(64,40,(f-51)/33), yaw:mix(110,200,(f-51)/33), halo:1, haloArc:1 };
+ return { elev:mix(40,6,(f-85)/35), yaw:mix(200,300,(f-85)/35), halo:1, haloArc:1 };
+}
+window.addEventListener('hf-seek', e => minute.renderAt(stateAt(e.detail.time)));
+minute.renderAt(stateAt(window.__hfThreeTime || 0));
+</script></body></html>

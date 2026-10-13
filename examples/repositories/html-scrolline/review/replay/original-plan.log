@@ -1,0 +1,192 @@
+{
+  "version": 1,
+  "deck": "exhibit-ja",
+  "concept": "rail",
+  "duration": 11.100000000000001,
+  "unit": 0.65,
+  "stops": [
+    {
+      "name": "opening",
+      "label": "stop:opening",
+      "t": 0.8,
+      "beat": "opening"
+    },
+    {
+      "name": "prepare",
+      "label": "stop:prepare",
+      "t": 2.5,
+      "beat": "prepare"
+    },
+    {
+      "name": "prepare/venue",
+      "label": "stop:prepare/venue",
+      "t": 4,
+      "beat": "prepare"
+    },
+    {
+      "name": "deliver",
+      "label": "stop:deliver",
+      "t": 7,
+      "beat": "deliver"
+    },
+    {
+      "name": "deliver/opening-day",
+      "label": "stop:deliver/opening-day",
+      "t": 8.5,
+      "beat": "deliver"
+    },
+    {
+      "name": "closing",
+      "label": "stop:closing",
+      "t": 10.3,
+      "beat": "closing"
+    }
+  ],
+  "beats": [
+    {
+      "id": "opening",
+      "type": "text",
+      "start": 0,
+      "stop": 0.8,
+      "end": 2.05,
+      "spans": [
+        {
+          "role": "enter",
+          "move": "line-mask-rise",
+          "start": 0,
+          "end": 0.8,
+          "params": {
+            "duration": 0.8,
+            "stagger": 0.12,
+            "tracking": 0.02,
+            "emDelay": 0.7,
+            "rule": false,
+            "emStyle": "color"
+          }
+        },
+        {
+          "role": "exit",
+          "move": "engine:fade-out",
+          "start": 1.65,
+          "end": 2.05,
+          "params": {
+            "duration": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "prepare",
+      "type": "chronology",
+      "start": 1.7999999999999998,
+      "stop": 2.5,
+      "end": 6.85,
+      "spans": [
+        {
+          "role": "enter",
+          "move": "rail-surface",
+          "start": 1.7999999999999998,
+          "end": 2.5,
+          "params": {
+            "duration": 0.7,
+            "stagger": 0.04
+          }
+        },
+        {
+          "role": "step",
+          "move": "rail-advance",
+          "start": 3.35,
+          "end": 4,
+          "params": {
+            "from": -1,
+            "to": 1,
+            "base": 0.6,
+            "perMonth": 0.05,
+            "max": 2.6,
+            "ghostParallax": 1,
+            "blurMax": 4,
+            "trailOpacity": 0.32
+          }
+        }
+      ]
+    },
+    {
+      "id": "deliver",
+      "type": "chronology",
+      "start": 4.85,
+      "stop": 7,
+      "end": 9.75,
+      "spans": [
+        {
+          "role": "link",
+          "move": "era-shift",
+          "start": 4.85,
+          "end": 6.85,
+          "params": {
+            "duration": 2,
+            "boundaryWidth": 2,
+            "labelTracking": 0.12
+          }
+        },
+        {
+          "role": "enter",
+          "move": "engine:none",
+          "start": 7,
+          "end": 7,
+          "params": {
+            "duration": 0
+          }
+        },
+        {
+          "role": "step",
+          "move": "rail-advance",
+          "start": 7.85,
+          "end": 8.5,
+          "params": {
+            "from": -1,
+            "to": 1,
+            "base": 0.6,
+            "perMonth": 0.05,
+            "max": 2.6,
+            "ghostParallax": 1,
+            "blurMax": 4,
+            "trailOpacity": 0.32
+          }
+        },
+        {
+          "role": "exit",
+          "move": "engine:fade-out",
+          "start": 9.35,
+          "end": 9.75,
+          "params": {
+            "duration": 0.4
+          }
+        }
+      ]
+    },
+    {
+      "id": "closing",
+      "type": "text",
+      "start": 9.5,
+      "stop": 10.3,
+      "end": 11.15,
+      "spans": [
+        {
+          "role": "enter",
+          "move": "line-mask-rise",
+          "start": 9.5,
+          "end": 10.3,
+          "params": {
+            "duration": 0.8,
+            "stagger": 0.12,
+            "tracking": 0.02,
+            "emDelay": 0.7,
+            "rule": false,
+            "emStyle": "color"
+          }
+        }
+      ]
+    }
+  ]
+}
+

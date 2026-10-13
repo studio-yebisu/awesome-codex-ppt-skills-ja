@@ -1,0 +1,295 @@
+/* rail 배치(C11 layout.css): 연감 종이 위 가로 레일. engine.css의 중립 chronology 기본값을 rail 문법으로 덮는다.
+   규칙: 모든 선택자는 .sl-concept-rail 범위, 색은 var(--sl-*)만, !important·@import 금지(tools/check-concepts.mjs).
+   아트 디렉션: 레일이 주인공(굵은 먹 선·달 눈금·해마다 레일을 가로지르는 연도 표석),
+   도착 사건이 화면의 초점(제목 L1 major 120 / minor 92, 설명 L2 한 줄, 굵은 줄기·큰 점). 크기는 1920 기준 px × --px. */
+
+.sl-concept-rail {
+  --rail-u: calc(var(--px) * 1px);
+  --rail-line: calc(var(--rail-u) * 4);
+}
+
+/* 시대 tone을 쓰는 rail의 영상 caption은 그 화면의 유일한 문장이라 L2 크기 */
+.sl-concept-rail .sl-beat[data-tone] .sl-video__caption {
+  font-size: var(--sl-size-m);
+  line-height: 1.35;
+}
+
+/* tone이 있는 chronology 밖 beat(숫자·인용·영상): 시대 종이를 화면 전체에 깐다(chronology는 ground가 맡음). */
+.sl-concept-rail .sl-beat[data-tone]:not(.sl-beat--chronology) {
+  background: var(--sl-bg);
+  box-shadow: 0 0 0 200vmax var(--sl-bg);
+}
+
+/* chronology(axis x) = 가로 레일. 레일 선은 화면 높이 66%, 사건은 날짜 비례(--sl-position-x) 위치에 점을 찍고
+   위로 줄기·제목·설명, 아래로 날짜·출처. `now`가 있으면 트랙이 「지금」 선에서 출발하고 길이 = 개월 × 64px,
+   없으면(전체 레일) 좌우 여백 안에 맞춘다. 크기는 1920 기준 px × --px. */
+.sl-concept-rail .sl-chronology__track {
+  position: absolute;
+  top: 66%;
+  left: var(--sl-gutter);
+  width: calc(100% - 2 * var(--sl-gutter));
+  height: 0;
+  border-block-start: 1px solid var(--sl-rule);
+}
+.sl-concept-rail [data-now] > .sl-chronology__track {
+  left: var(--sl-now);
+  width: calc(var(--sl-span) * 64 * var(--px) * 1px);
+  border: 0;
+}
+.sl-concept-rail [data-now] > .sl-chronology__track::before {
+  position: absolute;
+  top: calc(var(--rail-line) / -2);
+  left: -200vw;
+  right: -200vw;
+  height: var(--rail-line);
+  background: var(--sl-fg);
+  content: '';
+}
+/* 달 눈금: 레일 아래로 한 달(64px)마다 */
+.sl-concept-rail [data-now] > .sl-chronology__track::after {
+  position: absolute;
+  top: calc(var(--rail-line) / 2);
+  left: calc(var(--rail-u) * -64 * 60);
+  right: -200vw;
+  height: calc(var(--rail-u) * 16);
+  background: repeating-linear-gradient(
+    to right,
+    var(--sl-fg) 0 calc(var(--rail-u) * 2),
+    transparent calc(var(--rail-u) * 2) calc(var(--rail-u) * 64)
+  );
+  opacity: 0.4;
+  content: '';
+}
+.sl-concept-rail .sl-chronology__event {
+  position: absolute;
+  bottom: calc(var(--rail-u) * -14);
+  left: calc(var(--sl-position-x) - var(--rail-u) * 14);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: calc(var(--rail-u) * 1080);
+  color: var(--sl-fg);
+}
+.sl-concept-rail [data-now] :is(.sl-chronology__media, .sl-chronology__title, .sl-chronology__note) {
+  margin-inline-start: calc(24 * var(--px) * 1px);
+}
+.sl-concept-rail .sl-chronology__media {
+  order: 1;
+  outline: 1px solid var(--sl-rule);
+  display: block;
+  width: calc(var(--rail-u) * 400);
+  height: calc(var(--rail-u) * 225);
+  margin-block-end: calc(var(--rail-u) * 32);
+  object-fit: cover;
+}
+.sl-concept-rail .sl-chronology__title {
+  order: 2;
+  margin: 0;
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+  font-size: calc(var(--rail-u) * 120);
+  font-weight: var(--sl-weight-display);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.sl-concept-rail .sl-chronology__note {
+  order: 3;
+  max-width: calc(var(--rail-u) * 1060);
+  margin: calc(var(--rail-u) * 22) 0 0;
+  color: var(--sl-fg);
+  font-size: var(--sl-size-m);
+  line-height: 1.3;
+  word-break: keep-all;
+}
+.sl-concept-rail .sl-chronology__stem {
+  order: 4;
+  display: block;
+  width: 0;
+  height: calc(var(--rail-u) * 128);
+  margin-block-start: calc(var(--rail-u) * 28);
+  margin-inline-start: calc(var(--rail-u) * 13);
+  border-inline-start: calc(var(--rail-u) * 2) solid var(--sl-accent);
+}
+.sl-concept-rail .sl-chronology__dot {
+  order: 5;
+  display: block;
+  width: calc(var(--rail-u) * 28);
+  height: calc(var(--rail-u) * 28);
+  border-radius: 50%;
+  outline: calc(var(--rail-u) * 5) solid var(--sl-bg);
+  background: var(--sl-accent);
+}
+.sl-concept-rail .sl-chronology__event[data-weight='minor'] .sl-chronology__title {
+  font-size: calc(var(--rail-u) * 92);
+}
+.sl-concept-rail .sl-chronology__event[data-weight='minor'] .sl-chronology__stem {
+  height: calc(var(--rail-u) * 88);
+}
+.sl-concept-rail .sl-chronology__event[data-weight='minor'] .sl-chronology__dot {
+  width: calc(var(--rail-u) * 16);
+  height: calc(var(--rail-u) * 16);
+  margin-inline-start: calc(var(--rail-u) * 6);
+  margin-block-end: calc(var(--rail-u) * 6);
+}
+.sl-concept-rail .sl-chronology__date,
+.sl-concept-rail .sl-chronology__source {
+  position: absolute;
+  left: calc(var(--rail-u) * 40);
+  top: calc(100% + var(--rail-u) * 22);
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: calc(var(--rail-u) * 22);
+  white-space: nowrap;
+}
+.sl-concept-rail .sl-chronology__date {
+  color: var(--sl-fg);
+  font-weight: 700;
+}
+.sl-concept-rail .sl-chronology__source {
+  top: calc(100% + var(--rail-u) * 54);
+}
+.sl-concept-rail .sl-chronology__label {
+  position: absolute;
+  top: calc(var(--rail-u) * 168);
+  left: var(--sl-gutter);
+  margin: 0;
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+  font-size: var(--sl-size-m);
+  font-weight: 600;
+}
+.sl-concept-rail .sl-chronology__caption {
+  position: absolute;
+  top: calc(66% + 40 * var(--px) * 1px);
+  right: var(--sl-gutter);
+  margin: 0;
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-caption);
+}
+.sl-concept-rail .sl-chronology__counter {
+  position: absolute;
+  top: calc(96 * var(--px) * 1px);
+  left: var(--sl-gutter);
+  display: flex;
+  align-items: flex-start;
+  height: 1em;
+  overflow: hidden;
+  color: var(--sl-accent);
+  font-family: var(--sl-font-mono);
+  font-size: calc(var(--rail-u) * 48);
+  font-weight: 700;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+/* 연도 표석: 해 경계(ghost 자리)에서 레일을 가로지르는 세로 눈금 + 레일 아래 큰 연도. 레일과 같은 속도로 달린다. */
+.sl-concept-rail .sl-chronology__ghost {
+  position: absolute;
+  top: calc(66% + var(--rail-u) * 108);
+  left: calc(var(--sl-now, var(--sl-gutter)) + var(--sl-ratio, 0) * var(--sl-span) * 64 * var(--rail-u));
+  padding-inline-start: calc(var(--rail-u) * 22);
+  color: color-mix(in srgb, var(--sl-accent) 26%, var(--sl-bg));
+  opacity: 1;
+  font-family: var(--sl-font-display);
+  font-size: calc(var(--rail-u) * 230);
+  font-weight: 800;
+  line-height: 0.74;
+  letter-spacing: -0.03em;
+}
+/* 표석 눈금: 레일 위 44px에서 연도 글자 바닥까지 */
+.sl-concept-rail .sl-chronology__ghost::before {
+  position: absolute;
+  top: calc(var(--rail-u) * -152);
+  bottom: 0;
+  left: 0;
+  border-inline-start: calc(var(--rail-u) * 3) solid var(--sl-accent);
+  content: '';
+}
+.sl-concept-rail .sl-chronology__now {
+  border-inline-start-width: calc(var(--rail-u) * 2);
+  opacity: 0.8;
+}
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__ghost {
+  display: none;
+}
+
+/* 전체 레일(now 없음): 결론 문장이 L1, 주요 사건 제목만 3단 높이로, 설명·날짜·출처는 접는다. */
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__track {
+  border-block-start: var(--rail-line) solid var(--sl-fg);
+}
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__label {
+  top: calc(150 * var(--px) * 1px);
+  max-width: calc(1600 * var(--px) * 1px);
+  font-size: calc(84 * var(--px) * 1px);
+  font-weight: var(--sl-weight-display);
+  line-height: 1.2;
+  letter-spacing: var(--sl-tracking-display);
+  word-break: keep-all;
+}
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__event {
+  bottom: calc(var(--rail-u) * -8);
+  align-items: center;
+  left: calc(var(--sl-position-x) - 120 * var(--px) * 1px);
+  width: calc(240 * var(--px) * 1px);
+}
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__title {
+  padding: 0 calc(6 * var(--px) * 1px);
+  background: var(--sl-bg);
+  font-size: calc(var(--rail-u) * 30);
+}
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__stem {
+  height: calc((56 + var(--sl-lane, 0) * 64) * var(--px) * 1px);
+  margin: calc(8 * var(--px) * 1px) 0 0;
+  border-color: var(--sl-rule);
+}
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__event[data-weight='minor'] .sl-chronology__stem {
+  height: 0;
+  margin: 0;
+}
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__dot {
+  width: calc(var(--rail-u) * 16);
+  height: calc(var(--rail-u) * 16);
+  margin: 0;
+  outline-width: calc(var(--rail-u) * 3);
+}
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__event[data-weight='minor'] .sl-chronology__dot {
+  width: calc(var(--rail-u) * 10);
+  height: calc(var(--rail-u) * 10);
+  margin-block-end: calc(var(--rail-u) * 3);
+}
+.sl-concept-rail
+  .sl-beat--chronology:not([data-now])
+  :is(.sl-chronology__note, .sl-chronology__date, .sl-chronology__source, .sl-chronology__media) {
+  display: none;
+}
+/* 양 끝 날짜만 남겨 10년의 처음과 끝을 읽게 한다. */
+.sl-concept-rail .sl-beat--chronology:not([data-now]) .sl-chronology__event:is(:first-child, :last-child) .sl-chronology__date {
+  display: block;
+  left: 50%;
+  translate: -50% 0;
+}
+
+/* 인용: 그 화면의 L1. 따옴표는 사건 점이 솟아 된 잉크, 문장은 104px. */
+.sl-concept-rail .sl-beat--quote .sl-quote {
+  max-width: calc(var(--rail-u) * 1560);
+}
+/* 따옴표는 글자 폭만큼(레일 점이 솟아 이 자리에 앉는다) */
+.sl-concept-rail .sl-beat--quote .sl-quote__mark {
+  display: inline-block;
+  font-size: calc(var(--rail-u) * 220);
+}
+.sl-concept-rail .sl-beat--quote .sl-quote__text {
+  font-size: calc(var(--rail-u) * 104);
+  line-height: 1.16;
+  letter-spacing: -0.03em;
+}
+.sl-concept-rail .sl-beat--quote .sl-quote__by {
+  margin-block-start: calc(var(--rail-u) * 48);
+  color: var(--sl-fg);
+  font-size: var(--sl-size-s);
+}
+.sl-concept-rail .sl-beat--quote .sl-quote__source {
+  font-size: calc(var(--rail-u) * 20);
+}
+

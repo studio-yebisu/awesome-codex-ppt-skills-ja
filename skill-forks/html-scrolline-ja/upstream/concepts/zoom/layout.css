@@ -1,0 +1,274 @@
+/* zoom 배치(C11 layout.css): 「시야 틀」(field) 하나에 모든 장면이 꽉 차게 앉는다. 잠수 끝 frame rect가 덱 내내
+   같은 자리라서 viewfinder corner도 늘 같은 자리다(plan/concepts/zoom.md §4). beat는 전부 place slot full.
+   1920×1080 기준: field = x 320–1600 · y 240–940(1280×700), L1 결론 = field 위, L2 = field 아래, 사다리 = x 64.
+   규칙: 모든 선택자는 .sl-concept-zoom 범위, 색은 var(--sl-*)만, !important·@import 금지(tools/check-concepts.mjs). */
+
+.sl-concept-zoom {
+  --zoom-u: calc(var(--px) * 1px);
+  --zoom-field-x: calc(50% - 640 * var(--zoom-u));
+  --zoom-field-y: calc(50% - 300 * var(--zoom-u));
+  --zoom-field-w: calc(1280 * var(--zoom-u));
+  --zoom-field-h: calc(700 * var(--zoom-u));
+  --zoom-hero: calc(232 * var(--zoom-u));
+}
+
+/* ── text: 결론 문장(L1)과 결정 목록. 가운데 한 덩어리 ───────────────── */
+.sl-concept-zoom .sl-beat--text {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.sl-concept-zoom .sl-text__block {
+  max-width: calc(1600 * var(--zoom-u));
+  word-break: keep-all;
+}
+.sl-concept-zoom .sl-text--l {
+  font-size: calc(92 * var(--zoom-u));
+  line-height: 1.22;
+}
+.sl-concept-zoom .sl-text__em {
+  background: none;
+  color: var(--sl-accent);
+}
+/* 결정 목록: 첫 줄 = 제목(L1), 나머지 = 실행안. 사다리 칸에서 뻗은 지시선이 줄 왼쪽 끝에 닿는다 */
+.sl-concept-zoom .sl-beat--text:has(.sl-text--m) {
+  justify-content: flex-start;
+  padding-inline-start: calc(480 * var(--zoom-u));
+}
+.sl-concept-zoom .sl-text--m {
+  font-family: var(--sl-font-text);
+  font-size: calc(44 * var(--zoom-u));
+  font-weight: var(--sl-weight-display);
+  line-height: 1.3;
+}
+.sl-concept-zoom .sl-text--m .sl-text__line + .sl-text__line {
+  margin-block-start: calc(44 * var(--zoom-u));
+}
+.sl-concept-zoom .sl-text--m .sl-text__line:first-child {
+  margin-block-end: calc(40 * var(--zoom-u));
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-s);
+  font-weight: var(--sl-weight-text);
+  letter-spacing: 0;
+}
+
+/* ── number: 숫자 히어로. 가운데, label(L2)은 아래 ─────────────────── */
+.sl-concept-zoom .sl-beat--number {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.sl-concept-zoom .sl-number__value {
+  font-size: var(--zoom-hero);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.sl-concept-zoom .sl-number__suffix {
+  margin-inline-start: 0.12em;
+  font-size: 0.42em;
+  letter-spacing: 0;
+}
+.sl-concept-zoom .sl-number__label {
+  max-width: calc(1280 * var(--zoom-u));
+  margin-block-start: calc(48 * var(--zoom-u));
+  color: var(--sl-fg-muted);
+  text-align: center;
+}
+
+/* ── chart: plot = field. L1 title 위, L2 dek 아래, 범례·단위는 field 왼쪽 위 주석 ── */
+.sl-concept-zoom .sl-beat--chart > * {
+  position: absolute;
+  margin: 0;
+}
+.sl-concept-zoom .sl-chart__plot {
+  left: var(--zoom-field-x);
+  top: var(--zoom-field-y);
+  width: var(--zoom-field-w);
+  height: var(--zoom-field-h);
+}
+.sl-concept-zoom .sl-chart__title {
+  left: var(--zoom-field-x);
+  bottom: calc(50% + 330 * var(--zoom-u));
+  max-width: calc(1440 * var(--zoom-u));
+  font-family: var(--sl-font-display);
+  font-weight: var(--sl-weight-display);
+  line-height: var(--sl-leading-display);
+  letter-spacing: var(--sl-tracking-display);
+  word-break: keep-all;
+}
+.sl-concept-zoom .sl-chart__dek {
+  left: var(--zoom-field-x);
+  top: calc(50% + 425 * var(--zoom-u));
+  max-width: calc(1440 * var(--zoom-u));
+  font-size: calc(32 * var(--zoom-u));
+  line-height: 1.35;
+  word-break: keep-all;
+}
+.sl-concept-zoom .sl-chart__legend,
+.sl-concept-zoom .sl-chart__unit {
+  top: var(--zoom-field-y);
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-text);
+  font-size: var(--sl-size-caption);
+}
+.sl-concept-zoom .sl-chart__legend {
+  right: var(--zoom-field-x);
+}
+.sl-concept-zoom .sl-chart__unit {
+  right: var(--zoom-field-x);
+  top: calc(50% - 270 * var(--zoom-u));
+}
+/* 막대: 렌더러의 44 단위 막대는 1280 폭에서 성냥개비라 3.6배 굵게 연다. transform이 아니라 개별 속성 scale을
+   쓴다(측정은 transform만 끄므로 포트 rect가 보이는 막대와 같아진다) */
+.sl-concept-zoom .sl-chart__mark--bar {
+  fill: var(--sl-fg-muted);
+  stroke: none;
+  transform-box: fill-box;
+  transform-origin: center;
+  scale: 3.6 1;
+}
+/* 가로 막대(orient h, 렌더러가 높이 44로 그림): 굵기를 아래로 3.6배, 범주 이름은 막대 왼쪽 끝에 붙인다 */
+.sl-concept-zoom .sl-chart__mark--bar[height='44'] {
+  transform-origin: center top;
+  scale: 1 3.6;
+}
+.sl-concept-zoom .sl-chart__plot:has(.sl-chart__mark--bar[height='44']) .sl-chart__label {
+  text-anchor: start;
+}
+.sl-concept-zoom .sl-chart__mark--bar[data-sign='neg'] {
+  fill: var(--sl-accent);
+}
+.sl-concept-zoom .sl-chart__label {
+  fill: var(--sl-fg-muted);
+  font-family: var(--sl-font-text);
+  font-size: 30px;
+  text-anchor: middle;
+}
+.sl-concept-zoom .sl-chart__baseline {
+  stroke: var(--sl-fg-muted);
+  stroke-width: 2px;
+}
+.sl-concept-zoom .sl-chart__axis {
+  display: none;
+}
+
+/* ── compare: 휴대폰 화면 두 장이 field 안에 나란히. 이름·한 줄은 바깥 옆 ─────── */
+.sl-concept-zoom .sl-compare {
+  position: absolute;
+  inset: 0;
+}
+.sl-concept-zoom .sl-compare__item {
+  position: absolute;
+  top: var(--zoom-field-y);
+  width: calc(307 * var(--zoom-u));
+  height: var(--zoom-field-h);
+}
+.sl-concept-zoom .sl-compare__item:first-of-type {
+  left: calc(50% - 357 * var(--zoom-u));
+}
+.sl-concept-zoom .sl-compare__item:last-of-type {
+  left: calc(50% + 50 * var(--zoom-u));
+}
+.sl-concept-zoom .sl-compare__media {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--sl-radius);
+  object-fit: cover;
+}
+.sl-concept-zoom .sl-compare__label,
+.sl-concept-zoom .sl-compare__text {
+  position: absolute;
+  width: calc(380 * var(--zoom-u));
+  margin: 0;
+  word-break: keep-all;
+}
+.sl-concept-zoom .sl-compare__label {
+  top: 0;
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-caption);
+  font-weight: 500;
+}
+.sl-concept-zoom .sl-compare__text {
+  top: calc(40 * var(--zoom-u));
+  color: var(--sl-fg);
+  font-size: calc(34 * var(--zoom-u));
+  font-weight: var(--sl-weight-display);
+  line-height: 1.3;
+}
+.sl-concept-zoom .sl-compare__item:first-of-type :is(.sl-compare__label, .sl-compare__text) {
+  right: calc(100% + 48 * var(--zoom-u));
+  text-align: right;
+}
+.sl-concept-zoom .sl-compare__item:last-of-type :is(.sl-compare__label, .sl-compare__text) {
+  left: calc(100% + 48 * var(--zoom-u));
+}
+.sl-concept-zoom .sl-compare__divider {
+  display: none;
+}
+.sl-concept-zoom .sl-compare__verdict {
+  position: absolute;
+  left: var(--zoom-field-x);
+  top: calc(50% + 425 * var(--zoom-u));
+  width: var(--zoom-field-w);
+  margin: 0;
+  color: var(--sl-fg-muted);
+  font-size: calc(32 * var(--zoom-u));
+  text-align: center;
+}
+
+/* ── video: 9:16 휴대폰 화면 하나가 field 높이에 맞는다. caption은 화면 왼쪽 옆(오른쪽은 조준 주석 자리) ── */
+.sl-concept-zoom .sl-video {
+  position: absolute;
+  left: calc(50% - 197 * var(--zoom-u));
+  top: var(--zoom-field-y);
+  width: calc(394 * var(--zoom-u));
+  height: var(--zoom-field-h);
+  margin: 0;
+}
+.sl-concept-zoom .sl-video__media {
+  border-radius: var(--sl-radius);
+}
+.sl-concept-zoom .sl-video__caption {
+  left: auto;
+  right: calc(100% + 64 * var(--zoom-u));
+  top: auto;
+  bottom: 0;
+  text-align: right;
+  width: calc(520 * var(--zoom-u));
+  color: var(--sl-fg);
+  font-size: calc(34 * var(--zoom-u));
+  font-weight: var(--sl-weight-display);
+  line-height: 1.3;
+  word-break: keep-all;
+}
+
+/* ── move overlay 글자(위치는 move가 inline으로, 글꼴만 여기서) ───────────── */
+.sl-concept-zoom .sl-port-aim__label,
+.sl-concept-zoom .sl-rule-mark__label {
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-s);
+  font-weight: 500;
+  white-space: nowrap;
+}
+.sl-concept-zoom .sl-strike-swap__value {
+  font-family: var(--sl-font-display);
+  font-weight: var(--sl-weight-display);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  white-space: nowrap;
+}
+.sl-concept-zoom .sl-strike-swap__label {
+  margin: 0;
+  color: var(--sl-fg);
+  font-size: var(--sl-size-m);
+  line-height: 1.35;
+  text-align: center;
+  word-break: keep-all;
+}
+.sl-concept-zoom .sl-depth-ladder {
+  font-family: var(--sl-font-text);
+  font-size: var(--sl-size-caption);
+}

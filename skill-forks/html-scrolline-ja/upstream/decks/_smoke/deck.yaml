@@ -1,0 +1,28 @@
+id: _smoke
+title: Scrolline v2 smoke
+lang: ko
+concept: _smoke
+sample: true
+beats:
+  - id: opening
+    type: text
+    text: Scrolline v2 엔진 확인
+    place: { slot: center }
+    enter: { move: "engine:fade-in" }
+    exit: { move: "engine:fade-out" }
+    repeat: intended
+  - id: image
+    type: photo
+    src: assets/smoke.svg
+    alt: Scrolline smoke gradient
+    place: { slot: center }
+    enter: { move: "engine:fade-in" }
+    exit: { move: "engine:fade-out" }
+    repeat: intended
+  - id: total
+    type: number
+    value: 3
+    label: 확인한 beat
+    place: { slot: center }
+    enter: { move: "engine:fade-in" }
+    repeat: intended

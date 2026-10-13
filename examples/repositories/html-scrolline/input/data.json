@@ -1,0 +1,149 @@
+{
+  "id": "exhibit-ja",
+  "title": "小さな展示を、ひらくまで",
+  "lang": "en",
+  "concept": "rail",
+  "sample": true,
+  "sources": [],
+  "timing": {
+    "unit": 0.65,
+    "hold": 0.85,
+    "overlap": 0.15
+  },
+  "beats": [
+    {
+      "id": "opening",
+      "type": "text",
+      "text": "小さな展示を、 ひらくまで",
+      "lines": [
+        "小さな展示を、",
+        "ひらくまで"
+      ],
+      "size": "l",
+      "place": {
+        "slot": "center"
+      },
+      "enter": {
+        "move": "line-mask-rise"
+      },
+      "exit": {
+        "move": "engine:fade-out"
+      }
+    },
+    {
+      "id": "prepare",
+      "type": "chronology",
+      "label": "まず、企画と会場を決める",
+      "counter": "month",
+      "now": 0.23,
+      "ground": true,
+      "tone": 0,
+      "scale": "time",
+      "axis": "x",
+      "events": [
+        {
+          "date": "2027-05",
+          "title": "企画を決める",
+          "note": "誰に、どんな写真を見てもらうか。"
+        },
+        {
+          "date": "2027-06",
+          "title": "会場を確かめる",
+          "note": "広さ・展示方法・利用条件を確認。"
+        }
+      ],
+      "place": {
+        "world": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "s": 1
+        }
+      },
+      "enter": {
+        "move": "rail-surface"
+      },
+      "steps": [
+        {
+          "name": "venue",
+          "move": "rail-advance",
+          "params": {
+            "to": 1
+          }
+        }
+      ],
+      "link": {
+        "move": "era-shift",
+        "params": {
+          "duration": 2.0
+        }
+      },
+      "repeat": "intended"
+    },
+    {
+      "id": "deliver",
+      "type": "chronology",
+      "label": "次に、案内と当日を整える",
+      "counter": "month",
+      "now": 0.23,
+      "ground": true,
+      "tone": 4,
+      "scale": "time",
+      "axis": "x",
+      "events": [
+        {
+          "date": "2027-07",
+          "title": "案内を届ける",
+          "note": "日時・場所・問い合わせ先をそろえる。"
+        },
+        {
+          "date": "2027-08",
+          "title": "当日を整える",
+          "note": "展示順・受付・撤収の担当を決める。"
+        }
+      ],
+      "place": {
+        "world": {
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "s": 1
+        }
+      },
+      "enter": {
+        "move": "engine:none",
+        "at": 0.15
+      },
+      "steps": [
+        {
+          "name": "opening-day",
+          "move": "rail-advance",
+          "params": {
+            "to": 1
+          }
+        }
+      ],
+      "exit": {
+        "move": "engine:fade-out"
+      },
+      "repeat": "intended"
+    },
+    {
+      "id": "closing",
+      "type": "text",
+      "text": "次に決めるのは、 展示のテーマ。",
+      "lines": [
+        "次に決めるのは、",
+        "展示のテーマ。"
+      ],
+      "size": "l",
+      "place": {
+        "slot": "center"
+      },
+      "enter": {
+        "move": "line-mask-rise"
+      },
+      "repeat": "intended"
+    }
+  ]
+}

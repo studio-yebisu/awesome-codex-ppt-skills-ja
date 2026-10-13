@@ -1,0 +1,505 @@
+.sl-stage {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: var(--sl-bg);
+  color: var(--sl-fg);
+  font-family: var(--sl-font-text);
+}
+.sl-viewport,
+.sl-camera,
+.sl-world,
+.sl-screen,
+.sl-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.sl-viewport {
+  overflow: hidden;
+  perspective: var(--sl-perspective);
+}
+.sl-camera {
+  transform-style: preserve-3d;
+}
+.sl-world {
+  transform-style: preserve-3d;
+  pointer-events: none;
+}
+.sl-screen {
+  pointer-events: none;
+}
+.sl-overlay {
+  z-index: 10;
+  pointer-events: none;
+}
+.sl-beat {
+  position: absolute;
+  box-sizing: border-box;
+}
+.sl-place-world {
+  transform-origin: 0 0;
+}
+.sl-slot-center {
+  position: absolute;
+}
+.sl-slot-left {
+  position: absolute;
+}
+.sl-slot-right {
+  position: absolute;
+}
+.sl-slot-top {
+  position: absolute;
+}
+.sl-slot-bottom {
+  position: absolute;
+}
+.sl-slot-full {
+  inset: 0;
+}
+/* 비 full 슬롯은 left 50% 등에서 남은 폭으로 줄어들지 않게 내용 폭(최대 = 무대 − 양 여백). concept slots.w가 있으면 inline max-width가 이긴다. */
+:where(.sl-slot-center, .sl-slot-left, .sl-slot-right, .sl-slot-top, .sl-slot-bottom, .sl-slot-lower-third) {
+  width: max-content;
+  max-width: calc(100% - 2 * var(--sl-gutter));
+}
+.sl-slot-lower-third {
+  position: absolute;
+}
+.sl-move-overlay {
+  position: absolute;
+  inset: 0;
+}
+.sl-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+/* C12 ?debug=1 HUD(t · stop · beat). 무대 밖 고정, 클릭 통과. */
+.sl-debug {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 100;
+  padding: 4px 8px;
+  color: var(--sl-fg);
+  background: var(--sl-scrim);
+  font: 12px/1.4 ui-monospace, monospace;
+  pointer-events: none;
+}
+.sl-blackout {
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  background: #000;
+}
+
+/* C4 기본 배치: 렌더러는 구조만 만들고, 여기서는 정지점의 읽기 상태를 둔다. */
+.sl-text__block,
+.sl-quote__block,
+.sl-prompt__field,
+.sl-code__block {
+  max-width: min(82vw, 1500px);
+}
+.sl-text__block,
+.sl-quote__text {
+  font-family: var(--sl-font-display);
+  line-height: var(--sl-leading-display);
+  letter-spacing: var(--sl-tracking-display);
+}
+.sl-text__block {
+  font-size: var(--sl-size-l);
+  font-weight: var(--sl-weight-display);
+}
+/* text size 필드(C4, 기본 l) */
+.sl-text--xl {
+  font-size: var(--sl-size-xl);
+}
+.sl-text--l {
+  font-size: var(--sl-size-l);
+}
+.sl-text--m {
+  font-size: var(--sl-size-m);
+}
+.sl-text__line {
+  display: block;
+}
+.sl-text__word,
+.sl-quote__word,
+.sl-prompt__word {
+  display: inline-block;
+}
+.sl-text__em {
+  background: none;
+}
+.sl-text__em,
+.sl-quote__mark,
+.sl-prompt__caret,
+.sl-code__caret {
+  color: var(--sl-accent);
+}
+
+.sl-photo__frame,
+.sl-video__frame {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+.sl-video__media-host {
+  position: absolute;
+  inset: 0;
+}
+.sl-photo__media,
+.sl-video__media {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.sl-photo__caption,
+.sl-video__caption {
+  position: absolute;
+  left: var(--sl-caption-left);
+  bottom: var(--sl-caption-bottom);
+  width: var(--sl-caption-width);
+  color: var(--sl-fg);
+  font-size: var(--sl-size-caption);
+}
+.sl-video__credit {
+  position: absolute;
+  right: var(--sl-gutter);
+  bottom: var(--sl-gutter);
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-caption);
+}
+
+.sl-number__value {
+  white-space: nowrap;
+  font-family: var(--sl-font-display);
+  font-size: var(--sl-size-xl);
+  font-weight: var(--sl-weight-display);
+  line-height: var(--sl-leading-display);
+}
+.sl-number__digits,
+.sl-number__unit {
+  display: inline-block;
+}
+.sl-number__label {
+  max-width: calc(1200 * var(--px) * 1px);
+  margin: calc(32 * var(--px) * 1px) 0 0;
+  color: var(--sl-fg);
+  font-size: var(--sl-size-m);
+  line-height: 1.35;
+  word-break: keep-all;
+}
+.sl-number__source,
+.sl-chart__source,
+.sl-compare__source {
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-caption);
+}
+
+.sl-chart__title {
+  margin: 0;
+  color: var(--sl-fg);
+  font-size: var(--sl-size-l);
+}
+.sl-chart__dek {
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-m);
+}
+.sl-chart__plot {
+  display: block;
+  width: min(88vw, 1600px);
+  height: auto;
+  overflow: visible;
+}
+.sl-chart__axis,
+.sl-chart__baseline {
+  stroke: var(--sl-rule);
+}
+.sl-chart__label,
+.sl-chart__legend,
+.sl-chart__note {
+  color: var(--sl-fg-muted);
+  fill: var(--sl-fg-muted);
+  font-size: var(--sl-size-caption);
+}
+.sl-chart__mark {
+  fill: var(--sl-accent);
+  stroke: var(--sl-accent);
+}
+.sl-chart__note {
+  position: absolute;
+}
+
+/* chronology(axis x) 중립 기본값: 트랙 선은 화면 가운데, 사건은 날짜 비례(--sl-position-x) 자리에 점을 찍고
+   위로 줄기·제목·설명, 아래로 날짜·출처. 컨셉 고유 배치(레일 높이·길이·「지금」 출발·전체 레일 단 나누기 등)는
+   concepts/<id>/layout.css가 덮는다(C11). 크기는 1920 기준 px × --px. */
+.sl-chronology__track {
+  position: absolute;
+  top: 50%;
+  left: var(--sl-gutter);
+  width: calc(100% - 2 * var(--sl-gutter));
+  height: 0;
+  border-block-start: 1px solid var(--sl-rule);
+}
+.sl-chronology__event {
+  position: absolute;
+  bottom: calc(-6 * var(--px) * 1px);
+  left: calc(var(--sl-position-x) - 6 * var(--px) * 1px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: calc(480 * var(--px) * 1px);
+  color: var(--sl-fg);
+}
+.sl-chronology__media {
+  order: 1;
+  display: block;
+  width: calc(240 * var(--px) * 1px);
+  height: calc(135 * var(--px) * 1px);
+  margin-block-end: calc(16 * var(--px) * 1px);
+  object-fit: cover;
+}
+.sl-chronology__title {
+  order: 2;
+  margin: 0;
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+  font-size: var(--sl-size-m);
+  font-weight: var(--sl-weight-display);
+  line-height: var(--sl-leading-display);
+}
+.sl-chronology__note {
+  order: 3;
+  max-width: calc(480 * var(--px) * 1px);
+  margin: calc(8 * var(--px) * 1px) 0 0;
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-s);
+  line-height: 1.35;
+  word-break: keep-all;
+}
+.sl-chronology__stem {
+  order: 4;
+  display: block;
+  width: 0;
+  height: calc(64 * var(--px) * 1px);
+  margin-block-start: calc(16 * var(--px) * 1px);
+  margin-inline-start: calc(6 * var(--px) * 1px - 0.5px);
+  border-inline-start: 1px solid var(--sl-rule);
+}
+.sl-chronology__dot {
+  order: 5;
+  display: block;
+  width: calc(12 * var(--px) * 1px);
+  height: calc(12 * var(--px) * 1px);
+  border-radius: 50%;
+  background: var(--sl-accent);
+}
+.sl-chronology__date,
+.sl-chronology__source {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 12 * var(--px) * 1px);
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-caption);
+  white-space: nowrap;
+}
+.sl-chronology__source {
+  top: calc(100% + 36 * var(--px) * 1px);
+}
+.sl-chronology__label {
+  position: absolute;
+  top: var(--sl-gutter);
+  left: var(--sl-gutter);
+  margin: 0;
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+  font-size: var(--sl-size-m);
+  font-weight: var(--sl-weight-display);
+}
+.sl-chronology__caption {
+  position: absolute;
+  top: calc(50% + 40 * var(--px) * 1px);
+  right: var(--sl-gutter);
+  margin: 0;
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-caption);
+}
+/* 숫자 릴: 자리마다 0–9 세로 스택을 1em 창으로 자른다(동작에 필요한 구조라 컨셉이 바꾸지 않는다). */
+.sl-chronology__counter {
+  position: absolute;
+  top: var(--sl-gutter);
+  left: var(--sl-gutter);
+  display: flex;
+  align-items: flex-start;
+  height: 1em;
+  overflow: hidden;
+  color: var(--sl-accent);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-s);
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.sl-chronology__reel {
+  display: flex;
+  flex-direction: column;
+}
+.sl-chronology__reel > * {
+  display: block;
+  height: 1em;
+}
+.sl-chronology__ground {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: var(--sl-bg);
+  /* C10 v2.3: 카메라가 기울면 같은 평면의 바탕이 3D 정렬에서 내용 앞에 올 수 있다 → 깊이로 뒤에 둔다 */
+  translate: 0 0 -8px;
+}
+.sl-chronology__ghost {
+  position: absolute;
+  top: calc(50% - 160 * var(--px) * 1px);
+  left: calc(var(--sl-gutter) + var(--sl-ratio, 0) * (100% - 2 * var(--sl-gutter)));
+  color: var(--sl-fg);
+  opacity: 0.06;
+  font-family: var(--sl-font-display);
+  font-size: var(--sl-size-xl);
+  font-weight: var(--sl-weight-display);
+  line-height: 1;
+}
+.sl-chronology__now {
+  position: absolute;
+  inset-block: 0;
+  border-inline-start: 1px solid var(--sl-accent);
+}
+.sl-chronology__tick {
+  position: absolute;
+  left: var(--sl-position-x);
+  top: calc(12 * var(--px) * 1px);
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-caption);
+}
+
+.sl-place-world.sl-beat--chronology {
+  width: 100%;
+  height: 100%;
+}
+
+.sl-compare__item {
+  display: inline-block;
+  width: min(38vw, 600px);
+  vertical-align: top;
+}
+.sl-compare__label,
+.sl-compare__value {
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+}
+.sl-compare__text,
+.sl-compare__verdict {
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-m);
+}
+.sl-compare__divider {
+  margin-inline: var(--sl-gutter);
+  color: var(--sl-accent);
+}
+.sl-compare__media {
+  display: block;
+  max-width: 100%;
+}
+
+.sl-quote {
+  max-width: calc(1440 * var(--px) * 1px);
+  margin: 0;
+}
+.sl-quote__mark {
+  display: block;
+  height: 0.5em;
+  font-family: var(--sl-font-display);
+  font-size: var(--sl-size-xl);
+  font-weight: var(--sl-weight-display);
+  line-height: 0.9;
+}
+.sl-quote__text {
+  display: block;
+  font-size: var(--sl-size-l);
+  font-weight: 600;
+  word-break: keep-all;
+}
+.sl-quote__by {
+  display: block;
+  margin-block-start: calc(40 * var(--px) * 1px);
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-caption);
+  font-style: normal;
+}
+.sl-quote__source {
+  display: block;
+  margin-block-start: calc(8 * var(--px) * 1px);
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-caption);
+}
+.sl-prompt__field {
+  padding: var(--sl-gutter);
+  border: 1px solid var(--sl-rule);
+  color: var(--sl-fg);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-m);
+}
+.sl-prompt__label,
+.sl-code__caption {
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-caption);
+}
+.sl-prompt__result {
+  margin-block-start: var(--sl-gutter);
+}
+.sl-prompt__run {
+  display: inline-block;
+  white-space: nowrap;
+}
+/* inline-block 글자는 공백이 0폭으로 접히므로 pre로 폭을 지킨다. 줄은 어절(run) 사이 공백에서만 갈린다. */
+.sl-prompt__char {
+  display: inline-block;
+  white-space: pre;
+}
+.sl-code__block {
+  padding: var(--sl-gutter);
+  color: var(--sl-fg);
+  background: var(--sl-scrim);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-m);
+}
+.sl-code__line {
+  display: block;
+}
+.sl-code__token {
+  color: var(--sl-accent-2);
+}
+
+[data-state] {
+  transition:
+    opacity 0.15s linear,
+    visibility 0.15s linear;
+}
+[data-state]:not([data-state='base']) {
+  visibility: hidden;
+  opacity: 0;
+}

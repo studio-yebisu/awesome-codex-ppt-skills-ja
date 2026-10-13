@@ -1,0 +1,114 @@
+{
+  "id": "canvas",
+  "name": "캔버스 플라이스루",
+  "axis": "xyz",
+  "camera": {
+    "mode": "world",
+    "perspective": 1400
+  },
+  "timing": {
+    "unit": 0.75,
+    "hold": 0.8,
+    "overlap": 0.25
+  },
+  "eases": {
+    "in": "power2.in",
+    "out": "power3.out",
+    "inout": "power2.inOut",
+    "scrub": "none",
+    "flight": "power2.inOut",
+    "settle": "power3.out"
+  },
+  "beats": {
+    "allow": [
+      "text",
+      "number",
+      "chart",
+      "compare",
+      "quote",
+      "video",
+      "photo",
+      "sequence"
+    ]
+  },
+  "moves": {
+    "allow": [
+      "arc-flight",
+      "establish-crane",
+      "atlas-pullback",
+      "focus-pull",
+      "map-label-settle",
+      "window-open",
+      "frame-scrub",
+      "window-takeover",
+      "headline-to-caption",
+      "divider-split",
+      "pin-drop",
+      "count-roll",
+      "line-draw",
+      "point-focus",
+      "recede",
+      "engine:fade-in",
+      "engine:fade-out",
+      "engine:crossfade",
+      "engine:none"
+    ],
+    "signature": [
+      "arc-flight",
+      "establish-crane",
+      "atlas-pullback"
+    ],
+    "params": {
+      "recede": {
+        "to": 0.22,
+        "scaleTo": 0.985,
+        "duration": 0.9
+      }
+    }
+  },
+  "defaults": {
+    "enter": "focus-pull",
+    "exit": "recede",
+    "byType": {
+      "video": {
+        "enter": "window-open"
+      },
+      "photo": {
+        "enter": "window-open"
+      },
+      "number": {
+        "enter": "count-roll"
+      },
+      "chart": {
+        "enter": "line-draw"
+      },
+      "compare": {
+        "enter": "divider-split"
+      }
+    }
+  },
+  "slots": {
+    "center": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "lower-third": {
+      "x": 0.0625,
+      "y": 0.95
+    }
+  },
+  "tokens": {
+    "blurMax": 8,
+    "stagger": 0.05,
+    "depthNear": 1.0,
+    "depthFar": 0.35,
+    "bankMax": 6,
+    "craneTilt": 10,
+    "atlasTilt": 6,
+    "altitude": 0.32,
+    "glideBelow": 0.6,
+    "hazeShift": 0.35,
+    "visited": 0.22,
+    "floatZ": 80
+  }
+}

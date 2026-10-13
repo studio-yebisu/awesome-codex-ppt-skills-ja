@@ -1,0 +1,411 @@
+# rail-ai-decade — rail(가로 레일 연표) 컨셉 플래그십 덱
+# 「생성형 AI 10년: 2017 Transformer부터 2026까지」 업계 브리핑. 실데이터(sample: false).
+# 날짜·수치는 전부 sources의 원문에서 확인한 것만 실음(확인일 2026-10-08, Aside 브라우저·웹 검색).
+# 계약 요청 중인 필드(메인 승인 대기, docs/concepts.md):
+#   chronology: label, counter, tone, events[].weight, events[].source / 모든 beat source: 문자열 또는 id 배열
+#   rail-lift params.toIndex(anchor index)
+# 미채택 시 W4 처리: 위 필드 삭제, source 배열은 첫 id만 남기고 나머지는 주석으로.
+id: rail-ai-decade
+title: "생성형 AI 10년: 2017 Transformer부터 2026까지"
+lang: ko
+concept: rail
+sample: false
+
+sources:
+  - { id: s-attn,        short: "arXiv", title: "Vaswani et al., Attention Is All You Need (arXiv 1706.03762 v1, 2017-06-12)", url: "https://arxiv.org/abs/1706.03762", accessed: "2026-10-08" }
+  - { id: s-gpt1,        short: "OpenAI", title: "OpenAI, Improving language understanding with unsupervised learning (2018-06-11)", url: "https://openai.com/index/language-unsupervised/", accessed: "2026-10-08" }
+  - { id: s-bert,        short: "arXiv", title: "Devlin et al., BERT (arXiv 1810.04805 v1, 2018-10-11)", url: "https://arxiv.org/abs/1810.04805", accessed: "2026-10-08" }
+  - { id: s-gpt2,        short: "OpenAI", title: "OpenAI, Better language models and their implications (2019-02-14)", url: "https://openai.com/index/better-language-models/", accessed: "2026-10-08" }
+  - { id: s-gpt2-paper,  short: "OpenAI", title: "Radford et al., Language Models are Unsupervised Multitask Learners, Table 2 (117M = original GPT)", url: "https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf", accessed: "2026-10-08" }
+  - { id: s-scaling,     short: "arXiv", title: "Kaplan et al., Scaling Laws for Neural Language Models (arXiv 2001.08361 v1, 2020-01-23)", url: "https://arxiv.org/abs/2001.08361", accessed: "2026-10-08" }
+  - { id: s-gpt3,        short: "arXiv", title: "Brown et al., Language Models are Few-Shot Learners (arXiv 2005.14165 v1, 2020-05-28, 175B parameters)", url: "https://arxiv.org/abs/2005.14165", accessed: "2026-10-08" }
+  - { id: s-dalle,       short: "OpenAI", title: "OpenAI, DALL·E: Creating images from text (2021-01-05)", url: "https://openai.com/index/dall-e/", accessed: "2026-10-08" }
+  - { id: s-copilot,     short: "GitHub", title: "GitHub Blog, Introducing GitHub Copilot: your AI pair programmer (2021-06-29)", url: "https://github.blog/news-insights/product-news/introducing-github-copilot-ai-pair-programmer/", accessed: "2026-10-08" }
+  - { id: s-instruct,    short: "arXiv", title: "Ouyang et al., Training language models to follow instructions with human feedback (arXiv 2203.02155 v1, 2022-03-04)", url: "https://arxiv.org/abs/2203.02155", accessed: "2026-10-08" }
+  - { id: s-sd,          short: "Stability AI", title: "Stability AI, Stable Diffusion Public Release (2022-08-22)", url: "https://stability.ai/news-updates/stable-diffusion-public-release", accessed: "2026-10-08" }
+  - { id: s-chatgpt,     short: "OpenAI", title: "OpenAI, Introducing ChatGPT (2022-11-30)", url: "https://openai.com/index/chatgpt/", accessed: "2026-10-08" }
+  - { id: s-reuters,     short: "Reuters", title: "Reuters, ChatGPT sets record for fastest-growing user base - analyst note (UBS·Similarweb, 2023-02-01)", url: "https://www.reuters.com/technology/chatgpt-sets-record-fastest-growing-user-base-analyst-note-2023-02-01/", accessed: "2026-10-08" }
+  - { id: s-llama,       short: "Meta", title: "Meta AI, Introducing LLaMA (2023-02-24)", url: "https://ai.meta.com/blog/large-language-model-llama-meta-ai/", accessed: "2026-10-08" }
+  - { id: s-gpt4,        short: "OpenAI", title: "OpenAI, GPT-4 (2023-03-14; gpt-4 API $0.03 per 1K prompt tokens)", url: "https://openai.com/index/gpt-4-research/", accessed: "2026-10-08" }
+  - { id: s-claude1,     short: "Anthropic", title: "Anthropic, Introducing Claude (2023-03-14)", url: "https://www.anthropic.com/news/introducing-claude", accessed: "2026-10-08" }
+  - { id: s-llama2,      short: "Meta", title: "Meta AI, Llama 2 (2023-07-18, free for research and commercial use)", url: "https://ai.meta.com/blog/llama-2/", accessed: "2026-10-08" }
+  - { id: s-gemini,      short: "Google", title: "Google, Introducing Gemini (2023-12-06)", url: "https://blog.google/technology/ai/google-gemini-ai/", accessed: "2026-10-08" }
+  - { id: s-sora-date,   short: "Wikipedia", title: "Wikipedia, Sora (text-to-video model) — first preview 2024-02-15", url: "https://en.wikipedia.org/wiki/Sora_(text-to-video_model)", accessed: "2026-10-08" }
+  - { id: s-sora,        short: "OpenAI", title: "OpenAI, Sora: Creating video from text (page note: product no longer available as of 2026-04-26)", url: "https://openai.com/index/sora/", accessed: "2026-10-08" }
+  - { id: s-claude3,     short: "Anthropic", title: "Anthropic, Introducing the next generation of Claude (Claude 3, 2024-03-04)", url: "https://www.anthropic.com/news/claude-3-family", accessed: "2026-10-08" }
+  - { id: s-4o,          short: "OpenAI", title: "OpenAI, Hello GPT-4o (2024-05-13)", url: "https://openai.com/index/hello-gpt-4o/", accessed: "2026-10-08" }
+  - { id: s-4omini,      short: "OpenAI", title: "OpenAI, GPT-4o mini: advancing cost-efficient intelligence (2024-07-18; 15 cents per 1M input tokens)", url: "https://openai.com/index/gpt-4o-mini-advancing-cost-efficient-intelligence/", accessed: "2026-10-08" }
+  - { id: s-o1,          short: "OpenAI", title: "OpenAI, Learning to reason with LLMs (o1, 2024-09-12)", url: "https://openai.com/index/learning-to-reason-with-llms/", accessed: "2026-10-08" }
+  - { id: s-cu,          short: "Anthropic", title: "Anthropic, Introducing computer use, a new Claude 3.5 Sonnet, and Claude 3.5 Haiku (2024-10-22)", url: "https://www.anthropic.com/news/3-5-models-and-computer-use", accessed: "2026-10-08" }
+  - { id: s-mcp,         short: "Anthropic", title: "Anthropic, Introducing the Model Context Protocol (2024-11-25)", url: "https://www.anthropic.com/news/model-context-protocol", accessed: "2026-10-08" }
+  - { id: s-r1,          short: "arXiv", title: "DeepSeek-AI, DeepSeek-R1: Incentivizing Reasoning Capability in LLMs via Reinforcement Learning (arXiv 2501.12948 v1, 2025-01-22)", url: "https://arxiv.org/abs/2501.12948", accessed: "2026-10-08" }
+  - { id: s-r1-date,     short: "Wikipedia", title: "Wikipedia, DeepSeek — DeepSeek-R1 released 2025-01-20", url: "https://en.wikipedia.org/wiki/DeepSeek", accessed: "2026-10-08" }
+  - { id: s-cc,          short: "Anthropic", title: "Anthropic, Claude 3.7 Sonnet and Claude Code (2025-02-24, Claude Code limited research preview)", url: "https://www.anthropic.com/news/claude-3-7-sonnet", accessed: "2026-10-08" }
+  - { id: s-gpt5,        short: "OpenAI", title: "OpenAI, Introducing GPT-5 (2025-08-07)", url: "https://openai.com/index/introducing-gpt-5/", accessed: "2026-10-08" }
+  - { id: s-gpt55,       short: "OpenAI", title: "OpenAI, Introducing GPT-5.5 (2026-04-23)", url: "https://openai.com/index/introducing-gpt-5-5/", accessed: "2026-10-08" }
+  - { id: s-fable5,      short: "Anthropic", title: "Anthropic, Claude Fable 5 and Claude Mythos 5 (2026-06-09)", url: "https://www.anthropic.com/news/claude-fable-5-mythos-5", accessed: "2026-10-08" }
+  - { id: s-gemini4,     short: "Google", title: "Google, Gemini 4 Argon: our next era of frontier intelligence (2026-09-30)", url: "https://blog.google/innovation-and-ai/models-and-research/gemini-models/gemini-4-argon/", accessed: "2026-10-08" }
+  - { id: s-gpt6,        short: "OpenAI", title: "OpenAI, GPT-6 and Intelligent UI for everyone (2026-10-07; more than 1.2 billion weekly ChatGPT users)", url: "https://openai.com/index/gpt-6-for-everyone/", accessed: "2026-10-08" }
+
+timing:
+  unit: 0.5
+  hold: 0.5
+  overlap: 0.15
+export:
+  secondsPerUnit: 0.5
+
+beats:
+  # ── 1. 표지: 「10년」 글자 안에 단어 사이를 잇는 빛의 선(어텐션). 영상 V1 ──
+  - id: b-title
+    type: video
+    tone: 0
+    src: assets/video/v1-attention.mp4
+    poster: assets/video/v1-attention.jpg
+    alt: "단어 사이를 잇는 가는 빛의 선들이 천천히 흐르는 추상 영상"
+    mode: loop
+    mask: { type: text, text: "10년" }
+    caption: "생성형 AI, Transformer에서 GPT-6까지 · 업계 브리핑 2026.10"
+    place: { slot: full }
+    enter: { move: mask-word-in, params: { duration: 1.4, captionIn: true } }
+    steps:
+      - { name: dive, move: text-mask-dive, params: { focusX: 0.15, focusY: 0.55 } }   # 「1」 세로획 위(획 밖이면 종이로 들어가 화면이 빈다)
+    link: { move: rail-drop, params: { duration: 1.6, toEvent: 0 } }
+    exportHold: 2.6
+
+  # ── 2. 토대 2017–2019: 오프닝 카메라가 원근에서 정면으로 눕고, 레일이 그어진다 ──
+  - id: b-r1
+    type: chronology
+    label: "토대 2017–2019"
+    counter: month
+    now: 0.375
+    ground: true
+    tone: 0
+    scale: time
+    axis: x
+    events:
+      - { date: "2017-06-12", title: "Transformer 논문", note: "순환 구조 없이 어텐션만으로 문장을 처리한다. 이후 대형 언어 모델의 뼈대", weight: major, media: assets/video/v1-attention.jpg, source: s-attn }
+      - { date: "2018-06-11", title: "GPT-1", note: "인터넷 글로 먼저 학습하고, 과제별로 조금 더 학습한다", weight: minor, source: s-gpt1 }
+      - { date: "2018-10-11", title: "BERT", note: "문장의 앞뒤를 함께 읽는 구글의 사전학습 모델", weight: minor, source: s-bert }
+      - { date: "2019-02-14", title: "GPT-2", note: "15억 매개변수. 악용 우려로 공개를 미뤘다", weight: major, source: s-gpt2 }
+    place: { world: { x: 0, y: 0, z: 0, s: 1 } }
+    camera: { move: rail-settle, params: { duration: 2.2, tilt: 9, startScale: 1.15 } }
+    enter: { move: rail-draw, params: { duration: 1.4 }, at: -1.2 }
+    steps:
+      - { name: gpt1, move: rail-advance, params: { to: 1 } }
+      - { name: bert, move: rail-advance, params: { to: 2 } }
+      - { name: gpt2, move: rail-advance, params: { to: 3 } }
+    link: { move: rail-lift, params: { duration: 1.6, fromEvent: 3, fromPart: dot, toPart: mark } }
+    repeat: intended   # rail-advance = 레일 주행 리듬(컨셉 문법)
+    exportHold: 2.0
+
+  # ── 3. GPT-2의 한 문장: 레일 위 점이 솟아 인용 부호가 된다 ──
+  - id: b-q-gpt2
+    type: quote
+    tone: 0
+    text: "기술이 악용될 우려 때문에, 학습한 모델은 공개하지 않습니다."
+    by: "OpenAI"
+    role: "GPT-2 발표문, 2019.02.14 (번역)"
+    source: s-gpt2
+    place: { slot: center }
+    enter: { move: line-mask-rise, params: { duration: 1.0 } }
+    link: { move: fold-to-rail, params: { duration: 1.4 } }
+    exportHold: 3.0
+
+  # ── 4. 스케일 2020: 인용이 눌려 새 레일이 되고, 법칙과 GPT-3 ──
+  - id: b-r2
+    type: chronology
+    label: "스케일 2020–2022"
+    counter: month
+    now: 0.375
+    ground: true
+    tone: 1
+    scale: time
+    axis: x
+    events:
+      - { date: "2020-01-23", title: "스케일링 법칙", note: "모델·데이터·연산을 키우면 성능이 예측한 대로 오른다는 측정", weight: minor, source: s-scaling }
+      - { date: "2020-05-28", title: "GPT-3", note: "예시 몇 개만 보여 주면 새 과제를 푼다", weight: major, source: s-gpt3 }
+    place: { slot: full }
+    enter: { move: rail-surface }
+    steps:
+      - { name: gpt3, move: rail-advance, params: { to: 1 } }
+    link: { move: counter-handoff, params: { duration: 1.8 } }
+    repeat: intended
+    exportHold: 1.8
+
+  # ── 5. 카운터가 그대로 매개변수 수가 된다 ──
+  - id: b-n-params
+    type: number
+    tone: 1
+    value: 175000000000
+    format: { suffix: "개" }
+    label: "GPT-3의 매개변수. 2년 전 GPT-1(1억 1,700만 개)의 약 1,500배"
+    source: [s-gpt3, s-gpt2-paper]
+    place: { slot: center }
+    enter: { move: count-roll, params: { duration: 0.8 } }
+    link: { move: counter-handoff, params: { duration: 1.6 } }
+    repeat: intended   # counter-handoff 왕복(레일 → 숫자 → 레일)
+    exportHold: 2.4
+
+  # ── 6. 스케일 2021–2022: 그림·코드·지시 따르기, 그리고 ChatGPT ──
+  - id: b-r3
+    type: chronology
+    label: "스케일 2020–2022"
+    counter: month
+    now: 0.375
+    ground: true
+    tone: 1
+    scale: time
+    axis: x
+    events:
+      - { date: "2021-01-05", title: "DALL·E", note: "문장으로 그림을 만든다", weight: minor, source: s-dalle }
+      - { date: "2021-06-29", title: "GitHub Copilot", note: "코드 편집기 안에서 다음 줄을 제안한다", weight: minor, source: s-copilot }
+      - { date: "2022-03-04", title: "InstructGPT", note: "사람의 평가로 지시를 따르도록 다듬었다(RLHF)", weight: minor, source: s-instruct }
+      - { date: "2022-08-22", title: "Stable Diffusion", note: "이미지 생성 모델의 가중치를 누구나 내려받게 공개", weight: major, source: s-sd }
+      - { date: "2022-11-30", title: "ChatGPT", note: "대화창 하나로 누구나 쓰는 언어 모델", weight: major, media: assets/video/v2-chat.jpg, source: s-chatgpt }
+    place: { slot: full }
+    enter: { move: rail-surface }
+    steps:
+      - { name: copilot, move: rail-advance, params: { to: 1 } }
+      - { name: instruct, move: rail-advance, params: { to: 2 } }
+      - { name: sd, move: rail-advance, params: { to: 3 } }
+      - { name: chatgpt, move: rail-advance, params: { to: 4 } }
+    link: { move: rail-lift, params: { duration: 1.6, fromEvent: 4, fromPart: media } }
+    repeat: intended
+    exportHold: 1.8
+
+  # ── 7. ChatGPT 썸네일이 떠올라 화면이 되고, 스크롤로 질문과 답이 흐른다. 영상 V2(scrub) ──
+  - id: b-v-chat
+    type: video
+    tone: 1
+    src: assets/video/v2-chat.mp4
+    poster: assets/video/v2-chat.jpg
+    frames: assets/video/v2-chat/frames.json
+    alt: "빈 입력창에 질문이 한 글자씩 써지고, 아래로 답 문장이 한 줄씩 흘러나오는 화면"
+    mode: scrub
+    caption: "질문을 쓰면, 답이 문장으로 흘러나온다"
+    place: { slot: full }
+    enter: { move: video-scrub, params: { stops: [{ name: ask, at: 0.38 }] } }
+    link: { move: frame-to-figure, params: { duration: 1.4 } }
+    exportHold: 1.6
+
+  # ── 8. 그 화면이 숫자가 된다: 두 달 만의 1억 ──
+  - id: b-n-users
+    type: number
+    tone: 1
+    value: 100000000
+    format: { suffix: "명" }
+    label: "출시 두 달 만의 월간 사용자 추정치(2023년 1월, UBS·Similarweb)"
+    source: s-reuters
+    place: { slot: center }
+    enter: { move: count-roll, params: { duration: 0.8 } }
+    link: { move: counter-handoff, params: { duration: 1.6 } }
+    repeat: intended
+    exportHold: 2.4
+
+  # ── 9. 대중화 2023: 공개 가중치와 프런티어 모델이 같은 해에 ──
+  - id: b-r4
+    type: chronology
+    label: "대중화 2023"
+    counter: month
+    now: 0.375
+    ground: true
+    tone: 2
+    scale: time
+    axis: x
+    events:
+      - { date: "2023-02-24", title: "LLaMA", note: "연구용으로 가중치를 공개한 Meta의 모델(7B–65B)", weight: minor, source: s-llama }
+      - { date: "2023-03-14", title: "GPT-4 · Claude", note: "같은 날 OpenAI와 Anthropic이 각각 발표", weight: major, source: [s-gpt4, s-claude1] }
+      - { date: "2023-07-18", title: "Llama 2", note: "연구와 상업 이용 모두 무료로 공개", weight: minor, source: s-llama2 }
+      - { date: "2023-12-06", title: "Gemini", note: "Ultra·Pro·Nano 세 크기로 나온 구글 모델", weight: minor, source: s-gemini }
+    place: { slot: full }
+    enter: { move: rail-surface }
+    steps:
+      - { name: gpt4, move: rail-advance, params: { to: 1 } }
+      - { name: llama2, move: rail-advance, params: { to: 2 } }
+      - { name: gemini, move: rail-advance, params: { to: 3 } }
+    link: { move: era-shift, params: { duration: 2.0, boundaryWidth: 5 } }
+    repeat: intended
+    exportHold: 1.8
+
+  # ── 10. 감각과 추론 2024: 경계선이 지나가며 종이 색이 보라로 넘어간다 ──
+  - id: b-r5
+    type: chronology
+    label: "감각과 추론 2024"
+    counter: month
+    now: 0.375
+    ground: true
+    tone: 3
+    scale: time
+    axis: x
+    events:
+      - { date: "2024-02-15", title: "Sora 미리보기", note: "문장으로 영상을 만든다. 제품은 2026.04.26 종료", weight: minor, source: [s-sora-date, s-sora] }
+      - { date: "2024-03-04", title: "Claude 3", note: "Opus·Sonnet·Haiku 세 등급", weight: minor, source: s-claude3 }
+      - { date: "2024-05-13", title: "GPT-4o", note: "소리·이미지·글을 한 모델이 실시간으로 다룬다", weight: major, source: s-4o }
+      - { date: "2024-07-18", title: "GPT-4o mini", note: "MMLU 82%. 채팅 선호도에서 GPT-4를 앞섰다고 발표", weight: minor, source: s-4omini }
+    place: { slot: full }
+    enter: { move: engine:none }
+    steps:
+      - { name: claude3, move: rail-advance, params: { to: 1 } }
+      - { name: gpt4o, move: rail-advance, params: { to: 2 } }
+      - { name: mini, move: rail-advance, params: { to: 3 } }
+    link: { move: rail-lift, params: { duration: 1.4, fromEvent: 3, fromPart: title, toPart: label } }
+    repeat: intended
+    exportHold: 1.8
+
+  # ── 11. 사건 이름이 떠올라 숫자의 이름표가 되고, 가격이 $30에서 굴러 내려간다 ──
+  - id: b-n-price
+    type: number
+    tone: 3
+    value: 0.15
+    from: 30
+    format: { prefix: "$", decimals: 2 }
+    label: "GPT-4o mini 입력 100만 토큰 가격(2024.07). 16개월 전 GPT-4 출시가 $30의 200분의 1"
+    source: [s-4omini, s-gpt4]
+    place: { slot: center }
+    enter: { move: count-roll, params: { duration: 1.8, ease: inout } }
+    link: { move: fold-to-rail, params: { duration: 1.4 } }
+    repeat: intended   # fold-to-rail 2회째(인용·숫자 → 레일 복귀)
+    exportHold: 2.6
+
+  # ── 12. 감각과 추론 2024 후반: 생각하는 모델, 화면을 쓰는 모델, 도구를 잇는 규격 ──
+  - id: b-r6
+    type: chronology
+    label: "감각과 추론 2024"
+    counter: month
+    now: 0.375
+    ground: true
+    tone: 3
+    scale: time
+    axis: x
+    events:
+      - { date: "2024-09-12", title: "o1", note: "답하기 전에 먼저 생각하도록 강화학습한 추론 모델", weight: major, source: s-o1 }
+      - { date: "2024-10-22", title: "컴퓨터 사용", note: "Claude가 화면을 보고 마우스와 키보드를 다룬다", weight: minor, source: s-cu }
+      - { date: "2024-11-25", title: "MCP", note: "AI를 도구·데이터와 잇는 공개 규격", weight: minor, source: s-mcp }
+    place: { slot: full }
+    enter: { move: rail-surface }
+    steps:
+      - { name: computer-use, move: rail-advance, params: { to: 1 } }
+      - { name: mcp, move: rail-advance, params: { to: 2 } }
+    link: { move: era-shift, params: { duration: 1.8, boundaryWidth: 5 } }
+    repeat: intended   # era-shift 2회째(시대 경계 2곳)
+    exportHold: 1.8
+
+  # ── 13. 일하는 AI 2025: 녹색 종이 ──
+  - id: b-r7
+    type: chronology
+    label: "일하는 AI 2025–2026"
+    counter: month
+    now: 0.375
+    ground: true
+    tone: 4
+    scale: time
+    axis: x
+    events:
+      - { date: "2025-01-20", title: "DeepSeek-R1", note: "강화학습으로 키운 추론 모델의 가중치를 공개", weight: minor, source: [s-r1, s-r1-date] }
+      - { date: "2025-02-24", title: "Claude Code", note: "터미널에서 코드를 읽고 고치는 에이전트(연구 미리보기)", weight: major, media: assets/video/v3-agent.jpg, source: s-cc }
+    place: { slot: full }
+    enter: { move: engine:none }
+    steps:
+      - { name: claude-code, move: rail-advance, params: { to: 1 } }
+    link: { move: rail-split-open, params: { duration: 1.5 } }
+    repeat: intended
+    exportHold: 1.8
+
+  # ── 14. 레일이 갈라지고 그 틈으로 일하는 화면이 열린다. 영상 V3(장면 안 재생) ──
+  - id: b-v-agent
+    type: video
+    tone: 4
+    src: assets/video/v3-agent.mp4
+    poster: assets/video/v3-agent.jpg
+    alt: "터미널에서 에이전트가 테스트를 돌리고, 실패 두 건을 고치고, 다시 돌려 통과시키는 반복 화면"
+    mode: loop
+    caption: "답하던 모델이 일을 맡는다: 읽고, 고치고, 다시 돌린다"
+    place: { slot: full }
+    enter: { move: engine:fade-in, params: {} }   # frame은 rail-split-open이 넘겨줌, caption만 fade
+    link: { move: rail-drop, params: { duration: 1.6, toEvent: 0 } }
+    repeat: intended   # rail-drop 2회째(표지·영상 → 레일 복귀)
+    exportHold: 4.0
+
+  # ── 15. 일하는 AI 2025–2026: 영상이 Claude Code 자리로 돌아가고 레일은 지금까지 달린다 ──
+  - id: b-r8
+    type: chronology
+    label: "일하는 AI 2025–2026"
+    counter: month
+    now: 0.375
+    ground: true
+    tone: 4
+    scale: time
+    axis: x
+    events:
+      - { date: "2025-02-24", title: "Claude Code", note: "터미널에서 코드를 읽고 고치는 에이전트(연구 미리보기)", weight: major, media: assets/video/v3-agent.jpg, source: s-cc }
+      - { date: "2025-08-07", title: "GPT-5", note: "생각하는 기능을 기본으로 품은 통합 모델", weight: major, source: s-gpt5 }
+      - { date: "2026-04-23", title: "GPT-5.5", note: "에이전트 코딩과 전문 업무를 앞세운 모델", weight: minor, source: s-gpt55 }
+      - { date: "2026-06-09", title: "Claude Fable 5", note: "Mythos급 모델을 일반 사용에 맞게 공개", weight: minor, source: s-fable5 }
+      - { date: "2026-09-30", title: "Gemini 4 Argon", note: "소프트웨어·법률·금융 같은 복잡한 업무 흐름을 겨냥", weight: minor, source: s-gemini4 }
+      - { date: "2026-10-07", title: "GPT-6 확대 공개", note: "유료 고객에 이어 더 많은 ChatGPT 사용자에게", weight: major, source: s-gpt6 }
+    place: { slot: full }
+    enter: { move: rail-surface }
+    steps:
+      - { name: gpt5, move: rail-advance, params: { to: 1 } }
+      - { name: fable5, move: rail-advance, params: { from: 1, to: 3 } }
+      - { name: gpt6, move: rail-advance, params: { from: 3, to: 5 } }
+    link: { move: counter-handoff, params: { duration: 1.8 } }
+    repeat: intended
+    exportHold: 1.8
+
+  # ── 16. 2026.10 카운터가 굴러 주간 사용자 수가 된다 ──
+  - id: b-n-weekly
+    type: number
+    tone: 4
+    value: 1200000000
+    format: { suffix: "명+" }
+    label: "매주 ChatGPT를 쓰는 사람(OpenAI 발표, 2026.10.07)"
+    source: s-gpt6
+    place: { slot: center }
+    enter: { move: count-roll, params: { duration: 0.8 } }
+    link: { move: rail-compress, params: { duration: 2.4, startZoom: 8 } }
+    exportHold: 2.6
+
+  # ── 17. 마지막 줌아웃: 숫자가 레일 끝의 점이 되고, 10년이 한 화면에. 왼쪽은 성기고 오른쪽은 빽빽하다 ──
+  - id: b-overview
+    type: chronology
+    label: "2019년엔 모델 공개를 미뤘고, 2026년엔 매주 12억 명 넘게 쓴다"
+    counter: none
+    ground: true
+    tone: 4
+    scale: time
+    axis: x
+    events:
+      - { date: "2017-06-12", title: "Transformer", weight: major, source: s-attn }
+      - { date: "2018-06-11", title: "GPT-1", weight: minor, source: s-gpt1 }
+      - { date: "2018-10-11", title: "BERT", weight: minor, source: s-bert }
+      - { date: "2019-02-14", title: "GPT-2", weight: major, source: s-gpt2 }
+      - { date: "2020-01-23", title: "스케일링 법칙", weight: minor, source: s-scaling }
+      - { date: "2020-05-28", title: "GPT-3", weight: major, source: s-gpt3 }
+      - { date: "2021-01-05", title: "DALL·E", weight: minor, source: s-dalle }
+      - { date: "2021-06-29", title: "Copilot", weight: minor, source: s-copilot }
+      - { date: "2022-03-04", title: "InstructGPT", weight: minor, source: s-instruct }
+      - { date: "2022-08-22", title: "Stable Diffusion", weight: minor, source: s-sd }
+      - { date: "2022-11-30", title: "ChatGPT", weight: major, source: s-chatgpt }
+      - { date: "2023-02-24", title: "LLaMA", weight: minor, source: s-llama }
+      - { date: "2023-03-14", title: "GPT-4 · Claude", weight: major, source: [s-gpt4, s-claude1] }
+      - { date: "2023-07-18", title: "Llama 2", weight: minor, source: s-llama2 }
+      - { date: "2023-12-06", title: "Gemini", weight: minor, source: s-gemini }
+      - { date: "2024-02-15", title: "Sora", weight: minor, source: s-sora-date }
+      - { date: "2024-03-04", title: "Claude 3", weight: minor, source: s-claude3 }
+      - { date: "2024-05-13", title: "GPT-4o", weight: major, source: s-4o }
+      - { date: "2024-07-18", title: "GPT-4o mini", weight: minor, source: s-4omini }
+      - { date: "2024-09-12", title: "o1", weight: major, source: s-o1 }
+      - { date: "2024-10-22", title: "컴퓨터 사용", weight: minor, source: s-cu }
+      - { date: "2024-11-25", title: "MCP", weight: minor, source: s-mcp }
+      - { date: "2025-01-20", title: "DeepSeek-R1", weight: minor, source: [s-r1, s-r1-date] }
+      - { date: "2025-02-24", title: "Claude Code", weight: major, source: s-cc }
+      - { date: "2025-08-07", title: "GPT-5", weight: minor, source: s-gpt5 }
+      - { date: "2026-04-23", title: "GPT-5.5", weight: minor, source: s-gpt55 }
+      - { date: "2026-06-09", title: "Claude Fable 5", weight: minor, source: s-fable5 }
+      - { date: "2026-09-30", title: "Gemini 4 Argon", weight: minor, source: s-gemini4 }
+      - { date: "2026-10-07", title: "GPT-6", weight: major, source: s-gpt6 }
+    place: { slot: full }
+    enter: { move: rail-surface, params: { duration: 0.6 } }
+    exit: { move: engine:none }   # 마지막 정지 화면 = 전체 레일 + 결론, 사라지지 않음
+    exportHold: 4.0

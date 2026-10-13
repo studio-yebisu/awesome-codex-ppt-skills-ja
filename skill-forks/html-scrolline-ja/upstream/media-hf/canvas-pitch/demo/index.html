@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>서릿길 · 배송 온도 기록</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Pretendard"; src: local("Pretendard Variable"), local("Pretendard"); font-weight: 100 900; }
+      @font-face { font-family: "Pretendard Variable"; src: local("Pretendard Variable"); font-weight: 100 900; }
+      :root { background: #0f171d; color: #ede6d6; }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body { font-family: Pretendard, "Pretendard Variable", sans-serif; font-weight: 500; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #0f171d; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .grain { position:absolute; inset:0; opacity:.22; background-image:radial-gradient(rgba(143,211,255,.11) .55px, transparent .7px); background-size:9px 9px; }
+      .guide { position:absolute; left:120px; top:124px; width:560px; border-top:1px solid #24343e; }
+      .guide::after { content:"COLD CHAIN / DEMO"; position:absolute; top:18px; color:#7d8a91; font:400 15px "IBM Plex Mono", monospace; letter-spacing:.18em; }
+      .box { position:absolute; left:842px; top:676px; width:320px; height:224px; border:1px solid #24343e; background:rgba(20,34,43,.45); }
+      .box::before, .box::after { content:""; position:absolute; background:#24343e; }
+      .box::before { width:100%; height:1px; top:58px; transform:skewY(-13deg); transform-origin:left; }
+      .box::after { width:1px; height:100%; left:159px; transform:skewX(-18deg); transform-origin:top; }
+      .tag { position:absolute; left:1030px; top:755px; width:56px; height:56px; border:1px solid #8fd3ff; border-radius:50%; background:#0f171d; box-shadow:0 0 0 7px rgba(15,23,29,.78); }
+      .tag::before { content:""; position:absolute; inset:16px; border:1px solid #8fd3ff; border-radius:50%; opacity:.7; }
+      .phone-wrap { position:absolute; left:1080px; top:108px; width:498px; height:864px; will-change:transform; }
+      .phone { position:absolute; inset:0; border:1px solid #8fd3ff; border-radius:3px; background:#0a1116; padding:15px; }
+      .screen { position:relative; width:100%; height:100%; overflow:hidden; background:#0f171d; border:1px solid #24343e; }
+      .topbar { position:absolute; left:27px; right:27px; top:26px; display:flex; align-items:baseline; border-bottom:1px solid #24343e; padding-bottom:14px; }
+      .brand { font-size:25px; letter-spacing:-.04em; color:#ede6d6; }
+      .status { margin-left:auto; color:#8fd3ff; font-size:14px; letter-spacing:.05em; }
+      .sample { position:absolute; left:27px; bottom:24px; color:#7d8a91; font:400 11px "IBM Plex Mono", monospace; letter-spacing:.17em; }
+      .tap-state { position:absolute; inset:0; }
+      .tap-copy { position:absolute; left:27px; top:145px; color:#7d8a91; font-size:16px; letter-spacing:.02em; }
+      .tap-line { position:absolute; left:27px; top:186px; width:174px; border-top:1px solid #24343e; }
+      .tap-dot { position:absolute; left:27px; top:221px; width:7px; height:7px; border-radius:50%; background:#8fd3ff; }
+      .ripple { position:absolute; left:-76px; top:607px; width:158px; height:158px; border:1px solid #8fd3ff; border-radius:50%; opacity:0; transform-origin:center; }
+      .ripple.second { width:226px; height:226px; left:-110px; top:573px; }
+      .map-state { position:absolute; inset:0; opacity:0; }
+      .map-meta { position:absolute; left:27px; top:99px; color:#7d8a91; font:400 12px "IBM Plex Mono", monospace; letter-spacing:.08em; }
+      .map-svg { position:absolute; left:0; top:125px; width:100%; height:456px; }
+      .contour { fill:none; stroke:#24343e; stroke-width:1; }
+      .route-base { fill:none; stroke:#24343e; stroke-width:2; }
+      .route-cold { fill:none; stroke:#8fd3ff; stroke-width:3; stroke-linecap:round; }
+      .route-alert { fill:none; stroke:#ffb547; stroke-width:4; stroke-linecap:round; opacity:0; }
+      .point { fill:#8fd3ff; }
+      .chart { position:absolute; left:27px; right:27px; bottom:78px; height:135px; border-top:1px solid #24343e; }
+      .chart-title { position:absolute; top:13px; color:#7d8a91; font-size:12px; letter-spacing:.08em; }
+      .chart-svg { position:absolute; left:0; right:0; bottom:20px; width:100%; height:78px; }
+      .chart-grid { stroke:#24343e; stroke-width:1; }
+      .temp-line { fill:none; stroke:#8fd3ff; stroke-width:2.5; stroke-linecap:round; }
+      .temp-alert { fill:none; stroke:#ffb547; stroke-width:3.5; stroke-linecap:round; opacity:0; }
+      .times { position:absolute; left:0; right:0; bottom:0; display:flex; justify-content:space-between; color:#7d8a91; font:400 10px "IBM Plex Mono", monospace; }
+      .alert-label { position:absolute; left:112px; top:222px; padding:10px 12px; border-left:2px solid #ffb547; color:#ede6d6; background:rgba(15,23,29,.9); font-size:13px; opacity:0; white-space:nowrap; }
+      .alert-label .num { font-family:"IBM Plex Mono", monospace; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="canvas-seoritgil-demo" data-start="0" data-width="1920" data-height="1080" data-duration="12" data-fps="30">
+      <section id="seoritgil-demo-scene" class="clip" data-start="0" data-duration="12" aria-label="가상 콜드체인 앱 서릿길 제품 데모">
+        <div class="grain" aria-hidden="true"></div><div class="guide" aria-hidden="true"></div>
+        <div class="box" aria-hidden="true"></div><div class="tag" aria-hidden="true"></div>
+        <div class="phone-wrap" id="phone-wrap">
+          <div class="phone"><div class="screen">
+            <header class="topbar"><span class="brand">서릿길</span><span class="status">배송 중</span></header>
+            <div class="tap-state" id="tap-state"><div class="tap-copy">태그에 가까이 대세요</div><div class="tap-line"></div><div class="tap-dot"></div></div>
+            <div class="ripple" id="ripple-one" aria-hidden="true"></div><div class="ripple second" id="ripple-two" aria-hidden="true"></div>
+            <div class="map-state" id="map-state">
+              <div class="map-meta">운송 경로 · 온도 기록</div>
+              <svg class="map-svg" viewBox="0 0 468 456" aria-hidden="true">
+                <path class="contour" d="M-20 69 C59 8 111 111 183 53 S305 19 363 83 S435 149 510 76"/><path class="contour" d="M-24 128 C47 66 114 166 174 115 S284 78 350 142 S435 207 500 139"/><path class="contour" d="M-12 194 C61 138 107 232 182 177 S290 139 351 204 S427 262 493 201"/><path class="contour" d="M-22 272 C54 216 121 310 185 257 S288 225 346 282 S432 350 505 278"/><path class="contour" d="M-10 346 C64 291 110 377 178 326 S281 300 352 358 S434 417 505 350"/>
+                <path class="route-base" d="M42 344 C95 288 117 302 158 245 S243 210 277 159 S358 112 424 67"/>
+                <path id="route-cold" class="route-cold" d="M42 344 C95 288 117 302 158 245 S243 210 277 159 S358 112 424 67"/>
+                <path id="route-alert" class="route-alert" d="M210 211 C237 195 259 181 277 159"/>
+                <circle class="point" cx="42" cy="344" r="4"/><circle class="point" cx="424" cy="67" r="4"/>
+              </svg>
+              <div class="alert-label" id="alert-label">이탈 <span class="num">12</span>분 · 최고 <span class="num">9.4°C</span></div>
+              <div class="chart"><span class="chart-title">온도 °C</span><svg class="chart-svg" viewBox="0 0 414 78" preserveAspectRatio="none" aria-hidden="true"><path class="chart-grid" d="M0 55H414 M0 24H414"/><path id="temp-line" class="temp-line" d="M0 53 L72 48 L138 52 L192 46 L229 20 L260 18 L292 44 L350 48 L414 42"/><path id="temp-alert" class="temp-alert" d="M210 30 L229 20 L260 18 L278 34"/></svg><div class="times"><span>13:00</span><span>14:00</span><span>15:00</span><span>16:00</span></div></div>
+            </div>
+            <div class="sample">표본</div>
+          </div></div>
+        </div>
+      </section>
+    </div>
+    <script>
+      document.fonts.ready.then(() => {
+        const q = (id) => document.getElementById(id);
+        const route = q('route-cold'), alertRoute = q('route-alert'), temp = q('temp-line'), tempAlert = q('temp-alert');
+        [route, temp, alertRoute, tempAlert].forEach((path) => { const n = path.getTotalLength(); path.style.strokeDasharray = n; path.style.strokeDashoffset = n; });
+        const tl = gsap.timeline({ paused: true, defaults: { overwrite: 'auto' } });
+        // NFC approach + one bounded ripple: only the touch is active in this beat.
+        tl.fromTo(q('phone-wrap'), { x: 72 }, { x: 0, duration: .72, ease: 'power2.inOut' }, .22);
+        tl.fromTo(q('ripple-one'), { opacity: 0, scale: .18 }, { opacity: .82, scale: 1, duration: .62, ease: 'power2.out' }, .94);
+        tl.to(q('ripple-one'), { opacity: 0, scale: 1.18, duration: .42, ease: 'power1.in' }, 1.56);
+        tl.fromTo(q('ripple-two'), { opacity: 0, scale: .16 }, { opacity: .46, scale: 1, duration: .63, ease: 'power2.out' }, 1.15);
+        tl.to(q('ripple-two'), { opacity: 0, scale: 1.1, duration: .38, ease: 'power1.in' }, 1.78);
+        // Map path and temperature graph share one progress beat (svg-path-draw).
+        tl.to(q('tap-state'), { opacity: 0, duration: .22, ease: 'power1.in' }, 2.8);
+        tl.to(q('map-state'), { opacity: 1, duration: .2, ease: 'power1.out' }, 3.0);
+        tl.to([route, temp], { strokeDashoffset: 0, duration: 3.45, ease: 'none' }, 3.15);
+        // Single alert event: amber is confined to the 14:20–14:32 section.
+        tl.to([alertRoute, tempAlert], { strokeDashoffset: 0, opacity: 1, duration: .58, ease: 'power2.out' }, 7.15);
+        tl.fromTo(q('alert-label'), { opacity: 0, x: -12 }, { opacity: 1, x: 0, duration: .32, ease: 'power3.out' }, 7.72);
+        // Resolve cleanly to the exact tag-ready first state, then hold for the loop seam.
+        tl.to(q('alert-label'), { opacity: 0, x: -12, duration: .22, ease: 'power1.in' }, 10.0);
+        tl.to([alertRoute, tempAlert], { opacity: 0, duration: .18, ease: 'power1.in' }, 10.02);
+        tl.to(q('map-state'), { opacity: 0, duration: .22, ease: 'power1.in' }, 10.18);
+        tl.to(q('tap-state'), { opacity: 1, duration: .18, ease: 'power1.out' }, 10.42);
+        tl.to(q('phone-wrap'), { x: 72, duration: .44, ease: 'power2.inOut' }, 10.6);
+        window.__timelines['canvas-seoritgil-demo'] = tl;
+      });
+    </script>
+  </body>
+</html>

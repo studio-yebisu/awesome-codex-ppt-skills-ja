@@ -1,0 +1,111 @@
+{
+  "id": "kinetic",
+  "name": "키네틱 타이포 강의",
+  "axis": "free",
+  "camera": {
+    "mode": "locked",
+    "perspective": 2400
+  },
+  "timing": {
+    "unit": 0.45,
+    "hold": 0.5,
+    "overlap": 0.15,
+    "tail": 0.8
+  },
+  "eases": {
+    "in": "power3.in",
+    "out": "expo.out",
+    "inout": "power4.inOut",
+    "scrub": "none",
+    "land": "back.out(1.2)",
+    "type": "steps(1)"
+  },
+  "beats": {
+    "allow": ["text", "prompt", "video", "number", "quote", "compare"]
+  },
+  "moves": {
+    "allow": [
+      "word-door",
+      "slot-pick",
+      "phrase-fold",
+      "caret-collapse",
+      "into-word",
+      "field-burst",
+      "glyph-rise",
+      "type-on",
+      "result-stream",
+      "caret-blink",
+      "push-build",
+      "tracking-close",
+      "word-slam",
+      "scramble-swap",
+      "scramble-out",
+      "half-split",
+      "sweep-out",
+      "blur-drop",
+      "line-focus",
+      "count-roll",
+      "video-scrub",
+      "engine:fade-in",
+      "engine:fade-out",
+      "engine:crossfade",
+      "engine:none",
+      "mask-word-in"
+    ],
+    "signature": ["word-door", "slot-pick", "phrase-fold"]
+  },
+  "defaults": {
+    "enter": "tracking-close",
+    "exit": "blur-drop",
+    "byType": {
+      "prompt": {
+        "enter": "type-on"
+      },
+      "video": {
+        "enter": "glyph-rise",
+        "exit": "blur-drop"
+      },
+      "number": {
+        "enter": "count-roll",
+        "exit": "sweep-out"
+      },
+      "quote": {
+        "enter": "tracking-close",
+        "exit": "blur-drop"
+      }
+    }
+  },
+  "slots": {
+    "center": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "left": {
+      "x": 0.1,
+      "y": 0.36
+    },
+    "bottom": {
+      "x": 0.1,
+      "y": 0.58,
+      "ax": 0,
+      "ay": 0.5
+    },
+    "full": {
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  "tokens": {
+    "blurMax": 4,
+    "stagger": 0.06,
+    "charStep": 0.035,
+    "wordGap": 0.06,
+    "maskScale": 0.78,
+    "maskWeight": 920,
+    "slamScale": 1.4,
+    "caretWidth": 0.06,
+    "caretHeight": 0.9,
+    "exitRatio": 0.6,
+    "mutedOpacity": 0.35
+  }
+}

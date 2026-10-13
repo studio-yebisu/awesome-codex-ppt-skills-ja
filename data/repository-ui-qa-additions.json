@@ -1,15 +1,15 @@
 {
   "status": "passed_for_recorded_scope",
-  "checked_at": "2026-10-13T21:11:18.655347+00:00",
+  "checked_at": "2026-10-13T22:17:14.476535+00:00",
   "baseline": "data/repository-ui-qa.json (16 repositories)",
-  "current_repository_count": 26,
-  "current_case_count": 29,
-  "current_slide_count": 175,
+  "current_repository_count": 29,
+  "current_case_count": 32,
+  "current_slide_count": 194,
   "catalog": {
     "original_count": 209,
-    "produced_filter_count": 26,
-    "gallery_count": 29,
-    "gallery_summary": "29冊 / 175枚",
+    "produced_filter_count": 29,
+    "gallery_count": 32,
+    "gallery_summary": "32冊 / 194枚",
     "console_errors": []
   },
   "new_cases": [
@@ -215,7 +215,7 @@
           "size": 667472
         },
         "source_zip": {
-          "sha256": "0ede931597a082e75fac6b22ed78547a79d799afbfa0999b267212c9d9e1dd44",
+          "sha256": "5979be42d655d73f76ebbd3667e777dd14e6d708718f5951493d52d4a0a6648f",
           "size": 57381958
         }
       },
@@ -228,7 +228,53 @@
         "3 / 5",
         "5 / 5"
       ],
+      "console_errors": [],
+      "historical_26_source_zip_download_sha256": "0ede931597a082e75fac6b22ed78547a79d799afbfa0999b267212c9d9e1dd44",
+      "source_zip_current_download_scope": "Actual current source ZIP download after QA count and REPRODUCE.md correction; existing PPTX/PDF and control evidence remains separately recorded."
+    },
+    {
+      "id": "hands-on-deck",
+      "format": "powerpoint-native",
+      "counter_checks": [
+        "1 / 5",
+        "3 / 5",
+        "5 / 5"
+      ],
+      "native_end_next_disabled": true,
+      "notes": "Japanese page 3 note opened and matches a fictional check proposal",
+      "pptx_download_sha256": "242c7f3ecc6f26ed81bf6f3b19517c9134a55f5b277b6b8accdb6ca705b8de14",
+      "source_zip_download_sha256": "1895bd98905f91240bc5872d9dd3fb65e2770a1bb159fd07cdb049f928b51fb3",
       "console_errors": []
+    },
+    {
+      "id": "slide-writer",
+      "format": "native-html",
+      "counter_checks": [
+        "1 / 8",
+        "3 / 8",
+        "8 / 8"
+      ],
+      "original_dot_to_parent_counter": "Original dot 3 and parent 3 / 8 synced",
+      "native_end_next_disabled": true,
+      "source_zip_download_sha256": "ec92a904e7a35bdf1df24edbd013e49f272f22e87d4f963c668d06d112be7320",
+      "console_errors": [],
+      "reproduction_guide_verified": true
+    },
+    {
+      "id": "html-scrolline",
+      "format": "native-html-scrolline",
+      "counter_checks": [
+        "3 / 6",
+        "6 / 6"
+      ],
+      "native_left_sync": "4 / 6 → 3 / 6 after focus inside iframe",
+      "native_end_next_disabled": true,
+      "escape_from_iframe_closes_dialog": true,
+      "prompt_copy_readback": false,
+      "source_zip_download_sha256": "59415e81d61e84df52abbe5b11ceb340d9193feb2b011f0dc504592df3c70b48",
+      "locator_press_timeout": "body.press initially timed out and changed scroll position; subsequently used visible native surface focus plus ArrowLeft, observed actual 4→3 synchronization",
+      "scope": "Actual localhost guide and floating player controls; not full native motion/video or mobile QA.",
+      "copy_scope": "Copy toast appeared, but browser clipboard readback differed. Copy/readback is not counted as passed in this batch."
     }
   ],
   "screenshots": [
@@ -339,14 +385,32 @@
     {
       "file": "docs/assets/repository-catalog-26.jpg",
       "sha256": "a26f8d93328669bdbefb9ba1dfd041880bd01e41b19cc0bfc38ed95c16ffa7dd"
+    },
+    {
+      "file": "docs/assets/hands-on-deck-float-desktop.jpg",
+      "sha256": "c7570618567bb9808c6fd4ea3ff2731fd63cf5ada6f8d4ad48e0c491ad61c1b3"
+    },
+    {
+      "file": "docs/assets/slide-writer-float-desktop.jpg",
+      "sha256": "7d972f6f6b80c79071d57886b38f77bd8e2a351388c02eb943e11f70ee3658c2"
+    },
+    {
+      "file": "docs/assets/html-scrolline-float-desktop.jpg",
+      "sha256": "08b3e018b94a0e39911993ced7162d0a5c8c19a2b9fb7fd90d65d7b1a76a5fe7"
+    },
+    {
+      "file": "docs/assets/repository-catalog-29.jpg",
+      "sha256": "22acb441e6b141bf8f7f92a84d494d397e5ced8231c4e995370f29426ddebb41"
     }
   ],
-  "scope": "Ten added cases and current 26 repository / 29 deck / 175 page catalog counts, together with scoped 16-repository baseline. Does not claim every control in all 29 decks or all 209 repositories was executed. Square carousel native navigation, clipboard copy/readback, expanded view and 393px modal inspected; existing 16:9 React and PowerPoint switching inspected. CyberPPT page 3 / Japanese notes / end and actual PPTX, PDF, source ZIP download inspected. Original fidelity failure is visible. Temporary viewport and media overrides reset; private QA tab closed.",
+  "scope": "Thirteen added cases and current 29 repository / 32 deck / 194 page catalog counts, together with scoped 16-repository baseline. New batch: actual native Slide-Writer dot 3 to parent 3 / 8; parent last page; Hands-on-deck page 3 notes, end and PPTX/source ZIP downloads; Scrolline parent page 3 and end, actual native surface left 4 to 3, iframe Esc and source ZIP download. Scrolline copy toast only; clipboard readback did not match and is not passed. Cyber source ZIP redownloaded after metadata/document corrections. Does not claim every control in all 32 decks, all motion frames, mobile of the three added cases, or all 209 repositories was tested.",
   "local_trial": {
     "repository": "tfriedel/claude-office-skills",
     "guide_label": "ローカル試用済み / 配布条件の確認待ち",
     "download_links": 0,
     "evidence_link_visible": true,
     "placeholder": "ローカル試用 / 配布条件を確認中"
-  }
+  },
+  "private_tabs_closed": true,
+  "temporary_viewport_and_media_overrides_reset": true
 }

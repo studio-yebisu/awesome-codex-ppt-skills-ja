@@ -1,0 +1,120 @@
+{
+  "id": "launch",
+  "name": "제품 런치",
+  "axis": "z",
+  "camera": {
+    "mode": "fixed",
+    "perspective": 2000
+  },
+  "timing": {
+    "unit": 0.6,
+    "hold": 0.7,
+    "overlap": 0.15,
+    "tail": 1.0
+  },
+  "eases": {
+    "in": "power3.in",
+    "out": "expo.out",
+    "inout": "power3.inOut",
+    "scrub": "none",
+    "settle": "power4.out",
+    "dive": "expo.in"
+  },
+  "beats": {
+    "allow": [
+      "text",
+      "video",
+      "photo",
+      "number",
+      "prompt",
+      "compare",
+      "quote"
+    ]
+  },
+  "moves": {
+    "allow": [
+      "lit-from-dark",
+      "sticky-scrub-link",
+      "number-slam",
+      "scrub-callouts",
+      "lights-out",
+      "mask-word-in",
+      "text-mask-dive",
+      "line-mask-rise",
+      "type-on",
+      "transcript-condense",
+      "window-open",
+      "slow-push",
+      "engine:fade-in",
+      "engine:fade-out",
+      "engine:crossfade",
+      "engine:none"
+    ],
+    "signature": [
+      "lit-from-dark",
+      "sticky-scrub-link",
+      "number-slam"
+    ]
+  },
+  "defaults": {
+    "enter": "line-mask-rise",
+    "exit": "engine:fade-out",
+    "byType": {
+      "video": {
+        "enter": "lit-from-dark",
+        "exit": "lights-out"
+      },
+      "photo": {
+        "enter": "lit-from-dark",
+        "exit": "lights-out"
+      },
+      "number": {
+        "enter": "number-slam"
+      },
+      "prompt": {
+        "enter": "type-on"
+      },
+      "quote": {
+        "enter": "line-mask-rise"
+      }
+    }
+  },
+  "slots": {
+    "center": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "left": {
+      "x": 0.24,
+      "y": 0.7
+    },
+    "right": {
+      "x": 0.62,
+      "y": 0.52
+    },
+    "lower-third": {
+      "x": 0.24,
+      "y": 0.78
+    }
+  },
+  "tokens": {
+    "darkFloor": 0.04,
+    "rimFromX": -0.2,
+    "rimFromY": -0.1,
+    "revealScale": 1.06,
+    "captionRise": 36,
+    "stagger": 0.12,
+    "slamScale": 1.6,
+    "slamBlur": 18,
+    "sweepWidth": 0.35,
+    "maskZoomMax": 40,
+    "maskBright": 1.3,
+    "windowInset": 30,
+    "windowRadius": 28,
+    "pushScale": 1.05,
+    "dimOthers": 0.55,
+    "calloutStroke": 1.5,
+    "productX": 0.62,
+    "productY": 0.52
+  }
+}

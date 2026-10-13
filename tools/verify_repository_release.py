@@ -235,6 +235,34 @@ def provenance(row):
                     entries=report if isinstance(report,list) else [report]
                     need(any(c.get('exit_code')!=0 and c.get('log') and record_path(folder,c['log'])==path and c.get('log_sha256')==sha(path) for c in entries),'Incidental failure log/report hash missing')
             warn(row['id']+':original-gate','Original strict image fidelity gates remain failed; separately recorded Japanese fork content/readability and merge QA passed.')
+        elif data.get('execution_type')=='original_scrolline_engine_rail_moves_and_vite_build':
+            need(row['repository']=='gongnyang/awesome-html-scrolline-deck','Unexpected Scrolline repository')
+            review=load(local(folder,'QA.json'))
+            need(row.get('original_gate_not_passed') is True and review.get('original_gate_not_passed') is True,'Original CI limitation missing')
+            need(review.get('original_full_ci',{}).get('passed') is False and review['original_full_ci'].get('failed_tests')==3,'Original CI failures presented as passed')
+            need(review.get('runtime_core_tests',{}).get('passed') is True and review['runtime_core_tests'].get('tests')==424,'Missing scoped original core test result')
+            failed=[]
+            for c in commands:
+                need(c.get('argv') and isinstance(c.get('exit_code'),int),'Missing actual Scrolline command')
+                need(sha(record_path(folder,c['log']))==c.get('log_sha256'),'Scrolline log hash stale')
+                if c['exit_code']!=0:
+                    need(c.get('reason') and c.get('failed_stage') in {'upstream_chrome_discovery','upstream_full_ci'},'Unexpected Scrolline execution failure')
+                    if c['failed_stage']=='upstream_full_ci':
+                        need(c['argv'][-2:]==['run','ci'] and '3 failed' in read(record_path(folder,c['log'])),'Original full CI failure evidence missing')
+                    else:
+                        need(c['argv'][1]=='tools/smoke.mjs' and any(x.get('exit_code')==0 and len(x.get('argv',[]))>1 and x['argv'][1].replace('\\','/').endswith('tools/smoke.windows.mjs') for x in commands),'Missing actual adapted smoke success')
+                    failed.append(c)
+            need(len(failed)==2,'Original Scrolline failures missing')
+            count=0
+            for directory in ['engine','moves','concepts']:
+                for f in (source/directory).rglob('*'):
+                    if f.is_file():
+                        frozen=local(folder,'source/upstream/'+f.relative_to(source).as_posix())
+                        need(sha(frozen)==sha(f),'Original Scrolline core modified: '+f.relative_to(source).as_posix());count+=1
+            need(count==321,'Original Scrolline core file count changed')
+            for name in ['errors','empty','overlaps','clipped','tinyText','mediaPending']:
+                need(not review.get('browser_smoke',{}).get(name),'Scrolline browser smoke issue: '+name)
+            warn(row['id']+':original-gate','Original full CI retains three Windows-path failures; scoped core tests, HTTP smoke and player controls passed.')
         elif row.get('editability')=='raster_slides':
             # Preserve failed attempts; each must have an identical successful retry.
             for i,c in enumerate(commands):
@@ -280,6 +308,14 @@ def provenance(row):
     licenses=[f for f in folder.rglob('*') if f.is_file() and ('license' in f.name.lower() or 'ofl' in f.name.lower())]
     need(licenses,'No packaged source/font license notices')
     need(any('license' in f.name.lower() and f.stat().st_size>100 for f in licenses),'Empty upstream license')
+    if row['repository']=='FeeiCN/slide-writer':
+        review=load(local(folder,'QA.json'));blocked=load(local(folder,'source/direct-file-launch.json'))
+        need(row.get('original_gate_not_passed') is True and review.get('original_gate_not_passed') is True,'Direct-file gate limitation missing')
+        need(blocked.get('status')=='blocked_by_browser_url_policy' and blocked.get('direct_file_launch_verified') is False,'Blocked direct file launch presented as verified')
+        need(review.get('japanese_fork_qa',{}).get('passed') is True and review.get('original_checks',{}).get('original_full_delivery_gate')=='not_completed','Original delivery gate presented as complete')
+        for c in commands:need(sha(record_path(folder,c['log']))==c.get('log_sha256'),'Slide-writer log hash stale')
+        need({Path(c['argv'][1]).name for c in commands}=={'apply-template-branding.py','inline-images.py','smoke-test.sh'},'Original slide-writer CLI stages missing')
+        warn(row['id']+':original-gate','Direct local-file launch was blocked and remains unverified. Original template/CLI and HTTP browser review passed as a Japanese fork.')
 
 
 def qa(row):
@@ -467,6 +503,7 @@ def html(row):
       'lewislulu/html-ppt-skill':['slide','keydown'],
       'lqshow/neon-slides':['function go(','jumper'],
       'chuspeeism/dashi-ppt-skill':['deck-view-model','imported-theme'],
+      'FeeiCN/slide-writer':['class MiniSlidePresentation','updateViewportScale','setupIntersectionObserver'],
     }
     markers=signatures.get(row['repository'])
     if markers:need(all(s in runtime for s in markers),'Original runtime identity missing: '+row['repository'])
@@ -482,7 +519,8 @@ def html(row):
         need(base64.b64decode(payload)[:4]==font_signatures[mime], 'Embedded font MIME/signature mismatch: '+mime)
     if not frozen_bento:
         need('yebisu-slide' in runtime,'Catalog page-control bridge missing')
-        need('e.source!==parent' in runtime and 'e.origin!==location.origin' in runtime,'Parent message origin/source checks missing')
+        compact_runtime = re.sub(r'\s+', '', runtime)
+        need('e.source!==parent' in compact_runtime and 'e.origin!==location.origin' in compact_runtime,'Parent message origin/source checks missing')
 
 
 def archive(row):

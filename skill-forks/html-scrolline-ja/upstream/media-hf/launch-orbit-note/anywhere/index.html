@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>Minute — anywhere loop</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #0b0907; }
+      #anywhere-loop { position: relative; width: 100%; height: 100%; overflow: hidden; background: #0b0907; }
+      .clip { position: absolute; inset: 0; overflow: hidden; }
+      .layer { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .layer img { display: block; width: 100%; height: 100%; object-fit: cover; }
+      .meeting img { object-position: 50% 58%; }
+      .cafe img { object-position: 53% 61%; }
+      .home img { object-position: 55% 59%; }
+    </style>
+  </head>
+  <body>
+    <main id="anywhere-loop" data-composition-id="anywhere-loop" data-width="1920" data-height="1080" data-duration="9" data-fps="30">
+      <section id="three-places" class="clip" aria-label="Minute in three everyday settings">
+        <div id="meeting-main" class="layer meeting" data-layout-allow-overflow><img src="./stills/a-meeting.png" alt="" /></div>
+        <div id="cafe" class="layer cafe" data-layout-allow-overflow><img src="./stills/b-cafe.png" alt="" /></div>
+        <div id="home" class="layer home" data-layout-allow-overflow><img src="./stills/c-home.png" alt="" /></div>
+      </section>
+    </main>
+    <script>
+      const tl = gsap.timeline({ paused: true, defaults: { ease: 'none' } });
+      const meetingMain = document.getElementById('meeting-main');
+      const cafe = document.getElementById('cafe');
+      const home = document.getElementById('home');
+      // Every scene pushes toward Minute. Meeting is reset while transparent
+      // before its final return, making the final pose equal to frame zero.
+      gsap.set([meetingMain, cafe, home], { opacity: 0 });
+      gsap.set(meetingMain, { opacity: 1, scale: 1, transformOrigin: '50% 58%' });
+      gsap.set(cafe, { scale: 1, transformOrigin: '53% 61%' });
+      gsap.set(home, { scale: 1, transformOrigin: '55% 59%' });
+
+      tl.to(meetingMain, { scale: 1.06, duration: 3, ease: 'sine.inOut' }, 0);
+      tl.to(cafe, { scale: 1.06, duration: 3, ease: 'sine.inOut' }, 3);
+      tl.to(home, { scale: 1.06, duration: 3, ease: 'sine.inOut' }, 6);
+
+      tl.to(meetingMain, { opacity: 0, duration: 0.6, ease: 'sine.inOut' }, 2.4);
+      tl.to(cafe, { opacity: 1, duration: 0.6, ease: 'sine.inOut' }, 2.4);
+      tl.to(cafe, { opacity: 0, duration: 0.6, ease: 'sine.inOut' }, 5.4);
+      tl.to(home, { opacity: 1, duration: 0.6, ease: 'sine.inOut' }, 5.4);
+      tl.set(meetingMain, { scale: 1 }, 8.4);
+      tl.to(home, { opacity: 0, duration: 0.6, ease: 'power4.out' }, 8.4);
+      tl.to(meetingMain, { opacity: 1, duration: 0.6, ease: 'power4.out' }, 8.4);
+
+      window.__timelines['anywhere-loop'] = tl;
+    </script>
+  </body>
+</html>

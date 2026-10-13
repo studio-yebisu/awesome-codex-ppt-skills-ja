@@ -1,0 +1,294 @@
+/* data 컨셉 배치(C11 layout.css). 규칙: 모든 선택자 .sl-concept-data 범위, 색은 var(--sl-*)만, !important 금지.
+   데이터 저널리즘 차트 문법. 1920×1080 기준 px × --px.
+   chart beat = 1600×900 상자(viewBox와 같은 비율)라 렌더러의 % 주석이 마크 옆에 정확히 붙는다.
+   상자 안 플롯 = x 260~1560, y 330~930(화면 좌표). 제목·dek는 상자 위 여백, 오른쪽 360px는 선 끝 이름표 자리. */
+.sl-concept-data {
+  --data-u: calc(var(--px) * 1px);
+}
+
+/* chart는 place slot center(가운데 기준) + 여백으로 (100, 170)에 놓는다 */
+.sl-concept-data .sl-beat--chart {
+  width: calc(1600 * var(--data-u));
+  height: calc(900 * var(--data-u));
+  margin-left: calc(-60 * var(--data-u));
+  margin-top: calc(80 * var(--data-u));
+}
+.sl-concept-data .sl-chart__plot {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.sl-concept-data .sl-chart__title {
+  position: absolute;
+  left: calc(20 * var(--data-u));
+  bottom: calc(100% - 66 * var(--data-u));
+  width: max-content;
+  max-width: calc(1640 * var(--data-u));
+  font-family: var(--sl-font-display);
+  font-weight: var(--sl-weight-display);
+  font-size: var(--sl-size-l);
+  line-height: var(--sl-leading-display);
+  letter-spacing: var(--sl-tracking-display);
+  word-break: keep-all;
+}
+.sl-concept-data .sl-chart__dek {
+  position: absolute;
+  left: calc(20 * var(--data-u));
+  top: calc(84 * var(--data-u));
+  width: max-content;
+  max-width: calc(1700 * var(--data-u));
+  margin: 0;
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-m);
+  line-height: 1.4;
+  word-break: keep-all;
+}
+.sl-concept-data .sl-chart__unit {
+  position: absolute;
+  left: calc(20 * var(--data-u));
+  top: calc(150 * var(--data-u));
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-s);
+}
+.sl-concept-data .sl-chart__source {
+  position: absolute;
+  left: calc(20 * var(--data-u));
+  top: calc(872 * var(--data-u));
+  font-size: var(--sl-size-caption);
+}
+.sl-concept-data .sl-chart__legend {
+  display: none;
+}
+.sl-concept-data .sl-chart__note {
+  margin: 0;
+  color: var(--sl-fg);
+  font-size: calc(28 * var(--data-u));
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* SVG 안 = viewBox 단위(상자가 1600 폭이라 1920 화면 px과 같음) */
+.sl-concept-data .sl-chart__axis line {
+  stroke: var(--sl-fg);
+  stroke-width: 2px;
+}
+.sl-concept-data .sl-chart__baseline {
+  stroke: var(--sl-fg);
+  stroke-width: 2px;
+}
+.sl-concept-data .sl-chart__label {
+  fill: var(--sl-fg-muted);
+  font-family: var(--sl-font-text);
+  font-size: 24px;
+  font-weight: 500;
+  text-anchor: middle;
+  dominant-baseline: middle;
+}
+.sl-concept-data .sl-chart__mark {
+  fill: var(--sl-fg);
+  stroke: none;
+}
+.sl-concept-data .sl-chart__mark--line {
+  fill: none;
+  stroke: var(--sl-fg);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+.sl-concept-data circle.sl-chart__mark--line {
+  fill: var(--sl-fg);
+  stroke: none;
+  r: 8px;
+}
+
+/* 영상 표지 캡션 = 덱 제목(L1) */
+.sl-concept-data [data-beat="b-open"] .sl-video__caption {
+  left: calc(120 * var(--data-u));
+  bottom: calc(110 * var(--data-u));
+  width: calc(1400 * var(--data-u));
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+  font-weight: 900;
+  font-size: calc(104 * var(--data-u));
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 calc(40 * var(--data-u)) var(--sl-scrim);
+}
+
+/* b-seed: 점 하나 = 11만 9천 대. 점은 격자 씨앗 칸(화면 712, 596), 축·이름표 없음 */
+.sl-concept-data [data-beat="b-seed"] .sl-chart__mark {
+  cx: 612px;
+  cy: 426px;
+  r: 64px;
+  fill: var(--sl-accent);
+}
+.sl-concept-data [data-beat="b-seed"] .sl-chart__axis,
+.sl-concept-data [data-beat="b-seed"] .sl-chart__label,
+.sl-concept-data [data-beat="b-seed"] .sl-chart__unit {
+  display: none;
+}
+.sl-concept-data [data-beat="b-seed"] .sl-chart__note {
+  font-size: calc(40 * var(--data-u));
+  font-weight: 700;
+}
+
+/* 세로 막대: 렌더러 폭 44 → 범주 간격의 약 65%(CSS scale, transform과 따로 합성) */
+.sl-concept-data .sl-chart rect.sl-chart__mark {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+}
+.sl-concept-data [data-beat="b-sales"] rect.sl-chart__mark { scale: 1.9 1; }
+.sl-concept-data [data-beat="b-sales"] .sl-chart__mark[data-index="10"] { fill: var(--sl-accent); }
+.sl-concept-data [data-beat="b-split"] rect.sl-chart__mark,
+.sl-concept-data [data-beat="b-q1"] rect.sl-chart__mark { scale: 4.5 1; }
+.sl-concept-data [data-beat="b-q1"] rect.sl-chart__mark[data-sign="neg"] { transform-origin: 50% 0%; }
+
+/* 강조 범주(deck highlight) = 주홍 한 개 */
+.sl-concept-data [data-beat="b-split"] .sl-chart__mark[data-index="0"],
+.sl-concept-data [data-beat="b-share"] .sl-chart__mark[data-index="1"],
+.sl-concept-data [data-beat="b-growth"] .sl-chart__mark[data-index="0"],
+.sl-concept-data [data-beat="b-q1"] .sl-chart__mark[data-index="0"] {
+  fill: var(--sl-accent);
+}
+
+/* 가로 막대 순위: 이름표는 왼쪽 단(화면 x 120)에 왼쪽 맞춤, 단위는 값 표가 대신 */
+.sl-concept-data [data-beat="b-share"] .sl-chart__label,
+.sl-concept-data [data-beat="b-growth"] .sl-chart__label {
+  text-anchor: start;
+  font-size: 26px;
+  fill: var(--sl-fg);
+}
+.sl-concept-data [data-beat="b-share"] .sl-chart__unit,
+.sl-concept-data [data-beat="b-growth"] .sl-chart__unit,
+.sl-concept-data [data-beat="b-split"] .sl-chart__unit,
+.sl-concept-data [data-beat="b-q1"] .sl-chart__unit,
+.sl-concept-data [data-beat="b-quarter"] .sl-chart__unit {
+  display: none;
+}
+
+/* 100칸 격자는 move가 칸으로 그린다: 렌더러 점·축은 자리만 */
+.sl-concept-data [data-beat="b-quarter"] .sl-chart__plot > * {
+  display: none;
+}
+
+/* compare(b-why): 결론 줄이 L1으로 위, 아래 두 숫자 칸 사이 세로 괘선 */
+.sl-concept-data .sl-beat--compare {
+  display: flex;
+  flex-direction: column;
+  width: calc(1680 * var(--data-u));
+  height: calc(860 * var(--data-u));
+}
+.sl-concept-data .sl-compare__verdict {
+  order: -1;
+  margin: 0 0 calc(72 * var(--data-u));
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+  font-weight: var(--sl-weight-display);
+  font-size: var(--sl-size-l);
+  line-height: var(--sl-leading-display);
+  letter-spacing: var(--sl-tracking-display);
+}
+.sl-concept-data .sl-compare {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  column-gap: calc(96 * var(--data-u));
+  flex: 1;
+}
+.sl-concept-data .sl-compare__item {
+  width: auto;
+}
+.sl-concept-data .sl-compare__divider {
+  width: calc(2 * var(--data-u));
+  margin: 0;
+  background: var(--sl-rule);
+  color: transparent;
+  font-size: 0;
+}
+.sl-concept-data .sl-compare__label {
+  margin: 0;
+  font-family: var(--sl-font-text);
+  font-size: calc(40 * var(--data-u));
+  font-weight: 700;
+}
+.sl-concept-data .sl-compare__value {
+  display: block;
+  margin: calc(8 * var(--data-u)) 0 calc(24 * var(--data-u));
+  font-weight: 900;
+  font-size: calc(300 * var(--data-u));
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.sl-concept-data .sl-compare__value::after {
+  content: '%';
+  margin-left: 0.04em;
+  font-size: 0.4em;
+}
+.sl-concept-data .sl-compare__item:first-child .sl-compare__value {
+  color: var(--sl-accent);
+}
+.sl-concept-data .sl-compare__text {
+  max-width: calc(660 * var(--data-u));
+  margin: 0;
+  font-size: calc(30 * var(--data-u));
+  line-height: 1.45;
+  word-break: keep-all;
+}
+.sl-concept-data .sl-compare__source {
+  margin-top: calc(24 * var(--data-u));
+}
+
+/* 텍스트: 맺음말(l)은 크게 두 줄, 출처(m)는 L2 문장 */
+.sl-concept-data .sl-text--l {
+  max-width: calc(1760 * var(--data-u));
+  font-size: calc(84 * var(--data-u));
+  word-break: keep-all;
+}
+.sl-concept-data .sl-text--m {
+  max-width: calc(1500 * var(--data-u));
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-text);
+  font-weight: var(--sl-weight-text);
+  font-size: var(--sl-size-m);
+  line-height: 1.5;
+  letter-spacing: 0;
+  word-break: keep-all;
+}
+.sl-concept-data .sl-text__em {
+  background: linear-gradient(var(--sl-accent), var(--sl-accent)) 0 94% / 100% 0.07em no-repeat;
+  color: inherit;
+}
+
+/* 글리프 마스크 영상(b-vietnam, tone 1 = 종이 위 영상): 캡션은 글리프 아래 L2 */
+.sl-concept-data [data-beat="b-vietnam"] .sl-video__caption {
+  left: calc(120 * var(--data-u));
+  bottom: calc(150 * var(--data-u));
+  width: calc(1500 * var(--data-u));
+  font-size: var(--sl-size-m);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+/* 숫자 히어로(b-2035) */
+.sl-concept-data .sl-number__value {
+  color: var(--sl-accent);
+  font-weight: 900;
+  font-size: calc(300 * var(--data-u));
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+}
+.sl-concept-data .sl-number__label {
+  max-width: calc(1100 * var(--data-u));
+  margin-top: calc(40 * var(--data-u));
+}
+
+/* 영상 출처는 차트와 같은 자리(왼쪽 아래 L3) */
+.sl-concept-data .sl-video__source {
+  position: absolute;
+  left: calc(120 * var(--data-u));
+  bottom: calc(24 * var(--data-u));
+  color: var(--sl-fg-muted);
+  font-size: var(--sl-size-caption);
+}

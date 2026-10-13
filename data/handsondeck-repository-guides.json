@@ -1,0 +1,100 @@
+[
+  {
+    "repository": "EveryInc/hands-on-deck",
+    "execution_type": "original_deck_py_atomic_editing",
+    "execution_status": "generated_and_reviewed",
+    "case_ids": [
+      "hands-on-deck"
+    ],
+    "summary_ja": "既存の日本語PPTXを原典JSON patchで79箇所更新。全5枚をPowerPoint描画・別エージェント確認。",
+    "requirements": [
+      "Python 3.10+ / python-pptx / Pillow",
+      "描画: Windows / Microsoft PowerPoint",
+      "原典render: LibreOffice / Poppler",
+      "Yu Gothic / Yu Mincho / Times New Roman"
+    ],
+    "steps": [
+      "編集元と入力本文を用意",
+      "原典inspectで図形を特定",
+      "JSON patchをapply",
+      "fixとdiffで編集結果を確認",
+      "PowerPointで描画し全ページを確認"
+    ],
+    "commands": [
+      "python source/reproduce.py --input input/data.json --render"
+    ],
+    "source_refs": [
+      {
+        "path": "skills/hands-on-deck/designing-slides.md",
+        "sha256": "31dbd43427849592926e64d86ba968998a681743e832685c9194ed7ad2d2d146",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/designing-slides.md"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "4a0870f370917b8df17ae1edc7c7a3fa065f7b8067af12fff19e47b64d4f10a6",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "sha256": "56af30a5c6774ff1d6a1762a7757dee7d716c013dd7307652a62360981cf1398",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/README.md"
+      },
+      {
+        "path": "skills/hands-on-deck/scripts/deck.py",
+        "sha256": "224d9e365f269102f7ce2bb70162e9813ffb44eb5d0494ddd2bd5e3028279826",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/scripts/deck.py"
+      },
+      {
+        "path": "skills/hands-on-deck/scripts/html2patch.py",
+        "sha256": "4ba9f2a57a6be6114f5e420eed37b335d8a9e319d1745fcf79fe14e816c5ffb6",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/scripts/html2patch.py"
+      },
+      {
+        "path": "skills/hands-on-deck/scripts/inventory.py",
+        "sha256": "0b61c1d0752cab571669cf478c9b7a68d2de10942550d154a2eb477f192c7da3",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/scripts/inventory.py"
+      },
+      {
+        "path": "skills/hands-on-deck/scripts/merge_decks.py",
+        "sha256": "9e0499fb44769b57e0627fe27fa83029455ee7945f8e98265963ad6301bc6101",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/scripts/merge_decks.py"
+      },
+      {
+        "path": "skills/hands-on-deck/scripts/rearrange.py",
+        "sha256": "714c4f16d79d1aa0ca0cff9702c4d32a9abfe2a88d7a795759d41ed11f0e3d95",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/scripts/rearrange.py"
+      },
+      {
+        "path": "skills/hands-on-deck/scripts/replace.py",
+        "sha256": "05d63614827f62f9b4eaa7d4055b31c8a3147a9be694923e648cd300ddc72cd6",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/scripts/replace.py"
+      },
+      {
+        "path": "skills/hands-on-deck/scripts/thumbnail.py",
+        "sha256": "c21fd950b6ada7bd2f029885d3e56bc66b7ff061cc8404c492eb301664aa9e5d",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/scripts/thumbnail.py"
+      },
+      {
+        "path": "skills/hands-on-deck/SKILL.md",
+        "sha256": "8fe291608146ca0f9f45d5e800c62940bc84701612b49d040100a5a77f6616fd",
+        "url": "https://github.com/EveryInc/hands-on-deck/blob/a24b996ecff6393ccf39c4fee2b88c493fb0b693/skills/hands-on-deck/SKILL.md"
+      }
+    ],
+    "local_changes": [
+      "当プロジェクト作成の日本語ドナーを原典deck.pyで編集。",
+      "5枚の日本語本文とノート、文字サイズ、文書プロパティをJSON patchで更新。",
+      "可搬CLIはinput/data.jsonを読んで原典patchを組み立てる。"
+    ],
+    "license": "MIT",
+    "limitations": [
+      "エージェントのレビュー済み。人による採用は未承認。",
+      "架空の運用案であり実際の公開・確認・利用者テストは未実施。",
+      "新しい本文で再実行した場合は全ページの再レビューが必要。"
+    ],
+    "artifact_paths": [
+      "examples/repositories/hands-on-deck/deck.pptx"
+    ],
+    "fork": "hands-on-deck-ja",
+    "method_ja": "原典deck.pyのinspect・JSON patch・apply・fix・diffを実行"
+  }
+]

@@ -1,0 +1,52 @@
+{
+  "id": "_smoke",
+  "name": "Smoke",
+  "axis": "x",
+  "camera": {
+    "mode": "none",
+    "perspective": 1600
+  },
+  "timing": {
+    "unit": 0.55,
+    "hold": 0.6,
+    "overlap": 0.2
+  },
+  "eases": {
+    "in": "power2.in",
+    "out": "power2.out",
+    "inout": "power2.inOut",
+    "scrub": "none"
+  },
+  "beats": {
+    "allow": [
+      "text",
+      "photo",
+      "number"
+    ]
+  },
+  "moves": {
+    "allow": [
+      "engine:fade-in",
+      "engine:fade-out",
+      "engine:crossfade",
+      "engine:none"
+    ],
+    "signature": []
+  },
+  "defaults": {
+    "enter": "engine:fade-in",
+    "exit": "engine:fade-out"
+  },
+  "slots": {
+    "center": {
+      "x": 0.5,
+      "y": 0.5
+    }
+  },
+  "tokens": {
+    "blurMax": 0,
+    "depthNear": 1,
+    "depthFar": 1,
+    "stagger": 0
+  }
+}

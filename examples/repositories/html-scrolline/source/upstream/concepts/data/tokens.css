@@ -1,0 +1,49 @@
+/* 컨셉 data(데이터 저널리즘) 토큰. 계약 C11: 이 범위에 C11 변수만 정의.
+   종이(newsprint) 바탕 + 잉크 + 주홍 초점 1색. 회색은 맥락, 주홍은 지금 볼 것.
+   글꼴 로드는 덱 index.html 몫:
+   - Noto Serif KR 700·900: Google Fonts
+   - Pretendard v1.3.9 dynamic-subset: https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css
+   - IBM Plex Mono 400·500: Google Fonts
+   대비(바탕 #f4f1ea 기준): fg 16.3:1, fg-muted 4.8:1, accent 4.6:1(본문 글자 가능), rule 1.5:1(격자·맥락 mark 전용, 글자 금지) */
+.sl-concept-data {
+  --sl-bg: #f4f1ea;
+  --sl-fg: #141413;
+  --sl-fg-muted: #6e6a62;
+  --sl-accent: #c8371f;
+  --sl-accent-2: #2f5d8a;
+  --sl-rule: #cfc9bd;
+  --sl-scrim: rgba(244, 241, 234, 0.88);
+
+  --sl-font-display: "Noto Serif KR", "Nanum Myeongjo", serif;
+  --sl-font-text: "Pretendard Variable", Pretendard, system-ui, sans-serif;
+  --sl-font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --sl-weight-display: 700;
+  --sl-weight-text: 500;
+
+  --sl-size-xl: calc(var(--px) * 200 * 1px);
+  --sl-size-l: calc(var(--px) * 76 * 1px);
+  --sl-size-m: calc(var(--px) * 32 * 1px);
+  --sl-size-s: calc(var(--px) * 22 * 1px);
+  --sl-size-caption: calc(var(--px) * 17 * 1px);
+
+  --sl-leading-display: 1.22;
+  --sl-leading-text: 1.55;
+  --sl-tracking-display: -0.02em;
+
+  --sl-perspective: 2400px;
+  --sl-gutter: calc(var(--px) * 120 * 1px);
+  --sl-radius: 0px;
+}
+
+/* 영상 beat 위 글자는 어두운 scrim 위에 종이색으로(같은 변수 이름, 하위 범위 재정의) */
+.sl-concept-data .sl-beat--video {
+  --sl-fg: #f4f1ea;
+  --sl-fg-muted: #cfc9bd;
+  --sl-scrim: rgba(20, 20, 19, 0.55);
+}
+
+/* tone 1 = 종이 위 글리프 마스크 영상: 영상 밖이 종이라 글자는 다시 잉크색 */
+.sl-concept-data [data-tone="1"] {
+  --sl-fg: #141413;
+  --sl-fg-muted: #6e6a62;
+}

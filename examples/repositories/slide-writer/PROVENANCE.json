@@ -1,0 +1,102 @@
+{
+  "repository": "FeeiCN/slide-writer",
+  "upstream_commit": "3c4524c4abb3310fdee106282d0a64f156fd4ff6",
+  "method": "原典template.htmlを複製し、Mode A1の構成・コンポーネントで日本語原稿を配置。無改変のapply-template-branding.py、inline-images.py、smoke-test.shを実行。固有MiniSlidePresentationで再生。",
+  "execution_type": "original_template_branding_inlining_smoke_japanese_fork",
+  "references": [
+    {
+      "path": "LICENSE",
+      "sha256": "97f30f610666a917f1e511806bcd0aa7518c94dbbf5eea8844ead162a2cf7bcc"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "e3c77c9dd3ec62dd617e1a03bf14b98d64a2586b95c39d59587d6a9bd2418362"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1a81e919ecf51cbedc02193da7dedbf713260d86518f288363ce2a323e1856bd"
+    },
+    {
+      "path": "template.html",
+      "sha256": "501f37010d90063e97dba1ea1ecb3ec60add8f2c84a0f5a582381be01fd1523a"
+    },
+    {
+      "path": "components.md",
+      "sha256": "fc66612265e31e9714d288d05aac32a6b8ed5ba5620bd005b008c67f4780f3e9"
+    },
+    {
+      "path": "icons.md",
+      "sha256": "c7c97e548d0a31c396c488ef2e7411a1deed35ef707266a838fad5e146437d43"
+    },
+    {
+      "path": "themes/_index.md",
+      "sha256": "1d52bbb176c6989ebecc4e5ef69268da6193a76f498da624764cc0ab8ff7cc84"
+    },
+    {
+      "path": "scripts/apply-template-branding.py",
+      "sha256": "cce64b37bb5d7ae48f11ca7d13c42c7e6abbf8e89b29550755242dc82e1a4508"
+    },
+    {
+      "path": "scripts/inline-images.py",
+      "sha256": "8d0c70059c4f612de913935daf5dbc3989a8d0124d641df8169d6a986c0f414f"
+    },
+    {
+      "path": "scripts/smoke-test.sh",
+      "sha256": "d199a22ede350c9b81fbb731363b05a3585edf1c2dd409d46c1cb4fcc2097885"
+    }
+  ],
+  "commands_executed": [
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-writer\\source\\working-upstream\\scripts\\apply-template-branding.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-writer\\index.html",
+        "--title",
+        "朝会は、判断と相談の入口に",
+        "--speaker",
+        "しおりの運営担当",
+        "--theme-id",
+        "shiori"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-writer",
+      "exit_code": 0,
+      "log": "source/logs/01-apply-template-branding.log",
+      "log_sha256": "4d9852ab4d3e8e8f94b2085e1ccc8af43add256ec77e6076cfec0cd92f539cc9"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-writer\\source\\working-upstream\\scripts\\inline-images.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-writer\\index.html"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-writer",
+      "exit_code": 0,
+      "log": "source/logs/02-inline-images.log",
+      "log_sha256": "1e6f53c59329daa1a4adab3f2ad88ab6e228cd57c125c6bec88c6a22a4b7a9b8"
+    },
+    {
+      "argv": [
+        "C:\\Program Files\\Git\\bin\\bash.exe",
+        "/m/Codex/Projects/awesome-codex-ppt-skills-ja/examples/repositories/slide-writer/source/working-upstream/scripts/smoke-test.sh",
+        "/m/Codex/Projects/awesome-codex-ppt-skills-ja/examples/repositories/slide-writer/index.html"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-writer",
+      "exit_code": 0,
+      "log": "source/logs/03-smoke-test.log",
+      "log_sha256": "fa5ee01b2483c97318109fff89129731c79d2e53c58b974b3aa6243e299e09a6"
+    }
+  ],
+  "artifact_sha256": "0bac973c47d47dccb2ea73a16997f8020986b187146f093c2ced0d4ae2f45876",
+  "input_sha256": "88204e4f11ae89b23ffd45b3cc7dc407fe5c0f861defd58fd653e54967e2d4f8",
+  "original_refresh_during_production": "source/refresh-receipt.json",
+  "changes": [
+    "架空ブランドの独自themeと自作logoを原典branding CLIへ渡す。",
+    "BIZ UDPGothicのOFLサブセットを別内部名で単一HTMLへ埋め込む。",
+    "日本語の操作ラベル、読みやすい改行、原典runtimeと外側カウンターの接続。",
+    "日本語の意味の切れ目で改行し、本文とカード見出しの文字サイズを補正。",
+    "動きを減らす設定では原典のreveal待機と明示smooth scrollも停止。通常の原典移動と表示は保持。"
+  ],
+  "scope": "原典の実装と工程を使った日本語8枚の指示型スキル作例。14企業テーマ全種の動作・効果・人の採用は未確認。再現は固定原典で行い、自動更新しない。ブラウザーの安全ポリシーによりfile://直接起動は未確認、原典の全工程完走とは記録しない。",
+  "checked_at": "2026-10-13T21:34:46.877792+00:00",
+  "original_gate_not_passed": true
+}

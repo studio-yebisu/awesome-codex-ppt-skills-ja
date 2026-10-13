@@ -147,7 +147,7 @@
       "method": "現配布ZIP全入力を短い新規フォルダーへ展開し、新venv/Pillow12.3.0/numpy2.5.4/pywin32312とNode固定lockでReproduce.ps1を実行。原典の内容lock・ページ再構築・PowerPoint全描画・統合比較を30コマンドで再実行。",
       "pages": 5,
       "zip_sha256": "0ede931597a082e75fac6b22ed78547a79d799afbfa0999b267212c9d9e1dd44",
-      "input_files_match_current_archive": true,
+      "input_files_match_current_archive": false,
       "input_data_identical": true,
       "run_log_sha256": "7c6e0366e086e9f2e2efc1c63eeb674f2ba874185b69a7a026c2193734d5a0a0",
       "output_review_status": "generated_awaiting_review",
@@ -222,9 +222,66 @@
         "source_lock_sha256": "dc16b4c19c91716aa019f80f75ee4a8758d47d4e082005b232638774f0ce70ff"
       },
       "full_pptx_byte_identity_claimed": false,
-      "original_gate_not_passed": true
+      "original_gate_not_passed": true,
+      "tested_zip_sha256": "0ede931597a082e75fac6b22ed78547a79d799afbfa0999b267212c9d9e1dd44",
+      "current_archive_sha256": "5979be42d655d73f76ebbd3667e777dd14e6d708718f5951493d52d4a0a6648f",
+      "current_archive_different_members": [
+        "cyberppt/QA.json",
+        "cyberppt/reproduce/workspace/examples/repositories/cyberppt/QA.json",
+        "cyberppt/reproduce/workspace/examples/repositories/cyberppt/REPRODUCE.md"
+      ],
+      "runtime_and_input_members_match": true,
+      "archive_change_after_test": "QAのnative要素個数を補正し、REPRODUCE.mdに監査済み依存の説明を追記。合計154個の内訳は文字90・その他64。CLI・原典・原稿・画像・PPTXは試験ZIPと一致。"
+    },
+    {
+      "repository": "EveryInc/hands-on-deck",
+      "method": "現配布ZIP全入力を新フォルダーへ展開し、新venvからReproduce.ps1を実行。原典固有の生成・編集経路を再実行。",
+      "pages": 5,
+      "zip_sha256": "1895bd98905f91240bc5872d9dd3fb65e2770a1bb159fd07cdb049f928b51fb3",
+      "input_files_match_current_archive": true,
+      "run_log_sha256": "0a12c5397cf486eede4be1ae2dc14342c3d91c6d4013d66e0ca6a3789dc1d3b5",
+      "output_review_status": "generated_awaiting_review",
+      "native_text_identical": true,
+      "all_five_powerpoint_render_pixels_identical": true,
+      "pptx_sha256": "ee95515657374fb0742d42de206ef8096b8fcaa1d048d739f93c85af5d987f36",
+      "full_pptx_byte_identity_claimed": false
+    },
+    {
+      "repository": "FeeiCN/slide-writer",
+      "method": "現配布ZIP全入力を新フォルダーへ展開し、新venvからReproduce.ps1を実行。原典固有の生成・編集経路を再実行。",
+      "pages": 8,
+      "zip_sha256": "ec92a904e7a35bdf1df24edbd013e49f272f22e87d4f963c668d06d112be7320",
+      "input_files_match_current_archive": true,
+      "run_log_sha256": "fc3ae8893fb2be8e9ff9b1ede9817a11e847fdd6095fed3e7bff6a9e20964efe",
+      "output_review_status": "generated_awaiting_review",
+      "html_sha256": "0bac973c47d47dccb2ea73a16997f8020986b187146f093c2ced0d4ae2f45876",
+      "html_bytes_identical": true,
+      "direct_file_launch_verified": false,
+      "scope": "原典branding・inline・smokeを実行。書体は公式固定版から新規取得。直接file://表示は未確認で、この再現試験は生成だけ。"
+    },
+    {
+      "repository": "gongnyang/awesome-html-scrolline-deck",
+      "method": "現配布ZIP全入力を新フォルダーへ展開し、新venvからReproduce.ps1を実行。原典固有の生成・編集経路を再実行。",
+      "pages": 6,
+      "zip_sha256": "59415e81d61e84df52abbe5b11ceb340d9193feb2b011f0dc504592df3c70b48",
+      "input_files_match_current_archive": true,
+      "run_log_sha256": "6d846bf9207f475a3057816f58518e939665cf89aaa8820a81a190d736aced97",
+      "output_review_status": "generated_awaiting_review",
+      "html_sha256": "12c264d15b8c7c26b02b08b29d21c044d0ab7b64862887d36cb7144d83c882e1",
+      "html_bytes_identical": true,
+      "direct_file_launch_verified": false,
+      "http_original_smoke": {
+        "stops": 6,
+        "errors": 0,
+        "empty": [],
+        "overlaps": 0,
+        "clipped": 0,
+        "tinyText": [],
+        "mediaPending": []
+      },
+      "scope": "原典Node固定lockの新規npm ci・plan・Vite build・HTTP smoke。6停止点。全体CIのWindowsパス3件未達は保持。"
     }
   ],
-  "scope": "12形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全209リポの再現確認へ読み替えない。SeaSlidesとslides_makerは実行後の文書追記差分を記録。Reactは現配布ZIP全入力とbyte一致。Magic Slideは全入力一致。画像→PPTXは固定manifest/分離済み画像のreplayで、新しい入力への自動抽出ではない。 原典43番の再現はSNS公開用データではなく、構成確認プレビュー。 CyberPPTは保存済み設計見本からの日本語派生再構築。全5枚の日本語文字と描画pixel一致を確認し、原典strict画像一致の未達は保持。",
-  "checked_at": "2026-10-13T21:08:56.101285+00:00"
+  "scope": "15形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全209リポの再現確認へ読み替えない。SeaSlidesとslides_makerは実行後の文書追記差分を記録。Reactは現配布ZIP全入力とbyte一致。Magic Slideは全入力一致。画像→PPTXは固定manifest/分離済み画像のreplayで、新しい入力への自動抽出ではない。 原典43番の再現はSNS公開用データではなく、構成確認プレビュー。 CyberPPTは保存済み設計見本からの日本語派生再構築。全5枚の日本語文字と描画pixel一致を確認し、原典strict画像一致の未達は保持。",
+  "checked_at": "2026-10-13T22:10:57.355177+00:00"
 }

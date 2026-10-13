@@ -1,0 +1,46 @@
+/* rail — 가로 레일 연표. 연감(almanac) 종이 위의 시간표: 상아 종이 + 먹 글자 + 시대마다 바뀌는 종이 색·잉크 한 가지.
+   다른 5개 컨셉이 전부 어두운 무대라 rail은 밝은 종이로 간다(덱 갤러리에서 한눈에 구별).
+   글꼴 로드는 덱 index.html의 <link>가 맡는다:
+     Google Fonts — Hahmlet 600·800 / JetBrains Mono 500·700
+     Pretendard v1.3.9 (cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css)
+   이 파일은 C11 변수만 정의한다. 시대 색(tone 0–4)은 같은 변수를 [data-tone] 범위에서 다시 정의(새 변수 이름 없음, 계약 요청 중). */
+
+.sl-concept-rail {
+  --sl-bg: #efe9dd;
+  --sl-fg: #17140f;
+  --sl-fg-muted: #6b6457;
+  --sl-accent: #8a5a1f;
+  --sl-accent-2: #17140f;
+  --sl-rule: #c9bfae;
+  --sl-scrim: rgba(239, 233, 221, 0.86);
+
+  --sl-font-display: 'Hahmlet', 'Noto Serif KR', serif;
+  --sl-font-text: 'Pretendard', 'Noto Sans KR', system-ui, sans-serif;
+  --sl-font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --sl-weight-display: 800;
+  --sl-weight-text: 500;
+
+  --sl-size-xl: calc(var(--px) * 168 * 1px);
+  --sl-size-l: calc(var(--px) * 84 * 1px);
+  --sl-size-m: calc(var(--px) * 40 * 1px);
+  --sl-size-s: calc(var(--px) * 26 * 1px);
+  --sl-size-caption: calc(var(--px) * 18 * 1px);
+
+  --sl-leading-display: 1.08;
+  --sl-leading-text: 1.5;
+  --sl-tracking-display: -0.02em;
+
+  --sl-perspective: 1800px;
+  --sl-gutter: calc(var(--px) * 120 * 1px);
+  --sl-caption-left: calc(var(--px) * 120 * 1px);
+  --sl-caption-bottom: calc(var(--px) * 40 * 1px);
+  --sl-caption-width: calc(var(--px) * 1200 * 1px);
+  --sl-radius: 0px;
+}
+
+/* 시대 tone. 종이 색은 명도 차 작게(같은 연감의 다른 장), 잉크(accent)만 확실히 다르게. */
+.sl-concept-rail [data-tone="0"] { --sl-bg: #efe9dd; --sl-accent: #8a5a1f; --sl-rule: #c9bfae; } /* 토대 2017–2019: 세피아 */
+.sl-concept-rail [data-tone="1"] { --sl-bg: #e6eaee; --sl-accent: #1f4fbf; --sl-rule: #b7c1cc; } /* 스케일 2020–2022: 코발트 */
+.sl-concept-rail [data-tone="2"] { --sl-bg: #f3e6d8; --sl-accent: #d2481b; --sl-rule: #d8c0a8; } /* 대중화 2023: 신호 주홍 */
+.sl-concept-rail [data-tone="3"] { --sl-bg: #e9e5ef; --sl-accent: #5b3fc4; --sl-rule: #c3bbd3; } /* 감각과 추론 2024: 보라 */
+.sl-concept-rail [data-tone="4"] { --sl-bg: #e2ece5; --sl-accent: #0e7a4b; --sl-rule: #b4c9ba; } /* 일하는 AI 2025–2026: 신호 녹색 */

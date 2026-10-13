@@ -1,0 +1,280 @@
+deck.py REFERENCE (print anytime: `deck.py docs` — no file needed)
+
+GOLDEN RULES
+- ALL slide indices are 0-BASED everywhere (slide 0 = first). Rendered images
+  are named slide-<0-based>.jpg to match.
+- Shapes are addressed by NATIVE id: "s12". Ids are stable — deleting a shape
+  never renumbers the others. Get ids from `inspect`. Exact shape NAME also
+  works if unique on the slide.
+- All positions/sizes are INCHES, measured from the slide's top-left.
+- Patches are ATOMIC: every op is validated first (all errors reported at
+  once, listing the slide's real shapes), then applied all-or-nothing.
+- After apply, the tool lints and reports only NEW/WORSENED geometry issues,
+  with the exact `fix` command to run. A `covered_by` report (text under a
+  picture) means the text RENDERS CLIPPED — treat it as real, not stylistic.
+
+THE EDIT LOOP
+  inspect --slide N  →  write patch  →  apply  →  fix --slides <touched>
+  →  render --slide <touched> (look at it!)  →  diff (optional sanity)
+
+  ONE-CALL POWERUP: `apply patch.json --in-place --fix --render img/` chains
+  apply + fix + render-of-touched-slides in a single call. fix/render remain
+  standalone subcommands — use them individually whenever you want.
+
+  ORIENTATION READS: `inspect --slide N --brief` = one line per shape (id,
+  type, geometry, font, text preview, issues). Use full JSON only when you
+  are about to write a patch and need exact paragraph formatting.
+
+PATCH FORMAT  {"ops":[ ... ]}  — ops run in order.
+
+set-text       {"op":"set-text","slide":3,"shape":"s12","text":["Line one","Line two"]}
+  - INHERITANCE: new paragraph i inherits ALL formatting of old paragraph i
+    (font, size, bold, color, bullet, level, alignment, spacing). If you pass
+    MORE paragraphs than existed, extras inherit from the LAST old paragraph
+    (so adding bullets to a list continues the list style).
+  - To CHANGE formatting, pass an object; your keys override the inherited:
+      {"text":"Heading","bold":true,"font_size":24,"font_name":"Inter",
+       "italic":false,"underline":false,"color":"D4A853","theme_color":"DARK_1",
+       "alignment":"CENTER",            // LEFT|CENTER|RIGHT|JUSTIFY
+       "bullet":true,"level":0,         // bullets ARE supported — never put
+                                        // "•" in the text; level needs bullet
+       "space_before":10,"space_after":6,"line_spacing":22}
+  - To REMOVE a bullet inherited from the old paragraph: {"text":"...","bullet":false}.
+  - VERTICAL centering: "alignment" is horizontal; to center text vertically in
+    its box add "anchor":"MIDDLE" (TOP|MIDDLE|BOTTOM) at the op level (next to
+    "slide"/"shape"), not inside a paragraph. Also a set-style key.
+  - MIXED FORMATTING inside one paragraph: pass "runs" instead of "text":
+      {"runs":[{"text":"We measured "},
+               {"text":"5x","bold":true,"color":"F8DE6E"},
+               {"text":" fewer tokens"}]}
+    Every run inherits the OLD paragraph's first-run font, then its own keys
+    override (per-run keys: bold, italic, underline, font_size, font_name,
+    color, theme_color, link). "link":"https://…" makes the run a hyperlink
+    (null/"" removes one); works on plain paragraph objects too. Paragraph
+    keys (alignment, bullet, level, spacing) still go on the paragraph
+    object, next to "runs".
+    A plain "text" paragraph still collapses mixed old runs to the first
+    run's format — use "runs" when you need to PRESERVE a mid-paragraph style
+    (inspect shows the current runs breakdown when formats differ).
+  - TABLES: target a cell with "cell":[row,col] (0-based).
+  - Keep text length comparable to the original or run `fix` after.
+
+swap-image     {"op":"swap-image","slide":4,"rid":"rId3","image":"/abs/new.png"}
+  - Target by "rid" (from inspect) or "shape":"s9". New image becomes its own
+    media part: other slides sharing the old media are NOT affected.
+  - "fit":"auto" (default) re-fits the frame, preserving aspect ratio, when it
+    differs >8% from the frame; "stretch" fills the frame; "contain" forces fit.
+  - A picture with a circular/rounded crop keeps that crop after the swap.
+  - GLOBAL: {"op":"swap-image","media":"image13.png","image":"/abs/new.png"}
+    (no slide/rid) overwrites that media file's bytes, so EVERY slide, master,
+    and layout showing it changes at once — THE way to swap a logo deck-wide.
+    Frames keep their geometry: supply art with the same aspect ratio.
+  - Cannot fix client data baked INTO pixels — that needs a new asset.
+
+replace-text   {"op":"replace-text","scope":"deck","from":"Globex","to":"Acme"}
+  - scope "deck" = every slide; "master" = slide masters + layouts (footers
+    live there); "slide" + "slide":N = one slide.
+  - Replaces within single runs. If the text is split across runs, the error
+    names the affected slides — use set-text on those shapes instead.
+  - Errors if zero occurrences (so a silent no-op can't pass review).
+
+replace-color  {"op":"replace-color","scope":"deck","from":"E8A33D","to":"F8DE6E"}
+  - The re-theme primitive: swaps one concrete color for another everywhere
+    in scope — fills, gradients, lines, text, effects. Same scopes as
+    replace-text. One op per palette mapping; a full re-theme is a handful
+    of ops in one atomic patch.
+  - Only literal (srgbClr) colors match. Theme-indexed colors (schemeClr)
+    are deliberately untouched — remap those once in the theme via xml.
+  - Errors if zero occurrences, and the error lists the colors actually
+    present (with counts) so the next patch can be exact.
+  - Colors inside IMAGES don't change (pixels aren't XML) — re-render and
+    look; swap-image any asset that carries the old palette.
+
+set-props      {"op":"set-props","title":"Q3 Review","author":"Acme"}
+  - Document metadata (File > Info): title, subject, author, keywords,
+    comments, category, last_modified_by. Strings; "" clears a field.
+    Current values appear in `inspect` (no --slide) under "props".
+
+set-slide      {"op":"set-slide","slide":3,"hidden":true,"background":"0F5258"}
+  - Slide-level properties. "hidden": true/false (hidden slides don't
+    present/render unless explicitly listed). "background" paints the
+    slide's own p:bg layer (under every shape): "RRGGBB",
+    {"gradient":{"colors":["A","B"],"angle":90}}, or {"image":"/abs/p.png"}.
+  - "transition": {"type":"fade"} sets how the slide ENTERS; "none" removes.
+    ONLY add transitions when the user explicitly asks for them — uninvited
+    or mixed transitions read as annoying, not polished. When asked,
+    default to ONE subtle type (fade) deck-wide.
+    Types: fade, cut, dissolve, push, wipe, split, cover, uncover, zoom.
+    Options: "speed" slow|med|fast; "advance_after" seconds (auto-advance;
+    click still advances unless "advance_on_click":false); per-type
+    direction "dir" — push/wipe: l r u d; cover/uncover: + ld lu rd ru;
+    split: "orient" horz|vert + "dir" in|out; zoom: "dir" in|out.
+    One op per slide; same dict on every slide for a uniform deck.
+    Transitions are MOTION — renders are static JPGs, so verify with
+    inspect ("_transition" per slide) or diff, not render.
+
+set-theme      {"op":"set-theme","colors":{"accent1":"BB7B19"},"fonts":{"major":"Georgia"}}
+  - Remaps the THEME: color slots dk1 lt1 dk2 lt2 accent1-6 hlink folHlink,
+    and major (headings) / minor (body) latin fonts. Every shape that uses
+    theme-indexed colors/fonts follows automatically — this is how
+    template decks are rebranded. "master":N targets one master (default
+    all). Literal hard-coded colors don't follow — that's replace-color;
+    a full rebrand is usually set-theme + a few replace-color ops.
+
+set-notes      {"op":"set-notes","slide":3,"notes":"plain text speaker notes"}
+move           {"op":"move","slide":3,"shape":"s12","to":[1.0,2.5]}     or "by":[dx,dy]
+resize         {"op":"resize","slide":3,"shape":"s12","size":[4.0,1.5]} or "scale":0.8
+set-style      {"op":"set-style","slide":3,"shape":"s12",...}
+  - Text: applies to ALL runs in the shape (and all table cells): font_size,
+    font_name, bold, italic, underline, color ("RRGGBB"). For per-paragraph
+    changes use set-text override objects; per-run, set-text "runs".
+  - Fill: "fill":"RRGGBB" = solid background; "fill":"none" = no fill
+    (hollow shape — only the outline paints).
+    "gradient":{"colors":["0F5258","4999A0"],"angle":90,"positions":[0,1]}
+    = two-stop linear gradient (replaces any existing fill; angle in degrees
+    counter-clockwise from left-to-right; positions optional, 0-1).
+  - Line/border: "line_color":"RRGGBB", "line_width":1.5 (pt),
+    "line_dash":"dash" (solid|dash|dot|dash_dot|dash_dot_dot|long_dash|
+    long_dash_dot|round_dot|square_dot), "line":"none" removes the outline.
+    Works on any shape incl. pictures (frame border).
+  - "rotation":45 = degrees clockwise (inspect reports it; pos/size stay the
+    unrotated bounding box).
+  - "insets":[l,t,r,b] = text-frame internal margins in INCHES (PowerPoint
+    defaults are 0.1/0.05/0.1/0.05, NOT zero — set [0,0,0,0] for flush text).
+  - "anchor":"MIDDLE" = vertical text anchor within the box: TOP|MIDDLE|BOTTOM
+    (the default is TOP). This is how text gets centered in a box taller than
+    the text — alignment (set-text) is HORIZONTAL, anchor is VERTICAL. Applies
+    to all table cells too. inspect reports it when it is not the TOP default.
+  - "adjustments":[0.12] = shape adjustment handles (e.g. roundRect corner
+    radius as a fraction of the smaller dimension, max 0.5).
+  - "shadow":false = remove the theme's inherited drop shadow (new autoshapes
+    often carry one); true restores inheritance.
+  - "alt_text":"describe the image" = accessibility description (any shape;
+    "" removes). inspect shows it.
+delete         {"op":"delete","slide":3,"shape":"s12"}   (deleting a GROUP deletes its children)
+duplicate      {"op":"duplicate","slide":3,"shape":"s12","offset":[0,1.2],"text":["New label"]}
+  - THE way to scale a styled element ("three boxes → four"). The copy keeps
+    all styling/images, gets fresh ids, lands offset inches from the original;
+    "text" then rewrites it via set-text semantics. "at":[l,t] = absolute.
+copy-shape     {"op":"copy-shape","from_slide":8,"shape":"s12","slide":3,"at":[1.0,2.0],"text":["…"]}
+  - Borrow a styled shape from ANOTHER slide; images/hyperlinks re-homed.
+reorder        {"op":"reorder","slide":3,"shape":"s12","z":"front"}   front|back|forward|backward
+  - Z-order. inspect lists shapes back-to-front (first = bottom layer).
+
+CREATE OPS (prefer duplicate/copy-shape when a styled donor exists — new
+shapes start from PowerPoint defaults, not the deck's design language.
+Designing a whole slide from scratch? html2patch.py compiles an HTML/CSS
+file into a patch of these ops: write the slide as HTML, get measured
+add-shape/add-picture/add-table ops back. Needs playwright.)
+add-shape      {"op":"add-shape","slide":3,"kind":"textbox","at":[1.0,2.0],"size":[4.0,1.5],
+                "text":["Label"],"fill":"0B3D3A","font_size":18,"rotation":0,"name":"my-box"}
+  - kind: textbox | rect | rounded_rect | ellipse | any MSO_SHAPE name
+    (CHEVRON, PENTAGON, …) | line (straight connector, takes "from":[x,y] +
+    "to":[x,y] instead of at/size).
+  - Accepts every set-style key in the same op (fill, gradient, line_color,
+    line_width, line_dash, font_*, color, rotation, insets, adjustments) plus
+    "text" (set-text semantics — strings or {"text":…, formatting} objects or
+    "runs").
+  - Give it a "name" and LATER ops in the same patch can target that name
+    (validation knows it's coming). New shape ids appear in the apply log.
+add-picture    {"op":"add-picture","slide":3,"image":"/abs/img.png","at":[1.0,2.0],"width":4.0}
+  - Give "width" OR "height" to keep aspect (preferred), "size":[w,h] to force
+    both, neither = native size.
+  - "crop":[l,t,r,b] = fractions of the source trimmed from each edge (this is
+    how you fill a box without distortion: size to the box + crop the excess).
+add-table      {"op":"add-table","slide":3,"at":[0.5,1.5],"size":[9.0,3.0],
+                "rows":[["Header A","Header B"],["1","2"]],"font_size":14}
+  - Optional: "name" (target it later in the same patch), "color":"RRGGBB"
+    (all text), "fill":"RRGGBB"|"none" (all cells) or "fills":[[...]] row-major
+    per-cell grid, "col_widths":[4.5,2.25,2.25] (inches), "first_row":false +
+    "banding":false to neutralize the theme's banded table style.
+  - set-text with "cell":[row,col] styles individual cells afterwards; its
+    paragraph objects take "bullet":true (•) or "bullet":"number" (1. 2. 3.).
+add-slide      {"op":"add-slide","layout":"Blank","at":5}
+  - layout = name (exact, then substring) or 0-based index across all masters;
+    omit it for the blankest layout. Omit "at" to append. Later ops in the
+    same patch use POST-insertion indices; prefer adding slides at the end or
+    in a separate patch to keep indices easy to reason about.
+
+TABLE STRUCTURE (tables without merged cells only — merged → xml escape hatch)
+add-row        {"op":"add-row","slide":3,"shape":"s12","cells":["a","b"],"copy":0,"at":2}
+  - Clones row "copy" (default: last) with all its formatting, inserts at
+    "at" (default: append), then writes "cells" via set-text inheritance.
+delete-row     {"op":"delete-row","slide":3,"shape":"s12","row":2}      (negative = from end)
+add-col        {"op":"add-col","slide":3,"shape":"s12","cells":["h","1"],"copy":-1,"at":1}
+  - Same semantics column-wise; all column widths rescale so the table keeps
+    its overall width. "cells" runs top-to-bottom (one per row).
+delete-col     {"op":"delete-col","slide":3,"shape":"s12","col":1}      (widths rescale back)
+
+FIX (deterministic repair — run after every apply)
+  fix --slides 3,7 --in-place        # ALWAYS scope to slides you touched
+  - Text overflow: grows the box if free space below, else shrinks fonts
+    (floor: 60% of original and 10pt). Off-slide TEXT: nudged back.
+  - NEVER auto-moves pictures (off-slide may be intentional bleed) and never
+    auto-resolves overlaps — those come back as residue with a suggested op.
+  - Residue = what still needs judgment. It is honest: an action that didn't
+    actually resolve the measured issue is reported as residue, not success.
+  - Why scoping: overflow is ESTIMATED with fallback fonts when the deck's
+    fonts aren't installed; untouched template slides have known false
+    positives. Never `--all` a template-derived deck.
+
+INSPECT FIELDS
+  pos/size [in], type, group (parent group id), placeholder,
+  paragraphs (text + non-default formatting — what set-text will inherit;
+    a "runs" breakdown appears when a paragraph mixes run formats;
+    "link" appears on hyperlinked runs),
+  rid + media (pictures), rows (tables), fill / fill_gradient / line (when set),
+  alt_text (when set), "_fonts" + "_notes" + "_transition" per slide,
+  deck-level: "props" (document metadata), "hidden_slides", issues:
+    frame_overflow_bottom  text taller than its box (inches over)
+    slide_overflow_right/bottom  shape sticks off the slide
+    overlaps  {other_sid: sq inches}  (text-vs-text only)
+    covered_by  {picture_sid: sq inches}  text drawn UNDER a picture that is
+      above it in z-order — including its estimated overflow region. This
+      text renders clipped/hidden; it is almost never a false positive.
+    misaligned  an edge sitting a hair (0.03"-0.15") off a gridline that >=3
+      other shapes share — the near-miss that reads as sloppy ("3px short of
+      the card edge"). The grid is discovered from the deck, not configured.
+      ADVISORY: intentional asymmetry is real, so this never fails a build and
+      only the load-bearing edge counts (a left-aligned box's ragged right
+      edge is ignored). Exact matches and far gaps are silent. On apply, only
+      a NEWLY introduced near-miss is reported. To resolve: move/resize so the
+      edge lands on the named gridline coordinate.
+  --issues = only problem shapes; --master = masters/layouts too (footers!)
+
+DECK STRUCTURE (subcommands, not patch ops)
+  slides 0,3,3,5 -o out.pptx   keep only these slides, in this order, 0-based;
+    a repeated index duplicates that slide (styling + images preserved).
+  merge module.pptx --slides 0,2 --at 12 --layout 5 -o out.pptx
+    copy slides from another deck; they re-attach to THIS deck's layout
+    (--list-layouts to choose) so they inherit its master/footer/theme.
+    Charts/OLE relationships are not copied (warned, handle manually).
+
+RENDER / DIFF / XML
+  render -o dir [--slide 3,7] [--dpi 110] [--crop l,t,w,h --scale 2]
+    crop is in INCHES (matches inspect coords); writes slide-<N>-crop.jpg.
+    Hidden slides are skipped in full renders (warned), rendered when explicit.
+  diff other.pptx   text/geometry/media/notes changelog — verify without rendering
+  xml get --slide 5 -o s5.xml   pretty-printed part XML (escape hatch);
+  xml set s5.xml --slide 5 -o out.pptx   parse-checked + lint-checked write-back.
+  Use xml ONLY when no op above expresses the change.
+
+OUT OF SCOPE (use the xml escape hatch, or do it in PowerPoint)
+  Creating/editing native charts, shape ANIMATIONS (slide transitions ARE
+  covered — set-slide "transition"), embedded video/OLE, merged table cells.
+  swap-image DOES handle replacing a chart rendered as a picture; add-table
+  covers most "chart as table" needs.
+
+RECIPES
+  Rebrand a deck:      replace-text scope master (footer) + scope deck (mentions)
+  Re-theme a deck:     inspect the palette (xml get + grep srgbClr, or render),
+                       then ONE patch of replace-color ops — one per mapping,
+                       deck + master scope; render and check images for
+                       old-palette pixels baked into pictures
+  Scale a 3-item list to 5: two duplicates with offsets + text, then fix
+  Make text fit:       prefer set-text with shorter copy; else set-style
+                       font_size; else resize; fix handles the remainder
+  Match fonts across merged slides: set-style font_name per shape
+  Borrow a styled card: copy-shape from the slide that has it, then set-text
+
+

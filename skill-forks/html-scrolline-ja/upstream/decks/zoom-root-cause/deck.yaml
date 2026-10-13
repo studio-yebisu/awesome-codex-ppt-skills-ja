@@ -1,0 +1,270 @@
+# zoom-root-cause — 문제 진단 보고: 3분기 매출 하락의 진짜 원인
+# 가상 회사 「누리살림」(생활용품 D2C) 표본. 모든 수치는 표본이며 서로 맞물리게 설계했다(docs/concepts.md).
+# 계약 확장 전제(10-08 메인 채택, W2 병합 뒤 반영): ① BeatInstance.anchor(part, index) ② chart.title·chart.note ③ chart 음수 값
+id: zoom-root-cause
+title: "3분기 매출 진단: 숫자에서 버튼까지"
+lang: ko
+concept: zoom
+sample: true
+sources: []
+timing:
+  unit: 0.6
+  hold: 0.7
+  overlap: 0.15
+export:
+  secondsPerUnit: 0.5
+
+beats:
+  # ── 0. 결론 먼저 ─────────────────────────────────────────
+  - id: b-verdict
+    type: text
+    size: l
+    lines:
+      - "3분기 매출이 12% 줄었다."
+      - "원인은 시장이 아니라 결제 버튼 하나였다."
+    text: "3분기 매출이 12% 줄었다. 원인은 시장이 아니라 결제 버튼 하나였다."
+    emphasis: ["결제", "버튼", "하나였다."]
+    place: { slot: full }
+    enter: { move: focus-pull, params: { duration: 1.2 } }
+    exit: { move: blur-drop }
+    exportHold: 2.4
+
+  # ── 1. 파고들기: 전체 → 지역 → 채널 → 여정 → 화면 → 사용 장면 → 버튼 ──
+  - id: b-total
+    type: number
+    value: 105.6
+    from: 120
+    format: { suffix: "억 원", decimals: 1 }
+    label: "3분기 매출. 작년 같은 분기 120억 원보다 14.4억 원 적다."
+    place: { slot: full }
+    enter: { move: count-roll, params: { duration: 1.6 } }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 0, maxLevel: 0, appearAfter: 0.4 } }
+    steps:
+      - { name: aim, move: port-aim, params: { part: value, label: "−14.4억", labelSide: top } }
+    link: { move: zoom-dive, params: { fromPart: value, toPart: plot, k: 8, duration: 2.6, hudParts: ["label", "source"] } }
+
+  - id: b-region
+    type: chart
+    kind: bar
+    title: "줄어든 곳은 수도권 하나다"
+    dek: "수도권 66.0억 → 48.2억 원. 나머지 세 권역은 6~8% 늘었다."
+    categories: ["수도권", "영남", "호남·충청", "강원·제주"]
+    series:
+      - { name: "작년 대비 증감", values: [-17.8, 1.4, 1.0, 1.0] }
+    unit: "억 원"
+    highlight: { index: 0 }
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 1, maxLevel: 1, appearAfter: 2.5 } }
+    steps:
+      - { name: aim, move: port-aim, params: { part: mark, index: 0, label: "−27%", labelSide: top } }
+    link: { move: zoom-dive, params: { fromPart: mark, fromIndex: 0, toPart: plot, duration: 2.4 } }
+    repeat: intended
+
+  - id: b-channel
+    type: chart
+    kind: bar
+    orient: h
+    title: "수도권에서 빠진 17.8억 원은 전부 앱에서 나왔다"
+    dek: "앱 30.0억 → 12.2억 원. 웹과 매장은 작년과 거의 같다."
+    categories: ["앱", "웹", "매장"]
+    series:
+      - { name: "작년 대비 증감", values: [-17.8, -0.4, 0.4] }
+    unit: "억 원"
+    highlight: { index: 0 }
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 2, maxLevel: 2, appearAfter: 2.3 } }
+    steps:
+      - { name: aim, move: port-aim, params: { part: mark, index: 0, label: "−59%", labelSide: top } }
+    link: { move: zoom-dive, params: { fromPart: mark, fromIndex: 0, toPart: plot, duration: 2.4 } }
+    repeat: intended
+
+  - id: b-journey
+    type: chart
+    kind: bar
+    title: "앱 결제 여정에서 손님이 사라진 단계는 하나뿐이다"
+    dek: "배송 시간을 고른 뒤 결제 버튼을 누른 손님: 작년 74%, 올해 21%. 앞뒤 단계는 그대로다."
+    categories: ["장바구니 → 배송 선택", "배송 선택 → 결제 버튼", "결제 버튼 → 결제 완료"]
+    series:
+      - { name: "통과율, 작년 대비", values: [-1, -53, -1] }
+    unit: "%p"
+    highlight: { index: 1 }
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 3, maxLevel: 3, appearAfter: 2.3 } }
+    steps:
+      - { name: aim, move: port-aim, params: { part: mark, index: 1, label: "74% → 21%", labelSide: top } }
+    link: { move: zoom-dive, params: { fromPart: mark, fromIndex: 1, toPart: item, frameAll: true, duration: 2.4 } }
+    repeat: intended
+
+  - id: b-screens
+    type: compare
+    items:
+      - { label: "앱 5.1 · 7월 7일까지", text: "결제 버튼이 첫 화면 안에 있다", media: assets/screens/v51.webp }
+      - { label: "앱 5.2 · 7월 8일부터", text: "배송 시간 목록 8칸이 결제 버튼을 첫 화면 밖으로 밀어냈다", media: assets/screens/v52.webp }
+    verdict: "새벽배송 주문 화면에만 생긴 일이다. 새벽배송은 수도권에서만 한다."
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 4, maxLevel: 4, appearAfter: 2.3 } }
+    steps:
+      - { name: fold, move: rule-mark, params: { part: item, y: 0.78, label: "첫 화면 끝", below: true } }
+      - { name: aim, move: port-aim, params: { part: item, index: 1, box: { x: 0, y: 0, w: 1, h: 0.78 }, label: "5.2", labelSide: right } }
+    link: { move: zoom-dive, params: { fromPart: item, fromIndex: 1, fromBox: { x: 0, y: 0, w: 1, h: 0.78 }, toPart: frame, k: 3, duration: 2.2, hudParts: ["verdict", "label", "text", "divider"] } }
+    exportHold: 2.6
+    repeat: intended
+
+  - id: b-replay
+    type: video
+    mode: scrub
+    src: assets/video/replay-52.mp4
+    poster: assets/video/replay-52/poster.webp
+    frames: assets/video/replay-52/frames.json
+    alt: "앱 5.2 결제 화면에서 배송 시간을 고르자 시간 목록이 펼쳐지고, 결제 버튼이 화면 아래로 밀려나 손가락이 두 번 스크롤한 뒤에야 버튼이 보이는 장면"
+    caption: "배송 시간을 고르면 목록이 펼쳐지고, 결제 버튼은 화면 아래로 내려간다"
+    place: { slot: full }
+    enter: { move: video-scrub, params: { duration: 3.6, stops: [{ name: list-open, at: 0.42 }] } }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 5, maxLevel: 5, appearAfter: 2.1 } }
+    steps:
+      - { name: aim, move: port-aim, params: { part: media, box: { x: 0.06, y: 0.89, w: 0.88, h: 0.08 }, label: "결제하기", labelSide: right } }
+    link: { move: zoom-dive, params: { fromPart: media, fromBox: { x: 0.06, y: 0.89, w: 0.88, h: 0.08 }, toPart: value, duration: 2.0, hudParts: ["caption"], toHudParts: ["label", "source"] } }
+    exportHold: 2.0
+    repeat: intended
+
+  - id: b-button
+    type: number
+    value: 212
+    from: 212
+    format: { suffix: "px", decimals: 0 }
+    label: "결제 버튼이 첫 화면 끝에서 내려간 거리 · 360×640 화면"
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 6, maxLevel: 6, appearAfter: 1.9 } }
+    steps:
+      - { name: fix, move: strike-swap, params: { to: 0, decimals: 0, suffix: "px", label: "5.2.1: 배송 시간을 골라도 결제 버튼은 화면 아래에 붙어 있다" } }
+    link: { move: zoom-surface, params: { fromPart: value, toPart: media, toBox: { x: 0.06, y: 0.89, w: 0.88, h: 0.08 }, duration: 2.0, hudParts: ["label", "source"] } }
+    exportHold: 2.4
+
+  # ── 2. 빠져나오기: 해법이 각 층에서 어떻게 보이는가 ─────────────
+  - id: b-fix
+    type: video
+    mode: loop
+    src: assets/video/fix-521.mp4
+    poster: assets/video/fix-521-poster.webp
+    alt: "앱 5.2.1 시범판 결제 화면에서 배송 시간 목록을 펼쳐도 결제 버튼이 화면 아래에 고정되어 보이는 장면"
+    caption: "5.2.1 시범판. 목록을 펼쳐도 결제 버튼이 그 자리에 있다"
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 5, maxLevel: 6, appearAfter: 1.9 } }
+    link: { move: zoom-surface, params: { fromPart: frame, toPart: mark, toIndex: 1, duration: 2.2 } }
+    exportHold: 3.2
+    repeat: intended
+
+  - id: b-journey-after
+    type: chart
+    kind: bar
+    title: "시범판에서는 결제 버튼까지 가는 손님이 71%로 돌아왔다"
+    dek: "9월 16~29일, 수도권 앱 사용자 10%에게 5.2.1 시범 배포. 작년 74%와 거의 같다."
+    categories: ["장바구니 → 배송 선택", "배송 선택 → 결제 버튼", "결제 버튼 → 결제 완료"]
+    series:
+      - { name: "통과율, 작년 대비", values: [-1, -3, -1] }
+    unit: "%p"
+    domain: { min: -53 }
+    highlight: { index: 1 }
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 3, maxLevel: 6, appearAfter: 2.1 } }
+    link: { move: zoom-surface, params: { fromPart: plot, toPart: mark, toIndex: 0, duration: 2.0, ease: power1.in, keepRing: false } }
+    repeat: intended
+
+  - id: b-channel-pass
+    type: chart
+    kind: bar
+    orient: h
+    categories: ["앱", "웹", "매장"]
+    series:
+      - { name: "작년 대비 증감", values: [-17.8, -0.4, 0.4] }
+    unit: "억 원"
+    highlight: { index: 0 }
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    stop: false
+    hold: 0
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 2, maxLevel: 6, appearAfter: 1.9 } }
+    link: { move: zoom-surface, params: { fromPart: plot, toPart: mark, toIndex: 0, duration: 1.3, ease: none, keepRing: false } }
+    repeat: intended
+
+  - id: b-region-pass
+    type: chart
+    kind: bar
+    categories: ["수도권", "영남", "호남·충청", "강원·제주"]
+    series:
+      - { name: "작년 대비 증감", values: [-17.8, 1.4, 1.0, 1.0] }
+    unit: "억 원"
+    highlight: { index: 0 }
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    stop: false
+    hold: 0
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 1, maxLevel: 6, appearAfter: 1.2 } }
+    link: { move: zoom-surface, params: { fromPart: plot, toPart: value, duration: 1.3, ease: power1.out, keepRing: true } }
+    repeat: intended
+
+  - id: b-total-after
+    type: number
+    value: 105.6
+    from: 105.6
+    format: { suffix: "억 원", decimals: 1 }
+    label: "3분기 매출. 작년 같은 분기 120억 원보다 14.4억 원 적다."
+    place: { slot: full }
+    enter: { move: "engine:none" }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 0, maxLevel: 6, appearAfter: 1.2 } }
+    steps:
+      - { name: regain, move: strike-swap, params: { to: 123.4, decimals: 1, suffix: "억 원", label: "앱에서 빠진 17.8억 원을 되찾았다면 3분기 매출은 123.4억 원. 작년보다 2.8% 많다." } }
+    exit: { move: blur-drop }
+    exportHold: 3.0
+    repeat: intended
+
+  # ── 3. 결론과 결정 ────────────────────────────────────────
+  - id: b-close
+    type: text
+    size: l
+    lines:
+      - "시장은 식지 않았다."
+      - "버튼 하나를 제자리에 돌려놓으면 된다."
+    text: "시장은 식지 않았다. 버튼 하나를 제자리에 돌려놓으면 된다."
+    emphasis: ["버튼", "하나를"]
+    place: { slot: full }
+    enter: { move: focus-pull }
+    exit: { move: blur-drop }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 0, maxLevel: 6, appearAfter: 0.65 } }
+    repeat: intended
+
+  - id: b-asks
+    type: text
+    size: m
+    lines:
+      - "10월 15일까지 결정할 세 가지"
+      - "5.2.1 전체 배포 · 10월 15일"
+      - "결제 단계 통과율 일일 경보 · 60% 아래로 내려가면 담당자 호출"
+      - "배포 전 360px 화면에서 결제 동선 점검을 필수 절차로"
+    text: "10월 15일까지 결정할 세 가지 5.2.1 전체 배포 · 10월 15일 결제 단계 통과율 일일 경보 · 60% 아래로 내려가면 담당자 호출 배포 전 360px 화면에서 결제 동선 점검을 필수 절차로"
+    place: { slot: full }
+    enter: { move: ladder-callout, params: { rungs: [0, 6, 3, 4], stagger: 0.2, duration: 2.0 } }
+    ambient:
+      - { move: depth-ladder, params: { rungs: ["3분기 매출", "지역", "수도권 채널", "앱 결제 여정", "결제 화면", "사용 장면", "결제 버튼"], level: 0, maxLevel: 6, appearAfter: 0.65 } }
+    exportHold: 4.0
+    repeat: intended

@@ -1,0 +1,111 @@
+{
+  "id": "zoom",
+  "name": "무한 줌 드릴다운",
+  "axis": "z",
+  "camera": {
+    "mode": "zoom",
+    "perspective": 2000
+  },
+  "timing": {
+    "unit": 0.6,
+    "hold": 0.7,
+    "overlap": 0.15
+  },
+  "eases": {
+    "in": "power2.in",
+    "out": "power3.out",
+    "inout": "sine.inOut",
+    "scrub": "none",
+    "dive": "sine.inOut",
+    "land": "expo.out"
+  },
+  "beats": {
+    "allow": [
+      "text",
+      "number",
+      "chart",
+      "compare",
+      "photo",
+      "video"
+    ]
+  },
+  "moves": {
+    "allow": [
+      "zoom-dive",
+      "zoom-surface",
+      "depth-ladder",
+      "ladder-callout",
+      "port-aim",
+      "focus-pull",
+      "blur-drop",
+      "count-roll",
+      "strike-swap",
+      "rule-mark",
+      "video-scrub",
+      "engine:none",
+      "engine:fade-in",
+      "engine:fade-out",
+      "engine:crossfade"
+    ],
+    "signature": [
+      "zoom-dive",
+      "zoom-surface",
+      "depth-ladder"
+    ]
+  },
+  "defaults": {
+    "enter": "focus-pull",
+    "exit": "blur-drop",
+    "byType": {
+      "chart": {
+        "enter": "engine:none",
+        "link": "zoom-dive"
+      },
+      "compare": {
+        "enter": "engine:none",
+        "link": "zoom-dive"
+      },
+      "number": {
+        "enter": "count-roll"
+      },
+      "video": {
+        "enter": "engine:none"
+      }
+    }
+  },
+  "slots": {
+    "center": {
+      "x": 0.5,
+      "y": 0.53
+    },
+    "left": {
+      "x": 0.3,
+      "y": 0.53
+    },
+    "right": {
+      "x": 0.7,
+      "y": 0.53
+    },
+    "top": {
+      "x": 0.5,
+      "y": 0.2
+    }
+  },
+  "tokens": {
+    "blurMax": 8,
+    "stagger": 0.05,
+    "dimOthers": 0.22,
+    "hudRise": 16,
+    "ringStroke": 2,
+    "ringStart": 420,
+    "ringPad": 12,
+    "cornerLen": 28,
+    "diveFill": 0.86,
+    "diveKMax": 40,
+    "ladderX": 64,
+    "ladderTop": 300,
+    "ladderStep": 64,
+    "depthNear": 1.0,
+    "depthFar": 0.55
+  }
+}

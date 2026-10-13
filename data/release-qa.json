@@ -1,11 +1,11 @@
 {
   "status": "passed",
   "catalog_count": 209,
-  "produced_repository_count": 26,
-  "case_count": 29,
-  "slide_count": 175,
-  "checked_case_count": 29,
-  "passed_checks": 176,
+  "produced_repository_count": 29,
+  "case_count": 32,
+  "slide_count": 194,
+  "checked_case_count": 32,
+  "passed_checks": 194,
   "issues": [],
   "warnings": [
     {
@@ -31,6 +31,18 @@
     {
       "check": "cyberppt:language",
       "detail": "5 slides omit ja-JP run locale; Japanese text integrity checked, rendered glyph review remains mandatory in QA"
+    },
+    {
+      "check": "hands-on-deck:language",
+      "detail": "5 slides omit ja-JP run locale; Japanese text integrity checked, rendered glyph review remains mandatory in QA"
+    },
+    {
+      "check": "slide-writer:original-gate",
+      "detail": "Direct local-file launch was blocked and remains unverified. Original template/CLI and HTTP browser review passed as a Japanese fork."
+    },
+    {
+      "check": "html-scrolline:original-gate",
+      "detail": "Original full CI retains three Windows-path failures; scoped core tests, HTTP smoke and player controls passed."
     }
   ],
   "scope": "Read-only integrity, provenance and recorded review audit. Does not synthesize missing evidence, assess artistic quality or approve publication."

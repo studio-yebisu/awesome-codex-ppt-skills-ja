@@ -1,0 +1,277 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>html,body,[data-composition-id],canvas{margin:0;width:100%;height:100%;overflow:hidden;background:#050506}canvas{display:block}</style>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.181.2/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.181.2/examples/jsm/"}}</script>
+</head><body>
+<div data-composition-id="minute-explode" data-no-timeline data-width="1920" data-height="1080" data-duration="4"><canvas id="three-layer"></canvas></div>
+<script type="module">
+import * as THREE from 'three';
+import { RectAreaLightUniformsLib } from 'three/addons/lights/RectAreaLightUniformsLib.js';
+import { createMinute, END_STATE } from './scene.js';
+import { frameAt, stateAt } from './timeline.js';
+
+RectAreaLightUniformsLib.init();
+const DEG = Math.PI / 180;
+const W = 1920, H = 1080;
+
+// scene.js is the approved turntable scene and stays untouched. The explode
+// rig attaches to the scene the first time it is rendered: it adds interior
+// detail that the closed product hides, and extra lights that start at zero,
+// so frame 1 is the turntable's last frame.
+function seeded(seed) {
+  let a = seed >>> 0;
+  return () => { a = (a + 0x6d2b79f5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+
+// Seamless heather knit for the lifted top: wales read as fine ribs and the
+// melange as soft mottling once the plate is seen from above. The shared tile
+// has visible seams that alias into stripes at this framing.
+function knitTexture() {
+  const N = 512, c = document.createElement('canvas'); c.width = c.height = N;
+  const g = c.getContext('2d'), rnd = seeded(11);
+  g.fillStyle = '#4a4c51'; g.fillRect(0, 0, N, N);
+  const wrap = (fn) => { for (const dx of [-N, 0, N]) for (const dy of [-N, 0, N]) fn(dx, dy); };
+  for (let i = 0; i < 260; i += 1) {
+    const x = rnd() * N, y = rnd() * N, r = 10 + rnd() * 46, v = rnd() < 0.5 ? 0 : 255, a = 0.03 + rnd() * 0.05;
+    wrap((dx, dy) => { const gr = g.createRadialGradient(x + dx, y + dy, 0, x + dx, y + dy, r); gr.addColorStop(0, `rgba(${v},${v},${v},${a})`); gr.addColorStop(1, `rgba(${v},${v},${v},0)`); g.fillStyle = gr; g.fillRect(x + dx - r, y + dy - r, r * 2, r * 2); });
+  }
+  const P = 16;
+  for (let y = 0; y < N; y += P / 2) for (let x = 0; x < N; x += P) {
+    const lift = rnd() * 40 - 20, base = 120 + lift;
+    wrap((dx, dy) => {
+      g.strokeStyle = `rgba(${base + 40},${base + 42},${base + 46},0.45)`; g.lineWidth = 3.2;
+      g.beginPath(); g.moveTo(x + dx + 2, y + dy); g.lineTo(x + dx + P / 2, y + dy + P / 2 + 1); g.lineTo(x + dx + P - 2, y + dy); g.stroke();
+      g.strokeStyle = 'rgba(0,0,0,0.75)'; g.lineWidth = 2;
+      g.beginPath(); g.moveTo(x + dx + P / 2, y + dy - 1); g.lineTo(x + dx + P / 2, y + dy + P / 2 + 1); g.stroke();
+    });
+  }
+  for (let i = 0; i < 2400; i += 1) {
+    const x = rnd() * N, y = rnd() * N, a = rnd() * Math.PI, l = 2 + rnd() * 6, v = rnd() < 0.5 ? 20 : 210;
+    g.strokeStyle = `rgba(${v},${v},${v},0.18)`; g.lineWidth = 0.7;
+    wrap((dx, dy) => { g.beginPath(); g.moveTo(x + dx, y + dy); g.lineTo(x + dx + Math.cos(a) * l, y + dy + Math.sin(a) * l); g.stroke(); });
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.colorSpace = THREE.SRGBColorSpace; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = 8;
+  // Normal map from the same canvas luminance (wrapped Sobel), so the knit catches light.
+  const src = g.getImageData(0, 0, N, N).data, out = g.createImageData(N, N), d = out.data;
+  const lum = (x, y) => src[(((y + N) % N) * N + ((x + N) % N)) * 4] / 255;
+  for (let y = 0; y < N; y += 1) for (let x = 0; x < N; x += 1) {
+    const dx = (lum(x + 1, y) - lum(x - 1, y)) * 2.2, dy = (lum(x, y + 1) - lum(x, y - 1)) * 2.2;
+    const l = Math.hypot(dx, dy, 1), i = (y * N + x) * 4;
+    d[i] = (-dx / l * 0.5 + 0.5) * 255; d[i + 1] = (dy / l * 0.5 + 0.5) * 255; d[i + 2] = (1 / l * 0.5 + 0.5) * 255; d[i + 3] = 255;
+  }
+  const nc = document.createElement('canvas'); nc.width = nc.height = N; nc.getContext('2d').putImageData(out, 0, 0);
+  const n = new THREE.CanvasTexture(nc);
+  n.wrapS = n.wrapT = THREE.RepeatWrapping; n.anisotropy = 8;
+  return { map: t, normal: n };
+}
+
+// Blend the shared fabric map toward the knit by uKnit (0 at frame 1 = unchanged).
+function addKnit(material, knit, repeat) {
+  const uniforms = { uKnit: { value: 0 }, uKnitMap: { value: knit.map }, uKnitNormal: { value: knit.normal }, uKnitRepeat: { value: repeat } };
+  material.onBeforeCompile = (shader) => {
+    Object.assign(shader.uniforms, uniforms);
+    shader.fragmentShader = shader.fragmentShader
+      .replace('#include <map_pars_fragment>', '#include <map_pars_fragment>\nuniform float uKnit; uniform sampler2D uKnitMap; uniform sampler2D uKnitNormal; uniform float uKnitRepeat;')
+      .replace('#include <normal_fragment_maps>', THREE.ShaderChunk.normal_fragment_maps.replace('vec3 mapN = texture2D( normalMap, vNormalMapUv ).xyz * 2.0 - 1.0;', 'vec3 mapN = mix( texture2D( normalMap, vNormalMapUv ).xyz, texture2D( uKnitNormal, vMapUv * uKnitRepeat ).xyz, uKnit ) * 2.0 - 1.0;'))
+      .replace('#include <map_fragment>', `#ifdef USE_MAP
+  vec4 sampledDiffuseColor = texture2D( map, vMapUv );
+  vec4 knitColor = texture2D( uKnitMap, vMapUv * uKnitRepeat );
+  sampledDiffuseColor = mix( sampledDiffuseColor, knitColor, uKnit );
+  diffuseColor *= sampledDiffuseColor;
+#endif`);
+  };
+  material.customProgramCacheKey = () => 'minute-knit';
+  material.needsUpdate = true;
+  return uniforms.uKnit;
+}
+
+function buildRig(scene) {
+  const product = scene.children.find((c) => c.isGroup);
+  const layers = product.children;
+  const [rim, key] = scene.children.filter((c) => c.isRectAreaLight);
+  const fill = scene.children.find((c) => c.isDirectionalLight);
+  const base = { rim: rim.intensity, key: key.intensity, fill: fill.intensity };
+
+  const solder = new THREE.MeshPhysicalMaterial({ color: 0x062a14, roughness: 0.8, metalness: 0, specularIntensity: 0.12, envMapIntensity: 0.1 });
+  const pinGold = new THREE.MeshStandardMaterial({ color: 0xe0b25a, metalness: 1, roughness: 0.24, envMapIntensity: 3 });
+  const nickel = new THREE.MeshPhysicalMaterial({ color: 0xaeb2b8, metalness: 0.8, roughness: 0.3, envMapIntensity: 3 });
+  const ceramic = new THREE.MeshStandardMaterial({ color: 0x7d6a52, roughness: 0.55 });
+  const resin = new THREE.MeshStandardMaterial({ color: 0x131417, metalness: 0.1, roughness: 0.4 });
+  const substrate = new THREE.MeshStandardMaterial({ color: 0x1a2620, roughness: 0.5 });
+  const shell = new THREE.MeshStandardMaterial({ color: 0x0a0b0d, metalness: 0.3, roughness: 0.75, side: THREE.DoubleSide });
+  const box = (w, h, d, mat, x, y, z, parent) => { const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat); m.position.set(x, y, z); parent.add(m); return m; };
+
+  // Passives in tidy aligned clusters (how a real board is laid out), not scattered noise.
+  function cluster(parent, rnd, cx, cy, zTop, cols, rows, angle) {
+    const g = new THREE.Group(); g.position.set(cx, cy, 0); g.rotation.z = angle; parent.add(g);
+    const big = rnd() < 0.35;
+    const w = big ? 2.0 : 1.2, h = big ? 1.25 : 0.65, d = big ? 0.9 : 0.5;
+    for (let c = 0; c < cols; c += 1) for (let r = 0; r < rows; r += 1) {
+      const part = box(w, h, d, rnd() < 0.6 ? ceramic : resin, (c - (cols - 1) / 2) * (w + 0.9), (r - (rows - 1) / 2) * (h + 0.8), zTop + d / 2, g);
+      [-1, 1].forEach((s) => box(0.26, h + 0.02, d + 0.02, nickel, s * (w / 2 - 0.12), 0, 0, part));
+    }
+  }
+  function edgePads(parent, radius, z, from, to, n) {
+    for (let i = 0; i < n; i += 1) {
+      const a = (from + (to - from) * (i / (n - 1))) * DEG;
+      const pad = box(1.4, 0.8, 0.12, pinGold, Math.cos(a) * (radius - 0.9), Math.sin(a) * (radius - 0.9), z, parent);
+      pad.rotation.z = a;
+    }
+  }
+
+  // Mic board (layer 2): eight silver MEMS cans on the ring, passives beside each, a centre flex tail.
+  const mic = layers[2];
+  mic.children[0].material = solder;
+  mic.children.forEach((m) => { if (m.geometry?.type === 'BoxGeometry') { m.material = nickel; m.scale.set(1.25, 1.25, 1.5); } });
+  const rndMic = seeded(7);
+  for (let i = 0; i < 8; i += 1) {
+    const a = (i * 45 + 22.5) * DEG;
+    cluster(mic, rndMic, Math.cos(a) * 33, Math.sin(a) * 33, 11.65, 2, 2, a);
+  }
+  box(12, 6, 0.5, resin, 0, 0, 11.9, mic);
+  for (let i = 0; i < 12; i += 1) box(0.45, 1.3, 0.14, pinGold, -5.5 + i, -3.6, 11.72, mic);
+  edgePads(mic, 39.5, 11.71, 250, 290, 9);
+
+  // Main board (layer 3): NPU package with nickel lid, shield can, connector, passives.
+  const main = layers[3];
+  main.children[0].material = solder;
+  main.children[1].visible = false; // heat block
+  main.children[2].visible = false; // flat gold square
+  box(22, 22, 0.7, substrate, 0, 0, 9.65, main);
+  box(15, 15, 1.1, nickel, 0, 0, 10.55, main);
+  for (let i = 0; i < 20; i += 1) {
+    const t = -9.5 + i;
+    box(0.5, 0.9, 0.12, pinGold, t, -11.6, 9.36, main); box(0.5, 0.9, 0.12, pinGold, t, 11.6, 9.36, main);
+    box(0.9, 0.5, 0.12, pinGold, -11.6, t, 9.36, main); box(0.9, 0.5, 0.12, pinGold, 11.6, t, 9.36, main);
+  }
+  box(16, 10, 1.6, nickel, -2, 23, 10.1, main);
+  box(9, 3.2, 1.4, resin, 23, -13, 10.0, main).rotation.z = 0.6;
+  const rndMain = seeded(31);
+  [[-22, -6, 3, 2, 0], [-20, 9, 2, 3, 0], [18, 8, 3, 2, 0.4], [6, -22, 4, 2, 0], [-10, -21, 2, 2, 0], [24, -1, 2, 3, 0], [12, 20, 2, 2, 0.3], [-26, 2, 1, 4, 0]]
+    .forEach(([x, y, c, r, a]) => cluster(main, rndMain, x, y, 9.3, c, r, a));
+  edgePads(main, 37, 9.36, 200, 236, 10);
+
+  // Fabric top (layer 0): a 2.5 mm fabric-wrapped frame so the top reads as a part, not a sheet.
+  const fabricTop = layers[0].children[0];
+  const band = new THREE.Mesh(new THREE.CylinderGeometry(45.2, 45.2, 2.5, 192, 1, true), fabricTop.material);
+  band.rotation.x = Math.PI / 2; band.position.z = 10.45; layers[0].add(band);
+  const under = new THREE.Mesh(new THREE.CircleGeometry(45.2, 192), shell); under.position.z = 9.2; under.rotation.x = Math.PI; layers[0].add(under);
+
+  // Halo (layer 1): give the light guide a 2 mm wall so it reads as a ring, not a line.
+  const halo = layers[1];
+  // The guide walls glow softer than the top face so the ring keeps an amber body.
+  const guide = new THREE.MeshStandardMaterial({ color: 0x3a3a3f, metalness: 0.25, roughness: 0.42, emissive: 0xffa63a, emissiveIntensity: 0, side: THREE.DoubleSide });
+  // These would peek 0.1 mm above the closed top, so they appear once the parts separate.
+  const late = [];
+  [44, 42].forEach((r) => {
+    const w = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 2.2, 192, 1, true), guide);
+    w.rotation.x = Math.PI / 2; w.position.z = 11.62; halo.add(w); late.push(w);
+  });
+
+  // Housing (layer 5): inner wall, machined top lip, internal deck with bosses.
+  const housing = layers[5];
+  const bodyMat = housing.children[0].material;
+  const innerWall = new THREE.Mesh(new THREE.CylinderGeometry(44.2, 44.2, 10, 192, 1, true), shell);
+  innerWall.rotation.x = Math.PI / 2; innerWall.position.z = 7; housing.add(innerWall);
+  const lipShape = new THREE.Shape(); lipShape.absarc(0, 0, 45.4, 0, Math.PI * 2, false);
+  const lipHole = new THREE.Path(); lipHole.absarc(0, 0, 44.2, 0, Math.PI * 2, true); lipShape.holes.push(lipHole);
+  const lip = new THREE.Mesh(new THREE.ShapeGeometry(lipShape, 192), bodyMat); lip.position.z = 12.0; housing.add(lip); late.push(lip);
+  const deck = new THREE.Mesh(new THREE.CircleGeometry(44.2, 192), shell); deck.position.z = 2.0; housing.add(deck);
+  const ringBoss = new THREE.Mesh(new THREE.TorusGeometry(30, 0.7, 12, 160), shell); ringBoss.position.z = 2.3; housing.add(ringBoss);
+  for (let i = 0; i < 3; i += 1) {
+    const a = (90 + i * 120) * DEG;
+    const boss = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 3, 32), shell);
+    boss.rotation.x = Math.PI / 2; boss.position.set(Math.cos(a) * 38, Math.sin(a) * 38, 3.5); housing.add(boss);
+    const screw = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 1.1, 0.3, 24), nickel);
+    screw.rotation.x = Math.PI / 2; screw.position.set(Math.cos(a) * 38, Math.sin(a) * 38, 5.1); housing.add(screw);
+  }
+
+  // Explode-only studio: a soft top box for plate faces and a high rim for the
+  // stacked edges. Both start at zero intensity.
+  const top = new THREE.RectAreaLight(0xfff6ea, 0, 170, 150);
+  top.position.set(20, -60, 250); top.lookAt(0, 0, 40); scene.add(top);
+  const rim2 = new THREE.RectAreaLight(0xdfe8f6, 0, 120, 70);
+  rim2.position.set(-130, 95, 170); rim2.lookAt(0, 0, 45); scene.add(rim2);
+  const rim3 = new THREE.RectAreaLight(0xdfe8f6, 0, 120, 70);
+  rim3.position.set(140, 90, 120); rim3.lookAt(0, 0, 30); scene.add(rim3);
+  // Low back kickers trace the housing silhouette left and right.
+  const kickL = new THREE.RectAreaLight(0xe4ecf8, 0, 80, 120);
+  kickL.position.set(-120, 165, 5); kickL.lookAt(0, 0, 0); scene.add(kickL);
+  const kickR = new THREE.RectAreaLight(0xe4ecf8, 0, 80, 120);
+  kickR.position.set(120, 165, 5); kickR.lookAt(0, 0, 0); scene.add(kickR);
+
+  // The 700 mm floor's far edge shows as a horizon once the camera rises; fade it into the stage colour.
+  const floor = scene.children.find((c) => c.isMesh && c.geometry.parameters?.width === 700);
+  const fabric = fabricTop.material;
+  // vMapUv already carries the shared 7x repeat; 2/7 gives ~45 mm knit tiles.
+  const knit = addKnit(fabric, knitTexture(), 2 / 7);
+  const fabricBase = { sheen: fabric.sheen, normal: fabric.normalScale.x, rough: fabric.roughness, color: fabric.color.clone() };
+  return { layers, guide, late, floor, floorBase: floor.material.color.clone(), fabric, knit, fabricBase, lights: { rim, key, fill, top, rim2, rim3, kickL, kickR }, base };
+}
+
+const TUNE = { top: 1.6, rim2: 14, rim3: 8, kick: 40, rimGain: 0.25, keyGain: 0.2, guide: 0.45, sheen: 0.1, normal: 1.0, rough: 0.95, fabricSpec: 0.35, fabricColor: new THREE.Color(0x232428) };
+// Floor colour that lands on the #050506 stage after ACES at the shared exposure.
+const STAGE = new THREE.Color(0x121215);
+let rig = null;
+let current = null;
+function prepare(scene, camera) {
+  // PMREMGenerator also renders through this renderer (the RoomEnvironment
+  // capture); only the product stage, the scene holding RectAreaLights, is rigged.
+  if (!scene.children.some((c) => c.isRectAreaLight)) return;
+  if (!rig) rig = buildRig(scene);
+  if (current) {
+    const s = current;
+    rig.layers.forEach((layer, i) => { layer.position.z = s.offsets[i]; });
+    rig.late.forEach((m) => { m.visible = s.offsets[0] > 0.3; });
+    const L = rig.lights, k = s.lights;
+    L.rim.intensity = rig.base.rim * (1 + TUNE.rimGain * k);
+    L.key.intensity = rig.base.key * (1 + TUNE.keyGain * k);
+    L.top.intensity = TUNE.top * k;
+    L.rim2.intensity = TUNE.rim2 * k;
+    L.rim3.intensity = TUNE.rim3 * k;
+    L.kickL.intensity = L.kickR.intensity = TUNE.kick * k;
+    rig.guide.emissiveIntensity = TUNE.guide * k;
+    const f = rig.fabric, fb = rig.fabricBase;
+    f.sheen = fb.sheen + (TUNE.sheen - fb.sheen) * k;
+    f.normalScale.setScalar(fb.normal + (TUNE.normal - fb.normal) * k);
+    f.roughness = fb.rough + (TUNE.rough - fb.rough) * k;
+    rig.knit.value = k;
+    rig.floor.material.color.copy(rig.floorBase).lerp(STAGE, k);
+    f.specularIntensity = 1 + (TUNE.fabricSpec - 1) * k;
+    f.color.copy(fb.color).lerp(TUNE.fabricColor, k);
+    const e = s.elev * DEG;
+    camera.position.set(0, -Math.cos(e) * s.distance, Math.sin(e) * s.distance + s.targetZ);
+    camera.lookAt(0, 0, s.targetZ);
+    camera.setViewOffset(W, H, W * 0.5 - W * s.center.x, H * 0.5 - H * s.center.y, W, H);
+    camera.updateProjectionMatrix();
+  }
+}
+// WebGLRenderer.render is an instance method in r181, so wrap it per instance.
+class ExplodeRenderer extends THREE.WebGLRenderer {
+  constructor(options) {
+    super(options);
+    const nativeRender = this.render;
+    this.render = (scene, camera) => { prepare(scene, camera); nativeRender.call(this, scene, camera); };
+  }
+}
+
+const canvas = document.querySelector('#three-layer');
+// The first draw can run before the fabric textures arrive; redraw once they
+// land so frame 1 (t = 0, which may not get a fresh seek) carries the fabric.
+let lastTime = window.__hfThreeTime || 0;
+window.__hf = window.__hf || {};
+window.__hf.buildReady = window.__hf.buildReady || {};
+window.__hf.buildReady['minute-explode'] = new Promise((resolve) => {
+  THREE.DefaultLoadingManager.onLoad = () => { draw(lastTime); resolve(); };
+});
+const minute = createMinute({ THREE: { ...THREE, WebGLRenderer: ExplodeRenderer }, canvas, width: W, height: H });
+function draw(time) {
+  lastTime = time;
+  current = stateAt(frameAt(time));
+  minute.renderAt({ ...END_STATE, yaw: current.yaw, elev: current.elev, halo: current.halo, haloArc: current.haloArc });
+}
+window.addEventListener('hf-seek', (event) => draw(event.detail.time));
+draw(lastTime);
+</script>
+</body></html>

@@ -1,0 +1,98 @@
+{
+  "repository": "FeeiCN/slide-writer",
+  "execution_type": "original_template_branding_inlining_smoke_japanese_fork",
+  "execution_status": "generated_and_reviewed",
+  "case_ids": [
+    "slide-writer"
+  ],
+  "summary_ja": "原典テンプレートとbranding・inline・smokeで、日本語8枚の単一HTMLを制作。固有のスクロールと表示を再生。",
+  "method_ja": "原典template.htmlを複製し、Mode A1の構成・コンポーネントで日本語原稿を配置。無改変のapply-template-branding.py、inline-images.py、smoke-test.shを実行。固有MiniSlidePresentationで再生。",
+  "requirements": [
+    "Python 3.13 / fontTools 4.66.1 / Brotli 1.2.0",
+    "Git Bash（原典のsmoke-test.sh）",
+    "作成したHTMLを表示できるブラウザー",
+    "初回の公式OFL書体取得にはネット接続"
+  ],
+  "steps": [
+    "読み手・原稿を用意し、Mode A1で構成と密度を整理",
+    "原典template.htmlを複製",
+    "架空ブランドの自作テーマを原典brandingへ渡す",
+    "日本語本文・書体・図を配置し、原典inlineとsmokeを実行",
+    "全ページをブラウザーで確認"
+  ],
+  "commands": [
+    "python tools/build_slide_writer_repository_example.py --input examples/repositories/slide-writer/input/data.json"
+  ],
+  "source_refs": [
+    {
+      "path": "LICENSE",
+      "sha256": "97f30f610666a917f1e511806bcd0aa7518c94dbbf5eea8844ead162a2cf7bcc",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/LICENSE"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "e3c77c9dd3ec62dd617e1a03bf14b98d64a2586b95c39d59587d6a9bd2418362",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/SKILL.md"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1a81e919ecf51cbedc02193da7dedbf713260d86518f288363ce2a323e1856bd",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/README.md"
+    },
+    {
+      "path": "template.html",
+      "sha256": "501f37010d90063e97dba1ea1ecb3ec60add8f2c84a0f5a582381be01fd1523a",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/template.html"
+    },
+    {
+      "path": "components.md",
+      "sha256": "fc66612265e31e9714d288d05aac32a6b8ed5ba5620bd005b008c67f4780f3e9",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/components.md"
+    },
+    {
+      "path": "icons.md",
+      "sha256": "c7c97e548d0a31c396c488ef2e7411a1deed35ef707266a838fad5e146437d43",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/icons.md"
+    },
+    {
+      "path": "themes/_index.md",
+      "sha256": "1d52bbb176c6989ebecc4e5ef69268da6193a76f498da624764cc0ab8ff7cc84",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/themes/_index.md"
+    },
+    {
+      "path": "scripts/apply-template-branding.py",
+      "sha256": "cce64b37bb5d7ae48f11ca7d13c42c7e6abbf8e89b29550755242dc82e1a4508",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/scripts/apply-template-branding.py"
+    },
+    {
+      "path": "scripts/inline-images.py",
+      "sha256": "8d0c70059c4f612de913935daf5dbc3989a8d0124d641df8169d6a986c0f414f",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/scripts/inline-images.py"
+    },
+    {
+      "path": "scripts/smoke-test.sh",
+      "sha256": "d199a22ede350c9b81fbb731363b05a3585edf1c2dd409d46c1cb4fcc2097885",
+      "url": "https://github.com/FeeiCN/slide-writer/blob/3c4524c4abb3310fdee106282d0a64f156fd4ff6/scripts/smoke-test.sh"
+    }
+  ],
+  "local_changes": [
+    "架空ブランドの独自themeと自作logoを原典branding CLIへ渡す。",
+    "BIZ UDPGothicのOFLサブセットを別内部名で単一HTMLへ埋め込む。",
+    "日本語の操作ラベル、読みやすい改行、原典runtimeと外側カウンターの接続。",
+    "日本語の意味の切れ目で改行し、本文とカード見出しの文字サイズを補正。",
+    "動きを減らす設定では原典のreveal待機と明示smooth scrollも停止。通常の原典移動と表示は保持。"
+  ],
+  "license": "MIT",
+  "fork": "slide-writer-ja",
+  "limitations": [
+    "単一HTMLの日本語8枚と通常の原典ナビゲーションをlocalhostで確認。",
+    "直接ローカルファイル起動はブラウザーの安全ポリシーに拒否され未確認。原典の全工程完走とは扱わない。",
+    "原典14企業テーマは未試行。使用素材は自作logoと、個別MIT表示を保持したFeather SVG。",
+    "2週間は架空チームの試行期間の提案。改善効果は未測定。",
+    "人による採用と外部公開は未実施。再生成出力には新たな全ページ確認が必要。"
+  ],
+  "artifact_paths": [
+    "examples/repositories/slide-writer/index.html"
+  ],
+  "original_gate_not_passed": true
+}

@@ -1,0 +1,129 @@
+{
+  "status": "qa_complete",
+  "page_count": 6,
+  "page_unit": "timeline_stop",
+  "render_engine": "Google Chrome / original Scrolline smoke CDP driver with local HTTP URL adapter",
+  "all_pages_visually_reviewed": true,
+  "human_adoption": "pending",
+  "production_adoption": false,
+  "publication": false,
+  "artifact_sha256": "12c264d15b8c7c26b02b08b29d21c044d0ab7b64862887d36cb7144d83c882e1",
+  "input_sha256": "6dc0490920cbaca0fa3587642b1adb80f6477bce854f7a10f904c84687639600",
+  "original_gate_not_passed": true,
+  "original_full_ci": {
+    "passed": false,
+    "passed_tests": 499,
+    "failed_tests": 3,
+    "reason": "Windows path assertions",
+    "report": "review/original-full-ci.log"
+  },
+  "runtime_core_tests": {
+    "passed": true,
+    "test_files": 153,
+    "tests": 424,
+    "report": "review/engine-moves-concepts-tests.log"
+  },
+  "browser_smoke": {
+    "stops": 6,
+    "errors": 0,
+    "empty": [],
+    "overlaps": 0,
+    "clipped": 0,
+    "tinyText": [],
+    "mediaPending": []
+  },
+  "browser_smoke_report": "render/report.json",
+  "player_controls": {
+    "passed": true,
+    "report": "review/player-check.json",
+    "verified": [
+      "initial visible title",
+      "ArrowRight",
+      "ArrowLeft",
+      "Home",
+      "End",
+      "wheel",
+      "rail-advance interpolation",
+      "era-shift interpolation"
+    ]
+  },
+  "visual_review": {
+    "pages_reviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "method": "Author viewed six original full-size smoke screenshots, final HTTP bundle contact sheet, and representative final renders after license-notice-only packaging changes.",
+    "result": "Japanese title, notes, dates and fictional labels legible. No clipping, accidental overlap or missing text observed.",
+    "evidence": [
+      "render/report.json",
+      "render/sheet.png"
+    ]
+  },
+  "editability": {
+    "type": "original deck.yaml plus Japanese deck CSS",
+    "raster_slides": false,
+    "live_text": true
+  },
+  "portable_reproduction": {
+    "exit_code": 0,
+    "artifact_bytes_identical": true,
+    "fresh_npm_install": true,
+    "new_qa_status": "generated_awaiting_review",
+    "new_qa_visually_reviewed": false,
+    "smoke_summary": {
+      "stops": 6,
+      "errors": 0,
+      "empty": [],
+      "overlaps": 0,
+      "clipped": 0,
+      "tinyText": [],
+      "mediaPending": []
+    },
+    "argv": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\html-scrolline-portable-licensed\\source\\reproduce.py",
+      "--input",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\html-scrolline-portable-licensed\\input\\data.json",
+      "--render"
+    ],
+    "applies_to_current_artifact": false,
+    "scope": "Pre-bridge evidence retained; parent will rerun distribution ZIP after this bridge change."
+  },
+  "limitations": [
+    "原典全体CIはWindowsのパス検査3件で不合格。原典の全ゲート完了ではない。",
+    "日本語フォントの見た目は閲覧端末に依存。フォントファイルは同梱しない。",
+    "現在の確認範囲はlocalhost HTTP表示。IABのfile://表示確認ではない。",
+    "MP4書き出し・印刷・スマートフォン縦画面は未検証。",
+    "原典内部localeはenのまま。日本語locale機能を追加したものではない。",
+    "エージェント確認済み。人による採用は未承認。"
+  ],
+  "historical_direct_file_results": {
+    "smoke": "review/prior-direct-file-smoke/report.json",
+    "player_failure": "review/prior-direct-file-player-check.json",
+    "method": "Original smoke-derived raw CDP driver; run completed before later HTTP-only instruction. Not IAB verification."
+  },
+  "runtime_warnings": {
+    "report": "review/runtime-warnings.json",
+    "uncaught_errors_in_smoke": 0,
+    "warning_free_claimed": false
+  },
+  "native_artifact_sha256": "12c264d15b8c7c26b02b08b29d21c044d0ab7b64862887d36cb7144d83c882e1",
+  "browser_review": "passed",
+  "catalog_bridge": {
+    "passed": true,
+    "report": "review/bridge-check.json",
+    "native_bundle_unchanged_proof": "review/bridge-source-proof.json",
+    "transport": "HTTP same-origin parent iframe",
+    "guards": [
+      "parent source",
+      "same origin",
+      "integer index",
+      "range"
+    ],
+    "escape_close": true
+  }
+}

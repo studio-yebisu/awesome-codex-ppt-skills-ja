@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      :root { background: #17140f; }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; background: #17140f; }
+      #attention-loop { position: relative; width: 100%; height: 100%; overflow: hidden; background: #17140f; }
+      .vignette { position: absolute; inset: 0; background: radial-gradient(ellipse 75% 70% at 50% 50%, #201b13 0%, #17140f 58%, #0f0c08 100%); }
+      .field { position: absolute; inset: 0; width: 100%; height: 100%; }
+      .amb-base { fill: none; stroke-linecap: round; opacity: .3; }
+      .amb-spark { fill: none; stroke: #f6dca4; stroke-linecap: round; opacity: .9; }
+      .q-path { fill: none; stroke-linecap: round; }
+      .q-head { fill: none; stroke: #fff3d8; stroke-linecap: round; }
+      .q-arc { opacity: 0; }
+      .halo { opacity: 0; }
+      .node { fill: #f6e2b8; }
+    </style>
+  </head>
+  <body>
+    <div id="attention-loop" data-composition-id="attention-loop" data-width="1920" data-height="1080" data-duration="8" data-fps="30">
+      <div class="vignette" aria-hidden="true"></div>
+      <svg class="field" id="field" viewBox="0 0 1920 1080" aria-hidden="true">
+        <defs id="defs">
+          <filter id="glow-strong" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="16" result="b1" />
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5" result="b2" />
+            <feMerge><feMergeNode in="b1" /><feMergeNode in="b1" /><feMergeNode in="b2" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <filter id="glow-soft" filterUnits="userSpaceOnUse" x="0" y="0" width="1920" height="1080">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="6" result="b1" />
+            <feMerge><feMergeNode in="b1" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+          <radialGradient id="halo-grad">
+            <stop offset="0" stop-color="#ffe9bd" stop-opacity=".95" />
+            <stop offset=".35" stop-color="#f2c46d" stop-opacity=".45" />
+            <stop offset="1" stop-color="#c98a3a" stop-opacity="0" />
+          </radialGradient>
+        </defs>
+        <g id="ambient" filter="url(#glow-soft)"></g>
+        <g id="queries" filter="url(#glow-strong)"></g>
+        <g id="halos"></g>
+        <g id="nodes" filter="url(#glow-soft)"></g>
+      </svg>
+    </div>
+    <script>
+      (function () {
+        const NS = 'http://www.w3.org/2000/svg';
+        const W = 1920, H = 1080;
+        // Seeded PRNG (mulberry32) — deterministic jitter only.
+        let seed = 20171206;
+        function rnd() {
+          seed |= 0; seed = (seed + 0x6d2b79f5) | 0;
+          let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+          t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+          return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+        }
+        function el(tag, attrs, parent) {
+          const e = document.createElementNS(NS, tag);
+          for (const k in attrs) e.setAttribute(k, attrs[k]);
+          if (parent) parent.appendChild(e);
+          return e;
+        }
+        const defs = document.getElementById('defs');
+        const ambient = document.getElementById('ambient');
+        const queries = document.getElementById('queries');
+        const halos = document.getElementById('halos');
+        const nodesG = document.getElementById('nodes');
+
+        // 24 token nodes: 3 rows x 8 columns across the whole frame.
+        const rowsY = [0.16, 0.5, 0.84];
+        const nodes = [];
+        rowsY.forEach((ry, r) => {
+          for (let c = 0; c < 8; c++) {
+            const x = W * (0.05 + c * (0.9 / 7)) + (rnd() - 0.5) * 56;
+            const y = H * ry + (rnd() - 0.5) * 60;
+            nodes.push({ x, y, r: 6 + rnd() * 4 });
+          }
+        });
+
+        function curve(a, b, bulge) {
+          const A = nodes[a], B = nodes[b];
+          const dx = B.x - A.x, dy = B.y - A.y;
+          const len = Math.hypot(dx, dy);
+          const nx = -dy / len, ny = dx / len;
+          let k = bulge * len;
+          const cp = (s) => {
+            const p1 = { x: A.x + dx * 0.25 + nx * s, y: A.y + dy * 0.25 + ny * s };
+            const p2 = { x: A.x + dx * 0.75 + nx * s, y: A.y + dy * 0.75 + ny * s };
+            return [p1, p2];
+          };
+          let [p1, p2] = cp(k);
+          const out = (p) => p.y < 24 || p.y > H - 24 || p.x < 24 || p.x > W - 24;
+          if (out(p1) || out(p2)) { k = -k; [p1, p2] = cp(k); }
+          const clamp = (p) => ({ x: Math.min(W - 24, Math.max(24, p.x)), y: Math.min(H - 24, Math.max(24, p.y)) });
+          p1 = clamp(p1); p2 = clamp(p2);
+          return `M${A.x.toFixed(1)} ${A.y.toFixed(1)} C${p1.x.toFixed(1)} ${p1.y.toFixed(1)} ${p2.x.toFixed(1)} ${p2.y.toFixed(1)} ${B.x.toFixed(1)} ${B.y.toFixed(1)}`;
+        }
+        let gradId = 0;
+        function gradient(a, b, from, to) {
+          const A = nodes[a], B = nodes[b];
+          const g = el('linearGradient', { id: 'g' + (gradId++), gradientUnits: 'userSpaceOnUse', x1: A.x, y1: A.y, x2: B.x, y2: B.y }, defs);
+          el('stop', { offset: '0', 'stop-color': from }, g);
+          el('stop', { offset: '1', 'stop-color': to }, g);
+          return 'url(#' + g.id + ')';
+        }
+
+        const tl = gsap.timeline({ paused: true });
+        const LOOP = 8;
+
+        // Ambient layer: thin faint arcs everywhere + slow sparks travelling on them (whole laps per loop = seamless).
+        const ambientPairs = [];
+        for (let r = 0; r < 3; r++) for (let c = 0; c < 7; c++) ambientPairs.push([r * 8 + c, r * 8 + c + 1]);
+        for (let c = 0; c < 8; c++) ambientPairs.push(c % 2 ? [c, 8 + Math.min(7, c + 1)] : [8 + c, 16 + Math.min(7, c + 1)]);
+        for (let c = 0; c < 8; c += 2) ambientPairs.push([c, 16 + Math.min(7, c + 2)]);
+        ambientPairs.forEach(([a, b], i) => {
+          const d = curve(a, b, (i % 2 ? 0.22 : -0.22) * (0.7 + rnd() * 0.6));
+          const w = 1.5 + rnd() * 1.5;
+          el('path', { d, class: 'amb-base', stroke: gradient(a, b, '#f2c46d', '#c98a3a'), 'stroke-width': w.toFixed(2) }, ambient);
+          const spark = el('path', { d, class: 'amb-spark', pathLength: '1000', 'stroke-width': (w + 1.5).toFixed(2), 'stroke-dasharray': '110 890' }, ambient);
+          const phase = Math.floor(rnd() * 1000);
+          const laps = (i % 3 === 0 ? 2 : 1) * (i % 2 ? 1 : -1);
+          tl.fromTo(spark, { strokeDashoffset: phase }, { strokeDashoffset: phase - laps * 1000, duration: LOOP, ease: 'none' }, 0);
+        });
+
+        // Halos (query glow + arrival flash) and nodes.
+        const haloEls = nodes.map((n) => el('circle', { cx: n.x, cy: n.y, r: 46, fill: 'url(#halo-grad)', class: 'halo' }, halos));
+        nodes.forEach((n) => el('circle', { cx: n.x, cy: n.y, r: n.r.toFixed(1), class: 'node' }, nodesG));
+
+        // Four queries, one every 2 s. Weight = stroke width (2..16 px). Q3 holds the classic coreference arc (16 px).
+        const Q = [
+          { at: 0, src: 9, arcs: [[1, 6, .3], [4, 3, -.2], [7, 2, .25], [12, 10, -.18], [15, 4, .2], [16, 5, -.3], [19, 8, .22], [22, 2.5, -.2]] },
+          { at: 2, src: 5, arcs: [[0, 3, .22], [2, 9, -.3], [11, 5, .2], [8, 2, .25], [14, 7, -.25], [17, 4, .2], [21, 12, .3]] },
+          { at: 4, src: 19, arcs: [[1, 16, .38], [3, 2.5, -.2], [6, 3, .25], [8, 5, -.22], [13, 7, .2], [16, 3, .25], [22, 4, -.25], [10, 9, -.2], [23, 2, .3]] },
+          { at: 6, src: 14, arcs: [[0, 4, -.25], [3, 8, .2], [6, 3, -.3], [9, 11, .22], [11, 3, -.2], [17, 6, .2], [20, 2.5, -.25]] },
+        ];
+        const DRAW = 0.8, HOLD_END = 1.6, FADE = 0.9;
+
+        function buildArc(src, tgt, w, bulge) {
+          const d = curve(src, tgt, bulge);
+          const g = el('g', { class: 'q-arc' }, queries);
+          el('path', { d, class: 'q-path', pathLength: '1000', stroke: gradient(src, tgt, '#f2c46d', '#c98a3a'), 'stroke-width': w, 'stroke-dasharray': '1000 1000' }, g);
+          const head = el('path', { d, class: 'q-head', pathLength: '1000', 'stroke-width': w + 3, 'stroke-dasharray': '45 2000' }, g);
+          return { g, path: g.firstChild, head };
+        }
+
+        Q.forEach((q, qi) => {
+          // query node halo: on for the whole window
+          tl.fromTo(haloEls[q.src], { opacity: 0, scale: .6, transformOrigin: '50% 50%' }, { opacity: 1, scale: 1.25, duration: .35, ease: 'power2.out', immediateRender: false }, q.at);
+          tl.fromTo(haloEls[q.src], { opacity: 1, scale: 1.25 }, { opacity: 0, scale: .6, duration: .5, ease: 'power1.in', immediateRender: false }, q.at + 1.35);
+          q.arcs.forEach(([tgt, w, bulge], i) => {
+            const S = q.at + 0.06 + i * 0.07;
+            const a = buildArc(q.src, tgt, w, bulge);
+            a.path.style.strokeDashoffset = 1000;
+            a.head.style.strokeDashoffset = 45;
+            tl.fromTo(a.g, { opacity: 0 }, { opacity: 1, duration: .12, ease: 'none', immediateRender: false }, S);
+            tl.fromTo(a.path, { strokeDashoffset: 1000 }, { strokeDashoffset: 0, duration: DRAW, ease: 'power2.inOut', immediateRender: false }, S);
+            tl.fromTo(a.head, { strokeDashoffset: 45 }, { strokeDashoffset: -955, duration: DRAW, ease: 'power2.inOut', immediateRender: false }, S);
+            tl.fromTo(a.head, { opacity: 1 }, { opacity: 0, duration: .3, ease: 'none', immediateRender: false }, S + DRAW);
+            // target arrival flash
+            tl.fromTo(haloEls[tgt], { opacity: 0, scale: .5, transformOrigin: '50% 50%' }, { opacity: .85, scale: 1, duration: .18, ease: 'power2.out', immediateRender: false }, S + DRAW - 0.05);
+            tl.fromTo(haloEls[tgt], { opacity: .85, scale: 1 }, { opacity: 0, scale: .5, duration: .55, ease: 'power1.in', immediateRender: false }, S + DRAW + 0.13);
+            const fadeStart = S + HOLD_END, fadeEnd = fadeStart + FADE;
+            if (fadeEnd <= LOOP) {
+              tl.fromTo(a.g, { opacity: 1 }, { opacity: 0, duration: FADE, ease: 'none', immediateRender: false }, fadeStart);
+            } else {
+              // Wrap the tail around the loop seam with a twin element so frame 8 == frame 0.
+              const v8 = fadeStart >= LOOP ? 1 : 1 - (LOOP - fadeStart) / FADE;
+              if (fadeStart < LOOP) tl.fromTo(a.g, { opacity: 1 }, { opacity: v8, duration: LOOP - fadeStart, ease: 'none', immediateRender: false }, fadeStart);
+              const twin = buildArc(q.src, tgt, w, bulge);
+              twin.path.style.strokeDashoffset = 0;
+              twin.head.style.opacity = 0;
+              twin.g.style.opacity = v8;
+              const tailStart = Math.max(0, fadeStart - LOOP);
+              tl.fromTo(twin.g, { opacity: v8 }, { opacity: 0, duration: fadeEnd - LOOP - tailStart, ease: 'none', immediateRender: false }, tailStart);
+            }
+          });
+        });
+        // pin the timeline length to exactly one loop
+        tl.set({}, {}, LOOP);
+        window.__timelines['attention-loop'] = tl;
+      })();
+    </script>
+  </body>
+</html>

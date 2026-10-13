@@ -1,0 +1,150 @@
+/* kinetic 배치(C11 layout.css): 카메라 고정, 글자가 무대. 1920 기준 px × --px.
+   규칙: 모든 선택자는 .sl-concept-kinetic 범위, 색은 var(--sl-*)만, !important·@import 금지(tools/check-concepts.mjs).
+   문장은 두 자리만 쓴다 — center(선언·제목, 가운데 정렬) / left(써지는 문장, 왼쪽 끝 x 고정). */
+
+/* 한글 거대 글자는 어절 단위로만 줄바꿈 */
+.sl-concept-kinetic .sl-text,
+.sl-concept-kinetic .sl-prompt {
+  word-break: keep-all;
+}
+
+/* 글자 크기 단계(engine 기본은 모든 text를 xl로 둔다) */
+.sl-concept-kinetic .sl-text--xl {
+  font-size: var(--sl-size-xl);
+}
+.sl-concept-kinetic .sl-text--l {
+  font-size: var(--sl-size-l);
+}
+.sl-concept-kinetic .sl-text--m {
+  font-size: var(--sl-size-m);
+}
+.sl-concept-kinetic .sl-text__em {
+  background: none;
+  color: var(--sl-accent);
+}
+
+/* slot 루트는 absolute라 left 오프셋만큼 폭이 줄어든다 → 내용 폭 그대로, 여백 안에서만 줄바꿈 */
+.sl-concept-kinetic .sl-slot-center,
+.sl-concept-kinetic .sl-slot-left {
+  width: max-content;
+  max-width: calc(100% - 2 * var(--sl-gutter));
+}
+.sl-concept-kinetic .sl-slot-center .sl-text {
+  text-align: center;
+}
+/* 가운데 선언은 화면 폭을 크게 쓴다: l 150 · xl 240 (1920 기준) */
+.sl-concept-kinetic .sl-slot-center .sl-text--l {
+  font-size: calc(var(--px) * 150 * 1px);
+}
+.sl-concept-kinetic .sl-slot-center .sl-text--xl {
+  font-size: calc(var(--px) * 240 * 1px);
+}
+.sl-concept-kinetic .sl-slot-left {
+  max-width: 80%;
+}
+/* 써지는 문장(left)은 l보다 한 단계 크게 — 2줄, 둘째 줄 끝에 다음 칸이 붙는다 */
+.sl-concept-kinetic .sl-slot-left .sl-text {
+  font-size: calc(var(--px) * 136 * 1px);
+}
+
+/* prompt: 박스 없음. 라벨(mono L3) → 밑줄 하나 입력창 → 답(display). 왼쪽 끝은 써지는 문장과 같은 x 0.1 */
+.sl-concept-kinetic .sl-beat--prompt {
+  width: 80%;
+  max-width: 80%;
+}
+.sl-concept-kinetic .sl-prompt__label {
+  display: block;
+  margin-block-end: calc(28 * var(--px) * 1px);
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-caption);
+  letter-spacing: 0.02em;
+}
+.sl-concept-kinetic .sl-prompt__field {
+  max-width: none;
+  padding: 0 0 calc(28 * var(--px) * 1px);
+  border: 0;
+  border-block-end: 1px solid var(--sl-rule);
+  font-family: var(--sl-font-text);
+  font-size: calc(var(--px) * 84 * 1px);
+  font-weight: var(--sl-weight-text);
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+/* 글자 span은 inline: 줄바꿈이 어절 단위(keep-all)로만 일어난다(inline-block이면 글자마다 끊김) */
+.sl-concept-kinetic .sl-prompt__char {
+  display: inline;
+  white-space: normal;
+}
+.sl-concept-kinetic .sl-prompt__caret {
+  display: inline-block;
+  width: calc(4 * var(--px) * 1px);
+  height: 0.86em;
+  margin-inline-start: 0.08em;
+  overflow: hidden;
+  vertical-align: -0.1em;
+  background: var(--sl-accent);
+  color: transparent;
+}
+.sl-concept-kinetic .sl-prompt__result {
+  margin-block-start: calc(64 * var(--px) * 1px);
+  font-family: var(--sl-font-display);
+  font-size: calc(var(--px) * 92 * 1px);
+  font-weight: var(--sl-weight-display);
+  line-height: 1.08;
+  letter-spacing: var(--sl-tracking-display);
+}
+.sl-concept-kinetic .sl-prompt__word {
+  display: inline-block;
+}
+
+/* 숫자 히어로: 값이 화면을 지배하고 설명은 그 아래 L2, 출처 L3 */
+.sl-concept-kinetic .sl-beat--number {
+  width: max-content;
+  max-width: calc(100% - 2 * var(--sl-gutter));
+  text-align: center;
+}
+
+/* 영상 캡션: 영상 위 왼쪽 아래, 받침 위 L3 */
+.sl-concept-kinetic .sl-video__caption {
+  position: absolute;
+  left: var(--sl-gutter);
+  bottom: calc(56 * var(--px) * 1px);
+  margin: 0;
+  color: var(--sl-fg-muted);
+  font-family: var(--sl-font-mono);
+  font-size: var(--sl-size-caption);
+}
+.sl-concept-kinetic .sl-number__value {
+  font-size: calc(var(--px) * 300 * 1px);
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+}
+.sl-concept-kinetic .sl-number__unit {
+  margin-inline-start: 0.06em;
+  font-size: 0.42em;
+  letter-spacing: -0.02em;
+}
+.sl-concept-kinetic .sl-number__label {
+  max-width: calc(1400 * var(--px) * 1px);
+  margin: calc(48 * var(--px) * 1px) auto 0;
+  font-size: var(--sl-size-s);
+  font-weight: var(--sl-weight-text);
+}
+.sl-concept-kinetic .sl-number__source {
+  display: block;
+  margin-block-start: calc(20 * var(--px) * 1px);
+  font-family: var(--sl-font-mono);
+}
+
+/* 글자 마스크 영상(북엔드 「다음」)의 캡션은 그 화면의 결론 문장: 글자 아래 가운데 L2 */
+.sl-concept-kinetic .sl-video:has(.sl-mask) .sl-video__caption {
+  right: var(--sl-gutter);
+  bottom: calc(96 * var(--px) * 1px);
+  color: var(--sl-fg);
+  font-family: var(--sl-font-display);
+  font-size: calc(var(--px) * 60 * 1px);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  text-align: center;
+}

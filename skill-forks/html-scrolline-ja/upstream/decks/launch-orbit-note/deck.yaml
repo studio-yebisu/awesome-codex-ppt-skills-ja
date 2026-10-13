@@ -1,0 +1,193 @@
+# 컨셉 launch 덱. 가상 회사 「온점」의 AI 회의 기록기 Minute 신제품 발표(표본).
+# 수치는 전부 가상 제품 사양. 실존 통계 없음. 스토리보드 정본: docs/concepts.md
+id: launch-orbit-note
+title: "Minute 신제품 발표"
+lang: ko
+concept: launch
+sample: true
+beats:
+  # ── 1막: 문제 ──────────────────────────────
+  - id: b-open
+    type: text
+    text: "회의는 한 시간. 정리는 그다음부터."
+    lines: ["회의는 한 시간.", "정리는 그다음부터."]
+    emphasis: ["정리는"]
+    size: xl
+    place: { slot: full }
+    enter: { move: line-mask-rise }
+    exit: { move: "engine:fade-out" }
+    exportHold: 2.0
+
+  - id: b-word
+    type: video
+    src: assets/video/meeting.mp4
+    poster: assets/video/meeting-poster.webp
+    alt: "회의 테이블 위로 손과 노트북이 오가는 실제 회의 장면"
+    mode: loop
+    mask: { type: text, text: "회의" }
+    caption: "말이 오가는 동안 한 사람은 대화에 없습니다. 받아 적고 있으니까."
+    place: { slot: full }
+    enter: { move: mask-word-in }
+    steps:
+      - { name: open, move: text-mask-dive, params: { focusX: 0.36, focusY: 0.5 } }
+    exit: { move: lights-out }
+    exportHold: 2.4
+
+  - id: b-quiet
+    type: text
+    text: "그래서 그 한 사람의 몫을 테이블에 맡기기로 했습니다."
+    lines: ["그래서 그 한 사람의 몫을", "테이블에 맡기기로 했습니다."]
+    size: m
+    at: 0.9   # 앞 장면 암전(lights-out)이 끝난 검정에서 시작
+    place: { slot: full }
+    enter: { move: line-mask-rise }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # 헤드라인 문법 통일(line-mask-rise 2번째)
+
+  # ── 2막: 공개(sticky 피처 리빌 → 분해) ──────
+  - id: b-reveal
+    type: video
+    src: assets/video/turntable.mp4
+    poster: assets/frames/turntable/poster.webp
+    frames: assets/frames/turntable/frames.json
+    alt: "검은 무대 위 그래파이트 원반형 기기 Minute가 빛을 받으며 드러남"
+    mode: scrub
+    caption: "Minute. 회의 테이블 한가운데 두는 기록기."
+    place: { slot: full }
+    enter: { move: lit-from-dark, params: { scrubTo: 0.18 } }
+    link: { move: sticky-scrub-link, params: { from: 0.18, to: 0.42 } }
+    hold: 0.9
+    exportHold: 2.4
+
+  - id: b-mics
+    type: video
+    src: assets/video/turntable.mp4
+    poster: assets/frames/turntable/poster.webp
+    frames: assets/frames/turntable/frames.json
+    alt: "위에서 본 Minute 상판, 가장자리를 따라 난 마이크 구멍 여덟 개"
+    mode: scrub
+    caption: "마이크 여덟 개가 목소리의 방향을 듣습니다."
+    place: { slot: full }
+    enter: { move: "engine:none" }   # link가 제품을 넘겨줌(다시 어둠에서 켜지지 않음)
+    link: { move: sticky-scrub-link, params: { from: 0.42, to: 0.7 } }
+    repeat: intended   # sticky 피처 리빌 = 같은 link 연쇄
+
+  - id: b-halo
+    type: video
+    src: assets/video/turntable.mp4
+    poster: assets/frames/turntable/poster.webp
+    frames: assets/frames/turntable/frames.json
+    alt: "상판 가장자리 앰버 빛 고리 중 한쪽이 더 밝게 켜진 Minute"
+    mode: scrub
+    caption: "지금 말하는 사람 쪽으로 빛이 기웁니다."
+    place: { slot: full }
+    enter: { move: "engine:none" }   # link가 제품을 넘겨줌(다시 어둠에서 켜지지 않음)
+    link: { move: sticky-scrub-link, params: { from: 0.7, to: 1.0 } }
+    repeat: intended
+
+  - id: b-allday
+    type: video
+    src: assets/video/turntable.mp4
+    poster: assets/frames/turntable/poster.webp
+    frames: assets/frames/turntable/frames.json
+    alt: "옆에서 본 얇은 Minute 측면과 USB-C 포트"
+    mode: scrub
+    caption: "두께 24mm. 한 번 충전으로 회의 서른 시간."
+    place: { slot: full }
+    enter: { move: "engine:none" }   # link가 제품을 넘겨줌(다시 어둠에서 켜지지 않음)
+    link: { move: sticky-scrub-link, params: { from: 1.0, to: 1.0, bAt: 0, duration: 0.7 } }
+    repeat: intended
+
+  - id: b-inside
+    type: video
+    src: assets/video/explode.mp4
+    poster: assets/frames/explode/poster.webp
+    frames: assets/frames/explode/frames.json
+    alt: "Minute가 상판, 빛 고리, 마이크 기판, 메인 기판, 배터리, 몸체 여섯 층으로 위아래로 벌어짐"
+    mode: scrub
+    caption: "열어 보면, 층마다 맡은 일이 하나씩."
+    place: { slot: full }
+    enter: { move: "engine:none" }   # link가 제품을 넘겨줌(다시 어둠에서 켜지지 않음)
+    steps:
+      - name: top
+        move: scrub-callouts
+        params: { to: 0.42, anchor: { x: 0.62, y: 0.19 }, label: "패브릭 상판", note: "소리는 통과시키고 먼지는 막습니다" }
+      - name: mics
+        move: scrub-callouts
+        params: { to: 0.67, anchor: { x: 0.62, y: 0.51 }, label: "MEMS 마이크 8개", note: "반경 5m 안의 목소리를 방향별로 나눕니다" }
+      - name: npu
+        move: scrub-callouts
+        params: { to: 0.92, anchor: { x: 0.62, y: 0.54 }, label: "온디바이스 NPU", note: "녹음을 기기 안에서 바로 글로 바꿉니다" }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # scrub-callouts 3 step(층마다 하나)
+    exportHold: 2.2
+
+  # ── 3막: 증명 ──────────────────────────────
+  - id: b-listen
+    type: prompt
+    label: "실시간 기록 · 디자인 리뷰"
+    text: |-
+      지민  다음 주 화요일까지 시안 두 개 가능할까요?
+      태오  화요일 오전이면 됩니다. 카피만 월요일까지 확정해 주세요.
+      지민  그럼 카피는 제가 월요일 오후 세 시까지 넘길게요.
+    result:
+      type: text
+      text: |-
+        결정  시안 2종, 화요일 오전 전달 — 태오
+        할 일  카피 확정, 월요일 15:00 — 지민
+    place: { slot: full }
+    enter: { move: type-on, params: { speed: 60 } }
+    steps:
+      - { name: summary, move: transcript-condense }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # engine:fade-out 반복(글자 beat 기본 퇴장)
+    exportHold: 2.6
+
+  - id: b-12s
+    type: number
+    value: 12
+    format: { unit: "초" }
+    label: "회의가 끝나고 회의록이 도착하기까지 · 1시간 회의 기준"
+    place: { slot: full }
+    enter: { move: number-slam }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # engine:fade-out 반복
+    hold: 0.9
+    exportHold: 2.4
+
+  - id: b-private
+    type: text
+    text: "녹음은 기기 밖으로 나가지 않습니다. 나가는 건 회의록뿐입니다."
+    lines: ["녹음은 기기 밖으로 나가지 않습니다.", "나가는 건 회의록뿐입니다."]
+    emphasis: ["회의록뿐입니다."]
+    size: l
+    place: { slot: full }
+    enter: { move: line-mask-rise }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # line-mask-rise 3번째
+
+  # ── 4막: 현장 → 마지막 공개 ───────────────
+  - id: b-anywhere
+    type: video
+    src: assets/video/anywhere.mp4
+    poster: assets/video/anywhere-poster.webp
+    alt: "회의실, 카페, 재택 책상 위에 놓인 Minute 세 장면"
+    mode: loop
+    caption: "네 명이 둘러앉은 회의실에도, 둘이 마주 앉은 카페에도."
+    place: { slot: full }
+    enter: { move: window-open }
+    exit: { move: lights-out }
+    repeat: intended   # 암전 2번째(마지막 공개 직전)
+    exportHold: 2.4
+
+  - id: b-lockup
+    type: photo
+    src: assets/img/lockup.webp
+    alt: "위에서 본 Minute, 앰버 빛 고리 전체가 켜짐"
+    caption: "Minute — 11월 출시, 249,000원"
+    at: 0.9   # 앞 장면 암전(lights-out)이 끝난 검정에서 시작
+    place: { slot: full }
+    enter: { move: lit-from-dark, params: { scaleFrom: 1 } }
+    ambient: [ { move: slow-push } ]
+    repeat: intended   # 첫 공개와 수미상관
+    exportHold: 3.0

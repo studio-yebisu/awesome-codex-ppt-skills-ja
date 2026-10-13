@@ -1,0 +1,37 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "scrolline-v2 state/board.json (plan/ARCHITECTURE.md §9, CONTRACTS C18)",
+  "type": "object",
+  "required": ["version", "updated", "waves", "engine", "concepts", "moves", "decks"],
+  "additionalProperties": false,
+  "properties": {
+    "version": { "const": 1 },
+    "updated": { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}T" },
+    "waves": { "type": "object", "additionalProperties": {
+      "type": "object", "required": ["status"], "additionalProperties": false,
+      "properties": { "root_run_id": { "type": ["string", "null"] }, "status": { "$ref": "#/$defs/status" }, "note": { "type": "string" } } } },
+    "engine": { "type": "object", "additionalProperties": {
+      "type": "object", "required": ["files", "stage", "status", "runs"], "additionalProperties": false,
+      "properties": { "files": { "type": "array", "items": { "type": "string" } }, "stage": { "enum": ["spec", "impl", "tested", "merged"] },
+        "status": { "$ref": "#/$defs/status" }, "runs": { "$ref": "#/$defs/runs" } } } },
+    "concepts": { "type": "object", "additionalProperties": {
+      "type": "object", "required": ["stage", "status", "runs"], "additionalProperties": false,
+      "properties": { "stage": { "enum": ["direction", "storyboard", "tokens", "done"] }, "status": { "$ref": "#/$defs/status" },
+        "deck": { "type": "string" }, "runs": { "$ref": "#/$defs/runs" } } } },
+    "moves": { "type": "object", "additionalProperties": {
+      "type": "object", "required": ["family", "stage", "status", "runs"], "additionalProperties": false,
+      "properties": { "family": { "type": "string" }, "stage": { "enum": ["inventory", "spec", "impl", "tested", "merged"] },
+        "status": { "$ref": "#/$defs/status" }, "sources": { "type": "array", "items": { "type": "string" } },
+        "used_by": { "type": "array", "items": { "type": "string" } }, "runs": { "$ref": "#/$defs/runs" } } } },
+    "decks": { "type": "object", "additionalProperties": {
+      "type": "object", "required": ["concept", "stage", "status", "runs"], "additionalProperties": false,
+      "properties": { "concept": { "type": "string" }, "stage": { "enum": ["brief", "storyboard", "assemble", "judge", "repair", "done"] },
+        "status": { "$ref": "#/$defs/status" }, "moves": { "type": "array", "items": { "type": "string" } },
+        "score": { "type": "object", "additionalProperties": { "type": "number", "minimum": 0, "maximum": 1 } },
+        "runs": { "$ref": "#/$defs/runs" } } } }
+  },
+  "$defs": {
+    "status": { "enum": ["todo", "running", "review", "pass", "fail", "blocked"] },
+    "runs": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+  }
+}

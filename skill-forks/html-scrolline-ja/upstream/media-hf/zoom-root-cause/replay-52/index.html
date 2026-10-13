@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=1080, height=1920" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" /><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+  <style>
+    * { box-sizing: border-box; } html, body { width:100%; height:100%; margin:0; overflow:hidden; background:#f7f8fa; }
+    #root { position:relative; width:100%; height:100%; overflow:hidden; background:#f7f8fa; }
+    .clip { position:absolute; inset:0; overflow:hidden; }
+    .app { width:360px; height:640px; overflow:hidden; position:absolute; inset:0; transform-origin:top left; background:#f7f8fa; font-family:"IBM Plex Sans KR", Arial, sans-serif; color:#171a1e; }
+    .bar { height:64px; background:#fff; border-bottom:1px solid #e7e9ed; display:flex; align-items:center; padding:0 18px; font-size:19px; font-weight:700; letter-spacing:-.04em; }
+    .scroll { height:576px; overflow:hidden; padding:16px; padding-bottom:32px; }
+    .content { will-change:transform; }
+    .card { background:#fff; border:1px solid #e3e6ea; border-radius:2px; }
+    .address { height:96px; padding:15px 14px; } .eyebrow { color:#6c737d; font-size:11px; line-height:16px; font-weight:500; }
+    .address strong { display:block; margin-top:2px; font-size:14px; line-height:21px; }.address small { display:block; color:#68717c; font-size:11px; line-height:16px; }
+    .summary { height:76px; margin-top:12px; padding:11px 14px; }.line{display:flex;justify-content:space-between;gap:10px;font-size:12px;line-height:25px}.line span:last-child{color:#4d5560;white-space:nowrap}
+    .delivery{height:56px;margin-top:12px;padding:0 14px;display:flex;align-items:center;justify-content:space-between}.delivery b{font-size:14px;letter-spacing:-.035em}.delivery .chosen{font-size:11px;color:#606873}.chevron{width:7px;height:7px;border-right:1.5px solid #434a53;border-bottom:1.5px solid #434a53;transform:rotate(45deg) translateY(-2px)}
+    .slots{display:grid;margin-top:8px;grid-template-columns:1fr 1fr;gap:4px;opacity:0;overflow:hidden;height:0}.slot{height:51px;background:#fff;border:1px solid #e1e5e9;border-radius:2px;display:flex;align-items:center;padding:0 11px;font-size:11px;color:#363c44}.slot:first-child{border-color:#fb6847;color:#c1452a;background:#fff8f6;font-weight:700}
+    .pay{margin-top:76px;width:100%;height:48px;border:0;border-radius:2px;background:#fb5b3d;color:#171a1e;font:700 15px "IBM Plex Sans KR",Arial,sans-serif;letter-spacing:-.03em}
+    .finger { position:absolute; width:48px; height:48px; border-radius:50%; background:rgba(23,26,30,.22); border:2px solid rgba(255,255,255,.72); opacity:0; pointer-events:none; }
+  </style>
+</head>
+<body>
+  <div id="root" data-composition-id="replay-52" data-start="0" data-width="1080" data-height="1920" data-duration="8">
+    <section class="clip" id="replay-scene" data-start="0" data-duration="8"><div class="app" id="app" data-layout-allow-overflow>
+      <header class="bar">누리살림</header><section class="scroll" data-layout-allow-overflow><div class="content" id="content" data-layout-allow-overflow>
+        <article class="card address"><span class="eyebrow">배송지</span><strong data-layout-allow-occlusion>집 · 서울시 마포구 성산로</strong><small data-layout-allow-occlusion>문 앞에 놓아 주세요</small></article>
+        <article class="card summary"><div class="line"><span>저자극 생활세제</span><span>1개 · 18,900원</span></div><div class="line"><span>주방 소모품 세트</span><span>1개 · 12,400원</span></div></article>
+        <section class="card delivery" id="delivery"><b data-layout-allow-occlusion>새벽배송 시간 선택</b><span class="chosen" data-layout-allow-occlusion>오전 1시~2시</span><i class="chevron"></i></section>
+        <section class="slots" id="slots"><div class="slot">오전 1시~2시</div><div class="slot">오전 2시~3시</div><div class="slot">오전 3시~4시</div><div class="slot">오전 4시~5시</div><div class="slot">오전 5시~6시</div><div class="slot">오전 6시~7시</div><div class="slot">오전 7시~8시</div><div class="slot">오전 8시~9시</div></section>
+        <button class="pay">결제하기</button>
+      </div></section><i class="finger" id="finger" data-layout-allow-overflow></i>
+    </div></section>
+  </div>
+  <script>
+    document.fonts.ready.then(() => {
+      const app = document.querySelector('#app'), content = document.querySelector('#content'), slots = document.querySelector('#slots'), finger = document.querySelector('#finger');
+      gsap.set(app, { scale: 3, transformOrigin: 'top left' });
+      const tl = gsap.timeline({ paused:true });
+      tl.to(slots, { height:416, opacity:1, duration:1.36, ease:'power2.inOut' }, 2);
+      tl.to('#delivery', { backgroundColor:'#fff8f6', borderColor:'#fb6847', duration:.18, ease:'none' }, 2);
+      tl.to('#delivery', { backgroundColor:'#fff', borderColor:'#e3e6ea', duration:.18, ease:'none' }, 2.22);
+      tl.set(finger, { x:156, y:480, opacity:0 }, 3.4);
+      tl.to(finger, { opacity:1, duration:.12, ease:'none' }, 3.4).to(finger, { y:300, duration:.72, ease:'power2.inOut' }, 3.52).to(content, { y:-132, duration:.72, ease:'power2.inOut' }, 3.52).to(finger, { opacity:0, duration:.12, ease:'none' }, 4.28);
+      tl.set(finger, { x:204, y:500, opacity:0 }, 4.9);
+      tl.to(finger, { opacity:1, duration:.12, ease:'none' }, 4.9).to(finger, { y:320, duration:.72, ease:'power2.inOut' }, 5.02).to(content, { y:-264, duration:.72, ease:'power2.inOut' }, 5.02).to(finger, { opacity:0, duration:.12, ease:'none' }, 5.78);
+      window.__timelines['replay-52'] = tl;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+{
+  "name": "scrolline-v2",
+  "private": true,
+  "version": "2.0.0",
+  "description": "Scroll-driven continuous presentation decks: one stage, one master timeline, handoff moves, concept packs",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "check": "node tools/check.mjs",
+    "check:deps": "node tools/check-deps.mjs",
+    "ci": "npm test && npm run check",
+    "deck": "node tools/cli.mjs",
+    "export": "node tools/export.mjs",
+    "capture": "node tools/capture.mjs",
+    "frames": "node tools/media/extract-frames.mjs",
+    "transitions": "node tools/transitions.mjs"
+  },
+  "dependencies": {
+    "gsap": "3.15.0",
+    "lenis": "1.3.26"
+  },
+  "devDependencies": {
+    "happy-dom": "20.14.5",
+    "prettier": "^3.9.9",
+    "vite": "8.3.0",
+    "vitest": "5.0.1",
+    "yaml": "2.9.1"
+  }
+}

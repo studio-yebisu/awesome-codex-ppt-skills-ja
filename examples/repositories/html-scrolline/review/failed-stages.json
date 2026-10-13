@@ -1,0 +1,28 @@
+[
+  {
+    "failed_stage": "source_subset_ci_initial",
+    "expected": false,
+    "exit_code": 1,
+    "reason": "Runtime subset omitted unrelated gallery/_smoke fixtures; initial subset CI had 4 failed suites / 3 failed tests. Full original checkout was tested next.",
+    "record_type": "summary_of_observed_tool_output"
+  },
+  {
+    "failed_stage": "upstream_full_ci",
+    "expected": false,
+    "exit_code": 1,
+    "reason": "Full original checkout: 499 tests passed, 3 failed; assertions compare POSIX paths with Windows paths. npm run check is not reached by npm run ci.",
+    "log": "review/original-full-ci.log"
+  },
+  {
+    "failed_stage": "initial_handoff_smoke",
+    "expected": false,
+    "reason": "At a handoff boundary incoming/outgoing captions or counters overlapped. Removed duplicate captions and added 0.15u settling time to deck enter data. Final smoke has zero overlaps."
+  },
+  {
+    "failed_stage": "prior_direct_file_player_check",
+    "expected": false,
+    "exit_code": 1,
+    "reason": "End/Home did not settle within the initial 1.5s measurement window. Historical run completed before instruction to restrict further verification to HTTP. Retained; not an IAB test. Current HTTP test waits 2.8s and passes.",
+    "log": "review/prior-direct-file-player-check.json"
+  }
+]

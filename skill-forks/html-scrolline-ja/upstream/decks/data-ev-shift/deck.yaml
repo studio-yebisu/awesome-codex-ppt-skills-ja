@@ -1,0 +1,307 @@
+# 컨셉 data 덱. 「전기차 전환은 어디까지 왔나」 — 2025년 실적·2026년 전망 시장 분석 보고(실데이터).
+# 스토리보드 정본: docs/concepts.md).
+# 파생 수치(증가율·배수·차이)는 OWID CSV 원값으로 계산: data.md §5.3 계산표.
+#
+# 계약 제안 필드(아직 C4에 없음 → 메인 승인 전엔 validateDeck가 unknown key로 막음, data.md §8):
+#   chart.title · chart.dek · chart.notes[{index, series?, text}] · chart.orient(v|h)
+#   chart.states[].title · .dek · .notes · .unit
+#   source: 문자열 또는 문자열 배열(한 차트가 두 출처를 합칠 때)
+#   compare.source
+id: data-ev-shift
+title: "전기차 전환은 어디까지 왔나"
+lang: ko
+concept: data
+sample: false
+sources:
+  - { id: s1, title: "IEA, Global EV Outlook 2026 — Executive summary", url: "https://www.iea.org/reports/global-ev-outlook-2026/executive-summary", accessed: "2026-10-08" }
+  - { id: s2, title: "IEA, Global EV Outlook 2026 — Trends in electric cars", url: "https://www.iea.org/reports/global-ev-outlook-2026/trends-in-electric-cars", accessed: "2026-10-08" }
+  - { id: s3, title: "Our World in Data, Number of new electric cars sold (IEA 자료 가공, 2026-06-15 갱신)", url: "https://ourworldindata.org/grapher/electric-car-sales", accessed: "2026-10-08" }
+  - { id: s4, title: "Our World in Data, Share of new cars sold that are electric (IEA 자료 가공, 2026-06-15 갱신)", url: "https://ourworldindata.org/grapher/electric-car-sales-share", accessed: "2026-10-08" }
+  - { id: s5, title: "Our World in Data, Share of car stocks that are electric (IEA 자료 가공)", url: "https://ourworldindata.org/grapher/share-car-stocks-electric", accessed: "2026-10-08" }
+timing:
+  unit: 0.6
+  hold: 0.9
+  overlap: 0.15
+beats:
+  # ── 1막: 점 하나에서 2,120만 대까지 ───────────────────────
+  - id: b-open
+    type: video
+    src: assets/video/open-highway.mp4
+    poster: assets/frames/open-highway/poster.webp
+    frames: assets/frames/open-highway/frames.json
+    alt: "밤 고속도로 분기점을 위에서 내려다본 장면. 차 불빛이 선처럼 흐르다 한 점만 남는다"
+    mode: scrub
+    caption: "전기차 전환은 어디까지 왔나"
+    place: { slot: full }
+    enter: { move: video-scrub, params: { duration: 2.4 } }
+    link: { move: iris-to-dot, params: { focusX: 0.486, focusY: 0.39, duration: 1.8 } }
+    exportHold: 2.0
+
+  - id: b-seed
+    type: chart
+    kind: dot
+    categories: ["2012"]
+    series:
+      - { name: "전기차 판매(대)", values: [119000] }
+    unit: "대"
+    title: "2012년, 전 세계에서 팔린 전기차는 11만 9천 대였다"
+    notes:
+      - { index: 0, text: "이 점 하나가 11만 9천 대" }
+    states:
+      - name: x178
+        series:
+          - { name: "전기차 판매(대)", values: [21200000] }
+        title: "2025년, 같은 점이 178개가 됐다"
+        dek: "2,120만 대. 13년 사이 178배"
+    source: s3
+    place: { slot: center }
+    enter: { move: dot-seed, params: { noteSide: right, duration: 1.2 } }
+    steps:
+      - { name: x178, move: dot-multiply, params: { cols: 18, pitch: 54, duration: 2.6 } }
+    link: { move: dots-pour, params: { toIndex: -1, duration: 2.6 } }
+    exportHold: 2.0
+
+  - id: b-sales
+    type: chart
+    kind: bar
+    categories: ["2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023", "2024", "2025"]
+    series:
+      - { name: "전기차 판매", values: [52, 78, 120, 205, 208, 298, 660, 1020, 1370, 1750, 2120] }
+    unit: "만 대"
+    title: "판매는 2021년부터 해마다 350만 대 이상 늘었다"
+    dek: "2025년 2,120만 대. 코로나 이후 다섯 해 연속 같은 폭으로 계단을 올랐다"
+    highlight: { index: 10 }
+    states:
+      - name: steps
+        notes:
+          - { index: 6, text: "+362만" }
+          - { index: 7, text: "+360만" }
+          - { index: 8, text: "+350만" }
+          - { index: 9, text: "+380만" }
+          - { index: 10, text: "+370만" }
+      - name: share
+        kind: line
+        unit: "%"
+        series:
+          - { name: "신차 중 전기차 비중", values: [0.68, 0.95, 1.4, 2.4, 2.7, 4.4, 9.3, 15, 18, 21, 25] }
+        title: "신차 4대 중 1대가 전기차다"
+        dek: "같은 기간 신차 판매 중 전기차 비중은 0.7%에서 25%로"
+        notes:
+          - { index: 10, text: "2025년 25%" }
+    source: [s3, s4]
+    place: { slot: center }
+    enter: { move: "engine:none" }
+    steps:
+      - { name: steps, move: annotation-pin, params: { shape: stairs, stagger: 0.16, duration: 1.8 } }
+      - { name: share, move: mark-morph, params: { duration: 2.6 } }
+    link: { move: line-to-waffle, params: { cols: 10, cells: 100, duration: 2.2 } }
+    exportHold: 2.2
+
+  - id: b-quarter
+    type: chart
+    kind: dot
+    categories: ["신차 판매", "도로 위 승용차"]
+    series:
+      - { name: "전기차 비중(%)", values: [25, 5] }
+    unit: "%"
+    title: "새 차 100대 중 25대가 전기차다"
+    states:
+      - name: stock
+        title: "도로 위 승용차는 100대 중 5대뿐이다"
+        dek: "판매 비중과 보유 비중의 간격. 부품·정비·충전 수요는 이 간격만큼 늦게 따라온다"
+    source: [s4, s5]
+    place: { slot: center }
+    enter: { move: "engine:none" }
+    steps:
+      - { name: stock, move: waffle-recount, params: { index: 1, duration: 2 } }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # enter engine:none(link가 그림) 2번째
+    exportHold: 2.4
+
+  # ── 2막: 어디서 팔렸나 ─────────────────────────────────
+  - id: b-split
+    type: chart
+    kind: bar
+    categories: ["중국", "유럽", "미국", "그 밖"]
+    series:
+      - { name: "2025년 전기차 판매", values: [1330, 430, 153, 207] }
+    unit: "만 대"
+    title: "2,120만 대 중 1,330만 대가 중국에서 팔렸다"
+    dek: "세계 판매의 63%. 유럽 430만 대, 미국 153만 대"
+    highlight: { index: 0 }
+    source: s3
+    place: { slot: center }
+    enter: { move: aggregate-split, params: { duration: 2.4 } }
+    link: { move: rank-reorder, params: { matchBy: label, duration: 2.4 } }
+    exportHold: 2.0
+
+  - id: b-share
+    type: chart
+    kind: bar
+    orient: h
+    categories: ["노르웨이", "중국", "베트남", "독일", "유럽", "세계", "태국", "한국", "미국", "일본"]
+    series:
+      - { name: "2025년 신차 중 전기차 비중", values: [97, 53, 40, 30, 28, 25, 23, 11, 10, 3] }
+    unit: "%"
+    title: "비중으로 줄 세우면 순서가 바뀐다"
+    dek: "2025년 신차 판매 중 전기차 비중"
+    highlight: { index: 1 }
+    states:
+      - name: world
+        title: "한국은 11%, 세계 평균 25%의 절반에 못 미친다"
+        dek: "태국 23%, 미국 10%, 일본 3%도 평균선 아래"
+    source: s4
+    place: { slot: center }
+    enter: { move: "engine:none" }
+    steps:
+      - { name: world, move: threshold-line, params: { refIndex: 5, focusIndex: 7, duration: 1.8 } }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # 지나간 차트는 회색으로 물러난다 — 덱 공통 퇴장 문법(2번째)
+    exportHold: 2.4
+
+  - id: b-korea
+    type: chart
+    kind: line
+    categories: ["2020", "2021", "2022", "2023", "2024", "2025"]
+    series:
+      - { name: "한국", values: [2.5, 6.3, 9.6, 8.9, 7.4, 11] }
+      - { name: "세계", values: [4.4, 9.3, 15, 18, 21, 25] }
+    unit: "%"
+    title: "한국은 2년 뒷걸음질 뒤 2025년 11%로 반등했다"
+    dek: "2022년 9.6% → 2024년 7.4% → 2025년 11%. 처음으로 두 자릿수 비중"
+    highlight: { series: "한국", index: 5 }
+    states:
+      - name: gap
+        notes:
+          - { index: 5, series: "한국", text: "세계 평균과 14%p 차이" }
+    source: s4
+    place: { slot: center }
+    enter: { move: ink-in, params: { duration: 2.2 } }
+    steps:
+      - { name: gap, move: annotation-pin, params: { shape: gap, against: 1, offset: 44, duration: 1.4 } }
+    repeat: intended   # 주석 고정은 시그니처 — 덱에서 2번째 annotation-pin
+    exit: { move: "engine:fade-out" }
+    exportHold: 2.2
+
+  # ── 3막: 새 성장 축 ───────────────────────────────────
+  - id: b-vietnam
+    type: video
+    tone: 1
+    src: assets/video/vietnam-street.mp4
+    poster: assets/video/vietnam-street-poster.webp
+    alt: "베트남 도시 큰길. 오토바이와 소형 전기차가 뒤섞여 흐르는 낮 장면"
+    mode: loop
+    mask: { type: text, text: "40%" }
+    caption: "베트남, 신차 10대 중 4대가 전기차. 2023년엔 10대 중 1대였다"
+    source: s4
+    place: { slot: full }
+    enter: { move: mask-word-in, params: { duration: 1.6, captionIn: true } }
+    link: { move: glyph-to-bar, params: { toIndex: 0, duration: 2.4 } }
+    exportHold: 2.4
+
+  - id: b-growth
+    type: chart
+    kind: bar
+    orient: h
+    categories: ["베트남", "인도", "태국", "한국", "독일", "브라질", "중국", "미국", "일본"]
+    series:
+      - { name: "2025년 전기차 판매 증가율(전년 대비)", values: [160.7, 84.7, 71.6, 69.7, 50.9, 41.3, 17.7, 0.7, -1.0] }
+    unit: "%"
+    title: "1년 새 베트남 판매는 2.6배, 중국은 18% 늘었다"
+    dek: "2025년 전기차 판매 증가율(전년 대비)"
+    highlight: { index: 0 }
+    source: s3
+    place: { slot: center }
+    enter: { move: "engine:none" }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # 공통 퇴장 문법(3번째)
+    exportHold: 2.0
+
+  - id: b-q1
+    type: chart
+    kind: bar
+    categories: ["세계", "유럽", "중국 제외 아시아태평양", "중남미"]
+    series:
+      - { name: "2026년 1분기 전기차 판매(전년 같은 분기 대비)", values: [-8, 30, 80, 75] }
+    unit: "%"
+    title: "2026년 1분기, 세계 판매는 8% 줄었다"
+    dek: "중국·미국의 정책 변화 탓. 같은 기간 유럽은 30% 가까이, 중국 제외 아시아태평양은 80% 늘었다"
+    highlight: { index: 0 }
+    notes:
+      - { index: 0, text: "1분기 세계 판매 약 390만 대" }
+    source: s1
+    place: { slot: center }
+    enter: { move: diverge-grow, params: { duration: 2 } }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # 조용한 퇴장(2번째)
+    exportHold: 2.2
+
+  - id: b-2026
+    type: chart
+    kind: line
+    categories: ["2020", "2021", "2022", "2023", "2024", "2025", "2026 전망"]
+    series:
+      - { name: "신차 중 전기차 비중", values: [4.4, 9.3, 15, 18, 21, 25, 28] }
+    unit: "%"
+    title: "비중은 다섯 해 만에 4.4%에서 25%로 올랐다"
+    states:
+      - name: forecast
+        title: "IEA는 2026년 신차의 28%, 2,300만 대를 전망한다"
+        dek: "1분기 부진에도 연간으로는 유럽 약 20%, 중국 제외 아시아태평양 50% 이상 증가 예상"
+        notes:
+          - { index: 6, text: "전망 · IEA Global EV Outlook 2026" }
+    source: [s4, s1]
+    place: { slot: center }
+    enter: { move: ink-in, params: { upto: 5, duration: 2 } }
+    steps:
+      - { name: forecast, move: forecast-extend, params: { fromIndex: 5, duration: 1.8 } }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # 조용한 퇴장(3번째)
+    exportHold: 2.4
+
+  # ── 4막: 왜, 그리고 다음 ───────────────────────────────
+  - id: b-why
+    type: compare
+    items:
+      - { label: "중국", value: 70, text: "2025년 팔린 배터리 전기차 중 평균 내연기관차보다 값이 싼 차의 비율(%)" }
+      - { label: "미국", value: -45, text: "세액공제 종료 뒤 2025년 4분기 전기차 판매, 전년 같은 분기 대비(%)" }
+    verdict: "속도를 가르는 것은 가격과 정책이다"
+    source: [s1, s2]
+    place: { slot: center }
+    enter: { move: divider-split }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # 조용한 퇴장(4번째)
+    exportHold: 2.4
+
+  - id: b-2035
+    type: number
+    value: 5.1
+    format: { suffix: "억", unit: "대", decimals: 1 }
+    from: 0
+    label: "2035년 전 세계 전기차 보유 대수 전망(최대 5억 1,000만 대). 2025년의 6배 이상. 현재 정책 기준, 이륜·삼륜 제외"
+    source: s1
+    place: { slot: center }
+    enter: { move: count-roll }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # 공통 퇴장 문법(4번째)
+    exportHold: 2.2
+
+  - id: b-end
+    type: text
+    text: "판매의 전환점은 지났다. 이제 승부는 도로 위 차가 바뀌는 속도다."
+    lines: ["판매의 전환점은 지났다.", "이제 승부는 도로 위 차가 바뀌는 속도다."]
+    emphasis: ["도로 위 차가 바뀌는 속도"]
+    size: l
+    place: { slot: center }
+    enter: { move: line-mask-rise }
+    exit: { move: "engine:fade-out" }
+    repeat: intended   # 조용한 퇴장(5번째)
+    exportHold: 2.6
+
+  - id: b-sources
+    type: text
+    text: "출처: IEA Global EV Outlook 2026, Our World in Data 전기차 판매·보유 통계(IEA 자료 가공, 2026년 6월 갱신). 증가율·배수·차이는 원자료로 계산."
+    size: m
+    place: { slot: lower-third }
+    enter: { move: "engine:fade-in" }
+    exportHold: 2.0

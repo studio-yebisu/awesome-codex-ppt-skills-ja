@@ -1,0 +1,117 @@
+{
+  "id": "rail",
+  "name": "가로 레일 연표",
+  "axis": "x",
+  "camera": {
+    "mode": "rail",
+    "perspective": 1800
+  },
+  "timing": {
+    "unit": 0.5,
+    "hold": 0.5,
+    "overlap": 0.15
+  },
+  "eases": {
+    "in": "power2.in",
+    "out": "expo.out",
+    "inout": "power2.inOut",
+    "scrub": "none",
+    "travel": "power3.inOut",
+    "arrive": "expo.out",
+    "settle": "power3.out"
+  },
+  "beats": {
+    "allow": [
+      "chronology",
+      "text",
+      "number",
+      "quote",
+      "video",
+      "photo"
+    ]
+  },
+  "moves": {
+    "allow": [
+      "rail-advance",
+      "era-shift",
+      "counter-handoff",
+      "rail-lift",
+      "rail-drop",
+      "fold-to-rail",
+      "rail-split-open",
+      "rail-compress",
+      "rail-draw",
+      "rail-surface",
+      "rail-settle",
+      "mask-word-in",
+      "line-mask-rise",
+      "count-roll",
+      "video-scrub",
+      "frame-to-figure",
+      "engine:fade-in",
+      "engine:fade-out",
+      "engine:crossfade",
+      "engine:none",
+      "text-mask-dive"
+    ],
+    "signature": [
+      "rail-advance",
+      "era-shift",
+      "counter-handoff"
+    ]
+  },
+  "defaults": {
+    "enter": "line-mask-rise",
+    "exit": "engine:fade-out",
+    "byType": {
+      "chronology": {
+        "enter": "rail-surface"
+      },
+      "number": {
+        "enter": "count-roll"
+      },
+      "video": {
+        "enter": "mask-word-in"
+      },
+      "photo": {
+        "enter": "mask-word-in"
+      }
+    }
+  },
+  "slots": {
+    "center": {
+      "x": 0.5,
+      "y": 0.42
+    },
+    "full": {
+      "x": 0.5,
+      "y": 0.5
+    },
+    "left": {
+      "x": 0.33,
+      "y": 0.42
+    },
+    "lower-third": {
+      "x": 0.0625,
+      "y": 0.8
+    }
+  },
+  "tokens": {
+    "nowX": 0.375,
+    "railY": 0.66,
+    "monthPx": 64,
+    "overviewMonthPx": 14,
+    "ghostParallax": 1,
+    "blurMax": 4,
+    "trailOpacity": 0.32,
+    "minorScale": 0.62,
+    "stemMax": 240,
+    "liftRise": 0.12,
+    "stagger": 0.06,
+    "depthNear": 1.0,
+    "depthFar": 0.35,
+    "settleTilt": 9,
+    "settleScale": 1.15,
+    "crossfadeMax": 0.15
+  }
+}

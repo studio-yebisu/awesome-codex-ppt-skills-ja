@@ -2,13 +2,13 @@
 
 掲載GitHubリポジトリを実際に使い、**そのリポで作った日本語資料 → 全ページ再生 → 日本語の使い方 → 派生スキル・再現用ソースキット**へ進めるガイドです。Studio Yebisuが原典の調査、日本語制作、派生スキルとサイトの開発を担当します。原典カタログは [zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)です。
 
-**26リポジトリで制作した29冊・175枚を掲載しています。** 元209件・6分類の作者、分類、一覧は保持しています。209件の原典入口を取得・棚卸し済みで、残る183件は未制作です。原典の取得と、実行・生成の成功は別に記録します。
+**29リポジトリで制作した29冊・175枚を掲載しています。** 元209件・6分類の作者、分類、一覧は保持しています。209件の原典入口を取得・棚卸し済みで、残る183件は未制作です。原典の取得と、実行・生成の成功は別に記録します。
 
 今回の改修はローカル実装・未公開です。[ローカルサイト](http://127.0.0.1:8847/)で再生できます。[既存の公開サイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)は更新前の版です。
 
 [全209件](#catalog) · [6カテゴリ](#choose) · [製品仕様](docs/PRODUCT_SPEC.md) · [制作台帳](data/production-ledger.json) · [確認記録](docs/QA.md) · [出典と利用条件](docs/出典とライセンス.md)
 
-## 実際に制作した26リポジトリ
+## 実際に制作した29リポジトリ
 
 | 原典リポジトリ | 出力と冊数 | 全ページ再生 | 使い方と派生 |
 |---|---|---|---|
@@ -38,10 +38,13 @@
 | [addsumtech/slides_maker](https://github.com/addsumtech/slides_maker) | 編集可能PPTX／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=slide-maker) | [日本語ガイド](repository.html?repo=addsumtech/slides_maker)・[派生SKILL](skill-forks/slide-maker-ja/SKILL.md) |
 | [minhnv0807/ai-business-skills](https://github.com/minhnv0807/ai-business-skills) | 固有HTML／1冊 | [6枚](http://127.0.0.1:8847/case.html?id=business-carousel) | [日本語ガイド](repository.html?repo=minhnv0807/ai-business-skills)・[派生SKILL](skill-forks/business-carousel-ja/SKILL.md) |
 | [crazyykhllc-bit/CyberPPT](https://github.com/crazyykhllc-bit/CyberPPT) | 編集可能PPTX／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=cyberppt) | [日本語ガイド](repository.html?repo=crazyykhllc-bit/CyberPPT)・[派生SKILL](skill-forks/cyberppt-ja/SKILL.md) |
+| [EveryInc/hands-on-deck](https://github.com/EveryInc/hands-on-deck) | 編集可能PPTX／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=hands-on-deck) | [日本語ガイド](repository.html?repo=EveryInc/hands-on-deck)・[派生SKILL](skill-forks/hands-on-deck-ja/SKILL.md) |
+| [FeeiCN/slide-writer](https://github.com/FeeiCN/slide-writer) | 固有HTML／1冊 | [8枚](http://127.0.0.1:8847/case.html?id=slide-writer) | [日本語ガイド](repository.html?repo=FeeiCN/slide-writer)・[派生SKILL](skill-forks/slide-writer-ja/SKILL.md) |
+| [gongnyang/awesome-html-scrolline-deck](https://github.com/gongnyang/awesome-html-scrolline-deck) | 連続スクロールHTML／1冊 | [6停止点](http://127.0.0.1:8847/case.html?id=html-scrolline) | [日本語ガイド](repository.html?repo=gongnyang/awesome-html-scrolline-deck)・[派生SKILL](skill-forks/html-scrolline-ja/SKILL.md) |
 
 MultiAgentPPTは原典のAPI不要exportを実行した4枚を追加。通常のmulti-agent・LLM・画像API経路は未実行です。
 
-編集可能なPPTXは12冊66枚、画像主体のPPTXは1冊3枚、各リポ固有のHTMLは16冊106枚です。PPTX13冊69枚はMicrosoft PowerPointで描画し、プレビューにはそのPNGを使用しています。HTMLは各リポの実装・テンプレートで再生します。全175ページを実表示または実描画画像で目視確認しました。 ai-business-skillsの6枚は原典指定のHTML構成確認プレビューで、SNS公開用の仕上げは別工程です。CyberPPTの5枚は日本語派生の確認済み例で、原典の厳密画像一致は未達のまま記録しています。操作・配布などの確認範囲は [QA記録](docs/QA.md) と各冊のQA.jsonを参照してください。
+編集可能なPPTXは13冊71枚、画像主体のPPTXは1冊3枚、各リポ固有のHTMLは18冊120枚です。PPTX14冊74枚はMicrosoft PowerPointで描画し、プレビューにはそのPNGを使用しています。HTMLは各リポの実装・テンプレートで再生します。全194ページを実表示または実描画画像で目視確認しました。 ai-business-skillsの6枚は原典指定のHTML構成確認プレビューで、SNS公開用の仕上げは別工程です。CyberPPTの5枚は日本語派生の確認済み例で、原典の厳密画像一致は未達のまま記録しています。操作・配布などの確認範囲は [QA記録](docs/QA.md) と各冊のQA.jsonを参照してください。
 
 画像主体のcodex-ppt-skill作例は、native imagegenが生成した全ページ画像を原典assemblerで組み立てたものです。文字・図を個別編集できるPPTXとは区別し、発表者ノートを付けています。実ツールがモデル名を公開していないため、特定の画像モデルを使用したとは断定しません。
 
@@ -72,7 +75,7 @@ python -m http.server 8847 --bind 127.0.0.1
 
 ## 未制作と利用条件
 
-PPTAgentは実行を試しましたが、固定依存のWindows import時のassertで停止し、生成未達です。成功した26リポには含めません。[試行記録と再開条件](examples/repositories/pptagent/README.md)にLinux（WSL含む）またはmacOS等の必要条件を記録しています。その他の未制作リポの状態は制作台帳で確認できます。
+PPTAgentは実行を試しましたが、固定依存のWindows import時のassertで停止し、生成未達です。成功した29リポには含めません。[試行記録と再開条件](examples/repositories/pptagent/README.md)にLinux（WSL含む）またはmacOS等の必要条件を記録しています。その他の未制作リポの状態は制作台帳で確認できます。
 
 一覧・サイトのCC0を掲載コードへ一括適用しません。原文LICENSE／NOTICEと素材・書体の条件を維持します。Mckとminorun-marpはApache-2.0、GuizangとDashiの対象ソースはAGPLです。Dashiの配布対象は使用したHTML経路で、専有ライセンスのPPTX engineは含めません。詳細は [出典と利用条件](docs/出典とライセンス.md)、各原文通知と派生のSOURCE台帳を参照してください。
 
@@ -386,6 +389,9 @@ PPTXなどのPowerPoint形式を扱う制作・変換ツール。
 | [hugohe3/ppt-master](https://github.com/hugohe3/ppt-master) | 60,118 | 文書やテーマからPowerPointを制作。標準の図形・図表・アニメーション、音声ナレーション、手持ちテンプレートに対応。 | [🟢 問題なし](https://agentskillshub.top/skill/hugohe3/ppt-master/) |
 | [op7418/NanoBanana-PPT-Skills](https://github.com/op7418/NanoBanana-PPT-Skills) | 3,294 | AIでPPT用画像や動画を生成するスキル。スライド遷移やインタラクティブな再生に対応。 | [🟡 要注意](https://agentskillshub.top/skill/op7418/NanoBanana-PPT-Skills/) |
 | [crazyykhllc-bit/CyberPPT](https://github.com/crazyykhllc-bit/CyberPPT) | 1,771 | SCR構成とスタイル確認を使い、編集可能なコンサルティング風PowerPointを作るCodex向けスキル。 | [🟢 問題なし](https://agentskillshub.top/skill/crazyykhllc-bit/CyberPPT/) |
+| [EveryInc/hands-on-deck](https://github.com/EveryInc/hands-on-deck) | 編集可能PPTX／1冊 | [5枚](http://127.0.0.1:8847/case.html?id=hands-on-deck) | [日本語ガイド](repository.html?repo=EveryInc/hands-on-deck)・[派生SKILL](skill-forks/hands-on-deck-ja/SKILL.md) |
+| [FeeiCN/slide-writer](https://github.com/FeeiCN/slide-writer) | 固有HTML／1冊 | [8枚](http://127.0.0.1:8847/case.html?id=slide-writer) | [日本語ガイド](repository.html?repo=FeeiCN/slide-writer)・[派生SKILL](skill-forks/slide-writer-ja/SKILL.md) |
+| [gongnyang/awesome-html-scrolline-deck](https://github.com/gongnyang/awesome-html-scrolline-deck) | 連続スクロールHTML／1冊 | [6停止点](http://127.0.0.1:8847/case.html?id=html-scrolline) | [日本語ガイド](repository.html?repo=gongnyang/awesome-html-scrolline-deck)・[派生SKILL](skill-forks/html-scrolline-ja/SKILL.md) |
 | [Gabberflast/academic-pptx-skill](https://github.com/Gabberflast/academic-pptx-skill) | 1,152 | 学会発表、セミナー、学位審査、助成金説明向けの資料を作成。論旨と引用を重視するClaude向けスキル。 | [🟢 問題なし](https://agentskillshub.top/skill/Gabberflast/academic-pptx-skill/) |
 | [irenerachel/visual-style-ppt-skill](https://github.com/irenerachel/visual-style-ppt-skill) | 391 | 視覚的なスタイル設計を重視したPPT作成スキル。 | [🟢 問題なし](https://agentskillshub.top/skill/irenerachel/visual-style-ppt-skill/) |
 | [Noi1r/beamer-skill](https://github.com/Noi1r/beamer-skill) | 364 | BeamerやLaTeXの学術資料を作成、コンパイル、レビュー、推敲するClaude Code向けスキル。 | [🟢 問題なし](https://agentskillshub.top/skill/Noi1r/beamer-skill/) |

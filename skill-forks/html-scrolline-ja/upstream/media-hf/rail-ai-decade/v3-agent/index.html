@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <title>일하는 에이전트</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      @font-face { font-family: "Pretendard"; src: url("fonts/Pretendard-Medium.woff2") format("woff2"); font-weight: 500; font-style: normal; }
+      @font-face { font-family: "Pretendard"; src: url("fonts/Pretendard-Bold.woff2") format("woff2"); font-weight: 700; font-style: normal; }
+      :root { background: #e2ece5; color: #17140f; }
+      * { box-sizing: border-box; }
+      html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+      body { font-family: "JetBrains Mono", "Pretendard", monospace; font-weight: 500; }
+      #root { position: relative; width: 100%; height: 100%; overflow: hidden; background: #e2ece5; }
+      .grain { position: absolute; inset: 0; opacity: .32; background-image: radial-gradient(rgba(23,20,15,.12) .7px, transparent .8px); background-size: 7px 7px; }
+      .terminal { position: absolute; left: 120px; right: 120px; top: 128px; bottom: 128px; border: 2px solid #17140f; background: #f8f4eb; }
+      .topline { height: 80px; border-bottom: 2px solid #17140f; display: flex; align-items: center; padding: 0 40px; font-size: 24px; letter-spacing: .025em; }
+      .signal { display: flex; gap: 12px; margin-right: 24px; }
+      .signal i { display: block; width: 14px; height: 14px; border: 2px solid #17140f; border-radius: 50%; }
+      .signal i:last-child { background: #0e7a4b; border-color: #0e7a4b; }
+      .title { color: #0e7a4b; font-weight: 700; }
+      .stamp { margin-left: auto; color: #6b6457; font-size: 22px; }
+      .workspace { display: grid; grid-template-columns: 45fr 55fr; height: calc(100% - 80px); }
+      .tasks { border-right: 2px solid #17140f; padding: 54px 60px 50px; display: flex; flex-direction: column; min-width: 0; }
+      .label { color: #6b6457; font-size: 24px; letter-spacing: .12em; font-weight: 700; }
+      .task-list { margin-top: 46px; display: grid; gap: 34px; }
+      .task { display: flex; align-items: center; min-height: 72px; font-size: 52px; letter-spacing: -.035em; white-space: nowrap; }
+      .check { position: relative; width: 50px; height: 50px; margin-right: 30px; border: 3px solid #17140f; flex: 0 0 auto; }
+      .check .tick { position: absolute; left: 10px; top: 11px; width: 24px; height: 13px; border-left: 5px solid #f8f4eb; border-bottom: 5px solid #f8f4eb; transform: rotate(-45deg); opacity: 0; }
+      .task-text { display: inline-block; }
+      .workmark { margin-top: auto; padding-top: 26px; border-top: 2px solid rgba(23,20,15,.22); color: #0e7a4b; font-size: 30px; display: flex; align-items: center; }
+      .workmark b { display: inline-block; margin-right: 16px; font-size: 34px; line-height: 1; }
+      .status { position: relative; height: 44px; flex: 1 1 auto; }
+      .status span { position: absolute; left: 0; top: 0; line-height: 44px; white-space: nowrap; }
+      .diff { padding: 54px 60px 50px; display: flex; flex-direction: column; min-width: 0; }
+      .diff-head { display: flex; align-items: baseline; }
+      .diff-head .label { color: #0e7a4b; }
+      .file { margin-left: auto; color: #6b6457; font-size: 22px; }
+      .code { margin-top: 46px; padding: 36px 36px; border-left: 4px solid #0e7a4b; background: rgba(14,122,75,.055); font-size: 38px; line-height: 70px; letter-spacing: -.035em; white-space: nowrap; }
+      .line { display: block; overflow: hidden; height: 70px; }
+      .line-inner { display: inline-block; }
+      .minus { color: #ba3e35; }
+      .plus { color: #0e7a4b; }
+      .prefix { display: inline-block; width: 44px; font-weight: 700; }
+      .result { margin-top: auto; display: flex; align-items: center; gap: 24px; color: #0e7a4b; font-size: 64px; font-weight: 700; letter-spacing: -.04em; line-height: 1.1; opacity: 0; }
+      .result-check { width: 62px; height: 62px; border-radius: 50%; background: #0e7a4b; position: relative; flex: 0 0 auto; }
+      .result-check:after { content: ""; position: absolute; left: 16px; top: 17px; width: 27px; height: 14px; border-left: 6px solid #f8f4eb; border-bottom: 6px solid #f8f4eb; transform: rotate(-45deg); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="v3-agent" data-start="0" data-width="1920" data-height="1080" data-duration="10" data-fps="30">
+      <div class="grain" aria-hidden="true"></div>
+      <main class="terminal" aria-label="가상 작업 에이전트의 진행 화면">
+        <header class="topline"><span class="signal"><i></i><i></i><i></i></span><span class="title">WORKER / PATCH-07</span><span class="stamp">작업 진행 중</span></header>
+        <div class="workspace">
+          <section class="tasks" aria-label="할 일 목록">
+            <div class="label">TASKS / 04</div>
+            <div class="task-list">
+              <div class="task" id="task-1"><span class="check"><i class="tick"></i></span><span class="task-text">테스트 실행</span></div>
+              <div class="task" id="task-2"><span class="check"><i class="tick"></i></span><span class="task-text">실패 2건 확인</span></div>
+              <div class="task" id="task-3"><span class="check"><i class="tick"></i></span><span class="task-text">파일 2곳 수정</span></div>
+              <div class="task" id="task-4"><span class="check"><i class="tick"></i></span><span class="task-text">다시 실행</span></div>
+            </div>
+            <div class="workmark"><b>✳</b><span class="status">
+              <span id="st-0">실행을 준비합니다</span>
+              <span id="st-1">테스트 결과를 읽습니다</span>
+              <span id="st-2">실패한 경로를 확인합니다</span>
+              <span id="st-3">두 곳을 고칩니다</span>
+              <span id="st-4">수정 후 다시 실행합니다</span>
+              <span id="st-5">검증이 끝났습니다</span>
+            </span></div>
+          </section>
+          <section class="diff" aria-label="가상 변경 사항">
+            <div class="diff-head"><span class="label">PATCH / 03</span><span class="file">module/relay.unit</span></div>
+            <div class="code" aria-label="변경된 가상 코드">
+              <span class="line minus"><span class="line-inner" id="line-1"><b class="prefix">−</b>route = wait_for(signal)</span></span>
+              <span class="line plus"><span class="line-inner" id="line-2"><b class="prefix">+</b>route = await_signal(signal)</span></span>
+              <span class="line plus"><span class="line-inner" id="line-3"><b class="prefix">+</b>return relay.commit(route)</span></span>
+            </div>
+            <div class="result" id="result"><span class="result-check"></span><span>통과 12/12</span></div>
+          </section>
+        </div>
+      </main>
+    </div>
+    <script>
+      document.fonts.ready.then(() => {
+        const INK = "#17140f", GREEN = "#0e7a4b", PAPER = "#f8f4eb";
+        const tasks = [1, 2, 3, 4].map((n) => document.getElementById(`task-${n}`));
+        const checks = tasks.map((t) => t.querySelector(".check"));
+        const ticks = tasks.map((t) => t.querySelector(".tick"));
+        const texts = tasks.map((t) => t.querySelector(".task-text"));
+        const lines = ["line-1", "line-2", "line-3"].map((id) => document.getElementById(id));
+        const sts = [0, 1, 2, 3, 4, 5].map((n) => document.getElementById(`st-${n}`));
+        const result = document.getElementById("result");
+
+        gsap.set(lines, { x: -42, opacity: 0 });
+        gsap.set(result, { y: 14, opacity: 0, scale: .96, transformOrigin: "left center" });
+        gsap.set(sts, { opacity: 0 });
+        gsap.set(sts[0], { opacity: 1 });
+        gsap.set(checks, { backgroundColor: "rgba(14,122,75,0)", borderColor: INK });
+        gsap.set(ticks, { opacity: 0 });
+        gsap.set(texts, { color: INK });
+
+        const tl = gsap.timeline({ paused: true });
+        const showStatus = (i, at) => {
+          tl.set(sts, { opacity: 0 }, at);
+          tl.set(sts[i], { opacity: 1 }, at);
+        };
+        const markDone = (index, statusIndex, at) => {
+          tl.set(checks[index], { backgroundColor: GREEN, borderColor: GREEN }, at);
+          tl.set(ticks[index], { opacity: 1 }, at);
+          tl.set(texts[index], { color: GREEN }, at);
+          showStatus(statusIndex, at);
+          tl.fromTo(tasks[index], { x: -12 }, { x: 0, duration: .24, ease: "power3.out", immediateRender: false }, at);
+        };
+        markDone(0, 1, 1.45);
+        tl.to(lines[0], { x: 0, opacity: 1, duration: .42, ease: "power2.out" }, 2.05);
+        markDone(1, 2, 3.35);
+        tl.to(lines[1], { x: 0, opacity: 1, duration: .42, ease: "power2.out" }, 4.05);
+        markDone(2, 3, 5.25);
+        tl.to(lines[2], { x: 0, opacity: 1, duration: .42, ease: "power2.out" }, 6.02);
+        markDone(3, 4, 7.15);
+        showStatus(5, 8.04);
+        tl.to(result, { y: 0, opacity: 1, scale: 1, duration: .34, ease: "power3.out" }, 8.04);
+        // reset to the frame-0 state so 10.0 s == 0 s
+        showStatus(0, 9.08);
+        tl.set(checks, { backgroundColor: "rgba(14,122,75,0)", borderColor: INK }, 9.08);
+        tl.set(ticks, { opacity: 0 }, 9.08);
+        tl.set(texts, { color: INK }, 9.08);
+        tl.to(result, { y: 14, opacity: 0, scale: .96, duration: .18, ease: "power1.in" }, 9.08);
+        tl.to(lines, { x: -42, opacity: 0, duration: .3, stagger: .08, ease: "power1.in" }, 9.26);
+        tl.set({}, {}, 10);
+        window.__timelines["v3-agent"] = tl;
+      });
+    </script>
+  </body>
+</html>
