@@ -1,11 +1,11 @@
 {
   "status": "passed",
   "catalog_count": 209,
-  "produced_repository_count": 24,
-  "case_count": 27,
-  "slide_count": 164,
-  "checked_case_count": 27,
-  "passed_checks": 164,
+  "produced_repository_count": 26,
+  "case_count": 29,
+  "slide_count": 175,
+  "checked_case_count": 29,
+  "passed_checks": 176,
   "issues": [],
   "warnings": [
     {
@@ -23,13 +23,15 @@
     {
       "check": "slide-maker:language",
       "detail": "5 slides omit ja-JP run locale; Japanese text integrity checked, rendered glyph review remains mandatory in QA"
+    },
+    {
+      "check": "cyberppt:original-gate",
+      "detail": "Original strict image fidelity gates remain failed; separately recorded Japanese fork content/readability and merge QA passed."
+    },
+    {
+      "check": "cyberppt:language",
+      "detail": "5 slides omit ja-JP run locale; Japanese text integrity checked, rendered glyph review remains mandatory in QA"
     }
   ],
-  "scope": "Read-only integrity, provenance and recorded review audit. Does not synthesize missing evidence, assess artistic quality or approve publication.",
-  "ui_proof_refs": [
-    "data/repository-ui-qa.json",
-    "data/repository-ui-qa-additions.json"
-  ],
-  "reproduction_kit_qa_sha256": "0042c7a21f6ce2fd530c0d8b2e6b12465d572e7a948c1df2b55f54a635bb7ef9",
-  "checked_at": "2026-10-13T20:13:14.805399+00:00"
+  "scope": "Read-only integrity, provenance and recorded review audit. Does not synthesize missing evidence, assess artistic quality or approve publication."
 }

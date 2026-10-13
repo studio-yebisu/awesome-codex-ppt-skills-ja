@@ -130,8 +130,101 @@
         "reason": "Windowsの深い展開先でfontToolsのbezierTools DLL importが失敗。同じZIPと固定依存を短い展開先に移して再実行し成功。",
         "changed_dependencies": false
       }
+    },
+    {
+      "repository": "minhnv0807/ai-business-skills",
+      "method": "現配布ZIPの全入力から、短い新規フォルダーと新venv/fontTools4.63.0/Brotli1.2.0でReproduce.ps1を実行。原典43番の専用HTML構成確認プレビューを6枚再生成。",
+      "pages": 6,
+      "html_sha256": "e82206204987754d48d7382dfe2aa522adc40e2b5bb8659c5fdce054c7d53325",
+      "zip_sha256": "47537a02e4bf27dc99e22abd042f650808ae48d3ff25eb05c8418e0868b5a01f",
+      "run_log_sha256": "e91d3fe5b00d1fab882d14fbe3853f99f9c768a2cf5a7dbbb25577ecea8c3ee6",
+      "output_review_status": "generated_awaiting_review",
+      "production_stage": "concept_preview",
+      "original_cli_exists": false
+    },
+    {
+      "repository": "crazyykhllc-bit/CyberPPT",
+      "method": "現配布ZIP全入力を短い新規フォルダーへ展開し、新venv/Pillow12.3.0/numpy2.5.4/pywin32312とNode固定lockでReproduce.ps1を実行。原典の内容lock・ページ再構築・PowerPoint全描画・統合比較を30コマンドで再実行。",
+      "pages": 5,
+      "zip_sha256": "0ede931597a082e75fac6b22ed78547a79d799afbfa0999b267212c9d9e1dd44",
+      "input_files_match_current_archive": true,
+      "input_data_identical": true,
+      "run_log_sha256": "7c6e0366e086e9f2e2efc1c63eeb674f2ba874185b69a7a026c2193734d5a0a0",
+      "output_review_status": "generated_awaiting_review",
+      "pptx_sha256": "4911fed99fd2f22037992cb69b7a2e061712aa13bc8c93ed4dc2db9fda758622",
+      "scope": "保存済みImageGen見本からの日本語派生の再構築。新規画像生成・他題材への自動変換・原典画像一致ゲート通過・人の採用とは扱わない。",
+      "commands_successful": 30,
+      "render_comparison": [
+        {
+          "path": "render/slide-01.png",
+          "pixels_identical": true,
+          "primary_sha256": "1c4c3c93b1fb3f760c80de2257baf09c27cd3973e413b26901ec90ba1f4646a0",
+          "reproduced_sha256": "1c4c3c93b1fb3f760c80de2257baf09c27cd3973e413b26901ec90ba1f4646a0"
+        },
+        {
+          "path": "render/slide-02.png",
+          "pixels_identical": true,
+          "primary_sha256": "6789a87df0c57c0c6704d0e0e4cb3f38a53706818f0f30811f9566a2623c46db",
+          "reproduced_sha256": "6789a87df0c57c0c6704d0e0e4cb3f38a53706818f0f30811f9566a2623c46db"
+        },
+        {
+          "path": "render/slide-03.png",
+          "pixels_identical": true,
+          "primary_sha256": "e547031507086aab2a7d15c5507c9630d3b9c2a2ea763f2b6c6cfa0e5d5e7576",
+          "reproduced_sha256": "e547031507086aab2a7d15c5507c9630d3b9c2a2ea763f2b6c6cfa0e5d5e7576"
+        },
+        {
+          "path": "render/slide-04.png",
+          "pixels_identical": true,
+          "primary_sha256": "1d7d2a0ba338498366eb44619b458cf5745c69e695b14a2582485edc706a5e51",
+          "reproduced_sha256": "1d7d2a0ba338498366eb44619b458cf5745c69e695b14a2582485edc706a5e51"
+        },
+        {
+          "path": "render/slide-05.png",
+          "pixels_identical": true,
+          "primary_sha256": "7567d640f3d8bc84df57de34cdd3554bd7e84f4980f1a3123ce0dc3f1763c35e",
+          "reproduced_sha256": "7567d640f3d8bc84df57de34cdd3554bd7e84f4980f1a3123ce0dc3f1763c35e"
+        }
+      ],
+      "native_content_comparison": [
+        {
+          "part": "ppt/slides/slide1.xml",
+          "native_text_runs_identical": 9,
+          "shape_counts_identical": true
+        },
+        {
+          "part": "ppt/slides/slide2.xml",
+          "native_text_runs_identical": 16,
+          "shape_counts_identical": true
+        },
+        {
+          "part": "ppt/slides/slide3.xml",
+          "native_text_runs_identical": 32,
+          "shape_counts_identical": true
+        },
+        {
+          "part": "ppt/slides/slide4.xml",
+          "native_text_runs_identical": 21,
+          "shape_counts_identical": true
+        },
+        {
+          "part": "ppt/slides/slide5.xml",
+          "native_text_runs_identical": 21,
+          "shape_counts_identical": true
+        }
+      ],
+      "powerpoint_version": "16.0",
+      "dependency_audit_after_fix": {
+        "high": 0,
+        "total": 0,
+        "image-size": "2.0.3",
+        "pptxgenjs": "4.0.1",
+        "source_lock_sha256": "dc16b4c19c91716aa019f80f75ee4a8758d47d4e082005b232638774f0ce70ff"
+      },
+      "full_pptx_byte_identity_claimed": false,
+      "original_gate_not_passed": true
     }
   ],
-  "scope": "10形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全209リポの再現確認へ読み替えない。SeaSlidesとslides_makerは実行後の文書追記差分を記録。Reactは現配布ZIP全入力とbyte一致。Magic Slideは全入力一致。画像→PPTXは固定manifest/分離済み画像のreplayで、新しい入力への自動抽出ではない。",
-  "checked_at": "2026-10-13T20:10:22.851729+00:00"
+  "scope": "12形式の配布キット独立実行。再生成出力は確認前。他キットの新venv実行や全209リポの再現確認へ読み替えない。SeaSlidesとslides_makerは実行後の文書追記差分を記録。Reactは現配布ZIP全入力とbyte一致。Magic Slideは全入力一致。画像→PPTXは固定manifest/分離済み画像のreplayで、新しい入力への自動抽出ではない。 原典43番の再現はSNS公開用データではなく、構成確認プレビュー。 CyberPPTは保存済み設計見本からの日本語派生再構築。全5枚の日本語文字と描画pixel一致を確認し、原典strict画像一致の未達は保持。",
+  "checked_at": "2026-10-13T21:08:56.101285+00:00"
 }

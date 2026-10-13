@@ -1,0 +1,47 @@
+[
+  {
+    "repository": "minhnv0807/ai-business-skills",
+    "execution_type": "instruction_skill_carousel_brief_html_preview",
+    "execution_status": "generated_and_reviewed",
+    "case_ids": [
+      "business-carousel"
+    ],
+    "summary_ja": "原典43番の制作指示で、日本語6枚のSNSカルーセルを構成確認。ブリーフと正方形HTMLを作成。",
+    "method_ja": "この集の43-carousel-brief-globalは、デザイナーへ渡すブリーフと構成確認用HTMLを作る指示型スキルです。原典に自動スライド生成CLIはありません。読み手・ブランド→構成→短い原稿→図案と背景→1080×1080のHTMLという原典の工程をCodexが実行しました。",
+    "requirements": [
+      "Python 3.13 / fontTools / Brotli（この作例の再現）",
+      "HTTPで表示できるブラウザー",
+      "公式BIZ UDPGothicのOFL書体（固定版を取得・サブセット化）"
+    ],
+    "steps": [
+      "原典43番、読み手、ブランド条件を読む",
+      "6枚の流れと日本語の短い原稿を確認する",
+      "各カードの図案と背景をブリーフへ書く",
+      "正方形HTMLを作り、全6枚を表示・確認する",
+      "公開用に仕上げる場合は、別途デザインツールと人の確認へ進む"
+    ],
+    "commands": [
+      "python tools/build_business_carousel_repository_example.py --input examples/repositories/business-carousel/input/data.json"
+    ],
+    "source_refs": [
+      {
+        "path": "LICENSE",
+        "sha256": "2e18800268aaa2ada19c22135f541c3ffa9357ab257e427ac403c7b03ebc4a53",
+        "url": "https://github.com/minhnv0807/ai-business-skills/blob/0360adced422a08f70c3eff8905b81962872105d/LICENSE"
+      },
+      {
+        "path": "skills/en/43-carousel-brief-global/SKILL.md",
+        "sha256": "3543c4892ffbb6fe05b55c4043911cfc9201d9b779ed3a25baf0af9f1729893c",
+        "url": "https://github.com/minhnv0807/ai-business-skills/blob/0360adced422a08f70c3eff8905b81962872105d/skills/en/43-carousel-brief-global/SKILL.md"
+      }
+    ],
+    "limitations": [
+      "原典43番のHTMLは構成確認用。Canva/Figma等のSNS公開用仕上げ、縦長版、LinkedIn投稿PDFは未制作。",
+      "実績の証拠がないため、架空の記入例を明示。SNSの反応や改善効果は測定していない。",
+      "人による原稿・コンセプトの承認と投稿は未実施。今回の確認は制作エージェントの判断。",
+      "日本語の短さは字数と実表示で調整。英語の8語・25語を日本語へ機械換算しない。"
+    ],
+    "guide": "examples/repositories/business-carousel/README.md",
+    "production_stage": "concept_preview"
+  }
+]

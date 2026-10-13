@@ -14,7 +14,7 @@ function caseCards(){
   const format=$('#case-format').value;
   const list=cases.filter(c=>(use==='all'||caseUse(c)===use)&&(format==='all'||c.format===format));
   $('#case-results').textContent=list.length+'冊 / '+list.reduce((n,c)=>n+c.page_count,0)+'枚';
-  $('#case-grid').innerHTML=list.length?list.map(c=>'<article class="case-card"><button class="case-card-image" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+' '+esc(c.style)+'のスライド事例を見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライド事例を見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(c.use_case)+'</span><span>'+(c.format==='pptx'?'PowerPoint':'Web')+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.repository)+' / '+esc(c.style)+'</p><div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">事例を見る ↗</button><a href="'+esc(c.guide)+'">このスキルで作る →</a></div></div></article>').join(''):'<p class="case-empty">この条件の制作事例はまだありません。別の用途・形式を選んでください。</p>';
+  $('#case-grid').innerHTML=list.length?list.map(c=>'<article class="case-card"><button class="case-card-image'+(c.preview_canvas?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+' '+esc(c.style)+'のスライド事例を見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライド事例を見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(c.use_case)+'</span><span>'+(c.format==='pptx'?'PowerPoint':'Web')+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.repository)+' / '+esc(c.style)+'</p><div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">事例を見る ↗</button><a href="'+esc(c.guide)+'">このスキルで作る →</a></div></div></article>').join(''):'<p class="case-empty">この条件の制作事例はまだありません。別の用途・形式を選んでください。</p>';
 }
 function previewFor(repo){return Array.isArray(previews)?previews.find(p=>p.repository===repo||p.repo_full_name===repo):previews.images?.[repo]||previews[repo]}
 function skillCards(){
@@ -27,14 +27,16 @@ function skillCards(){
     const repo=s.repo_full_name,works=cases.filter(c=>c.repository===repo),p=previewFor(repo),profile=profileByRepo.get(repo),trial=profile?.execution_status==='local_trial_generated_not_packaged',[owner,name]=repo.split('/');
     const cover=(works[0]?previewUrl(works[0],works[0].interior):null)||(p?.kind==='project'&&p.license&&!/非商用|不一致|未確定/.test(profile?.license_note||'')?(p.src||p.image||p.local_path):null);
     const guide='repository.html?repo='+encodeURIComponent(repo);
-    const visual=cover?(works.length?'<button class="repo-image" data-open-case="'+esc(works[0].id)+'" aria-label="'+esc(repo)+'の日本語スライドを見る"><img src="'+esc(cover)+'" alt="ここで制作した日本語資料" loading="lazy"><span class="watch">▶ このリポの実例を見る</span></button>':'<div class="repo-image repo-original-visual"><img src="'+esc(cover)+'" alt="原作者の公開作例・紹介画像" loading="lazy"></div>'):'<div class="repo-placeholder"><span>'+esc(name.slice(0,2).toUpperCase())+'</span><small>'+(trial?'ローカル試用 / 配布条件を確認中':'日本語の作例は制作前')+'</small></div>';
+    const visual=cover?(works.length?'<button class="repo-image'+(works[0].preview_canvas?' square-preview':'')+'" data-open-case="'+esc(works[0].id)+'" aria-label="'+esc(repo)+'の日本語スライドを見る"><img src="'+esc(cover)+'" alt="ここで制作した日本語資料" loading="lazy"><span class="watch">▶ このリポの実例を見る</span></button>':'<div class="repo-image repo-original-visual"><img src="'+esc(cover)+'" alt="原作者の公開作例・紹介画像" loading="lazy"></div>'):'<div class="repo-placeholder"><span>'+esc(name.slice(0,2).toUpperCase())+'</span><small>'+(trial?'ローカル試用 / 配布条件を確認中':'日本語の作例は制作前')+'</small></div>';
     return '<article class="skill-item" id="skill-'+esc(repo.replace('/','--'))+'">'+visual+'<span class="owner">'+esc(owner)+' / '+esc(categories[s.kind])+'</span><h3><a href="'+guide+'">'+esc(name)+'</a></h3><p>'+esc(s.description_ja)+'</p><p class="skill-state">'+(works.length?'ここで実制作：日本語 '+works.length+'冊・'+works.reduce((n,c)=>n+c.page_count,0)+'枚':trial?'ローカル試用済み / 配布条件の確認待ち':'日本語の作例は未制作 / 原典の入口を取得済み')+'</p><div class="skill-item-actions">'+(works.length?'<button data-open-case="'+esc(works[0].id)+'">スライドを見る ↗</button>':'')+'<a href="'+guide+'">'+(works.length?'使い方を見る →':trial?'試用結果と条件 →':'リポの情報を見る →')+'</a><a href="https://github.com/'+esc(repo)+'" target="_blank" rel="noopener noreferrer">原典 ↗</a></div><p class="case-sample-note">★ '+Number(s.stars).toLocaleString('ja-JP')+' / '+esc(s.license||'条件を原典で確認')+(cover&&!works.length?' / 原作者の公開画像':'')+'</p></article>';
   }).join('')||'<p class="case-empty">該当するスキルがありません。</p>';
 }
 function stop(){playing=false;clearTimeout(timer);timer=null;$('#case-play').textContent='▶ 再生'}
 function fit(){
   const stage=$('#case-stage'),frame=stage?.querySelector('iframe');if(!frame)return;
-  stage.style.setProperty('--case-scale',String(stage.clientWidth/1280));
+  const width=current?.preview_canvas?.width||1280,height=current?.preview_canvas?.height||720;
+  frame.style.width=width+'px';frame.style.height=height+'px';
+  stage.style.setProperty('--case-scale',String(stage.clientWidth/width));
 }
 function send(){
   const frame=$('#case-stage iframe');if(!frame)return;
@@ -80,6 +82,7 @@ function open(id,button){
   const c=cases.find(c=>c.id===id);if(!c)return;
   if(!dialog.open)trigger=button||document.activeElement;
   stop();nativeObserver?.disconnect();nativeObserver=null;current=c;page=0;
+  dialog.classList.toggle('square-preview',Boolean(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height));
   $('#case-owner').textContent=c.repository+' / '+c.style;
   $('#case-title').textContent=c.title;
   $('#case-state').textContent=c.preview_notice||(c.format==='pptx'?(c.editability==='raster_slides'?'原典で生成・組版した画像のPPTX / 発表ノート付き・ページ内の文字と図は画像です':'完成PPTXをPowerPointで出力したプレビュー / 文字・図形・ノートを編集できます'):'元のスキルを適用したHTML / スライド固有の演出を再生');

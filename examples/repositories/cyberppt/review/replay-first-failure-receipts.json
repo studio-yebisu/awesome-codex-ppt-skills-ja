@@ -1,0 +1,63 @@
+[
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt\\source\\upstream\\scripts\\build_content_lock.py",
+      "--outline",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt\\input\\outline.json",
+      "--slide",
+      "1",
+      "--out",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt\\design\\slide-01-content-lock.json"
+    ],
+    "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt",
+    "exit_code": 0,
+    "log": "review/replay/01-build_content_lock.log",
+    "log_sha256": "2bf29a53bbc9f9adf6fa1bf8eea554ffa5aa58664188858d79846a27d9f3bcf6",
+    "original_gate_failure_expected": false
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt\\source\\prepare_measurements.py",
+      "1"
+    ],
+    "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt",
+    "exit_code": 0,
+    "log": "review/replay/02-prepare_measurements.log",
+    "log_sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+    "original_gate_failure_expected": false
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\AppData\\Local\\nodejs\\node-v24.18.0-win-x64\\node.EXE",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt\\source\\reconstruct.cjs",
+      "1"
+    ],
+    "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt",
+    "exit_code": 0,
+    "log": "review/replay/03-reconstruct.log",
+    "log_sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+    "original_gate_failure_expected": false
+  },
+  {
+    "argv": [
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt\\source\\render_powerpoint.ps1",
+      "-PresentationPath",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt\\pages\\slide-01.pptx",
+      "-OutputDirectory",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt\\render\\page-01"
+    ],
+    "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\cyberppt",
+    "exit_code": 1,
+    "log": "review/replay-first-render-failure.log",
+    "log_sha256": "d911ef3f7c08e464e5ee55e9f828e996e0ce0bc0447acae0ac485d44420ad769",
+    "original_gate_failure_expected": false,
+    "resolved_by": "review/replay/04--NoProfile.log"
+  }
+]

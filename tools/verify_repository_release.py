@@ -69,7 +69,7 @@ class HTMLFacts(HTMLParser):
             if a.get(k): self.links.append((tag,k,a[k]))
 
 
-def validate_png(p):
+def validate_png(p,expected_ratio=16/9):
     data=p.read_bytes(); need(data[:8]==b'\x89PNG\r\n\x1a\n', 'Not a PNG: '+str(p))
     pos=8; compressed=bytearray(); dimensions=None; ended=False
     while pos+12<=len(data):
@@ -83,7 +83,7 @@ def validate_png(p):
         if kind==b'IEND': ended=True;break
     need(ended and dimensions and all(dimensions), 'Incomplete PNG: '+str(p))
     need(bool(zlib.decompress(compressed)), 'Empty PNG pixels: '+str(p))
-    need(dimensions[0]>=640 and abs(dimensions[0]/dimensions[1]-16/9)<0.035, 'Unexpected page dimensions: '+str(dimensions))
+    need(dimensions[0]>=640 and abs(dimensions[0]/dimensions[1]-expected_ratio)<0.035, 'Unexpected page dimensions: '+str(dimensions))
     return dimensions
 
 
@@ -177,7 +177,11 @@ def case_manifest(row):
 
 def image_set(row):
     paths=[local(ROOT,p) for p in page_paths(row)]
-    dimensions=[validate_png(p) for p in paths]
+    canvas=row.get('preview_canvas')
+    if canvas:
+        need(row['format']=='html' and canvas=={'width':1080,'height':1080},'Unsupported declared concept canvas')
+    dimensions=[validate_png(p,canvas['width']/canvas['height'] if canvas else 16/9) for p in paths]
+    if canvas:need(set(dimensions)=={(canvas['width'],canvas['height'])},'PNG dimensions differ from declared concept canvas')
     need(len(set(dimensions))==1,'Page dimensions differ inside deck')
     need(len({sha(p) for p in paths})==len(paths),'Duplicate slide images')
     if len({p.parent for p in paths})==1:
@@ -204,7 +208,34 @@ def provenance(row):
     else:need(False,'No artifact identity in provenance')
     commands=data.get('commands_executed')
     if commands:
-        if row.get('editability')=='raster_slides':
+        if data.get('execution_type')=='original_content_lock_measurement_diff_and_pptxgenjs_japanese_fork':
+            # The explicitly documented Japanese fork retains the original
+            # strict-image failures. They are failures, not successful retries.
+            review=load(local(folder,'QA.json'))
+            need(row.get('original_gate_not_passed') is True and data.get('original_gate_not_passed') is True and review.get('original_gate_not_passed') is True,'CyberPPT original-gate status missing')
+            fork=review.get('japanese_fork_qa',{})
+            need(fork.get('passed') is True and fork.get('original_fidelity_not_claimed') is True and fork.get('merge_regression_passed') is True,'Japanese fork review/merge scope missing')
+            local(folder,fork.get('policy'))
+            failed=[]
+            for c in commands:
+                need(c.get('argv') and isinstance(c.get('exit_code'),int),'Missing actual CyberPPT command')
+                need(sha(record_path(folder,c['log']))==c.get('log_sha256'),'CyberPPT command log hash stale')
+                if c['exit_code']!=0:
+                    need(c.get('expected_original_gate_failure') is True and c.get('script') in {'compare_render.py','build_visual_qa_gate.py'} and c.get('failed_original_gate'),'Unexpected CyberPPT execution failure')
+                    failed.append(c)
+            need(len(failed)==2*row['page_count'],'Missing original per-page strict-image failures')
+            need(review.get('original_visual_gates',{}).get('all_passed') is False,'Original failed gates presented as passed')
+            by_log={record_path(folder,c['log']):c for c in commands}
+            for issue in data.get('resolved_incidental_failures',[]):
+                report=load(record_path(folder,issue['report']))
+                resolved=by_log.get(record_path(folder,issue['resolved_by_log']))
+                need(resolved and resolved['exit_code']==0 and issue.get('reason'),'Missing actual incidental-error resolution')
+                if issue.get('failed_log'):
+                    path=record_path(folder,issue['failed_log'])
+                    entries=report if isinstance(report,list) else [report]
+                    need(any(c.get('exit_code')!=0 and c.get('log') and record_path(folder,c['log'])==path and c.get('log_sha256')==sha(path) for c in entries),'Incidental failure log/report hash missing')
+            warn(row['id']+':original-gate','Original strict image fidelity gates remain failed; separately recorded Japanese fork content/readability and merge QA passed.')
+        elif row.get('editability')=='raster_slides':
             # Preserve failed attempts; each must have an identical successful retry.
             for i,c in enumerate(commands):
                 need(c.get('argv'),'Missing generation command')

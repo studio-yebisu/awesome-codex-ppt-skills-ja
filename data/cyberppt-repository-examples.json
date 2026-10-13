@@ -1,0 +1,57 @@
+[
+  {
+    "id": "cyberppt",
+    "title": "商店街のイベント案内を、一つにまとめる",
+    "repository": "crazyykhllc-bit/CyberPPT",
+    "skill_repository": "crazyykhllc-bit/CyberPPT",
+    "upstream_commit": "980e5576565f0673c67ee41b01d20ed66cb8417c",
+    "fork_id": "cyberppt-ja",
+    "page_count": 5,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "style": "紙色と銅色 / 商店街の企画提案",
+    "use_case": "地域イベント案内の企画",
+    "pdf_download": "examples/repositories/cyberppt/render/deck.pdf",
+    "input_data": "examples/repositories/cyberppt/input/outline.json",
+    "input_sha256": "06ea8a49baff0ef2a48cadfb1f8d2102458c6f52efbba63b3ac4cd46c4f85a1a",
+    "notes": [
+      "こもれび商店街｜企画たたき台。一つの入口から、必要な案内にたどり着く。 架空の企画例です。",
+      "SNS・Web・掲示板を行き来する、という課題仮説。既存の発信を生かし、一覧を共通の入口にする。 架空の企画例です。",
+      "日時・場所・費用・雨天時の扱いを同じ順序で掲載。見た目より先に、掲載項目と更新日をそろえる。 架空の企画例です。",
+      "提案する担当分担｜実際の担当者との合意は未取得。誰が直すかまで決めて、案内を古くしない。 架空の企画例です。",
+      "試行期間は2週間という提案｜効果の実測値はまだない。便利さと運用負担の両方を見て、次を決める。 架空の企画例です。"
+    ],
+    "titles": [
+      "商店街のイベント案内を、一つにまとめる",
+      "まず「探す場所」をそろえる",
+      "一覧には、比較に必要な項目をそろえる",
+      "更新の窓口と、公開前の確認を決める",
+      "小さく試し、続けられるかを確かめる"
+    ],
+    "cover": "examples/repositories/cyberppt/render/slide-01.png",
+    "interior": "examples/repositories/cyberppt/render/slide-03.png",
+    "preview": "examples/repositories/cyberppt/index.html",
+    "artifact_download": "examples/repositories/cyberppt/deck.pptx",
+    "source_download": "downloads/cyberppt-example-ja.zip",
+    "input": "examples/repositories/cyberppt/input/BRIEF.md",
+    "prompt": "examples/repositories/cyberppt/PROMPT.txt",
+    "prompt_text": "CyberPPTの固定commitの原文と補助スクリプトを使い、日本語5枚の企画資料「商店街のイベント案内を、一つにまとめる」を作る。\n題材は架空のこもれび商店街。課題仮説、イベントの比較項目、更新担当、試行計画を説明する。実在の開催情報・実測の改善効果に見せない。\n内容をlockし、ImageGenで全ページの設計見本を作り、原典の紙色＋銅色の小売向けスタイルを採用する。設計見本からPptxGenJSで単頁ずつネイティブ再構築し、PowerPoint本体で描画する。\n原典の厳密画像一致テストは実行し、失敗結果をそのまま残す。日本語派生では字形の完全一致と可読性・編集性を区別し、要素の意味と数字を保持する。見切れ・不自然な折り返しを修正する。\n原典原文・派生差分・入力・見本・単頁・比較結果・実行ログを保存する。人間の承認や正式採用を受けたとは記録しない。\n",
+    "provenance": "examples/repositories/cyberppt/PROVENANCE.json",
+    "qa": "examples/repositories/cyberppt/QA.json",
+    "guide": "examples/repositories/cyberppt/README.md",
+    "pages": [
+      "examples/repositories/cyberppt/render/slide-01.png",
+      "examples/repositories/cyberppt/render/slide-02.png",
+      "examples/repositories/cyberppt/render/slide-03.png",
+      "examples/repositories/cyberppt/render/slide-04.png",
+      "examples/repositories/cyberppt/render/slide-05.png"
+    ],
+    "method": "原典の内容lock・画像blueprint・測定比較＋日本語派生のネイティブ再構築",
+    "editability": "native_text_shapes_and_small_svg_icons",
+    "sample_notice": "商店街・イベント・運用計画は架空。効果の実績はありません。",
+    "fork_download": "downloads/cyberppt-ja.zip",
+    "preview_notice": "全5枚。原典の厳密1:1一致は未達。日本語派生QAとPowerPoint実描画を確認。",
+    "reproduce_script": "source/reproduce.py",
+    "original_gate_not_passed": true
+  }
+]

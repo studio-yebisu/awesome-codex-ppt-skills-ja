@@ -1,0 +1,50 @@
+{
+  "repository": "crazyykhllc-bit/CyberPPT",
+  "checked_at": "2026-10-13T21:06:33.454845+00:00",
+  "scope": "この作例の固定Node生成依存のみ。原典全体や他キットの監査ではない。",
+  "before": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 2,
+      "critical": 0,
+      "total": 2
+    },
+    "report": "examples/repositories/cyberppt/review/dependency/npm-audit-before.json",
+    "report_sha256": "11a6dce324b74a76c87c310ada712d2787ae3da146a7b2f36bcf5be46ecdba41"
+  },
+  "after": {
+    "vulnerabilities": {
+      "info": 0,
+      "low": 0,
+      "moderate": 0,
+      "high": 0,
+      "critical": 0,
+      "total": 0
+    },
+    "report": "examples/repositories/cyberppt/review/dependency/npm-audit-after.json",
+    "report_sha256": "bda85c043c4a72fc3fb2bec2874a0503db4460d8a345fa62196e88450be8d2e8",
+    "package_lock_sha256": "dc16b4c19c91716aa019f80f75ee4a8758d47d4e082005b232638774f0ce70ff"
+  },
+  "change": {
+    "pptxgenjs": "4.0.1 unchanged",
+    "image-size": "1.2.1 -> 2.0.3 via explicit override",
+    "forced_fix": false,
+    "advisories": [
+      "https://github.com/advisories/GHSA-5p2g-fcmc-qvqq",
+      "https://github.com/advisories/GHSA-w3rx-r6r6-pgpr"
+    ]
+  },
+  "actual_audit_receipt": {
+    "argv": [
+      "C:/Users/owner/AppData/Local/nodejs/node-v24.18.0-win-x64/node.exe",
+      "C:\\Users\\owner\\AppData\\Local\\nodejs\\node-v24.18.0-win-x64\\node_modules\\npm\\bin\\npm-cli.js",
+      "audit",
+      "--json"
+    ],
+    "exit_code": 0,
+    "stdout_sha256": "bda85c043c4a72fc3fb2bec2874a0503db4460d8a345fa62196e88450be8d2e8"
+  },
+  "runtime_compatibility_evidence": "data/reproduction-kit-qa.json"
+}

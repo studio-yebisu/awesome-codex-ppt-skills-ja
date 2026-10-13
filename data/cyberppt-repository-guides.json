@@ -1,0 +1,170 @@
+[
+  {
+    "repository": "crazyykhllc-bit/CyberPPT",
+    "execution_type": "original_content_lock_measurement_diff_and_pptxgenjs_japanese_fork",
+    "execution_status": "generated_and_reviewed",
+    "case_ids": [
+      "cyberppt"
+    ],
+    "summary_ja": "原典の画像blueprint方式を実行し、日本語の可読性と編集性を優先した5枚へ。原版strict一致は未達。",
+    "requirements": [
+      "Node.js / PptxGenJS 4.0.1",
+      "Python / Pillow, numpy, pywin32",
+      "Windows / Microsoft PowerPoint",
+      "Yu Gothic / Yu Mincho / Times New Roman",
+      "新規設計見本にはImageGen"
+    ],
+    "steps": [
+      "内容lockとImageGen設計見本5枚",
+      "原典の要素署名・測定登録",
+      "PptxGenJSで単頁ずつ再構築",
+      "PowerPoint描画・原典diffと日本語派生QA",
+      "原典mergeの派生実装で統合・回帰比較"
+    ],
+    "commands": [
+      "python examples/repositories/cyberppt/source/reproduce.py"
+    ],
+    "source_refs": [
+      {
+        "path": "LICENSE",
+        "sha256": "7c97ba85605e44b15549678bf66e536bcce1783c22c942bad854561493ea5556",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/LICENSE"
+      },
+      {
+        "path": "references/ppt-production.md",
+        "sha256": "b4f9b9ae43519791b930a68aced3cb34cfc65b5c21ad5b165f7d68c2ca8e3e5a",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/ppt-production.md"
+      },
+      {
+        "path": "references/quality-assurance.md",
+        "sha256": "a26afa95716661d22ceb14aa6da92d999beb9364bfce9c5f99bcc84a97f74763",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/quality-assurance.md"
+      },
+      {
+        "path": "references/source-analysis.md",
+        "sha256": "4501ee35ed24ec31e0f68d1527ae741cbe6fd47f77fbe75e25f7bf2cfe959cfb",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/source-analysis.md"
+      },
+      {
+        "path": "references/storyline.md",
+        "sha256": "06df580e70ca770288421a8e8f35d237bb602d6df844ac710d31876196e42a51",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/storyline.md"
+      },
+      {
+        "path": "references/visual-system.md",
+        "sha256": "5eedd3691ad181550ff5e6ffc45b8ae22ac924d0855242a3847aa78911d54c20",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/visual-system.md"
+      },
+      {
+        "path": "scripts/build_component_signature.py",
+        "sha256": "0975cf493e0579a178a3edf10fa0af7c72550af587b35dbdcbf594c6058d4698",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/build_component_signature.py"
+      },
+      {
+        "path": "scripts/build_content_lock.py",
+        "sha256": "f4f4579733f26e0838b085f3714422dcd9a1c491a1cb6f100b827c9b70809739",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/build_content_lock.py"
+      },
+      {
+        "path": "scripts/build_rework_report.py",
+        "sha256": "75041b1d05205d5a71b28f6cafb7bfc5e092bf796fc1dd881dcbb67ce530b542",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/build_rework_report.py"
+      },
+      {
+        "path": "scripts/build_visual_qa_gate.py",
+        "sha256": "bfb73ab32ffebacbd997e89183f00a736db058c0e4223a0eeafde86358945fd2",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/build_visual_qa_gate.py"
+      },
+      {
+        "path": "scripts/compare_merged_render.py",
+        "sha256": "fb15b32e544cbe3e189b1ae2739ad3369bbab103d5dd676293bd0227e6188e0d",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/compare_merged_render.py"
+      },
+      {
+        "path": "scripts/compare_render.py",
+        "sha256": "bc42baa69eaabdddc6b10d5d792cd4470b30fc72331ee17bd446be6d98f91c76",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/compare_render.py"
+      },
+      {
+        "path": "scripts/export_ppt_render.ps1",
+        "sha256": "1ff972c2569c53df4baebfbdf0dc586442515199ea85097871761da33591247e",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/export_ppt_render.ps1"
+      },
+      {
+        "path": "scripts/inspect_pptx_objects.py",
+        "sha256": "8329ad6736b0ea15e7a1c52b50e5b2435b4f6fbe99a3d88dd974d5e53dd22bf5",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/inspect_pptx_objects.py"
+      },
+      {
+        "path": "scripts/measure_blueprint.py",
+        "sha256": "6dcff4b76ba31bce33c345ff12ee15ea1fd1d956e69c5bf9fcb846599d25b3d0",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/measure_blueprint.py"
+      },
+      {
+        "path": "scripts/merge_verified_pages.py",
+        "sha256": "9aed0530bf1242008d7af37e73bd03c2cbc4109184c925bd77a822080b75170f",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/merge_verified_pages.py"
+      },
+      {
+        "path": "scripts/select_icon.py",
+        "sha256": "999b35c9eac609e5ddd5b4816587c865a05efef8cee3728a7db712d0bfb9ae31",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/select_icon.py"
+      },
+      {
+        "path": "scripts/test_select_icon.py",
+        "sha256": "7497563e85fa7493c315df8be23b3dd76b9eeb543ff46260d4d3e32764c01908",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/test_select_icon.py"
+      },
+      {
+        "path": "scripts/test_validate_pptx.py",
+        "sha256": "b3d6f39858347936d2c12c7e4092c9bcf924c753e8f2b2eb8e0cb4c2329fc7ca",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/test_validate_pptx.py"
+      },
+      {
+        "path": "scripts/validate_pptx.py",
+        "sha256": "550e4a340d7de1171cdb74df8ffa5d3b2ad4d4911eff8f0f75767c87f6e2a666",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/validate_pptx.py"
+      },
+      {
+        "path": "SKILL.md",
+        "sha256": "170f9941d257f52dcb9b5a0731c656e0d8920e08dcaeb06ac5ceef7cb6c182ee",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/SKILL.md"
+      },
+      {
+        "path": "assets/icons/tabler-outline/calendar-event.svg",
+        "sha256": "63ea485308307c968964cd6f5d9b80f91418efd3f15a2cc4f04535e7aa322076",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/assets/icons/tabler-outline/calendar-event.svg"
+      },
+      {
+        "path": "assets/icons/tabler-outline/map-pin.svg",
+        "sha256": "980c1cccd35d4244cf1625306e900d9b54f512e1ba253c61ffb2b1374746f04d",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/assets/icons/tabler-outline/map-pin.svg"
+      },
+      {
+        "path": "assets/icons/tabler-outline/search.svg",
+        "sha256": "e579b69a4b978f702908a48b1bef74d9ac73df4679cb1a6074c567bec2748c41",
+        "url": "https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/assets/icons/tabler-outline/search.svg"
+      }
+    ],
+    "local_changes": [
+      "原典mergeの背景保持を日本語派生実装で補正。原コードと差分を保持。",
+      "ImageGen設計見本の測定結果から、日本語の文字・図形を編集可能な要素へ再構築。",
+      "原典の厳密画像一致と、日本語の内容・読みやすさ・編集性の確認を別に記録。",
+      "PptxGenJS 4.0.1を保持し、間接依存image-sizeを修正版2.0.3へ固定。検出前後の監査を保持。"
+    ],
+    "license": "MIT",
+    "limitations": [
+      "原典の厳密な画像一致は全5枚で未達。日本語派生版の確認済み作例として掲載。",
+      "エージェントが全ページを確認。独立審査・人による採用・公開は未実施。",
+      "商店街・日付・会場・料金・運営案は架空の例。実施効果は未測定。",
+      "再現キットは保存済み見本からの再構築。別原稿には新しい設計見本と測定が必要。",
+      "新しく生成した出力は、全ページを改めて表示確認する。"
+    ],
+    "artifact_paths": [
+      "examples/repositories/cyberppt/deck.pptx"
+    ],
+    "fork": "cyberppt-ja",
+    "method_ja": "原典の内容lock、ImageGen設計見本、測定・比較スクリプトを使い、主要文字と表をPptxGenJSで再構築。厳密画像一致と日本語派生QAを分離。",
+    "original_gate_not_passed": true
+  }
+]

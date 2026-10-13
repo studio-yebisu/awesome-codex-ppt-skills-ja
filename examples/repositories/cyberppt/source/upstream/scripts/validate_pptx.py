@@ -1,0 +1,2106 @@
+#!/usr/bin/env python3
+"""Inspect a PPTX for structural, editability, and layout risks."""
+
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+import zipfile
+from pathlib import Path
+from typing import Any
+from xml.etree import ElementTree as ET
+
+
+NS = {
+    "a": "http://schemas.openxmlformats.org/drawingml/2006/main",
+    "p": "http://schemas.openxmlformats.org/presentationml/2006/main",
+    "c": "http://schemas.openxmlformats.org/drawingml/2006/chart",
+}
+TYPOGRAPHY_MIN_PT = {
+    "C0": 32.0,
+    "T1": 14.0,
+    "T2": 22.0,
+    "T3": 10.0,
+    "T4": 11.0,
+    "T5": 7.5,
+    "T6": 11.0,
+    "T7": 9.5,
+    "T8": 10.0,
+    "T9": 10.0,
+    "T10": 9.5,
+    "T11": 7.5,
+    "T12": 8.5,
+    "T13": 18.0,
+    "T14": 6.5,
+}
+GLOBAL_MIN_FONT_PT = 6.5
+LARGE_IMAGE_AREA_RATIO = 0.40
+FULL_SLIDE_IMAGE_RATIO = 0.90
+TRACE_METHODS = {
+    "pixel-boundary-sampling",
+    "manual-control-point-overlay",
+    "svg-path-tracing",
+    "ppt-custom-geometry-tracing",
+    "approved-local-crop",
+}
+TRACE_REQUIRED_FIELDS = ("trace_method", "trace_reference_crop", "trace_debug_artifact", "rendered_crop_comparison")
+TRACE_ASSET_FIELDS = ("svg_asset", "asset_path", "custom_geometry_asset", "picture_asset")
+GEOMETRY_ANALYSIS_REQUIRED_FIELDS = (
+    "shape_type",
+    "stroke_or_fill",
+    "endpoint_summary",
+    "width_behavior",
+    "local_features",
+    "reconstruction_decision",
+)
+CORE_CURVE_MIN_POINTS = 16
+BLUEPRINT_RECONSTRUCTION_REQUIRED_FIELDS = (
+    "blueprint_path",
+    "canvas_size",
+    "background_color_sample",
+    "surface_system",
+    "layout_regions",
+    "header_footer_system",
+    "so_what_region",
+    "main_chart_semantics",
+    "density_targets",
+    "anchor_targets",
+    "native_rebuild_targets",
+    "allowed_visual_assets",
+    "complex_visual_scan",
+)
+COMPLEX_VISUAL_SCAN_REQUIRED_FIELDS = (
+    "completed",
+    "complex_visual_candidates",
+    "triggered_gates",
+    "pictures_zero_is_not_goal",
+)
+PYTHON_PPTX_TOOL_NAMES = {"python-pptx", "python_pptx", "pythonpptx"}
+HIGH_FIDELITY_VALUES = {
+    "high_fidelity",
+    "high-fidelity",
+    "1:1",
+    "one_to_one",
+    "precise",
+    "exact",
+    "formal",
+    "final",
+}
+VISUAL_QA_REQUIRED_FIELDS = (
+    "surface_system_match",
+    "main_chart_semantics_match",
+    "visual_semantics_preserved",
+    "editable_information_layer_pass",
+    "spatial_registration_pass",
+    "curve_fidelity_pass",
+    "label_collision_pass",
+    "text_overflow_pass",
+    "container_overflow_pass",
+    "continuous_text_flow_pass",
+    "table_semantic_typography_pass",
+    "table_density_pass",
+    "blueprint_background_not_used",
+    "deliverable_allowed",
+)
+TABLE_PROSE_SEMANTIC_ROLES = {
+    "table_body",
+    "table_action",
+    "table_risk",
+    "table_explanation",
+    "table_recommendation",
+    "table_paragraph",
+    "table_sentence",
+    "table_bullet",
+}
+TABLE_PROSE_ALLOWED_ROLES = {"T7", "T10"}
+VISUAL_ELEMENT_PRIORITIES = {"P0", "P1", "P2"}
+VISUAL_ELEMENT_TOLERANCE_MAX = {
+    "P0": 6,
+    "P1": 8,
+    "P2": 12,
+}
+VISUAL_ELEMENT_MEASUREMENT_MODES = {
+    "individual_bbox",
+    "group_with_child_anchors",
+    "decoration_group",
+}
+VISUAL_ELEMENT_P0_ROLES = {
+    "title",
+    "subtitle",
+    "main_chart",
+    "main_visual",
+    "main_flow",
+    "main_matrix",
+    "so_what",
+    "footer",
+    "source",
+    "page_number",
+    "key_number",
+    "core_panel",
+    "user_specified",
+}
+VISUAL_ELEMENT_P0_ROLE_KEYWORDS = (
+    "title",
+    "main_",
+    "so_what",
+    "footer",
+    "source",
+    "page",
+    "key",
+    "core_panel",
+    "user",
+)
+NUMERIC_BBOX_FIELDS = ("x", "y", "w", "h")
+COORDINATE_MAPPING_FIELDS = ("blueprint_canvas_px", "ppt_canvas_in", "scale_x", "scale_y")
+DECORATION_GROUP_REQUIRED_ANY_FIELDS = (("density", "count", "quantity"),)
+DECORATION_GROUP_REQUIRED_FIELDS = (
+    "group_bbox_px",
+    "color",
+    "spacing_px",
+    "alignment",
+    "repeat_direction",
+    "opacity",
+    "reproduction_strategy",
+)
+STRICT_FAILURE_CODES = {
+    "FULL_SLIDE_BACKGROUND_RISK",
+    "PICTURES_NOT_ALLOWED",
+    "PICTURE_COUNT_MISMATCH",
+    "UNJUSTIFIED_LARGE_IMAGE",
+    "NO_NATIVE_TEXT_WITH_EDITABLE_TEXT_REQUIRED",
+    "MANIFEST_SLIDE_MISSING",
+    "MANIFEST_TYPOGRAPHY_INCOMPLETE",
+    "MANIFEST_TEXT_OBJECT_INVALID",
+    "MANIFEST_FONT_BELOW_SCALE",
+    "MANIFEST_DUAL_GATE_INCOMPLETE",
+    "FONT_SIZE_BELOW_FOOTER_MIN",
+    "MANIFEST_TRACE_INCOMPLETE",
+    "MANIFEST_TRACE_METHOD_INVALID",
+    "MANIFEST_TRACE_GEOMETRY_ANALYSIS_MISSING",
+    "MANIFEST_TRACE_GEOMETRY_ANALYSIS_INCOMPLETE",
+    "MANIFEST_TRACE_ASSET_MISSING",
+    "MANIFEST_TRACE_FILE_NOT_FOUND",
+    "MANIFEST_TRACE_CURVES_MISSING",
+    "MANIFEST_TRACE_CURVE_POINT_COUNT_MISSING",
+    "MANIFEST_TRACE_CURVE_POINT_COUNT_TOO_LOW",
+    "MANIFEST_LABEL_COLLISION_CHECK_MISSING",
+    "MANIFEST_LABEL_COLLISION_FAILED",
+    "MANIFEST_SPATIAL_REGISTRATION_CHECK_MISSING",
+    "MANIFEST_SPATIAL_REGISTRATION_FAILED",
+    "MANIFEST_SPATIAL_REGISTRATION_INCOMPLETE",
+    "MANIFEST_CONTAINER_OVERFLOW_CHECK_MISSING",
+    "MANIFEST_CONTAINER_OVERFLOW_FAILED",
+    "MANIFEST_CONTAINER_OVERFLOW_INCOMPLETE",
+    "MANIFEST_CONTINUOUS_TEXT_FLOW_CHECK_MISSING",
+    "MANIFEST_CONTINUOUS_TEXT_FLOW_FAILED",
+    "MANIFEST_CONTINUOUS_TEXT_FLOW_INCOMPLETE",
+    "MANIFEST_TABLE_SEMANTIC_TYPOGRAPHY_MISSING",
+    "MANIFEST_TABLE_SEMANTIC_TYPOGRAPHY_INVALID",
+    "MANIFEST_TABLE_SEMANTIC_TYPOGRAPHY_FAILED",
+    "MANIFEST_TABLE_DENSITY_CHECK_MISSING",
+    "MANIFEST_TABLE_DENSITY_FAILED",
+    "MANIFEST_TABLE_DENSITY_INCOMPLETE",
+    "MANIFEST_BLUEPRINT_RECONSTRUCTION_PLAN_MISSING",
+    "MANIFEST_BLUEPRINT_RECONSTRUCTION_PLAN_INCOMPLETE",
+    "MANIFEST_VISUAL_COMPLEXITY_SCAN_MISSING",
+    "MANIFEST_VISUAL_COMPLEXITY_SCAN_INCOMPLETE",
+    "MANIFEST_PICTURES_ZERO_USED_AS_GOAL",
+    "MANIFEST_GENERATION_ENGINE_MISSING",
+    "MANIFEST_GENERATION_ENGINE_INCOMPLETE",
+    "MANIFEST_PYTHON_PPTX_FORBIDDEN",
+    "MANIFEST_PAGE_EXECUTION_MISSING",
+    "MANIFEST_PAGE_EXECUTION_INCOMPLETE",
+    "MANIFEST_PAGE_EXECUTION_NOT_SINGLE_PAGE",
+    "MANIFEST_PAGE_APPROVAL_MISSING",
+    "MANIFEST_VISUAL_ELEMENT_INVENTORY_MISSING",
+    "VISUAL_ELEMENT_REGISTRY_MISSING",
+    "MANIFEST_VISUAL_ELEMENT_INVENTORY_INCOMPLETE",
+    "MANIFEST_VISUAL_ELEMENT_PRIORITY_INVALID",
+    "MANIFEST_VISUAL_ELEMENT_PRIORITY_DOWNGRADED",
+    "CONTENT_LOCK_MISSING",
+    "CONTENT_LOCK_HASH_MISMATCH",
+    "COMPONENT_SIGNATURE_MISSING",
+    "COMPONENT_SIGNATURE_HASH_MISMATCH",
+    "COMPONENT_SIGNATURE_INCOMPLETE",
+    "P0_ELEMENT_MISSING",
+    "P1_ELEMENT_MISSING",
+    "P2_ELEMENT_MISSING",
+    "RENDER_BBOX_MISSING",
+    "P0_RENDER_DELTA_EXCEEDED",
+    "P1_RENDER_DELTA_EXCEEDED",
+    "P2_RENDER_DELTA_EXCEEDED",
+    "ONLY_REGION_BBOX_NO_CHILDREN",
+    "SPATIAL_PASS_WITHOUT_RENDER_MEASUREMENT",
+    "MANIFEST_BLUEPRINT_MEASUREMENT_MISSING",
+    "MANIFEST_COORDINATE_MAPPING_MISSING",
+    "MANIFEST_KEY_REGION_MEASUREMENT_MISSING",
+    "MANIFEST_DECORATION_GROUP_MEASUREMENT_MISSING",
+    "MANIFEST_SPATIAL_NUMERIC_ANCHOR_MISSING",
+    "MANIFEST_SPATIAL_ANCHOR_DELTA_FAILED",
+    "MANIFEST_BATCH_FINAL_DELIVERY_FORBIDDEN",
+    "MANIFEST_FINAL_MERGE_MISSING",
+    "MANIFEST_FINAL_MERGE_REGENERATED_PAGES",
+    "MANIFEST_MERGE_REGRESSION_MISSING",
+    "MANIFEST_MERGE_REGRESSION_FAILED",
+    "VISUAL_QA_NOT_PROVIDED",
+    "VISUAL_QA_INVALID",
+    "VISUAL_QA_SLIDE_MISSING",
+    "VISUAL_QA_FIELD_MISSING",
+    "VISUAL_QA_CHECK_FAILED",
+    "VISUAL_QA_DELIVERY_BLOCKED",
+    "VISUAL_QA_EVIDENCE_MISSING",
+    "VISUAL_QA_EVIDENCE_FILE_NOT_FOUND",
+    "BLUEPRINT_RENDER_MISSING",
+    "PPT_RENDER_MISSING",
+    "SIDE_BY_SIDE_COMPARISON_MISSING",
+    "VISUAL_PASS_WITHOUT_EVIDENCE",
+    "VISUAL_QA_LOCAL_OVERLAY_MISSING",
+    "VISUAL_QA_UNACCEPTED_HIGH_DIFFERENCE",
+    "VISUAL_DIFFERENCES_EMPTY_WITHOUT_EXTERNAL_EVIDENCE",
+    "DELIVERABLE_ALLOWED_WITHOUT_DIFF_EVIDENCE",
+    "INVALID_SHAPE_BOUNDS",
+}
+PLACEHOLDER_RE = re.compile(
+    r"\b(?:TODO|TBD)\b|Lorem ipsum|Click to add|单击此处添加",
+    re.IGNORECASE,
+)
+SLIDE_RE = re.compile(r"ppt/slides/slide(\d+)\.xml$")
+SHA256_RE = re.compile(r"^[0-9a-fA-F]{64}$")
+
+
+def issue(code: str, message: str, *, slide: int | None = None) -> dict[str, Any]:
+    item: dict[str, Any] = {"code": code, "message": message}
+    if slide is not None:
+        item["slide"] = slide
+    return item
+
+
+def read_xml(archive: zipfile.ZipFile, name: str) -> ET.Element:
+    return ET.fromstring(archive.read(name))
+
+
+def find_slide_names(archive: zipfile.ZipFile) -> list[str]:
+    matched: list[tuple[int, str]] = []
+    for name in archive.namelist():
+        result = SLIDE_RE.fullmatch(name)
+        if result:
+            matched.append((int(result.group(1)), name))
+    return [name for _, name in sorted(matched)]
+
+
+def shape_bounds(element: ET.Element) -> tuple[int, int, int, int] | None:
+    xfrm = element.find(".//a:xfrm", NS)
+    if xfrm is None:
+        return None
+    offset = xfrm.find("a:off", NS)
+    extent = xfrm.find("a:ext", NS)
+    if offset is None or extent is None:
+        return None
+    try:
+        return (
+            int(offset.get("x", "0")),
+            int(offset.get("y", "0")),
+            int(extent.get("cx", "0")),
+            int(extent.get("cy", "0")),
+        )
+    except ValueError:
+        return None
+
+
+def text_content(element: ET.Element) -> str:
+    return " ".join((node.text or "") for node in element.findall(".//a:t", NS)).strip()
+
+
+def font_sizes_pt(element: ET.Element) -> list[float]:
+    sizes: list[float] = []
+    for node in element.findall(".//a:rPr", NS) + element.findall(".//a:defRPr", NS):
+        raw_size = node.get("sz")
+        if raw_size is None:
+            continue
+        try:
+            size = int(raw_size) / 100
+        except ValueError:
+            continue
+        if size > 0:
+            sizes.append(size)
+    return sizes
+
+
+def load_manifest(path: str | Path) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    manifest_path = Path(path)
+    if not manifest_path.exists():
+        return None, [issue("MANIFEST_NOT_FOUND", f"Manifest file does not exist: {manifest_path}")]
+    try:
+        data = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return None, [issue("MANIFEST_INVALID_JSON", f"Cannot parse manifest JSON: {exc}")]
+    if not isinstance(data, dict):
+        return None, [issue("MANIFEST_INVALID_ROOT", "Manifest root must be a JSON object.")]
+    if not isinstance(data.get("slides"), list):
+        return None, [issue("MANIFEST_MISSING_SLIDES", "Manifest must contain a slides array.")]
+    return data, []
+
+
+def load_visual_qa(path: str | Path) -> tuple[dict[str, Any] | None, list[dict[str, Any]]]:
+    visual_qa_path = Path(path)
+    if not visual_qa_path.exists():
+        return None, [issue("VISUAL_QA_NOT_FOUND", f"Visual QA file does not exist: {visual_qa_path}")]
+    try:
+        data = json.loads(visual_qa_path.read_text(encoding="utf-8"))
+    except json.JSONDecodeError as exc:
+        return None, [issue("VISUAL_QA_INVALID", f"Cannot parse visual QA JSON: {exc}")]
+    if not isinstance(data, dict):
+        return None, [issue("VISUAL_QA_INVALID", "Visual QA root must be a JSON object.")]
+    if not isinstance(data.get("slides"), list):
+        return None, [issue("VISUAL_QA_INVALID", "Visual QA must contain a slides array.")]
+    return data, []
+
+
+def find_manifest_slide(manifest: dict[str, Any], slide_number: int) -> dict[str, Any] | None:
+    for entry in manifest.get("slides", []):
+        if isinstance(entry, dict) and entry.get("slide") == slide_number:
+            return entry
+    return None
+
+
+def find_visual_qa_slide(visual_qa: dict[str, Any], slide_number: int) -> dict[str, Any] | None:
+    for entry in visual_qa.get("slides", []):
+        if isinstance(entry, dict) and entry.get("slide") == slide_number:
+            return entry
+    return None
+
+
+def manifest_requires_visual_qa(manifest: dict[str, Any] | None) -> bool:
+    if manifest is None:
+        return False
+    for entry in manifest.get("slides", []):
+        if not isinstance(entry, dict):
+            continue
+        qa = entry.get("qa_expectations") if isinstance(entry.get("qa_expectations"), dict) else {}
+        if qa.get("visual_qa_required") is True:
+            return True
+    return False
+
+
+def manifest_has_visual_semantics(manifest: dict[str, Any] | None) -> bool:
+    if manifest is None:
+        return False
+    for entry in manifest.get("slides", []):
+        if not isinstance(entry, dict):
+            continue
+        qa = entry.get("qa_expectations") if isinstance(entry.get("qa_expectations"), dict) else {}
+        if qa.get("visual_semantics_required") is True:
+            return True
+    return False
+
+
+def manifest_is_high_fidelity(manifest: dict[str, Any] | None) -> bool:
+    if manifest is None:
+        return False
+    raw_value = str(manifest.get("fidelity_requirement", "")).strip().lower()
+    if raw_value in HIGH_FIDELITY_VALUES:
+        return True
+    if manifest.get("high_fidelity_required") is True:
+        return True
+    return manifest_has_visual_semantics(manifest)
+
+
+def validate_manifest(manifest: dict[str, Any] | None) -> list[dict[str, Any]]:
+    warnings: list[dict[str, Any]] = []
+    if manifest is None:
+        return warnings
+
+    slides = [entry for entry in manifest.get("slides", []) if isinstance(entry, dict)]
+    high_fidelity = manifest_is_high_fidelity(manifest)
+    delivery_mode = str(manifest.get("delivery_mode", "")).strip().lower()
+
+    if high_fidelity and len(slides) > 1 and delivery_mode in {
+        "batch_final_deck",
+        "batch",
+        "full_deck_generation",
+        "one_shot_final",
+    }:
+        warnings.append(
+            issue(
+                "MANIFEST_BATCH_FINAL_DELIVERY_FORBIDDEN",
+                "High-fidelity stage 3 delivery cannot be one-shot batch generation; pages must be made, rendered, and approved one at a time.",
+            )
+        )
+
+    if high_fidelity and len(slides) > 1:
+        final_merge = manifest.get("final_merge")
+        if not isinstance(final_merge, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_FINAL_MERGE_MISSING",
+                    "Final deck must declare a merge of already approved single-page PPTX files.",
+                )
+            )
+        else:
+            if (
+                final_merge.get("method") != "merge_approved_single_page_pptx"
+                or final_merge.get("regenerated_pages") is True
+            ):
+                warnings.append(
+                    issue(
+                        "MANIFEST_FINAL_MERGE_REGENERATED_PAGES",
+                        "Final merge must not regenerate, re-layout, redraw, or rasterize approved pages.",
+                    )
+                )
+            source_pages = final_merge.get("source_single_page_pptx")
+            if not isinstance(source_pages, list) or len(source_pages) != len(slides):
+                warnings.append(
+                    issue(
+                        "MANIFEST_FINAL_MERGE_MISSING",
+                        "Final merge must list one approved single-page PPTX source for every slide.",
+                    )
+                )
+            if final_merge.get("merge_regression_rendered") is not True:
+                warnings.append(
+                    issue(
+                        "MANIFEST_MERGE_REGRESSION_MISSING",
+                        "Merged deck must be rendered for regression QA against approved single-page renders.",
+                    )
+                )
+            if final_merge.get("merge_regression_pass") is not True:
+                warnings.append(
+                    issue(
+                        "MANIFEST_MERGE_REGRESSION_FAILED",
+                        "Merged deck regression QA must pass before final delivery.",
+                    )
+                )
+    return warnings
+
+
+def manifest_ref_exists(value: Any, manifest_dir: Path | None = None) -> bool:
+    if not isinstance(value, str) or not value.strip():
+        return False
+    candidate = Path(value)
+    if candidate.exists():
+        return True
+    if not candidate.is_absolute() and manifest_dir is not None:
+        return (manifest_dir / candidate).exists()
+    return False
+
+
+def is_number(value: Any) -> bool:
+    return isinstance(value, (int, float)) and not isinstance(value, bool)
+
+
+def has_numeric_bbox(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return all(is_number(value.get(field)) for field in NUMERIC_BBOX_FIELDS)
+
+
+def has_numeric_size(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return is_number(value.get("w")) and is_number(value.get("h"))
+
+
+def has_numeric_delta(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return all(is_number(value.get(field)) for field in ("x", "y"))
+
+
+def has_valid_sha256(value: Any) -> bool:
+    return isinstance(value, str) and bool(SHA256_RE.fullmatch(value.strip()))
+
+
+def lock_record_is_valid(value: Any) -> bool:
+    if not isinstance(value, dict):
+        return False
+    return (
+        value.get("locked") is True
+        and isinstance(value.get("path"), str)
+        and bool(value.get("path").strip())
+        and has_valid_sha256(value.get("sha256"))
+    )
+
+
+def get_blueprint_measurement_table(entry: dict[str, Any], reconstruction_plan: dict[str, Any]) -> Any:
+    table = reconstruction_plan.get("blueprint_measurement_table")
+    if table is not None:
+        return table
+    return entry.get("blueprint_measurement_table")
+
+
+def role_requires_p0(role: Any) -> bool:
+    if not isinstance(role, str):
+        return False
+    normalized = role.strip().lower()
+    return normalized in VISUAL_ELEMENT_P0_ROLES or any(
+        keyword in normalized for keyword in VISUAL_ELEMENT_P0_ROLE_KEYWORDS
+    )
+
+
+def has_individual_measurement(item: dict[str, Any]) -> bool:
+    return (
+        item.get("measurement_mode") == "individual_bbox"
+        and has_numeric_bbox(item.get("blueprint_bbox_px"))
+        and has_numeric_bbox(item.get("ppt_target_bbox_in"))
+        and is_number(item.get("tolerance_px"))
+        and item.get("must_reproduce") is True
+    )
+
+
+def has_group_child_measurement(item: dict[str, Any]) -> bool:
+    child_anchors = item.get("child_anchors", item.get("anchor_points"))
+    return (
+        item.get("measurement_mode") == "group_with_child_anchors"
+        and has_numeric_bbox(item.get("group_bbox_px", item.get("blueprint_bbox_px")))
+        and isinstance(child_anchors, list)
+        and bool(child_anchors)
+    )
+
+
+def has_decoration_group_measurement(item: dict[str, Any]) -> bool:
+    if item.get("measurement_mode") != "decoration_group":
+        return False
+    if not has_numeric_bbox(item.get("group_bbox_px")):
+        return False
+    if not all(item.get(field) not in (None, "", [], {}) for field in DECORATION_GROUP_REQUIRED_FIELDS[1:]):
+        return False
+    return any(
+        item.get(field) not in (None, "", [], {})
+        for field in DECORATION_GROUP_REQUIRED_ANY_FIELDS[0]
+    )
+
+
+def delta_exceeds_tolerance(delta: dict[str, Any], tolerance: Any) -> bool:
+    if not is_number(tolerance):
+        return True
+    for field in ("x", "y", "w", "h"):
+        value = delta.get(field)
+        if is_number(value) and abs(float(value)) > float(tolerance):
+            return True
+    return False
+
+
+def validate_manifest_slide(
+    entry: dict[str, Any] | None,
+    metrics: dict[str, Any],
+    slide_number: int,
+    manifest_dir: Path | None = None,
+) -> list[dict[str, Any]]:
+    warnings: list[dict[str, Any]] = []
+    if entry is None:
+        return [
+            issue(
+                "MANIFEST_SLIDE_MISSING",
+                "No slide_manifest.json entry exists for this slide.",
+                slide=slide_number,
+            )
+        ]
+
+    qa = entry.get("qa_expectations") if isinstance(entry.get("qa_expectations"), dict) else {}
+    if qa.get("dual_gate_required") is not True:
+        warnings.append(
+            issue(
+                "MANIFEST_DUAL_GATE_INCOMPLETE",
+                "qa_expectations.dual_gate_required must be true so editability and visual semantics are enforced as co-equal gates.",
+                slide=slide_number,
+            )
+        )
+    if qa.get("visual_semantics_required") is not True:
+        warnings.append(
+            issue(
+                "MANIFEST_DUAL_GATE_INCOMPLETE",
+                "qa_expectations.visual_semantics_required must be true; editable structure cannot substitute for visual-semantic fidelity.",
+                slide=slide_number,
+            )
+        )
+    else:
+        content_lock = entry.get("slide_content_lock")
+        if not lock_record_is_valid(content_lock):
+            warnings.append(
+                issue(
+                    "CONTENT_LOCK_MISSING",
+                    "visual_semantics_required=true requires a frozen slide_content_lock with path, sha256, and locked=true.",
+                    slide=slide_number,
+                )
+            )
+
+        component_signature = entry.get("blueprint_component_signature")
+        if not lock_record_is_valid(component_signature):
+            warnings.append(
+                issue(
+                    "COMPONENT_SIGNATURE_MISSING",
+                    "visual_semantics_required=true requires a frozen blueprint_component_signature with path, sha256, and locked=true.",
+                    slide=slide_number,
+                )
+            )
+        elif not isinstance(component_signature.get("components"), list) or not component_signature.get("components"):
+            warnings.append(
+                issue(
+                    "COMPONENT_SIGNATURE_INCOMPLETE",
+                    "blueprint_component_signature must include a non-empty components array.",
+                    slide=slide_number,
+                )
+            )
+        else:
+            for component_index, component in enumerate(component_signature.get("components", []), start=1):
+                if not isinstance(component, dict):
+                    warnings.append(
+                        issue(
+                            "COMPONENT_SIGNATURE_INCOMPLETE",
+                            f"blueprint_component_signature.components[{component_index}] must be an object.",
+                            slide=slide_number,
+                        )
+                    )
+                    continue
+                missing_component_fields = []
+                for field in ("id", "type", "priority", "required_subcomponents"):
+                    value = component.get(field)
+                    if field == "required_subcomponents":
+                        if not isinstance(value, list) or not value:
+                            missing_component_fields.append(field)
+                    elif value in (None, "", [], {}):
+                        missing_component_fields.append(field)
+                if component.get("priority") not in VISUAL_ELEMENT_PRIORITIES:
+                    missing_component_fields.append("priority")
+                if component.get("must_preserve_type") is not True:
+                    missing_component_fields.append("must_preserve_type")
+                if missing_component_fields:
+                    warnings.append(
+                        issue(
+                            "COMPONENT_SIGNATURE_INCOMPLETE",
+                            f"blueprint_component_signature.components[{component_index}] is missing: {', '.join(sorted(set(missing_component_fields)))}.",
+                            slide=slide_number,
+                        )
+                    )
+
+        reconstruction_plan = entry.get("blueprint_reconstruction_plan")
+        if not isinstance(reconstruction_plan, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_BLUEPRINT_RECONSTRUCTION_PLAN_MISSING",
+                    "visual_semantics_required=true requires a blueprint_reconstruction_plan before PPTX generation.",
+                    slide=slide_number,
+                )
+            )
+        else:
+            missing_plan_fields = []
+            for field in BLUEPRINT_RECONSTRUCTION_REQUIRED_FIELDS:
+                field_value = reconstruction_plan.get(field)
+                if field == "allowed_visual_assets":
+                    if not isinstance(field_value, list):
+                        missing_plan_fields.append(field)
+                elif field == "complex_visual_scan":
+                    if not isinstance(field_value, dict):
+                        missing_plan_fields.append(field)
+                elif field in {"layout_regions", "anchor_targets", "native_rebuild_targets"}:
+                    if not isinstance(field_value, list) or not field_value:
+                        missing_plan_fields.append(field)
+                elif field_value in (None, "", [], {}):
+                    missing_plan_fields.append(field)
+            if missing_plan_fields:
+                warnings.append(
+                    issue(
+                        "MANIFEST_BLUEPRINT_RECONSTRUCTION_PLAN_INCOMPLETE",
+                        f"blueprint_reconstruction_plan is missing: {', '.join(missing_plan_fields)}.",
+                        slide=slide_number,
+                    )
+                )
+            complex_visual_scan = reconstruction_plan.get("complex_visual_scan")
+            if not isinstance(complex_visual_scan, dict):
+                warnings.append(
+                    issue(
+                        "MANIFEST_VISUAL_COMPLEXITY_SCAN_MISSING",
+                        "blueprint_reconstruction_plan requires complex_visual_scan before choosing native-only reconstruction.",
+                        slide=slide_number,
+                    )
+                )
+            else:
+                scan_missing_fields = []
+                if complex_visual_scan.get("completed") is not True:
+                    scan_missing_fields.append("completed")
+                if not isinstance(complex_visual_scan.get("complex_visual_candidates"), list):
+                    scan_missing_fields.append("complex_visual_candidates")
+                if not isinstance(complex_visual_scan.get("triggered_gates"), list):
+                    scan_missing_fields.append("triggered_gates")
+                if "pictures_zero_is_not_goal" not in complex_visual_scan:
+                    scan_missing_fields.append("pictures_zero_is_not_goal")
+                if scan_missing_fields:
+                    warnings.append(
+                        issue(
+                            "MANIFEST_VISUAL_COMPLEXITY_SCAN_INCOMPLETE",
+                            "complex_visual_scan must record completion, complex candidates, triggered gates, and the pictures=0 non-goal assertion.",
+                            slide=slide_number,
+                        )
+                    )
+                if (
+                    complex_visual_scan.get("pictures_zero_is_not_goal") is not True
+                    or qa.get("pictures_zero_goal") is True
+                    or entry.get("pictures_zero_goal") is True
+                    or qa.get("target_pictures") == 0
+                    or entry.get("target_pictures") == 0
+                ):
+                    warnings.append(
+                        issue(
+                            "MANIFEST_PICTURES_ZERO_USED_AS_GOAL",
+                            "pictures=0 is not a third-stage goal and cannot justify avoiding asset, curve, or complex-visual gates.",
+                            slide=slide_number,
+                        )
+                    )
+                candidates = complex_visual_scan.get("complex_visual_candidates")
+                triggered_gates = complex_visual_scan.get("triggered_gates")
+                if (
+                    isinstance(candidates, list)
+                    and isinstance(triggered_gates, list)
+                    and not candidates
+                    and not triggered_gates
+                    and not complex_visual_scan.get("native_only_rationale")
+                ):
+                    warnings.append(
+                        issue(
+                            "MANIFEST_VISUAL_COMPLEXITY_SCAN_INCOMPLETE",
+                            "native-only reconstruction requires a rationale when no complex visual candidates or gates are found.",
+                            slide=slide_number,
+                        )
+                    )
+            visual_element_inventory = entry.get(
+                "visual_element_inventory",
+                reconstruction_plan.get("visual_element_inventory"),
+            )
+            visual_element_registry = entry.get(
+                "visual_element_registry",
+                reconstruction_plan.get("visual_element_registry", visual_element_inventory),
+            )
+            if not isinstance(visual_element_registry, list) or not visual_element_registry:
+                warnings.append(
+                    issue(
+                        "VISUAL_ELEMENT_REGISTRY_MISSING",
+                        "visual_semantics_required=true requires visual_element_registry covering every visible element with blueprint, PPT target, render bbox, delta, and tolerance.",
+                        slide=slide_number,
+                    )
+                )
+            if not isinstance(visual_element_inventory, list) or not visual_element_inventory:
+                warnings.append(
+                    issue(
+                        "MANIFEST_VISUAL_ELEMENT_INVENTORY_MISSING",
+                        "visual_semantics_required=true requires visual_element_inventory covering every visible visual element or element group.",
+                        slide=slide_number,
+                    )
+                )
+            else:
+                for element_index, element in enumerate(visual_element_inventory, start=1):
+                    if not isinstance(element, dict):
+                        warnings.append(
+                            issue(
+                                "MANIFEST_VISUAL_ELEMENT_INVENTORY_INCOMPLETE",
+                                f"visual_element_inventory[{element_index}] must be an object.",
+                                slide=slide_number,
+                            )
+                        )
+                        continue
+                    priority = element.get("priority")
+                    measurement_mode = element.get("measurement_mode")
+                    role = element.get("role")
+                    if priority not in VISUAL_ELEMENT_PRIORITIES or measurement_mode not in VISUAL_ELEMENT_MEASUREMENT_MODES:
+                        warnings.append(
+                            issue(
+                                "MANIFEST_VISUAL_ELEMENT_PRIORITY_INVALID",
+                                f"visual_element_inventory[{element_index}] must include priority P0/P1/P2 and a valid measurement_mode.",
+                                slide=slide_number,
+                            )
+                        )
+                        continue
+                    if priority == "P2" and role_requires_p0(role):
+                        warnings.append(
+                            issue(
+                                "MANIFEST_VISUAL_ELEMENT_PRIORITY_DOWNGRADED",
+                                f"visual_element_inventory[{element_index}] marks a P0 role as P2.",
+                                slide=slide_number,
+                            )
+                        )
+                    if priority == "P0":
+                        if measurement_mode != "individual_bbox":
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_VISUAL_ELEMENT_PRIORITY_DOWNGRADED",
+                                    f"visual_element_inventory[{element_index}] is P0 but is not individually measured.",
+                                    slide=slide_number,
+                                )
+                            )
+                        if not has_individual_measurement(element):
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_KEY_REGION_MEASUREMENT_MISSING",
+                                    f"visual_element_inventory[{element_index}] P0 elements require blueprint_bbox_px, ppt_target_bbox_in, tolerance_px, and must_reproduce=true.",
+                                    slide=slide_number,
+                                )
+                            )
+                    elif priority == "P1":
+                        if measurement_mode not in {"individual_bbox", "group_with_child_anchors"}:
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_VISUAL_ELEMENT_PRIORITY_DOWNGRADED",
+                                    f"visual_element_inventory[{element_index}] is P1 but uses an invalid low-detail measurement mode.",
+                                    slide=slide_number,
+                                )
+                            )
+                        if not (has_individual_measurement(element) or has_group_child_measurement(element)):
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_KEY_REGION_MEASUREMENT_MISSING",
+                                    f"visual_element_inventory[{element_index}] P1 elements require individual bbox measurement or group child anchors.",
+                                    slide=slide_number,
+                                )
+                            )
+                    elif priority == "P2":
+                        if not (has_decoration_group_measurement(element) or has_group_child_measurement(element)):
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_DECORATION_GROUP_MEASUREMENT_MISSING",
+                                    f"visual_element_inventory[{element_index}] P2 elements require decoration-group measurement or group child anchors.",
+                                    slide=slide_number,
+                                )
+                            )
+
+            if isinstance(visual_element_registry, list) and visual_element_registry:
+                for element_index, element in enumerate(visual_element_registry, start=1):
+                    if not isinstance(element, dict):
+                        warnings.append(
+                            issue(
+                                "MANIFEST_VISUAL_ELEMENT_INVENTORY_INCOMPLETE",
+                                f"visual_element_registry[{element_index}] must be an object.",
+                                slide=slide_number,
+                            )
+                        )
+                        continue
+                    priority = element.get("priority")
+                    missing_fields = [
+                        field
+                        for field in ("element_id", "element_type", "source_component_id", "registration_status")
+                        if element.get(field) in (None, "", [], {})
+                    ]
+                    if priority not in VISUAL_ELEMENT_PRIORITIES:
+                        missing_fields.append("priority")
+                    if not has_numeric_bbox(element.get("blueprint_bbox_px")):
+                        missing_fields.append("blueprint_bbox_px")
+                    if not has_numeric_bbox(element.get("ppt_target_bbox_in")):
+                        missing_fields.append("ppt_target_bbox_in")
+                    if not has_numeric_delta(element.get("delta_px")):
+                        missing_fields.append("delta_px")
+                    if not is_number(element.get("tolerance_px")):
+                        missing_fields.append("tolerance_px")
+                    if missing_fields:
+                        warnings.append(
+                            issue(
+                                "MANIFEST_VISUAL_ELEMENT_INVENTORY_INCOMPLETE",
+                                f"visual_element_registry[{element_index}] is missing: {', '.join(sorted(set(missing_fields)))}.",
+                                slide=slide_number,
+                            )
+                        )
+                    if priority in VISUAL_ELEMENT_PRIORITIES and not has_numeric_bbox(element.get("render_bbox_px")):
+                        warnings.append(
+                            issue(
+                                "RENDER_BBOX_MISSING",
+                                f"visual_element_registry[{element_index}] must include render_bbox_px for post-render measurement; all P0/P1/P2 elements require render feedback.",
+                                slide=slide_number,
+                            )
+                        )
+                    if element.get("registration_status") != "passed":
+                        warnings.append(
+                            issue(
+                                "SPATIAL_PASS_WITHOUT_RENDER_MEASUREMENT",
+                                f"visual_element_registry[{element_index}] registration_status must be exactly 'passed' only after render measurement.",
+                                slide=slide_number,
+                            )
+                        )
+                    if priority in VISUAL_ELEMENT_PRIORITIES:
+                        tolerance = element.get("tolerance_px")
+                        max_tolerance = VISUAL_ELEMENT_TOLERANCE_MAX[priority]
+                        if not is_number(tolerance) or float(tolerance) > max_tolerance:
+                            warnings.append(
+                                issue(
+                                    f"{priority}_RENDER_DELTA_EXCEEDED",
+                                    f"visual_element_registry[{element_index}] tolerance exceeds {priority} maximum of {max_tolerance}px.",
+                                    slide=slide_number,
+                                )
+                            )
+                        delta = element.get("delta_px")
+                        if isinstance(delta, dict) and delta_exceeds_tolerance(delta, tolerance):
+                            warnings.append(
+                                issue(
+                                    f"{priority}_RENDER_DELTA_EXCEEDED",
+                                    f"visual_element_registry[{element_index}] delta_px exceeds tolerance_px.",
+                                    slide=slide_number,
+                                )
+                            )
+                    if (
+                        isinstance(element.get("children_expected"), list)
+                        and element.get("children_expected")
+                        and not isinstance(element.get("children_measured"), list)
+                    ):
+                        warnings.append(
+                            issue(
+                                "ONLY_REGION_BBOX_NO_CHILDREN",
+                                f"visual_element_registry[{element_index}] declares child elements but lacks children_measured; container bbox cannot replace child measurement.",
+                                slide=slide_number,
+                            )
+                        )
+
+            measurement_table = get_blueprint_measurement_table(entry, reconstruction_plan)
+            if not isinstance(measurement_table, dict):
+                warnings.append(
+                    issue(
+                        "MANIFEST_BLUEPRINT_MEASUREMENT_MISSING",
+                        "visual_semantics_required=true requires blueprint_measurement_table before PPTX generation.",
+                        slide=slide_number,
+                    )
+                )
+            else:
+                missing_mapping = []
+                for field in COORDINATE_MAPPING_FIELDS:
+                    field_value = measurement_table.get(field)
+                    if field in {"blueprint_canvas_px", "ppt_canvas_in"}:
+                        if not has_numeric_size(field_value):
+                            missing_mapping.append(field)
+                    elif not is_number(field_value):
+                        missing_mapping.append(field)
+                if missing_mapping:
+                    warnings.append(
+                        issue(
+                            "MANIFEST_COORDINATE_MAPPING_MISSING",
+                            f"blueprint_measurement_table is missing coordinate mapping fields: {', '.join(missing_mapping)}.",
+                            slide=slide_number,
+                        )
+                    )
+        generation_engine = entry.get("generation_engine")
+        if not isinstance(generation_engine, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_GENERATION_ENGINE_MISSING",
+                    "visual_semantics_required=true requires generation_engine metadata.",
+                    slide=slide_number,
+                )
+            )
+        else:
+            tool_name = str(generation_engine.get("tool", "")).strip().lower()
+            if not tool_name or generation_engine.get("visual_fidelity_not_reduced") is not True:
+                warnings.append(
+                    issue(
+                        "MANIFEST_GENERATION_ENGINE_INCOMPLETE",
+                        "generation_engine must record the PPTX tool and assert that visual fidelity was not reduced.",
+                        slide=slide_number,
+                    )
+                )
+            if tool_name in PYTHON_PPTX_TOOL_NAMES:
+                warnings.append(
+                    issue(
+                        "MANIFEST_PYTHON_PPTX_FORBIDDEN",
+                        "python-pptx is forbidden for third-stage formal PPTX generation; fix PptxGenJS objects instead of switching engines.",
+                        slide=slide_number,
+                    )
+                )
+        page_execution = entry.get("page_execution")
+        if not isinstance(page_execution, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_PAGE_EXECUTION_MISSING",
+                    "visual_semantics_required=true requires page_execution metadata for single-page making and approval.",
+                    slide=slide_number,
+                )
+            )
+        else:
+            required_page_fields = (
+                "mode",
+                "single_page_pptx_path",
+                "blueprint_render_path",
+                "ppt_render_path",
+                "side_by_side_path",
+                "local_comparison_artifacts",
+                "page_status",
+                "user_confirmed",
+                "made_before_next_slide",
+            )
+            missing_page_fields = [
+                field
+                for field in required_page_fields
+                if page_execution.get(field) in (None, "", [], {})
+            ]
+            if missing_page_fields or not isinstance(page_execution.get("local_comparison_artifacts"), list):
+                warnings.append(
+                    issue(
+                        "MANIFEST_PAGE_EXECUTION_INCOMPLETE",
+                        f"page_execution is missing: {', '.join(missing_page_fields)}.",
+                        slide=slide_number,
+                    )
+                )
+            if page_execution.get("mode") != "single_page":
+                warnings.append(
+                    issue(
+                        "MANIFEST_PAGE_EXECUTION_NOT_SINGLE_PAGE",
+                        "Stage 3 high-fidelity production must make one single-page PPTX at a time.",
+                        slide=slide_number,
+                    )
+                )
+            if (
+                page_execution.get("page_status") != "approved"
+                or page_execution.get("user_confirmed") is not True
+                or page_execution.get("made_before_next_slide") is not True
+            ):
+                warnings.append(
+                    issue(
+                        "MANIFEST_PAGE_APPROVAL_MISSING",
+                        "A page must be approved by the user before the next page is made or final merge begins.",
+                        slide=slide_number,
+                    )
+                )
+    if qa.get("all_key_text_editable") is not True:
+        warnings.append(
+            issue(
+                "MANIFEST_DUAL_GATE_INCOMPLETE",
+                "qa_expectations.all_key_text_editable must be true; visual fidelity cannot substitute for editable key information.",
+                slide=slide_number,
+            )
+        )
+    if qa.get("dual_gate_required") is True and qa.get("visual_qa_required") is not True:
+        warnings.append(
+            issue(
+                "MANIFEST_DUAL_GATE_INCOMPLETE",
+                "qa_expectations.visual_qa_required must be true when dual_gate_required is true.",
+                slide=slide_number,
+            )
+        )
+    expected_pictures = entry.get("expected_pictures")
+    pictures_must_be_zero = qa.get("pictures_must_be_zero") is True or expected_pictures == 0
+    if pictures_must_be_zero and metrics["pictures"] > 0:
+        warnings.append(
+            issue(
+                "PICTURES_NOT_ALLOWED",
+                "Manifest requires pictures=0, but the slide contains image assets.",
+                slide=slide_number,
+            )
+        )
+    elif isinstance(expected_pictures, int) and metrics["pictures"] != expected_pictures:
+        warnings.append(
+            issue(
+                "PICTURE_COUNT_MISMATCH",
+                f"Manifest expects {expected_pictures} picture(s), but the slide contains {metrics['pictures']}.",
+                slide=slide_number,
+            )
+        )
+
+    image_assets = entry.get("image_assets")
+    has_declared_images = isinstance(image_assets, list) and len(image_assets) > 0
+    if metrics["max_picture_area_ratio"] >= LARGE_IMAGE_AREA_RATIO and not has_declared_images:
+        warnings.append(
+            issue(
+                "UNJUSTIFIED_LARGE_IMAGE",
+                "A picture covers at least 40% of the slide, but manifest image_assets is empty.",
+                slide=slide_number,
+            )
+        )
+
+    if qa.get("all_key_text_editable") is True and metrics["native_text_shapes"] == 0:
+        warnings.append(
+            issue(
+                "NO_NATIVE_TEXT_WITH_EDITABLE_TEXT_REQUIRED",
+                "Manifest requires key text to be editable, but no native text shapes were found.",
+                slide=slide_number,
+            )
+        )
+
+    if qa.get("typography_scale_required") is True:
+        text_objects = entry.get("text_objects")
+        if not isinstance(text_objects, list) or not text_objects:
+            warnings.append(
+                issue(
+                    "MANIFEST_TYPOGRAPHY_INCOMPLETE",
+                    "Typography scale is required, but manifest text_objects is missing or empty.",
+                    slide=slide_number,
+                )
+            )
+        else:
+            for index, text_object in enumerate(text_objects, start=1):
+                if not isinstance(text_object, dict):
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TEXT_OBJECT_INVALID",
+                            f"text_objects[{index}] must be an object.",
+                            slide=slide_number,
+                        )
+                    )
+                    continue
+                role = text_object.get("role")
+                size = text_object.get("font_size_pt")
+                if role not in TYPOGRAPHY_MIN_PT or not isinstance(size, (int, float)):
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TYPOGRAPHY_INCOMPLETE",
+                            f"text_objects[{index}] must include a valid role and font_size_pt.",
+                            slide=slide_number,
+                        )
+                    )
+                    continue
+                min_size = TYPOGRAPHY_MIN_PT[role]
+                if float(size) < min_size:
+                    warnings.append(
+                        issue(
+                            "MANIFEST_FONT_BELOW_SCALE",
+                            f"text_objects[{index}] role {role} is {size}pt; minimum is {min_size}pt.",
+                            slide=slide_number,
+                        )
+                    )
+
+    for collection_name in ("image_assets", "native_components"):
+        collection = entry.get(collection_name)
+        if not isinstance(collection, list):
+            continue
+        for index, component in enumerate(collection, start=1):
+            if not isinstance(component, dict) or component.get("trace_required") is not True:
+                continue
+
+            missing = [field for field in TRACE_REQUIRED_FIELDS if not component.get(field)]
+            if missing:
+                warnings.append(
+                    issue(
+                        "MANIFEST_TRACE_INCOMPLETE",
+                        f"{collection_name}[{index}] has trace_required=true but is missing: {', '.join(missing)}.",
+                        slide=slide_number,
+                    )
+                )
+
+            method = component.get("trace_method")
+            if method and method not in TRACE_METHODS:
+                warnings.append(
+                    issue(
+                        "MANIFEST_TRACE_METHOD_INVALID",
+                        f"{collection_name}[{index}] uses trace_method '{method}', expected one of: {', '.join(sorted(TRACE_METHODS))}.",
+                        slide=slide_number,
+                    )
+                )
+
+            geometry_analysis = component.get("geometry_analysis")
+            if not isinstance(geometry_analysis, dict):
+                warnings.append(
+                    issue(
+                        "MANIFEST_TRACE_GEOMETRY_ANALYSIS_MISSING",
+                        f"{collection_name}[{index}] has trace_required=true but geometry_analysis is missing.",
+                        slide=slide_number,
+                    )
+                )
+            else:
+                missing_geometry = [
+                    field
+                    for field in GEOMETRY_ANALYSIS_REQUIRED_FIELDS
+                    if not geometry_analysis.get(field)
+                ]
+                if missing_geometry:
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TRACE_GEOMETRY_ANALYSIS_INCOMPLETE",
+                            f"{collection_name}[{index}].geometry_analysis is missing: {', '.join(missing_geometry)}.",
+                            slide=slide_number,
+                        )
+                    )
+
+            if not any(component.get(field) for field in TRACE_ASSET_FIELDS):
+                warnings.append(
+                    issue(
+                        "MANIFEST_TRACE_ASSET_MISSING",
+                        f"{collection_name}[{index}] has trace_required=true but no traced asset path is declared.",
+                        slide=slide_number,
+                    )
+                )
+
+            for field in (*TRACE_REQUIRED_FIELDS[1:], *TRACE_ASSET_FIELDS):
+                value = component.get(field)
+                if value and not manifest_ref_exists(value, manifest_dir):
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TRACE_FILE_NOT_FOUND",
+                            f"{collection_name}[{index}] declares {field}='{value}', but the file was not found.",
+                            slide=slide_number,
+                        )
+                    )
+
+            if component.get("curve_fidelity_required") is True:
+                curves = component.get("trace_curves")
+                if not isinstance(curves, list) or not curves:
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TRACE_CURVES_MISSING",
+                            f"{collection_name}[{index}] has curve_fidelity_required=true but trace_curves is missing or empty.",
+                            slide=slide_number,
+                        )
+                    )
+                else:
+                    for curve_index, curve in enumerate(curves, start=1):
+                        if not isinstance(curve, dict):
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_TRACE_CURVE_POINT_COUNT_MISSING",
+                                    f"{collection_name}[{index}].trace_curves[{curve_index}] must be an object.",
+                                    slide=slide_number,
+                                )
+                            )
+                            continue
+                        point_count = curve.get("point_count")
+                        min_required = curve.get(
+                            "min_required_point_count",
+                            component.get("min_required_point_count", CORE_CURVE_MIN_POINTS),
+                        )
+                        if not isinstance(point_count, int) or not isinstance(min_required, int):
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_TRACE_CURVE_POINT_COUNT_MISSING",
+                                    f"{collection_name}[{index}].trace_curves[{curve_index}] must include integer point_count and min_required_point_count.",
+                                    slide=slide_number,
+                                )
+                            )
+                            continue
+                        if point_count < min_required:
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_TRACE_CURVE_POINT_COUNT_TOO_LOW",
+                                    f"{collection_name}[{index}].trace_curves[{curve_index}] has {point_count} point(s); minimum is {min_required}.",
+                                    slide=slide_number,
+                                )
+                            )
+
+    if qa.get("label_collision_check_required") is True:
+        label_check = entry.get("label_collision_check")
+        if not isinstance(label_check, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_LABEL_COLLISION_CHECK_MISSING",
+                    "Manifest requires label collision check, but label_collision_check is missing.",
+                    slide=slide_number,
+                )
+            )
+        elif label_check.get("passed") is not True:
+            warnings.append(
+                issue(
+                    "MANIFEST_LABEL_COLLISION_FAILED",
+                    "Manifest label_collision_check did not pass.",
+                    slide=slide_number,
+                )
+            )
+
+    if qa.get("spatial_registration_required") is True:
+        spatial_check = entry.get("spatial_registration_check")
+        if not isinstance(spatial_check, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_SPATIAL_REGISTRATION_CHECK_MISSING",
+                    "Manifest requires spatial registration check, but spatial_registration_check is missing.",
+                    slide=slide_number,
+                )
+            )
+        elif spatial_check.get("passed") is not True:
+            warnings.append(
+                issue(
+                    "MANIFEST_SPATIAL_REGISTRATION_FAILED",
+                    "Manifest spatial_registration_check did not pass.",
+                    slide=slide_number,
+                )
+            )
+        else:
+            checked_groups = spatial_check.get("checked_groups")
+            if not isinstance(checked_groups, list) or not checked_groups:
+                warnings.append(
+                    issue(
+                        "MANIFEST_SPATIAL_REGISTRATION_INCOMPLETE",
+                        "spatial_registration_check must include non-empty checked_groups.",
+                        slide=slide_number,
+                    )
+                )
+            else:
+                for group_index, group in enumerate(checked_groups, start=1):
+                    if not isinstance(group, dict):
+                        warnings.append(
+                            issue(
+                                "MANIFEST_SPATIAL_REGISTRATION_INCOMPLETE",
+                                f"spatial_registration_check.checked_groups[{group_index}] must be an object.",
+                                slide=slide_number,
+                            )
+                        )
+                        continue
+                    if group.get("status") != "passed":
+                        warnings.append(
+                            issue(
+                                "MANIFEST_SPATIAL_REGISTRATION_FAILED",
+                                f"spatial_registration_check.checked_groups[{group_index}] status must be exactly 'passed'.",
+                                slide=slide_number,
+                            )
+                        )
+                    anchor_points = group.get("anchor_points")
+                    if not isinstance(anchor_points, list) or not anchor_points:
+                        warnings.append(
+                            issue(
+                                "MANIFEST_SPATIAL_REGISTRATION_INCOMPLETE",
+                                f"spatial_registration_check.checked_groups[{group_index}] must include anchor_points for individual nodes/icons/labels/arrows.",
+                                slide=slide_number,
+                            )
+                        )
+                        continue
+                    for anchor_index, anchor_point in enumerate(anchor_points, start=1):
+                        if not isinstance(anchor_point, dict):
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_SPATIAL_NUMERIC_ANCHOR_MISSING",
+                                    f"spatial_registration_check.checked_groups[{group_index}].anchor_points[{anchor_index}] must be an object with numeric bbox and delta evidence.",
+                                    slide=slide_number,
+                                )
+                            )
+                            continue
+                        if anchor_point.get("status") != "passed":
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_SPATIAL_REGISTRATION_FAILED",
+                                    f"spatial_registration_check.checked_groups[{group_index}].anchor_points[{anchor_index}] status must be exactly 'passed'.",
+                                    slide=slide_number,
+                                )
+                            )
+                        if (
+                            not has_numeric_bbox(anchor_point.get("blueprint_bbox_px"))
+                            or not has_numeric_bbox(anchor_point.get("render_bbox_px"))
+                            or not has_numeric_delta(anchor_point.get("delta_px"))
+                            or not is_number(anchor_point.get("tolerance_px"))
+                        ):
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_SPATIAL_NUMERIC_ANCHOR_MISSING",
+                                    f"spatial_registration_check.checked_groups[{group_index}].anchor_points[{anchor_index}] must include blueprint_bbox_px, render_bbox_px, delta_px, and tolerance_px.",
+                                    slide=slide_number,
+                                )
+                            )
+                            continue
+                        if delta_exceeds_tolerance(anchor_point["delta_px"], anchor_point["tolerance_px"]):
+                            warnings.append(
+                                issue(
+                                    "MANIFEST_SPATIAL_ANCHOR_DELTA_FAILED",
+                                    f"spatial_registration_check.checked_groups[{group_index}].anchor_points[{anchor_index}] delta_px exceeds tolerance_px.",
+                                    slide=slide_number,
+                                )
+                            )
+                    has_text_anchor = any(
+                        isinstance(anchor, dict)
+                        and isinstance(anchor.get("anchor"), str)
+                        and ("label" in str(anchor.get("item", "")).lower()
+                             or "text" in str(anchor.get("item", "")).lower()
+                             or "baseline" in anchor.get("anchor", ""))
+                        for anchor in anchor_points
+                    )
+                    if not has_text_anchor:
+                        warnings.append(
+                            issue(
+                                "MANIFEST_SPATIAL_REGISTRATION_INCOMPLETE",
+                                f"spatial_registration_check.checked_groups[{group_index}] must include at least one text/label baseline anchor.",
+                                slide=slide_number,
+                            )
+                        )
+
+    if qa.get("container_overflow_check_required") is True:
+        overflow_check = entry.get("container_overflow_check")
+        if not isinstance(overflow_check, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_CONTAINER_OVERFLOW_CHECK_MISSING",
+                    "Manifest requires container overflow check, but container_overflow_check is missing.",
+                    slide=slide_number,
+                )
+            )
+        elif overflow_check.get("passed") is not True:
+            warnings.append(
+                issue(
+                    "MANIFEST_CONTAINER_OVERFLOW_FAILED",
+                    "Manifest container_overflow_check did not pass.",
+                    slide=slide_number,
+                )
+            )
+        elif not isinstance(overflow_check.get("checked_regions"), list) or not overflow_check.get("checked_regions"):
+            warnings.append(
+                issue(
+                    "MANIFEST_CONTAINER_OVERFLOW_INCOMPLETE",
+                    "container_overflow_check must include non-empty checked_regions.",
+                    slide=slide_number,
+                )
+            )
+
+    if qa.get("continuous_text_flow_check_required") is True:
+        flow_check = entry.get("continuous_text_flow_check")
+        if not isinstance(flow_check, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_CONTINUOUS_TEXT_FLOW_CHECK_MISSING",
+                    "Manifest requires continuous text flow check, but continuous_text_flow_check is missing.",
+                    slide=slide_number,
+                )
+            )
+        elif flow_check.get("passed") is not True:
+            warnings.append(
+                issue(
+                    "MANIFEST_CONTINUOUS_TEXT_FLOW_FAILED",
+                    "Manifest continuous_text_flow_check did not pass.",
+                    slide=slide_number,
+                )
+            )
+        elif not isinstance(flow_check.get("checked_text_runs"), list) or not flow_check.get("checked_text_runs"):
+            warnings.append(
+                issue(
+                    "MANIFEST_CONTINUOUS_TEXT_FLOW_INCOMPLETE",
+                    "continuous_text_flow_check must include non-empty checked_text_runs.",
+                    slide=slide_number,
+                )
+            )
+
+    if qa.get("table_semantic_typography_required") is True:
+        table_text_objects = entry.get("table_text_objects")
+        if not isinstance(table_text_objects, list) or not table_text_objects:
+            warnings.append(
+                issue(
+                    "MANIFEST_TABLE_SEMANTIC_TYPOGRAPHY_MISSING",
+                    "Manifest requires table semantic typography, but table_text_objects is missing or empty.",
+                    slide=slide_number,
+                )
+            )
+        else:
+            for index, table_text in enumerate(table_text_objects, start=1):
+                if not isinstance(table_text, dict):
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TABLE_SEMANTIC_TYPOGRAPHY_INVALID",
+                            f"table_text_objects[{index}] must be an object.",
+                            slide=slide_number,
+                        )
+                    )
+                    continue
+                semantic_role = table_text.get("semantic_role")
+                role = table_text.get("role")
+                size = table_text.get("font_size_pt")
+                if not isinstance(semantic_role, str) or role not in TYPOGRAPHY_MIN_PT or not isinstance(size, (int, float)):
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TABLE_SEMANTIC_TYPOGRAPHY_INVALID",
+                            f"table_text_objects[{index}] must include semantic_role, valid role, and font_size_pt.",
+                            slide=slide_number,
+                        )
+                    )
+                    continue
+                if semantic_role in TABLE_PROSE_SEMANTIC_ROLES and role not in TABLE_PROSE_ALLOWED_ROLES:
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TABLE_SEMANTIC_TYPOGRAPHY_FAILED",
+                            f"table_text_objects[{index}] semantic_role '{semantic_role}' must use T7 or T10, not {role}.",
+                            slide=slide_number,
+                        )
+                    )
+                min_size = TYPOGRAPHY_MIN_PT[role]
+                if float(size) < min_size:
+                    warnings.append(
+                        issue(
+                            "MANIFEST_TABLE_SEMANTIC_TYPOGRAPHY_FAILED",
+                            f"table_text_objects[{index}] role {role} is {size}pt; minimum is {min_size}pt.",
+                            slide=slide_number,
+                        )
+                    )
+
+    if qa.get("table_density_check_required") is True:
+        density_check = entry.get("table_density_check")
+        if not isinstance(density_check, dict):
+            warnings.append(
+                issue(
+                    "MANIFEST_TABLE_DENSITY_CHECK_MISSING",
+                    "Manifest requires table density check, but table_density_check is missing.",
+                    slide=slide_number,
+                )
+            )
+        elif density_check.get("passed") is not True:
+            warnings.append(
+                issue(
+                    "MANIFEST_TABLE_DENSITY_FAILED",
+                    "Manifest table_density_check did not pass.",
+                    slide=slide_number,
+                )
+            )
+        elif not isinstance(density_check.get("checked_cells"), list) or not density_check.get("checked_cells"):
+            warnings.append(
+                issue(
+                    "MANIFEST_TABLE_DENSITY_INCOMPLETE",
+                    "table_density_check must include non-empty checked_cells.",
+                    slide=slide_number,
+                )
+            )
+
+    return warnings
+
+
+def validate_visual_qa(
+    visual_qa: dict[str, Any] | None,
+    manifest: dict[str, Any] | None,
+    visual_qa_dir: Path | None = None,
+) -> list[dict[str, Any]]:
+    warnings: list[dict[str, Any]] = []
+    if manifest is None or not manifest_requires_visual_qa(manifest):
+        return warnings
+    if visual_qa is None:
+        return [issue("VISUAL_QA_NOT_PROVIDED", "visual_qa_gate.json is required but was not provided.")]
+
+    for manifest_entry in manifest.get("slides", []):
+        if not isinstance(manifest_entry, dict):
+            continue
+        qa = manifest_entry.get("qa_expectations") if isinstance(manifest_entry.get("qa_expectations"), dict) else {}
+        if qa.get("visual_qa_required") is not True:
+            continue
+        slide_number = manifest_entry.get("slide")
+        if not isinstance(slide_number, int):
+            continue
+        entry = find_visual_qa_slide(visual_qa, slide_number)
+        if entry is None:
+            warnings.append(
+                issue(
+                    "VISUAL_QA_SLIDE_MISSING",
+                    "visual_qa_gate.json has no entry for a slide that requires visual QA.",
+                    slide=slide_number,
+                )
+            )
+            continue
+        for field in VISUAL_QA_REQUIRED_FIELDS:
+            if field not in entry:
+                warnings.append(
+                    issue(
+                        "VISUAL_QA_FIELD_MISSING",
+                        f"visual_qa_gate.json slide entry is missing '{field}'.",
+                        slide=slide_number,
+                    )
+                )
+                continue
+            if not isinstance(entry.get(field), bool):
+                warnings.append(
+                    issue(
+                        "VISUAL_QA_INVALID",
+                        f"visual_qa_gate.json field '{field}' must be boolean.",
+                        slide=slide_number,
+                    )
+                )
+
+        failed_fields = [
+            field
+            for field in VISUAL_QA_REQUIRED_FIELDS
+            if field != "deliverable_allowed" and entry.get(field) is False
+        ]
+        if failed_fields:
+            warnings.append(
+                issue(
+                    "VISUAL_QA_CHECK_FAILED",
+                    f"Visual QA failed fields: {', '.join(failed_fields)}.",
+                    slide=slide_number,
+                )
+            )
+        if entry.get("deliverable_allowed") is not True:
+            warnings.append(
+                issue(
+                    "VISUAL_QA_DELIVERY_BLOCKED",
+                    "visual_qa_gate.json does not allow delivery for this slide.",
+                    slide=slide_number,
+                )
+            )
+        if failed_fields and entry.get("deliverable_allowed") is True:
+            warnings.append(
+                issue(
+                    "VISUAL_QA_INVALID",
+                    "deliverable_allowed cannot be true when any visual QA field failed.",
+                    slide=slide_number,
+                )
+            )
+
+        if entry.get("deliverable_allowed") is True:
+            delivery_artifacts = (
+                ("blueprint_render_path", "BLUEPRINT_RENDER_MISSING"),
+                ("ppt_render_path", "PPT_RENDER_MISSING"),
+                ("side_by_side_comparison_path", "SIDE_BY_SIDE_COMPARISON_MISSING"),
+            )
+            for artifact_field, code in delivery_artifacts:
+                artifact_value = entry.get(artifact_field)
+                if not manifest_ref_exists(artifact_value, visual_qa_dir):
+                    warnings.append(
+                        issue(
+                            code,
+                            f"deliverable_allowed=true requires an existing {artifact_field}.",
+                            slide=slide_number,
+                        )
+                    )
+
+            visual_differences = entry.get("visual_differences")
+            if not isinstance(visual_differences, list):
+                warnings.append(
+                    issue(
+                        "VISUAL_QA_EVIDENCE_MISSING",
+                        "deliverable_allowed=true requires visual_differences to be recorded as a list, even when empty.",
+                        slide=slide_number,
+                    )
+                )
+            else:
+                for difference_index, difference in enumerate(visual_differences, start=1):
+                    if not isinstance(difference, dict):
+                        continue
+                    severity = str(difference.get("severity", "")).strip().lower()
+                    if severity in {"high", "critical"} and difference.get("accepted_by_user") is not True:
+                        warnings.append(
+                            issue(
+                                "VISUAL_QA_UNACCEPTED_HIGH_DIFFERENCE",
+                                f"visual_differences[{difference_index}] is High/Critical and has not been explicitly accepted by the user.",
+                                slide=slide_number,
+                            )
+                        )
+                if not visual_differences:
+                    external_evidence_fields = (
+                        "component_signature_check_path",
+                        "visual_element_registry_path",
+                        "bbox_delta_report_path",
+                        "overlay_comparison_path",
+                        "pixel_diff_report_path",
+                    )
+                    missing_external_evidence = [
+                        field
+                        for field in external_evidence_fields
+                        if entry.get(field) in (None, "", [], {})
+                    ]
+                    local_crops = entry.get("local_crop_comparisons")
+                    if not isinstance(local_crops, list) or not local_crops:
+                        missing_external_evidence.append("local_crop_comparisons")
+                    if missing_external_evidence:
+                        warnings.append(
+                            issue(
+                                "VISUAL_DIFFERENCES_EMPTY_WITHOUT_EXTERNAL_EVIDENCE",
+                                f"visual_differences=[] requires external diff evidence: {', '.join(missing_external_evidence)}.",
+                                slide=slide_number,
+                            )
+                        )
+                    else:
+                        for field in external_evidence_fields:
+                            if not manifest_ref_exists(entry.get(field), visual_qa_dir):
+                                warnings.append(
+                                    issue(
+                                        "DELIVERABLE_ALLOWED_WITHOUT_DIFF_EVIDENCE",
+                                        f"deliverable_allowed=true declares {field}, but the file was not found.",
+                                        slide=slide_number,
+                                    )
+                                )
+                        for crop_index, crop in enumerate(local_crops, start=1):
+                            crop_path = crop.get("path") if isinstance(crop, dict) else crop
+                            if not manifest_ref_exists(crop_path, visual_qa_dir):
+                                warnings.append(
+                                    issue(
+                                        "DELIVERABLE_ALLOWED_WITHOUT_DIFF_EVIDENCE",
+                                        f"local_crop_comparisons[{crop_index}] file was not found.",
+                                        slide=slide_number,
+                                    )
+                                )
+            local_overlays = entry.get("local_overlay_artifacts")
+            if not isinstance(local_overlays, list) or not local_overlays:
+                warnings.append(
+                    issue(
+                        "VISUAL_QA_LOCAL_OVERLAY_MISSING",
+                        "deliverable_allowed=true requires local_overlay_artifacts for key-region overlay or bbox comparison.",
+                        slide=slide_number,
+                    )
+                )
+            if entry.get("measurement_evidence_path") in (None, "", [], {}):
+                warnings.append(
+                    issue(
+                        "VISUAL_QA_LOCAL_OVERLAY_MISSING",
+                        "deliverable_allowed=true requires measurement_evidence_path for blueprint measurement evidence.",
+                        slide=slide_number,
+                    )
+                )
+            if entry.get("spatial_numeric_check_path") in (None, "", [], {}):
+                warnings.append(
+                    issue(
+                        "VISUAL_QA_LOCAL_OVERLAY_MISSING",
+                        "deliverable_allowed=true requires spatial_numeric_check_path for numeric anchor evidence.",
+                        slide=slide_number,
+                    )
+                )
+
+        evidence = entry.get("evidence")
+        if not isinstance(evidence, dict):
+            evidence = {}
+        for field in VISUAL_QA_REQUIRED_FIELDS:
+            if field == "deliverable_allowed" or entry.get(field) is not True:
+                continue
+            field_evidence = evidence.get(field)
+            if field_evidence in (None, "", [], {}):
+                warnings.append(
+                    issue(
+                        "VISUAL_PASS_WITHOUT_EVIDENCE",
+                        f"visual_qa_gate.json field '{field}' is true but has no evidence entry.",
+                        slide=slide_number,
+                    )
+                )
+                continue
+            if isinstance(field_evidence, str) and not manifest_ref_exists(field_evidence, visual_qa_dir):
+                warnings.append(
+                    issue(
+                        "VISUAL_QA_EVIDENCE_FILE_NOT_FOUND",
+                        f"visual_qa_gate.json evidence for '{field}' was not found: {field_evidence}.",
+                        slide=slide_number,
+                    )
+                )
+
+    return warnings
+
+
+def inspect_slide(
+    root: ET.Element,
+    slide_number: int,
+    width: int,
+    height: int,
+) -> tuple[dict[str, Any], list[dict[str, Any]]]:
+    warnings: list[dict[str, Any]] = []
+    shapes = root.findall(".//p:sp", NS)
+    pictures = root.findall(".//p:pic", NS)
+    graphic_frames = root.findall(".//p:graphicFrame", NS)
+    charts = root.findall(".//c:chart", NS)
+    tables = root.findall(".//a:tbl", NS)
+
+    native_text_shapes = sum(1 for shape in shapes if text_content(shape))
+    all_elements = [*shapes, *pictures, *graphic_frames]
+    bounds: list[tuple[int, int, int, int]] = []
+    slide_area = max(width * height, 1)
+    font_sizes = [size for shape in shapes for size in font_sizes_pt(shape)]
+    picture_area_ratios: list[float] = []
+
+    for element in all_elements:
+        box = shape_bounds(element)
+        if box is None:
+            continue
+        bounds.append(box)
+        x, y, cx, cy = box
+        if cx <= 0 or cy <= 0 or x < 0 or y < 0:
+            warnings.append(
+                issue(
+                    "INVALID_SHAPE_BOUNDS",
+                    "Element has non-positive dimensions or negative coordinates; PowerPoint may treat the PPTX as corrupted.",
+                    slide=slide_number,
+                )
+            )
+        if x < 0 or y < 0 or x + cx > width or y + cy > height:
+            warnings.append(
+                issue(
+                    "SHAPE_OUTSIDE_SLIDE",
+                    f"Element extends beyond the {width}×{height} EMU slide canvas.",
+                    slide=slide_number,
+                )
+            )
+
+    combined_text = " ".join(filter(None, (text_content(shape) for shape in shapes)))
+    if PLACEHOLDER_RE.search(combined_text):
+        warnings.append(
+            issue(
+                "PLACEHOLDER_TEXT",
+                "Possible authoring placeholder text remains on the slide.",
+                slide=slide_number,
+            )
+        )
+
+    for picture in pictures:
+        box = shape_bounds(picture)
+        if box is None:
+            continue
+        _, _, cx, cy = box
+        ratio = max(0.0, (cx * cy) / slide_area)
+        picture_area_ratios.append(ratio)
+        if ratio >= FULL_SLIDE_IMAGE_RATIO:
+            warnings.append(
+                issue(
+                    "FULL_SLIDE_BACKGROUND_RISK",
+                    "A single image covers at least 90% of the slide; this is treated as a full-slide background risk even if native text exists.",
+                    slide=slide_number,
+                )
+            )
+        elif ratio >= LARGE_IMAGE_AREA_RATIO:
+            warnings.append(
+                issue(
+                    "LARGE_IMAGE_ASSET",
+                    "A single image covers at least 40% of the slide and must be justified in slide_manifest.json.",
+                    slide=slide_number,
+                )
+            )
+
+    total_picture_area_ratio = round(min(sum(picture_area_ratios), 1.0), 4)
+    max_picture_area_ratio = round(max(picture_area_ratios, default=0.0), 4)
+    if total_picture_area_ratio >= LARGE_IMAGE_AREA_RATIO:
+        warnings.append(
+            issue(
+                "HIGH_TOTAL_IMAGE_AREA",
+                "Images cover at least 40% of the slide in total and must be justified in slide_manifest.json.",
+                slide=slide_number,
+            )
+        )
+
+    if font_sizes:
+        min_font_size = min(font_sizes)
+        max_font_size = max(font_sizes)
+        if min_font_size < GLOBAL_MIN_FONT_PT:
+            warnings.append(
+                issue(
+                    "FONT_SIZE_BELOW_FOOTER_MIN",
+                    f"A native text run is {min_font_size:.1f}pt; global minimum is {GLOBAL_MIN_FONT_PT:.1f}pt.",
+                    slide=slide_number,
+                )
+            )
+    else:
+        min_font_size = None
+        max_font_size = None
+
+    if bounds:
+        left = min(x for x, _, _, _ in bounds)
+        top = min(y for _, y, _, _ in bounds)
+        right = max(x + cx for x, _, cx, _ in bounds)
+        bottom = max(y + cy for _, y, _, cy in bounds)
+        coverage = max(0.0, min(1.0, ((right - left) * (bottom - top)) / slide_area))
+        right_gap = max(0, width - right) / max(width, 1)
+        bottom_gap = max(0, height - bottom) / max(height, 1)
+        if right_gap > 0.28 and bottom_gap > 0.28 and len(all_elements) >= 2:
+            warnings.append(
+                issue(
+                    "UNBALANCED_EMPTY_SPACE",
+                    "Content leaves more than 28% unused space on both the right and bottom edges.",
+                    slide=slide_number,
+                )
+            )
+    else:
+        coverage = 0.0
+        warnings.append(
+            issue(
+                "EMPTY_OR_UNMEASURABLE_SLIDE",
+                "No measurable native slide elements were found.",
+                slide=slide_number,
+            )
+        )
+
+    if len(all_elements) <= 1 and not pictures:
+        warnings.append(
+            issue(
+                "LOW_CONTENT_DENSITY",
+                "The slide contains one or fewer measurable elements; review information density.",
+                slide=slide_number,
+            )
+        )
+
+    metrics = {
+        "slide": slide_number,
+        "native_text_shapes": native_text_shapes,
+        "native_graphic_shapes": len(shapes) + len(graphic_frames),
+        "pictures": len(pictures),
+        "charts": len(charts),
+        "tables": len(tables),
+        "element_count": len(all_elements),
+        "coverage_ratio": round(coverage, 4),
+        "picture_area_ratio": total_picture_area_ratio,
+        "max_picture_area_ratio": max_picture_area_ratio,
+        "min_font_size_pt": round(min_font_size, 2) if min_font_size is not None else None,
+        "max_font_size_pt": round(max_font_size, 2) if max_font_size is not None else None,
+        "text_characters": len(combined_text),
+    }
+    return metrics, warnings
+
+
+def empty_report(path: Path) -> dict[str, Any]:
+    return {
+        "file": str(path),
+        "summary": {
+            "slide_count": 0,
+            "width_emu": 0,
+            "height_emu": 0,
+            "aspect_ratio": 0.0,
+            "native_text_shapes": 0,
+            "native_graphic_shapes": 0,
+            "pictures": 0,
+            "charts": 0,
+            "tables": 0,
+        },
+        "errors": [],
+        "warnings": [],
+        "slides": [],
+    }
+
+
+def promote_strict_failures(report: dict[str, Any]) -> None:
+    existing = {(item.get("code"), item.get("slide"), item.get("message")) for item in report["errors"]}
+    for warning in report["warnings"]:
+        if warning.get("code") not in STRICT_FAILURE_CODES:
+            continue
+        key = (warning.get("code"), warning.get("slide"), warning.get("message"))
+        if key in existing:
+            continue
+        failure = dict(warning)
+        failure["strict_failure"] = True
+        report["errors"].append(failure)
+        existing.add(key)
+
+
+def validate_pptx(
+    path: str | Path,
+    manifest_path: str | Path | None = None,
+    visual_qa_path: str | Path | None = None,
+    *,
+    strict: bool = False,
+) -> dict[str, Any]:
+    source = Path(path)
+    report = empty_report(source)
+    manifest: dict[str, Any] | None = None
+    visual_qa: dict[str, Any] | None = None
+    if manifest_path is not None:
+        manifest, manifest_errors = load_manifest(manifest_path)
+        report["manifest"] = {
+            "file": str(Path(manifest_path)),
+            "loaded": manifest is not None,
+            "slide_entries": len(manifest.get("slides", [])) if manifest else 0,
+        }
+        report["errors"].extend(manifest_errors)
+        if manifest is None:
+            return report
+        report["warnings"].extend(validate_manifest(manifest))
+
+    if visual_qa_path is not None:
+        visual_qa, visual_qa_errors = load_visual_qa(visual_qa_path)
+        report["visual_qa"] = {
+            "file": str(Path(visual_qa_path)),
+            "loaded": visual_qa is not None,
+            "slide_entries": len(visual_qa.get("slides", [])) if visual_qa else 0,
+        }
+        report["errors"].extend(visual_qa_errors)
+    elif manifest_requires_visual_qa(manifest):
+        report["warnings"].append(
+            issue("VISUAL_QA_NOT_PROVIDED", "visual_qa_gate.json is required by manifest but --visual-qa was not provided.")
+        )
+
+    if not source.exists():
+        report["errors"].append(issue("FILE_NOT_FOUND", f"File does not exist: {source}"))
+        return report
+
+    try:
+        with zipfile.ZipFile(source) as archive:
+            names = set(archive.namelist())
+            required = {"[Content_Types].xml", "ppt/presentation.xml"}
+            missing = sorted(required - names)
+            if missing:
+                report["errors"].append(
+                    issue("MISSING_PACKAGE_PART", f"Missing required parts: {', '.join(missing)}")
+                )
+                return report
+
+            presentation = read_xml(archive, "ppt/presentation.xml")
+            slide_size = presentation.find("p:sldSz", NS)
+            if slide_size is None:
+                report["errors"].append(
+                    issue("MISSING_SLIDE_SIZE", "ppt/presentation.xml has no p:sldSz element.")
+                )
+                return report
+
+            width = int(slide_size.get("cx", "0"))
+            height = int(slide_size.get("cy", "0"))
+            if width <= 0 or height <= 0:
+                report["errors"].append(
+                    issue("INVALID_SLIDE_SIZE", f"Invalid slide size: {width}×{height} EMU.")
+                )
+                return report
+
+            ratio = width / height
+            report["summary"].update(
+                {
+                    "width_emu": width,
+                    "height_emu": height,
+                    "aspect_ratio": round(ratio, 4),
+                }
+            )
+            if not 1.75 <= ratio <= 1.79:
+                report["warnings"].append(
+                    issue(
+                        "NON_WIDESCREEN_ASPECT",
+                        f"Slide aspect ratio is {ratio:.4f}; expected approximately 16:9.",
+                    )
+                )
+
+            slide_names = find_slide_names(archive)
+            if not slide_names:
+                report["errors"].append(issue("NO_SLIDES", "No ppt/slides/slideN.xml parts found."))
+                return report
+
+            for slide_number, slide_name in enumerate(slide_names, start=1):
+                try:
+                    slide_root = read_xml(archive, slide_name)
+                except (KeyError, ET.ParseError) as exc:
+                    report["errors"].append(
+                        issue(
+                            "INVALID_SLIDE_XML",
+                            f"Cannot parse {slide_name}: {exc}",
+                            slide=slide_number,
+                        )
+                    )
+                    continue
+                metrics, warnings = inspect_slide(slide_root, slide_number, width, height)
+                report["slides"].append(metrics)
+                report["warnings"].extend(warnings)
+                if manifest is not None:
+                    manifest_entry = find_manifest_slide(manifest, slide_number)
+                    manifest_dir = Path(manifest_path).parent if manifest_path is not None else None
+                    report["warnings"].extend(
+                        validate_manifest_slide(manifest_entry, metrics, slide_number, manifest_dir)
+                    )
+
+            report["summary"]["slide_count"] = len(slide_names)
+            for field in (
+                "native_text_shapes",
+                "native_graphic_shapes",
+                "pictures",
+                "charts",
+                "tables",
+            ):
+                report["summary"][field] = sum(slide[field] for slide in report["slides"])
+
+            visual_qa_dir = Path(visual_qa_path).parent if visual_qa_path is not None else None
+            report["warnings"].extend(validate_visual_qa(visual_qa, manifest, visual_qa_dir))
+    except zipfile.BadZipFile:
+        report["errors"].append(issue("INVALID_PPTX_ZIP", "File is not a readable PPTX ZIP package."))
+    except (ET.ParseError, KeyError, ValueError) as exc:
+        report["errors"].append(issue("INVALID_PACKAGE_XML", str(exc)))
+
+    if strict:
+        promote_strict_failures(report)
+
+    return report
+
+
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        description="Check PPTX structure, aspect ratio, editability, placeholders, and layout risks."
+    )
+    parser.add_argument("pptx", help="Path to the PPTX file")
+    parser.add_argument("--manifest", help="CyberPPT stage 3 slide_manifest.json")
+    parser.add_argument("--visual-qa", help="CyberPPT stage 3 visual_qa_gate.json")
+    parser.add_argument("--strict", action="store_true", help="Promote CyberPPT hard-rule violations to errors")
+    parser.add_argument("--json-out", help="Optional path for a UTF-8 JSON report")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    args = build_parser().parse_args(argv)
+    report = validate_pptx(
+        args.pptx,
+        manifest_path=args.manifest,
+        visual_qa_path=args.visual_qa,
+        strict=args.strict,
+    )
+    payload = json.dumps(report, ensure_ascii=False, indent=2)
+    if args.json_out:
+        output = Path(args.json_out)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(payload + "\n", encoding="utf-8")
+    print(payload)
+    return 1 if report["errors"] else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

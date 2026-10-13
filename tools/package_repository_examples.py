@@ -26,8 +26,10 @@ SPECS = {
  'image-to-editable': ('image-to-editable-ppt-ja','build_image_editable_repository_example.py',['--replay','--source-dir','.build/recorded-image-editable','--output-dir','examples/repositories/image-to-editable','--upstream-dir','.build/actual-upstreams/ningzimu__image-to-editable-ppt-skill']),
  'react-slide-deck': ('react-slide-deck-ja','build_reactdeck_repository_example.py',['--input','examples/repositories/react-slide-deck/input/data.json']),
  'slide-maker': ('slide-maker-ja','build_slide_maker_repository_example.py',[]),
+ 'business-carousel': ('business-carousel-ja','build_business_carousel_repository_example.py',['--input','examples/repositories/business-carousel/input/data.json']),
+ 'cyberppt': ('cyberppt-ja','build_cyberppt_repository_example.py',[]),
 }
-FRAGMENTS = ['web','native','japanese','dashi','codex-image','multiagent','knowledgecat','seaslides','pptdesign','magicslide','imageeditable','reactdeck','slidemaker']
+FRAGMENTS = ['web','native','japanese','dashi','codex-image','multiagent','knowledgecat','seaslides','pptdesign','magicslide','imageeditable','reactdeck','slidemaker','businesscarousel','cyberppt']
 CODE_SUFFIXES = {'.py','.js','.mjs','.cjs','.jsx','.ts','.tsx','.css','.html','.json','.yaml','.yml','.md','.txt','.toml','.xml','.csv','.svg','.sh','.ps1','.psm1','.ini','.cfg','.in','.sql','.ttf','.woff','.woff2'}
 SKIP_PARTS = {'.git','node_modules','__pycache__','.venv','venv','.pytest_cache','.cache','releases','public'}
 SPECIAL = {
@@ -36,6 +38,8 @@ SPECIAL = {
  'johnson7788/MultiAgentPPT': ['backend/save_ppt/ppt_template_0717.pptx'],
 }
 NOTES = {
+ 'cyberppt':'原典の内容lock、ImageGen設計見本、要素の測定・対応登録、PptxGenJS単頁再構築、PowerPoint描画、比較、統合を使う。日本語派生は読みやすさと編集性を確認し、原典の厳密な画像一致ゲート全頁不合格を成功へ読み替えない。画像の字形差と内容の数字の欠落は別に確認する。派生mergeの背景保持と差分を残す。再現は固定した5見本からのreplayで、新規画像生成や異なる原稿への自動再構築ではない。',
+ 'business-carousel':'原典43-carousel-brief-globalの指示型工程で、読み手とブランド条件、HookからCTAまでの構成、1枚1論点の原稿、図案と背景をブリーフにし、1080×1080のHTML構成確認プレビューを作る。原典に自動生成CLIやPowerPoint出力はない。SNS公開用の制作データ、人の承認、公開とは区別する。実績の証拠がない箇所は、架空の記入例を明示する。',
  'slide-maker':'原典deckkit/native_chartでnative図とグラフを作る。入力のPython実探索、1〜15の全15通り、グラフ全30値、PowerPoint全5枚と独立critic/blind readを照合する。計画比較は制作後に追加した記録。完成例はselfread用途で、人による正式採用・投影可読性・全時系列工程の完走を主張しない。',
  'react-slide-deck':'原典en-context-engineeringのReact App、SlideLayout、useSlideScale、Motion variantsで制作する。training-cycleとBold Signalを保持し、CJK字体、reduced-motion、週別タブ、ページ同期を補う。原典依存のVite8/Tailwind4.2.1衝突はTailwind4.2.2への最小補正で解消し、元lockと差分と固定再現lockを保存。HTTPで表示する。',
  'office-powerpoint-mcp':'原典のstdio MCPへ実際にツール呼び出しを送る。mcp 1.30.0を使う。文字、テーブル、ネイティブチャートを生成し、PowerPoint本体で確認する。サーバーはアーカイブ済み。',
@@ -89,6 +93,9 @@ def source_files(folder,repo):
    if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
   if repo=='ningzimu/image-to-editable-ppt-skill':
    refs=load(ROOT/'data/imageeditable-repository-guides.json')[0]['source_refs']
+   if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
+  if repo=='minhnv0807/ai-business-skills':
+   refs=load(ROOT/'data/businesscarousel-repository-guides.json')[0]['source_refs']
    if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
   # The dedicated proprietary export engine is fetched only inside the original
   # integrated Dashi skill at reproduction time. Never publish a separated copy.
@@ -168,14 +175,19 @@ def make_kit(case,fork):
    copy(folder/name,workspace/'examples/repositories'/cid/name)
  if cid=='ppt-design-skill':copy(folder/'input/data.json',workspace/'examples/repositories'/cid/'input/data.json')
  if cid=='magic-slide':copy(folder/'input/data.json',workspace/'examples/repositories'/cid/'input/data.json')
+ if cid=='business-carousel':copy(folder/'input/data.json',workspace/'examples/repositories'/cid/'input/data.json')
  if cid=='react-slide-deck':
   for name in ['data.json','package-lock.json']:copy(folder/'input'/name,workspace/'examples/repositories'/cid/'input'/name)
  if cid=='image-to-editable':
   for p in files(folder):copy(p,workspace/'.build/recorded-image-editable'/p.relative_to(folder))
  if cid=='seaslides':
   for p in files(folder):copy(p,workspace/'examples/repositories'/cid/p.relative_to(folder))
+ if cid=='cyberppt':
+  for p in files(folder):copy(p,workspace/'examples/repositories'/cid/p.relative_to(folder))
  requirements=['python-pptx==1.0.2','Pillow==12.3.0','lxml==6.1.3','fonttools==4.63.0','brotli==1.2.0','beautifulsoup4==4.15.0','filelock==4.1.1']
  if cid=='react-slide-deck':requirements=[r.replace('fonttools==4.63.0','fonttools==4.66.1')for r in requirements]
+ if cid=='business-carousel':requirements=['fonttools==4.63.0','brotli==1.2.0']
+ if cid=='cyberppt':requirements=['Pillow==12.3.0','numpy==2.5.4','pywin32==312; sys_platform == "win32"']
  if cid=='office-powerpoint-mcp':requirements.append('mcp[cli]==1.30.0')
  if cid=='multiagent-ppt':requirements.append('requests==2.34.2')
  if cid=='seaslides':requirements.append('pypdf==6.20.1')
@@ -192,11 +204,15 @@ def make_kit(case,fork):
   setup+='    & $taskPy tools/acquire_repository.py chuspeeism/dashi-ppt-skill\n    if ($LASTEXITCODE) { throw "Pinned upstream acquisition failed" }\n    & npm --prefix .build/actual-upstreams/chuspeeism__dashi-ppt-skill/skills/dashi-ppt/project ci --ignore-scripts\n    if ($LASTEXITCODE) { throw "Dashi dependencies failed" }\n'
  if cid=='image-to-editable':
   setup+='    & $taskPy -m pip install -e .build/actual-upstreams/ningzimu__image-to-editable-ppt-skill/skills/image-to-editable-ppt/cli\n    if ($LASTEXITCODE) { throw "Original editppt CLI installation failed" }\n'
+ if cid=='cyberppt':
+  setup+='    & npm --prefix examples/repositories/cyberppt/source ci --ignore-scripts\n    if ($LASTEXITCODE) { throw "CyberPPT Node dependencies failed" }\n'
  generation='    & $taskPy tools/'+generator+' '+' '.join(args)+'\n'
  if case['format']=='pptx' and cid!='codex-image-ppt':
   generation='    $taskArgs = @('+','.join('"'+a+'"' for a in args)+')\n    if ($Render) { $taskArgs += "--render" }\n    & $taskPy tools/'+generator+' @taskArgs\n'
  if cid=='slide-maker':
   generation='    & $taskPy tools/'+generator+'\n    if ($LASTEXITCODE) { throw "Slide maker generation failed" }\n    if ($Render) { & pwsh -NoProfile -File tools/render_powerpoint.ps1 -PresentationPath examples/repositories/slide-maker/deck.pptx -OutputDirectory examples/repositories/slide-maker/render }\n'
+ if cid=='cyberppt':
+  generation='    & $taskPy examples/repositories/cyberppt/source/reproduce.py --input examples/repositories/cyberppt/input/data.json --render\n'
  if cid=='knowledge-cat':
   generation='    $taskArgs = @("--node",$NodePath,"--workspace",$ArtifactWorkspace)\n    if ($Render) { $taskArgs += "--render" }\n    & $taskPy tools/'+generator+' @taskArgs\n'
  if cid=='image-to-editable':
@@ -206,12 +222,13 @@ def make_kit(case,fork):
  if cid=='codex-image-ppt':
   generation+='    if ($Render) { & pwsh -NoProfile -File tools/render_powerpoint.ps1 -PresentationPath examples/repositories/codex-image-ppt/codex-image-ppt.pptx -OutputDirectory examples/repositories/codex-image-ppt/render }\n'
  fontsetup=''
- if cid!='codex-image-ppt':
+ if cid not in {'codex-image-ppt','business-carousel','cyberppt'}:
   fontsetup='    $taskFont = Join-Path $taskRoot ".build/fonts/NotoSansJP[wght].ttf"\n    if (-not (Test-Path -LiteralPath $taskFont)) {\n        New-Item -ItemType Directory -Path (Split-Path $taskFont) -Force | Out-Null\n        Invoke-WebRequest -Uri "'+font['source_url']+'" -OutFile $taskFont\n    }\n    if ((Get-FileHash -LiteralPath $taskFont -Algorithm SHA256).Hash.ToLower() -ne "'+font['source_sha256']+'") { throw "Pinned font hash mismatch" }\n'
  script='param([switch]$Render)\n$ErrorActionPreference = "Stop"\n$taskRoot = Join-Path $PSScriptRoot "workspace"\nPush-Location -LiteralPath $taskRoot\ntry {\n    & python -m venv .build/ppt-master-venv\n    if ($LASTEXITCODE) { throw "Python environment failed" }\n    $taskPy = Join-Path $taskRoot ".build/ppt-master-venv/Scripts/python.exe"\n    & $taskPy -m pip install -r requirements-reproduce.txt\n    if ($LASTEXITCODE) { throw "Python dependencies failed" }\n'+fontsetup+setup+generation+'    if ($LASTEXITCODE) { throw "Generation failed" }\n    & $taskPy tools/mark_reproduced.py\n    Write-Host "Generated: $taskRoot/examples/repositories/'+cid+'"\n    Write-Host "Open the actual output and review all pages before using it."\n} finally { Pop-Location }\n'
  if cid=='knowledge-cat':
   script=script.replace('param([switch]$Render)','param([switch]$Render, [Parameter(Mandatory=$true)][string]$ArtifactWorkspace, [string]$NodePath="node")')
  if cid=='react-slide-deck':script=script.replace('param([switch]$Render)','param([string]$NodePath="node")')
+ if cid=='business-carousel':script=script.replace('param([switch]$Render)','param()')
  write(kit/'reproduce/Reproduce.ps1',script)
  mark="from pathlib import Path\nimport json, hashlib\np=Path('examples/repositories/"+cid+"')\nartifact=p/"+repr(Path(case['artifact_download']).name if case['format']=='pptx' else Path(case['preview']).name)+"\n(p/'QA.json').write_text(json.dumps({'status':'generated_awaiting_review','artifact_sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),'visual_review':'Review your reproduced output; the original catalog QA is not transferred to a new run.'},ensure_ascii=False,indent=2),encoding='utf-8')\n"
  write(workspace/'tools/mark_reproduced.py',mark)
@@ -241,6 +258,15 @@ def make_kit(case,fork):
   readme=readme.replace('次を実行（project内venv・固定npm依存・公式固定commitの書体を取得します）。','次を実行（キット内の原典と新しいPython仮想環境で生成します）。')
   readme=readme.replace('HTMLは生成したファイルを開き、原典のページ操作を使います。','生成したdeck.pptxをPowerPointで開きます。')
   readme=readme.replace('Noto Sans JPをインストール済みのWindows / PowerPoint / pwsh','游ゴシック（Yu Gothic）が利用できるWindows / PowerPoint / pwsh')
+ if cid=='business-carousel':
+  readme=readme.replace('Python 3.13、Node.js、必要に応じてGit Bashを用意。','Python 3.13を用意。')
+  readme=readme.replace('次を実行（project内venv・固定npm依存・公式固定commitの書体を取得します）。','次を実行（キット内の原典指示を使った専用ソースとPython仮想環境で生成します）。')
+  readme=readme.replace('PowerPoint本体でPNG/PDFを描画する場合は、Noto Sans JPをインストール済みのWindows / PowerPoint / pwshを使用し、-Renderを指定します。HTMLは生成したファイルを開き、原典のページ操作を使います。','生成先で `python -m http.server 8000 --bind 127.0.0.1` を実行し、localhostのURLで正方形HTMLを開きます。原典の出力は構成確認用プレビューで、PPTX・PowerPoint描画は対象外です。')
+  readme+='\n自分の内容にはreproduce/workspace/examples/repositories/business-carousel/input/data.jsonの6枚の見出し・本文・ノートを変更して再実行できます。原稿確認と図案の調整を行い、公開用の仕上げ・人の承認は原典の次の工程として別途実施します。\n'
+ if cid=='cyberppt':
+  readme='# '+case['title']+'の日本語派生・再現キット\n\nWindows、Microsoft PowerPoint、Python 3.13、Node.js、游ゴシック・游明朝・Times New Romanが必要です。フォント本体は配布しません。\n\n1. ZIPを展開して、このフォルダーでPowerShellを開きます。\n2. ` .\\reproduce\\Reproduce.ps1 ` を実行します。新しいPython仮想環境と固定Node依存を用意し、PowerPointの全ページ描画まで常に実行します。\n3. 出力は `reproduce/workspace/examples/repositories/cyberppt/deck.pptx`。再生成したQAは確認前となるため、全5枚を改めて表示確認します。\n\n保存済み5見本からの再構築で、ImageGenの新規生成は含みません。異なる入力は旧見本と一致しないため停止します。自分の題材へ変える際は、日本語派生SKILLと原典から新しい内容lock・見本・測定・再構築を作成します。\n\n'+NOTES[cid]+'\n\n元のsource/reproduce.pyを直接使う方法、元ゲート未達、派生方針と実行記録はREADME.md、source/JAPANESE-FORK-POLICY.md、PROVENANCE.jsonを確認してください。原典のMIT、SVGアイコンの個別MIT条件を保持します。人による採用と公開は未実施です。\n'
+ if cid=='cyberppt':
+  readme+='\n生成用lockはPptxGenJS4.0.1を保持し、間接依存image-sizeを修正版2.0.3に固定しています。検出前後のnpm auditはreview/dependency/に保存しています。このキット以外の依存監査へ読み替えません。\n'
  write(kit/'REPRODUCE.md',readme);write(folder/'REPRODUCE.md',readme)
  zip_folder(kit,ROOT/'downloads'/(cid+'-example-ja.zip'),cid)
  return 'downloads/'+cid+'-example-ja.zip'

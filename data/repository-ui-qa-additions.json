@@ -1,14 +1,15 @@
 {
   "status": "passed_for_recorded_scope",
-  "checked_at": "2026-10-13T20:12:25.947153+00:00",
+  "checked_at": "2026-10-13T21:11:18.655347+00:00",
   "baseline": "data/repository-ui-qa.json (16 repositories)",
-  "current_repository_count": 24,
-  "current_case_count": 27,
-  "current_slide_count": 164,
+  "current_repository_count": 26,
+  "current_case_count": 29,
+  "current_slide_count": 175,
   "catalog": {
     "original_count": 209,
-    "produced_filter_count": 24,
-    "gallery_count": 27,
+    "produced_filter_count": 26,
+    "gallery_count": 29,
+    "gallery_summary": "29冊 / 175枚",
     "console_errors": []
   },
   "new_cases": [
@@ -149,6 +150,85 @@
       "pdf_download_sha256": "b7bae7855fbfbd38d31ecdd7b9d59354642e8c63c73723ecd1dc6d1e9ee12ba7",
       "whole_slide_visibility": "Dialog scrolled to top after notes focus; complete page 3 visible. All 5 original PowerPoint renders separately reviewed.",
       "guide_copy": "Japanese method, actual Python runtime requirements, independently reviewed scope."
+    },
+    {
+      "id": "business-carousel",
+      "format": "native-html-square-concept",
+      "counter_checks": [
+        "1 / 6",
+        "3 / 6",
+        "5 / 6",
+        "6 / 6"
+      ],
+      "native_navigation_to_parent_counter": "2 -> 3",
+      "template_copy_readback_matches": true,
+      "clipboard_restored": true,
+      "normal_square_stage": [
+        330,
+        330
+      ],
+      "expanded_square_stage": [
+        490,
+        490
+      ],
+      "mobile": {
+        "counter": "6 / 6",
+        "dialog_left": 8.5,
+        "dialog_right": 369.5,
+        "scroll_width": 378,
+        "stage_height": 324,
+        "stage_width": 324,
+        "viewport": 393
+      },
+      "existing_16_9_regression": {
+        "react_counter": "2 / 5",
+        "powerpoint_counter": "2 / 5",
+        "square_flag_removed": true
+      },
+      "source_zip_download_sha256": "47537a02e4bf27dc99e22abd042f650808ae48d3ff25eb05c8418e0868b5a01f",
+      "console_errors": [],
+      "production_stage_visible": true
+    },
+    {
+      "page3Counter": "3 / 5",
+      "page3JapaneseNotes": "日時・場所・費用・雨天時の扱いを同じ順序で掲載。見た目より先に、掲載項目と更新日をそろえる。 架空の企画例です。",
+      "end": {
+        "counter": "5 / 5",
+        "image": [
+          {
+            "complete": true,
+            "height": 900,
+            "src": "examples/repositories/cyberppt/render/slide-05.png?v=a71059930c484f5e",
+            "width": 1600
+          }
+        ],
+        "nextDisabled": true,
+        "notice": true
+      },
+      "downloads": {
+        "pptx": {
+          "sha256": "21e4dbd0d00bd7f8f5379f464b7e28482fec74bd5e9a92ccdce78679de39c70e",
+          "size": 72390
+        },
+        "pdf": {
+          "sha256": "52164f5991008a115cb71367049dcd6696a51c9251de37f147a76ab35b47f257",
+          "size": 667472
+        },
+        "source_zip": {
+          "sha256": "0ede931597a082e75fac6b22ed78547a79d799afbfa0999b267212c9d9e1dd44",
+          "size": 57381958
+        }
+      },
+      "screenshot": "docs/assets/cyberppt-float-desktop.jpg",
+      "guideLanguage": "Japanese limitations and original fidelity failure displayed",
+      "id": "cyberppt",
+      "format": "powerpoint-native",
+      "counter_checks": [
+        "1 / 5",
+        "3 / 5",
+        "5 / 5"
+      ],
+      "console_errors": []
     }
   ],
   "screenshots": [
@@ -243,9 +323,25 @@
     {
       "file": "docs/assets/repository-catalog-24.jpg",
       "sha256": "f651e59f5608b390c5de939945ef85bd005417ff708979d55c5c18d0e2172922"
+    },
+    {
+      "file": "docs/assets/business-carousel-float-desktop.jpg",
+      "sha256": "179249f64a92807063ab3fd1770969874f15ae36a05d7f10ac0a19c2ea338c7e"
+    },
+    {
+      "file": "docs/assets/business-carousel-float-mobile.png",
+      "sha256": "986b58eef48c006d2a03018592a8439c95800b1e5ed6fd16b20e2c5fb83c0762"
+    },
+    {
+      "file": "docs/assets/cyberppt-float-desktop.jpg",
+      "sha256": "4fb6447588e39c236c602e5a956ba267417abc433f1fdc96f88307276ac4f2c5"
+    },
+    {
+      "file": "docs/assets/repository-catalog-26.jpg",
+      "sha256": "a26f8d93328669bdbefb9ba1dfd041880bd01e41b19cc0bfc38ed95c16ffa7dd"
     }
   ],
-  "scope": "Eight added cases and current 24 repository / 27 deck / 164 page catalog counts, together with scoped 16-repository baseline. Does not claim every control in all 27 decks or all 209 repositories was executed. React normal motion, native navigation and W3 tab exercised; 393px modal inspected. PowerPoint slide-maker page 3 / end / notes and actual downloads inspected. Trial guide has no download. Temporary viewport, cache and media overrides reset; QA tab closed.",
+  "scope": "Ten added cases and current 26 repository / 29 deck / 175 page catalog counts, together with scoped 16-repository baseline. Does not claim every control in all 29 decks or all 209 repositories was executed. Square carousel native navigation, clipboard copy/readback, expanded view and 393px modal inspected; existing 16:9 React and PowerPoint switching inspected. CyberPPT page 3 / Japanese notes / end and actual PPTX, PDF, source ZIP download inspected. Original fidelity failure is visible. Temporary viewport and media overrides reset; private QA tab closed.",
   "local_trial": {
     "repository": "tfriedel/claude-office-skills",
     "guide_label": "ローカル試用済み / 配布条件の確認待ち",

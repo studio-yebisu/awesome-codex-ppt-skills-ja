@@ -1,0 +1,43 @@
+--- upstream/scripts/merge_verified_pages.py
++++ merge_verified_pages_ja.py
+@@ -31,18 +31,36 @@
+ 
+     output = str(Path(args.out).resolve())
+     app = win32com.client.Dispatch("PowerPoint.Application")
+-    app.Visible = True
+-    presentation = app.Presentations.Add()
++    # Japanese fork: preserve other PowerPoint documents and create no visible window.
++    had_presentations = app.Presentations.Count > 0
++    presentation = app.Presentations.Add(False)
+     try:
++        first = app.Presentations.Open(str(Path(args.pages[0]).resolve()), True, False, False)
++        try:
++            presentation.PageSetup.SlideWidth = first.PageSetup.SlideWidth
++            presentation.PageSetup.SlideHeight = first.PageSetup.SlideHeight
++        finally:
++            first.Close()
+         for page in args.pages:
+             presentation.Slides.InsertFromFile(str(Path(page).resolve()), presentation.Slides.Count)
++            # InsertFromFile otherwise adopts the destination master's white background.
++            source = app.Presentations.Open(str(Path(page).resolve()), True, False, False)
++            try:
++                inserted = presentation.Slides(presentation.Slides.Count)
++                inserted.FollowMasterBackground = False
++                inserted.Background.Fill.Solid()
++                inserted.Background.Fill.ForeColor.RGB = source.Slides(1).Background.Fill.ForeColor.RGB
++            finally:
++                source.Close()
+         presentation.SaveAs(output)
+     finally:
+         presentation.Close()
+-        app.Quit()
++        if not had_presentations:
++            app.Quit()
+ 
+     manifest = {
+-        "method": "merge_approved_single_page_pptx",
++        "method": "merge_japanese_fork_reviewed_single_page_pptx",
++        "original_gate_not_passed": True,
+         "merged": True,
+         "output": output,
+         "source_single_page_pptx": args.pages,

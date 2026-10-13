@@ -14,7 +14,7 @@ def main():
     audit = {r['repository']: r for r in load('data/repository-audit.json')['repositories']}
     cases = load('data/case-studies.json')
     by_id = {c['id']: c for c in cases}
-    for name in ['web-repository-examples', 'native-repository-examples', 'japanese-repository-examples','dashi-repository-examples','codex-image-repository-examples','multiagent-repository-examples','knowledgecat-repository-examples','seaslides-repository-examples','pptdesign-repository-examples','magicslide-repository-examples','imageeditable-repository-examples','reactdeck-repository-examples','slidemaker-repository-examples']:
+    for name in ['web-repository-examples', 'native-repository-examples', 'japanese-repository-examples','dashi-repository-examples','codex-image-repository-examples','multiagent-repository-examples','knowledgecat-repository-examples','seaslides-repository-examples','pptdesign-repository-examples','magicslide-repository-examples','imageeditable-repository-examples','reactdeck-repository-examples','slidemaker-repository-examples','businesscarousel-repository-examples','cyberppt-repository-examples']:
         if (ROOT / ('data/' + name + '.json')).exists():
             for c in load('data/' + name + '.json'):
                 by_id[c['id']] = c
@@ -39,7 +39,7 @@ def main():
             'source_refs': r['source_refs'],
             'execution_status': r['execution_status'],
             'steps': ['原典の環境と個別条件を確認する', '記載したコマンドの外部API使用条件を確認する', '入力を用意し、原典の方式で生成する', '完成ファイルを開いて全ページを確認する']}
-    for name in ['native-repository-guides', 'japanese-repository-guides', 'web-repository-guides','dashi-repository-guides','codex-image-repository-guides','pptagent-repository-guides','multiagent-repository-guides','knowledgecat-repository-guides','spacemulti-repository-guides','presenter-repository-guides','starry-repository-guides','seaslides-repository-guides','pptdesign-repository-guides','magicslide-repository-guides','imageeditable-repository-guides','reactdeck-repository-guides','claudeoffice-repository-guides','slidemaker-repository-guides']:
+    for name in ['native-repository-guides', 'japanese-repository-guides', 'web-repository-guides','dashi-repository-guides','codex-image-repository-guides','pptagent-repository-guides','multiagent-repository-guides','knowledgecat-repository-guides','spacemulti-repository-guides','presenter-repository-guides','starry-repository-guides','seaslides-repository-guides','pptdesign-repository-guides','magicslide-repository-guides','imageeditable-repository-guides','reactdeck-repository-guides','claudeoffice-repository-guides','slidemaker-repository-guides','businesscarousel-repository-guides','cyberppt-repository-guides']:
         if (ROOT / ('data/' + name + '.json')).exists():
             authored.update({r['repository']: r for r in load('data/' + name + '.json')})
     profiles = []

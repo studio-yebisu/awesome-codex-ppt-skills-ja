@@ -4,7 +4,7 @@
 
 ## 現行の制作範囲
 
-24リポジトリ、27冊、164枚。編集可能PPTX 11冊61枚、画像主体PPTX 1冊3枚、固有HTML 15冊100枚。元209件は作者・分類・データを保持し、原典入口を取得・棚卸し済み。残185件は未制作で、取得だけを生成成功に数えない。
+26リポジトリ、29冊、175枚。編集可能PPTX 12冊66枚、画像主体PPTX 1冊3枚、固有HTML 16冊106枚。元209件は作者・分類・データを保持し、原典入口を取得・棚卸し済み。残183件は未制作で、取得だけを生成成功に数えない。
 
 各リポのCLI、MCP、指示型スキル、テンプレート、変換器を使用し、実行記録と原典ファイルのハッシュを保存している。旧共通renderer試作・自己紹介題材の試作は現行件数に含めない。
 
@@ -37,10 +37,12 @@
 | [image-to-editable](../examples/repositories/image-to-editable/QA.json) | ningzimu/image-to-editable-ppt-skill | 2 | 編集可能PPTX |
 | [react-slide-deck](../examples/repositories/react-slide-deck/QA.json) | code-on-sunday/slide-deck-generator | 5 | HTML |
 | [slide-maker](../examples/repositories/slide-maker/QA.json) | addsumtech/slides_maker | 5 | 編集可能PPTX |
+| [business-carousel](../examples/repositories/business-carousel/QA.json) | minhnv0807/ai-business-skills | 6 | HTML |
+| [cyberppt](../examples/repositories/cyberppt/QA.json) | crazyykhllc-bit/CyberPPT | 5 | 編集可能PPTX |
 
 ## 全ページの描画・目視
 
-全164ページの目視確認が完了。PPTXは完成ファイルをMicrosoft PowerPointで開いた64枚のPNGとPDFを生成し、入力SVGや元HTMLだけで代替していない。各冊の描画receiptにPPTXのSHA、ページ順序と出力を記録した。HTML100枚は固有ランタイムで再生し、実表示を確認している。
+全175ページの目視確認が完了。PPTXは完成ファイルをMicrosoft PowerPointで開いた69枚のPNGとPDFを生成し、入力SVGや元HTMLだけで代替していない。各冊の描画receiptにPPTXのSHA、ページ順序と出力を記録した。HTML106枚は固有ランタイムで再生し、実表示を確認している。
 
 今回追加したWeb7冊49枚は全ページを実ブラウザーで再生し、DOMの見出し・ページ位置を照合、実キャプチャを全頁視認した。対象はReveal.js 6枚、Lewis HTML 8枚、minorun Marp 9枚、Neon 6枚、Bento 6枚、make-slide 8枚、Frontend Editable 6枚。Dashi 6枚は別途同じく実ブラウザーで全頁を確認した。先行6冊45枚に、上表の原典別制作を追加している。新規PPTXは実ファイルのPowerPoint描画、HTMLは原典ランタイムの実表示を確認する。
 
@@ -68,9 +70,9 @@ python tools/verify_repository_release.py
 
 この検査は元209件の一致、リポ・冊数・枚数の対応、原典と出力のハッシュ、PNG/PPTX構造、固有HTML runtime、記録された全ページレビュー、ZIPの内容と更新一致を検査する。画像PPTXではjobs/style/state、native生成記録、原典assembler実行、画像media一致、日本語ノートと画像内日本語の目視記録を追加条件とする。失敗した初期コマンドは消さず、同一コマンドの後続成功とログのハッシュで復旧を検証する。
 
-**最終自動検査：164項目通過、問題0件。** [実行結果](../data/release-qa.json)を保存。Jinba 7枚・Japanese Corporate 6枚のXML run locale省略は警告として残し、日本語文字列と実PowerPointの全ページ字形を別途確認している。検査の成功を、画像内の美術品質の自動判定や正式採用として扱わない。
+**最終自動検査：29冊の176検査が合格、issues 0。** [実行結果](../data/release-qa.json)を保存。Jinba 7枚・Japanese Corporate 6枚・Image to Editable 2枚・slides_maker 5枚・CyberPPT 5枚のXML run locale省略とCyberPPT原典画像一致の未達は、計6件の警告として残し、日本語文字列と実PowerPointの全ページ字形を別途確認している。検査の成功を、画像内の美術品質の自動判定や正式採用として扱わない。
 
-24派生版と76配布ファイルの内容・SHAを検査。[別フォルダー再現](../data/reproduction-kit-qa.json)では、配布ZIPを新しいフォルダーへ展開し新venvから10形式（minorun-marp-skill9枚、Office-PowerPoint-MCP-Server6枚、MultiAgentPPT4枚、knowledge-cat-ppt-skill5枚、seaslides5枚、PPT-Design-Skill5枚、magic-slide5枚、image-to-editable-ppt-skill2枚、slides_maker5枚、slide-deck-generator5枚）の生成に成功。他キットの独立実行や、全リポの再現確認へ読み替えない。再生成した出力は確認前として扱う。
+26派生版と82配布ファイルの内容・SHAを検査。[別フォルダー再現](../data/reproduction-kit-qa.json)では、配布ZIPを新しいフォルダーへ展開し新venvから12形式（minorun-marp-skill9枚、Office-PowerPoint-MCP-Server6枚、MultiAgentPPT4枚、knowledge-cat-ppt-skill5枚、seaslides5枚、PPT-Design-Skill5枚、magic-slide5枚、image-to-editable-ppt-skill2枚、slides_maker5枚、slide-deck-generator5枚、ai-business-skills6枚、CyberPPT5枚）の生成に成功。他キットの独立実行や、全リポの再現確認へ読み替えない。再生成した出力は確認前として扱う。
 
 ## 現行サイトのUI検証
 
@@ -84,7 +86,7 @@ python tools/verify_repository_release.py
 
 ## 未制作の試行と利用条件
 
-[PPTAgent](../examples/repositories/pptagent/README.md)は固定依存pptagent 1.1.37のWindows import assertにより停止。実際のtraceと環境を保存し、PPTX・完成HTML・レンダー画像は生成していない。24リポの成功数には含めない。原典が要求するLinux（WSL含む）/macOS等を用意することが再開条件で、Windowsでの停止をLinuxでの失敗とは扱わない。
+[PPTAgent](../examples/repositories/pptagent/README.md)は固定依存pptagent 1.1.37のWindows import assertにより停止。実際のtraceと環境を保存し、PPTX・完成HTML・レンダー画像は生成していない。26リポの成功数には含めない。原典が要求するLinux（WSL含む）/macOS等を用意することが再開条件で、Windowsでの停止をLinuxでの失敗とは扱わない。
 
 Mckとminorun-marpはApache-2.0。GuizangとDashiの対象ソースはAGPLの条件を保持する。Dashiの専有PPTX engineはこのHTML経路の配布に含めない。原文LICENSE／NOTICE、書体・素材条件を保持し、サイト編集のCC0を上流へ一括適用しない。
 
@@ -131,3 +133,23 @@ deckkit固有の、画面外に置くアクセシビリティ用タイトルは�
 tfriedel/claude-office-skillsも固定原典html2pptx-local.cjsから日本語4枚をローカル生成し、native chart・表・ノートとPowerPoint描画を確認した。明示的な再配布条件が未確認のため、原典コード・PPTX・描画画像・派生版は配布せず、[試行の事実と再開条件](../examples/repositories/claude-office/ATTEMPT.json)だけを案内する。これは24リポの配布対象に数えない。全体の残件は185件。
 
 ![React原典を浮遊プレイヤーで再生](assets/reactdeck-float-desktop.jpg)
+
+## 26リポ時点の追加確認
+
+minhnv0807/ai-business-skillsは、原典43-carousel-brief-globalの指示から「引き継ぎ、何を書けばいい？」6枚を制作。読み手・架空ブランド・構成・原稿確認・図案を先にブリーフへ記録し、原典指定の1080×1080 HTML構成確認プレビューへ実装した。原典に自動CLIやPPTX出力はない。SNS公開用の制作データや人の承認とは区別する。公式BIZ UDPGothicのOFL条件を保持し、改変サブセットの内部名を別名へ変更。全6枚の日本語と図を実ブラウザーで確認した。
+
+正方形のフロートは通常330px、拡大490px、393pxの画面で324pxの正方形を保つ。原典内の次ページ操作が外側の2→3へ反映し、終端6枚目・メモ・記入型コピーの読戻しを確認。変更前のクリップボードを復元した。既存16:9のReactとPowerPointへ切り替え、正方形設定が残らないことも確認した。現配布ZIPの全入力から新venvで再生成し、HTMLが掲載版とbyte一致。生成し直したQAは確認前として記録する。
+
+crazyykhllc-bit/CyberPPTは、原典のSCR構成・内容lock・全5枚のImageGen設計見本・要素測定と登録・PptxGenJSでのページ再構築・PowerPoint描画・比較を実行。「商店街のイベント案内を、一つにまとめる」5枚はnative文字90個、native図形154個、表紙の小さなSVG3個で構成される。表は編集可能な文字枠と線で、native tableオブジェクトではない。原典の厳密1:1画像一致は全5枚で未達のまま保存。日本語派生の内容保持・読みやすさ・編集性と、原典の画像一致を分けて記録した。原典の合格や人の採用は主張しない。
+
+原典mergeで背景を保持できなかった実失敗を保存し、派生mergeで背景・ページ寸法を保持する補正を加えた。単頁と統合後の描画比較は合格。エージェントがPowerPointの全5枚を目視した。自分で読む教材の小注釈を含み、投影用途は未確認。サイトでは3枚目・日本語メモ・5枚目の終端・原典ゲート未達の説明を確認し、PPTX/PDF/ソースZIPを実ダウンロードしてSHA一致を照合した。
+
+CyberPPTの配布ZIPも新フォルダー・新venv・固定Node lockから30コマンドで全5枚の再構築とPowerPoint描画まで成功。掲載版と全5枚の描画pixel・native日本語文字・図形個数が一致した。PPTXファイル全体のbyte一致は主張しない。保存済み画像見本からのreplayで、新規画像生成・異なる題材への自動変換ではない。再生成出力には確認前のQAを新たに書き、制作時のレビューを引き継がない。
+
+生成用依存で実検出したHigh 2件は、PptxGenJS 4.0.1を保持してimage-sizeを2.0.3へ固定した派生lockで解消。このlockのnpm auditは検出0件で、補正後の配布ZIP再生成も成功。[検出前後の監査記録](../data/cyberppt-dependency-qa.json)を保存し、他キットや将来の依存状態へ読み替えない。全体の残件は183件。
+
+[追加UI記録](../data/repository-ui-qa-additions.json)は計10事例の限定した実操作と、元209件・実例あり26件・29冊175枚を確認した記録。全29冊の全操作や、全209リポの生成確認とは扱わない。
+
+![原典43番の日本語カルーセルを正方形で再生](assets/business-carousel-float-desktop.jpg)
+
+![CyberPPTの日本語PowerPointを浮遊プレイヤーで再生](assets/cyberppt-float-desktop.jpg)

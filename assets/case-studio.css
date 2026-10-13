@@ -28,3 +28,8 @@
 .case-pages button{width:116px;min-width:116px;max-width:116px;flex-basis:116px}.case-pages span{line-height:1.4}
 #case-dialog.expanded .case-stage{width:min(100%,calc((100dvh - 230px)*16/9));max-height:none;max-width:none}
 #case-dialog.expanded .case-pages,#case-dialog.expanded .case-bottom>p{display:none}
+/* Original carousel instruction skills use square concept canvases. */
+#case-dialog.square-preview .case-stage{aspect-ratio:1;width:min(100%,calc(100dvh - 390px))}
+#case-dialog.square-preview .case-pages img{aspect-ratio:1;object-fit:contain}
+#case-dialog.square-preview.expanded .case-stage{aspect-ratio:1;width:min(100%,calc(100dvh - 230px))}
+.case-card-image.square-preview>img:not(.interior-thumb),.repo-image.square-preview>img{object-fit:contain}
