@@ -3,7 +3,7 @@ from pathlib import Path
 import json, hashlib, urllib.request
 ROOT=Path(__file__).resolve().parents[1]
 COMMIT='66928797f271fed5ee428544e7229685e2d90127'
-FAMILIES={'archivoblack':'Archivo Black','spacegrotesk':'Space Grotesk','playfairdisplay':'Playfair Display','sourceserif4':'Source Serif 4','ibmplexmono':'IBM Plex Mono'}
+FAMILIES={'archivoblack':'Archivo Black','spacegrotesk':'Space Grotesk','playfairdisplay':'Playfair Display','sourceserif4':'Source Serif 4','ibmplexmono':'IBM Plex Mono','jetbrainsmono':'JetBrains Mono','inter':'Inter'}
 OUT=ROOT/'assets/fonts/presets';OUT.mkdir(parents=True,exist_ok=True)
 records=[]
 def get(url):

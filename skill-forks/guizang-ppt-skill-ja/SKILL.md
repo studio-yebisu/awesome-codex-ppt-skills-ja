@@ -9,6 +9,8 @@ metadata:
 
 # Guizang 日本語版
 
+日本語の企画・導入提案は [references/japanese-business-workflow.md](references/japanese-business-workflow.md) を読む。MagazineとSwissの選定、入力、組版、講稿、実テンプレートの検証を扱う。
+
 元の [SKILL.upstream.md](SKILL.upstream.md) を読む。選んだStyle A/Bに必要な参照だけを読み、**assets/template.html または assets/template-swiss.html を実際にコピーして内容を挿入する**。別の共通レンダラーへ置き換えない。Swissは元のS01–S22の登録版式を保持する。
 
 日本語の内容を作り、langをjaにする。中国語用のNoto SC指定はNoto Sans JP / Noto Serif JPへ変更する。英字の指定フォント、テーマ色、レイアウト、WebGL、Motion、ページ制御は保持する。文の意味で改行し、長い日本語の見出しは字号とフレームを調整する。ローカルの日本語フォントはreferences/japanese-fonts.mdを参照する。

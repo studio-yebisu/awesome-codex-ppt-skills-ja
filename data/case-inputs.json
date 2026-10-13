@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "notice": "組織・店舗・計数は、制作手順を試すために作成した架空のサンプルです。外部調査・実績・見積書ではありません。",
+  "cafe": {
+    "title": "喫茶つむぎ 2号店出店提案",
+    "audience": "店舗経営者・店長。8分の決裁説明と、後日の店内説明会。",
+    "decision": "運河沿いB案の現地調査・条件交渉を進める。契約決裁は調査後。",
+    "facts": ["既存店は24席。週末のピーク時間は満席になることがある。", "新店は落ち着いて滞在できる地域の居場所を目指す。", "客数・工事額・客単価は計画上の仮定。契約前に検証する。"],
+    "sites": [
+      {"name":"A 駅前", "seats":38, "rent_man_yen":28, "scores":[4,5,3,4,4]},
+      {"name":"B 運河沿い", "seats":32, "rent_man_yen":18, "scores":[5,3,5,3,4]}
+    ],
+    "criteria": ["滞在しやすさ", "通行量", "賃料", "視認性", "運営のしやすさ"],
+    "weights": [30,25,20,15,10],
+    "score_scale": 5,
+    "ticket_yen": 1100,
+    "business_days": 26,
+    "daily_customers": 82,
+    "variable_cost_ratio": 0.35,
+    "fixed_cost_man_yen": {"賃料":18,"人件費":68,"その他固定費":24},
+    "initial_cost_man_yen": {"内装":500,"設備":200,"保証金等":90,"開業準備":90},
+    "stress_daily_customers": 55,
+    "operations": ["平日：近隣の仕事・散歩客", "週末：家族と訪問客", "既存店と仕込み・購買を共通化"],
+    "risks": ["客数が計画を下回る：2週間の通行量調査と試験販売", "工事額が上振れる：3社の見積と予備費を確認", "店長が不足する：配置を先に決め、採用へ進む"],
+    "schedule": ["1〜2週：現地調査", "3〜4週：見積・条件交渉", "5週：投資決裁", "決裁後：内装・採用・開業準備"],
+    "owners": ["経営者：投資判断", "既存店長：現地調査", "新店候補店長：運営設計"]
+  },
+  "ec": {
+    "title": "くらし便 EC事業 9月報告",
+    "audience": "事業責任者と販売・広告・CSの担当者。7分の月次会議。",
+    "period": "2026年9月（架空の集計）",
+    "comparison_period": "2025年9月",
+    "sales_man_yen": 1200,
+    "previous_sales_man_yen": 1000,
+    "orders": 4000,
+    "previous_orders": 3500,
+    "gross_margin_ratio": 0.36,
+    "previous_gross_margin_ratio": 0.38,
+    "return_ratio": 0.06,
+    "previous_return_ratio": 0.04,
+    "channels": [
+      {"name":"広告", "sales_man_yen":240, "previous_man_yen":220},
+      {"name":"自然検索", "sales_man_yen":390, "previous_man_yen":300},
+      {"name":"メール", "sales_man_yen":210, "previous_man_yen":160},
+      {"name":"リピート直訪", "sales_man_yen":360, "previous_man_yen":320}
+    ],
+    "hypotheses": ["返品率の上昇は商品説明と実物の差が一因かもしれない。返品理由の分類で確認する。", "粗利率の低下は値引きと商品構成の影響が考えられる。商品別に分解する。"],
+    "actions": [
+      {"owner":"CS / 森", "action":"上位20商品で返品理由を分類", "date":"10/09", "metric":"分類率100%"},
+      {"owner":"商品 / 青木", "action":"返品上位5商品の説明を改稿", "date":"10/16", "metric":"対象商品の返品率を週次比較"},
+      {"owner":"販売 / 山田", "action":"値引きと商品構成を分解", "date":"10/16", "metric":"粗利率の差分を説明"}
+    ],
+    "decision": "商品説明の修正と粗利分析を先行。広告増額は次回の確認後に判断する。"
+  },
+  "git": {
+    "title": "新入社員向け Git・レビュー入門",
+    "audience": "Gitを触り始めた新入社員。15分の説明と、20分のローカル演習。",
+    "goal": "作業ブランチで変更し、差分を確認して、小さな変更としてレビューを依頼できる。",
+    "commands": ["git status", "git diff", "git switch -c feature/greeting", "git add README.md", "git diff --staged", "git commit -m \"Add greeting\"", "git restore --staged README.md"],
+    "review_items": ["変更の目的と対象が説明されている", "意図しないファイルや秘密情報が混ざっていない", "手元で実行・確認した内容が書かれている"],
+    "conflict_steps": ["git statusで競合ファイルを確認", "両方の変更の意図を読む", "競合マーカーを解消し、結果を実行確認", "解消したファイルだけをaddし、mergeを完了"],
+    "exercise": "input/trainingのREADME.mdに挨拶を追記。作業用フォルダーへコピーし、git init後に変更前の状態をcommitする。feature/greetingで変更・差分確認・commitを実施。GitHubへの送信は演習の必須条件にしない。",
+    "sources": [
+      "https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository",
+      "https://git-scm.com/book/en/v2/Git-Basics-Undoing-Things",
+      "https://docs.github.com/en/pull-requests/how-tos/create-pull-requests",
+      "https://docs.github.com/en/pull-requests/how-tos/review-pull-requests",
+      "https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/resolving-a-merge-conflict-on-github"
+    ]
+  },
+  "harbor": {
+    "title": "週末の汐見港町 回遊企画提案",
+    "audience": "架空の商店会と案内スタッフ。7分の企画説明。",
+    "target": "日帰りの来訪者。車を置いたあと、徒歩で半日を楽しめる人。",
+    "promise": "市場・食・工房・灯台を、一本の徒歩行程でつなぐ。",
+    "itinerary": [
+      {"time":"11:00", "stop":"港の案内所", "experience":"地図と回遊カードを受け取る"},
+      {"time":"11:20", "stop":"朝市通り", "experience":"旬の食材と店主の話"},
+      {"time":"12:15", "stop":"路地の食堂", "experience":"地元の昼ごはん"},
+      {"time":"13:30", "stop":"ガラス工房", "experience":"制作見学と小物選び"},
+      {"time":"14:30", "stop":"旧灯台", "experience":"海を見る休憩と記念写真"},
+      {"time":"15:00", "stop":"港の案内所", "experience":"感想を記入して帰着"}
+    ],
+    "distance_km":4,
+    "pilot_days":4,
+    "pilot_staff":2,
+    "budget_man_yen": {"案内物":6,"スタッフ":16,"記録・調整":6},
+    "targets": ["参加者60人以上", "全行程を回る人40%以上", "回遊カード回収率70%以上"],
+    "measurement": "参加時に匿名カードを渡し、各店で印を付ける。帰着時に回収。来街者全体の売上効果は、この試行だけで断定しない。",
+    "risks": ["雨天時は工房と食堂を中心に短縮", "混雑時は時間指定で分散", "休日の営業時間を前日確認"],
+    "decision": "2週末・4日の試行を企画。参加店舗の合意後に実施日を決める。"
+  },
+  "knowledge": {
+    "title": "社内ナレッジ検索 導入提案",
+    "audience": "情報システム・各部門の資料管理者。8分の導入判断。",
+    "organization": "架空のソフトウェア会社・50人",
+    "problem": "規程や手順が複数フォルダーに分散。質問者が、現行版かどうか確かめるために管理者へ聞き直している。",
+    "scenarios": ["出張精算の現行手順を探す", "開発環境の初期設定を探す", "顧客対応テンプレートの最新版を探す"],
+    "architecture": ["資料台帳：所有者・版・公開範囲を登録", "検索索引：公開範囲と更新時刻を同期", "検索前に本人の閲覧権限を照合", "根拠リンクと最終更新日を返す"],
+    "options": [
+      {"name":"現行運用", "scope":"フォルダー検索", "cost":"追加開発なし", "issue":"現行版と所有者が見つけにくい"},
+      {"name":"台帳＋全文検索", "scope":"資料と版を直接探す", "cost":"小さく試作", "issue":"質問文と資料の語句が違うと弱い"},
+      {"name":"回答支援を追加", "scope":"根拠付きの回答を組み立てる", "cost":"検索の評価後に見積", "issue":"誤回答と権限の追加検証が必要"}
+    ],
+    "phases": ["1週：対象30資料を整理", "2週：台帳と索引を作成", "3週：30問で利用テスト", "4週：導入・継続・中止を判断"],
+    "owners": ["資料所有者：現行版の指定・更新", "情報システム：権限・索引・監査", "利用部門：質問と正解の作成"],
+    "criteria": ["正しい資料へ到達：24/30問以上", "権限外資料の露出：0/20ケース", "資料更新：翌営業日までに反映"],
+    "decision": "台帳＋全文検索で4週間の試作を行う。回答生成や全社展開は、評価後に別途判断する。"
+  }
+}

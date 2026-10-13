@@ -1,0 +1,43 @@
+{
+  "case_id": "ec-monthly",
+  "repository": "hugohe3/ppt-master",
+  "upstream_commit": "ca04346de145ed6462ddf34682848e71df5e20a2",
+  "upstream_files": [
+    {
+      "path": "skills/ppt-master/SKILL.md",
+      "sha256": "4b0f576b482a447a35967df230398baf888550b3e3f2243ca0982c59cb8c61db"
+    },
+    {
+      "path": "skills/ppt-master/scripts/attribution_guard.py",
+      "sha256": "63d3e2f9075426f805dc4ab750d0151e100abdee42c90cc8d9640bb8fd380155"
+    },
+    {
+      "path": "skills/ppt-master/scripts/svg_quality_checker.py",
+      "sha256": "cf8f21be001a30c9f8212ad80c34f4e657741b9186a79213808f0bcef045a482"
+    },
+    {
+      "path": "skills/ppt-master/scripts/svg_to_pptx.py",
+      "sha256": "030fac5181fffbbaee09f6af6b8fa93b7561ce08ba8d40ded3368900bcbefb01"
+    },
+    {
+      "path": "skills/ppt-master/workflows/profiles/quick-generate.md",
+      "sha256": "0953958921062f862c772acaf43288ed1e34a34370514efb4d367d965da48f9c"
+    }
+  ],
+  "fork": "ppt-master-ja",
+  "method": "日本語の文字・図形profile。上流guard・checker・native SVG→PPTX変換器を使用。Default全工程ではない。PowerPoint本体でPNG/PDF出力。",
+  "input_sha256": "8a784fe4d57ea0a5f869e0f9b5caf9a92bdaaba9d52bf1ed09ee19a8cf923d36",
+  "input": "input/data.json",
+  "output": "deck.pptx",
+  "generator": "tools/make_business_pptx.py",
+  "changes": [
+    "日本語入力・講稿",
+    "日本語書体と改行",
+    "題材別の図表",
+    "当地プレビュー同期"
+  ],
+  "license": "MIT",
+  "fonts": "licenses/fonts",
+  "qa": "QA.json",
+  "render_report": "render/powerpoint-render.json"
+}

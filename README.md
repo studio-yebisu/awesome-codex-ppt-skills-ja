@@ -1,42 +1,78 @@
-# AIスライドスキル集 / 209件を日本語で選ぶ
+# AIスライド制作スキル集｜日本語で作って、実例から選ぶ
 
-元の209件のスキル・作者・分類を主役にした、日本語の作例カタログ。Studio Yebisuが編集・制作・サイト開発しています。
+209件・6カテゴリのスキル集を土台に、実際に日本語の資料を制作し、完成作品から使うスキルを選べるコレクションへ育てています。Studio Yebisuが選定・日本語制作・派生スキルの改善・サイト開発を担当します。原典は [zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)です。
 
-[ウェブサイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/) · [使い方](guide.html) · [出典と利用条件](licenses.html)
+**今回の改修はローカル実装・未公開です。** [ローカルサイト](http://127.0.0.1:8847/)で制作事例を確認できます。[既存の公開サイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)は更新前の版です。
 
-現在の改修版はローカルでレビュー可能。公開サイトの更新はまだ実施していません。
+[全209件](#catalog) · [6カテゴリ](#choose) · [製品仕様](docs/PRODUCT_SPEC.md) · [出典と利用条件](docs/出典とライセンス.md)
 
-- 209件の元プロジェクトを検索・6分類・作者・個別ライセンスから選択。
-- カードから浮かぶ作例ビューアー。日本語の実制作は再生、ページ送り、講稿に対応。
-- 3つの該当スキルで日本語作例を12枚制作。原テンプレートや指定スタイル、上流変換器を実際に使用。
-- 原作者の公開画像、GitHub紹介画像、未制作を実制作と区別。
-- 日本語版フォークは元実装・著作権・個別のLICENSEを保持。原作者の公式日本語版ではありません。
+## 日本語の制作事例：6冊・45枚
 
-## 実制作の対応
+提案、月次報告、研修、地域企画、業務改善の資料を3つの実在スキルで制作しました。「スライド事例を見る」から全ページをその場で閲覧し、成果物、入力資料、日本語依頼文、使用スキルへ進めます。組織・数値は制作手順を試すための架空サンプルで、実績や外部調査ではありません。
 
-| 掲載スキル | 適用したもの | 日本語作例 | 日本語版 |
-|---|---|---|---|
-| [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) | 元のHTMLテンプレートを使用 | [4枚](examples/actual/guizang-magazine/index.html) / [制作記録](examples/actual/guizang-magazine/PROVENANCE.html) | [guizang-ppt-skill-ja](skill-forks/guizang-ppt-skill-ja/SKILL.md) |
-| [zarazhangrui/frontend-slides](https://github.com/zarazhangrui/frontend-slides) | 元のSKILL・指定プリセットを適用 | [4枚](examples/actual/frontend-bold-signal/index.html) / [制作記録](examples/actual/frontend-bold-signal/PROVENANCE.html) | [frontend-slides-ja](skill-forks/frontend-slides-ja/SKILL.md) |
-| [hugohe3/ppt-master](https://github.com/hugohe3/ppt-master) | 元の変換器でPPTX出力 · SVGプレビュー | [4枚](examples/actual/ppt-master-native/index.html) / [制作記録](examples/actual/ppt-master-native/PROVENANCE.html) | [ppt-master-ja](skill-forks/ppt-master-ja/SKILL.md) |
+| 資料と用途 | 使用スキル・形式 | 枚数 | 制作物・再制作手順 |
+|---|---|---:|---|
+| [喫茶つむぎ 2号店出店提案](http://127.0.0.1:8847/case.html?id=cafe-pptx)／調査開始の社内決裁 | PPT Master／編集可能なPPTX | 8 | [PPTX](examples/cases/cafe-pptx/deck.pptx)・[PDF](examples/cases/cafe-pptx/render/deck.pdf)・[手順](examples/cases/cafe-pptx/README.md) |
+| [くらし便 EC事業 9月報告](http://127.0.0.1:8847/case.html?id=ec-monthly)／数字から改善計画へ | PPT Master／編集可能なPPTX | 7 | [PPTX](examples/cases/ec-monthly/deck.pptx)・[PDF](examples/cases/ec-monthly/render/deck.pdf)・[手順](examples/cases/ec-monthly/README.md) |
+| [喫茶つむぎ 2号店出店提案](http://127.0.0.1:8847/case.html?id=cafe-web)／店内説明会 | Frontend Slides／Bold Signal・HTML | 8 | [HTML](examples/cases/cafe-web/index.html)・[手順](examples/cases/cafe-web/README.md) |
+| [新入社員向け Git・レビュー入門](http://127.0.0.1:8847/case.html?id=git-onboarding)／説明とローカル演習 | Frontend Slides／Terminal Green・HTML | 7 | [HTML](examples/cases/git-onboarding/index.html)・[手順](examples/cases/git-onboarding/README.md) |
+| [週末の汐見港町 回遊企画提案](http://127.0.0.1:8847/case.html?id=port-town)／参加店舗との企画検討 | Guizang／Magazine・HTML | 7 | [HTML](examples/cases/port-town/index.html)・[手順](examples/cases/port-town/README.md) |
+| [社内ナレッジ検索 導入提案](http://127.0.0.1:8847/case.html?id=knowledge-search)／段階導入の判断 | Guizang／Swiss・HTML | 8 | [HTML](examples/cases/knowledge-search/index.html)・[手順](examples/cases/knowledge-search/README.md) |
 
-PPT Masterはフォークに同梱した元のチェッカーと変換器でネイティブPPTXを出力。ブラウザーは入力SVGを表示します。PowerPointアプリ内の表示検証は未実施で、Noto Sans JPの導入が必要です。Guizangの発表者モードの全機能、209件すべての生成は検証済みと扱いません。
+カフェの2冊は同じ入力と数値を共有しています。編集するPPTXと、動きを含めて発表するWebの違いを同じ題材で比較できます。各事例には入力、コピーできる依頼文、講稿、原典コミット・使用ファイルの記録、検証状態を付けています。GitHub上のHTMLリンクはソース表示になるため、再生にはローカルサイトを使ってください。
 
-## 開発と正本
+PPTX2冊・15枚はMicrosoft PowerPoint 16.0で実ファイルからPNG／PDFへ出力しました。サイトのPPTXプレビューもその描画結果です。Web4冊・30枚はブラウザーで描画とページ内のはみ出しを確認しています。操作や配布を含む確認範囲は各事例のQA記録を参照してください。技術的な確認と、人による採用判断は別です。
 
-```text
+## 自分の内容で作る
+
+1. 用途と制作事例からスキルを選び、資料の中面と編集できる形式を確認します。
+2. 各事例の入力資料とPROMPT.txtを取得し、読者、説明時間、判断事項、原稿・数値を自分の内容に置き換えます。
+3. 下記の日本語派生スキルを利用環境へ配置し、そのSKILL.mdと必要な上流参照に従ってAIエージェントへ制作を依頼します。導入するパッケージの依存・条件も確認します。
+4. 日本語の字形、改行、単位、図表、講稿を実際の出力で確認します。PPTXはPowerPointで、HTMLはブラウザーで開き、編集・保存・印刷など利用する機能を確かめます。
+
+| 日本語派生スキル | 上流から使うもの | 日本語版に加えたもの |
+|---|---|---|
+| [ppt-master-ja](skill-forks/ppt-master-ja/SKILL.md) | [PPT Master](https://github.com/hugohe3/ppt-master)の帰属ガード・チェッカー・native SVG→PPTX変換器 | 提案・報告の入力、数値と単位、講稿、PowerPoint本体での描画確認 |
+| [frontend-slides-ja](skill-forks/frontend-slides-ja/SKILL.md) | [Frontend Slides](https://github.com/zarazhangrui/frontend-slides)のSKILL・プリセット・固定ステージ・編集の契約 | 日本語入力、英数・コード混在の組版、編集保存・配布時の確認 |
+| [guizang-ppt-skill-ja](skill-forks/guizang-ppt-skill-ja/SKILL.md) | [Guizang](https://github.com/op7418/guizang-ppt-skill)のMagazine／Swiss実テンプレート・ページ制御・演出 | 日本語の企画構成、書体、講稿、元テンプレートに沿った検証 |
+
+当地の実制作とは、それぞれの上流の手順・実装・テンプレートを使って今回の資料を作ったことです。PPT Masterは文字・図形中心の経路で、上流Defaultの全工程を実行した意味ではありません。Frontend Slidesは指示型のスキルを適用して制作し、存在しない上流生成CLIを実行したとは扱いません。
+
+書体はNoto Sans JP、Noto Serif JP、BIZ UDPGothic等を役割に応じて使います。Webの同梱サブセットとPCに導入する書体は別物で、新しい本文では字形の収録範囲を確認します。出典・条件は [data/fonts.json](data/fonts.json) と各派生スキルの日本語フォント参照にあります。PPTXの受け手にも使用書体が必要です。
+
+## ローカルで開く・作例を再生成する
+
+リポジトリrootから静的サーバーを起動します。
+
+~~~text
 python -m http.server 8847 --bind 127.0.0.1
-node tools/build_site.mjs
-python tools/verify_release.py
-```
+~~~
 
-`data/skills.json`が元の209件、`data/actual-examples.json`が実制作、`data/project-workflows.json`がその対応です。サイトは静的HTML/CSS/ES modules。実制作の再生成は`tools/build_actual_examples.py`、日本語版の配布は`tools/package_actual_forks.py`。元ソースの取得は`tools/acquire_real_skill.py`。元コミットの全アーカイブはビルド用キャッシュへ保存し、各作例に使用ファイルのハッシュを記録しています。
+[ローカルサイト](http://127.0.0.1:8847/)を開いてください。これはブラウザーで資料を生成するサービスではなく、実例とスキルを選んで自分のAI環境で制作するためのサイトです。
 
-サイト・カタログの独自部分はCC0。各フォークはMIT / AGPL、フォントはOFL、公開画像は原典ごとの条件です。CC0を掲載物へ一括適用しません。
+今回のHTML4冊と共通の入力・依頼文・制作記録・manifestは、リポジトリ全体を取得し、固定した上流ソースと必要素材を準備した環境で再生成できます。
 
-前回作った独立5スキル・共通レンダラーの6デッキは、今回の意図に合わない不採用試作として保全。[記録](docs/withdrawn-prototypes.md)。現在の実制作の件数や制作手段に含めません。
+~~~text
+python tools/build_case_studies.py
+~~~
 
-以下は元の209件と原版の実測比較の記録であり、今回の制作検証結果とは別です。
+[build_case_studies.py](tools/build_case_studies.py)は当地の作例組立スクリプトです。原典のSKILL.mdそのものや、任意の資料を生成する汎用CLIとは異なります。PPTX2冊は [make_business_pptx.py](tools/make_business_pptx.py)で先に生成し、[render_powerpoint.ps1](tools/render_powerpoint.ps1)で実PowerPointのPNG／PDFへ出力しておきます。PPT Master用の依存を準備したPython環境と、描画用のWindows版PowerPointが必要です。具体的な条件・コマンドは各作例のREADMEと [PPT Master日本語業務手順](skill-forks/ppt-master-ja/references/japanese-business-workflow.md)を参照してください。
+
+再生成は同じ作例の出力先を更新するため、独自の改稿は別の場所へ保存します。配布ZIPだけに生成環境一式が含まれるわけではありません。最終確認後の配布ZIP作成には次を使います。
+
+~~~text
+python tools/build_case_studies.py --package
+~~~
+
+正本は [製品仕様](docs/PRODUCT_SPEC.md)、[現行方針](docs/PROJECT.md)、[209件のカタログ](data/skills.json)、[制作入力](data/case-inputs.json)、[6冊の対応データ](data/case-studies.json)です。
+
+## 掲載・条件・確認範囲
+
+209件の掲載は、全件の日本語生成や動作確認が完了したという意味ではありません。今回の初回実装は3派生・6冊45枚です。上流の公開作例、GitHub紹介画像、当地の制作例を区別します。サイト・一覧編集のCC0を各スキルへ一括適用せず、MIT／AGPLなどの原条件、書体のOFL、素材ごとの条件を保持します。日本語派生は原作者の公式日本語版ではありません。
+
+以前の独立5スキル・共通rendererの6デッキ、その後の自己紹介題材3冊12枚は不採用試作の記録で、今回の件数へ含めません。公開更新・正式採用は未実施です。
+
+以下は元の209件と原版の実測比較の記録です。今回の当地制作・検証とは別の結果として掲載します。元データの基準日は2026年10月11日です。
 
 ---
 

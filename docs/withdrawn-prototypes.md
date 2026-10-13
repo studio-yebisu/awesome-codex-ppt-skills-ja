@@ -2,10 +2,14 @@
 
 2026-10-13、209件のカタログ改修という依頼を、独自の5スキルと6デッキを中心にした別の制作サイトへ取り違えた。ユーザーの訂正に従って、その案内と完了宣言を撤回した。
 
-`skills/yebisu-*`、`data/decks.json`、従来の`examples/*`の6デッキ、旧配布物は試作として保全する。現在のホームページと使い方からは推奨しない。現在の3件・12枚の実制作へ合算しない。元の生成手段は共通の独自SVGレンダラーとArtifact Toolであり、掲載スキルの実行結果ではない。
+`skills/yebisu-*`、`data/decks.json`、従来の`examples/*`の6デッキ、旧配布物は試作として保全する。現在のホームページと使い方からは推奨しない。現在の6冊・45枚の制作事例へ合算しない。元の生成手段は共通の独自SVGレンダラーとArtifact Toolであり、掲載スキルの実行結果ではない。
 
 旧サイトの生成コードは`tools/build_prototype_site.mjs`に保全。通常の`tools/build_site.mjs`は209件を主役とした現行サイトだけを更新する。
 
 自動導入していた共通`yebisu-japanese-slides`は、ファイル一致を確認したうえで`.build/withdrawn-global-skill`へ移した。削除せず、共通スキルの自動選択から外した。
 
 目的：旧試作の復元・比較。所有者：Studio Yebisu / Codex。採用状態：不採用。次工程：現在のカタログとは別の候補として利用する場合に、ユーザーの意図を確認する。
+
+## 後続のギャラリー案
+
+209件の一覧へ日本語の自己紹介デモ3冊12枚を足した後続案も不採用。examples/actualとdata/actual-examples.jsonは技術試作の履歴であり、現行の6冊45枚へ算入しない。現在の作品正本はdata/case-studies.json、仕様はdocs/PRODUCT_SPEC.md。

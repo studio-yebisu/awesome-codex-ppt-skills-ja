@@ -9,6 +9,8 @@ metadata:
 
 # Frontend Slides 日本語版
 
+日本語の提案・研修は [references/japanese-business-workflow.md](references/japanese-business-workflow.md) を読む。入力、英数・コード混在、固定ステージ、編集保存・オフライン確認を扱う。書体の変更・配布は [references/japanese-fonts.md](references/japanese-fonts.md) を参照する。
+
 [SKILL.upstream.md](SKILL.upstream.md)と選択したSTYLE_PRESETS.mdの項目を読む。元の指定書体・色・署名的な配置を使う。html-template.mdのHTMLとSlidePresentationを制作の土台にして、viewport-base.cssを**全文**含める。1920×1080の固定ステージを等比縮小し、スマートフォンでスライド内を再配置しない。
 
 英字の指定書体に日本語用Noto Sans JP等を足す。日本語だけが別のシステム書体へ落ちないよう実字形を確認する。自然な改行と異なる字重・字号を使い、内容を詰め込まない。図形は抽象的な形にする。キーボード、タッチ、ホイールを実装する。元の編集仕様に従いE編集・localStorage保存・HTML出力を整える。

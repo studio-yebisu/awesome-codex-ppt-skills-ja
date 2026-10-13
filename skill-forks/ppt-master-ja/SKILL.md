@@ -14,6 +14,8 @@ metadata:
 
 # PPT Master 日本語版の制作経路
 
+日本語の提案・報告は [references/japanese-business-workflow.md](references/japanese-business-workflow.md) を読む。入力・単位・前年差・講稿・PPTX実アプリ確認と当地の再現コマンドを収録。書体の変更・配布は [references/japanese-fonts.md](references/japanese-fonts.md) を参照する。
+
 上流の[SKILL.upstream.md](SKILL.upstream.md)を参照し、文字・図形を編集できるPPTXという目的を維持する。上流の通常ルートを使う場合は、そのルーティングと計画契約に従う。
 
 この日本語版には、カタログの作例や文字・図形中心の小規模な資料を制作する専用経路を追加している。これは上流Default Generateの全工程の実行を意味しない。上流のQuick Generate変換契約を内部で使う。外部画像、アイコン、音源を要しない日本語スライド向けであり、素材ライブラリーは同梱していない。
