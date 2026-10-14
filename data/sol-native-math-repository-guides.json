@@ -1,0 +1,39 @@
+[
+  {
+    "repository": "Noi1r/powerpoint-skill",
+    "summary_ja": "Sandwich themeと原典OMML注入で数式・図表をPowerPoint内で編集する日本語教材。",
+    "example_ids": [
+      "native-math-showcase"
+    ],
+    "upstream_commit": "a39cd8cfba332741a96d52bebd2bb378b638364e",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/native-math-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/native-math-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Node.js / PptxGenJS4.0.1 (MIT)",
+      "Python / lxml6.1.3",
+      "Pandoc3.12.1 (GPL2+, external runtime)",
+      "Microsoft PowerPoint16 for native OMML PNG/PDF render",
+      "Shippori Mincho / BIZ UDPGothic / Manrope (OFL)"
+    ],
+    "commands": [
+      "npm install",
+      "python -m pip install -r requirements.txt",
+      "python source/build.py --node C:/path/to/node.exe --pandoc C:/path/to/pandoc.exe",
+      "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
+    "guide": "examples/repositories/native-math-showcase/README.md",
+    "source_download": "downloads/native-math-example-ja.zip",
+    "fork_download": "downloads/native-math-ja.zip",
+    "limitations": [
+      "仮想データ・全体の分散n分母。調査結果ではない",
+      "OMMLはPowerPoint実描画。LibreOfficeでは欠ける場合がある",
+      "全ページ詳細監査・独立レビュー・ZIP再実行なし"
+    ]
+  }
+]

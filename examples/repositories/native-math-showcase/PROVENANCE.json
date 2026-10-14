@@ -1,0 +1,55 @@
+{
+  "repository": "Noi1r/powerpoint-skill",
+  "upstream_commit": "a39cd8cfba332741a96d52bebd2bb378b638364e",
+  "license": "MIT",
+  "method": "Original themes.md Sandwich masters/helpers -> PptxGenJS4.0.1 -> original render_latex OMML manifest + original inject_omml.py Pandoc3.12.1 DOCX extraction -> Microsoft PowerPoint16 render",
+  "runtime_originals": {
+    "upstream/LICENSE": "06dcddbb6908a0c6dd4a9e8ec822eea41d5a460a53089fecccc8a68049e99241",
+    "upstream/powerpoint-slides/formula-rendering.md": "ee9ea3db9f79093ded04f6b556941a8d70f3946a1cdea8c08a410fa5ede7ac33",
+    "upstream/powerpoint-slides/SKILL.md": "ce0b222141419457cbe1f8f161474b3b90ff4ecfd70448033320899d995fd0d9",
+    "upstream/powerpoint-slides/references/themes.md": "9117881468a0b9807794c1969c944ab2de8ea07ee9e84f693c7512e6ffc8d8d0",
+    "upstream/powerpoint-slides/scripts/inject_omml.py": "4df34947ecd4f407704354c87a9434fbf9e0502c9cc3582c50746da9873dec17",
+    "upstream/powerpoint-slides/scripts/render_latex.py": "428d09af2f8274452b8d7bbaa6faa742408527efce8f045a34602ce679e79b33"
+  },
+  "helper_changes": "source/helpers.diff",
+  "formula_images_used": false,
+  "auxiliary_xsl_used": false,
+  "office_fonts_or_xsl_redistributed": false,
+  "fonts": {
+    "fonts/bizudpgothic/BIZUDPGothic-Bold.ttf": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90",
+    "fonts/bizudpgothic/BIZUDPGothic-Regular.ttf": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01",
+    "fonts/manrope/Manrope[wght].ttf": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+    "fonts/shipporimincho/ShipporiMincho-Bold.ttf": "63bc4eddc74793f671c3ab827c5175e773ffbe569d0bf50ee65375ea9e3bc286",
+    "fonts/shipporimincho/ShipporiMincho-Regular.ttf": "769b5269f0f9bc6534b352c0e6bd856a566e03ff788f107191c2d835863570b2"
+  },
+  "dependency_licenses": [
+    "upstream MIT",
+    "PptxGenJS MIT",
+    "lxml BSD3 and dependencies: see dependencies/lxml",
+    "Pandoc GPL2+ external runtime only",
+    "fonts OFL1.1"
+  ],
+  "input_status": "hypothetical educational scores; population variance divisor n",
+  "build": {
+    "steps": {
+      "manifest": {
+        "exit_code": 0,
+        "log": "source/manifest.log"
+      },
+      "generate": {
+        "exit_code": 0,
+        "log": "source/generate.log"
+      },
+      "inject": {
+        "exit_code": 0,
+        "log": "source/inject.log"
+      }
+    },
+    "residual_math_placeholders": 0,
+    "formula_definition_count": 9,
+    "omml_conversion_method": "original inject_omml.py -> Pandoc LaTeX to DOCX -> extract OMML",
+    "full_structure_audit": false
+  },
+  "font_source_metadata": "fonts/SOURCE.json",
+  "render_receipt": "render/powerpoint-render.json"
+}

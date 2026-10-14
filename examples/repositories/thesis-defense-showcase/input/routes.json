@@ -1,0 +1,79 @@
+{
+  "study_kind": "fictitious educational simulation",
+  "unit": "minutes",
+  "nodes": {
+    "H": "自宅",
+    "A": "交差点",
+    "B": "アーケード",
+    "C": "橋",
+    "G": "学校"
+  },
+  "edges": [
+    {
+      "a": "H",
+      "b": "A",
+      "time": 6,
+      "exposure": 6
+    },
+    {
+      "a": "A",
+      "b": "G",
+      "time": 8,
+      "exposure": 8
+    },
+    {
+      "a": "H",
+      "b": "B",
+      "time": 8,
+      "exposure": 2
+    },
+    {
+      "a": "B",
+      "b": "G",
+      "time": 10,
+      "exposure": 1
+    },
+    {
+      "a": "H",
+      "b": "C",
+      "time": 7,
+      "exposure": 7
+    },
+    {
+      "a": "C",
+      "b": "G",
+      "time": 9,
+      "exposure": 9
+    }
+  ],
+  "routes": [
+    {
+      "name": "近道",
+      "path": [
+        "H",
+        "A",
+        "G"
+      ]
+    },
+    {
+      "name": "屋根道",
+      "path": [
+        "H",
+        "B",
+        "G"
+      ]
+    },
+    {
+      "name": "川沿い",
+      "path": [
+        "H",
+        "C",
+        "G"
+      ]
+    }
+  ],
+  "lambdas": [
+    0,
+    0.5
+  ]
+}

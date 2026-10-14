@@ -1,0 +1,80 @@
+--- original themes.md JavaScript helpers
++++ Sandwich Japanese helper adapter
+@@ -2,31 +2,50 @@
+ const fs = require("fs");
+ let pres = new pptxgen();
+ pres.layout = "LAYOUT_16x9";
+-pres.author = "Presenter Name";
+-pres.title = "Presentation Title";
++pres.author = "Studio Yebisu";
++pres.title = "平均の、その先。";
+ 
+ // Theme — short alias T
+ const T = {
+-  bg: { title: "1E2761", content: "F8F9FA", section: "1E2761" },
+-  tx: { pri: "1A1A2E", sec: "4A4A5A", mut: "8C8C8C", wh: "FFFFFF" },
+-  ac: { pos: "0173B2", neg: "DE8F05", emp: "029E73" },
+-  chart: ["0173B2", "DE8F05", "029E73", "CC78BC"],
+-  cardFill: "0173B215", divider: "D0D0D0"
++  "bg": {
++    "title": "2D3436",
++    "content": "FFFFFF",
++    "section": "2D3436"
++  },
++  "tx": {
++    "pri": "2D3436",
++    "sec": "555555",
++    "mut": "8C8C8C",
++    "wh": "FFFFFF"
++  },
++  "ac": {
++    "pos": "0173B2",
++    "neg": "DE8F05",
++    "emp": "029E73"
++  },
++  "chart": [
++    "0173B2",
++    "DE8F05",
++    "029E73",
++    "CC78BC"
++  ],
++  "cardFill": "0173B215",
++  "divider": "D0D0D0"
+ };
+ 
+ // Typography — default baselines (scale up when content is sparse, see QA density check)
+ const F = {
+-  cover:    { face: "Georgia", size: 48 },
+-  section:  { face: "Georgia", size: 36 },
+-  title:    { face: "Georgia", size: 22 },
+-  subtitle: { face: "Calibri", size: 18 },
+-  body:     { face: "Calibri", size: 15 },
+-  small:    { face: "Calibri", size: 12 },
+-  caption:  { face: "Calibri", size: 11 },
+-  stat:     { face: "Georgia", size: 60 },
+-  cardTitle:{ face: "Georgia", size: 18 },
+-  tblHead:  { face: "Calibri", size: 13 },
+-  tblCell:  { face: "Calibri", size: 12 },
++  cover:    { face: "Shippori Mincho", size: 48 },
++  section:  { face: "Shippori Mincho", size: 36 },
++  title:    { face: "Shippori Mincho", size: 22 },
++  subtitle: { face: "BIZ UDPGothic", size: 18 },
++  body:     { face: "BIZ UDPGothic", size: 15 },
++  small:    { face: "BIZ UDPGothic", size: 12 },
++  caption:  { face: "BIZ UDPGothic", size: 11 },
++  stat:     { face: "Shippori Mincho", size: 60 },
++  cardTitle:{ face: "Shippori Mincho", size: 18 },
++  tblHead:  { face: "BIZ UDPGothic", size: 13 },
++  tblCell:  { face: "BIZ UDPGothic", size: 12 },
+ };
+ 
+ // Layout constants
+@@ -71,7 +90,7 @@
+     color: opts.color || T.tx.pri,
+     align: opts.align || "center",
+     valign: opts.valign || "middle",
+-    margin: 0
++    margin: 0, shrinkText: true
+   });
+ }
+ 

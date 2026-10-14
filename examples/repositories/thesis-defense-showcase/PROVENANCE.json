@@ -1,0 +1,106 @@
+{
+  "repository": "zouchenzhen/thesis-defense-pptx-skill",
+  "commit": "7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb",
+  "license": "Apache-2.0",
+  "author": "zouchenzhen",
+  "official": false,
+  "method": "Original minimal Markdown build_template creates the native blank template; original COM Duplicate/MoveTo helper clones 1,2,3,4,4,3; original Markdown section parser, replace_exact_text/set_text_preserve_style/add_text/rect/write_table fill the Japanese native deck.",
+  "template_geometry_and_font_sizes_preserved": true,
+  "upstream_originals_preserved": true,
+  "modifications": [
+    "Generated template typefaces changed Microsoft YaHei to BIZ UDPGothic / Shippori Mincho; geometry, sizes, red band, navigation and content frames retained.",
+    "Local clone and local export helper never call Application.Quit: close only this case presentation for parallel COM work.",
+    "Japanese source content and original native diagrams/tables added inside existing template areas.",
+    "User-requested six slides and initial-main-display checks replace upstream defaults of 12–16 slides and extensive QA."
+  ],
+  "editability": "native_elements",
+  "editable_features": [
+    "text",
+    "shapes",
+    "tables"
+  ],
+  "inputs": [
+    "input/research.md",
+    "input/routes.json",
+    "input/calculation-results.json",
+    "input/figure-allowlist.json"
+  ],
+  "source_refs": [
+    {
+      "path": "skills/thesis-defense-pptx/SKILL.md",
+      "sha256": "277c5aba2e1bc42ce2a515b4fd1b797c1c6daaa304ffe866c4a95b1145c10cde",
+      "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/skills/thesis-defense-pptx/SKILL.md"
+    },
+    {
+      "path": "examples/minimal_markdown/build_template.py",
+      "sha256": "d93e33151d11d6e974efb3342cdb93c633704b9e4583e6a9e861af6a58073e77",
+      "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/examples/minimal_markdown/build_template.py"
+    },
+    {
+      "path": "examples/minimal_markdown/build_deck.py",
+      "sha256": "fa577061678e75768660f0188969df726953cc812674d60d7886fd0ea179e399",
+      "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/examples/minimal_markdown/build_deck.py"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/scripts/clone_template_deck.ps1",
+      "sha256": "c2e3310c4e556361e582a3399c89a0bbee0f2153693da40803607a3fa040ffbb",
+      "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/skills/thesis-defense-pptx/scripts/clone_template_deck.ps1"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/scripts/pptx_template_tools.py",
+      "sha256": "f857f9a87f69ba3e159cf24d1fde1003a692d7540db4bb6a1554441f8d879817",
+      "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/skills/thesis-defense-pptx/scripts/pptx_template_tools.py"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "ac1168a821eaef7d1eae645659ee8c705c2bf7c5c857b9f579c15d3c6d66637e",
+      "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/LICENSE"
+    },
+    {
+      "path": "NOTICE",
+      "sha256": "7384dfc71559d8498e3ada0fd6b34907551f909b736f8f792b7bb3a75182221d",
+      "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/NOTICE"
+    }
+  ],
+  "fonts": [
+    {
+      "family": "BIZ UDPGothic",
+      "files": [
+        "BIZUDPGothic-Regular.ttf",
+        "BIZUDPGothic-Bold.ttf"
+      ],
+      "license": "OFL-1.1"
+    },
+    {
+      "family": "Shippori Mincho",
+      "files": [
+        "ShipporiMincho-Bold.ttf"
+      ],
+      "license": "OFL-1.1"
+    }
+  ],
+  "font_source_commit": "66928797f271fed5ee428544e7229685e2d90127",
+  "font_embedding": false,
+  "dependencies": "python-pptx, Pillow; original Markdown module imported; Windows PowerPoint COM used for native clone/export. Extraction/PDF dependencies in original requirements retained but not used for this Markdown case.",
+  "third_party_images_or_logos": false,
+  "artifact_tool_used": false,
+  "dependency_versions_and_conditions": [
+    {
+      "package": "python-pptx",
+      "version": "1.0.2",
+      "license": "MIT",
+      "bundled": false
+    },
+    {
+      "package": "Pillow",
+      "version": "12.3.0",
+      "license": "MIT-CMU",
+      "bundled": false
+    },
+    {
+      "component": "Microsoft PowerPoint 16.0 COM",
+      "license": "Requires installed licensed Microsoft PowerPoint; not redistributed",
+      "bundled": false
+    }
+  ]
+}

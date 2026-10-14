@@ -1,0 +1,75 @@
+[
+  {
+    "id": "thesis-defense-showcase",
+    "title": "雨の日の、通学ルート。",
+    "repository": "zouchenzhen/thesis-defense-pptx-skill",
+    "skill_repository": "zouchenzhen/thesis-defense-pptx-skill",
+    "upstream_commit": "7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb",
+    "fork_id": "thesis-defense-ja",
+    "page_count": 6,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "preview_canvas": {
+      "width": 1600,
+      "height": 900
+    },
+    "style": "原典template保持 / 白・濃赤・墨紺の仮想研究",
+    "use_case": "研究発表・仮想試算",
+    "preview": "examples/repositories/thesis-defense-showcase/index.html",
+    "cover": "examples/repositories/thesis-defense-showcase/render/slide-01.png",
+    "interior": "examples/repositories/thesis-defense-showcase/render/slide-03.png",
+    "pages": [
+      "examples/repositories/thesis-defense-showcase/render/slide-01.png",
+      "examples/repositories/thesis-defense-showcase/render/slide-02.png",
+      "examples/repositories/thesis-defense-showcase/render/slide-03.png",
+      "examples/repositories/thesis-defense-showcase/render/slide-04.png",
+      "examples/repositories/thesis-defense-showcase/render/slide-05.png",
+      "examples/repositories/thesis-defense-showcase/render/slide-06.png"
+    ],
+    "artifact_download": "downloads/thesis-defense-example-ja.zip",
+    "source_download": "downloads/thesis-defense-example-ja.zip",
+    "fork_download": "downloads/thesis-defense-ja.zip",
+    "pptx_download": "examples/repositories/thesis-defense-showcase/deck.pptx",
+    "pdf_download": "examples/repositories/thesis-defense-showcase/render/deck.pdf",
+    "input": "examples/repositories/thesis-defense-showcase/input/research.md",
+    "input_data": "examples/repositories/thesis-defense-showcase/input/routes.json",
+    "prompt": "examples/repositories/thesis-defense-showcase/PROMPT.md",
+    "prompt_text": "zouchenzhen/thesis-defense-pptx-skill原典のminimal_markdown/build_template.pyで生成した無地templateを、原典COM clone helperとpptx_template_toolsのnative replace/add_text/write_tableで再利用し、日本語研究発表「雨の日の、通学ルート。」を全6枚で作ってください。入力正本は自作Markdown研究メモとroutes.json。学部生ゼミ向けの架空地点・辺・所要時間を用い、関係図、候補比較、J=移動時間+λ×露出時間の仮想試算、限界と次の実験を説明。観測や調査を実施したと偽らず、設定値と仮想試算を明示。第三者写真・大学ロゴは使わない。原典templateのgeometry・濃赤・文字サイズ・native objectsを維持し、字体だけBIZ本文/Shippori見出しへ局所対応。追加の角丸カード量産は避け、既存content frame内を図・表・大きい数値で使い分ける。原典既定12〜16枚より6枚指定を優先、生成成功と主要完成物の初回表示のみ確認。元Apache-2.0/NOTICE、使用TTF/OFL、計算コードと図allowlistを保全。共有PowerPointのApplication.Quitは呼ばず自分のdeckだけClose。",
+    "provenance": "examples/repositories/thesis-defense-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/thesis-defense-showcase/QA.json",
+    "guide": "examples/repositories/thesis-defense-showcase/README.md",
+    "titles": [
+      "雨の日の、通学ルート。",
+      "研究課題",
+      "経路モデル",
+      "候補の比較",
+      "仮想試算",
+      "限界と展望"
+    ],
+    "notes": [
+      "学部ゼミ向けの仮想研究です。地点・辺・時間は学習用設定、観測・実測ではありません。",
+      "所要時間だけでなく、雨にさらされる時間を評価する経路選択の問題を考えます。",
+      "自宅Hと学校Gの間に、交差点A、アーケードB、橋Cを置いた仮想グラフ。辺の時間はinput/routes.jsonに記録しています。",
+      "近道14分・露出14分、屋根道18分・露出3分、川沿い16分・露出16分。全て設定値からの合計です。",
+      "評価値J=移動時間+λ×露出時間。λ=0なら近道、λ=0.5なら屋根道が最小。コードでの仮想試算で、行動調査の結果ではありません。",
+      "一定速度や混雑なし等の仮定を置きました。次は仮想条件を増やし、実測する場合は時間と露出の測定設計を先に決めます。"
+    ],
+    "sample_notice": "地点・辺・時間は学習用設定、結果は仮想試算。観測・調査・実在ルートではありません。",
+    "method": "Original minimal Markdown build_template creates the native blank template; original COM Duplicate/MoveTo helper clones 1,2,3,4,4,3; original Markdown section parser, replace_exact_text/set_text_preserve_style/add_text/rect/write_table fill the Japanese native deck.",
+    "navigation": "native-runtime-bridge",
+    "editability": "native_elements",
+    "editable_features": [
+      "text",
+      "shapes",
+      "tables"
+    ],
+    "status": "light_check_complete",
+    "execution_status": "light_check_complete",
+    "preview_notice": "原典native templateをclone/replace。文字・経路図形・表を編集できます。全数値は仮想設定。",
+    "representative_previews": [
+      "examples/repositories/thesis-defense-showcase/render/slide-01.png",
+      "examples/repositories/thesis-defense-showcase/render/slide-03.png"
+    ],
+    "preview_image_notice": "6枚のPowerPoint初回書き出しPNG。代表完成物のみ初回表示、全詳細目視なし。"
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "policy": "Only original native diagrams from the authored input. No third-party photographs, university logos or institutional template binaries.",
+  "figures": [
+    {
+      "id": "route-network",
+      "source": "input/routes.json",
+      "generator": "rebuild.py: graph()",
+      "output": "slide 3 native shapes/connectors/text"
+    },
+    {
+      "id": "exposure-bars",
+      "source": "input/calculation-results.json",
+      "generator": "rebuild.py: candidate comparison",
+      "output": "slide 4 native rectangle/text"
+    },
+    {
+      "id": "score-table",
+      "source": "input/calculation-results.json",
+      "generator": "rebuild.py: simulation",
+      "output": "slide 5 native table"
+    }
+  ]
+}

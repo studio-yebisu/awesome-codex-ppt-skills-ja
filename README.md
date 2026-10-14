@@ -6,8 +6,8 @@ GitHubの原典スキルを実際に使い、魅力ある日本語資料・短�
 
 ## 現在のアトリエ
 
-- 厳選36スキルと、日本語の作例36冊・203枚。
-- Sol 6.1の並列制作で、原典HTML教材・Beamer・DOM変換器による新作3冊16枚を追加。別制作セッションの2冊19枚も、その制作環境と編集範囲を示して接続。
+- 厳選38スキルと、日本語の作例38冊・214枚。
+- Sol 6.1の並列制作で、原典の数式注入器と研究テンプレートによる新作2冊11枚を追加。数式も編集できる教材と、文字・経路図・表を編集できる発表資料を用意。
 - 各派生スキル固有の本文を直接Markdown取得。サイトで本文を開いてコピーでき、原典・テンプレート・入力の一式ZIPも取得。
 - OSS書体8ファミリー・14ファイルと、6作風の実フォント見本・AI向け指示コピー。BIZ UDPGothic／BIZ UDPMinchoを公式配布物とOFL付きで追加。
 
@@ -33,13 +33,15 @@ python tools/build_atelier_site.py
 
 [制作方針](docs/PROJECT.md) · [製品仕様](docs/PRODUCT_SPEC.md) · [現在の実行目標](data/project-goal.json) · [厳選掲載](data/product-collection.json)
 
-Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は46リポ・51冊で、現在の厳選掲載と区別します。
+Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は48リポ・53冊で、現在の厳選掲載と区別します。
 
 原作者、固定原典、LICENSE・NOTICEと書体のOFLを保持します。カタログのCC0は各スキル・コード・素材・書体の条件を変更しません。[原典・条件](licenses.html)を参照してください。
 
 公開更新・merge・deployはローカル制作と別に扱います。
 
-最新バッチ： [割合は、全体との比べ方。](examples/repositories/soil-teaching-showcase/README.md) · [待ち時間のしくみ](examples/repositories/beamer-showcase/README.md) · [花を、一本から。](examples/repositories/learndeck-showcase/README.md)。原典のHTML段階表示、Beamer、DOMからのPPTX変換を実使用。PDFの絞り込みとフロート表示にも対応しました。
+最新バッチ： [平均の、その先。](examples/repositories/native-math-showcase/README.md) · [雨の日の、通学ルート。](examples/repositories/thesis-defense-showcase/README.md)。原典で9個の数式をPowerPointへ注入し、研究テンプレートの複製・置換で6枚を生成。「編集したいもの」の絞り込みとPPTX本体・日本語本文の直接取得を接続。[制作記録](docs/PRODUCTION_BATCH_20261014_06.md)。
+
+前のバッチ： [割合は、全体との比べ方。](examples/repositories/soil-teaching-showcase/README.md) · [待ち時間のしくみ](examples/repositories/beamer-showcase/README.md) · [花を、一本から。](examples/repositories/learndeck-showcase/README.md)。原典のHTML段階表示、Beamer、DOMからのPPTX変換を実使用。PDFの絞り込みとフロート表示にも対応しました。
 
 別制作セッションの取り込み： [まちを、余白から。](examples/repositories/sebastian-207/README.md) · [雨の図書室](examples/repositories/sebastian-208/README.md)。制作元は各PROVENANCEへ記録。前者の原典美術QAは80.7点FAILを維持。後者の本文・図は画像で、ノートと画像差替えを編集できます。両方ともPowerPoint実機表示は未確認です。
 

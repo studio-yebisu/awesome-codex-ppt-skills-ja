@@ -4715,7 +4715,7 @@
   },
   {
     "repository": "zouchenzhen/thesis-defense-pptx-skill",
-    "summary_ja": "論文PDFやLaTeXから、指定テンプレートを維持した編集可能な学位審査用PowerPoint資料を作成するスキル。",
+    "summary_ja": "原典無地template/COM clone/helperで日本語6枚。Markdownから架空経路とコード上の仮想試算をnative図表へ。",
     "kind": "pptx",
     "upstream_commit": "7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb",
     "checked_at": "2026-10-13T13:34:33.124414+00:00",
@@ -4730,37 +4730,79 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/README.md",
-        "bytes": 11715
+        "path": "skills/thesis-defense-pptx/SKILL.md",
+        "sha256": "277c5aba2e1bc42ce2a515b4fd1b797c1c6daaa304ffe866c4a95b1145c10cde",
+        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/skills/thesis-defense-pptx/SKILL.md"
       },
       {
-        "path": "skills/thesis-defense-pptx/SKILL.md",
-        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/skills/thesis-defense-pptx/SKILL.md",
-        "bytes": 9683
+        "path": "examples/minimal_markdown/build_template.py",
+        "sha256": "d93e33151d11d6e974efb3342cdb93c633704b9e4583e6a9e861af6a58073e77",
+        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/examples/minimal_markdown/build_template.py"
+      },
+      {
+        "path": "examples/minimal_markdown/build_deck.py",
+        "sha256": "fa577061678e75768660f0188969df726953cc812674d60d7886fd0ea179e399",
+        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/examples/minimal_markdown/build_deck.py"
+      },
+      {
+        "path": "skills/thesis-defense-pptx/scripts/clone_template_deck.ps1",
+        "sha256": "c2e3310c4e556361e582a3399c89a0bbee0f2153693da40803607a3fa040ffbb",
+        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/skills/thesis-defense-pptx/scripts/clone_template_deck.ps1"
+      },
+      {
+        "path": "skills/thesis-defense-pptx/scripts/pptx_template_tools.py",
+        "sha256": "f857f9a87f69ba3e159cf24d1fde1003a692d7540db4bb6a1554441f8d879817",
+        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/skills/thesis-defense-pptx/scripts/pptx_template_tools.py"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/LICENSE",
-        "bytes": 10758
+        "sha256": "ac1168a821eaef7d1eae645659ee8c705c2bf7c5c857b9f579c15d3c6d66637e",
+        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/LICENSE"
       },
       {
         "path": "NOTICE",
-        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/NOTICE",
-        "bytes": 111
+        "sha256": "7384dfc71559d8498e3ada0fd6b34907551f909b736f8f792b7bb3a75182221d",
+        "url": "https://github.com/zouchenzhen/thesis-defense-pptx-skill/blob/7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb/NOTICE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "thesis-defense-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python3.10+ / python-pptx / Pillow",
+      "Windows PowerPoint COM",
+      "BIZ UDPGothic/Shippori Mincho（同梱TTF/OFL）"
+    ],
+    "commands": [
+      "python rebuild.py",
+      "powershell -NoProfile -File runtime/export_case.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
+    "steps": [
+      "Markdown研究メモとJSONを読み、図allowlistを作る",
+      "元build_templateで無地templateを作る",
+      "原典COM helperで6枚cloneし元native helperで置換",
+      "完成PPTXを初回export/表示"
+    ],
+    "limitations": [],
+    "forks": [
+      "thesis-defense-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_minimal_template_com_clone_native_replace",
+    "case_ids": [
+      "thesis-defense-showcase"
+    ],
+    "license_notice_ja": "原典Apache-2.0とNOTICEを保持。使用書体はOFL。大学ロゴ・既存大学templateは含みません。",
+    "caveats": [
+      "Fictitious educational calculations, no observational data or real route guidance.",
+      "PPTX fonts not embedded; full original TTF/OFL provided.",
+      "Local COM scripts close only this case document and do not quit shared PowerPoint."
+    ],
+    "skill": "skill-forks/thesis-defense-ja/SKILL.md",
+    "guide": "examples/repositories/thesis-defense-showcase/README.md",
     "original_description_ja": "論文PDFやLaTeXから、指定テンプレートを維持した編集可能な学位審査用PowerPoint資料を作成するスキル。"
   },
   {
@@ -5209,7 +5251,7 @@
   },
   {
     "repository": "Noi1r/powerpoint-skill",
-    "summary_ja": "数式やGraphviz・Mermaid・TikZの図を含むPowerPointを作成する、AIコーディング支援用スキル。",
+    "summary_ja": "Sandwich themeと原典OMML注入で数式・図表をPowerPoint内で編集する日本語教材。",
     "kind": "pptx",
     "upstream_commit": "a39cd8cfba332741a96d52bebd2bb378b638364e",
     "checked_at": "2026-10-13T13:34:41.269775+00:00",
@@ -5239,17 +5281,38 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "native-math-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node.js / PptxGenJS4.0.1 (MIT)",
+      "Python / lxml6.1.3",
+      "Pandoc3.12.1 (GPL2+, external runtime)",
+      "Microsoft PowerPoint16 for native OMML PNG/PDF render",
+      "Shippori Mincho / BIZ UDPGothic / Manrope (OFL)"
+    ],
+    "commands": [
+      "npm install",
+      "python -m pip install -r requirements.txt",
+      "python source/build.py --node C:/path/to/node.exe --pandoc C:/path/to/pandoc.exe",
+      "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "仮想データ・全体の分散n分母。調査結果ではない",
+      "OMMLはPowerPoint実描画。LibreOfficeでは欠ける場合がある",
+      "全ページ詳細監査・独立レビュー・ZIP再実行なし"
     ],
-    "forks": [],
-    "original_description_ja": "数式やGraphviz・Mermaid・TikZの図を含むPowerPointを作成する、AIコーディング支援用スキル。"
+    "forks": [
+      "native-math-ja"
+    ],
+    "guide": "examples/repositories/native-math-showcase/README.md",
+    "source_download": "downloads/native-math-example-ja.zip",
+    "fork_download": "downloads/native-math-ja.zip",
+    "original_description_ja": "数式やGraphviz・Mermaid・TikZの図を含むPowerPointを作成する、AIコーディング支援用スキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "Ayushmaniar/powerpoint-mcp",

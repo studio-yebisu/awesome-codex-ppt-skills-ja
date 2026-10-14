@@ -17,6 +17,8 @@ SELECTION = [
     ('andyluu98/slidefly','図形がつながるモーション資料','motion','slidefly-showcase','原典Morphエンジンで、同じ図形が動いて話をつなぐ。'),
     ('chunyifish/soil-teaching-slides','図解で学べるWeb教材','diagram','soil-teaching-showcase','原典の授業構成と段階表示で、割合を図から理解する教材へ。'),
     ('xukp20/build-beamer-slides','数式と図を組む発表資料','diagram','beamer-showcase','原典Beamerの書式と数式で、説明をPDFへ組み上げる。'),
+    ('Noi1r/powerpoint-skill','数式まで編集できるPowerPoint','diagram','native-math-showcase','原典の数式注入器で、平均とばらつきの式・図表を編集できる教材へ。'),
+    ('zouchenzhen/thesis-defense-pptx-skill','テンプレートを使う研究発表','work','thesis-defense-showcase','原典テンプレートの複製と置換で、経路図と仮想試算を編集できる研究発表へ。'),
     ('MURMURE11118586/codex-xkppt-skill','大きな文字で組む編集室の企画','editorial','sebastian-207','原典の誌面用生成器で、文字と図形を編集できる企画へ。原典美術QAは未合格。'),
     ('demoolight/academic-image-ppt','画像で描く研究提案','editorial','sebastian-208','原典のページ別画像生成とノート付き包装で、空間の提案を資料へ。'),
     ('LearnAIHubC/LearnDeck','HTMLから花の企画書を作る','editorial','learndeck-showcase','原典のDOM変換器で、書体の役割を保った編集可能PPTXへ。'),
