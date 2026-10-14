@@ -1,0 +1,62 @@
+{
+  "repository": "masaki39/marp-mcp",
+  "commit": "2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2025 masaki39",
+  "source_url": "https://github.com/masaki39/marp-mcp/tree/2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f",
+  "originals": "source/upstream",
+  "runtime": "source/runtime",
+  "original_skill": "source/upstream/skills/marp/SKILL.md",
+  "adapter_diff": "source/windows-export-adapter.diff",
+  "method": "実MCP stdio JSON-RPC tools/call → 原典minimalの構造化templates → 原典export_slide → Marp CLI4.4.0 HTML/PDF/画像主体PPTX",
+  "mcp_calls": [
+    "list_themes_and_styles",
+    "list_layouts",
+    "create_presentation",
+    "set_frontmatter",
+    "manage_slide",
+    "generate_slide_ids",
+    "read_slide",
+    "export_slide"
+  ],
+  "mcp_log": "source/logs/mcp-operations.json",
+  "upstream_package_version": "1.7.0",
+  "local_changes": [
+    "Windowsのspawn(marp)にMARP_CLI_JS指定時だけ同じCLI JSをNode実行するadapter",
+    "森色・生成り・土色、布/縫い目風CSS図形、和文字体の役割分け",
+    "公式未改変TTFをdata URLとして埋込み",
+    "0-based同一origin yebisu-slide/yebisu-page bridgeをHTMLに追加",
+    "日本語依頼・構造化入力・再生成helper・短いSKILL"
+  ],
+  "outputs": {
+    "html": "index.html",
+    "pdf": "deck.pdf",
+    "pptx": "deck.pptx",
+    "png": "render/slide-01.png through slide-06.png"
+  },
+  "editability": {
+    "html": "Markdown/JSON/CSSのソース編集",
+    "pdf": "固定レイアウト",
+    "pptx": "各頁の画像。文字・表・図形native編集不能",
+    "pptxEditable_used": false,
+    "powerpoint_runtime_checked": false
+  },
+  "fonts": {
+    "source": "fonts/SOURCE.json",
+    "families": [
+      "Shippori Mincho",
+      "BIZ UDPGothic",
+      "Manrope"
+    ],
+    "files_bundled": true,
+    "licenses": "各fonts/<family>/OFL.txt",
+    "modified": false,
+    "os_extracted": false,
+    "html_external_fonts_required": false
+  },
+  "dependency_licenses": "source/dependency-licenses.json",
+  "source_binaries": "node_modules/browser/cache not bundled",
+  "fictional": true,
+  "sample_notice": "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
+  "verification_scope": "原典buildとMCP生成/export、PDF6枚、表紙PNG初回表示のみ。全頁詳細目視・独立review・構造監査・ZIP再実行なし。"
+}

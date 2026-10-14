@@ -1,0 +1,13 @@
+--- upstream/src/tools/export_slide.ts
++++ runtime/src/tools/export_slide.ts
+@@ -62,7 +62,9 @@
+   timeoutMs: number
+ ): Promise<{ exitCode: number; stdout: string; stderr: string }> {
+   return new Promise((resolve) => {
+-    const proc = spawn(command, args, { stdio: ["ignore", "pipe", "pipe"] });
++    // Windows adapter: execute the identical Marp CLI through Node, avoiding .cmd shim spawning.
++    const cli = process.env.MARP_CLI_JS;
++    const proc = spawn(cli ? process.execPath : command, cli ? [cli, ...args] : args, { stdio: ["ignore", "pipe", "pipe"] });
+ 
+     let stdout = "";
+     let stderr = "";

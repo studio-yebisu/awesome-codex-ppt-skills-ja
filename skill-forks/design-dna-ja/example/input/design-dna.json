@@ -1,0 +1,239 @@
+{
+  "version": "3.0",
+  "persistence_state": "unsaved_candidate",
+  "profile_id": null,
+  "profile_name": "紙と三原色の道具棚",
+  "current_profile_version": null,
+  "source": {
+    "input_mode": "single_image",
+    "fusion_strategy": "single_reference",
+    "source_assets": [
+      {
+        "id": "akxan-cover-01",
+        "type": "pptx_render_screenshot",
+        "path": "input/reference/slide-01.png",
+        "description": "自作Akxan Bauhaus native PPTX表紙のPowerPoint実描画",
+        "weight": 1,
+        "role": "style_reference",
+        "style_traits_allowed": [
+          "paper background",
+          "large Japanese typography",
+          "strict grid",
+          "asymmetry",
+          "primary geometric vocabulary",
+          "hard edges",
+          "hairline rules",
+          "intentional whitespace"
+        ],
+        "subject_matter_detected": [
+          "original exhibition title and subtitle",
+          "the source-specific exact three-shape arrangement",
+          "source deck identity/chrome copy"
+        ],
+        "subject_replication_policy": "forbidden"
+      }
+    ],
+    "extraction_confidence": 0.9,
+    "evidence": "input/reference-analysis.json",
+    "confidence_note": "Author interpretation, not measured quality score"
+  },
+  "user_dna": {
+    "fixed_parameters": {
+      "whitespace": 72,
+      "information_density": 32,
+      "image_weight": 48,
+      "title_weight": 92,
+      "chart_weight": 42,
+      "text_density": 28,
+      "formula_friendliness": 5,
+      "grid_strictness": 95,
+      "hierarchy_strength": 95,
+      "motion_intensity": 22
+    },
+    "semantic_tags": {
+      "minimal": 85,
+      "editorial": 91,
+      "playful": 57,
+      "serious": 72,
+      "youthful": 58,
+      "experimental": 65,
+      "business": 42,
+      "academic": 20,
+      "tech": 12,
+      "premium": 55,
+      "emotional": 35,
+      "trustworthy": 58
+    },
+    "plain_language_summary": "紙色と墨の大きな和文、左揃えの硬いグリッド、三原色の幾何で、使い方の関係を短く示す。",
+    "layers": {
+      "Mood": {
+        "direction": "紙と硬い幾何の、明快な編集感",
+        "minimal": 85,
+        "editorial": 91,
+        "playful": 57,
+        "note": "見た目の設計判断であり、信頼性や効果の実証ではない"
+      },
+      "Composition": {
+        "whitespace": 72,
+        "information_density": 32,
+        "alignment": "left",
+        "grid_system": "12_col / 120px safe margin",
+        "grid_strictness": 95,
+        "hierarchy_strength": 95,
+        "visual_focus": "one large title or operational diagram",
+        "asymmetry": 80,
+        "layout_rhythm": [
+          "cover_hero",
+          "three_point_argument",
+          "split_text_visual",
+          "process_flow",
+          "comparison",
+          "closing_takeaway"
+        ],
+        "forbidden_layout_patterns": [
+          "repeated card walls",
+          "center every element"
+        ]
+      },
+      "Visual": {
+        "primary_background": "#f4f0e8",
+        "primary_text": "#1a1a1a",
+        "accent_primary": "#d62828",
+        "accent_secondary": [
+          "#003049",
+          "#ffd60a"
+        ],
+        "heading_style": "large, heavy Japanese sans",
+        "body_style": "small restrained Japanese serif",
+        "font_candidates": [
+          "Zen Kaku Gothic New Black",
+          "BIZ UDPMincho Regular",
+          "Manrope"
+        ],
+        "radius": 0,
+        "border_style": "2px hairline",
+        "shadow_style": "none",
+        "gradient_usage": "none",
+        "material": "flat paper",
+        "texture": "none",
+        "image_treatment": "no reference screenshot embedded"
+      },
+      "Content Strategy": {
+        "density_mode": "low_to_balanced",
+        "max_words_per_slide": 60,
+        "max_bullets_per_slide": 3,
+        "max_bullet_length": "short Japanese sentence",
+        "image_weight": 48,
+        "chart_weight": 42,
+        "formula_friendliness": 5,
+        "data_table_friendliness": "one small status table",
+        "preferred_content_forms": [
+          "headline",
+          "tool diagram",
+          "role list",
+          "process",
+          "status table",
+          "short invitation"
+        ],
+        "split_rules": "one operational question per page"
+      },
+      "Presentation": {
+        "pacing": "speaker_led",
+        "animation_intensity": 22,
+        "transition_style": "short opacity fade",
+        "reveal_strategy": "connect process and reveal status rows in meaning order",
+        "motion_extraction": "Static source has no observable motion; these motion rules are authored adaptations",
+        "prefers_reduced_motion": true
+      }
+    }
+  },
+  "execution_dna": {
+    "canvas": {
+      "aspect_ratio": "16:9",
+      "target_size": {
+        "width": 1920,
+        "height": 1080
+      },
+      "safe_margin": {
+        "top": 80,
+        "right": 120,
+        "bottom": 140,
+        "left": 120
+      }
+    },
+    "composition_rules": {
+      "max_primary_blocks": 3,
+      "max_nested_cards": 0,
+      "snap_to_grid": true,
+      "avoid_centered_everything": true
+    },
+    "density_rules": {
+      "max_words_per_slide": 60,
+      "minimum_font_size": 24,
+      "split_when_overflow": true
+    },
+    "reference_subject_firewall": {
+      "enabled": true,
+      "forbidden_subjects": [
+        "original exhibition title and subtitle",
+        "the source-specific exact three-shape arrangement",
+        "source deck identity/chrome copy"
+      ],
+      "allowed_surrogates": [
+        "typography",
+        "original operational diagrams",
+        "abstract geometric vocabulary",
+        "whitespace"
+      ],
+      "reference_not_embedded": true,
+      "forbid_subject_silhouette": true,
+      "note": "No identifiable person/product in reference. New tool drawings are based on the new user topic, not reference subjects."
+    },
+    "mechanical_layout_preflight": {
+      "required_before_html": true,
+      "estimate_text_fit": true,
+      "reserve_visual_effect_padding": true,
+      "reserve_nav_safe_zone": true,
+      "check_collision_pairs": true,
+      "if_fail": "recompose_reduce_copy_or_split"
+    },
+    "layout_box_budget": {
+      "required_before_html": true,
+      "required_height_formula": "estimated_lines * font_size * line_height + glyph_pad_top + glyph_pad_bottom + visual_effect_pad",
+      "chain_readable_zones": true,
+      "forbid_z_index_collision_fix": true
+    },
+    "motion_rules": {
+      "max_motion_intensity": 22,
+      "prefers_reduced_motion": true,
+      "avoid_generic_repeated_animation": true
+    }
+  },
+  "tokens": {
+    "bg": "#f4f0e8",
+    "ink": "#1a1a1a",
+    "red": "#d62828",
+    "navy": "#003049",
+    "yellow": "#ffd60a",
+    "muted": "#5a5a5a",
+    "light-ink": "#f4f0e8",
+    "outside-bg": "#1a1a1a"
+  },
+  "negative_constraints": [
+    "No copied exhibition wording or exact source composition",
+    "No reference screenshot as slide content",
+    "No shadows, gradients, rounded card walls",
+    "No fabricated participants, effect, expense, dates, venue or safety verification",
+    "No text below24px or unbudgeted nav overlap"
+  ],
+  "design_prompt": {
+    "short": "Paper + large Japanese ink typography + strict asymmetrical grid + hard primary geometry",
+    "long": "Reuse the observed paper/ink palette and headline hierarchy; adapt geometry to tool-sharing roles/process/status. Retain sharp edges and large breathing room; vary page composition and do not copy the reference source layout."
+  },
+  "quality_constraints": {
+    "mandatory_source_guard": "source/upstream/scripts/ppt-layout-guard.js",
+    "p0_blocks_handoff": true,
+    "no_extra_scoring": true
+  },
+  "interaction_adaptation": "Current authorized autonomous production replaces user-turn confirmation gates with a retained DNA panel and requirement decisions; no canonical profile save performed."
+}

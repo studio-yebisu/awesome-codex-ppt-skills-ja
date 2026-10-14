@@ -1,3 +1,4 @@
+import {caseDownloadName} from './download-name.mjs';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const [cases,collection,previews,pins,profiles,product]=await Promise.all(['data/case-studies.json','data/skills.json','data/previews.json','data/upstreams.json','data/repository-guides.json','data/product-collection.json'].map(async url=>{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(url);return r.json()}));
@@ -104,10 +105,11 @@ function open(id,button){
   let licenseNotice=$('#case-license');if(!licenseNotice){licenseNotice=document.createElement('p');licenseNotice.id='case-license';licenseNotice.className='case-sample-note';$('#case-state').after(licenseNotice)}
   licenseNotice.textContent=profileByRepo.get(c.repository)?.license_notice_ja||'';licenseNotice.hidden=!licenseNotice.textContent;
   $('#case-download').href=c.artifact_download;
-  $('#case-download').textContent=c.format==='pptx'?'PowerPointをダウンロード ↓':c.format==='pdf'?'PDFをダウンロード ↓':'Webスライド一式をダウンロード ↓';
+  $('#case-download').download=caseDownloadName(c,c.artifact_download);
+  $('#case-download').textContent=c.format==='pptx'?'PowerPointをダウンロード ↓':c.format==='pdf'?'PDFをダウンロード ↓':/\.html?(?:[?#]|$)/i.test(c.artifact_download)?'Webスライドをダウンロード ↓':'Webスライド一式をダウンロード ↓';
   for(const [id,path,label] of [['case-pptx',c.pptx_download===c.artifact_download?null:c.pptx_download,'PowerPoint版 ↓'],['case-pdf',c.pdf_download===c.artifact_download?null:c.pdf_download,'PDF ↓']]){
     let link=$('#'+id);if(!link){link=document.createElement('a');link.id=id;link.className='button outline';link.setAttribute('download','');$('#case-download').after(link);}
-    link.hidden=!path;link.href=path||'#';link.textContent=label;
+    link.hidden=!path;link.href=path||'#';link.textContent=label;if(path)link.download=caseDownloadName(c,path);
   }
   $('#case-make').href=recipeUrl(c);
   $('#case-origin').href='https://github.com/'+c.repository+'/tree/'+c.upstream_commit;

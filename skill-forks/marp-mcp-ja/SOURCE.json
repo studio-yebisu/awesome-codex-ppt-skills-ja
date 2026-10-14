@@ -1,0 +1,2356 @@
+{
+  "repository": "masaki39/marp-mcp",
+  "commit": "2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2025 masaki39",
+  "source_url": "https://github.com/masaki39/marp-mcp/tree/2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f",
+  "originals": "source/upstream",
+  "runtime": "source/runtime",
+  "original_skill": "source/upstream/skills/marp/SKILL.md",
+  "adapter_diff": "source/windows-export-adapter.diff",
+  "method": "実MCP stdio JSON-RPC tools/call → 原典minimalの構造化templates → 原典export_slide → Marp CLI4.4.0 HTML/PDF/画像主体PPTX",
+  "mcp_calls": [
+    "list_themes_and_styles",
+    "list_layouts",
+    "create_presentation",
+    "set_frontmatter",
+    "manage_slide",
+    "generate_slide_ids",
+    "read_slide",
+    "export_slide"
+  ],
+  "mcp_log": "完成作例の制作ZIP内 source/logs/mcp-operations.json",
+  "upstream_package_version": "1.7.0",
+  "local_changes": [
+    "Windowsのspawn(marp)にMARP_CLI_JS指定時だけ同じCLI JSをNode実行するadapter",
+    "森色・生成り・土色、布/縫い目風CSS図形、和文字体の役割分け",
+    "公式未改変TTFをdata URLとして埋込み",
+    "0-based同一origin yebisu-slide/yebisu-page bridgeをHTMLに追加",
+    "日本語依頼・構造化入力・再生成helper・短いSKILL"
+  ],
+  "outputs": "再生成時にこのkit rootへ出力",
+  "editability": {
+    "html": "Markdown/JSON/CSSのソース編集",
+    "pdf": "固定レイアウト",
+    "pptx": "各頁の画像。文字・表・図形native編集不能",
+    "pptxEditable_used": false,
+    "powerpoint_runtime_checked": false
+  },
+  "fonts": {
+    "source": "fonts/SOURCE.json",
+    "families": [
+      "Shippori Mincho",
+      "BIZ UDPGothic",
+      "Manrope"
+    ],
+    "files_bundled": true,
+    "licenses": "各fonts/<family>/OFL.txt",
+    "modified": false,
+    "os_extracted": false,
+    "html_external_fonts_required": false
+  },
+  "dependency_licenses": "source/dependency-licenses.json",
+  "source_binaries": "node_modules/browser/cache not bundled",
+  "fictional": true,
+  "sample_notice": "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
+  "verification_scope": "原典buildとMCP生成/export、PDF6枚、表紙PNG初回表示のみ。全頁詳細目視・独立review・構造監査・ZIP再実行なし。",
+  "id": "marp-mcp-ja",
+  "example_source_zip": "downloads/marp-mcp-example-ja.zip",
+  "case_studies": [
+    "marp-mcp-showcase"
+  ],
+  "files": [
+    {
+      "path": "fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "fonts/bizudpgothic/BIZUDPGothic-Regular.ttf",
+      "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01"
+    },
+    {
+      "path": "fonts/bizudpgothic/OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "fonts/manrope/Manrope[wght].ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    {
+      "path": "fonts/manrope/OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "fonts/shipporimincho/OFL.txt",
+      "sha256": "41fba056279be5f45ff9a99e44b7b53897b42732f5806d8e666e0ab49ac6bd38"
+    },
+    {
+      "path": "fonts/shipporimincho/ShipporiMincho-Bold.ttf",
+      "sha256": "63bc4eddc74793f671c3ab827c5175e773ffbe569d0bf50ee65375ea9e3bc286"
+    },
+    {
+      "path": "input/BRIEF.md",
+      "sha256": "dd3b8174965133d4d7da69034ecee301b0b5c476eeff06fd46ae8429f7bfbd45"
+    },
+    {
+      "path": "input/content.json",
+      "sha256": "b04fea1e58d1e21382a84b1de1d5dffca6036c6253b47a271bd702ff29f5977d"
+    },
+    {
+      "path": "input/MANUSCRIPT.md",
+      "sha256": "da8de06983c3600452a76f13d71a752993dc59bc7695d2a514cc4133f4c218b9"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "a7d0732937aa0f9e13eaaafd09c395926a00586342d76362fa789003405b7fd3"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "a7da1165f243ca1cf95b83712e59bd1fde4a9c3705cb12375140c54d83c3d699"
+    },
+    {
+      "path": "README.md",
+      "sha256": "c5bad3c9cd85de01e96f252e7af5b2e2c2d3877628de41d04f7d8aa8c1335be2"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "050028932bb239293f3120621d3bdfb589f6d4c5b71b29f58f0c6845f5680af8"
+    },
+    {
+      "path": "source/dependency-licenses.json",
+      "sha256": "3bba876b8ae7396d09163b639a8dc01f42ae03a68eb5e1dbdd98f673146b3c15"
+    },
+    {
+      "path": "source/licenses/commander.txt",
+      "sha256": "04512a63dce4d2d506ad612dc0bd7681ccf6e3655f7b6eaef7dfac8323d1ec0b"
+    },
+    {
+      "path": "source/licenses/cosmiconfig.txt",
+      "sha256": "8e714750725e75c8b31172ef84c0805f94873f86e3b5cfca8a948553f0778fa1"
+    },
+    {
+      "path": "source/licenses/gray-matter.txt",
+      "sha256": "e70ff771504ba41f2be55de812a017ff46433d7a250c862e38fc419159e44500"
+    },
+    {
+      "path": "source/licenses/image-size.txt",
+      "sha256": "3109783dad7527b490aabc49c3cb148573c19b41b843e70cf9388a93f3d7fccd"
+    },
+    {
+      "path": "source/licenses/marp-team__marp-cli.txt",
+      "sha256": "f2b31d0b3aa8ec75832e76b5deb842d8889f7121e9419414b4e32ab37327e64b"
+    },
+    {
+      "path": "source/licenses/marp-team__marp-core.txt",
+      "sha256": "f2b31d0b3aa8ec75832e76b5deb842d8889f7121e9419414b4e32ab37327e64b"
+    },
+    {
+      "path": "source/licenses/marp-team__marpit.txt",
+      "sha256": "2b746ee2296f314dccca30aee79814f18f80b12e4a1e0aef58445bc971230540"
+    },
+    {
+      "path": "source/licenses/modelcontextprotocol__sdk.txt",
+      "sha256": "5e13dbbc1d120fc2a03cecde7c91424ae2d7de11b63d58ded2f4431e261ee50d"
+    },
+    {
+      "path": "source/licenses/typescript.txt",
+      "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47"
+    },
+    {
+      "path": "source/licenses/zod.txt",
+      "sha256": "3f1189b28e3866e0d979968d466b78f813f76827cfdca1fbb124cc0a5c8841f8"
+    },
+    {
+      "path": "source/run_mcp.py",
+      "sha256": "da58f3ffa8abb175b1d970188ffa4b65a7cf1c8d54645533933c78720c030027"
+    },
+    {
+      "path": "source/runtime/build/cli/commands.js",
+      "sha256": "d0df575b5469ab2461b9d8beb0410271b905c1aaffce1a79fb0ecd7182040ab4"
+    },
+    {
+      "path": "source/runtime/build/cli/helpers.js",
+      "sha256": "852f6a9cf6ce4d94b6c1930b8e428abffa1c5fb7996ec12a35fcdb4218b8251d"
+    },
+    {
+      "path": "source/runtime/build/index.js",
+      "sha256": "0ebbbb575acb3af6d66f79059a1e54bd7f58c9c4da7e309bbadf40f9d118398c"
+    },
+    {
+      "path": "source/runtime/build/mcp.js",
+      "sha256": "89f75c701fbe96179c19b2bd086323b698a991cdaf230a02d32c61e0f3b79fbb"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/css.js",
+      "sha256": "b383da9d4360754f7a01b2faf4671c08ffff19cee172aab299cc6aefc66df867"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/index.js",
+      "sha256": "71c22809e918d6311320aa79324189ed4a73d770c29ac19b34a788c8c4beec9e"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/content.js",
+      "sha256": "732e6503ac354959486431a5533fe3c2a866ddf561bcc187e26866e783ca663f"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/image-center.js",
+      "sha256": "0e9f31483e560ffc5a337432a2d06d172a7a2b4e8e9512b1d2cb5b83e6f1e31d"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/image-right.js",
+      "sha256": "dd826e0ad3f16a9300f81c020936520a64023e2bf358639593f2bd1b0a1e573d"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/key-message.js",
+      "sha256": "af4ba3e094ef259ae851609d4cb4b1dcf94271bf618ad1ceb601a74b2d84f43d"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/list.js",
+      "sha256": "5a59c0e1b7be1f4d7cdd41fe378ae9c88f222d7cd64cc7820a59303bb3591cda"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/methodology.js",
+      "sha256": "7736d7e3572f6fd0b340254f186e063b057eec66fb85dc6eaf9c875ee76467cf"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/section.js",
+      "sha256": "56f756871f5cca88c3c18353c49b562639e198fff5ec12fb32b3a4624893886f"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/statistics.js",
+      "sha256": "27da6cd47d463d5dfc188cbb438f452443c30d057a96d58b8bc7387bc14795a8"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/table.js",
+      "sha256": "703e73718c6ba9b8112dd024e6139394e0dc2aace7cfab453f542e5d376254b0"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/title.js",
+      "sha256": "53796bddb3df70423b174f6729ef6eb4b2df9a0a3802b8fbe687fd90e071cef3"
+    },
+    {
+      "path": "source/runtime/build/styles/academic/layouts/two-column.js",
+      "sha256": "d4566b50d14d9a2c283a1120b4993c8e802d1b12a2e6945e43f6a749826aa806"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/css.js",
+      "sha256": "021ba32ce9c100f7ea388f77670ca9f2cdd8c8acdd51b448a800f45667dc1ec3"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/index.js",
+      "sha256": "53e85a99d8e651e026b577dff6ae538b02d5758be5a5e22008fab54e8eddd4ea"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/agenda.js",
+      "sha256": "1d6cc36747ce9d95c84c67ba0a6b457ae4a1abb2f379e6cba0c5208413c71527"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/big-statement.js",
+      "sha256": "43c948fcbee45251980ac2d8a6cc347f5fe116900a603a413418c79f9f5f4d4b"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/chart-bar.js",
+      "sha256": "f0af9d583cb42c9419771947ebb2c38ab58605ec87a714f9a3efa1e1852201c4"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/content.js",
+      "sha256": "a06058c3b3472d821ce831c81bfaedddae82b8ba55ca7bd8a7a9d93e680ebc1f"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/highlight-box.js",
+      "sha256": "60d1180830a2793f86281f22159c66295640f69ac3494bf2b2b35f06ad66c45b"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/image-center.js",
+      "sha256": "c1bd9d47002bbd6be224f792133b20abc9ad37aacc791ce70d53c28f62cb4814"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/image-right.js",
+      "sha256": "f69638a720881885cd5440c82ce7d68da59d21fc8b57c7b33530b2891d42b071"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/list.js",
+      "sha256": "fa8bada80fcff3de8223e454f01991b1a663370a4ca35dd6c7a9bf41e7e4a53e"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/process.js",
+      "sha256": "8113e9f219daa5de8cdb0430e2f9bc958c642d9d46469f4e0e24bf614803b442"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/progress-bar.js",
+      "sha256": "8e5a6daad18c2c0f4f5c498cb020ad287e573febf47b62a81458ee0aa8067a0a"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/pull-quote.js",
+      "sha256": "f0e93f30c3b6055e5192157e5a4f79e0506245b3186b6d662715ef616b754fad"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/quadrant.js",
+      "sha256": "ac6f37ffd36abb6bc39595842ca8f120565033c80de84ca8b623969e8e25c8c2"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/quote.js",
+      "sha256": "020d5367b046400e64ab62886e7a29e87a4f1112988158a70ffb3bfc9932a623"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/section.js",
+      "sha256": "41977e9a2a9e7a0e876c24c0e9f69f6f61f7d88ec681a3ef0d76f2f82e3dff0c"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/sidebar.js",
+      "sha256": "5127ce0ca4a6990f82cef65f292f481667a51baf6c94589ba75f3fe88c9b0b83"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/statistics.js",
+      "sha256": "d84c20346ceb5e8353a74291eb3b325e0213b8819ff7c017512c49797f735daf"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/table.js",
+      "sha256": "eb550f2ad7d12a0bbc1999a447b337e11e657f5f101743909b7bd15d4cb7ab19"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/three-column.js",
+      "sha256": "3aabcb7520303cea4e41661f7f312cf47145580a23310f749e8dc13f33677de3"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/title.js",
+      "sha256": "a49b9aba75ee2ae97ac71c2d55348a57f80e1256f1cf775fe46818d485367939"
+    },
+    {
+      "path": "source/runtime/build/styles/corporate/layouts/two-column.js",
+      "sha256": "9782ecdf3ec844408ee8a1d34e8d61c773e7f8401ba9d238d22a6395f0d77be2"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/css.js",
+      "sha256": "2aaf2393ee5621747b4f7517151ced5a9a05049354d161d4e01232491258ff05"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/index.js",
+      "sha256": "39f01004c1f480e31e0768208142e6aa10f6d625b14662718b126a56c3f5ba71"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/big-statement.js",
+      "sha256": "c97bd784726879b99dce2f1d5b7d88fe285fa984a5ffdcdd56ac9a2f513b1e69"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/card-grid.js",
+      "sha256": "1cc28d3c69d3428a414d01070b4d3ab047c4f192dd4f2bf52da242e13ceba2df"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/chart-bar.js",
+      "sha256": "3373439ecd944992b4638100809f4ced775159d9a76abdf8f4a205165fea2945"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/code-comparison.js",
+      "sha256": "0c9baf71ba5c91aedbee3dc3e38680659757541ee82c2a0faf49b3b76a429748"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/code-showcase.js",
+      "sha256": "6e1e485c8541dec61257841968d599a4b2f9ff5cf19223ed23af6992b5ad1ce2"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/content.js",
+      "sha256": "960827f88b4f23f87819cbd26aa3b77fe0f1369c3d329d271818f518d9c0a9c8"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/highlight-box.js",
+      "sha256": "3e2210415aa58ba1c28d96bc0ab9d07bf3dae0e55b4cc1a998eb872292f52553"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/image-center.js",
+      "sha256": "8706d60e1b8ae40a9b8428f164776cc5f6d2790dee316fe9ba6655bc143a9340"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/image-right.js",
+      "sha256": "1645b365f8af0ca12fe1b52bf58206a22c504f77f0fad141e988f1eea152ed4d"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/list.js",
+      "sha256": "caa280b58e5f03fd6f951a936b3d39b7a6d575ac645aa2d57918bc4c7979b267"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/process.js",
+      "sha256": "a456e5bae3eb03bde9aef0766d981df98f9d6ffb4fa1ea26c50239aee62822f3"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/progress-bar.js",
+      "sha256": "b3a7ff5272bb5713c71feb498352fb8ed1024fed0eb897a1d678614efd560d57"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/quote.js",
+      "sha256": "261d7468765b70a04ba04bec76594f441a52a881f240d61d5b17f5f16568c6f6"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/section.js",
+      "sha256": "3f68fc2c22bb72de4aa98a93ace0b7454eebd6cf0713449cffd11b40dd1e5a53"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/statistics.js",
+      "sha256": "5f9a09b4da45ec9e48bf0be154f23ea682d58beb3419ad913897290bea3bb100"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/table.js",
+      "sha256": "1af2bd4cd01956376bfff8821f3b9a45d8d5a0b56846a23a92a1cf53c7592da0"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/terminal.js",
+      "sha256": "a78855bef51e77c9a43f1b8a2c09010686d37f8f073c7305b3a7499ce35a5f19"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/timeline-horizontal.js",
+      "sha256": "4fe89a7d8a75ca18a98b649f3188cb1776f58eaba71af4d0e5226364dd3d40d7"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/timeline.js",
+      "sha256": "ecccec9e22d77deb0cdbf1b768725e29e9fff760e7fe2facc66acf17536d36ba"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/title.js",
+      "sha256": "ae71e98ba116ef5b71a97e36d2b1224d5f384cea68d9e236020b220044fccb46"
+    },
+    {
+      "path": "source/runtime/build/styles/dark/layouts/two-column.js",
+      "sha256": "e213e9eb1a45f59642335690b48bfab99d0778b5ef929b82db33fc0837f9f8f2"
+    },
+    {
+      "path": "source/runtime/build/styles/default/index.js",
+      "sha256": "03a1ec18f580893d6f4dfc127fac0df2ea87ebc966e1df950b3407bdebb732a1"
+    },
+    {
+      "path": "source/runtime/build/styles/index.js",
+      "sha256": "7aef6830ed14c50d816f3446daa6bc47a79610637f3d5ff73dabc0ddfdf5c80c"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/css.js",
+      "sha256": "5d9d57a9c3411bc69a2f1489cf70ee4e9c772b033f76669cf023cfb9f6606f52"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/index.js",
+      "sha256": "019da6ebc3db056b5f39adece607efb364e757699562e1ec486d072592f95535"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/agenda.js",
+      "sha256": "b3e3943f1672d9a8525267273e9033fc41f09ce18ccafef67cd78009d457e25f"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/big-statement.js",
+      "sha256": "166c01349c15388e415051a5de1d6dcf8b67247aa139774520b000a8eba610f6"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/comparison.js",
+      "sha256": "97c544d95bd87521a3d862e2cb59ff4fedc22ed6edbdc3ee55c958e500d0fad3"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/content.js",
+      "sha256": "e81bfeaa315ce2571502bbeea47d2c3da26e02ab52b267e054d69eb6705ccf06"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/highlight-box.js",
+      "sha256": "d1daf408f8d4a741c6b4dc03c74accbc2875310b7fc0218dd53cc3ba1551bedc"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/image-center.js",
+      "sha256": "79940a7e4467adc17b9b09727581055a02c9e71311968bbd7296ee4a92fbf31a"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/image-right.js",
+      "sha256": "8c2a02219a28862dfda45303b57b4f417e9e344fd1f502094836636c1b51f7f5"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/list.js",
+      "sha256": "a7f667401ce923736b2f4a4db5c808db8a0716e3465991fd8a7494cb6ca98398"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/pull-quote.js",
+      "sha256": "cd562b1f154a4f1c76b5a6b14195efc7434e3d730b28b7b9ef202e531277f8c1"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/quote.js",
+      "sha256": "c3204e7465b3345269acdefde0a3c13a068fb6d42c394da67c378e528f7bd090"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/section.js",
+      "sha256": "3c7e728e008a637362b8955c752c82bce0de2bc474aa4418b26ba58212e2193a"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/statistics.js",
+      "sha256": "c8e219cb9f8e66aa975eede14769d2852c4595f8008fb4235150056ce6ee2e41"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/table.js",
+      "sha256": "af5b193e237b4fc74be5e414c7d814726e9d7ef7012e3df9a8c637f92cff5842"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/title.js",
+      "sha256": "3dc2f0712f3d5556d29e8aa9097566af812e41c39154f45b351be1a01665fe2d"
+    },
+    {
+      "path": "source/runtime/build/styles/minimal/layouts/two-column.js",
+      "sha256": "2f454c95b5d80c581b67eaf01fa7420bc3be0e4b747ef490467b6706f22b9d28"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/css.js",
+      "sha256": "29c7cc4b3a0e29c214dae17798c6d1e3d2cb5265b1f07529fcbf5797a52cad95"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/index.js",
+      "sha256": "db2a0fe33d8dfbc0df588acd2a4841270ac298d396852a78aa1334b3c45a9dca"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/bento-grid.js",
+      "sha256": "2b96bb1338fd0e502cb2017b94decec8fe058bceff2083d8060840a68828f466"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/big-statement.js",
+      "sha256": "da2fdbb4f1ddf2c387dcceda35f9b38929844d95dd24b860bafbac3035d0b005"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/card-grid.js",
+      "sha256": "5b683e8400449785b483133846590ecb61ad8c73d303a83964faddeee292fd24"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/chart-bar.js",
+      "sha256": "2fac558c72455df9892f6590110e08f5b4cd41f9c6867e54c8c2292f23affa2d"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/content.js",
+      "sha256": "537e14d640aaeeae4e2ebba023bf63692b5456e8e0987f7dc4a8719a678d456f"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/highlight-box.js",
+      "sha256": "281120436b62a76cbed8b1775de0ea9f9d563965c0f13a42013ba60eaaecdd5b"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/image-center.js",
+      "sha256": "964cf7898711acabc71cd29a21484a6bc59dfed8fd9227522267c118f87249c0"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/image-comparison.js",
+      "sha256": "1eeb0553901e7ca821fbe71a3b6e65ef23b47f9029adc1e418881309707bdee7"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/image-right.js",
+      "sha256": "83f1010bd3fa4c58f60779439228fca849a6a49a9aed76f4ac41a8c32461f149"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/image-split.js",
+      "sha256": "767a2307b7154018eacf919305a631cc1763050288890f73a5c46f55682907c9"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/list.js",
+      "sha256": "0ef1ea01e3107ae91135f68bd5750c56919c6521e58e7f0cd9a00a02653be0cb"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/process.js",
+      "sha256": "1f8edd3798d25716affcbd63179913b7f099780e022c5f33f72bd4fb65eb2128"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/progress-bar.js",
+      "sha256": "03344941a5e767e48b39a5a2dc110fc3d3a1211f5ad4c97bab002e0a75749ab5"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/pull-quote.js",
+      "sha256": "54c1a9cd9a50ce260ff97accffe13bd546a1c3032cb1172a2b8fed9521e6b5bb"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/quote.js",
+      "sha256": "fa09606ef241c04021fb820f9fb450108ef72c0061ea4f25e2f850460307143d"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/section.js",
+      "sha256": "42f3e0a42c71f6d629edb1a5aa01aa82cffc9baa31ab8a4142f951d575906bf8"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/sidebar.js",
+      "sha256": "e184dc707880c46e1d4a0a31b77fdec59c83890475399a2140a529ff875bde5a"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/statistics.js",
+      "sha256": "8f31ef23f3fbc9c4244dc5b505dadfa309cf980452d02b932ae56f1338a934d5"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/table.js",
+      "sha256": "8576e1230a5b63aa5d4aa3609000c876787453f017a2a3faba3635ba47745c53"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/three-column-panel.js",
+      "sha256": "ea3c6c68fe51aa36e72407a36a6858610bef3a047cdb7ee4e85920049abfc8fe"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/timeline-horizontal.js",
+      "sha256": "84306ed042c9bb82847c672538e2a9759da8c09707fc8a60283854007ba382fb"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/timeline.js",
+      "sha256": "064f19247d7234edef706cb1b59e826ca66c699137392fbe7c31ea7d35bfbe37"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/title.js",
+      "sha256": "1b673279eeadd37be69d1de72476973eda6c18599bf0b604a8369c96aa6738b4"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/two-column-panel.js",
+      "sha256": "e94fb9b6436bce4a746aa90d49bfeb73f48e28a8ce4da6ba3e8bba8307ac6be8"
+    },
+    {
+      "path": "source/runtime/build/styles/rich/layouts/two-column.js",
+      "sha256": "7f12dfc5b6ffd746c57c263466f53ab34b98022df544f5091ba3392f395d04af"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/css.js",
+      "sha256": "54ea6ccbb92394774ea3756d701985d9fd02b815af7cd069081310003a4c88ca"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/index.js",
+      "sha256": "390eb2d0b715d34a386b69793a33b5931b8e93c02951fab24f73bef5373445c9"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/content.js",
+      "sha256": "78d6b6873f98773089aea574e4bfc5e9d3b3bb1956f0c33edeb70e9f9566264b"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/feature-grid.js",
+      "sha256": "2a5128c0dca191dd5328ce5834eddcf0e4c8a54d3061a4448891afcc4689a38d"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/highlight-box.js",
+      "sha256": "b2ee7756792edc45494a9ca1cb047125d76cc83d33f0d23c776e64235caba640"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/list.js",
+      "sha256": "67b04614957a5df3905bd423321f3b486802c1cfe49286bfcffdaf3629deb20d"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/quote.js",
+      "sha256": "6c0bd7b2a783358c447d73373cd922942c6a07492a369caa28d9c681c686a31d"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/roadmap.js",
+      "sha256": "559f9070b93b4211422e4d73e0095690eb6057dac22617b75d88334039a853a5"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/section.js",
+      "sha256": "c7d586a3b607abbceb31e677b3f4ccd606a5a942fd5f7feb35ed40cf4595f22a"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/statistics.js",
+      "sha256": "4d29ba5046dfa9bc927cf6728b2063c9f7a6406e1b3a15e0aa0fd11b431a24d3"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/title.js",
+      "sha256": "f3ed4e1534be4af16d0b5f56fc8b64790d2a7c083d669754410d3dd5c744e06f"
+    },
+    {
+      "path": "source/runtime/build/styles/tech/layouts/two-column.js",
+      "sha256": "13dde3c01c6de78de0305c4a73e2a9f19cf42fcbb00c914fa428c98ac284f5a0"
+    },
+    {
+      "path": "source/runtime/build/themes/default/index.js",
+      "sha256": "96f2e661878a2614454738ef4a79fc2484e72d5a35e7ef35d6b8a8c2181bfe06"
+    },
+    {
+      "path": "source/runtime/build/themes/default/layouts/content.js",
+      "sha256": "8d798abf27b933fe36f4ddbd2161881b97699ec14d3a12c8bd8f330e66bf35b2"
+    },
+    {
+      "path": "source/runtime/build/themes/default/layouts/image-center.js",
+      "sha256": "9d5a7ba8d8bc594bd5a8618b1964b14d9dde55f4101caed7f335e8458b9f6b25"
+    },
+    {
+      "path": "source/runtime/build/themes/default/layouts/image-right.js",
+      "sha256": "17ffcda59b66ae03ea9092db755eb5f22364d9985223d0cce5ed0b2976b9498b"
+    },
+    {
+      "path": "source/runtime/build/themes/default/layouts/list.js",
+      "sha256": "7178276ca5abc16c951ea3c7813ad340e2cca39ddf015f3f370a2940aed8dea9"
+    },
+    {
+      "path": "source/runtime/build/themes/default/layouts/section.js",
+      "sha256": "5aa035b00b33a9527b03c724d50265616790418cf2ee2edc255e87e6b383ff86"
+    },
+    {
+      "path": "source/runtime/build/themes/default/layouts/table.js",
+      "sha256": "fd26c6e5f0a869db7ec298165aa93c3e37dfe42e9b9f427c5d5a2c3e0e6df52b"
+    },
+    {
+      "path": "source/runtime/build/themes/default/layouts/title.js",
+      "sha256": "74f7c65d62daccf5a721d3f3f48348dd2b394d45387c8859c4f2d0521031b16e"
+    },
+    {
+      "path": "source/runtime/build/themes/gaia/index.js",
+      "sha256": "7d54be59306eb7dfd47f512dd8c2c1f7625378c7d4e5bea9e0d94c05b0482ddb"
+    },
+    {
+      "path": "source/runtime/build/themes/gaia/layouts/image-center.js",
+      "sha256": "0c0ec7ba43b05123c173cb857a838cfcc4e912784c3ea60ac2bd1e185c7c4bc9"
+    },
+    {
+      "path": "source/runtime/build/themes/gaia/layouts/image-right.js",
+      "sha256": "9ce61a65c3e6363b14531714c0b843682033aca342e8fad91fd9bad3b2a3a753"
+    },
+    {
+      "path": "source/runtime/build/themes/gaia/layouts/list.js",
+      "sha256": "8677f1e0c7f8b13efec91d523942f89f0aae71b58c1b81eb67ab53eb03b9a7c7"
+    },
+    {
+      "path": "source/runtime/build/themes/gaia/layouts/section.js",
+      "sha256": "542fff24e4a3b36bd6e29661050a0cfe52920383ce6e313c9b7285184ec603dd"
+    },
+    {
+      "path": "source/runtime/build/themes/gaia/layouts/table.js",
+      "sha256": "6d2a76906e3376c2d8b030a2538734f4ae88c5f401d804909e81ba4ec3302555"
+    },
+    {
+      "path": "source/runtime/build/themes/gaia/layouts/title.js",
+      "sha256": "e0f2915f8c020a7b3d27aa7dd53e7e22f3bb037f8ab156bbdc836b1528bb6327"
+    },
+    {
+      "path": "source/runtime/build/themes/index.js",
+      "sha256": "90b8e5dcc0e43e75d75f2b3ebb3f66310bce587efdb1f13dd855b7c05c483744"
+    },
+    {
+      "path": "source/runtime/build/themes/types.js",
+      "sha256": "8e609bb71c20b858c77f0e9f90bb1319db8477b13f9f965f1a1e18524bf50881"
+    },
+    {
+      "path": "source/runtime/build/themes/uncover/index.js",
+      "sha256": "060d48bcca11e36d5c0e70136ba652638d54888b9b0abd7b1140be0fec1d74ea"
+    },
+    {
+      "path": "source/runtime/build/themes/uncover/layouts/image-center.js",
+      "sha256": "ce2c360d17dd54aa2b90bb4e4126df408748772195e27e6dca4ae05fd540042c"
+    },
+    {
+      "path": "source/runtime/build/themes/uncover/layouts/image-right.js",
+      "sha256": "af5eed4e82573b1d64fde7fcaa065a6d63e0c7fe655b51918f8ddf8f6e7186aa"
+    },
+    {
+      "path": "source/runtime/build/themes/uncover/layouts/list.js",
+      "sha256": "6be7f2d848fc5cf98dac767c65fac5236dbaa6851e8d405672f23adc0adb60e1"
+    },
+    {
+      "path": "source/runtime/build/themes/uncover/layouts/section.js",
+      "sha256": "4f932aaf8c08ff3736972fd2d818518898f9bd3c61a4d8054166800e128c603d"
+    },
+    {
+      "path": "source/runtime/build/themes/uncover/layouts/table.js",
+      "sha256": "6a6115a27d1977e641b8613a78d27aaa6e259f88f146a34e3b72b383643162b4"
+    },
+    {
+      "path": "source/runtime/build/themes/uncover/layouts/title.js",
+      "sha256": "f3ecc60f519193d54bf4ece28781f042105d006d1bf82b5bdbaad0ea192d77ed"
+    },
+    {
+      "path": "source/runtime/build/tools/add_image_transition.js",
+      "sha256": "4adb614e58115ee1a87869d67f5bf3f63332700c8e13480a930f97254d1f04a9"
+    },
+    {
+      "path": "source/runtime/build/tools/batch_manage_slides.js",
+      "sha256": "3541a272fddcdffb0c350282e9c35a8711c3c859c3b177411bfddcc282a5a638"
+    },
+    {
+      "path": "source/runtime/build/tools/create_presentation.js",
+      "sha256": "4ca28fd76ae288b0f3fe46aeceb1ed52cfe1382b4a4da20d2ace53af9bdb28ba"
+    },
+    {
+      "path": "source/runtime/build/tools/export_slide.js",
+      "sha256": "4d98c64097ffb5bf937fde4e4b2760951f9034462e210b6f93a6c2b431aa3ad7"
+    },
+    {
+      "path": "source/runtime/build/tools/generate_agenda.js",
+      "sha256": "050ad5b405676d8c87af5553ee1f76604a0c9afd12a86752a0417e66ae76b46f"
+    },
+    {
+      "path": "source/runtime/build/tools/generate_slide_ids.js",
+      "sha256": "0743316ec90830d50133445ab8e23276f8d8225a711ee7174e0d0b3605e1613b"
+    },
+    {
+      "path": "source/runtime/build/tools/list_layouts.js",
+      "sha256": "216b23a34564436e15231c4cab746998dd456815670d989481ec71abe9f1c448"
+    },
+    {
+      "path": "source/runtime/build/tools/list_themes_and_styles.js",
+      "sha256": "fa055649b779a63f61c395e781c43e36bf1250a28e114abca7a6d075ac8b4e12"
+    },
+    {
+      "path": "source/runtime/build/tools/manage_slide.js",
+      "sha256": "c1e52cc51350a2a4a03afec72eee049054aaee7927f969b277ec7a4a4a89ecc4"
+    },
+    {
+      "path": "source/runtime/build/tools/read_slide.js",
+      "sha256": "ac62bee9cf5d120af645ff23f24b88ac656727f85d6cad976986d58d4575b327"
+    },
+    {
+      "path": "source/runtime/build/tools/set_frontmatter.js",
+      "sha256": "39043559a22cbe17a58f713c79c4c7d504548e3738a6c40c2dd7ebb88cda51c6"
+    },
+    {
+      "path": "source/runtime/build/types/common.js",
+      "sha256": "96d447e679ff1612cff6e7977fba164552ffe496a266535c45aabc5b2986f7c6"
+    },
+    {
+      "path": "source/runtime/build/utils/constants.js",
+      "sha256": "7c561fb7bbc778be869d6ba56d1231dae3e7076e02b18d879a4831aaa69975ea"
+    },
+    {
+      "path": "source/runtime/build/utils/external-styles.js",
+      "sha256": "a08dfd2d755bdd16461a21102c4a87f8ea15d11d4e051a66a4c58a8e6b7dcd83"
+    },
+    {
+      "path": "source/runtime/build/utils/frontmatter.js",
+      "sha256": "c2ab780ab54a73d1b1a331778c847f6083b691012d28e9896dc8d0d219fd73be"
+    },
+    {
+      "path": "source/runtime/build/utils/logger.js",
+      "sha256": "34e33a66930db5bc03b0d4337bd20595cf3c9696d76af16ac37f98dda9213899"
+    },
+    {
+      "path": "source/runtime/build/utils/path-validator.js",
+      "sha256": "7ea155f1130f0994744ed32398362edfbd97afb5f75409f06052bdba99cd5ddf"
+    },
+    {
+      "path": "source/runtime/build/utils/response.js",
+      "sha256": "9d090fac91e822d004344b771554ab311ca1bce39eca35a60dc3cb6190324fb0"
+    },
+    {
+      "path": "source/runtime/build/utils/slide-id.js",
+      "sha256": "b9fc9df0d24d14df55876b11b7ade4325d440c5b5c070141695b1e503325b12f"
+    },
+    {
+      "path": "source/runtime/build/utils/text-length.js",
+      "sha256": "3482b464776b7869ec295702be9c969f53738581c688897e4632cd3716be9412"
+    },
+    {
+      "path": "source/runtime/LICENSE",
+      "sha256": "a7d0732937aa0f9e13eaaafd09c395926a00586342d76362fa789003405b7fd3"
+    },
+    {
+      "path": "source/runtime/package-lock.json",
+      "sha256": "dd89ad8581581361d7a7d942436815d4a0fbce601e927e47a7a66d701c72bc80"
+    },
+    {
+      "path": "source/runtime/package.json",
+      "sha256": "1995eefe88327e64bf10a6f322cae6a69ee172a736e933bad740a1f5e5938799"
+    },
+    {
+      "path": "source/runtime/src/__tests__/readme-generator.test.ts",
+      "sha256": "30f23bf77c99bc4fd2f1264c71e4dc1b422551adf835c2082de22187523dd67b"
+    },
+    {
+      "path": "source/runtime/src/__tests__/skill-generator.test.ts",
+      "sha256": "058c9530bd91bc7e2d90e5a51ee3baa85ccc37696af18f362264e0976d1662cc"
+    },
+    {
+      "path": "source/runtime/src/cli/commands.ts",
+      "sha256": "f97f4c6d74bd1348ed6051161c707378ce7ab734e854bd9a614c73e79006e805"
+    },
+    {
+      "path": "source/runtime/src/cli/helpers.ts",
+      "sha256": "224e38732efcd89a1b54644c1cb0ef747c3bac3be9ee052f97a09a151b148a0f"
+    },
+    {
+      "path": "source/runtime/src/index.ts",
+      "sha256": "55972866bc33896dd6aaa4cb69dee85deffce36495b65364be31e83853136219"
+    },
+    {
+      "path": "source/runtime/src/mcp.ts",
+      "sha256": "0cc18a7e78215b27705a624130abf760376193b2c612312919463ab7590aa476"
+    },
+    {
+      "path": "source/runtime/src/styles/__tests__/example-generator.test.ts",
+      "sha256": "3c60d5a5cb377800d81389e5ae83eb9ab4168b3b4c594c61536585f0d3bc7039"
+    },
+    {
+      "path": "source/runtime/src/styles/__tests__/external-style.test.ts",
+      "sha256": "38f248246dbe0d3b6c2d95c8edd6a8d122a1657e8fde5e9b5133861e4cbd773a"
+    },
+    {
+      "path": "source/runtime/src/styles/__tests__/style-registry.test.ts",
+      "sha256": "8e0ff96ff0dae12ff7d50b40c8e248f9da4d1c51553a5272e3ac77e810ebd3ad"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/css.ts",
+      "sha256": "cf6e02ebaac7c998344d1c9c4cdaf11cdd9f4a37319cd02c28a110b7f7d76059"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/index.ts",
+      "sha256": "684442520a05ec1a4103ffa8949f184fde419adc42cba37d516c05fb123d35ce"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/content.ts",
+      "sha256": "46a4270f6c8c133a8eed7112ad861cbcdf8fb538cc4319ac9da8df9b334c13ea"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/image-center.ts",
+      "sha256": "a6fe64c65949d1e2bf747992ae14274f15ca7a40ff3dbc4eb47117281bd7fc86"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/image-right.ts",
+      "sha256": "11be552924b175b2b23b2598cc74b48b6a5126a6eed78b22ce65b9a840fe2d52"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/key-message.ts",
+      "sha256": "233915341df9b283b09338c9152532aa4111a4f5e612131b2d0131c400ff3b0f"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/list.ts",
+      "sha256": "d9595c1fe861add455aa80c85458700141120248457d4a916ebccc331f3ed6cb"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/methodology.ts",
+      "sha256": "49ef78feddd5be02f76d5664524e0db6f6e7884ecf7e771f9c48bcb71f903194"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/section.ts",
+      "sha256": "ae1b9f085dd8e58805a8a2c3bc7a8266fd2a3316b09d8c763d650bdbe56b2572"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/statistics.ts",
+      "sha256": "b1743872f970128cbea6ccd0abda7a1d44188bdd3d0c4c1ab165f39f606f2cb6"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/table.ts",
+      "sha256": "c013b07e3ba9280a4bf55304a89c77b1b3f3c063a9ac014697c128496d1afcf1"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/title.ts",
+      "sha256": "ec12157bfddf1d2a21202e76d008ed2c07a3b80e9051970c8ddd54be754176f3"
+    },
+    {
+      "path": "source/runtime/src/styles/academic/layouts/two-column.ts",
+      "sha256": "b8d84deb3349ff4bdbd5292dce244bfcb4fa8446115ac46fd1dd2c1f590620c8"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/css.ts",
+      "sha256": "3627e72dc9bcbf7b697f620b1e0db2fa06a0ad1bf4a1b66c85f04a0e66a18e62"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/index.ts",
+      "sha256": "9a3ab46dd3f26bf034a00c5fc4e866f883b44bd991418611197f65f28657093a"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/agenda.ts",
+      "sha256": "50171f7c164ce774147c3ae3991f56cb5ee895db4fe78a02915bf4d2ab65bf12"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/big-statement.ts",
+      "sha256": "28d096b9bd6073a454579543d94fd5d1c716777f69843bb2ff9d5f0a8ea91c73"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/chart-bar.ts",
+      "sha256": "c4a40ab595c7ba912ada80f6e2b4de81e42836341a1dac90a8628ad84edefa0a"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/content.ts",
+      "sha256": "13ec605889b4406498ada3bbf04ccfb7c64083f2abf1f855c1efddd0934b8b97"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/highlight-box.ts",
+      "sha256": "d05dc411c60a8a36b29b77c8fd07c14be3abde8ab204cfba866d9587c8b7a5e1"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/image-center.ts",
+      "sha256": "daeedbe88bda09f313e5f2847a410a33d528727c56ee6c689d87e56bcb7000d6"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/image-right.ts",
+      "sha256": "a4d05d8906a4f64af76844f541060fbe0046444bab0350cf4489919093e2c74c"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/list.ts",
+      "sha256": "e05d39631fd4b327933d77b21d8f76d19ad07e12cdaf8e509f3debbafea8e7ac"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/process.ts",
+      "sha256": "c3e41b063c29440c5b768db09af973ca151b4bbcee875cfe0a57fa7c6e466a1e"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/progress-bar.ts",
+      "sha256": "b0ce1989bff4c371a44ac49d65d0437e2781577d1d6a2a34be56c5ffd659ee00"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/pull-quote.ts",
+      "sha256": "6c7e65440dc2ca75c5a480c8b5a628b17ab39702bd0b7f2cc06cbfb1047af721"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/quadrant.ts",
+      "sha256": "840c2dd5d08d7bb00c35b58a739939a96b79d4cac5f9ae6d7ba60219795140c4"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/quote.ts",
+      "sha256": "48ddfe2e0689d9636308b56a66ce9434966a5a091b14933f50b986d7692745d0"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/section.ts",
+      "sha256": "0bc08d4b2cd4c33c6aed9d98524e46f6e7c559c8693969c20d844d3f2c39bb67"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/sidebar.ts",
+      "sha256": "39b4a437e57554cc08920898aee08b2fa69dfbad1a026e29b4e4e0b5a935fc74"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/statistics.ts",
+      "sha256": "f2f6b8ad4fc01de40afe209feb84b73d2809197ef423a99ee371025cbe3326d5"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/table.ts",
+      "sha256": "866d95e50e76e8cb429bf8f5b96a9168bc5fe90174eb1af02bf47bab04232741"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/three-column.ts",
+      "sha256": "8219ac9bf7ef6cc7000e2c65fbce6d28f12345be50b5334c367cda9df1ffa4e6"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/title.ts",
+      "sha256": "75dac008a71045aeb11030c75ae9c9373e77d5fd6dd003eb5cebf146846aa13d"
+    },
+    {
+      "path": "source/runtime/src/styles/corporate/layouts/two-column.ts",
+      "sha256": "a3e0170357d00041bd44bee288c371f1fa8cc517c18e145269263291584bfb90"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/css.ts",
+      "sha256": "3d4ad9e911cd6d96695d2351e1d238c43706330460191c9a0a998a52f3e4a703"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/index.ts",
+      "sha256": "f3176c513c43244435d63a5db0e8af35f99980e321c2666de93d52a76c38e280"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/big-statement.ts",
+      "sha256": "fb10f93eb779188351238dbd5d8e443da945ab81bc51008e18cb5740779c3342"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/card-grid.ts",
+      "sha256": "1ee4ddef1958b0e194fff3dc8c8750cc41ceb26b78880e3badafb8198d64c630"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/chart-bar.ts",
+      "sha256": "d138c130c9c98d755e674beb3afe08708bcd007994f70520524c9e302a1934bb"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/code-comparison.ts",
+      "sha256": "1a88b0cd58d148fc9b8f8df63fc9503f41c286f32138eda13a0670b04b2d981d"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/code-showcase.ts",
+      "sha256": "0ed244bc0903b67a248e073003f902e352c2a4a8209311061977306b26d87be2"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/content.ts",
+      "sha256": "448a0186bed56c2a51757d2091a15df0d0cccbba1c53075e43113b2e5c2b75aa"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/highlight-box.ts",
+      "sha256": "980f14067b8e127ac4e598e9bb5df7cbb1777f3e36a00931686c7be49e888cbf"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/image-center.ts",
+      "sha256": "3d0ecde07ab706f0e1ac0fe1b3547654db51296b7a7b3e057c8f6b71237d846c"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/image-right.ts",
+      "sha256": "6a209bc1772d11fcb646a28f449776965971306c136e2ae29da4c940c7ee56b0"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/list.ts",
+      "sha256": "b640053d7a7909719f91ca2a429ce9a6f40be9f2f1c1515bb46fdd813f8899d1"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/process.ts",
+      "sha256": "86451e2df3911cb4961c4824ab2878300e1d68a0b72e21eba66b37720eab5460"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/progress-bar.ts",
+      "sha256": "2da8a8c83e87690e94c7babc25095d8d4fc477f66c652e7989f991a29d871975"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/quote.ts",
+      "sha256": "aa9b47a7fabe64a3f668285a1ecf6725f9c1bc1791ca8657dd115fc045e165f6"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/section.ts",
+      "sha256": "bc6d7e2590ae685d02b75a19ef1a780530fe6b23160f05ef06072ecd3beba909"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/statistics.ts",
+      "sha256": "e8077a911d4983393e819225f8ffc56109841dc37af1441f49f14119399453ad"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/table.ts",
+      "sha256": "a764dd082c40b1a0e6ffba4e2db5cadb102af464fafcca38eb47eb9e03c6aba8"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/terminal.ts",
+      "sha256": "6364a30b03857d10c642611b003e9de38d3397a9f8956731145284e50be9b99e"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/timeline-horizontal.ts",
+      "sha256": "2a54ed9065ba16676aa92d4511832ad9a5560e057f07dd4569824d59b74a9fd4"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/timeline.ts",
+      "sha256": "50db989a2e0d46afa8c302c1098408e6ff76185ac28841b8a3e06ce1cc16ccff"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/title.ts",
+      "sha256": "cfe7dae7edc582f79e351a08a0838309727e87c1b878b7bfd18c28496bbe3c41"
+    },
+    {
+      "path": "source/runtime/src/styles/dark/layouts/two-column.ts",
+      "sha256": "f23444a906c8e63adfeed0dc4547a42fea29df9df74dcaae10a537c3e0fad814"
+    },
+    {
+      "path": "source/runtime/src/styles/default/index.ts",
+      "sha256": "760baeddd39f5f056f7df942cf6b368bcf365f374b1c0b07ec5d77616c7f820b"
+    },
+    {
+      "path": "source/runtime/src/styles/index.ts",
+      "sha256": "0db3ee38c17e55fdcf5844ff6a6d31a914ca4f26d5927ee74f0a4665795ac7b0"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/css.ts",
+      "sha256": "defc465f5b6f98413355b8bf087870d73b8c64d0442e99d4ff2c89fddc1e6020"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/index.ts",
+      "sha256": "a4a7aa3e81039031592e61d62d2f1fc35428d6bcf668eddea5556f24b6ca55df"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/agenda.ts",
+      "sha256": "4f06e4053230509aba312eaa0848b890ad4b9f61cb1a233762fb16c514b9e5c8"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/big-statement.ts",
+      "sha256": "85e47150cd6e40eb7e255a91e8a25057dd061d25ca888bba6f90f80a88645f7f"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/comparison.ts",
+      "sha256": "50707b9498f0fbdc2ea74b9cfa160ebf2339e1b28e98bc0a03ea9f50c1c854a4"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/content.ts",
+      "sha256": "5ea76e15910877706e1f90db20232f1fc51f7a3090f6fd9c753c64b73b501a01"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/highlight-box.ts",
+      "sha256": "14c44caf41ad5a8d4260e23445a3e9118f1201101c50bd758c71361b9a73f008"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/image-center.ts",
+      "sha256": "87e085a63883f306f4567184199bc94628e2f7dba045f02d73fd06d4c72cbdd9"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/image-right.ts",
+      "sha256": "aef5effc795b7c3bd5506f0dbc53ca8b5bd2daa480687ceacdc45619b50929be"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/list.ts",
+      "sha256": "a01c63d161eecc7ac96e94ddef691dd23dad13d8cd379d9fafee31d4cb12abfb"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/pull-quote.ts",
+      "sha256": "e9567210aae39c17e0f104d959d2308ab23a9aaec4b8391cd121fb34b819e302"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/quote.ts",
+      "sha256": "e635f9866a302d505fb8260208f795e528692b225bf6b14c6e4056b4c7bd5a58"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/section.ts",
+      "sha256": "5b18b82d8b0c59639e12d6abeeee5b6562126c84d06b329fd6865165d2db366f"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/statistics.ts",
+      "sha256": "056336bac3eeb7b0b7381394385a0e564e00f5f48b02e1dd4be84fb18ea12845"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/table.ts",
+      "sha256": "2133cd5b981a4a1e269943ec197eb9449ef7bbee73a47999fcdf41ef619aeb88"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/title.ts",
+      "sha256": "5582ec9ea1cb8302adb93fd8d9b34f55003687a283de509938b912495653d453"
+    },
+    {
+      "path": "source/runtime/src/styles/minimal/layouts/two-column.ts",
+      "sha256": "15316087308443e5b9236e9b4af388c199fdcc26a23ec6c2d20f778603e92f06"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/css.ts",
+      "sha256": "bc5cb76fbef25cf1867449e256804e881d69ac5dede25c7dad5b5903b1404b21"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/index.ts",
+      "sha256": "6b1bd8ac0817c01954dbc5f6e3b88f498161e6e9569217914ee3e0b5a52acb93"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/bento-grid.ts",
+      "sha256": "793a7988ec362ae5ef2521cd0f3b454a59ef744a91824a7a497497b2f850244a"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/big-statement.ts",
+      "sha256": "08af8ec50959b377206b4b2563161de99b4f42fa0a250a2892ffb68d09b05a8c"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/card-grid.ts",
+      "sha256": "65f52690b406854bb0d80e54da6e8be19c82756285afffe38391d73443986ea5"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/chart-bar.ts",
+      "sha256": "52450567670be3dade3d1243348ce51ae42aa458f96fddb78c543805040d8c5f"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/content.ts",
+      "sha256": "3b1fcee126f5e8279b7dcd3a1bf205eb9ae90d98d9f92427195836056b31565b"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/highlight-box.ts",
+      "sha256": "622c457282c28d4e1c01cdfe5ab7724cc64fe9a9768138344ea872a049ce7d83"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/image-center.ts",
+      "sha256": "371e648fe84a70d74ec7606c733dc7859da5204cad4b948d7144bf8a9bc1b186"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/image-comparison.ts",
+      "sha256": "a4d111cfa7bbb6ef71a92ac384370bfc1a6b698614c1103908eb28741e232edc"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/image-right.ts",
+      "sha256": "13f034668e22129e07edc2a276b66fd5464ecffe1ef9ccb5255e00295d17f378"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/image-split.ts",
+      "sha256": "f55f6fde7359678dc0f67423e755664189dc3ac483b81ab572ee77b92ea82c1a"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/list.ts",
+      "sha256": "3d818124e80ecc18ff33209bbf1d5a3c65132e6831751c4e489d6bcdc16d9614"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/process.ts",
+      "sha256": "e5d79b48a081c587f976577c87bbafbc29b213b1c9c8a0bd28344315a270d0ca"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/progress-bar.ts",
+      "sha256": "adbba0d649c38826a32d8dbc6bee7f1bba92d9d5602d38c9c2623cefd541f5d6"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/pull-quote.ts",
+      "sha256": "67283263905834fd0d23f527f3f5d9b055292ee73e4b8fe66f42b77fb262963d"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/quote.ts",
+      "sha256": "37bc695878b452f696602957db0897fcb1878adf93d362bd2c6de67a262b9376"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/section.ts",
+      "sha256": "7a44dac7262a6b4bbef40579565de6bbd2a581a13f55352d65391f08c2138a46"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/sidebar.ts",
+      "sha256": "ab0d0fbb7007e15a4b66b61a8c3e5a0afd6871e8bae33d5f53ad1de8ceced50a"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/statistics.ts",
+      "sha256": "500df12e1b226943f5a83e3a2fd239822874eac012c9fa8a4edec17124de2df1"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/table.ts",
+      "sha256": "3b29392b079a7b9bb3f659e5e6d9cf846aeb7afa18f11082c37c386053ae3b1e"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/three-column-panel.ts",
+      "sha256": "7a001378dd567d5a84c85d5bdb16cee6ec086c6dee49a89fd69c3f518d03baad"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/timeline-horizontal.ts",
+      "sha256": "a85331ea3d0ccb66da95011799399572c10795c7d4a11223aaa76e4c1cbb59fb"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/timeline.ts",
+      "sha256": "c860a4aa77968995f262fca9c5827e203aa10443a6bcfd95fe4e41969fe9bc91"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/title.ts",
+      "sha256": "75c7451da042b5cc96deab2f187b0dce2345616b714d83164aa8452f79bd04f0"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/two-column-panel.ts",
+      "sha256": "e34c493079ec51523c13dbf9d91c867fbd579804a3467dfa087c54957ba56221"
+    },
+    {
+      "path": "source/runtime/src/styles/rich/layouts/two-column.ts",
+      "sha256": "386cf1798063bbbebe047242b3579de198332b2fbea0640da9e7f2fd12dc3328"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/css.ts",
+      "sha256": "54ea6ccbb92394774ea3756d701985d9fd02b815af7cd069081310003a4c88ca"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/index.ts",
+      "sha256": "4e9c78b34cee522f7ba0e8f30974390c330f3ebcf964ae01525d8d7d702df544"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/content.ts",
+      "sha256": "9e3ca99c9b11900ea60e208c75f3bf44b8207579dbb30ed9437bbeb08f6369dc"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/feature-grid.ts",
+      "sha256": "22ed2ef87cbbb7a5f75415e71fa024a93606160a5e22f27d00036c506126e755"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/highlight-box.ts",
+      "sha256": "34cb78ebea38bafb4572af58d5774d922936fd44388116f28fec339c3adecaf3"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/list.ts",
+      "sha256": "4b49b6837c043ce0949a956aa63f770e4209acfb3de01ab82481f3969d07fbd9"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/quote.ts",
+      "sha256": "fe87b7e9eeb55b2dc0c78ef67c2f3102dc99659fab57c2e25ebb6517430b7354"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/roadmap.ts",
+      "sha256": "636c8f8a011dbb344c293f0f2ac3bc89e18585c184391eed0afabff4cffeed26"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/section.ts",
+      "sha256": "3621d37fb1a3693a0ace90f94a881ecd1caac1556c51c0b3cba10e81a8821f18"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/statistics.ts",
+      "sha256": "2951cea5f2f02a890276174b950e212daa997524cdc9c0f1318d4edd9b1a9d74"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/title.ts",
+      "sha256": "9f396e008f021fe3ef68f707fbb424db88aee243ed42b971359aaddf8fb5c6ae"
+    },
+    {
+      "path": "source/runtime/src/styles/tech/layouts/two-column.ts",
+      "sha256": "e25577d2b390b4264933a9d61e08d32e7b040db3faa791164fd47fb5c4cf3f49"
+    },
+    {
+      "path": "source/runtime/src/themes/__tests__/example-generator.test.ts",
+      "sha256": "07690d804ae567390e56336194600abb28ce8e9bcc38fa389818b25818925040"
+    },
+    {
+      "path": "source/runtime/src/themes/__tests__/theme-manager.test.ts",
+      "sha256": "30f9ed7d570c7f068225d71b97741090d9c391503d0e1fce8b2888a0e4b131c9"
+    },
+    {
+      "path": "source/runtime/src/themes/default/index.ts",
+      "sha256": "c0100fd7a3cf3c6193c9acd8e28f556ecbbd544f6c734029cd9906be98e2a008"
+    },
+    {
+      "path": "source/runtime/src/themes/default/layouts/content.ts",
+      "sha256": "cb79d3cb0d3dede016347e09e73429e8d5fc2cf94f38cbc979d62f055767f476"
+    },
+    {
+      "path": "source/runtime/src/themes/default/layouts/image-center.ts",
+      "sha256": "3583b2666baa8122e4284560e945277f786bd581a1c04b71b2a9ea09ba234f0c"
+    },
+    {
+      "path": "source/runtime/src/themes/default/layouts/image-right.ts",
+      "sha256": "6ab30e143a9fd752e3db4c93c15e0a514bc03b9c642308390f984e3572bbe68e"
+    },
+    {
+      "path": "source/runtime/src/themes/default/layouts/list.ts",
+      "sha256": "61501e5373b5c734ddabb3ecea43dabd20c135851adebd4f219a1c6644a1e952"
+    },
+    {
+      "path": "source/runtime/src/themes/default/layouts/section.ts",
+      "sha256": "c82c94dd0a1cc7551edce90c7f61af26851ddcec22c1401e5b7a123a0d3fc88b"
+    },
+    {
+      "path": "source/runtime/src/themes/default/layouts/table.ts",
+      "sha256": "4b9030c903ff44d3dac1e2c649e77cf62fe042810d2c24fcba237ade9a03f004"
+    },
+    {
+      "path": "source/runtime/src/themes/default/layouts/title.ts",
+      "sha256": "c2a358a0cdbd9ea00b1faade4d8b6a3bc06fddef4a51a3ba389f2cd8fbb7272a"
+    },
+    {
+      "path": "source/runtime/src/themes/gaia/index.ts",
+      "sha256": "6b856993935ab3d06d3cde21cc4c0f28a0fcd28350304852930e6f7ce3586e17"
+    },
+    {
+      "path": "source/runtime/src/themes/gaia/layouts/image-center.ts",
+      "sha256": "6d81ccf8580ac2cab562a6676bb239e1eaaffb28c6ae40e404a1c2519d43a946"
+    },
+    {
+      "path": "source/runtime/src/themes/gaia/layouts/image-right.ts",
+      "sha256": "a0d2ae538b04e5c12272d7abdbdaa098c399118f5637c1b62f60337ea8dc5656"
+    },
+    {
+      "path": "source/runtime/src/themes/gaia/layouts/list.ts",
+      "sha256": "af9f34b2c03edd3013a203912119ce5c66170f715add2897230e2e2c12ad307f"
+    },
+    {
+      "path": "source/runtime/src/themes/gaia/layouts/section.ts",
+      "sha256": "21d101a3c32247aafc23831518b6384df275860a5320a7d45f5740b15f499837"
+    },
+    {
+      "path": "source/runtime/src/themes/gaia/layouts/table.ts",
+      "sha256": "0b4dc0144c98c2175c60bcdd9378cc5977185751ab785373f62d6822d2ae4249"
+    },
+    {
+      "path": "source/runtime/src/themes/gaia/layouts/title.ts",
+      "sha256": "0a846cf49924a8a678419862ce841400b05138012e9ed1d8d28a4bba9e4ec8f1"
+    },
+    {
+      "path": "source/runtime/src/themes/index.ts",
+      "sha256": "b0e9382eed9470454fae13a26cb2add13af9a1033233c0e820d9fdb665c3b053"
+    },
+    {
+      "path": "source/runtime/src/themes/types.ts",
+      "sha256": "a04df2d177eacecd3ff38f669310c4783e2f35cfa7a29eac320a34b467c56982"
+    },
+    {
+      "path": "source/runtime/src/themes/uncover/index.ts",
+      "sha256": "36745451730f2f9ed6b98212dc1e70188fa9ff725e22ee03b876306df381c2cf"
+    },
+    {
+      "path": "source/runtime/src/themes/uncover/layouts/image-center.ts",
+      "sha256": "3f543083a93f3d201a57bee93ea909697502dd1e2993dc0b156343cc19a955b2"
+    },
+    {
+      "path": "source/runtime/src/themes/uncover/layouts/image-right.ts",
+      "sha256": "f83ef7d12d1c4276cebea97d7b09cd54823609d602356c4b06e69237d6ac30ad"
+    },
+    {
+      "path": "source/runtime/src/themes/uncover/layouts/list.ts",
+      "sha256": "778dfc650254848f1477d82c3d474d39cb6dbba40374a0a0c7cfc039dfaa8802"
+    },
+    {
+      "path": "source/runtime/src/themes/uncover/layouts/section.ts",
+      "sha256": "61e86864d5f13680358fb705aa0e1ae0c04276fd5820d0d6fc430a2065f484c8"
+    },
+    {
+      "path": "source/runtime/src/themes/uncover/layouts/table.ts",
+      "sha256": "1bc07c96ca0c1cdc91356e0666526b8d4d07f8a15b6f780a8e7cf6287050f2cc"
+    },
+    {
+      "path": "source/runtime/src/themes/uncover/layouts/title.ts",
+      "sha256": "b1c68323f4577d02d4240a6ae8b3b9b5268267707ad3f682b1ccc83dec1e712d"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/add_image_transition.test.ts",
+      "sha256": "b2e50ee463a4171a9c45e0ec7cafd2a12b356e665f3221a65bbd8ae31e0029eb"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/batch_manage_slides.test.ts",
+      "sha256": "6d87f3007df6472d59826f7be314d83e235b364768f2ac1626ae83736b0e1784"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/cjk-roundtrip.test.ts",
+      "sha256": "e1830d64b0228134297b52eff63a638b8bb41f85984f14583175e7c1b308b6cb"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/create_presentation.test.ts",
+      "sha256": "2405c42c7f87e86d6a8cc4426b5de505c2740c8e8f620057aeb1741d7bd7b8c9"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/edge-cases.test.ts",
+      "sha256": "e1b4244ecb295b19c857e6c70dc8bffdad46305c97471ebcdb41321da1e85687"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/export_slide.test.ts",
+      "sha256": "a672e6a7bbf19aef7eddaca44c626fccab965e6c209d950462d225767296067c"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/generate_agenda.test.ts",
+      "sha256": "882813fd2853e3b803aee4be015b1760efd54ed7f8d59065f3bc3659356db30f"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/generate_slide_ids.test.ts",
+      "sha256": "6e333d1b8ffcf425a4f57f80ddf8be5d0c7e61f5719591d807b8f399e6c0e580"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/manage_slide.test.ts",
+      "sha256": "320e6e310ef09fd4726091fb9f6815d4b0dba8759c74f55f531c7fd02a2218b4"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/read_slide.test.ts",
+      "sha256": "3d7d6e3fd538213b73889b137a6347ed8b30f84f2c754cc6ba8696ad37e98f5f"
+    },
+    {
+      "path": "source/runtime/src/tools/__tests__/set_frontmatter.test.ts",
+      "sha256": "b30022b0faf39a2357e6ab5d712a708fa29f8e7962a4831e4e111c6e3e0ae9a2"
+    },
+    {
+      "path": "source/runtime/src/tools/add_image_transition.ts",
+      "sha256": "9b0fc25b498f922c02a5e0f4a2e0ff0e7ec40864f30a2d689c07be27a122da4e"
+    },
+    {
+      "path": "source/runtime/src/tools/batch_manage_slides.ts",
+      "sha256": "ba8cccf93a4a0c959f3d8103d623bfe591a6f888b53736fa04d2d5f1d10cc46a"
+    },
+    {
+      "path": "source/runtime/src/tools/create_presentation.ts",
+      "sha256": "f76fa62f7c64ec5321a6cf61e503d1c819b0ca9014418424197cc8941e25b4b6"
+    },
+    {
+      "path": "source/runtime/src/tools/export_slide.ts",
+      "sha256": "a226bc93d89cb8d22a0eda9d4705e9a39093180ae88bdad9cd40873dbac842ce"
+    },
+    {
+      "path": "source/runtime/src/tools/generate_agenda.ts",
+      "sha256": "a6b1e272d921262aa823312e3ca69c5488795da5c71a0a51a61fde965589b0f2"
+    },
+    {
+      "path": "source/runtime/src/tools/generate_slide_ids.ts",
+      "sha256": "50708ca4dea9d0dab45bd2054e95704459a3da6e027d865d6a456e0820121308"
+    },
+    {
+      "path": "source/runtime/src/tools/list_layouts.ts",
+      "sha256": "07e8c8a07c8144bc2dbb4ccbadffbd3e9167b62ac44337beca7764eff24b3e7d"
+    },
+    {
+      "path": "source/runtime/src/tools/list_themes_and_styles.ts",
+      "sha256": "78467a5a92dcc536a6206dcd4079c32faf0be0adb2311e068fb5e8e23109b77e"
+    },
+    {
+      "path": "source/runtime/src/tools/manage_slide.ts",
+      "sha256": "29a8577ff8e18b7dac1a31b59404271cd869072a5eba5695aa116a04d473f8b7"
+    },
+    {
+      "path": "source/runtime/src/tools/read_slide.ts",
+      "sha256": "28aa06f23090c26b659ad614aa686230a5274f9c797db644ca46ccd5b536f859"
+    },
+    {
+      "path": "source/runtime/src/tools/set_frontmatter.ts",
+      "sha256": "e391e9a4da2da0d3a9f9057834f359fee7b31a240d0165da45719d3bb85b4b2c"
+    },
+    {
+      "path": "source/runtime/src/types/common.ts",
+      "sha256": "014981eb912580a57ef2f9b4c30867c983f008e52143297ac0f6b6a3f254ee61"
+    },
+    {
+      "path": "source/runtime/src/utils/__tests__/external-styles.test.ts",
+      "sha256": "96850b3013bef7d48bae1e9343822d138fd6ba1140310c761d9f4061483779ff"
+    },
+    {
+      "path": "source/runtime/src/utils/__tests__/path-validator.test.ts",
+      "sha256": "b2ef3f935d9f657d8197d593bd0a9b6c9c552fec96b2a152ec0782370bbfce5b"
+    },
+    {
+      "path": "source/runtime/src/utils/__tests__/text-length.test.ts",
+      "sha256": "bfffa5636e40b4ce1dae3216eb3e6b88dedc5b2e4913751a02c1aac66dd3af17"
+    },
+    {
+      "path": "source/runtime/src/utils/constants.ts",
+      "sha256": "7c561fb7bbc778be869d6ba56d1231dae3e7076e02b18d879a4831aaa69975ea"
+    },
+    {
+      "path": "source/runtime/src/utils/external-styles.ts",
+      "sha256": "3eb0a2ca254241fc47e182b2201d71204d40b622ad89d4873133ea594b7c21a2"
+    },
+    {
+      "path": "source/runtime/src/utils/frontmatter.ts",
+      "sha256": "b96098144ea40e7716e8d0b8d1bdb06629c67435c4c71e390f309fd0965828f6"
+    },
+    {
+      "path": "source/runtime/src/utils/logger.ts",
+      "sha256": "3356941c92008ca2b1ba05e5c116746cf38da3dce48166aa70bb0bf18ee4da99"
+    },
+    {
+      "path": "source/runtime/src/utils/path-validator.ts",
+      "sha256": "5d912c444a98f754c3b8a8812a7242faa044041a154781ee25c4a134fc6f1886"
+    },
+    {
+      "path": "source/runtime/src/utils/response.ts",
+      "sha256": "8eac0293d4c290bd1f6a9a478f190ea8f563243e13ee4597fcead0606301e2e9"
+    },
+    {
+      "path": "source/runtime/src/utils/slide-id.ts",
+      "sha256": "9e9f39a81d199ed9c887471c293b5f7fca48e1d7719d9355078e9c4c351d4a7c"
+    },
+    {
+      "path": "source/runtime/src/utils/text-length.ts",
+      "sha256": "fff8e4b20f20eb11a791e6385fad91cf4c130e4b64dab2b24307e46829594801"
+    },
+    {
+      "path": "source/runtime/tsconfig.json",
+      "sha256": "ac7cf65816f3423452cfd910fc02bb1717f504c917d8c5fea56f41fe271bb59b"
+    },
+    {
+      "path": "source/upstream/ACQUISITION.json",
+      "sha256": "9267ccc07a28f928037aa7f8ae6799e572f7765530f7c5e316a85151ad497417"
+    },
+    {
+      "path": "source/upstream/LICENSE",
+      "sha256": "a7d0732937aa0f9e13eaaafd09c395926a00586342d76362fa789003405b7fd3"
+    },
+    {
+      "path": "source/upstream/package.json",
+      "sha256": "1995eefe88327e64bf10a6f322cae6a69ee172a736e933bad740a1f5e5938799"
+    },
+    {
+      "path": "source/upstream/pnpm-lock.yaml",
+      "sha256": "d8954f900ed8ac14a8cde3aac55ff2d426dd6621f258dc5124bfe97cc41501e3"
+    },
+    {
+      "path": "source/upstream/README.md",
+      "sha256": "ead4a3cd5788d1b24d7e740ca82ce1336cab9e5d648a0602f8366a65d704d374"
+    },
+    {
+      "path": "source/upstream/skills/marp/SKILL.md",
+      "sha256": "b388faad7c8bc5e7307644c1d4e8e85745bab81ddca762c74bcf6c14134fe990"
+    },
+    {
+      "path": "source/upstream/src/__tests__/readme-generator.test.ts",
+      "sha256": "30f23bf77c99bc4fd2f1264c71e4dc1b422551adf835c2082de22187523dd67b"
+    },
+    {
+      "path": "source/upstream/src/__tests__/skill-generator.test.ts",
+      "sha256": "058c9530bd91bc7e2d90e5a51ee3baa85ccc37696af18f362264e0976d1662cc"
+    },
+    {
+      "path": "source/upstream/src/cli/commands.ts",
+      "sha256": "f97f4c6d74bd1348ed6051161c707378ce7ab734e854bd9a614c73e79006e805"
+    },
+    {
+      "path": "source/upstream/src/cli/helpers.ts",
+      "sha256": "224e38732efcd89a1b54644c1cb0ef747c3bac3be9ee052f97a09a151b148a0f"
+    },
+    {
+      "path": "source/upstream/src/index.ts",
+      "sha256": "55972866bc33896dd6aaa4cb69dee85deffce36495b65364be31e83853136219"
+    },
+    {
+      "path": "source/upstream/src/mcp.ts",
+      "sha256": "0cc18a7e78215b27705a624130abf760376193b2c612312919463ab7590aa476"
+    },
+    {
+      "path": "source/upstream/src/styles/__tests__/example-generator.test.ts",
+      "sha256": "3c60d5a5cb377800d81389e5ae83eb9ab4168b3b4c594c61536585f0d3bc7039"
+    },
+    {
+      "path": "source/upstream/src/styles/__tests__/external-style.test.ts",
+      "sha256": "38f248246dbe0d3b6c2d95c8edd6a8d122a1657e8fde5e9b5133861e4cbd773a"
+    },
+    {
+      "path": "source/upstream/src/styles/__tests__/style-registry.test.ts",
+      "sha256": "8e0ff96ff0dae12ff7d50b40c8e248f9da4d1c51553a5272e3ac77e810ebd3ad"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/css.ts",
+      "sha256": "cf6e02ebaac7c998344d1c9c4cdaf11cdd9f4a37319cd02c28a110b7f7d76059"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/index.ts",
+      "sha256": "684442520a05ec1a4103ffa8949f184fde419adc42cba37d516c05fb123d35ce"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/content.ts",
+      "sha256": "46a4270f6c8c133a8eed7112ad861cbcdf8fb538cc4319ac9da8df9b334c13ea"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/image-center.ts",
+      "sha256": "a6fe64c65949d1e2bf747992ae14274f15ca7a40ff3dbc4eb47117281bd7fc86"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/image-right.ts",
+      "sha256": "11be552924b175b2b23b2598cc74b48b6a5126a6eed78b22ce65b9a840fe2d52"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/key-message.ts",
+      "sha256": "233915341df9b283b09338c9152532aa4111a4f5e612131b2d0131c400ff3b0f"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/list.ts",
+      "sha256": "d9595c1fe861add455aa80c85458700141120248457d4a916ebccc331f3ed6cb"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/methodology.ts",
+      "sha256": "49ef78feddd5be02f76d5664524e0db6f6e7884ecf7e771f9c48bcb71f903194"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/section.ts",
+      "sha256": "ae1b9f085dd8e58805a8a2c3bc7a8266fd2a3316b09d8c763d650bdbe56b2572"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/statistics.ts",
+      "sha256": "b1743872f970128cbea6ccd0abda7a1d44188bdd3d0c4c1ab165f39f606f2cb6"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/table.ts",
+      "sha256": "c013b07e3ba9280a4bf55304a89c77b1b3f3c063a9ac014697c128496d1afcf1"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/title.ts",
+      "sha256": "ec12157bfddf1d2a21202e76d008ed2c07a3b80e9051970c8ddd54be754176f3"
+    },
+    {
+      "path": "source/upstream/src/styles/academic/layouts/two-column.ts",
+      "sha256": "b8d84deb3349ff4bdbd5292dce244bfcb4fa8446115ac46fd1dd2c1f590620c8"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/css.ts",
+      "sha256": "3627e72dc9bcbf7b697f620b1e0db2fa06a0ad1bf4a1b66c85f04a0e66a18e62"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/index.ts",
+      "sha256": "9a3ab46dd3f26bf034a00c5fc4e866f883b44bd991418611197f65f28657093a"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/agenda.ts",
+      "sha256": "50171f7c164ce774147c3ae3991f56cb5ee895db4fe78a02915bf4d2ab65bf12"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/big-statement.ts",
+      "sha256": "28d096b9bd6073a454579543d94fd5d1c716777f69843bb2ff9d5f0a8ea91c73"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/chart-bar.ts",
+      "sha256": "c4a40ab595c7ba912ada80f6e2b4de81e42836341a1dac90a8628ad84edefa0a"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/content.ts",
+      "sha256": "13ec605889b4406498ada3bbf04ccfb7c64083f2abf1f855c1efddd0934b8b97"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/highlight-box.ts",
+      "sha256": "d05dc411c60a8a36b29b77c8fd07c14be3abde8ab204cfba866d9587c8b7a5e1"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/image-center.ts",
+      "sha256": "daeedbe88bda09f313e5f2847a410a33d528727c56ee6c689d87e56bcb7000d6"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/image-right.ts",
+      "sha256": "a4d05d8906a4f64af76844f541060fbe0046444bab0350cf4489919093e2c74c"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/list.ts",
+      "sha256": "e05d39631fd4b327933d77b21d8f76d19ad07e12cdaf8e509f3debbafea8e7ac"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/process.ts",
+      "sha256": "c3e41b063c29440c5b768db09af973ca151b4bbcee875cfe0a57fa7c6e466a1e"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/progress-bar.ts",
+      "sha256": "b0ce1989bff4c371a44ac49d65d0437e2781577d1d6a2a34be56c5ffd659ee00"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/pull-quote.ts",
+      "sha256": "6c7e65440dc2ca75c5a480c8b5a628b17ab39702bd0b7f2cc06cbfb1047af721"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/quadrant.ts",
+      "sha256": "840c2dd5d08d7bb00c35b58a739939a96b79d4cac5f9ae6d7ba60219795140c4"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/quote.ts",
+      "sha256": "48ddfe2e0689d9636308b56a66ce9434966a5a091b14933f50b986d7692745d0"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/section.ts",
+      "sha256": "0bc08d4b2cd4c33c6aed9d98524e46f6e7c559c8693969c20d844d3f2c39bb67"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/sidebar.ts",
+      "sha256": "39b4a437e57554cc08920898aee08b2fa69dfbad1a026e29b4e4e0b5a935fc74"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/statistics.ts",
+      "sha256": "f2f6b8ad4fc01de40afe209feb84b73d2809197ef423a99ee371025cbe3326d5"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/table.ts",
+      "sha256": "866d95e50e76e8cb429bf8f5b96a9168bc5fe90174eb1af02bf47bab04232741"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/three-column.ts",
+      "sha256": "8219ac9bf7ef6cc7000e2c65fbce6d28f12345be50b5334c367cda9df1ffa4e6"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/title.ts",
+      "sha256": "75dac008a71045aeb11030c75ae9c9373e77d5fd6dd003eb5cebf146846aa13d"
+    },
+    {
+      "path": "source/upstream/src/styles/corporate/layouts/two-column.ts",
+      "sha256": "a3e0170357d00041bd44bee288c371f1fa8cc517c18e145269263291584bfb90"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/css.ts",
+      "sha256": "3d4ad9e911cd6d96695d2351e1d238c43706330460191c9a0a998a52f3e4a703"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/index.ts",
+      "sha256": "f3176c513c43244435d63a5db0e8af35f99980e321c2666de93d52a76c38e280"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/big-statement.ts",
+      "sha256": "fb10f93eb779188351238dbd5d8e443da945ab81bc51008e18cb5740779c3342"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/card-grid.ts",
+      "sha256": "1ee4ddef1958b0e194fff3dc8c8750cc41ceb26b78880e3badafb8198d64c630"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/chart-bar.ts",
+      "sha256": "d138c130c9c98d755e674beb3afe08708bcd007994f70520524c9e302a1934bb"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/code-comparison.ts",
+      "sha256": "1a88b0cd58d148fc9b8f8df63fc9503f41c286f32138eda13a0670b04b2d981d"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/code-showcase.ts",
+      "sha256": "0ed244bc0903b67a248e073003f902e352c2a4a8209311061977306b26d87be2"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/content.ts",
+      "sha256": "448a0186bed56c2a51757d2091a15df0d0cccbba1c53075e43113b2e5c2b75aa"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/highlight-box.ts",
+      "sha256": "980f14067b8e127ac4e598e9bb5df7cbb1777f3e36a00931686c7be49e888cbf"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/image-center.ts",
+      "sha256": "3d0ecde07ab706f0e1ac0fe1b3547654db51296b7a7b3e057c8f6b71237d846c"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/image-right.ts",
+      "sha256": "6a209bc1772d11fcb646a28f449776965971306c136e2ae29da4c940c7ee56b0"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/list.ts",
+      "sha256": "b640053d7a7909719f91ca2a429ce9a6f40be9f2f1c1515bb46fdd813f8899d1"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/process.ts",
+      "sha256": "86451e2df3911cb4961c4824ab2878300e1d68a0b72e21eba66b37720eab5460"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/progress-bar.ts",
+      "sha256": "2da8a8c83e87690e94c7babc25095d8d4fc477f66c652e7989f991a29d871975"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/quote.ts",
+      "sha256": "aa9b47a7fabe64a3f668285a1ecf6725f9c1bc1791ca8657dd115fc045e165f6"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/section.ts",
+      "sha256": "bc6d7e2590ae685d02b75a19ef1a780530fe6b23160f05ef06072ecd3beba909"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/statistics.ts",
+      "sha256": "e8077a911d4983393e819225f8ffc56109841dc37af1441f49f14119399453ad"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/table.ts",
+      "sha256": "a764dd082c40b1a0e6ffba4e2db5cadb102af464fafcca38eb47eb9e03c6aba8"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/terminal.ts",
+      "sha256": "6364a30b03857d10c642611b003e9de38d3397a9f8956731145284e50be9b99e"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/timeline-horizontal.ts",
+      "sha256": "2a54ed9065ba16676aa92d4511832ad9a5560e057f07dd4569824d59b74a9fd4"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/timeline.ts",
+      "sha256": "50db989a2e0d46afa8c302c1098408e6ff76185ac28841b8a3e06ce1cc16ccff"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/title.ts",
+      "sha256": "cfe7dae7edc582f79e351a08a0838309727e87c1b878b7bfd18c28496bbe3c41"
+    },
+    {
+      "path": "source/upstream/src/styles/dark/layouts/two-column.ts",
+      "sha256": "f23444a906c8e63adfeed0dc4547a42fea29df9df74dcaae10a537c3e0fad814"
+    },
+    {
+      "path": "source/upstream/src/styles/default/index.ts",
+      "sha256": "760baeddd39f5f056f7df942cf6b368bcf365f374b1c0b07ec5d77616c7f820b"
+    },
+    {
+      "path": "source/upstream/src/styles/index.ts",
+      "sha256": "0db3ee38c17e55fdcf5844ff6a6d31a914ca4f26d5927ee74f0a4665795ac7b0"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/css.ts",
+      "sha256": "defc465f5b6f98413355b8bf087870d73b8c64d0442e99d4ff2c89fddc1e6020"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/index.ts",
+      "sha256": "a4a7aa3e81039031592e61d62d2f1fc35428d6bcf668eddea5556f24b6ca55df"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/agenda.ts",
+      "sha256": "4f06e4053230509aba312eaa0848b890ad4b9f61cb1a233762fb16c514b9e5c8"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/big-statement.ts",
+      "sha256": "85e47150cd6e40eb7e255a91e8a25057dd061d25ca888bba6f90f80a88645f7f"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/comparison.ts",
+      "sha256": "50707b9498f0fbdc2ea74b9cfa160ebf2339e1b28e98bc0a03ea9f50c1c854a4"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/content.ts",
+      "sha256": "5ea76e15910877706e1f90db20232f1fc51f7a3090f6fd9c753c64b73b501a01"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/highlight-box.ts",
+      "sha256": "14c44caf41ad5a8d4260e23445a3e9118f1201101c50bd758c71361b9a73f008"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/image-center.ts",
+      "sha256": "87e085a63883f306f4567184199bc94628e2f7dba045f02d73fd06d4c72cbdd9"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/image-right.ts",
+      "sha256": "aef5effc795b7c3bd5506f0dbc53ca8b5bd2daa480687ceacdc45619b50929be"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/list.ts",
+      "sha256": "a01c63d161eecc7ac96e94ddef691dd23dad13d8cd379d9fafee31d4cb12abfb"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/pull-quote.ts",
+      "sha256": "e9567210aae39c17e0f104d959d2308ab23a9aaec4b8391cd121fb34b819e302"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/quote.ts",
+      "sha256": "e635f9866a302d505fb8260208f795e528692b225bf6b14c6e4056b4c7bd5a58"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/section.ts",
+      "sha256": "5b18b82d8b0c59639e12d6abeeee5b6562126c84d06b329fd6865165d2db366f"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/statistics.ts",
+      "sha256": "056336bac3eeb7b0b7381394385a0e564e00f5f48b02e1dd4be84fb18ea12845"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/table.ts",
+      "sha256": "2133cd5b981a4a1e269943ec197eb9449ef7bbee73a47999fcdf41ef619aeb88"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/title.ts",
+      "sha256": "5582ec9ea1cb8302adb93fd8d9b34f55003687a283de509938b912495653d453"
+    },
+    {
+      "path": "source/upstream/src/styles/minimal/layouts/two-column.ts",
+      "sha256": "15316087308443e5b9236e9b4af388c199fdcc26a23ec6c2d20f778603e92f06"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/css.ts",
+      "sha256": "bc5cb76fbef25cf1867449e256804e881d69ac5dede25c7dad5b5903b1404b21"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/index.ts",
+      "sha256": "6b1bd8ac0817c01954dbc5f6e3b88f498161e6e9569217914ee3e0b5a52acb93"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/bento-grid.ts",
+      "sha256": "793a7988ec362ae5ef2521cd0f3b454a59ef744a91824a7a497497b2f850244a"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/big-statement.ts",
+      "sha256": "08af8ec50959b377206b4b2563161de99b4f42fa0a250a2892ffb68d09b05a8c"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/card-grid.ts",
+      "sha256": "65f52690b406854bb0d80e54da6e8be19c82756285afffe38391d73443986ea5"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/chart-bar.ts",
+      "sha256": "52450567670be3dade3d1243348ce51ae42aa458f96fddb78c543805040d8c5f"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/content.ts",
+      "sha256": "3b1fcee126f5e8279b7dcd3a1bf205eb9ae90d98d9f92427195836056b31565b"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/highlight-box.ts",
+      "sha256": "622c457282c28d4e1c01cdfe5ab7724cc64fe9a9768138344ea872a049ce7d83"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/image-center.ts",
+      "sha256": "371e648fe84a70d74ec7606c733dc7859da5204cad4b948d7144bf8a9bc1b186"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/image-comparison.ts",
+      "sha256": "a4d111cfa7bbb6ef71a92ac384370bfc1a6b698614c1103908eb28741e232edc"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/image-right.ts",
+      "sha256": "13f034668e22129e07edc2a276b66fd5464ecffe1ef9ccb5255e00295d17f378"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/image-split.ts",
+      "sha256": "f55f6fde7359678dc0f67423e755664189dc3ac483b81ab572ee77b92ea82c1a"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/list.ts",
+      "sha256": "3d818124e80ecc18ff33209bbf1d5a3c65132e6831751c4e489d6bcdc16d9614"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/process.ts",
+      "sha256": "e5d79b48a081c587f976577c87bbafbc29b213b1c9c8a0bd28344315a270d0ca"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/progress-bar.ts",
+      "sha256": "adbba0d649c38826a32d8dbc6bee7f1bba92d9d5602d38c9c2623cefd541f5d6"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/pull-quote.ts",
+      "sha256": "67283263905834fd0d23f527f3f5d9b055292ee73e4b8fe66f42b77fb262963d"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/quote.ts",
+      "sha256": "37bc695878b452f696602957db0897fcb1878adf93d362bd2c6de67a262b9376"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/section.ts",
+      "sha256": "7a44dac7262a6b4bbef40579565de6bbd2a581a13f55352d65391f08c2138a46"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/sidebar.ts",
+      "sha256": "ab0d0fbb7007e15a4b66b61a8c3e5a0afd6871e8bae33d5f53ad1de8ceced50a"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/statistics.ts",
+      "sha256": "500df12e1b226943f5a83e3a2fd239822874eac012c9fa8a4edec17124de2df1"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/table.ts",
+      "sha256": "3b29392b079a7b9bb3f659e5e6d9cf846aeb7afa18f11082c37c386053ae3b1e"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/three-column-panel.ts",
+      "sha256": "7a001378dd567d5a84c85d5bdb16cee6ec086c6dee49a89fd69c3f518d03baad"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/timeline-horizontal.ts",
+      "sha256": "a85331ea3d0ccb66da95011799399572c10795c7d4a11223aaa76e4c1cbb59fb"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/timeline.ts",
+      "sha256": "c860a4aa77968995f262fca9c5827e203aa10443a6bcfd95fe4e41969fe9bc91"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/title.ts",
+      "sha256": "75c7451da042b5cc96deab2f187b0dce2345616b714d83164aa8452f79bd04f0"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/two-column-panel.ts",
+      "sha256": "e34c493079ec51523c13dbf9d91c867fbd579804a3467dfa087c54957ba56221"
+    },
+    {
+      "path": "source/upstream/src/styles/rich/layouts/two-column.ts",
+      "sha256": "386cf1798063bbbebe047242b3579de198332b2fbea0640da9e7f2fd12dc3328"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/css.ts",
+      "sha256": "54ea6ccbb92394774ea3756d701985d9fd02b815af7cd069081310003a4c88ca"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/index.ts",
+      "sha256": "4e9c78b34cee522f7ba0e8f30974390c330f3ebcf964ae01525d8d7d702df544"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/content.ts",
+      "sha256": "9e3ca99c9b11900ea60e208c75f3bf44b8207579dbb30ed9437bbeb08f6369dc"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/feature-grid.ts",
+      "sha256": "22ed2ef87cbbb7a5f75415e71fa024a93606160a5e22f27d00036c506126e755"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/highlight-box.ts",
+      "sha256": "34cb78ebea38bafb4572af58d5774d922936fd44388116f28fec339c3adecaf3"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/list.ts",
+      "sha256": "4b49b6837c043ce0949a956aa63f770e4209acfb3de01ab82481f3969d07fbd9"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/quote.ts",
+      "sha256": "fe87b7e9eeb55b2dc0c78ef67c2f3102dc99659fab57c2e25ebb6517430b7354"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/roadmap.ts",
+      "sha256": "636c8f8a011dbb344c293f0f2ac3bc89e18585c184391eed0afabff4cffeed26"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/section.ts",
+      "sha256": "3621d37fb1a3693a0ace90f94a881ecd1caac1556c51c0b3cba10e81a8821f18"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/statistics.ts",
+      "sha256": "2951cea5f2f02a890276174b950e212daa997524cdc9c0f1318d4edd9b1a9d74"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/title.ts",
+      "sha256": "9f396e008f021fe3ef68f707fbb424db88aee243ed42b971359aaddf8fb5c6ae"
+    },
+    {
+      "path": "source/upstream/src/styles/tech/layouts/two-column.ts",
+      "sha256": "e25577d2b390b4264933a9d61e08d32e7b040db3faa791164fd47fb5c4cf3f49"
+    },
+    {
+      "path": "source/upstream/src/themes/__tests__/example-generator.test.ts",
+      "sha256": "07690d804ae567390e56336194600abb28ce8e9bcc38fa389818b25818925040"
+    },
+    {
+      "path": "source/upstream/src/themes/__tests__/theme-manager.test.ts",
+      "sha256": "30f9ed7d570c7f068225d71b97741090d9c391503d0e1fce8b2888a0e4b131c9"
+    },
+    {
+      "path": "source/upstream/src/themes/default/index.ts",
+      "sha256": "c0100fd7a3cf3c6193c9acd8e28f556ecbbd544f6c734029cd9906be98e2a008"
+    },
+    {
+      "path": "source/upstream/src/themes/default/layouts/content.ts",
+      "sha256": "cb79d3cb0d3dede016347e09e73429e8d5fc2cf94f38cbc979d62f055767f476"
+    },
+    {
+      "path": "source/upstream/src/themes/default/layouts/image-center.ts",
+      "sha256": "3583b2666baa8122e4284560e945277f786bd581a1c04b71b2a9ea09ba234f0c"
+    },
+    {
+      "path": "source/upstream/src/themes/default/layouts/image-right.ts",
+      "sha256": "6ab30e143a9fd752e3db4c93c15e0a514bc03b9c642308390f984e3572bbe68e"
+    },
+    {
+      "path": "source/upstream/src/themes/default/layouts/list.ts",
+      "sha256": "61501e5373b5c734ddabb3ecea43dabd20c135851adebd4f219a1c6644a1e952"
+    },
+    {
+      "path": "source/upstream/src/themes/default/layouts/section.ts",
+      "sha256": "c82c94dd0a1cc7551edce90c7f61af26851ddcec22c1401e5b7a123a0d3fc88b"
+    },
+    {
+      "path": "source/upstream/src/themes/default/layouts/table.ts",
+      "sha256": "4b9030c903ff44d3dac1e2c649e77cf62fe042810d2c24fcba237ade9a03f004"
+    },
+    {
+      "path": "source/upstream/src/themes/default/layouts/title.ts",
+      "sha256": "c2a358a0cdbd9ea00b1faade4d8b6a3bc06fddef4a51a3ba389f2cd8fbb7272a"
+    },
+    {
+      "path": "source/upstream/src/themes/gaia/index.ts",
+      "sha256": "6b856993935ab3d06d3cde21cc4c0f28a0fcd28350304852930e6f7ce3586e17"
+    },
+    {
+      "path": "source/upstream/src/themes/gaia/layouts/image-center.ts",
+      "sha256": "6d81ccf8580ac2cab562a6676bb239e1eaaffb28c6ae40e404a1c2519d43a946"
+    },
+    {
+      "path": "source/upstream/src/themes/gaia/layouts/image-right.ts",
+      "sha256": "a0d2ae538b04e5c12272d7abdbdaa098c399118f5637c1b62f60337ea8dc5656"
+    },
+    {
+      "path": "source/upstream/src/themes/gaia/layouts/list.ts",
+      "sha256": "af9f34b2c03edd3013a203912119ce5c66170f715add2897230e2e2c12ad307f"
+    },
+    {
+      "path": "source/upstream/src/themes/gaia/layouts/section.ts",
+      "sha256": "21d101a3c32247aafc23831518b6384df275860a5320a7d45f5740b15f499837"
+    },
+    {
+      "path": "source/upstream/src/themes/gaia/layouts/table.ts",
+      "sha256": "0b4dc0144c98c2175c60bcdd9378cc5977185751ab785373f62d6822d2ae4249"
+    },
+    {
+      "path": "source/upstream/src/themes/gaia/layouts/title.ts",
+      "sha256": "0a846cf49924a8a678419862ce841400b05138012e9ed1d8d28a4bba9e4ec8f1"
+    },
+    {
+      "path": "source/upstream/src/themes/index.ts",
+      "sha256": "b0e9382eed9470454fae13a26cb2add13af9a1033233c0e820d9fdb665c3b053"
+    },
+    {
+      "path": "source/upstream/src/themes/types.ts",
+      "sha256": "a04df2d177eacecd3ff38f669310c4783e2f35cfa7a29eac320a34b467c56982"
+    },
+    {
+      "path": "source/upstream/src/themes/uncover/index.ts",
+      "sha256": "36745451730f2f9ed6b98212dc1e70188fa9ff725e22ee03b876306df381c2cf"
+    },
+    {
+      "path": "source/upstream/src/themes/uncover/layouts/image-center.ts",
+      "sha256": "3f543083a93f3d201a57bee93ea909697502dd1e2993dc0b156343cc19a955b2"
+    },
+    {
+      "path": "source/upstream/src/themes/uncover/layouts/image-right.ts",
+      "sha256": "f83ef7d12d1c4276cebea97d7b09cd54823609d602356c4b06e69237d6ac30ad"
+    },
+    {
+      "path": "source/upstream/src/themes/uncover/layouts/list.ts",
+      "sha256": "778dfc650254848f1477d82c3d474d39cb6dbba40374a0a0c7cfc039dfaa8802"
+    },
+    {
+      "path": "source/upstream/src/themes/uncover/layouts/section.ts",
+      "sha256": "61e86864d5f13680358fb705aa0e1ae0c04276fd5820d0d6fc430a2065f484c8"
+    },
+    {
+      "path": "source/upstream/src/themes/uncover/layouts/table.ts",
+      "sha256": "1bc07c96ca0c1cdc91356e0666526b8d4d07f8a15b6f780a8e7cf6287050f2cc"
+    },
+    {
+      "path": "source/upstream/src/themes/uncover/layouts/title.ts",
+      "sha256": "b1c68323f4577d02d4240a6ae8b3b9b5268267707ad3f682b1ccc83dec1e712d"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/add_image_transition.test.ts",
+      "sha256": "b2e50ee463a4171a9c45e0ec7cafd2a12b356e665f3221a65bbd8ae31e0029eb"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/batch_manage_slides.test.ts",
+      "sha256": "6d87f3007df6472d59826f7be314d83e235b364768f2ac1626ae83736b0e1784"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/cjk-roundtrip.test.ts",
+      "sha256": "e1830d64b0228134297b52eff63a638b8bb41f85984f14583175e7c1b308b6cb"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/create_presentation.test.ts",
+      "sha256": "2405c42c7f87e86d6a8cc4426b5de505c2740c8e8f620057aeb1741d7bd7b8c9"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/edge-cases.test.ts",
+      "sha256": "e1b4244ecb295b19c857e6c70dc8bffdad46305c97471ebcdb41321da1e85687"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/export_slide.test.ts",
+      "sha256": "a672e6a7bbf19aef7eddaca44c626fccab965e6c209d950462d225767296067c"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/generate_agenda.test.ts",
+      "sha256": "882813fd2853e3b803aee4be015b1760efd54ed7f8d59065f3bc3659356db30f"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/generate_slide_ids.test.ts",
+      "sha256": "6e333d1b8ffcf425a4f57f80ddf8be5d0c7e61f5719591d807b8f399e6c0e580"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/manage_slide.test.ts",
+      "sha256": "320e6e310ef09fd4726091fb9f6815d4b0dba8759c74f55f531c7fd02a2218b4"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/read_slide.test.ts",
+      "sha256": "3d7d6e3fd538213b73889b137a6347ed8b30f84f2c754cc6ba8696ad37e98f5f"
+    },
+    {
+      "path": "source/upstream/src/tools/__tests__/set_frontmatter.test.ts",
+      "sha256": "b30022b0faf39a2357e6ab5d712a708fa29f8e7962a4831e4e111c6e3e0ae9a2"
+    },
+    {
+      "path": "source/upstream/src/tools/add_image_transition.ts",
+      "sha256": "9b0fc25b498f922c02a5e0f4a2e0ff0e7ec40864f30a2d689c07be27a122da4e"
+    },
+    {
+      "path": "source/upstream/src/tools/batch_manage_slides.ts",
+      "sha256": "ba8cccf93a4a0c959f3d8103d623bfe591a6f888b53736fa04d2d5f1d10cc46a"
+    },
+    {
+      "path": "source/upstream/src/tools/create_presentation.ts",
+      "sha256": "f76fa62f7c64ec5321a6cf61e503d1c819b0ca9014418424197cc8941e25b4b6"
+    },
+    {
+      "path": "source/upstream/src/tools/export_slide.ts",
+      "sha256": "2785880c00d8d2b1d10eea80fe978427dd4556b0c07a08ffea3f0c175e373c85"
+    },
+    {
+      "path": "source/upstream/src/tools/generate_agenda.ts",
+      "sha256": "a6b1e272d921262aa823312e3ca69c5488795da5c71a0a51a61fde965589b0f2"
+    },
+    {
+      "path": "source/upstream/src/tools/generate_slide_ids.ts",
+      "sha256": "50708ca4dea9d0dab45bd2054e95704459a3da6e027d865d6a456e0820121308"
+    },
+    {
+      "path": "source/upstream/src/tools/list_layouts.ts",
+      "sha256": "07e8c8a07c8144bc2dbb4ccbadffbd3e9167b62ac44337beca7764eff24b3e7d"
+    },
+    {
+      "path": "source/upstream/src/tools/list_themes_and_styles.ts",
+      "sha256": "78467a5a92dcc536a6206dcd4079c32faf0be0adb2311e068fb5e8e23109b77e"
+    },
+    {
+      "path": "source/upstream/src/tools/manage_slide.ts",
+      "sha256": "29a8577ff8e18b7dac1a31b59404271cd869072a5eba5695aa116a04d473f8b7"
+    },
+    {
+      "path": "source/upstream/src/tools/read_slide.ts",
+      "sha256": "28aa06f23090c26b659ad614aa686230a5274f9c797db644ca46ccd5b536f859"
+    },
+    {
+      "path": "source/upstream/src/tools/set_frontmatter.ts",
+      "sha256": "e391e9a4da2da0d3a9f9057834f359fee7b31a240d0165da45719d3bb85b4b2c"
+    },
+    {
+      "path": "source/upstream/src/types/common.ts",
+      "sha256": "014981eb912580a57ef2f9b4c30867c983f008e52143297ac0f6b6a3f254ee61"
+    },
+    {
+      "path": "source/upstream/src/utils/__tests__/external-styles.test.ts",
+      "sha256": "96850b3013bef7d48bae1e9343822d138fd6ba1140310c761d9f4061483779ff"
+    },
+    {
+      "path": "source/upstream/src/utils/__tests__/path-validator.test.ts",
+      "sha256": "b2ef3f935d9f657d8197d593bd0a9b6c9c552fec96b2a152ec0782370bbfce5b"
+    },
+    {
+      "path": "source/upstream/src/utils/__tests__/text-length.test.ts",
+      "sha256": "bfffa5636e40b4ce1dae3216eb3e6b88dedc5b2e4913751a02c1aac66dd3af17"
+    },
+    {
+      "path": "source/upstream/src/utils/constants.ts",
+      "sha256": "7c561fb7bbc778be869d6ba56d1231dae3e7076e02b18d879a4831aaa69975ea"
+    },
+    {
+      "path": "source/upstream/src/utils/external-styles.ts",
+      "sha256": "3eb0a2ca254241fc47e182b2201d71204d40b622ad89d4873133ea594b7c21a2"
+    },
+    {
+      "path": "source/upstream/src/utils/frontmatter.ts",
+      "sha256": "b96098144ea40e7716e8d0b8d1bdb06629c67435c4c71e390f309fd0965828f6"
+    },
+    {
+      "path": "source/upstream/src/utils/logger.ts",
+      "sha256": "3356941c92008ca2b1ba05e5c116746cf38da3dce48166aa70bb0bf18ee4da99"
+    },
+    {
+      "path": "source/upstream/src/utils/path-validator.ts",
+      "sha256": "5d912c444a98f754c3b8a8812a7242faa044041a154781ee25c4a134fc6f1886"
+    },
+    {
+      "path": "source/upstream/src/utils/response.ts",
+      "sha256": "8eac0293d4c290bd1f6a9a478f190ea8f563243e13ee4597fcead0606301e2e9"
+    },
+    {
+      "path": "source/upstream/src/utils/slide-id.ts",
+      "sha256": "9e9f39a81d199ed9c887471c293b5f7fca48e1d7719d9355078e9c4c351d4a7c"
+    },
+    {
+      "path": "source/upstream/src/utils/text-length.ts",
+      "sha256": "fff8e4b20f20eb11a791e6385fad91cf4c130e4b64dab2b24307e46829594801"
+    },
+    {
+      "path": "source/upstream/tsconfig.json",
+      "sha256": "ac7cf65816f3423452cfd910fc02bb1717f504c917d8c5fea56f41fe271bb59b"
+    },
+    {
+      "path": "source/windows-export-adapter.diff",
+      "sha256": "a9f19dec4fd2893194c9a5fb4b4fb12df80ead6e3a4221424421521d04c1f237"
+    },
+    {
+      "path": "source/workshop.css",
+      "sha256": "701e21a4ad469ff99b50ab0f6417de2332ac35379f2bd66ee7549735c1d3d2ef"
+    }
+  ]
+}

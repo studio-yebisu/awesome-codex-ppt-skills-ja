@@ -1,7 +1,7 @@
 {
   "catalog_count": 209,
-  "case_count": 64,
-  "slide_count": 387,
+  "case_count": 68,
+  "slide_count": 411,
   "history": {
     "withdrawn_examples": "data/actual-examples.json",
     "included_in_current_counts": false
@@ -11739,11 +11739,79 @@
         }
       ],
       "upstream_commit": "d95ba204c9e98488b86b76ced75765ab4ec5de96",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "slide-wright-showcase",
+          "title": "星を待つ、夜の天文台。",
+          "use_case": "夜の観察イベントを提案する日本語6枚",
+          "repository": "arifszn/slide-wright",
+          "skill_repository": "arifszn/slide-wright",
+          "upstream_commit": "d95ba204c9e98488b86b76ced75765ab4ec5de96",
+          "fork_id": "slide-wright-ja",
+          "page_count": 6,
+          "format": "html",
+          "preview_kind": "html",
+          "preview_canvas": {
+            "width": 1920,
+            "height": 1080
+          },
+          "preview_notice": "独自テーマのWeb資料。HTML/SVG/CSSと発表メモを編集できます。再生にはネット接続が必要です。",
+          "editability": "html_svg",
+          "editable_features": [
+            "html_text",
+            "svg",
+            "css_motion",
+            "speaker_notes"
+          ],
+          "style": "独自Night Orbit / 夜の青黒・cyan・amber / Dela大見出し・円/軌道・紙色2列",
+          "cover": "examples/repositories/slide-wright-showcase/render/slide-01.png",
+          "interior": "examples/repositories/slide-wright-showcase/render/slide-02.png",
+          "preview": "examples/repositories/slide-wright-showcase/night-observatory.html",
+          "artifact_download": "examples/repositories/slide-wright-showcase/night-observatory.html",
+          "source_download": "downloads/slide-wright-example-ja.zip",
+          "fork_download": "downloads/slide-wright-ja.zip",
+          "input": "examples/repositories/slide-wright-showcase/input/BRIEF.md",
+          "input_data": "examples/repositories/slide-wright-showcase/input/MANUSCRIPT.md",
+          "prompt": "examples/repositories/slide-wright-showcase/PROMPT.md",
+          "prompt_text": "# 制作依頼\n\n日本語6枚「星を待つ、夜の天文台。」を、arifszn/slide-wright固定commit `d95ba204c9e98488b86b76ced75765ab4ec5de96`の原典テンプレートとエンジンで制作する。架空の観察イベント、日時/会場未定。天体観測実測や性能/科学データ、実施効果を作らない。\n\n原典の「独自テーマ→実title/content2枚を同じ実ファイルで試作→最初に開く→その2枚を保持して残りをappend」を実施。1920×1080、背景sectionと内部frame、notes、inline CSS、stock themeを使わない契約を守る。CDN5.1.0の原典経路と必要ネット接続を保持する。\n\n夜の青黒、明るいcyan、小さなamber。Dela Gothic Oneの大胆な和文見出し、Zen Kaku Gothic New本文、Space Grotesk英数字。公式の実字体/OFLを同梱しinline化。単一の観測の円/軌道deviceを各頁で変形し、説明用SVGを使う。4枚目は紙色、見る/話すの2列。硬いカード列を反復しない。\n\nCSSの一斉entrance、少数のauto-animate、元engineのページ移動とreduce motionを使う。元engineへsame-origin 0-based yebisu-slide/page bridgeだけを追加して差分に残す。\n\n現在のユーザー指定により内部デザインの判断・進行は承認済み。新たなpreview承認待ちは追加せず、派生変更として記録する。ユーザーの美術承認済みとは称さない。初回主要2枚表示と元engine稼働、必要生成だけを確認し、全6枚詳細検査・独立レビュー・構造監査・ZIP再実行は行わない。\n\n完成HTML、代表2PNG、原稿/依頼、2枚からappendした記録、デザイン決定、原典未変更原本/局所差分、短い日本語SKILL、SOURCE、fonts/OFL、制作ZIPとfork ZIPを完成させる。\n",
+          "provenance": "examples/repositories/slide-wright-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/slide-wright-showcase/QA.json",
+          "guide": "repository.html?repo=arifszn/slide-wright",
+          "titles": [
+            "星を待つ、夜の天文台。",
+            "みんなで、夜を見上げる。",
+            "入口から、星へ。",
+            "見るだけの日も、あっていい。",
+            "待つ時間も、企画の一部。",
+            "今夜の空を、次の話に。"
+          ],
+          "notes": [
+            "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。",
+            "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。",
+            "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。",
+            "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。",
+            "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。",
+            "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。"
+          ],
+          "method": "原典HTML skeleton + 専用テーマ → 同じnight-observatory.htmlの実2枚を初回ブラウザ表示 → その2sectionを保持して4枚append",
+          "sample_notice": "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。",
+          "navigation": "native-runtime-bridge",
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "representative_previews": [
+            "examples/repositories/slide-wright-showcase/render/slide-01.png",
+            "examples/repositories/slide-wright-showcase/render/slide-02.png"
+          ],
+          "case_guide": "examples/repositories/slide-wright-showcase/README.md",
+          "content_revision": "0a7063307c41254b"
+        }
+      ],
+      "derived_skills": [
+        "slide-wright-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "whiteg2030-alt/BWC-XIXI-PPT-HTML",
@@ -12081,27 +12149,156 @@
       "license_checked_at": "2026-10-13T13:35:00.612303+00:00",
       "license_evidence": [
         {
+          "path": "LICENSE",
+          "preserved_path": "source/upstream/LICENSE",
+          "sha256": "4be6e6e57c9a2687c5639660a8a4e77171603a57830734883865d5d0a28c3ec6",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/LICENSE"
+        },
+        {
           "path": "README.md",
-          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/README.md",
-          "bytes": 12788
+          "preserved_path": "source/upstream/README.md",
+          "sha256": "9cfdd685aeffb110df482fa6c7aac0190fad7c39f8988a532a5c78cb904a0c73",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/README.md"
+        },
+        {
+          "path": "README_en.md",
+          "preserved_path": "source/upstream/README_en.md",
+          "sha256": "2d06faa1420caa1b2b368ce151c9a7a9ccbdc03f0f2d2a3626993afcc977a4b0",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/README_en.md"
+        },
+        {
+          "path": "references/design-dna-schema.md",
+          "preserved_path": "source/upstream/references/design-dna-schema.md",
+          "sha256": "c0805752ad8746652e504856813c6c0fe7318e1991d7d0e10beac69394a400f4",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/design-dna-schema.md"
+        },
+        {
+          "path": "references/html-generation-rules.md",
+          "preserved_path": "source/upstream/references/html-generation-rules.md",
+          "sha256": "f7abdf4f7ae133981e4ef4d57ec3a3507d16cfe053a9eb0b992375b9794c63c9",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/html-generation-rules.md"
+        },
+        {
+          "path": "references/image-asset-strategy.md",
+          "preserved_path": "source/upstream/references/image-asset-strategy.md",
+          "sha256": "65932451eee067638bca054a6dd689e4cba2730bf46cbd696ace08e2fc97fb8e",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/image-asset-strategy.md"
+        },
+        {
+          "path": "references/output-contract.md",
+          "preserved_path": "source/upstream/references/output-contract.md",
+          "sha256": "e043d23dd8a3766d7b3a0047cc92cd5efb832f72c78b5baded0ec3abc49b5da7",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/output-contract.md"
+        },
+        {
+          "path": "references/page-spec-contract.md",
+          "preserved_path": "source/upstream/references/page-spec-contract.md",
+          "sha256": "5776d4e80e6a83d92c0dc80a960b5839ca953897102e321daf9f89214d6387fb",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/page-spec-contract.md"
+        },
+        {
+          "path": "references/visual-safety-rules.md",
+          "preserved_path": "source/upstream/references/visual-safety-rules.md",
+          "sha256": "6aa173de2f2a5da560ab2fd76ff39e82ed62719459fd762eaa5c1cc0be3135d5",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/visual-safety-rules.md"
+        },
+        {
+          "path": "references/workflow.md",
+          "preserved_path": "source/upstream/references/workflow.md",
+          "sha256": "13f8a0b1ec48f89d6abbc41e6b86f67d7b849642112e04eef2534543734837e3",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/workflow.md"
+        },
+        {
+          "path": "scripts/ppt-layout-guard.js",
+          "preserved_path": "source/upstream/scripts/ppt-layout-guard.js",
+          "sha256": "663b8c156c72ff94c553241cbb83c18511addc147b7bfb2775cafa915529890d",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/scripts/ppt-layout-guard.js"
         },
         {
           "path": "SKILL.md",
-          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/SKILL.md",
-          "bytes": 39089
-        },
-        {
-          "path": "LICENSE",
-          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/LICENSE",
-          "bytes": 11340
+          "preserved_path": "source/upstream/SKILL.md",
+          "sha256": "ddf06b00932abcc1f2317972565376f385027cf8a52a9b5caeddd1177a5d4dae",
+          "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/SKILL.md"
         }
       ],
       "upstream_commit": "5d1d84cf952f16920d893b6c04bd7cb7cff9d155",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "design-dna-showcase",
+          "title": "町の道具を、借り合う。",
+          "repository": "dakjdakd/PPT-Design-DNA",
+          "skill_repository": "dakjdakd/PPT-Design-DNA",
+          "upstream_commit": "5d1d84cf952f16920d893b6c04bd7cb7cff9d155",
+          "fork_id": "design-dna-ja",
+          "page_count": 6,
+          "format": "html",
+          "preview_kind": "html",
+          "preview_canvas": {
+            "width": 1920,
+            "height": 1080
+          },
+          "style": "実画像抽出DNA × 紙・墨・硬い三原色の幾何",
+          "use_case": "架空の地域道具棚・スタイル抽出と再利用",
+          "preview": "examples/repositories/design-dna-showcase/index.html",
+          "cover": "examples/repositories/design-dna-showcase/render/slide-01.png",
+          "interior": "examples/repositories/design-dna-showcase/render/slide-02.png",
+          "artifact_download": "examples/repositories/design-dna-showcase/index.html",
+          "source_download": "downloads/design-dna-example-ja.zip",
+          "fork_download": "downloads/design-dna-ja.zip",
+          "input": "examples/repositories/design-dna-showcase/input/MANUSCRIPT.md",
+          "input_data": "examples/repositories/design-dna-showcase/input/design-dna.json",
+          "reference": "examples/repositories/design-dna-showcase/input/reference/slide-01.png",
+          "prompt": "examples/repositories/design-dna-showcase/PROMPT.md",
+          "prompt_text": "# 自分の題材へ置き換えて使える依頼文\n\ndakjdakd/PPT-Design-DNA、commit 5d1d84cf952f16920d893b6c04bd7cb7cff9d155の原典SKILLを使い、参考画像からdesign DNAを抽出して日本語の新作6枚「町の道具を、借り合う。」へ適用してください。参考はinput/reference/slide-01.pngです。まず実画像を見て、Mood/Composition/Visual/Content Strategy/Presentationの5層、固定パラメータとsemantic tags、subject firewallを記録してください。画像をスライド内容へ入れず、固有の文章や配置をコピーしません。\n\n紙色・大きな和文・硬いグリッド・赤/紺/黄の幾何を再利用し、台車/机/椅子、棚の担当、借りる/使う/返す、仮の状態表、短い案内へ構図を変えます。架空の運用案で、参加者数・費用・効果・日時・会場を発明せず、安全性の実証を捏造しません。\n\n抽出DNA→tokens→Design Contract→Blueprint→数値layout_box_budgetのPage Specs→原典固定1920×1080 HTMLの順を実行してください。元のscaling式と可視性切替契約を使い、原典Node ppt-layout-guard.jsを実際に実行してP0を解消します。評価限定SDKや汎用スライドrendererへ代替しません。公式固定Zen Kaku/BIZ UDPMincho/Manrope TTFとOFLを保持して単一HTMLへ埋め込みます。\n\n確認は必須guard、主要出力の初回表示とページ送りのみ。独立review、全頁詳細目視、追加採点、全ZIP再実行は不要です。現行の自律制作指示に基づく判断をDNAパネルへ保存し、工程ごとの確認待ちやcanonical profile保存は追加しません。原典未変更原本、局所差分と確認範囲を記録してください。\n\n別の題材へ使う場合は参考画像とその利用条件、input/MANUSCRIPT.md、specsの内容と目的を置き換え、DNAの出所を新しい実画像へ対応させてください。\n",
+          "provenance": "examples/repositories/design-dna-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/design-dna-showcase/QA.json",
+          "guide": "repository.html?repo=dakjdakd/PPT-Design-DNA",
+          "titles": [
+            "町の道具を、借り合う。",
+            "借りる道具は、使い道で選ぶ。",
+            "棚の担当を、三つの役に。",
+            "借りる・使う・返すを、ひと続きに。",
+            "予定と状態を、同じ表で見る。",
+            "まずは、棚の担当へ。"
+          ],
+          "notes": [
+            "架空の道具棚運用案。日時・会場・費用・参加者数は未定。",
+            "自作の道具説明SVG。製品仕様・耐荷重や安全性を示すものではありません。",
+            "受付・点検・相談の運用案。当番人数・具体的担当は未定。",
+            "提案する貸出の流れ。安全性・運用効果を実証した結果ではありません。",
+            "記号・状態は説明用の架空設定。実際の貸出予定や記録ではありません。",
+            "参加者数・費用・日時/会場は未定。安全性・効果は未検証。"
+          ],
+          "sample_notice": "架空の地域の道具棚を提案する資料。参考にした自作の展示案内と行き来し、作風の使い回しを見られます。",
+          "method": "Reference PNG actually viewed → original five-layer Design DNA schema and parameter panel → reusable tokens → Design Contract → Blueprint → numeric Page Specs/layout_box_budget → original fixed1920x1080 stage/scaling contract with local HTML/SVG/navigation → unmodified mandatory Node ppt-layout-guard.js PASS.",
+          "navigation": "native-runtime-bridge",
+          "editability": "html_svg",
+          "editable_features": [
+            "html_text",
+            "svg",
+            "css_motion"
+          ],
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "preview_notice": "参考画像から作風を受け継いだWeb資料。文字・図・配置はJSON/HTML/SVG/CSSから編集できます。",
+          "representative_previews": [
+            "examples/repositories/design-dna-showcase/render/slide-01.png",
+            "examples/repositories/design-dna-showcase/render/slide-02.png"
+          ],
+          "preview_image_notice": "表紙/道具一覧の代表PNG2枚。必須guardPASS、全頁詳細目視は未実施。",
+          "comparison": "repository.html?repo=Akxan%2Fppt-agent-skill&case=ppt-agent-showcase",
+          "comparison_label": "参考にした資料を見る →",
+          "compare_id": "ppt-agent-showcase",
+          "case_guide": "examples/repositories/design-dna-showcase/README.md",
+          "content_revision": "49640e9b8879ca06"
+        }
+      ],
+      "derived_skills": [
+        "design-dna-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "sharptoolbox/consulting-html-ppt",
@@ -12593,11 +12790,75 @@
         }
       ],
       "upstream_commit": "2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "marp-mcp-showcase",
+          "title": "ひとつの服を、もう一度。",
+          "use_case": "衣服お直しワークショップの架空企画6枚",
+          "repository": "masaki39/marp-mcp",
+          "skill_repository": "masaki39/marp-mcp",
+          "upstream_commit": "2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f",
+          "fork_id": "marp-mcp-ja",
+          "page_count": 6,
+          "format": "html",
+          "preview_kind": "html",
+          "preview_notice": "ブラウザーで再生する資料。編集は制作原稿から。PDFは固定レイアウト、PowerPoint版の本文と図は画像です。",
+          "editability": "source_code",
+          "editable_features": [
+            "source"
+          ],
+          "style": "原典minimal / 生成り・森色・土色 / 大明朝・布の色面・行程と役割表",
+          "cover": "examples/repositories/marp-mcp-showcase/render/slide-01.png",
+          "interior": "examples/repositories/marp-mcp-showcase/render/slide-03.png",
+          "preview": "examples/repositories/marp-mcp-showcase/index.html",
+          "artifact_download": "examples/repositories/marp-mcp-showcase/index.html",
+          "pdf_download": "examples/repositories/marp-mcp-showcase/deck.pdf",
+          "pptx_download": "examples/repositories/marp-mcp-showcase/deck.pptx",
+          "source_download": "downloads/marp-mcp-example-ja.zip",
+          "fork_download": "downloads/marp-mcp-ja.zip",
+          "input": "examples/repositories/marp-mcp-showcase/input/BRIEF.md",
+          "input_data": "examples/repositories/marp-mcp-showcase/input/content.json",
+          "prompt": "examples/repositories/marp-mcp-showcase/PROMPT.md",
+          "prompt_text": "# 制作依頼\n\n日本語6枚「ひとつの服を、もう一度。」を制作する。架空の衣服お直しワークショップ企画。開催・効果・売上の実績はない。具体的修理技法の手順より、持ち物・当日の行程・役割・持ち帰るものを短い図解と表で示す。\n\nmasaki39/marp-mcpの固定commit `2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f`、原典skills/marp/SKILL.mdと実MCP stdio tools/call、固有minimalレイアウトを使う。巨大で短い和文見出し、布を思わせる色面、明暗、余白を組み、同じカード列を反復しない。Shippori Minchoの見出し、BIZ UDPGothicの本文、Manropeの番号・時間を役割別に使う。公式の実TTFとOFLを同梱する。\n\n原典MCP生成・必要build・主要完成物の初回表示のみ確認。全頁詳細目視、独立レビュー、構造監査、ZIP再実行は追加しない。artifact-toolを使わず、原典MCPのexport_slideからHTML・PDFを出力し、同じ原典経路で画像主体PPTXも追加する。0-basedで同一originのyebisu-slide/yebisu-page bridgeを小さなHTML差分として残す。\n\n入力・原稿・MCP操作ログ・再生成コード・未変更原典と局所差分・許諾・短い日本語SKILLとSOURCE・制作ZIPとfork ZIPを完成させる。\n",
+          "provenance": "examples/repositories/marp-mcp-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/marp-mcp-showcase/QA.json",
+          "guide": "repository.html?repo=masaki39/marp-mcp",
+          "titles": [
+            "ひとつの服を、もう一度。",
+            "一着と、ひとつの気がかり。",
+            "見つけて、試して、記録する。",
+            "役割を、先に分けておく。",
+            "持ち帰るのは、この三つ。",
+            "直せたところも、次の一手も。"
+          ],
+          "notes": [
+            "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
+            "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
+            "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
+            "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
+            "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
+            "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。"
+          ],
+          "method": "実MCP stdio JSON-RPC tools/call → 原典minimalの構造化templates → 原典export_slide → Marp CLI4.4.0 HTML/PDF/画像主体PPTX",
+          "sample_notice": "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
+          "pages": [
+            "examples/repositories/marp-mcp-showcase/render/slide-01.png",
+            "examples/repositories/marp-mcp-showcase/render/slide-02.png",
+            "examples/repositories/marp-mcp-showcase/render/slide-03.png",
+            "examples/repositories/marp-mcp-showcase/render/slide-04.png",
+            "examples/repositories/marp-mcp-showcase/render/slide-05.png",
+            "examples/repositories/marp-mcp-showcase/render/slide-06.png"
+          ],
+          "case_guide": "examples/repositories/marp-mcp-showcase/README.md",
+          "content_revision": "e10b4cbf1be89869"
+        }
+      ],
+      "derived_skills": [
+        "marp-mcp-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "young920/gz-ppt-skill",
@@ -12862,27 +13123,110 @@
       "license_checked_at": "2026-10-13T13:35:14.512010+00:00",
       "license_evidence": [
         {
-          "path": "README.md",
-          "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/README.md",
-          "bytes": 4369
+          "path": "skill/SKILL.md",
+          "preserved_path": "source/upstream/skill/SKILL.md",
+          "sha256": "6f27f51712f13f5b57fdec0e0f30ac3c185b1438102a68df7e8bb335b1648ce1",
+          "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/skill/SKILL.md"
         },
         {
-          "path": "skill/SKILL.md",
-          "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/skill/SKILL.md",
-          "bytes": 11514
+          "path": "style/sketch-notes-base.css",
+          "preserved_path": "source/upstream/style/sketch-notes-base.css",
+          "sha256": "36d7cc91d4b9b0b900665f00cad6402e35e9427a2696debd29b7e2ede065a010",
+          "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/style/sketch-notes-base.css"
+        },
+        {
+          "path": "style/STYLE_GUIDE.md",
+          "preserved_path": "source/upstream/style/STYLE_GUIDE.md",
+          "sha256": "808f17260ff7163d780faa4c7a41fd02d2ce19a46f2faf298bc9742652187b40",
+          "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/style/STYLE_GUIDE.md"
+        },
+        {
+          "path": "demo/demo-index.html",
+          "preserved_path": "source/upstream/demo/demo-index.html",
+          "sha256": "adb9a37c2a73daff8cb79e093c632c192e677bcea00a3c5b9cf077e9af35e02c",
+          "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/demo/demo-index.html"
         },
         {
           "path": "LICENSE",
-          "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/LICENSE",
-          "bytes": 1071
+          "preserved_path": "source/upstream/LICENSE",
+          "sha256": "e1e7ac99ceea4bf7c6126649a54e75d971283197e6ad8562fe9279888714db9e",
+          "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/LICENSE"
         }
       ],
       "upstream_commit": "0729098c28a2105b3e2f6225b3afe125e3959fb6",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "sketch-note-showcase",
+          "title": "文字のかたちを、観察する。",
+          "repository": "Watermelon4000/sketch-note-ppt",
+          "skill_repository": "Watermelon4000/sketch-note-ppt",
+          "upstream_commit": "0729098c28a2105b3e2f6225b3afe125e3959fb6",
+          "fork_id": "sketch-note-ja",
+          "page_count": 6,
+          "format": "html",
+          "preview_kind": "html",
+          "preview_canvas": {
+            "width": 1600,
+            "height": 900
+          },
+          "style": "原典Sketch Notes × 和文の字形観察",
+          "use_case": "文字・太さ・余白・改行を観察する教材",
+          "preview": "examples/repositories/sketch-note-showcase/index.html",
+          "cover": "examples/repositories/sketch-note-showcase/render/slide-01.png",
+          "interior": "examples/repositories/sketch-note-showcase/render/slide-02.png",
+          "artifact_download": "examples/repositories/sketch-note-showcase/index.html",
+          "source_download": "downloads/sketch-note-example-ja.zip",
+          "fork_download": "downloads/sketch-note-ja.zip",
+          "input": "examples/repositories/sketch-note-showcase/input/MANUSCRIPT.md",
+          "prompt": "examples/repositories/sketch-note-showcase/PROMPT.md",
+          "prompt_text": "# この作例を再制作する依頼文\n\nWatermelon4000/sketch-note-pptの固定commit 0729098c28a2105b3e2f6225b3afe125e3959fb6を使い、添付の日本語原稿「文字のかたちを、観察する。」を6枚の動くHTMLへ組んでください。読者は和文スライド初心者です。\n\n原典skill/SKILL.mdのsketch-notes authoring route、style/sketch-notes-base.css、demoのgo() controller、revealの順番を実際に使ってください。紙の温度、大きい和文と小さなメモ、手描きSVG線・下線・矢印を使います。全頁をカード格子にしないで、字形比較、太さ比較、文字周囲の余白、意味で区切る改行、声に合わせる分岐へ構成を変えます。\n\n公式固定配布のZen Maru Gothic、BIZ UDPGothic、Manropeを役割別に用い、TTF/OFLを保持して単一HTMLへ字体を埋め込んでください。OS字体は抽出しません。効果・読了率・可読性の実測は発明せず、自作の観察教材・選択案として説明します。AI画像は原典の必須工程ではないため、手描きSVGで成立させます。\n\n原典CSS/JS/条件の未変更原本と、和文対応・same-origin yebisu-slide/yebisu-page adapterの局所差分を保存します。PPTX生成とは表示せず、編集対象をHTML/SVG/CSSと明示します。生成成功、主な出力の初回表示とページ送りのみ確認し、独立レビュー・全頁詳細目視・構造監査・ZIP再実行は不要です。\n\n自分の題材で使う場合は、input/MANUSCRIPT.mdの6主題と語句、書体の選択目的を置き換えてください。\n",
+          "provenance": "examples/repositories/sketch-note-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/sketch-note-showcase/QA.json",
+          "guide": "repository.html?repo=Watermelon4000/sketch-note-ppt",
+          "titles": [
+            "文字のかたちを、観察する。",
+            "丸さは、線の終わりに出る。",
+            "太さを変えると、白いすき間も変わる。",
+            "文字のまわりにも、居場所を。",
+            "改行は、意味の切れ目で。",
+            "伝える声に、書体を合わせる。"
+          ],
+          "notes": [
+            "自作の観察教材。効果・読了率・可読性の実測はありません。",
+            "公式Zen Maru/BIZの実際の字を同じサイズで比較。印象の正解を決める比較ではありません。",
+            "同じBIZ UDPGothicのRegular/Bold。文字の内側にも目を向けます。",
+            "同じ文字サイズで、囲みまでの距離を変えた作例。",
+            "一文を、意味のまとまりを保つ位置で改行する比較。",
+            "書体と声の対応は教材の選択案。効果を実測した結果ではありません。"
+          ],
+          "sample_notice": "自作の和文観察教材。書体と声の対応は選択案で、実測効果はありません。",
+          "method": "Original SKILL sketch-notes direct HTML authoring route: unmodified sketch-notes-base.css + original demo go() controller + original SKILL reveal CSS; authored Japanese text and inline SVG; local font/typography/motion override; Python stdlib single-file packaging.",
+          "navigation": "native-runtime-bridge",
+          "editability": "html_svg",
+          "editable_features": [
+            "html_text",
+            "svg",
+            "css_motion"
+          ],
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "preview_notice": "手描きノートのWeb教材。文字・線・配置はHTML/SVG/CSSから編集できます。",
+          "representative_previews": [
+            "examples/repositories/sketch-note-showcase/render/slide-01.png",
+            "examples/repositories/sketch-note-showcase/render/slide-02.png"
+          ],
+          "preview_image_notice": "表紙と字体比較の代表PNG2枚。全頁詳細目視は未実施。",
+          "input_data": "examples/repositories/sketch-note-showcase/input/PLAN.md",
+          "case_guide": "examples/repositories/sketch-note-showcase/README.md",
+          "content_revision": "9d4b28502a35d2d2"
+        }
+      ],
+      "derived_skills": [
+        "sketch-note-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "alingowangxr/guizang-ppt-skill",

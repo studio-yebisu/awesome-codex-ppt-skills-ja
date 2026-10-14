@@ -1,0 +1,653 @@
+# Design Contract, Blueprint, and Page Spec
+
+The deck should not be generated from one loose prompt. Use structured intermediate artifacts.
+
+## Design Contract
+
+The Design Contract adapts a reusable Design DNA Profile or adapter to one concrete deck.
+
+Example:
+
+```json
+{
+  "design_contract": {
+    "base_profile": "Apple Minimal",
+    "adapter": "Apple Academic",
+    "scenario": "math_modeling_defense",
+    "selected_strategy": "cell_division",
+    "preserve": [
+      "minimal mood",
+      "clean typography",
+      "single-focus pages",
+      "calm premium rhythm"
+    ],
+    "adapt": {
+      "information_density": { "from": 30, "to": 55 },
+      "chart_weight": { "from": 35, "to": 75 },
+      "formula_friendliness": { "from": 20, "to": 65 },
+      "page_count_multiplier": 1.6
+    },
+    "risk_notes": [
+      "High whitespace conflicts with formula-heavy content.",
+      "Charts must be larger than the base style would normally allow."
+    ],
+    "negative_constraints": [
+      "Do not shrink formulas below readable size.",
+      "Do not preserve whitespace by hiding required evidence.",
+      "Do not create decorative title-only pages for technical steps.",
+      "Do not recreate identifiable subjects from style reference images.",
+      "Do not draw animals, people, mascots, characters, products, or object silhouettes from style references."
+    ]
+  }
+}
+```
+
+## PPT Blueprint
+
+The blueprint plans the story and page sequence.
+
+```json
+{
+  "ppt_blueprint": {
+    "title": "University Math Modeling Defense",
+    "goal": "defense",
+    "audience": "teachers",
+    "page_count_target": 12,
+    "density_mode": "balanced",
+    "narrative_style": "academic_storytelling",
+    "sections": [
+      {
+        "name": "Opening and Problem",
+        "purpose": "Establish the research question and value",
+        "pages": [1, 2]
+      },
+      {
+        "name": "Model and Method",
+        "purpose": "Explain modeling logic and assumptions",
+        "pages": [3, 4, 5]
+      },
+      {
+        "name": "Results and Validation",
+        "purpose": "Show results, charts, and reliability",
+        "pages": [6, 7, 8, 9]
+      }
+    ]
+  }
+}
+```
+
+## Page Spec
+
+The Page Spec is the true execution instruction for each slide.
+
+Required fields:
+
+- page_number
+- page_type
+- title
+- purpose
+- core_message
+- layout
+- zones
+- content_constraints
+- visual_constraints
+- required_elements
+- forbidden_elements
+- motion_recipe
+- quality_targets
+- safe_zones
+- zone_budget
+- layout_capacity
+- visual_slot_policy
+- image_strategy
+- visual_subject_policy
+- text_surface_pairs
+- surface_pair_plan
+- typography_spacing
+- text_stack_plan
+- headline_break_plan
+- mechanical_layout_preflight
+- z_index_plan
+- collision_exclusions
+- mechanical_failure_fixes
+- speaker_note
+
+Example:
+
+```json
+{
+  "page_spec": {
+    "page_number": 3,
+    "page_type": "method_flow",
+    "title": "From Raw Data to Explainable Variables",
+    "purpose": "Help judges understand the modeling pipeline quickly.",
+    "core_message": "The model turns raw data into three interpretable variables before prediction.",
+    "layout": {
+      "archetype": "center_flow_with_side_notes",
+      "grid": "12_col",
+      "safe_zones": {
+        "content": { "x": 96, "y": 80, "w": 1728, "h": 900 },
+        "nav": { "x": 1680, "y": 980, "w": 220, "h": 70 },
+        "no_text": []
+      },
+      "zones": [
+        {
+          "id": "title",
+          "x": 110,
+          "y": 90,
+          "w": 980,
+          "h": 120,
+          "content_type": "text",
+          "hierarchy": "primary"
+        },
+        {
+          "id": "flow_diagram",
+          "x": 180,
+          "y": 280,
+          "w": 1180,
+          "h": 420,
+          "content_type": "diagram",
+          "hierarchy": "primary"
+        },
+        {
+          "id": "explanation",
+          "x": 1400,
+          "y": 300,
+          "w": 360,
+          "h": 390,
+          "content_type": "short_text",
+          "hierarchy": "secondary"
+        }
+      ]
+    },
+    "content_constraints": {
+      "max_words": 48,
+      "max_bullets": 3,
+      "required_elements": ["flow_diagram", "three_step_explanation"],
+      "forbidden_elements": ["long_paragraph", "dense_table"]
+    },
+    "visual_constraints": {
+      "background": "light",
+      "accent_usage": "single_accent_for_flow_nodes",
+      "image_or_diagram_weight": 70,
+      "whitespace": 65,
+      "minimum_font_size": 26,
+      "zone_budget": {
+        "principle": "dynamic safety declaration, not a reusable template",
+        "title_zone": { "x": 110, "y": 90, "w": 980, "h": 140 },
+        "body_zone": { "x": 1400, "y": 300, "w": 360, "h": 390 },
+        "visual_zone": { "x": 180, "y": 280, "w": 1180, "h": 420 },
+        "card_zone": null,
+        "footer_zone": { "x": 96, "y": 984, "w": 700, "h": 48 },
+        "nav_safe_zone": { "x": 1680, "y": 980, "w": 220, "h": 70 },
+        "decoration_zone": null,
+        "no_text_zones": [],
+        "layout_is_unique_to_slide": true
+      },
+      "layout_capacity": {
+        "archetype": "process_flow",
+        "capacity_status": "pass",
+        "max_primary_blocks": 3,
+        "actual_primary_blocks": 2,
+        "if_exceeded": "split_slide_or_switch_archetype"
+      },
+      "text_surface_pairs": [
+        {
+          "zone": "title",
+          "text": "var(--ink)",
+          "surface": "var(--bg)",
+          "contrast_target": "4.5:1"
+        },
+        {
+          "zone": "explanation",
+          "text": "var(--surface-light-ink)",
+          "surface": "var(--surface-light)",
+          "contrast_target": "4.5:1"
+        }
+      ],
+      "surface_pair_plan": [
+        {
+          "zone": "title",
+          "surface_token": "--bg",
+          "ink_token": "--ink",
+          "inheritance_allowed": false
+        },
+        {
+          "zone": "explanation",
+          "surface_token": "--surface-light",
+          "ink_token": "--surface-light-ink",
+          "inheritance_allowed": false
+        }
+      ],
+      "typography_spacing": {
+        "title_stack": {
+          "zone": "title",
+          "font_size": 96,
+          "line_height": 1.08,
+          "visual_effect_pad": 0,
+          "gap_after": 44,
+          "min_clearance_to_next_block": 36,
+          "cjk_or_mixed_script": true,
+          "has_stroke_shadow_or_offset": false
+        },
+        "subtitle_or_lead": {
+          "font_size": 34,
+          "line_height": 1.32,
+          "gap_after": 24
+        }
+      },
+      "text_stack_plan": {
+        "display_title": {
+          "reserved_zone_height": 140,
+          "line_count": 1,
+          "cjk_or_mixed_script": false,
+          "descender_or_effect_clearance": 20,
+          "next_block_clearance": 52
+        },
+        "fallback_if_too_tall": "split_title_or_reduce_font_5_to_12_percent"
+      },
+      "visual_slot_policy": {
+        "image_or_visual_role": "diagram",
+        "approved_content_image_required": false,
+        "empty_slot_fallback": "css_svg_diagram",
+        "forbid_placeholder_box": true
+      },
+      "visual_subject_policy": {
+        "uses_reference_subject": false,
+        "subject_replication_allowed": false,
+        "forbidden_reference_subjects": [
+          "cat",
+          "fish",
+          "dinosaur",
+          "person",
+          "mascot",
+          "specific product object"
+        ],
+        "visual_surrogate_strategy": "diagram",
+        "forbid_subject_silhouette": true,
+        "forbid_subject_parts": true
+      },
+      "image_strategy": {
+        "intent": "fallback_visual",
+        "slot_type": null,
+        "asset_id": null,
+        "slot_id": null,
+        "semantic_role": "explain_workflow",
+        "ratio": null,
+        "fit": null,
+        "placement": "center",
+        "caption": null,
+        "text_overlay_allowed": false,
+        "fallback_if_missing": "css_svg_diagram",
+        "visible_placeholder": false
+      },
+      "mechanical_layout_preflight": {
+        "stage": { "w": 1920, "h": 1080 },
+        "safe_margin": { "top": 80, "right": 96, "bottom": 96, "left": 96 },
+        "nav_safe_zone_reserved": true,
+        "text_fit_estimates": [
+          {
+            "zone": "title",
+            "text": "From Raw Data to Explainable Variables",
+            "font_size": 96,
+            "line_height": 1.08,
+            "estimated_lines": 1,
+            "visual_effect_pad": 0,
+            "required_height": 124,
+            "allocated_height": 140,
+            "fit": "pass"
+          }
+        ],
+        "collision_pairs_checked": [
+          ["title_zone", "visual_zone"],
+          ["body_zone", "visual_zone"],
+          ["footer_zone", "nav_safe_zone"]
+        ],
+        "if_fail": "recompose_or_split_slide"
+      },
+      "z_index_plan": {
+        "background": 0,
+        "decoration": 2,
+        "media_or_diagram": 4,
+        "content": 10,
+        "navigation": 90
+      },
+      "collision_exclusions": [
+        "no primary text inside nav zone",
+        "no decorative object above content layer"
+      ],
+      "mechanical_failure_fixes": [
+        {
+          "failure": "card_text_unreadable",
+          "fix": "apply_valid_surface_pair"
+        },
+        {
+          "failure": "title_card_collision",
+          "fix": "increase_title_zone_or_split_slide"
+        }
+      ]
+    },
+    "motion_recipe": {
+      "type": "diagram_build",
+      "intensity": 15,
+      "final_state_readable": true
+    },
+    "quality_targets": {
+      "design_dna_alignment": 85,
+      "readability": 90,
+      "density_fit": 85
+    },
+    "speaker_note": "Explain the process; leave formula details for the next slide."
+  }
+}
+```
+
+## Layout Archetypes
+
+Use layout archetypes instead of rigid templates.
+
+Current archetype library:
+
+- cover_hero
+- section_divider
+- single_big_claim
+- split_text_image
+- data_hero
+- three_point_argument
+- process_flow
+- timeline
+- comparison
+- quote
+- image_grid
+- chart_explanation
+- formula_walkthrough
+- closing_takeaway
+
+An archetype is reshaped by Design DNA:
+
+```text
+Apple Minimal + data_hero
+-> large number, high whitespace, one short explanation
+
+Cyber Editorial + data_hero
+-> dark background, one neon accent, grid lines, sharper contrast
+
+Academic + data_hero
+-> bigger chart, clearer labels, lower whitespace, stronger evidence note
+```
+
+## Density Gate
+
+Before rendering each slide, compare content amount with the profile capacity.
+
+If too dense, choose or ask:
+
+- compress copy
+- split slide
+- reduce whitespace
+- increase page count
+- switch layout archetype
+
+Never silently shrink text below the minimum readable size.
+
+## HTML Renderer Contract
+
+For HTML decks, each Page Spec should compile to a fixed-stage slide:
+
+```html
+<section class="slide" data-page="03" data-layout="process-flow" data-density="balanced">
+```
+
+The renderer must:
+
+- use the profile or adapter tokens
+- respect the selected density strategy
+- include a semantic motion recipe per slide
+- reserve safe areas for navigation
+- keep internal slide dimensions at 1920x1080
+- prevent scrollbars
+- prevent reference images from becoming content assets by accident
+- prevent fake image placeholders and repeated meaningless side visuals
+- prevent late image insertion after the blueprint has been planned
+- enforce valid text/surface pairs
+- enforce explicit surface/ink tokens for every readable component
+- enforce per-slide dynamic zone budgets without turning them into repeated templates
+- enforce layout capacity before HTML is written
+- enforce typography spacing and title-stack clearance
+- enforce z-index layer order and collision exclusions
+
+See [HTML Generation Rules](html-generation-rules.md).
+
+## Renderer Instructions
+
+LLM decides design and content. Renderer executes deterministically.
+
+Renderer should enforce:
+
+- fixed 16:9 canvas
+- safe margins
+- type scale
+- design tokens
+- max blocks per slide
+- min font size
+- no overlap
+- no overflow
+- allowed layout archetypes
+- dynamic zone budget
+- layout capacity gate
+- no empty image placeholders
+- no unreadable text/surface pairs
+- no inherited card/stat/badge text color without explicit surface/ink pair
+- no title/subtitle/body text squeezing caused by unsafe line-height or missing vertical clearance
+- no decorative/media layer covering text
+
+## Visual Safety Fields
+
+Every real Page Spec must include the following fields. If any field cannot be filled, revise the Page Spec before rendering.
+
+```json
+{
+  "visual_safety": {
+    "zone_budget": {
+      "principle": "dynamic per-slide safety declaration, not a template",
+      "title_zone": { "x": 96, "y": 80, "w": 1120, "h": 220 },
+      "body_zone": { "x": 96, "y": 340, "w": 820, "h": 420 },
+      "visual_zone": { "x": 1040, "y": 160, "w": 760, "h": 620 },
+      "card_zone": { "x": 96, "y": 760, "w": 1480, "h": 150 },
+      "footer_zone": { "x": 96, "y": 980, "w": 720, "h": 48 },
+      "nav_safe_zone": { "x": 1680, "y": 980, "w": 220, "h": 70 },
+      "decoration_zone": { "x": 0, "y": 0, "w": 1920, "h": 1080 },
+      "no_text_zones": [
+        { "reason": "hero visual", "x": 1120, "y": 120, "w": 700, "h": 760 }
+      ],
+      "layout_is_unique_to_slide": true
+    },
+    "layout_capacity": {
+      "archetype": "single_big_claim | cover_hero | three_point_argument | stat_grid | split_text_visual | closing_takeaway | other",
+      "capacity_status": "pass | revise_before_render",
+      "actual_primary_blocks": 1,
+      "max_primary_blocks": 3,
+      "revision_if_failed": "compress_copy | split_slide | switch_archetype | reduce_card_count | lower_decoration"
+    },
+    "safe_zones": {
+      "content": { "x": 96, "y": 80, "w": 1728, "h": 900 },
+      "nav": { "x": 1680, "y": 980, "w": 220, "h": 70 },
+      "no_text": [
+        { "reason": "hero visual", "x": 1120, "y": 120, "w": 700, "h": 760 }
+      ]
+    },
+    "visual_slot_policy": {
+      "image_or_visual_role": "typographic_visual | diagram | approved_content_image | material_object | whitespace",
+      "approved_content_image_required": false,
+      "empty_slot_fallback": "typography | css_svg_diagram | material_object | whitespace",
+      "forbid_placeholder_box": true
+    },
+    "image_strategy": {
+      "intent": "none | approved_content_image | replaceable_slot | generated_image | fallback_visual",
+      "slot_type": "hero_bleed | object_focus | screenshot_frame | evidence_card | image_grid | editorial_cutout | background_texture | side_visual | inline_thumbnail | diagram_image | null",
+      "asset_id": "approved asset id or null",
+      "slot_id": "replaceable slot id or null",
+      "semantic_role": "evidence | atmosphere | identity | explanation | feature | proof | null",
+      "ratio": "16:9 | 16:10 | 4:3 | 1:1 | 3:2 | null",
+      "fit": "cover | contain | frame | null",
+      "placement": "specific stage zone or null",
+      "caption": "caption text or null",
+      "text_overlay_allowed": false,
+      "fallback_if_missing": "typography | css_svg_diagram | material_object | whitespace | css_wireframe | none",
+      "visible_placeholder": false
+    },
+    "text_surface_pairs": [
+      {
+        "zone": "card_1",
+        "surface": "var(--surface-muted)",
+        "text": "var(--surface-muted-ink)",
+        "contrast_target": "4.5:1"
+      }
+    ],
+    "surface_pair_plan": [
+      {
+        "zone": "card_1",
+        "surface_token": "--surface-muted",
+        "ink_token": "--surface-muted-ink",
+        "inheritance_allowed": false,
+        "reason": "light surfaces use dark ink"
+      }
+    ],
+    "typography_spacing": {
+      "display_title": {
+        "font_size": 144,
+        "line_height": 1.06,
+        "visual_effect_pad": 24,
+        "gap_after": 56,
+        "min_clearance_to_next_block": 40,
+        "cjk_or_mixed_script": true,
+        "has_stroke_shadow_or_offset": true
+      },
+      "lead": {
+        "font_size": 36,
+        "line_height": 1.36,
+        "gap_after": 24
+      }
+    },
+    "text_stack_plan": {
+      "display_title": {
+        "reserved_zone_height": 260,
+        "line_count": 2,
+        "line_height": 1.08,
+        "letter_spacing": 0,
+        "cjk_or_mixed_script": true,
+        "descender_or_effect_clearance": 24,
+        "next_block_clearance": 56
+      },
+      "fallback_if_too_tall": "split_title_lines | reduce_font_5_to_12_percent | move_cards | split_slide"
+    },
+    "headline_break_plan": {
+      "required_for_display_title": true,
+      "text": "workflow 为什么比提示词重要",
+      "planned_lines": ["workflow", "为什么比提示词", "更重要"],
+      "script": "mixed_cjk_latin",
+      "orphan_line_check": "pass",
+      "min_last_line_visible_chars": 4,
+      "forbidden_breaks": ["single CJK character final line", "1-2 character CJK fragment", "browser-only auto wrap"],
+      "fallback_if_fail": "rewrite_title | reduce_font_5_to_12_percent | widen_title_zone | recompose | split_slide"
+    },
+    "layout_box_budget": {
+      "stage": { "w": 1920, "h": 1080 },
+      "zones": [
+        {
+          "id": "title",
+          "role": "display_title",
+          "x": 96,
+          "y": 80,
+          "w": 1120,
+          "allocated_h": 260,
+          "text": "example title",
+          "font_family_role": "display_serif | display_sans | cjk_display | body",
+          "font_size": 120,
+          "line_height": 1.06,
+          "estimated_lines": 2,
+          "glyph_pad_top": 16,
+          "glyph_pad_bottom": 28,
+          "visual_effect_pad": 0,
+          "required_h": 299,
+          "fit": "pass | fail"
+        }
+      ],
+      "derived_zone_rules": [
+        "body_zone.y >= title_zone.y + title_zone.required_h + 44",
+        "card_zone.y >= max(planned_card_y, body_zone.y + body_zone.required_h + 56)",
+        "footer_zone.y + footer_zone.h <= nav_safe_zone.y - 24"
+      ],
+      "collision_pairs": [
+        ["title_zone", "body_zone"],
+        ["title_zone", "card_zone"],
+        ["body_zone", "card_zone"],
+        ["card_zone", "nav_safe_zone"]
+      ],
+      "if_fail": "lower_title_size_or_move_next_zone_or_split_slide"
+    },
+    "z_index_plan": {
+      "background": 0,
+      "atmosphere": 1,
+      "decoration": 2,
+      "media": 4,
+      "content": 10,
+      "chrome": 80,
+      "navigation": 90
+    },
+    "collision_exclusions": [
+      "primary text cannot intersect no_text zones",
+      "cards cannot intersect nav zone",
+      "decoration cannot sit above content"
+    ],
+    "mechanical_failure_fixes": [
+      "pale cards must use dark ink",
+      "title/card collisions require zone revision",
+      "decorations crossing body text must move or lower opacity",
+      "fake visual slots must become diagrams, typography, or whitespace"
+    ]
+  }
+}
+```
+
+See [Visual Safety Rules](visual-safety-rules.md).
+
+For detailed image field semantics, read [Image Asset Strategy](image-asset-strategy.md).
+
+## Visual Subject Policy
+
+Use `visual_subject_policy` whenever the active Design Profile came from reference images or when a slide requests a fallback visual.
+
+Rules:
+
+- `uses_reference_subject` defaults to `false`.
+- `subject_replication_allowed` defaults to `false` and can become true only when the user explicitly marks an image as slide content or explicitly requests a new subject image.
+- Style references cannot become CSS/SVG/HTML drawings, icons, mascots, generated-image prompts, or decorative motifs that depict the reference subject.
+- Forbidden reference subjects include people, animals, characters, mascots, specific products, buildings, vehicles, toys, recognizable objects, and subject parts such as eyes, ears, tails, fins, horns, wings, paws, posture, clothing, fur, scales, and silhouettes.
+- If no approved content image exists, use one of these `visual_surrogate_strategy` values: `abstract_material_shape`, `typography`, `diagram`, `texture`, `pattern`, or `whitespace`.
+- Abstract material shapes can include paper strips, tape, labels, slices, grid blocks, hand-drawn lines, halftone fields, crop marks, and geometric modules. They cannot include animal/person/character/object silhouettes or parts from the reference.
+
+## Mechanical Layout Preflight
+
+Use `mechanical_layout_preflight` before converting Page Specs into HTML. It is a blocking gate, not a handoff note.
+
+Rules:
+
+- Estimate text boxes before writing source: available width, expected line count, script type, font size, line-height, and visual-effect padding.
+- Every slide with more than one major element must include `layout_box_budget` inside `visual_safety` or beside `mechanical_layout_preflight`. This is a numeric source-level gate, not a visual note.
+- `layout_box_budget.zones[].required_h` must be calculated as `estimated_lines * font_size * line_height + glyph_pad_top + glyph_pad_bottom + visual_effect_pad`.
+- Large display titles, serif headings, and headings containing English descenders such as `g`, `y`, `p`, `q`, and `j` must add `glyph_pad_bottom` before placing the next content zone.
+- Any later content zone must start after the previous readable zone's `y + required_h + min_gap`. Do not place cards, body text, dividers, captions, or footer content using fixed `top` values that ignore the previous zone's required height.
+- Prefer chained zone rules such as `body_zone.y = title_zone.bottom + 44` and `card_zone.y = max(planned_card_y, body_zone.bottom + 56)` over independent absolute `top` guesses.
+- `title_zone`, `body_zone`, `card_zone`, `footer_zone`, and `nav_safe_zone` are content layers and must not overlap. DOM order must not be used to let a later card or panel cover earlier text.
+- Do not fix content collisions by raising `z-index`; revise the zone budget, reduce copy, lower title size by 5-12%, change layout, or split the slide.
+- CJK display text must use safe line-height and `letter-spacing: 0`; do not import tight Latin poster settings into Chinese headings.
+- Display titles with CJK or mixed CJK/Latin text must include `headline_break_plan`. A single Chinese character or 1-2 character fragment on the final title line is a failed plan.
+- Do not rely on browser auto-wrap, `text-wrap: balance`, `word-break: break-all`, or `overflow-wrap: anywhere` for large CJK/mixed titles. Planned semantic lines must be present in the Page Spec and reflected in the HTML.
+- Stroked, shadowed, glowing, or duplicate-offset titles must reserve extra visible height before cards, body text, dividers, captions, or navigation are placed.
+- Card capacity includes padding and internal label/badge height.
+- Navigation safe zone is reserved before footer, captions, and bottom cards are placed.
+- If any estimate or collision check fails, revise the Page Spec before HTML generation by recomposing, reducing copy, reducing title size by 5-12%, changing archetype, or splitting the slide.
+- Do not use `overflow: hidden` on text containers to mask capacity failure. It is allowed only for decorative crop containers.
+- The generated HTML must preserve enough zone information for the static guard: major content elements use `data-zone`, and the deck source or manifest keeps `layout_box_budget` for multi-element slides. A slide with multiple text elements and no `data-zone` markers has not been checked.
+- After HTML generation, `scripts/ppt-layout-guard.js` must be able to verify the Page Spec assumptions from source when Node is available. Any P0 guard failure means the Page Spec was wrong or the HTML drifted from it; revise and rerun.

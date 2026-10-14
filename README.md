@@ -6,10 +6,11 @@ GitHubの原典スキルを実際に使い、魅力ある日本語資料・短�
 
 ## 現在のアトリエ
 
-- 厳選49スキルと、日本語の作例49冊・286枚。
-- Sol 6.1の2並列で、原典PptxGenJSの引き継ぎ資料6枚と、既存PPTXからのモーションHTML5枚を制作。別制作のSVG・教材化・文化イベント資料3冊21枚も接続。
+- 厳選53スキルと、日本語の作例53冊・310枚。
+- Sol 6.1の2並列で、MCP操作、手描きノート、独自テーマ、参考画像の作風抽出から4冊24枚を追加制作。
 - 各派生スキル固有の本文を直接Markdown取得。サイトで本文を開いてコピーでき、原典・テンプレート・入力の一式ZIPも取得。
 - 作例の詳細で、自分の原稿・読み手・希望枚数・書体を入れ、そのスキル向けの依頼文を組み立ててコピー。実際の制作依頼も別に読めます。
+- 完成HTML・PDF・PPTXは資料の題名でダウンロード。作風を参考にした資料も、フロート内で行き来できます。
 - OSS書体9ファミリー・16ファイルと、7作風の実フォント見本・AI向け指示コピー。Noto Sans CJK JPの公式OTF/OFLを追加し、研究作例から同じ書体を直接取得。
 
 原典のSKILL、固有テンプレート・controller・生成器を使います。日本語向けの改良と実施範囲は各作例に記載。主な出力が開く範囲の軽い確認を行い、制作を中心に進めています。
@@ -34,13 +35,15 @@ python tools/build_atelier_site.py
 
 [制作方針](docs/PROJECT.md) · [製品仕様](docs/PRODUCT_SPEC.md) · [現在の実行目標](data/project-goal.json) · [厳選掲載](data/product-collection.json)
 
-Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は59リポ・64冊で、現在の厳選掲載と区別します。
+Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は63リポ・68冊で、現在の厳選掲載と区別します。
 
 原作者、固定原典、LICENSE・NOTICEと書体のOFLを保持します。カタログのCC0は各スキル・コード・素材・書体の条件を変更しません。[原典・条件](licenses.html)を参照してください。
 
 公開更新・merge・deployはローカル制作と別に扱います。
 
-最新バッチ： [仕事の引き継ぎを、迷わない一枚に。](examples/repositories/presentation-skill-showcase/README.md) · [小さな展示を、ひとつの体験に。動く展示案内](examples/repositories/aws-html-showcase/README.md)。原典のJSON・role contract・PptxGenJSで文字・図形・表を生成し、原典extractor・Neon controllerでPPTXをHTMLへ変換。変換前後の資料を行き来できます。[制作記録](docs/PRODUCTION_BATCH_20261014_08.md)。
+最新バッチ： [ひとつの服を、もう一度。](examples/repositories/marp-mcp-showcase/README.md) · [文字のかたちを、観察する。](examples/repositories/sketch-note-showcase/README.md) · [星を待つ、夜の天文台。](examples/repositories/slide-wright-showcase/README.md) · [町の道具を、借り合う。](examples/repositories/design-dna-showcase/README.md)。原典の実MCP、手描きCSSとページ操作、2枚を保持して育てる独自テーマ、参考画像からのDNA抽出を使用。短い日本語本文と制作一式を直接取得できます。[制作記録](docs/PRODUCTION_BATCH_20261014_09.md)。
+
+前のバッチ： [仕事の引き継ぎを、迷わない一枚に。](examples/repositories/presentation-skill-showcase/README.md) · [小さな展示を、ひとつの体験に。動く展示案内](examples/repositories/aws-html-showcase/README.md)。原典のJSON・role contract・PptxGenJSで文字・図形・表を生成し、原典extractor・Neon controllerでPPTXをHTMLへ変換。変換前後の資料を行き来できます。[制作記録](docs/PRODUCTION_BATCH_20261014_08.md)。
 
 別制作の取り込み： [AIに任せる前の設計図](examples/repositories/sebastian-188/README.md) · [動画一本を、教材へ。](examples/repositories/sebastian-178/README.md) · [音を、地図にする。](examples/repositories/sebastian-173/README.md)。SVG→PDF、原典CSSの図解部品と教材化、13slotのHTML編集誌面。178のroot Apache-2.0とSKILL内MITの記載差を保持し、埋め込み字体は公式固定配布のNotoへ揃えました。
 

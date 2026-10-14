@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>認識 NotebookLM — 您的專屬 AI 研究與思考助理</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Caveat:wght@400;700&family=Permanent+Marker&display=swap');
+
+    /* ─── Tokens ─────────────────────────────── */
+    :root {
+      --ink: #1a1a1a;
+      --paper: #f5f0e8;
+      --grey: #888;
+      --light-grey: #d0ccc4;
+      --accent-warm: #e07b53;
+      --accent-teal: #3a9e8f;
+      --accent-gold: #c9a227;
+    }
+
+    /* ─── Reset ──────────────────────────────── */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--ink);
+      font-family: 'Noto Sans SC', sans-serif;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    /* ─── Halftone ────────────────────────────── */
+    .halftone {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .04;
+      background-image: radial-gradient(circle, var(--ink) 1px, transparent 1px);
+      background-size: 6px 6px;
+    }
+
+    /* ─── Deck & Slides ──────────────────────── */
+    .deck { position: relative; width: 100vw; height: 100vh; height: 100dvh; }
+
+    .slide {
+      position: absolute; inset: 0;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: var(--paper);
+      opacity: 0; visibility: hidden;
+      transition: opacity .5s ease, visibility .5s ease;
+      padding: 60px 80px;
+      overflow: hidden;
+      word-break: break-word;
+      overflow-wrap: break-word;
+    }
+    .slide.active { opacity: 1; visibility: visible; }
+
+    .slide::before {
+      content: ''; position: absolute; inset: 18px;
+      border: 3.5px solid var(--ink); border-radius: 2px;
+      pointer-events: none; z-index: 1;
+    }
+    .slide::after {
+      content: ''; position: absolute; inset: 14px;
+      border: 1px solid var(--light-grey);
+      pointer-events: none; z-index: 1;
+    }
+
+    /* ─── Navigation ─────────────────────────── */
+    .nav {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+      display: flex; align-items: center; gap: 16px; z-index: 100;
+      background: var(--ink); padding: 10px 24px; border-radius: 40px;
+      box-shadow: 0 4px 20px rgba(0,0,0,.3);
+    }
+    .nav button {
+      background: none; border: 2px solid var(--paper); color: var(--paper);
+      font-size: 18px; width: 40px; height: 40px; border-radius: 50%;
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      transition: .2s;
+    }
+    .nav button:hover { background: var(--paper); color: var(--ink); }
+    .nav .counter {
+      color: var(--paper); font-family: 'Permanent Marker', sans-serif;
+      font-size: 16px; min-width: 60px; text-align: center;
+    }
+
+    /* ─── Typography ─────────────────────────── */
+    h1 {
+      font-family: 'Permanent Marker', 'Noto Sans SC', sans-serif;
+      font-size: clamp(36px, 5vw, 72px); color: var(--ink);
+      text-align: center; line-height: 1.2; letter-spacing: 2px;
+      position: relative; z-index: 2;
+    }
+    h1 .cn { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; display: block; }
+
+    h2 {
+      font-family: 'Noto Sans SC', sans-serif; font-weight: 900;
+      font-size: clamp(24px, 3.2vw, 48px); color: var(--ink);
+      text-align: center; margin-bottom: clamp(16px, 2vw, 30px); position: relative; z-index: 2;
+    }
+    h2::after {
+      content: ''; display: block; width: 120px; height: 4px;
+      background: var(--ink); margin: 12px auto 0; border-radius: 2px;
+    }
+
+    .subtitle {
+      font-family: 'Caveat', cursive; font-size: clamp(18px, 2.5vw, 32px);
+      color: var(--grey); text-align: center; margin-top: 12px;
+      position: relative; z-index: 2;
+    }
+
+    p, li {
+      font-size: clamp(14px, 1.6vw, 20px); color: var(--ink); line-height: 1.7;
+      position: relative; z-index: 2;
+    }
+
+    /* ─── Speech Bubble ──────────────────────── */
+    .bubble {
+      background: #fff; border: 2.5px solid var(--ink); border-radius: 18px;
+      padding: 18px 26px; position: relative; z-index: 2; max-width: 600px;
+      margin: 10px auto; box-shadow: 4px 4px 0 var(--ink);
+    }
+    .bubble::after {
+      content: ''; position: absolute; bottom: -14px; left: 40px;
+      width: 0; height: 0;
+      border-left: 14px solid transparent; border-right: 14px solid transparent;
+      border-top: 14px solid var(--ink);
+    }
+    .bubble.right::after { left: auto; right: 40px; }
+
+    /* ─── Tool Cards ─────────────────────────── */
+    .tools-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px; width: 100%; max-width: 1200px; position: relative; z-index: 2;
+    }
+    .tool-card {
+      background: #fff; border: 2.5px solid var(--ink); padding: 20px;
+      position: relative; box-shadow: 5px 5px 0 var(--ink); transition: transform .2s;
+    }
+    .tool-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+    .tool-card .icon { font-size: clamp(28px, 3vw, 40px); margin-bottom: 8px; filter: grayscale(1); }
+    .tool-card h3 { font-family: 'Permanent Marker', sans-serif; font-size: clamp(14px, 1.8vw, 22px); margin-bottom: 4px; color: var(--ink); }
+    .tool-card .cn-name { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; font-size: clamp(12px, 1.4vw, 16px); color: var(--grey); margin-bottom: 8px; }
+    .tool-card p { font-size: clamp(12px, 1.3vw, 15px); line-height: 1.6; }
+    .tool-card::before {
+      content: ''; position: absolute; top: 0; right: 0; width: 50px; height: 50px; opacity: .5;
+      background: repeating-linear-gradient(-45deg, transparent, transparent 2px, var(--light-grey) 2px, var(--light-grey) 3px);
+    }
+
+    /* ─── Tag ─────────────────────────────────── */
+    .tag { display: inline-block; background: var(--ink); color: var(--paper); padding: 2px 10px; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+
+    /* ─── Insight Grid ────────────────────────── */
+    .insight-grid {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px; width: 100%; max-width: 1100px; position: relative; z-index: 2;
+    }
+    .insight-card { background: #fff; border: 2px solid var(--ink); padding: 20px; position: relative; box-shadow: 4px 4px 0 var(--ink); }
+    .insight-card .num { font-family: 'Permanent Marker', sans-serif; font-size: clamp(32px, 4vw, 48px); color: var(--light-grey); position: absolute; top: 8px; right: 16px; opacity: .4; }
+    .insight-card h3 { font-weight: 900; font-size: clamp(14px, 1.6vw, 18px); margin-bottom: 8px; padding-right: 40px; }
+    .insight-card p { font-size: clamp(13px, 1.3vw, 15px); color: #444; }
+
+    /* ─── Emphasis Box ────────────────────────── */
+    .emphasis-box { display: inline-block; background: var(--ink); color: var(--paper); padding: 4px 14px; font-weight: 900; transform: rotate(-1deg); font-size: clamp(13px, 1.5vw, 18px); position: relative; z-index: 2; }
+
+    /* ─── Sketch underline ────────────────────── */
+    .sketch-underline { position: relative; display: inline-block; }
+    .sketch-underline::after {
+      content: ''; position: absolute; bottom: -4px; left: -4px; right: -4px; height: 8px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 8'%3E%3Cpath d='M0 5 Q25 0 50 5 T100 5 T150 5 T200 5' stroke='%231a1a1a' stroke-width='2.5' fill='none'/%3E%3C/svg%3E") repeat-x;
+      background-size: 100px 8px;
+    }
+
+    /* ─── Crosshatch ──────────────────────────── */
+    .crosshatch {
+      position: absolute; opacity: .06; border-radius: 4px; z-index: 0;
+      background:
+        repeating-linear-gradient(45deg, var(--ink), var(--ink) 1px, transparent 1px, transparent 6px),
+        repeating-linear-gradient(-45deg, var(--ink), var(--ink) 1px, transparent 1px, transparent 6px);
+    }
+
+    /* ─── Combo Cards ─────────────────────────── */
+    .combo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; width: 100%; max-width: 1100px; position: relative; z-index: 2; }
+    .combo-card { background: #fff; border: 2.5px solid var(--ink); padding: 18px 20px; box-shadow: 4px 4px 0 var(--ink); }
+    .combo-card h3 { font-size: clamp(14px, 1.7vw, 19px); font-weight: 900; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+    .combo-card .tools-list { font-family: 'Permanent Marker', sans-serif; font-size: clamp(12px, 1.4vw, 16px); color: var(--grey); margin-bottom: 8px; }
+    .combo-card p { font-size: clamp(12px, 1.4vw, 16px); }
+
+    /* ─── Manga Star ──────────────────────────── */
+    .manga-star { display: inline-block; font-size: 28px; animation: twinkle 2s ease-in-out infinite; }
+    @keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(.85); } }
+
+    /* ─── Entrance Animations ─────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.6s cubic-bezier(0.16,1,0.3,1),
+                  transform 0.6s cubic-bezier(0.16,1,0.3,1);
+    }
+    .slide.active .reveal { opacity: 1; transform: translateY(0); }
+    .reveal:nth-child(1) { transition-delay: 0.1s; }
+    .reveal:nth-child(2) { transition-delay: 0.2s; }
+    .reveal:nth-child(3) { transition-delay: 0.3s; }
+    .reveal:nth-child(4) { transition-delay: 0.4s; }
+    .reveal:nth-child(5) { transition-delay: 0.5s; }
+    .reveal:nth-child(6) { transition-delay: 0.6s; }
+
+    /* ─── Slide-specific ─────────────────────── */
+
+    /* Cover slide */
+    .slide-cover .google-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: #fff; border: 2px solid var(--ink); border-radius: 40px;
+      padding: 6px 18px 6px 12px; font-size: clamp(12px, 1.4vw, 16px);
+      font-weight: 700; color: var(--grey); z-index: 2; position: relative;
+      margin-bottom: clamp(12px, 2vw, 24px);
+    }
+    .slide-cover .google-badge .g-logo {
+      width: clamp(20px, 2.5vw, 28px); height: clamp(20px, 2.5vw, 28px);
+      background: conic-gradient(from 0deg, #4285f4 0deg 90deg, #ea4335 90deg 180deg, #fbbc05 180deg 270deg, #34a853 270deg 360deg);
+      border-radius: 50%; flex-shrink: 0;
+    }
+    .slide-cover h1 { margin-bottom: 8px; }
+    .slide-cover h1 .cn { font-size: clamp(28px, 4vw, 56px); margin-top: 8px; }
+
+    /* Feature icon color (un-greyscale for specific cards) */
+    .tool-card .icon { filter: none; }
+
+    /* Citation dot */
+    .cite-dot {
+      display: inline-block; width: clamp(8px, 1vw, 12px); height: clamp(8px, 1vw, 12px);
+      border-radius: 50%; margin-right: 4px; vertical-align: middle;
+    }
+    .cite-dot.green { background: #34a853; }
+    .cite-dot.blue { background: #4285f4; }
+
+    /* Source grounded visual */
+    .source-visual {
+      display: flex; align-items: center; gap: clamp(20px, 3vw, 40px);
+      width: 100%; max-width: 900px; z-index: 2; position: relative;
+    }
+    .source-visual .diagram {
+      flex: 0 0 auto; display: flex; flex-direction: column; align-items: center; gap: 8px;
+    }
+    .source-visual .diagram .src-node {
+      background: #fff; border: 2.5px solid var(--ink); padding: 8px 16px;
+      font-weight: 700; font-size: clamp(12px, 1.2vw, 14px);
+      box-shadow: 3px 3px 0 var(--ink); white-space: nowrap;
+    }
+    .source-visual .diagram .arrow-down {
+      width: 3px; height: 16px; background: var(--ink); position: relative;
+    }
+    .source-visual .diagram .arrow-down::after {
+      content: ''; position: absolute; bottom: -5px; left: 50%; transform: translateX(-50%);
+      border-left: 6px solid transparent; border-right: 6px solid transparent; border-top: 7px solid var(--ink);
+    }
+    .source-visual .diagram .ai-node {
+      background: var(--ink); color: var(--paper); padding: 10px 20px;
+      font-weight: 900; font-size: clamp(14px, 1.6vw, 20px);
+      box-shadow: 3px 3px 0 var(--grey);
+    }
+    .source-visual .desc { flex: 1; }
+    .source-visual .desc h3 {
+      font-weight: 900; font-size: clamp(16px, 2vw, 24px); margin-bottom: 8px;
+    }
+    .source-visual .desc p {
+      font-size: clamp(13px, 1.4vw, 17px); color: #444; line-height: 1.8;
+    }
+    .source-visual .desc p .cite-tag {
+      display: inline-block; background: #e8f5e9; border: 1.5px solid #34a853;
+      color: #2e7d32; padding: 1px 8px; border-radius: 10px;
+      font-size: clamp(11px, 1.1vw, 13px); font-weight: 700; margin-left: 4px;
+    }
+
+    /* Slide 6 scene cards */
+    .scene-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 18px; width: 100%; max-width: 1100px; z-index: 2; position: relative;
+    }
+    .scene-card {
+      background: #fff; border: 2.5px solid var(--ink); padding: 18px;
+      box-shadow: 4px 4px 0 var(--ink); position: relative;
+    }
+    .scene-card .scene-icon { font-size: clamp(28px, 3vw, 40px); margin-bottom: 8px; }
+    .scene-card h3 { font-weight: 900; font-size: clamp(14px, 1.6vw, 18px); margin-bottom: 6px; }
+    .scene-card ul { list-style: none; padding: 0; }
+    .scene-card ul li {
+      font-size: clamp(12px, 1.2vw, 15px); color: #444; line-height: 1.7;
+      padding-left: 16px; position: relative;
+    }
+    .scene-card ul li::before {
+      content: '→'; position: absolute; left: 0; color: var(--grey);
+    }
+
+    /* Privacy shield */
+    .privacy-row {
+      display: flex; gap: clamp(20px, 3vw, 36px); width: 100%; max-width: 1000px;
+      z-index: 2; position: relative; align-items: stretch;
+    }
+    .privacy-card {
+      flex: 1; background: #fff; border: 2.5px solid var(--ink); padding: 24px;
+      position: relative; box-shadow: 4px 4px 0 var(--ink);
+    }
+    .privacy-card .shield { font-size: clamp(36px, 4vw, 56px); margin-bottom: 12px; }
+    .privacy-card h3 { font-weight: 900; font-size: clamp(15px, 1.8vw, 20px); margin-bottom: 8px; }
+    .privacy-card p { font-size: clamp(13px, 1.3vw, 16px); color: #444; line-height: 1.7; }
+    .privacy-card .highlight {
+      display: inline; background: linear-gradient(transparent 60%, #fce4b8 60%);
+      font-weight: 900;
+    }
+
+    /* Final slide */
+    .final-statement {
+      font-family: 'Noto Sans SC', sans-serif; font-weight: 900;
+      font-size: clamp(18px, 2.5vw, 36px); color: var(--ink);
+      text-align: center; line-height: 1.6; z-index: 2; position: relative;
+      max-width: 800px;
+    }
+    .final-statement .accent-line {
+      display: block; font-family: 'Caveat', cursive; font-weight: 700;
+      font-size: clamp(22px, 3vw, 42px); color: var(--accent-teal); margin-top: 12px;
+    }
+    .qa-badge {
+      display: inline-flex; align-items: center; gap: 12px;
+      background: var(--ink); color: var(--paper); padding: 12px 32px;
+      font-family: 'Permanent Marker', sans-serif;
+      font-size: clamp(18px, 2.5vw, 32px); border-radius: 4px;
+      box-shadow: 5px 5px 0 var(--grey); z-index: 2; position: relative;
+      margin-top: clamp(20px, 3vw, 40px);
+    }
+
+    /* ─── Responsive ──────────────────────────── */
+    @media (max-width: 768px) {
+      .slide { padding: 40px 24px; }
+      .slide::before { inset: 10px; }
+      .slide::after { inset: 6px; }
+      .tools-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+      .insight-grid, .combo-grid { grid-template-columns: 1fr; }
+      .scene-grid { grid-template-columns: 1fr; }
+      .source-visual { flex-direction: column; text-align: center; }
+      .privacy-row { flex-direction: column; }
+      .nav { bottom: 12px; padding: 8px 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="halftone"></div>
+  <div class="deck">
+
+    <!-- ==================== SLIDE 1: COVER ==================== -->
+    <div class="slide slide-cover active">
+      <div class="crosshatch" style="width:180px;height:180px;top:30px;right:40px;"></div>
+      <div class="crosshatch" style="width:120px;height:120px;bottom:80px;left:30px;"></div>
+
+      <div class="google-badge reveal">
+        <div class="g-logo"></div>
+        Google AI Product
+      </div>
+
+      <h1 class="reveal">
+        NotebookLM
+        <span class="cn">您的專屬 AI 研究與思考助理</span>
+      </h1>
+
+      <p class="subtitle reveal" style="max-width:600px;">
+        基於最新 Gemini 模型，打造零幻覺的個人知識工作室
+      </p>
+
+      <div class="bubble reveal" style="margin-top:clamp(16px, 2vw, 28px);">
+        <p>🔬 上傳文件 → 獲得專屬 AI 專家 → 產出筆記、Podcast、影片⋯⋯</p>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 2: WHAT IS ==================== -->
+    <div class="slide">
+      <div class="crosshatch" style="width:160px;height:100px;top:30px;left:30px;"></div>
+
+      <h2 class="reveal"><span class="sketch-underline">什麼是 NotebookLM？</span></h2>
+
+      <div class="tools-grid" style="max-width:1000px;">
+        <div class="tool-card reveal">
+          <div class="icon">🤖</div>
+          <div class="tag">CORE</div>
+          <h3>AI Research Tool</h3>
+          <div class="cn-name">AI 研究工具</div>
+          <p>由 Google 推出的 AI 驅動研究工具與思考合作夥伴，基於最新 Gemini 模型。</p>
+        </div>
+
+        <div class="tool-card reveal">
+          <div class="icon">📚</div>
+          <div class="tag">SOURCES</div>
+          <h3>Multi-Format Input</h3>
+          <div class="cn-name">多格式來源支援</div>
+          <p>支援 PDF、網站連結、YouTube 影片、音訊、Google 文件與簡報等多種格式。</p>
+        </div>
+
+        <div class="tool-card reveal">
+          <div class="icon">🧠</div>
+          <div class="tag">PERSONALIZED</div>
+          <h3>Your Expert</h3>
+          <div class="cn-name">個人化專家</div>
+          <p>匯入資料後自動進行摘要，成為您專屬資訊庫的 AI 專家，隨問隨答。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 3: SOURCE GROUNDED ==================== -->
+    <div class="slide">
+      <div class="crosshatch" style="width:140px;height:140px;bottom:60px;right:40px;"></div>
+
+      <h2 class="reveal"><span class="sketch-underline">核心優勢 — 基於來源</span></h2>
+
+      <div class="source-visual reveal">
+        <div class="diagram">
+          <div class="src-node">📄 您的文件</div>
+          <div class="arrow-down"></div>
+          <div class="src-node">🔗 您的連結</div>
+          <div class="arrow-down"></div>
+          <div class="src-node">🎥 您的影片</div>
+          <div class="arrow-down"></div>
+          <div class="ai-node">✨ NotebookLM</div>
+        </div>
+        <div class="desc">
+          <h3>Source-Grounded AI</h3>
+          <p>
+            AI 的回答<span class="highlight">完全基於您上傳的特定知識庫</span>，大幅降低 AI 產生「幻覺」或錯誤資訊的風險。
+          </p>
+          <p style="margin-top:12px;">
+            每個回答都附帶 <span class="cite-tag">📌 內聯引用</span> ，直接顯示原文中的確切引語，讓您能輕鬆驗證資訊的真實性。
+          </p>
+        </div>
+      </div>
+
+      <div class="bubble reveal" style="margin-top:clamp(12px, 2vw, 24px);">
+        <p>💡 看到引用 → 點一下 → 跳到原文段落 → 信任建立！</p>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 4: MULTIMEDIA ARTIFACTS ==================== -->
+    <div class="slide">
+      <div class="crosshatch" style="width:100px;height:200px;top:40px;left:30px;"></div>
+
+      <h2 class="reveal"><span class="sketch-underline">多媒體學習產物</span></h2>
+
+      <div class="tools-grid" style="max-width:1100px;">
+        <div class="tool-card reveal">
+          <div class="icon">🎙️</div>
+          <div class="tag">AUDIO</div>
+          <h3>Audio Overviews</h3>
+          <div class="cn-name">音訊總結</div>
+          <p>一鍵將文件轉為類似 Podcast 的音訊，兩位 AI 主持人深度對話。通勤必備！</p>
+        </div>
+
+        <div class="tool-card reveal">
+          <div class="icon">🎬</div>
+          <div class="tag">VIDEO</div>
+          <h3>Video Overviews</h3>
+          <div class="cn-name">視訊總結</div>
+          <p>將文件轉化為帶旁白的影片，以視覺化方式幫助吸收關鍵概念。</p>
+        </div>
+
+        <div class="tool-card reveal">
+          <div class="icon">🃏</div>
+          <div class="tag">LEARNING</div>
+          <h3>Interactive Tools</h3>
+          <div class="cn-name">互動學習工具</div>
+          <p>自動生成抽認卡、帶錯題解析的測驗，以及梳理關聯的心智圖。</p>
+        </div>
+      </div>
+
+      <div class="emphasis-box reveal" style="margin-top:clamp(14px, 2vw, 24px);">
+        ✦ 一份文件 → 六種形式輸出 — Podcast / 影片 / 抽認卡 / 測驗 / 心智圖 / 報告
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 5: ADVANCED RESEARCH ==================== -->
+    <div class="slide">
+      <div class="crosshatch" style="width:120px;height:140px;top:50px;right:30px;"></div>
+
+      <h2 class="reveal"><span class="sketch-underline">進階研究與跨平台</span></h2>
+
+      <div class="insight-grid" style="max-width:900px;">
+        <div class="insight-card reveal">
+          <div class="num">01</div>
+          <h3>🔍 深度研究 Deep Research</h3>
+          <p>透過「來源探索」與「深度研究」功能，綜合數百個來源，加速複雜文獻回顧，一鍵生成研究報告。</p>
+        </div>
+
+        <div class="insight-card reveal">
+          <div class="num">02</div>
+          <h3>📱 跨平台同步</h3>
+          <p>支援 iOS 與 Android 雙平台 App，筆記與產物在手機與電腦間即時同步，隨時隨地研究。</p>
+        </div>
+      </div>
+
+      <div class="bubble reveal" style="margin-top:clamp(16px, 2.5vw, 32px); max-width:700px;">
+        <p>🚀 想像一下：晨間通勤聽 AI 生成的 Podcast，午休用手機翻抽認卡複習，回家電腦上繼續深度研究——全自動同步！</p>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 6: USE CASES ==================== -->
+    <div class="slide">
+      <div class="crosshatch" style="width:100px;height:100px;bottom:70px;left:40px;"></div>
+
+      <h2 class="reveal"><span class="sketch-underline">多元應用場景</span></h2>
+
+      <div class="scene-grid">
+        <div class="scene-card reveal">
+          <div class="scene-icon">🎓</div>
+          <h3>學生與教育</h3>
+          <ul>
+            <li>結合 OpenStax 教材生成學習指南</li>
+            <li>專屬 AI 家教進行問答</li>
+            <li>高效準備考試</li>
+          </ul>
+        </div>
+
+        <div class="scene-card reveal">
+          <div class="scene-icon">💼</div>
+          <h3>業務與工作流</h3>
+          <ul>
+            <li>上傳競品分析準備銷售提案</li>
+            <li>上傳會議紀錄整理待辦事項</li>
+            <li>自動起草跟進郵件</li>
+          </ul>
+        </div>
+
+        <div class="scene-card reveal">
+          <div class="scene-icon">🎧</div>
+          <h3>客戶服務</h3>
+          <ul>
+            <li>建立產品文件問答庫</li>
+            <li>設為公開筆記本</li>
+            <li>客戶自助尋找答案</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 7: PRIVACY ==================== -->
+    <div class="slide">
+      <div class="crosshatch" style="width:160px;height:120px;top:30px;left:50px;"></div>
+
+      <h2 class="reveal"><span class="sketch-underline">資料隱私與安全</span></h2>
+
+      <div class="privacy-row">
+        <div class="privacy-card reveal">
+          <div class="shield">🛡️</div>
+          <h3>隱私承諾</h3>
+          <p>Google 明確承諾：<span class="highlight">絕不使用您的個人、學校或企業資料來訓練生成式 AI 基礎模型</span>（除非您主動提供回饋）。</p>
+        </div>
+
+        <div class="privacy-card reveal">
+          <div class="shield">🔒</div>
+          <h3>資料保護</h3>
+          <p>使用者資料<span class="highlight">不會與任何第三方分享</span>，確保核心研究與內部文件的高度安全。</p>
+        </div>
+      </div>
+
+      <div class="bubble right reveal" style="margin-top:clamp(14px, 2vw, 24px);">
+        <p>🔐 您的資料只屬於您 — 安心上傳企業內部文件與個人研究。</p>
+      </div>
+    </div>
+
+    <!-- ==================== SLIDE 8: SUMMARY & Q&A ==================== -->
+    <div class="slide">
+      <div class="crosshatch" style="width:200px;height:160px;bottom:50px;right:30px;"></div>
+      <div class="crosshatch" style="width:80px;height:80px;top:40px;left:40px;"></div>
+
+      <div class="final-statement reveal">
+        NotebookLM 結合了<br>
+        <span class="emphasis-box" style="transform:rotate(-0.5deg);">高準確性</span>
+        &nbsp;×&nbsp;
+        <span class="emphasis-box" style="transform:rotate(0.5deg);">高效率合成</span>
+        &nbsp;×&nbsp;
+        <span class="emphasis-box" style="transform:rotate(-0.8deg);">多媒體創意輸出</span>
+        <span class="accent-line">是現代工作與學習的理想夥伴 ✨</span>
+      </div>
+
+      <div class="qa-badge reveal">
+        <span class="manga-star">✦</span> Q & A <span class="manga-star">✦</span>
+      </div>
+
+      <p class="subtitle reveal" style="margin-top:16px;">歡迎提問與交流！</p>
+    </div>
+
+  </div>
+
+  <!-- Navigation -->
+  <nav class="nav">
+    <button onclick="prev()" aria-label="Previous">←</button>
+    <span class="counter" id="counter">1 / 8</span>
+    <button onclick="next()" aria-label="Next">→</button>
+  </nav>
+
+  <script>
+    const S=document.querySelectorAll('.slide');let c=0;
+    function show(n){S[c].classList.remove('active');c=(n+S.length)%S.length;S[c].classList.add('active');document.getElementById('counter').textContent=`${c+1} / ${S.length}`;}
+    function next(){show(c+1)} function prev(){show(c-1)}
+    document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')next();if(e.key==='ArrowLeft')prev();});
+    let tx=0;document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX});
+    document.addEventListener('touchend',e=>{const d=e.changedTouches[0].clientX-tx;if(d<-50)next();if(d>50)prev();});
+  </script>
+</body>
+</html>

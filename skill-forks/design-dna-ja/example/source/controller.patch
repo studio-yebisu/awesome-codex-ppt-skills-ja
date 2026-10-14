@@ -1,0 +1,16 @@
+--- controller.before-bridge.js
++++ controller.js
+@@ -14,9 +14,13 @@
+   document.querySelector('#counter').textContent=String(current+1).padStart(2,'0')+' / '+String(slides.length).padStart(2,'0');
+   document.querySelector('#prev').disabled=current===0;
+   document.querySelector('#next').disabled=current===slides.length-1;
++  if(parent!==window && location.origin!=='null')parent.postMessage({type:'yebisu-page',index:current},location.origin);
+ }
+ document.querySelector('#prev').onclick=()=>go(current-1);
+ document.querySelector('#next').onclick=()=>go(current+1);
+ addEventListener('keydown',e=>{if(['ArrowRight','ArrowDown',' '].includes(e.key)){e.preventDefault();go(current+1)}if(['ArrowLeft','ArrowUp'].includes(e.key)){e.preventDefault();go(current-1)}if(e.key==='Home')go(0);if(e.key==='End')go(slides.length-1)});
+ let touchX=0;addEventListener('touchstart',e=>{touchX=e.touches[0].clientX});addEventListener('touchend',e=>{let dx=e.changedTouches[0].clientX-touchX;if(Math.abs(dx)>50)go(current+(dx<0?1:-1))});
+ go(0);
++
++addEventListener('message',e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.type==='yebisu-slide'&&Number.isInteger(e.data.index))go(e.data.index)});
++window.deckPage=()=>current;

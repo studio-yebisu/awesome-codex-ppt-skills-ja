@@ -1,0 +1,212 @@
+/*
+ * sketch-notes-base.css
+ * Agentic PPT — Sketch Notes Visual Style
+ * https://github.com/[your-username]/agentic-ppt
+ *
+ * Include this stylesheet (or paste inline) to use the Sketch Notes components.
+ * Required fonts (load in <head>):
+ *   @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Caveat:wght@400;700&family=Permanent+Marker&display=swap');
+ */
+
+/* ─── Tokens ─────────────────────────────────────────── */
+:root {
+  --ink: #1a1a1a;
+  --paper: #f5f0e8;
+  --grey: #888;
+  --light-grey: #d0ccc4;
+}
+
+/* ─── Reset ──────────────────────────────────────────── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--ink);
+  font-family: 'Noto Sans SC', sans-serif;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* ─── Halftone dot overlay ───────────────────────────── */
+.halftone {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .04;
+  background-image: radial-gradient(circle, var(--ink) 1px, transparent 1px);
+  background-size: 6px 6px;
+}
+
+/* ─── Deck & slides ──────────────────────────────────── */
+.deck { position: relative; width: 100vw; height: 100vh; }
+
+.slide {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: var(--paper);
+  opacity: 0; visibility: hidden;
+  transition: opacity .5s ease, visibility .5s ease;
+  padding: 60px 80px;
+  overflow: hidden;
+}
+.slide.active { opacity: 1; visibility: visible; }
+
+/* Comic panel double border */
+.slide::before {
+  content: ''; position: absolute; inset: 18px;
+  border: 3.5px solid var(--ink); border-radius: 2px;
+  pointer-events: none; z-index: 1;
+}
+.slide::after {
+  content: ''; position: absolute; inset: 14px;
+  border: 1px solid var(--light-grey);
+  pointer-events: none; z-index: 1;
+}
+
+/* ─── Navigation ─────────────────────────────────────── */
+.nav {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 16px; z-index: 100;
+  background: var(--ink); padding: 10px 24px; border-radius: 40px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.3);
+}
+.nav button {
+  background: none; border: 2px solid var(--paper); color: var(--paper);
+  font-size: 18px; width: 40px; height: 40px; border-radius: 50%;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: .2s;
+}
+.nav button:hover { background: var(--paper); color: var(--ink); }
+.nav .counter {
+  color: var(--paper); font-family: 'Permanent Marker', sans-serif;
+  font-size: 16px; min-width: 60px; text-align: center;
+}
+
+/* ─── Typography ─────────────────────────────────────── */
+h1 {
+  font-family: 'Permanent Marker', 'Noto Sans SC', sans-serif;
+  font-size: clamp(36px, 5vw, 72px); color: var(--ink);
+  text-align: center; line-height: 1.2; letter-spacing: 2px;
+  position: relative; z-index: 2;
+}
+h1 .cn { font-family: 'Noto Sans SC', sans-serif; font-weight: 900; display: block; }
+
+h2 {
+  font-family: 'Noto Sans SC', sans-serif; font-weight: 900;
+  font-size: clamp(24px, 3.2vw, 48px); color: var(--ink);
+  text-align: center; margin-bottom: 30px; position: relative; z-index: 2;
+}
+h2::after {
+  content: ''; display: block; width: 120px; height: 4px;
+  background: var(--ink); margin: 12px auto 0; border-radius: 2px;
+}
+
+.subtitle {
+  font-family: 'Caveat', cursive; font-size: clamp(18px, 2.5vw, 32px);
+  color: var(--grey); text-align: center; margin-top: 12px;
+  position: relative; z-index: 2;
+}
+
+p, li { font-size: clamp(14px, 1.6vw, 20px); color: var(--ink); line-height: 1.7; position: relative; z-index: 2; }
+
+/* ─── Speech Bubble ──────────────────────────────────── */
+.bubble {
+  background: #fff; border: 2.5px solid var(--ink); border-radius: 18px;
+  padding: 18px 26px; position: relative; z-index: 2; max-width: 600px;
+  margin: 10px auto; box-shadow: 4px 4px 0 var(--ink);
+}
+.bubble::after {
+  content: ''; position: absolute; bottom: -14px; left: 40px;
+  width: 0; height: 0;
+  border-left: 14px solid transparent; border-right: 14px solid transparent;
+  border-top: 14px solid var(--ink);
+}
+
+/* ─── Tool Cards ─────────────────────────────────────── */
+.tools-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px; width: 100%; max-width: 1200px; position: relative; z-index: 2;
+}
+.tool-card {
+  background: #fff; border: 2.5px solid var(--ink); padding: 20px;
+  position: relative; box-shadow: 5px 5px 0 var(--ink); transition: transform .2s;
+}
+.tool-card:hover { transform: translate(-2px, -2px); box-shadow: 7px 7px 0 var(--ink); }
+.tool-card .icon { font-size: 40px; margin-bottom: 8px; filter: grayscale(1); }
+.tool-card h3 { font-family: 'Permanent Marker', sans-serif; font-size: clamp(16px, 2vw, 22px); margin-bottom: 4px; color: var(--ink); }
+.tool-card .cn-name { font-family: 'Noto Sans SC', sans-serif; font-weight: 700; font-size: clamp(12px, 1.4vw, 16px); color: var(--grey); margin-bottom: 8px; }
+.tool-card p { font-size: clamp(12px, 1.4vw, 16px); line-height: 1.6; }
+/* speed lines corner */
+.tool-card::before {
+  content: ''; position: absolute; top: 0; right: 0; width: 50px; height: 50px; opacity: .5;
+  background: repeating-linear-gradient(-45deg, transparent, transparent 2px, var(--light-grey) 2px, var(--light-grey) 3px);
+}
+
+/* ─── Tag label ──────────────────────────────────────── */
+.tag { display: inline-block; background: var(--ink); color: var(--paper); padding: 2px 10px; font-size: 12px; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+
+/* ─── Insight Grid ───────────────────────────────────── */
+.insight-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px; width: 100%; max-width: 1100px; position: relative; z-index: 2;
+}
+.insight-card { background: #fff; border: 2px solid var(--ink); padding: 20px; position: relative; box-shadow: 4px 4px 0 var(--ink); }
+.insight-card .num { font-family: 'Permanent Marker', sans-serif; font-size: clamp(32px, 4vw, 48px); color: var(--light-grey); position: absolute; top: 8px; right: 16px; opacity: .4; }
+.insight-card h3 { font-weight: 900; font-size: clamp(14px, 1.6vw, 18px); margin-bottom: 8px; padding-right: 40px; }
+.insight-card p { font-size: clamp(13px, 1.3vw, 15px); color: #444; }
+
+/* ─── Comparison Table ───────────────────────────────── */
+.compare-table { width: 100%; max-width: 1100px; border-collapse: collapse; position: relative; z-index: 2; font-size: clamp(12px, 1.4vw, 16px); }
+.compare-table th, .compare-table td { border: 2px solid var(--ink); padding: 12px 16px; text-align: center; vertical-align: middle; }
+.compare-table th { background: var(--ink); color: var(--paper); font-weight: 900; }
+.compare-table tr:nth-child(even) td { background: rgba(0,0,0,.03); }
+.compare-table td:first-child { font-weight: 700; text-align: left; white-space: nowrap; }
+
+/* ─── Decision Tree ──────────────────────────────────── */
+.decision-tree { position: relative; z-index: 2; width: 100%; max-width: 900px; display: flex; flex-direction: column; align-items: center; gap: 0; }
+.dt-node { background: #fff; border: 2.5px solid var(--ink); padding: 14px 24px; font-weight: 700; font-size: clamp(14px, 1.8vw, 20px); text-align: center; position: relative; box-shadow: 3px 3px 0 var(--ink); max-width: 480px; width: 100%; }
+.dt-node.question { background: var(--ink); color: var(--paper); clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%); padding: 18px 40px; box-shadow: none; }
+.dt-node.answer { border: 3px dashed var(--ink); box-shadow: none; font-family: 'Permanent Marker', sans-serif; font-size: clamp(16px, 2vw, 22px); }
+.dt-arrow { width: 3px; height: 24px; background: var(--ink); position: relative; }
+.dt-arrow::after { content: ''; position: absolute; bottom: -6px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 8px solid var(--ink); }
+.dt-branch { display: flex; gap: 36px; align-items: flex-start; justify-content: center; flex-wrap: wrap; }
+.dt-branch-item { display: flex; flex-direction: column; align-items: center; gap: 0; }
+.dt-label { font-family: 'Caveat', cursive; font-size: 16px; color: var(--grey); padding: 4px 0; font-weight: 700; }
+
+/* ─── Emphasis Box ───────────────────────────────────── */
+.emphasis-box { display: inline-block; background: var(--ink); color: var(--paper); padding: 4px 14px; font-weight: 900; transform: rotate(-1deg); font-size: clamp(13px, 1.5vw, 18px); position: relative; z-index: 2; }
+
+/* ─── Sketch underline ───────────────────────────────── */
+.sketch-underline { position: relative; display: inline-block; }
+.sketch-underline::after {
+  content: ''; position: absolute; bottom: -4px; left: -4px; right: -4px; height: 8px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 8'%3E%3Cpath d='M0 5 Q25 0 50 5 T100 5 T150 5 T200 5' stroke='%231a1a1a' stroke-width='2.5' fill='none'/%3E%3C/svg%3E") repeat-x;
+  background-size: 100px 8px;
+}
+
+/* ─── Crosshatch patch ───────────────────────────────── */
+.crosshatch {
+  position: absolute; opacity: .06; border-radius: 4px; z-index: 0;
+  background:
+    repeating-linear-gradient(45deg, var(--ink), var(--ink) 1px, transparent 1px, transparent 6px),
+    repeating-linear-gradient(-45deg, var(--ink), var(--ink) 1px, transparent 1px, transparent 6px);
+}
+
+/* ─── Combo / Workflow cards ─────────────────────────── */
+.combo-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; width: 100%; max-width: 1100px; position: relative; z-index: 2; }
+.combo-card { background: #fff; border: 2.5px solid var(--ink); padding: 18px 20px; box-shadow: 4px 4px 0 var(--ink); }
+.combo-card h3 { font-size: clamp(14px, 1.7vw, 19px); font-weight: 900; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
+.combo-card .tools-list { font-family: 'Permanent Marker', sans-serif; font-size: clamp(12px, 1.4vw, 16px); color: var(--grey); margin-bottom: 8px; }
+.combo-card p { font-size: clamp(12px, 1.4vw, 16px); }
+
+/* ─── Twinkle / manga star ───────────────────────────── */
+.manga-star { display: inline-block; font-size: 28px; animation: twinkle 2s ease-in-out infinite; }
+@keyframes twinkle { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: .5; transform: scale(.85); } }
+
+/* ─── Responsive ─────────────────────────────────────── */
+@media (max-width: 768px) {
+  .slide { padding: 40px 24px; }
+  .slide::before { inset: 10px; }
+  .slide::after { inset: 6px; }
+  .tools-grid { grid-template-columns: 1fr 1fr; gap: 12px; }
+  .combo-grid, .insight-grid { grid-template-columns: 1fr; }
+  .nav { bottom: 12px; padding: 8px 14px; }
+  .dt-branch { gap: 16px; }
+}

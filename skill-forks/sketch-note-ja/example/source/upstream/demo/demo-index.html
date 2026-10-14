@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent 工具选择指南 — 五大架构全解析</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&family=Caveat:wght@400;700&family=Permanent+Marker&display=swap');
+
+  :root {
+    --ink: #1a1a1a;
+    --paper: #f5f0e8;
+    --grey: #888;
+    --light-grey: #d0ccc4;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--ink);
+    font-family: 'Noto Sans SC', sans-serif;
+    overflow: hidden;
+    cursor: default;
+  }
+
+  /* ── Halftone dot pattern overlay ── */
+  .halftone {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none; opacity: .04;
+    background-image: radial-gradient(circle, var(--ink) 1px, transparent 1px);
+    background-size: 6px 6px;
+  }
+
+  /* ── Slide container ── */
+  .deck {
+    position: relative;
+    width: 100vw; height: 100vh;
+  }
+
+  .slide {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: var(--paper);
+    opacity: 0; visibility: hidden;
+    transition: opacity .5s ease, visibility .5s ease;
+    padding: 60px 80px;
+    overflow-y: auto;
+  }
+  .slide.active {
+    opacity: 1; visibility: visible;
+  }
+
+  /* ── Comic panel border ── */
+  .slide::before {
+    content: '';
+    position: absolute;
+    inset: 18px;
+    border: 3.5px solid var(--ink);
+    border-radius: 2px;
+    pointer-events: none;
+    z-index: 1;
+  }
+  .slide::after {
+    content: '';
+    position: absolute;
+    inset: 14px;
+    border: 1px solid var(--light-grey);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── Typography ── */
+  h1 {
+    font-family: 'Permanent Marker', 'Noto Sans SC', sans-serif;
+    font-size: clamp(36px, 5vw, 72px);
+    color: var(--ink);
+    text-align: center;
+    line-height: 1.2;
+    letter-spacing: 2px;
+    position: relative;
+    z-index: 2;
+  }
+  h1 .cn {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 900;
+    display: block;
+  }
+  h2 {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 900;
+    font-size: clamp(24px, 3.2vw, 48px);
+    color: var(--ink);
+    text-align: center;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 2;
+  }
+  h2::after {
+    content: '';
+    display: block;
+    width: 120px; height: 4px;
+    background: var(--ink);
+    margin: 12px auto 0;
+    border-radius: 2px;
+  }
+
+  .subtitle {
+    font-family: 'Caveat', cursive;
+    font-size: clamp(18px, 2.5vw, 32px);
+    color: var(--grey);
+    text-align: center;
+    margin-top: 12px;
+    position: relative; z-index: 2;
+  }
+
+  p, li {
+    font-size: clamp(14px, 1.6vw, 20px);
+    color: var(--ink);
+    line-height: 1.7;
+    position: relative; z-index: 2;
+  }
+
+  /* ── Speech bubble ── */
+  .bubble {
+    background: #fff;
+    border: 2.5px solid var(--ink);
+    border-radius: 18px;
+    padding: 18px 26px;
+    position: relative;
+    z-index: 2;
+    max-width: 600px;
+    margin: 10px auto;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -14px; left: 40px;
+    width: 0; height: 0;
+    border-left: 14px solid transparent;
+    border-right: 14px solid transparent;
+    border-top: 14px solid var(--ink);
+  }
+  .bubble-inner::after {
+    content: '';
+    position: absolute;
+    bottom: -10px; left: 42px;
+    width: 0; height: 0;
+    border-left: 12px solid transparent;
+    border-right: 12px solid transparent;
+    border-top: 12px solid #fff;
+  }
+
+  /* ── Tool cards ── */
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    width: 100%;
+    max-width: 1200px;
+    position: relative; z-index: 2;
+  }
+  .tool-card {
+    background: #fff;
+    border: 2.5px solid var(--ink);
+    padding: 24px;
+    position: relative;
+    box-shadow: 5px 5px 0 var(--ink);
+    transition: transform .2s;
+  }
+  .tool-card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 7px 7px 0 var(--ink);
+  }
+  .tool-card .icon {
+    font-size: 48px;
+    margin-bottom: 8px;
+    filter: grayscale(1);
+  }
+  .tool-card h3 {
+    font-family: 'Permanent Marker', sans-serif;
+    font-size: 22px;
+    margin-bottom: 4px;
+    color: var(--ink);
+  }
+  .tool-card .cn-name {
+    font-family: 'Noto Sans SC', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    color: var(--grey);
+    margin-bottom: 10px;
+  }
+  .tool-card p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  /* Manga speed lines on card */
+  .tool-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 50px; height: 50px;
+    background: repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 2px,
+      var(--light-grey) 2px,
+      var(--light-grey) 3px
+    );
+    opacity: .5;
+  }
+
+  /* ── Comparison table ── */
+  .compare-table {
+    width: 100%; max-width: 1100px;
+    border-collapse: collapse;
+    position: relative; z-index: 2;
+    font-size: clamp(12px, 1.4vw, 16px);
+  }
+  .compare-table th, .compare-table td {
+    border: 2px solid var(--ink);
+    padding: 12px 16px;
+    text-align: center;
+    vertical-align: middle;
+  }
+  .compare-table th {
+    background: var(--ink);
+    color: var(--paper);
+    font-weight: 900;
+    font-size: clamp(13px, 1.5vw, 18px);
+  }
+  .compare-table tr:nth-child(even) td {
+    background: rgba(0,0,0,.03);
+  }
+  .compare-table td:first-child {
+    font-weight: 700;
+    text-align: left;
+    white-space: nowrap;
+  }
+
+  /* ── Decision tree ── */
+  .decision-tree {
+    position: relative; z-index: 2;
+    width: 100%; max-width: 900px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 0;
+  }
+  .dt-node {
+    background: #fff;
+    border: 2.5px solid var(--ink);
+    padding: 16px 28px;
+    font-weight: 700;
+    font-size: clamp(14px, 1.8vw, 20px);
+    text-align: center;
+    position: relative;
+    box-shadow: 3px 3px 0 var(--ink);
+    max-width: 480px;
+    width: 100%;
+  }
+  .dt-node.question {
+    background: var(--ink);
+    color: var(--paper);
+    clip-path: polygon(10% 0%, 90% 0%, 100% 50%, 90% 100%, 10% 100%, 0% 50%);
+    padding: 20px 40px;
+    box-shadow: none;
+  }
+  .dt-node.answer {
+    border: 3px dashed var(--ink);
+    box-shadow: none;
+    font-family: 'Permanent Marker', sans-serif;
+    font-size: clamp(16px, 2vw, 24px);
+  }
+  .dt-arrow {
+    width: 3px; height: 28px;
+    background: var(--ink);
+    position: relative;
+  }
+  .dt-arrow::after {
+    content: '';
+    position: absolute;
+    bottom: -6px; left: 50%;
+    transform: translateX(-50%);
+    width: 0; height: 0;
+    border-left: 7px solid transparent;
+    border-right: 7px solid transparent;
+    border-top: 8px solid var(--ink);
+  }
+  .dt-branch {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .dt-branch-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0;
+  }
+  .dt-label {
+    font-family: 'Caveat', cursive;
+    font-size: 18px;
+    color: var(--grey);
+    padding: 4px 0;
+    font-weight: 700;
+  }
+
+  /* ── Insight cards ── */
+  .insight-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+    width: 100%; max-width: 1100px;
+    position: relative; z-index: 2;
+  }
+  .insight-card {
+    background: #fff;
+    border: 2px solid var(--ink);
+    padding: 24px;
+    position: relative;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .insight-card .num {
+    font-family: 'Permanent Marker', sans-serif;
+    font-size: 48px;
+    color: var(--light-grey);
+    position: absolute;
+    top: 8px; right: 16px;
+    opacity: .4;
+  }
+  .insight-card h3 {
+    font-weight: 900;
+    font-size: clamp(14px, 1.6vw, 18px);
+    margin-bottom: 8px;
+    padding-right: 40px;
+  }
+  .insight-card p {
+    font-size: clamp(13px, 1.3vw, 15px);
+    color: #444;
+  }
+
+  /* ── Combo cards ── */
+  .combo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%; max-width: 1100px;
+    position: relative; z-index: 2;
+  }
+  .combo-card {
+    background: #fff;
+    border: 2.5px solid var(--ink);
+    padding: 20px 24px;
+    box-shadow: 4px 4px 0 var(--ink);
+  }
+  .combo-card h3 {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .combo-card .tools-list {
+    font-family: 'Permanent Marker', sans-serif;
+    font-size: 15px;
+    color: var(--grey);
+    margin-bottom: 8px;
+  }
+  .combo-card p { font-size: 14px; }
+
+  /* ── Workflow slide ── */
+  .workflow-flow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    position: relative; z-index: 2;
+    margin: 16px 0;
+  }
+  .wf-step {
+    background: #fff;
+    border: 2px solid var(--ink);
+    padding: 12px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    min-width: 120px;
+    box-shadow: 3px 3px 0 var(--ink);
+  }
+  .wf-step.highlight {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .wf-arrow-r {
+    font-size: 24px;
+    color: var(--ink);
+    font-weight: 900;
+  }
+
+  /* ── Navigation ── */
+  .nav {
+    position: fixed;
+    bottom: 28px;
+    left: 50%; transform: translateX(-50%);
+    display: flex; align-items: center; gap: 16px;
+    z-index: 100;
+    background: var(--ink);
+    padding: 10px 24px;
+    border-radius: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,.3);
+  }
+  .nav button {
+    background: none;
+    border: 2px solid var(--paper);
+    color: var(--paper);
+    font-size: 18px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: .2s;
+    font-family: 'Permanent Marker', sans-serif;
+  }
+  .nav button:hover {
+    background: var(--paper);
+    color: var(--ink);
+  }
+  .nav .counter {
+    color: var(--paper);
+    font-family: 'Permanent Marker', sans-serif;
+    font-size: 16px;
+    min-width: 60px;
+    text-align: center;
+  }
+
+  /* ── Manga decoration elements ── */
+  .manga-star {
+    display: inline-block;
+    font-size: 28px;
+    animation: twinkle 2s ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: .5; transform: scale(.85); }
+  }
+
+  .sketch-underline {
+    position: relative;
+    display: inline-block;
+  }
+  .sketch-underline::after {
+    content: '';
+    position: absolute;
+    bottom: -4px; left: -4px; right: -4px;
+    height: 8px;
+    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 8'%3E%3Cpath d='M0 5 Q25 0 50 5 T100 5 T150 5 T200 5' stroke='%231a1a1a' stroke-width='2.5' fill='none'/%3E%3C/svg%3E") repeat-x;
+    background-size: 100px 8px;
+  }
+
+  /* ── Cross-hatch background patches ── */
+  .crosshatch {
+    position: absolute;
+    opacity: .06;
+    background: repeating-linear-gradient(
+      45deg, var(--ink), var(--ink) 1px, transparent 1px, transparent 6px
+    ),
+    repeating-linear-gradient(
+      -45deg, var(--ink), var(--ink) 1px, transparent 1px, transparent 6px
+    );
+    border-radius: 4px;
+    z-index: 0;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 768px) {
+    .slide { padding: 40px 30px; }
+    .slide::before { inset: 10px; }
+    .slide::after { inset: 6px; }
+    .tools-grid { grid-template-columns: 1fr 1fr; gap: 14px; }
+    .tool-card { padding: 16px; }
+    .tool-card .icon { font-size: 32px; }
+    .dt-branch { gap: 16px; }
+    .insight-grid, .combo-grid { grid-template-columns: 1fr; }
+    .nav { bottom: 12px; padding: 8px 16px; }
+  }
+
+  /* ── Manga-style "BAM" emphasis ── */
+  .emphasis-box {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 14px;
+    font-weight: 900;
+    transform: rotate(-1deg);
+    font-size: clamp(13px, 1.5vw, 18px);
+    position: relative; z-index: 2;
+  }
+
+  /* ── Tag label ── */
+  .tag {
+    display: inline-block;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+</style>
+</head>
+<body>
+
+<div class="halftone"></div>
+
+<div class="deck">
+
+  <!-- ====== SLIDE 1: COVER ====== -->
+  <div class="slide active" id="s1">
+    <div class="crosshatch" style="width:200px;height:200px;top:40px;left:30px;"></div>
+    <div class="crosshatch" style="width:180px;height:160px;bottom:60px;right:40px;"></div>
+    <div style="text-align:center;position:relative;z-index:2;">
+      <div style="font-family:'Permanent Marker';font-size:clamp(16px,2vw,24px);color:var(--grey);margin-bottom:8px;">— Sketch Note Presentation —</div>
+      <h1>
+        <span class="cn">AI Agent</span>
+        <span class="cn">工具选择指南</span>
+      </h1>
+      <div class="subtitle" style="margin-top:20px;font-size:clamp(20px,3vw,36px);">五大工具架构全解析</div>
+      <div style="margin-top:40px;">
+        <div class="bubble" style="display:inline-block;text-align:left;">
+          <p>不是选"最强"的，而是选<strong>最适合你</strong>的。<br>不同工具有不同的架构理念，各有所长。</p>
+        </div>
+      </div>
+      <div style="margin-top:30px;font-family:'Caveat';font-size:18px;color:var(--grey);">
+        Antigravity · n8n · NotebookLM · OpenClaw · Claude Code
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 2: FIVE TOOLS OVERVIEW ====== -->
+  <div class="slide" id="s2">
+    <h2><span class="sketch-underline">五大工具一览</span></h2>
+    <div class="tools-grid">
+      <div class="tool-card">
+        <div class="icon">⚔️</div>
+        <div class="tag">CODE + CONTENT</div>
+        <h3>Antigravity</h3>
+        <div class="cn-name">全栈幕僚</div>
+        <p>内置 VS Code 的 AI IDE。<br>用 <strong>Skill</strong>（技能包）+ <strong>Workflow</strong>（工作流）打造个人自动化帝国。</p>
+      </div>
+      <div class="tool-card">
+        <div class="icon">🏭</div>
+        <div class="tag">AUTOMATION</div>
+        <h3>n8n</h3>
+        <div class="cn-name">自动化工厂</div>
+        <p>可视化拖拽的节点工作流。<br><strong>Cron 定时</strong>自动跑，程序级别的稳定性。不靠 LLM 记忆。</p>
+      </div>
+      <div class="tool-card">
+        <div class="icon">📚</div>
+        <div class="tag">KNOWLEDGE</div>
+        <h3>NotebookLM</h3>
+        <div class="cn-name">第二大脑</div>
+        <p>完整的 <strong>RAG 架构</strong>。<br>只基于你的资料回答，每句话都有出处。不编造。</p>
+      </div>
+      <div class="tool-card">
+        <div class="icon">🤵</div>
+        <div class="tag">PERSONAL AI</div>
+        <h3>OpenClaw</h3>
+        <div class="cn-name">私人管家</div>
+        <p>自托管多渠道 AI 助手。<br>WhatsApp / Telegram 随时唤醒，<strong>LLM 推理</strong>决定下一步。</p>
+      </div>
+      <div class="tool-card">
+        <div class="icon">💻</div>
+        <div class="tag">CODING</div>
+        <h3>Claude Code</h3>
+        <div class="cn-name">AI 程序员</div>
+        <p>终端里的专业 coder。<br><strong>单线程主循环</strong>：思考 → 行动 → 验证，深度推理。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 3: METAPHORS ====== -->
+  <div class="slide" id="s3">
+    <div class="crosshatch" style="width:150px;height:300px;top:60px;right:30px;"></div>
+    <h2><span class="sketch-underline">一个比喻秒懂</span></h2>
+    <div style="max-width:800px;position:relative;z-index:2;">
+      <div class="bubble" style="margin-bottom:30px;box-shadow:4px 4px 0 var(--ink);">
+        <p><strong style="font-size:1.1em;">选 AI 工具就像选交通工具——</strong><br>不是越快越好，而是看你<em>去哪</em>。</p>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="insight-card">
+          <div class="num">✈️</div>
+          <h3>n8n = 飞机</h3>
+          <p>固定航线、定时起飞。后台自动化，稳定且高效。适合长途重复路线。</p>
+        </div>
+        <div class="insight-card">
+          <div class="num">🚙</div>
+          <h3>OpenClaw = 私家车</h3>
+          <p>随叫随到、灵活路线。通过聊天 App 直接指挥，适合日常出行杂事。</p>
+        </div>
+        <div class="insight-card">
+          <div class="num">🚲</div>
+          <h3>NotebookLM = 自行车</h3>
+          <p>深入街巷、细致探索。沿着你给的资料路线走，绝不走偏。适合深入研究。</p>
+        </div>
+        <div class="insight-card">
+          <div class="num">🛻</div>
+          <h3>Antigravity = 越野车</h3>
+          <p>全地形通吃。带着一车工具（Skills），什么路都能走。适合复杂综合任务。</p>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:16px;">
+        <div class="insight-card" style="display:inline-block;max-width:380px;">
+          <div class="num">🏎️</div>
+          <h3>Claude Code = 赛车</h3>
+          <p>在赛道（代码）上极速。专注纯编码，深度推理能力最强。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 4: ARCHITECTURE COMPARISON ====== -->
+  <div class="slide" id="s4">
+    <h2><span class="sketch-underline">架构核心对比</span></h2>
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th>维度</th>
+          <th>Antigravity</th>
+          <th>n8n</th>
+          <th>NotebookLM</th>
+          <th>OpenClaw</th>
+          <th>Claude Code</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>触发方式</td>
+          <td>编辑器对话 / 命令</td>
+          <td>Cron 定时 / Webhook</td>
+          <td>Web UI 提问</td>
+          <td>聊天 App 消息</td>
+          <td>终端命令</td>
+        </tr>
+        <tr>
+          <td>AI 角色</td>
+          <td>全栈执行者</td>
+          <td>流程中的一环</td>
+          <td>知识检索员</td>
+          <td>通用任务管家</td>
+          <td>专业代码工程师</td>
+        </tr>
+        <tr>
+          <td>核心架构</td>
+          <td>Agent + Skill/Workflow</td>
+          <td>Node-based DAG</td>
+          <td>RAG 检索增强</td>
+          <td>Hub-Spoke Gateway</td>
+          <td>Master Loop</td>
+        </tr>
+        <tr>
+          <td>扩展方式</td>
+          <td>写 Markdown</td>
+          <td>添加节点</td>
+          <td>上传资料</td>
+          <td>Skills & Plugins</td>
+          <td>CLAUDE.md + MCP</td>
+        </tr>
+        <tr>
+          <td>稳定性</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐</td>
+          <td>⭐⭐⭐</td>
+          <td>⭐⭐⭐⭐</td>
+        </tr>
+        <tr>
+          <td>数据隐私</td>
+          <td>本地</td>
+          <td>自托管可控</td>
+          <td>Google 云端</td>
+          <td>自托管</td>
+          <td>本地 + API</td>
+        </tr>
+      </tbody>
+    </table>
+    <div style="margin-top:20px;position:relative;z-index:2;">
+      <div class="emphasis-box">n8n 是程序在执行 — OpenClaw 是大模型在思考</div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 5: DECISION TREE ====== -->
+  <div class="slide" id="s5">
+    <h2><span class="sketch-underline">如何选？跟着问题走</span></h2>
+    <div class="decision-tree">
+      <div class="dt-node question">你的核心需求是什么？</div>
+      <div class="dt-arrow"></div>
+      <div class="dt-branch">
+        <!-- Branch 1 -->
+        <div class="dt-branch-item">
+          <div class="dt-label">写代码 / 做开发</div>
+          <div class="dt-arrow"></div>
+          <div class="dt-node question" style="font-size:clamp(12px,1.5vw,16px);">只写代码？还是也做内容运营？</div>
+          <div class="dt-arrow"></div>
+          <div class="dt-branch" style="gap:20px;">
+            <div class="dt-branch-item">
+              <div class="dt-label">只写代码</div>
+              <div class="dt-arrow"></div>
+              <div class="dt-node answer">Claude Code</div>
+            </div>
+            <div class="dt-branch-item">
+              <div class="dt-label">代码 + 内容</div>
+              <div class="dt-arrow"></div>
+              <div class="dt-node answer">Antigravity</div>
+            </div>
+          </div>
+        </div>
+        <!-- Branch 2 -->
+        <div class="dt-branch-item">
+          <div class="dt-label">后台自动跑任务</div>
+          <div class="dt-arrow"></div>
+          <div class="dt-node answer">n8n</div>
+        </div>
+        <!-- Branch 3 -->
+        <div class="dt-branch-item">
+          <div class="dt-label">管理知识 / 学习</div>
+          <div class="dt-arrow"></div>
+          <div class="dt-node answer">NotebookLM</div>
+        </div>
+        <!-- Branch 4 -->
+        <div class="dt-branch-item">
+          <div class="dt-label">日常生活助手</div>
+          <div class="dt-arrow"></div>
+          <div class="dt-node answer">OpenClaw</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== SLIDE 6: RECOMMENDED COMBOS ====== -->
+  <div class="slide" id="s6">
+    <div class="crosshatch" style="width:160px;height:200px;bottom:40px;left:30px;"></div>
+    <h2><span class="sketch-underline">最聪明的用法：组合出击</span></h2>
+    <div class="combo-grid">
+      <div class="combo-card">
+        <h3>🎯 独立开发者 + 创作者</h3>
+        <div class="tools-list">Antigravity + NotebookLM + n8n</div>
+        <p>开发用 Antigravity，知识管理用 NotebookLM，定时任务用 n8n。三件套 = 一个人的创业团队。</p>
+      </div>
+      <div class="combo-card">
+        <h3>👨‍💻 纯程序员</h3>
+        <div class="tools-list">Claude Code / Antigravity</div>
+        <p>深度代码选 Claude Code，需要全栈能力选 Antigravity。两者都支持 MCP 协议互通。</p>
+      </div>
+      <div class="combo-card">
+        <h3>📱 非技术用户</h3>
+        <div class="tools-list">OpenClaw + NotebookLM</div>
+        <p>聊天式助手 + 知识管理。在 WhatsApp 里就能完成大多数日常任务。</p>
+      </div>
+      <div class="combo-card">
+        <h3>📣 运营 / 社群管理员</h3>
+        <div class="tools-list">Antigravity + n8n</div>
+        <p>Antigravity 做内容生产流水线，n8n 做定时同步和自动通知。稳定 + 灵活两手抓。</p>
+      </div>
+    </div>
+    <div style="margin-top:24px;position:relative;z-index:2;">
+      <div class="bubble" style="display:inline-block;">
+        <p>💡 <strong>不是选一个，而是让它们各司其职。</strong></p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====== SLIDE 8: TAKEAWAY ====== -->
+  <div class="slide" id="s7">
+    <div class="crosshatch" style="width:200px;height:200px;top:50px;left:40px;"></div>
+    <div class="crosshatch" style="width:180px;height:180px;bottom:80px;right:50px;"></div>
+    <div style="text-align:center;position:relative;z-index:2;">
+      <h1 style="margin-bottom:30px;">
+        <span class="cn">记住这三句话</span>
+      </h1>
+      <div style="display:flex;flex-direction:column;gap:20px;max-width:700px;margin:0 auto;">
+        <div class="bubble" style="text-align:left;">
+          <p style="font-size:clamp(16px,2vw,22px);"><strong>① n8n 是程序在执行，<br>　 OpenClaw 是大模型在思考。</strong></p>
+          <p style="font-size:14px;color:var(--grey);margin-top:6px;">一个按时上班的员工 vs 一个随叫随到的顾问</p>
+        </div>
+        <div class="bubble" style="text-align:left;">
+          <p style="font-size:clamp(16px,2vw,22px);"><strong>② NotebookLM 的力量来自你的资料，<br>　 不是来自 AI 的「想象力」。</strong></p>
+          <p style="font-size:14px;color:var(--grey);margin-top:6px;">RAG 架构 = 有据可查，不编东西</p>
+        </div>
+        <div class="bubble" style="text-align:left;">
+          <p style="font-size:clamp(16px,2vw,22px);"><strong>③ Antigravity 的强大不在模型，<br>　 而在你教会它的每一个 Skill。</strong></p>
+          <p style="font-size:14px;color:var(--grey);margin-top:6px;">20 个 Skill = 20 个永不离职的专业助手</p>
+        </div>
+      </div>
+      <div style="margin-top:36px;font-family:'Caveat';font-size:clamp(18px,2.5vw,28px);color:var(--grey);">
+        The best tool is the one that fits YOUR workflow. ✦
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Navigation -->
+<nav class="nav">
+  <button id="prev" title="Previous">◀</button>
+  <span class="counter" id="counter">1 / 7</span>
+  <button id="next" title="Next">▶</button>
+</nav>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const counter = document.getElementById('counter');
+  let current = 0;
+  const total = slides.length;
+
+  function go(idx) {
+    if (idx < 0 || idx >= total) return;
+    slides[current].classList.remove('active');
+    current = idx;
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${total}`;
+  }
+
+  document.getElementById('prev').addEventListener('click', () => go(current - 1));
+  document.getElementById('next').addEventListener('click', () => go(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+      e.preventDefault();
+      go(current + 1);
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      go(current - 1);
+    }
+    if (e.key === 'Home') go(0);
+    if (e.key === 'End') go(total - 1);
+  });
+
+  // Touch swipe support
+  let touchStartX = 0;
+  document.addEventListener('touchstart', (e) => { touchStartX = e.touches[0].clientX; });
+  document.addEventListener('touchend', (e) => {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 50) {
+      if (dx < 0) go(current + 1);
+      else go(current - 1);
+    }
+  });
+</script>
+
+</body>
+</html>

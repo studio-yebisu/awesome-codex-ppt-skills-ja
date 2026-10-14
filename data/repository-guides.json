@@ -10169,7 +10169,7 @@
   },
   {
     "repository": "arifszn/slide-wright",
-    "summary_ja": "指示に応じてデザインを構築し、reveal.jsでプレゼン資料を作成するAIエージェント向けスキル。",
+    "summary_ja": "独自テーマの実2枚を同じHTMLで試作し、原典engineを保って6枚へappendする日本語派生。",
     "kind": "html",
     "upstream_commit": "d95ba204c9e98488b86b76ced75765ab4ec5de96",
     "checked_at": "2026-10-13T13:34:52.103814+00:00",
@@ -10205,17 +10205,36 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "slide-wright-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python3（原典templateを埋めてappendする補助）",
+      "ブラウザ / 固定CDN5.1.0へのネット接続",
+      "Dela Gothic One / Zen Kaku Gothic New / Space Grotesk（実TTF/OFL同梱・inline）"
+    ],
+    "commands": [
+      "python source/build.py --stage preview --case . --upstream source/upstream",
+      "python -m http.server 8000 --bind 127.0.0.1",
+      "ブラウザで実2枚を開き source/stages.json の preview_opened を true に更新",
+      "python source/build.py --stage append --case . --upstream source/upstream"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "架空イベント・観測/科学データ・開催実績なし",
+      "CDNネット接続が必要 / PPTXとPDFは未生成",
+      "主要初回2枚・engine稼働・同じfile6枚追加のみ。全頁詳細検査・独立review・構造監査・ZIP再実行なし"
     ],
-    "forks": [],
-    "original_description_ja": "指示に応じてデザインを構築し、reveal.jsでプレゼン資料を作成するAIエージェント向けスキル。"
+    "forks": [
+      "slide-wright-ja"
+    ],
+    "guide": "examples/repositories/slide-wright-showcase/README.md",
+    "source_download": "downloads/slide-wright-example-ja.zip",
+    "fork_download": "downloads/slide-wright-ja.zip",
+    "original_description_ja": "指示に応じてデザインを構築し、reveal.jsでプレゼン資料を作成するAIエージェント向けスキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "whiteg2030-alt/BWC-XIXI-PPT-HTML",
@@ -10492,7 +10511,7 @@
   },
   {
     "repository": "dakjdakd/PPT-Design-DNA",
-    "summary_ja": "参考画像のデザインを再利用可能なスタイルとして保存し、HTMLスライドに適用するスキル。",
+    "summary_ja": "指定自作PNGを実表示して5層DNA抽出。tokens/Contract/Blueprint/数値Page Specsから道具棚HTML6頁、元Node guardPASS。",
     "kind": "html",
     "upstream_commit": "5d1d84cf952f16920d893b6c04bd7cb7cff9d155",
     "checked_at": "2026-10-13T13:35:00.612303+00:00",
@@ -10506,32 +10525,124 @@
     ],
     "source_refs": [
       {
+        "path": "LICENSE",
+        "preserved_path": "source/upstream/LICENSE",
+        "sha256": "4be6e6e57c9a2687c5639660a8a4e77171603a57830734883865d5d0a28c3ec6",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/LICENSE"
+      },
+      {
         "path": "README.md",
-        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/README.md",
-        "bytes": 12788
+        "preserved_path": "source/upstream/README.md",
+        "sha256": "9cfdd685aeffb110df482fa6c7aac0190fad7c39f8988a532a5c78cb904a0c73",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/README.md"
+      },
+      {
+        "path": "README_en.md",
+        "preserved_path": "source/upstream/README_en.md",
+        "sha256": "2d06faa1420caa1b2b368ce151c9a7a9ccbdc03f0f2d2a3626993afcc977a4b0",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/README_en.md"
+      },
+      {
+        "path": "references/design-dna-schema.md",
+        "preserved_path": "source/upstream/references/design-dna-schema.md",
+        "sha256": "c0805752ad8746652e504856813c6c0fe7318e1991d7d0e10beac69394a400f4",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/design-dna-schema.md"
+      },
+      {
+        "path": "references/html-generation-rules.md",
+        "preserved_path": "source/upstream/references/html-generation-rules.md",
+        "sha256": "f7abdf4f7ae133981e4ef4d57ec3a3507d16cfe053a9eb0b992375b9794c63c9",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/html-generation-rules.md"
+      },
+      {
+        "path": "references/image-asset-strategy.md",
+        "preserved_path": "source/upstream/references/image-asset-strategy.md",
+        "sha256": "65932451eee067638bca054a6dd689e4cba2730bf46cbd696ace08e2fc97fb8e",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/image-asset-strategy.md"
+      },
+      {
+        "path": "references/output-contract.md",
+        "preserved_path": "source/upstream/references/output-contract.md",
+        "sha256": "e043d23dd8a3766d7b3a0047cc92cd5efb832f72c78b5baded0ec3abc49b5da7",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/output-contract.md"
+      },
+      {
+        "path": "references/page-spec-contract.md",
+        "preserved_path": "source/upstream/references/page-spec-contract.md",
+        "sha256": "5776d4e80e6a83d92c0dc80a960b5839ca953897102e321daf9f89214d6387fb",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/page-spec-contract.md"
+      },
+      {
+        "path": "references/visual-safety-rules.md",
+        "preserved_path": "source/upstream/references/visual-safety-rules.md",
+        "sha256": "6aa173de2f2a5da560ab2fd76ff39e82ed62719459fd762eaa5c1cc0be3135d5",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/visual-safety-rules.md"
+      },
+      {
+        "path": "references/workflow.md",
+        "preserved_path": "source/upstream/references/workflow.md",
+        "sha256": "13f8a0b1ec48f89d6abbc41e6b86f67d7b849642112e04eef2534543734837e3",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/references/workflow.md"
+      },
+      {
+        "path": "scripts/ppt-layout-guard.js",
+        "preserved_path": "source/upstream/scripts/ppt-layout-guard.js",
+        "sha256": "663b8c156c72ff94c553241cbb83c18511addc147b7bfb2775cafa915529890d",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/scripts/ppt-layout-guard.js"
       },
       {
         "path": "SKILL.md",
-        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/SKILL.md",
-        "bytes": 39089
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/LICENSE",
-        "bytes": 11340
+        "preserved_path": "source/upstream/SKILL.md",
+        "sha256": "ddf06b00932abcc1f2317972565376f385027cf8a52a9b5caeddd1177a5d4dae",
+        "url": "https://github.com/dakjdakd/PPT-Design-DNA/blob/5d1d84cf952f16920d893b6c04bd7cb7cff9d155/SKILL.md"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "design-dna-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Browser（字体/CSS/JS/条件内包のsingle HTML）",
+      "Python3標準ライブラリ（再梱包）",
+      "Node.js（原典必須guard、外部依存なし）"
+    ],
+    "commands": [
+      "python source/rebuild.py",
+      "node source/upstream/scripts/ppt-layout-guard.js index.html --report layout-guard-report.json"
+    ],
+    "steps": [
+      "参考画像を実表示して出所とsubject firewallを保存",
+      "原典schemaに5層DNA・パネル・tokensを抽出",
+      "Contract/Blueprint/数値Page Specsを用意",
+      "固定1920×1080 stage/scaling式でHTML化",
+      "元Node guardを実行し代表出力を初回表示"
+    ],
+    "limitations": [
+      "編集はDNA/Page Specs・HTML/SVG/CSS/JS。PPTXは生成しません。",
+      "参考PNGはstyle evidenceのみ。静止画像由来のモーション実測はありません。",
+      "必須guardPASS。代表2頁以外の詳細目視と親bridge統合は未確認。",
+      "原典確認ゲートは承認済み自律制作の記録へ置換。canonical profile保存はしていません。"
+    ],
+    "forks": [
+      "design-dna-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "actual_reference_image_design_dna_schema_specs_fixed_stage_html_guard",
+    "case_ids": [
+      "design-dna-showcase"
+    ],
+    "license_notice_ja": "原典Apache-2.0 ©2026 dakjdakd、参考Akxan MIT ©2025 sunbigfly、字体OFLを個別保持。単体HTMLにもApache/OFL原文を内包。",
+    "caveats": [
+      "Static reference cannot supply observed motion; purposeful motion is a local adaptation.",
+      "Upstream has no completed renderer/controller; original schema/stage/scaling and mandatory Node guard are used, navigation authored locally.",
+      "Original user-turn gates adapted under authorized autonomous production; no canonical saved profile created.",
+      "Fictional proposal; participants/cost/dates/venue undecided; no safety or effectiveness evidence.",
+      "Mandatory source guard PASS is not an all-page visual approval."
+    ],
+    "skill": "skill-forks/design-dna-ja/SKILL.md",
+    "guide": "examples/repositories/design-dna-showcase/README.md",
     "original_description_ja": "参考画像のデザインを再利用可能なスタイルとして保存し、HTMLスライドに適用するスキル。"
   },
   {
@@ -10894,7 +11005,7 @@
   },
   {
     "repository": "masaki39/marp-mcp",
-    "summary_ja": "構造化された操作体系により、AIエージェントがMarpスライドの作成・編集を行うMCPサーバー。",
+    "summary_ja": "原典の実MCP構造化操作とminimalで、和文企画をHTML/PDF/画像PPTXへ生成。",
     "kind": "html",
     "upstream_commit": "2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f",
     "checked_at": "2026-10-13T13:35:11.130682+00:00",
@@ -10930,17 +11041,35 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "marp-mcp-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node18+ / 原典marp-mcp1.7.0 / Marp CLI4.4.0",
+      "Python3 / PyMuPDF / ChromeまたはEdge",
+      "Shippori Mincho / BIZ UDPGothic / Manrope (実TTF/OFL同梱)"
+    ],
+    "commands": [
+      "npm --prefix source/runtime ci --ignore-scripts",
+      "node source/runtime/node_modules/typescript/bin/tsc -p source/runtime/tsconfig.json",
+      "python source/run_mcp.py --case . --runtime source/runtime --node node --marp-cli source/runtime/node_modules/@marp-team/marp-cli/marp-cli.js"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "架空企画・仮の時間設定・開催効果売上実績なし",
+      "PDF固定・PPTX画像主体・native編集不可・PowerPoint表示未確認",
+      "HTMLブラウザ操作追加確認・全頁詳細目視・独立review・構造監査・ZIP再実行なし"
     ],
-    "forks": [],
-    "original_description_ja": "構造化された操作体系により、AIエージェントがMarpスライドの作成・編集を行うMCPサーバー。"
+    "forks": [
+      "marp-mcp-ja"
+    ],
+    "guide": "examples/repositories/marp-mcp-showcase/README.md",
+    "source_download": "downloads/marp-mcp-example-ja.zip",
+    "fork_download": "downloads/marp-mcp-ja.zip",
+    "original_description_ja": "構造化された操作体系により、AIエージェントがMarpスライドの作成・編集を行うMCPサーバー。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "young920/gz-ppt-skill",
@@ -11141,7 +11270,7 @@
   },
   {
     "repository": "Watermelon4000/sketch-note-ppt",
-    "summary_ja": "手描きノート風のプレゼン資料を、ビルド不要の単一HTMLファイルで作成するAIスキル。",
+    "summary_ja": "原典Sketch Notes CSS・吹き出し・手描き下線・decision tree・go()で和文6頁を制作。",
     "kind": "html",
     "upstream_commit": "0729098c28a2105b3e2f6225b3afe125e3959fb6",
     "checked_at": "2026-10-13T13:35:14.512010+00:00",
@@ -11155,32 +11284,78 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/README.md",
-        "bytes": 4369
+        "path": "skill/SKILL.md",
+        "preserved_path": "source/upstream/skill/SKILL.md",
+        "sha256": "6f27f51712f13f5b57fdec0e0f30ac3c185b1438102a68df7e8bb335b1648ce1",
+        "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/skill/SKILL.md"
       },
       {
-        "path": "skill/SKILL.md",
-        "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/skill/SKILL.md",
-        "bytes": 11514
+        "path": "style/sketch-notes-base.css",
+        "preserved_path": "source/upstream/style/sketch-notes-base.css",
+        "sha256": "36d7cc91d4b9b0b900665f00cad6402e35e9427a2696debd29b7e2ede065a010",
+        "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/style/sketch-notes-base.css"
+      },
+      {
+        "path": "style/STYLE_GUIDE.md",
+        "preserved_path": "source/upstream/style/STYLE_GUIDE.md",
+        "sha256": "808f17260ff7163d780faa4c7a41fd02d2ce19a46f2faf298bc9742652187b40",
+        "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/style/STYLE_GUIDE.md"
+      },
+      {
+        "path": "demo/demo-index.html",
+        "preserved_path": "source/upstream/demo/demo-index.html",
+        "sha256": "adb9a37c2a73daff8cb79e093c632c192e677bcea00a3c5b9cf077e9af35e02c",
+        "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/demo/demo-index.html"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/LICENSE",
-        "bytes": 1071
+        "preserved_path": "source/upstream/LICENSE",
+        "sha256": "e1e7ac99ceea4bf7c6126649a54e75d971283197e6ad8562fe9279888714db9e",
+        "url": "https://github.com/Watermelon4000/sketch-note-ppt/blob/0729098c28a2105b3e2f6225b3afe125e3959fb6/LICENSE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sketch-note-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "ブラウザ（single HTML、ネット接続不要）",
+      "Python3標準ライブラリ（再梱包のみ）"
+    ],
+    "commands": [
+      "python source/rebuild.py"
+    ],
+    "steps": [
+      "原稿・読者・計画を保存",
+      "原典sketch-notes CSSとcomponentへ和文/SVGを組む",
+      "元controllerへ最小bridgeを加え単一HTMLへ梱包",
+      "代表出力を初回表示してページ送りを確認"
+    ],
+    "limitations": [
+      "PPTXを生成せず、HTML/SVG/CSSを編集します。",
+      "観察教材・書体選択案で、効果の実測はありません。",
+      "同一origin親adapterは局所追加。親サイト統合の動作は未確認。",
+      "全頁詳細目視・独立レビュー・構造監査・ZIP再実行は未実施。"
+    ],
+    "forks": [
+      "sketch-note-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_sketch_notes_html_css_svg_js_authoring",
+    "case_ids": [
+      "sketch-note-showcase"
+    ],
+    "license_notice_ja": "原典MIT ©2026 Watermelon4000を保持。実字体は公式固定Google Fonts配布のOFL-1.1、未改変TTFと原文OFLを同梱。",
+    "caveats": [
+      "Editable HTML/SVG/CSS; no PPTX generated.",
+      "Japanese type roles replace original mandatory remote font stack and are documented as local adaptations.",
+      "The font/voice relationship is a teaching choice, not measured empirical evidence.",
+      "Representative first display only; remaining pages not inspected in detail; parent bridge integration not tested."
+    ],
+    "skill": "skill-forks/sketch-note-ja/SKILL.md",
+    "guide": "examples/repositories/sketch-note-showcase/README.md",
     "original_description_ja": "手描きノート風のプレゼン資料を、ビルド不要の単一HTMLファイルで作成するAIスキル。"
   },
   {

@@ -1,0 +1,508 @@
+[
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 1,
+      "method": "initialize",
+      "params": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {},
+        "clientInfo": {
+          "name": "yebisu-case-builder",
+          "version": "1.0"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "protocolVersion": "2024-11-05",
+        "capabilities": {
+          "resources": {},
+          "tools": {
+            "listChanged": true
+          }
+        },
+        "serverInfo": {
+          "name": "marp-mcp",
+          "version": "1.7.0"
+        }
+      },
+      "jsonrpc": "2.0",
+      "id": 1
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "method": "notifications/initialized"
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 2,
+      "method": "tools/call",
+      "params": {
+        "name": "list_themes_and_styles",
+        "arguments": {}
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"currentDefaults\": {\n    \"theme\": \"default\",\n    \"style\": \"minimal\"\n  },\n  \"usage\": {\n    \"serverDefaults\": \"Set server defaults via -t / -s CLI flags at startup (e.g. marp-mcp -t gaia -s rich). Omitting flags defaults to 'default'.\",\n    \"perCall\": \"Override per call by passing 'theme' and/or 'style' params to list_layouts, manage_slide, or set_frontmatter. Omit to use server defaults.\",\n    \"combining\": \"Styles add layouts on top of themes. Use list_layouts to see the merged layout list for a specific theme+style combination.\"\n  },\n  \"themes\": [\n    {\n      \"name\": \"default\",\n      \"description\": \"Standard Marp theme using directives for footers and built-in layouts\",\n      \"layoutCount\": 7,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"list\",\n        \"table\",\n        \"image-right\",\n        \"image-center\",\n        \"content\"\n      ]\n    },\n    {\n      \"name\": \"gaia\",\n      \"description\": \"Marp Gaia theme using default layouts (title slide supports lead styling)\",\n      \"layoutCount\": 6,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"list\",\n        \"table\",\n        \"image-right\",\n        \"image-center\"\n      ]\n    },\n    {\n      \"name\": \"uncover\",\n      \"description\": \"Marp Uncover theme using the standard layout set\",\n      \"layoutCount\": 6,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"list\",\n        \"table\",\n        \"image-right\",\n        \"image-center\"\n      ]\n    }\n  ],\n  \"styles\": [\n    {\n      \"name\": \"rich\",\n      \"description\": \"Rich visual style with cards, timelines, grids, gradients, and more\",\n      \"compatibleThemes\": [\n        \"all themes\"\n      ],\n      \"layoutCount\": 25,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"list\",\n        \"table\",\n        \"image-right\",\n        \"image-center\",\n        \"image-split\",\n        \"timeline\",\n        \"card-grid\",\n        \"statistics\",\n        \"highlight-box\",\n        \"two-column-panel\",\n        \"three-column-panel\",\n        \"image-comparison\",\n        \"content\",\n        \"quote\",\n        \"process\",\n        \"two-column\",\n        \"big-statement\",\n        \"sidebar\",\n        \"progress-bar\",\n        \"chart-bar\",\n        \"timeline-horizontal\",\n        \"pull-quote\",\n        \"bento-grid\"\n      ]\n    },\n    {\n      \"name\": \"minimal\",\n      \"description\": \"Clean, flat design with typography focus and minimal decoration\",\n      \"compatibleThemes\": [\n        \"all themes\"\n      ],\n      \"layoutCount\": 15,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"content\",\n        \"list\",\n        \"table\",\n        \"image-right\",\n        \"image-center\",\n        \"quote\",\n        \"two-column\",\n        \"big-statement\",\n        \"statistics\",\n        \"highlight-box\",\n        \"pull-quote\",\n        \"agenda\",\n        \"comparison\"\n      ]\n    },\n    {\n      \"name\": \"dark\",\n      \"description\": \"Dark mode style with indigo and emerald accents, developer-friendly\",\n      \"compatibleThemes\": [\n        \"all themes\"\n      ],\n      \"layoutCount\": 21,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"content\",\n        \"list\",\n        \"table\",\n        \"card-grid\",\n        \"timeline\",\n        \"statistics\",\n        \"image-right\",\n        \"terminal\",\n        \"quote\",\n        \"image-center\",\n        \"process\",\n        \"two-column\",\n        \"big-statement\",\n        \"highlight-box\",\n        \"progress-bar\",\n        \"chart-bar\",\n        \"timeline-horizontal\",\n        \"code-comparison\",\n        \"code-showcase\"\n      ]\n    },\n    {\n      \"name\": \"corporate\",\n      \"description\": \"Professional business style with navy color scheme, structured layouts\",\n      \"compatibleThemes\": [\n        \"all themes\"\n      ],\n      \"layoutCount\": 20,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"content\",\n        \"list\",\n        \"table\",\n        \"two-column\",\n        \"three-column\",\n        \"statistics\",\n        \"process\",\n        \"agenda\",\n        \"image-right\",\n        \"highlight-box\",\n        \"quote\",\n        \"image-center\",\n        \"big-statement\",\n        \"sidebar\",\n        \"progress-bar\",\n        \"chart-bar\",\n        \"pull-quote\",\n        \"quadrant\"\n      ]\n    },\n    {\n      \"name\": \"academic\",\n      \"description\": \"Academic conference presentation style with maroon color scheme, structured for scholarly talks\",\n      \"compatibleThemes\": [\n        \"all themes\"\n      ],\n      \"layoutCount\": 11,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"content\",\n        \"list\",\n        \"table\",\n        \"two-column\",\n        \"image-right\",\n        \"image-center\",\n        \"key-message\",\n        \"methodology\",\n        \"statistics\"\n      ]\n    },\n    {\n      \"name\": \"tech\",\n      \"description\": \"Modern tech/startup style with violet-cyan gradient accents, strong typography for product demos and engineering talks\",\n      \"compatibleThemes\": [\n        \"all themes\"\n      ],\n      \"layoutCount\": 10,\n      \"layouts\": [\n        \"title\",\n        \"section\",\n        \"content\",\n        \"list\",\n        \"two-column\",\n        \"statistics\",\n        \"quote\",\n        \"highlight-box\",\n        \"feature-grid\",\n        \"roadmap\"\n      ]\n    }\n  ]\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 2
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 3,
+      "method": "tools/call",
+      "params": {
+        "name": "list_layouts",
+        "arguments": {
+          "theme": "default",
+          "style": "minimal"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"theme\": \"default\",\n  \"style\": \"minimal\",\n  \"layouts\": [\n    {\n      \"name\": \"title\",\n      \"description\": \"Clean black title slide with white text\",\n      \"className\": \"min-title\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Main heading text\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"content\",\n          \"type\": \"string\",\n          \"description\": \"Content like author info (markdown supported, keep concise)\",\n          \"required\": false,\n          \"maxLength\": 500\n        },\n        {\n          \"name\": \"backgroundImage\",\n          \"type\": \"string\",\n          \"description\": \"Optional background image path or URL\",\n          \"required\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"section\",\n      \"description\": \"Simple black section divider slide\",\n      \"className\": \"min-section\",\n      \"params\": [\n        {\n          \"name\": \"title\",\n          \"type\": \"string\",\n          \"description\": \"Section title\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"subtitle\",\n          \"type\": \"string\",\n          \"description\": \"Subtitle or description\",\n          \"required\": false,\n          \"maxLength\": 200\n        }\n      ]\n    },\n    {\n      \"name\": \"list\",\n      \"description\": \"Simple bullet list slide\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 54\n        },\n        {\n          \"name\": \"list\",\n          \"type\": \"array\",\n          \"description\": \"List items (max 10 items)\",\n          \"required\": true,\n          \"maxItems\": 10,\n          \"maxLength\": 70\n        },\n        {\n          \"name\": \"citations\",\n          \"type\": \"string\",\n          \"description\": \"Citation (no line break)\",\n          \"required\": false,\n          \"maxLength\": 130\n        }\n      ]\n    },\n    {\n      \"name\": \"table\",\n      \"description\": \"Minimal table with black header and clean borders\",\n      \"className\": \"min-table\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 54\n        },\n        {\n          \"name\": \"tableMarkdown\",\n          \"type\": \"string\",\n          \"description\": \"Table in markdown format (max 5 rows)\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"string\",\n          \"description\": \"Table description below table (no line break)\",\n          \"required\": false,\n          \"maxLength\": 75\n        },\n        {\n          \"name\": \"citations\",\n          \"type\": \"string\",\n          \"description\": \"Citation (no line break)\",\n          \"required\": false,\n          \"maxLength\": 130\n        }\n      ]\n    },\n    {\n      \"name\": \"image-right\",\n      \"description\": \"Text on left, image on right (60:40 split), clean design\",\n      \"className\": \"min-img-right\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"list\",\n          \"type\": \"array\",\n          \"description\": \"List items for the content side\",\n          \"required\": true,\n          \"maxItems\": 10\n        },\n        {\n          \"name\": \"imagePath\",\n          \"type\": \"string\",\n          \"description\": \"Image file path or URL\",\n          \"required\": true\n        },\n        {\n          \"name\": \"citations\",\n          \"type\": \"string\",\n          \"description\": \"Citation (no line break)\",\n          \"required\": false,\n          \"maxLength\": 130\n        }\n      ]\n    },\n    {\n      \"name\": \"image-center\",\n      \"description\": \"Centered image slide, clean and minimal\",\n      \"className\": \"min-img-center\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 54\n        },\n        {\n          \"name\": \"imagePath\",\n          \"type\": \"string\",\n          \"description\": \"Image file path or URL\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"string\",\n          \"description\": \"Image description below image\",\n          \"required\": false,\n          \"maxLength\": 75\n        },\n        {\n          \"name\": \"caption\",\n          \"type\": \"string\",\n          \"description\": \"Image caption displayed below\",\n          \"required\": false,\n          \"maxLength\": 120\n        },\n        {\n          \"name\": \"citations\",\n          \"type\": \"string\",\n          \"description\": \"Citation (no line break)\",\n          \"required\": false,\n          \"maxLength\": 130\n        }\n      ]\n    },\n    {\n      \"name\": \"content\",\n      \"description\": \"Pure markdown content slide\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 54\n        },\n        {\n          \"name\": \"body\",\n          \"type\": \"string\",\n          \"description\": \"Free-form markdown body\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"quote\",\n      \"description\": \"Quote slide with left border accent, no extra decoration\",\n      \"className\": \"min-quote\",\n      \"params\": [\n        {\n          \"name\": \"quote\",\n          \"type\": \"string\",\n          \"description\": \"The quote text\",\n          \"required\": true\n        },\n        {\n          \"name\": \"attribution\",\n          \"type\": \"string\",\n          \"description\": \"Quote attribution (e.g. author name)\",\n          \"required\": false,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"content\",\n          \"type\": \"string\",\n          \"description\": \"Additional content below the quote\",\n          \"required\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"two-column\",\n      \"description\": \"Two-column layout with a thin divider line\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"leftTitle\",\n          \"type\": \"string\",\n          \"description\": \"Left column title\",\n          \"required\": false,\n          \"maxLength\": 60\n        },\n        {\n          \"name\": \"leftList\",\n          \"type\": \"array\",\n          \"description\": \"Left column list items\",\n          \"required\": false,\n          \"maxItems\": 8\n        },\n        {\n          \"name\": \"rightTitle\",\n          \"type\": \"string\",\n          \"description\": \"Right column title\",\n          \"required\": false,\n          \"maxLength\": 60\n        },\n        {\n          \"name\": \"rightList\",\n          \"type\": \"array\",\n          \"description\": \"Right column list items\",\n          \"required\": false,\n          \"maxItems\": 8\n        }\n      ]\n    },\n    {\n      \"name\": \"big-statement\",\n      \"description\": \"Large impactful statement slide with bold centered text\",\n      \"className\": \"min-statement\",\n      \"params\": [\n        {\n          \"name\": \"statement\",\n          \"type\": \"string\",\n          \"description\": \"The main statement or headline\",\n          \"required\": true,\n          \"maxLength\": 120\n        },\n        {\n          \"name\": \"subtitle\",\n          \"type\": \"string\",\n          \"description\": \"Optional supporting text below the statement\",\n          \"required\": false,\n          \"maxLength\": 200\n        }\n      ]\n    },\n    {\n      \"name\": \"statistics\",\n      \"description\": \"Minimal statistics display with black numbers and thin underline (use 'Number|Label' format)\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"stats\",\n          \"type\": \"array\",\n          \"description\": \"Statistics in 'Number|Label' format\",\n          \"required\": true,\n          \"maxItems\": 5\n        },\n        {\n          \"name\": \"caption\",\n          \"type\": \"string\",\n          \"description\": \"Optional caption below statistics\",\n          \"required\": false,\n          \"maxLength\": 200\n        }\n      ]\n    },\n    {\n      \"name\": \"highlight-box\",\n      \"description\": \"Minimal message box for key takeaways\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Box heading\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"content\",\n          \"type\": \"string\",\n          \"description\": \"Box content text\",\n          \"required\": false,\n          \"maxLength\": 500\n        }\n      ]\n    },\n    {\n      \"name\": \"pull-quote\",\n      \"description\": \"Minimal decorative impact quote with large quotation marks\",\n      \"className\": \"min-pull-quote\",\n      \"params\": [\n        {\n          \"name\": \"quote\",\n          \"type\": \"string\",\n          \"description\": \"The quote text (short, impactful)\",\n          \"required\": true,\n          \"maxLength\": 200\n        },\n        {\n          \"name\": \"attribution\",\n          \"type\": \"string\",\n          \"description\": \"Quote attribution\",\n          \"required\": false,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"context\",\n          \"type\": \"string\",\n          \"description\": \"Additional context or source\",\n          \"required\": false,\n          \"maxLength\": 120\n        }\n      ]\n    },\n    {\n      \"name\": \"agenda\",\n      \"description\": \"Clean agenda slide with numbered items and optional time durations (use 'Item name|Duration' format)\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading (max 80 chars, ~48 chars for Japanese)\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"items\",\n          \"type\": \"array\",\n          \"description\": \"Agenda items in 'Item name|Duration' format (duration is optional). Max 8 items.\",\n          \"required\": true,\n          \"maxItems\": 8\n        },\n        {\n          \"name\": \"subtitle\",\n          \"type\": \"string\",\n          \"description\": \"Optional subtitle displayed below the heading\",\n          \"required\": false,\n          \"maxLength\": 120\n        }\n      ]\n    },\n    {\n      \"name\": \"comparison\",\n      \"description\": \"Side-by-side comparison with explicit left/right titles and list items, separated by a thin divider\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading (max 80 chars, ~48 chars for Japanese)\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"leftTitle\",\n          \"type\": \"string\",\n          \"description\": \"Left panel title (e.g., 'Before', 'Option A', 'Pros')\",\n          \"required\": true,\n          \"maxLength\": 50\n        },\n        {\n          \"name\": \"leftList\",\n          \"type\": \"array\",\n          \"description\": \"Left panel list items. Max 6 items.\",\n          \"required\": true,\n          \"maxItems\": 6\n        },\n        {\n          \"name\": \"rightTitle\",\n          \"type\": \"string\",\n          \"description\": \"Right panel title (e.g., 'After', 'Option B', 'Cons')\",\n          \"required\": true,\n          \"maxLength\": 50\n        },\n        {\n          \"name\": \"rightList\",\n          \"type\": \"array\",\n          \"description\": \"Right panel list items. Max 6 items.\",\n          \"required\": true,\n          \"maxItems\": 6\n        }\n      ]\n    }\n  ]\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 3
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 4,
+      "method": "tools/call",
+      "params": {
+        "name": "create_presentation",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "title": "ひとつの服を、<br>もう一度。",
+          "subtitle": "衣服お直しワークショップ<br><small>架空の企画案 / 開催日時・会場は未定</small>",
+          "paginate": true
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"message\": \"Created presentation with 1 slide\",\n  \"filePath\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\",\n  \"title\": \"ひとつの服を、<br>もう一度。\",\n  \"totalSlides\": 1,\n  \"workflow\": [\n    \"Use list_layouts to see available layouts\",\n    \"Use manage_slide to add or edit slides\",\n    \"Use read_slide to list all slides and their IDs\",\n    \"Use export_slide to export to HTML or PDF\"\n  ]\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 4
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 5,
+      "method": "tools/call",
+      "params": {
+        "name": "set_frontmatter",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "header": "",
+          "paginate": true,
+          "theme": "default",
+          "style": "minimal"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"message\": \"Updated frontmatter successfully\",\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\",\n  \"style\": \"minimal\",\n  \"frontmatter\": {\n    \"marp\": true,\n    \"theme\": \"default\",\n    \"header\": \"\",\n    \"paginate\": true\n  }\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 5
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 6,
+      "method": "tools/call",
+      "params": {
+        "name": "manage_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "layoutType": "two-column",
+          "params": {
+            "heading": "一着と、ひとつの気がかり。",
+            "leftTitle": "持ってくるもの",
+            "leftList": [
+              "洗濯した、直したい服を一着",
+              "気になる箇所のメモ",
+              "持ち帰るための袋"
+            ],
+            "rightTitle": "会場で用意するもの",
+            "rightList": [
+              "基本の道具と材料",
+              "相談できる案内役",
+              "作業と記録のスペース"
+            ]
+          },
+          "note": "架空の企画案。具体的な道具・材料の適合は運営側で確認する。参加者に技法手順を指示する資料ではない。"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"operation\": \"Inserted slide at position 2 (end)\",\n  \"slideId\": \"137a2953-b510-42b1-a8d3-336041700c4f\",\n  \"layoutType\": \"two-column\",\n  \"totalSlides\": 2,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 6
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 7,
+      "method": "tools/call",
+      "params": {
+        "name": "manage_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "layoutType": "content",
+          "params": {
+            "heading": "見つけて、試して、記録する。",
+            "body": "<div class=\"journey\"><div><b>01</b><h3>見つける</h3><p>気になる箇所を共有</p><span>20 min</span></div><div><b>02</b><h3>相談する</h3><p>今日の範囲を決める</p><span>20 min</span></div><div><b>03</b><h3>試してみる</h3><p>案内役と手を動かす</p><span>60 min</span></div><div><b>04</b><h3>記録する</h3><p>次にすることを残す</p><span>20 min</span></div></div>\n\n<div class=\"caption\">当日の行程案 / 合計120分。作業範囲は服の状態に合わせて相談する。</div>"
+          },
+          "note": "時間は仮の企画設定で、実測ではない。修理の完成や効果を保証する内容ではない。"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"operation\": \"Inserted slide at position 3 (end)\",\n  \"slideId\": \"56786240-77d5-45e7-aaed-caf4862cad98\",\n  \"layoutType\": \"content\",\n  \"totalSlides\": 3,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 7
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 8,
+      "method": "tools/call",
+      "params": {
+        "name": "manage_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "layoutType": "table",
+          "params": {
+            "heading": "役割を、先に分けておく。",
+            "tableMarkdown": "| 役割 | 当日すること | 次へ渡すもの |\n| :-- | :-- | :-- |\n| 参加者 | 気がかりと希望を伝える | 今日の作業範囲 |\n| 案内役 | 服の状態を見て相談に応じる | 続け方と注意点 |\n| 記録役 | 作業前後と次の予定を残す | 持ち帰る記録 |",
+            "description": "架空の運営案。少人数なら案内役と記録役を兼ねる。"
+          },
+          "note": "実在の人名・会社・運営実績は示していない。役割の仮案。"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"operation\": \"Inserted slide at position 4 (end)\",\n  \"slideId\": \"897cb8e7-b4e8-4468-b557-ec22871dcf96\",\n  \"layoutType\": \"table\",\n  \"totalSlides\": 4,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 8
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 9,
+      "method": "tools/call",
+      "params": {
+        "name": "manage_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "layoutType": "content",
+          "params": {
+            "heading": "持ち帰るのは、この三つ。",
+            "body": "<div class=\"takeaways\"><div><span>01</span><h3>服</h3><p>今日、手を入れた一着</p></div><div><span>02</span><h3>記録</h3><p>変えた箇所と気づき</p></div><div><span>03</span><h3>次の一手</h3><p>家で続けることを一つ</p></div></div>\n\n<div class=\"caption\">完成していない箇所も、そのまま記録する。続きは無理のない範囲で。</div>"
+          },
+          "note": "持ち帰る内容の企画案。完成・効果の実績ではない。"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"operation\": \"Inserted slide at position 5 (end)\",\n  \"slideId\": \"d5b2ab3d-20a1-478c-bcea-676c19f77f8c\",\n  \"layoutType\": \"content\",\n  \"totalSlides\": 5,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 9
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 10,
+      "method": "tools/call",
+      "params": {
+        "name": "manage_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "layoutType": "big-statement",
+          "params": {
+            "statement": "直せたところも、<br>次の一手も。",
+            "subtitle": "持ち帰ろう。<br><small>開催前の企画案 / 日時・会場・参加条件は未定</small>"
+          },
+          "note": "架空の衣服お直しワークショップ企画。開催・効果・売上の実績はない。"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"operation\": \"Inserted slide at position 6 (end)\",\n  \"slideId\": \"9d4ba204-3b15-457a-8e95-423e8592739d\",\n  \"layoutType\": \"big-statement\",\n  \"totalSlides\": 6,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 10
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 11,
+      "method": "tools/call",
+      "params": {
+        "name": "generate_slide_ids",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"message\": \"All slides already have IDs\",\n  \"totalSlides\": 6,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 11
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 12,
+      "method": "tools/call",
+      "params": {
+        "name": "read_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md"
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"totalSlides\": 6,\n  \"slides\": [\n    {\n      \"slideId\": \"b43985c5-b8a2-409a-a8a5-d23a803fc778\",\n      \"position\": 1,\n      \"content\": \"<!-- slide-id: b43985c5-b8a2-409a-a8a5-d23a803fc778 -->\\n\\n<!-- _class: min-title -->\\n\\n# ひとつの服を、<br>もう一度。\\n\\n衣服お直しワークショップ<br><small>架空の企画案 / 開催日時・会場は未定</small>\\n\"\n    },\n    {\n      \"slideId\": \"137a2953-b510-42b1-a8d3-336041700c4f\",\n      \"position\": 2,\n      \"content\": \"\\n<!-- slide-id: 137a2953-b510-42b1-a8d3-336041700c4f -->\\n\\n## 一着と、ひとつの気がかり。\\n\\n<div class=\\\"min-2col\\\">\\n<div class=\\\"min-2col-left\\\">\\n<h3>持ってくるもの</h3><ul>\\n<li>洗濯した、直したい服を一着</li>\\n<li>気になる箇所のメモ</li>\\n<li>持ち帰るための袋</li>\\n</ul>\\n</div>\\n<div class=\\\"min-2col-right\\\">\\n<h3>会場で用意するもの</h3><ul>\\n<li>基本の道具と材料</li>\\n<li>相談できる案内役</li>\\n<li>作業と記録のスペース</li>\\n</ul>\\n</div>\\n</div>\\n\\n<!--\\n架空の企画案。具体的な道具・材料の適合は運営側で確認する。参加者に技法手順を指示する資料ではない。\\n-->\\n\"\n    },\n    {\n      \"slideId\": \"56786240-77d5-45e7-aaed-caf4862cad98\",\n      \"position\": 3,\n      \"content\": \"\\n<!-- slide-id: 56786240-77d5-45e7-aaed-caf4862cad98 -->\\n\\n## 見つけて、試して、記録する。\\n\\n<div class=\\\"journey\\\"><div><b>01</b><h3>見つける</h3><p>気になる箇所を共有</p><span>20 min</span></div><div><b>02</b><h3>相談する</h3><p>今日の範囲を決める</p><span>20 min</span></div><div><b>03</b><h3>試してみる</h3><p>案内役と手を動かす</p><span>60 min</span></div><div><b>04</b><h3>記録する</h3><p>次にすることを残す</p><span>20 min</span></div></div>\\n\\n<div class=\\\"caption\\\">当日の行程案 / 合計120分。作業範囲は服の状態に合わせて相談する。</div>\\n\\n<!--\\n時間は仮の企画設定で、実測ではない。修理の完成や効果を保証する内容ではない。\\n-->\\n\"\n    },\n    {\n      \"slideId\": \"897cb8e7-b4e8-4468-b557-ec22871dcf96\",\n      \"position\": 4,\n      \"content\": \"\\n<!-- slide-id: 897cb8e7-b4e8-4468-b557-ec22871dcf96 -->\\n\\n<!-- _class: min-table -->\\n\\n## 役割を、先に分けておく。\\n\\n| 役割 | 当日すること | 次へ渡すもの |\\n| :-- | :-- | :-- |\\n| 参加者 | 気がかりと希望を伝える | 今日の作業範囲 |\\n| 案内役 | 服の状態を見て相談に応じる | 続け方と注意点 |\\n| 記録役 | 作業前後と次の予定を残す | 持ち帰る記録 |\\n\\n架空の運営案。少人数なら案内役と記録役を兼ねる。\\n\\n<!--\\n実在の人名・会社・運営実績は示していない。役割の仮案。\\n-->\\n\"\n    },\n    {\n      \"slideId\": \"d5b2ab3d-20a1-478c-bcea-676c19f77f8c\",\n      \"position\": 5,\n      \"content\": \"\\n<!-- slide-id: d5b2ab3d-20a1-478c-bcea-676c19f77f8c -->\\n\\n## 持ち帰るのは、この三つ。\\n\\n<div class=\\\"takeaways\\\"><div><span>01</span><h3>服</h3><p>今日、手を入れた一着</p></div><div><span>02</span><h3>記録</h3><p>変えた箇所と気づき</p></div><div><span>03</span><h3>次の一手</h3><p>家で続けることを一つ</p></div></div>\\n\\n<div class=\\\"caption\\\">完成していない箇所も、そのまま記録する。続きは無理のない範囲で。</div>\\n\\n<!--\\n持ち帰る内容の企画案。完成・効果の実績ではない。\\n-->\\n\"\n    },\n    {\n      \"slideId\": \"9d4ba204-3b15-457a-8e95-423e8592739d\",\n      \"position\": 6,\n      \"content\": \"\\n<!-- slide-id: 9d4ba204-3b15-457a-8e95-423e8592739d -->\\n\\n<!-- _class: min-statement -->\\n\\n# 直せたところも、<br>次の一手も。\\n\\n持ち帰ろう。<br><small>開催前の企画案 / 日時・会場・参加条件は未定</small>\\n\\n<!--\\n架空の衣服お直しワークショップ企画。開催・効果・売上の実績はない。\\n-->\"\n    }\n  ],\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 12
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 13,
+      "method": "tools/call",
+      "params": {
+        "name": "export_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "format": "html",
+          "outputPath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\index.html",
+          "allowLocalFiles": true
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"message\": \"Exported successfully to HTML\",\n  \"outputPath\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\index.html\",\n  \"format\": \"html\",\n  \"sourceFile\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 13
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 14,
+      "method": "tools/call",
+      "params": {
+        "name": "export_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "format": "pdf",
+          "outputPath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.pdf",
+          "allowLocalFiles": true
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"message\": \"Exported successfully to PDF\",\n  \"outputPath\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.pdf\",\n  \"format\": \"pdf\",\n  \"sourceFile\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 14
+    }
+  },
+  {
+    "direction": "client",
+    "message": {
+      "jsonrpc": "2.0",
+      "id": 15,
+      "method": "tools/call",
+      "params": {
+        "name": "export_slide",
+        "arguments": {
+          "filePath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.md",
+          "format": "pptx",
+          "outputPath": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\marp-mcp-showcase\\deck.pptx",
+          "allowLocalFiles": true
+        }
+      }
+    }
+  },
+  {
+    "direction": "server",
+    "message": {
+      "result": {
+        "content": [
+          {
+            "type": "text",
+            "text": "{\n  \"success\": true,\n  \"message\": \"Exported successfully to PPTX\",\n  \"outputPath\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.pptx\",\n  \"format\": \"pptx\",\n  \"sourceFile\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\deck.md\"\n}"
+          }
+        ]
+      },
+      "jsonrpc": "2.0",
+      "id": 15
+    }
+  }
+]

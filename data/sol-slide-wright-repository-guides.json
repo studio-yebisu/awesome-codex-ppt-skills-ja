@@ -1,0 +1,37 @@
+[
+  {
+    "repository": "arifszn/slide-wright",
+    "summary_ja": "独自テーマの実2枚を同じHTMLで試作し、原典engineを保って6枚へappendする日本語派生。",
+    "example_ids": [
+      "slide-wright-showcase"
+    ],
+    "upstream_commit": "d95ba204c9e98488b86b76ced75765ab4ec5de96",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/slide-wright-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/slide-wright-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Python3（原典templateを埋めてappendする補助）",
+      "ブラウザ / 固定CDN5.1.0へのネット接続",
+      "Dela Gothic One / Zen Kaku Gothic New / Space Grotesk（実TTF/OFL同梱・inline）"
+    ],
+    "commands": [
+      "python source/build.py --stage preview --case . --upstream source/upstream",
+      "python -m http.server 8000 --bind 127.0.0.1",
+      "ブラウザで実2枚を開き source/stages.json の preview_opened を true に更新",
+      "python source/build.py --stage append --case . --upstream source/upstream"
+    ],
+    "guide": "examples/repositories/slide-wright-showcase/README.md",
+    "source_download": "downloads/slide-wright-example-ja.zip",
+    "fork_download": "downloads/slide-wright-ja.zip",
+    "limitations": [
+      "架空イベント・観測/科学データ・開催実績なし",
+      "CDNネット接続が必要 / PPTXとPDFは未生成",
+      "主要初回2枚・engine稼働・同じfile6枚追加のみ。全頁詳細検査・独立review・構造監査・ZIP再実行なし"
+    ]
+  }
+]

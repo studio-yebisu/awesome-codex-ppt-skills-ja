@@ -1,0 +1,53 @@
+/* Design DNA tokens come from input/design-dna.json, not a generic theme. */
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--outside-bg);font-family:'DNA Sans';color:var(--ink);overflow:hidden}
+.stage{background:var(--bg)}
+.slide{position:absolute;inset:0;background:var(--bg);color:var(--ink);visibility:hidden;opacity:0;pointer-events:none;transition:opacity .35s ease,visibility .35s ease;overflow:hidden}
+.slide.active{visibility:visible;opacity:1;pointer-events:auto}
+.slide::before{content:'';position:absolute;left:120px;right:120px;top:42px;height:2px;background:var(--ink)}
+.zone{background:var(--bg);color:var(--ink);font-weight:400}
+.headline{font-family:'DNA Heading';font-weight:900;letter-spacing:0;word-break:keep-all;overflow-wrap:normal;line-break:strict;background:var(--bg);color:var(--ink)}
+.eyebrow{font-family:'DNA Number';font-weight:750;letter-spacing:.05em;background:var(--bg);color:var(--red)}
+.lead,.copy{font-family:'DNA Body';font-weight:400;background:var(--bg);color:var(--ink)}
+.foot{font-family:'DNA Sans';font-weight:400;background:var(--bg);color:var(--muted)}
+.navigation{position:absolute;left:120px;right:120px;top:963px;height:64px;display:flex;align-items:center;justify-content:space-between;border-top:2px solid var(--ink);background:var(--bg);color:var(--ink);padding-top:12px;font:700 28px/1.35 'DNA Number'}
+.navigation button{border:0;background:var(--bg);color:var(--ink);font:400 35px/1.2 'DNA Number';width:70px;height:48px;cursor:pointer}
+.navigation button:disabled{opacity:.25;cursor:default}
+.art{width:100%;height:100%;display:block}
+.art text{font-family:'DNA Heading';font-weight:900;letter-spacing:0}
+.art .sans{font-family:'DNA Sans';font-weight:400}
+.art .num{font-family:'DNA Number';font-weight:700}
+.art .outline{fill:none;stroke:var(--ink);stroke-width:9;stroke-linejoin:miter;stroke-linecap:square}
+.tool-grid{display:flex;gap:74px;width:100%;height:100%}
+.tool{width:calc((100% - 148px)/3);position:relative;background:var(--bg);color:var(--ink)}
+.tool svg{width:100%;height:260px;display:block}
+.tool h3{font:900 52px/1.2 'DNA Heading';background:var(--bg);color:var(--ink);padding-top:26px;border-top:2px solid var(--ink)}
+.tool p{font:400 32px/1.4 'DNA Body';background:var(--bg);color:var(--ink);margin-top:18px}
+.roles{padding-left:48px;border-left:20px solid var(--navy)}
+.role{background:var(--bg);color:var(--ink);padding:22px 0;border-bottom:2px solid var(--ink)}
+.role:first-child{padding-top:0}
+.role h3{font:900 52px/1.2 'DNA Heading';background:var(--bg);color:var(--ink)}
+.role p{font:400 32px/1.4 'DNA Body';background:var(--bg);color:var(--ink);margin-top:18px}
+.big-word{font:900 188px/1.18 'DNA Heading';background:var(--bg);color:var(--ink);border-bottom:28px solid var(--yellow);display:inline-block}
+.flow-notes{display:flex;gap:110px;margin-top:30px}
+.flow-note{width:33.33%;font:400 32px/1.45 'DNA Body';background:var(--bg);color:var(--ink)}
+.records{width:100%;border-collapse:collapse;table-layout:fixed;font:400 34px/1.4 'DNA Sans';background:var(--bg);color:var(--ink)}
+.records th{background:var(--navy);color:var(--light-ink);font-weight:400;padding:22px 26px;text-align:left}
+.records td{background:var(--bg);color:var(--ink);padding:25px 26px;border-bottom:2px solid var(--ink);height:106px}
+.records th:nth-child(1){width:24%}.records th:nth-child(2){width:19%}.records th:nth-child(3){width:22%}
+.status{display:inline-block;vertical-align:middle;width:24px;height:24px;margin-right:13px;background:var(--navy)}
+.status.red{background:var(--red);border-radius:50%}.status.yellow{background:var(--yellow);clip-path:polygon(50% 0,100% 100%,0 100%)}
+.notice{padding:52px;background:var(--navy);color:var(--light-ink);height:100%}
+.notice p{font:400 37px/1.45 'DNA Body';background:var(--navy);color:var(--light-ink);padding-bottom:34px;margin-bottom:30px;border-bottom:1px solid rgba(255,255,255,.6)}
+.notice .meta{font:400 26px/1.45 'DNA Sans';margin:0;padding:0;border:0;background:var(--navy);color:var(--light-ink)}
+.slide.active .assemble{animation:assemble .6s both}
+.slide.active .assemble:nth-child(2){animation-delay:.15s}
+.slide.active .assemble:nth-child(3){animation-delay:.3s}
+@keyframes assemble{from{opacity:0;transform:translateX(30px)}to{opacity:1;transform:translateX(0)}}
+.slide.active .role{animation:role-in .5s both}
+.slide.active .role:nth-child(2){animation-delay:.13s}.slide.active .role:nth-child(3){animation-delay:.26s}
+@keyframes role-in{from{opacity:0;transform:translateY(15px)}to{opacity:1;transform:translateY(0)}}
+.slide.active .flow-line{stroke-dasharray:1000;stroke-dashoffset:1000;animation:connect 1s .3s forwards}
+@keyframes connect{to{stroke-dashoffset:0}}
+.slide.active .records tbody tr{animation:role-in .45s both}.slide.active .records tbody tr:nth-child(2){animation-delay:.12s}.slide.active .records tbody tr:nth-child(3){animation-delay:.24s}
+@media(prefers-reduced-motion:reduce){.slide{transition:none}.assemble,.role,.records tbody tr,.flow-line{animation:none!important;stroke-dashoffset:0!important}}

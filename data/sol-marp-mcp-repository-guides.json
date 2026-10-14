@@ -1,0 +1,36 @@
+[
+  {
+    "repository": "masaki39/marp-mcp",
+    "summary_ja": "原典の実MCP構造化操作とminimalで、和文企画をHTML/PDF/画像PPTXへ生成。",
+    "example_ids": [
+      "marp-mcp-showcase"
+    ],
+    "upstream_commit": "2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/marp-mcp-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/marp-mcp-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Node18+ / 原典marp-mcp1.7.0 / Marp CLI4.4.0",
+      "Python3 / PyMuPDF / ChromeまたはEdge",
+      "Shippori Mincho / BIZ UDPGothic / Manrope (実TTF/OFL同梱)"
+    ],
+    "commands": [
+      "npm --prefix source/runtime ci --ignore-scripts",
+      "node source/runtime/node_modules/typescript/bin/tsc -p source/runtime/tsconfig.json",
+      "python source/run_mcp.py --case . --runtime source/runtime --node node --marp-cli source/runtime/node_modules/@marp-team/marp-cli/marp-cli.js"
+    ],
+    "guide": "examples/repositories/marp-mcp-showcase/README.md",
+    "source_download": "downloads/marp-mcp-example-ja.zip",
+    "fork_download": "downloads/marp-mcp-ja.zip",
+    "limitations": [
+      "架空企画・仮の時間設定・開催効果売上実績なし",
+      "PDF固定・PPTX画像主体・native編集不可・PowerPoint表示未確認",
+      "HTMLブラウザ操作追加確認・全頁詳細目視・独立review・構造監査・ZIP再実行なし"
+    ]
+  }
+]

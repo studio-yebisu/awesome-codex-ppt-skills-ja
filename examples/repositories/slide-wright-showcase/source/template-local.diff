@@ -1,0 +1,307 @@
+Font payloads only are normalized in this human-readable diff; actual HTML and TTF remain complete.
+--- upstream/deck-template.md HTML skeleton
++++ night-observatory.html (font payload normalized)
+@@ -1,16 +1,15 @@
+ <!DOCTYPE html>
+-<html lang="en">
++<html lang="ja">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+-  <title><!-- DECK TITLE --></title>
++  <title>星を待つ、夜の天文台。</title>
+ 
+   <!-- Engine core + reset (no stock theme — our theme is inline below) -->
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css" />
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css" />
+ 
+-  <!-- Fonts: load a real web-font pair through a Fontshare or Google link; don't fall back to the system stack -->
+-  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=<!-- DISPLAY+BODY -->&display=swap" />
++  <!-- Official Google Fonts TTF embedded locally; original CDN engine retained. -->
+ 
+   <!-- ONLY for decks with code slides. Load a syntax theme close to the deck palette
+        (atom-one-dark/-light, monokai, github), then restyle the <pre> container below
+@@ -18,142 +17,130 @@
+   <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" /> -->
+ 
+   <style>
+-    /* ===========================================
+-       THEME — generated per deck. Edit these to restyle everything.
+-       =========================================== */
+-    :root {
+-      /* Palette */
+-      --bg:            /* #... */;
+-      --bg-alt:        /* #... (gradient stop / section bg) */;
+-      --text:          /* #... primary text */;
+-      --text-muted:    /* #... secondary text */;
+-      --accent:        /* #... */;
+-      --accent-2:      /* #... optional second accent */;
++@font-face{font-family:NightNumber;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED_FROM_DIFF>) format("truetype");font-weight:100 900;font-display:swap;}
++@font-face{font-family:NightBody;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED_FROM_DIFF>) format("truetype");font-weight:700;font-display:swap;}
++@font-face{font-family:NightBody;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED_FROM_DIFF>) format("truetype");font-weight:400;font-display:swap;}
++@font-face{font-family:NightDisplay;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED_FROM_DIFF>) format("truetype");font-weight:400;font-display:swap;}
++/* THEME: a unique orbit system for this event proposal; no stock theme. */
++:root {--bg:#07131f;--bg-alt:#0e2737;--text:#f4f0e6;--text-muted:#b4cad1;--accent:#69e2f2;--accent-2:#f3b95e;--font-display:NightDisplay,sans-serif;--font-body:NightBody,sans-serif;--ease:cubic-bezier(.16,1,.3,1);--dur:.65s;}
++/* BASE: original 1920x1080 canvas, background sections and frame contract. */
++.reveal {font-family:var(--font-body);color:var(--text);}
++.reveal h1,.reveal h2,.reveal h3 {font-family:var(--font-display);color:var(--text);text-transform:none;font-weight:400;line-height:1.35;margin:0;}
++.reveal-viewport,html,body {background:var(--bg);}
++.reveal .slides section {height:1080px;overflow:hidden;background:var(--bg);}
++.frame {position:absolute;inset:0;padding:150px 140px;display:flex;flex-direction:column;justify-content:center;box-sizing:border-box;text-align:left;}
++.reveal h1 {font-size:118px;letter-spacing:.015em;}
++.reveal h2 {font-size:83px;letter-spacing:.012em;}
++.reveal h3 {font-size:50px;}
++.reveal p {font-size:35px;line-height:1.8;margin:25px 0 0;}
++.eyebrow {font-family:NightNumber,sans-serif!important;font-size:24px!important;letter-spacing:.16em;color:var(--accent);margin:0 0 45px!important;}
++.small {font-size:25px!important;color:var(--text-muted);line-height:1.8;}
++.number {font-family:NightNumber,sans-serif;}
++.reveal .controls {color:var(--accent);}
++.reveal .progress {color:var(--accent);height:4px;}
++/* SIGNATURE: explanatory observation circles, not a celestial chart. */
++.orbit {position:absolute;pointer-events:none;color:var(--accent);}
++.orbit svg {display:block;width:100%;height:100%;overflow:visible;}
++.orbit circle,.orbit ellipse,.orbit path {vector-effect:non-scaling-stroke;}
++.title-orbit {width:1000px;height:1000px;right:-50px;top:30px;opacity:.7;}
++.small-orbit {width:540px;height:540px;left:135px;top:350px;opacity:.8;}
++.closing-orbit {width:790px;height:790px;right:50px;top:140px;opacity:.65;}
++/* LAYOUTS: a large title, constellation of activity, route, paper comparison and decision. */
++.title-slide h1 {max-width:1100px;z-index:1;}
++.title-slide p {max-width:980px;z-index:1;}
++.title-slide .small {margin-top:42px;}
++.content-frame {justify-content:flex-start;padding-top:145px;}
++.content-frame h2 {position:relative;z-index:1;}
++.night-activities {margin-left:700px;margin-top:80px;display:flex;flex-direction:column;gap:42px;}
++.night-activities h3 {font-size:46px;}
++.night-activities p {font-size:31px;margin-top:10px;color:var(--text-muted);}
++.orbit-word {position:absolute;left:190px;top:575px;width:420px;text-align:center;font-family:var(--font-display);font-size:51px;line-height:1.6;}
++.route {position:relative;display:flex;justify-content:space-between;margin-top:125px;gap:80px;}
++.route:before {content:'';position:absolute;left:100px;right:100px;top:67px;border-top:2px solid var(--accent);opacity:.6;}
++.route>div {width:420px;position:relative;}
++.route .node {position:relative;display:flex;align-items:center;justify-content:center;width:130px;height:130px;border:2px solid var(--accent);border-radius:50%;background:var(--bg);font-family:NightNumber;font-size:43px;color:var(--accent);margin-bottom:48px;}
++.route h3 {font-size:49px;}
++.route p {font-size:30px;color:var(--text-muted);}
++.reveal .slides section.paper {background:#f0eadb;color:#142c37;}
++.paper h2,.paper h3 {color:#142c37;}
++.paper .eyebrow {color:#226b7c;}
++.paper .orbit {color:#226b7c;opacity:.16;}
++.comparison {display:grid;grid-template-columns:1fr 1fr;gap:90px;margin-top:105px;}
++.comparison>div:first-child {border-right:2px solid #b9c9c6;padding-right:75px;}
++.comparison h3 {font-size:68px;margin-bottom:28px;}
++.comparison p {font-size:34px;line-height:1.9;}
++.decision {position:relative;margin-top:68px;display:flex;align-items:center;gap:115px;}
++.decision-center {width:380px;height:380px;border:2px solid var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--font-display);font-size:57px;flex-shrink:0;}
++.decision-branches {flex:1;display:flex;flex-direction:column;gap:48px;}
++.decision-branches>div {padding-left:55px;border-left:2px solid var(--accent);position:relative;}
++.decision-branches>div:before {content:'';position:absolute;left:-116px;top:50%;width:114px;border-top:2px solid var(--accent);}
++.decision-branches h3 {font-size:39px;color:var(--accent);}
++.decision-branches p {font-size:44px;margin-top:12px;}
++.closing h1 {font-size:112px;position:relative;z-index:1;}
++.closing .small {margin-top:55px;max-width:1080px;}
++/* MOTION: one coordinated entrance; original engine handles slide state. */
++.reveal .slides section.present .entrance {animation:night-entrance var(--dur) var(--ease) both;}
++@keyframes night-entrance {from {opacity:0;transform:translateY(24px);}to {opacity:1;transform:translateY(0);}}
++@media (prefers-reduced-motion:reduce) {*,*::before,*::after {animation-duration:.01ms!important;transition-duration:.2s!important;}}
+ 
+-      /* Typography */
+-      --font-display:  /* 'Display Font', sans-serif */;
+-      --font-body:     /* 'Body Font', sans-serif */;
+-
+-      /* Motion */
+-      --ease:          cubic-bezier(0.16, 1, 0.3, 1);
+-      --dur:           0.6s;
+-    }
+-
+-    /* ===========================================
+-       BASE — map the engine surfaces to our theme
+-       =========================================== */
+-    .reveal { font-family: var(--font-body); color: var(--text); }
+-    .reveal h1, .reveal h2, .reveal h3 { font-family: var(--font-display); color: var(--text); text-transform: none; }
+-    .reveal-viewport, html, body { background: var(--bg); }
+-
+-    /* Slides are authored on a 1920x1080 canvas (init uses center:false).
+-       The <section> carries ONLY the background. All layout lives in an inner
+-       .frame wrapper — see below.
+-       Per-slide background variants (e.g. a dark closing) MUST match the base
+-       selector's specificity or they lose to it. Use `.reveal .slides section.ink`,
+-       NOT a bare `section.ink`. Section backgrounds print correctly in PDF export. */
+-    .reveal .slides section { height: 1080px; overflow: hidden; background: var(--bg); }
+-    /* overflow:hidden is a print guard: in ?print-pdf the engine paginates any content
+-       taller than the 1080 canvas onto EXTRA pages, so one overflowing slide silently
+-       becomes two or three in the PDF. Clipping at the slide bound stops phantom pages —
+-       but it's a backstop, not a license to overflow: fix the slide so nothing is cut. */
+-    /* .reveal .slides section.ink { background: var(--text); }  <- example variant */
+-
+-    /* .frame = the layout box for every slide. Fills the slide (inset:0) and owns
+-       padding + flex. CRITICAL: do the padding here, NOT on <section>. In PDF export
+-       (?print-pdf) the engine forces `section { padding:0 }`, which would let content
+-       slide into the top/left edge and overlap fixed labels. A child wrapper is immune
+-       to that reset, so the same layout holds on screen AND in the exported PDF.
+-       The top padding also leaves room for any fixed labels/rules near the edges. */
+-    .frame {
+-      position: absolute;
+-      inset: 0;
+-      padding: 230px 140px 150px;
+-      display: flex;
+-      flex-direction: column;
+-      justify-content: center;
+-      box-sizing: border-box;
+-      text-align: left;     /* undo the engine's global center; see Rules */
+-    }
+-
+-    /* ===========================================
+-       SIGNATURE DEVICE — the one visual idea of this theme
+-       (gradient field / grid / hard color plane / texture). Define here.
+-       =========================================== */
+-    /* ... */
+-
+-    /* ===========================================
+-       SLIDE LAYOUTS — title, section, two-column, quote, comparison, closing
+-       =========================================== */
+-    /* ... */
+-
+-    /* ===========================================
+-       CODE — only for decks with code slides. Restyle freely, but keep this
+-       contract or the line-step clones ghost / stair-step / cover the heading.
+-       =========================================== */
+-    /* .reveal pre {
+-         position: relative;   restyle to taste, but keep these two:
+-         flex-shrink: 0;       (clones anchor here; don't let a flex frame shrink it)
+-       }
+-       .reveal pre code.hljs {
+-         display: block;                        (inline + bg = one box per line = stairs)
+-         background: var(--bg-alt) !important;  (opaque, else stacked clones bleed through)
+-         max-height: none;                      (drop reveal's 400px cap = no scroll misalign)
+-         padding: 2rem 2.4rem; font-family: var(--font-mono);
+-       } */
+-
+-    /* ===========================================
+-       MOTION — entrance + emphasis
+-       =========================================== */
+-    /* ... */
+   </style>
+ </head>
+ <body>
+   <div class="reveal">
+     <div class="slides">
+ 
+-      <!-- Every slide: <section> for background, inner .frame for layout.
+-           Put layout variant classes (title-slide, two-col, etc.) on .frame. -->
++<!-- TITLE SLIDE: real event proposal, authored on the original frame. -->
++<section data-transition="fade" data-auto-animate>
++  <div class="frame title-slide">
++    <div class="orbit title-orbit" data-id="observation-orbit"><svg viewBox="0 0 1000 1000" aria-hidden="true"><circle cx="500" cy="500" r="430" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="500" cy="500" r="360" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/><circle cx="805" cy="197" r="13" fill="#f3b95e"/></svg></div>
++    <div class="entrance"><p class="eyebrow">NIGHT OBSERVATORY</p><h1>星を待つ、<br>夜の天文台。</h1><p>夜空を見上げる、観察イベントの企画。</p><p class="small">架空のイベント案 / 日時・会場は未定</p></div>
++  </div>
++  <aside class="notes">開催前の架空企画です。円と軌道は説明用の図形で、天体の位置・観測データを表すものではありません。</aside>
++</section>
++<!-- CONTENT SLIDE: this real second slide is retained when the deck grows. -->
++<section data-auto-animate>
++  <div class="frame content-frame">
++    <div class="orbit small-orbit" data-id="observation-orbit"><svg viewBox="0 0 1000 1000" aria-hidden="true"><circle cx="500" cy="500" r="430" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="500" cy="500" r="360" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/><circle cx="805" cy="197" r="13" fill="#f3b95e"/></svg></div>
++    <div class="entrance"><p class="eyebrow">AT THE VENUE</p><h2>みんなで、夜を見上げる。</h2><div class="orbit-word">急がず、<br>過ごす。</div><div class="night-activities"><div><h3>案内を聞く</h3><p>会場での過ごし方を、最初に共有。</p></div><div><h3>静かに待つ</h3><p>眺めたい場所で、ゆっくり過ごす。</p></div><div><h3>見えたものを話す</h3><p>気になったことを、言葉にしてみる。</p></div></div></div>
++  </div>
++  <aside class="notes">過ごし方の提案です。特定の天体が見えることや観測成果を約束しません。会場の導線・安全条件は未定です。</aside>
++</section>
+ 
+-      <!-- TITLE SLIDE -->
+-      <section data-transition="fade">
+-        <div class="frame title-slide">
+-          <h1><!-- Real deck title --></h1>
+-          <p class="subtitle"><!-- subtitle / author / date --></p>
+-        </div>
+-        <aside class="notes"><!-- speaker notes for this slide --></aside>
+-      </section>
++<!-- ROUTE: the recurring circle becomes a sequence of three observation stops. -->
++<section>
++  <div class="frame content-frame entrance">
++    <p class="eyebrow">FROM ENTRY TO SKY</p><h2>入口から、星へ。</h2>
++    <div class="route"><div><div class="node" style="border:0;background:transparent"><svg viewBox="0 0 130 130" aria-hidden="true" style="position:absolute;inset:0;width:130px;height:130px"><circle cx="65" cy="65" r="63" fill="#07131f" stroke="#69e2f2" stroke-width="2"/></svg><span style="position:relative">01</span></div><h3>迎える</h3><p>入口で受付と案内。<br>過ごせる場所を伝える。</p></div><div><div class="node" style="border:0;background:transparent"><svg viewBox="0 0 130 130" aria-hidden="true" style="position:absolute;inset:0;width:130px;height:130px"><circle cx="65" cy="65" r="63" fill="#07131f" stroke="#69e2f2" stroke-width="2"/></svg><span style="position:relative">02</span></div><h3>待つ</h3><p>会場でひと息。<br>空を見る時間をつくる。</p></div><div><div class="node" style="border:0;background:transparent"><svg viewBox="0 0 130 130" aria-hidden="true" style="position:absolute;inset:0;width:130px;height:130px"><circle cx="65" cy="65" r="63" fill="#07131f" stroke="#69e2f2" stroke-width="2"/></svg><span style="position:relative">03</span></div><h3>観察する</h3><p>各自のペースで見上げ、<br>気づきを共有する。</p></div></div>
++    <p class="small">当日の行程案。実施時刻と観察方法は未定。</p>
++  </div>
++  <aside class="notes">行程は企画上の案です。天文学の解説や観測技法の手順ではありません。</aside>
++</section>
++<!-- PAPER COMPARISON: the same circle becomes a quiet background on a light slide. -->
++<section class="paper" data-transition="fade">
++  <div class="frame content-frame">
++    <div class="orbit closing-orbit"><svg viewBox="0 0 1000 1000" aria-hidden="true"><circle cx="500" cy="500" r="430" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="805" cy="197" r="13" fill="#f3b95e"/></svg></div>
++    <div class="entrance"><p class="eyebrow">YOUR OWN PACE</p><h2>見るだけの日も、あっていい。</h2><div class="comparison"><div><h3>見る</h3><p>眺めたい場所で立ち止まる。<br>見えるものを各自で探す。</p></div><div><h3>話す</h3><p>見えたもの、気になったこと。<br>次に見たいものを共有する。</p></div></div></div>
++  </div>
++  <aside class="notes">参加者が会話や観察のペースを選べるというイベント案です。科学的効果を主張していません。</aside>
++</section>
++<!-- WEATHER PLAN: one circle anchors two tentative operating choices. -->
++<section>
++  <div class="frame content-frame entrance">
++    <p class="eyebrow">TIME TO WAIT</p><h2>待つ時間も、企画の一部。</h2>
++    <div class="decision"><div class="decision-center" style="position:relative;border:0"><svg viewBox="0 0 380 380" aria-hidden="true" style="position:absolute;inset:0;width:380px;height:380px"><circle cx="190" cy="190" r="188" fill="none" stroke="#69e2f2" stroke-width="2"/></svg><span style="position:relative">今夜の<br>空</span></div><div class="decision-branches"><div><h3>空を見られそうなら</h3><p>屋外で、見上げる。</p></div><div><h3>見えにくそうなら</h3><p>室内で、空の話をする。</p></div></div></div>
++    <p class="small">当日の確認で決める仮案。代替会場・中止条件・連絡方法は未定。</p>
++  </div>
++  <aside class="notes">天候による運用の提案です。開催判断の確定条件や観測予測は示していません。現場条件の決定は次工程です。</aside>
++</section>
++<!-- CLOSING: the device returns as a single large observation circle. -->
++<section data-transition="fade">
++  <div class="frame closing">
++    <div class="orbit closing-orbit"><svg viewBox="0 0 1000 1000" aria-hidden="true"><circle cx="500" cy="500" r="430" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="805" cy="197" r="13" fill="#f3b95e"/></svg></div>
++    <div class="entrance"><p class="eyebrow">TAKE THE NIGHT WITH YOU</p><h1>今夜の空を、<br>次の話に。</h1><p class="small">架空の観察イベント案。日時・会場は未定。<br>観測実測・性能・科学データや開催実績は含みません。</p></div>
++  </div>
++  <aside class="notes">企画の締めくくりです。見えたものを次の会話に持ち帰るという提案で、実施成果ではありません。</aside>
++</section>
+ 
+-      <!-- CONTENT SLIDE -->
+-      <section>
+-        <div class="frame">
+-          <h2>Slide title</h2>
+-          <ul>
+-            <li class="fragment">Point one</li>
+-            <li class="fragment">Point two</li>
+-          </ul>
+-        </div>
+-        <aside class="notes"><!-- talking points --></aside>
+-      </section>
+-
+-      <!-- CODE SLIDE (only when the deck shows code). data-line-numbers shows line
+-           numbers; pipe-separated ranges ("3-5|8-10") step the highlight on each
+-           click. Use data-noescape (or a <script type="text/template"> body) for raw
+-           < & in the code. The code-block CSS contract in motion-recipes.md is
+-           mandatory when you restyle the block. -->
+-      <!--
+-      <section>
+-        <div class="frame">
+-          <h2>Slide title</h2>
+-          <pre><code data-trim data-noescape data-line-numbers="1|3-5" class="language-sql">
+-SELECT count() FROM events WHERE ts > now() - INTERVAL 1 DAY
+-          </code></pre>
+-        </div>
+-        <aside class="notes"></aside>
+-      </section>
+-      -->
+-
+-      <!-- more <section> slides... -->
+ 
+     </div>
+   </div>
+@@ -173,10 +160,24 @@
+       controls: true,
+       progress: true,
+       hash: true,
+-      transition: 'slide',  // per-slide override via data-transition
++      transition: 'fade',  // per-slide override via data-transition
+       pdfSeparateFragments: false, // collapse fragments to one page per slide on ?print-pdf
++      autoAnimateDuration: 0.8,
++      autoAnimateEasing: 'ease-out',
+       plugins: [ RevealNotes ],    // add RevealHighlight here when the deck has code
+     });
++
++    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
++    const applyReduced = () => Reveal.configure({transition:reduced.matches?'none':'fade',autoAnimate:!reduced.matches});
++    applyReduced(); reduced.addEventListener('change',applyReduced);
++
++// Same-origin 0-based catalog bridge; original engine remains the controller.
++const sendPage = () => { if(parent!==window) parent.postMessage({type:'yebisu-page',index:Reveal.getIndices().h,total:Reveal.getTotalSlides()},location.origin); };
++Reveal.on('ready',sendPage); Reveal.on('slidechanged',sendPage);
++addEventListener('message', e => {
++  if(e.source!==parent || e.origin!==location.origin || e.data?.type!=='yebisu-slide' || !Number.isInteger(e.data.index)) return;
++  if(e.data.index>=0 && e.data.index<Reveal.getTotalSlides()) Reveal.slide(e.data.index);
++});
+   </script>
+ </body>
+ </html>
