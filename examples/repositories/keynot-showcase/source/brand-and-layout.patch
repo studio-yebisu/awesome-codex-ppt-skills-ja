@@ -1,0 +1,81 @@
+--- upstream/example inline CSS
++++ source/CSS with appended local overrides
+@@ -451,3 +451,78 @@
+       print-color-adjust: exact !important;
+     }
+   }
++
++/* Extracted from input/BRAND.md: paper70/black28/red2 target; accent never a whole background. */
++:root{--primary:#20201e;--accent:#e52b25;--cream:#f6f0e5;--stone:#d5cec2;--ink:#20201e;--muted:#66625a;--white:#fffaf1;--blood:var(--accent);--serif:"Holiday Serif";--sans:"Holiday Sans";--numbers:"Holiday Number";}
++/* Japanese local adaptation. Upstream example CSS remains intact before this. */
++html,body{background:var(--cream)}
++.deck{height:100vh;height:100dvh}
++.slide{height:100%;position:absolute}
++.display{font-weight:400;line-height:1.25;letter-spacing:0;font-size:clamp(58px,7vw,112px)}
++.heading{font-weight:400;line-height:1.35;letter-spacing:0;font-size:clamp(38px,4.5vw,72px)}
++.label{font-family:var(--numbers);font-size:clamp(14px,1.05vw,18px);font-weight:500;letter-spacing:.15em}
++.body{font-size:clamp(20px,1.65vw,27px);font-weight:400;line-height:1.7}
++.w-line-1{font-family:var(--numbers);font-size:clamp(15px,1.1vw,18px);font-weight:500;letter-spacing:.15em}
++.w-line-2{font-size:clamp(13px,.95vw,16px);font-weight:400;letter-spacing:.03em;color:var(--muted);margin-top:8px}
++.s1{position:absolute;background:var(--cream);padding:clamp(48px,4vw,64px) clamp(54px,5vw,80px)}
++.s1::before,.s2-left::after,.s5-right::before{display:none}
++.s1-title{color:var(--ink);max-width:none;z-index:2;font-size:clamp(54px,6vw,96px);white-space:nowrap}
++.s1-main{display:grid;grid-template-columns:1.12fr .88fr;align-items:center;gap:4%;flex:1}
++.s1-eyebrow{color:var(--muted);margin-bottom:clamp(22px,2vw,32px)}
++.s1-sub{font-family:var(--sans);font-size:clamp(24px,2vw,32px);font-style:normal;font-weight:400;color:var(--muted);line-height:1.75;margin-top:36px}
++.s1-bottom{font-family:var(--sans);font-size:clamp(14px,1.15vw,19px);color:var(--muted);letter-spacing:0;text-transform:none;padding-bottom:54px}
++.s1-rule{width:116px;height:2px}
++.art{width:100%;display:block;overflow:visible}
++.art text{font-family:var(--serif);font-weight:400}
++.art .sans{font-family:var(--sans);font-weight:700}
++.art .line{stroke:var(--ink);stroke-width:2;fill:none}
++.art .accent-line{stroke:var(--accent);stroke-width:2;fill:none}
++.cover-print{width:100%;height:auto;transform:rotate(3deg)}
++.s2-left{padding:72px 64px 130px;width:50%}
++.s2-right{padding:80px 66px 130px;background:var(--cream)}
++.s2-title{font-size:clamp(48px,5.4vw,86px);line-height:1.3;color:var(--white);max-width:none}
++.s2 .body{color:rgba(255,250,241,.72);margin-top:32px}
++.s2 .type-tray{width:85%;margin-top:36px}
++.s2-kicker{font-family:var(--sans);font-weight:400;letter-spacing:.04em;text-transform:none;font-size:clamp(20px,1.6vw,26px);color:var(--ink);margin-bottom:30px}
++.pain{padding:26px 0;gap:24px}
++.pain-num{font-family:var(--numbers);font-size:clamp(24px,2.2vw,36px);color:var(--muted);line-height:1.4;min-width:45px}
++.pain-text{font-size:clamp(22px,1.8vw,29px);font-weight:400;line-height:1.55}
++.pain-text span{display:block;font-size:clamp(18px,1.45vw,24px);margin-top:12px;font-weight:400;line-height:1.65}
++.s3{padding:64px 80px 150px}
++.s3-header{margin-bottom:40px}
++.s3-heading{max-width:none}
++.approach{padding-top:42px;gap:20px;flex-direction:column;justify-content:flex-start}
++.approach-num{font-family:var(--numbers);font-size:clamp(48px,4.5vw,72px);color:var(--stone);-webkit-text-stroke:0;text-shadow:none;line-height:1.1}
++.approach-title{font-size:clamp(28px,2.5vw,40px);font-weight:400;line-height:1.5;margin-bottom:20px}
++.approach-text{font-size:clamp(20px,1.6vw,26px);font-weight:400;line-height:1.65;color:var(--muted)}
++.stage-sketch{height:230px;margin-top:32px}
++.s3-note{font-size:clamp(14px,1.1vw,18px);color:var(--muted);padding-top:20px}
++.s4{padding:70px 80px 130px}
++.s4-header{margin-bottom:0}
++.quote-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:6%;flex:1;align-items:center}
++.large-quote{color:var(--white);font-family:var(--serif);font-size:clamp(54px,5.4vw,86px);font-weight:400;line-height:1.4;letter-spacing:0}
++.quote-note{font-size:clamp(20px,1.7vw,27px);font-family:var(--sans);line-height:1.65;color:rgba(255,250,241,.7);margin-top:30px}
++.white-space-art{max-height:570px}
++.s5-left{padding:72px 64px 130px;width:50%;justify-content:center}
++.s5-label{margin-bottom:44px}
++.s5-heading{font-size:clamp(50px,5.2vw,84px);line-height:1.35;max-width:none;color:var(--white)}
++.s5-sub{font-family:var(--sans);font-size:clamp(22px,1.7vw,28px);font-style:normal;font-weight:400;line-height:1.75;margin-top:34px;max-width:none;color:rgba(255,250,241,.75)}
++.s5-right{background:var(--cream);flex-direction:column;padding:58px 62px 128px;align-items:stretch;justify-content:center}
++.s5 .roller{height:270px;margin-bottom:35px}
++.s5 .feature{gap:24px;padding:22px 0}
++.s5 .feature-name{font-size:clamp(28px,2.3vw,37px);font-weight:400;color:var(--ink);line-height:1.5}
++.s5 .feature-text{font-size:clamp(20px,1.55vw,25px);font-weight:400;color:var(--muted);line-height:1.65}
++.s5 .feature-bar{width:2px}
++.s6{background:var(--cream);display:flex;flex-direction:column;padding:64px 80px 140px}
++.s6-main{display:flex;flex:1;align-items:center;justify-content:space-between;gap:8%}
++.s6-title{font-size:clamp(58px,6.3vw,100px);line-height:1.4;color:var(--ink)}
++.s6-question{font-family:var(--sans);font-size:clamp(24px,2.1vw,34px);color:var(--muted);line-height:1.7;margin-top:42px}
++.s6-print{width:31%;transform:rotate(-4deg)}
++.s6-bottom{font-family:var(--sans);font-size:clamp(17px,1.3vw,21px);line-height:1.65;color:var(--muted);max-width:70%}
++.nav{background:rgba(32,32,30,.88);border-color:rgba(255,250,241,.22)}
++.nav button{font-family:var(--numbers);font-size:clamp(17px,1.15vw,20px)}
++.nav button:hover{background:rgba(255,250,241,.13)}
++.counter{font-family:var(--numbers);font-size:clamp(13px,.95vw,16px);letter-spacing:.05em}
++.rotate-overlay h2{line-height:1.4;color:var(--white)}
++@media(prefers-reduced-motion:reduce){.slide{transition:none}.slide.active .reveal,.rotate-icon{animation:none!important}}
++@media print{.s1-bottom{padding-bottom:0}.s6-bottom{max-width:100%}}

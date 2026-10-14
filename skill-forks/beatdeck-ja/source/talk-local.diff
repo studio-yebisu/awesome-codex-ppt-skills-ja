@@ -1,0 +1,166 @@
+Talk-only diff: original blank starter -> authored deck. src/beatdeck remains unmodified.
+--- init-blank/deck/CatalogBridge.tsx
++++ deck/CatalogBridge.tsx
+@@ -0,0 +1,10 @@
++import {useEffect} from 'react';
++import {deck} from 'beatdeck';
++/** Outside the engine: flatten its scene/beat positions, then call its original public API. */
++export function CatalogBridge(){useEffect(()=>{
++ const positions=deck.scenes.flatMap((scene,s)=>scene.beats.map((_,b)=>({scene:s,beat:b})));
++ const report=()=>{const p=deck.getState();const index=positions.findIndex(q=>q.scene===p.scene&&q.beat===p.beat);if(parent!==window)parent.postMessage({type:'yebisu-page',index,total:positions.length},location.origin);};
++ const receive=(e:MessageEvent)=>{if(e.source!==parent||e.origin!==location.origin||e.data?.type!=='yebisu-slide'||!Number.isInteger(e.data.index))return;const p=positions[e.data.index];if(p)deck.go(p);};
++ const unsubscribe=deck.subscribe(report);addEventListener('message',receive);report();
++ return()=>{unsubscribe();removeEventListener('message',receive);};
++ },[]);return null;}
+--- init-blank/deck/deck.config.ts
++++ deck/deck.config.ts
+@@ -1,14 +1 @@
+-/**
+- * Everything that may need changing five minutes before going on stage lives here.
+- * After editing, rebuild (`npm run build` / `npm run present`).
+- */
+-export const config = {
+-  title: 'My talk',
+-  /** One line under the title. Empty = none. */
+-  subtitle: '',
+-  author: '',
+-  /** Destination of the QR on the closing screen. "TODO" = no QR (the presenter view warns). Never guess it. */
+-  qrUrl: 'TODO',
+-  /** Shown under the QR, e.g. "example.com/talk". */
+-  qrLabel: '',
+-} as const;
++export const config={title:'パンが、店先に届くまで。',subtitle:'架空のパン店の概念資料',author:'Studio Yebisu / 架空企画',qrUrl:'TODO',qrLabel:''} as const;
+--- init-blank/deck/Illustrations.tsx
++++ deck/Illustrations.tsx
+@@ -0,0 +1,10 @@
++/** Original explanatory SVGs, not product photography, process measurements or recipes. */
++export function Dough() {
++ return <svg viewBox="0 0 240 160" aria-label="生地の説明用図形" role="img"><path d="M30 123 C26 74 64 30 114 31 C170 17 213 69 211 121 Z" fill="var(--surface)" stroke="var(--ink)" strokeWidth="2"/><path d="M60 98 Q81 54 101 53 M129 50 Q160 57 178 88" fill="none" stroke="var(--hair-strong)" strokeWidth="2"/></svg>;
++}
++export function Bread({warm=false}:{warm?:boolean}) {
++ return <svg viewBox="0 0 240 160" aria-label="パンの説明用図形" role="img"><path d="M26 120 C25 67 63 33 119 29 C177 24 215 63 215 119 L211 135 L31 135 Z" fill={warm?'var(--accent)':'var(--surface)'} stroke="var(--ink)" strokeWidth="2"/><path d="M80 50 L65 94 M120 41 L107 92 M160 46 L149 95" fill="none" stroke={warm?'var(--surface)':'var(--hair-strong)'} strokeWidth="3"/></svg>;
++}
++export function Shelf() {
++ return <svg viewBox="0 0 300 170" aria-label="棚とパンの説明用図形。個数はデータではない" role="img"><path d="M21 42 V148 M279 42 V148 M21 113 H279 M21 148 H279" fill="none" stroke="var(--ink)" strokeWidth="2"/>{[30,114,198].map(x=><path key={x} d={`M${x} 100 C${x} 61 ${x+64} 58 ${x+68} 100 Z`} fill="var(--accent)" stroke="var(--ink)" strokeWidth="1.5"/>)}</svg>;
++}
+--- init-blank/deck/index.tsx
++++ deck/index.tsx
+@@ -1,26 +1,13 @@
+-import { defineDeck } from 'beatdeck';
++import {defineDeck} from 'beatdeck';
+ import '../themes/neutral.css';
+-import { config } from './deck.config';
+-import { SCENES } from './scenes';
+-import { Open } from './scenes/01-Open';
+-import { End } from './scenes/02-End';
+-
+-/** Every layer of the stage, back to front. All stay mounted; each shows itself for its own scene. */
+-function Stage() {
+-  return (
+-    <>
+-      <Open />
+-      <End />
+-    </>
+-  );
+-}
+-
+-export default defineDeck({
+-  id: 'my-talk',
+-  title: config.title,
+-  lang: 'en',
+-  scenes: SCENES,
+-  Stage,
+-  fonts: ['400 100px "Inter Variable"', '600 100px "Inter Variable"', '400 32px "JetBrains Mono Variable"'],
+-  qrUrl: config.qrUrl,
+-});
++import '../themes/light.css';
++import './theme-brand.css';
++import {config} from './deck.config';
++import {SCENES} from './scenes';
++import {initialLive,timeline,type Live} from './timeline';
++import {World} from './World';
++import {Opening,Materials,DoughScene,Baking,Shop,Handoff} from './SceneLayers';
++import {CatalogBridge} from './CatalogBridge';
++function Stage(){return <><World/><Opening/><Materials/><DoughScene/><Baking/><Shop/><Handoff/><CatalogBridge/></>;}
++export default defineDeck<Live>({id:'bread-stage',title:config.title,lang:'ja',scenes:SCENES,Stage,initialLive,timeline,
++ fonts:['400 140px "BreadDisplay"','400 34px "BreadBody"','700 34px "BreadBody"','500 32px "BreadNumber"']});
+--- init-blank/deck/SceneLayers.tsx
++++ deck/SceneLayers.tsx
+@@ -0,0 +1,28 @@
++import {useSyncExternalStore} from 'react';
++import {Reveal,Scene,Typewriter,reducedMotion,useScene} from 'beatdeck';
++import {Bread} from './Illustrations';
++
++function Statement({on,out=false,text,body,size=140}:{on:boolean;out?:boolean;text:React.ReactNode;body?:string;size?:number}) {
++ return <><Reveal on={on} out={out} x={140} y={180}><div className="t-statement bread-heading" style={{fontSize:size}}>{text}</div></Reveal>{body&&<Reveal on={on} out={out} x={140} y={565}><p className="bread-body">{body}</p></Reveal>}</>;
++}
++function Opening_(){const {here,b}=useScene();return <>
++ <Reveal on={here&&b===0} out={here&&b>0} x={200} y={430}><div className="t-editorial" style={{fontSize:72}}>パンが、店先に届くまで。</div><p className="bread-body" style={{marginTop:42}}>架空のパン店の概念資料。クリックで開始。</p></Reveal>
++ <Reveal on={here&&b>=1} x={140} y={220}><div className="t-statement" style={{fontSize:144}}>パンが、店先に<br/>届くまで。</div><p className="bread-body" style={{marginTop:54}}>素材から、誰かの手へ。</p><p className="brand-caption" style={{marginTop:38}}>架空のパン店を説明する概念資料。</p></Reveal>
++ <Reveal on={here&&b>=1} x={1380} y={420}><div style={{width:350,height:250}}><Bread warm/></div></Reveal>
++ </>;}
++export const Opening=()=> <Scene index={0}><Opening_/></Scene>;
++function Materials_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text={<>はじまりは、<br/>素材から。</>} body="流れの最初の位置を、ひとつの図で見る。"/><Statement on={here&&b===1} text="次の工程へ。" body="素材から、生地をつくるところへ。"/></>;}
++export const Materials=()=> <Scene index={1}><Materials_/></Scene>;
++function DoughScene_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="混ぜる。" size={180} body="素材が、生地になる場面。"/><Statement on={here&&b===1} out={here&&b>1} text="形づくる。" size={170} body="生地の形を整え、次の工程へ渡す。"/><Statement on={here&&b===2} text="焼く場所へ。" body="この資料は工程の関係を示す概念図。"/></>;}
++export const DoughScene=()=> <Scene index={2}><DoughScene_/></Scene>;
++function Baking_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="焼く。" size={180} body="図形の色の変化は、工程を示す演出。"/><Statement on={here&&b===1} text={<>パンとして、<br/>店先へ。</>} body="焼き方の条件・時間・温度は、この資料に含めない。"/></>;}
++export const Baking=()=> <Scene index={3}><Baking_/></Scene>;
++function Shop_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="店先に、届く。" body="焼く工程から、並べる場所へ。"/><Statement on={here&&b===1} out={here&&b>1} text={<>並べて、<br/>見つけやすく。</>} body="棚のパンは説明用の図形。個数はデータではない。"/><Statement on={here&&b===2} text="選ぶ時間へ。" body="つくる流れから、選ぶ体験へ。"/></>;}
++export const Shop=()=> <Scene index={4}><Shop_/></Scene>;
++function Handoff_(){const {here,b,entry}=useScene();const reduced=useSyncExternalStore(reducedMotion.subscribe,reducedMotion.get);return <>
++ <Statement on={here&&b===0} out={here&&b>0} text="選ぶ。" size={180} body="店先で、気になるパンを見つける。"/>
++ <Reveal on={here&&b===1} out={here&&b>1} x={140} y={180}><Typewriter run={here&&b===1&&!reduced} entry={entry} lines={['ひとつを、','手渡す。']} charMs={60} lineStyle={{fontFamily:'BreadDisplay',fontSize:140,lineHeight:1.25}}/></Reveal>
++ <Reveal on={here&&b===1} out={here&&b>1} x={140} y={565}><p className="bread-body">店先から、手へ渡る場面。</p></Reveal>
++ <Statement on={here&&b===2} text={<>店先から、<br/>誰かの手へ。</>} body="架空のパン店の概念資料。素材から、誰かの手へ。"/>
++ </>;}
++export const Handoff=()=> <Scene index={5}><Handoff_/></Scene>;
+--- init-blank/deck/theme-brand.css
++++ deck/theme-brand.css
+@@ -0,0 +1,13 @@
++/* User-provided fictional brand layered after the original neutral + light themes. */
++@font-face {font-family:BreadDisplay;src:url('./assets/fonts/delagothicone/DelaGothicOne-Regular.ttf') format('truetype');font-weight:400;}
++@font-face {font-family:BreadBody;src:url('./assets/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf') format('truetype');font-weight:400;}
++@font-face {font-family:BreadBody;src:url('./assets/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf') format('truetype');font-weight:700;}
++@font-face {font-family:BreadNumber;src:url('./assets/fonts/manrope/Manrope[wght].ttf') format('truetype');font-weight:100 900;}
++:root {--bg:#F4EFE6;--surface:#FFFAF2;--ink:#25221D;--ink-2:rgba(37,34,29,.68);--ink-3:rgba(37,34,29,.32);--hair:rgba(37,34,29,.14);--hair-strong:rgba(37,34,29,.3);--accent:#CB4B34;--accent-strong:#A43826;--op-accent:#F18F75;--op-accent-strong:#CB4B34;--font-sans:BreadBody,sans-serif;--font-mono:BreadNumber,BreadBody,sans-serif;}
++.t-statement,.t-editorial {font-family:BreadDisplay,sans-serif;font-weight:400;letter-spacing:.005em;line-height:1.25;}
++.bread-heading {white-space:nowrap;}
++.bread-body {font-family:BreadBody,sans-serif;font-size:34px;line-height:1.5;max-width:1600px;color:var(--ink-2);}
++.world-art {position:absolute;width:160px;height:115px;transition:left 800ms var(--ease);}
++.world-art svg {width:100%;height:100%;display:block;}
++.capture .world-art,.reduced-motion .world-art {transition:none;}
++.brand-caption {font-size:24px;color:var(--ink-2);}
+--- init-blank/deck/timeline.ts
++++ deck/timeline.ts
+@@ -0,0 +1,11 @@
++import type {Position,TimelineHost} from 'beatdeck';
++import {reducedMotion} from 'beatdeck';
++export interface Live {breadReady:boolean}
++export function initialLive({scene,beat}:Position):Live {return {breadReady:scene>3||(scene===3&&beat>=1)};}
++/** Visual timing only: not baking time. Never auto-advance; every next step remains a click. */
++export function timeline({scene,beat}:Position,host:TimelineHost<Live>) {
++ if(scene===3&&beat===0) {
++  if(reducedMotion.get())host.setLive({breadReady:true});
++  else host.at(550,()=>host.setLive({breadReady:true}));
++ }
++}
+--- init-blank/deck/World.tsx
++++ deck/World.tsx
+@@ -0,0 +1,16 @@
++import {Arrow,NodeBox,Reveal,useDeck,usePos,type Rect} from 'beatdeck';
++import {Bread,Dough,Shelf} from './Illustrations';
++import type {Live} from './timeline';
++const labels=['素材','混ぜる・形','焼く','店先','選ぶ','手渡す'];
++const nodes:Rect[]=labels.map((_,i)=>({x:140+i*280,y:785,w:240,h:140}));
++/** One persistent world spans scenes; its position is derived from the original engine. */
++export function World() {
++ const {s,b}=usePos();const ready=useDeck<boolean,Live>(state=>state.live.breadReady);
++ const on=s>=1;const active=s===1?0:s===2?1:s===3?2:s===4?3:b===0?4:5;
++ return <>
++  {nodes.map((rect,i)=><NodeBox key={i} rect={rect} on={on} tone={i===active?'hot':i<active?'normal':'dim'} kind={String(i+1).padStart(2,'0')} value={<span style={{fontFamily:'var(--font-sans)',fontSize:32}}>{labels[i]}</span>}/>)}
++  {nodes.slice(0,-1).map((rect,i)=><Arrow key={i} from={rect} to={nodes[i+1]} on={on} tone={i===active-1?'hot':i<active?'normal':'dim'}/>)}
++  <div className="world-art" style={{left:140+active*280+40,top:650,opacity:on?1:0}}>{s===4?<Shelf/>:ready||s===5?<Bread warm/>:<Dough/>}</div>
++  <Reveal on={on} x={140} y={971}><p className="brand-caption">架空のパン店 / 工程を示す概念図</p></Reveal>
++ </>;
++}

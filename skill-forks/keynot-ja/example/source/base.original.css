@@ -1,0 +1,453 @@
+/* ============================================================
+     BRAND PALETTE — Keynot for Zombies
+     Primary:  #1a2e1f  swamp black-green (dominant dark panels)
+     Accent:   #a3e635  toxic lime (rules, CTAs, status)
+     Blood:    #8b1a1a  second accent (sparingly)
+     Cream:    #f3efe4  light slide backgrounds
+     Ink:      #1a1a1a  body text on light panels
+     Tone: editorial + slightly unhinged
+     ============================================================ */
+  :root {
+    --primary: #1a2e1f;
+    --accent:  #a3e635;
+    --blood:   #8b1a1a;
+    --cream:   #f3efe4;
+    --stone:   #e3ddcb;
+    --ink:     #1a1a1a;
+    --muted:   #6b6a5e;
+    --serif:   'Cormorant Garamond', Georgia, serif;
+    --sans:    'DM Sans', system-ui, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #000; font-family: var(--sans); }
+
+  .deck { width: 100vw; height: 100vh; position: relative; }
+
+  .slide {
+    position: absolute; inset: 0;
+    opacity: 0; pointer-events: none;
+    transition: opacity .55s cubic-bezier(.4,0,.2,1);
+  }
+  .slide.active { opacity: 1; pointer-events: all; }
+
+  .slide.active .reveal { animation: fadeUp .6s both; }
+  .slide.active .reveal:nth-child(1) { animation-delay: .05s; }
+  .slide.active .reveal:nth-child(2) { animation-delay: .15s; }
+  .slide.active .reveal:nth-child(3) { animation-delay: .25s; }
+  .slide.active .reveal:nth-child(4) { animation-delay: .35s; }
+  .slide.active .reveal:nth-child(5) { animation-delay: .45s; }
+  .slide.active .reveal:nth-child(6) { animation-delay: .55s; }
+  .slide.active .reveal:nth-child(7) { animation-delay: .65s; }
+  .slide.active .reveal:nth-child(8) { animation-delay: .75s; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(22px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ---------- Typography ---------- */
+  .display {
+    font-family: var(--serif);
+    font-size: clamp(56px, 8vw, 112px);
+    font-weight: 300; line-height: .92;
+    letter-spacing: -.015em;
+  }
+  .heading {
+    font-family: var(--serif);
+    font-size: clamp(34px, 4.2vw, 56px);
+    font-weight: 400; line-height: 1.08;
+  }
+  .label {
+    font-family: var(--sans);
+    font-size: 10px; font-weight: 600;
+    letter-spacing: .22em; text-transform: uppercase;
+  }
+  .body {
+    font-family: var(--sans);
+    font-size: clamp(13px, 1.05vw, 15px);
+    font-weight: 300; line-height: 1.65;
+  }
+
+  /* ---------- Wordmark ---------- */
+  .wordmark { font-family: var(--sans); }
+  .w-line-1 {
+    font-size: 11px; font-weight: 600;
+    letter-spacing: .32em; text-transform: uppercase;
+    color: var(--accent);
+  }
+  .w-line-2 {
+    font-size: 10px; font-weight: 400;
+    letter-spacing: .18em; text-transform: uppercase;
+    color: rgba(255,255,255,.55);
+    margin-top: 4px;
+  }
+
+  /* =================== SLIDE 1 — Title =================== */
+  .s1 {
+    background: var(--primary);
+    display: flex; flex-direction: column;
+    padding: 56px 72px;
+    position: relative; overflow: hidden;
+  }
+  .s1::before {
+    content: ''; position: absolute;
+    top: 0; right: 0; width: 38%; height: 100%;
+    background:
+      radial-gradient(circle at 30% 40%, rgba(163,230,53,.12) 0%, transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(139,26,26,.18) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .s1-top {
+    display: flex; justify-content: space-between; align-items: flex-start;
+    position: relative; z-index: 2;
+  }
+  .s1-rule {
+    width: 64px; height: 2px; background: var(--accent);
+    margin-top: 8px;
+  }
+  .s1-main {
+    flex: 1; display: flex; flex-direction: column; justify-content: center;
+    position: relative; z-index: 2;
+  }
+  .s1-eyebrow {
+    color: var(--accent);
+    margin-bottom: 28px;
+  }
+  .s1-title {
+    color: #fff;
+    max-width: 12ch;
+  }
+  .s1-title .amp { color: var(--accent); font-style: italic; }
+  .s1-sub {
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.6vw, 24px);
+    color: rgba(255,255,255,.7);
+    font-style: italic;
+    margin-top: 32px;
+    max-width: 48ch;
+    font-weight: 300;
+  }
+  .s1-bottom {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    color: rgba(255,255,255,.45);
+    font-size: 11px; font-weight: 400;
+    letter-spacing: .15em; text-transform: uppercase;
+    position: relative; z-index: 2;
+  }
+
+  /* =================== SLIDE 2 — The Problem =================== */
+  .s2 { display: flex; background: var(--cream); }
+  .s2-left {
+    width: 52%; background: var(--primary);
+    padding: 72px 64px;
+    display: flex; flex-direction: column; justify-content: center;
+    position: relative; overflow: hidden;
+  }
+  .s2-left::after {
+    content: ''; position: absolute;
+    bottom: -40px; left: -40px; width: 240px; height: 240px;
+    background: radial-gradient(circle, rgba(163,230,53,.08) 0%, transparent 70%);
+  }
+  .s2-label { color: var(--accent); margin-bottom: 22px; }
+  .s2-title { color: #fff; max-width: 14ch; }
+  .s2-title em { font-style: italic; color: var(--accent); font-weight: 400; }
+  .s2-right {
+    flex: 1; padding: 72px 56px 72px 64px;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .s2-kicker {
+    color: var(--muted); margin-bottom: 28px;
+  }
+  .pain {
+    display: flex; align-items: flex-start; gap: 18px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--stone);
+  }
+  .pain:last-child { border-bottom: none; }
+  .pain-num {
+    font-family: var(--serif);
+    font-size: 26px; font-weight: 300;
+    color: var(--blood);
+    min-width: 32px; line-height: 1;
+  }
+  .pain-text {
+    font-family: var(--sans);
+    font-size: 15px; color: var(--ink);
+    font-weight: 400; line-height: 1.5;
+  }
+  .pain-text span { color: var(--muted); font-weight: 300; }
+
+  /* =================== SLIDE 3 — How it works =================== */
+  .s3 {
+    background: var(--cream);
+    padding: 64px 80px;
+    display: flex; flex-direction: column;
+  }
+  .s3-header { margin-bottom: 48px; }
+  .s3-label { color: var(--blood); margin-bottom: 14px; }
+  .s3-heading { color: var(--ink); max-width: 22ch; }
+  .s3-heading em { font-style: italic; color: var(--blood); font-weight: 400; }
+  .approach-grid {
+    flex: 1;
+    display: grid; grid-template-columns: 1fr 1fr 1fr;
+    gap: 0;
+    border-top: 1px solid var(--stone);
+  }
+  .approach {
+    padding: 36px 36px 36px 0;
+    border-right: 1px solid var(--stone);
+    display: flex; gap: 24px;
+  }
+  .approach:last-child { border-right: none; }
+  .approach:not(:first-child) { padding-left: 36px; }
+  .approach-num {
+    font-family: var(--serif);
+    font-size: 64px; font-weight: 300;
+    color: var(--accent);
+    line-height: 1;
+    -webkit-text-stroke: 1px var(--primary);
+    text-shadow: 2px 2px 0 var(--primary);
+  }
+  .approach-body { flex: 1; }
+  .approach-title {
+    font-family: var(--serif);
+    font-size: 22px; font-weight: 500;
+    color: var(--ink); margin-bottom: 10px;
+    line-height: 1.15;
+  }
+  .approach-text {
+    font-family: var(--sans);
+    font-size: 13px; font-weight: 300;
+    color: var(--muted); line-height: 1.6;
+  }
+
+  /* =================== SLIDE 4 — What you get =================== */
+  .s4 {
+    background: var(--primary);
+    padding: 64px 80px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+  }
+  .s4::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 100%; height: 3px;
+    background: var(--accent);
+  }
+  .s4-header { margin-bottom: 48px; }
+  .s4-label { color: var(--accent); margin-bottom: 14px; }
+  .s4-heading { color: #fff; max-width: 20ch; }
+  .s4-heading em { font-style: italic; color: var(--accent); font-weight: 400; }
+  .features-grid {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 36px;
+    align-content: center;
+  }
+  .feature {
+    display: flex; gap: 18px; align-items: flex-start;
+    padding: 18px 0;
+  }
+  .feature-bar {
+    width: 3px; align-self: stretch;
+    background: var(--accent);
+    flex-shrink: 0;
+  }
+  .feature-body { flex: 1; }
+  .feature-name {
+    font-family: var(--serif);
+    font-size: 20px; font-weight: 500;
+    color: #fff; margin-bottom: 6px;
+  }
+  .feature-text {
+    font-family: var(--sans);
+    font-size: 13px; font-weight: 300;
+    color: rgba(255,255,255,.65); line-height: 1.55;
+  }
+
+  /* =================== SLIDE 5 — CTA =================== */
+  .s5 { display: flex; background: var(--primary); }
+  .s5-left {
+    width: 54%;
+    padding: 72px 64px;
+    display: flex; flex-direction: column; justify-content: space-between;
+    position: relative; z-index: 2;
+  }
+  .s5-label { color: var(--accent); }
+  .s5-heading {
+    color: #fff;
+    max-width: 14ch;
+  }
+  .s5-heading em { font-style: italic; color: var(--accent); }
+  .s5-sub {
+    font-family: var(--serif);
+    font-size: clamp(18px, 1.5vw, 22px);
+    color: rgba(255,255,255,.72);
+    font-style: italic; font-weight: 300;
+    max-width: 40ch;
+    margin-top: 24px;
+  }
+  .s5-cta {
+    display: inline-flex; align-items: center; gap: 14px;
+    padding: 16px 28px;
+    background: var(--accent); color: var(--primary);
+    font-family: var(--sans);
+    font-size: 11px; font-weight: 600;
+    letter-spacing: .2em; text-transform: uppercase;
+    border: none;
+    align-self: flex-start;
+    margin-top: 32px;
+  }
+  .s5-cta .arr { font-size: 14px; }
+  .s5-right {
+    flex: 1;
+    background:
+      linear-gradient(135deg, rgba(26,46,31,0) 0%, rgba(26,46,31,.5) 60%, var(--primary) 100%),
+      radial-gradient(circle at 30% 30%, #2a4a32 0%, #0f1a12 70%);
+    position: relative; overflow: hidden;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .s5-right::before {
+    content: ''; position: absolute; inset: 0;
+    background:
+      radial-gradient(circle at 20% 30%, rgba(163,230,53,.15) 0%, transparent 25%),
+      radial-gradient(circle at 75% 60%, rgba(139,26,26,.2) 0%, transparent 30%),
+      radial-gradient(circle at 50% 80%, rgba(163,230,53,.1) 0%, transparent 20%);
+  }
+  .brain {
+    font-family: var(--serif);
+    font-size: clamp(120px, 18vw, 260px);
+    font-weight: 300;
+    color: rgba(163,230,53,.14);
+    font-style: italic;
+    line-height: 1;
+    position: relative; z-index: 1;
+    letter-spacing: -.03em;
+  }
+
+  /* Shared bottom meta */
+  .meta-bar {
+    position: absolute;
+    bottom: 36px; left: 72px; right: 72px;
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--sans);
+    font-size: 10px; font-weight: 500;
+    letter-spacing: .2em; text-transform: uppercase;
+    color: rgba(255,255,255,.4);
+    z-index: 3;
+  }
+  .meta-bar.dark { color: var(--muted); }
+
+  /* =================== Navigation =================== */
+  .nav {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%);
+    z-index: 999;
+    display: flex; align-items: center; gap: 14px;
+    background: rgba(26,46,31,.82);
+    backdrop-filter: blur(12px);
+    padding: 9px 20px; border-radius: 40px;
+    border: 1px solid rgba(163,230,53,.22);
+    opacity: 1;
+    transition: opacity .4s ease;
+  }
+  .nav-hidden { opacity: 0; pointer-events: none; }
+  .nav button {
+    background: none; border: none; cursor: pointer;
+    color: rgba(255,255,255,.65); font-size: 16px;
+    width: 30px; height: 30px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: color .2s, background .2s;
+  }
+  .nav button:hover { color: #fff; background: rgba(163,230,53,.18); }
+  .dots { display: flex; gap: 8px; align-items: center; }
+  .dot {
+    width: 7px; height: 7px; border-radius: 50%;
+    background: rgba(255,255,255,.3); cursor: pointer;
+    transition: background .2s, transform .2s;
+  }
+  .dot.active { background: var(--accent); transform: scale(1.35); }
+  .counter {
+    color: rgba(255,255,255,.5);
+    font-size: 10px; font-weight: 500;
+    letter-spacing: .15em;
+    margin-left: 4px;
+  }
+
+  /* Rotate-to-landscape overlay — only visible on portrait phones */
+  .rotate-overlay {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 9999;
+    background: var(--primary);
+    color: var(--white);
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 40px;
+    font-family: var(--sans);
+  }
+  .rotate-overlay .rotate-icon {
+    margin-bottom: 24px;
+    color: var(--accent);
+    animation: rotate-hint 2.4s ease-in-out infinite;
+  }
+  .rotate-overlay h2 {
+    font-family: var(--serif);
+    font-size: 30px; font-weight: 400;
+    margin-bottom: 12px; letter-spacing: -.01em;
+  }
+  .rotate-overlay p {
+    font-size: 14px; line-height: 1.6;
+    opacity: .72; max-width: 280px;
+  }
+  @keyframes rotate-hint {
+    0%, 40%, 100% { transform: rotate(0deg); }
+    60%, 80%      { transform: rotate(90deg); }
+  }
+  @media (orientation: portrait) and (max-width: 900px) {
+    .rotate-overlay { display: flex; }
+  }
+
+  /* Print / PDF export — Cmd+P → Save as PDF gives one slide per page */
+  @media print {
+    @page {
+      size: 1600px 1000px;
+      margin: 0;
+    }
+    html, body {
+      width: 1600px; height: auto;
+      overflow: visible !important;
+      background: #fff;
+    }
+    .deck {
+      width: 1600px; height: auto;
+      position: static !important;
+    }
+    .slide {
+      position: relative !important;
+      inset: auto !important;
+      width: 1600px; height: 1000px;
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      page-break-after: always;
+      break-after: page;
+      transform: none !important;
+    }
+    *, *::before, *::after {
+      animation: none !important;
+      animation-duration: 0s !important;
+      animation-delay: 0s !important;
+      transition: none !important;
+    }
+    .slide .reveal {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+    .nav, .rotate-overlay { display: none !important; }
+    * {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+    }
+  }

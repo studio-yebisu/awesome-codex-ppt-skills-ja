@@ -1,0 +1,69 @@
+[
+  {
+    "repository": "shawnzam/keynot",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_keynot_brand_extraction_example_css_inline_controller_html",
+    "case_ids": [
+      "keynot-showcase"
+    ],
+    "summary_ja": "独自ブランドを先に抽出し、元Keynot例CSSと完全inline controllerで和文6枚。元JSは未変更、bridgeのみ末尾追加。",
+    "requirements": [
+      "Browser（single HTML、字体と条件も内包）",
+      "Python3標準ライブラリ（再梱包のみ）"
+    ],
+    "steps": [
+      "独自BRANDからhex・字体・比率・版式を記録",
+      "各頁の一つの役目と元patternを選ぶ",
+      "原典shell/CSS/完全JSを実使用し和文局所差分を追加",
+      "公式TTF/OFLをinline化して単一HTMLへ梱包",
+      "主な出力を初回表示し元navigation1→2を確認"
+    ],
+    "commands": [
+      "python source/rebuild.py"
+    ],
+    "source_refs": [
+      {
+        "path": "skills/keynot/SKILL.md",
+        "preserved_path": "source/upstream/skills/keynot/SKILL.md",
+        "sha256": "c6e9651bbb182566cbb3cafeb9dfad89c8e58a4ff3251d83571127544367fb89",
+        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/skills/keynot/SKILL.md"
+      },
+      {
+        "path": "examples/keynot-for-zombies.html",
+        "preserved_path": "source/upstream/examples/keynot-for-zombies.html",
+        "sha256": "92afc40dc20a33a93f40f88c33c8779ed879668eafacbd68005e116f77b40a51",
+        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/examples/keynot-for-zombies.html"
+      },
+      {
+        "path": "LICENSE",
+        "preserved_path": "source/upstream/LICENSE",
+        "sha256": "dec8b5d41d9677d4b60c38df015c3c6daae97a4bfc33f933255108454a9e52cd",
+        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "preserved_path": "source/upstream/README.md",
+        "sha256": "a60b241fdd3a930f63d1631f2c87d484a0091d8f5ad36a3e3c811c34c40a754b",
+        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/README.md"
+      }
+    ],
+    "upstream_commit": "d1f9e449ddb89da707b489cb69c520a64975b47c",
+    "license": "MIT",
+    "license_notice_ja": "原典MIT ©2026 Shawn Zamechek、公式固定TTF/OFL-1.1を保持。単体HTMLにもMIT/OFL原文を内包。",
+    "caveats": [
+      "Original JS arithmetic/controller retained; fullscreen/swipe/print code kept but actions not separately tested.",
+      "Preview1600x1000 is a native viewport sample, not a fixed1920x1080 uniformly scaled stage.",
+      "Own fictional brand/experience; all real event details undecided.",
+      "Parent same-origin integration and detailed remaining-page review not tested."
+    ],
+    "skill": "skill-forks/keynot-ja/SKILL.md",
+    "guide": "examples/repositories/keynot-showcase/README.md",
+    "limitations": [
+      "編集はHTML/SVG/CSS/JS。PPTXは生成しません。",
+      "初回2頁とnavigation1→2だけ確認。全頁詳細検査・独立採点・ZIP再実行は未実施。",
+      "fullscreen/swipe/printは原典code保持、各操作の別確認は未実施。",
+      "親bridge統合は未確認。日時・会場・費用・参加人数は未定。"
+    ]
+  }
+]

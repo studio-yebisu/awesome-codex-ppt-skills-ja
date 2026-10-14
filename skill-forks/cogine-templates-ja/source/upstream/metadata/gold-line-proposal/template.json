@@ -1,0 +1,1091 @@
+{
+  "slug": "gold-line-proposal",
+  "name": "Gold Line Proposal",
+  "tagline": "Charcoal and gold proposal deck rebuilt into a complete premium project proposal sequence with framed title pages, thin line geometry, tables, budget, timeline, maps, mockups, and decision layouts.",
+  "mood": [
+    "premium",
+    "serious",
+    "geometric",
+    "focused"
+  ],
+  "occasion": [
+    "project proposal",
+    "executive concept",
+    "premium service pitch",
+    "strategic recommendation"
+  ],
+  "tone": [
+    "elegant",
+    "dark",
+    "authoritative",
+    "minimal"
+  ],
+  "formality": "high",
+  "density": "medium-high",
+  "palette": {
+    "bg": "#282B31",
+    "surface": "#30333A",
+    "panel": "#1F2228",
+    "ink": "#F3E9D0",
+    "text": "#E4DDCF",
+    "muted": "#A89F90",
+    "primary": "#D2A74F",
+    "description": "Charcoal canvas with thin gold line geometry, warm cream text, and muted executive neutrals."
+  },
+  "typography": {
+    "display": "Cinzel",
+    "body": "Montserrat",
+    "style": "Luxury all-caps serif display with compact modern sans body, matching the premium proposal source more closely than the prior condensed sans."
+  },
+  "scheme": "dark",
+  "best_for": "Premium project proposals, executive concepts, procurement presentations, and serious service pitches that need budget, requirement, timeline, map, mockup, and decision pages.",
+  "avoid_for": "Playful campaigns, classroom materials, casual portfolios, or dense scientific explainers.",
+  "slide_count": 27,
+  "content_limits": {
+    "max_title_chars": 72,
+    "max_subtitle_chars": 150,
+    "max_body_chars_per_slide": 760,
+    "max_bullets": 6,
+    "max_cards": 8,
+    "recommended_slide_count_min": 14,
+    "recommended_slide_count_max": 27
+  },
+  "features": {
+    "navigation": true,
+    "keyboard_navigation": true,
+    "touch_navigation": true,
+    "progress_bar": true,
+    "slide_counter": true,
+    "aspect_ratio": "fullscreen-responsive",
+    "format": "single-file-html",
+    "source_preview_slides": 27
+  },
+  "layouts": [
+    "boxed-title-cover",
+    "proposal-intro",
+    "contents-grid",
+    "company-overview",
+    "mission-statement",
+    "project-scope",
+    "problem-opportunity",
+    "solution-architecture",
+    "requirements-table",
+    "deliverables-grid",
+    "timeline-stages",
+    "budget-summary",
+    "budget-table",
+    "market-map",
+    "team-profile",
+    "service-packages",
+    "process-diagram",
+    "risk-mitigation",
+    "success-metrics",
+    "mockup-showcase",
+    "comparison-matrix",
+    "future-vision",
+    "implementation-roadmap",
+    "decision-slide",
+    "resource-credits",
+    "thank-you",
+    "closing-contact"
+  ],
+  "layout_slots": {
+    "boxed-title-cover": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Small proposal category label above the cover title."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Primary cover title."
+      },
+      {
+        "name": "subtitle",
+        "type": "text",
+        "required": true,
+        "description": "Cover subtitle below the main title inside the gold frame."
+      },
+      {
+        "name": "cover_note",
+        "type": "text",
+        "required": false,
+        "description": "Small explanatory note positioned outside the cover frame."
+      }
+    ],
+    "proposal-intro": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Intro section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Main introductory headline."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Intro paragraph under the headline."
+      },
+      {
+        "name": "sidebar_number",
+        "type": "label",
+        "required": false,
+        "description": "Large numeric marker in the right-side panel."
+      },
+      {
+        "name": "sidebar_title",
+        "type": "text",
+        "required": true,
+        "description": "Right-side panel title."
+      },
+      {
+        "name": "sidebar_body",
+        "type": "text",
+        "required": false,
+        "description": "Right-side panel supporting copy."
+      }
+    ],
+    "contents-grid": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Contents section label."
+      },
+      {
+        "name": "tag",
+        "type": "label",
+        "required": false,
+        "description": "Small tag in the top-right topline."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Contents slide headline."
+      },
+      {
+        "name": "cards",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Eight contents cards, each represented as a short section label.",
+        "minItems": 1,
+        "maxItems": 8,
+        "items": {
+          "type": "object",
+          "required": [
+            "label"
+          ],
+          "properties": {
+            "label": {
+              "type": "text",
+              "description": "Contents card label."
+            }
+          }
+        }
+      }
+    ],
+    "company-overview": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Company section label."
+      },
+      {
+        "name": "tag",
+        "type": "label",
+        "required": false,
+        "description": "Small profile tag in the topline."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Company overview headline."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Company overview paragraph."
+      },
+      {
+        "name": "portrait_visual",
+        "type": "object",
+        "required": false,
+        "description": "Right-side portrait or visual placeholder content."
+      }
+    ],
+    "mission-statement": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Mission section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Large centered mission statement."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Short supporting mission copy."
+      }
+    ],
+    "project-scope": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Project section label."
+      },
+      {
+        "name": "tag",
+        "type": "label",
+        "required": false,
+        "description": "Small scope tag in the topline."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Project scope headline."
+      },
+      {
+        "name": "modules",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Three scope modules with number, title, and body fields.",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": [
+            "number",
+            "title",
+            "body"
+          ],
+          "properties": {
+            "number": {
+              "type": "label",
+              "description": "Large module number."
+            },
+            "title": {
+              "type": "text",
+              "description": "Module title."
+            },
+            "body": {
+              "type": "text",
+              "description": "Module supporting copy."
+            }
+          }
+        }
+      }
+    ],
+    "problem-opportunity": [
+      {
+        "name": "left_kicker",
+        "type": "label",
+        "required": false,
+        "description": "Left column label."
+      },
+      {
+        "name": "left_title",
+        "type": "text",
+        "required": true,
+        "description": "Left column headline."
+      },
+      {
+        "name": "left_body",
+        "type": "text",
+        "required": false,
+        "description": "Left column supporting copy."
+      },
+      {
+        "name": "right_kicker",
+        "type": "label",
+        "required": false,
+        "description": "Right column label."
+      },
+      {
+        "name": "right_title",
+        "type": "text",
+        "required": true,
+        "description": "Right column headline."
+      },
+      {
+        "name": "right_body",
+        "type": "text",
+        "required": false,
+        "description": "Right column supporting copy."
+      }
+    ],
+    "solution-architecture": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Solution section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Architecture slide headline."
+      },
+      {
+        "name": "steps",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Five architecture step labels.",
+        "minItems": 1,
+        "maxItems": 5,
+        "items": {
+          "type": "object",
+          "required": [
+            "label"
+          ],
+          "properties": {
+            "label": {
+              "type": "text",
+              "description": "Architecture step label."
+            }
+          }
+        }
+      }
+    ],
+    "requirements-table": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Requirements section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Requirements table headline."
+      },
+      {
+        "name": "table_rows",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Table rows with requirement, owner, and decision cells.",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": [
+            "requirement",
+            "owner",
+            "decision"
+          ],
+          "properties": {
+            "requirement": {
+              "type": "text",
+              "description": "Requirement cell."
+            },
+            "owner": {
+              "type": "text",
+              "description": "Owner cell."
+            },
+            "decision": {
+              "type": "text",
+              "description": "Decision cell."
+            }
+          }
+        }
+      }
+    ],
+    "deliverables-grid": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Deliverables section label."
+      },
+      {
+        "name": "tag",
+        "type": "label",
+        "required": false,
+        "description": "Small outputs tag in the topline."
+      },
+      {
+        "name": "cards",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Four deliverable cards with title and body fields.",
+        "minItems": 1,
+        "maxItems": 4,
+        "items": {
+          "type": "object",
+          "required": [
+            "title",
+            "body"
+          ],
+          "properties": {
+            "title": {
+              "type": "text",
+              "description": "Deliverable card title."
+            },
+            "body": {
+              "type": "text",
+              "description": "Deliverable card body."
+            }
+          }
+        }
+      }
+    ],
+    "timeline-stages": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Timeline section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Timeline headline."
+      },
+      {
+        "name": "stages",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Five timeline stages with number and title fields.",
+        "minItems": 1,
+        "maxItems": 5,
+        "items": {
+          "type": "object",
+          "required": [
+            "number",
+            "title"
+          ],
+          "properties": {
+            "number": {
+              "type": "label",
+              "description": "Timeline stage number."
+            },
+            "title": {
+              "type": "text",
+              "description": "Timeline stage title."
+            }
+          }
+        }
+      }
+    ],
+    "budget-summary": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Budget section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Budget headline."
+      },
+      {
+        "name": "amount",
+        "type": "text",
+        "required": true,
+        "description": "Large highlighted investment amount."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Budget summary paragraph."
+      },
+      {
+        "name": "sidebar_title",
+        "type": "text",
+        "required": false,
+        "description": "Budget mix sidebar title."
+      },
+      {
+        "name": "budget_mix_visual",
+        "type": "object",
+        "required": false,
+        "description": "Circular budget mix visualization values or replacement visual."
+      }
+    ],
+    "budget-table": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Budget table section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Budget table headline."
+      },
+      {
+        "name": "table_rows",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Budget rows with workstream, budget, and notes cells.",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": [
+            "workstream",
+            "budget",
+            "notes"
+          ],
+          "properties": {
+            "workstream": {
+              "type": "text",
+              "description": "Workstream cell."
+            },
+            "budget": {
+              "type": "text",
+              "description": "Budget cell."
+            },
+            "notes": {
+              "type": "text",
+              "description": "Notes cell."
+            }
+          }
+        }
+      }
+    ],
+    "market-map": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Market section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Market map headline."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Market map explanatory copy."
+      },
+      {
+        "name": "map_points",
+        "type": "array",
+        "required": false,
+        "repeatable": true,
+        "description": "Map or stakeholder points represented in the right-side map visual.",
+        "minItems": 0,
+        "maxItems": 4,
+        "items": {
+          "type": "object",
+          "required": [
+            "label"
+          ],
+          "properties": {
+            "label": {
+              "type": "text",
+              "description": "Map or stakeholder point label."
+            }
+          }
+        }
+      }
+    ],
+    "team-profile": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Team section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Team slide headline."
+      },
+      {
+        "name": "members",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Three team member cards with role title, body, and optional portrait.",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": [
+            "role_title",
+            "body"
+          ],
+          "properties": {
+            "role_title": {
+              "type": "text",
+              "description": "Team member role or name."
+            },
+            "body": {
+              "type": "text",
+              "description": "Team member responsibility copy."
+            },
+            "portrait": {
+              "type": "object",
+              "description": "Optional portrait or avatar replacement."
+            }
+          }
+        }
+      }
+    ],
+    "service-packages": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Package section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Service package headline."
+      },
+      {
+        "name": "packages",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Three package cards with tag, title, and body fields.",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": [
+            "tag",
+            "title",
+            "body"
+          ],
+          "properties": {
+            "tag": {
+              "type": "label",
+              "description": "Package tier tag."
+            },
+            "title": {
+              "type": "text",
+              "description": "Package title."
+            },
+            "body": {
+              "type": "text",
+              "description": "Package description."
+            }
+          }
+        }
+      }
+    ],
+    "process-diagram": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Method section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Process headline."
+      },
+      {
+        "name": "steps",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Four process step labels.",
+        "minItems": 1,
+        "maxItems": 4,
+        "items": {
+          "type": "object",
+          "required": [
+            "label"
+          ],
+          "properties": {
+            "label": {
+              "type": "text",
+              "description": "Process step label."
+            }
+          }
+        }
+      }
+    ],
+    "risk-mitigation": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Risk section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Risk slide headline."
+      },
+      {
+        "name": "risks",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Three risk cards with title and mitigation body.",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": [
+            "title",
+            "body"
+          ],
+          "properties": {
+            "title": {
+              "type": "text",
+              "description": "Risk title."
+            },
+            "body": {
+              "type": "text",
+              "description": "Mitigation body."
+            }
+          }
+        }
+      }
+    ],
+    "success-metrics": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Metrics section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Metrics headline."
+      },
+      {
+        "name": "metrics",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Four metric cards with value and label fields.",
+        "minItems": 1,
+        "maxItems": 4,
+        "items": {
+          "type": "object",
+          "required": [
+            "value",
+            "label"
+          ],
+          "properties": {
+            "value": {
+              "type": "text",
+              "description": "Highlighted metric value."
+            },
+            "label": {
+              "type": "text",
+              "description": "Metric label."
+            }
+          }
+        }
+      }
+    ],
+    "mockup-showcase": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Mockup section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Mockup slide headline."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Mockup explanatory paragraph."
+      },
+      {
+        "name": "device_visual",
+        "type": "object",
+        "required": false,
+        "description": "Right-side device screenshot or visual replacement."
+      }
+    ],
+    "comparison-matrix": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Comparison section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Comparison matrix headline."
+      },
+      {
+        "name": "table_rows",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Matrix rows with option, speed, depth, and cost cells.",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": [
+            "option",
+            "speed",
+            "depth",
+            "cost"
+          ],
+          "properties": {
+            "option": {
+              "type": "text",
+              "description": "Option cell."
+            },
+            "speed": {
+              "type": "text",
+              "description": "Speed cell."
+            },
+            "depth": {
+              "type": "text",
+              "description": "Depth cell."
+            },
+            "cost": {
+              "type": "text",
+              "description": "Cost cell."
+            }
+          }
+        }
+      }
+    ],
+    "future-vision": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Future section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Large future-state headline."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Short supporting copy for the destination state."
+      }
+    ],
+    "implementation-roadmap": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Roadmap section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Roadmap headline."
+      },
+      {
+        "name": "stages",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Four implementation stages with timing and title fields.",
+        "minItems": 1,
+        "maxItems": 4,
+        "items": {
+          "type": "object",
+          "required": [
+            "timing",
+            "title"
+          ],
+          "properties": {
+            "timing": {
+              "type": "label",
+              "description": "Roadmap timing label."
+            },
+            "title": {
+              "type": "text",
+              "description": "Roadmap stage title."
+            }
+          }
+        }
+      }
+    ],
+    "decision-slide": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Decision section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Decision slide headline."
+      },
+      {
+        "name": "recommendation",
+        "type": "text",
+        "required": true,
+        "description": "Large recommended decision inside the decision box."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Decision rationale below the recommendation."
+      }
+    ],
+    "resource-credits": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Resources section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Resources slide headline."
+      },
+      {
+        "name": "resources",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Three resource labels in the grid.",
+        "minItems": 1,
+        "maxItems": 3,
+        "items": {
+          "type": "object",
+          "required": [
+            "label"
+          ],
+          "properties": {
+            "label": {
+              "type": "text",
+              "description": "Resource label."
+            }
+          }
+        }
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Resource usage note below the grid."
+      }
+    ],
+    "thank-you": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Closing section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Thank-you headline."
+      },
+      {
+        "name": "body",
+        "type": "text",
+        "required": false,
+        "description": "Short closing note."
+      }
+    ],
+    "closing-contact": [
+      {
+        "name": "kicker",
+        "type": "label",
+        "required": false,
+        "description": "Contact section label."
+      },
+      {
+        "name": "title",
+        "type": "text",
+        "required": true,
+        "description": "Final contact headline."
+      },
+      {
+        "name": "contact_lines",
+        "type": "array",
+        "required": true,
+        "repeatable": true,
+        "description": "Contact lines such as email and website.",
+        "minItems": 1,
+        "maxItems": 2,
+        "items": {
+          "type": "object",
+          "required": [
+            "line"
+          ],
+          "properties": {
+            "line": {
+              "type": "text",
+              "description": "Contact detail line."
+            }
+          }
+        }
+      }
+    ]
+  },
+  "source_inspiration": {
+    "name": "Slidesgo Custal Project Proposal",
+    "url": "https://slidesgo.com/theme/custal-project-proposal",
+    "notes": "Independent HTML/CSS reconstruction of the public preview structure: dark premium proposal styling, thin gold line geometry, boxed title frames, sections for company, project, requirements, budget, stages, maps, tables, timelines, mockups, future, and decision. It does not reuse source presentation assets."
+  }
+}

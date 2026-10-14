@@ -1,0 +1,16 @@
+{
+  "status": "blocked_before_draft",
+  "repository": "eluckydog/ppt-scene-graph",
+  "commit": "646e3dc4b72a444278d320c8984d5986d7fbf4bb",
+  "failure": "ModuleNotFoundError: No module named pptx.parts",
+  "cause": "Both original vendored pptx copies lack the entire parts directory; fixed audited tree has no parts paths",
+  "draft_generated": false,
+  "replacement_engine_used": false,
+  "next_candidate": "Only same-version official python-pptx1.0.2 parts modules; awaiting parent direction before completion",
+  "other_source_limitations": [
+    "parse_slide declared in docs but not in package exports/implementation",
+    "beautify validates display names, not short projection key; use load_theme(projection).name",
+    "Vendored python-pptx still imports external lxml/Pillow/typing_extensions/XlsxWriter",
+    "Original archive lacks separate python-pptx MIT license; official v1.0.2 text supplemented already"
+  ]
+}

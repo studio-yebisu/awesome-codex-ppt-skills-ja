@@ -1,0 +1,92 @@
+[
+  {
+    "repository": "eluckydog/ppt-scene-graph",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_outline_create_beautify_projection_native_pptx_repaired_same_version_vendor",
+    "case_ids": [
+      "scene-graph-showcase"
+    ],
+    "summary_ja": "元OutlineSpec/SlideSpec→createでdraft、元beautifyでprojection6枚。同版parts8欠落だけ補完、native文字と枠を編集。",
+    "requirements": [
+      "Python3 / 原典runtimeとvendor",
+      "lxml6.1.3 / Pillow12.3.0 / typing_extensions4.16.0 / XlsxWriter3.2.9（必要実行依存）",
+      "公式BIZ UDPGothic（PPTX字体は未埋込、編集・export時登録）",
+      "PowerPoint（通常PNG/PDF exportに使用）"
+    ],
+    "steps": [
+      "大綱を元OutlineSpec/SlideSpecへ読み込む",
+      "元create_from_outlineでdesignhub_warm draftを保存",
+      "元beautifyへload_theme(projection).nameを渡す",
+      "同じ本文のnative完成PPTXを保存",
+      "自分のdeckだけ開いて通常export、表紙初回表示"
+    ],
+    "commands": [
+      "python source/rebuild.py",
+      "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
+    "source_refs": [
+      {
+        "path": "SKILL.md",
+        "preserved_path": "source/upstream/SKILL.md",
+        "sha256": "d8eba54e4cae5c78ec556cb2435dbfd90cbb85093c61f3d5e30dff3c10714a12",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/SKILL.md"
+      },
+      {
+        "path": "README.md",
+        "preserved_path": "source/upstream/README.md",
+        "sha256": "2bcfc5cffa5d53cf444c9188752d4812772388053e86736720b4e8517d56076b",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/README.md"
+      },
+      {
+        "path": "LICENSE",
+        "preserved_path": "source/upstream/LICENSE",
+        "sha256": "e13d3bdabc6b4c046ea1a6aa63ddf86d85e6bcb76a42e88b9a8be409bf7e0950",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/LICENSE"
+      },
+      {
+        "path": "ppt_scene_graph/__init__.py",
+        "preserved_path": "source/upstream/ppt_scene_graph/__init__.py",
+        "sha256": "c720d3d84633955787886566f4de0b1a72e1c031d389e96ae3756f55444166e5",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/__init__.py"
+      },
+      {
+        "path": "ppt_scene_graph/design.py",
+        "preserved_path": "source/upstream/ppt_scene_graph/design.py",
+        "sha256": "d843eb70d732466629126a8226cef8dfe4df2884976da80892d564dc3d4382af",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/design.py"
+      },
+      {
+        "path": "ppt_scene_graph/pipeline.py",
+        "preserved_path": "source/upstream/ppt_scene_graph/pipeline.py",
+        "sha256": "e84cfa8b5a7d833da27b947bc9a0bb236f034da48e19d45f85bb72c10e35c38a",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/pipeline.py"
+      },
+      {
+        "path": "ppt_scene_graph/vendor/pptx/__init__.py",
+        "preserved_path": "source/upstream/ppt_scene_graph/vendor/pptx/__init__.py",
+        "sha256": "5cbabf88d062a399cd8d03e6986c700bc189647bd5d7404ba9130244301e519c",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/vendor/pptx/__init__.py"
+      }
+    ],
+    "upstream_commit": "646e3dc4b72a444278d320c8984d5986d7fbf4bb",
+    "license": "MIT",
+    "license_notice_ja": "原典MIT ©2026 PPT Scene Graph Contributors、vendor同版python-pptx MIT ©2013 Steve Canny、公式BIZ字体OFLと外部依存の個別条件を保持。",
+    "caveats": [
+      "Fixed upstream omitted vendored parts;8 official same-version modules supplemented in runtime only.",
+      "parse_slide declared but not implemented/exported.",
+      "Beautify validates display names rather than short theme keys.",
+      "Decor affects cover/section type detection; non-text fill colors retained; original create ignores speaker-notes field.",
+      "Projection tokens are code settings, not empirically verified optimal point sizes.",
+      "Normal6PNG/PDF export and cover first display only; evaluate/all-page review not run."
+    ],
+    "skill": "skill-forks/scene-graph-ja/SKILL.md",
+    "guide": "examples/repositories/scene-graph-showcase/README.md",
+    "limitations": [
+      "parse_slideは未実装、evaluateは未実施。",
+      "公式同版parts8のみ不足補完。元原本を未変更で保存。",
+      "PPTXのfontは未埋込。公式字体を登録して編集します。",
+      "全頁詳細検査・独立review・構造監査・ZIP再実行は未実施。"
+    ]
+  }
+]

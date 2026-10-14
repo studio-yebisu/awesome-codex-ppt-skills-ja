@@ -1,0 +1,13 @@
+/* User-provided fictional brand layered after the original neutral + light themes. */
+@font-face {font-family:BreadDisplay;src:url('./assets/fonts/delagothicone/DelaGothicOne-Regular.ttf') format('truetype');font-weight:400;}
+@font-face {font-family:BreadBody;src:url('./assets/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf') format('truetype');font-weight:400;}
+@font-face {font-family:BreadBody;src:url('./assets/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf') format('truetype');font-weight:700;}
+@font-face {font-family:BreadNumber;src:url('./assets/fonts/manrope/Manrope[wght].ttf') format('truetype');font-weight:100 900;}
+:root {--bg:#F4EFE6;--surface:#FFFAF2;--ink:#25221D;--ink-2:rgba(37,34,29,.68);--ink-3:rgba(37,34,29,.32);--hair:rgba(37,34,29,.14);--hair-strong:rgba(37,34,29,.3);--accent:#CB4B34;--accent-strong:#A43826;--op-accent:#F18F75;--op-accent-strong:#CB4B34;--font-sans:BreadBody,sans-serif;--font-mono:BreadNumber,BreadBody,sans-serif;}
+.t-statement,.t-editorial {font-family:BreadDisplay,sans-serif;font-weight:400;letter-spacing:.005em;line-height:1.25;}
+.bread-heading {white-space:nowrap;}
+.bread-body {font-family:BreadBody,sans-serif;font-size:34px;line-height:1.5;max-width:1600px;color:var(--ink-2);}
+.world-art {position:absolute;width:160px;height:115px;transition:left 800ms var(--ease);}
+.world-art svg {width:100%;height:100%;display:block;}
+.capture .world-art,.reduced-motion .world-art {transition:none;}
+.brand-caption {font-size:24px;color:var(--ink-2);}

@@ -1,0 +1,458 @@
+{
+  "repository": "cogine-ai/ai-slide-templates",
+  "commit": "8a7a59d39f059a7e58da9c3471014ba7fe3b98eb",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Cogine AI",
+  "source_url": "https://github.com/cogine-ai/ai-slide-templates/tree/8a7a59d39f059a7e58da9c3471014ba7fe3b98eb",
+  "chosen_template": "editorial-luxury",
+  "originals": "source/upstream",
+  "original_skill": "source/upstream/skills/ai-slide-templates/SKILL.md",
+  "original_template": "source/upstream/templates/editorial-luxury/template.html",
+  "original_metadata": "source/upstream/templates/editorial-luxury/template.json",
+  "selection_and_slots": "input/template-selection-and-slots.json",
+  "layout_slots_defined_by_upstream": false,
+  "metadata_scan": "全templates/*/template.jsonを読み、原文をsource/upstream/metadataへ保持",
+  "method": "原典metadata選択 → editorial-luxury folder clone → content_limits/実DOM slot mapping → demo差替え → 原典template.htmlとinline controllerで完成HTML",
+  "source_slide_selection": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    8
+  ],
+  "page_count": 6,
+  "local_changes": [
+    "日本語の架空企画へのdemo差替え、8→6枚とcounter更新",
+    "ユーザー承認によりPlayfair/Inter→Shippori/Zen Kaku/Manropeの役割別字体変更、和文line-height調整",
+    "公式未改変TTFをinline化、茶葉/包み/結びの自作説明用SVGを原典枠へ挿入",
+    "原典updateSlide/changeSlideへsame-origin 0-based bridgeを接続",
+    "template.jsonの実字体と枚数を実装に合わせ、原典metadataは別保存"
+  ],
+  "palette_grid_decoration_retained": true,
+  "original_navigation_retained": true,
+  "local_diffs": [
+    "source/template-local.diff (font payloadのみ表示用省略)",
+    "source/template-json-local.diff"
+  ],
+  "fonts": {
+    "families": [
+      "Shippori Mincho",
+      "Zen Kaku Gothic New",
+      "Manrope"
+    ],
+    "licenses": "OFL-1.1; 各fonts/<family>/OFL.txt",
+    "source": "fonts/SOURCE.json",
+    "actual_files_bundled": true,
+    "modified": false,
+    "os_extracted": false,
+    "html_inline": true
+  },
+  "format": "single-file-html",
+  "preview_canvas": {
+    "width": 1600,
+    "height": 900,
+    "note": "原典はfullscreen-responsive。これは代表PNGとプレビューの実viewport。"
+  },
+  "navigation": "native-runtime-bridge",
+  "editability": {
+    "kind": "html_svg",
+    "features": [
+      "html_text",
+      "svg",
+      "css"
+    ],
+    "pptx_generated": false,
+    "pdf_generated": false
+  },
+  "external_assets_required": false,
+  "custom_assets": [
+    "assets/leaf.svg",
+    "assets/wrap.svg",
+    "assets/knot.svg"
+  ],
+  "fictional": true,
+  "sample_notice": "架空の茶の贈りもの企画。商品仕様・価格・効能・売上実績は示していません。図形は説明用。",
+  "verification_scope": "生成成功、主要初回表示と代表表紙PNG、原典navigation1→2、短いSKILL quick_validateだけ。optional visual-validator/全頁詳細検査/全kit再実行/採点なし。",
+  "id": "cogine-templates-ja",
+  "source_zip": "downloads/cogine-templates-example-ja.zip",
+  "fork_zip": "downloads/cogine-templates-ja.zip",
+  "completed_sample_included": true,
+  "case_studies": [
+    "cogine-templates-showcase"
+  ],
+  "files": [
+    {
+      "path": "assets/knot.svg",
+      "sha256": "ba9fefcd99ffdd092756ba828a15b36790735df086d5a5028bb084bfbe6d94fc"
+    },
+    {
+      "path": "assets/leaf.svg",
+      "sha256": "02fab1b1b8f51c7ad30ca8c29f4b3c21166679211f76b2498458eccb8489fc88"
+    },
+    {
+      "path": "assets/wrap.svg",
+      "sha256": "391a6e31a4ee1bcaa266cba1387fe78f538430ade3abddd7191faed140ab26b3"
+    },
+    {
+      "path": "fonts/manrope/Manrope[wght].ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    {
+      "path": "fonts/manrope/OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "fonts/shipporimincho/OFL.txt",
+      "sha256": "41fba056279be5f45ff9a99e44b7b53897b42732f5806d8e666e0ab49ac6bd38"
+    },
+    {
+      "path": "fonts/shipporimincho/ShipporiMincho-Bold.ttf",
+      "sha256": "63bc4eddc74793f671c3ab827c5175e773ffbe569d0bf50ee65375ea9e3bc286"
+    },
+    {
+      "path": "fonts/zenkakugothicnew/OFL.txt",
+      "sha256": "0fac78a235c98d640cb06332eb5362c211d86fa03c011df438c35005d22ad2c7"
+    },
+    {
+      "path": "fonts/zenkakugothicnew/ZenKakuGothicNew-Regular.ttf",
+      "sha256": "b840cd07a67d89cacca44249ae49aa99ee7640eb5ce623be8d8983d6aabac801"
+    },
+    {
+      "path": "input/BRIEF.md",
+      "sha256": "3a430c0bdf449b8fb0b26467edf3f76b5fdbfb2c2af71ccb07c0320ad626b111"
+    },
+    {
+      "path": "input/content.json",
+      "sha256": "8405f9ecd2176ef002ce1b316c0bf4fc3c161a4ae97806f72757e5844cfe3673"
+    },
+    {
+      "path": "input/MANUSCRIPT.md",
+      "sha256": "fdae90777e0f1fcd6dea37758c7d39839b905ed5af6360fe59f62ac2ac7b9603"
+    },
+    {
+      "path": "input/template-selection-and-slots.json",
+      "sha256": "8d018b824904c8a148bc9f8ab9f8c471a1df61babc2152bf9836e1cb445a2a0c"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "3b34e14d3294e03f17256390aa11b46f2519e94b341313ec845ac95f568b09eb"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "dba9037f35b084400460e6bfec9df42c3f7b212676000a6b675f9c017ae4070a"
+    },
+    {
+      "path": "README.md",
+      "sha256": "e17b6780d1eb2adec7f9ccfeffe3d3c26bc3719032aae0eca7438debfbd6b2c5"
+    },
+    {
+      "path": "render/slide-01.png",
+      "sha256": "37dfc0973af348c9e200abf26a0cd435e11a1e74a37eb5c750df70986f9a12fe"
+    },
+    {
+      "path": "render/slide-02.png",
+      "sha256": "6244d27e7063a9b07866366520f1813fe870c5ba9ea5e18b6458b3226282022f"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "fb9684a7b23f3bac3a56fd31e7d9897591f1993c3cd3a51ee526444f51111be7"
+    },
+    {
+      "path": "source/build.py",
+      "sha256": "9105c074c82d4374b61cc828f2bdd2381a71e89dccb2143af9e19382a9a83c69"
+    },
+    {
+      "path": "source/japanese-fonts.css",
+      "sha256": "b2ec65b1cbda9da67e63f1849658da797ecb5f26168eb03a5215f4493b8b72c5"
+    },
+    {
+      "path": "source/template-json-local.diff",
+      "sha256": "a90a6e3d6569850d45be120a1ae56731116de02401bbe0445e45fad00d1f9450"
+    },
+    {
+      "path": "source/template-local.diff",
+      "sha256": "1b857a73535f7b1021ad76e5e1e4baa7f10f08c1d24a05f6eae589ef1b594671"
+    },
+    {
+      "path": "source/upstream/ACQUISITION.json",
+      "sha256": "e95a7c424fceb9380b28ebbe78141388653ec92d45849f5876cb20c5238884d6"
+    },
+    {
+      "path": "source/upstream/AGENTS.md",
+      "sha256": "a94b93a99a8238f5cc584d4b5732d1a1b5a000a68c6219cea65ce1bceffffff1"
+    },
+    {
+      "path": "source/upstream/INPUT_GUIDE.md",
+      "sha256": "2cdb91d9273c5f7e63151a114c7cc75648297778e8cd283a49d2f6c6ba285947"
+    },
+    {
+      "path": "source/upstream/LICENSE",
+      "sha256": "3b34e14d3294e03f17256390aa11b46f2519e94b341313ec845ac95f568b09eb"
+    },
+    {
+      "path": "source/upstream/metadata/5s-training/template.json",
+      "sha256": "996876c5fe5bb31ec3085be98334c0a1e57e4e12d3f480d79def9aa3b19ed176"
+    },
+    {
+      "path": "source/upstream/metadata/abstract-3d-maximalist-pitch/template.json",
+      "sha256": "d928784068356a19fae6a188384dd4ac8eaa612bddf21eb04b8d5e7c9efa8fab"
+    },
+    {
+      "path": "source/upstream/metadata/abstract-art-showcase/template.json",
+      "sha256": "fc22f65e6aad70c911227092a21485fe1d90a4b3387be569d597d38461b64394"
+    },
+    {
+      "path": "source/upstream/metadata/airy-modern/template.json",
+      "sha256": "b1324a7aecddbe3739fde016c2e7bbd8981b3c8512d3b1c429f54338e4dcb8ea"
+    },
+    {
+      "path": "source/upstream/metadata/architecture-portfolio/template.json",
+      "sha256": "6b11eabcdc58104f8635c790e5d7fe0f63facc896b133eb4c1614a5e17145e3e"
+    },
+    {
+      "path": "source/upstream/metadata/b2b-sales-pitch/template.json",
+      "sha256": "2e48f938d6ed1876faf5241db188a4172ee53916787d03572f7032288439416f"
+    },
+    {
+      "path": "source/upstream/metadata/bilingual-editorial/template.json",
+      "sha256": "515b2fee258e25243c7f44e352aefc3d66879fc2c7d6f4f6c9906f5993927e76"
+    },
+    {
+      "path": "source/upstream/metadata/bright-organized/template.json",
+      "sha256": "981266626fc4757cc4da30ce221df045426fd0bbbf15413b4553d21923e8fd1e"
+    },
+    {
+      "path": "source/upstream/metadata/circuit-tech-dark/template.json",
+      "sha256": "7c1142a43075eb25d9014df92e5b34b9066cf33966fb594535dde592a4d285b7"
+    },
+    {
+      "path": "source/upstream/metadata/classy-agency/template.json",
+      "sha256": "97ab2a43da73486f15f52053448ccd69265f472c471fde2416cfb9d8a4760f5a"
+    },
+    {
+      "path": "source/upstream/metadata/clinical-infographic/template.json",
+      "sha256": "c6996abb5797c0c3605060e9a29a6250d043766093f3b9afd95c714d562884fe"
+    },
+    {
+      "path": "source/upstream/metadata/colorful-keynote-system/template.json",
+      "sha256": "83447581bec6982b3e772d8b5ab5eae78438459ace74d83b480023d90a74f079"
+    },
+    {
+      "path": "source/upstream/metadata/construction-project-proposal/template.json",
+      "sha256": "89ae62eb4c5600a0e18a1b75e255ebc4d7bddd8be2f7bc022397f92af7084071"
+    },
+    {
+      "path": "source/upstream/metadata/customer-journey-map/template.json",
+      "sha256": "5da2c196d4dafb784910a6df1897fd94b30635f3b1bcd1331e9299a9043ffc0c"
+    },
+    {
+      "path": "source/upstream/metadata/dark-minimal-ui/template.json",
+      "sha256": "ec89c932c2a7883a1dea11a0eeb3e9ca7dd4c6049b665f6f0778143ea687a2b8"
+    },
+    {
+      "path": "source/upstream/metadata/earthy-handmade/template.json",
+      "sha256": "04a2dc91ad26543c7a9929a1d55a73633d877d534fb445d35ee64eb0ea42011e"
+    },
+    {
+      "path": "source/upstream/metadata/editorial-luxury/template.json",
+      "sha256": "29badc2202285e7bcf494597167fda94a148d14266d400ab129c57f05ceb83d3"
+    },
+    {
+      "path": "source/upstream/metadata/elegant-product-launch/template.json",
+      "sha256": "b9c38d94e8d545f5622953353dbb8705cd24d7009b0692a6ab4478465ff067ed"
+    },
+    {
+      "path": "source/upstream/metadata/finance-startup-statements/template.json",
+      "sha256": "cc57b1c4e5475ea4fda4538c9b2f5f981949cbd04bcb3e34bf6035b415b429f3"
+    },
+    {
+      "path": "source/upstream/metadata/financial-ledger/template.json",
+      "sha256": "c6989ce5bb6f3005ff6a1c9484fb94a09b330349654da4989f4daa200e548f03"
+    },
+    {
+      "path": "source/upstream/metadata/glass-ux-studio/template.json",
+      "sha256": "24abeb31d6f46fce14395739bf5773a58696276019e56d24fd207e30674b14fb"
+    },
+    {
+      "path": "source/upstream/metadata/gold-line-proposal/template.json",
+      "sha256": "933af0969d128e0f4b8988e1b8e53cb575fc44ba1028b7590a0ccf1fb0902faf"
+    },
+    {
+      "path": "source/upstream/metadata/graffiti-art/template.json",
+      "sha256": "d7de814370179da242f90f09f3da7b219918989a7ac6f5be691fa5aebb5c41d5"
+    },
+    {
+      "path": "source/upstream/metadata/grant-proposal/template.json",
+      "sha256": "b05d856f0cfdf47dbdb4786adf2fb51aa5eea668f85a40c8cd72ccafa1b8bce6"
+    },
+    {
+      "path": "source/upstream/metadata/green-halftone-retro/template.json",
+      "sha256": "0dd5c43e110628dbb06785b6494d351d0025da0665c43f4a7d943303f4ef45bb"
+    },
+    {
+      "path": "source/upstream/metadata/grunge-marketing/template.json",
+      "sha256": "7fb01b738c60dc04e7046c1c8316fa0d539647211d5e8058a2d7a33c3b41bdf1"
+    },
+    {
+      "path": "source/upstream/metadata/hr-orientation/template.json",
+      "sha256": "0d4963949605a64b41c1954327ee8957df2aecd27ddcd50b0354d82a2829b925"
+    },
+    {
+      "path": "source/upstream/metadata/identity-brand-guidelines/template.json",
+      "sha256": "1cb1b970c9b492b589bc7dfab11153db54515403ae6da3f3da95d3e39078f020"
+    },
+    {
+      "path": "source/upstream/metadata/incident-review/template.json",
+      "sha256": "aed4fa4ff350bd0277fc5adedf3637900872bbc07af1f47751fc828d86646d8c"
+    },
+    {
+      "path": "source/upstream/metadata/interactive-portfolio/template.json",
+      "sha256": "0bf621646c89fce1417761b6127e0ab7c6c0b5ead96b2e9159a4cad6bee88ccd"
+    },
+    {
+      "path": "source/upstream/metadata/law-justice/template.json",
+      "sha256": "ae93c77e9032685ddb1a7094e18b5ebabb5f31fe11d7ff3438df1c8c91e097ac"
+    },
+    {
+      "path": "source/upstream/metadata/linear-qbr/template.json",
+      "sha256": "a16dedd3b4c404caa6024b5dd660508a9b83d7049069813350b17b8638d05e88"
+    },
+    {
+      "path": "source/upstream/metadata/matisse-collage/template.json",
+      "sha256": "a71690823516f4176ac24d3501a05d1721b280b139355e8a7d47a634416d91c8"
+    },
+    {
+      "path": "source/upstream/metadata/mental-health-workshop/template.json",
+      "sha256": "47ab7c72ca332ddb02545f355363d249e52db83c6a8afcba5adedb828c8d9366"
+    },
+    {
+      "path": "source/upstream/metadata/midnight-executive/template.json",
+      "sha256": "370f9ad4fa88066dc6ca6b350541e9502057f5b65ef807c62ec9f2360671bd49"
+    },
+    {
+      "path": "source/upstream/metadata/minimalist-grayscale-pitch/template.json",
+      "sha256": "ce94a8736f14ba76b9294a289078f72021766069e8fb9d9e391e17330dd72e37"
+    },
+    {
+      "path": "source/upstream/metadata/modern-business-proposal/template.json",
+      "sha256": "f0332ec24e441c8c19316b7611158bddd0c55f9a4c00018dd4180841da0c3b34"
+    },
+    {
+      "path": "source/upstream/metadata/modern-wave/template.json",
+      "sha256": "4327b78d25bc3237da8690ad4a3d9d2f7bf1d5473cf646ff9c55902c5b503117"
+    },
+    {
+      "path": "source/upstream/metadata/neon-grid-agency/template.json",
+      "sha256": "9982d9e290ce5d6e49cc4e736f67c1a14be47348904d20eb4eaaf1d1d821d2ef"
+    },
+    {
+      "path": "source/upstream/metadata/neon-night-pitch/template.json",
+      "sha256": "5ff46e3c716e6366d1d51f5b98aeb479ecde1549b9b9b2292c7b3af1aa1a088c"
+    },
+    {
+      "path": "source/upstream/metadata/newspaper-editorial/template.json",
+      "sha256": "8c8338e8d51f3ebcd5ff4ba266486cfcbbd1b687c4dfec35e5a231d05bb5d368"
+    },
+    {
+      "path": "source/upstream/metadata/newsroom-broadcast/template.json",
+      "sha256": "6677cd7e6ae81d04420889d99b95afa3c8a33015a0f6bd0943724bb32d129843"
+    },
+    {
+      "path": "source/upstream/metadata/newsroom-evidence/template.json",
+      "sha256": "c7b8d2a3af416b9e7e10f2bb63a3370753995aac43816bccb72edc245caa8ad3"
+    },
+    {
+      "path": "source/upstream/metadata/nineties-memphis-pitch/template.json",
+      "sha256": "1e2c479cb8a9b6cdbe8ac33a0149c83024fa2ef4d530cd15ad50751d08e927a9"
+    },
+    {
+      "path": "source/upstream/metadata/nonprofit-sponsorship/template.json",
+      "sha256": "db334a0b0f4d58dd51a0ff326152ee27e27e1608a6a5a7ee91573fa75c6813fb"
+    },
+    {
+      "path": "source/upstream/metadata/outcome-case-study/template.json",
+      "sha256": "201ce49d96a73b0fb7e47022de9a31070ccfdd3e7a51a836263585f2877c015e"
+    },
+    {
+      "path": "source/upstream/metadata/pastel-research/template.json",
+      "sha256": "2279b5a382ebbe42ff36150e1ba02af37d7250d0debd07b73c50407b8c91d8fb"
+    },
+    {
+      "path": "source/upstream/metadata/photo-mosaic/template.json",
+      "sha256": "76775b12589cc1f0bd7b2712939ae0c05f08270bf97e6dfd87667012ac542f35"
+    },
+    {
+      "path": "source/upstream/metadata/product-roadmap-infographics/template.json",
+      "sha256": "6b844d4dbc7cc37c7ac39b35c6262c63fdcfe09eec30741b30398b80ff522b06"
+    },
+    {
+      "path": "source/upstream/metadata/product-strategy-roadmap/template.json",
+      "sha256": "54de607770696ef32a0613a43b1c560ffebeb44fd3c4396783a674e2a27ee8e1"
+    },
+    {
+      "path": "source/upstream/metadata/programming-workshop-3d/template.json",
+      "sha256": "a3b7dbdf8934e1391c740653db141596263e19109e9130e8f49dc3661455eb25"
+    },
+    {
+      "path": "source/upstream/metadata/psychedelic-art/template.json",
+      "sha256": "a5accc816f0ebf397d10acb8e97b128013447880f2705fbf01e324f86132b5e7"
+    },
+    {
+      "path": "source/upstream/metadata/quarterly-review-infographics/template.json",
+      "sha256": "d6dafc193b830bf9d9d70e49417b46e1860596bc4e66d19d6a3bfd19091b7f01"
+    },
+    {
+      "path": "source/upstream/metadata/quarterly-review-meeting/template.json",
+      "sha256": "85b42057038842bfe0daee1c2af217e3ca25c56571dd5b5220c2d03468280904"
+    },
+    {
+      "path": "source/upstream/metadata/real-estate-listing/template.json",
+      "sha256": "7745b62541ba99745d75b5ecfe4fc36e6cc3f78dfafc861ef75fc1f1562d142d"
+    },
+    {
+      "path": "source/upstream/metadata/retro-analog-brutalist/template.json",
+      "sha256": "9b0b5c1d513297a1059e5cf3724a07cc7c3fb0e15c9b0b1b8c424bf3df239a57"
+    },
+    {
+      "path": "source/upstream/metadata/smart-business-report/template.json",
+      "sha256": "aeb1126e219993a1103b5df02fb022d50d5712a3d52a9585ace845e53fe6ace4"
+    },
+    {
+      "path": "source/upstream/metadata/survey-results-infographics/template.json",
+      "sha256": "ea29f1b6beb3cda64c6f9715556f84268d75fe2dc88386e116dd51206824614a"
+    },
+    {
+      "path": "source/upstream/metadata/sustainability-report/template.json",
+      "sha256": "4057135de05b384aa440ccd1230f0c8a1380330b014a95a7beff9d1676de33db"
+    },
+    {
+      "path": "source/upstream/metadata/traveling-keynote-modern/template.json",
+      "sha256": "4b386ad641c1569c39bc0312cf83e2fc9ebf76013e3e2a4aed1acf23e6f4a99f"
+    },
+    {
+      "path": "source/upstream/skills/ai-slide-templates/agents/openai.yaml",
+      "sha256": "d859042be2798d46e96e6c742d7179209a87a376768a3385a0ca8c2be29894b7"
+    },
+    {
+      "path": "source/upstream/skills/ai-slide-templates/SKILL.md",
+      "sha256": "d1c7133d47aa21ebc42aabaafc5e66b077d5b7f64ff001613b082efb90090e9c"
+    },
+    {
+      "path": "source/upstream/templates/editorial-luxury/template.html",
+      "sha256": "4b5165cf524aaed20062e5fcf65dc23a9efacb1d1855f6cdbc95f7851c9c7dd6"
+    },
+    {
+      "path": "source/upstream/templates/editorial-luxury/template.json",
+      "sha256": "29badc2202285e7bcf494597167fda94a148d14266d400ab129c57f05ceb83d3"
+    },
+    {
+      "path": "template.html",
+      "sha256": "f923c526744076c9072e42bf14b174ac24eaf4df3c54a0d9e50dc8203e78d0f0"
+    },
+    {
+      "path": "template.json",
+      "sha256": "f7ac80a347c8c2d456999d388335b6f7a7d9e9c8b50bcf7b7b7d0ae29658ccc3"
+    }
+  ]
+}

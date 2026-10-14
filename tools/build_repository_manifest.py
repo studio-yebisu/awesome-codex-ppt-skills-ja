@@ -96,7 +96,8 @@ def main():
     dump('data/repository-guides.json', profiles)
     dump('data/production-ledger.json', {'catalog_count': len(original),
         'source_inspected_count': len(audit), 'produced_repository_count': sum(bool(p['example_ids']) for p in profiles),
-        'case_count': len(cases), 'slide_count': sum(c['page_count'] for c in cases),
+        'case_count': len(cases), 'slide_count': sum(c['page_count'] for c in cases if c.get('page_unit')!='段階'),
+        'step_count': sum(c['page_count'] for c in cases if c.get('page_unit')=='段階'),
         'remaining_repository_count': sum(not p['example_ids'] for p in profiles),
         'states': [{'repository': p['repository'], 'state': p['production_status'], 'examples': p['example_ids']} for p in profiles]})
     # Preserve original project identity and historical prototypes while joining
@@ -111,7 +112,9 @@ def main():
                            generation_status='japanese_cases_generated', license_status='reviewed_for_example',
                            execution_status=profile['execution_status'], upstream_commit=profile['upstream_commit'],
                            license_evidence=profile.get('source_refs', project.get('license_evidence', [])))
-    workflows.update(catalog_count=len(original), case_count=len(cases), slide_count=sum(c['page_count'] for c in cases))
+    workflows.update(catalog_count=len(original), case_count=len(cases),
+                     slide_count=sum(c['page_count'] for c in cases if c.get('page_unit')!='段階'),
+                     step_count=sum(c['page_count'] for c in cases if c.get('page_unit')=='段階'))
     dump('data/project-workflows.json', workflows)
     print(str(sum(bool(p['example_ids']) for p in profiles)) + ' repositories with Japanese outputs; ' + str(len(cases)) + ' decks. Curated site is built separately.')
 

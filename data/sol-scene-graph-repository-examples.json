@@ -1,0 +1,75 @@
+[
+  {
+    "id": "scene-graph-showcase",
+    "title": "遠くの席へ、伝わる資料。",
+    "repository": "eluckydog/ppt-scene-graph",
+    "skill_repository": "eluckydog/ppt-scene-graph",
+    "upstream_commit": "646e3dc4b72a444278d320c8984d5986d7fbf4bb",
+    "fork_id": "scene-graph-ja",
+    "page_count": 6,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "preview_canvas": {
+      "width": 1600,
+      "height": 900
+    },
+    "runtime": "Original create_from_outline/beautify API with vendored python-pptx1.0.2; same-version parts8 repair; native PPTX, PowerPoint16 export",
+    "style": "原典projection × BIZ UDPGothic・太い見出しと枠",
+    "use_case": "会場で読む資料の説明用教材",
+    "preview": "examples/repositories/scene-graph-showcase/index.html",
+    "cover": "examples/repositories/scene-graph-showcase/render/slide-01.png",
+    "interior": "examples/repositories/scene-graph-showcase/render/slide-03.png",
+    "pages": [
+      "examples/repositories/scene-graph-showcase/render/slide-01.png",
+      "examples/repositories/scene-graph-showcase/render/slide-02.png",
+      "examples/repositories/scene-graph-showcase/render/slide-03.png",
+      "examples/repositories/scene-graph-showcase/render/slide-04.png",
+      "examples/repositories/scene-graph-showcase/render/slide-05.png",
+      "examples/repositories/scene-graph-showcase/render/slide-06.png"
+    ],
+    "artifact_download": "examples/repositories/scene-graph-showcase/deck.pptx",
+    "pptx_download": "examples/repositories/scene-graph-showcase/deck.pptx",
+    "pdf_download": "examples/repositories/scene-graph-showcase/deck.pdf",
+    "draft_download": "examples/repositories/scene-graph-showcase/draft.pptx",
+    "source_download": "downloads/scene-graph-example-ja.zip",
+    "fork_download": "downloads/scene-graph-ja.zip",
+    "input": "examples/repositories/scene-graph-showcase/input/outline.json",
+    "input_data": "examples/repositories/scene-graph-showcase/input/theme-source-map.json",
+    "prompt": "examples/repositories/scene-graph-showcase/PROMPT.md",
+    "prompt_text": "# 別の題材へ置き換えて使える依頼文\n\neluckydog/ppt-scene-graph固定commit646e3dc4b72a444278d320c8984d5986d7fbf4bbの実APIを使い、日本語6枚「遠くの席へ、伝わる資料。」を作ってください。説明用の自作原稿で、距離による可読性改善や最適pt値を測定したとは述べません。\n\ninput/outline.jsonを元OutlineSpec/SlideSpecへ読み、create_from_outlineでdesignhub_warmのdraft.pptxを作成。その同じ本文を元beautifyでprojectionへ変え、deck.pptxを保存してください。元beautifyは短いkeyを拒否するため、load_theme('projection').nameを渡します。original cover/section/content/ending factoryと枠、色の役割を用い、概念図factoryがないので原典外のアートは追加しません。\n\n元vendorのparts/欠落は同版公式python-pptx1.0.2のparts8ファイルだけをruntimeへ補完したキットを利用し、元原本を保全。URL/version/hash/MIT原文・追加一覧と日本語fontの局所diffを保持してください。DesignSystemの字体をBIZ UDPGothicに対応し、a:ea/a:cs/langも設定。TTF/OFLは公式固定配布だけを使います。\n\nparse_slideは宣言されていても実装/exportがないため使ったと称しません。evaluate採点も不要です。必要な原典生成、PowerPoint通常export、初回表紙だけの表示、短いSKILL検証で十分。全頁詳細検査・独立review・構造監査・全ZIP再実行は不要です。共有PowerPointではApplication.Quitを呼ばず、自分のdeckだけCloseします。\n\n別の題材ではinput/MANUSCRIPT.mdとoutline.jsonを置き換えます。大きい文字・短い見出し・少ない本文という生成設定を、実証された最適値として表現しないでください。\n",
+    "provenance": "examples/repositories/scene-graph-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/scene-graph-showcase/QA.json",
+    "guide": "examples/repositories/scene-graph-showcase/README.md",
+    "titles": [
+      "遠くの席へ、伝わる資料。",
+      "一頁に、一つの問い。",
+      "見出しは、ひと息で。",
+      "強い文字を、少なく。",
+      "色には、役割を。",
+      "最後に、何を残す？"
+    ],
+    "notes": [
+      "自作の小教材。距離による可読性改善・最適pt値の実測ではありません。",
+      "元section factoryで章の区切りを表現。数字1は章番号。",
+      "短い文章への言い換えは説明用の自作例。理解度の実測なし。",
+      "元のbold見出し・regular本文で文字の強弱を示す。",
+      "Projectionの紺見出し・濃灰本文。旧warmの図形accentも元beautify仕様で残る。",
+      "Q&Aの問い。会場での読みやすさを保証する検証結果ではありません。"
+    ],
+    "sample_notice": "説明用の自作例。可読性改善・理解度・最適pt値の実測ではありません。",
+    "method": "Original OutlineSpec/SlideSpec -> create_from_outline(designhub_warm) -> native draft.pptx -> original beautify(load_theme(projection).name) -> native deck.pptx; original core factories/decor retained, Japanese DesignSystem/East Asian font mapping local; missing vendor parts8 modules repaired from same official python-pptx1.0.2 distribution only.",
+    "navigation": "native-runtime-bridge",
+    "editability": "native_elements",
+    "editable_features": [
+      "text",
+      "shapes"
+    ],
+    "status": "light_check_complete",
+    "execution_status": "light_check_complete",
+    "preview_notice": "同版parts8不足補完後、元create→draft→beautify projectionを実行。文字/長方形枠はnative編集可。parse_slideは未実装、evaluate未実施。",
+    "representative_previews": [
+      "examples/repositories/scene-graph-showcase/render/slide-01.png"
+    ],
+    "preview_image_notice": "PowerPoint16で全6PNGを通常export。目視したのは表紙の初回表示のみ。"
+  }
+]

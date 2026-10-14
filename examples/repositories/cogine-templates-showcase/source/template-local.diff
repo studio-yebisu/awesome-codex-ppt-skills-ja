@@ -1,0 +1,133 @@
+Font payloads normalized for this human-readable diff only; full data is in template.html and actual TTF files.
+--- upstream/templates/editorial-luxury/template.html
++++ template.html (font payload normalized)
+@@ -1,40 +1,109 @@
+ <!DOCTYPE html>
+-<html lang="en">
++<html lang="ja">
+ <head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-  <title>Editorial Luxury Presentation Template</title>
+-  <link rel="preconnect" href="https://fonts.googleapis.com">
+-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:wght@600;700;800&display=swap" rel="stylesheet">
++  <title>香りを、贈る。</title>
+   <style>
+     *{box-sizing:border-box;margin:0;padding:0}html,body{width:100%;height:100%;overflow:hidden}.deck{position:relative;width:100vw;height:100vh;overflow:hidden}.slide{position:absolute;inset:0;display:flex;flex-direction:column;padding:4vw 4.5vw 8.5vh;opacity:0;pointer-events:none;transform:translateX(34px);transition:opacity .42s ease,transform .42s ease;overflow:hidden}.slide.active{opacity:1;pointer-events:auto;transform:translateX(0);z-index:5}.slide.prev{transform:translateX(-34px)}p,li{font-size:clamp(.84rem,1.05vw,1rem);line-height:1.6}.slide-counter{position:fixed;left:3vw;bottom:2.6vh;z-index:50;font-weight:800;color:var(--muted)}.keyboard-hint{position:fixed;left:50%;bottom:2.72vh;transform:translateX(-50%);z-index:50;color:var(--muted);font-size:.68rem;opacity:.7}.progress-bar{position:fixed;left:0;bottom:0;height:4px;z-index:50;background:linear-gradient(90deg,var(--primary),var(--secondary),var(--tertiary));transition:width .35s ease}.nav-controls{position:fixed;right:3vw;bottom:2.35vh;z-index:50;display:flex;gap:.7rem}.nav-btn{width:44px;height:44px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink);display:grid;place-items:center;cursor:pointer;box-shadow:0 10px 28px rgba(0,0,0,.12)}.nav-btn:hover{background:var(--ink);color:var(--surface)}.nav-btn:disabled{opacity:.35;cursor:not-allowed}@media(max-height:720px){.slide{padding-top:3vw}h1{font-size:clamp(2.7rem,5.3vw,5rem)!important}}
+-      :root{--bg:#F3F0EA;--surface:#FFFFFF;--panel:#E3DED5;--ink:#111111;--text:#33302B;--muted:#77706A;--primary:#111111;--secondary:#B08D57;--tertiary:#D9FF5A;--green:#6E8B68;--line:rgba(17,17,17,.18)}body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}.deck{background:var(--bg)}h1,h2,h3{font-family:'Playfair Display',serif;color:var(--ink)}h1{font-size:clamp(4rem,8vw,8.4rem);line-height:.86;font-weight:800}h2{font-size:clamp(2.5rem,5vw,5.2rem);line-height:.9}p,li{color:var(--muted)}.rule{height:1px;background:var(--ink);opacity:.22}.topline{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem;margin-bottom:2.5vh}.kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:var(--secondary)}.folio{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase}.ed-cover{display:grid;grid-template-columns:.9fr 1.1fr;gap:4vw;align-items:center}.image-block{height:66vh;background:linear-gradient(135deg,var(--panel),#fff),repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(17,17,17,.06) 12px,rgba(17,17,17,.06) 13px);border:1px solid var(--line);position:relative}.image-block:after{content:'IMAGE / CAMPAIGN';position:absolute;left:1rem;bottom:1rem;font-size:.7rem;letter-spacing:.14em}.contents{display:grid;grid-template-columns:1fr 1fr;gap:4vw;flex:1}.contents ol{list-style:none;counter-reset:item}.contents li{counter-increment:item;border-top:1px solid var(--line);padding:1rem 0;display:grid;grid-template-columns:58px 1fr}.contents li:before{content:counter(item,decimal-leading-zero);font-family:'Playfair Display';font-size:2rem;color:var(--ink)}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:1rem;flex:1}.grid .large,.grid .small{background:var(--surface);border:1px solid var(--line);position:relative}.grid .large{min-height:480px}.grid .smallwrap{display:grid;gap:1rem}.grid .small{min-height:232px}.caption{position:absolute;left:1rem;bottom:1rem;background:var(--ink);color:#fff;padding:.45rem .65rem;font-size:.7rem;letter-spacing:.12em}.quote{justify-content:center}.quote blockquote{font-family:'Playfair Display';font-size:clamp(3rem,6vw,6.4rem);line-height:.9;color:var(--ink);max-width:78vw}.quote .source{margin-top:1.5rem;color:var(--secondary);font-weight:700}.position{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid var(--line);margin-top:2rem}.position article{padding:1.3rem;min-height:300px;border-right:1px solid var(--line);background:rgba(255,255,255,.45)}.position article:last-child{border-right:0}.board{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem}.swatch{min-height:320px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;justify-content:flex-end;padding:1rem}.swatch:nth-child(2){background:var(--panel)}.swatch:nth-child(3){background:var(--secondary);color:white}.swatch:nth-child(4){background:var(--ink);color:white}.vindex{display:grid;grid-template-columns:260px 1fr;gap:3vw;flex:1}.vnav{border-right:1px solid var(--line);display:grid;align-content:space-between}.vnav b{font-family:'Playfair Display';font-size:4rem;color:var(--ink)}.essay{columns:2;column-gap:3rem}.essay p{break-inside:avoid;margin-bottom:1rem}.close{justify-content:center;text-align:center}.close h1{max-width:82vw;margin:auto}.close p{max-width:44vw;margin:1rem auto}
+-    </style>
++      :root{--bg:#F3F0EA;--surface:#FFFFFF;--panel:#E3DED5;--ink:#111111;--text:#33302B;--muted:#77706A;--primary:#111111;--secondary:#B08D57;--tertiary:#D9FF5A;--green:#6E8B68;--line:rgba(17,17,17,.18)}body{font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}.deck{background:var(--bg)}h1,h2,h3{font-family:'Playfair Display',serif;color:var(--ink)}h1{font-size:clamp(4rem,8vw,8.4rem);line-height:.86;font-weight:800}h2{font-size:clamp(2.5rem,5vw,5.2rem);line-height:.9}p,li{color:var(--muted)}.rule{height:1px;background:var(--ink);opacity:.22}.topline{display:grid;grid-template-columns:1fr auto;align-items:center;gap:2rem;margin-bottom:2.5vh}.kicker{font-size:.72rem;text-transform:uppercase;letter-spacing:.18em;font-weight:700;color:var(--secondary)}.folio{font-size:.72rem;letter-spacing:.18em;text-transform:uppercase}.ed-cover{display:grid;grid-template-columns:.9fr 1.1fr;gap:4vw;align-items:center}.image-block{height:66vh;background:linear-gradient(135deg,var(--panel),#fff),repeating-linear-gradient(45deg,transparent,transparent 12px,rgba(17,17,17,.06) 12px,rgba(17,17,17,.06) 13px);border:1px solid var(--line);position:relative}.image-block:after{content:'包みのイメージ / 説明用図形';position:absolute;left:1rem;bottom:1rem;font-size:.7rem;letter-spacing:.14em}.contents{display:grid;grid-template-columns:1fr 1fr;gap:4vw;flex:1}.contents ol{list-style:none;counter-reset:item}.contents li{counter-increment:item;border-top:1px solid var(--line);padding:1rem 0;display:grid;grid-template-columns:58px 1fr}.contents li:before{content:counter(item,decimal-leading-zero);font-family:'Playfair Display';font-size:2rem;color:var(--ink)}.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:1rem;flex:1}.grid .large,.grid .small{background:var(--surface);border:1px solid var(--line);position:relative}.grid .large{min-height:480px}.grid .smallwrap{display:grid;gap:1rem}.grid .small{min-height:232px}.caption{position:absolute;left:1rem;bottom:1rem;background:var(--ink);color:#fff;padding:.45rem .65rem;font-size:.7rem;letter-spacing:.12em}.quote{justify-content:center}.quote blockquote{font-family:'Playfair Display';font-size:clamp(3rem,6vw,6.4rem);line-height:.9;color:var(--ink);max-width:78vw}.quote .source{margin-top:1.5rem;color:var(--secondary);font-weight:700}.position{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;border:1px solid var(--line);margin-top:2rem}.position article{padding:1.3rem;min-height:300px;border-right:1px solid var(--line);background:rgba(255,255,255,.45)}.position article:last-child{border-right:0}.board{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem}.swatch{min-height:320px;border:1px solid var(--line);background:var(--surface);display:flex;flex-direction:column;justify-content:flex-end;padding:1rem}.swatch:nth-child(2){background:var(--panel)}.swatch:nth-child(3){background:var(--secondary);color:white}.swatch:nth-child(4){background:var(--ink);color:white}.vindex{display:grid;grid-template-columns:260px 1fr;gap:3vw;flex:1}.vnav{border-right:1px solid var(--line);display:grid;align-content:space-between}.vnav b{font-family:'Playfair Display';font-size:4rem;color:var(--ink)}.essay{columns:2;column-gap:3rem}.essay p{break-inside:avoid;margin-bottom:1rem}.close{justify-content:center;text-align:center}.close h1{max-width:82vw;margin:auto}.close p{max-width:44vw;margin:1rem auto}
++    
++/* Authorized Japanese font adaptation; original palette/layout rules retained. */
++@font-face{font-family:GiftNumber;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED>) format("truetype");font-weight:100 900;}
++@font-face{font-family:GiftBody;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED>) format("truetype");font-weight:400;}
++@font-face{font-family:GiftHeading;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED>) format("truetype");font-weight:700;}
++/* Source palette, grid, frame heights, ornaments and original navigation are preserved. */
++body {font-family:GiftBody,sans-serif;}
++h1,h2,h3,.quote blockquote {font-family:GiftHeading,serif;font-weight:700;}
++h1 {line-height:1.15;}
++h2 {line-height:1.2;}
++.quote blockquote {line-height:1.3;}
++.contents li:before,.folio,.slide-counter,.kicker {font-family:GiftNumber,GiftBody,sans-serif;}
++.gift-svg {width:100%;height:100%;display:block;}
++.position .gift-svg {height:160px;margin-bottom:24px;}
++.grid .gift-svg {position:absolute;inset:0;padding:35px;}
++.image-block .gift-svg {padding:20px;}
++@media(prefers-reduced-motion:reduce) {.slide,.progress-bar {transition-duration:.01ms!important;}}
++
++</style>
+ </head>
+ <body>
+   <main class="deck">
+     
+-      <section class="slide ed-cover active"><div><span class="kicker">Brand Strategy / 2026</span><h1>Brand Positioning Edit</h1><div class="rule" style="margin:1.5rem 0;"></div><p style="max-width:36vw;">A refined editorial template for premium brand narratives, launch storytelling, portfolios, and design-led strategy.</p></div><div class="image-block"></div></section>
+-      <section class="slide"><div class="topline"><span class="kicker">Contents</span><span class="folio">Vol. 01</span></div><div class="contents"><div><h2>The edit is structured like a magazine issue.</h2><p style="margin-top:1rem;">Use pacing, contrast, image rhythm, and restraint to make the argument feel curated.</p></div><ol><li><span><h3>Position</h3><p>The role the brand owns.</p></span></li><li><span><h3>Proof</h3><p>Why the claim is credible.</p></span></li><li><span><h3>Expression</h3><p>How the brand should show up.</p></span></li><li><span><h3>Launch</h3><p>How to sequence the story.</p></span></li></ol></div></section>
+-      <section class="slide"><div class="topline"><span class="kicker">Image Grid</span><span class="folio">Campaign System</span></div><h2>Balance one dominant visual with supporting fragments.</h2><div class="grid"><div class="large"><span class="caption">HERO IMAGE</span></div><div class="smallwrap"><div class="small"><span class="caption">DETAIL</span></div><div class="small"><span class="caption">MATERIAL</span></div></div></div></section>
+-      <section class="slide quote"><span class="kicker">Editorial Principle</span><blockquote>Luxury is not more information. It is sharper selection.</blockquote><div class="source">Creative direction note</div></section>
+-      <section class="slide"><div class="topline"><span class="kicker">Positioning</span><span class="folio">Table</span></div><h2>A three-column table keeps the brand argument precise.</h2><div class="position"><article><h3>Audience</h3><p>Design-conscious operators who value substance, not decoration.</p></article><article><h3>Promise</h3><p>A calmer way to make premium work feel organized and intentional.</p></article><article><h3>Proof</h3><p>Clear systems, refined pacing, and presentation craft.</p></article></div></section>
+-      <section class="slide"><div class="topline"><span class="kicker">Art Direction</span><span class="folio">Mood board</span></div><h2>Use swatches as layout objects, not decoration.</h2><div class="board"><article class="swatch"><h3>Stone</h3><p>Warm background restraint.</p></article><article class="swatch"><h3>Ivory</h3><p>Editorial surfaces.</p></article><article class="swatch"><h3>Gold</h3><p>Quiet premium signal.</p></article><article class="swatch"><h3>Black</h3><p>Typography and authority.</p></article></div></section>
+-      <section class="slide"><div class="topline"><span class="kicker">Narrative Index</span><span class="folio">Vertical essay</span></div><div class="vindex"><div class="vnav"><b>01</b><b>04</b></div><div><h2>Let the slide breathe like an editorial spread.</h2><div class="essay" style="margin-top:1rem;"><p>The system is deliberately less dense than a reporting deck. Every slide gives hierarchy room to work.</p><p>The layout language relies on large type, rules, image fields, and limited color so that the brand feels curated.</p><p>This makes it useful for positioning, launch storytelling, premium portfolios, and design-led strategy work.</p></div></div></div></section>
+-      <section class="slide close"><span class="kicker">Close</span><h1>Make restraint do the work.</h1><p>Use this direction when the deck should feel premium, editorial, and carefully selected.</p></section>
++      <section class="slide ed-cover active"><div><span class="kicker">TEA / GIFT IDEA</span><h1>香りを、<br>贈る。</h1><div class="rule" style="margin:1.5rem 0;"></div><p style="max-width:36vw;">茶葉を選び、包みを整え、<br>ひと言を添える。<br><br>架空の茶の贈りもの企画。</p></div><div class="image-block"><svg class="gift-svg" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="包みと結びの説明用図形">
++<rect x="154" y="95" width="335" height="290" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
++<path d="M154 95 L321 176 L489 95 M154 385 L321 308 L489 385" fill="none" stroke="#E3DED5" stroke-width="2"/>
++<path d="M321 95 V385 M154 244 H489" fill="none" stroke="#B08D57" stroke-width="5"/>
++<path d="M321 244 C241 237 233 174 274 189 C303 199 321 244 321 244 C330 210 373 174 389 197 C411 229 355 247 321 244Z" fill="none" stroke="#B08D57" stroke-width="4"/>
++<path d="M321 244 Q298 274 284 291 M321 244 Q348 271 371 284" fill="none" stroke="#B08D57" stroke-width="4"/>
++<path d="M230 90 Q205 54 236 38 Q263 57 230 90Z" fill="#6E8B68" opacity=".8"/>
++<path d="M225 107 Q235 74 251 53" fill="none" stroke="#6E8B68" stroke-width="2"/>
++</svg>
++</div></section>
++      <section class="slide"><div class="topline"><span class="kicker">選ぶ前に</span><span class="folio">01 / SELECT</span></div><div class="contents"><div><h2>相手のひと息を、<br>思い浮かべる。</h2><p style="margin-top:1rem;">好みが分からなければ、<br>尋ねてから選ぶ。</p></div><ol><li><span><h3>いつ、飲む？</h3><p>朝、仕事の合間、ゆっくり過ごすとき。</p></span></li><li><span><h3>どんな香りが好き？</h3><p>相手の好みを、選ぶ手がかりに。</p></span></li><li><span><h3>どう淹れる？</h3><p>使う道具を、先に聞いてみる。</p></span></li></ol></div></section>
++      <section class="slide"><div class="topline"><span class="kicker">包む</span><span class="folio">02 / WRAP</span></div><h2>包みを、整える。</h2><div class="grid"><div class="large"><svg class="gift-svg" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="包みと結びの説明用図形">
++<rect x="154" y="95" width="335" height="290" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
++<path d="M154 95 L321 176 L489 95 M154 385 L321 308 L489 385" fill="none" stroke="#E3DED5" stroke-width="2"/>
++<path d="M321 95 V385 M154 244 H489" fill="none" stroke="#B08D57" stroke-width="5"/>
++<path d="M321 244 C241 237 233 174 274 189 C303 199 321 244 321 244 C330 210 373 174 389 197 C411 229 355 247 321 244Z" fill="none" stroke="#B08D57" stroke-width="4"/>
++<path d="M321 244 Q298 274 284 291 M321 244 Q348 271 371 284" fill="none" stroke="#B08D57" stroke-width="4"/>
++<path d="M230 90 Q205 54 236 38 Q263 57 230 90Z" fill="#6E8B68" opacity=".8"/>
++<path d="M225 107 Q235 74 251 53" fill="none" stroke="#6E8B68" stroke-width="2"/>
++</svg>
++<span class="caption">包み / イメージ</span></div><div class="smallwrap"><div class="small"><svg class="gift-svg" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="茶葉の説明用図形">
++<path d="M195 384 Q332 282 405 95" fill="none" stroke="#6E8B68" stroke-width="3"/>
++<path d="M298 300 Q207 283 233 169 Q314 185 298 300Z" fill="#6E8B68" opacity=".8"/>
++<path d="M338 249 Q420 259 451 151 Q364 148 338 249Z" fill="#6E8B68" opacity=".85"/>
++<path d="M379 171 Q316 151 347 76 Q414 101 379 171Z" fill="#6E8B68" opacity=".75"/>
++<path d="M288 292 L247 201 M344 242 L428 176 M380 161 L360 99" fill="none" stroke="#F3F0EA" stroke-width="2"/>
++</svg>
++<span class="caption">茶葉 / イメージ</span></div><div class="small"><svg class="gift-svg" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="結びの説明用図形">
++<path d="M90 247 H551 M321 69 V403" fill="none" stroke="#B08D57" stroke-width="5"/>
++<path d="M321 247 C152 246 170 134 236 163 C282 184 309 224 321 247 C332 206 422 130 457 166 C500 220 392 254 321 247Z" fill="#F3F0EA" stroke="#B08D57" stroke-width="5"/>
++<path d="M321 247 Q274 304 250 349 M321 247 Q369 307 399 332" fill="none" stroke="#B08D57" stroke-width="5"/>
++<circle cx="321" cy="247" r="10" fill="#B08D57"/>
++</svg>
++<span class="caption">結び / イメージ</span></div></div></div></section>
++      <section class="slide quote"><span class="kicker">短い言葉を、ひとつ。</span><blockquote>「おつかれさま。<br>ひと息つくときに、どうぞ。」</blockquote><div class="source">添える言葉の例</div></section>
++      <section class="slide"><div class="topline"><span class="kicker">贈る体験</span><span class="folio">03 / GIVE</span></div><h2>選ぶ。包む。渡す。</h2><div class="position"><article><svg class="gift-svg" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="茶葉の説明用図形">
++<path d="M195 384 Q332 282 405 95" fill="none" stroke="#6E8B68" stroke-width="3"/>
++<path d="M298 300 Q207 283 233 169 Q314 185 298 300Z" fill="#6E8B68" opacity=".8"/>
++<path d="M338 249 Q420 259 451 151 Q364 148 338 249Z" fill="#6E8B68" opacity=".85"/>
++<path d="M379 171 Q316 151 347 76 Q414 101 379 171Z" fill="#6E8B68" opacity=".75"/>
++<path d="M288 292 L247 201 M344 242 L428 176 M380 161 L360 99" fill="none" stroke="#F3F0EA" stroke-width="2"/>
++</svg>
++<h3>茶葉を選ぶ</h3><p>相手の好みと、<br>使う道具を手がかりに。</p></article><article><svg class="gift-svg" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="包みと結びの説明用図形">
++<rect x="154" y="95" width="335" height="290" fill="#FFFFFF" stroke="#111111" stroke-width="2"/>
++<path d="M154 95 L321 176 L489 95 M154 385 L321 308 L489 385" fill="none" stroke="#E3DED5" stroke-width="2"/>
++<path d="M321 95 V385 M154 244 H489" fill="none" stroke="#B08D57" stroke-width="5"/>
++<path d="M321 244 C241 237 233 174 274 189 C303 199 321 244 321 244 C330 210 373 174 389 197 C411 229 355 247 321 244Z" fill="none" stroke="#B08D57" stroke-width="4"/>
++<path d="M321 244 Q298 274 284 291 M321 244 Q348 271 371 284" fill="none" stroke="#B08D57" stroke-width="4"/>
++<path d="M230 90 Q205 54 236 38 Q263 57 230 90Z" fill="#6E8B68" opacity=".8"/>
++<path d="M225 107 Q235 74 251 53" fill="none" stroke="#6E8B68" stroke-width="2"/>
++</svg>
++<h3>包みを整える</h3><p>渡す場面を思い浮かべ、<br>包みと結びを選ぶ。</p></article><article><svg class="gift-svg" viewBox="0 0 640 480" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="結びの説明用図形">
++<path d="M90 247 H551 M321 69 V403" fill="none" stroke="#B08D57" stroke-width="5"/>
++<path d="M321 247 C152 246 170 134 236 163 C282 184 309 224 321 247 C332 206 422 130 457 166 C500 220 392 254 321 247Z" fill="#F3F0EA" stroke="#B08D57" stroke-width="5"/>
++<path d="M321 247 Q274 304 250 349 M321 247 Q369 307 399 332" fill="none" stroke="#B08D57" stroke-width="5"/>
++<circle cx="321" cy="247" r="10" fill="#B08D57"/>
++</svg>
++<h3>ひと言を添える</h3><p>長い説明より、<br>相手に向けた短い言葉を。</p></article></div></section>
++      <section class="slide close"><span class="kicker">TEA / A SMALL GIFT</span><h1>贈るのは、<br>ひと息のきっかけ。</h1><p>架空の企画。商品仕様・価格・効能・売上実績は示していません。</p></section>
+     
+   </main>
+   
+-  <div class="slide-counter"><span id="current">1</span> / <span id="total">8</span></div>
+-  <div class="keyboard-hint">Use arrow keys to navigate</div>
++  <div class="slide-counter"><span id="current">1</span> / <span id="total">6</span></div>
++  <div class="keyboard-hint">矢印キーでページを移動</div>
+   <div class="progress-bar" id="progress"></div>
+   <div class="nav-controls">
+-    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" aria-label="Previous slide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
+-    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" aria-label="Next slide"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
++    <button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)" aria-label="前のページ"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></button>
++    <button class="nav-btn" id="nextBtn" onclick="changeSlide(1)" aria-label="次のページ"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg></button>
+   </div>
+   <script>
+-    const slides=document.querySelectorAll('.slide');const currentEl=document.getElementById('current');const totalEl=document.getElementById('total');const progressEl=document.getElementById('progress');const prevBtn=document.getElementById('prevBtn');const nextBtn=document.getElementById('nextBtn');let current=0;const total=slides.length;totalEl.textContent=total;function updateSlide(){slides.forEach((slide,index)=>{slide.classList.remove('active','prev');if(index===current)slide.classList.add('active');else if(index<current)slide.classList.add('prev')});currentEl.textContent=current+1;progressEl.style.width=((current+1)/total*100)+'%';prevBtn.disabled=current===0;nextBtn.disabled=current===total-1}function changeSlide(direction){const next=current+direction;if(next>=0&&next<total){current=next;updateSlide()}}document.addEventListener('keydown',(event)=>{if(event.key==='ArrowRight'||event.key===' '||event.key==='PageDown'){event.preventDefault();changeSlide(1)}else if(event.key==='ArrowLeft'||event.key==='PageUp'){event.preventDefault();changeSlide(-1)}else if(event.key==='Home'){event.preventDefault();current=0;updateSlide()}else if(event.key==='End'){event.preventDefault();current=total-1;updateSlide()}});let touchStartX=0;document.addEventListener('touchstart',(event)=>{touchStartX=event.changedTouches[0].screenX},{passive:true});document.addEventListener('touchend',(event)=>{const diff=touchStartX-event.changedTouches[0].screenX;if(Math.abs(diff)>50)changeSlide(diff>0?1:-1)},{passive:true});updateSlide();
++    const slides=document.querySelectorAll('.slide');const currentEl=document.getElementById('current');const totalEl=document.getElementById('total');const progressEl=document.getElementById('progress');const prevBtn=document.getElementById('prevBtn');const nextBtn=document.getElementById('nextBtn');let current=0;const total=slides.length;totalEl.textContent=total;function updateSlide(){slides.forEach((slide,index)=>{slide.classList.remove('active','prev');if(index===current)slide.classList.add('active');else if(index<current)slide.classList.add('prev')});currentEl.textContent=current+1;progressEl.style.width=((current+1)/total*100)+'%';prevBtn.disabled=current===0;nextBtn.disabled=current===total-1;if(parent!==window)parent.postMessage({type:'yebisu-page',index:current,total},location.origin)}function changeSlide(direction){const next=current+direction;if(next>=0&&next<total){current=next;updateSlide()}}document.addEventListener('keydown',(event)=>{if(event.key==='ArrowRight'||event.key===' '||event.key==='PageDown'){event.preventDefault();changeSlide(1)}else if(event.key==='ArrowLeft'||event.key==='PageUp'){event.preventDefault();changeSlide(-1)}else if(event.key==='Home'){event.preventDefault();current=0;updateSlide()}else if(event.key==='End'){event.preventDefault();current=total-1;updateSlide()}});let touchStartX=0;document.addEventListener('touchstart',(event)=>{touchStartX=event.changedTouches[0].screenX},{passive:true});document.addEventListener('touchend',(event)=>{const diff=touchStartX-event.changedTouches[0].screenX;if(Math.abs(diff)>50)changeSlide(diff>0?1:-1)},{passive:true});updateSlide();
++
++// Same-origin 0-based input; the original updateSlide remains the controller.
++addEventListener('message',e=>{if(e.source!==parent||e.origin!==location.origin||e.data?.type!=='yebisu-slide'||!Number.isInteger(e.data.index))return;if(e.data.index>=0&&e.data.index<total){current=e.data.index;updateSlide()}});
+   </script>
+ </body>
+ </html>

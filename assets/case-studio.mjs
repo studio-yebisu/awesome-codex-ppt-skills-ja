@@ -1,4 +1,5 @@
 import {caseDownloadName} from './download-name.mjs';
+import {caseCountLabel,collectionCountLabel,playbackCounter,playbackOrdinal} from './case-units.mjs';
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const [cases,collection,previews,pins,profiles,product]=await Promise.all(['data/case-studies.json','data/skills.json','data/previews.json','data/upstreams.json','data/repository-guides.json','data/product-collection.json'].map(async url=>{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(url);return r.json()}));
@@ -28,9 +29,14 @@ function editingLabel(c){return {native:'文字・図形を編集',math:'数式�
 function caseCards(){
   if(!$('#case-grid'))return;
   const format=$('#case-format').value,editing=$('#case-editing')?.value||'all';
-  const list=activeCases.filter(c=>(use==='all'||caseUse(c)===use)&&(look==='all'||entryByRepo.get(c.repository)?.style===look)&&(format==='all'||c.format===format||(format==='pptx'&&c.pptx_download))&&(editing==='all'||(editing==='native'&&['native','math'].includes(editingKind(c)))||(editing==='source'&&['web','tex','svg'].includes(editingKind(c)))||editingKind(c)===editing));
-  $('#case-results').textContent=list.length+'冊 / '+list.reduce((n,c)=>n+c.page_count,0)+'枚';
-  $('#case-grid').innerHTML=list.length?list.map((c,i)=>'<article class="case-card" data-style="'+esc(entryByRepo.get(c.repository)?.style)+'"><button class="case-card-image'+(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+'のスライドを見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライドを見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(entryByRepo.get(c.repository)?.title_ja||c.use_case)+'</span><span>'+formatLabel(c)+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.style)+'</p>'+(editingLabel(c)?'<p class="case-editing-note">'+esc(editingLabel(c))+'</p>':'')+'<div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">再生する ↗</button><a href="'+esc(entryByRepo.get(c.repository)?.skill_download)+'" download>スキル本文 ↓</a><a href="'+esc(recipeUrl(c))+'">作り方 →</a></div></div></article>').join(''):'<p class="case-empty">条件に合う作例はまだありません。絞り込みを変えてください。</p>';
+  const query=$('#case-query')?.value.trim()||'',term=query.normalize('NFKC').toLowerCase();
+  const list=activeCases.filter(c=>{
+    const entry=entryByRepo.get(c.repository);
+    const searchable=[c.title,c.use_case,c.style,c.repository,entry?.title_ja,entry?.description_ja,...c.titles].join(' ').normalize('NFKC').toLowerCase();
+    return (!term||searchable.includes(term))&&(use==='all'||caseUse(c)===use)&&(look==='all'||entry?.style===look)&&(format==='all'||c.format===format||(format==='pptx'&&c.pptx_download))&&(editing==='all'||(editing==='native'&&['native','math'].includes(editingKind(c)))||(editing==='source'&&['web','tex','svg'].includes(editingKind(c)))||editingKind(c)===editing);
+  });
+  $('#case-results').textContent=collectionCountLabel(list)+(query?' /「'+query+'」':'');
+  $('#case-grid').innerHTML=list.length?list.map((c,i)=>'<article class="case-card" data-style="'+esc(entryByRepo.get(c.repository)?.style)+'"><button class="case-card-image'+(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+'のスライドを見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライドを見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(entryByRepo.get(c.repository)?.title_ja||c.use_case)+'</span><span>'+formatLabel(c)+' · '+caseCountLabel(c)+'</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.style)+'</p>'+(editingLabel(c)?'<p class="case-editing-note">'+esc(editingLabel(c))+'</p>':'')+'<div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">再生する ↗</button><a href="'+esc(entryByRepo.get(c.repository)?.skill_download)+'" download>スキル本文 ↓</a><a href="'+esc(recipeUrl(c))+'">作り方 →</a></div></div></article>').join(''):'<p class="case-empty">条件に合う作例はまだありません。絞り込みを変えてください。</p>';
 }
 function previewFor(repo){return Array.isArray(previews)?previews.find(p=>p.repository===repo||p.repo_full_name===repo):previews.images?.[repo]||previews[repo]}
 function skillCards(){
@@ -49,8 +55,10 @@ function skillCards(){
 }
 function stop(){playing=false;clearTimeout(timer);timer=null;$('#case-play').textContent='▶ 再生'}
 function fit(){
-  const stage=$('#case-stage'),frame=stage?.querySelector('iframe');if(!frame)return;
+  const stage=$('#case-stage'),frame=stage?.querySelector('iframe');if(!stage||!current)return;
   const width=current?.preview_canvas?.width||1280,height=current?.preview_canvas?.height||720;
+  stage.style.aspectRatio=width+' / '+height;
+  if(!frame)return;
   frame.style.width=width+'px';frame.style.height=height+'px';
   stage.style.setProperty('--case-scale',String(stage.clientWidth/width));
 }
@@ -80,7 +88,7 @@ function nativeSync(frame){
   const config=nativeDOM[current.id];if(!config)return;
   const sections=[...doc.querySelectorAll(config[0])],idx=sections.findIndex(s=>s.matches(config[1]));
   if(idx<0||idx>=current.page_count||idx===page)return;page=idx;
-  $('#case-counter').textContent=(page+1)+' / '+current.page_count;
+  $('#case-counter').textContent=playbackCounter(current,page);
   $('#case-prev').disabled=page===0;$('#case-next').disabled=page===current.page_count-1;
   $('#case-note').textContent=current.notes[page]||'';
   $('#case-pages').querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',String(Number(b.dataset.page)===page)));
@@ -89,7 +97,7 @@ function go(n){
   if(!current)return;page=Math.max(0,Math.min(n,current.page_count-1));
   if(['powerpoint-render','pdf-render','artifact-tool-pptx-import-render','libreoffice-pptx-pdf-render','generated-png-byte-matched-to-pptx-media','image-slides'].includes(current.preview_kind))$('#case-stage').innerHTML='<img src="'+esc(imagePath(current,page))+'" alt="'+esc(current.titles[page])+'">';
   else send();
-  $('#case-counter').textContent=(page+1)+' / '+current.page_count;
+  $('#case-counter').textContent=playbackCounter(current,page);
   $('#case-prev').disabled=page===0;$('#case-next').disabled=page===current.page_count-1;
   $('#case-note').textContent=current.notes[page]||'';
   for(const b of $('#case-pages').querySelectorAll('button'))b.setAttribute('aria-current',String(Number(b.dataset.page)===page));
@@ -107,9 +115,9 @@ function open(id,button){
   $('#case-download').href=c.artifact_download;
   $('#case-download').download=caseDownloadName(c,c.artifact_download);
   $('#case-download').textContent=c.format==='pptx'?'PowerPointをダウンロード ↓':c.format==='pdf'?'PDFをダウンロード ↓':/\.html?(?:[?#]|$)/i.test(c.artifact_download)?'Webスライドをダウンロード ↓':'Webスライド一式をダウンロード ↓';
-  for(const [id,path,label] of [['case-pptx',c.pptx_download===c.artifact_download?null:c.pptx_download,'PowerPoint版 ↓'],['case-pdf',c.pdf_download===c.artifact_download?null:c.pdf_download,'PDF ↓']]){
+  for(const [id,path,label,draft] of [['case-pptx',c.pptx_download===c.artifact_download?null:c.pptx_download,'PowerPoint版 ↓'],['case-pdf',c.pdf_download===c.artifact_download?null:c.pdf_download,'PDF ↓'],['case-draft',c.draft_download,'変更前のPowerPoint ↓',true]]){
     let link=$('#'+id);if(!link){link=document.createElement('a');link.id=id;link.className='button outline';link.setAttribute('download','');$('#case-download').after(link);}
-    link.hidden=!path;link.href=path||'#';link.textContent=label;if(path)link.download=caseDownloadName(c,path);
+    link.hidden=!path;link.href=path||'#';link.textContent=label;if(path)link.download=caseDownloadName(draft?{...c,title:c.title.replace(/[。．. ]+$/,'')+'（変更前）'}:c,path);
   }
   $('#case-make').href=recipeUrl(c);
   $('#case-origin').href='https://github.com/'+c.repository+'/tree/'+c.upstream_commit;
@@ -117,7 +125,7 @@ function open(id,button){
   $('#case-compare').hidden=!comparison;
   if(comparison){$('#case-compare').dataset.openCase=comparison.id;$('#case-compare').href=recipeUrl(comparison);$('#case-compare').textContent=c.comparison_label||(c.format==='pptx'?'同じ入力のWeb版と比べる ↗':'同じ入力のPPTX版と比べる ↗')}
   $('#case-note').hidden=true;$('#case-notes').setAttribute('aria-expanded','false');
-  $('#case-pages').innerHTML=c.titles.map((t,i)=>'<button type="button" data-page="'+i+'" aria-label="'+(i+1)+'ページ目 '+esc(t)+'">'+(c.preview_kind==='html'&&!c.pages?'':'<img src="'+esc(imagePath(c,i))+'" alt="">')+'<span>'+String(i+1).padStart(2,'0')+' '+esc(t)+'</span></button>').join('');
+  $('#case-pages').innerHTML=c.titles.map((t,i)=>'<button type="button" data-page="'+i+'" aria-label="'+playbackOrdinal(c,i)+' '+esc(t)+'">'+(c.preview_kind==='html'&&!c.pages?'':'<img src="'+esc(imagePath(c,i))+'" alt="">')+'<span>'+String(i+1).padStart(2,'0')+' '+esc(t)+'</span></button>').join('');
   const skillLink=$('#case-skill');if(skillLink){const download=caseRecipes[c.id]?.skill_download||entryByRepo.get(c.repository)?.skill_download;skillLink.hidden=!download;skillLink.href=download||'#'}
   if(c.preview_kind==='html'){
     const frame=document.createElement('iframe');frame.src=previewUrl(c,c.preview);frame.title=c.title;frame.setAttribute('sandbox','allow-scripts allow-same-origin');frame.addEventListener('load',()=>{fit();send();const doc=frame.contentDocument;if(!doc)return;doc.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();dialog.close()}},true);const config=nativeDOM[c.id],slides=config&&doc.querySelector(config[2]);if(slides){nativeObserver=new MutationObserver(()=>nativeSync(frame));nativeObserver.observe(slides,{attributes:true,childList:true,subtree:true,attributeFilter:['class']});nativeSync(frame)}});$('#case-stage').replaceChildren(frame);
@@ -155,9 +163,10 @@ $('#case-fullscreen').onclick=()=>{dialog.classList.toggle('expanded');$('#case-
 dialog.addEventListener('close',()=>{stop();nativeObserver?.disconnect();nativeObserver=null;$('#case-stage').replaceChildren();dialog.classList.remove('expanded');$('#case-fullscreen').textContent='大きく見る ↗';trigger?.focus()});
 dialog.addEventListener('click',e=>{if(e.target===dialog){const b=dialog.getBoundingClientRect();if(e.clientX<b.left||e.clientX>b.right||e.clientY<b.top||e.clientY>b.bottom)dialog.close()}});
 document.addEventListener('keydown',e=>{if(!dialog.open)return;if(e.key==='Escape'){e.preventDefault();dialog.close()}if(['ArrowRight','ArrowLeft'].includes(e.key)){e.preventDefault();stop();go(page+(e.key==='ArrowRight'?1:-1))}});
-window.addEventListener('message',e=>{const frame=$('#case-stage iframe');if(!frame||e.source!==frame.contentWindow||e.origin!==location.origin)return;if(e.data?.type==='yebisu-close')dialog.close();if(e.data?.type==='yebisu-page'&&Number.isInteger(e.data.index)){page=Math.max(0,Math.min(e.data.index,current.page_count-1));$('#case-counter').textContent=(page+1)+' / '+current.page_count;$('#case-prev').disabled=page===0;$('#case-next').disabled=page===current.page_count-1;$('#case-note').textContent=current.notes[page]||'';$('#case-pages').querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',String(Number(b.dataset.page)===page))) }});
+window.addEventListener('message',e=>{const frame=$('#case-stage iframe');if(!frame||e.source!==frame.contentWindow||e.origin!==location.origin)return;if(e.data?.type==='yebisu-close')dialog.close();if(e.data?.type==='yebisu-page'&&Number.isInteger(e.data.index)){page=Math.max(0,Math.min(e.data.index,current.page_count-1));$('#case-counter').textContent=playbackCounter(current,page);$('#case-prev').disabled=page===0;$('#case-next').disabled=page===current.page_count-1;$('#case-note').textContent=current.notes[page]||'';$('#case-pages').querySelectorAll('button').forEach(b=>b.setAttribute('aria-current',String(Number(b.dataset.page)===page))) }});
 new ResizeObserver(fit).observe($('#case-stage'));window.addEventListener('resize',fit);
 $('#case-format')?.addEventListener('change',caseCards);
 $('#case-editing')?.addEventListener('change',caseCards);
+$('#case-query')?.addEventListener('input',caseCards);
 for(const id of ['skill-query','skill-status','skill-order'])$('#'+id)?.addEventListener(id==='skill-query'?'input':'change',skillCards);
 caseCards();skillCards();await detail();

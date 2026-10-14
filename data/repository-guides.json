@@ -7751,7 +7751,7 @@
   },
   {
     "repository": "eluckydog/ppt-scene-graph",
-    "summary_ja": "PPTX内の要素座標、重なり順、空間関係を構造化データとして抽出し、AIによるレイアウト解析を支援するツール。",
+    "summary_ja": "元OutlineSpec/SlideSpec→createでdraft、元beautifyでprojection6枚。同版parts8欠落だけ補完、native文字と枠を編集。",
     "kind": "pptx",
     "upstream_commit": "646e3dc4b72a444278d320c8984d5986d7fbf4bb",
     "checked_at": "2026-10-13T13:35:32.650745+00:00",
@@ -7765,32 +7765,96 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/README.md",
-        "bytes": 10232
+        "path": "SKILL.md",
+        "preserved_path": "source/upstream/SKILL.md",
+        "sha256": "d8eba54e4cae5c78ec556cb2435dbfd90cbb85093c61f3d5e30dff3c10714a12",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/SKILL.md"
       },
       {
-        "path": "SKILL.md",
-        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/SKILL.md",
-        "bytes": 6335
+        "path": "README.md",
+        "preserved_path": "source/upstream/README.md",
+        "sha256": "2bcfc5cffa5d53cf444c9188752d4812772388053e86736720b4e8517d56076b",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/README.md"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/LICENSE",
-        "bytes": 1085
+        "preserved_path": "source/upstream/LICENSE",
+        "sha256": "e13d3bdabc6b4c046ea1a6aa63ddf86d85e6bcb76a42e88b9a8be409bf7e0950",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/LICENSE"
+      },
+      {
+        "path": "ppt_scene_graph/__init__.py",
+        "preserved_path": "source/upstream/ppt_scene_graph/__init__.py",
+        "sha256": "c720d3d84633955787886566f4de0b1a72e1c031d389e96ae3756f55444166e5",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/__init__.py"
+      },
+      {
+        "path": "ppt_scene_graph/design.py",
+        "preserved_path": "source/upstream/ppt_scene_graph/design.py",
+        "sha256": "d843eb70d732466629126a8226cef8dfe4df2884976da80892d564dc3d4382af",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/design.py"
+      },
+      {
+        "path": "ppt_scene_graph/pipeline.py",
+        "preserved_path": "source/upstream/ppt_scene_graph/pipeline.py",
+        "sha256": "e84cfa8b5a7d833da27b947bc9a0bb236f034da48e19d45f85bb72c10e35c38a",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/pipeline.py"
+      },
+      {
+        "path": "ppt_scene_graph/vendor/pptx/__init__.py",
+        "preserved_path": "source/upstream/ppt_scene_graph/vendor/pptx/__init__.py",
+        "sha256": "5cbabf88d062a399cd8d03e6986c700bc189647bd5d7404ba9130244301e519c",
+        "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/vendor/pptx/__init__.py"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "scene-graph-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python3 / 原典runtimeとvendor",
+      "lxml6.1.3 / Pillow12.3.0 / typing_extensions4.16.0 / XlsxWriter3.2.9（必要実行依存）",
+      "公式BIZ UDPGothic（PPTX字体は未埋込、編集・export時登録）",
+      "PowerPoint（通常PNG/PDF exportに使用）"
+    ],
+    "commands": [
+      "python source/rebuild.py",
+      "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
+    "steps": [
+      "大綱を元OutlineSpec/SlideSpecへ読み込む",
+      "元create_from_outlineでdesignhub_warm draftを保存",
+      "元beautifyへload_theme(projection).nameを渡す",
+      "同じ本文のnative完成PPTXを保存",
+      "自分のdeckだけ開いて通常export、表紙初回表示"
+    ],
+    "limitations": [
+      "parse_slideは未実装、evaluateは未実施。",
+      "公式同版parts8のみ不足補完。元原本を未変更で保存。",
+      "PPTXのfontは未埋込。公式字体を登録して編集します。",
+      "全頁詳細検査・独立review・構造監査・ZIP再実行は未実施。"
+    ],
+    "forks": [
+      "scene-graph-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_outline_create_beautify_projection_native_pptx_repaired_same_version_vendor",
+    "case_ids": [
+      "scene-graph-showcase"
+    ],
+    "license_notice_ja": "原典MIT ©2026 PPT Scene Graph Contributors、vendor同版python-pptx MIT ©2013 Steve Canny、公式BIZ字体OFLと外部依存の個別条件を保持。",
+    "caveats": [
+      "Fixed upstream omitted vendored parts;8 official same-version modules supplemented in runtime only.",
+      "parse_slide declared but not implemented/exported.",
+      "Beautify validates display names rather than short theme keys.",
+      "Decor affects cover/section type detection; non-text fill colors retained; original create ignores speaker-notes field.",
+      "Projection tokens are code settings, not empirically verified optimal point sizes.",
+      "Normal6PNG/PDF export and cover first display only; evaluate/all-page review not run."
+    ],
+    "skill": "skill-forks/scene-graph-ja/SKILL.md",
+    "guide": "examples/repositories/scene-graph-showcase/README.md",
     "original_description_ja": "PPTX内の要素座標、重なり順、空間関係を構造化データとして抽出し、AIによるレイアウト解析を支援するツール。"
   },
   {
@@ -8190,7 +8254,7 @@
     "upstream_commit": "21479a3fe72a17f1304037a725139220f79278ee",
     "checked_at": "2026-10-13T13:35:41.684050+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": null,
+    "license": "許諾未確認",
     "license_paths": [],
     "skill_paths": [
       ".claude/skills/figure/SKILL.md",
@@ -8205,37 +8269,36 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/concertoy/glissando/blob/21479a3fe72a17f1304037a725139220f79278ee/README.md",
-        "bytes": 2867
-      },
-      {
-        "path": ".claude/skills/figure/SKILL.md",
-        "url": "https://github.com/concertoy/glissando/blob/21479a3fe72a17f1304037a725139220f79278ee/.claude/skills/figure/SKILL.md",
-        "bytes": 2417
+        "path": "package.json",
+        "url": "https://github.com/concertoy/glissando/blob/21479a3fe72a17f1304037a725139220f79278ee/package.json",
+        "sha256": "d75c80157cfde3a865abab3d15c2c56b85a748884c170a37a9adc17190f51ca3"
       },
       {
         "path": ".claude/skills/slides/SKILL.md",
         "url": "https://github.com/concertoy/glissando/blob/21479a3fe72a17f1304037a725139220f79278ee/.claude/skills/slides/SKILL.md",
-        "bytes": 6461
-      },
-      {
-        "path": ".claude/skills/figure-figma/SKILL.md",
-        "url": "https://github.com/concertoy/glissando/blob/21479a3fe72a17f1304037a725139220f79278ee/.claude/skills/figure-figma/SKILL.md",
-        "bytes": 3135
+        "sha256": "c85c7100e855d56108bb6769a98175187de2ed8981c2cc37c99b548cd62a5d94"
       }
     ],
     "archived": false,
     "example_ids": [],
     "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
+    "license_review_status": "reviewed_for_fork_scope",
+    "requirements": [
+      "固定原典に日本語派生・再配布を許す条件が示されること",
+      "Node.js/TypeScriptと原典レンダラー。今回は実行していない"
+    ],
     "commands": [],
-    "steps": [],
+    "steps": [
+      "原典の条件と必要な環境を確認する"
+    ],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "固定treeにLICENSE/COPYING等の原文はなく、実取得したpackage.jsonにもlicense指定がない。",
+      "コードやスキルの翻訳forkを配布する前提は未確認。現行厳選には追加せず、原典リンクを保持する。",
+      "生成・実行は未実施。実行不能を実証した記録ではない。"
     ],
     "forks": [],
+    "execution_status": "source_conditions_reviewed_not_executed",
+    "license_note": "原文は固定GitHubで確認できます。この原典の実行ファイル・派生コードは配布していません。",
     "original_description_ja": "AIエージェントによるコードベースのプレゼン資料作成を支援するツール。"
   },
   {
@@ -8245,7 +8308,7 @@
     "upstream_commit": "6c294e800a084700b925fdf776960e7c57d96bf0",
     "checked_at": "2026-10-13T13:35:41.825902+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": "NOASSERTION",
+    "license": "Proprietary / original installer-use distribution scope",
     "license_paths": [
       "LICENSE"
     ],
@@ -8254,32 +8317,37 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/gtoxlili/deckforge/blob/6c294e800a084700b925fdf776960e7c57d96bf0/README.md",
-        "bytes": 8148
+        "path": "LICENSE",
+        "url": "https://github.com/gtoxlili/deckforge/blob/6c294e800a084700b925fdf776960e7c57d96bf0/LICENSE",
+        "sha256": "b46b3280407084f1dbe60a7188fd8dcd45ddac5f88159d6c9abb143ae2a2b9f5"
       },
       {
         "path": "SKILL.md",
         "url": "https://github.com/gtoxlili/deckforge/blob/6c294e800a084700b925fdf776960e7c57d96bf0/SKILL.md",
-        "bytes": 4417
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/gtoxlili/deckforge/blob/6c294e800a084700b925fdf776960e7c57d96bf0/LICENSE",
-        "bytes": 1073
+        "sha256": "f0c2045124a615adbbe9263b87ad6a37450fe6a7d3a245e547ee15b5aadef48d"
       }
     ],
     "archived": false,
     "example_ids": [],
     "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
+    "license_review_status": "reviewed_for_fork_scope",
+    "requirements": [
+      "原典が提供するDeckForgeバイナリと個別商用条件",
+      "インストール・使用案内に限定されたファイル配布範囲を保つこと"
+    ],
     "commands": [],
-    "steps": [],
+    "steps": [
+      "原典の条件と必要な環境を確認する"
+    ],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "LICENSEはengineバイナリ、埋め込まれた方法論・design recipes・PPTL・素材の複製、改変、配布等の許諾を与えていない。",
+      "repositoryのinstaller/SKILL/README/TERMSの複製と再配布は、DeckForgeのインストールと使用を目的とする範囲に限定。独立したエンジン・recipeのforkとして同梱していない。",
+      "LICENSEはDeckForgeで作った出力をユーザーに帰属させる。出力の条件とエンジンの条件を区別する。",
+      "バイナリの導入・実行・課金・生成は未実施。"
     ],
     "forks": [],
+    "execution_status": "source_conditions_reviewed_not_executed",
+    "license_note": "原文は固定GitHubで確認できます。この原典の実行ファイル・派生コードは配布していません。",
     "original_description_ja": "AIエージェントからのインストールおよびスクリプト実行に対応したPowerPoint生成CLI。"
   },
   {
@@ -10086,12 +10154,12 @@
   },
   {
     "repository": "borjaperfra/beatdeck",
-    "summary_ja": "1920×1080解像度のReact画面で、クリック操作により進行するプレゼンツール。オフライン表示や発表者画面に対応。",
+    "summary_ja": "原典initとSceneDef/React stageで、架空のパン店を6場面・15段階へ構成する日本語派生。",
     "kind": "html",
     "upstream_commit": "329a971303bedd3eeaae7c5216317fafdf2ef6a3",
     "checked_at": "2026-10-13T13:34:46.558992+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": "NOASSERTION",
+    "license": "MIT",
     "license_paths": [
       "LICENSE"
     ],
@@ -10116,17 +10184,36 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "beatdeck-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node18+ / npm / 原典Beatdeck0.5.1（React18/Vite6.4.3/GSAP3.15.0個別Standard License）",
+      "公式Dela/BIZ/Manrope実TTF/OFL + 原典Inter/JetBrains OFL local assets",
+      "Python3（local HTTPと再生成helper）"
+    ],
+    "commands": [
+      "npm --prefix runtime ci --ignore-scripts --no-audit --no-fund",
+      "npm --prefix runtime run build",
+      "python -m http.server 8000 --bind 127.0.0.1 --directory runtime/dist"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "架空概念資料・工程仕様/時間/食品安全/売上/科学値なし・QRなし",
+      "フォルダーbuildで単独HTMLではない。PPTX未生成",
+      "原典verify全forward/back/direct/frame比較は今回未実施。buildと主要初回表示/一段移動のみ",
+      "GSAP依存はMITではなく個別Standard No Charge License。第三者Kernel Panic assetsは不使用/非同梱"
     ],
-    "forks": [],
-    "original_description_ja": "1920×1080解像度のReact画面で、クリック操作により進行するプレゼンツール。オフライン表示や発表者画面に対応。"
+    "forks": [
+      "beatdeck-ja"
+    ],
+    "guide": "examples/repositories/beatdeck-showcase/README.md",
+    "source_download": "downloads/beatdeck-example-ja.zip",
+    "fork_download": "downloads/beatdeck-ja.zip",
+    "original_description_ja": "1920×1080解像度のReact画面で、クリック操作により進行するプレゼンツール。オフライン表示や発表者画面に対応。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "kaisersong/slide-creator",
@@ -10911,7 +10998,7 @@
   },
   {
     "repository": "shawnzam/keynot",
-    "summary_ja": "指示から単独で動作するHTML資料を作成するClaude Code向けスキル。KeynoteやPowerPointは不要。",
+    "summary_ja": "独自ブランドを先に抽出し、元Keynot例CSSと完全inline controllerで和文6枚。元JSは未変更、bridgeのみ末尾追加。",
     "kind": "html",
     "upstream_commit": "d1f9e449ddb89da707b489cb69c520a64975b47c",
     "checked_at": "2026-10-13T13:35:08.954389+00:00",
@@ -10925,32 +11012,73 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/README.md",
-        "bytes": 11434
+        "path": "skills/keynot/SKILL.md",
+        "preserved_path": "source/upstream/skills/keynot/SKILL.md",
+        "sha256": "c6e9651bbb182566cbb3cafeb9dfad89c8e58a4ff3251d83571127544367fb89",
+        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/skills/keynot/SKILL.md"
       },
       {
-        "path": "skills/keynot/SKILL.md",
-        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/skills/keynot/SKILL.md",
-        "bytes": 26795
+        "path": "examples/keynot-for-zombies.html",
+        "preserved_path": "source/upstream/examples/keynot-for-zombies.html",
+        "sha256": "92afc40dc20a33a93f40f88c33c8779ed879668eafacbd68005e116f77b40a51",
+        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/examples/keynot-for-zombies.html"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/LICENSE",
-        "bytes": 1071
+        "preserved_path": "source/upstream/LICENSE",
+        "sha256": "dec8b5d41d9677d4b60c38df015c3c6daae97a4bfc33f933255108454a9e52cd",
+        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/LICENSE"
+      },
+      {
+        "path": "README.md",
+        "preserved_path": "source/upstream/README.md",
+        "sha256": "a60b241fdd3a930f63d1631f2c87d484a0091d8f5ad36a3e3c811c34c40a754b",
+        "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/README.md"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "keynot-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Browser（single HTML、字体と条件も内包）",
+      "Python3標準ライブラリ（再梱包のみ）"
+    ],
+    "commands": [
+      "python source/rebuild.py"
+    ],
+    "steps": [
+      "独自BRANDからhex・字体・比率・版式を記録",
+      "各頁の一つの役目と元patternを選ぶ",
+      "原典shell/CSS/完全JSを実使用し和文局所差分を追加",
+      "公式TTF/OFLをinline化して単一HTMLへ梱包",
+      "主な出力を初回表示し元navigation1→2を確認"
+    ],
+    "limitations": [
+      "編集はHTML/SVG/CSS/JS。PPTXは生成しません。",
+      "初回2頁とnavigation1→2だけ確認。全頁詳細検査・独立採点・ZIP再実行は未実施。",
+      "fullscreen/swipe/printは原典code保持、各操作の別確認は未実施。",
+      "親bridge統合は未確認。日時・会場・費用・参加人数は未定。"
+    ],
+    "forks": [
+      "keynot-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_keynot_brand_extraction_example_css_inline_controller_html",
+    "case_ids": [
+      "keynot-showcase"
+    ],
+    "license_notice_ja": "原典MIT ©2026 Shawn Zamechek、公式固定TTF/OFL-1.1を保持。単体HTMLにもMIT/OFL原文を内包。",
+    "caveats": [
+      "Original JS arithmetic/controller retained; fullscreen/swipe/print code kept but actions not separately tested.",
+      "Preview1600x1000 is a native viewport sample, not a fixed1920x1080 uniformly scaled stage.",
+      "Own fictional brand/experience; all real event details undecided.",
+      "Parent same-origin integration and detailed remaining-page review not tested."
+    ],
+    "skill": "skill-forks/keynot-ja/SKILL.md",
+    "guide": "examples/repositories/keynot-showcase/README.md",
     "original_description_ja": "指示から単独で動作するHTML資料を作成するClaude Code向けスキル。KeynoteやPowerPointは不要。"
   },
   {
@@ -11982,7 +12110,7 @@
   },
   {
     "repository": "cogine-ai/ai-slide-templates",
-    "summary_ja": "資料作成用のメタデータとエージェント向け指示を含む、単独で動作するHTMLテンプレート集。",
+    "summary_ja": "原典metadataからEditorial Luxuryを選び、folder cloneと実DOM slotsへのdemo差替えで日本語企画HTMLを作る。",
     "kind": "html",
     "upstream_commit": "8a7a59d39f059a7e58da9c3471014ba7fe3b98eb",
     "checked_at": "2026-10-13T13:35:28.337849+00:00",
@@ -12012,17 +12140,36 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "cogine-templates-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python3標準ライブラリ / ブラウザ（主制作はnpm不要）",
+      "Shippori Mincho / Zen Kaku Gothic New / Manrope（実TTF/OFLとinline字体）",
+      "代表PNGのみ任意Node/Playwright/Chrome補助"
+    ],
+    "commands": [
+      "python source/build.py --case . --upstream source/upstream",
+      "python -m http.server 8000 --bind 127.0.0.1",
+      "ブラウザでtemplate.htmlを開く"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "架空企画・商品仕様/価格/効能/売上実績なし",
+      "原典layout_slots未定義。実DOMからの局所mappingと明記",
+      "PPTX/PDF未生成。全頁PNGなし、代表2PNGのみ",
+      "初回主要表示/navigation1→2/short SKILL quick_validateのみ。optional validator/全頁詳細検査/全kit再実行/採点なし"
     ],
-    "forks": [],
-    "original_description_ja": "資料作成用のメタデータとエージェント向け指示を含む、単独で動作するHTMLテンプレート集。"
+    "forks": [
+      "cogine-templates-ja"
+    ],
+    "guide": "examples/repositories/cogine-templates-showcase/README.md",
+    "source_download": "downloads/cogine-templates-example-ja.zip",
+    "fork_download": "downloads/cogine-templates-ja.zip",
+    "original_description_ja": "資料作成用のメタデータとエージェント向け指示を含む、単独で動作するHTMLテンプレート集。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "AgentiaPT/vela-slides",
@@ -12031,7 +12178,7 @@
     "upstream_commit": "cd72a0b265cefb0bb12a8ba3d2d2c7f5fabb6f29",
     "checked_at": "2026-10-13T13:35:33.611380+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": "NOASSERTION",
+    "license": "Elastic License 2.0 (ELv2)",
     "license_paths": [
       "LICENSE",
       "NOTICE"
@@ -12076,47 +12223,37 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/AgentiaPT/vela-slides/blob/cd72a0b265cefb0bb12a8ba3d2d2c7f5fabb6f29/README.md",
-        "bytes": 17389
-      },
-      {
-        "path": "skills/vela-slides/SKILL.md",
-        "url": "https://github.com/AgentiaPT/vela-slides/blob/cd72a0b265cefb0bb12a8ba3d2d2c7f5fabb6f29/skills/vela-slides/SKILL.md",
-        "bytes": 6692
-      },
-      {
-        "path": "evals/skills/live/SKILL.md",
-        "url": "https://github.com/AgentiaPT/vela-slides/blob/cd72a0b265cefb0bb12a8ba3d2d2c7f5fabb6f29/evals/skills/live/SKILL.md",
-        "bytes": 6363
-      },
-      {
-        "path": "evals/skills/v2.3/SKILL.md",
-        "url": "https://github.com/AgentiaPT/vela-slides/blob/cd72a0b265cefb0bb12a8ba3d2d2c7f5fabb6f29/evals/skills/v2.3/SKILL.md",
-        "bytes": 5033
-      },
-      {
         "path": "LICENSE",
         "url": "https://github.com/AgentiaPT/vela-slides/blob/cd72a0b265cefb0bb12a8ba3d2d2c7f5fabb6f29/LICENSE",
-        "bytes": 3935
+        "sha256": "1292ff6f5b6f25058ae4081cda5e56fd1903241ab29a09e439324a26d6e64cd5"
       },
       {
         "path": "NOTICE",
         "url": "https://github.com/AgentiaPT/vela-slides/blob/cd72a0b265cefb0bb12a8ba3d2d2c7f5fabb6f29/NOTICE",
-        "bytes": 2699
+        "sha256": "6d53d9f8309779d5a8fb3ec1d09d995d66ddea3ed84b27bf6a28e816e5c90eda"
       }
     ],
     "archived": false,
     "example_ids": [],
     "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
+    "license_review_status": "reviewed_for_fork_scope",
+    "requirements": [
+      "原典Vela CLI、runtime、原典NOTICEに列挙された依存",
+      "条件・著作権表示と、hosted/managed serviceの利用制限を保持すること"
+    ],
     "commands": [],
-    "steps": [],
+    "steps": [
+      "原典の条件と必要な環境を確認する"
+    ],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "固定LICENSEはELv2。MITや無条件OSSとは表示しない。",
+      "LICENSEは使用・コピー・配布・派生を制限付きで許可する一方、第三者へ相当の機能を提供するhosted/managed serviceを制限する。",
+      "キー機能や保護機能の迂回と、条件・著作権表示の変更/除去を禁止。サイトで生成エンジンをホストしていない。",
+      "NOTICEはruntime提供の依存とCDN依存を区別している。生成・runtime試用は未実施。"
     ],
     "forks": [],
+    "execution_status": "source_conditions_reviewed_not_executed",
+    "license_note": "原文は固定GitHubで確認できます。この原典の実行ファイル・派生コードは配布していません。",
     "original_description_ja": "AIを活用したプレゼン資料作成アプリケーションおよびエージェント向けスキル。"
   },
   {
@@ -12453,34 +12590,39 @@
     "upstream_commit": "1b494aabae1de495dce981ba6b69b22733a199f1",
     "checked_at": "2026-10-13T13:35:44.353432+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": "NOASSERTION",
+    "license": "FSL-1.1-ALv2",
     "license_paths": [
       "LICENSE.md"
     ],
     "skill_paths": [],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/joelbarmettlerUZH/slidev-mcp/blob/1b494aabae1de495dce981ba6b69b22733a199f1/README.md",
-        "bytes": 4958
-      },
-      {
         "path": "LICENSE.md",
         "url": "https://github.com/joelbarmettlerUZH/slidev-mcp/blob/1b494aabae1de495dce981ba6b69b22733a199f1/LICENSE.md",
-        "bytes": 3747
+        "sha256": "b5efc8a68e2f95c3fc35df06af675c1c167bd91856aef0dc976fc3cb2ae3be91"
       }
     ],
     "archived": false,
     "example_ids": [],
     "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
+    "license_review_status": "reviewed_for_fork_scope",
+    "requirements": [
+      "Python/Node/原典Slidev MCPとbuilder",
+      "配布・改変用途が原典のPermitted Purposeに該当し、Competing Useに当たらないこと"
+    ],
     "commands": [],
-    "steps": [],
+    "steps": [
+      "原典の条件と必要な環境を確認する"
+    ],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "固定LICENSEはFSL-1.1-ALv2。MIT/現時点のApache-2.0や無条件OSSとは表示しない。",
+      "内部利用、非商用教育、非商用研究等をPermitted Purposeとして挙げ、原ソフトウェア等の代替・同等機能を提供する商用製品やサービスをCompeting Useとして制限する。",
+      "再配布に条件のコピーまたはリンク、copyright noticeが必要。独立サービスとしての取り込み範囲は未決定。",
+      "サーバー起動・生成・API操作は未実施。"
     ],
     "forks": [],
+    "execution_status": "source_conditions_reviewed_not_executed",
+    "license_note": "原文は固定GitHubで確認できます。この原典の実行ファイル・派生コードは配布していません。",
     "original_description_ja": "Slidev資料の生成・レンダリング・ホスティングを行うMCPサーバー。"
   },
   {

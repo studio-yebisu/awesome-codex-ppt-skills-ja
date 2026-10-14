@@ -1,0 +1,146 @@
+--- upstream/ppt_scene_graph/pipeline.py
++++ runtime/ppt_scene_graph/pipeline.py
+@@ -18,6 +18,7 @@
+ from pptx.enum.text import PP_ALIGN, MSO_ANCHOR
+ from pptx.enum.shapes import MSO_SHAPE, MSO_SHAPE_TYPE
+ from pptx.oxml.ns import qn
++from lxml import etree
+ 
+ from .design import DesignSystem, load_theme, list_themes, FONT_SIZES
+ 
+@@ -25,6 +26,18 @@
+ # ============================================================
+ # Utilities
+ # ============================================================
++
++def _set_japanese_font(run, name):
++    """Local Japanese font mapping; original factories/restyling remain the callers."""
++    run.font.name = name
++    rpr = run._r.get_or_add_rPr()
++    rpr.set('lang', 'ja-JP')
++    for tag in ('a:ea', 'a:cs'):
++        element = rpr.find(qn(tag))
++        if element is None:
++            element = etree.SubElement(rpr, qn(tag))
++        element.set('typeface', name)
++
+ 
+ def _safe(fn, *args, **kwargs):
+     """Call fn, return None on any exception."""
+@@ -197,7 +210,7 @@
+     run.text = str(page_num)
+     run.font.size = Pt(14)
+     run.font.color.rgb = ds.text_dim
+-    run.font.name = ds.font_body
++    _set_japanese_font(run, ds.font_body)
+ 
+ 
+ def _restyle_shape(shape, ds: DesignSystem, role: str = 'body'):
+@@ -207,22 +220,22 @@
+ 
+     for run in _iter_text_runs(shape):
+         if role == 'title':
+-            run.font.name = ds.font_title
++            _set_japanese_font(run, ds.font_title)
+             run.font.color.rgb = ds.text_title
+             if run.font.size is None or run.font.size < Pt(36):
+                 run.font.size = FONT_SIZES['page_title']
+         elif role == 'subtitle':
+-            run.font.name = ds.font_body
++            _set_japanese_font(run, ds.font_body)
+             run.font.color.rgb = ds.text_body
+             if run.font.size is None:
+                 run.font.size = FONT_SIZES['subtitle']
+         elif role == 'section':
+-            run.font.name = ds.font_title
++            _set_japanese_font(run, ds.font_title)
+             run.font.color.rgb = ds.primary
+             if run.font.size is None or run.font.size < Pt(36):
+                 run.font.size = FONT_SIZES['section_title']
+         else:  # body
+-            run.font.name = ds.font_body
++            _set_japanese_font(run, ds.font_body)
+             run.font.color.rgb = ds.text_body
+             if run.font.size is None:
+                 run.font.size = FONT_SIZES['body']
+@@ -251,7 +264,7 @@
+                 for para in s.text_frame.paragraphs:
+                     para.alignment = PP_ALIGN.CENTER
+             for run in _iter_text_runs(s):
+-                run.font.name = ds.font_title
++                _set_japanese_font(run, ds.font_title)
+                 run.font.color.rgb = ds.text_title
+ 
+     elif slide_type == 'section':
+@@ -414,7 +427,7 @@
+         run.text = spec.title
+         run.font.size = FONT_SIZES['hero']
+         run.font.color.rgb = ds.text_light
+-        run.font.name = ds.font_title
++        _set_japanese_font(run, ds.font_title)
+         run.font.bold = True
+ 
+     # Subtitle
+@@ -429,7 +442,7 @@
+         run.text = spec.subtitle
+         run.font.size = FONT_SIZES['subtitle']
+         run.font.color.rgb = ds.text_light
+-        run.font.name = ds.font_body
++        _set_japanese_font(run, ds.font_body)
+ 
+     # Bottom accent line
+     bar = slide.shapes.add_shape(
+@@ -479,7 +492,7 @@
+         run.text = number_str
+         run.font.size = Pt(120)
+         run.font.color.rgb = ds.primary
+-        run.font.name = ds.font_title
++        _set_japanese_font(run, ds.font_title)
+         run.font.bold = True
+         run.font.color.rgb = RGBColor(
+             ds.primary[0], ds.primary[1], ds.primary[2]
+@@ -500,7 +513,7 @@
+     run.text = title.strip()
+     run.font.size = FONT_SIZES['section_title']
+     run.font.color.rgb = ds.text_title
+-    run.font.name = ds.font_title
++    _set_japanese_font(run, ds.font_title)
+ 
+     return slide
+ 
+@@ -536,7 +549,7 @@
+         run.text = spec.title
+         run.font.size = FONT_SIZES['page_title']
+         run.font.color.rgb = ds.text_title
+-        run.font.name = ds.font_title
++        _set_japanese_font(run, ds.font_title)
+         run.font.bold = True
+ 
+     # Title underline
+@@ -574,7 +587,7 @@
+         run.text = bullet
+         run.font.size = FONT_SIZES['body']
+         run.font.color.rgb = ds.text_body
+-        run.font.name = ds.font_body
++        _set_japanese_font(run, ds.font_body)
+ 
+     # Images (right side, if provided)
+     if spec.images:
+@@ -616,7 +629,7 @@
+     run.text = spec.title or '谢谢'
+     run.font.size = FONT_SIZES['hero']
+     run.font.color.rgb = ds.text_light
+-    run.font.name = ds.font_title
++    _set_japanese_font(run, ds.font_title)
+     run.font.bold = True
+ 
+     if spec.subtitle:
+@@ -629,7 +642,7 @@
+         run2.font.color.rgb = RGBColor(
+             ds.text_light[0], ds.text_light[1], ds.text_light[2]
+         )
+-        run2.font.name = ds.font_body
++        _set_japanese_font(run2, ds.font_body)
+ 
+     return slide
+ 

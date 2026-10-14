@@ -1,0 +1,1293 @@
+{
+  "repository": "eluckydog/ppt-scene-graph",
+  "commit": "646e3dc4b72a444278d320c8984d5986d7fbf4bb",
+  "license": "MIT",
+  "copyright": "2026 PPT Scene Graph Contributors",
+  "method": "Original OutlineSpec/SlideSpec -> create_from_outline(designhub_warm) -> native draft.pptx -> original beautify(load_theme(projection).name) -> native deck.pptx; original core factories/decor retained, Japanese DesignSystem/East Asian font mapping local; missing vendor parts8 modules repaired from same official python-pptx1.0.2 distribution only.",
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "preserved_path": "example/source/upstream/SKILL.md",
+      "sha256": "d8eba54e4cae5c78ec556cb2435dbfd90cbb85093c61f3d5e30dff3c10714a12",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/SKILL.md"
+    },
+    {
+      "path": "README.md",
+      "preserved_path": "example/source/upstream/README.md",
+      "sha256": "2bcfc5cffa5d53cf444c9188752d4812772388053e86736720b4e8517d56076b",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/README.md"
+    },
+    {
+      "path": "LICENSE",
+      "preserved_path": "example/source/upstream/LICENSE",
+      "sha256": "e13d3bdabc6b4c046ea1a6aa63ddf86d85e6bcb76a42e88b9a8be409bf7e0950",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/LICENSE"
+    },
+    {
+      "path": "ppt_scene_graph/__init__.py",
+      "preserved_path": "example/source/upstream/ppt_scene_graph/__init__.py",
+      "sha256": "c720d3d84633955787886566f4de0b1a72e1c031d389e96ae3756f55444166e5",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/__init__.py"
+    },
+    {
+      "path": "ppt_scene_graph/design.py",
+      "preserved_path": "example/source/upstream/ppt_scene_graph/design.py",
+      "sha256": "d843eb70d732466629126a8226cef8dfe4df2884976da80892d564dc3d4382af",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/design.py"
+    },
+    {
+      "path": "ppt_scene_graph/pipeline.py",
+      "preserved_path": "example/source/upstream/ppt_scene_graph/pipeline.py",
+      "sha256": "e84cfa8b5a7d833da27b947bc9a0bb236f034da48e19d45f85bb72c10e35c38a",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/pipeline.py"
+    },
+    {
+      "path": "ppt_scene_graph/vendor/pptx/__init__.py",
+      "preserved_path": "example/source/upstream/ppt_scene_graph/vendor/pptx/__init__.py",
+      "sha256": "5cbabf88d062a399cd8d03e6986c700bc189647bd5d7404ba9130244301e519c",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/vendor/pptx/__init__.py"
+    }
+  ],
+  "upstream_preserved": true,
+  "modifications": [
+    "BIZ UDPGothic default family mapping in DesignSystem; a:ea/a:cs/lang added at existing font callsites, no geometry/FONT_SIZES changes",
+    "Original vendor parts/ missing; same-version official wheel adds8 modules only to runtime, original source preserved unchanged",
+    "Documented projection key validation defect and used display-name argument without replacing API",
+    "Source assumptions preserved: detected types content/content/content/content/content/ending after decor; existing warm shape fills retained",
+    "Local PowerPoint exporter manages only openedDeck and does not call Application.Quit",
+    "Added Japanese guide, outline/manuscript and PNG-only viewer; production artifact remains native PPTX"
+  ],
+  "vendor_repair": {
+    "purpose": "Repair missing parts only, same original vendored engine version; upstream untouched",
+    "repository": "scanny/python-pptx",
+    "version": "1.0.2",
+    "pypi_metadata_url": "https://pypi.org/pypi/python-pptx/1.0.2/json",
+    "url": "https://files.pythonhosted.org/packages/d9/4f/00be2196329ebbff56ce564aa94efb0fbc828d00de250b1980de1a34ab49/python_pptx-1.0.2-py3-none-any.whl",
+    "filename": "python_pptx-1.0.2-py3-none-any.whl",
+    "wheel_sha256": "160838e0b8565a8b1f67947675886e9fea18aa5e795db7ae531606d68e785cba",
+    "license": "MIT",
+    "copyright": "2013 Steve Canny",
+    "license_file": "source/dependencies/python-pptx-wheel-LICENSE.txt",
+    "added_files": [
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/__init__.py",
+        "wheel_path": "pptx/parts/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/chart.py",
+        "wheel_path": "pptx/parts/chart.py",
+        "sha256": "04c25f6eec67795c4198b9e52867185b2b6ed6dcc0bbb512f86efbe48c1528fd",
+        "bytes": 3212
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/coreprops.py",
+        "wheel_path": "pptx/parts/coreprops.py",
+        "sha256": "52d76b5d89afc72e66c0f09740c45136ee9ab61678822c3b0612307bebcd4ecf",
+        "bytes": 4435
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/embeddedpackage.py",
+        "wheel_path": "pptx/parts/embeddedpackage.py",
+        "sha256": "5e187cfc141697fff83726aa2654fce42f2f9083fefc16b1981bbf832ac3123f",
+        "bytes": 2979
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/image.py",
+        "wheel_path": "pptx/parts/image.py",
+        "sha256": "2986341c5535d1551cf601cb6b7febeb8347f86e9d70f6c992ec61a345decdf4",
+        "bytes": 9617
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/media.py",
+        "wheel_path": "pptx/parts/media.py",
+        "sha256": "e615f4229779ec3dcafc283dfb8ba7792cb8ffddd6131b93bfacafdd9862e51d",
+        "bytes": 918
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/presentation.py",
+        "wheel_path": "pptx/parts/presentation.py",
+        "sha256": "25403af83c0d9445a086a1174c174ba48fa806c08c3b7f49dba46b40487475a0",
+        "bytes": 4840
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/slide.py",
+        "wheel_path": "pptx/parts/slide.py",
+        "sha256": "f7729b1a52f38a65e3dcae513adc9f053f3a491778b8711ccb3dcc3b6d8aeeea",
+        "bytes": 10776
+      }
+    ],
+    "files_added": 8,
+    "all_vendor_recomparison": false,
+    "authorization": "Parent explicitly authorized same-version missing modules only"
+  },
+  "python_pptx_license": "MIT Copyright(c)2013 Steve Canny; source/dependencies/python-pptx-wheel-LICENSE.txt",
+  "external_dependencies": {
+    "python_pptx": "1.0.2 vendored from original repository",
+    "vendor_license_url": "https://raw.githubusercontent.com/scanny/python-pptx/v1.0.2/LICENSE",
+    "vendor_license_note": "Original Scene Graph archive omitted python-pptx license; official same-version MIT text added separately, unmodified upstream kept",
+    "external_packages": {
+      "lxml": "6.1.3",
+      "Pillow": "12.3.0",
+      "typing_extensions": "4.16.0",
+      "XlsxWriter": "3.2.9"
+    },
+    "note": "No dependency binaries redistributed. Vendoring python-pptx does not eliminate its lxml/Pillow/typing_extensions/XlsxWriter runtime requirements.",
+    "external_licenses": {
+      "lxml": "BSD-3-Clause",
+      "Pillow": "MIT-CMU",
+      "typing_extensions": "PSF-2.0",
+      "XlsxWriter": "BSD-2-Clause"
+    }
+  },
+  "fonts": {
+    "families": [
+      {
+        "id": "bizudpgothic",
+        "family": "BIZ UDPGothic",
+        "license": "OFL-1.1",
+        "commit": "66928797f271fed5ee428544e7229685e2d90127",
+        "license_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/OFL.txt",
+        "license_file": "source/fonts/bizudpgothic/OFL.txt",
+        "download": "downloads/fonts/bizudpgothic.zip",
+        "use_ja": "業務資料・表・教材の日本語本文",
+        "files": [
+          {
+            "file": "source/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf",
+            "source_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/BIZUDPGothic-Regular.ttf",
+            "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01",
+            "bytes": 4669688,
+            "modified": false
+          },
+          {
+            "file": "source/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
+            "source_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/BIZUDPGothic-Bold.ttf",
+            "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90",
+            "bytes": 4640596,
+            "modified": false
+          }
+        ]
+      }
+    ],
+    "source": "Existing official fixed distribution; no OS extraction",
+    "fonts_embedded_in_pptx": false
+  },
+  "input": "input/outline.json",
+  "manuscript": "input/MANUSCRIPT.md",
+  "theme_source_mapping": "input/theme-source-map.json",
+  "page_count": 6,
+  "draft": "draft.pptx",
+  "artifact": "deck.pptx",
+  "pdf": "deck.pdf",
+  "parse_slide_implemented": false,
+  "parse_slide_used": false,
+  "evaluate_run": false,
+  "speaker_notes_written_by_original_create": false,
+  "content_status": "Self-authored explanatory proposal; no measured distance-readability improvement or optimal point-size evidence",
+  "native_editing": "Text boxes and rectangle frame/accent shapes",
+  "build": {
+    "route": "Original OutlineSpec/SlideSpec -> create_from_outline(designhub_warm) -> draft.pptx -> original beautify(load_theme(projection).name) -> deck.pptx",
+    "source_package": "source/runtime/ppt_scene_graph",
+    "pptx_engine_path": "source\\runtime\\ppt_scene_graph\\vendor\\pptx\\__init__.py",
+    "pptx_version": "1.0.2",
+    "parse_slide_available": false,
+    "evaluate_run": false,
+    "theme_source_map": "input/theme-source-map.json",
+    "dependency_versions": {
+      "lxml": "6.1.3",
+      "Pillow": "12.3.0",
+      "typing_extensions": "4.16.0",
+      "XlsxWriter": "3.2.9"
+    },
+    "native_elements": "text boxes and rectangle shapes from original factories/decor",
+    "local_changes": "DesignSystem Japanese default families and a:ea/a:cs/lang mapping; original factories/geometry/font-size tokens/heuristics retained; missing original vendor parts8 files repaired from same-version official wheel",
+    "notes_support": "SlideSpec.notes field accepted but original create code does not write speaker notes; manuscript notes remain in input",
+    "beautify_types_from_generation_stdout": [
+      "content",
+      "content",
+      "content",
+      "content",
+      "content",
+      "ending"
+    ]
+  },
+  "render": {
+    "application": "Microsoft PowerPoint",
+    "version": "16.0",
+    "slide_count": 6,
+    "application_quit_called": false,
+    "report": "render/powerpoint-render.json"
+  },
+  "verification": "Original API generation, normal6PNG/PDF export, cover initial viewing only, short Japanese SKILL validation. No rerun of generation/export/view on finishing resume.",
+  "example_root": "example/",
+  "case_studies": [
+    "scene-graph-showcase"
+  ],
+  "files": [
+    {
+      "path": "example/deck.pdf",
+      "sha256": "1cd5902a9fbc25da7e0e673959577b3f0d00fb38e33f5d1a62d31afd65b4c26d"
+    },
+    {
+      "path": "example/deck.pptx",
+      "sha256": "2d9a7a87258fe03933433597e603f8fb9da20168cad07802e84c402c15f84b5d"
+    },
+    {
+      "path": "example/draft.pptx",
+      "sha256": "5e9523ec56c7b842f595a49e7bd7d9aa47d029bad68ca2fb9274ad7e0e475056"
+    },
+    {
+      "path": "example/index.html",
+      "sha256": "c144c6dcb9b9a0e8baee27d4b4bedc2ea85ed32fc186ab6e44e95e5605e52b52"
+    },
+    {
+      "path": "example/input/MANUSCRIPT.md",
+      "sha256": "d2bd1f623422e62464de8fef75e7a6340a0c40d6dc75bc12ff4f53d05dddd9b7"
+    },
+    {
+      "path": "example/input/outline.json",
+      "sha256": "7d025bfba01fd79ab260cbd7cedba1d8596343405ca953b458843a5efac00502"
+    },
+    {
+      "path": "example/input/theme-source-map.json",
+      "sha256": "53dfb2e9ab802ef141e3821543d99db803117d2d43921838da1e45fe38d58624"
+    },
+    {
+      "path": "example/LICENSE",
+      "sha256": "e13d3bdabc6b4c046ea1a6aa63ddf86d85e6bcb76a42e88b9a8be409bf7e0950"
+    },
+    {
+      "path": "example/NOTICE",
+      "sha256": "0e892b64e4ee8f0eec404d5dedd2579a45d9b77a35f879f720c1592be6b9787f"
+    },
+    {
+      "path": "example/PROMPT.md",
+      "sha256": "ccf8a609df95f7b89fa344b9e4da00dfaed28d778e1bfe121295c50773f01a0b"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "6cb56020dabc65aee91afc357e210f8c773ad8c7fbf21c46e92b533a3d639fd1"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "a1934ab991ad672efde4f324690d553e4e039a0eec5277867018d37581c74a23"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "1d98e54fc8666e983b0b0c8c5c7d2af5ae30c6b0908e02c361ab06cec9403531"
+    },
+    {
+      "path": "example/render/powerpoint-render.json",
+      "sha256": "cd60fd712737b16a7698f36ffebf71a0d9203157673b5c87c9e0f702abf029b6"
+    },
+    {
+      "path": "example/render/slide-01.png",
+      "sha256": "d9642a9746a3259d04ca17d00edf22c319ead7bd769820e82da29b289ed930f5"
+    },
+    {
+      "path": "example/render/slide-02.png",
+      "sha256": "a8de06fa4c862bc2d008b73087d9483bd71753078a707ae637cfbce5af0abe59"
+    },
+    {
+      "path": "example/render/slide-03.png",
+      "sha256": "3806b739991385f3862bdf4f973ad26549a0c65032425db7e32b59d47152a699"
+    },
+    {
+      "path": "example/render/slide-04.png",
+      "sha256": "ad46273439add485156239a10b3cc8149b6cf7b49b0ad843a5d8f18c4d4def22"
+    },
+    {
+      "path": "example/render/slide-05.png",
+      "sha256": "28afdc8e304ab84153625772544dd591745f0df7d7978df63e442301b7361137"
+    },
+    {
+      "path": "example/render/slide-06.png",
+      "sha256": "b29e1438a7829fa5875de0e13b38f7b42768265bcb8bb79e2f95c1e2d23c0abd"
+    },
+    {
+      "path": "example/source/BUILD.json",
+      "sha256": "b73d1f5ac16feea0d8010da4a0e195417fd7a40dcd22b6fdf3496e10bea0b5b4"
+    },
+    {
+      "path": "example/source/dependencies/lxml/LICENSE.txt",
+      "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69"
+    },
+    {
+      "path": "example/source/dependencies/lxml/LICENSES.txt",
+      "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398"
+    },
+    {
+      "path": "example/source/dependencies/Pillow/LICENSE",
+      "sha256": "4f7866a74802c6326f81faff59a56546b6aec2b10b91973e0e9308de95e79857"
+    },
+    {
+      "path": "example/source/dependencies/python-pptx-LICENSE.txt",
+      "sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132"
+    },
+    {
+      "path": "example/source/dependencies/python-pptx-wheel-LICENSE.txt",
+      "sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132"
+    },
+    {
+      "path": "example/source/dependencies/REQUIREMENTS.json",
+      "sha256": "ef383347f05a062047311a49c5c3281b354047c8c502572fe90ab65c607ab699"
+    },
+    {
+      "path": "example/source/dependencies/requirements.txt",
+      "sha256": "5eae494b9d39f3fa34a596e7acff88965d447d1083f7a0c06849815b34a5e97d"
+    },
+    {
+      "path": "example/source/dependencies/typing_extensions/LICENSE",
+      "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+    },
+    {
+      "path": "example/source/dependencies/XlsxWriter/LICENSE.txt",
+      "sha256": "cf08b60a4ded986b58a617cb8304373bda5c4eff42fb4e30d7597b616e116e87"
+    },
+    {
+      "path": "example/source/design-ja.patch",
+      "sha256": "33ee1e513a83f74a36b903fdc0cc21a6d4c2ebaed3a833738941e511a97ae2ea"
+    },
+    {
+      "path": "example/source/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "example/source/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf",
+      "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01"
+    },
+    {
+      "path": "example/source/fonts/bizudpgothic/OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "example/source/INITIAL-FAILURE.json",
+      "sha256": "aa40c9818fd360b8a823e2b2c8f8ae38b271cd0a94e041a8249ccbaab02363eb"
+    },
+    {
+      "path": "example/source/pipeline-ja.patch",
+      "sha256": "78ce4369739c32524ea1c9a74803873a4403acab490edc2dc390cdbca40f2d42"
+    },
+    {
+      "path": "example/source/rebuild.py",
+      "sha256": "385e8d3a5866454778e4061ac5cda19a41aa12f4c2ac3d53f3be7cc9a3ad9b09"
+    },
+    {
+      "path": "example/source/render_powerpoint.ps1",
+      "sha256": "71e68dbe37dfc5c60374e0bebcc9446c30a8bdd702ba046f3c1c40dc67129993"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/__init__.py",
+      "sha256": "c720d3d84633955787886566f4de0b1a72e1c031d389e96ae3756f55444166e5"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/design.py",
+      "sha256": "93ccbac4f0d4eb93a4c944e42e49fc7be23b507d87d2f7f36d606467b2bfd647"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/pipeline.py",
+      "sha256": "1d32e28ead22f0a6ce7092b0291b6fc32fe0b709b0a6f7d0d9c0ddbc19982386"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/__init__.py",
+      "sha256": "9b76bf90e582dd9b06edeb7b9cb4c4fc94d5050c3e7102ca2dbcd5e79104b3d2"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/__init__.py",
+      "sha256": "5cbabf88d062a399cd8d03e6986c700bc189647bd5d7404ba9130244301e519c"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/action.py",
+      "sha256": "3626a81bbe446322de987614915e73341f776704b9037f6e4d8f48fcad0ffdbd"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/api.py",
+      "sha256": "22b1b16b7e59eadc99071681ba49f244e7661ca348f1751aefb5d4eb6c411453"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/axis.py",
+      "sha256": "35ba36ef55a7eef64bce7bc7c4565bdd556b692838d642ec4b5a38ef4785909b"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/category.py",
+      "sha256": "8f9b7f7241bb88d9ac69be37c92dd029f308336297488543f788c74fa93c4bfd"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/chart.py",
+      "sha256": "e41ea70567d4ba7368151df290352a6237e3c3b08c88083b722ba6f884887398"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/data.py",
+      "sha256": "4d5d6c67ef9eb410ea9970f31b0fe5b8af3b0205ce7b41b87c47786653cec117"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/datalabel.py",
+      "sha256": "30850014dfcd9cb732540ea1a5391ed57487454b01da6f66621c2c58a71622e0"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/legend.py",
+      "sha256": "798f5efcd09312a7faf3d958af05bb1ec6f86b1f0fc19d2da73b141b8de94fbc"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/marker.py",
+      "sha256": "49d800d8ce3028aeb035ee7ce2e1941ebd9acb9ceb71bd61457cde40886521df"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/plot.py",
+      "sha256": "88e456b89757e5c32cfcbcbdd6035aa886bdd35a9a60835beecee30dd52f90e0"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/point.py",
+      "sha256": "c41cae2849a7e9ef0762610b55346f47c148b7b201d64f0402817a0f5ba78a3d"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/series.py",
+      "sha256": "37ac16112b0061620f17c2d0437f9bad91f4087f284a4ec586300194027c0bc1"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/xlsx.py",
+      "sha256": "13b66371154c86d16b19fd4d854177ea7f10ae783ac4e80864bdb15832e30b17"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/chart/xmlwriter.py",
+      "sha256": "ab2201878f14e965798fff5add7df39893acf3bf75f306b59a2bea426138b9dc"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/dml/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/dml/chtfmt.py",
+      "sha256": "9869fe8f4a78738f6e94532397d8c2cd9deb29d6007d177680261670f3565ba3"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/dml/color.py",
+      "sha256": "a31eae18e1b22b68255824869d1727b2863ba545f33141462f3646bf70a9021c"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/dml/effect.py",
+      "sha256": "d23b540b3acaf3ab92d09f4b2337bd1a7185236fc7b7f37d5cf583b143b08b7d"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/dml/fill.py",
+      "sha256": "575b508d38c3362d94d9af5af67e07b5fc7b823c51be57c5ae737a5b34ebf3c2"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/dml/line.py",
+      "sha256": "fecb898429224e065291c4c84778682f472e68640ed4411d5cb206237e4a0edc"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/enum/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/enum/action.py",
+      "sha256": "79e80ec374899a32fcadb2978dcf4c13848140959057d6ed1cdce7378dead7c7"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/enum/base.py",
+      "sha256": "eb9b0140803b19d3088e482b374a5b6eeab05bc2eeeef878879d9ac22f495c96"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/enum/chart.py",
+      "sha256": "361b73ba1e3dff8320f7c77331f8dfc7df9f326ae998e30a5274b3992da6ea8e"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/enum/dml.py",
+      "sha256": "cf5b5319d513ed1d1883ec0b44a00baeadb5a5f04ed5dc1569650a6d16d926c8"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/enum/lang.py",
+      "sha256": "166a7554d538676bbcd381adb4c8571ceff597fd6756ff104bebcc28be2c5e00"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/enum/shapes.py",
+      "sha256": "296a9c7b50c5521e6c29ceacaf54b8baeb072affb6f9d051eaaf9daf7b4d0512"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/enum/text.py",
+      "sha256": "792acf53b09b66db8a9b5ebac1a5ff2e8733e72eb94e19c9646e56634f587cbe"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/exc.py",
+      "sha256": "e5a86be36a4be442c61c50f4605080629d7b6049bf0e45d4ca6cadd843455ff4"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/media.py",
+      "sha256": "2f909d36252929d97a02d3e46949dc4f6a6296e9ca34562eb1a59a5023ea4440"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/opc/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/opc/constants.py",
+      "sha256": "918a89055101665a0ea5135fe880e24bd0b5da890a8acb83bfd73099d4d4b467"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/opc/oxml.py",
+      "sha256": "7938e2fbe9e33db51c5481033c1979b48194dd59cb3b149889811e5af778a804"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/opc/package.py",
+      "sha256": "c23d8aeacf86bdac3a4fa55f5bcd9fd0644bc1942e1483dedf2c97b4122da27b"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/opc/packuri.py",
+      "sha256": "963761cb27007279cab02df5b0507078e38f4dd082db7479d03e72625a29fcc7"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/opc/serialized.py",
+      "sha256": "ee21f7bf72e7f795b6e8fd42d1762cc2f3ce35dc13a7e84cfe577b401e655c74"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/opc/shared.py",
+      "sha256": "9a855eb3a277869e01ad741365f92854995dc5fafd2d4cccb7186d97a9e460ec"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/opc/spec.py",
+      "sha256": "01dc6095ddccfa44db593c26dbb60dc0f50f97b0238776a75d38b08182db203a"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/__init__.py",
+      "sha256": "357a2705a0384c8bbde4de17a115838443fe09b16a7ca822b9cb296983a3b02c"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/action.py",
+      "sha256": "5ccf3e81ec6d182e9b4cfe110991e80c37cefbca81695a6ae9fba148b8d88450"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/axis.py",
+      "sha256": "1ec2dc4fd95a46d2df0afe83a2e894dcbb0dfc81178ca7984841eb4ecd468f27"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/chart.py",
+      "sha256": "9eb9a93e92b1aaf24a0cbbc06f6836ee535c29388961773a36cd08f4b7b45fc0"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/datalabel.py",
+      "sha256": "801e343e1da47ae8685d6cf51ed69453d3a3ce71d0496f5fe597b07debaf532b"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/legend.py",
+      "sha256": "3910e25519997f716625ea152a6e23abdc4013b4523cdf4516e0eb746cc8e280"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/marker.py",
+      "sha256": "65edaa05ee3c406bc43dc6ea02fefe4c012892631be8cdea40628781a6457546"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/plot.py",
+      "sha256": "3924a3cbae4da773538f716c7d2cacd520850d5f9b7b8869abb842686de2a281"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/series.py",
+      "sha256": "272cf161780e6a3b284c073a45aac5cef06d95c7d38842fb7e22a82ab5fa14d7"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/chart/shared.py",
+      "sha256": "deeb37f1741ac2d97b0a383cf0d7625626625cd9c390b5ec3f64d9d051dc5952"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/coreprops.py",
+      "sha256": "437da6ea0301aa51f6580ed7b570710fad2f7566350c4b852505f6c3c0a37c5c"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/dml/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/dml/color.py",
+      "sha256": "87fb99a534de2e715e36d13d6ec39993cffb5f46b8aafafa1a1b7a5d7c8a712a"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/dml/fill.py",
+      "sha256": "0add5843b62a0d893efb16623b4e7e521897c04d6b8e095c4f7f3778e26a61d9"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/dml/line.py",
+      "sha256": "82b01fc800dcc5cf5dcc7c2c5e543377b3b327dfb20a9a2be35d42f37fae853a"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/ns.py",
+      "sha256": "127dcdd9da4ad9e25bfc4ef0e64a2b831ad810353fc859077693d1e5e0e4ccb5"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/presentation.py",
+      "sha256": "b21d8301a120e4f748577bd721e797e118092002d9e146d1a83385f61505bd5e"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/shapes/__init__.py",
+      "sha256": "34cf2b01e2d1ff6f54ff8ac9249531aec92e12762a74b451cc55647d8abc63ea"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/shapes/autoshape.py",
+      "sha256": "a7bf83f04061dd8558e41cb08ba5d6f6c2fe9e650afa21b4e1faf6ffae43bc6a"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/shapes/connector.py",
+      "sha256": "1af9a73ce9d4f21c9254efeccbd7e7b2fcd11e93090f347e9a59edc403601571"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/shapes/graphfrm.py",
+      "sha256": "286ce19c6a7cac586149bd89df5e7a013992cbc9700dfcf4392dc2025d46b518"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/shapes/groupshape.py",
+      "sha256": "081441c350dfda4d94be268ebf55a1df61bd23422b219b40a08bec4685eab7f0"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/shapes/picture.py",
+      "sha256": "7bd978755adbcbf3393f479956cec9db256332b4a6782a2a6128294783768691"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/shapes/shared.py",
+      "sha256": "8897315c3a33e23aabbb0280684b310de36f6000d1f767d5655d32326140f7c8"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/simpletypes.py",
+      "sha256": "f05a1b28ab6429302c3d2c5473d1e8bd70c78d0f48ae498e5b9709156600966f"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/slide.py",
+      "sha256": "0b95e846539145cb9a6fe48ac7c47bb97617238230ae9551b57fa77750e6f6ad"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/table.py",
+      "sha256": "5d9c1eff46bf8f83266b1a8239efd8d2fabceb38e88ed59e8e22220c2e04fbfa"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/text.py",
+      "sha256": "128d1a723567f782e7b7691777c6d006a0ee306837bc0d6209f096755fca3559"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/theme.py",
+      "sha256": "332951a39eaa2a61ade96e1f7455056e07bfd82300e0c226b6c9d48bf743a275"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/oxml/xmlchemy.py",
+      "sha256": "42b286f6084c62268e5197591068c29de0d5f4463bcf9fbc0019939100109f75"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/package.py",
+      "sha256": "b4e082ddde5c62ef50aca9f0ad2f96168e63c9a716db3e8b7d6341e3e5a8785f"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/parts/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/parts/chart.py",
+      "sha256": "04c25f6eec67795c4198b9e52867185b2b6ed6dcc0bbb512f86efbe48c1528fd"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/parts/coreprops.py",
+      "sha256": "52d76b5d89afc72e66c0f09740c45136ee9ab61678822c3b0612307bebcd4ecf"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/parts/embeddedpackage.py",
+      "sha256": "5e187cfc141697fff83726aa2654fce42f2f9083fefc16b1981bbf832ac3123f"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/parts/image.py",
+      "sha256": "2986341c5535d1551cf601cb6b7febeb8347f86e9d70f6c992ec61a345decdf4"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/parts/media.py",
+      "sha256": "e615f4229779ec3dcafc283dfb8ba7792cb8ffddd6131b93bfacafdd9862e51d"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/parts/presentation.py",
+      "sha256": "25403af83c0d9445a086a1174c174ba48fa806c08c3b7f49dba46b40487475a0"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/parts/slide.py",
+      "sha256": "f7729b1a52f38a65e3dcae513adc9f053f3a491778b8711ccb3dcc3b6d8aeeea"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/presentation.py",
+      "sha256": "54fda4d3f3c2d98a282d555043a08c4ad44a45720e540794ef626d65533df6eb"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/py.typed",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/__init__.py",
+      "sha256": "4dcb0dd0403f7e8648e5104e0040e33de85b92bebaeafe3ba1dcef81b901ff02"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/autoshape.py",
+      "sha256": "6882506d5bed164007010d487a708052e58f0abd497f7cf156387d67f93db2ad"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/base.py",
+      "sha256": "e0c1d106fb08d422d48105fde9af915f9b5ca941914bdd54b2ec0c4715698732"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/connector.py",
+      "sha256": "742d25a19e5d6d013884094407e148e85c09f3e2e3aae572863f0cf151241e3f"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/freeform.py",
+      "sha256": "68bca6dd633faf72fe3268e27d5a66e413260376e60090e35fc8c427c813fe1c"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/graphfrm.py",
+      "sha256": "53196bccced50ab1d1747f184562c6d39761f2ce9cd1f8543f5d21e07e4ef631"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/group.py",
+      "sha256": "53c5e3b6851490efb70ff86f04c447efc73baeca1b1448985166c1b50da11d09"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/picture.py",
+      "sha256": "75ac59333bae16360db5d95d0443f4b49136166a10e527259d8759433ff05cff"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/placeholder.py",
+      "sha256": "7bb9bc6bf557299c31b36b6390d27a0bda01f402d2dcc00ce055804d9092f600"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shapes/shapetree.py",
+      "sha256": "1bec72fbd15f6faabcd022429ffb55ee681b237a45cc926fd87d6bba9fdd478c"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/shared.py",
+      "sha256": "dd0d95b99e7eac7a0b68a3a49126c3ff93e6b5a8e21e663581a99625ec9cc27c"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/slide.py",
+      "sha256": "6d4cc334dd502a63f9a2f3b8279960eac26b97e23ecba111cca97f5db5c9cf08"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/spec.py",
+      "sha256": "5571c4cf3dce067d3ed02c76fd971fe68d331172bd407cee95351e9d24f44545"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/table.py",
+      "sha256": "3cebe5c4d126741391001dc69849e335bb002900e278dcea32fcdf657d7d5ba2"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/templates/default.pptx",
+      "sha256": "e10cc9e120961f6bd4074a373c9c80d2a06c497157e8f4972977b7bea83a8f34"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/templates/docx-icon.emf",
+      "sha256": "cbfa051aa5f1ec1993f0ce056f67112ce4af3a8c3ac6fccfc219399ed6dc625d"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/templates/generic-icon.emf",
+      "sha256": "e12b5b9555953d6eeef4c24e9c6a3c2a7073e1eaeba8825291ea4b78572b955e"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/templates/notes.xml",
+      "sha256": "a8f14f275cf7616e15c61216afe36aac706c3e7c7c4e987bd433c65809110d03"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/templates/notesMaster.xml",
+      "sha256": "1fb939714ad0571d747d9e573f9a0594062a89e73c6a076d943ba7f541072813"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/templates/pptx-icon.emf",
+      "sha256": "7f976582a6d94fe56b65ce6d3bef5ab5746a6f652718979b1325a31c5a2b4e5d"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/templates/theme.xml",
+      "sha256": "76f7bdf39e5333483e42f9c4f6eba344330617b6e6171b7a4039c239131a9b4d"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/templates/xlsx-icon.emf",
+      "sha256": "14e52936cebdf16e5a6629ce707415c26122fe54af322872a2d25fec618a69ee"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/text/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/text/fonts.py",
+      "sha256": "76f9085b58d3551d8f6ec01b941fa5340d31624a7ce957942890ba0ce09bbb77"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/text/layout.py",
+      "sha256": "6e46638919a822b14c95c9a89e844e7e07e0ae02c273d0515ca882916c01ed6d"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/text/text.py",
+      "sha256": "2252578005a8eb412a5b84b0ca53d804b7afea4fcfa6819880c02a819ec87e30"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/types.py",
+      "sha256": "8bf15100b17afab866b5f656d7b88d5e65963b82b65588ce623648038e6062ff"
+    },
+    {
+      "path": "example/source/runtime/ppt_scene_graph/vendor/pptx/util.py",
+      "sha256": "b8327c3d75a19f0c22ca888e1376df36a09df48e8757dbc61d0c7c20308905a6"
+    },
+    {
+      "path": "example/source/upstream/LICENSE",
+      "sha256": "e13d3bdabc6b4c046ea1a6aa63ddf86d85e6bcb76a42e88b9a8be409bf7e0950"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/__init__.py",
+      "sha256": "c720d3d84633955787886566f4de0b1a72e1c031d389e96ae3756f55444166e5"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/design.py",
+      "sha256": "d843eb70d732466629126a8226cef8dfe4df2884976da80892d564dc3d4382af"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/pipeline.py",
+      "sha256": "e84cfa8b5a7d833da27b947bc9a0bb236f034da48e19d45f85bb72c10e35c38a"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/__init__.py",
+      "sha256": "9b76bf90e582dd9b06edeb7b9cb4c4fc94d5050c3e7102ca2dbcd5e79104b3d2"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/__init__.py",
+      "sha256": "5cbabf88d062a399cd8d03e6986c700bc189647bd5d7404ba9130244301e519c"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/action.py",
+      "sha256": "3626a81bbe446322de987614915e73341f776704b9037f6e4d8f48fcad0ffdbd"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/api.py",
+      "sha256": "22b1b16b7e59eadc99071681ba49f244e7661ca348f1751aefb5d4eb6c411453"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/axis.py",
+      "sha256": "35ba36ef55a7eef64bce7bc7c4565bdd556b692838d642ec4b5a38ef4785909b"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/category.py",
+      "sha256": "8f9b7f7241bb88d9ac69be37c92dd029f308336297488543f788c74fa93c4bfd"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/chart.py",
+      "sha256": "e41ea70567d4ba7368151df290352a6237e3c3b08c88083b722ba6f884887398"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/data.py",
+      "sha256": "4d5d6c67ef9eb410ea9970f31b0fe5b8af3b0205ce7b41b87c47786653cec117"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/datalabel.py",
+      "sha256": "30850014dfcd9cb732540ea1a5391ed57487454b01da6f66621c2c58a71622e0"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/legend.py",
+      "sha256": "798f5efcd09312a7faf3d958af05bb1ec6f86b1f0fc19d2da73b141b8de94fbc"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/marker.py",
+      "sha256": "49d800d8ce3028aeb035ee7ce2e1941ebd9acb9ceb71bd61457cde40886521df"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/plot.py",
+      "sha256": "88e456b89757e5c32cfcbcbdd6035aa886bdd35a9a60835beecee30dd52f90e0"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/point.py",
+      "sha256": "c41cae2849a7e9ef0762610b55346f47c148b7b201d64f0402817a0f5ba78a3d"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/series.py",
+      "sha256": "37ac16112b0061620f17c2d0437f9bad91f4087f284a4ec586300194027c0bc1"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/xlsx.py",
+      "sha256": "13b66371154c86d16b19fd4d854177ea7f10ae783ac4e80864bdb15832e30b17"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/chart/xmlwriter.py",
+      "sha256": "ab2201878f14e965798fff5add7df39893acf3bf75f306b59a2bea426138b9dc"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/dml/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/dml/chtfmt.py",
+      "sha256": "9869fe8f4a78738f6e94532397d8c2cd9deb29d6007d177680261670f3565ba3"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/dml/color.py",
+      "sha256": "a31eae18e1b22b68255824869d1727b2863ba545f33141462f3646bf70a9021c"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/dml/effect.py",
+      "sha256": "d23b540b3acaf3ab92d09f4b2337bd1a7185236fc7b7f37d5cf583b143b08b7d"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/dml/fill.py",
+      "sha256": "575b508d38c3362d94d9af5af67e07b5fc7b823c51be57c5ae737a5b34ebf3c2"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/dml/line.py",
+      "sha256": "fecb898429224e065291c4c84778682f472e68640ed4411d5cb206237e4a0edc"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/enum/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/enum/action.py",
+      "sha256": "79e80ec374899a32fcadb2978dcf4c13848140959057d6ed1cdce7378dead7c7"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/enum/base.py",
+      "sha256": "eb9b0140803b19d3088e482b374a5b6eeab05bc2eeeef878879d9ac22f495c96"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/enum/chart.py",
+      "sha256": "361b73ba1e3dff8320f7c77331f8dfc7df9f326ae998e30a5274b3992da6ea8e"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/enum/dml.py",
+      "sha256": "cf5b5319d513ed1d1883ec0b44a00baeadb5a5f04ed5dc1569650a6d16d926c8"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/enum/lang.py",
+      "sha256": "166a7554d538676bbcd381adb4c8571ceff597fd6756ff104bebcc28be2c5e00"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/enum/shapes.py",
+      "sha256": "296a9c7b50c5521e6c29ceacaf54b8baeb072affb6f9d051eaaf9daf7b4d0512"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/enum/text.py",
+      "sha256": "792acf53b09b66db8a9b5ebac1a5ff2e8733e72eb94e19c9646e56634f587cbe"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/exc.py",
+      "sha256": "e5a86be36a4be442c61c50f4605080629d7b6049bf0e45d4ca6cadd843455ff4"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/media.py",
+      "sha256": "2f909d36252929d97a02d3e46949dc4f6a6296e9ca34562eb1a59a5023ea4440"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/opc/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/opc/constants.py",
+      "sha256": "918a89055101665a0ea5135fe880e24bd0b5da890a8acb83bfd73099d4d4b467"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/opc/oxml.py",
+      "sha256": "7938e2fbe9e33db51c5481033c1979b48194dd59cb3b149889811e5af778a804"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/opc/package.py",
+      "sha256": "c23d8aeacf86bdac3a4fa55f5bcd9fd0644bc1942e1483dedf2c97b4122da27b"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/opc/packuri.py",
+      "sha256": "963761cb27007279cab02df5b0507078e38f4dd082db7479d03e72625a29fcc7"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/opc/serialized.py",
+      "sha256": "ee21f7bf72e7f795b6e8fd42d1762cc2f3ce35dc13a7e84cfe577b401e655c74"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/opc/shared.py",
+      "sha256": "9a855eb3a277869e01ad741365f92854995dc5fafd2d4cccb7186d97a9e460ec"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/opc/spec.py",
+      "sha256": "01dc6095ddccfa44db593c26dbb60dc0f50f97b0238776a75d38b08182db203a"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/__init__.py",
+      "sha256": "357a2705a0384c8bbde4de17a115838443fe09b16a7ca822b9cb296983a3b02c"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/action.py",
+      "sha256": "5ccf3e81ec6d182e9b4cfe110991e80c37cefbca81695a6ae9fba148b8d88450"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/axis.py",
+      "sha256": "1ec2dc4fd95a46d2df0afe83a2e894dcbb0dfc81178ca7984841eb4ecd468f27"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/chart.py",
+      "sha256": "9eb9a93e92b1aaf24a0cbbc06f6836ee535c29388961773a36cd08f4b7b45fc0"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/datalabel.py",
+      "sha256": "801e343e1da47ae8685d6cf51ed69453d3a3ce71d0496f5fe597b07debaf532b"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/legend.py",
+      "sha256": "3910e25519997f716625ea152a6e23abdc4013b4523cdf4516e0eb746cc8e280"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/marker.py",
+      "sha256": "65edaa05ee3c406bc43dc6ea02fefe4c012892631be8cdea40628781a6457546"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/plot.py",
+      "sha256": "3924a3cbae4da773538f716c7d2cacd520850d5f9b7b8869abb842686de2a281"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/series.py",
+      "sha256": "272cf161780e6a3b284c073a45aac5cef06d95c7d38842fb7e22a82ab5fa14d7"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/chart/shared.py",
+      "sha256": "deeb37f1741ac2d97b0a383cf0d7625626625cd9c390b5ec3f64d9d051dc5952"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/coreprops.py",
+      "sha256": "437da6ea0301aa51f6580ed7b570710fad2f7566350c4b852505f6c3c0a37c5c"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/dml/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/dml/color.py",
+      "sha256": "87fb99a534de2e715e36d13d6ec39993cffb5f46b8aafafa1a1b7a5d7c8a712a"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/dml/fill.py",
+      "sha256": "0add5843b62a0d893efb16623b4e7e521897c04d6b8e095c4f7f3778e26a61d9"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/dml/line.py",
+      "sha256": "82b01fc800dcc5cf5dcc7c2c5e543377b3b327dfb20a9a2be35d42f37fae853a"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/ns.py",
+      "sha256": "127dcdd9da4ad9e25bfc4ef0e64a2b831ad810353fc859077693d1e5e0e4ccb5"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/presentation.py",
+      "sha256": "b21d8301a120e4f748577bd721e797e118092002d9e146d1a83385f61505bd5e"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/shapes/__init__.py",
+      "sha256": "34cf2b01e2d1ff6f54ff8ac9249531aec92e12762a74b451cc55647d8abc63ea"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/shapes/autoshape.py",
+      "sha256": "a7bf83f04061dd8558e41cb08ba5d6f6c2fe9e650afa21b4e1faf6ffae43bc6a"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/shapes/connector.py",
+      "sha256": "1af9a73ce9d4f21c9254efeccbd7e7b2fcd11e93090f347e9a59edc403601571"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/shapes/graphfrm.py",
+      "sha256": "286ce19c6a7cac586149bd89df5e7a013992cbc9700dfcf4392dc2025d46b518"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/shapes/groupshape.py",
+      "sha256": "081441c350dfda4d94be268ebf55a1df61bd23422b219b40a08bec4685eab7f0"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/shapes/picture.py",
+      "sha256": "7bd978755adbcbf3393f479956cec9db256332b4a6782a2a6128294783768691"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/shapes/shared.py",
+      "sha256": "8897315c3a33e23aabbb0280684b310de36f6000d1f767d5655d32326140f7c8"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/simpletypes.py",
+      "sha256": "f05a1b28ab6429302c3d2c5473d1e8bd70c78d0f48ae498e5b9709156600966f"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/slide.py",
+      "sha256": "0b95e846539145cb9a6fe48ac7c47bb97617238230ae9551b57fa77750e6f6ad"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/table.py",
+      "sha256": "5d9c1eff46bf8f83266b1a8239efd8d2fabceb38e88ed59e8e22220c2e04fbfa"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/text.py",
+      "sha256": "128d1a723567f782e7b7691777c6d006a0ee306837bc0d6209f096755fca3559"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/theme.py",
+      "sha256": "332951a39eaa2a61ade96e1f7455056e07bfd82300e0c226b6c9d48bf743a275"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/oxml/xmlchemy.py",
+      "sha256": "42b286f6084c62268e5197591068c29de0d5f4463bcf9fbc0019939100109f75"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/package.py",
+      "sha256": "b4e082ddde5c62ef50aca9f0ad2f96168e63c9a716db3e8b7d6341e3e5a8785f"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/presentation.py",
+      "sha256": "54fda4d3f3c2d98a282d555043a08c4ad44a45720e540794ef626d65533df6eb"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/py.typed",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/__init__.py",
+      "sha256": "4dcb0dd0403f7e8648e5104e0040e33de85b92bebaeafe3ba1dcef81b901ff02"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/autoshape.py",
+      "sha256": "6882506d5bed164007010d487a708052e58f0abd497f7cf156387d67f93db2ad"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/base.py",
+      "sha256": "e0c1d106fb08d422d48105fde9af915f9b5ca941914bdd54b2ec0c4715698732"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/connector.py",
+      "sha256": "742d25a19e5d6d013884094407e148e85c09f3e2e3aae572863f0cf151241e3f"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/freeform.py",
+      "sha256": "68bca6dd633faf72fe3268e27d5a66e413260376e60090e35fc8c427c813fe1c"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/graphfrm.py",
+      "sha256": "53196bccced50ab1d1747f184562c6d39761f2ce9cd1f8543f5d21e07e4ef631"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/group.py",
+      "sha256": "53c5e3b6851490efb70ff86f04c447efc73baeca1b1448985166c1b50da11d09"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/picture.py",
+      "sha256": "75ac59333bae16360db5d95d0443f4b49136166a10e527259d8759433ff05cff"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/placeholder.py",
+      "sha256": "7bb9bc6bf557299c31b36b6390d27a0bda01f402d2dcc00ce055804d9092f600"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shapes/shapetree.py",
+      "sha256": "1bec72fbd15f6faabcd022429ffb55ee681b237a45cc926fd87d6bba9fdd478c"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/shared.py",
+      "sha256": "dd0d95b99e7eac7a0b68a3a49126c3ff93e6b5a8e21e663581a99625ec9cc27c"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/slide.py",
+      "sha256": "6d4cc334dd502a63f9a2f3b8279960eac26b97e23ecba111cca97f5db5c9cf08"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/spec.py",
+      "sha256": "5571c4cf3dce067d3ed02c76fd971fe68d331172bd407cee95351e9d24f44545"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/table.py",
+      "sha256": "3cebe5c4d126741391001dc69849e335bb002900e278dcea32fcdf657d7d5ba2"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/templates/default.pptx",
+      "sha256": "e10cc9e120961f6bd4074a373c9c80d2a06c497157e8f4972977b7bea83a8f34"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/templates/docx-icon.emf",
+      "sha256": "cbfa051aa5f1ec1993f0ce056f67112ce4af3a8c3ac6fccfc219399ed6dc625d"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/templates/generic-icon.emf",
+      "sha256": "e12b5b9555953d6eeef4c24e9c6a3c2a7073e1eaeba8825291ea4b78572b955e"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/templates/notes.xml",
+      "sha256": "a8f14f275cf7616e15c61216afe36aac706c3e7c7c4e987bd433c65809110d03"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/templates/notesMaster.xml",
+      "sha256": "1fb939714ad0571d747d9e573f9a0594062a89e73c6a076d943ba7f541072813"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/templates/pptx-icon.emf",
+      "sha256": "7f976582a6d94fe56b65ce6d3bef5ab5746a6f652718979b1325a31c5a2b4e5d"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/templates/theme.xml",
+      "sha256": "76f7bdf39e5333483e42f9c4f6eba344330617b6e6171b7a4039c239131a9b4d"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/templates/xlsx-icon.emf",
+      "sha256": "14e52936cebdf16e5a6629ce707415c26122fe54af322872a2d25fec618a69ee"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/text/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/text/fonts.py",
+      "sha256": "76f9085b58d3551d8f6ec01b941fa5340d31624a7ce957942890ba0ce09bbb77"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/text/layout.py",
+      "sha256": "6e46638919a822b14c95c9a89e844e7e07e0ae02c273d0515ca882916c01ed6d"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/text/text.py",
+      "sha256": "2252578005a8eb412a5b84b0ca53d804b7afea4fcfa6819880c02a819ec87e30"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/types.py",
+      "sha256": "8bf15100b17afab866b5f656d7b88d5e65963b82b65588ce623648038e6062ff"
+    },
+    {
+      "path": "example/source/upstream/ppt_scene_graph/vendor/pptx/util.py",
+      "sha256": "b8327c3d75a19f0c22ca888e1376df36a09df48e8757dbc61d0c7c20308905a6"
+    },
+    {
+      "path": "example/source/upstream/README.md",
+      "sha256": "2bcfc5cffa5d53cf444c9188752d4812772388053e86736720b4e8517d56076b"
+    },
+    {
+      "path": "example/source/upstream/SKILL.md",
+      "sha256": "d8eba54e4cae5c78ec556cb2435dbfd90cbb85093c61f3d5e30dff3c10714a12"
+    },
+    {
+      "path": "example/source/vendor-parts-repair.json",
+      "sha256": "610e8aa0851a5a361cbba09359e5a4a987821da72926845110493d9189956f14"
+    },
+    {
+      "path": "example/source/vendor-parts-repair.patch",
+      "sha256": "b2fa79914cf5712e0a401c2e023c121093c32202ca2e4b7183d3db2b1ae9f250"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "e13d3bdabc6b4c046ea1a6aa63ddf86d85e6bcb76a42e88b9a8be409bf7e0950"
+    },
+    {
+      "path": "NOTICE",
+      "sha256": "0e892b64e4ee8f0eec404d5dedd2579a45d9b77a35f879f720c1592be6b9787f"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "dd21a803e8d609bf80266aae1f4c6dc1623d6417eed7611511354a2cf352b253"
+    }
+  ]
+}

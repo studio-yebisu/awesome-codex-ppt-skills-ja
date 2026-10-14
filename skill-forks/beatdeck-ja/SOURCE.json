@@ -1,0 +1,901 @@
+{
+  "repository": "borjaperfra/beatdeck",
+  "commit": "329a971303bedd3eeaae7c5216317fafdf2ef6a3",
+  "license": "MIT",
+  "copyright": "Copyright (c) 2026 Borja Pérez Francés",
+  "source_url": "https://github.com/borjaperfra/beatdeck/tree/329a971303bedd3eeaae7c5216317fafdf2ef6a3",
+  "original_version": "0.5.1",
+  "originals": "source/upstream",
+  "runtime": "runtime",
+  "method": "Verified private copy → original npm run init --theme light → source/content audit → SceneDef[] ref/source/note → authored Scene/Reveal/NodeBox+Arrow/Typewriter/Timeline → unchanged src/beatdeck React stage → original npm run build (typecheck/bundle/offline check)",
+  "init_record": "source/init-path.json / source/init-log.txt",
+  "build_record": "source/build-log.txt / source/build-receipt.json",
+  "source_script": "reference/SCRIPT.md",
+  "content_audit": "docs/CONTENT-AUDIT.md",
+  "brand": "input/BRAND.json",
+  "beat_map": "input/scene-plan.json",
+  "local_diff": "source/talk-local.diff",
+  "engine_modified": false,
+  "controller_replaced": false,
+  "bridge": "source/authored/deck/CatalogBridge.tsx; original deck public API, same-origin flattened 0-based index",
+  "scene_count": 6,
+  "flattened_beat_count": 15,
+  "page_unit": "段階",
+  "standby_included": true,
+  "standby": "light paper with small title and click-to-start text",
+  "canvas": [
+    1920,
+    1080
+  ],
+  "primary_output": "dist/index.html + dist/assets (folder build; not single-file HTML)",
+  "web_archive": "downloads/beatdeck-example-ja.zip",
+  "representative_pngs": [
+    "render/major-01.png",
+    "render/major-02.png"
+  ],
+  "representative_flattened_indices": [
+    1,
+    2
+  ],
+  "qr": {
+    "target_given": false,
+    "generated": false,
+    "final_beat_no_qr": true
+  },
+  "editability": {
+    "kind": "react_stage",
+    "features": [
+      "react_text",
+      "svg",
+      "scene_beat",
+      "timeline",
+      "css_tokens"
+    ],
+    "pptx_generated": false
+  },
+  "fonts": {
+    "custom_families": [
+      "Dela Gothic One",
+      "BIZ UDPGothic",
+      "Manrope"
+    ],
+    "actual_ttf_and_ofl": "fonts/",
+    "source": "fonts/SOURCE.json",
+    "original_theme_assets": [
+      "Inter Variable",
+      "JetBrains Mono Variable"
+    ],
+    "original_fontsource_licenses": "source/licenses/fontsource-variable__*",
+    "local_bundled": true,
+    "modified": false,
+    "os_extracted": false
+  },
+  "dependency_licenses": "source/dependency-licenses.json",
+  "gsap": {
+    "version": "3.15.0",
+    "license": "GSAP Standard No Charge License; not MIT",
+    "terms": "https://gsap.com/community/standard-license/",
+    "notice": "source/licenses/GSAP-BANNER-NOTICE.txt"
+  },
+  "excluded_assets": "examples/kernel-panic/assets not copied, used, or bundled",
+  "offline_build_check_passed": true,
+  "fictional": true,
+  "sample_notice": "架空のパン店を説明する概念資料。原料仕様・食品安全・時間・売上・科学値は示さず、パン/生地/棚は説明用SVG。QR target未指定でQRなし。",
+  "verification_scope": "Original build/typecheck/bundle/offline check, first major browser display, one native click from #1.2 to #2.1, two representative PNGs only. Original full verify walk/back/direct/frame comparisons not executed per user scope.",
+  "id": "beatdeck-ja",
+  "source_download": "downloads/beatdeck-example-ja.zip",
+  "fork_download": "downloads/beatdeck-ja.zip",
+  "case_studies": [
+    "beatdeck-showcase"
+  ],
+  "files": [
+    {
+      "path": "dist/assets/App-bHQq7rHt.js",
+      "sha256": "19cab3d875c16b31699ac7859844347fc650b2c8df08691f8fb3545dcccccfd9"
+    },
+    {
+      "path": "dist/assets/BIZUDPGothic-Bold-C1CvbGqf.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "dist/assets/BIZUDPGothic-Regular-Cb4pYHWU.ttf",
+      "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01"
+    },
+    {
+      "path": "dist/assets/DelaGothicOne-Regular-CDTM2190.ttf",
+      "sha256": "4ff87a0965f1b0505e5a2c58424bc6ad3cff27e56a82f21c2fc9d6b0e3857ee2"
+    },
+    {
+      "path": "dist/assets/index-CaQM0sJ3.js",
+      "sha256": "66a7e322f45cfad450d7c38a78f9f5dd39d0d552b1453b0730c75110b05eb2ed"
+    },
+    {
+      "path": "dist/assets/index-DVioWamw.css",
+      "sha256": "a899c3b2e81185a8e749990b39ef77c4d2bf624df7325c960e6c305eace65c73"
+    },
+    {
+      "path": "dist/assets/inter-cyrillic-ext-wght-normal-BOeWTOD4.woff2",
+      "sha256": "ca157063339ac4ad418f214f3abfed119b0798ab4d377386ce5c9e5a7a435ebd"
+    },
+    {
+      "path": "dist/assets/inter-cyrillic-wght-normal-DqGufNeO.woff2",
+      "sha256": "71d5ee93cc1e9f1d520a3a8b66456de18c7879d8df09d57fcd2eaff75fef0075"
+    },
+    {
+      "path": "dist/assets/inter-greek-ext-wght-normal-DlzME5K_.woff2",
+      "sha256": "6e9e020a25f9b56d418f2c085b1d3c09725a4da23fe693a5b463064606732190"
+    },
+    {
+      "path": "dist/assets/inter-greek-wght-normal-CkhJZR-_.woff2",
+      "sha256": "1be3448e292fbf05ffe176fe1e43f135013d50b1e7d324ad1a558f623d3bb6f6"
+    },
+    {
+      "path": "dist/assets/inter-latin-ext-wght-normal-DO1Apj_S.woff2",
+      "sha256": "34b9c504cab7a73e37b746343a449132e56cf7b5481af2cb81dc74dcff25c956"
+    },
+    {
+      "path": "dist/assets/inter-latin-wght-normal-Dx4kXJAl.woff2",
+      "sha256": "3100e775e8616cd2611beecfa23a4263d7037586789b43f035236a2e6fbd4c62"
+    },
+    {
+      "path": "dist/assets/inter-vietnamese-wght-normal-CBcvBZtf.woff2",
+      "sha256": "5c66f9e07e90c6d4ac4922cc68d60de26c17b1858e677fb5e603fce3952b3ff2"
+    },
+    {
+      "path": "dist/assets/jetbrains-mono-cyrillic-ext-wght-normal-EocZY2iu.woff2",
+      "sha256": "593ccd6fe36e299e151aeae4521be9bfe83ac487d96d7cdb44f50be4a04041c7"
+    },
+    {
+      "path": "dist/assets/jetbrains-mono-cyrillic-wght-normal-D73BlboJ.woff2",
+      "sha256": "d274604c40757f98f07df623a8b8fb5194508a6fa4f5413a7a107f09e3b7452a"
+    },
+    {
+      "path": "dist/assets/jetbrains-mono-greek-wght-normal-Bw9x6K1M.woff2",
+      "sha256": "ee863198077f3093ffa81c072581cc4bd608a04e60a8a9c0b846396ce4f14109"
+    },
+    {
+      "path": "dist/assets/jetbrains-mono-latin-ext-wght-normal-DBQx-q_a.woff2",
+      "sha256": "79bfdab9ba467e26eea4122e6f2567e188dd8a09a8c730d501fc487c4ab99c6e"
+    },
+    {
+      "path": "dist/assets/jetbrains-mono-latin-wght-normal-B9CIFXIH.woff2",
+      "sha256": "18be452724bfdc236c074ca94a249a7f41a86752c7d04ab258ce9ed5651f6a7e"
+    },
+    {
+      "path": "dist/assets/jetbrains-mono-vietnamese-wght-normal-Bt-aOZkq.woff2",
+      "sha256": "2288795da89dd97e648954b96e22b4501bd85dfc453264460b252f888b582ca2"
+    },
+    {
+      "path": "dist/assets/Manrope_wght_-DIRNzeTG.ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    {
+      "path": "dist/assets/navigation-xec84O3d.js",
+      "sha256": "64a5e7046d93a2b5cf77325d950d99fe85cf1fdd05af574a74458a297ea4ef56"
+    },
+    {
+      "path": "dist/assets/PresenterView-Cp1xedQf.js",
+      "sha256": "afe7d0679fd494d05a591b8f303b0db05944aa19b73c3534cc1433af77d2318b"
+    },
+    {
+      "path": "dist/index.html",
+      "sha256": "ab0dc9f14c94b232b8e343cd3abadae7b0282ab0c2da1dc2493ffa266c425fa1"
+    },
+    {
+      "path": "dist/THIRD-PARTY-NOTICES.md",
+      "sha256": "70d59460c36962de61599ffcc8701f29e77c66883a293d1e69fe7545eee5b719"
+    },
+    {
+      "path": "docs/CONTENT-AUDIT.md",
+      "sha256": "7952a89ee12d89a944de0d96e8e41c78af4d98b02a3682720b627f4c8ae894b8"
+    },
+    {
+      "path": "docs/RUNBOOK.md",
+      "sha256": "1d8b7983eb5b5dd6f226a4197f604cbed62d9475b04e6a1286dc84140998fa5e"
+    },
+    {
+      "path": "fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "fonts/bizudpgothic/BIZUDPGothic-Regular.ttf",
+      "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01"
+    },
+    {
+      "path": "fonts/bizudpgothic/OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "fonts/delagothicone/DelaGothicOne-Regular.ttf",
+      "sha256": "4ff87a0965f1b0505e5a2c58424bc6ad3cff27e56a82f21c2fc9d6b0e3857ee2"
+    },
+    {
+      "path": "fonts/delagothicone/OFL.txt",
+      "sha256": "c0014792d4f4abc0508c295b277f2b17ae44465c8dc88d12af9cea48279b5fda"
+    },
+    {
+      "path": "fonts/manrope/Manrope[wght].ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    {
+      "path": "fonts/manrope/OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "input/BRAND.json",
+      "sha256": "5ad5b646afd47ea7ff62ace96375e0872383a0d9fe641cf6afcfdaaac0fb4707"
+    },
+    {
+      "path": "input/BRIEF.md",
+      "sha256": "064be615f994f89f267cb2a0117260f5af81a08ddff1c0b08929ec54725c2ee4"
+    },
+    {
+      "path": "input/scene-plan.json",
+      "sha256": "6bd4da421ad9d06601674a44a39dfd137110ac9228fe5a0fed88278b2a0ab778"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "4ae8461a63711e270c07dab93abf5dad11198e3c4c013033ba5f4187751d344f"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "0ed300860d6c58fd1aa66f2b9d1fcaa4516b71c7f6f9998c36b45a411359b981"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ee0d2da967aa96a1466f93076735bc30dd734951c576a5f944c5a8b397cd12ce"
+    },
+    {
+      "path": "reference/SCRIPT.md",
+      "sha256": "0029194823bc694e7beea05f3c9864ddcd974dcc946341c14ec78e60eb230833"
+    },
+    {
+      "path": "render/major-01.png",
+      "sha256": "7584b6505d61c68b93419a4453ab2820f2990dcd468542e638befa7de9306cca"
+    },
+    {
+      "path": "render/major-02.png",
+      "sha256": "046eecd8442b9fa0a069c9faddc1300246367a98d600a5d65fc7018e6b592770"
+    },
+    {
+      "path": "runtime/.beatdeck.json",
+      "sha256": "357e758471aa30ba7a68d8d607d2b181e72df38fd1f50f9435c0fde6e105b4dc"
+    },
+    {
+      "path": "runtime/AGENTS.md",
+      "sha256": "afb3fea61f170cea3c4147ddc3c926cc4c12f630f919c745379888f17b6903e2"
+    },
+    {
+      "path": "runtime/deck/assets/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "runtime/deck/assets/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf",
+      "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01"
+    },
+    {
+      "path": "runtime/deck/assets/fonts/bizudpgothic/OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "runtime/deck/assets/fonts/delagothicone/DelaGothicOne-Regular.ttf",
+      "sha256": "4ff87a0965f1b0505e5a2c58424bc6ad3cff27e56a82f21c2fc9d6b0e3857ee2"
+    },
+    {
+      "path": "runtime/deck/assets/fonts/delagothicone/OFL.txt",
+      "sha256": "c0014792d4f4abc0508c295b277f2b17ae44465c8dc88d12af9cea48279b5fda"
+    },
+    {
+      "path": "runtime/deck/assets/fonts/manrope/Manrope[wght].ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    {
+      "path": "runtime/deck/assets/fonts/manrope/OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "runtime/deck/CatalogBridge.tsx",
+      "sha256": "8d060e7cce4df96bcb280b56a6de6fdc29c4fdc9f1c1c3c8b5a3d02604943977"
+    },
+    {
+      "path": "runtime/deck/deck.config.ts",
+      "sha256": "c0ff366497879e9845264a657d3740aa0a3688ed690e6c7359334b7e1bb40dfe"
+    },
+    {
+      "path": "runtime/deck/Illustrations.tsx",
+      "sha256": "3afeff74da1e20b441469ff9af26b4d6c0719ca2f862644c30c2dbc80203b5bb"
+    },
+    {
+      "path": "runtime/deck/index.tsx",
+      "sha256": "211c8f3856501b3b2e22cad8dfb02ab61c294c77f54ad7685a9224d81d6df844"
+    },
+    {
+      "path": "runtime/deck/SceneLayers.tsx",
+      "sha256": "293b9b638a4dd865268bf44dfe63b62ea12e78e0849d4d9e9278b25e36e025b8"
+    },
+    {
+      "path": "runtime/deck/scenes.ts",
+      "sha256": "f2b0e18bbd3488ef01b1e28409157e9cc8d7e78c0be76def0e68690133fc4fe5"
+    },
+    {
+      "path": "runtime/deck/theme-brand.css",
+      "sha256": "25e6c43436a1974302e716176bfc27b5ebd6c90827025067a99b5a546c6f2ebe"
+    },
+    {
+      "path": "runtime/deck/timeline.ts",
+      "sha256": "89600b5d1b0aadb0563db39a3ff2fd0012347835b046b4cdfb8ec13c430ec2dc"
+    },
+    {
+      "path": "runtime/deck/World.tsx",
+      "sha256": "d88b701977b0dcd703773d2f0e11223f61b3f167f99937e6a2fc87651185a1fe"
+    },
+    {
+      "path": "runtime/docs/CONTENT-AUDIT.md",
+      "sha256": "7952a89ee12d89a944de0d96e8e41c78af4d98b02a3682720b627f4c8ae894b8"
+    },
+    {
+      "path": "runtime/docs/RUNBOOK.md",
+      "sha256": "02fd4683f5b5561379745c6487c4de363006c455d8a42dc1bdab671a554e454b"
+    },
+    {
+      "path": "runtime/index.html",
+      "sha256": "71b52c50184d372220b1d1c4e87bc948d310b47953c7dfca4a9d5cb5b5a3ad22"
+    },
+    {
+      "path": "runtime/LICENSE",
+      "sha256": "6e16fe369542fb31132b3c769950bbc36e8a949d3df52ec2a56d309ba7c8b468"
+    },
+    {
+      "path": "runtime/package-lock.json",
+      "sha256": "35388d61e808db74f31cedbbfa73cd10f6392590258978b3bceeb256b020f85f"
+    },
+    {
+      "path": "runtime/package.json",
+      "sha256": "bc9965c801d4cfc70a3bac0334b65a799de84e1fe8c2dcf888c9d2ee1e64da8d"
+    },
+    {
+      "path": "runtime/reference/README.md",
+      "sha256": "4c455d782045c9b43d6c6ff3e19ef044f6b8d3c77a7981d462645f1398431825"
+    },
+    {
+      "path": "runtime/reference/SCRIPT.md",
+      "sha256": "0029194823bc694e7beea05f3c9864ddcd974dcc946341c14ec78e60eb230833"
+    },
+    {
+      "path": "runtime/scripts/check-offline.mjs",
+      "sha256": "999a20dc855dd2d627af717a2a5587aa617eaa18cff0427ef78a485e83ab1e41"
+    },
+    {
+      "path": "runtime/scripts/lib.mjs",
+      "sha256": "3f5891ed92f810b6ab2ff784ac6dcb181d98abb3f13952526149ffd78ec216a7"
+    },
+    {
+      "path": "runtime/scripts/shot.mjs",
+      "sha256": "e3785c7ad5884b08ca4c61e87b668c8ba68389c9793fd3ad19ee9509f2d6c8c2"
+    },
+    {
+      "path": "runtime/scripts/upgrade.mjs",
+      "sha256": "06b675574f6dac824f7fefb9edf7fdcc4dacb589fb6563e8defe6e24d8add2e8"
+    },
+    {
+      "path": "runtime/scripts/verify.mjs",
+      "sha256": "4340b93a9a8cef429bddcbd75c906af91de03e3018713cdc0d845880631b6d8f"
+    },
+    {
+      "path": "runtime/skills/building-a-beatdeck/references/api.md",
+      "sha256": "8e09e31e17aacfad0abf60e0c0b807bb4d2cd880d3d47698a43d8743b7eeedbb"
+    },
+    {
+      "path": "runtime/skills/building-a-beatdeck/references/authoring.md",
+      "sha256": "875bcbaa09e5c52ba792e846104af0ce122961431b84bcdaab509c14e8162fa1"
+    },
+    {
+      "path": "runtime/skills/building-a-beatdeck/references/beat-model.md",
+      "sha256": "a13b81f6212c66fef2342caf7061fde584d8017b82e6e0bbcb7133ef8ab87f91"
+    },
+    {
+      "path": "runtime/skills/building-a-beatdeck/references/checklist.md",
+      "sha256": "2ab783fccb77eb8eb5b99a48647a29aed21d0a8ac29bfa983e0dcc1bf3c3bdad"
+    },
+    {
+      "path": "runtime/skills/building-a-beatdeck/references/content-audit-template.md",
+      "sha256": "924cc72267018eca708ccc14bee43a7a73292279d22724854ae3b2a401d5cd25"
+    },
+    {
+      "path": "runtime/skills/building-a-beatdeck/references/runbook-template.md",
+      "sha256": "2f2983eee1f8a7d50e45faf9e3a780721ab462111f742635097450eff8e95657"
+    },
+    {
+      "path": "runtime/skills/building-a-beatdeck/scripts/extract_pptx.py",
+      "sha256": "6d6bd59137573350bf7e2bf6a6e5475395dd054240242e25eb8dcc628263a65e"
+    },
+    {
+      "path": "runtime/skills/building-a-beatdeck/SKILL.md",
+      "sha256": "4141cfd1d060bbe49e6ae484f2ec033c7a02d7c4e0fa27dfe46e4491834801e2"
+    },
+    {
+      "path": "runtime/src/beatdeck/app/App.tsx",
+      "sha256": "44c7296c9cbb01bedc09178d251ac385c62e75b18b1278d9d935eb4234588e68"
+    },
+    {
+      "path": "runtime/src/beatdeck/app/DebugPanel.tsx",
+      "sha256": "e8a3838276555f6726bca724e9075060bad4973aafcc6028c5459432284f92ca"
+    },
+    {
+      "path": "runtime/src/beatdeck/app/DefaultChrome.tsx",
+      "sha256": "4f9f7e85319fd5a4deb713b139230d8f2715d68cebf4bd0968ce3241e1b8972e"
+    },
+    {
+      "path": "runtime/src/beatdeck/app/Overview.tsx",
+      "sha256": "4cdcaf4b68d0ff4a5e65f5055cf08f3541c6a21470579bbad5cdce2850a5f9bb"
+    },
+    {
+      "path": "runtime/src/beatdeck/app/PresenterView.tsx",
+      "sha256": "7ea55a7b745b38f16ee079f963d1252aae4274354dafb8b8ee2b145be2be4a52"
+    },
+    {
+      "path": "runtime/src/beatdeck/app/stage.ts",
+      "sha256": "637ea32aec90b555fee14aba367e240bfae380122beeb46d94dc6907c8dd8502"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/Chart.tsx",
+      "sha256": "0afbb1bf2f0306eadefd7638f17e76f0b440834b2d163522d3217195764994fd"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/CountUp.tsx",
+      "sha256": "731f9b0505b18983e9a88a57ebef68e9917086886869dafb4f5ea8977158752d"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/Diagram.tsx",
+      "sha256": "677b711a1e8bf2c1c36ec3a5891d12474c6d386c5a555c99bf27853ab90f3e3f"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/Layout.tsx",
+      "sha256": "8b1ead6510e17b2539d5ece215eeda2ab357f427849e41943a27d396b448a2f4"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/motion.ts",
+      "sha256": "7fe15c67a87d3da970c6da23d44dcf9ef6dd8d1f596a351d576515df742e7be0"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/QR.tsx",
+      "sha256": "f307c13df870124a2d41aa7e2d3c99c41651da2dece7333bf2cc8eaeafe1c68b"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/Terminal.tsx",
+      "sha256": "8e720866715f1a2ef03977144e9995e11f3348da779ba898cd9498e76e0fc99b"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/Typewriter.tsx",
+      "sha256": "7c6641ae6571d9e0a9c43a791cfe8dab778f5946c6305ce6d99df7bd6e20763b"
+    },
+    {
+      "path": "runtime/src/beatdeck/components/useGlitch.ts",
+      "sha256": "6bdbd4323c2e9d6ac6d74f479c226aa2018538024311ade1164b64a9d67390ee"
+    },
+    {
+      "path": "runtime/src/beatdeck/debugStats.ts",
+      "sha256": "3fedd81a9139ca5d3deb6b7951e11e8116c47578cd6a96533f7c55040eb8378e"
+    },
+    {
+      "path": "runtime/src/beatdeck/engine.ts",
+      "sha256": "c4e06fb1a68af172f5bbc86471e3860d4df5c2f6f0668f82483a111da363c585"
+    },
+    {
+      "path": "runtime/src/beatdeck/flags.ts",
+      "sha256": "8fa9f8db41ffad42754d26739fa3abd3eb372d42236409b2571de631c44ea3da"
+    },
+    {
+      "path": "runtime/src/beatdeck/fx/glitch.ts",
+      "sha256": "71afe0d26d2b839cb48a8df76f3ac78374568f8c155bdb265c9fc382b6889ff9"
+    },
+    {
+      "path": "runtime/src/beatdeck/index.ts",
+      "sha256": "4dbc7e8d21290b054898e35128cbc789c7fe1f5dcf76a0acc281976abd929582"
+    },
+    {
+      "path": "runtime/src/beatdeck/mount.tsx",
+      "sha256": "9835602ce2f9b303c0d0dee4bbc00f98350c7e598f8a8c014a0ce502bf2306dc"
+    },
+    {
+      "path": "runtime/src/beatdeck/navigation.ts",
+      "sha256": "975d38b6008714b182a12c4ce730022eb81daca410f25e499b009e74f57674bf"
+    },
+    {
+      "path": "runtime/src/beatdeck/persistence.ts",
+      "sha256": "25d91bfb8bbfdc9f662730cb1af021e1d738f79741e59871ba1a8254e47b329c"
+    },
+    {
+      "path": "runtime/src/beatdeck/presenter.ts",
+      "sha256": "f7529d6dc340d9c3b069bb326db71ef78d840dd842e7a836dbc23393375a1569"
+    },
+    {
+      "path": "runtime/src/beatdeck/styles/components.css",
+      "sha256": "547af75f31e3c96faf5072dc52f9a79889901c93c9818982f7d46ee2512ed5aa"
+    },
+    {
+      "path": "runtime/src/beatdeck/styles/operator.css",
+      "sha256": "f3225b781c2982768c228cac6baad90db8675e9972dcaa18093598d63f01e8c6"
+    },
+    {
+      "path": "runtime/src/beatdeck/styles/stage.css",
+      "sha256": "965a0bbb17124bc2e406e328a51c1a8043fb939afc4036ef6f0e729a270bcfd2"
+    },
+    {
+      "path": "runtime/src/beatdeck/types.ts",
+      "sha256": "3f0927c1bb3f83aef64d0af1bd00d2b1ecbefae521ae3ea9524a5cda926f5835"
+    },
+    {
+      "path": "runtime/src/main.tsx",
+      "sha256": "d79d33f66ab03c56fa6925cd861fa356b3a56775e4b0faf55103cc4da6cfeab3"
+    },
+    {
+      "path": "runtime/src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "runtime/themes/light.css",
+      "sha256": "5c1456b893d6558f0baa5a7c09d92b5fe88e39345ba35a98b56a335afb8a771d"
+    },
+    {
+      "path": "runtime/themes/neutral.css",
+      "sha256": "1170072ebafaef0292558bff2c6d82dd8b1ad26d80aa8f3db7335619808c5150"
+    },
+    {
+      "path": "runtime/tsconfig.json",
+      "sha256": "dcd9bfdf1cb3e61e3d942b94d538ed7b3c0be2f75f3e781ebc58e0472c54118c"
+    },
+    {
+      "path": "runtime/vite.config.ts",
+      "sha256": "80c3209f04e356523f82aca17368be2081b507292204cd3df4c307c096c3f6ee"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "599714c289ed1e9dfa8eb603e022a60cf28b9eb07a5c9b5fc774c87a8a642c48"
+    },
+    {
+      "path": "source/authored/deck/CatalogBridge.tsx",
+      "sha256": "8d060e7cce4df96bcb280b56a6de6fdc29c4fdc9f1c1c3c8b5a3d02604943977"
+    },
+    {
+      "path": "source/authored/deck/deck.config.ts",
+      "sha256": "c0ff366497879e9845264a657d3740aa0a3688ed690e6c7359334b7e1bb40dfe"
+    },
+    {
+      "path": "source/authored/deck/Illustrations.tsx",
+      "sha256": "3afeff74da1e20b441469ff9af26b4d6c0719ca2f862644c30c2dbc80203b5bb"
+    },
+    {
+      "path": "source/authored/deck/index.tsx",
+      "sha256": "211c8f3856501b3b2e22cad8dfb02ab61c294c77f54ad7685a9224d81d6df844"
+    },
+    {
+      "path": "source/authored/deck/SceneLayers.tsx",
+      "sha256": "293b9b638a4dd865268bf44dfe63b62ea12e78e0849d4d9e9278b25e36e025b8"
+    },
+    {
+      "path": "source/authored/deck/theme-brand.css",
+      "sha256": "25e6c43436a1974302e716176bfc27b5ebd6c90827025067a99b5a546c6f2ebe"
+    },
+    {
+      "path": "source/authored/deck/timeline.ts",
+      "sha256": "89600b5d1b0aadb0563db39a3ff2fd0012347835b046b4cdfb8ec13c430ec2dc"
+    },
+    {
+      "path": "source/authored/deck/World.tsx",
+      "sha256": "d88b701977b0dcd703773d2f0e11223f61b3f167f99937e6a2fc87651185a1fe"
+    },
+    {
+      "path": "source/build.py",
+      "sha256": "7b8d4da511c95f349bbf5803f39a6757365d6e772f1561082ca62a83a99b929d"
+    },
+    {
+      "path": "source/dependency-licenses.json",
+      "sha256": "12529ec04d6d290bc97897ba796916eaf1ab9a3d4e4e6b269c8e9aa68e2d1c33"
+    },
+    {
+      "path": "source/licenses/dijkstrajs__LICENSE.md",
+      "sha256": "c46324e45a005413535a6fb7a97e9eacd3cc6bf30335b7d5c10b8ee3af9e60c2"
+    },
+    {
+      "path": "source/licenses/fontsource-variable__inter__LICENSE",
+      "sha256": "3b0a5fca3d17942cde889069889dedbbbd075e9b599968c82a95f4d944e9b345"
+    },
+    {
+      "path": "source/licenses/fontsource-variable__jetbrains-mono__LICENSE",
+      "sha256": "403581b69dac5cff4079205e01c6b467e56af449ecbd7247693ddb1baafa005b"
+    },
+    {
+      "path": "source/licenses/GSAP-BANNER-NOTICE.txt",
+      "sha256": "7cd51f882ecac81194ee918a89f31567728ea5c67b0abdf38e4c54e404dd5b63"
+    },
+    {
+      "path": "source/licenses/loose-envify__LICENSE",
+      "sha256": "4eb7543b08d955a6d23fcc224601d43ff566e775be918805e26210d7f6eb4893"
+    },
+    {
+      "path": "source/licenses/playwright-core__LICENSE",
+      "sha256": "45873d00a0dd243596deb4aa23b2493b3d1f0671921bf2538ea431d7380220eb"
+    },
+    {
+      "path": "source/licenses/pngjs__LICENSE",
+      "sha256": "176b07a18c0bb3836aaeb61088fd0bf11a38f66e6f15e3fbda85faa225250d6e"
+    },
+    {
+      "path": "source/licenses/qrcode__license",
+      "sha256": "8df47c6ad9ac2c41eb9b2a72def9908959da0ede8dadd56c7b249c1bdb0c5ce6"
+    },
+    {
+      "path": "source/licenses/react-dom__LICENSE",
+      "sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85"
+    },
+    {
+      "path": "source/licenses/react__LICENSE",
+      "sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85"
+    },
+    {
+      "path": "source/licenses/scheduler__LICENSE",
+      "sha256": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85"
+    },
+    {
+      "path": "source/licenses/typescript__LICENSE.txt",
+      "sha256": "a7d00bfd54525bc694b6e32f64c7ebcf5e6b7ae3657be5cc12767bce74654a47"
+    },
+    {
+      "path": "source/licenses/vite__LICENSE.md",
+      "sha256": "008938a3441801ca3960f8e3ccb4c0738e7996442a53063141d57d3769a7344d"
+    },
+    {
+      "path": "source/talk-local.diff",
+      "sha256": "a500aaf8d1cebe47ec10b099605cf7771e4008f32d889da6086a34d894866635"
+    },
+    {
+      "path": "source/upstream/ACQUISITION.json",
+      "sha256": "952ac9f59ce23f8d2bae32ea4bb38999480fdad57514f7bfcdcad6e2c29bfd9f"
+    },
+    {
+      "path": "source/upstream/AGENTS.md",
+      "sha256": "0d094367c188b270e325d4d2afb008bb3332d184689f3fe3b446b00a039d013c"
+    },
+    {
+      "path": "source/upstream/index.html",
+      "sha256": "dcc1b90a21240fdb6c547913d3ea7280e2ba75635629e0ad6862ac2cff736148"
+    },
+    {
+      "path": "source/upstream/LICENSE",
+      "sha256": "4ae8461a63711e270c07dab93abf5dad11198e3c4c013033ba5f4187751d344f"
+    },
+    {
+      "path": "source/upstream/package-lock.json",
+      "sha256": "8797a0053d9728f9f43ed19125c207f5ce6603b4599a2bbd08b85d1ab6567e52"
+    },
+    {
+      "path": "source/upstream/package.json",
+      "sha256": "b47b6cf815a004c780247201c78558dc7365293ffa399782054c514502c4718a"
+    },
+    {
+      "path": "source/upstream/README.md",
+      "sha256": "94390abfe7c9ad2238ab6a6045e163aa071504adfefbd34b4f2e0c43c37ac50f"
+    },
+    {
+      "path": "source/upstream/scripts/check-offline.mjs",
+      "sha256": "999a20dc855dd2d627af717a2a5587aa617eaa18cff0427ef78a485e83ab1e41"
+    },
+    {
+      "path": "source/upstream/scripts/init.mjs",
+      "sha256": "345e934eb74991c6dc6a953c2491c099215b8767d0c1252e273d9442586c89b9"
+    },
+    {
+      "path": "source/upstream/scripts/lib.mjs",
+      "sha256": "3f5891ed92f810b6ab2ff784ac6dcb181d98abb3f13952526149ffd78ec216a7"
+    },
+    {
+      "path": "source/upstream/scripts/shot.mjs",
+      "sha256": "e3785c7ad5884b08ca4c61e87b668c8ba68389c9793fd3ad19ee9509f2d6c8c2"
+    },
+    {
+      "path": "source/upstream/scripts/upgrade.mjs",
+      "sha256": "06b675574f6dac824f7fefb9edf7fdcc4dacb589fb6563e8defe6e24d8add2e8"
+    },
+    {
+      "path": "source/upstream/scripts/verify.mjs",
+      "sha256": "4340b93a9a8cef429bddcbd75c906af91de03e3018713cdc0d845880631b6d8f"
+    },
+    {
+      "path": "source/upstream/skills/building-a-beatdeck/references/api.md",
+      "sha256": "8e09e31e17aacfad0abf60e0c0b807bb4d2cd880d3d47698a43d8743b7eeedbb"
+    },
+    {
+      "path": "source/upstream/skills/building-a-beatdeck/references/authoring.md",
+      "sha256": "875bcbaa09e5c52ba792e846104af0ce122961431b84bcdaab509c14e8162fa1"
+    },
+    {
+      "path": "source/upstream/skills/building-a-beatdeck/references/beat-model.md",
+      "sha256": "a13b81f6212c66fef2342caf7061fde584d8017b82e6e0bbcb7133ef8ab87f91"
+    },
+    {
+      "path": "source/upstream/skills/building-a-beatdeck/references/checklist.md",
+      "sha256": "2ab783fccb77eb8eb5b99a48647a29aed21d0a8ac29bfa983e0dcc1bf3c3bdad"
+    },
+    {
+      "path": "source/upstream/skills/building-a-beatdeck/references/content-audit-template.md",
+      "sha256": "924cc72267018eca708ccc14bee43a7a73292279d22724854ae3b2a401d5cd25"
+    },
+    {
+      "path": "source/upstream/skills/building-a-beatdeck/references/runbook-template.md",
+      "sha256": "2f2983eee1f8a7d50e45faf9e3a780721ab462111f742635097450eff8e95657"
+    },
+    {
+      "path": "source/upstream/skills/building-a-beatdeck/scripts/extract_pptx.py",
+      "sha256": "6d6bd59137573350bf7e2bf6a6e5475395dd054240242e25eb8dcc628263a65e"
+    },
+    {
+      "path": "source/upstream/skills/building-a-beatdeck/SKILL.md",
+      "sha256": "4141cfd1d060bbe49e6ae484f2ec033c7a02d7c4e0fa27dfe46e4491834801e2"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/app/App.tsx",
+      "sha256": "44c7296c9cbb01bedc09178d251ac385c62e75b18b1278d9d935eb4234588e68"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/app/DebugPanel.tsx",
+      "sha256": "e8a3838276555f6726bca724e9075060bad4973aafcc6028c5459432284f92ca"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/app/DefaultChrome.tsx",
+      "sha256": "4f9f7e85319fd5a4deb713b139230d8f2715d68cebf4bd0968ce3241e1b8972e"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/app/Overview.tsx",
+      "sha256": "4cdcaf4b68d0ff4a5e65f5055cf08f3541c6a21470579bbad5cdce2850a5f9bb"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/app/PresenterView.tsx",
+      "sha256": "7ea55a7b745b38f16ee079f963d1252aae4274354dafb8b8ee2b145be2be4a52"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/app/stage.ts",
+      "sha256": "637ea32aec90b555fee14aba367e240bfae380122beeb46d94dc6907c8dd8502"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/Chart.tsx",
+      "sha256": "0afbb1bf2f0306eadefd7638f17e76f0b440834b2d163522d3217195764994fd"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/CountUp.tsx",
+      "sha256": "731f9b0505b18983e9a88a57ebef68e9917086886869dafb4f5ea8977158752d"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/Diagram.tsx",
+      "sha256": "677b711a1e8bf2c1c36ec3a5891d12474c6d386c5a555c99bf27853ab90f3e3f"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/Layout.tsx",
+      "sha256": "8b1ead6510e17b2539d5ece215eeda2ab357f427849e41943a27d396b448a2f4"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/motion.ts",
+      "sha256": "7fe15c67a87d3da970c6da23d44dcf9ef6dd8d1f596a351d576515df742e7be0"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/QR.tsx",
+      "sha256": "f307c13df870124a2d41aa7e2d3c99c41651da2dece7333bf2cc8eaeafe1c68b"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/Terminal.tsx",
+      "sha256": "8e720866715f1a2ef03977144e9995e11f3348da779ba898cd9498e76e0fc99b"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/Typewriter.tsx",
+      "sha256": "7c6641ae6571d9e0a9c43a791cfe8dab778f5946c6305ce6d99df7bd6e20763b"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/components/useGlitch.ts",
+      "sha256": "6bdbd4323c2e9d6ac6d74f479c226aa2018538024311ade1164b64a9d67390ee"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/debugStats.ts",
+      "sha256": "3fedd81a9139ca5d3deb6b7951e11e8116c47578cd6a96533f7c55040eb8378e"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/engine.ts",
+      "sha256": "c4e06fb1a68af172f5bbc86471e3860d4df5c2f6f0668f82483a111da363c585"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/flags.ts",
+      "sha256": "8fa9f8db41ffad42754d26739fa3abd3eb372d42236409b2571de631c44ea3da"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/fx/glitch.ts",
+      "sha256": "71afe0d26d2b839cb48a8df76f3ac78374568f8c155bdb265c9fc382b6889ff9"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/index.ts",
+      "sha256": "4dbc7e8d21290b054898e35128cbc789c7fe1f5dcf76a0acc281976abd929582"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/mount.tsx",
+      "sha256": "9835602ce2f9b303c0d0dee4bbc00f98350c7e598f8a8c014a0ce502bf2306dc"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/navigation.ts",
+      "sha256": "975d38b6008714b182a12c4ce730022eb81daca410f25e499b009e74f57674bf"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/persistence.ts",
+      "sha256": "25d91bfb8bbfdc9f662730cb1af021e1d738f79741e59871ba1a8254e47b329c"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/presenter.ts",
+      "sha256": "f7529d6dc340d9c3b069bb326db71ef78d840dd842e7a836dbc23393375a1569"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/styles/components.css",
+      "sha256": "547af75f31e3c96faf5072dc52f9a79889901c93c9818982f7d46ee2512ed5aa"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/styles/operator.css",
+      "sha256": "f3225b781c2982768c228cac6baad90db8675e9972dcaa18093598d63f01e8c6"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/styles/stage.css",
+      "sha256": "965a0bbb17124bc2e406e328a51c1a8043fb939afc4036ef6f0e729a270bcfd2"
+    },
+    {
+      "path": "source/upstream/src/beatdeck/types.ts",
+      "sha256": "3f0927c1bb3f83aef64d0af1bd00d2b1ecbefae521ae3ea9524a5cda926f5835"
+    },
+    {
+      "path": "source/upstream/src/main.tsx",
+      "sha256": "d79d33f66ab03c56fa6925cd861fa356b3a56775e4b0faf55103cc4da6cfeab3"
+    },
+    {
+      "path": "source/upstream/src/vite-env.d.ts",
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "source/upstream/templates/blank/deck/deck.config.ts",
+      "sha256": "c1eb2ddd2425c097b0aae5af5bce2920f19369db638275af114920d9a48966f4"
+    },
+    {
+      "path": "source/upstream/templates/blank/deck/index.tsx",
+      "sha256": "6656357be0084814157efe09be12268d61df343a6811d4bf9dca03ac572032c6"
+    },
+    {
+      "path": "source/upstream/templates/blank/deck/scenes/01-Open.tsx",
+      "sha256": "19872bf00dc2699d8b59e4d85ad81fc9f55c42cbed7e611bfefed30f45ef274b"
+    },
+    {
+      "path": "source/upstream/templates/blank/deck/scenes/02-End.tsx",
+      "sha256": "13770bdbcd5723ae5724cf997332391b48b0950d7359a2ddfa9691a4d273cc41"
+    },
+    {
+      "path": "source/upstream/templates/blank/deck/scenes.ts",
+      "sha256": "92662e2d7d6cc2e4021292f8859bdfecfe98fa668bd3d31e81a1f2a8247b4196"
+    },
+    {
+      "path": "source/upstream/templates/talk/AGENTS.md",
+      "sha256": "afb3fea61f170cea3c4147ddc3c926cc4c12f630f919c745379888f17b6903e2"
+    },
+    {
+      "path": "source/upstream/templates/talk/ci.yml",
+      "sha256": "543772f4928451f52198a8e0a6301d210a126fa479690ec008b88d0d8428b13e"
+    },
+    {
+      "path": "source/upstream/themes/light.css",
+      "sha256": "5c1456b893d6558f0baa5a7c09d92b5fe88e39345ba35a98b56a335afb8a771d"
+    },
+    {
+      "path": "source/upstream/themes/neutral.css",
+      "sha256": "1170072ebafaef0292558bff2c6d82dd8b1ad26d80aa8f3db7335619808c5150"
+    },
+    {
+      "path": "source/upstream/tsconfig.json",
+      "sha256": "d75a85e328dced0d9fc0df7a7ea926da7d41d7165f9283815201d140d6216f02"
+    },
+    {
+      "path": "source/upstream/vite.config.ts",
+      "sha256": "80c3209f04e356523f82aca17368be2081b507292204cd3df4c307c096c3f6ee"
+    }
+  ]
+}

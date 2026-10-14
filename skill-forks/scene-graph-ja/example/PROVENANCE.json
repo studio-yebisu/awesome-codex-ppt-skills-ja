@@ -1,0 +1,223 @@
+{
+  "repository": "eluckydog/ppt-scene-graph",
+  "commit": "646e3dc4b72a444278d320c8984d5986d7fbf4bb",
+  "license": "MIT",
+  "copyright": "2026 PPT Scene Graph Contributors",
+  "method": "Original OutlineSpec/SlideSpec -> create_from_outline(designhub_warm) -> native draft.pptx -> original beautify(load_theme(projection).name) -> native deck.pptx; original core factories/decor retained, Japanese DesignSystem/East Asian font mapping local; missing vendor parts8 modules repaired from same official python-pptx1.0.2 distribution only.",
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "preserved_path": "source/upstream/SKILL.md",
+      "sha256": "d8eba54e4cae5c78ec556cb2435dbfd90cbb85093c61f3d5e30dff3c10714a12",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/SKILL.md"
+    },
+    {
+      "path": "README.md",
+      "preserved_path": "source/upstream/README.md",
+      "sha256": "2bcfc5cffa5d53cf444c9188752d4812772388053e86736720b4e8517d56076b",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/README.md"
+    },
+    {
+      "path": "LICENSE",
+      "preserved_path": "source/upstream/LICENSE",
+      "sha256": "e13d3bdabc6b4c046ea1a6aa63ddf86d85e6bcb76a42e88b9a8be409bf7e0950",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/LICENSE"
+    },
+    {
+      "path": "ppt_scene_graph/__init__.py",
+      "preserved_path": "source/upstream/ppt_scene_graph/__init__.py",
+      "sha256": "c720d3d84633955787886566f4de0b1a72e1c031d389e96ae3756f55444166e5",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/__init__.py"
+    },
+    {
+      "path": "ppt_scene_graph/design.py",
+      "preserved_path": "source/upstream/ppt_scene_graph/design.py",
+      "sha256": "d843eb70d732466629126a8226cef8dfe4df2884976da80892d564dc3d4382af",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/design.py"
+    },
+    {
+      "path": "ppt_scene_graph/pipeline.py",
+      "preserved_path": "source/upstream/ppt_scene_graph/pipeline.py",
+      "sha256": "e84cfa8b5a7d833da27b947bc9a0bb236f034da48e19d45f85bb72c10e35c38a",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/pipeline.py"
+    },
+    {
+      "path": "ppt_scene_graph/vendor/pptx/__init__.py",
+      "preserved_path": "source/upstream/ppt_scene_graph/vendor/pptx/__init__.py",
+      "sha256": "5cbabf88d062a399cd8d03e6986c700bc189647bd5d7404ba9130244301e519c",
+      "url": "https://github.com/eluckydog/ppt-scene-graph/blob/646e3dc4b72a444278d320c8984d5986d7fbf4bb/ppt_scene_graph/vendor/pptx/__init__.py"
+    }
+  ],
+  "upstream_preserved": true,
+  "modifications": [
+    "BIZ UDPGothic default family mapping in DesignSystem; a:ea/a:cs/lang added at existing font callsites, no geometry/FONT_SIZES changes",
+    "Original vendor parts/ missing; same-version official wheel adds8 modules only to runtime, original source preserved unchanged",
+    "Documented projection key validation defect and used display-name argument without replacing API",
+    "Source assumptions preserved: detected types content/content/content/content/content/ending after decor; existing warm shape fills retained",
+    "Local PowerPoint exporter manages only openedDeck and does not call Application.Quit",
+    "Added Japanese guide, outline/manuscript and PNG-only viewer; production artifact remains native PPTX"
+  ],
+  "vendor_repair": {
+    "purpose": "Repair missing parts only, same original vendored engine version; upstream untouched",
+    "repository": "scanny/python-pptx",
+    "version": "1.0.2",
+    "pypi_metadata_url": "https://pypi.org/pypi/python-pptx/1.0.2/json",
+    "url": "https://files.pythonhosted.org/packages/d9/4f/00be2196329ebbff56ce564aa94efb0fbc828d00de250b1980de1a34ab49/python_pptx-1.0.2-py3-none-any.whl",
+    "filename": "python_pptx-1.0.2-py3-none-any.whl",
+    "wheel_sha256": "160838e0b8565a8b1f67947675886e9fea18aa5e795db7ae531606d68e785cba",
+    "license": "MIT",
+    "copyright": "2013 Steve Canny",
+    "license_file": "source/dependencies/python-pptx-wheel-LICENSE.txt",
+    "added_files": [
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/__init__.py",
+        "wheel_path": "pptx/parts/__init__.py",
+        "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "bytes": 0
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/chart.py",
+        "wheel_path": "pptx/parts/chart.py",
+        "sha256": "04c25f6eec67795c4198b9e52867185b2b6ed6dcc0bbb512f86efbe48c1528fd",
+        "bytes": 3212
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/coreprops.py",
+        "wheel_path": "pptx/parts/coreprops.py",
+        "sha256": "52d76b5d89afc72e66c0f09740c45136ee9ab61678822c3b0612307bebcd4ecf",
+        "bytes": 4435
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/embeddedpackage.py",
+        "wheel_path": "pptx/parts/embeddedpackage.py",
+        "sha256": "5e187cfc141697fff83726aa2654fce42f2f9083fefc16b1981bbf832ac3123f",
+        "bytes": 2979
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/image.py",
+        "wheel_path": "pptx/parts/image.py",
+        "sha256": "2986341c5535d1551cf601cb6b7febeb8347f86e9d70f6c992ec61a345decdf4",
+        "bytes": 9617
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/media.py",
+        "wheel_path": "pptx/parts/media.py",
+        "sha256": "e615f4229779ec3dcafc283dfb8ba7792cb8ffddd6131b93bfacafdd9862e51d",
+        "bytes": 918
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/presentation.py",
+        "wheel_path": "pptx/parts/presentation.py",
+        "sha256": "25403af83c0d9445a086a1174c174ba48fa806c08c3b7f49dba46b40487475a0",
+        "bytes": 4840
+      },
+      {
+        "path": "source/runtime/ppt_scene_graph/vendor/pptx/parts/slide.py",
+        "wheel_path": "pptx/parts/slide.py",
+        "sha256": "f7729b1a52f38a65e3dcae513adc9f053f3a491778b8711ccb3dcc3b6d8aeeea",
+        "bytes": 10776
+      }
+    ],
+    "files_added": 8,
+    "all_vendor_recomparison": false,
+    "authorization": "Parent explicitly authorized same-version missing modules only"
+  },
+  "python_pptx_license": "MIT Copyright(c)2013 Steve Canny; source/dependencies/python-pptx-wheel-LICENSE.txt",
+  "external_dependencies": {
+    "python_pptx": "1.0.2 vendored from original repository",
+    "vendor_license_url": "https://raw.githubusercontent.com/scanny/python-pptx/v1.0.2/LICENSE",
+    "vendor_license_note": "Original Scene Graph archive omitted python-pptx license; official same-version MIT text added separately, unmodified upstream kept",
+    "external_packages": {
+      "lxml": "6.1.3",
+      "Pillow": "12.3.0",
+      "typing_extensions": "4.16.0",
+      "XlsxWriter": "3.2.9"
+    },
+    "note": "No dependency binaries redistributed. Vendoring python-pptx does not eliminate its lxml/Pillow/typing_extensions/XlsxWriter runtime requirements.",
+    "external_licenses": {
+      "lxml": "BSD-3-Clause",
+      "Pillow": "MIT-CMU",
+      "typing_extensions": "PSF-2.0",
+      "XlsxWriter": "BSD-2-Clause"
+    }
+  },
+  "fonts": {
+    "families": [
+      {
+        "id": "bizudpgothic",
+        "family": "BIZ UDPGothic",
+        "license": "OFL-1.1",
+        "commit": "66928797f271fed5ee428544e7229685e2d90127",
+        "license_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/OFL.txt",
+        "license_file": "source/fonts/bizudpgothic/OFL.txt",
+        "download": "downloads/fonts/bizudpgothic.zip",
+        "use_ja": "業務資料・表・教材の日本語本文",
+        "files": [
+          {
+            "file": "source/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf",
+            "source_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/BIZUDPGothic-Regular.ttf",
+            "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01",
+            "bytes": 4669688,
+            "modified": false
+          },
+          {
+            "file": "source/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
+            "source_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/BIZUDPGothic-Bold.ttf",
+            "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90",
+            "bytes": 4640596,
+            "modified": false
+          }
+        ]
+      }
+    ],
+    "source": "Existing official fixed distribution; no OS extraction",
+    "fonts_embedded_in_pptx": false
+  },
+  "input": "input/outline.json",
+  "manuscript": "input/MANUSCRIPT.md",
+  "theme_source_mapping": "input/theme-source-map.json",
+  "page_count": 6,
+  "draft": "draft.pptx",
+  "artifact": "deck.pptx",
+  "pdf": "deck.pdf",
+  "parse_slide_implemented": false,
+  "parse_slide_used": false,
+  "evaluate_run": false,
+  "speaker_notes_written_by_original_create": false,
+  "content_status": "Self-authored explanatory proposal; no measured distance-readability improvement or optimal point-size evidence",
+  "native_editing": "Text boxes and rectangle frame/accent shapes",
+  "build": {
+    "route": "Original OutlineSpec/SlideSpec -> create_from_outline(designhub_warm) -> draft.pptx -> original beautify(load_theme(projection).name) -> deck.pptx",
+    "source_package": "source/runtime/ppt_scene_graph",
+    "pptx_engine_path": "source\\runtime\\ppt_scene_graph\\vendor\\pptx\\__init__.py",
+    "pptx_version": "1.0.2",
+    "parse_slide_available": false,
+    "evaluate_run": false,
+    "theme_source_map": "input/theme-source-map.json",
+    "dependency_versions": {
+      "lxml": "6.1.3",
+      "Pillow": "12.3.0",
+      "typing_extensions": "4.16.0",
+      "XlsxWriter": "3.2.9"
+    },
+    "native_elements": "text boxes and rectangle shapes from original factories/decor",
+    "local_changes": "DesignSystem Japanese default families and a:ea/a:cs/lang mapping; original factories/geometry/font-size tokens/heuristics retained; missing original vendor parts8 files repaired from same-version official wheel",
+    "notes_support": "SlideSpec.notes field accepted but original create code does not write speaker notes; manuscript notes remain in input",
+    "beautify_types_from_generation_stdout": [
+      "content",
+      "content",
+      "content",
+      "content",
+      "content",
+      "ending"
+    ]
+  },
+  "render": {
+    "application": "Microsoft PowerPoint",
+    "version": "16.0",
+    "slide_count": 6,
+    "application_quit_called": false,
+    "report": "render/powerpoint-render.json"
+  },
+  "verification": "Original API generation, normal6PNG/PDF export, cover initial viewing only, short Japanese SKILL validation. No rerun of generation/export/view on finishing resume."
+}

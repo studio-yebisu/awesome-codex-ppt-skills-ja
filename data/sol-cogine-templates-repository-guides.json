@@ -1,0 +1,37 @@
+[
+  {
+    "repository": "cogine-ai/ai-slide-templates",
+    "summary_ja": "原典metadataからEditorial Luxuryを選び、folder cloneと実DOM slotsへのdemo差替えで日本語企画HTMLを作る。",
+    "example_ids": [
+      "cogine-templates-showcase"
+    ],
+    "upstream_commit": "8a7a59d39f059a7e58da9c3471014ba7fe3b98eb",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/cogine-templates-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/cogine-templates-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Python3標準ライブラリ / ブラウザ（主制作はnpm不要）",
+      "Shippori Mincho / Zen Kaku Gothic New / Manrope（実TTF/OFLとinline字体）",
+      "代表PNGのみ任意Node/Playwright/Chrome補助"
+    ],
+    "commands": [
+      "python source/build.py --case . --upstream source/upstream",
+      "python -m http.server 8000 --bind 127.0.0.1",
+      "ブラウザでtemplate.htmlを開く"
+    ],
+    "guide": "examples/repositories/cogine-templates-showcase/README.md",
+    "source_download": "downloads/cogine-templates-example-ja.zip",
+    "fork_download": "downloads/cogine-templates-ja.zip",
+    "limitations": [
+      "架空企画・商品仕様/価格/効能/売上実績なし",
+      "原典layout_slots未定義。実DOMからの局所mappingと明記",
+      "PPTX/PDF未生成。全頁PNGなし、代表2PNGのみ",
+      "初回主要表示/navigation1→2/short SKILL quick_validateのみ。optional validator/全頁詳細検査/全kit再実行/採点なし"
+    ]
+  }
+]

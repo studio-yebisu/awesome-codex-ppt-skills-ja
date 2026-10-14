@@ -1,0 +1,20 @@
+--- upstream/example inline controller
++++ source/controller.js
+@@ -100,3 +100,17 @@
+     const dx = e.changedTouches[0].clientX - tx;
+     if (Math.abs(dx) > 50) go(dx < 0 ? cur + 1 : cur - 1);
+   }, { passive: true });
++
++// Japanese case adapter appended to the untouched original controller.
++(function () {
++  function notifyParent() {
++    if (parent !== window && location.origin !== 'null')
++      parent.postMessage({type:'yebisu-page',index:cur}, location.origin);
++  }
++  addEventListener('message', e => {
++    if (e.source !== parent || e.origin !== location.origin || e.data?.type !== 'yebisu-slide') return;
++    if (Number.isInteger(e.data.index) && e.data.index >= 0 && e.data.index < slides.length) go(e.data.index);
++  });
++  new MutationObserver(notifyParent).observe(counter, {childList:true});
++  notifyParent();
++})();

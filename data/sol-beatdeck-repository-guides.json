@@ -1,0 +1,37 @@
+[
+  {
+    "repository": "borjaperfra/beatdeck",
+    "summary_ja": "原典initとSceneDef/React stageで、架空のパン店を6場面・15段階へ構成する日本語派生。",
+    "example_ids": [
+      "beatdeck-showcase"
+    ],
+    "upstream_commit": "329a971303bedd3eeaae7c5216317fafdf2ef6a3",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/beatdeck-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/beatdeck-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Node18+ / npm / 原典Beatdeck0.5.1（React18/Vite6.4.3/GSAP3.15.0個別Standard License）",
+      "公式Dela/BIZ/Manrope実TTF/OFL + 原典Inter/JetBrains OFL local assets",
+      "Python3（local HTTPと再生成helper）"
+    ],
+    "commands": [
+      "npm --prefix runtime ci --ignore-scripts --no-audit --no-fund",
+      "npm --prefix runtime run build",
+      "python -m http.server 8000 --bind 127.0.0.1 --directory runtime/dist"
+    ],
+    "guide": "examples/repositories/beatdeck-showcase/README.md",
+    "source_download": "downloads/beatdeck-example-ja.zip",
+    "fork_download": "downloads/beatdeck-ja.zip",
+    "limitations": [
+      "架空概念資料・工程仕様/時間/食品安全/売上/科学値なし・QRなし",
+      "フォルダーbuildで単独HTMLではない。PPTX未生成",
+      "原典verify全forward/back/direct/frame比較は今回未実施。buildと主要初回表示/一段移動のみ",
+      "GSAP依存はMITではなく個別Standard No Charge License。第三者Kernel Panic assetsは不使用/非同梱"
+    ]
+  }
+]

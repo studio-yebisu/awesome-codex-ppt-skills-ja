@@ -1,0 +1,144 @@
+import type {SceneDef} from 'beatdeck';
+export const SCENES:SceneDef[]=[
+  {
+    "id": "01",
+    "title": "はじめる",
+    "beats": [
+      {
+        "name": "待機画面",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 01 はじめる",
+        "source": "架空のパン店の流れを、概念図で見てみよう。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      },
+      {
+        "name": "パンが、店先に届くまで。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 01 はじめる",
+        "source": "最初のクリックで話を始める。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      }
+    ]
+  },
+  {
+    "id": "02",
+    "title": "素材",
+    "beats": [
+      {
+        "name": "はじまりは、素材から。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 02 素材",
+        "source": "はじまりは、素材から。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      },
+      {
+        "name": "次の工程へ。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 02 素材",
+        "source": "次の工程へ。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      }
+    ]
+  },
+  {
+    "id": "03",
+    "title": "生地",
+    "beats": [
+      {
+        "name": "混ぜる。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 03 生地",
+        "source": "素材から生地をつくる。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      },
+      {
+        "name": "形づくる。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 03 生地",
+        "source": "形づくる。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      },
+      {
+        "name": "焼く場所へ。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 03 生地",
+        "source": "次の工程へ渡す。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      }
+    ]
+  },
+  {
+    "id": "04",
+    "title": "焼く",
+    "beats": [
+      {
+        "name": "焼く。",
+        "auto": true,
+        "ref": "reference/SCRIPT.md / 04 焼く",
+        "source": "焼く。条件・時間・温度は含めない。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      },
+      {
+        "name": "パンとして、店先へ。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 04 焼く",
+        "source": "パンとして、店先へ。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      }
+    ]
+  },
+  {
+    "id": "05",
+    "title": "店先",
+    "beats": [
+      {
+        "name": "店先に、届く。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 05 店先",
+        "source": "店先に、届く。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      },
+      {
+        "name": "並べて、見つけやすく。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 05 店先",
+        "source": "並べて、見つけやすく。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      },
+      {
+        "name": "選ぶ時間へ。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 05 店先",
+        "source": "選ぶ時間へ。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。"
+      }
+    ]
+  },
+  {
+    "id": "06",
+    "title": "手渡す",
+    "beats": [
+      {
+        "name": "選ぶ。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 06 手渡す",
+        "source": "選ぶ。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。 QR target未指定、最終段階にQRを表示しない。"
+      },
+      {
+        "name": "ひとつを、手渡す。",
+        "auto": true,
+        "ref": "reference/SCRIPT.md / 06 手渡す",
+        "source": "ひとつを、手渡す。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。 QR target未指定、最終段階にQRを表示しない。"
+      },
+      {
+        "name": "店先から、誰かの手へ。",
+        "auto": false,
+        "ref": "reference/SCRIPT.md / 06 手渡す",
+        "source": "店先から、誰かの手へ。QRなし。",
+        "note": "架空のパン店の概念資料。図形とmotionは説明用。原料/時間/温度/安全/売上/科学値は作らない。 QR target未指定、最終段階にQRを表示しない。"
+      }
+    ]
+  }
+];

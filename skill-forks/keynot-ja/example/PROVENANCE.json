@@ -1,0 +1,121 @@
+{
+  "repository": "shawnzam/keynot",
+  "commit": "d1f9e449ddb89da707b489cb69c520a64975b47c",
+  "license": "MIT",
+  "copyright": "2026 Shawn Zamechek",
+  "method": "Original Keynot brand extraction from independent BRAND.md → deck architecture → original example full CSS and deck/slide/nav/rotate/print shell → Japanese content/layout overrides → untouched complete inline controller (circular go/hash/session/dots/reveal/swipe/fullscreen/auto-hide) + appended same-origin bridge → self-contained inline-font HTML.",
+  "runtime": "Original examples/keynot-for-zombies.html inline JS; 100vw×100vh viewport slides, circular0-based cur, 1-based #slide-N deep-link, session persistence, dots, auto-hide, swipe, fullscreen. Appended bridge only.",
+  "source_refs": [
+    {
+      "path": "skills/keynot/SKILL.md",
+      "preserved_path": "source/upstream/skills/keynot/SKILL.md",
+      "sha256": "c6e9651bbb182566cbb3cafeb9dfad89c8e58a4ff3251d83571127544367fb89",
+      "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/skills/keynot/SKILL.md"
+    },
+    {
+      "path": "examples/keynot-for-zombies.html",
+      "preserved_path": "source/upstream/examples/keynot-for-zombies.html",
+      "sha256": "92afc40dc20a33a93f40f88c33c8779ed879668eafacbd68005e116f77b40a51",
+      "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/examples/keynot-for-zombies.html"
+    },
+    {
+      "path": "LICENSE",
+      "preserved_path": "source/upstream/LICENSE",
+      "sha256": "dec8b5d41d9677d4b60c38df015c3c6daae97a4bfc33f933255108454a9e52cd",
+      "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/LICENSE"
+    },
+    {
+      "path": "README.md",
+      "preserved_path": "source/upstream/README.md",
+      "sha256": "a60b241fdd3a930f63d1631f2c87d484a0091d8f5ad36a3e3c811c34c40a754b",
+      "url": "https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/README.md"
+    }
+  ],
+  "upstream_preserved": true,
+  "modifications": [
+    "Independent fictional brand extracted into exact hex/font pairing/usage target/layout record before layout code",
+    "Original example content replaced by6-page Japanese letterpress experience concept and self-authored explanatory SVG",
+    "Original full inline CSS preserved before local brand/Japanese font size/line-height/letter-spacing/layout overrides; decorative zombie gradients disabled",
+    "Original full JS block preserved byte-for-byte before appended parent bridge; no arithmetic replacements or new shell",
+    "Navigation/portrait overlay labels localized; delta retained in chrome.patch",
+    "Remote CDN fonts replaced by four official pinned full TTF; original OFL texts included and embedded with MIT in single HTML",
+    "Japanese cover orphan break found on initial view; only s1-title clamp/nowrap corrected and cover re-displayed"
+  ],
+  "input": "input/BRAND.md",
+  "input_content": "input/MANUSCRIPT.md",
+  "brand_record": "input/brand-record.json",
+  "architecture": "input/ARCHITECTURE.md",
+  "original_controller_sha256": "e526862f97d015da874c27b00437b067b99f1809896a3f59378dd7311d55def0",
+  "original_controller_prefix_preserved": true,
+  "local_diffs": [
+    "source/controller.patch",
+    "source/chrome.patch",
+    "source/brand-and-layout.patch"
+  ],
+  "fonts": {
+    "repository": "google/fonts",
+    "commit": "66928797f271fed5ee428544e7229685e2d90127",
+    "source": "Existing official fixed TTF/OFL distribution; no OS extraction",
+    "fonts": [
+      {
+        "path": "source/fonts/shipporimincho/ShipporiMincho-Regular.ttf",
+        "family_alias": "Holiday Serif",
+        "weight": "400",
+        "bytes": 8677284,
+        "sha256": "769b5269f0f9bc6534b352c0e6bd856a566e03ff788f107191c2d835863570b2",
+        "modified": false,
+        "license": "OFL-1.1",
+        "commit": "66928797f271fed5ee428544e7229685e2d90127",
+        "source_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/shipporimincho/ShipporiMincho-Regular.ttf",
+        "license_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/shipporimincho/OFL.txt"
+      },
+      {
+        "path": "source/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf",
+        "family_alias": "Holiday Sans",
+        "weight": "400",
+        "bytes": 4669688,
+        "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01",
+        "modified": false,
+        "license": "OFL-1.1",
+        "commit": "66928797f271fed5ee428544e7229685e2d90127",
+        "source_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/BIZUDPGothic-Regular.ttf",
+        "license_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/OFL.txt"
+      },
+      {
+        "path": "source/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
+        "family_alias": "Holiday Sans",
+        "weight": "700",
+        "bytes": 4640596,
+        "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90",
+        "modified": false,
+        "license": "OFL-1.1",
+        "commit": "66928797f271fed5ee428544e7229685e2d90127",
+        "source_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/BIZUDPGothic-Bold.ttf",
+        "license_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/bizudpgothic/OFL.txt"
+      },
+      {
+        "path": "source/fonts/spacegrotesk/SpaceGrotesk[wght].ttf",
+        "family_alias": "Holiday Number",
+        "weight": "300 700",
+        "bytes": 136676,
+        "sha256": "acad6de1fc93436f5c0f1f4137751ef04f1aea3063e7036535970ffcfbd79f72",
+        "modified": false,
+        "license": "OFL-1.1",
+        "commit": "66928797f271fed5ee428544e7229685e2d90127",
+        "source_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/spacegrotesk/SpaceGrotesk%5Bwght%5D.ttf",
+        "license_url": "https://raw.githubusercontent.com/google/fonts/66928797f271fed5ee428544e7229685e2d90127/ofl/spacegrotesk/OFL.txt"
+      }
+    ]
+  },
+  "assets": "Self-authored explanatory inline SVG; no third-party photographs/trademarks or image API",
+  "content_status": "Fictional workshop plan; dates/venue/cost/participants undecided. No performed-workshop, safety-performance or procedural claim",
+  "page_count": 6,
+  "editability": "HTML/SVG/CSS/JavaScript",
+  "pptx_generated": false,
+  "backend": "Original zero-framework HTML authoring with Python stdlib packaging only; no npm/API/artifact-tool",
+  "preview_canvas": {
+    "width": 1600,
+    "height": 1000
+  },
+  "qa_scope": "Necessary build; representative first views; original1to2 navigation; cover targeted orphan correction. No all-page review/scoring/ZIP rerun."
+}

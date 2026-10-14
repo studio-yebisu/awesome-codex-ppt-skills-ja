@@ -1,0 +1,27 @@
+--- upstream/example navigation and rotate overlay
++++ source/chrome.ja.html
+@@ -1,10 +1,10 @@
+ <!-- Navigation -->
+ <div class="nav">
+-  <button id="prev" aria-label="Previous">&#8592;</button>
++  <button id="prev" aria-label="前のページ">&#8592;</button>
+   <div class="dots" id="dots"></div>
+-  <button id="next" aria-label="Next">&#8594;</button>
+-  <span class="counter" id="counter">1 / 5</span>
+-  <button id="fsBtn" onclick="toggleFS()" aria-label="Fullscreen">&#x26F6;</button>
++  <button id="next" aria-label="次のページ">&#8594;</button>
++  <span class="counter" id="counter">1 / 6</span>
++  <button id="fsBtn" onclick="toggleFS()" aria-label="全画面">&#x26F6;</button>
+ </div>
+ 
+ <!-- Rotate-to-landscape hint for portrait phones -->
+@@ -15,7 +15,7 @@
+     <rect x="5" y="2" width="14" height="20" rx="2.5" />
+     <line x1="12" y1="18.5" x2="12.01" y2="18.5" />
+   </svg>
+-  <h2>Rotate your device</h2>
+-  <p>This deck is designed for landscape viewing. Turn your phone sideways to continue.</p>
++  <h2>端末を横向きに</h2>
++  <p>横向きの画面でご覧ください。端末を横にすると、続きを表示します。</p>
+ </div>
+ 

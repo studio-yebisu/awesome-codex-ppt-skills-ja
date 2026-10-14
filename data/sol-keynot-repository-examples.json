@@ -1,0 +1,66 @@
+[
+  {
+    "id": "keynot-showcase",
+    "title": "紙と、インクの休日。",
+    "repository": "shawnzam/keynot",
+    "skill_repository": "shawnzam/keynot",
+    "upstream_commit": "d1f9e449ddb89da707b489cb69c520a64975b47c",
+    "fork_id": "keynot-ja",
+    "page_count": 6,
+    "format": "html",
+    "preview_kind": "html",
+    "preview_canvas": {
+      "width": 1600,
+      "height": 1000
+    },
+    "runtime": "Original examples/keynot-for-zombies.html inline JS; 100vw×100vh viewport slides, circular0-based cur, 1-based #slide-N deep-link, session persistence, dots, auto-hide, swipe, fullscreen. Appended bridge only.",
+    "style": "原典Keynot brand extraction × 明朝・紙・黒と細い赤",
+    "use_case": "架空の活版ワークショップ企画",
+    "preview": "examples/repositories/keynot-showcase/index.html",
+    "cover": "examples/repositories/keynot-showcase/render/slide-01.png",
+    "interior": "examples/repositories/keynot-showcase/render/slide-02.png",
+    "artifact_download": "examples/repositories/keynot-showcase/index.html",
+    "source_download": "downloads/keynot-example-ja.zip",
+    "fork_download": "downloads/keynot-ja.zip",
+    "input": "examples/repositories/keynot-showcase/input/BRAND.md",
+    "input_data": "examples/repositories/keynot-showcase/input/brand-record.json",
+    "prompt": "examples/repositories/keynot-showcase/PROMPT.md",
+    "prompt_text": "# 自分の題材へ置き換える依頼文\n\nshawnzam/keynot、固定commit d1f9e449ddb89da707b489cb69c520a64975b47cのSKILLとexamples/keynot-for-zombies.htmlを使い、input/BRAND.mdの独自ブランドを抽出して、日本語6枚「紙と、インクの休日。」を作ってください。題材は架空の活版印刷ワークショップ企画です。日時・会場・費用・参加人数は未定。実施実績・制作操作の指示・安全性能の実証を発明しません。\n\n原典Step1で正確なhex、serif/sansの組、使用比率、版式、文字だけのwordmarkルールを先に記録し、Step2の元HTML shell/CSS/controllerを使ってください。元のinline JSを一つの単位として保ち、go()の循環算術、const slides、hash/session、dots、1.8秒auto-hide、swipe、fullscreenを既成の別shellへ差し替えません。親の同一origin0-based yebisu-slide/pageは末尾の小adapterだけにし、差分を残します。\n\nShippori明朝の大見出し、BIZ UDPGothic本文、Space Groteskの小さい英数字を、既存公式固定の実TTF/OFLから使います。CDNをinline fontへ置換し、紙色/黒/薄い赤のaccentと大きな余白を主役にしてください。活字/紙/ローラーは必要な自作SVGで説明し、split-panel/approach rows/large quote/feature bars/closeの構成を変えます。外部写真・商標・API、角丸カードの反復は不要です。\n\n完成物は単一HTML、代表PNG、原典原本/局所diff、入力/依頼/再生成ソース、MIT/OFL、PROVENANCE、日本語SKILL/SOURCE、一式ZIP。確認は必要な梱包buildと初回表紙/主要内部頁、元navigation1→2、短いSKILL quick_validateのみ。全頁詳細検査・独立採点・全ZIP再実行は不要です。\n\n他の題材にする場合はBRAND.mdの色・字体・声とMANUSCRIPT.mdを置き換え、原典の版式から頁の一つの役目に合う構成を選び直してください。\n",
+    "provenance": "examples/repositories/keynot-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/keynot-showcase/QA.json",
+    "guide": "examples/repositories/keynot-showcase/README.md",
+    "titles": [
+      "紙と、インクの休日。",
+      "ひと文字から、はじまる。",
+      "選ぶ。並べる。刷る。",
+      "余白も、刷らない場所のかたち。",
+      "紙とインクを、見比べる。",
+      "持ち帰るのは、自分の一枚。"
+    ],
+    "notes": [
+      "架空の活版ワークショップ案。日時・会場・費用・参加人数は未定。",
+      "字の形・余白・残したい言葉を眺める体験案。図は自作の説明記号。",
+      "順序01–03は体験案。制作操作・安全手順の指示や実施実績ではありません。",
+      "紙の中の余白を比較する説明図。実物・印刷結果の写真ではありません。",
+      "紙と刷り跡の観察案。ローラーは自作の説明SVG。",
+      "持ち帰る一枚の体験案。実施実績・安全性能を実証した主張はありません。"
+    ],
+    "sample_notice": "架空企画。日時/会場/費用/参加人数は未定。操作指示・実施実績・安全性能の実証を発明していません。",
+    "method": "Original Keynot brand extraction from independent BRAND.md → deck architecture → original example full CSS and deck/slide/nav/rotate/print shell → Japanese content/layout overrides → untouched complete inline controller (circular go/hash/session/dots/reveal/swipe/fullscreen/auto-hide) + appended same-origin bridge → self-contained inline-font HTML.",
+    "navigation": "native-runtime-bridge",
+    "editability": "html_svg",
+    "editable_features": [
+      "html_text",
+      "svg",
+      "css_motion"
+    ],
+    "status": "light_check_complete",
+    "execution_status": "light_check_complete",
+    "preview_notice": "元Keynot例CSS/inline JSを実使用。字体・CSS・JS・MIT/OFL内包の単一HTML。編集はHTML/SVG/CSS、PPTX生成なし。",
+    "representative_previews": [
+      "examples/repositories/keynot-showcase/render/slide-01.png",
+      "examples/repositories/keynot-showcase/render/slide-02.png"
+    ],
+    "preview_image_notice": "表紙とsplit-panelの代表PNG2枚。全頁PNG・詳細検査は未実施。"
+  }
+]
