@@ -1,61 +1,32 @@
 ---
-name: guizang-ppt-skill-ja-entry
-description: 雑誌とSwissのレイアウトを日本語で制作するときに使う。op7418/guizang-ppt-skillの原典方式を使い、作例の作風を自分の題材へ展開する。
+name: guizang-ppt-skill-ja
+description: 雑誌風・Swiss風の日本語HTMLスライドを、Guizangの実際のテンプレートで制作する。Guizangの作例や日本語版を指定されたときに使う。
+metadata:
+  license: AGPL-3.0
+  upstream: https://github.com/op7418/guizang-ppt-skill
+  upstream_commit: c91369c449d34755d320a8b81d0734000d99d1ab
 ---
 
-# 雑誌とSwissのレイアウト
+# Guizang 日本語版
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
+日本語の企画・導入提案は [references/japanese-business-workflow.md](references/japanese-business-workflow.md) を読む。MagazineとSwissの選定、入力、組版、講稿、実テンプレートの検証を扱う。
 
-## 元の方式で作る
+元の [SKILL.upstream.md](SKILL.upstream.md) を読む。選んだStyle A/Bに必要な参照だけを読み、**assets/template.html または assets/template-swiss.html を実際にコピーして内容を挿入する**。別の共通レンダラーへ置き換えない。Swissは元のS01–S22の登録版式を保持する。
+
+日本語の内容を作り、langをjaにする。中国語用のNoto SC指定はNoto Sans JP / Noto Serif JPへ変更する。英字の指定フォント、テーマ色、レイアウト、WebGL、Motion、ページ制御は保持する。文の意味で改行し、長い日本語の見出しは字号とフレームを調整する。ローカルの日本語フォントはreferences/japanese-fonts.mdを参照する。
+
+上流の「見出しだけ変えた別スタイル」を作らない。元のテンプレートとの差分と出力をSOURCE.jsonに基づいて記録する。スライドIDと講稿を一対一に対応させ、scripts/validate-presenter-mode.mjsを実行する。Swissではscripts/validate-swiss-deck.mjsも実行する。ブラウザーで実表示・翻ページ・字形を確認する。
+
+このフォークとテンプレート派生物のコードはAGPL-3.0。LICENSEを保持し、改変ソースと対応する配布元を用意する。MotionはMIT、LucideはISC、書体はOFLの原文を個別に保持する。カタログのCC0をこのスキルへ適用しない。
+
+## 単体の本文から使う
+
+この本文は `skill-forks/guizang-ppt-skill-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/op7418/guizang-ppt-skill/tree/c91369c449d34755d320a8b81d0734000d99d1ab
 
-- https://github.com/op7418/guizang-ppt-skill/blob/c91369c449d34755d320a8b81d0734000d99d1ab/README.md
-- https://github.com/op7418/guizang-ppt-skill/blob/c91369c449d34755d320a8b81d0734000d99d1ab/SKILL.md
-- https://github.com/op7418/guizang-ppt-skill/blob/c91369c449d34755d320a8b81d0734000d99d1ab/LICENSE
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `guizang-ppt-skill-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-元HTMLテンプレートに題材別本文を挿入。元ページ制御・演出を維持し、日本語字形・講稿・構図を調整。
-
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-- 原典のスキルを読めるコーディングエージェント
-- 各作例のPROVENANCE.jsonに記録した制作環境
-- Noto Sans JP（PowerPointでの表示）
-
-
-
-## 日本語で魅力ある資料へ
-
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
-
-## この作例を自分の題材へ
-
-作例: 週末の汐見港町 回遊企画提案
-
-$guizang-ppt-skill-ja を使ってください。
-
-「週末の汐見港町 回遊企画提案」をguizang-ppt-skill-jaで日本語の7枚にしてください。
-input/data.jsonを数値・事実・仮定の正本とします。読者：架空の商店会と案内スタッフ。7分の企画説明。
-構成：週末の汐見港町 → 対象者と体験 → 4時間の徒歩行程 → 集客と、次の店への案内 → 4日間の試行と運営 → 試行の測り方 → 次の判断。
-出力：Magazine / Ink Classicの元テンプレートを使用したHTML一式と講稿。
-単位・比較期間を揃え、仮説と事実、目標と実績を区別。日本語字形と改行を実表示で確認。架空のサンプルと明記し、原典・条件・制作ソースを保持。実施した検証だけを記録してください。
-
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: op7418 / 原典条件: AGPL-3.0
+原作者: op7418 / 原典条件: AGPL-3.0。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
 - https://github.com/op7418/guizang-ppt-skill/blob/c91369c449d34755d320a8b81d0734000d99d1ab/LICENSE
-
-原文LICENSE・NOTICEと素材・依存物の条件を保持する。
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。

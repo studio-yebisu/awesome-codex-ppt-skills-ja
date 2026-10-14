@@ -20,6 +20,12 @@ def main():
                 by_id[c['id']] = c
     for fragment in sorted((ROOT / 'data').glob('sol-*-repository-examples.json')):
         for c in load(fragment.relative_to(ROOT)):
+            # Parallel producers write their fragments while exports/packages finish.
+            # Keep the live site on completed files until that case is ready.
+            required=['qa','artifact_download','source_download','fork_download','cover','preview']
+            if not all(c.get(key) and (ROOT/c[key]).is_file() for key in required):
+                print('Deferred unfinished production fragment: '+c['id'])
+                continue
             by_id[c['id']] = c
     cases = list(by_id.values())
     for c in cases:

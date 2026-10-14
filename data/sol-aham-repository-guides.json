@@ -1,0 +1,73 @@
+[
+  {
+    "repository": "Aham-AIAPP/aham-ppt",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_layout_functions_svg_native_conversion",
+    "case_ids": [
+      "aham-showcase"
+    ],
+    "summary_ja": "原典の凍結座標layoutIDとSVG-native converterで日本語4枚の架空ワークショップ案。",
+    "requirements": [
+      "Python",
+      "python-pptx",
+      "CairoSVG（native経路ではPNG fallback不要）"
+    ],
+    "steps": [
+      "入力とlayoutIDを決める",
+      "原典部品でSVGを生成する",
+      "native wrapperでPPTXへ変換",
+      "初回表示と閲覧PNG/PDFを出す"
+    ],
+    "commands": [
+      "pip install -r upstream/requirements.txt",
+      "python generate.py"
+    ],
+    "source_refs": [
+      {
+        "path": "SKILL.md",
+        "sha256": "d31e1f3f6158a1fc9818132908d55f28b2b8944a60a1eb0567fccb5cdb7aece5",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/SKILL.md"
+      },
+      {
+        "path": "references/layout-library.md",
+        "sha256": "2cb076716e20e4a50aea542df13fa0b964a1892368ef12fc3b775506fa1e41dd",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/references/layout-library.md"
+      },
+      {
+        "path": "assets/components/layouts.py",
+        "sha256": "978f3bce1c6fa5f2528d3a56a0f92b7b31455b5285f4a90d804457d3904d50ed",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/layouts.py"
+      },
+      {
+        "path": "assets/components/themes.py",
+        "sha256": "8be944b838a9f2505b148bb65c92d2c3026e1962834412dcc2dcdb45a5b1c7c3",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/themes.py"
+      },
+      {
+        "path": "assets/components/structures.py",
+        "sha256": "ed5fcb6dd3ce3380ee8755277e3eb47a01bb8a3dd384449e43e18fd10a8c9ac1",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/structures.py"
+      },
+      {
+        "path": "assets/svg_to_pptx_wrapper.py",
+        "sha256": "d6d2639a43d4c4a160709317e4f7ad6c0a13bebc64d341ae702c2c0452edbdaf",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/svg_to_pptx_wrapper.py"
+      },
+      {
+        "path": "assets/svg_to_pptx/LICENSE_NOTE.md",
+        "sha256": "7f7f384d907c4a280f1b0e5c184b5336ae94f14e261f2a31b97bb62410fa95dd",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/svg_to_pptx/LICENSE_NOTE.md"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "4c770fc239092d3d2f1f10ff8ea4982fcb202de2d8bda9a0b61503fe19ffef1f",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/LICENSE"
+      }
+    ],
+    "upstream_commit": "c2b4ece69bbac777557934f981457c1f98c2b73f",
+    "license": "MIT",
+    "skill": "skill-forks/aham-ja/SKILL.md",
+    "guide": "examples/repositories/aham-showcase/README.md"
+  }
+]

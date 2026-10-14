@@ -1,0 +1,90 @@
+import { z } from "zod"
+import { IconNameSchema, TagSchema } from "./shared"
+import type { ComponentAliasSpec, ComponentTraits } from "./types"
+import type { DesignStory } from "../../design-story"
+
+const StateSchema = z
+  .object({
+    kicker: z.string().optional().describe("Tiny line above the state name, in the deck's own language."),
+    title: z.string().min(1).describe("What this state is — a period, a version, a way of working."),
+  })
+  .strict()
+
+const RowSchema = z
+  .object({
+    label: z.string().min(1).describe("What this row measures."),
+    icon: IconNameSchema.optional().describe("A symbol before the row's name."),
+    note: z.string().min(1).optional().describe('A short line under the name, such as where the figures come from: "CNESA estimate".'),
+    from: z.string().min(1).describe("The value in the starting state, written as it should read."),
+    to: z.string().min(1).describe("The value in the ending state, written as it should read."),
+    unit: z.string().optional().describe("Unit printed after both values, in smaller type."),
+    change: z.string().optional().describe("The move itself, in the words the deck uses for it."),
+    tag: TagSchema.optional().describe(
+      "What this measure is, in a few words printed as a small tag after its values, such as 新增 or New. Set quiet on a tag that says nothing changed.",
+    ),
+    emphasis: z
+      .boolean()
+      .optional()
+      .describe("Marks the one measure the page is about: its row is set apart and its tag fills in the emphasis colour. At most one row."),
+  })
+  .strict()
+
+export const schema = z
+  .object({
+    type: z.literal("from_to"),
+    /** 判据句：两个状态（前后、现状与目标、旧法与新法）在同一批指标上逐行
+     * 对齐，每行都能给出两个值时用。两侧比的是不同的东西用 comparison，
+     * 一列数字自己成立用 kpi_cards，中间过程重要用 steps。到达的一侧整块
+     * 反色填满。 */
+    from: StateSchema.describe("Where things start."),
+    to: StateSchema.describe("Where things end up. This is the side that carries the fill."),
+    rows: z
+      .array(RowSchema)
+      .min(3, "from_to.rows needs at least 3 rows — one or two measures are a `kpi_cards` pair, not a shift")
+      .max(6, "from_to.rows accepts at most 6 rows — a seventh leaves each row too short for its own number")
+      .describe("3-6 measures, the same ones on both sides, in the order they should be read."),
+    /** 行名那一列的表头，如「指标」。 */
+    label_column: z
+      .string()
+      .optional()
+      .describe('The header over the measures\' names, such as "指标" or "Measure".'),
+    /** 两侧之间的跨度，如「12 个月」，画在箭头下方。 */
+    span: z.string().optional().describe("What separates the two states — a duration, a release, a decision. Printed under the arrow."),
+  })
+  .strict()
+  .superRefine((c, ctx) => {
+    const marked = c.rows.flatMap((row, i) => (row.emphasis === true ? [i] : []))
+    if (marked.length > 1) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["rows", marked[1]!, "emphasis"],
+        message: `from_to marks ${marked.length} rows with emphasis, and a marked row singles out one. Keep emphasis on the measure the page is about.`,
+      })
+    }
+  })
+  .describe(
+    "Two states of the same thing, measured on the same rows, with an arrow between them. Use from_to when " +
+      "every row has a value on both sides and the move between them is the argument. Use `comparison` when " +
+      "the two sides are different things rather than the same thing twice, `kpi_cards` when one column of " +
+      "numbers stands on its own, and `steps` when what happens in between matters more than the endpoints."
+  )
+
+export const aliases = {
+  block: { before: "from", after: "to", items: "rows" },
+  items: [{ itemsKey: "rows", aliases: { title: "label", name: "label", before: "from", after: "to", delta: "change" } }],
+} satisfies ComponentAliasSpec
+
+export const traits = {
+  stretchable: false,
+  scalable: false,
+  fullBody: false,
+  evidence: false,
+} as const satisfies ComponentTraits
+
+export const story: DesignStory = {
+  name: "Shift",
+  story: "One table: the measures named once down the left, a column for each state, and an arrow in the gutter between them. The opening and closing columns of a ledger, set against each other.",
+  positioning: "Choose it when both states carry a value on every row and the size of the move is the point. Use comparison when the two sides are different things rather than one thing twice.",
+  audience: "Readers who need to see how far something moved, row by row.",
+  notFor: "Two different subjects set against each other, which belong in comparison.",
+}

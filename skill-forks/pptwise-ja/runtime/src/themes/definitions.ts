@@ -1,0 +1,583 @@
+import type { BackgroundSpec, BrandConfig, Slide } from "@/ir"
+import type { DesignStory } from "../design-story"
+import { PptwiseError } from "../errors"
+import type { MotifId } from "../motifs/types"
+import { hasExactWidthTable, resolveFontFace } from "../render/fonts"
+import { hasTakeoverRenderer } from "../render/image-pages"
+import { contrastRatio } from "../render/ink"
+import { getLayout, type LayoutParamDeclaration } from "../layouts/registry"
+import { REGISTERED_THEMES } from "./registered-themes"
+import { foldedFaceIdMessage } from "./retired-ids"
+import {
+  StructuralThemeFileSchema,
+  ThemeFileSchema,
+  type BuiltinThemeDeclaration,
+  type Menu,
+  type MenuEntry,
+  type EmphasisTreatment,
+  type MenuParamValue,
+  type ThemeFile,
+} from "./schema"
+import { THEME_OCCASIONS, type Occasion } from "./occasions"
+import type { StyleTokens } from "./tokens"
+import { BUILTIN_THEME_FILES, CANONICAL_THEME_IDS, resolveThemeId, type CanonicalThemeId } from "./index"
+
+/**
+ * A theme = distributable bundle: `style` (style tokens) + `brand` (brand
+ * frame) + affinity tags (filled in W4).
+ *
+ * `id` is a plain `string`, not `CanonicalThemeId` — the 24 built-ins satisfy
+ * this (`CanonicalThemeId` is a subtype of `string`), but `registerTheme`
+ * below (W3 task 4's SDK registration seam) must also accept ids outside that
+ * closed union.
+ */
+export interface ThemeDefinition {
+  id: string
+  label?: string
+  style: StyleTokens
+  brand: BrandConfig
+  tags: readonly string[]
+  occasions?: readonly Occasion[]
+  identity?: "low" | "medium" | "high"
+  /**
+   * The theme's design story: the voice it speaks in, when to reach for it,
+   * and when not to. Public copy — the gallery and the docs read it.
+   */
+  story?: DesignStory
+  /** How this theme strikes a `**marked**` run. `undefined` equals `"tint"`. */
+  emphasis?: EmphasisTreatment
+  /** The theme's semantic page menu: one face per served kind. Authoritative. */
+  menu: Menu
+  /** One registered motif id. `undefined` means the theme has no motif. */
+  motif?: MotifId
+  motifParameters?: { intensity?: "subtle" | "normal" }
+}
+
+/**
+ * Built-ins compile from the same v2 menu the public contract uses. Their
+ * declaration type additionally permits internal constructor metadata (the
+ * theme-wide motif anchor) that public files cannot express.
+ */
+export function compileBuiltinTheme(file: BuiltinThemeDeclaration): ThemeDefinition {
+  assertMenuContract(file.id, file.menu)
+  const record = THEME_OCCASIONS[file.id]
+  return {
+    id: file.id,
+    label: file.label,
+    style: file.style,
+    brand: file.brand ?? {},
+    tags: record.occasions,
+    occasions: record.occasions,
+    identity: record.identity,
+    story: file.story,
+    emphasis: file.emphasis,
+    menu: file.menu,
+    motif: file.motif?.id,
+    motifParameters: file.motif?.params,
+  }
+}
+
+export const THEME_DEFINITIONS: Record<CanonicalThemeId, ThemeDefinition> = Object.fromEntries(
+  CANONICAL_THEME_IDS.map((id) => [id, compileBuiltinTheme(BUILTIN_THEME_FILES[id])]),
+) as Record<CanonicalThemeId, ThemeDefinition>
+
+// ── Theme compilation and the SDK registration seam ──────────────────────
+//
+// Two ways a theme reaches the render chain:
+//
+// - By value. `compileThemeDefinition` turns a v2 file into a definition and
+//   hands it back. The CLI does this for a deck or workspace theme file and
+//   passes the object down as the `theme` option of every entry point.
+//   Nothing is stored, so nothing lingers after the file changes and two
+//   concurrent requests can hold different definitions under one id.
+// - By id. `registerTheme` installs a definition for the life of the
+//   process, next to the factory presets, for an embedder that configures
+//   its own preset shelf once at startup. It is process-level configuration,
+//   never per-request state: it refuses an id that is already installed and
+//   there is no replace-in-place channel. An entry point handed only an id
+//   reads this shelf exactly once, through `resolve-ir-theme.ts`, and hands
+//   the definition down from there.
+
+/**
+ * Reduce a `BackgroundSpec` to one representative hex color — a color spec
+ * is already one; a gradient's `from` stop stands in for the whole band (see
+ * `svg/full-slide-svg.tsx`'s own copy of this same function for the fuller
+ * gradient/asset rationale).
+ *
+ * Deliberately duplicated (byte-identical logic) from `svg/full-slide-svg.tsx`'s
+ * exported `resolveBackgroundHex` rather than imported: that file already
+ * imports back from this one (`getThemeDefinition`), and it further pulls in
+ * the render-orchestration subtree (`branding.tsx`/`layout-selection.ts`/
+ * `motif-selection.ts`, confirmed via `npx madge --circular`) — importing it
+ * here would fold that whole subtree into a cycle with this foundational
+ * theme-registration module just to reuse a 3-line pure function. `ink.ts`'s
+ * own `contrastRatio` below makes the identical call against
+ * `deck-audit.ts`'s copy for an analogous reason (see that file's header
+ * comment: "render code must never import from the audit package;
+ * dependency direction is render→util, not the reverse") — this is the same
+ * discipline applied to the mirror-image direction (a low-level
+ * registration module must not import the high-level render orchestrator).
+ * Keep in sync with `full-slide-svg.tsx`'s copy if the reduction rule ever
+ * changes.
+ */
+function resolveBackgroundHex(spec: BackgroundSpec, surfaceFallback: string): string {
+  if (spec.kind === "color") return spec.value
+  if (spec.kind === "gradient") return spec.from
+  return surfaceFallback
+}
+
+/**
+ * Registration-time contrast floor (backlog-sweep task I2, controller-
+ * adjudicated): `colors.text`/`colors.muted` must clear 3.0:1 — the WCAG
+ * large-text floor — against each checked slide type's own resolved default
+ * background (same reduction `full-slide-svg.tsx` itself paints with,
+ * {@link resolveBackgroundHex}). Below 3.0 a token is unreadable at *any*
+ * font size, not just body text, which is the same "always broken, no
+ * legitimate design reading it as intentional" bar this function's 6
+ * existing throw checks already hold layout ids to.
+ *
+ * Deliberately *not* the 4.5:1 body-text floor: a real gray-scale design can
+ * legitimately land in [3.0, 4.5) and should not be hard-rejected at
+ * registration — that higher bar is a theme author's own self-audit
+ * concern, already covered by `full-matrix-contrast.test.ts`'s
+ * `colors.muted contrast` suite for the 24 built-ins (all measure >= 4.5
+ * there today).
+ */
+const CONTRAST_FLOOR = 3.0
+
+/**
+ * Slide types this check actually walks — `"chapter"` is deliberately
+ * excluded, same as `full-matrix-contrast.test.ts`'s `colors.muted contrast`
+ * suite (see that block's own comment). Verified by reading, not assumed:
+ * every one of the 8 chapter layouts (`chapter-*.tsx`) imports
+ * `accessibleInk`/`readableOn` from `../render/ink` and routes *both*
+ * `colors.text` and `colors.muted` through it before ever painting a fill —
+ * none paints either token raw against `ctx.defaultBg`. This isn't a
+ * per-theme coincidence this function would need to re-verify per
+ * registration: `registerTheme` can only curate a subset of *already
+ * existing* layouts ("a theme never ships new render code", this
+ * function's own doc comment above) drawn from that same shared, fixed
+ * chapter-layout set — so the raw-token-vs-chapter-background pairing
+ * this check would otherwise measure is structurally never what actually
+ * renders, for any theme this function could ever accept, not just the 13
+ * built-ins. A probe against all 24 built-ins' real tokens confirms this is
+ * load-bearing, not theoretical: `thesis`/`homeroom`/`brief` are the
+ * 3 builtins whose `defaultBackgrounds.chapter` intentionally diverges from
+ * their own `colors.bg` (a dark divider tone, see {@link resolveBackgroundHex}'s
+ * own doc comment) — checking `chapter` here would hard-reject `colors.text`
+ * and/or `colors.muted` for all 3 of them (measured 1.00:1/2.41:1/2.23:1 for
+ * text, 3.26:1/1.18:1/1.46:1 for muted, against their own chapter
+ * background) despite every one of them rendering correctly today, precisely
+ * because their chapter layouts never read these tokens raw.
+ */
+const CONTRAST_CHECKED_SLIDE_TYPES = ["cover", "content", "ending"] as const
+
+/**
+ * Throws {@link PptwiseError} the moment any of `style.colors.text`/
+ * `style.colors.muted` falls below {@link CONTRAST_FLOOR} against a
+ * {@link CONTRAST_CHECKED_SLIDE_TYPES} slide type's own resolved default
+ * background — see that constant's doc comment for the 3.0 rationale and
+ * {@link CONTRAST_CHECKED_SLIDE_TYPES}'s for why `chapter` is out of scope.
+ *
+ * Exported so a test can sweep it directly against the 24 built-ins. They
+ * compile from trusted in-package declarations instead of entering through
+ * the public registration seam, so this direct sweep locks the same floor.
+ */
+export function assertContrastFloor(id: string, style: StyleTokens): void {
+  for (const slideType of CONTRAST_CHECKED_SLIDE_TYPES) {
+    const bg = resolveBackgroundHex(style.defaultBackgrounds[slideType], style.colors.surface)
+    for (const token of ["text", "muted"] as const) {
+      const ratio = contrastRatio(style.colors[token], bg)
+      if (ratio < CONTRAST_FLOOR) {
+        throw new PptwiseError(
+          `theme "${id}" colors.${token} has a contrast ratio of ${ratio.toFixed(2)}:1 against its "${slideType}" background (${bg}) — must be at least ${CONTRAST_FLOOR.toFixed(1)}:1`,
+        )
+      }
+    }
+  }
+  for (const token of ["text", "muted"] as const) {
+    const ratio = contrastRatio(style.colors[token], style.colors.surface)
+    if (ratio < CONTRAST_FLOOR) {
+      throw new PptwiseError(
+        `theme "${id}" colors.${token} has a contrast ratio of ${ratio.toFixed(2)}:1 against colors.surface (${style.colors.surface}). It must be at least ${CONTRAST_FLOOR.toFixed(1)}:1`,
+      )
+    }
+  }
+  // A theme names `emphasisInk` when its accent cannot separate from its own
+  // text ink, so the token is a deliberate second ink and is held to the
+  // ordinary body floor on the page it is painted on. The built-in shelf has
+  // been checked for this since it gained the token (`definitions.test.ts`),
+  // but the check lived only in that test, so a registered theme file could
+  // set `emphasisInk` to its own background and ship a marked run that is
+  // simply invisible, with nothing anywhere saying so.
+  //
+  // Only a declared value is checked. Leaving it out selects the accent,
+  // which every other rule here already measures.
+  const emphasisInk = style.colors.emphasisInk
+  if (emphasisInk !== undefined) {
+    const ratio = contrastRatio(emphasisInk, style.colors.bg)
+    if (ratio < CONTRAST_FLOOR) {
+      throw new PptwiseError(
+        `theme "${id}" colors.emphasisInk (${emphasisInk}) has a contrast ratio of ${ratio.toFixed(2)}:1 against colors.bg (${style.colors.bg}). A **marked** run is painted in this ink on that background, so it must be at least ${CONTRAST_FLOOR.toFixed(1)}:1. Leave emphasisInk out to use colors.accent.`,
+      )
+    }
+  }
+}
+
+/**
+ * `console.warn`s a single line when `stack` (a theme's `fonts.heading` or
+ * `fonts.body`) resolves — via `resolveFontFace`, the exact same resolution
+ * `full-slide-svg.tsx`'s render path uses — to a face with no exact
+ * per-character width table (`hasExactWidthTable`, `../render/fonts` ->
+ * `svg-text-layout.ts`). Not a hard rejection: an unmeasured designer font
+ * (Cambria, a theme's own custom stack, …) is a legitimate design choice,
+ * not a defect — `measureTextUnits`'s class-average envelope still sizes it,
+ * just more conservatively, with a real (if small) overflow risk on long
+ * runs. `mono` is deliberately never checked here — `measureMonoTextUnits`
+ * already sizes it with an exact per-glyph model for Consolas, the only
+ * mono face any builtin ships.
+ *
+ * This is the first `console.warn` call site in the codebase (a repo-wide
+ * grep found none) — deliberately plain, no new warning-channel
+ * abstraction: there is no registration-time warning plumbing to reuse, and
+ * `console.warn` needs none (zero API surface change, works identically on
+ * every platform this package ships to).
+ */
+/** Faces already warned about this process. The information is a property of
+ * the face, not of the theme that happens to register it, so registering
+ * dozens of themes sharing one unmeasured face (the gallery corpus does)
+ * says it once instead of once per theme. */
+const WARNED_UNMEASURED_FACES = new Set<string>()
+
+/** Test hook: lets suites assert the warning fires deterministically. */
+export function __resetUnmeasuredFaceWarnings(): void {
+  WARNED_UNMEASURED_FACES.clear()
+}
+
+function warnUnmeasuredFace(id: string, role: "heading" | "body", stack: string[]): void {
+  const face = resolveFontFace(stack, role)
+  if (!hasExactWidthTable(face)) {
+    const key = `${role}:${face}`
+    if (WARNED_UNMEASURED_FACES.has(key)) return
+    WARNED_UNMEASURED_FACES.add(key)
+    console.warn(
+      `theme "${id}" ${role} font "${face}" has no exact width table — text width estimation falls back to a conservative class-average envelope and may overflow on long text; see measureTextUnits in src/lib/svg-text-layout.ts`,
+    )
+  }
+}
+
+type ThemeFileContract = typeof ThemeFileSchema
+
+function parseThemeFile(value: unknown, schema: ThemeFileContract = ThemeFileSchema): ThemeFile {
+  const result = schema.safeParse(value)
+  if (!result.success) {
+    const detail = result.error.issues
+      .map((issue) => `${issue.path.join(".") || "(root)"}: ${issue.message}`)
+      .join("\n")
+    throw new PptwiseError(`invalid theme definition:\n${detail}`)
+  }
+  return result.data as ThemeFile
+}
+
+/** Compile the public v2 declaration into the internal theme definition. */
+function compileThemeFile(file: ThemeFile): ThemeDefinition {
+  return {
+    id: file.id,
+    label: file.label,
+    style: file.style,
+    brand: file.brand ?? {},
+    tags: file.occasions ?? [],
+    occasions: file.occasions,
+    identity: file.identity,
+    story: file.story,
+    emphasis: file.emphasis,
+    menu: file.menu,
+  }
+}
+
+interface MenuEntryLocation {
+  path: string
+  slideType: Slide["type"]
+  entry: MenuEntry
+}
+
+function menuEntryLocations(menu: Menu): MenuEntryLocation[] {
+  const content = Object.entries(menu.content).flatMap(([kind, entry]) =>
+    entry === undefined ? [] : [{ path: `menu.content.${kind}`, slideType: "content" as const, entry }],
+  )
+  return [
+    { path: "menu.cover", slideType: "cover", entry: menu.cover },
+    { path: "menu.chapter", slideType: "chapter", entry: menu.chapter },
+    ...content,
+    { path: "menu.ending", slideType: "ending", entry: menu.ending },
+  ]
+}
+
+function assertNumberParam(
+  themeId: string,
+  path: string,
+  value: MenuParamValue,
+  declaration: Extract<LayoutParamDeclaration, { type: "number" }>,
+): void {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    throw new PptwiseError(`theme "${themeId}" ${path} expected number`)
+  }
+  if (declaration.integer && !Number.isInteger(value)) {
+    throw new PptwiseError(`theme "${themeId}" ${path} expected an integer`)
+  }
+  if (declaration.min !== undefined && value < declaration.min) {
+    throw new PptwiseError(`theme "${themeId}" ${path} is ${value}, below minimum ${declaration.min}`)
+  }
+  if (declaration.max !== undefined && value > declaration.max) {
+    throw new PptwiseError(`theme "${themeId}" ${path} is ${value}, above maximum ${declaration.max}`)
+  }
+}
+
+function assertStringParam(
+  themeId: string,
+  path: string,
+  value: MenuParamValue,
+  declaration: Extract<LayoutParamDeclaration, { type: "string" }>,
+): void {
+  if (typeof value !== "string") {
+    throw new PptwiseError(`theme "${themeId}" ${path} expected string`)
+  }
+  if (declaration.values !== undefined && !declaration.values.includes(value)) {
+    throw new PptwiseError(
+      `theme "${themeId}" ${path} is "${value}". Allowed values: ${declaration.values.join(", ")}`,
+    )
+  }
+  if (declaration.minLength !== undefined && value.length < declaration.minLength) {
+    throw new PptwiseError(
+      `theme "${themeId}" ${path} has length ${value.length}, below minimum length ${declaration.minLength}`,
+    )
+  }
+  if (declaration.maxLength !== undefined && value.length > declaration.maxLength) {
+    throw new PptwiseError(
+      `theme "${themeId}" ${path} has length ${value.length}, above maximum length ${declaration.maxLength}`,
+    )
+  }
+}
+
+function assertMenuParam(
+  themeId: string,
+  path: string,
+  value: MenuParamValue,
+  declaration: LayoutParamDeclaration,
+): void {
+  if (declaration.type === "number") {
+    assertNumberParam(themeId, path, value, declaration)
+    return
+  }
+  if (declaration.type === "string") {
+    assertStringParam(themeId, path, value, declaration)
+    return
+  }
+  if (typeof value !== "boolean") {
+    throw new PptwiseError(`theme "${themeId}" ${path} expected boolean`)
+  }
+}
+
+/** Validate menu faces and every face-owned adjustable parameter before registration. */
+function assertMenuContract(themeId: string, menu: Menu): void {
+  for (const { path, slideType, entry } of menuEntryLocations(menu)) {
+    const layout = getLayout(entry.face)
+    if (!layout) {
+      const folded = foldedFaceIdMessage(entry.face)
+      throw new PptwiseError(
+        `theme "${themeId}" ${path}.face references unknown layout id "${entry.face}"${folded !== undefined ? `. ${folded}` : ""}`,
+      )
+    }
+    if (!layout.slideTypes.includes(slideType)) {
+      throw new PptwiseError(
+        `theme "${themeId}" ${path}.face layout "${entry.face}" is not valid for "${slideType}" slides`,
+      )
+    }
+    if (layout.suppressMotif === true && entry.decor?.kind === "motif") {
+      throw new PptwiseError(
+        `theme "${themeId}" ${path}.decor selects a motif but layout "${entry.face}" suppresses motifs`,
+      )
+    }
+    if (layout.kind === "takeover" && !hasTakeoverRenderer(entry.face)) {
+      throw new PptwiseError(
+        `theme "${themeId}" ${path}.face takeover "${entry.face}" has no renderer dispatcher`,
+      )
+    }
+
+    const values = Object.entries(entry.params ?? {}).sort(([left], [right]) =>
+      left < right ? -1 : left > right ? 1 : 0,
+    )
+    if (values.length === 0) continue
+    if (layout.params === undefined) {
+      throw new PptwiseError(
+        `theme "${themeId}" ${path}.params cannot set values because layout "${entry.face}" declares no adjustable parameters`,
+      )
+    }
+    for (const [name, value] of values) {
+      const declaration = layout.params[name]
+      const paramPath = `${path}.params.${name}`
+      if (declaration === undefined) {
+        throw new PptwiseError(
+          `theme "${themeId}" ${paramPath} is not declared by layout "${entry.face}"`,
+        )
+      }
+      assertMenuParam(themeId, paramPath, value, declaration)
+    }
+  }
+}
+
+/**
+ * Register a theme for the life of the process (SDK seam, not the v0.4
+ * distribution protocol). This is process-level configuration, the way an
+ * embedder extends the factory preset shelf once at startup. It is not
+ * per-request state: a theme that belongs to one deck, one request, or one
+ * file on disk is compiled with {@link compileThemeDefinition} and passed
+ * by value as the `theme` option of `validateIr`, `renderSlideSvg`,
+ * `generatePptx`, `auditDeck`, and `buildAssetBrief` instead.
+ *
+ * The input is a complete v2 theme file and nothing else: one
+ * self-contained declaration carrying style, brand, and the menu. There is
+ * no partial completeness, no inherited structure, and no registry-wide
+ * default pool to fall back on.
+ *
+ * Hard gates, in order:
+ *
+ * - the file must parse against {@link ThemeFileSchema} (which already
+ *   rejects a `style.id` that disagrees with `id`, and requires a
+ *   non-empty content-kind subset).
+ * - `id` must not collide with a built-in or an already-registered theme.
+ * - `style.colors.text`/`style.colors.muted` must each clear the
+ *   {@link CONTRAST_FLOOR} against a {@link CONTRAST_CHECKED_SLIDE_TYPES}
+ *   slide type's own resolved default background — see
+ *   {@link assertContrastFloor}.
+ * - every menu entry must name a registered layout valid for that page
+ *   type, and every parameter it sets must be declared by that face and
+ *   inside the face's own declared bounds ({@link assertMenuContract}).
+ *
+ * Also `console.warn`s (never throws) once for each of `style.fonts.heading`/
+ * `style.fonts.body` that resolves to a face with no exact width table — see
+ * {@link warnUnmeasuredFace}'s own doc comment. Fires only for a
+ * registration that clears every check above.
+ *
+ * Once registered, the theme participates in `getInstalledThemeIds`,
+ * `getThemeDefinition`, and `themes/index.ts`'s `resolveStyle`: the shelf
+ * `resolveIrTheme` reads when an entry point is handed an id and no
+ * definition. A built-in id can never be shadowed here, and a registered id
+ * is never replaced. There is no uninstall outside the test-only reset.
+ */
+export function registerTheme(input: unknown): void {
+  const file = parseThemeFile(input)
+  if ((CANONICAL_THEME_IDS as readonly string[]).includes(file.id) || REGISTERED_THEMES.has(file.id)) {
+    throw new PptwiseError(`theme "${file.id}" is already installed`)
+  }
+  installParsedThemeFile(file)
+}
+
+/**
+ * Install a theme whose id and label are internal handles, not names anyone
+ * reads: the review corpus composes one out of a source theme, a page type,
+ * and the internal name of the drawing under test.
+ *
+ * Everything the public contract checks is still checked — version, strict
+ * shape, `style.id === id`, the menu contract, the contrast floor — and only
+ * the customer naming rule stands down. The double underscore and this
+ * module's absence from `src/index.ts` are the fence: no CLI command, no
+ * SDK caller, and no theme file on disk can reach this. Drawing the
+ * exception at the source of the theme is the only place it is safe to draw
+ * it, because any exception keyed on the shape of an id can be written by a
+ * user too.
+ *
+ * The only caller is `themes/test-fixtures.ts`.
+ */
+export function __registerStructuralTheme(input: unknown): ThemeDefinition {
+  return installParsedThemeFile(parseThemeFile(input, StructuralThemeFileSchema))
+}
+
+/**
+ * Compile a complete v2 theme file into a definition the render chain can
+ * carry by value. Every gate `registerTheme` runs is run here (schema,
+ * contrast floor, menu contract, unmeasured-font warning), and nothing is
+ * written anywhere: the caller owns the returned object and hands it to
+ * `validateIr`, `renderSlideSvg`, `generatePptx`, and friends as their
+ * `theme` option. The CLI's name lookup uses this for a deck or workspace
+ * theme file, so two requests in one process can each hold a different
+ * definition under the same id without seeing each other.
+ */
+export function compileThemeDefinition(input: unknown): ThemeDefinition {
+  return compileCheckedThemeFile(parseThemeFile(input))
+}
+
+function compileCheckedThemeFile(file: ThemeFile): ThemeDefinition {
+  const def = compileThemeFile(file)
+  assertContrastFloor(def.id, def.style)
+  assertMenuContract(def.id, def.menu)
+  warnUnmeasuredFace(def.id, "heading", def.style.fonts.heading)
+  warnUnmeasuredFace(def.id, "body", def.style.fonts.body)
+  return def
+}
+
+function installParsedThemeFile(file: ThemeFile): ThemeDefinition {
+  const def = compileCheckedThemeFile(file)
+  REGISTERED_THEMES.set(def.id, def)
+  return def
+}
+
+/**
+ * Whether `id` names an installed theme: a built-in or a registered one.
+ * The same answer as `getInstalledThemeIds().includes(id)`, without listing
+ * and sorting every registered theme to give it.
+ */
+export function isInstalledThemeId(id: string): boolean {
+  return (CANONICAL_THEME_IDS as readonly string[]).includes(id) || REGISTERED_THEMES.has(id)
+}
+
+/** Every installed theme id in deterministic lexical order. */
+export function getInstalledThemeIds(): readonly string[] {
+  return [...new Set([...CANONICAL_THEME_IDS, ...REGISTERED_THEMES.keys()])].sort()
+}
+
+/**
+ * Resolve a theme id to its full definition — an SDK-registered theme first,
+ * then the built-in shelf. An id that is neither throws (`resolveThemeId`),
+ * so a misspelled theme surfaces at once instead of rendering as some other
+ * theme.
+ *
+ * Only `resolveIrTheme` (`./resolve-ir-theme.ts`) calls this on the render
+ * path, and only for a deck that supplied no definition of its own — plus
+ * the theme catalog queries (`kind-components.ts`, the gallery), which ask
+ * about installed themes rather than about a bound deck. A deck or
+ * workspace theme file never goes through here: the CLI compiles it and
+ * passes the definition by value, so this table only ever answers for
+ * factory presets and process-level `registerTheme` calls.
+ */
+export function getThemeDefinition(id: string): ThemeDefinition {
+  return REGISTERED_THEMES.get(id) ?? THEME_DEFINITIONS[resolveThemeId(id)]
+}
+
+/**
+ * The emphasis stroke declared by the theme these style tokens came from, or
+ * `undefined` when the id belongs to no installed theme.
+ *
+ * Unlike `getThemeDefinition`, an unknown id is not an error here: `buildCtx`
+ * is routinely handed a hand-built `StyleTokens` object that never came from
+ * a theme file at all (motif and layout tests), and such tokens simply
+ * declare no stroke — the same answer as an installed theme that omits the
+ * field.
+ */
+export function resolveThemeEmphasis(id: string): EmphasisTreatment | undefined {
+  const registered = REGISTERED_THEMES.get(id)
+  if (registered) return registered.emphasis
+  return CANONICAL_THEME_IDS.includes(id as CanonicalThemeId)
+    ? THEME_DEFINITIONS[id as CanonicalThemeId].emphasis
+    : undefined
+}
+
+/**
+ * Test-only: clear every registered theme. Deliberately not exported from
+ * `src/index.ts` (the public SDK barrel) — a `__`-prefixed, clearly
+ * test-only name signals the same at the call site.
+ */
+export function __resetRegisteredThemes(): void {
+  WARNED_UNMEASURED_FACES.clear()
+  REGISTERED_THEMES.clear()
+}

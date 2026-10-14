@@ -1,0 +1,177 @@
+import type { StyleTokens } from "../tokens";
+import type { BuiltinThemeDeclaration } from "../schema";
+
+/**
+ * memo（打字机决定）——2026-08-21 新增第 22 个 theme id（第 21 个结构身份）。
+ * 性格：这不是讨论，是已经写下的决定。
+ * 目标场景：决策通报、会后 leave-behind、政策落地。页脚、页码、
+ * 机构名这些 branding 在一份给人带走的备忘录上是该在的，与 deck 声明
+ * `branding: "full"` 天然搭配。搭配写在本注释与 `docs/themes`，引擎不绑定
+ * （branding 仍归 deck 声明，本主题的 `brand` 是空对象）。
+ *
+ * 暖纸三家分家（纸色 + 红怎么用 + 字族）：
+ *   - heritage 灰本白 `#F4EDE2` + 藏书票衬线，motif 是顶缘焦糖双线断口嵌章。
+ *   - vermilion 公文米白 `#F6EFE3` + 雅黑无衬线，红成面（chapter 整版
+ *     `#B02318`，banner-title 红条承白字）。
+ *   - memo 便笺纸 `#F6F1E7` + 宋体标题 + 打字机等宽眉行，红成线与字
+ *     （accent `#A63A2B` 永不成面）。
+ *
+ * 红三家纪律（与 swiss 任务书同一把尺，本主题落地的那一格）：
+ * vermilion 红成面 `#B02318` / memo 红成线 `#A63A2B` / swiss 红成边
+ * `#D7282F`。memo 的印章红只出现在 motif 双线与「MEMORANDUM」眉字，
+ * `primary` 是墨不是红，所以 banner-title 抽到时横幅是墨底白字，不是红条。
+ *
+ * 四轴：L / bottom-left / light / tight。最近邻 brief
+ * （L / BL / light / medium），岔留白轴。封面倾向 banner-title /
+ * editorial-masthead（briefing 已锁 banner-title，editorial-masthead 是
+ * 真正的边际权重：报头双线构图吃的是本主题的打字机双线，不是 vermilion
+ * 的红条）。
+ *
+ * 逐条来历（设计板 `theme-wave7/Memo.dc.html` 给死五格，其余自推，本仓库
+ * `svg/ink.ts` 的 `contrastRatio` 实测）：
+ *   - `bg` `#F6F1E7`：便笺纸。比 heritage 灰本白黄一档、比 vermilion 米白
+ *     灰一档，三张纸并排缩略图能分开。
+ *   - `surface` `#FBF8F1`：衬页，比纸底抬一档。纯白在便笺上是一块冷斑。
+ *   - `primary` `#221E18`：墨。唯一允许成面的深色。压 bg 14.72:1，白字压它
+ *     16.58:1。与 `text` 同值是故意的：备忘录的结构色就是打字的墨。
+ *   - `accent` `#A63A2B`：印章红（5.72:1），只成线与字，永不成面。
+ *   - `text` `#221E18`：墨（14.72:1）。
+ *   - `muted` `#675E51`：档案褐注脚。板上给 `#6B6255`，压 bg 5.32:1 过正文
+ *     门槛，但压 `content-matrix` 的 accent 混 16% 格底只有 4.44:1。照
+ *     journal 先例「数字赢」压深到 `#675E51`（压 mix 4.72 / 压 bg 5.66 /
+ *     压 surface 6.01）。
+ *   - `border` `#E4DFD2`：便笺栏线。
+ *   - `chartPalette` 四色：墨 / 档案蓝灰 / 牛皮褐 / 印章红（2026-10 起红排最后，见下）。蓝灰饱和度
+ *     0.15、牛皮褐 0.26，都不进蓝橙禁忌的 vivid 带。实测压 bg 14.72 /
+ *     5.72 / 6.50 / 5.09:1。白字压四格全过 4.5（people-cards 徽章底）。
+ *
+ * 语义三色压 `surface` 校准（kpi 箭头是字，callout 的 warning 是线与图标）：
+ *   - `danger` `#8B2418`：比印章红更沉的朱（8.38:1）。
+ *   - `warning` `#8A6230`：牛皮褐压深（5.12:1），只作线与图标。
+ *   - `success` `#3F5E48`：档案绿（6.81:1）。
+ *
+ * 字体：heading 是宋体，西文配 Times New Roman（2026-10 样例重做）。中文仍
+ * 走 SimSun（Windows 安全面，导出无 tofu），西文和数字走 Times New Roman：
+ * PowerPoint 按字符分槽取字，SimSun 当 `<a:latin>` 时英文和数字落在它的半角
+ * 等宽格上（每个 ASCII 字 0.5em），而 Mac 预览没有 SimSun、退到 Songti SC，
+ * 西文是 Times 一路的比例衬线，两边对不上。中文公文与 Word 的中文默认版式
+ * 都是「宋体配 Times New Roman」，设计板的 Songti SC 西文也是这一路字形。
+ * 栈写成 ["Times New Roman", "SimSun", …]：`resolveFontStack` 把 SimSun 排在
+ * 第二位，导出时 SimSun 写进 run 的 `<a:ea>`（`fonts.ts` `pairedEaFace`），
+ * 预览和 PowerPoint 的西文都是 Times New Roman，中文都是宋体。body 雅黑。
+ * mono 打头 Courier New：设计板 Courier Prime 不在 `SAFE_FONTS`，白名单里的
+ * 等宽是 Consolas / Courier New / Lucida Console，打字机头行取 Courier New
+ * （Consolas 是编程面）。等宽并未缺席，无需退化成纯双线。
+ *
+ * 圆角 2 + gapScale 0.9：咨询报告那一档的微圆，留白收到 tight（brief
+ * 是 1.0 的 medium，本主题在最近邻上只岔这一轴）。
+ *
+ * 装饰见 `../../motifs/motif-memo-motif.tsx`（顶部红双线 + Latin 等宽眉字
+ * 「MEMORANDUM」。light 档，单锚不借用。封面整片退让给 `memo-head`，章节 /
+ * 内容 / ending 仍画这一张）。
+ *
+ * 板上不做的两件（文件头记录，不进 motif）：
+ *   1. 标题「决定」二字下的重笔划线。跟随内容位置，违反恒位纪律。
+ *   2. 封面 FROM / RE 打字机落款。那是封面文案，不是页缘装饰。
+ *
+ * 四页型都走便笺纸，chapter 不整版红（红永不成面，与 vermilion 分家）。
+ *
+ * **第八波批 4（`.issues/2026-08-22-theme-redesign-wave8/batch4`）**：封面
+ * 仍锁 `memo-head`，motif 几何不动（y26/32，MEMORANDUM）。章节锁 pinOnly
+ * `issue-line-chapter`（议题 kicker，红只成字，版式不画双线）。ending 锁
+ * pinOnly `decision-close-ending`（决定两条 + 拟稿审定抄送取 subheading）。
+ * 四页 defaultBackgrounds 仍是便笺纸，角色色 hex 与 fonts 不动。
+ *
+ * **菜单分派（S1-B）**：打字机备忘录是纯文本件，hierarchy 用主次三分讲选项与从属，photo 会破掉它的纸面语域，不上，evidence 的展品页同理不上。
+ *
+ * **2026-10 样例重做（`design/rounds/2026-10-05-memo/`）**：照着定稿画成一份
+ * 打字机备忘录。封面换成 `memo-cover`（MEMORANDUM 加红双线、致发日期事由
+ * 四栏、宋体大标题、贴在纸上的附图 1、「已决定」印章），结尾换成
+ * `memo-ending`（页边栏、决定、签发栏、印章）。除 statement 外的内容页都走
+ * `memo-sheet`：左边红色宋体页边栏写页面的 `kicker`，标题和正文从 x240 起，
+ * 正文交给 memo 设定下的构图。照片按「附图 N」贴在纸上，所以 photo 和
+ * evidence 现在也上菜单，上面那条 S1-B 的裁决作废。页眉页脚归
+ * `memo-motif`。章节页没有定稿，留在 `issue-line-chapter`，statement 留在
+ * `statement`。
+ *
+ * 图表色板改为墨、档案蓝灰、牛皮褐、印章红：印章红是一页唯一的重点，原先
+ * 排在第二位，任何两个系列的图第二个系列都是红的，不管它是不是这一页要说的
+ * 那个。现在没标重点的系列先用墨、蓝灰、褐，红排到第四。色值不变，只换
+ * 顺序。
+ *
+ * **共享组件照打字稿排（2026-10，`shape.surfaces: "ruled"`）**：memo 构图之外
+ * 由共享渲染器画的页（矩阵、SWOT、编号卡、表格之类）也照一份打出来的备忘录
+ * 画，不铺卡、不画圆角，细线和留白撑结构，编号就是数字，实心块改成墨线描边，
+ * 领头的那一处是一条印章红细线，正合「红成线与字，永不成面」。卡面 `surface`
+ * 和 `radius` 不收：衬页是从便笺纸抬一档的真实卡色，不是为了装作没有卡设
+ * 的，打开后它只剩缺图垫底和热力图起色，上面压 surface 的实测照旧成立。圆角
+ * 只剩 memo 构图和图表自己的标记还在用，共享组件一律直角。
+ */
+export const MEMO_TOKENS: StyleTokens = {
+  id: "memo",
+  colors: {
+    bg: "#F6F1E7", // 便笺纸。页底，正文墨压它 14.72:1，答 4.5
+    surface: "#FBF8F1", // 衬页。卡面，正文墨压它 15.63:1，答 4.5
+    primary: "#221E18", // 墨（14.72:1，白字 16.58:1）——唯一成面的深色
+    accent: "#A63A2B", // 印章红（5.72:1），只成线与字，永不成面
+    text: "#221E18", // 墨（14.72:1）
+    muted: "#675E51", // 档案褐注脚（5.66:1）——板上 #6B6255 压 matrix 混色失守，见文件头
+    border: "#E4DFD2", // 便笺栏线。只作线，永不承字，不答文字门槛
+    danger: "#8B2418", // 沉朱（压 surface 8.38:1）
+    warning: "#8A6230", // 牛皮褐压深（5.12:1），只作线与图标
+    success: "#3F5E48", // 档案绿（6.81:1）
+    chartPalette: ["#221E18", "#4A5864", "#7A6248", "#A63A2B"], // 墨/档案蓝灰/牛皮褐/印章红（红排最后，见文件头）
+  },
+  fonts: {
+    // 打字机决定的报题是宋体，西文配 Times New Roman（见文件头）。SimSun/宋体
+    // 是 SAFE_FONTS 里的 CJK 衬线，跟在西文面后面就是 run 的东亚字体。
+    // Songti SC/STSong 留作 macOS 预览回退。
+    heading: ["Times New Roman", "SimSun", "宋体", "Songti SC", "STSong", "serif"],
+    body: ["Microsoft YaHei", "Helvetica Neue", "Arial", "system-ui"],
+    // 设计板 Courier Prime 不在 SAFE_FONTS。白名单等宽三选一，打字机头行
+    // 用 Courier New（Consolas 是编程面，不承担公文眉字）。
+    mono: ["Courier New", "Consolas"],
+  },
+  // 微圆克制 + tight 留白（brief 同圆角，留白再收一档）。共享组件照打字稿排，见文件头。
+  shape: { radius: 2, gapScale: 0.9, surfaces: "ruled" },
+  defaultBackgrounds: {
+    cover: { kind: "color", value: "#F6F1E7" },
+    chapter: { kind: "color", value: "#F6F1E7" },
+    content: { kind: "color", value: "#F6F1E7" },
+    ending: { kind: "color", value: "#F6F1E7" },
+  },
+};
+
+export const MEMO_THEME = {
+  version: 2,
+  id: "memo",
+  label: "Memo",
+  story: {
+    name: "Memo",
+    story: "Typewriter rhythm, a letterhead rule, FROM and RE lines. This is not a discussion, it is a decision that has already been written down.",
+    positioning: "Choose it for decisions, leave-behinds, and policy notes that people will read later, alone.",
+    audience: "One person writing to be held to their word, including by themselves.",
+    notFor: "Live performance, visual spectacle, or anything with many pictures.",
+    lineage: "The memorandum and the typed decision record.",
+  },
+  style: MEMO_TOKENS,
+  menu: {
+    cover: { face: "memo-cover" },
+    chapter: { face: "issue-line-chapter" },
+    content: {
+      points: { face: "memo-sheet" },
+      list: { face: "memo-sheet" },
+      comparison: { face: "memo-sheet" },
+      process: { face: "memo-sheet" },
+      data: { face: "memo-sheet" },
+      photo: { face: "memo-sheet" },
+      statement: { face: "statement" },
+      quote: { face: "memo-sheet" },
+      fact: { face: "memo-sheet" },
+      evidence: { face: "memo-sheet" },
+      hierarchy: { face: "memo-sheet" },
+    },
+    ending: { face: "memo-ending" },
+  },
+  motif: { id: "memo-motif" },
+} satisfies BuiltinThemeDeclaration;

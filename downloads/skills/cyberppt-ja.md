@@ -1,67 +1,62 @@
 ---
-name: cyberppt-ja-entry
-description: 情報を整理するPPTXを日本語で制作するときに使う。crazyykhllc-bit/CyberPPTの原典方式を使い、作例の作風を自分の題材へ展開する。
+name: cyberppt-ja
+description: CyberPPTの内容lock・画像設計見本・要素測定・PptxGenJS再構築を使い、日本語の編集可能なPowerPointを制作する。厳密な画像一致と日本語派生の可読性確認を区別し、固定見本からの再現例を参考にするときに使う。
+license: MIT
 ---
 
-# 情報を整理するPPTX
+# CyberPPTで日本語の編集可能な資料を作る
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
+Studio Yebisuの日本語派生版。原作者のMITと固定原文をupstreamに保持しています。
 
-## 元の方式で作る
+## 原典を読む
+
+- upstream/SKILL.md
+
+references/WORKFLOW.mdとreferences/recipe.jsonで、日本語5枚の実作例、原典のどの機能を使ったか、環境、入力、再現条件を読みます。
+
+## 原典から引き継ぐ制作
+
+1. 読む人、資料の目的、出典、事実と仮説、各ページの結論を決める。内容を原典のcontent lockへ固定する。
+2. 原典のスタイル参照を読み、各ページの画像設計見本を実際に生成する。公開されていないモデル名や、人の承認を推測して記録しない。
+3. 見本の要素を測り、対応を登録する。意味・数値・図の関係を落とさず、PptxGenJSで単頁ずつ再構築する。python-pptxの共通生成器へ置き換えない。
+4. 各PPTXをPowerPoint本体で描画し、原典の比較も実行する。実測のないrender bboxを、見本の値で埋めて合格扱いにしない。
+5. 日本語の字形、改行、数値と単位、要素の対応、見切れ、編集性を実表示で確認する。各ページを統合し、統合前後の描画を比較する。
+
+## 日本語派生での受け入れ
+
+今回の5枚は、原典の厳密な画像一致ゲートが未達です。その不合格とログを保持し、原典の完全なゲート通過とは呼びません。日本語の可読性と編集性を別に確認した派生例です。
+
+画像の字形差、位置・幅・高さの一致、内容の数字そのものの欠落や変化を分けて確認してください。比較の失敗を隠したり、元の閾値を下げて合格にしたりしません。条件を改訂する際は、日本語派生の方針として理由と差分を明示します。
+
+派生mergeではページ寸法と背景色を保持し、他のPowerPoint文書を閉じない処理を用います。原版とパッチを制作ソースに保持します。最終品質の確認、人による採用、外部公開は別の判断として記録します。
+
+## 固有の制作方式
+
+原典の内容lock、ImageGen設計見本、要素の測定・対応登録、PptxGenJS単頁再構築、PowerPoint描画、比較、統合を使う。日本語派生は読みやすさと編集性を確認し、原典の厳密な画像一致ゲート全頁不合格を成功へ読み替えない。画像の字形差と内容の数字の欠落は別に確認する。派生mergeの背景保持と差分を残す。再現は固定した5見本からのreplayで、新規画像生成や異なる原稿への自動再構築ではない。
+
+## 自分の原稿への変更
+
+- 先に読み手、目的、結論、必要なページ、出力形式を決める。
+- 入力の出典と数値を確認し、万円・件・%・ポイントを区別する。架空条件と評価目標を実績に見せない。
+- 日本語の見出しは意味の区切りで改行し、数字と単位が不自然に分かれないようにする。
+- Webは必要文字を収録したOFL書体を埋め込む。PowerPointは受け手の書体環境を案内し、主要な完成ファイルが開くことを確認する。
+- 再現キットは保存済みの5見本を使う固定作例の再構築です。新規画像を生成しません。異なる原稿は、新しい内容lock・見本・測定・再構築へ進めます。
+- Windows、PowerPoint、Node/PptxGenJSとPython依存が必要。使用書体は受け手の環境でも確認し、Windowsのフォント本体は配布しません。
+- 原典方式で実ファイルを生成し、全ページの本文、図、ノート、ページ移動を確認します。再生成した出力へ、元のQAをそのまま移しません。
+
+## 再現と利用条件
+
+完成例と再現キットはカタログの当該リポに掲載。環境と制約はreferences/WORKFLOW.mdに記載する。上流コードと書体の条件はupstream内の原文を保持し、カタログのCC0を上流へ適用しない。
+
+## 単体の本文から使う
+
+この本文は `skill-forks/cyberppt-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/crazyykhllc-bit/CyberPPT/tree/980e5576565f0673c67ee41b01d20ed66cb8417c
 
-- https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/LICENSE
-- https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/ppt-production.md
-- https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/quality-assurance.md
-- https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/source-analysis.md
-- https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/storyline.md
-- https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/references/visual-system.md
-- https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/build_component_signature.py
-- https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/scripts/build_content_lock.py
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `cyberppt-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-原典の内容lock、ImageGen設計見本、測定・比較スクリプトを使い、主要文字と表をPptxGenJSで再構築。厳密画像一致と日本語派生QAを分離。
-
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-- Node.js / PptxGenJS 4.0.1
-- Python / Pillow, numpy, pywin32
-- Windows / Microsoft PowerPoint
-- Yu Gothic / Yu Mincho / Times New Roman
-- 新規設計見本にはImageGen
-
-
-
-## 日本語で魅力ある資料へ
-
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
-
-## この作例を自分の題材へ
-
-作例: 商店街のイベント案内を、一つにまとめる
-
-CyberPPTの固定commitの原文と補助スクリプトを使い、日本語5枚の企画資料「商店街のイベント案内を、一つにまとめる」を作る。
-題材は架空のこもれび商店街。課題仮説、イベントの比較項目、更新担当、試行計画を説明する。実在の開催情報・実測の改善効果に見せない。
-内容をlockし、ImageGenで全ページの設計見本を作り、原典の紙色＋銅色の小売向けスタイルを採用する。設計見本からPptxGenJSで単頁ずつネイティブ再構築し、PowerPoint本体で描画する。
-原典の厳密画像一致テストは実行し、失敗結果をそのまま残す。日本語派生では字形の完全一致と可読性・編集性を区別し、要素の意味と数字を保持する。見切れ・不自然な折り返しを修正する。
-原典原文・派生差分・入力・見本・単頁・比較結果・実行ログを保存する。人間の承認や正式採用を受けたとは記録しない。
-
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: crazyykhllc-bit / 原典条件: MIT
+原作者: crazyykhllc-bit / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
 - https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/LICENSE
 - https://github.com/crazyykhllc-bit/CyberPPT/blob/980e5576565f0673c67ee41b01d20ed66cb8417c/assets/icons/tabler-outline/license.svg
-
-原文LICENSE・NOTICEと素材・依存物の条件を保持する。
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。

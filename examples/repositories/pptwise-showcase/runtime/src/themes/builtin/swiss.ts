@@ -1,0 +1,148 @@
+import type { StyleTokens } from "../tokens";
+import type { BuiltinThemeDeclaration } from "../schema";
+
+/**
+ * swiss（冷白制度）——2026-08-21 新增第 22 个 theme id（第 21 个结构身份）。
+ * 性格：机构年报的封面，红只在页缘亮一下。
+ * 目标场景：机构年报、政策汇报、审计交付。
+ *
+ * 三家报告语域分腔，不是换色：
+ *   - brief = 报告腔（藏青承结构，黄只当一把高亮尺）
+ *   - vermilion  = 公文腔（米白纸 + 正红成面，红头承白字）
+ *   - swiss      = 制度腔（冷白纸 + 硬黑即正文即色块，瑞士红成边）
+ *
+ * **红三家纪律**（与 vermilion / memo 并立，本主题只执行自己那一条）：
+ *   vermilion 红成面 `#B02318` / memo 红成线 `#A63A2B` / swiss 红成边 `#D7282F`。
+ *   swiss 的红只出现在页缘边条与小色块，永不承字成横幅。封面倾向的
+ *   left-anchor / split-diagonal 色块走 primary 硬黑，不走 accent。
+ *
+ * 四轴 L / bottom-right / light / tight。最近邻 terminal（L / BR / medium /
+ * tight），岔在装饰轴：terminal 是右缘星座链的 medium，swiss 是顶边 8px 红条
+ * 的 light。bulletin 也是 L / tight，但 meta 在 top-band、
+ * 装饰是 IKB 方块的 medium，两轴都岔开。
+ *
+ * 逐条来历（设计定稿板 `theme-wave7/Swiss.dc.html` 给死五格，surface 与
+ * chart 四色自推，本仓库 `svg/ink.ts` 的 `contrastRatio` 压 `bg #F7F7F5`
+ * 实测）：
+ *   - `bg` `#F7F7F5`：冷白纸。板上原值。
+ *   - `surface` `#FFFFFF`：制度卡纯白，从冷白纸上抬一档（brief 同形）。
+ *   - `primary` `#101010`：硬黑。即正文即色块。压 bg 17.74:1，白字压它
+ *     19.03:1。横幅、斜切、签名块走它，不走红。章节页改走冷白纸。
+ *   - `accent` `#D7282F`：瑞士红（4.62:1）。只给页缘边条与小色块，永不承字
+ *     成横幅。白字压它 4.96:1，刚过 4.5，但本主题纪律禁止把它当成横幅底。
+ *     正文 4.5 门槛的余量只有 0.12，字号掉档会翻车。
+ *   - `text` `#101010`：与 primary 同一格，制度腔就是「墨即结构」。
+ *   - `muted` `#5F5F5C`：注脚灰（5.97:1 / 压 surface 6.41:1）。
+ *   - `border` `#E3E3E0`：网格线，跟着纸底走。
+ *   - `chartPalette` 四色：瑞士红 / 硬黑 / 中灰 / 冷蓝灰。无橙，不进蓝橙
+ *     禁忌。冷蓝灰 `#4A7A8A` 饱和度 0.30，未过 vivid-blue 的 0.35 线。
+ *     实测压 bg 4.62 / 17.74 / 5.97 / 4.41:1，四格全过 3.0 装饰线。
+ *     白墨压四格 4.96 / 19.03 / 6.41 / 4.73:1，people-cards 徽章首字站得住。
+ *     两两 ΔE：红对三格 88 / 77 / 95，黑对灰 35.6、黑对蓝灰 47.4，灰对蓝灰
+ *     20.8（刚过分类色板的 20 线，靠色相分开，不是靠明度）。
+ *
+ * 语义三色压 `surface` 校准（kpi 箭头是字，callout 的 warning 是线与图标）：
+ *   - `danger` `#C41F26`：瑞士红压深一档（5.88:1）。accent 的 4.96:1 刚过
+ *     线，箭头小字要更沉才压得住。
+ *   - `warning` `#6B5A3A`：墨青铜（6.67:1），饱和度 0.30，不进 vivid orange
+ *     带。只作线与图标，不进 chartPalette。
+ *   - `success` `#2F6B52`：克制森绿（6.28:1）。
+ *
+ * 字体：heading 加粗 sans。板上 Archivo 900 落地为 Microsoft YaHei 族
+ * （字重导出只有粗/不粗两档，900 → 加粗）。圆角 0 + gapScale 1（tight，
+ * 与 terminal 同档）。
+ *
+ * 装饰见 `../../motifs/motif-swiss-motif.tsx`（顶边 8px 红条每页都画）。
+ * light 档。
+ *
+ * 第八波批 4：chapter 默认底从 primary 硬黑改为冷白纸（与 bg 同值）。
+ * 板上章节是白纸，不是整版黑。红条每页都在，是身份件。
+ *
+ * **2026-10 样例改版**（`design/rounds/2026-10-03-swiss/`，设计系统见
+ * `docs/design-swiss.md`）：
+ *   - 顶边红条收到 8px，每一页都画，右缘三格灰刻度去掉。
+ *   - 内容页统一一种头部（`grid-sheet` 的 `GridHead`）：左上红色章号加灰色
+ *     章名 15px，黑色粗体结论 34px 整行 1120 宽、以最后一行为基准，2px 黑线
+ *     y180。数据页的整条黑色标题条和「3.1」编号徽章都去掉了。
+ *   - 数据主色是黑（text），次要是两档灰，红（accent，即强调墨）每页只标
+ *     一处：作者标出的柱子、系列、表格行、数字，以及预测柱的斜线和这一页
+ *     要说的那个变化括号。红仍然不承字成横幅：能承字的色块走黑。
+ *   - 结论页 `grid-statement`、大数字页 `grid-figure`、照片页 `image-top`
+ *     的 `band: "grid"`，其余七类内容页都走 `grid-sheet`，按内容交给栅格
+ *     设定下的构图。封面、章节、收尾三张脸按板重画（章节页自带本章目录）。
+ *
+ * **菜单分派**：制度年报按章推进，七类内容页共用一张栅格正文页，按内容挑
+ * 构图。结论、大数字、照片各有自己的页。quote 不上。
+ *
+ * **共享组件照年报印刷排（2026-10，`shape.surfaces: "ruled"`）**：栅格构图
+ * 之外由共享渲染器画的页（矩阵、SWOT、编号卡、表格之类）也照印刷年报画，
+ * 不铺卡，细线和留白撑结构，编号就是数字，硬黑色块改成墨线描边，领头的那
+ * 一处是一条 2px 瑞士红线，红仍不成面、不成横幅，每页除顶边红条外只亮作者
+ * 标的那一处。卡面 `surface` 不收：制度卡纯白是从冷白纸抬一档的真实卡色，
+ * 不是为了装作没有卡设的，打开后它只剩缺图垫底和热力图起色，上面压 surface
+ * 的实测照旧成立。swiss 本来就是直角，也没有卡描边。
+ */
+export const SWISS_TOKENS: StyleTokens = {
+  id: "swiss",
+  colors: {
+    bg: "#F7F7F5", // 冷白纸。页底，正文墨压它 17.74:1，答 4.5
+    surface: "#FFFFFF", // 制度卡纯白。卡面，正文墨压它 19.03:1，答 4.5
+    primary: "#101010", // 硬黑（17.74:1）。即正文即色块，白字 19.03:1
+    accent: "#D7282F", // 瑞士红（4.62:1）——只给页缘边条与小色块，永不承字成横幅
+    text: "#101010", // 与 primary 同一格
+    muted: "#5F5F5C", // 注脚灰（5.97:1）
+    border: "#E3E3E0", // 网格线。只作线，永不承字，不答文字门槛
+    danger: "#C41F26", // 瑞士红压深（压 surface 5.88:1）
+    warning: "#6B5A3A", // 墨青铜（6.67:1），只作线与图标
+    success: "#2F6B52", // 克制森绿（6.28:1）
+    // 瑞士红 / 硬黑 / 中灰 / 冷蓝灰。无橙。冷蓝灰 sat 0.30，不是 vivid blue。
+    chartPalette: ["#D7282F", "#101010", "#5F5F5C", "#4A7A8A"],
+  },
+  fonts: {
+    // 板上 Archivo 900 → YaHei 族加粗 sans。Microsoft YaHei 打头保导出无 tofu，
+    // 也是有精确字宽表的两张脸之一（`hasExactWidthTable`）。
+    heading: ["Microsoft YaHei", "PingFang SC", "Helvetica Neue", "Arial", "system-ui"],
+    body: ["Microsoft YaHei", "PingFang SC", "Helvetica Neue", "Arial", "system-ui"],
+  },
+  // 制度直角 + tight（与 terminal 同档）。共享组件照年报印刷排，见文件头。
+  shape: { radius: 0, gapScale: 1, surfaces: "ruled" },
+  defaultBackgrounds: {
+    cover: { kind: "color", value: "#F7F7F5" },
+    chapter: { kind: "color", value: "#F7F7F5" }, // 冷白纸（第八波批 4：板上章节是白纸 + 小数编号）
+    content: { kind: "color", value: "#F7F7F5" },
+    ending: { kind: "color", value: "#F7F7F5" },
+  },
+};
+
+export const SWISS_THEME = {
+  version: 2,
+  id: "swiss",
+  label: "Swiss",
+  story: {
+    name: "Swiss",
+    story: "Cold white, a red bar along one edge, grid discipline everywhere else. It is the cover of an institutional annual report that has nothing to hide.",
+    positioning: "Choose it for transparency reports, audits, and policy briefings where the design must not distract from the accounting.",
+    audience: "A foundation, agency, or auditor reporting to the public or a board.",
+    notFor: "Warmth, celebration, or a brand that needs a personality.",
+    lineage: "Swiss typographic modernism as practiced by institutions.",
+  },
+  style: SWISS_TOKENS,
+  menu: {
+    cover: { face: "institutional-block" },
+    chapter: { face: "decimal-index-chapter" },
+    content: {
+      points: { face: "grid-sheet" },
+      list: { face: "grid-sheet" },
+      comparison: { face: "grid-sheet" },
+      process: { face: "grid-sheet" },
+      data: { face: "grid-sheet" },
+      photo: { face: "image-top", params: { band: "grid" } },
+      statement: { face: "grid-statement" },
+      fact: { face: "grid-figure" },
+      evidence: { face: "grid-sheet" },
+      hierarchy: { face: "grid-sheet" },
+    },
+    ending: { face: "resolution-ending" },
+  },
+  motif: { id: "swiss-motif" },
+} satisfies BuiltinThemeDeclaration;

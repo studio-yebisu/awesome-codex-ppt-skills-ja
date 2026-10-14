@@ -1,0 +1,1911 @@
+/**
+ * validateIr and everything it needs — split out of `./api` (P2
+ * browser-distribution wave, task 1) so the light `./validate` SDK entry
+ * (`src/validate.ts`) can import this file directly and, by simple
+ * file-level reachability, never touch `./pptx/generate` or
+ * `./render/render-slide` (react-dom/server, jszip, pptxgenjs) at all —
+ * a physical module boundary, not a bet on a bundler's cross-file
+ * tree-shaking of an unused re-export (tried first; esbuild's CJS-interop
+ * wrapper for jszip/react-dom's `require()`-based deps kept pulling their
+ * init closures into the "validate-only" bundle even though `renderSlideSvg`
+ * and `generatePptx`'s own bodies were correctly eliminated — see this
+ * task's report for the metafile trace). `./api` re-exports everything in
+ * this file unchanged, so every existing internal consumer
+ * (`src/index.ts`, `cli/commands.ts`, `svg/audit/*`, tests) keeps importing
+ * from `./api`/`../../api`/`@/api` with zero changes; `renderSlideSvg`,
+ * `generatePptx`, and their shared `checkDraftGate` helper stay defined in
+ * `./api` itself, the one file allowed to reach the render/export chain.
+ */
+import { PptwiseError } from "./errors"
+import { footerSettingIssues, OLD_IR_VERSION_ERROR, PptxIRSchema, themeIssueMessage, type PptxIR } from "./ir"
+import { listAssetReferences } from "./ir/asset-references"
+import { dataUriHead, dataUriMime, FORMAT_BY_MIME, MIME_BY_SNIFFED_FORMAT, sniffImageFormat } from "./ir/asset-sniff"
+import { normalizeComponentAliases, normalizeDeckRootAliases } from "./ir/field-aliases"
+import {
+  findOverflowVocabulary,
+  OVERFLOW_VOCABULARY_MESSAGE,
+  visitStringLeaves,
+} from "./ir/overflow-vocabulary"
+import { MARKED_COMPONENT_FIELDS, carriesMark, fieldDrawsMarks, markFieldKey } from "./ir/mark-fields"
+import { isSlideLevelPath, renameHintsFor, SLIDE_LEVEL_UNKNOWN_KEY_HINT } from "./ir/rename-hints"
+import { normalizeNarrativeShape, resolveNarrative, type NarrativeProfile } from "./narrative"
+import { CAPACITY } from "./audit/capacity"
+import { CATEGORY_FOLDING_TYPES } from "./ir/components/chart"
+import { FULL_BODY_TYPES } from "./render/component-traits"
+import { checkIrQuality, type QualityIssue } from "./render/ir-quality"
+import { footerFitIssues } from "./render/footer-marks"
+import { courseStageIssues } from "./render/course-marks"
+import { deckFonts, resolveFontStack } from "./render/fonts"
+import { deckWritesChinese } from "./lib/conf-labels"
+import { componentFace, faceAcceptedComponentTypes, resolveEffectiveFace } from "./render/layout-selection"
+import { resolvePageRenderContext } from "./render/page-context"
+import { MOTIFS_THAT_SET_THE_KICKER } from "./motifs/kicker-roles"
+import { boundaryBulletItems, boundarySlotBlocks, drawableItems, slotItemRoom } from "./layouts/boundary-content"
+import { findImageSelection } from "./layouts/find-image"
+import { bodyStatementLines } from "./layouts/minimal-shared"
+import { headingRoom, headingVerdict, type HeadingCtx, type HeadingPage } from "./layouts/heading-set"
+import { prefixOf, textRoom, type TextRoom } from "./layouts/text-room"
+import { isChineseText } from "./lib/text-script"
+import { blockTextCrowding, blocksLoss, fieldsCrowdingBlocks, headingCrowding, subheadingSet, type PageLoss } from "./render/boundary-loss"
+import { contentLoss, contentRemedy, leaveOffDropped, losesContent, PAGE_FIELD_DROPS } from "./render/content-loss"
+import { dropPhrase } from "./render/drop-marker"
+import { droppedIn, slideToSvgMarkup } from "./render/render-slide"
+import { parseSvgRoot } from "./render/serialize"
+import { IMAGE_COVER_HEADING } from "./render/image-pages"
+import { deckFigureStyle } from "./lib/figure-style"
+import { stripEmphasis } from "./render/emphasis"
+import { getLayout, type LayoutDefinition } from "./layouts/registry"
+import { CANONICAL_THEME_IDS, THEME_LABELS, THEME_STYLES } from "./themes"
+import { foldedThemeTarget, foldedThemeWarning, retiredThemeHint } from "./themes/retired-ids"
+import type { ThemeDefinition } from "./themes/definitions"
+import { resolveBoundThemeResult } from "./themes/resolve-ir-theme"
+
+export interface ValidationIssue {
+  path: string
+  message: string
+  /** 1-based slide number when the issue is scoped to a slide. */
+  page?: number
+  /**
+   * The offending slide's own `id` (`Slide.id`, `ir/index.ts`) — W5
+   * whole-branch review finding 2: the README already claimed "validation
+   * error messages reference [a slide] by [its] id"; this is what makes
+   * that true. Set by every page-scoped issue producer
+   * ({@link checkThemeMenuFaces}, {@link checkBoundaryPageContent},
+   * {@link checkBoundarySlotCapacity}, {@link checkBoundaryItemCapacity},
+   * the content-quality-gate translation in {@link validateIr}, and
+   * {@link checkDuplicateSlideIds})
+   * when the slide in question has an `id` — absent when the slide has
+   * none (bare, pre-W5 IR) or the issue is deck-level, not scoped to any
+   * single slide. {@link formatIssues} appends it in parens after the page
+   * number.
+   */
+  slideId?: string
+}
+
+export interface ValidateResult {
+  ok: boolean
+  ir?: PptxIR
+  errors: ValidationIssue[]
+  /**
+   * Human-readable "`path`: `alias` → `canonical`" entries for every
+   * deterministic field-alias rewrite `validateIr` applied before parsing
+   * (W5 task 4, `ir/field-aliases.ts`'s `normalizeComponentAliases`) — e.g. a
+   * kpi item's `title` silently adopted as `label`. Present only when at
+   * least one rewrite happened; informational, never gates `ok` on its own.
+   */
+  normalized?: string[]
+  /**
+   * Backward-compatible addition (borrow wave, Task 2 — dual-threshold
+   * severity recalibration): warn-severity {@link checkIrQuality} findings
+   * (editorial-budget codes — `missing_heading`/`long_heading`/`density`/
+   * `bullets_overflow`/`bullet_item_long`/`big_number_no_kpi`) plus
+   * {@link checkAssetReferences}'s dangling-`asset_id` findings (borrow wave,
+   * Task 2, B5 — a reference to an `assets.images` key that doesn't exist),
+   * formatted the same shape {@link formatIssues} already prints for `errors`
+   * (page/id/path all included). Present only when at least one warn-severity
+   * finding exists, and never gates `ok` on its own — that is exactly what
+   * moved these findings off `errors` and onto here. Can be present alongside
+   * a failing (`ok:false`) result too, whenever `checkIrQuality`/
+   * `checkAssetReferences` themselves ran (an *earlier* hard gate — schema,
+   * theme id, theme menu, full-body exclusivity, boundary-page
+   * content, duplicate ids, asset bytes, narrative — short-circuits before
+   * either runs at all, so a deck rejected by one of those never reaches
+   * this field either way, see `validateIr`'s own body for the exact gate
+   * order). {@link formatWarnings} renders this array as CLI-ready
+   * `"warning: ..."` lines.
+   */
+  warnings?: ValidationIssue[]
+  /**
+   * The theme this deck resolved to, present on every `ok: true` result:
+   * the definition the caller supplied, or the installed theme
+   * `ir.theme.id` names. Validation has to resolve it to check the menu, so
+   * it hands the object back and a caller that goes on to render (see
+   * `api.ts`'s `generatePptx`) passes this down instead of resolving the
+   * same id a second time. Absent on failure — nothing was resolved.
+   */
+  theme?: ThemeDefinition
+  /**
+   * Set on an `ok` result for a deck built under a theme other than the
+   * one its pages were written for (`validateIr`'s `writtenFor`), when that
+   * theme leaves anything off or draws a page short: the theme they were
+   * written for. `ir` is then the deck as this theme draws it,
+   * with what its faces cannot take left off, and a page may be drawn
+   * short. Each is named in `warnings`, and an export of this `ir` is told
+   * so (`allowDroppedContent`).
+   */
+  switchedFrom?: string
+}
+
+/**
+ * English rendering of a `checkIrQuality` finding. `ir-quality.ts` writes its
+ * `message` field for a (Chinese-language) content-authoring UI; once wired
+ * into `validateIr` those findings become part of the public CLI/API error
+ * surface, which must stay English. Translate by `code` here instead of
+ * changing `ir-quality.ts` itself (and its already-green test suite, which
+ * asserts on the Chinese wording directly). Unknown/future codes fall back to
+ * a generic English string rather than leaking the untranslated Chinese text.
+ *
+ * `density` / `bullets_overflow` / `bullet_item_long` (W3 task 3, spec §5):
+ * the effective threshold is now narrative-aware (pacing editorial budget,
+ * `density` additionally minned against the resolved layout's geometric
+ * capacity — spec §5's dual-attribute capacity split), so the number can no
+ * longer be read off a flat constant here. `checkIrQuality` resolves both
+ * `min()` candidates once (the single place that runs the layout-selection
+ * path render also uses) and attaches them to the issue via `density` /
+ * `bulletsBudget` — this function only formats what it's handed.
+ */
+/** Test-only: the public English wording for one quality issue, so a branch
+ * that `validateIr` can no longer reach (a folding chart type's repeated
+ * category is refused at the schema now) can still be pinned. Same `__`
+ * convention `deck-audit.ts`'s `__parseWedgePath` already establishes. */
+export function __describeQualityIssue(issue: QualityIssue): string {
+  return describeQualityIssue(issue)
+}
+
+function describeQualityIssue(issue: QualityIssue): string {
+  switch (issue.code) {
+    case "empty_deck":
+      return "deck has no slides"
+    case "missing_heading":
+      return "slide is missing a heading"
+    case "long_heading":
+      return `heading exceeds ${CAPACITY.headingMaxChars} characters — tighten it into a short, assertive phrase`
+    case "density": {
+      const d = issue.density
+      // Defensive fallback only — checkIrQuality always attaches `density`
+      // alongside a "density" code (same total-function posture as the rest
+      // of this file's `?.`/`??` guards); never actually hit.
+      if (!d) return "too many components on this slide — split into multiple slides"
+      const { limit, pacing, pacingBudget, layoutId, layoutCapacity } = d
+      if (d.unit === "items" && d.slotName !== undefined) {
+        return `too many ${d.slotName} items (max ${limit} — ${layoutId} layout's ${d.slotName} capacity is ${layoutCapacity}) — trim them or split into multiple slides`
+      }
+      if (layoutCapacity === undefined || layoutCapacity === pacingBudget) {
+        // No geometric term because the face has no body capacity, or it
+        // agrees with the editorial budget. Nothing extra
+        // to disambiguate, name the pacing alone.
+        return `too many components on this slide (max ${limit} for ${pacing} pacing) — split into multiple slides`
+      }
+      return layoutCapacity > pacingBudget
+        ? // Pacing is the binding side, but the layout itself allows more —
+          // name both so a generous-looking layout (e.g. bento-panel's 6)
+          // doesn't read as a bug.
+          `too many components on this slide (max ${limit} — ${layoutId} fits ${layoutCapacity} but ${pacing} pacing caps at ${limit}) — split into multiple slides`
+        : // The layout's own capacity is the binding side.
+          `too many components on this slide (max ${limit} — ${layoutId} layout's capacity is tighter than ${pacing} pacing's ${pacingBudget}) — split into multiple slides`
+    }
+    case "bullets_overflow": {
+      const b = issue.bulletsBudget
+      return b
+        ? `bullet list has too many items (max ${b.maxItems} for ${b.pacing} pacing) — trim it or split into multiple slides`
+        : "bullet list has too many items — trim it or split into multiple slides"
+    }
+    case "bullets_count_overflow":
+      // P0 hardening (robustness deep-review D1, borrow-wave Task 2's
+      // dual-threshold machinery reused, not a new severity system): the
+      // count-based escalation of "bullets_overflow" above — severity
+      // "error", so this is the one bullets-count message that actually
+      // blocks `ok`. Like `bullet_item_overflow`, `CAPACITY.bullets
+      // .countOverflowItems` is a flat, pacing-independent ceiling (see its
+      // own derivation comment, capacity.ts): past this many items, the
+      // render-side box.h cap (bullets.tsx, same task) will still land the
+      // file successfully, but "graceful truncation" stops describing the
+      // outcome honestly — most of the content would simply be gone from
+      // the page, which nothing on the page would say, and the export
+      // refuses a deck that drops content.
+      return `bullet list has far too many items (over ${CAPACITY.bullets.countOverflowItems}) — most would be dropped rather than rendered, and the export refuses a deck that drops content, so shorten it substantially or split it across slides`
+    case "bullet_item_long": {
+      const b = issue.bulletsBudget
+      return b
+        ? `a bullet item is too long for ${b.pacing} pacing — keep it within about 2 lines`
+        : "a bullet item is too long — keep it within about 2 lines"
+    }
+    case "bullet_item_overflow":
+      // Task 2 (borrow wave, dual-threshold severity): the geometric
+      // counterpart to `bullet_item_long` above — severity "error", not
+      // "warn", so this is the one bullets message that actually blocks
+      // `ok`. `CAPACITY.bullets.itemOverflowUnits` is a flat, pacing-
+      // independent ceiling (see its own derivation comment, capacity.ts),
+      // unlike `bullet_item_long`'s per-pacing `maxUnitsPerItem`.
+      //
+      // Wording (review fix round): "will be truncated" overstated it — the
+      // ceiling carries a deliberate safety margin below every style's real
+      // truncation edge (~56-60 units across all five bullet styles per the
+      // truncation-visibility fix, 2026-07-22 — see capacity.ts's own
+      // derivation comment — vs. this 50-unit ceiling), so an item past the
+      // ceiling can still render with zero `data-truncated`. "can truncate"
+      // covers that margin: crossing this ceiling is a real render-safety
+      // risk worth fixing, not a guaranteed loss.
+      return `a bullet item exceeds the render-safety limit (${CAPACITY.bullets.itemOverflowUnits} width units) and can truncate — shorten it substantially or split the point across two items`
+    // comparison_overflow/architecture_overflow + their _count_overflow
+    // error tiers (carried-items wave): the same dual-threshold shape as
+    // bullet_item_long/bullet_item_overflow above, applied to the two other
+    // vertical-stacking family members P0 hardening gave a render-time
+    // box.h cap but no pre-render editorial signal (see
+    // CAPACITY.comparison/.architecture's own
+    // derivation comments, capacity.ts, for the box-geometry arithmetic and
+    // two-sided bracketing behind each number).
+    case "comparison_overflow":
+      return `comparison table has too many rows (over ${CAPACITY.comparison.warnRows}) — trim it or split into multiple slides`
+    case "comparison_count_overflow":
+      return `comparison table has far too many rows (over ${CAPACITY.comparison.errorRows}) — most would be dropped rather than rendered, and the export refuses a deck that drops content, so shorten it substantially or split it across slides`
+    case "architecture_overflow":
+      return `architecture diagram has too many layers (over ${CAPACITY.architecture.warnLayers}) — trim it or split into multiple slides`
+    case "architecture_count_overflow":
+      return `architecture diagram has far too many layers (over ${CAPACITY.architecture.errorLayers}) — split it into multiple slides`
+    case "big_number_no_kpi":
+      return "big_number arrangement is missing a kpi_cards component"
+    case "chart_axes_ignored": {
+      // chart-axes feature: `axes` (x_title/y_title/show_grid) only renders
+      // for bar/line/scatter/area (chart.tsx's AXES_APPLICABLE_TYPES) — names
+      // the offending chart_type via `issue.chartAxesIgnored`, same
+      // structured-field convention as `density`/`bulletsBudget` above.
+      const chartType = issue.chartAxesIgnored?.chartType
+      return chartType
+        ? `axes settings (x_title/y_title/show_grid) are not supported for "${chartType}" charts and are ignored — only bar, line, scatter, area, stacked, percent_stacked and combo charts render them`
+        : "chart axes settings (x_title/y_title/show_grid) are not supported for this chart type and are ignored — only bar, line, scatter, area, stacked, percent_stacked and combo charts render them"
+    }
+    case "chart_duplicate_category": {
+      // What a repeated category costs depends on the chart type, so the
+      // message says which — see `ir-quality.ts`'s own note where the issue
+      // is raised. Bar, line and area read the folded model and keep only
+      // the first value, and the schema refuses that outright now, so the
+      // first-wins wording is only reachable for a caller running quality
+      // checks on IR it built in memory. Every other type draws both
+      // entries, and the old message told those authors about a loss the
+      // page had not taken.
+      const d = issue.chartDuplicateCategory
+      if (!d) {
+        return "a chart series repeats a category value — check whether the repeat is intended"
+      }
+      const folds = CATEGORY_FOLDING_TYPES.includes(
+        d.chartType as (typeof CATEGORY_FOLDING_TYPES)[number],
+      )
+      return folds
+        ? `chart series "${d.seriesName}" has a duplicate category "${d.x}" — only the first occurrence is kept, later ones are dropped`
+        : `chart series "${d.seriesName}" has two entries sharing the category "${d.x}" — a ${d.chartType} draws both, so the chart shows two parts with the same name`
+    }
+    case "chart_line_too_many_series":
+      // Dataviz's 8-series ceiling (CAPACITY.chart.lineSeriesAdvisoryMax).
+      // Warn only — the chart still renders. Suggest splitting or grouping.
+      return `line chart has too many series (over ${CAPACITY.chart.lineSeriesAdvisoryMax}) — split it or group the series`
+    case "data_table_missing_cell": {
+      // R1 evidence wave, Task T3: a data_table row's `cells` omits one of
+      // `columns`' declared keys — schema-legal (the lenient half of the
+      // plan's revised contract), rendered as an empty cell by
+      // data-table.tsx. Names the row index and the missing key via
+      // `issue.dataTableMissingCell`, same structured-field convention as
+      // `chartDuplicateCategory` above.
+      const d = issue.dataTableMissingCell
+      return d
+        ? `data table row ${d.rowIndex} is missing a value for column "${d.key}" — that cell will render empty`
+        : "a data table row is missing a value for a declared column — that cell will render empty"
+    }
+    default:
+      return `content quality issue (${issue.code})`
+  }
+}
+
+/** Resolve every page through the same menu route the renderer consumes. */
+function checkThemeMenuFaces(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const menu = theme.menu
+  if (menu === undefined) {
+    return [
+      {
+        path: "theme.id",
+        message: `theme "${ir.theme.id}" has no menu`,
+      },
+    ]
+  }
+  return ir.slides.flatMap((slide, index) => {
+    const effective = resolveEffectiveFace(ir, slide, theme)
+    if (effective.route !== "unresolved") return []
+    return [
+      {
+        path: slide.type === "content" ? `slides.${index}.kind` : `slides.${index}.type`,
+        page: index + 1,
+        ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+        message: effective.error ?? `theme "${ir.theme.id}" could not resolve a face for "${slide.type}" pages`,
+      },
+    ]
+  })
+}
+
+/**
+ * Full-body component exclusivity hard gate (structure-components wave 1
+ * task 1, decision 2 — set extended by wave 1 task 2 and wave 2 tasks 1-3,
+ * unchanged in shape): a `FULL_BODY_TYPES` member (`swot`/`bmc`/`waterfall`/
+ * `gantt`/`pest`/`five_forces`/`heatmap`/`sankey`, `component-traits.ts`) is meant to own an
+ * entire slide's content rect by
+ * itself (`svg-content.tsx` hands it the whole rect verbatim) — a slide that
+ * pairs one with *any* other component (another full-body type included)
+ * has nowhere left to put that sibling, so this is a hard validation error,
+ * not a silent "drop the extra component(s) and render anyway" degrade.
+ * Same shape as the menu-face gate above: one
+ * page-scoped `ValidationIssue` per offending slide, naming the offending
+ * full-body type(s) so the message is actionable without needing to open
+ * the slide's own JSON.
+ */
+function checkFullBodyExclusivity(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    const fullBodyTypes = slide.components.filter((c) => FULL_BODY_TYPES.has(c.type))
+    if (fullBodyTypes.length === 0 || slide.components.length === 1) return
+    // A face that sets a full-body component beside companions of declared
+    // types takes exactly that page: one full-body component, the rest
+    // companions.
+    const companions = slide.type === "content" ? componentFace(ir, slide, theme)?.fullBodyCompanions : undefined
+    if (
+      companions !== undefined &&
+      fullBodyTypes.length === 1 &&
+      slide.components.every((c) => FULL_BODY_TYPES.has(c.type) || companions.includes(c.type))
+    ) {
+      return
+    }
+    const names = [...new Set(fullBodyTypes.map((c) => c.type))].join(", ")
+    errors.push({
+      path: `slides.${i}.components`,
+      page: i + 1,
+      ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+      message: `"${names}" is a full-body component and must be the slide's only component (found ${slide.components.length} components)`,
+    })
+  })
+  return errors
+}
+
+function layoutAcceptsComponent(layout: LayoutDefinition, componentType: string): boolean {
+  return layout.slots.some((slot) => slot.accepts === "any" || slot.accepts.includes(componentType))
+}
+
+/** Content components must satisfy the slots of the exact resolved render surface. */
+function checkContentPageSlots(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder || slide.type !== "content") return
+    const layout = componentFace(ir, slide, theme)
+    if (!layout) return
+    const imageSlot = layout.kind === "takeover"
+      ? layout.slots.find((slot) => slot.name === "image" && slot.selection === "first")
+      : undefined
+    const imageSelection = imageSlot === undefined ? undefined : findImageSelection(slide)
+    for (const slot of layout.slots) {
+      if (slot.required !== true || slot.accepts === "any") continue
+      const present = slot === imageSlot
+        ? imageSelection !== undefined && slot.accepts.includes(imageSelection.source.type)
+        : slide.components.some((component) => slot.accepts.includes(component.type))
+      if (present) continue
+      const expected = slot.accepts.join(" or ")
+      errors.push({
+        path: `slides.${i}.components`,
+        page: i + 1,
+        ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+        message: `layout "${layout.id}" requires an ${expected} component for its ${slot.name} slot`,
+      })
+    }
+    const unsupported = slide.components.filter((component) => {
+      if (component === imageSelection?.source) return false
+      return !layout.slots.some((slot) => {
+        if (slot === imageSlot) return false
+        return slot.accepts === "any" || slot.accepts.includes(component.type)
+      })
+    })
+    if (unsupported.length > 0) {
+      const types = [...new Set(unsupported.map((component) => component.type))].join(", ")
+      errors.push({
+        path: `slides.${i}.components`,
+        page: i + 1,
+        ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+        message: `layout "${layout.id}" does not render ${types} components`,
+      })
+    }
+  })
+  return errors
+}
+
+/** Page fields no cover, chapter or ending face draws: filling one is an error. */
+export const BOUNDARY_UNRENDERED_FIELDS = ["footnote"] as const
+
+/**
+ * Boundary-page render-surface hard gate (bench-driven fixes wave, defect
+ * D, retargeted in wave 8 batch 1). `footnote` still never renders on
+ * cover/chapter/ending. `components` used to be the same universal never —
+ * that was coarser than the slot model, and it sealed `verdict-index`'s
+ * declared `body accepts: ["bullets"]` behind a type-level reject the
+ * layout already knew how to draw. The gate now consults the knowable
+ * menu-bound face's slots. A component type a slot accepts is live content,
+ * not dead IR. A face with no matching slot hard-rejects.
+ *
+ * `content` is deliberately never gated on any field. `subheading` is
+ * still absent from this rule: no type drops it on every layout. Placeholder
+ * pages (`slide.placeholder`) are exempt. `notes` is never checked here.
+ */
+function checkBoundaryPageContent(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder) return
+    if (slide.type !== "cover" && slide.type !== "chapter" && slide.type !== "ending") return
+    const ignored: string[] = []
+    const layout = componentFace(ir, slide, theme)
+    const stray = slide.components.filter((component) => !layout || !layoutAcceptsComponent(layout, component.type))
+    if (stray.length > 0) ignored.push("components")
+    // A face may declare that it sets the page's source line (an ending's
+    // disclaimer at its foot, `LayoutDefinition.pageFields`).
+    for (const field of BOUNDARY_UNRENDERED_FIELDS) if (slide[field] && !layout?.pageFields?.includes(field)) ignored.push(field)
+    if (ignored.length === 0) return
+    errors.push({
+      path: `slides.${i}`,
+      page: i + 1,
+      ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+      message: `"${slide.type}" slides do not render ${ignored.join("/")} — move this content to a content slide or remove it`,
+    })
+  })
+  return errors
+}
+
+/** The page fields a face draws only when it declares a place for them, and what an author does with one that has none. */
+const FACE_PAGE_FIELDS = [
+  { field: "kicker", name: "a kicker", fix: "move the label into the heading or summary, or remove it", givesWay: true },
+  { field: "fields", name: "header lines (fields)", fix: "move them into the subheading or a component, or remove them", givesWay: false },
+  { field: "stamp", name: "a stamp", fix: "say it in the heading or a component, or remove it", givesWay: true },
+  { field: "tag", name: "a page tag", fix: "say it in the subheading or the source line, or remove it", givesWay: true },
+  { field: "ballot", name: "a ballot", fix: "list the choices in a component, or remove it", givesWay: false },
+  { field: "years", name: "a strip of years", fix: "name the years in the heading, or remove it", givesWay: true },
+  { field: "stage", name: "a course stage", fix: "name the stage in the kicker or the heading, or remove it", givesWay: true },
+] as const
+
+/** Whether the slide asks for `field` at all: an empty kicker asks for nothing. */
+function asksFor(slide: PptxIR["slides"][number], field: (typeof FACE_PAGE_FIELDS)[number]["field"]): boolean {
+  if (field === "kicker") return Boolean(slide.kicker?.trim())
+  return slide[field] !== undefined
+}
+
+/**
+ * Whether the motif that paints over this content page's face sets the
+ * page's kicker itself (`MOTIFS_THAT_SET_THE_KICKER`): museum's hall sign and
+ * runway's masthead print it over any content face, and a face under them
+ * leaves it to them. The same page decision the renderer makes
+ * (`resolvePageRenderContext`).
+ */
+function motifSetsKicker(ir: PptxIR, slide: PptxIR["slides"][number], theme: ThemeDefinition): boolean {
+  // Both motifs paint content pages only. A cover, chapter or ending face draws its own kicker.
+  if (slide.type !== "content") return false
+  const face = resolveEffectiveFace(ir, slide, theme)
+  if (face.route === "unresolved") return false
+  const page = resolvePageRenderContext(ir, slide, face, theme)
+  return page.motifOn && page.motifId !== undefined && MOTIFS_THAT_SET_THE_KICKER.has(page.motifId)
+}
+
+/**
+ * A `kicker`, `fields`, a `stamp`, a page `tag`, a `ballot`, `years` or a `stage` is drawn only by a face that declares a
+ * place for it (`LayoutDefinition.pageFields`), on any page type, or, for a
+ * kicker, by a motif that sets it over the face. An empty kicker asks for
+ * nothing.
+ *
+ * Two answers for a face with no place. `fields` and a `ballot` carry
+ * words found nowhere else on the page (who wrote it, the choices put to
+ * the room), so the page is refused, naming the face. The others are a
+ * theme's furniture, labels a theme sets around the page: a kicker, a
+ * stamp, a tag, a strip of years, a course stage. A theme with no place
+ * for one gives way: it leaves the label off and says so in a warning
+ * naming the page, the field and the face, so a deck can change theme by
+ * changing the name its spec binds. The label stays in the source and is
+ * drawn again under any theme with a place for it.
+ */
+/**
+ * A content page whose own kind the theme offers, on a face that does not
+ * take what the page holds, is drawn by the nearest stand-in whose face
+ * does (`./render/kind-landing.ts`). That keeps a deck moved from another
+ * theme drawable, and it is a warning rather than silence: while a deck is
+ * being written, the author usually meant the page as its own kind, and
+ * the face that draws it as that kind names what it takes.
+ */
+function checkOwnKindLanding(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const warnings: ValidationIssue[] = []
+  ir.slides.forEach((slide, index) => {
+    if (slide.type !== "content") return
+    const entry = theme.menu.content[slide.kind]
+    if (entry === undefined) return
+    const served = resolveEffectiveFace(ir, slide, theme).servedKind
+    if (served === undefined || served === slide.kind) return
+    const own = getLayout(entry.face)
+    if (own === undefined) return
+    const takes = faceAcceptedComponentTypes(own)
+    const refused = [...new Set(slide.components.map((c) => c.type).filter((type) => !takes.includes(type)))]
+    const missing = own.slots.find(
+      (slot) => slot.required === true && slot.accepts !== "any" && !slide.components.some((c) => (slot.accepts as readonly string[]).includes(c.type)),
+    )
+    const why =
+      refused.length > 0
+        ? `does not take ${refused.join(", ")}`
+        : missing !== undefined && missing.accepts !== "any"
+          ? `needs one of ${missing.accepts.join(", ")}`
+          : "does not set these components together"
+    warnings.push({
+      path: `slides.${index}.components`,
+      message:
+        `theme "${theme.id}" draws "${slide.kind}" pages on face "${entry.face}", which ${why}, so this page is drawn as "${served}". ` +
+        `To keep it a "${slide.kind}" page, use what that face takes: ${takes.join(", ")}`,
+      page: index + 1,
+      ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+    })
+  })
+  return warnings
+}
+
+function checkKickerDrawn(ir: PptxIR, theme: ThemeDefinition): { errors: ValidationIssue[]; givenWay: ValidationIssue[] } {
+  const errors: ValidationIssue[] = []
+  const givenWay: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder) return
+    for (const { field, name, fix, givesWay } of FACE_PAGE_FIELDS) {
+      if (!asksFor(slide, field)) continue
+      const layout = componentFace(ir, slide, theme)
+      if (layout?.pageFields?.includes(field)) continue
+      if (field === "kicker" && motifSetsKicker(ir, slide, theme)) continue
+      const face = layout ? `face "${layout.id}"` : "this page's face"
+      const issue = {
+        path: `slides.${i}.${field}`,
+        page: i + 1,
+        ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+      }
+      if (givesWay) {
+        givenWay.push({
+          ...issue,
+          message: `${face} of theme "${ir.theme.id}" has no place for ${name}, so it is left off this page. It stays in the source and is drawn under a theme with a place for it. If the deck keeps this theme, ${fix}`,
+        })
+      } else {
+        errors.push({ ...issue, message: `${face} has no place for ${name} — ${fix}` })
+      }
+    }
+  })
+  return { errors, givenWay }
+}
+
+/**
+ * A subheading on a face that has no place for one, or beside a body that
+ * fills the one line a face would set it in (`LayoutDefinition.subheading`),
+ * would leave the page with nothing to say so. The page is refused, naming
+ * the face and where the words can go. On a cover, chapter or ending the
+ * subheading is what a deck project's spec wrote as the page's summary, so
+ * the message says that too. An empty subheading asks for nothing.
+ */
+function checkSubheadingDrawn(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder || !slide.subheading?.trim()) return
+    const layout = componentFace(ir, slide, theme)
+    const place = layout?.subheading
+    if (layout === undefined || place === undefined) return
+    let message: string
+    if (place === "in-body") {
+      if (bodyStatementLines(slide) === undefined) return
+      const body = slide.components[0]!.type
+      message = `face "${layout.id}" sets one line under its claim, and this page's ${body} fills it — fold the subheading into the heading or the ${body}, or remove it`
+    } else if (place.beside === "bullets") {
+      if (boundaryBulletItems(slide, Infinity).length === 0) return
+      message = `face "${layout.id}" has no place for a subheading on a page with bullets — ${place.none}`
+    } else {
+      message = `face "${layout.id}" has no place for a subheading — ${place.none}`
+    }
+    if (slide.type !== "content") message += ` (a deck project's spec writes it as the page's summary)`
+    errors.push({
+      path: `slides.${i}.subheading`,
+      page: i + 1,
+      ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+      message,
+    })
+  })
+  return errors
+}
+
+/**
+ * Boundary-page component-capacity hard gate.
+ *
+ * `checkBoundaryPageContent` above asks whether a slot accepts a component's
+ * *type*. That is not the same question as whether the face has room for it.
+ * Every boundary body slot in the registry declares `capacity: 1` and every
+ * boundary face draws `boundarySlotBlock` — the first accepted block. A page
+ * that carried two of them therefore printed one and lost the other with no
+ * error, no `data-dropped`, and nothing in the audit: exactly the silent
+ * partial render the face contract forbids.
+ *
+ * The count and the selection now come from the same helper the faces draw
+ * with (`layouts/boundary-content.ts`), so the number this rule enforces
+ * cannot drift from the number the renderer honours.
+ */
+function checkBoundarySlotCapacity(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder) return
+    if (slide.type !== "cover" && slide.type !== "chapter" && slide.type !== "ending") return
+    const layout = componentFace(ir, slide, theme)
+    if (!layout) return
+    for (const slot of layout.slots) {
+      if (slot.capacity === undefined || slot.accepts === "any") continue
+      const blocks = boundarySlotBlocks(slide, slot.accepts)
+      if (blocks.length <= slot.capacity) continue
+      const kinds = slot.accepts.join(" or ")
+      errors.push({
+        path: `slides.${i}.components`,
+        page: i + 1,
+        ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+        message: `face "${layout.id}" draws ${slot.capacity} ${kinds} block${
+          slot.capacity === 1 ? "" : "s"
+        } in its ${slot.name} slot, and this "${slide.type}" page has ${
+          blocks.length
+        } — merge them into one block or move the rest to a content slide`,
+      })
+    }
+  })
+  return errors
+}
+
+/**
+ * Boundary-page item-capacity hard gate (face-fidelity wave).
+ *
+ * A cover, chapter or ending face draws its `bullets` into a fixed piece of
+ * furniture: two baked baselines, three numbered arguments, one call to
+ * action. Every one of those faces used to answer "and if there are more?"
+ * with `items.slice(0, N)` inside its own render code, so a page authored
+ * with five bullets printed three and nothing anywhere said what happened to
+ * the other two — not the slide, not validate, not the audit.
+ *
+ * The number is now declared on the face's own body slot (`itemCapacity`,
+ * `layouts/registry.ts`) and exceeding it is an error of the same class as
+ * the other structural boundary rejects above: the author is told which face
+ * is bound, what it holds, and how many items the page has, and decides what
+ * to cut. The render is not the place that decision gets made silently.
+ *
+ * A face declares its floor the same way (`itemMinimum`): a ticker of at
+ * least two figures, a line-up of at least three looks. A block the schema
+ * lets hold fewer used to be left off whole, with a mark only the export
+ * read. It is refused here with the floor.
+ *
+ * Only the exact bound face is consulted (`componentFace`), so a page
+ * whose theme routes it to an asset cover — which draws no bullets at all —
+ * is never measured against a cap it does not use.
+ */
+function checkBoundaryItemCapacity(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder) return
+    if (slide.type !== "cover" && slide.type !== "chapter" && slide.type !== "ending") return
+    const layout = componentFace(ir, slide, theme)
+    if (!layout) return
+    for (const slot of layout.slots) {
+      if ((slot.itemCapacity === undefined && slot.itemMinimum === undefined) || slot.accepts === "any") continue
+      for (const component of boundarySlotBlocks(slide, slot.accepts)) {
+        // A timeline's items are its milestones.
+        const list: unknown = "items" in component ? component.items : "milestones" in component ? component.milestones : undefined
+        if (!Array.isArray(list)) continue
+        // The count is what the face will draw, not what the array holds:
+        // `drawableItems` drops the blanks every face already skipped, so a
+        // page is never rejected for items nobody was going to print. Only a
+        // list of plain strings can hold a blank — a structured item (a KPI,
+        // a card) always draws something, so those count as authored.
+        const raw: readonly unknown[] = list
+        const strings = raw.filter((item): item is string => typeof item === "string")
+        const count = strings.length === raw.length ? drawableItems(strings).length : raw.length
+        if (slot.itemMinimum !== undefined && count < slot.itemMinimum) {
+          errors.push({
+            path: `slides.${i}.components`,
+            page: i + 1,
+            ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+            message: `face "${layout.id}" draws a "${component.type}" block of at least ${slot.itemMinimum} items, and this "${slide.type}" page has ${count} — add ${
+              slot.itemMinimum - count === 1 ? "one" : slot.itemMinimum - count
+            } more or move it to a content slide`,
+          })
+          continue
+        }
+        // A face that sets the heading in the list's first row has one row
+        // fewer for the list on a page with a heading.
+        const room = slotItemRoom(slot, slide)
+        if (room === undefined || count <= room) continue
+        const headed = room < slot.itemCapacity!
+        errors.push({
+          path: `slides.${i}.components`,
+          page: i + 1,
+          ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+          message: `face "${layout.id}" draws at most ${room} item${room === 1 ? "" : "s"} from a "${component.type}" block${
+            headed ? ", since it sets the heading in the list's first row," : ""
+          } and this "${slide.type}" page has ${count} — shorten the list${headed ? ", remove the heading" : ""} or move it to a content slide`,
+        })
+      }
+    }
+  })
+  return errors
+}
+
+/** What draws a boundary page, for a message: its face, or the shared photo page a cover or chapter over a photograph goes to. */
+function boundaryDrawer(effective: { route: string; layoutId: string | null }, type: string): string {
+  return effective.route === "image-cover" ? `a ${type} over a photograph` : `face "${effective.layoutId}"`
+}
+
+/** How much of a text a face holds, for a message: `the first 9 ("Same store growth …")`, or `none`. */
+function heldPart(room: TextRoom): string {
+  return room.limit === 0 ? "none" : `the first ${room.limit} ("${room.held}")`
+}
+
+/** How the face of cover, chapter or ending page `i` sets its heading, or undefined when it sets none. */
+function boundaryHeadingSet(ir: PptxIR, i: number, theme: ThemeDefinition) {
+  const slide = ir.slides[i]!
+  if (slide.placeholder) return undefined
+  if (slide.type !== "cover" && slide.type !== "chapter" && slide.type !== "ending") return undefined
+  if (!stripEmphasis(slide.heading ?? "").trim()) return undefined
+  const ctx: HeadingCtx = {
+    fonts: deckFonts(theme.style.fonts, deckWritesChinese(ir)),
+    ...(theme.style.shape !== undefined ? { shape: theme.style.shape } : {}),
+    figures: deckFigureStyle(ir),
+  }
+  const effective = resolveEffectiveFace(ir, slide, theme)
+  // A cover or chapter over a photograph is drawn by the shared photo
+  // page, not by its menu face, and is asked that page's fit.
+  const photo = effective.route === "image-cover"
+  const layout = componentFace(ir, slide, theme)
+  if (!layout && !photo) return undefined
+  const asked = photo ? IMAGE_COVER_HEADING : layout!
+  const page: HeadingPage = {
+    ir,
+    slide,
+    index: i,
+    ...(effective.entry?.params !== undefined ? { params: effective.entry.params } : {}),
+    page: resolvePageRenderContext(ir, slide, effective, theme),
+    ctx,
+  }
+  const verdict = headingVerdict(asked, page)
+  return { slide, effective, photo, layout, verdict, room: () => headingRoom(asked, page) }
+}
+
+/**
+ * Boundary-page heading hard gate.
+ *
+ * A cover, chapter or ending face has a fixed place for its heading and no
+ * page to give a heading it cannot hold, so a heading too long for the face
+ * used to come out cut, its tail gone and the cut only marked in the
+ * markup, or the face declined the page and the export refused the deck
+ * with no word of how long a heading would have fit. The bound face now
+ * answers before anything is drawn (`layouts/heading-set.ts`), with the same
+ * fit its drawing runs, and a heading it would not set whole is refused
+ * here, with the length the face holds and what to do about it.
+ *
+ * The length is measured on this page, in this deck's fonts and the
+ * theme's type scale, on the heading itself: the face is handed the
+ * heading's own first characters (a Chinese heading) or words (any other)
+ * until it stops setting them whole (`layouts/text-room.ts`). The message
+ * quotes the part it holds, so the number it gives is one this heading
+ * fits to, not one counted on other words of another width.
+ */
+function checkBoundaryHeadingFit(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((_, i) => {
+    const set = boundaryHeadingSet(ir, i, theme)
+    if (set === undefined) return
+    const { slide, effective, photo, layout, verdict } = set
+    if (verdict === undefined || verdict === "whole") return
+    const room = set.room()
+    const where = photo || layout!.subheading === undefined ? ", or move part of it into the subheading" : ""
+    errors.push({
+      path: `slides.${i}.heading`,
+      page: i + 1,
+      ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+      message: `${boundaryDrawer(effective, slide.type)} holds ${heldPart(room)} of this ${slide.type} heading's ${room.count} ${room.unit}, so the ${photo ? "page" : "face"} would ${
+        verdict === "cut" ? "cut the rest off" : "refuse the page"
+      }. Shorten the heading${where}.`,
+    })
+  })
+  return errors
+}
+
+/**
+ * Boundary-page subheading hard gate.
+ *
+ * A cover, chapter or ending face sets the subheading in a place of its own
+ * design: a line under the title, a pill at the foot, a grey line beside a
+ * button. Where it could not hold the words it cut them or left them off
+ * with a mark, and validate passed the page: only the audit or the export
+ * said so, after the deck was written. How much room the subheading gets
+ * moves with the rest of the page (the button's own words, the lines the
+ * title took), so the face is asked by drawing the page
+ * (`render/boundary-loss.ts`), the same drawing the export reads, and a
+ * subheading it would not set whole is refused here, quoting how much of
+ * it the face holds.
+ */
+function checkBoundarySubheadingFit(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder) return
+    if (slide.type !== "cover" && slide.type !== "chapter" && slide.type !== "ending") return
+    const text = slide.subheading ?? ""
+    if (!stripEmphasis(text).trim()) return
+    const verdict = subheadingSet(ir, i, theme)
+    const said = verdict(text)
+    if (said === "whole") return
+    const room = textRoom(text, (prefix) => verdict(prefix) === "whole")
+    const effective = resolveEffectiveFace(ir, slide, theme)
+    const face = boundaryDrawer(effective, slide.type)
+    const loses = said === "cut" ? "cut the rest off" : "leave it off the page"
+    const message =
+      room.limit === 0
+        ? `${face} has no room for this ${slide.type} page's subheading beside what else the page carries, so it would ${said === "cut" ? "cut it" : "leave it off the page"}. Remove the subheading, or shorten the heading and what shares the page with it.`
+        : `${face} holds ${heldPart(room)} of this ${slide.type} subheading's ${room.count} ${room.unit}, so the ${effective.route === "image-cover" ? "page" : "face"} would ${loses}. Shorten the subheading.`
+    errors.push({
+      path: `slides.${i}.subheading`,
+      page: i + 1,
+      ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+      message: `${message} (a deck project's spec writes it as the page's summary)`,
+    })
+  })
+  return errors
+}
+
+/**
+ * Boundary-page heading-and-body hard gate.
+ *
+ * A face whose components stand under the heading has room for them only
+ * under so many heading lines. crayonbox-ending set three contact cards
+ * under a one-line title and left them all off under a two-line one, with
+ * a mark, while the heading gate passed the title (the face does set it
+ * whole) and validate passed the page. The page is drawn under its own
+ * heading and under that heading's first character or word
+ * (`render/boundary-loss.ts`). When the short heading keeps what the long
+ * one loses, the page is refused, quoting how much of the heading the face
+ * holds with the rest of the page in place.
+ */
+function checkBoundaryHeadingRoom(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder || slide.components.length === 0) return
+    if (slide.type !== "cover" && slide.type !== "chapter" && slide.type !== "ending") return
+    const heading = slide.heading ?? ""
+    if (!stripEmphasis(heading).trim()) return
+    const holds = headingCrowding(ir, i, theme)
+    if (!holds) return
+    const room = textRoom(heading, holds)
+    const blocks = [...new Set(slide.components.map((c) => c.type))].join(" and ")
+    errors.push({
+      path: `slides.${i}.heading`,
+      page: i + 1,
+      ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+      message: `${boundaryDrawer(resolveEffectiveFace(ir, slide, theme), slide.type)} draws this page's ${blocks} only under a shorter heading: it holds them under ${heldPart(room)} of this ${slide.type} heading's ${room.count} ${room.unit}, and a longer heading takes the room they stand in, so the face would leave them off. Shorten the heading, or take the ${blocks} off this page.`,
+    })
+  })
+  return errors
+}
+
+/**
+ * Boundary-page block-shape hard gate.
+ *
+ * A face may need more of a block than its type and its count: yearbook-
+ * cover lays a timeline as a scale of years, and a timeline dated by
+ * quarter passed validate and was left off the cover with a mark only the
+ * export read. Such a face declares what it needs on its slot
+ * (`LayoutSlot.declines`), its drawing asks the same function, and the
+ * page is refused here with the face's own reason.
+ */
+function checkBoundaryBlockShape(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder) return
+    if (slide.type !== "cover" && slide.type !== "chapter" && slide.type !== "ending") return
+    const layout = componentFace(ir, slide, theme)
+    if (!layout) return
+    for (const slot of layout.slots) {
+      if (slot.declines === undefined || slot.accepts === "any") continue
+      for (const block of boundarySlotBlocks(slide, slot.accepts)) {
+        const why = slot.declines(block)
+        if (why === undefined) continue
+        errors.push({
+          path: `slides.${i}.components`,
+          page: i + 1,
+          ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+          message: `face "${layout.id}" cannot draw this ${slide.type} page's "${block.type}" block as written: ${why}. Rewrite it that way, or move it to a content slide.`,
+        })
+      }
+    }
+  })
+  return errors
+}
+
+/** Where a text sits in a page's blocks, for a message: `item 2 of this page's bullets`, `the text of item 3 of this page's icon_cards`. */
+function blockTextPlace(field: string, slide: PptxIR["slides"][number]): string {
+  const [, at, ...rest] = field.split(".")
+  const block = `this page's ${slide.components[Number(at)]!.type}`
+  const named: string[] = []
+  for (let k = 0; k < rest.length; k++) {
+    const key = rest[k]!
+    const next = rest[k + 1]
+    if (next !== undefined && /^\d+$/.test(next)) {
+      named.push(`${key.replace(/s$/, "")} ${Number(next) + 1}`)
+      k++
+    } else named.push(`the ${key}`)
+  }
+  return [...named.reverse(), block].join(" of ")
+}
+
+/**
+ * Boundary-page block hard gate, the last one: what a face would still
+ * leave off.
+ *
+ * Every gate above asks a face a question it can answer before drawing.
+ * What is left is what only the drawing knows: a list item too long for the
+ * one-line label close-word-ending sets it as, a button's words wider than
+ * the pill binder-ending draws them on. Each of those passed validate and
+ * reached the export as a data-dropped mark. The page is drawn
+ * (`render/boundary-loss.ts`), with its blocks and without them. When the
+ * face leaves more off with them, the texts
+ * in its blocks are cut short to see whether their length is the cost, and
+ * each text the face cannot hold is refused, quoting the part it holds.
+ * Otherwise a page field the face has no room for beside the blocks (a
+ * ballot's signature line beside binder-ending's cards) is refused by
+ * name. Whatever is still left off is a shape the face does not draw, and
+ * the page is refused naming what would be lost.
+ * A page this gate passes is one its face draws with nothing dropped.
+ */
+function checkBoundaryBlocksDrawn(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder) return
+    if (slide.type !== "cover" && slide.type !== "chapter" && slide.type !== "ending") return
+    if (slide.components.length === 0) return
+    const loss = blocksLoss(ir, i, theme)
+    if (loss <= 0) return
+    const drawer = boundaryDrawer(resolveEffectiveFace(ir, slide, theme), slide.type)
+    const where = { page: i + 1, ...(slide.id !== undefined ? { slideId: slide.id } : {}) }
+    const crowded = blockTextCrowding(ir, i, theme)
+    if (crowded !== undefined && crowded.length > 0) {
+      for (const { field, text, holds } of crowded) {
+        const room = textRoom(text, holds)
+        errors.push({
+          path: `slides.${i}.${field}`,
+          ...where,
+          message: `${drawer} holds ${heldPart(room)} of the ${room.count} ${room.unit} in ${blockTextPlace(field, slide)}, so the face would leave the block off the page. Shorten it, or move the block to a content slide.`,
+        })
+      }
+      return
+    }
+    const lost = droppedIn(parseSvgRoot(slideToSvgMarkup(ir, slide, i, theme)))
+      .drops.map(({ kind, count }) => dropPhrase(kind, count))
+      .join(" and ")
+    const blocks = [...new Set(slide.components.map((c) => c.type))].join(" and ")
+    const fields = fieldsCrowdingBlocks(ir, i, theme, loss)
+    if (fields.length > 0) {
+      for (const field of fields) {
+        errors.push({
+          path: `slides.${i}.${field}`,
+          ...where,
+          message: `${drawer} cannot draw this ${slide.type} page's ${blocks} beside its ${field} as written and would leave ${lost} off the page. Remove the ${field}, or move the ${blocks} to a content slide.`,
+        })
+      }
+      return
+    }
+    errors.push({
+      path: `slides.${i}.components`,
+      ...where,
+      message: `${drawer} cannot draw this ${slide.type} page's ${blocks} as written and would leave ${lost} off the page. Write them in a shape this face draws, or move them to a content slide.`,
+    })
+  })
+  return errors
+}
+
+/** Where a text sits on a content page, for a message: `this page's heading`, `item 2 of this page's bullets`. */
+function contentTextPlace(field: string, slide: PptxIR["slides"][number]): string {
+  if (field === "heading" || field === "subheading") return `this page's ${field}`
+  if (field === "footnote") return "this page's source line (footnote)"
+  return blockTextPlace(field, slide)
+}
+
+/**
+ * What a drawing of a content page would lose, for a message: `leave 2
+ * cards of this page's numbered_cards off the page and cut the label of
+ * item 3 of this page's kpi_cards`. A drop mark does not say which block it
+ * came from, so a page of several blocks names them all.
+ */
+function contentLossPhrase(loss: PageLoss, slide: PptxIR["slides"][number]): string {
+  const parts: string[] = []
+  if (loss.dropped > 0) {
+    const types = [...new Set(slide.components.map((c) => c.type))]
+    const ofBlocks = types.length === 0 ? "" : ` of this page's ${types.join(" and ")}`
+    const what = loss.drops.map(({ kind, count }) => {
+      const field = PAGE_FIELD_DROPS[kind]
+      if (field !== undefined) return `its ${field === "footnote" ? "source line (footnote)" : field}`
+      return kind === "component" ? dropPhrase(kind, count) : `${dropPhrase(kind, count)}${ofBlocks}`
+    })
+    parts.push(`leave ${what.join(" and ")} off the page`)
+  }
+  if (loss.hardCut.length > 0) parts.push(`cut ${loss.hardCut.map((field) => contentTextPlace(field, slide)).join(", ")}`)
+  return parts.join(" and ")
+}
+
+/**
+ * Content-page hard gate, the last one: what the drawing would still lose.
+ *
+ * A content face takes any block in its body, so no slot of its declares
+ * how much it holds, and a page it could not hold passed validate: a fifth
+ * annotation on image-annotate, a six-rib fishbone in a sheet's band, an
+ * image_compare beside bullets on a picture page, a KPI label wider than
+ * its card. The face, or the shared sheet it steps aside to, left the rest
+ * off with a mark the export refused, or cut a field a reader needs whole.
+ * Each content page is drawn here as the export draws it
+ * (`render/content-loss.ts`), and a page that would lose anything is
+ * refused, naming what it would lose. One more drawing at most looks for
+ * what to take off (`contentRemedy`). When it finds nothing, the message
+ * stops at what would be lost.
+ *
+ * `allowDroppedContent` skips this gate and nothing else, for the export's
+ * own opt-in (`generatePptx` in `./api.ts`): a deck its author knowingly
+ * ships short reaches the export, which names the drops again.
+ */
+function checkContentPagesDrawn(ir: PptxIR, theme: ThemeDefinition): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    if (slide.placeholder || slide.type !== "content") return
+    const loss = contentLoss(ir, i, theme)
+    if (!losesContent(loss)) return
+    const face = `face "${resolveEffectiveFace(ir, slide, theme).layoutId}"`
+    const where = { page: i + 1, ...(slide.id !== undefined ? { slideId: slide.id } : {}) }
+    const lost = contentLossPhrase(loss, slide)
+    const remedy = contentRemedy(ir, i, theme, loss)
+    if (remedy?.kind === "shorten") {
+      for (const field of remedy.fields) {
+        errors.push({
+          path: `slides.${i}.${field}`,
+          ...where,
+          message: `${face} cannot set ${contentTextPlace(field, slide)} whole beside the rest of this page, so it would cut it. Shorten it, or split the page.`,
+        })
+      }
+      return
+    }
+    if (remedy?.kind === "list") {
+      errors.push({
+        path: `slides.${i}.${remedy.field}`,
+        ...where,
+        message: `${face} draws ${remedy.keep} of the ${remedy.count} ${remedy.key} in this page's ${remedy.type} with the rest of the page as written, so it would ${lost}. Keep ${remedy.keep}, or split the ${remedy.type} across two pages.`,
+      })
+      return
+    }
+    if (remedy?.kind === "fields") {
+      for (const field of remedy.fields) {
+        errors.push({
+          path: `slides.${i}.${field}`,
+          ...where,
+          message: `${face} has no place for this page's ${field} beside the rest of the page, so it would ${lost}. Remove the ${field}, or write the page in a shape this face sets it with.`,
+        })
+      }
+      return
+    }
+    if (remedy?.kind === "blocks") {
+      const rest = [...new Set(slide.components.slice(remedy.keep).map((c) => c.type))].join(" and ")
+      errors.push({
+        path: `slides.${i}.components`,
+        ...where,
+        message: `${face} draws the first ${remedy.keep} of this page's ${remedy.count} blocks, so it would ${lost}. Move the ${rest} to another page.`,
+      })
+      return
+    }
+    errors.push({
+      path: `slides.${i}.components`,
+      ...where,
+      message: `${face} cannot draw this page as written: it would ${lost}.`,
+    })
+  })
+  return errors
+}
+
+/**
+ * Duplicate slide id hard gate (W5 task 1): `slide.id` is a stable page
+ * identity spec/assemble stamps on (spec-adjacent — see `ir/index.ts`'s
+ * `id` docstring), so two slides sharing one within the same deck is always
+ * an authoring/assemble bug, never legitimate input. One issue for the
+ * whole deck (`path: "slides"`, no `page` — the problem spans multiple
+ * slides, a single page number can't represent it), listing every
+ * duplicated id and the 1-based pages it appears on. Slides that omit `id`
+ * (bare, pre-W5 IR) are never compared — `undefined` is not a value that can
+ * collide with itself.
+ *
+ * `slideId` (W5 whole-branch review finding 2) is set to the *first*
+ * duplicated id, the same "representative id" shape `src/spec/index.ts`'s
+ * own deck/plan-wide checks already use (e.g. `checkAlternatePolicy`) for an
+ * issue that is not itself scoped to
+ * one single slide: this issue can list more than one distinct duplicated id
+ * (`"a" (pages 1,2), "b" (pages 3,4)`), so a single `slideId` field is never
+ * more than a representative pointer into that list, not a full account of
+ * it — the `message` string remains the complete, authoritative accounting.
+ * `page` deliberately stays unset regardless (see above): `formatIssues`
+ * only appends `slideId` alongside a `page`, so this representative id does
+ * not, on its own, change this issue's printed format.
+ */
+function checkDuplicateSlideIds(ir: PptxIR): ValidationIssue[] {
+  const pagesById = new Map<string, number[]>()
+  ir.slides.forEach((slide, i) => {
+    if (slide.id === undefined) return
+    const pages = pagesById.get(slide.id)
+    if (pages) pages.push(i + 1)
+    else pagesById.set(slide.id, [i + 1])
+  })
+  const duplicates = [...pagesById].filter(([, pages]) => pages.length > 1)
+  if (duplicates.length === 0) return []
+  const list = duplicates.map(([id, pages]) => `"${id}" (pages ${pages.join(", ")})`).join(", ")
+  return [
+    {
+      path: "slides",
+      slideId: duplicates[0]![0],
+      message: `duplicate slide id(s): ${list} — slide ids must be unique within a deck`,
+    },
+  ]
+}
+
+function checkOverflowVocabulary(ir: PptxIR): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  const consider = (root: unknown, prefix: string, page?: number, slideId?: string) => {
+    visitStringLeaves(root, prefix, (path, text) => {
+      if (!text || !findOverflowVocabulary(text)) return
+      errors.push({
+        path,
+        message: OVERFLOW_VOCABULARY_MESSAGE,
+        ...(page !== undefined ? { page } : {}),
+        ...(slideId !== undefined ? { slideId } : {}),
+      })
+    })
+  }
+  consider(ir.meta, "meta")
+  consider(ir.footer, "footer")
+  ir.slides.forEach((slide, i) => {
+    consider(slide, `slides.${i}`, i + 1, slide.id)
+  })
+  return errors
+}
+
+/**
+ * A `**…**` mark in a component field that draws its text as written
+ * (`ir/mark-fields.ts`). The renderer would print the asterisks, so the deck
+ * is refused here, by field, with the fields that do draw a mark named.
+ */
+function checkMarkedFields(ir: PptxIR): ValidationIssue[] {
+  const errors: ValidationIssue[] = []
+  ir.slides.forEach((slide, i) => {
+    slide.components.forEach((component, c) => {
+      visitStringLeaves(component, "", (path, text) => {
+        if (!carriesMark(text)) return
+        const segments = path.split(".").filter(Boolean)
+        if (fieldDrawsMarks(component.type, segments)) return
+        errors.push({
+          path: `slides.${i}.components.${c}.${path}`,
+          message: `${markFieldKey(component.type, segments)} draws its text as written, so a **…** mark would print its asterisks. Remove the asterisks. A mark is drawn in ${[...MARKED_COMPONENT_FIELDS].join(", ")}, and in a page's heading.`,
+          page: i + 1,
+          ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+        })
+      })
+    })
+  })
+  return errors
+}
+
+/**
+ * Byte-level validation of every inline (`data:`) image asset in
+ * `assets.images` (borrow wave, Task 2 — D3): magic-byte sniffing catches a
+ * zero-byte or corrupt-header asset before it ever reaches the render/export
+ * chain, where every existing check (schema, layout, `package-audit`'s 8
+ * structural rules) previously passed it silently — it landed in the
+ * exported `.pptx` as a 0-byte or undecodable media part
+ * (`dr/d-robustness.md`'s asset-ingestion finding: a zero-byte PNG, a
+ * garbage-byte PNG and a real PNG saved as `.jpg` all "resolveLocalAssets
+ * OK → generatePptx OK", the 0-byte case confirmed landing in the output
+ * zip as `ppt/media/image-1-1.png` at 0 bytes). ERROR severity: a broken
+ * image is content loss, the same class `bullet_item_overflow` already
+ * hard-gates on — not an editorial-budget warn.
+ *
+ * Scope: `data:` URIs only — three ingestion forms exist, this covers one.
+ * A local file path (`assets.images[x].src` not yet a `data:` URI) is the
+ * CLI-only ingestion form — `resolveLocalAssets` (`cli/load-ir.ts`) runs the
+ * same {@link sniffImageFormat} sniff at its own seam, right after reading
+ * the file's bytes, since that step is Node-only and cannot live here
+ * without pulling `node:fs` into `validateIr`'s browser-safe closure
+ * (`src/index.ts`'s dependency-closure rule). An `http(s)://` src is left
+ * untouched here too, but not because it's out of scope for byte
+ * validation — it's checked at a *different, later* seam on purpose:
+ * `validateIr` never makes a network request (a deliberate, unconditional
+ * boundary — no fetch, ever, from validate), so a remote asset's bytes
+ * simply don't exist yet at this point in the pipeline. `inlinePptxAssets`
+ * (`platform/inline-assets.ts`) is where the URL actually turns into bytes
+ * (its own `fetch` call, export time) — that function's
+ * `assertDecodableImage` runs this exact same sniff on what comes
+ * back, right after the fetch, so the byte check still happens, just later
+ * and at the seam where there's something to check. All three ingestion
+ * forms therefore end up sniffed exactly once, each at the earliest point
+ * its bytes actually exist — nowhere in the chain is an `http(s)` asset's
+ * validity left permanently unchecked.
+ *
+ * Extension/declared-MIME-vs-bytes mismatch disposition: reject, not
+ * silently trust the sniffed bytes and rewrite the MIME. A
+ * `data:image/jpeg;base64,...` URI whose payload is actually PNG-encoded
+ * would otherwise flow untouched into `svg2pptx/image.ts`'s `<image>` op and
+ * land in the exported package under a JPEG media-part identity with PNG
+ * bytes inside it — exactly the extension/content mismatch the repair-dialog
+ * probe (`docs/testing.md`) exists to catch, and `package-audit.ts`'s 8
+ * structural rules never check media-part byte validity at all (`dr/
+ * d-robustness.md` again — this is the gap that let it through before).
+ * Silently rewriting the MIME instead would make that specific risk
+ * disappear without ever telling the caller their source data was
+ * mislabeled — for an AI-agent-facing SDK, bytes that don't match their
+ * claimed format is itself a signal something upstream went wrong (wrong
+ * file selected, a failed re-encode) that the caller needs surfaced, not
+ * quietly reinterpreted out from under them.
+ */
+function checkAssetBytes(ir: PptxIR): ValidationIssue[] {
+  const issues: ValidationIssue[] = []
+  for (const [id, asset] of Object.entries(ir.assets.images)) {
+    if (!asset.src.startsWith("data:")) continue
+    const bytes = dataUriHead(asset.src)
+    if (bytes === null) {
+      issues.push({
+        path: `assets.images.${id}`,
+        message: `asset "${id}": data URI is not valid base64 image data — re-export or re-encode the image`,
+      })
+      continue
+    }
+    if (bytes.length === 0) {
+      issues.push({
+        path: `assets.images.${id}`,
+        message: `asset "${id}" is a zero-byte image — re-export or re-upload the file`,
+      })
+      continue
+    }
+    const sniffed = sniffImageFormat(bytes.head)
+    if (sniffed === null) {
+      issues.push({
+        path: `assets.images.${id}`,
+        message: `asset "${id}": image data has a corrupt or unrecognized header (expected PNG, JPEG, WebP, or GIF) — re-export or re-upload the file`,
+      })
+      continue
+    }
+    const declaredMime = dataUriMime(asset.src)
+    const declaredFormat = FORMAT_BY_MIME[declaredMime]
+    if (declaredFormat && declaredFormat !== sniffed) {
+      issues.push({
+        path: `assets.images.${id}`,
+        message: `asset "${id}" declares "${declaredMime}" but its bytes are actually ${MIME_BY_SNIFFED_FORMAT[sniffed]} — fix the data URI's MIME prefix or re-export the image as ${declaredMime}`,
+      })
+    }
+  }
+  return issues
+}
+
+/**
+ * Every `asset_id` reference in the deck (the full field inventory lives in
+ * `ir/asset-references.ts`, shared with the export-time asset inliner so the
+ * two never disagree about what counts as a reference) against the keys
+ * actually present in `assets.images` (borrow wave, Task 2 — B5). A reference to a key that
+ * doesn't exist renders as pptwise's documented graceful placeholder — a
+ * gray rect, `svg/components/image.tsx`'s `src ? <image> : <rect>` fallback,
+ * a deliberate "never crash" design — with zero error or warning text
+ * anywhere in the existing chain (`dr/b-weak-model.md`'s P15 probe: the only
+ * genuinely zero-signal misinterpretation found across 15 hand-written
+ * weak-model error probes — `validateIr` and `generatePptx` both stayed
+ * silent, so a single-turn model had no text to self-correct from). Warn,
+ * not error: the placeholder still renders and nothing downstream crashes,
+ * so this is advisory (naming the typo, not blocking export) — the
+ * render-time placeholder behavior itself is unchanged — this only makes its
+ * cause visible instead of silent.
+ */
+function checkAssetReferences(ir: PptxIR, theme: ThemeDefinition, missingAssetPath?: (assetId: string) => string): ValidationIssue[] {
+  const known = Object.keys(ir.assets.images)
+  const available = known.length > 0 ? known.map((k) => `"${k}"`).join(", ") : "(none defined)"
+  const issues: ValidationIssue[] = []
+  // Every deck-side reference carries a distinct `path` (one per
+  // asset_id-bearing field). A theme default background repeats its path
+  // once per page that falls back to it, each with that page's number, so
+  // the author sees every page the missing picture would have covered.
+  for (const ref of listAssetReferences(ir, theme)) {
+    if (known.includes(ref.asset_id)) continue
+    const place = missingAssetPath ? `. Put the picture at ${missingAssetPath(ref.asset_id)}.jpg (or a .png, .webp or .gif of that name), or pin one there with pptwise images fetch or generate --as ${ref.asset_id}` : ""
+    issues.push({
+      path: ref.path,
+      message: `asset_id "${ref.asset_id}" is not defined in assets.images — available: ${available}${place}`,
+      ...(ref.slide !== undefined ? { page: ref.slide + 1 } : {}),
+      ...(ref.slideId !== undefined ? { slideId: ref.slideId } : {}),
+    })
+  }
+  return issues
+}
+
+/**
+ * A deck that binds a folded theme id (`themes/retired-ids.ts`) binds the
+ * theme that absorbed it. The rewrite happens before the schema parse, like
+ * the alias passes, so everything downstream of validation, the render
+ * chain included, sees the current id and draws exactly what a deck naming
+ * it draws. The author is told in a warning rather than an error: the deck
+ * still renders, and one edit makes the warning go away.
+ */
+function foldIrThemeId(input: unknown): { value: unknown; warning?: ValidationIssue } {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) return { value: input }
+  const theme = (input as { theme?: unknown }).theme
+  if (typeof theme !== "object" || theme === null || Array.isArray(theme)) return { value: input }
+  const id = (theme as { id?: unknown }).id
+  if (typeof id !== "string") return { value: input }
+  const target = foldedThemeTarget(id)
+  if (target === undefined) return { value: input }
+  return {
+    value: { ...input, theme: { ...theme, id: target } },
+    warning: { path: "theme.id", message: foldedThemeWarning(id)! },
+  }
+}
+
+/** How every warning about a page written for another theme begins. */
+const WRITTEN_FOR_PREFIX = "this deck's pages were written for theme"
+
+const SWITCH_TAKEABLE_FIELDS = new Set(["fields", "ballot", "subheading", "stage", "footnote", "kicker", "stamp", "tag", "years"])
+
+/** The face gates a page can fail only because of the face it is drawn on, in validate's order. */
+function firstFaceGate(ir: PptxIR, theme: ThemeDefinition, bodyFamily: string): { gate: string; errors: ValidationIssue[] } | undefined {
+  const gates: [string, () => ValidationIssue[]][] = [
+    ["content-slots", () => checkContentPageSlots(ir, theme)],
+    ["full-body", () => checkFullBodyExclusivity(ir, theme)],
+    ["boundary-content", () => checkBoundaryPageContent(ir, theme)],
+    ["page-fields", () => [...checkKickerDrawn(ir, theme).errors, ...checkSubheadingDrawn(ir, theme)]],
+    ["stage", () => courseStageIssues(ir, bodyFamily)],
+    ["boundary-slot", () => checkBoundarySlotCapacity(ir, theme)],
+    ["boundary-items", () => checkBoundaryItemCapacity(ir, theme)],
+    ["boundary-shape", () => checkBoundaryBlockShape(ir, theme)],
+    ["boundary-heading", () => checkBoundaryHeadingFit(ir, theme)],
+    ["boundary-subheading", () => checkBoundarySubheadingFit(ir, theme)],
+    ["boundary-heading-room", () => checkBoundaryHeadingRoom(ir, theme)],
+    ["boundary-blocks", () => checkBoundaryBlocksDrawn(ir, theme)],
+  ]
+  for (const [gate, run] of gates) {
+    const errors = run()
+    if (errors.length > 0) return { gate, errors }
+  }
+  return undefined
+}
+
+type SwitchSlide = PptxIR["slides"][number]
+
+/**
+ * A heading split where the face stops setting it whole, at the last break
+ * a reader would pause on (a stop, a comma, a colon, a line break) when one
+ * falls in the second half of what the face holds, else at the last unit it
+ * holds.
+ */
+function splitHeading(heading: string, limit: number): { head: string; tail: string } {
+  const held = prefixOf(heading, limit)
+  let cut = held.length
+  const pause = /[.。,，:：;；?？!！\n]/g
+  let last = -1
+  for (let m = pause.exec(held); m !== null; m = pause.exec(held)) last = m.index + 1
+  if (last >= held.length / 2) cut = last
+  return { head: heading.slice(0, cut).trim(), tail: heading.slice(cut).trim() }
+}
+
+/**
+ * A cover, chapter or ending heading longer than the new face sets whole,
+ * with the part past what it holds moved to the line under it, where the
+ * face sets one. Every word stays on the page.
+ */
+function moveHeadingTail(ir: PptxIR, index: number, theme: ThemeDefinition): { slide: SwitchSlide; note: string } | undefined {
+  const set = boundaryHeadingSet(ir, index, theme)
+  if (set === undefined || set.verdict === undefined || set.verdict === "whole") return undefined
+  if (!set.photo && set.layout?.subheading !== undefined) return undefined
+  const room = set.room()
+  if (room.limit === 0) return undefined
+  const slide = set.slide
+  const { head, tail } = splitHeading(slide.heading ?? "", room.limit)
+  if (head === "" || tail === "") return undefined
+  const join = isChineseText(tail) ? "" : " "
+  const subheading = slide.subheading?.trim() ? `${tail}${join}${slide.subheading}` : tail
+  return {
+    slide: { ...slide, heading: head, subheading },
+    note: `sets the first part of this heading whole ("${head}"), so the rest moves to the line under it`,
+  }
+}
+
+/**
+ * `slide` with what one face gate refused left off, or undefined when
+ * nothing on it can be: a page field the face has no place for, a
+ * component it cannot set, or, on a cover, chapter or ending, the page's
+ * body, which leaves the page its heading. A heading is never left off: one
+ * longer than the face sets whole moves its tail to the line under it.
+ */
+function leaveOff(ir: PptxIR, index: number, gate: string, path: string, theme: ThemeDefinition): { slide: SwitchSlide; note?: string } | undefined {
+  const slide = ir.slides[index]!
+  const field = path.split(".")[2]
+  if (gate === "boundary-heading" && field === "heading") {
+    const moved = moveHeadingTail(ir, index, theme)
+    if (moved !== undefined) return moved
+  }
+  const boundary = slide.type === "cover" || slide.type === "chapter" || slide.type === "ending"
+  const without = (key: string): { slide: SwitchSlide } | undefined => {
+    if ((slide as Record<string, unknown>)[key] === undefined) return undefined
+    const next = { ...slide } as Record<string, unknown>
+    delete next[key]
+    return { slide: next as unknown as SwitchSlide }
+  }
+  if (gate === "full-body") {
+    const first = slide.components.find((c) => FULL_BODY_TYPES.has(c.type))
+    return first === undefined ? undefined : { slide: { ...slide, components: [first] } }
+  }
+  if (gate === "content-slots") {
+    const layout = componentFace(ir, slide, theme)
+    if (layout === undefined) return undefined
+    const kept = slide.components.filter((c) => layoutAcceptsComponent(layout, c.type))
+    return kept.length === slide.components.length ? undefined : { slide: { ...slide, components: kept } }
+  }
+  if (gate === "boundary-content") {
+    const layout = componentFace(ir, slide, theme)
+    let next: SwitchSlide = { ...slide, components: slide.components.filter((c) => layout !== undefined && layoutAcceptsComponent(layout, c.type)) }
+    if (slide.footnote !== undefined && !layout?.pageFields?.includes("footnote")) next = { ...next, footnote: undefined }
+    return { slide: next }
+  }
+  if (field !== undefined && SWITCH_TAKEABLE_FIELDS.has(field)) return without(field)
+  if (!boundary) return undefined
+  // A cover, chapter or ending whose face cannot set its body, or its
+  // heading beside that body, keeps the heading: first the body goes, then
+  // the line under the heading.
+  if (slide.components.length > 0) return { slide: { ...slide, components: [] } }
+  if (field === "heading") return without("subheading")
+  return undefined
+}
+
+/**
+ * A deck whose pages were written for one theme, built under another.
+ *
+ * Every page of a deck is written against the faces of the theme it was
+ * written for: a cover with a row of figures because that theme's cover
+ * sets one, a waterfall beside a note because that theme's chart face
+ * takes one, card text as long as that theme's cards hold. Changing the
+ * one name a deck binds keeps every page and changes every face. Some of
+ * what the pages carry has no place on the new faces, and some of it is
+ * longer than the new faces set whole.
+ *
+ * Refusing that deck would make a theme change a rewrite. So a deck built
+ * under a theme other than the one its pages were written for
+ * (`writtenFor`, which the build reads from the deck's own workspace folder)
+ * is drawn with what the new faces cannot take left off, page by page, and
+ * every piece left off is named in a warning. Nothing is removed from the
+ * source: building under the theme the pages were written for draws them
+ * whole again. A deck built under the theme it was written for keeps every
+ * hard gate exactly as before, so writing a deck is as strict as it was.
+ */
+function giveWayToTheme(input: PptxIR, theme: ThemeDefinition, from: string, bodyFamily: string): { ir: PptxIR; notes: ValidationIssue[] } {
+  // What the deck keeps under `theme`, and a warning for each piece left off.
+  let ir = input
+  const notes: ValidationIssue[] = []
+  // Each round leaves something off, so the rounds are bounded by what the
+  // deck holds. The cap is a guard against a gate that keeps naming a page
+  // it has already been given.
+  for (let round = 0; round < 64; round++) {
+    const hit = firstFaceGate(ir, theme, bodyFamily)
+    if (hit === undefined) break
+    let changed = false
+    const slides = [...ir.slides]
+    for (const issue of hit.errors) {
+      if (issue.page === undefined) continue
+      const index = issue.page - 1
+      const next = leaveOff({ ...ir, slides }, index, hit.gate, issue.path, theme)
+      if (next === undefined) continue
+      slides[index] = next.slide
+      changed = true
+      notes.push({
+        ...issue,
+        message:
+          next.note !== undefined
+            ? `${WRITTEN_FOR_PREFIX} "${from}", and "${theme.id}" ${next.note}. The source keeps the heading as written, and "${from}" sets it so again.`
+            : `${WRITTEN_FOR_PREFIX} "${from}", and under "${theme.id}" this is left off the page. The source keeps it, and "${from}" draws it again. To keep it under "${theme.id}": ${issue.message}`,
+      })
+    }
+    if (!changed) break
+    ir = { ...ir, slides }
+  }
+  return { ir, notes }
+}
+
+/**
+ * A deck written for theme `from`, its content pages fitted to `theme`'s
+ * faces: what a page's drawing leaves off is taken off the page it draws
+ * (`leaveOffDropped`), so the page shows what it holds and no block goes
+ * missing unmarked, and a warning names each piece. A cut text stays on the
+ * page as the face cuts it, and validate names it after.
+ */
+function fitContentToTheme(input: PptxIR, theme: ThemeDefinition, from: string): { ir: PptxIR; notes: ValidationIssue[] } {
+  let ir = input
+  const notes: ValidationIssue[] = []
+  for (let round = 0; round < 16; round++) {
+    let changed = false
+    const slides = [...ir.slides]
+    ir.slides.forEach((slide, i) => {
+      if (slide.placeholder || slide.type !== "content") return
+      const loss = contentLoss(ir, i, theme)
+      if (!losesContent(loss)) return
+      const fewer = leaveOffDropped(slide, loss)
+      if (fewer === undefined) return
+      slides[i] = fewer.slide
+      changed = true
+      notes.push({
+        path: `slides.${i}.components`,
+        page: i + 1,
+        ...(slide.id !== undefined ? { slideId: slide.id } : {}),
+        message: `${WRITTEN_FOR_PREFIX} "${from}", and "${theme.id}" cannot draw all of this page, so ${fewer.took} is left off. The source keeps it, and "${from}" draws it again. To keep it under "${theme.id}", split the page or shorten it.`,
+      })
+    })
+    if (!changed) break
+    ir = { ...ir, slides }
+  }
+  return { ir, notes }
+}
+
+/**
+ * Validate raw JSON against the IR schema, then — once it parses — resolve
+ * `narrative` (`resolveNarrative`, spec §5: an unrecognized preset name is a
+ * `narrative`-path error, page-less) and run the content-quality gate
+ * (`checkIrQuality`, passed the resolved axes) against the parsed IR. Every
+ * hard-gate stage (schema, theme id, theme menu, full-body
+ * exclusivity, boundary-page content, duplicate ids, asset bytes, narrative)
+ * must pass for `ok: true`, same as before. Quality findings are reported
+ * the same way as schema errors (page-scoped, 1-based).
+ *
+ * Dual-threshold severity (borrow wave, Task 2 — recalibrated from the prior
+ * "any finding blocks" design): `checkIrQuality`'s own "warn" vs "error" tag
+ * is now respected, not flattened. Only "error"-severity findings
+ * (`empty_deck`, `bullet_item_overflow` — content genuinely lost: an empty
+ * deck, or a bullet item long enough to hit `bullets.tsx`'s MIN_FONT floor
+ * and actually get truncated) gate `ok`. "warn"-severity findings — the
+ * editorial-budget codes (`missing_heading`/`long_heading`/`density`/
+ * `bullets_overflow`/`bullet_item_long`/`big_number_no_kpi`) — surface on
+ * {@link ValidateResult.warnings} instead: visible to every caller (the SDK,
+ * the CLI's `validate`/`render` pre-flight), never blocking. This reverses
+ * the prior posture (this comment used to read "any finding blocks... not
+ * only 'error'-severity ones") because the evidence behind it did not hold:
+ * a boundary scan (borrow-wave fact-report, Q3) found the editorial bullets
+ * threshold blocking content roughly 3.5x below where `bullets.tsx`'s own
+ * render safety net (2-line wrap, shrink to a 14px floor) actually starts
+ * losing characters — so the hard gate was rejecting deck content that
+ * would have rendered with zero visible defect, and a tight hard gate on an
+ * editorial (not geometric) threshold taught truncate-content-to-pass
+ * workarounds rather than catching real loss. `generatePptx`'s default path
+ * inherits this unchanged (`if (!v.ok) throw`) — it already only ever
+ * blocked on `ok`, never inspected `errors`/`warnings` directly.
+ *
+ * Before any of that, two deterministic pre-parse rewrite passes run, each
+ * threading its rewrite notes onto `ValidateResult.normalized` on *every*
+ * return path below via `withNormalized`, success or failure alike — neither
+ * ever gates `ok` on its own:
+ *  - {@link normalizeComponentAliases} (W5 task 4): the component
+ *    field-name synonym rescue (kpi `title`→`label`, blockquote
+ *    `content`→`text`,
+ *    …), scoped to `slides[]`. Only rewrites where the canonical key is
+ *    absent, so the schema parse below never sees an alias as an
+ *    "unrecognized key" in the first place.
+ *  - {@link normalizeNarrativeShape} (`./narrative`, T0b bench-evidence fix
+ *    2 — see its own doc comment for the full rationale): the root-level
+ *    `narrative: {id: <preset>}` shape rescue. A model that just wrote
+ *    `theme: {id: "brief"}` a few lines above pattern-matches the same
+ *    wrapper shape onto `narrative`; this rewrites it to the bare preset
+ *    string `resolveNarrative`'s string branch actually expects. Fires only
+ *    when `id` is the object's sole narrative-relevant key (none of
+ *    strategy/pacing/audience alongside it) — a mixed shape stays
+ *    unrescued, ambiguous, and hard-errors exactly as it did before this
+ *    pass existed.
+ *
+ * Both are the same class of fix — a weak-model *synonym* rescue (a name
+ * drift for the component-alias pass, a *shape* drift for the narrative
+ * pass) — which is the actual boundary the next paragraph's "no
+ * old-vocabulary rescue" draws, not "no rewrite ever touches `narrative`."
+ *
+ * IR versions 1 through 4 are rejected before normalization or schema
+ * parsing. The error states the current v5 contract and intentionally offers
+ * no compatibility rewrite or migration command.
+ */
+export function validateIr(
+  input: unknown,
+  opts?: {
+    theme?: ThemeDefinition
+    /**
+     * Where a picture the deck names but nobody supplied belongs, without its
+     * extension: a deck project's `assets/<id>`, as the CLI shows the path.
+     * With it, a dangling `asset_id` warning says where to put the file.
+     * The browser has no such folder and leaves it out.
+     */
+    missingAssetPath?: (assetId: string) => string
+    /**
+     * Skip the content-page drawn gate (`checkContentPagesDrawn`), and only
+     * that one: the export's `allowDroppedContent` opt-in, which has to reach
+     * the export to mean anything. Nothing else should set it.
+     */
+    allowDroppedContent?: boolean
+    /**
+     * The theme this deck's pages were written for, when the caller knows
+     * it (a deck project's build reads it from the deck's workspace
+     * folder). When it names a theme other than the one the deck binds, what
+     * the bound theme's faces cannot take is left off with a warning instead
+     * of refusing the deck (`giveWayToTheme`), and a content page drawn
+     * short is a warning too. The returned `ir` is the one drawn.
+     */
+    writtenFor?: string
+  },
+): ValidateResult {
+  const version = typeof input === "object" && input !== null ? (input as Record<string, unknown>).version : undefined
+
+  if (typeof version === "string" && ["1", "2", "3", "4"].includes(version)) {
+    return {
+      ok: false,
+      errors: [{ path: "version", message: OLD_IR_VERSION_ERROR }],
+    }
+  }
+
+  const rootAliasPass = normalizeDeckRootAliases(input)
+  const componentAliasPass = normalizeComponentAliases(rootAliasPass.value)
+  const narrativeShapePass = normalizeNarrativeShape(componentAliasPass.value)
+  const themeFold = foldIrThemeId(narrativeShapePass.value)
+  const normalizedInput = themeFold.value
+  const normalized = [...rootAliasPass.normalized, ...componentAliasPass.normalized, ...narrativeShapePass.normalized]
+  // The fold warning rides every return path below, a rejected deck's
+  // included: the author learns which theme the deck now binds whatever
+  // else is wrong with it.
+  // Theme furniture a face has no place for, left off with a warning
+  // (`checkKickerDrawn`). Found partway down the gates, then carried by
+  // every later return, a rejected deck's included.
+  let givenWay: ValidationIssue[] = []
+  const withNormalized = (result: ValidateResult): ValidateResult => {
+    const noted = normalized.length > 0 ? { ...result, normalized } : result
+    const extra = [...(themeFold.warning !== undefined ? [themeFold.warning] : []), ...givenWay]
+    if (extra.length === 0) return noted
+    return { ...noted, warnings: [...extra, ...(noted.warnings ?? [])] }
+  }
+
+  const r = PptxIRSchema.safeParse(normalizedInput)
+  if (!r.success) {
+    const errors = r.error.issues.map((issue) => {
+      const path = issue.path.join(".")
+      const m = /^slides\.(\d+)/.exec(path)
+      let message = themeIssueMessage(path, issue.message, issue.input, issue.code)
+      if (issue.code === "unrecognized_keys") {
+        // The retired `scenario` key needs the current `narrative` spelling
+        // in its error instead of zod's generic unrecognized-key message.
+        if (path === "" && issue.keys.includes("scenario")) {
+          message += '. "scenario" was renamed to "narrative". Rewrite the file to the current IR'
+        }
+        // Keep the documented rename table and the generic slide-level
+        // placement hint. A documented rename remains the more specific
+        // message when both could apply.
+        const renameHints = renameHintsFor(issue.keys, path)
+        if (renameHints.length > 0) {
+          message += renameHints.join("")
+        } else if (isSlideLevelPath(path)) {
+          message += SLIDE_LEVEL_UNKNOWN_KEY_HINT
+        }
+      }
+      return { path, message, page: m ? Number(m[1]) + 1 : undefined }
+    })
+    return withNormalized({ ok: false, errors })
+  }
+  // Installed-theme check (schema layer keeps theme.id open — see ThemeSchema
+  // in ir/index.ts — so this hard gate is the only place an unknown id is
+  // actually rejected, with the available list in the message). Installed =
+  // the 13 builtins + anything registered via themes/definitions.ts's
+  // registerTheme (W3 task 4's SDK seam) — a strict superset of the old
+  // BUILTIN_THEME_IDS-only check, same error shape.
+  // A definition passed by value is the theme, full stop: it must answer to
+  // the id the IR binds, and no table is consulted for it. Without one, the
+  // id must name a built-in or an SDK-registered theme.
+  const themeId = r.data.theme.id
+  const resolved = resolveBoundThemeResult(themeId, opts?.theme)
+  if (!resolved.ok) {
+    const message =
+      resolved.reason === "mismatch"
+        ? `IR binds theme "${themeId}" but the supplied theme definition is "${resolved.suppliedId}"`
+        : `unknown theme "${themeId}"${retiredThemeHint(themeId)}. Themes available: ${resolved.installed.join(", ")} (see \`pptwise themes\`)`
+    return withNormalized({ ok: false, errors: [{ path: "theme.id", message }] })
+  }
+  const theme = resolved.theme
+  const switchedFrom = opts?.writtenFor !== undefined && opts.writtenFor !== theme.id ? opts.writtenFor : undefined
+  let data = r.data
+  if (switchedFrom !== undefined) {
+    const kept = giveWayToTheme(data, theme, switchedFrom, resolveFontStack(theme.style.fonts.body, "body", deckWritesChinese(data)))
+    data = kept.ir
+    givenWay = kept.notes
+  }
+  const menuFaceErrors = checkThemeMenuFaces(data, theme)
+  if (menuFaceErrors.length > 0) return withNormalized({ ok: false, errors: menuFaceErrors })
+  const contentSlotErrors = checkContentPageSlots(data, theme)
+  if (contentSlotErrors.length > 0) return withNormalized({ ok: false, errors: contentSlotErrors })
+  const fullBodyErrors = checkFullBodyExclusivity(data, theme)
+  if (fullBodyErrors.length > 0) return withNormalized({ ok: false, errors: fullBodyErrors })
+  const boundaryPageErrors = checkBoundaryPageContent(data, theme)
+  if (boundaryPageErrors.length > 0) return withNormalized({ ok: false, errors: boundaryPageErrors })
+  const pageFields = checkKickerDrawn(data, theme)
+  givenWay = [...givenWay, ...checkOwnKindLanding(data, theme), ...pageFields.givenWay]
+  const kickerErrors = [...pageFields.errors, ...checkSubheadingDrawn(data, theme)]
+  if (kickerErrors.length > 0) return withNormalized({ ok: false, errors: kickerErrors })
+  // The body face these two measure in is the one the deck renders in,
+  // whose cut follows the deck's language (`resolveFontStack`).
+  const bodyFamily = resolveFontStack(theme.style.fonts.body, "body", deckWritesChinese(data))
+  const stageErrors = courseStageIssues(data, bodyFamily)
+  if (stageErrors.length > 0) return withNormalized({ ok: false, errors: stageErrors })
+  const boundarySlotErrors = checkBoundarySlotCapacity(data, theme)
+  if (boundarySlotErrors.length > 0) return withNormalized({ ok: false, errors: boundarySlotErrors })
+  const boundaryItemErrors = checkBoundaryItemCapacity(data, theme)
+  if (boundaryItemErrors.length > 0) return withNormalized({ ok: false, errors: boundaryItemErrors })
+  const boundaryShapeErrors = checkBoundaryBlockShape(data, theme)
+  if (boundaryShapeErrors.length > 0) return withNormalized({ ok: false, errors: boundaryShapeErrors })
+  const boundaryHeadingErrors = checkBoundaryHeadingFit(data, theme)
+  if (boundaryHeadingErrors.length > 0) return withNormalized({ ok: false, errors: boundaryHeadingErrors })
+  const duplicateIdErrors = checkDuplicateSlideIds(data)
+  if (duplicateIdErrors.length > 0) return withNormalized({ ok: false, errors: duplicateIdErrors })
+  const overflowVocabularyErrors = checkOverflowVocabulary(data)
+  if (overflowVocabularyErrors.length > 0) return withNormalized({ ok: false, errors: overflowVocabularyErrors })
+  const markErrors = checkMarkedFields(data)
+  if (markErrors.length > 0) return withNormalized({ ok: false, errors: markErrors })
+  // Footer marks: cross-field rules first (a mark with nothing to print, a
+  // legal classification in the wrong place), then whether the row the
+  // deck asked for fits on one line. A footer never trims an author's text
+  // to make room, so a row that does not fit is refused here.
+  const footerErrors = [...footerSettingIssues(data), ...footerFitIssues(data, bodyFamily)]
+  if (footerErrors.length > 0) return withNormalized({ ok: false, errors: footerErrors })
+  // Asset byte validation (borrow wave, Task 2 — D3): a broken image is
+  // content loss, so this is a hard gate at the same short-circuiting
+  // position as the other structural checks above, not folded into
+  // checkIrQuality's editorial-budget warn/error split below.
+  const assetByteErrors = checkAssetBytes(data)
+  if (assetByteErrors.length > 0) return withNormalized({ ok: false, errors: assetByteErrors })
+  // Drawn last among the hard gates: it draws the page, so every structural
+  // gate above has passed by then and the drawing reads a sound page.
+  const boundarySubheadingErrors = checkBoundarySubheadingFit(data, theme)
+  if (boundarySubheadingErrors.length > 0) return withNormalized({ ok: false, errors: boundarySubheadingErrors })
+  const boundaryHeadingRoomErrors = checkBoundaryHeadingRoom(data, theme)
+  if (boundaryHeadingRoomErrors.length > 0) return withNormalized({ ok: false, errors: boundaryHeadingRoomErrors })
+  const boundaryBlockErrors = checkBoundaryBlocksDrawn(data, theme)
+  if (boundaryBlockErrors.length > 0) return withNormalized({ ok: false, errors: boundaryBlockErrors })
+  // Narrative resolution (spec §5's defaults chain, W3 task 2; renamed from
+  // "scenario resolution" spec §8.1). Both branches of the schema's
+  // `narrative` union (NarrativeProfileInputSchema in ir/index.ts) are open
+  // now — a preset-name string and an axes object alike — the same
+  // open-schema/closed-semantic pattern as theme.id above, so
+  // resolveNarrative is the *sole* place any narrative semantics
+  // (unrecognized preset name, unrecognized axis key, unrecognized axis
+  // value) get rejected. This one try/catch is therefore the only path that
+  // can produce a `narrative` ValidationIssue, for all of those cases —
+  // deliberate, per the W3 task-2 review finding: nesting a schema-closed
+  // enum object inside a z.union meant a failing branch reported as one
+  // opaque zod `invalid_union` issue ("Invalid input", no specifics), never
+  // resolveNarrative's own available-values message. data.narrative's
+  // inferred type (`string | Record<string, unknown> | undefined`) is wider
+  // than resolveNarrative's declared parameter — safe to narrow here because
+  // resolveNarrative validates every key and value itself at runtime
+  // regardless of what the schema let through (its own test suite pins
+  // that). The resolved axes are not written back onto data (see the
+  // narrative field's docstring in ir/index.ts) — they are only threaded
+  // into checkIrQuality below for task 3 to consume.
+  let resolvedAxes: NarrativeProfile
+  try {
+    resolvedAxes = resolveNarrative(data.narrative as string | Partial<NarrativeProfile> | undefined)
+  } catch (err) {
+    if (!(err instanceof PptwiseError)) throw err
+    return withNormalized({ ok: false, errors: [{ path: "narrative", message: err.message }] })
+  }
+  const quality = checkIrQuality(data, resolvedAxes, theme)
+  // `issue.slide` indexes `data.slides` directly for every code but
+  // "empty_deck" (that branch never reaches here, see its own `slide: 0`
+  // bookkeeping in ir-quality.ts's checkIrQuality — an early return makes it
+  // the sole issue whenever it fires) — safe to read `.id` off it unguarded.
+  // `slideId` (W5 whole-branch review finding 2) set only when that slide
+  // itself has one, same as the other page-scoped producers above.
+  const toIssue = (issue: QualityIssue): ValidationIssue =>
+    issue.code === "empty_deck"
+      ? { path: "slides", message: describeQualityIssue(issue) }
+      : {
+          path: `slides.${issue.slide}`,
+          message: describeQualityIssue(issue),
+          page: issue.slide + 1,
+          ...(data.slides[issue.slide]!.id !== undefined ? { slideId: data.slides[issue.slide]!.id } : {}),
+        }
+  // Dual-threshold severity split (borrow wave, Task 2 — see this
+  // function's own doc comment above for the evidence/rationale): only
+  // "error"-severity findings gate `ok`. "warn"-severity findings — quality's
+  // own plus checkAssetReferences's dangling-asset_id findings (B5) —
+  // surface on `warnings` regardless of which branch fires below — a
+  // rejected (`ok: false`) deck's warnings are still worth seeing, not just
+  // a clean one's.
+  const warnFindings = quality.filter((issue) => issue.severity === "warn").map(toIssue)
+  const assetRefWarnings = checkAssetReferences(data, theme, opts?.missingAssetPath)
+  const allWarnings = [...warnFindings, ...assetRefWarnings]
+  const warnings = allWarnings.length > 0 ? allWarnings : undefined
+  const errorFindings = quality.filter((issue) => issue.severity === "error")
+  if (errorFindings.length > 0) {
+    return withNormalized({ ok: false, errors: errorFindings.map(toIssue), ...(warnings ? { warnings } : {}) })
+  }
+  // Drawn after every other gate: a page they refuse is not drawn, and a
+  // page they pass is drawn as the export will draw it.
+  if (switchedFrom !== undefined && opts?.allowDroppedContent !== true) {
+    const fitted = fitContentToTheme(data, theme, switchedFrom)
+    data = fitted.ir
+    givenWay = [...givenWay, ...fitted.notes]
+  }
+  const contentDrawnErrors = opts?.allowDroppedContent === true ? [] : checkContentPagesDrawn(data, theme)
+  if (switchedFrom !== undefined && contentDrawnErrors.length > 0) {
+    // A page written for another theme's faces, drawn short on these: the
+    // deck is drawn, and each page says what it loses and how to keep it.
+    givenWay = [
+      ...givenWay,
+      ...contentDrawnErrors.map((issue) => ({
+        ...issue,
+        message: `${WRITTEN_FOR_PREFIX} "${switchedFrom}", and "${theme.id}" draws this page short. The source keeps all of it, and "${switchedFrom}" draws it whole. To draw it whole under "${theme.id}": ${issue.message}`,
+      })),
+    ]
+    return withNormalized({ ok: true, ir: data, theme, errors: [], switchedFrom, ...(warnings ? { warnings } : {}) })
+  }
+  if (contentDrawnErrors.length > 0) {
+    return withNormalized({ ok: false, errors: contentDrawnErrors, ...(warnings ? { warnings } : {}) })
+  }
+  return withNormalized({ ok: true, ir: data, theme, errors: [], ...(switchedFrom !== undefined && givenWay.some((issue) => issue.message.startsWith(WRITTEN_FOR_PREFIX)) ? { switchedFrom } : {}), ...(warnings ? { warnings } : {}) })
+}
+
+/**
+ * `"page 2 (p-kpi) — path: message"` when the issue carries both a `page`
+ * and a `slideId` (W5 whole-branch review finding 2 — the README's own
+ * claim that a validation error "references [a slide] by [its] id", made
+ * true) — the parenthesized id is appended only alongside a `page` number,
+ * never on its own: a deck-level issue that happens to set a representative
+ * `slideId` with no `page` ({@link checkDuplicateSlideIds} above) keeps its
+ * pre-existing, unchanged format. Every other combination — `page` with no
+ * `slideId` (an id-less slide), or neither — is byte-identical to before
+ * this task.
+ */
+export function formatIssues(errors: ValidationIssue[]): string {
+  return errors
+    .map((e) => {
+      if (!e.page) return `${e.path}: ${e.message}`
+      const idSuffix = e.slideId !== undefined ? ` (${e.slideId})` : ""
+      return `page ${e.page}${idSuffix} — ${e.path}: ${e.message}`
+    })
+    .join("\n")
+}
+
+/**
+ * `"warning: page 2 (p-kpi) — path: message"` per {@link ValidateResult.warnings}
+ * entry (borrow wave, Task 2) — the CLI warn-line convention: `pptwise
+ * validate`/`render` print one of these per warn-severity finding, exit 0
+ * regardless (only `errors` drives the exit code — see `cli/commands.ts`'s
+ * `runValidate`/`runRender`). Formats each issue alone through
+ * {@link formatIssues} and prefixes the result rather than duplicating its
+ * page/id/path shape — a warning line is byte-identical to an error line
+ * past the leading label.
+ */
+export function formatWarnings(warnings: ValidationIssue[]): string {
+  return warnings.map((w) => `warning: ${formatIssues([w])}`).join("\n")
+}
+
+export interface ThemeInfo {
+  id: string
+  label: string
+  colors: Record<string, unknown>
+}
+
+/** Built-in theme catalog with labels and style color tokens. */
+export function listThemes(): ThemeInfo[] {
+  return CANONICAL_THEME_IDS.map((id) => ({
+    id,
+    label: THEME_LABELS[id],
+    colors: { ...THEME_STYLES[id].colors } as Record<string, unknown>,
+  }))
+}
+
+export { irJsonSchema } from "./ir/json-schema"

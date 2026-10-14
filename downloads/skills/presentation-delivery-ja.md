@@ -1,61 +1,64 @@
 ---
-name: presentation-delivery-ja-entry
-description: HTMLから編集できるPPTXを日本語で制作するときに使う。ConnorRX56/presentation-delivery-skillsの原典方式を使い、作例の作風を自分の題材へ展開する。
+name: presentation-delivery-ja
+description: Visual Deck StudioのHTML-firstとDOMからの要素変換を使い、日本語のHTML・編集可能なPPTX・PDFを同じ原稿から制作するときに使う。
 ---
 
-# HTMLから編集できるPPTX
+# Visual Deck Studio 日本語の資料制作
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
+Studio Yebisuの独自派生。原作者の公式翻訳ではない。固定commit `06ddac077030c62f0118b225860cac46fbf658ea` の原典コードとMIT表示を保持する。
 
-## 元の方式で作る
+## 実例から始める
+
+「引き継ぎは、次の一手まで。」日本語6枚。用途・場所・次の行動、用途と版がわかるファイル名、完了／保留をまとめた資料である。本文・単純図形・ノートをPowerPointで編集できる。HTMLの概覧からも再生できる。
+
+完成例ZIPの `input/data.json`、`slides/`、`source/runtime-adapter.diff`、`deck.pptx` と全ページのPowerPoint描画を対応させる。この作例は架空の記入例で、社内規則や実績ではない。
+
+## 原典の制作経路
+
+1. `upstream/skills/visual-deck-studio/SKILL.md` と `references/slide-decks.md`、`references/editable-pptx.md` を読む。原典のHTML-firstを守り、先に出力と編集範囲を決める。
+2. 新しい資料では読み手・目的・根拠・字体・配色を決める。実在製品を取り上げる場合は、原典の事実確認・ブランド素材の工程が必要。この実例では実在ブランドを取り上げていない。
+3. 原典Path Aで、独立したページHTMLを作る。5枚以上では構造の異なる2枚を先に制作・確認してから全体へ進む。人の早期承認を受けていない場合は、制作側の仮定として記録する。
+4. 原典 `assets/deck_index.html` を複製し、manifestを自分のページへ設定する。概覧・gallery・scale・ページ記憶・キー操作を別のplayerで置き換えない。
+5. 原典 `html2pptx.js` とexporterを使う。手書きの別PPTX rendererへすり替えない。HTTP入口、字体待ち、日本語ノートのadapterと差分を保持する。
+6. 原典PDF結合と縮略図を生成し、全ページのHTMLと実PowerPointを見比べる。字間・字体の太さ・br行間は一致しないことがある。内容の一致とpixel一致を分ける。
+
+## 編集可能なHTMLの条件
+
+- bodyは `960pt × 540pt`（1280×720pxと等価）にする。
+- 主な文字をpまたはh1〜h6へ入れる。divの裸文字やspanだけの主本文を使わない。
+- 文字タグに背景・border・shadowを付けず、必要なら外側のdivへ置く。
+- divのbackground-imageやgradientを使わない。複雑なWeb表現を残す必要がある場合はHTML/PDFを正本にする。
+- 合わせて編集する段落には原典の `data-pptx-merge` を使う。PPTX側の見た目を全ページ確認する。
+- 原典の寸法・overflow・下余白・文字条件の検査は弱めない。
+
+## 日本語と字体
+
+見出しは意味で改行し、値と単位・版番号を分断しない。架空の値や状態は記入例と明示する。日本語ノートには、数値の意味と読み手の次の行動を書く。
+
+実例はBIZ UDPGothicのOFL原本をWebで配信し、PowerPointには同じ書体のインストールを前提とする。OSのフォントを抽出して再配布しない。別の書体へ変えた場合は全ページを再描画する。
+
+## 再現
+
+完成例ZIPではPython3の標準ライブラリとNode.js22以上・npmを使う。固定lockから依存と公式Chromiumを用意する。
+
+```powershell
+python source/reproduce.py --powerpoint --node "node.exeの絶対パス"
+python -m http.server 8000 --bind 127.0.0.1
+```
+
+localhostのindex.htmlを開く。PowerPoint描画にはWindows / Microsoft PowerPoint / PowerShell7とBIZ UDPGothicが必要。新出力はレビュー待ちになり、前回のQAを引き継がない。
+
+PptxGenJS4.0.1とPlaywright1.60.0を保ち、sharp0.35.5とimage-size2.0.3を固定した。元manifest・初期lock・監査・表示比較は完成例に保存する。原典MIT、字体OFL、依存の各通知を個別に読む。動画・音声・file URL・原典全機能・正式採用を検証済みとは扱わない。
+
+## 単体の本文から使う
+
+この本文は `skill-forks/presentation-delivery-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/ConnorRX56/presentation-delivery-skills/tree/06ddac077030c62f0118b225860cac46fbf658ea
 
-- https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/LICENSE
-- https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/README.md
-- https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/skills/visual-deck-studio/LICENSE
-- https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/skills/visual-deck-studio/SKILL.md
-- https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/skills/visual-deck-studio/package.json
-- https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/skills/visual-deck-studio/references/slide-decks.md
-- https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/skills/visual-deck-studio/references/editable-pptx.md
-- https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/skills/visual-deck-studio/references/typography.md
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `presentation-delivery-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-原典HTML-first Path A → 原典DOM要素変換・寸法検査 → native PPTX / PDF
-
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-- Python3（標準ライブラリ）
-- Node.js22以上 / npm / 初回公式Chromium取得
-- PowerPoint描画: Windows / Microsoft PowerPoint / PowerShell7 / インストール済みBIZ UDPGothic
-
-
-
-## 日本語で魅力ある資料へ
-
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
-
-## この作例を自分の題材へ
-
-作例: 引き継ぎは、次の一手まで。
-
-ConnorRX56/presentation-delivery-skillsのvisual-deck-studio原典を使い、社内向け「引き継ぎは、次の一手まで。」を日本語6枚で作る。HTML-first Path Aの960×540ptと4条件を守り、原典deck_index.html、html2pptx.js、PDF exporterを使用する。原典の検査を保ち、本文と単純図形をPowerPointで編集可能にする。既存カタログの紙色・深緑とBIZ UDPGothicを参考にする。ファイル名や作業状況の例は架空と明記し、発表ノートを付ける。2枚の表示確認後に全6枚を作り、HTTPのHTML、PDF、PowerPoint本体で表示を確認する。
-
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: ConnorRX56 / 原典条件: MIT原典 / OFL BIZ UDPGothic / 各Node依存の原文通知
+原作者: ConnorRX56 / 原典条件: MIT原典 / OFL BIZ UDPGothic / 各Node依存の原文通知。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
 - https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/LICENSE
 - https://github.com/ConnorRX56/presentation-delivery-skills/blob/06ddac077030c62f0118b225860cac46fbf658ea/skills/visual-deck-studio/LICENSE
-
-原文LICENSE・NOTICEと素材・依存物の条件を保持する。
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。

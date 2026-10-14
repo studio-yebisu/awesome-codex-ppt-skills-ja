@@ -1,0 +1,695 @@
+import type { Component } from "@/ir"
+import {
+  fitSvgLine,
+  measureTextUnits,
+  truncateToUnits,
+  type TextWeightHint,
+} from "../lib/svg-text-layout"
+import { accessibleInk, accessibleOpacity, graphicInk, resolveSemanticColor, type SemanticColorTokens } from "../render/ink"
+import { deltaNewsInk } from "../render/delta-news"
+import { emphasisRunInk, markedLineSegments, paintMarkedLine, parseEmphasis, stripEmphasis } from "../render/emphasis"
+import { Icon } from "../render/icons"
+import { DroppedContentMarker } from "../render/drop-marker"
+import { isMagnitudeUnit, isMultiplierUnit, isPercentUnit, joinUnit } from "../lib/quantity-format"
+import { layoutAtSize } from "./legibility"
+import type { RenderDef, SvgComponent } from "./types"
+import { cardGround, HAIRLINE, hairlineInk, isRuled } from "./surfaces"
+import { ordinaryTagSpec, paintTag, tagInks, tagWidth } from "./tag"
+
+type KpiComponent = Extract<Component, { type: "kpi_cards" }>
+
+const GAP = 16
+const CARD_H = 120
+/** The delta arrow's size, and the air between the figure's last glyph (or its unit's) and the arrow. */
+const DELTA_SIZE = 20
+const DELTA_GAP = 8
+
+// Background-agnostic by design: this function has no idea what surface its
+// caller will paint the arrow on, so it returns the raw semantic color
+// (green/red/"") and leaves ink-vs-background calibration to each call
+// site's own `accessibleInk` wrap (bench-driven fix round, defect B, see
+// this file's own call site below). Pre-fix, the call sites rendered `dp.color` raw — a real,
+// reproducible defect (not theme-specific: the full-matrix sweep found at
+// least one of up/down failing on every one of the 13 themes across the two
+// call sites combined, not just the journal/bulletin/luxe instances the
+// benchmark happened to name).
+//
+// The colour is the news the move is (`deltaNews`): the theme's
+// `colors.success` for good news and `colors.danger` for bad, a rise good and
+// a fall bad unless the item's `delta_good` says otherwise. All 17 built-in
+// themes name their own pair, each calibrated to clear 4.5:1 on that theme's
+// own card surface so the `accessibleInk` wrap below keeps it instead of
+// demoting it to neutral ink; a theme that declares neither still resolves
+// to the same `#16A34A`/`#DC2626` this function used to return outright.
+export function deltaProps(item: { delta?: "up" | "down" | "flat"; delta_good?: boolean }, colors: SemanticColorTokens) {
+  if (item.delta === undefined) return null
+  return { arrow: deltaArrow(item.delta), color: deltaNewsInk(item, colors) ?? "" } // "" filled by caller with ctx.colors.muted
+}
+
+/**
+ * The width a card keeps on its value line for the delta arrow: the arrow
+ * follows the figure (and its unit) on the same line, so the figure is
+ * fitted to what is left. Zero for a card with no delta.
+ *
+ * The arrow used to stand in the card's top right corner on its own, and a
+ * figure long enough to reach the corner ran under it: "600 至 640 亿" with
+ * its arrow printed over the last digits. Nothing measured the two against
+ * each other, so the overlap reached the page with no finding.
+ */
+function deltaReserve(item: { delta?: "up" | "down" | "flat" }, fontFamily: string): number {
+  if (!item.delta) return 0
+  return DELTA_GAP + measureTextUnits(deltaArrow(item.delta), { fontFamily }) * DELTA_SIZE
+}
+
+function deltaArrow(delta: "up" | "down" | "flat"): string {
+  return delta === "up" ? "↑" : delta === "down" ? "↓" : "→"
+}
+
+/**
+ * The type scale the value line is rendered at, handed to
+ * `splitKpiValueWidths` so it can reason about the size the value will
+ * actually come out at. This file's own card uses `CARD_VALUE_SCALE`.
+ */
+interface KpiValueScale {
+  /** Design size of the value text (`fitSvgLine`'s `fontSize`). */
+  readonly fontSize: number
+  /** Floor `fitSvgLine` shrinks to before it starts cutting characters. */
+  readonly minFontSize: number
+  /** The unit tspan's size as a fraction of the fitted value size. */
+  readonly unitRatio: number
+  /** Font stack the value and unit render in — both are bold. */
+  readonly fontFamily?: string
+}
+
+const CARD_VALUE_SCALE: KpiValueScale = { fontSize: 40, minFontSize: 22, unitRatio: 0.45 }
+
+// Value first (review round 3, D-cluster 5a). The split used to be flatly
+// proportional to each side's character count, which reads well until the
+// unit is the longer string: `value="5"` / `unit="weeks"` on the gallery's
+// 123px two-column card gave the number 13px and the suffix 70px, and the
+// card came out as "…weeks" — the number itself gone, which is not a
+// truncation but a rewrite of the datum. `102k units` came out as `1…units`
+// on the same page. The number is the payload and the unit is a suffix, so
+// the unit is what gives way: first abbreviated, then dropped outright, and
+// only once the number cannot fit even at its own floor size does it start
+// shrinking itself (leading digits first, the significant ones).
+//
+// The proportional share is kept as-is wherever it already renders the
+// number, because it is not arbitrary — it is what keeps the *overflow
+// auditor* quiet. That auditor measures a `<text>`'s whole textContent
+// (value + unit tspan concatenated) at the outer element's font-size,
+// blind to the unit tspan rendering smaller, so the proportional share is
+// exactly the largest value budget whose auditor estimate still fits the
+// card. Widening the value's share therefore has to buy that width from the
+// unit's *text*, not just from its budget — which is what the fallback
+// below does, at the `unitRatio` exchange rate the auditor's own blindness
+// implies.
+export function splitKpiValueWidths(
+  value: string,
+  unit: string | undefined,
+  availableWidth: number,
+  scale: KpiValueScale = CARD_VALUE_SCALE,
+): { valueMaxWidth: number; unitMaxWidth: number } {
+  const unitUnits = unit ? measureTextUnits(unit) : 0
+  const valueUnits = measureTextUnits(value)
+  // Nothing to split: one side or the other has no ink of its own.
+  if (unitUnits <= 0 || valueUnits <= 0) return { valueMaxWidth: availableWidth, unitMaxWidth: 0 }
+
+  const sharedValueW = Math.floor((availableWidth * valueUnits) / (valueUnits + unitUnits))
+  // Whether that share renders the number is decided with the *same*
+  // measurement `fitSvgLine` will use on it below — bold, in the heading
+  // face. Measuring the split itself that way instead would move the
+  // proportional share on every card that carries a unit, including the
+  // ones that render fine today, so the two ruler settings stay as they
+  // are: unweighted to divide the line, weighted to judge the result.
+  const ink: TextWeightHint = { bold: true, fontFamily: scale.fontFamily }
+  const valueInkUnits = measureTextUnits(value, ink)
+  if (Math.floor(sharedValueW / valueInkUnits) >= scale.minFontSize) {
+    return { valueMaxWidth: sharedValueW, unitMaxWidth: availableWidth - sharedValueW }
+  }
+
+  // The number would lose characters. Take the room back from the unit: it
+  // may keep whatever is left over once the value has the width it renders
+  // at, converted at the `unitRatio` the auditor charges unit glyphs at.
+  // Zero is a legitimate answer — a unit that has no room left is dropped
+  // rather than drawn as a stub (`fitKpiUnit` below).
+  const unitInkUnits = measureTextUnits(unit!, ink)
+  const valueInkW = Math.min(valueInkUnits * scale.fontSize, availableWidth)
+  const unitWanted = Math.ceil(unitInkUnits * Math.round(scale.fontSize * scale.unitRatio))
+  const unitMaxWidth = Math.max(
+    0,
+    Math.min(unitWanted, scale.unitRatio * (availableWidth - valueInkW)),
+  )
+  return { valueMaxWidth: availableWidth - unitMaxWidth, unitMaxWidth }
+}
+
+/**
+ * What a figure and its unit are set apart by: nothing before a percent sign,
+ * a Latin magnitude or a multiplication sign, which a reader glues to the
+ * digits ("12%", "2m", "199×"), and a space before any other unit, Latin or
+ * Chinese ("2 months", 「936.70 元」), the way `joinUnit` writes them and the
+ * way pptwise spaces figures in Chinese text (「2026 年 10 月」).
+ *
+ * A renderer that sets the unit apart in a smaller tspan paints this gap at
+ * the head of the tspan, so the unit never touches the last digit.
+ */
+export function unitGap(unit: string): "" | " " {
+  return isPercentUnit(unit) || isMagnitudeUnit(unit) || isMultiplierUnit(unit) ? "" : " "
+}
+
+/**
+ * The unit tspan's text, its gap (`unitGap`) first, or `null` when it has no
+ * room worth drawing.
+ *
+ * The `null` cases are what the value-first split
+ * above made reachable: a unit can now be squeezed down to nothing, and both
+ * degenerate results read badly glued to a number — an empty tspan is a
+ * stray empty run in the exported OOXML, and a lone "…" after a figure reads
+ * as a truncated *number* ("5…"), which is the very misreading this whole
+ * fix exists to prevent. The gap comes out of the unit's own share
+ * (`splitKpiValueWidths` divides the line by the words alone), so the number
+ * keeps exactly the room it had, and a unit with nothing left after its gap
+ * is dropped with it.
+ */
+export function fitKpiUnit(
+  unit: string | undefined,
+  unitMaxWidth: number,
+  unitFontSize: number,
+  fontFamily?: string,
+): string | null {
+  if (!unit) return null
+  const gap = unitGap(unit)
+  const gapUnits = gap ? measureTextUnits(gap, { bold: true, fontFamily }) : 0
+  const fitted = truncateToUnits(unit, unitMaxWidth / unitFontSize - gapUnits, { bold: true, fontFamily })
+  return fitted === "" ? null : `${gap}${fitted}`
+}
+
+/** Whether `fitted`, what `fitKpiUnit` set, is less than the whole `unit`: cut short or left off. */
+export function kpiUnitCut(unit: string | undefined, fitted: string | null): boolean {
+  if (!unit) return false
+  return fitted !== `${unitGap(unit)}${unit}`
+}
+
+/**
+ * A figure and its unit fitted together: the figure at the largest size from
+ * `fontSize` down to the scale's floor at which it and its whole unit both
+ * fit their shares of the line. The unit gives way only once the figure is
+ * at its floor, and then `unitCut` says so, so the card can mark the cut
+ * (`data-truncated`) rather than print a figure that lost its unit with
+ * nothing to say it did. A unit that used to be cut short or dropped while
+ * the figure stood at its design size ("2.0" left without "billion years")
+ * now costs the figure a few points of type instead.
+ */
+function fitKpiFigure(
+  value: string,
+  unit: string | undefined,
+  availableWidth: number,
+  fontSize: number,
+  scale: KpiValueScale,
+): { fittedValue: { text: string; fontSize: number; truncated: boolean }; unitFontSize: number; fittedUnit: string | null; unitCut: boolean } {
+  const fitWith = (size: number, widths: { valueMaxWidth: number; unitMaxWidth: number }) => {
+    const fittedValue = fitSvgLine(value, { maxWidth: widths.valueMaxWidth, fontSize: size, minFontSize: scale.minFontSize, bold: true, fontFamily: scale.fontFamily })
+    const unitFontSize = Math.round(fittedValue.fontSize * scale.unitRatio)
+    const fittedUnit = fitKpiUnit(unit, widths.unitMaxWidth, unitFontSize, scale.fontFamily)
+    return { fittedValue, unitFontSize, fittedUnit, unitCut: kpiUnitCut(unit, fittedUnit) }
+  }
+  // The line shared as it always was: where the number and its whole unit
+  // fit that way, nothing moves.
+  const shared = fitWith(fontSize, splitKpiValueWidths(value, unit, availableWidth, scale))
+  if (!shared.unitCut) return shared
+  // Otherwise the number steps down a point at a time, and at each size takes
+  // only the width it is drawn at, so its unit has the rest of the line. The
+  // overflow audit measures a unit at its own size (`textRuns`), so the
+  // unit's share no longer has to be priced at the figure's.
+  const ink: TextWeightHint = { bold: true, fontFamily: scale.fontFamily }
+  const valueUnits = measureTextUnits(value, ink)
+  const unitUnits = measureTextUnits(`${unitGap(unit!)}${unit}`, ink)
+  for (let size = Math.min(fontSize, shared.fittedValue.fontSize); size >= scale.minFontSize; size -= 1) {
+    const valueW = Math.ceil(valueUnits * size)
+    if (valueW + Math.ceil(unitUnits * Math.round(size * scale.unitRatio)) > availableWidth) continue
+    const whole = fitWith(size, { valueMaxWidth: valueW, unitMaxWidth: availableWidth - valueW })
+    if (!whole.unitCut && !whole.fittedValue.truncated) return whole
+  }
+  return shared
+}
+
+/**
+ * The one type size every card in a row sets its number at: the smallest
+ * size at which *all* of them still state their number in full.
+ *
+ * Review round 4, finding 3. Each card used to fit its own value in
+ * isolation, and `splitKpiValueWidths` hands each one a different width
+ * budget (the unit's share depends on how long that card's unit is), so
+ * the card with the greediest unit shrank alone: the gallery's
+ * `layout--two-column--en` set "102k" at 29px beside "91" at 40px. A row
+ * of KPI cards is one comparison, and a comparison whose figures are set
+ * at two different sizes tells the reader the big one counts for more.
+ *
+ * Smallest rather than largest, because the alternative loses data: the
+ * tight card's budget is what it is, and setting it at the roomy card's
+ * size would push it into `fitSvgLine`'s truncate branch, which cuts
+ * digits off the number. A few points of type is the cheaper currency.
+ *
+ * Pure, and decided by nothing but the row's own content and the width
+ * every card in it gets — the same two inputs the render below already
+ * has in hand. `availableWidth` is the per-card *text* column (the card
+ * width less its padding), identical for every card in a row by
+ * construction. The value-first split and the readability floor are
+ * untouched: this only picks the size, never the widths.
+ */
+export function rowValueFontSize(
+  items: readonly { value: string | number; unit?: string; delta?: "up" | "down" | "flat" }[],
+  availableWidth: number,
+  scale: KpiValueScale = CARD_VALUE_SCALE,
+  reserve: (item: { delta?: "up" | "down" | "flat" }) => number = () => 0,
+): number {
+  let smallest = scale.fontSize
+  for (const item of items) {
+    const { text: value, unit } = kpiFigure(item.value, item.unit)
+    // The size its number and its whole unit both fit at (`fitKpiFigure`).
+    const { fontSize } = fitKpiFigure(value, unit, availableWidth - reserve(item), scale.fontSize, scale).fittedValue
+    if (fontSize < smallest) smallest = fontSize
+  }
+  return smallest
+}
+
+/**
+ * 弱模型冗余单位去重（2026-07-10 无图矩阵真机抓到：terminal 4/4、magazine 1/4
+ * KPI 卡渲成「35%%」）：模型常把 "35%" 填进 value 后又把 "%" 填进 unit，
+ * 拼接即重复。value 已以 unit 结尾时丢弃 unit。
+ */
+/**
+ * A figure as the reader sees it. An author marks the figure a page is about
+ * by writing its value between `**` (`"**4.5 万元**"`), and no renderer prints
+ * the asterisks: every one reads the value through here. `marked` says the
+ * author singled it out, for the renderers that set it apart.
+ */
+export function kpiValueText(value: string | number): { text: string; marked: boolean } {
+  const written = String(value)
+  return { text: stripEmphasis(written), marked: parseEmphasis(written).some((segment) => segment.emphasized) }
+}
+
+export function dedupeKpiUnit(
+  value: string,
+  unit: string | undefined,
+): string | undefined {
+  if (!unit) return unit
+  const u = unit.trim()
+  return u && value.trim().endsWith(u) ? undefined : unit
+}
+
+/**
+ * A kpi item's figure and the unit set after it, the way every renderer that
+ * draws the unit apart reads them. A unit the value already ends with is
+ * dropped (`dedupeKpiUnit`). A multiplication sign joins the figure ("199×"):
+ * it is how the number is written, and set as a unit at under half the
+ * figure's size its small glyph reads as a speck.
+ */
+export function kpiFigure(value: string | number, unit: string | undefined): { text: string; marked: boolean; unit: string | undefined } {
+  const { text, marked } = kpiValueText(value)
+  const own = dedupeKpiUnit(text, unit)
+  if (isMultiplierUnit(own)) return { text: joinUnit(text, own!.trim()), marked, unit: undefined }
+  return { text, marked, unit: own }
+}
+
+/** Pitch of a source line under the label, and under the source line before it. */
+const SOURCE_LINE = 18
+/**
+ * A source is a citation ("CloudSeek Workspaces Q2 2026 operating data"),
+ * and a quarter-width card holds about twenty characters of one at 16px. It
+ * takes a second line before it loses its tail.
+ */
+const SOURCE_MAX_LINES = 2
+
+function fitSource(source: string, cardW: number, maxLines = SOURCE_MAX_LINES): { lines: string[]; truncated: boolean } {
+  const one = fitSvgLine(source, { maxWidth: cardW - 40, fontSize: 16, minFontSize: 16 })
+  if (!one.truncated || maxLines <= 1) return { lines: [one.text], truncated: one.truncated }
+  const laid = layoutAtSize(source, { maxWidth: cardW - 40, fontSize: 16, maxLines })
+  return { lines: laid.lines, truncated: laid.truncated }
+}
+
+/**
+ * A note (`items[].note`) is the line that puts the figure in context, "6 月末
+ * 共 63,987 家" under "门店数同比". It sits right under the label, in the
+ * card's body ink, and takes up to two lines the way a source does. A source
+ * follows it.
+ */
+const NOTE_MAX_LINES = 2
+
+function noteLines(item: KpiComponent["items"][number], cardW: number): { lines: string[]; truncated: boolean } | null {
+  return item.note?.trim() ? fitSource(stripEmphasis(item.note.trim()), cardW, NOTE_MAX_LINES) : null
+}
+
+/**
+ * A tag (`items[].tag`) says what the figure is in a few words, 「约束性指标」
+ * or "Binding". It stands on a row of its own under the label, before the
+ * note and the source, and the card grows by that row.
+ */
+const TAG_ROW = 36
+
+/** 任一 item 带 source 来源行时卡加高（label 下再排一行 11px 小字），来源折成几行就加几行。note 行同理，排在来源之前。标签行排在 note 之前。 */
+function baseCardH(component: KpiComponent, cardW: number, maxLines = SOURCE_MAX_LINES): number {
+  const lines = Math.max(
+    0,
+    ...component.items.map(
+      (it) => (noteLines(it, cardW)?.lines.length ?? 0) + (it.source ? fitSource(it.source, cardW, maxLines).lines.length : 0),
+    ),
+  )
+  const tagRow = component.items.some((it) => it.tag) ? TAG_ROW : 0
+  return (lines > 0 ? CARD_H + SOURCE_LINE * lines : CARD_H) + tagRow
+}
+
+function cardWidth(boxW: number, cols: number): number {
+  return (boxW - GAP * (cols - 1)) / cols
+}
+
+/**
+ * Horizontal graceful landing (P0 hardening, robustness deep-review D1's
+ * horizontal-axis sibling, review round 2): `items` has no schema ceiling
+ * (unlike `icon_cards`/`row_cards`, which cap at 6), and pre-fix `cardW =
+ * (box.w - GAP*(n-1)) / n` had no floor of its own — past a realistic item
+ * count (reviewer's repro: 50 items with a `delta` set, a single-column
+ * full-width slide, no arrangement tricks needed), `cardW` goes negative.
+ * The card's own background `<rect>` survives that (`rect.ts`'s
+ * `floorAxis` already floors any `<rect>`'s negative extent to 0.75px), but
+ * the delta arrow `<text textAnchor="end" x={cardX+cardW-20}>` does not:
+ * `svg2pptx/text.ts`'s `align==="right"` branch computes `w =
+ * pxToIn(xPx)`, and `xPx = cardX+cardW-20` can itself go negative for an
+ * early card once `cardW` is negative enough, producing a genuinely
+ * negative-width **text shape** (`<p:sp>`, not `<p:rect>` — `floorAxis`
+ * never sees it) that `package-audit`'s `invalid-shape-transform` rule
+ * rejects outright: `a:ext cx=-132588 ... needs cx and cy > 0` (reviewer's
+ * exact repro, 50 items with delta).
+ *
+ * Same idiom as the vertical-axis family sweep (bullets/comparison/
+ * architecture/timeline — same task): cap the number of rendered
+ * cards to what fits `box.w` at a sane minimum card width, reflow the
+ * visible cards to fill the freed-up space, and mark the drop with the
+ * same `data-dropped` declaration every other member uses (row-cards.tsx's
+ * precedent). Nothing is painted where the cut happened.
+ *
+ * The floor itself is a *readability* floor, not the 80px anti-crash one it
+ * started as (review round 3, D-cluster 5a's second half). 80px only ever
+ * asked "will this produce a negative-width shape?", so a 528px column
+ * holding four 123px cards sailed past it and drew four cards nobody could
+ * read — every label cut to one word, and two of the four numbers gone. 160
+ * asks the question that matters and still answers the old one a fortiori,
+ * being twice as wide.
+ *
+ * Where 160 comes from, measured rather than guessed. A card spends 20px of
+ * padding on each side (`cardX + 20` starts every line, `cardW - 40` budgets
+ * every width below), so 160 leaves a 120px text column. The label is what
+ * runs out of room first: it renders at 16px and `fitSvgLine` may take it
+ * down to 12px before it starts cutting characters, so 120px buys
+ * 120 / 12 = 10 units of `measureTextUnits` — 10 CJK characters, or about 19
+ * Latin ones — with no ellipsis. Against the gallery's own twelve metric
+ * labels (zh 5.0-8.0 units, en 6.6-11.4) that renders nine of them whole and
+ * leaves the three longest English ones with ~19 characters, where the
+ * pre-change 10-across density row (84px cards, a 44px column) left them 7.
+ * The value line clears the same bar with room to spare: the widest gallery value
+ * ("102k", 2.45 units) wants 54px at its own 22px floor and its unit
+ * ("units") another 26px at the matching 10px — 80px of the 120.
+ */
+const MIN_READABLE_CARD_W = 160
+
+/**
+ * How many leading items fit `box.w` at `MIN_READABLE_CARD_W` —
+ * at least 1, matching every other component in this task's family
+ * sweep ("never render zero visible units, even in a near-zero box").
+ */
+function visibleCardCount(fullCount: number, boxW: number): number {
+  const visible = Math.floor((boxW + GAP) / (MIN_READABLE_CARD_W + GAP))
+  return Math.max(1, Math.min(fullCount, visible))
+}
+
+function wrappedHeight(component: KpiComponent, w: number): number {
+  const n = component.items.length
+  const cols = visibleCardCount(n, w)
+  const rows = Math.ceil(n / cols)
+  const rowH = baseCardH(component, cardWidth(w, cols))
+  return rows * rowH + (rows - 1) * GAP
+}
+
+export const kpi: SvgComponent<KpiComponent> = {
+  measure(component, w) {
+    return wrappedHeight(component, w)
+  },
+  render(rawComponent, box, ctx) {
+    const fullCount = rawComponent.items.length
+    const cols = visibleCardCount(fullCount, box.w)
+    // Grid pitch is the column count, not the last row's leftover, so a
+    // 3+1 wrap does not stretch the fourth card across the whole rail.
+    const cardW = cardWidth(box.w, cols)
+    const naturalRows = Math.ceil(fullCount / cols)
+    // A box too short for the cards at their wrapped-source height gives the
+    // source's second line back before it drops a row or runs a card past
+    // its bottom edge. At one line a card is the height it always was.
+    let sourceCap = SOURCE_MAX_LINES
+    let rowH = baseCardH(rawComponent, cardW, sourceCap)
+    while (box.h != null && sourceCap > 1 && naturalRows * rowH + (naturalRows - 1) * GAP > box.h) {
+      sourceCap -= 1
+      rowH = baseCardH(rawComponent, cardW, sourceCap)
+    }
+    const maxRows = box.h == null ? naturalRows : Math.floor((box.h + GAP) / (rowH + GAP))
+    // A box shorter than one row of cards cannot hold a card. It used to keep
+    // one row anyway and run it past the box's bottom edge with nothing to
+    // say so; the cards decline the box instead.
+    if (maxRows < 1) {
+      return (
+        <g transform={`translate(${box.x},${box.y})`}>
+          <DroppedContentMarker count={1} kind="component" />
+        </g>
+      )
+    }
+    const rows = Math.min(naturalRows, maxRows)
+    const visible = Math.min(fullCount, cols * rows)
+    const hidden = fullCount - visible
+    const component = hidden > 0 ? { ...rawComponent, items: rawComponent.items.slice(0, visible) } : rawComponent
+    const natural = rows * rowH + (rows - 1) * GAP
+    const cardH = box.h != null && box.h > natural ? (box.h - (rows - 1) * GAP) / rows : rowH
+    // Ruled, the words hang from the hairline over the card rather than
+    // floating in the middle of a card nobody can see.
+    const ruled = isRuled(ctx)
+    const contentShift = ruled ? 0 : (cardH - rowH) / 2
+    const ground = cardGround(ctx)
+    // Row-level, not per-card: every card in this row is the same width, so
+    // its text column and the type size its number is set at are the row's
+    // property rather than each card's (see `rowValueFontSize`).
+    const availableWidth = cardW - 40
+    const valueScale: KpiValueScale = { ...CARD_VALUE_SCALE, fontFamily: ctx.fonts.heading }
+    const reserve = (item: { delta?: "up" | "down" | "flat" }) => deltaReserve(item, ctx.fonts.body)
+    const rowFontSize = rowValueFontSize(component.items, availableWidth, valueScale, reserve)
+    return (
+      <g transform={`translate(${box.x},${box.y})`}>
+        {component.items.map((item, i) => {
+          const col = i % cols
+          const row = Math.floor(i / cols)
+          const cardX = col * (cardW + GAP)
+          const cardY = row * (cardH + GAP)
+          const dp = deltaProps(item, ctx.colors)
+          // Bench-driven fix round, defect B: `deltaProps` returns a raw
+          // semantic hex (or "" for "flat", falling back to colors.muted)
+          // with no idea what background it'll render on — this card's own
+          // `colors.surface` shell (painted below). Full-matrix scanning
+          // found #16A34A (up) failing against several themes' white/light
+          // surfaces and #DC2626 (down) failing against dark/saturated
+          // ones — a real, theme-independent defect, not just the
+          // journal/bulletin/luxe instances the benchmark happened to
+          // name. `accessibleInk` keeps the semantic color when it already
+          // clears 20px body text's 4.5:1 (every theme this arrow already
+          // passed on, byte-identical), falls back to neutral ink only
+          // where it doesn't.
+          const deltaColor = dp
+            ? accessibleInk(dp.color || ctx.colors.muted, ground, DELTA_SIZE)
+            : ctx.colors.muted
+          // The overflow auditor measures a `<text>`'s whole textContent
+          // (value + unit tspan concatenated) at the outer element's
+          // font-size — it can't see that the unit tspan renders smaller. So
+          // the value's width budget is shrunk in proportion to how much of
+          // the combined text the unit accounts for, instead of a flat
+          // pixel reserve, to keep the auditor's (over)estimate inside the
+          // card — and the number keeps that budget ahead of the unit when
+          // the two cannot both have it (see `splitKpiValueWidths`). The
+          // unit itself has no length limit from the schema, so its actual
+          // rendered text is separately truncated to fit the width share it
+          // was allotted at its own (smaller) font size — together the two
+          // bounds keep the card from overflowing at any value/unit length.
+          const { text: valueStr, marked, unit } = kpiFigure(item.value, item.unit)
+          // bold-metrics fix (2026-07-24): this text renders `fontWeight=
+          // "bold"` in `ctx.fonts.heading` below — audit-baseline.test.ts's
+          // ink/journal/runway "kpi" cases caught this the same way
+          // they caught the reported cover defect (that test's own header
+          // comment: "if a case fails, the residual overflow is real and
+          // belongs to the renderer") once svg-audit.ts's overflow walker
+          // became weight/face-aware. `fittedUnit` inherits the parent
+          // `<text>`'s bold (SVG tspans inherit `font-weight` unless
+          // overridden), so its own truncation budget needs the same
+          // correction.
+          //
+          // `fontSize` is the row's shared size, not the design size — the
+          // ceiling this card's number is set at is whatever the whole row
+          // can agree on (`rowValueFontSize`). Handing `fitSvgLine` a
+          // smaller ceiling can only ever make the line fit more easily, so
+          // the card that *set* the row's size renders exactly as it did
+          // before and no card is pushed into truncation by the change.
+          // A unit that cannot be set whole even with its figure at the floor
+          // is cut, and the figure's line says so (`data-truncated`).
+          const { fittedValue, unitFontSize, fittedUnit, unitCut } = fitKpiFigure(valueStr, unit, availableWidth - reserve(item), rowFontSize, valueScale)
+          const fittedLabel = fitSvgLine(item.label, {
+            maxWidth: cardW - 40,
+            fontSize: 16,
+            minFontSize: 16,
+          })
+          const valueY = cardY + (item.icon ? 64 : 58) + contentShift
+          // The arrow stands right after the figure and its unit, on their
+          // baseline, measured the way they are painted (bold, heading face).
+          const figureW =
+            measureTextUnits(fittedValue.text, { bold: true, fontFamily: ctx.fonts.heading }) * fittedValue.fontSize +
+            (fittedUnit != null ? measureTextUnits(fittedUnit, { bold: true, fontFamily: ctx.fonts.heading }) * unitFontSize : 0)
+          const fittedSource = item.source ? fitSource(item.source, cardW, sourceCap) : null
+          const fittedNote = noteLines(item, cardW)
+          const noteShift = (fittedNote?.lines.length ?? 0) * SOURCE_LINE
+          // Every card in the row moves its note and source under the tag row
+          // when any card has a tag, so the rows stay on one line across cards.
+          const tagShift = rawComponent.items.some((it) => it.tag) ? TAG_ROW : 0
+          const tagSpec = ordinaryTagSpec(ctx)
+          const tagFits = item.tag ? tagWidth(item.tag.text, tagSpec) <= cardW - 40 : true
+          return (
+            <g key={i}>
+              {ruled ? (
+                <line x1={cardX} y1={cardY} x2={cardX + cardW} y2={cardY} stroke={hairlineInk(ctx)} strokeWidth={HAIRLINE} />
+              ) : (
+                <rect
+                  x={cardX}
+                  y={cardY}
+                  width={cardW}
+                  height={cardH}
+                  rx={ctx.shape?.radius ?? 8}
+                  fill={ground}
+                  {...(ctx.colors.cardStroke
+                    ? { stroke: ctx.colors.cardStroke, strokeWidth: 1 }
+                    : {})}
+                />
+              )}
+              {item.icon && (
+                <Icon
+                  name={item.icon}
+                  x={cardX + 20}
+                  y={cardY + 12 + contentShift}
+                  size={18}
+                  color={graphicInk(item.tone ? resolveSemanticColor(item.tone, ctx.colors) : ctx.colors.primary, ground)}
+                />
+              )}
+              <text
+                data-truncated={fittedValue.truncated || unitCut ? "1" : undefined}
+                x={cardX + 20}
+                y={valueY}
+                fontSize={fittedValue.fontSize}
+                fontWeight="bold"
+                fill={marked ? accessibleInk(emphasisRunInk(ctx.colors), ground, fittedValue.fontSize) : ctx.colors.text}
+                fontFamily={ctx.fonts.heading}
+                dominantBaseline="alphabetic"
+                xmlSpace={fittedUnit?.startsWith(" ") ? "preserve" : undefined}
+              >
+                {fittedValue.text}
+                {fittedUnit != null && (
+                  <tspan fontSize={unitFontSize} fill={ctx.colors.muted}>
+                    {fittedUnit}
+                  </tspan>
+                )}
+              </text>
+              {dp && (
+                <text
+                  data-kpi-delta=""
+                  x={cardX + 20 + figureW + DELTA_GAP}
+                  y={valueY}
+                  fontSize={DELTA_SIZE}
+                  fill={deltaColor}
+                  fontFamily={ctx.fonts.body}
+                  dominantBaseline="alphabetic"
+                >
+                  {dp.arrow}
+                </text>
+              )}
+              <text
+                data-truncated={fittedLabel.truncated ? "1" : undefined}
+                x={cardX + 20}
+                y={cardY + 96 + contentShift}
+                fontSize={fittedLabel.fontSize}
+                // A tone (`danger`, `warning`, `success`) says what kind of
+                // news the figure is, and the label carries it.
+                fill={item.tone ? accessibleInk(resolveSemanticColor(item.tone, ctx.colors), ground, fittedLabel.fontSize) : ctx.colors.muted}
+                fontFamily={ctx.fonts.body}
+                dominantBaseline="alphabetic"
+              >
+                {fittedLabel.text}
+              </text>
+              {item.tag &&
+                (tagFits ? (
+                  paintTag({
+                    tag: item.tag,
+                    x: cardX + 20,
+                    y: cardY + 106 + contentShift,
+                    spec: tagSpec,
+                    inks: tagInks(ctx, item.tag, marked, ground, tagSpec.size),
+                  })
+                ) : (
+                  <g data-dropped={1} data-dropped-kind="label" />
+                ))}
+              {fittedNote?.lines.map((line, li) =>
+                paintMarkedLine(
+                  ctx,
+                  markedLineSegments(item.note ?? "", fittedNote.lines)[li]!,
+                  { baseFill: accessibleInk(ctx.colors.text, ground, 16), fontWeight: "700", fontFamily: ctx.fonts.body, bold: false, bg: ground },
+                  <text
+                    key={`note-${li}`}
+                    data-truncated={fittedNote.truncated && li === fittedNote.lines.length - 1 ? "1" : undefined}
+                    x={cardX + 20}
+                    y={cardY + 114 + tagShift + li * SOURCE_LINE + contentShift}
+                    fontSize={16}
+                    fill={accessibleInk(ctx.colors.text, ground, 16)}
+                    fontFamily={ctx.fonts.body}
+                    dominantBaseline="alphabetic"
+                  >
+                    {line}
+                  </text>,
+                ),
+              )}
+              {fittedSource?.lines.map((line, li) => (
+                <text
+                  key={`source-${li}`}
+                  data-truncated={fittedSource.truncated && li === fittedSource.lines.length - 1 ? "1" : undefined}
+                  x={cardX + 20}
+                  y={cardY + 114 + tagShift + noteShift + li * SOURCE_LINE + contentShift}
+                  fontSize={16}
+                  fill={ctx.colors.muted}
+                  // Post-v0.3 W8 fix round (backlog item "D", task-2 review
+                  // routed — pinned as a known gap in
+                  // `full-matrix-contrast.test.ts` by commit c523994 before
+                  // this fix landed): this line renders on the card's own
+                  // `colors.surface` shell (the `<rect fill={ctx.colors.
+                  // surface}>` above), not the page background, so contrast
+                  // is checked against that surface. A flat 0.7 fillOpacity blended colors.muted
+                  // toward colors.surface close enough to fail 4.5:1 on all
+                  // 13 themes (the pinned measurement). accessibleOpacity
+                  // falls back to full opacity wherever the blend doesn't
+                  // clear the floor, `preferredOpacity` unchanged otherwise
+                  // — same pattern as chapter-banner-chapter.tsx/chapter-
+                  // rail-chapter.tsx's existing subheading call sites.
+                  fillOpacity={accessibleOpacity(ctx.colors.muted, ground, 11, 0.7)}
+                  fontFamily={ctx.fonts.body}
+                  dominantBaseline="alphabetic"
+                >
+                  {line}
+                </text>
+              ))}
+            </g>
+          )
+        })}
+        {hidden > 0 && <g data-dropped={hidden} data-dropped-kind="card" />}
+      </g>
+    )
+  },
+}
+
+export const renderDef: RenderDef<KpiComponent> = { type: "kpi_cards", measure: kpi.measure, render: kpi.render }

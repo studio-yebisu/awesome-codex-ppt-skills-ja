@@ -1,0 +1,56 @@
+{
+  "repository": "SlideSpeak/slide-design-skill",
+  "commit": "5e87d8ae71f6306e0c88f4910e6c09114581d91b",
+  "license": "MIT",
+  "scope": "Actual engine and bespoke Japanese style package",
+  "case_studies": [
+    "slidespeak-showcase"
+  ],
+  "upstream_preserved": true,
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "f6f15bccc3ecb26d1d7ceccd33f97f1be0ed74387e2b2b4967928aa8fe4251c6",
+      "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/SKILL.md"
+    },
+    {
+      "path": "docs/INTEGRATION.md",
+      "sha256": "123dc6261487df915372da224b6258b344ca1ae24587322554fc22b94222080c",
+      "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/docs/INTEGRATION.md"
+    },
+    {
+      "path": "engine/index.ts",
+      "sha256": "465c2253f5426f6153cb045f5f8b66ddafaf517120debf718fc53c94b40ec855",
+      "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/engine/index.ts"
+    },
+    {
+      "path": "engine/renderer.ts",
+      "sha256": "0a1d042b78f4de491ce62ea0bd4a5dde9e72240e55e10b7dac803e13e5f65fa3",
+      "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/engine/renderer.ts"
+    },
+    {
+      "path": "engine/skill-loader.ts",
+      "sha256": "81d629d67a6ecf59d1be2027de6db880c4a1fc367b1e877ff4d7098475b487b5",
+      "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/engine/skill-loader.ts"
+    },
+    {
+      "path": "scripts/validate-skill.ts",
+      "sha256": "9c03686efa3c6c58742b93f57b61f9e66047fda37f4c42657a00f578c0fd398d",
+      "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/scripts/validate-skill.ts"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "31d4022a125428a89eaca0da0832d6d5e2563b8d1ea5cb5f972feacb49f280fc",
+      "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/LICENSE"
+    }
+  ],
+  "method": "Bespoke authored tokens/chrome/components/grammar → original loadSkill → generateDeck with persisted Sol-authored slide-tree LLMClient → original validateSlideTree/brand guards → original renderer/wrapAsStandaloneHtml.",
+  "modifications": [
+    "No original preset reused; all six templates and tokens derive from this bookstore brief.",
+    "Original engine core unchanged. Player frame adapter is outside original slide output.",
+    "Local fonts added to chrome as full embedded TTF; original TTF/OFL packaged.",
+    "No paid AI or image service; LLMClient replays the current author-created JSON, not an external model call.",
+    "Page2 headline slot carries an intentional semantic newline; .book-statement h2 uses white-space:pre-line. Japanese line-break extension, original renderer unchanged."
+  ],
+  "localized_fix": "Only page2 headline line break changed; deck/index/tree/style/PDF updated through original generateDeck/renderer."
+}

@@ -1,0 +1,71 @@
+import type React from "react"
+import type { PptxIR, Slide } from "@/ir"
+import type { ComponentCtx } from "../components/types"
+import type { PageRenderContext } from "../render/page-context"
+
+/**
+ * Props for a motif（原 templates/types.ts 的 DecorProps）。装饰几何是
+ * (theme, slide.type) 的纯函数，不读页序。
+ */
+export interface DecorProps {
+  ir: PptxIR
+  slide: Slide
+  ctx: ComponentCtx
+  page?: PageRenderContext
+  /**
+   * This page's 0-based position in the deck. Only a motif that paints the
+   * footer row reads it (`footer-roles.ts`), for the page number: the one
+   * mark that depends on where the page sits. Decoration never does.
+   */
+  index?: number
+  /**
+   * Where the page's own frame starts, when the face runs a photograph from
+   * the page's left edge and asks the motif to frame only the rest of the
+   * page: the `data-frame-left` a face's drawing carries, read off the body
+   * by the page renderer. Only a motif that frames the page reads it.
+   */
+  frameLeft?: number
+  /**
+   * Where the page's own frame ends, when the face runs a photograph to the
+   * page's right edge or keeps its words to a column short of it: the
+   * `data-frame-right` a face's drawing carries. Only a motif that frames the
+   * page reads it.
+   */
+  frameRight?: number
+  /**
+   * `"end"` when the face keeps the bottom left for something of its own (a
+   * chart's legend) and asks the footer's words packed to the right: the
+   * `data-footer-pack` a face's drawing carries.
+   */
+  footerPack?: "end"
+}
+
+/** Motif（原 per-theme Decor）：签名对齐 templates/types.ts 的 DecorProps，可为 null。 */
+export type Motif = (p: DecorProps) => React.ReactElement | null
+
+// Wave 3（motif，随 content 任务迁移）
+export type MotifId =
+  | "banner-motif" | "rail-motif" | "poster-motif"
+  | "constellation-motif" | "corner-ornament-motif" | "tone-adaptive-motif"
+  | "rally-motif" // 2026-07-13：多彩笔刷涂鸦（rally 专属，memphis 拆分 A）
+  | "homeroom-motif" // 2026-07-13：第 13 主题 homeroom 专属；2026-08-20 柔和组重设计为「拍纸簿」（装订孔排+铅笔虚线+回形针）。水彩兄弟 motif 已删除
+  | "ink-motif" // 2026-07-10：古籍版框+印章+远山（ink 专属新表达）
+  | "luxe-motif" // 2026-07-10 全覆盖：烫金细线（luxe 专属）
+  | "bulletin-motif" // 2026-07-10 全覆盖：IKB 方块秩序（bulletin 专属）
+  | "clinic-motif" // 2026-07-28 themes-16 wave T1：细脉搏线+胶囊/细胞圆点簇（clinic 专属，第 14 主题）
+  | "almanac-motif" // 2026-07-28 themes-16 wave T2：等高线+叶脉/种子点簇（almanac 专属，第 15 主题）
+  | "ember-motif" // 2026-07-28 themes-16 wave T3：上升火花（渐隐圆点粒子沿弧线上升，ember 专属，第 16 主题）
+  | "vermilion-motif" // 2026-08-06 gov-theme wave：旗帜感绸带弧线 + 金色光芒细线（vermilion 专属，第 17 主题；刻意不用政治符号）
+  | "crayon-motif" // 2026-08-21：蜡笔描边（顶缘涂边 + 太阳涂鸦 + 底带彩虹划，crayon 专属，单锚不借用）
+  | "lecture-motif" // 2026-08-21：粉笔槽细框。2026-10-08 起是整块黑板（10px 木框、底边粉笔槽带粉笔和板擦、槽上课名、右上课时页码字段）
+  | "swiss-motif" // 2026-08-21 wave7：顶边 12px 红条 + 右缘三格灰刻度（swiss 专属，单锚不借用。板上整高裸格线不进 motif）
+  | "memo-motif" // 2026-08-21：顶部红双线 + Latin 等宽眉字 MEMORANDUM（memo 专属，单锚不借用。红只成线与字）
+  | "gauge-motif" // 2026-08-25：brief 量规定位角标，左上两条直线构成 ⌐
+  | "crayonbox-motif" // 2026-08-25：一盒蜡笔右上角阳光黄太阳与星贴纸组
+  | "folio-motif" // 2026-10-02：brief 定稿页脚，y664 细线 + 左机构名右保密级别，不印页码
+  | "proposal-motif" // 2026-10-06：proposal 提案书页眉标签与页码（左上 deck 标签，右下页码字段）
+  | "runway-motif" // 2026-10-08：runway 秀场出场单报头（左 deck 标签、右分区与页码字段、y54 黑细线）
+  | "museum-motif" // 2026-10-08：museum 展厅墙面（左上厅名与 y58 接缝、左下讲座标签、右下门牌页码字段）
+  | "stage-motif" // 2026-10-08：stage 演讲遥控器进度线（y676 轨道、已讲比例哑银、右端页码字段与总页数）
+  | "profile-motif" // 2026-10-12：profile 人物专访页脚（左 deck 标签，右讲者名字与页码字段）
+  | "recap-motif" // 2026-10-13：recap 述职账本页脚（左 deck 标签，右述职人、场合与页码字段）

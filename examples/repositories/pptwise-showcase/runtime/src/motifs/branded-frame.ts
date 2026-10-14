@@ -1,0 +1,26 @@
+import type { PageRenderContext } from "../render/page-context"
+import type { Slide } from "@/ir"
+
+/** Outer frame bottom when branding paints the logo/footer strip. */
+export const FRAME_BOTTOM_BRANDED = 624
+/** Luxe top inset is 24px. Match that on the bottom when branding is off. */
+export const LUXE_FRAME_BOTTOM_BOARD = 696
+
+/**
+ * Sparse faces that already paint their own rules. Motifs that carry
+ * horizontal furniture yield on these faces so the face stays
+ * inside the 2-group budget (gallery review r2 B4).
+ */
+export const SPARSE_FACES = ["statement", "pull-quote", "stat-hero"] as const
+
+export function yieldsOnSparseFace(_slide: Slide): boolean {
+  return false
+}
+
+/**
+ * Outer-frame bottom edge. The page context owns the effective branding
+ * decision and supplies the adjusted edge when the footer strip is present.
+ */
+export function frameBottomY(page: PageRenderContext | undefined, boardY: number): number {
+  return page?.geometry.brandedFrameBottomY ?? boardY
+}

@@ -1,0 +1,503 @@
+/**
+ * Workspace artifact root — where `pptwise render` / `pptwise preview` put
+ * their output when the caller passes no `-o`.
+ *
+ * ```
+ * <anchor>/.pptwise/
+ *   <deck-slug>/
+ *     preview.html        preview --html          (regenerable)
+ *     manifest.json       preview --html          (regenerable)
+ *     001-cover.svg       preview                 (regenerable)
+ *     002-content.svg
+ *     <deck-slug>.pptx    render                  (regenerable)
+ *     assets/             pinned photos of an IR file, or of a deck
+ *                         project from before they moved into its own
+ *                         assets/                 (not regenerable)
+ *       hero.jpg
+ *       hero.json         sidecar
+ * ```
+ *
+ * Three properties this module exists to hold:
+ *
+ * 1. **One anchor rule, two lines long.** The anchor is the directory of the
+ *    nearest `pptwise.config.json` (`./config.ts`'s `findConfig` cwd walk-up
+ *    — the project root is already a concept this CLI has), else cwd. No git
+ *    root probing: a git root and a project root are not the same thing in a
+ *    monorepo, and a third rule would only be a third thing to remember.
+ * 2. **Two zones live here.** Render output (pptx, preview.html, `NNN-*.svg`,
+ *    manifest.json) is regenerable: delete those files and re-run, they grow
+ *    back. Stock-photo assets (`.pptwise/<deck>/assets/` plus sidecars) are
+ *    pinned downloads, not garbage. A deck project's pictures are pinned
+ *    into its own `assets/` (`resolveImageHome`, `./images.ts`), and this
+ *    folder is still read for the ones pinned here before. Deleting the whole `.pptwise/` directory
+ *    drops those photos. Deck sources (`deck.spec.json`, `pages/`, project
+ *    `assets/`, `theme.json`) stay where the user put them.
+ * 3. **The directory ignores itself, once.** The first time this CLI creates
+ *    `.pptwise/` it writes `.pptwise/.gitignore` holding `*`, and appends the
+ *    entry to the repository's *local* exclude file — never the shared
+ *    `.gitignore` at the project root, which is the user's to write. The
+ *    inner file works when `.git` is read-only. See {@link ensureGitIgnored}
+ *    for the four ways the exclude line can go sideways and what each one
+ *    does instead.
+ *
+ * Everything here is fs- and process-facing, so it lives under `src/cli/`
+ * (AGENTS.md's layout rule: Node-only code never enters `src/index.ts`'s
+ * dependency closure).
+ */
+import { appendFile, mkdir, readFile, readdir, stat, unlink, writeFile } from "node:fs/promises"
+import { createHash } from "node:crypto"
+import { basename, dirname, extname, isAbsolute, join, relative, resolve, sep } from "node:path"
+import { PptwiseError } from "../errors"
+import { slugify } from "../themes/extract/brand-extract"
+import { runChild } from "./child"
+import { ASSETS_DIRNAME, assertSafeFileSegment } from "./deck-dir"
+
+/** The artifact root's directory name, relative to the anchor. Fixed: every
+ *  writer (the CLI and the DSH plugin) finds the project's artifacts here. */
+export const WORKSPACE_DIRNAME = ".pptwise"
+
+/** The line appended to the local exclude file — a trailing slash so it only
+ *  ever matches a directory, and no leading slash so it matches at whatever
+ *  depth below the repository root the anchor happens to sit (a monorepo's
+ *  per-package project root is not the repository root). */
+export const WORKSPACE_IGNORE_ENTRY = `${WORKSPACE_DIRNAME}/`
+
+/**
+ * `preview`'s own per-slide SVG filenames: `NNN-<slide type>.svg`
+ * (`runPreview` in `./commands.ts`). Slide *type* is what the name carries,
+ * not slide *id*, so inserting, deleting, or retyping a page renames files —
+ * an 8-page deck cut to 5 leaves `006-*.svg`..`008-*.svg` behind. That was
+ * invisible while `-o` was mandatory and every run got a fresh directory;
+ * with a fixed default directory it would accumulate silently, so
+ * {@link pruneRenderedSvgs} clears them before each default-path write.
+ * Deliberately narrow: it matches only names this CLI itself produces, so a
+ * file a human dropped in the same directory is never touched.
+ */
+export const RENDERED_SVG_PATTERN = /^\d{3}-[a-z-]+\.svg$/
+
+/** Where a deck's artifacts go, fully resolved. {@link resolveWorkspaceLocation}
+ *  is pure — nothing here has touched the filesystem yet. */
+export interface WorkspaceLocation {
+  /** The project root the artifact root hangs off: the nearest
+   *  `pptwise.config.json`'s directory, else cwd. */
+  anchor: string
+  /** `<anchor>/.pptwise`. */
+  root: string
+  /** `<root>/<slug>` — this deck's own subdirectory. */
+  dir: string
+  /** The deck's place in the project, slugified: the workspace's own name ({@link deckSlug}). */
+  slug: string
+  /** The deck's own directory or file name, slugified: what its pptx is
+   *  called when the deck sets no `filename` ({@link finalPptxName}). */
+  name: string
+}
+
+/**
+ * `<deck target> → <directory name>`: the deck's own place in the project,
+ * so two decks never share a workspace. A deck project directory contributes
+ * its path from the anchor (`decks/q3-review` → `decks-q3-review`, a deck at
+ * the anchor's top level keeps its own name), and a single IR file the same
+ * without its extension.
+ *
+ * Keyed by the directory name alone, two decks both called `zh/` under
+ * different parents shared `.pptwise/zh/`, and one deck's pinned and
+ * generated photos turned up in the other's asset list. A name `slugify`
+ * cannot carry whole (a Chinese directory name, which it empties) and a deck
+ * outside the anchor, whose path from it climbs out, take a short hash of
+ * that path after the name, so they stay apart too.
+ *
+ * Two names belong to pptwise itself (`previews/` for the DSH plugin's
+ * cards, `theme-try/` for `pptwise theme try`), so a deck that would land on
+ * one of them gets `-deck` after its name instead.
+ *
+ * `slugify` strips every character that could mean anything to a path (it
+ * keeps `[a-z0-9-]` and nothing else), which makes an escape impossible by
+ * construction; {@link assertSafeFileSegment} runs anyway, as the same
+ * belt-and-braces posture `./deck-dir.ts` applies to every other id it joins
+ * into a write path — a future change to either function then fails loudly
+ * here instead of quietly writing outside the workspace.
+ */
+/** Folders under `.pptwise/` that pptwise writes for itself, not for one deck. */
+export const RESERVED_SLUGS: ReadonlySet<string> = new Set(["previews", "theme-try"])
+
+export function deckSlug(target: string, isDir: boolean, anchor?: string): string {
+  const withoutExt = (p: string) => (isDir ? p : p.slice(0, p.length - extname(p).length))
+  const name = withoutExt(basename(target))
+  let key = name
+  let hashed: string | undefined
+  if (anchor !== undefined && isAbsolute(target)) {
+    const rel = relative(resolve(anchor), withoutExt(resolve(target)))
+    if (rel === "") key = name
+    else if (rel.startsWith("..") || isAbsolute(rel)) hashed = withoutExt(resolve(target))
+    else key = rel
+  }
+  const words = key.split(/[\\/]+/u).join("-")
+  // A name slugify can only carry part of keeps the rest as a hash of the whole path.
+  if (hashed === undefined && /[^A-Za-z0-9 ._-]/u.test(words.replace(/-/gu, ""))) hashed = key
+  const base = slugify(hashed === undefined ? words : name, "deck")
+  const hashedSlug = hashed === undefined ? base : `${base}-${createHash("sha1").update(hashed.split(sep).join("/")).digest("hex").slice(0, 6)}`
+  const slug = anchor !== undefined && isAbsolute(target) && RESERVED_SLUGS.has(hashedSlug) ? `${hashedSlug}-deck` : hashedSlug
+  assertSafeFileSegment(slug, "deck slug")
+  return slug
+}
+
+/** The artifact root hanging off an anchor, before a deck slug is known.
+ *  {@link inspectWorkspace} (doctor) uses this, because it reports the root
+ *  rather than any one deck's subdirectory. */
+export function resolveWorkspaceRoot(opts: {
+  cwd: string
+  /** The nearest `pptwise.config.json`'s path (`findConfig`'s hit), or null. */
+  projectConfigPath?: string | null
+}): Pick<WorkspaceLocation, "anchor" | "root"> {
+  const anchor = opts.projectConfigPath ? dirname(resolve(opts.projectConfigPath)) : resolve(opts.cwd)
+  return { anchor, root: join(anchor, WORKSPACE_DIRNAME) }
+}
+
+export function resolveWorkspaceLocation(opts: {
+  cwd: string
+  projectConfigPath?: string | null
+  /** The deck's resolved path (`loadDeckTarget`'s `resolvedTarget`). */
+  target: string
+  isDir: boolean
+}): WorkspaceLocation {
+  const { anchor, root } = resolveWorkspaceRoot(opts)
+  const slug = deckSlug(opts.target, opts.isDir, anchor)
+  return { anchor, root, dir: join(root, slug), slug, name: deckSlug(opts.target, opts.isDir) }
+}
+
+const UNSAFE_NAME_CHARS = '<>:"/\\|?*'
+
+/**
+ * The file name of a deck's final .pptx in its workspace folder: the deck's
+ * own `filename` (the spec's, or an IR file's) when it sets one, else
+ * `fallback` ({@link WorkspaceLocation.name}). Authors write `filename` with
+ * or without the extension, so a trailing `.pptx` comes off before this adds
+ * it. Characters no file system takes in a name, and path separators, turn
+ * into `-`, so the name stays one file inside the folder. Letters of any
+ * script are kept: this is the name a person finds the deck by.
+ */
+export function finalPptxName(filename: unknown, fallback: string): string {
+  const raw = typeof filename === "string" ? filename.trim().replace(/\.pptx$/iu, "") : ""
+  const safe = Array.from(raw, (ch) => (ch.charCodeAt(0) < 0x20 || UNSAFE_NAME_CHARS.includes(ch) ? "-" : ch))
+    .join("")
+    .replace(/-{2,}/gu, "-")
+    .replace(/^[.\s-]+|[.\s]+$/gu, "")
+  const name = safe === "" ? fallback : safe
+  assertSafeFileSegment(name, "deck filename")
+  return `${name}.pptx`
+}
+
+/** A deck's workspace folder holds one final .pptx. Removes every `.pptx`
+ *  in `dir` so a build that does not pass, or a deck whose `filename`
+ *  changed, leaves no stale export behind. A missing folder is nothing to do. */
+export async function removeFinalPptx(dir: string): Promise<void> {
+  let entries: string[]
+  try {
+    entries = await readdir(dir)
+  } catch {
+    return
+  }
+  await Promise.all(entries.filter((name) => /\.pptx$/iu.test(name)).map((name) => unlink(join(dir, name))))
+}
+
+// ── git ignore ──────────────────────────────────────────────────────────
+
+/** One `git` invocation's result, or `null` when git could not be spawned at
+ *  all (no binary on PATH — a real possibility in a slim container). */
+export interface GitResult {
+  code: number
+  stdout: string
+}
+
+export type GitRunner = (args: string[], cwd: string) => Promise<GitResult | null>
+
+const runGitDefault: GitRunner = async (args, cwd) => {
+  try {
+    const { code, stdout } = await runChild("git", args, { cwd })
+    return { code, stdout }
+  } catch (error) {
+    // A spawn failure's errno string (`"ENOENT"`) is "there is no git here",
+    // which is not a failure — it is one of the four outcomes below.
+    const code = (error as NodeJS.ErrnoException).code
+    if (typeof code !== "number") return null
+    throw error
+  }
+}
+
+/**
+ * What {@link ensureGitIgnored} did. Every variant is a normal outcome —
+ * none of them ever stops a render.
+ */
+export type IgnoreOutcome =
+  | { kind: "already-ignored" }
+  /** Not a git repository (`check-ignore` exit 128), or no git binary. */
+  | { kind: "no-repo" }
+  | { kind: "appended"; path: string }
+  /** The repository is real and the entry is not ignored, but the exclude
+   *  file could not be written (read-only `.git`, permissions, ...). */
+  | { kind: "failed"; path: string; reason: string }
+
+/** What `git check-ignore` said, collapsed into the three outcomes doctor
+ *  and the exclude writer both need. */
+export type GitIgnoreStatus = "ignored" | "not-ignored" | "not-a-repo"
+
+export async function gitIgnoreStatus(
+  dir: string,
+  entry: string,
+  runGit: GitRunner = runGitDefault,
+): Promise<GitIgnoreStatus> {
+  // Keep a trailing slash if the caller passed one. A directory-only
+  // gitignore rule (`.pptwise/`) does not match a *non-existent* path
+  // without the slash — git cannot know that name would be a directory —
+  // so stripping it made the first-create probe always look unignored.
+  const check = await runGit(["check-ignore", "-q", "--", entry], dir)
+  if (check === null) return "not-a-repo"
+  if (check.code === 0) return "ignored"
+  if (check.code === 1) return "not-ignored"
+  return "not-a-repo"
+}
+
+/**
+ * The three facts `pptwise doctor` prints about the workspace: the anchor,
+ * the resolved artifact root, and whether git already ignores it. Read-only
+ * — never creates a directory, never writes an exclude line.
+ */
+export async function inspectWorkspace(
+  opts: {
+    cwd: string
+    projectConfigPath?: string | null
+    runGit?: GitRunner
+  },
+): Promise<{
+  anchor: string
+  root: string
+  ignore: GitIgnoreStatus
+}> {
+  const { anchor, root } = resolveWorkspaceRoot(opts)
+  // The folder's own `.gitignore` keeps everything in it out of git whether
+  // or not git is asked, so it settles the question first.
+  if (await isSelfIgnored(root)) return { anchor, root, ignore: "ignored" }
+  const ignore = await gitIgnoreStatus(anchor, WORKSPACE_IGNORE_ENTRY, opts.runGit)
+  return { anchor, root, ignore }
+}
+
+/**
+ * Append `entry` to the repository's local exclude file, unless git already
+ * ignores it. Runs exactly once per artifact root, at the moment this CLI
+ * creates it — see {@link prepareWorkspaceDir}.
+ *
+ * The four edge cases, each with a decided answer rather than a crash:
+ *
+ * - **exit 0** — already ignored, from anywhere (`.gitignore`, a previous
+ *   run's exclude line, `core.excludesFile`). Do nothing. This is also the
+ *   opt-out: a user who wants the whole team to share the rule writes it into
+ *   `.gitignore` themselves, and this code goes quiet forever after.
+ * - **exit 1** — a repository, entry not ignored. Append.
+ * - **exit 128, or no git binary** — not a repository (or no git at all).
+ *   There is nothing to accidentally commit into, so write the artifacts and
+ *   say nothing.
+ * - **the append itself fails** — a read-only `.git`, a permissions problem.
+ *   Report it as a note and keep going. Refusing to render because a courtesy
+ *   ignore line could not be written would be the wrong trade by a mile.
+ *
+ * The exclude file's path comes from `git rev-parse --git-common-dir`, never
+ * a hardcoded `.git/info/exclude`: inside a worktree or a submodule `.git` is
+ * a *file* pointing elsewhere, and `--git-common-dir` is the one answer that
+ * is right in all three shapes (plain clone, worktree, submodule). It can
+ * come back relative to the cwd git ran in, hence the `resolve(dir, ...)`.
+ *
+ * The DSH plugin keeps a plain-JS copy of this function and of the two-step
+ * order in {@link prepareWorkspaceDir} (`ensureGitIgnored` and
+ * `ensureWorkspaceDir` in `dsh/preview-tool.js`), since it cannot import
+ * TypeScript. Change one, change both.
+ */
+export async function ensureGitIgnored(
+  dir: string,
+  entry: string,
+  runGit: GitRunner = runGitDefault,
+): Promise<IgnoreOutcome> {
+  const status = await gitIgnoreStatus(dir, entry, runGit)
+  if (status === "ignored") return { kind: "already-ignored" }
+  if (status === "not-a-repo") return { kind: "no-repo" }
+
+  const common = await runGit(["rev-parse", "--git-common-dir"], dir)
+  if (common === null || common.code !== 0 || common.stdout.trim() === "") return { kind: "no-repo" }
+  const excludePath = join(resolve(dir, common.stdout.trim()), "info", "exclude")
+
+  try {
+    await mkdir(dirname(excludePath), { recursive: true })
+    // A file that does not end in a newline would otherwise get the entry
+    // glued onto its last line, silently changing that rule instead of
+    // adding one.
+    let existing = ""
+    try {
+      existing = await readFile(excludePath, "utf8")
+    } catch {
+      existing = ""
+    }
+    const lead = existing === "" || existing.endsWith("\n") ? "" : "\n"
+    await appendFile(excludePath, `${lead}${entry}\n`)
+    return { kind: "appended", path: excludePath }
+  } catch (e) {
+    return { kind: "failed", path: excludePath, reason: (e as Error).message }
+  }
+}
+
+// ── directory preparation ───────────────────────────────────────────────
+
+async function exists(path: string): Promise<boolean> {
+  try {
+    await stat(path)
+    return true
+  } catch {
+    return false
+  }
+}
+
+/** The file that keeps the artifact root out of git from the inside, and
+ *  its one rule. `*` matches every name in the folder, this file included,
+ *  so `git status` shows nothing there and no setting of the user's is
+ *  touched. Works where `.git` cannot be written (a sandbox that only grants
+ *  the working tree) and in a folder that is not a repository yet. */
+export const SELF_IGNORE_FILENAME = ".gitignore"
+export const SELF_IGNORE_RULES = "*\n"
+
+/**
+ * Write {@link SELF_IGNORE_FILENAME} into `root`, never over one already
+ * there. Shared with the DSH plugin's own copy of the rule
+ * (`dsh/preview-tool.js`), which creates the same folder for its previews.
+ */
+export async function writeSelfIgnore(root: string): Promise<void> {
+  try {
+    await writeFile(join(root, SELF_IGNORE_FILENAME), SELF_IGNORE_RULES, { flag: "wx" })
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code !== "EEXIST") throw e
+  }
+}
+
+/** Whether `root` holds a {@link SELF_IGNORE_FILENAME} with a bare `*` rule. */
+export async function isSelfIgnored(root: string): Promise<boolean> {
+  try {
+    const text = await readFile(join(root, SELF_IGNORE_FILENAME), "utf8")
+    return text.split(/\r?\n/u).some((line) => line.trim() === "*")
+  } catch {
+    return false
+  }
+}
+
+/**
+ * Create `location.dir`, and — only on the run that first creates the
+ * artifact root itself — keep that root out of git two ways: a
+ * {@link SELF_IGNORE_FILENAME} inside it, and a line in the repository's
+ * local exclude file. Either alone is enough. The file covers a `.git` this
+ * process may not write, the exclude line covers a user who deletes the
+ * file. Returns the note lines the command should print after its summary;
+ * an empty array is the normal, quiet case.
+ *
+ * Both steps are skipped when the caller passed `--no-git-ignore`: the
+ * user having already stated who manages that directory.
+ *
+ * A root that cannot be created (a read-only checkout, a container mount)
+ * throws a {@link PptwiseError} naming both ways out instead of quietly
+ * relocating to a temp directory — output the caller cannot find is worse
+ * than output that refused to be written.
+ */
+export async function prepareWorkspaceDir(
+  location: WorkspaceLocation,
+  opts: { gitIgnore?: boolean; runGit?: GitRunner } = {},
+): Promise<string[]> {
+  const rootExisted = await exists(location.root)
+  try {
+    await mkdir(location.dir, { recursive: true })
+  } catch (e) {
+    throw new PptwiseError(
+      `cannot create the output directory ${location.dir}: ${(e as Error).message}\n` +
+        `  pass -o <path> to write somewhere writable, or run from a writable project`,
+    )
+  }
+  if (rootExisted || opts.gitIgnore === false) return []
+
+  const ignoreEntry = WORKSPACE_IGNORE_ENTRY
+  // The exclude line first: once the folder holds its own `*` rule, git
+  // reports the folder as ignored already and the line would never be added.
+  const outcome = await ensureGitIgnored(location.anchor, ignoreEntry, opts.runGit)
+  const selfIgnore = join(location.root, SELF_IGNORE_FILENAME)
+  let selfIgnored = true
+  const notes: string[] = []
+  try {
+    await writeSelfIgnore(location.root)
+  } catch (e) {
+    selfIgnored = false
+    notes.push(`note: could not write ${selfIgnore} (${(e as Error).message})`)
+  }
+  if (outcome.kind === "appended") {
+    notes.push(`note: added ${ignoreEntry} to ${outcome.path} — a local ignore, your shared .gitignore is untouched`)
+  } else if (outcome.kind === "failed") {
+    notes.push(
+      selfIgnored
+        ? `note: could not write ${outcome.path} (${outcome.reason}). ${selfIgnore} still keeps ${ignoreEntry} out of git`
+        : `note: could not write ${outcome.path} (${outcome.reason}) — add ${ignoreEntry} to your ignore rules yourself`,
+    )
+  }
+  return notes
+}
+
+/**
+ * Delete every `NNN-<type>.svg` file in `dir` ({@link RENDERED_SVG_PATTERN}).
+ * Called only on the default-path write — a directory the user named with
+ * `-o` could be anything at all, and this CLI has no business deleting files
+ * out of it. Returns how many went, for the caller's note line. A missing
+ * directory counts as zero.
+ */
+export async function pruneRenderedSvgs(dir: string): Promise<number> {
+  let entries: string[]
+  try {
+    entries = await readdir(dir)
+  } catch {
+    return 0
+  }
+  const stale = entries.filter((name) => RENDERED_SVG_PATTERN.test(name))
+  await Promise.all(stale.map((name) => unlink(join(dir, name))))
+  return stale.length
+}
+
+const WORKSPACE_IMAGE_EXTS = new Set([".png", ".jpg", ".jpeg", ".gif", ".webp"])
+
+/** Directory under a deck workspace that holds pinned stock photos + sidecars. */
+export function workspaceStockAssetsDir(location: WorkspaceLocation): string {
+  return join(location.dir, ASSETS_DIRNAME)
+}
+
+/**
+ * Scan `.pptwise/<deck>/assets/` for image files. Skips `.json` sidecars and
+ * dotfiles. `src` is the absolute path so {@link resolveLocalAssets} can
+ * inline it without guessing. Duplicate ids (logo.png + logo.jpg) error,
+ * same posture as the deck-project `assets/` scan.
+ */
+export async function scanWorkspaceAssets(assetsDir: string): Promise<Record<string, { src: string }>> {
+  let names: string[]
+  try {
+    names = (await readdir(assetsDir, { withFileTypes: true }))
+      .filter((entry) => entry.isFile() && !entry.name.startsWith("."))
+      .map((entry) => entry.name)
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return {}
+    throw new PptwiseError(`cannot read workspace assets directory ${assetsDir}: ${(e as Error).message}`)
+  }
+  const images: Record<string, { src: string }> = {}
+  const sourceFile = new Map<string, string>()
+  for (const name of names) {
+    const ext = extname(name).toLowerCase()
+    if (ext === ".json" || !WORKSPACE_IMAGE_EXTS.has(ext)) continue
+    const id = basename(name, extname(name))
+    const previous = sourceFile.get(id)
+    if (previous !== undefined) {
+      throw new PptwiseError(
+        `workspace ${ASSETS_DIRNAME}/${previous} and ${ASSETS_DIRNAME}/${name} both register image id "${id}" — rename one of the files`,
+      )
+    }
+    sourceFile.set(id, name)
+    images[id] = { src: join(assetsDir, name) }
+  }
+  return images
+}

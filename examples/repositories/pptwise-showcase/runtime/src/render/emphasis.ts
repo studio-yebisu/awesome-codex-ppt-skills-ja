@@ -1,0 +1,791 @@
+import React from "react"
+import { META_FONT_FLOOR_PX } from "../constants"
+import {
+  fitSvgLine,
+  layoutSvgText,
+  measureTextUnits,
+  truncateToUnits,
+  type SvgTextLayout,
+  type TextWeightHint,
+} from "../lib/svg-text-layout"
+import { formLegibleInk } from "../components/legibility"
+import { fitHeadingLines } from "./heading-fit"
+import { accessibleInk } from "./ink"
+import { isBold } from "./fonts"
+import type { ComponentCtx } from "../components/types"
+import type { EmphasisTreatment } from "../themes/schema"
+import type { StyleColors } from "../themes/tokens"
+
+/** One run of text with its emphasis state, in source (unmarked) text order. */
+export interface EmphasisSegment {
+  text: string
+  emphasized: boolean
+}
+
+/** `**bold**` markdown subset — non-greedy so adjacent pairs don't merge. */
+const EMPHASIS_RE = /\*\*(.+?)\*\*/g
+
+/**
+ * Splits `text` on a `**bold**` markdown subset into ordered segments whose
+ * concatenated `.text` reconstructs the original text with the `**` markers
+ * removed (see `stripEmphasis`, which relies on exactly this).
+ *
+ * Nesting isn't supported — the regex matches left to right, so
+ * `"**a **b** c**"` treats the first `**` it can close as one emphasized run,
+ * not a nested one. An unclosed `**` (no matching close) never matches, so it
+ * falls through untouched as literal text; the same is true of an empty pair
+ * (`"****"`) since `(.+?)` requires at least one character between markers.
+ */
+export function parseEmphasis(text: string): EmphasisSegment[] {
+  const segments: EmphasisSegment[] = []
+  let lastIndex = 0
+  for (const match of text.matchAll(EMPHASIS_RE)) {
+    const index = match.index ?? 0
+    if (index > lastIndex) {
+      segments.push({ text: text.slice(lastIndex, index), emphasized: false })
+    }
+    segments.push({ text: match[1], emphasized: true })
+    lastIndex = index + match[0].length
+  }
+  if (lastIndex < text.length) {
+    segments.push({ text: text.slice(lastIndex), emphasized: false })
+  }
+  return segments
+}
+
+/** Strips `**` markers, returning plain text — the fit chain's (measure/wrap/truncate) input. */
+export function stripEmphasis(text: string): string {
+  return parseEmphasis(text)
+    .map((s) => s.text)
+    .join("")
+}
+
+/**
+ * Renders segments as SVG `tspan`s: plain runs get `fill={baseFill}`,
+ * emphasized runs get `fill={accent} fontWeight={opts.fontWeight ?? "600"}`.
+ * When there's a single non-emphasized segment (the common case — no `**` in
+ * the source text) this returns the bare string instead of wrapping it in a
+ * `tspan`, so unmarked text renders byte-identical to before this primitive
+ * existed.
+ *
+ * `fontWeight` defaults to `"600"` — the weight paragraph/bullets/callout
+ * have always used — so those three existing callers are unaffected by
+ * passing no `fontWeight` at all. Pass an explicit value (e.g. `"700"`) for a
+ * caller whose own base weight is heavier than 600 and wants its emphasized
+ * runs to stand out a full step above that (verdict_banner; template
+ * subheadings).
+ */
+export function renderEmphasisTspans(
+  segments: EmphasisSegment[],
+  opts: { accent: string; baseFill: string; fontWeight?: string },
+): React.ReactNode {
+  if (segments.length === 0) return ""
+  if (segments.length === 1 && !segments[0].emphasized) {
+    return segments[0].text
+  }
+  // These runs flow on from one another, and a renderer that strips each
+  // chunk's edge blanks under the default whitespace rule loses the space
+  // two runs meet at (rsvg does: "Added worldwide: **112 GW**, up 48%"
+  // previewed as "worldwide:112 GW, up"). A run with a blank on an edge
+  // another run meets says to keep it. Browsers and the PowerPoint export
+  // read the same single space either way.
+  const last = segments.length - 1
+  const keepsEdgeBlank = (index: number, text: string) =>
+    (index > 0 && /^\s/.test(text)) || (index < last && /\s$/.test(text)) ? { xmlSpace: "preserve" } : {}
+  return segments.map((seg, i) =>
+    seg.emphasized
+      ? React.createElement(
+          "tspan",
+          { key: i, fill: opts.accent, fontWeight: opts.fontWeight ?? "600", ...keepsEdgeBlank(i, seg.text) },
+          seg.text,
+        )
+      : React.createElement("tspan", { key: i, fill: opts.baseFill, ...keepsEdgeBlank(i, seg.text) }, seg.text),
+  )
+}
+
+export interface EmphasisLineRender {
+  pads: React.ReactNode
+  tspans: React.ReactNode
+}
+
+/** A theme that declares no emphasis stroke tints the run in its accent. */
+export function resolveEmphasisForm(emphasis: EmphasisTreatment | undefined): EmphasisTreatment {
+  return emphasis ?? "tint"
+}
+
+/**
+ * The ink a `**marked**` run is struck in.
+ *
+ * The accent, unless the theme named a separate `emphasisInk` because its
+ * accent cannot separate from its own text ink (see `themes/tokens.ts`). Every
+ * painter of an emphasised run resolves it here rather than reading
+ * `colors.accent` directly, so a theme that splits the two gets the split on
+ * headings, body text and its own sparse faces alike.
+ */
+export function emphasisRunInk(colors: Pick<StyleColors, "accent" | "emphasisInk">): string {
+  return colors.emphasisInk ?? colors.accent
+}
+
+/** Hand-drawn quadratic chalk stroke whose x-span equals `width`. */
+function chalkUnderlineD(x: number, width: number, y: number): string {
+  const span = Math.max(width, 1)
+  const ctrlDx = span * (200 / 420)
+  const ctrlDy = Math.max(4, Math.min(10, span * 0.05))
+  return `M ${x} ${y} q ${ctrlDx} ${ctrlDy} ${span} 2`
+}
+
+function djb2(s: string): number {
+  let h = 5381
+  for (let i = 0; i < s.length; i++) h = ((h << 5) + h + s.charCodeAt(i)) | 0
+  return Math.abs(h)
+}
+
+function hashUnit(h: number, i: number): number {
+  const mixed = Math.abs((h ^ Math.imul(i + 1, 2654435761)) | 0)
+  return (mixed % 1000) / 999
+}
+
+function r1(v: number): number {
+  return Math.round(v * 10) / 10
+}
+
+/**
+ * Marker-pen pad: a filled quad whose corners miss a true rectangle by a
+ * few pixels. Offsets come from a djb2 of the run, never Math.random.
+ */
+function markerPadD(opts: {
+  x: number
+  y: number
+  width: number
+  height: number
+  seed: string
+}): string {
+  const { x, y, width, height, seed } = opts
+  const h = djb2(seed)
+  const signed = (i: number) => hashUnit(h, i) * 2 - 1
+  const jitter = Math.min(7, Math.max(1.6, height * 0.14))
+  const overshoot = Math.min(10, Math.max(2.2, width * 0.06))
+  const tilt = signed(0) * jitter * 0.55
+  const tlx = r1(x + signed(1) * jitter * 0.45 + tilt)
+  const tly = r1(y + signed(2) * jitter * 0.32)
+  const trx = r1(x + width + signed(3) * jitter * 0.5 + overshoot * (0.15 + 0.45 * hashUnit(h, 4)) + tilt)
+  const try_ = r1(y + signed(5) * jitter * 0.28)
+  const brx = r1(x + width + signed(6) * jitter * 0.48 + overshoot * (0.3 + 0.4 * hashUnit(h, 7)) - tilt)
+  const bry = r1(y + height + signed(8) * jitter * 0.28)
+  const blx = r1(x + signed(9) * jitter * 0.45 - overshoot * (0.12 + 0.28 * hashUnit(h, 10)) - tilt)
+  const bly = r1(y + height + signed(11) * jitter * 0.26)
+  return `M ${tlx} ${tly} L ${trx} ${try_} L ${brx} ${bry} L ${blx} ${bly} Z`
+}
+
+/**
+ * The weight one run is measured at: the caller's hint for a plain run, and
+ * for a marked run the weight this module paints it in (`fontWeight`, 600 by
+ * default), in the caller's face.
+ *
+ * A caller's hint describes its own text, and the marked run is not that
+ * text: a callout set in Georgia Regular paints its marked run at 600, and
+ * measured it at the hint's Regular. Bold Georgia runs about a sixth wider,
+ * so the pad stopped short of the glyphs and the next run, placed where the
+ * regular glyphs would have ended, was drawn over them.
+ */
+function runWeight(
+  segment: EmphasisSegment,
+  opts: { fontWeight?: string; measureWeight?: TextWeightHint },
+): TextWeightHint | undefined {
+  if (!segment.emphasized) return opts.measureWeight
+  return { ...opts.measureWeight, bold: isBold(opts.fontWeight ?? "600") }
+}
+
+/**
+ * Width of one line as it will be painted, in px: plain runs at the
+ * caller's weight, marked runs at the weight they are painted in. Tracking
+ * is not counted, since none of the wrapping callers set any.
+ */
+export function paintedLineWidth(
+  segments: EmphasisSegment[],
+  opts: { fontSize: number; fontWeight?: string; measureWeight?: TextWeightHint },
+): number {
+  return segments.reduce((sum, segment) => sum + measureTextUnits(segment.text, runWeight(segment, opts)) * opts.fontSize, 0)
+}
+
+/**
+ * Renders one already-fitted emphasis line. The default tint branch delegates
+ * to `renderEmphasisTspans` unchanged. A theme-assigned pad branch derives run
+ * offsets and widths with the same `measureTextUnits` weight hint its caller
+ * used for fitting, then returns foreground rectangles separately so callers
+ * can place them immediately before their existing `<text>` element. The
+ * underline branch reuses that run geometry for a chalk quadratic under each
+ * emphasized run and keeps tint-like ink on the tspans.
+ */
+export function renderEmphasisLine(
+  segments: EmphasisSegment[],
+  opts: {
+    accent: string
+    padFill?: string
+    baseFill: string
+    fontSize: number
+    x: number
+    baselineY: number
+    emphasis?: EmphasisTreatment
+    fontWeight?: string
+    measureWeight?: TextWeightHint
+    textAnchor?: "start" | "middle" | "end"
+    /**
+     * The parent `<text>`'s own `letterSpacing`, in absolute px.
+     *
+     * Every tspan of a marked line carries an absolute `x`, so the cursor
+     * here has to advance the way the renderer will lay the glyphs out. It
+     * measured glyph units alone, so a face setting tracking (fashion
+     * masthead's title at -2, its subtitle at +4) got runs that drifted
+     * apart or overlapped, with the pad and underline missing by the same
+     * amount. Budgeted as `(charCount - 1) * letterSpacing` over the whole
+     * line, the same derivation `svg-text-layout.ts` uses.
+     */
+    letterSpacing?: number
+  },
+): EmphasisLineRender {
+  const form = resolveEmphasisForm(opts.emphasis)
+  const tspansTint = renderEmphasisTspans(segments, {
+    accent: opts.accent,
+    baseFill: opts.baseFill,
+    fontWeight: opts.fontWeight,
+  })
+  if (form === "tint" || !segments.some((segment) => segment.emphasized && segment.text.length > 0)) {
+    return {
+      pads: null,
+      tspans: tspansTint,
+    }
+  }
+
+  const tracking = opts.letterSpacing ?? 0
+  const chars = segments.map((segment) => Array.from(segment.text).length)
+  /** A run's own ink: its glyphs plus the gaps between them. */
+  const widths = segments.map(
+    (segment, index) =>
+      measureTextUnits(segment.text, runWeight(segment, opts)) * opts.fontSize +
+      Math.max(0, chars[index]! - 1) * tracking,
+  )
+  /** What the cursor moves by: the run's ink plus the gap to the next run. */
+  const advances = widths.map((width, index) => width + (chars[index]! > 0 ? tracking : 0))
+  const totalChars = chars.reduce((sum, n) => sum + n, 0)
+  const lineWidth =
+    advances.reduce((sum, advance) => sum + advance, 0) - (totalChars > 0 ? tracking : 0)
+  const startX =
+    opts.textAnchor === "middle"
+      ? opts.x - lineWidth / 2
+      : opts.textAnchor === "end"
+        ? opts.x - lineWidth
+        : opts.x
+  const padFill = opts.padFill ?? opts.accent
+
+  if (form === "underline") {
+    const underlineY = opts.baselineY + opts.fontSize * 0.12
+    let cursorX = startX
+    const pads = segments.flatMap((segment, index) => {
+      const width = widths[index] ?? 0
+      const path =
+        segment.emphasized && segment.text.length > 0
+          ? [
+              React.createElement("path", {
+                key: index,
+                d: chalkUnderlineD(cursorX, width, underlineY),
+                fill: "none",
+                stroke: padFill,
+                strokeWidth: 3,
+                strokeLinecap: "round",
+                "data-emphasis-underline": "",
+              }),
+            ]
+          : []
+      cursorX += advances[index] ?? width
+      return path
+    })
+    return { pads, tspans: tspansTint }
+  }
+
+  const xPadding = opts.fontSize * 0.1
+  const height = opts.fontSize * 1.1
+  const y = opts.baselineY - opts.fontSize * 0.85
+  let cursorX = startX
+  const textXs: number[] = []
+  const pads = segments.flatMap((segment, index) => {
+    const width = widths[index] ?? 0
+    textXs[index] = cursorX
+    const path =
+      segment.emphasized && segment.text.length > 0
+        ? [
+            React.createElement("path", {
+              key: index,
+              d: markerPadD({
+                x: cursorX - xPadding,
+                y,
+                width: width + xPadding * 2,
+                height,
+                seed: `${segment.text}:${r1(cursorX)}:${r1(y)}:${r1(width)}:${r1(opts.fontSize)}`,
+              }),
+              fill: padFill,
+              "data-emphasis-pad": "",
+            }),
+          ]
+        : []
+    cursorX += advances[index] ?? width
+    return path
+  })
+  const padInk = formLegibleInk(opts.baseFill, padFill, opts.fontSize)
+  // Every run here starts its own chunk at its own `x`, and a renderer may
+  // strip a chunk's leading blank under the default whitespace rule (rsvg
+  // does: "**double digits** at the group" previewed as "digitsat the
+  // group"). The cursor already counted that blank, so a run that opens
+  // with one says to keep it. PowerPoint reads the same single space.
+  const keepsBlank = (index: number, text: string) => (index > 0 && /^\s/.test(text) ? { xmlSpace: "preserve" } : {})
+  const tspans = segments.map((segment, index) => {
+    const x = textXs[index] ?? startX
+    return segment.emphasized
+      ? React.createElement(
+          "tspan",
+          {
+            key: index,
+            x,
+            fill: padInk,
+            fontWeight: opts.fontWeight ?? "600",
+            textAnchor: "start",
+            "data-emphasis-pad-fill": padFill,
+            ...keepsBlank(index, segment.text),
+          },
+          segment.text,
+        )
+      : React.createElement(
+          "tspan",
+          { key: index, x, fill: opts.baseFill, textAnchor: "start", ...keepsBlank(index, segment.text) },
+          segment.text,
+        )
+  })
+  return {
+    pads,
+    tspans,
+  }
+}
+
+/**
+ * Minimal-consumer wrapper around `renderEmphasisLine`. The caller supplies
+ * its existing text element, preserving that element's attribute order and
+ * therefore the tint branch's serialized bytes. The helper reads only the
+ * numeric line geometry needed for pad placement, clones the text with the
+ * generated tspans, and puts every pad before that clone.
+ */
+export function renderEmphasisText(
+  segments: EmphasisSegment[],
+  opts: {
+    accent: string
+    padFill?: string
+    baseFill: string
+    emphasis?: EmphasisTreatment
+    fontWeight?: string
+    measureWeight?: TextWeightHint
+  },
+  textElement: React.ReactElement<React.SVGProps<SVGTextElement>>,
+): React.ReactElement {
+  const x = Number(textElement.props.x ?? 0)
+  const baselineY = Number(textElement.props.y)
+  const fontSize = Number(textElement.props.fontSize)
+  if (![x, baselineY, fontSize].every(Number.isFinite)) {
+    throw new Error("emphasis text requires numeric x, y, and fontSize")
+  }
+  const textAnchor =
+    textElement.props.textAnchor === "middle" || textElement.props.textAnchor === "end"
+      ? textElement.props.textAnchor
+      : "start"
+  // The caller's own element is the authority on how its glyphs are spaced,
+  // so the geometry below reads the tracking from it rather than assuming
+  // none. A non-numeric value (a CSS length string) budgets as zero, which
+  // is what this helper did for every caller before it read the field.
+  const spacing = Number(textElement.props.letterSpacing)
+  const rendered = renderEmphasisLine(segments, {
+    ...opts,
+    x,
+    baselineY,
+    fontSize,
+    textAnchor,
+    letterSpacing: Number.isFinite(spacing) ? spacing : 0,
+  })
+  return React.createElement(
+    React.Fragment,
+    { key: textElement.key },
+    rendered.pads,
+    React.cloneElement(textElement, undefined, rendered.tspans),
+  )
+}
+
+/** Ink and stroke a heading paints its emphasis runs with. */
+interface EmphasisHeadingPaint {
+  /** Fill for an emphasized run under the `tint` stroke. */
+  accent: string
+  /** Fill of the pad/underline stroke. Defaults to `accent`. */
+  padFill?: string
+  /** Fill for plain runs — the same value the `<text>` element carries. */
+  baseFill: string
+  /** Weight for emphasized runs. Defaults to `"600"`. */
+  fontWeight?: string
+  /** The bound theme's stroke (`ComponentCtx.emphasis`). Omitted equals `tint`. */
+  emphasis?: EmphasisTreatment
+  /** The weight hint the fit used, so pad geometry lands under the glyphs. */
+  measureWeight?: TextWeightHint
+}
+
+/** A fitted heading plus one emphasis segment table per fitted line. */
+export interface EmphasisHeadingLayout extends SvgTextLayout {
+  /** Aligned 1:1 with `lines`. A line with no marked run holds one plain segment. */
+  segments: EmphasisSegment[][]
+}
+
+/**
+ * The one rule every heading painter follows: fit the stripped text, paint the
+ * marked one.
+ *
+ * `layout` must be the result of running the fit chain over
+ * `stripEmphasis(source)` — markers must never reach a measurement, or they
+ * widen lines and move breaks by four characters per run that nothing ever
+ * paints. This re-attaches each run's emphasis onto those already-fitted lines
+ * via `sliceEmphasisForLines`, so a run straddling a kinsoku-aware line break
+ * stays emphasized on both halves.
+ *
+ * Text with no markers is its own stripped form and yields one plain segment
+ * per line, which `renderEmphasisHeading` paints as a bare string — the same
+ * bytes the call site produced before it adopted this helper.
+ *
+ * The two wrappers below pair it with this codebase's two heading fits. A
+ * painter with a third fit of its own calls this directly rather than growing
+ * a second copy of the rule.
+ */
+export function attachEmphasis(
+  source: string | undefined,
+  layout: SvgTextLayout,
+): EmphasisHeadingLayout {
+  return {
+    ...layout,
+    segments: sliceEmphasisForLines(parseEmphasis(source ?? ""), layout.lines),
+  }
+}
+
+/** `attachEmphasis` over `fitHeadingLines` — shrink, wrap, truncate to a floor. */
+export function fitEmphasisHeading(
+  text: string | undefined,
+  opts: Parameters<typeof fitHeadingLines>[1],
+): EmphasisHeadingLayout {
+  return attachEmphasis(text, fitHeadingLines(stripEmphasis(text ?? ""), opts))
+}
+
+/**
+ * Wraps marked text so every line fits `maxWidth` as it is painted.
+ *
+ * The fit chain measures the stripped text at one weight, and a marked run is
+ * painted heavier than the text around it (`fontWeight`, 600 by default). A
+ * line the fit filled at regular weight comes out wider by however much its
+ * marked run gains in bold: about a sixth of the run in Georgia, enough to
+ * carry a callout's last word past its panel. So each line is measured as
+ * painted ({@link paintedLineWidth}), and while the widest overshoots, the
+ * wrap runs again on a budget narrower by that overshoot. Text with no
+ * marked run measures the same either way and comes back from the first
+ * wrap, unchanged.
+ */
+export function layoutEmphasisText(
+  text: string,
+  opts: Parameters<typeof layoutSvgText>[1] & { fontWeight?: string },
+): EmphasisHeadingLayout {
+  const segments = parseEmphasis(text)
+  const plain = stripEmphasis(text)
+  const measureWeight: TextWeightHint = { bold: opts.bold, fontFamily: opts.fontFamily }
+  let budget = opts.maxWidth
+  let laid = attachEmphasis(text, layoutSvgText(plain, opts))
+  if (!segments.some((segment) => segment.emphasized)) return laid
+  for (let attempt = 0; attempt < 8; attempt++) {
+    const widest = Math.max(
+      0,
+      ...laid.segments.map((line) =>
+        paintedLineWidth(line, { fontSize: laid.fontSize, fontWeight: opts.fontWeight, measureWeight }),
+      ),
+    )
+    const over = widest - opts.maxWidth
+    if (over <= 0) return laid
+    budget -= Math.max(1, over)
+    laid = attachEmphasis(text, layoutSvgText(plain, { ...opts, maxWidth: budget }))
+  }
+  return laid
+}
+
+/** `attachEmphasis` over `layoutSvgText` — wrap and shrink, no truncate fallback. */
+export function fitEmphasisText(
+  text: string | undefined,
+  opts: Parameters<typeof layoutSvgText>[1],
+): EmphasisHeadingLayout {
+  return attachEmphasis(text, layoutSvgText(stripEmphasis(text ?? ""), opts))
+}
+
+/**
+ * The standard heading run ink, derived from the render context so no call
+ * site has to decide it: the theme accent, pulled to a readable ink when it
+ * misses the contrast floor against the painted background at this heading's
+ * fitted size, over the theme's own pad/underline stroke.
+ *
+ * `baseFill` is the fill the `<text>` element itself carries, so plain runs
+ * keep the exact ink the call site already chose. Pass `accent` only for a
+ * painter whose emphasized run is not the theme accent.
+ *
+ * `bg` is the colour the run actually lands on, and a face that paints its
+ * own panel or full-bleed field has to say so. The default is the page
+ * background, which is right for the ordinary face drawing on the page and
+ * wrong for every face that covers it: `cover-fashion-masthead` fills 1280
+ * by 720 with `colors.primary` and sets its masthead on that, so the helper
+ * was grading a gold run against thesis's ivory (about 3.1:1, a pass) and
+ * painting it on green (about 2.1:1, well under the large-text floor). The
+ * face already measured its meta line against the panel; this is the same
+ * "measure what you painted" rule reaching the runs.
+ */
+/**
+ * How close two inks may come, in any one sRGB channel, before they read as
+ * the same ink. A heading set in the emphasis colour itself (vermilion's red
+ * claim, where `emphasisInk` is that red) would paint its marked run in the
+ * colour of every other word, and with no stroke under it the mark would
+ * vanish. Hue counts, so cyan beside white is two inks.
+ */
+const SAME_INK_CHANNEL = 12
+
+function sameInk(a: string, b: string): boolean {
+  const channels = (hex: string) => [1, 3, 5].map((i) => Number.parseInt(hex.slice(i, i + 2), 16))
+  if (!/^#[0-9a-f]{6}$/i.test(a) || !/^#[0-9a-f]{6}$/i.test(b)) return false
+  const [x, y] = [channels(a), channels(b)]
+  return x.every((v, i) => Math.abs(v - y[i]!) <= SAME_INK_CHANNEL)
+}
+
+/**
+ * A marked run's ink beside text in `baseFill`: the emphasis ink, held to the
+ * contrast its size needs, or the theme's text ink when that is the base
+ * fill's own colour.
+ */
+function runInkBeside(ctx: Pick<ComponentCtx, "colors">, baseFill: string, bg: string, fontSize: number): string {
+  const run = accessibleInk(emphasisRunInk(ctx.colors), bg, fontSize)
+  return sameInk(run, baseFill) ? accessibleInk(ctx.colors.text, bg, fontSize) : run
+}
+
+export function headingEmphasisPaint(
+  ctx: Pick<ComponentCtx, "colors" | "defaultBg" | "emphasis">,
+  layout: Pick<SvgTextLayout, "fontSize">,
+  style: {
+    baseFill: string
+    accent?: string
+    fontWeight?: string
+    fontFamily?: string
+    /** The family the line is painted in, when it is measured by the envelope (`TextWeightHint.paintedIn`). */
+    paintedIn?: string
+    bold?: boolean
+    bg?: string
+  },
+): EmphasisHeadingPaint {
+  const bg = style.bg ?? ctx.defaultBg ?? ctx.colors.bg
+  return {
+    accent: style.accent ?? runInkBeside(ctx, style.baseFill, bg, layout.fontSize),
+    padFill: emphasisRunInk(ctx.colors),
+    baseFill: style.baseFill,
+    fontWeight: style.fontWeight ?? "700",
+    emphasis: ctx.emphasis,
+    measureWeight: { bold: style.bold ?? true, fontFamily: style.fontFamily, ...(style.paintedIn !== undefined ? { paintedIn: style.paintedIn } : {}) },
+  }
+}
+
+/**
+ * Paints a `fitEmphasisHeading` layout. `line` builds this call site's own
+ * childless `<text>` element for one fitted line — its attributes (position,
+ * size, family, anchor, `data-truncated`) stay the call site's business, while
+ * the run ink, weight, and the pad/underline geometry stay here.
+ */
+export function renderEmphasisHeading(
+  layout: EmphasisHeadingLayout,
+  paint: EmphasisHeadingPaint,
+  line: (text: string, index: number) => React.ReactElement<React.SVGProps<SVGTextElement>>,
+): React.ReactNode {
+  return layout.lines.map((text, index) =>
+    renderEmphasisText(
+      layout.segments[index] ?? [{ text, emphasized: false }],
+      paint,
+      line(text, index),
+    ),
+  )
+}
+
+interface EmphasisChar {
+  char: string
+  emphasized: boolean
+}
+
+function flattenSegments(segments: EmphasisSegment[]): EmphasisChar[] {
+  const chars: EmphasisChar[] = []
+  for (const seg of segments) {
+    for (const char of Array.from(seg.text)) {
+      chars.push({ char, emphasized: seg.emphasized })
+    }
+  }
+  return chars
+}
+
+function collapseChars(chars: EmphasisChar[]): EmphasisSegment[] {
+  const segments: EmphasisSegment[] = []
+  for (const c of chars) {
+    const last = segments[segments.length - 1]
+    if (last && last.emphasized === c.emphasized) {
+      last.text += c.char
+    } else {
+      segments.push({ text: c.char, emphasized: c.emphasized })
+    }
+  }
+  return segments
+}
+
+/**
+ * Re-attaches emphasis flags from `segments` (parsed from the original
+ * `**marked**` source, whose concatenated text is the plain string the fit
+ * chain — `layoutSvgText` — wrapped into `lines`) onto each already-wrapped
+ * line.
+ *
+ * `lines` must be a gap-free partition of `segments`' concatenated text (i.e.
+ * the direct, not-yet-truncated output of the wrap step) — every source
+ * character has to show up in some line, just possibly with whitespace
+ * trimmed/collapsed at trim or line-break boundaries. If a line was already
+ * cut short by `truncateToUnits` (its tail replaced with `…`), the source
+ * characters that got discarded are simply missing from `lines` with no
+ * trace of how many there were, so later lines would desync against a
+ * cursor stuck mid-discard. Call this on the pre-truncation lines and use
+ * `truncateEmphasisSegments` afterward to reproduce per-line truncation.
+ *
+ * Implementation: walks the flattened source characters and each line's
+ * characters in lockstep; a source character not present at the cursor is
+ * only skipped if it's whitespace (the collapsed/dropped case). A run split
+ * across a line break continues its emphasis on both resulting lines.
+ */
+export function sliceEmphasisForLines(segments: EmphasisSegment[], lines: string[]): EmphasisSegment[][] {
+  const chars = flattenSegments(segments)
+  let cursor = 0
+  return lines.map((line) => {
+    const lineChars: EmphasisChar[] = []
+    let lastEmphasized = false
+    for (const ch of Array.from(line)) {
+      while (cursor < chars.length && chars[cursor].char !== ch && /\s/.test(chars[cursor].char)) {
+        cursor += 1
+      }
+      if (cursor < chars.length && chars[cursor].char === ch) {
+        lastEmphasized = chars[cursor].emphasized
+        lineChars.push({ char: ch, emphasized: lastEmphasized })
+        cursor += 1
+      } else {
+        // Not found verbatim at the cursor — carry forward whatever emphasis
+        // was last matched (covers a caller passing an already-truncated
+        // line's trailing "…", though `truncateEmphasisSegments` is the
+        // correct way to produce per-line truncation).
+        lineChars.push({ char: ch, emphasized: lastEmphasized })
+      }
+    }
+    return collapseChars(lineChars)
+  })
+}
+
+/**
+ * Truncates one line's segment table to `maxUnits`, mirroring
+ * `truncateToUnits`'s budget/ellipsis behavior exactly (it's used
+ * internally to decide *whether* and *where* to cut) but keeping each kept
+ * character's emphasis flag, and giving the appended `…` the emphasis of
+ * the last character kept before it — so truncation landing inside an
+ * emphasized run stays emphasized through the `…`.
+ *
+ * Safe to call per-line, independently, on the output of
+ * `sliceEmphasisForLines` — unlike truncating the line text first and then
+ * slicing, this never desyncs later lines because it only ever looks at
+ * this one line's own (gap-free) segment table.
+ */
+export function truncateEmphasisSegments(
+  segments: EmphasisSegment[],
+  maxUnits: number,
+  weight?: TextWeightHint,
+): EmphasisSegment[] {
+  const text = segments.map((s) => s.text).join("")
+  const truncated = truncateToUnits(text, maxUnits, weight)
+  if (truncated === text) return segments
+
+  const keptLen = Array.from(truncated).length
+  const chars = flattenSegments(segments)
+  return collapseChars(chars.slice(0, keptLen))
+}
+
+/**
+ * Single-line counterpart to the `sliceEmphasisForLines` + `truncateEmphasisSegments`
+ * pair above: fits `text`'s plain (emphasis-stripped) form via `fitSvgLine`
+ * (shrink-then-truncate, never wrap — unlike `layoutSvgText`'s multi-line fit
+ * chain, so there is no per-line slicing step here) and re-attaches emphasis
+ * flags onto the result, including on the truncation ellipsis if the line had
+ * to be cut.
+ *
+ * The truncation budget passed to `truncateEmphasisSegments` (`maxWidth /
+ * minFontSize`) mirrors `fitSvgLine`'s own internal truncate-branch budget
+ * exactly for the no-`letterSpacing` case this helper is scoped to (every
+ * current caller is a plain accent sentence, not a letter-spaced label) —
+ * `fitSvgLine` only reaches its truncate branch when the natural fit would
+ * drop below `minFontSize`, which is precisely when the plain text's measured
+ * units exceed this same budget, so `truncateEmphasisSegments` no-ops
+ * (returns `segments` unchanged) in exactly the cases `fitSvgLine` leaves
+ * `text` unchanged, and cuts at the same point otherwise.
+ *
+ * Returns `null` for empty/whitespace-only text, mirroring the
+ * `slide.xxx ? fitSvgLine(...) : null` guard every other single-line caller
+ * in this codebase already uses.
+ *
+ * The optional `TextWeightHint` reaches both the fit and the truncation
+ * budget, so the two keep measuring with the same table. Omitting it (what
+ * every caller predating the hint does) selects the same conservative
+ * cross-face envelope as before, so those callers stay byte-identical.
+ */
+export function fitEmphasisLine(
+  text: string | undefined,
+  opts: { maxWidth: number; fontSize: number; minFontSize?: number } & TextWeightHint,
+): { fontSize: number; segments: EmphasisSegment[]; truncated: boolean } | null {
+  if (!text || !text.trim()) return null
+  const minFontSize = opts.minFontSize ?? META_FONT_FLOOR_PX
+  const weight: TextWeightHint = { bold: opts.bold, fontFamily: opts.fontFamily }
+  const fitted = fitSvgLine(stripEmphasis(text), {
+    maxWidth: opts.maxWidth,
+    fontSize: opts.fontSize,
+    minFontSize,
+    ...weight,
+  })
+  const maxUnits = opts.maxWidth / minFontSize
+  const segments = truncateEmphasisSegments(parseEmphasis(text), maxUnits, weight)
+  // `fitted.truncated` is authoritative for this call too (bench-driven fix
+  // round, defect E) — see this function's own doc comment: the budget
+  // passed to `truncateEmphasisSegments` mirrors `fitSvgLine`'s internal
+  // truncate-branch budget exactly, so the two always agree on *whether* a
+  // cut happened, not just where.
+  return { fontSize: fitted.fontSize, segments, truncated: fitted.truncated }
+}
+
+/**
+ * A line a component fitted on its field's text with the marks stripped,
+ * painted with the marks the author wrote: the marked runs in the theme's
+ * emphasis (`headingEmphasisPaint`), the rest in the element's own fill. A
+ * line with no marked run keeps the element as it was, child text and all,
+ * so a field without marks paints the bytes it always did.
+ *
+ * The fields that draw a mark (`ir/mark-fields.ts`) are drawn through this
+ * or through a layout that already carries segments, never as raw text.
+ */
+export function paintMarkedLine(
+  ctx: Pick<ComponentCtx, "colors" | "defaultBg" | "emphasis">,
+  segments: EmphasisSegment[],
+  style: { baseFill: string; fontWeight?: string; fontFamily?: string; bold?: boolean; bg?: string },
+  textElement: React.ReactElement<React.SVGProps<SVGTextElement>>,
+): React.ReactElement {
+  if (!segments.some((segment) => segment.emphasized)) return textElement
+  const fontSize = Number(textElement.props.fontSize)
+  return renderEmphasisText(segments, headingEmphasisPaint(ctx, { fontSize }, style), React.cloneElement(textElement, undefined))
+}
+
+/** The segments of each painted line of a field whose marks were stripped before it was wrapped. */
+export function markedLineSegments(source: string, lines: readonly string[]): EmphasisSegment[][] {
+  return sliceEmphasisForLines(parseEmphasis(source), [...lines])
+}

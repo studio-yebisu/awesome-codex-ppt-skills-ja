@@ -1,59 +1,39 @@
 ---
-name: ppt-design-system-ja-entry
-description: デザインを揃えるPPTXを日本語で制作するときに使う。att6113/ppt-design-systemの原典方式を使い、作例の作風を自分の題材へ展開する。
+name: ppt-design-system-ja
+description: 原典ppt-design-systemのテンプレート・配色・レイアウトで日本語HTML資料を制作する。Forest Inkの実作例と再現入力を参考に、参加案内や説明資料を作るときに使う。
 ---
 
-# デザインを揃えるPPTX
+# 原典デザインシステムで日本語資料を作る
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
+Studio Yebisuの日本語派生版。原作者の公式日本語版ではありません。
 
-## 元の方式で作る
+まずupstream/SKILL.md、upstream/references/themes.md、upstream/references/layouts.mdを読む。原典assets/template.htmlとナビゲーションを使い、目的に合う配色とレイアウトを選ぶ。共通のカタログ用rendererへ置き換えない。
+
+## 読み手に役立つ原稿へ
+
+- 図書館の参加案内なら、日時・受付・会場・持ち物と、案内が変更されたときの次の行動を示す。実在の情報は主催者の情報で確認する。
+- 図書館イベントの実例は架空の設定。時刻・会場をそのまま実際の案内に転用しない。
+- 原典のcover、cards、body、question、comparison、closingを使い分ける。比較する行動が同じ重要度なら、片側だけを薄くして読みにくくしない。
+- 日本語の見出しを意味の区切りで改行し、単位と数字を保つ。游明朝・游ゴシック等の端末書体を確認する。OSのフォントファイルを取り出して配布しない。
+
+## 実例から制作する
+
+references/WORKFLOW.mdの入力・原典・制作条件を読む。配布キットのinput/data.jsonと本文HTMLを自分の内容へ替え、原典テンプレートで全ページを作る。再現入口はsource/reproduce.pyで、原典のHTML生成CLIではなく、この派生版の原稿配置用プログラムである。
+
+今回確認したのは6ページ・Forest InkのHTML経路。原典のキー・dot・横スクロールを保持する。localhost HTTPで全ページの文字、切れ、ナビゲーションを確認し、再生成は新たにレビューする。他テーマ・PPTX・印刷・縦画面を対応確認済みと表示しない。
+
+## 個別条件を保持する
+
+原典MITの通知をupstream/LICENSEに保持する。カタログのCC0を上流へ適用しない。自動検査を人による正式採用や外部公開へ読み替えない。
+
+## 単体の本文から使う
+
+この本文は `skill-forks/ppt-design-system-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/att6113/ppt-design-system/tree/9f39af607ab82da2827530c38b9dc86eb75768ee
 
-- https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/LICENSE
-- https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/SKILL.md
-- https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/README.md
-- https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/assets/template.html
-- https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/themes.md
-- https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/layouts.md
-- https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/references/presets.md
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `ppt-design-system-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-原典HTMLテンプレート・Forest Ink配色・原典ナビゲーション
-
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-- Python 3（生成。標準ライブラリのみ）
-- Node.js 22+ と Chrome/Edge（任意の描画検証）
-- 閲覧端末の日本語フォント
-
-
-
-## 日本語で魅力ある資料へ
-
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
-
-## この作例を自分の題材へ
-
-作例: 雨の日も迷わない、図書館イベント案内
-
-att6113/ppt-design-systemの原典SKILLとassets/template.htmlを使い、「雨の日も迷わない、図書館イベント案内」を日本語6ページにする。Forest Ink配色、原典の見出し階層、カバー・数値カード・本文・問い・比較・終わりのレイアウトを使う。本文は架空の読書会への参加案内として役に立つ内容にし、製品の説明書にしない。原典の矢印キー・ドット・横スクロールを保持する。日本語フォントは端末のフォントを使い、外部フォントを不要にする。
-
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: att6113 / 原典条件: MIT（原典。通知同梱）
+原作者: att6113 / 原典条件: MIT（原典。通知同梱）。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
 - https://github.com/att6113/ppt-design-system/blob/9f39af607ab82da2827530c38b9dc86eb75768ee/LICENSE
-
-原文LICENSE・NOTICEと素材・依存物の条件を保持する。
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。

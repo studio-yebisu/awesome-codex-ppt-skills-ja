@@ -1,0 +1,497 @@
+/**
+ * Deterministic field-alias normalization — a rescue layer for weak-model
+ * synonym field-name drift (a model writing kpi `title` when the schema
+ * wants `label`, blockquote `content` when it wants `text`, and so on). Ported
+ * from ops-kb's `field_aliases.py` (`_BLOCK_FIELD_ALIASES` /
+ * `_ITEM_FIELD_ALIASES`, the production system pptwise was extracted from):
+ * a 2026-07-12 failure-sample bucketing there found ~90% of weak-model
+ * `fill` failures were exactly this shape — a pair of "unrecognized field"
+ * + "field required" errors for a synonym pair (kpi `title`→`label` alone
+ * was 13 of that day's failures) that salvage-style extra-key stripping
+ * cannot fix, because stripping the wrong-named key still leaves the
+ * canonical one missing. The table must be *carried*, not dropped.
+ *
+ * Every ops-kb table entry was cross-checked against this repo's own
+ * `ComponentSchema` (`./index.ts`): the port needed zero drops — every
+ * ops-kb target field still exists post block→component rename (see the W5
+ * task-4 report for the row-by-row check). Two deliberate departures from
+ * the ops-kb original, both driven by this repo's own "omission gets a
+ * default, a wrong value is a hard error" posture (not ops-kb's — a
+ * same-thread retry-avoidance system with different incentives):
+ *  - both canonical and alias present here → left untouched (ops-kb instead
+ *    always discards the alias and keeps the canonical value); zod strict
+ *    then reports the leftover alias key as unrecognized. Two conflicting
+ *    keys is a wrong value, not an omission — it should hard-block, not
+ *    silently resolve in the canonical key's favor.
+ *  - no value coercion (ops-kb's `_coerce_str`, an int/float→string rescue
+ *    for a pattern like timeline `year: 2024`) — out of scope for a table
+ *    that normalizes field *names*; a type mismatch surviving a correct
+ *    rename is still a legitimate zod error, not a naming problem.
+ *
+ * **`COMPONENT_FIELD_ALIASES`/`COMPONENT_ITEM_FIELD_ALIASES` are pure
+ * aggregators (src domain reorg wave 2, spec §4.3), same discipline as
+ * `src/layouts/registry.ts`'s T1d precedent.** Every row used to be a
+ * hand-copied literal directly inside one of these two tables. Each
+ * component's own alias rows now live beside its IR schema instead — the
+ * `aliases: ComponentAliasSpec` export at the bottom of the matching
+ * `src/ir/components/<name>.ts` domain file (spec §4.1) — imported below and
+ * referenced by `.block`/`.items`, under the exact same table key the
+ * literal used to occupy. A component with no alias rows still exports
+ * `aliases = {}`; this file's tables simply don't reference it (`bullets`,
+ * `chart`, … have no row in either table, same as before this wave). Every
+ * other export in this file — `FieldAliasMap`/`ItemFieldAliasSpec` (the
+ * shapes a domain file's own `aliases` export is checked against),
+ * `SLIDE_FIELD_ALIASES` (slide-level, out of the component-domain split's
+ * scope — the singular `notes` synonym rescue was never a per-component
+ * concern), and every function below (`normalizeComponentAliases` and its
+ * private helpers) — is machinery that *applies* the two tables, not table
+ * content itself, and is unchanged by this wave.
+ */
+
+import { aliases as blockquoteAliases } from "./components/blockquote"
+import { aliases as codeAliases } from "./components/code"
+import { aliases as paragraphAliases } from "./components/paragraph"
+import { aliases as calloutAliases } from "./components/callout"
+import { aliases as kpiCardsAliases } from "./components/kpi-cards"
+import { aliases as architectureAliases } from "./components/architecture"
+import { aliases as timelineAliases } from "./components/timeline"
+import { aliases as rowCardsAliases } from "./components/row-cards"
+import { aliases as stepsAliases } from "./components/steps"
+import { aliases as numberedCardsAliases } from "./components/numbered-cards"
+import { aliases as verdictBannerAliases } from "./components/verdict-banner"
+import { aliases as swotAliases } from "./components/swot"
+import { aliases as bmcAliases } from "./components/bmc"
+import { aliases as waterfallAliases } from "./components/waterfall"
+import { aliases as ganttAliases } from "./components/gantt"
+import { aliases as pestAliases } from "./components/pest"
+import { aliases as fiveForcesAliases } from "./components/five-forces"
+import { aliases as heatmapAliases } from "./components/heatmap"
+import { aliases as sankeyAliases } from "./components/sankey"
+import { aliases as hubSpokeAliases } from "./components/hub-spoke"
+import { aliases as vennAliases } from "./components/venn"
+import { aliases as fishboneAliases } from "./components/fishbone"
+import { aliases as positioningMapAliases } from "./components/positioning-map"
+import { aliases as conceptEquationAliases } from "./components/concept-equation"
+import { aliases as segmentedWheelAliases } from "./components/segmented-wheel"
+import { aliases as prosConsAliases } from "./components/pros-cons"
+import { aliases as progressDonutsAliases } from "./components/progress-donuts"
+import { aliases as staircaseAliases } from "./components/staircase"
+import { aliases as chevronProcessAliases } from "./components/chevron-process"
+import { aliases as swimlaneAliases } from "./components/swimlane"
+import { aliases as journeyMapAliases } from "./components/journey-map"
+import { aliases as decisionTreeAliases } from "./components/decision-tree"
+import { aliases as fromToAliases } from "./components/from-to"
+import { aliases as logoWallAliases } from "./components/logo-wall"
+import { aliases as productCardsAliases } from "./components/product-cards"
+import { aliases as quoteWallAliases } from "./components/quote-wall"
+import { aliases as orgTreeAliases } from "./components/org-tree"
+import { aliases as issueTreeAliases } from "./components/issue-tree"
+import { aliases as pyramidAliases } from "./components/pyramid"
+import { aliases as icebergAliases } from "./components/iceberg"
+import { aliases as pillarModelAliases } from "./components/pillar-model"
+import { aliases as valueChainAliases } from "./components/value-chain"
+import { aliases as harveyBallsAliases } from "./components/harvey-balls"
+import { aliases as scorecardAliases } from "./components/scorecard"
+import { aliases as pictogramAliases } from "./components/pictogram"
+import { aliases as wordCloudAliases } from "./components/word-cloud"
+
+/** One component type's `{ aliasKey: canonicalKey }` map. */
+export type FieldAliasMap = Readonly<Record<string, string>>
+
+/**
+ * Top-level field aliases: component type → alias map applied to the
+ * component object's own keys. Ported verbatim from ops-kb's
+ * `_BLOCK_FIELD_ALIASES` (its "block" is pptwise's "component" post-rename).
+ */
+export const COMPONENT_FIELD_ALIASES: Readonly<Record<string, FieldAliasMap>> = {
+  blockquote: blockquoteAliases.block,
+  // Mental model overlap with "code snippet" / "code text" / "source code".
+  code: codeAliases.block,
+  paragraph: paragraphAliases.block,
+  // callout and verdict_banner's semantic fields commonly cross-wire
+  // (tone/variant) — each direction is this pair's own inverse alias below.
+  callout: calloutAliases.block,
+  verdict_banner: verdictBannerAliases.block,
+  // Named-slot full-body family (structure-components wave task 1, decision
+  // 8): every slot is its own top-level field (not an item-array element),
+  // so these belong in this top-level table, not
+  // `COMPONENT_ITEM_FIELD_ALIASES` below. Singular-for-plural is the
+  // predictable weak-model slip for a 4-named-array schema like `swot`'s —
+  // a model reaching for "strength" when the field holds a *list* of
+  // strengths.
+  swot: swotAliases.block,
+  // bmc's canonical keys are the Osterwalder canvas's own compound names
+  // (`key_partners`, `customer_segments`, …) — a model that knows the
+  // business-model-canvas vocabulary but not this schema's exact key
+  // spelling reaches for the shorter/bare noun instead.
+  bmc: bmcAliases.block,
+  // PEST macro-environment scan (structure-components wave 2 task 4): each
+  // of the 4 named slots is already a single common English adjective
+  // (unlike bmc's compound canonical names above), so the predictable slip
+  // is reaching for its noun form instead — a model that glosses the
+  // acronym as "Politics, Economics, Society, Technology" (a common
+  // informal expansion) writes the noun, not this schema's adjective.
+  pest: pestAliases.block,
+  // Porter's Five Forces (structure-components wave 2 task 4): the same
+  // bare-noun-for-compound-key slip bmc's table documents above —
+  // `rivalry`/`substitutes` are already bare nouns matching their own
+  // canonical spelling (no alias possible there), but the three qualified
+  // names invite dropping the qualifier.
+  five_forces: fiveForcesAliases.block,
+  // Heatmap (structure-components wave 2 task 4): `x_labels`/`y_labels`/
+  // `values` are chart-vocabulary names a model describing a plain "rows x
+  // columns" grid casually reaches past — `rows`/`columns` are the natural
+  // table words for the same two axes, `data` the generic noun for "the
+  // numbers." `range` is the natural word for `domain`'s `{min,max}`
+  // value-scale override.
+  heatmap: heatmapAliases.block,
+  // hub_spoke's center concept is the one field a model reaches past: every
+  // other card-like component in this IR calls its lead string `title`.
+  hub_spoke: hubSpokeAliases.block,
+  // A scoring grid's two axes are `options` and `criteria` here; a model
+  // describing the same picture reaches for the table words instead.
+  harvey_balls: harveyBallsAliases.block,
+  // `rows` is what a scorecard holds, `items` the generic container word
+  // every list-shaped schema attracts; `footnote` is the other name for the
+  // line set under a table.
+  scorecard: scorecardAliases.block,
+  // Same generic-container slip as scorecard's `items` above.
+  pictogram: pictogramAliases.block,
+  // Same again, on the array a word cloud calls `words`.
+  word_cloud: wordCloudAliases.block,
+  // decision_tree names its root string after what it is — a question — and
+  // its child array after what the lines out of it are. A model reaches for
+  // the generic `title` for the first, "decision" for the component's own
+  // subject, and "options" for the branches, by analogy to a multiple-choice
+  // question rather than to a tree.
+  decision_tree: decisionTreeAliases.block,
+  // from_to names its two states after the direction of the move. A model
+  // that has written a before/after slide reaches for that pair instead, and
+  // for the generic `items` for the row array.
+  from_to: fromToAliases.block,
+  // The hierarchy family (hierarchy-components wave): each of these names its
+  // lead string with a word specific to the drawing, and a model that knows
+  // the diagram but not this schema reaches for the generic one it uses
+  // everywhere else — `title` for the question a tree answers or the goal a
+  // beam carries, `visible`/`hidden` for the two sides of a waterline,
+  // `activities` for the row of links a chain is made of.
+  issue_tree: issueTreeAliases.block,
+  iceberg: icebergAliases.block,
+  pillar_model: pillarModelAliases.block,
+  value_chain: valueChainAliases.block,
+  // A model that has written `matrix` or `swot` reaches for `intersection` or
+  // `overlap` before it reaches for the shorter `center`.
+  venn: vennAliases.block,
+  // `result` and `problem` are what a model writes for the head of a cause
+  // diagram, and `categories` for the ribs hanging off its spine.
+  fishbone: fishboneAliases.block,
+  // Every other plotted component calls its array `items`, so that is the
+  // word a model reaches for before `points`.
+  positioning_map: positioningMapAliases.block,
+  // A model writing an equation reaches for `terms`, `factors` or `inputs`
+  // before `operands`, and for `output` before `result`.
+  concept_equation: conceptEquationAliases.block,
+  // The hub is the one field a model reaches past: every other card-like
+  // component in this IR calls its lead string `title`, and every other
+  // array `items`.
+  segmented_wheel: segmentedWheelAliases.block,
+  // `for`/`against` is how the two sides are named out loud, and a model
+  // writes `conclusion` or `decision` before it writes `verdict`.
+  pros_cons: prosConsAliases.block,
+}
+
+/** One component type's item-array field aliases: which array to walk, and the alias map applied to each item object in it. */
+export interface ItemFieldAliasSpec {
+  /** The component's own field name holding the item array (e.g. "items", "layers", "milestones"). */
+  itemsKey: string
+  aliases: FieldAliasMap
+}
+
+/**
+ * Item-array field aliases: component type → one `{ itemsKey, aliases }`
+ * spec *per item array* that type has. Ported verbatim from ops-kb's
+ * `_ITEM_FIELD_ALIASES` (its 2-tuple `(list_key, aliases)` becomes this
+ * named shape here — same data, more readable than an indexed tuple), then
+ * widened from one spec per component type to a list of specs (field-alias
+ * sweep task I1) so a component type with more than one item array (sankey's
+ * `nodes[]` alongside `links[]`) can alias each independently — see sankey's
+ * own two-entry row below for the shape this widening unlocked.
+ */
+export const COMPONENT_ITEM_FIELD_ALIASES: Readonly<Record<string, readonly ItemFieldAliasSpec[]>> = {
+  kpi_cards: kpiCardsAliases.items,
+  // Numeric-axis family (structure-components wave task 2, decision 8):
+  // waterfall's per-item signed delta is commonly reached for as "amount" in
+  // finance-deck vocabulary (a waterfall/bridge chart is itself a finance-
+  // reporting convention). gantt's start/end pair is the one field name a
+  // model that knows "Gantt chart" but not this schema's numeric-axis-only
+  // shape (decision 6: no date parsing) reaches for by analogy to a
+  // calendar's own "from"/"to" range vocabulary.
+  waterfall: waterfallAliases.items,
+  gantt: ganttAliases.items,
+  // Sankey (structure-components wave 2 task 4, `links`; field-alias sweep
+  // task I1, `nodes`): `links`' `source`/`target` is the exact field-name
+  // convention D3-sankey and Plotly's own Sankey trace both use for a
+  // link's two endpoints — a model that has ever produced a sankey spec for
+  // either of those two (the dominant JS/Python charting libraries for this
+  // diagram type) reaches for that vocabulary over this schema's
+  // `from`/`to`. `nodes[].label` carried no alias until task I1 widened this
+  // table's value type to a list of specs — rescuing it needed a *second*
+  // item-array entry for the same component type (`nodes` alongside
+  // `links`), which the original one-`itemsKey`-per-component-type shape
+  // did not support (a real, scoped-out gap, not a silent drop). Now that a
+  // component type can list one spec per item array, `nodes` gets its own:
+  // `name` is D3's own classic node-label convention (the same
+  // "reaches for the charting library's vocabulary" logic as `links`'
+  // `source`/`target` above), `title` mirrors kpi_cards' own
+  // `title`→`label` alias above — the same generic title-for-label slip on
+  // any labeled-card-like item shape.
+  sankey: sankeyAliases.items,
+  // Real-world terminal-deck mental model: layers have a "name" and hold
+  // "components" or "nodes" — pptwise's own top-level components array
+  // shares the word "components" by coincidence only; this alias is scoped
+  // to one architecture layer's own item shape, never the deck-level array.
+  architecture: architectureAliases.items,
+  steps: stepsAliases.items,
+  timeline: timelineAliases.items,
+  numbered_cards: numberedCardsAliases.items,
+  row_cards: rowCardsAliases.items,
+  hub_spoke: hubSpokeAliases.items,
+  progress_donuts: progressDonutsAliases.items,
+  // Staircase levels are cards in every respect but their height, so the
+  // same generic title-for-label and text-for-note slips apply.
+  staircase: staircaseAliases.items,
+  // A chevron stage is a card with a point on it, so the same
+  // title-for-label and description-for-text slips apply.
+  chevron_process: chevronProcessAliases.items,
+  // Two item arrays, same as sankey's nodes/links: a lane is named
+  // ("name"/"title" for its label, "owner" for the role under it) and a step
+  // is a card ("label"/"name" for its title, "text"/"desc" for its detail).
+  swimlane: swimlaneAliases.items,
+  // A stage is a card ("title"/"name" for its label), and the two rows a
+  // weak model renames are the ones whose canonical word is domain
+  // vocabulary rather than plain English: "channels" for touchpoints,
+  // "behaviour"/"behavior" for the action.
+  journey_map: journeyMapAliases.items,
+  // A branch is a card whose one unusual field is `edge`, the condition on
+  // the line into it — "condition" is the word a model reaches for.
+  decision_tree: decisionTreeAliases.items,
+  // The same before/after slip one level down, plus the generic
+  // title-for-label and "delta" for the change the row shows.
+  from_to: fromToAliases.items,
+  // The three names an author reaches for on a wall of organizations, plus
+  // the `image_id` spelling every image-bearing component attracts.
+  logo_wall: logoWallAliases.items,
+  // A catalogue card's lead string is `name`, not the `title`/`label` every
+  // other card family calls it, and its picture attracts the same
+  // `image_id` slip as logo_wall's.
+  product_cards: productCardsAliases.items,
+  // A quotation's own vocabulary — `quote`/`author`/`speaker` — crosses with
+  // blockquote's `text`/`attribution` pair, and `title` is the natural word
+  // for the line under a speaker's name.
+  quote_wall: quoteWallAliases.items,
+  // Hierarchy family: every node-bearing array here holds a `label`/`name`
+  // pair plus one explanatory line, and the generic `title`/`text` slip is
+  // the same one `row_cards` and `steps` above already document.
+  org_tree: orgTreeAliases.items,
+  issue_tree: issueTreeAliases.items,
+  pyramid: pyramidAliases.items,
+  pillar_model: pillarModelAliases.items,
+  value_chain: valueChainAliases.items,
+  harvey_balls: harveyBallsAliases.items,
+  scorecard: scorecardAliases.items,
+  pictogram: pictogramAliases.items,
+  word_cloud: wordCloudAliases.items,
+  venn: vennAliases.items,
+  fishbone: fishboneAliases.items,
+  positioning_map: positioningMapAliases.items,
+  concept_equation: conceptEquationAliases.items,
+  segmented_wheel: segmentedWheelAliases.items,
+}
+
+/**
+ * Slide-level (not component) field aliases — applied to a slide object's
+ * own keys, before this file's per-component normalization runs on that same
+ * slide. New for the speaker-notes field (`SlideSchema.notes`, `../ir/index.ts`):
+ * the singular "note", and PowerPoint's own vocabulary "speaker_notes" /
+ * "speakerNotes", are the same synonym drift this module exists to rescue —
+ * one level up the tree from every other row in this file, since `notes` is a
+ * slide field, not a component field. Same rename semantics as
+ * {@link renameAliases} everywhere else in this module: canonical-present
+ * wins, alias-and-canonical both present is left untouched for zod strict to
+ * reject.
+ */
+export const SLIDE_FIELD_ALIASES: FieldAliasMap = {
+  note: "notes",
+  speaker_notes: "notes",
+  speakerNotes: "notes",
+}
+
+export interface NormalizeAliasesResult {
+  /** The (possibly rewritten) input, structurally cloned — the original `input` is never mutated. */
+  value: unknown
+  /** Human-readable "`path`: `alias` → `canonical`" entry per rewrite performed, in walk order. */
+  normalized: string[]
+}
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value)
+}
+
+/**
+ * Rewrite `obj`'s own keys per `aliases` (alias → canonical) — only when the
+ * canonical key is absent *and* the alias key is present. Both present is
+ * left untouched: the caller's subsequent zod strict parse reports the
+ * leftover alias key as unrecognized (the deliberate ambiguity gate, see
+ * this module's top comment). Returns `obj` itself, unmodified, when nothing
+ * changes — never mutates it — so callers can cheaply detect "no change" via
+ * reference equality and skip cloning their own parent frame.
+ */
+function renameAliases(
+  obj: Record<string, unknown>,
+  aliases: FieldAliasMap,
+  path: string,
+  normalized: string[],
+): Record<string, unknown> {
+  let next = obj
+  for (const [alias, canonical] of Object.entries(aliases)) {
+    if (!Object.hasOwn(next, alias) || Object.hasOwn(next, canonical)) continue
+    if (next === obj) next = { ...obj } // clone lazily, once, on the first actual rewrite
+    next[canonical] = next[alias]
+    delete next[alias]
+    normalized.push(`${path}: ${alias} → ${canonical}`)
+  }
+  return next
+}
+
+function normalizeComponent(component: unknown, si: number, ci: number, normalized: string[]): unknown {
+  if (!isPlainObject(component) || typeof component.type !== "string") return component
+  const path = `slides[${si}].components[${ci}]`
+  let next = component
+
+  const blockAliases = COMPONENT_FIELD_ALIASES[component.type]
+  if (blockAliases) next = renameAliases(next, blockAliases, path, normalized)
+
+  const itemSpecs = COMPONENT_ITEM_FIELD_ALIASES[component.type]
+  if (itemSpecs) {
+    // One component type can list more than one item array (sankey: `links`
+    // then `nodes`) — walked in table order, each iteration reading/writing
+    // `next` so a rewrite in an earlier spec's array is visible to (and
+    // never clobbered by) a later spec's own `{ ...next, ... }` clone.
+    for (const itemSpec of itemSpecs) {
+      const items = next[itemSpec.itemsKey]
+      if (Array.isArray(items)) {
+        let itemsChanged = false
+        const nextItems = items.map((item, ii) => {
+          if (!isPlainObject(item)) return item
+          const renamed = renameAliases(item, itemSpec.aliases, `${path}.${itemSpec.itemsKey}[${ii}]`, normalized)
+          if (renamed !== item) itemsChanged = true
+          return renamed
+        })
+        if (itemsChanged) next = { ...next, [itemSpec.itemsKey]: nextItems }
+      }
+    }
+  }
+
+  return next
+}
+
+function normalizeSlide(slide: unknown, si: number, normalized: string[]): unknown {
+  if (!isPlainObject(slide)) return slide
+  const path = `slides[${si}]`
+  // Slide-level rename first (e.g. speaker_notes → notes) — independent of
+  // whether this slide has a valid components array at all.
+  let next = renameAliases(slide, SLIDE_FIELD_ALIASES, path, normalized)
+
+  const components = next.components
+  if (Array.isArray(components)) {
+    let componentsChanged = false
+    const nextComponents = components.map((component, ci) => {
+      const renamed = normalizeComponent(component, si, ci, normalized)
+      if (renamed !== component) componentsChanged = true
+      return renamed
+    })
+    if (componentsChanged) {
+      next = next === slide ? { ...slide, components: nextComponents } : { ...next, components: nextComponents }
+    }
+  }
+
+  return next
+}
+
+/**
+ * Deep-walk an unknown (pre-zod) IR shape — each slide's own top-level keys
+ * (per {@link SLIDE_FIELD_ALIASES}), plus `slides[].components[]` and their
+ * item arrays — rewriting synonym field names per
+ * {@link COMPONENT_FIELD_ALIASES} / {@link COMPONENT_ITEM_FIELD_ALIASES}.
+ * Structural-share, never mutates `input`: any slide/component/item
+ * subtree with nothing to rewrite is returned by the same reference it came
+ * in with, so a fully-canonical input comes back as `value === input` and
+ * `normalized: []`.
+ *
+ * Shape-defensive by construction, not by special-casing: a missing/non-array
+ * `slides`, a non-object slide, a non-array `components`, a non-object
+ * component, or a missing/non-string `type` all fall through untouched at
+ * the point they stop matching the expected shape — the point of this
+ * function is a deterministic rescue for a known field-name typo, not a
+ * general validator, so anything it doesn't recognize is left for the zod
+ * parse that runs right after it to report on its own terms.
+ */
+export function normalizeComponentAliases(input: unknown): NormalizeAliasesResult {
+  const normalized: string[] = []
+  if (!isPlainObject(input) || !Array.isArray(input.slides)) {
+    return { value: input, normalized }
+  }
+  let changed = false
+  const slides = input.slides.map((slide, si) => {
+    const next = normalizeSlide(slide, si, normalized)
+    if (next !== slide) changed = true
+    return next
+  })
+  return { value: changed ? { ...input, slides } : input, normalized }
+}
+
+// ── No root/narrative-level *old-vocabulary* alias layer (spec §16) ───────
+//
+// A v4-track rescue for the IR root's pre-rename `scenario` field name, and
+// the pre-rename `mode`/`delivery` field names and enum values one level
+// down inside `narrative`, briefly lived here (vocabulary-v4 rename, task 1,
+// spec §15.4's "v4 内旧字段走别名不走硬拦"). The user-issued spec §16 revoked
+// that call: old vocabulary is not a weak-model synonym slip the way
+// `kpi.title`→`label` above is — it is the exact vocabulary this rename
+// retired, so it must hard-error like any other unknown key or value, not be
+// silently rewritten. `scenario` now fails `PptxIRSchema`'s own `.strict()`
+// parse as an unrecognized key; `mode`/`delivery` inside `narrative` and the
+// old enum values (`"text"`, `"presentation"`, the `mode`/`strategy` value
+// `"narrative"`) fail `resolveNarrative`'s own runtime axis/value check
+// (`src/narrative`), listing the current values.
+//
+// This absence is scoped to *old vocabulary* specifically, not to "no
+// narrative-level rewrite of any kind" — `src/narrative/index.ts`'s
+// `normalizeNarrativeShape` (T0b, added after this paragraph was written)
+// does rewrite `narrative` pre-parse, but for an unrelated reason: a
+// `{id: <preset>}` wrapper shape weak models invent by analogy to
+// `theme: {id: ...}`, never a shape the pre-rename `scenario` vocabulary
+// spoke. Same "weak-model synonym rescue" class this file's own
+// `COMPONENT_FIELD_ALIASES` table is, just for a shape instead of a field
+// name — see that function's own doc comment for the full boundary against
+// this section's old-vocabulary rule.
+//
+// `chrome` is not a root-field alias. {@link DECK_ROOT_ALIASES} is empty, so
+// {@link normalizeDeckRootAliases} is an identity. `chrome` fails as an
+// unrecognized key under zod `.strict()`. The function remains because
+// `validate-core.ts` still calls it.
+
+/** Root-level IR/spec field aliases applied by {@link normalizeDeckRootAliases}. Empty: no current root aliases. */
+export const DECK_ROOT_ALIASES: FieldAliasMap = {}
+
+/**
+ * Deck-root field-alias pass. {@link DECK_ROOT_ALIASES} is empty, so this is
+ * an identity: no rewrite, and a plain object comes back as `value === input`.
+ * Does not mutate `input`. Non-object / null / array input is returned as-is.
+ */
+export function normalizeDeckRootAliases(input: unknown): NormalizeAliasesResult {
+  const normalized: string[] = []
+  if (!isPlainObject(input)) return { value: input, normalized }
+  const value = renameAliases(input, DECK_ROOT_ALIASES, "(root)", normalized)
+  return { value, normalized }
+}

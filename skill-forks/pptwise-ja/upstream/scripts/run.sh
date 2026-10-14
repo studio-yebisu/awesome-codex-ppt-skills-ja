@@ -1,0 +1,266 @@
+#!/bin/sh
+# pptwise skill launcher (macOS / Linux).
+#
+# One stable action for the agent ("run pptwise"); this script picks a working
+# way to run it in the current environment. Written to POSIX sh so it runs under
+# dash, busybox ash, and bash alike. Invoke it with `bash run.sh ...` (or plain
+# `sh run.sh ...`) so a lost execute bit after a file copy never matters.
+#
+# Resolution order (kept identical in run.ps1):
+#   1. A compatible pptwise already on PATH -> run it directly.
+#   2. npx present, on a node meeting the floor -> run the pinned npm version.
+#   3. bunx present -> run the pinned version via Bun.
+#   4. Nothing usable -> structured diagnosis, exit 78.
+#
+# It never writes PATH, never needs admin rights, never fetches a second script,
+# and has no postinstall step.
+set -eu
+
+# --- Version constants: stamped by scripts/stamp.mts at release time. ---------
+# Do not edit PINNED by hand; scripts/stamp.test.mts asserts it equals the
+# package.json version, and `pnpm release:version` rewrites it on every bump.
+PKG="@liustack/pptwise"
+BIN="pptwise"
+PINNED="0.44.0"
+# ------------------------------------------------------------------------------
+
+# Split "X.Y.Z" (extra suffix ignored) into the globals _MAJ, _MIN, _PAT.
+# Any non-numeric component becomes 0 so integer tests below never abort.
+parse_semver() {
+  _raw="$1"
+  _MAJ="${_raw%%.*}"
+  _rest="${_raw#*.}"
+  if [ "$_rest" = "$_raw" ]; then
+    _MIN=0
+    _PAT=0
+  else
+    _MIN="${_rest%%.*}"
+    _rest2="${_rest#*.}"
+    if [ "$_rest2" = "$_rest" ]; then _PAT=0; else _PAT="${_rest2%%.*}"; fi
+  fi
+  case "$_MAJ" in '' | *[!0-9]*) _MAJ=0 ;; esac
+  case "$_MIN" in '' | *[!0-9]*) _MIN=0 ;; esac
+  case "$_PAT" in '' | *[!0-9]*) _PAT=0 ;; esac
+}
+
+# True for a plain "X.Y.Z" with three numeric components and nothing else.
+# Anything looser is not a version this launcher can reason about.
+is_semver() {
+  case "$1" in
+    '' | *[!0-9.]* | .* | *. | *..*) return 1 ;;
+  esac
+  _tail="${1#*.*.}"
+  [ "$_tail" != "$1" ] || return 1
+  case "$_tail" in *.*) return 1 ;; esac
+}
+
+# Compatible = a PATH build this skill's IR guidance still holds for.
+#   major 0:  same major AND same minor as PINNED, patch not older. Every 0.x
+#             minor is a breaking release (components come and go), so a skill
+#             pinned to 0.34 must not hand its IR to a 0.35 CLI.
+#   major 1+: same major as PINNED AND not older than PINNED. Semver promises
+#             a newer minor still accepts everything the older one did.
+# Not-older in both cases refuses a stale build that predates what this skill
+# needs; a compatible PATH build keeps a global install usable without a forced
+# re-download.
+compatible() {
+  is_semver "$1" || return 1
+  parse_semver "$1"
+  _f_maj=$_MAJ
+  _f_min=$_MIN
+  _f_pat=$_PAT
+  parse_semver "$PINNED"
+  [ "$_f_maj" = "$_MAJ" ] || return 1
+  if [ "$_MAJ" -eq 0 ]; then
+    [ "$_f_min" = "$_MIN" ] || return 1
+    [ "$_f_pat" -ge "$_PAT" ]
+    return
+  fi
+  if [ "$_f_min" -gt "$_MIN" ]; then return 0; fi
+  if [ "$_f_min" -lt "$_MIN" ]; then return 1; fi
+  [ "$_f_pat" -ge "$_PAT" ]
+}
+
+# Human wording of what compatible() accepts, for the diagnosis text.
+compatible_range() {
+  parse_semver "$PINNED"
+  if [ "$_MAJ" -eq 0 ]; then
+    printf '%s' "$_MAJ.$_MIN.x at or above $PINNED"
+  else
+    printf '%s' "major $_MAJ, at or above $PINNED"
+  fi
+}
+
+# First "X.Y.Z" token printed by `$BIN --version`.
+cli_version() {
+  "$BIN" --version 2>/dev/null | head -n 1 |
+    sed -n 's/.*\([0-9][0-9]*\.[0-9][0-9]*\.[0-9][0-9]*\).*/\1/p'
+}
+
+# The npx path runs the CLI on this machine's node, so npx is only usable when
+# node itself meets the package's floor (package.json engines). An old node
+# with a working npx would otherwise be selected into a path known to fail.
+NODE_FLOOR="22.19.0"
+node_meets_floor() {
+  command -v node >/dev/null 2>&1 || return 1
+  _nv="$(node --version 2>/dev/null | sed 's/^v//')"
+  [ -n "$_nv" ] || return 1
+  parse_semver "$NODE_FLOOR"
+  _floor_maj="$_MAJ"
+  _floor_min="$_MIN"
+  parse_semver "$_nv"
+  if [ "$_MAJ" -gt "$_floor_maj" ]; then return 0; fi
+  if [ "$_MAJ" -lt "$_floor_maj" ]; then return 1; fi
+  [ "$_MIN" -ge "$_floor_min" ]
+}
+
+# Echo exactly one word: the chosen launch path.
+resolve() {
+  if command -v "$BIN" >/dev/null 2>&1; then
+    _v="$(cli_version)"
+    if [ -n "$_v" ] && compatible "$_v"; then
+      echo "path"
+      return
+    fi
+  fi
+  if command -v npx >/dev/null 2>&1 && node_meets_floor; then
+    echo "npx"
+    return
+  fi
+  if command -v bunx >/dev/null 2>&1; then
+    echo "bunx"
+    return
+  fi
+  echo "none"
+}
+
+detect_os() { uname -s 2>/dev/null | tr '[:upper:]' '[:lower:]'; }
+
+detect_arch() {
+  _a="$(uname -m 2>/dev/null)"
+  case "$_a" in
+    x86_64 | amd64) echo "x64" ;;
+    aarch64 | arm64) echo "arm64" ;;
+    *) echo "$_a" ;;
+  esac
+}
+
+# Escape a value for a JSON string literal (backslash and double quote).
+json_escape() { printf '%s' "$1" | sed 's/\\/\\\\/g; s/"/\\"/g'; }
+
+# Render "null" for an empty value, else an escaped JSON string.
+jstr() {
+  if [ -z "$1" ]; then printf 'null'; else printf '"%s"' "$(json_escape "$1")"; fi
+}
+
+# 1 -> true, anything else -> false.
+jbool() { if [ "$1" = "1" ]; then printf 'true'; else printf 'false'; fi; }
+
+# Probe the environment once into G_* globals shared by the emitters.
+collect() {
+  G_OS="$(detect_os)"
+  G_ARCH="$(detect_arch)"
+
+  G_CLI_PRESENT=0
+  G_CLI_PATH=""
+  G_CLI_VER=""
+  G_CLI_COMPAT=0
+  if command -v "$BIN" >/dev/null 2>&1; then
+    G_CLI_PRESENT=1
+    G_CLI_PATH="$(command -v "$BIN")"
+    G_CLI_VER="$(cli_version)"
+    if [ -n "$G_CLI_VER" ] && compatible "$G_CLI_VER"; then G_CLI_COMPAT=1; fi
+  fi
+
+  G_NPX_PRESENT=0
+  G_NPX_PATH=""
+  if command -v npx >/dev/null 2>&1; then
+    G_NPX_PRESENT=1
+    G_NPX_PATH="$(command -v npx)"
+  fi
+
+  G_BUNX_PRESENT=0
+  G_BUNX_PATH=""
+  if command -v bunx >/dev/null 2>&1; then
+    G_BUNX_PRESENT=1
+    G_BUNX_PATH="$(command -v bunx)"
+  fi
+
+  G_NODE_PRESENT=0
+  G_NODE_VER=""
+  if command -v node >/dev/null 2>&1; then
+    G_NODE_PRESENT=1
+    G_NODE_VER="$(node --version 2>/dev/null | sed 's/^v//')"
+  fi
+
+  G_NODE_FLOOR_OK=0
+  if node_meets_floor; then G_NODE_FLOOR_OK=1; fi
+
+  G_SEL="$(resolve)"
+}
+
+# Build the nextSteps JSON array body (without the brackets) into G_NEXTSTEPS.
+compute_next_steps() {
+  if [ "$G_SEL" = "none" ]; then
+    if [ "$G_NPX_PRESENT" = 1 ] && [ "$G_NODE_FLOOR_OK" = 0 ]; then
+      _s1="npx is present but node ${G_NODE_VER:-missing} is below the $NODE_FLOOR floor this CLI needs. Upgrade Node at https://nodejs.org, then re-run this launcher."
+    else
+      _s1="Install Node 22.19+ from https://nodejs.org so npx can run $PKG@$PINNED, then re-run this launcher."
+    fi
+    _s2="No JavaScript runtime? Install Bun from https://bun.sh to use bunx, or put a compatible $BIN ($(compatible_range)) on PATH."
+    G_NEXTSTEPS="$(printf '"%s", "%s"' "$(json_escape "$_s1")" "$(json_escape "$_s2")")"
+  else
+    G_NEXTSTEPS=""
+  fi
+}
+
+# Emit the structured diagnosis.
+emit_json() {
+  compute_next_steps
+  printf '{\n'
+  printf '  "tool": %s,\n' "$(jstr "$BIN")"
+  printf '  "package": %s,\n' "$(jstr "$PKG")"
+  printf '  "pinnedVersion": %s,\n' "$(jstr "$PINNED")"
+  printf '  "os": %s,\n' "$(jstr "$G_OS")"
+  printf '  "arch": %s,\n' "$(jstr "$G_ARCH")"
+  printf '  "checked": {\n'
+  printf '    "pathCli": { "present": %s, "path": %s, "version": %s, "compatible": %s },\n' \
+    "$(jbool "$G_CLI_PRESENT")" "$(jstr "$G_CLI_PATH")" "$(jstr "$G_CLI_VER")" "$(jbool "$G_CLI_COMPAT")"
+  printf '    "npx": { "present": %s, "path": %s, "nodeMeetsFloor": %s },\n' "$(jbool "$G_NPX_PRESENT")" "$(jstr "$G_NPX_PATH")" "$(jbool "$G_NODE_FLOOR_OK")"
+  printf '    "bunx": { "present": %s, "path": %s },\n' "$(jbool "$G_BUNX_PRESENT")" "$(jstr "$G_BUNX_PATH")"
+  printf '    "node": { "present": %s, "version": %s }\n' "$(jbool "$G_NODE_PRESENT")" "$(jstr "$G_NODE_VER")"
+  printf '  },\n'
+  printf '  "selected": %s,\n' "$(jstr "$G_SEL")"
+  printf '  "nextSteps": [%s]\n' "$G_NEXTSTEPS"
+  printf '}\n'
+}
+
+# Default action: forward every argument to the resolved CLI, inheriting stdio
+# and exit code. No usable runtime -> structured diagnosis on stderr, exit 78
+# (EX_CONFIG) so the agent never mistakes the diagnosis for a result.
+run() {
+  _sel="$(resolve)"
+  case "$_sel" in
+    path) exec "$BIN" "$@" ;;
+    npx) exec npx --yes --package "$PKG@$PINNED" "$BIN" "$@" ;;
+    bunx) exec bunx --bun "$PKG@$PINNED" "$@" ;;
+    none)
+      collect
+      emit_json >&2
+      exit 78
+      ;;
+  esac
+}
+
+# PPTWISE_LAUNCHER_LIB=1 sources this file for its functions only (the
+# compatibility tests in scripts/launcher-compat.test.mts); nothing runs.
+if [ "${PPTWISE_LAUNCHER_LIB:-}" != 1 ]; then
+  case "${1:-}" in
+    where)
+      resolve
+      ;;
+    *)
+      run "$@"
+      ;;
+  esac
+fi

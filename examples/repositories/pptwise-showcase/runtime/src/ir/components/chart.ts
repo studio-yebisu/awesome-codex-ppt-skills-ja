@@ -1,0 +1,1275 @@
+import { z } from "zod"
+import { isPercentUnit } from "../../lib/quantity-format"
+import { IconNameSchema, TagSchema, ToneSchema } from "./shared"
+import type { ComponentAliasSpec, ComponentTraits } from "./types"
+import type { DesignStory } from "../../design-story"
+
+/** One plotted datum. `x` is a category label (string) or a numeric
+ * coordinate (number); `y` is always numeric. `size` is scatter-only (see
+ * the chart_type `.describe()` below): an optional per-point magnitude that
+ * turns a scatter dot into a bubble whose radius scales with it. Every other
+ * chart_type ignores `size`. */
+const ChartPointSchema = z
+  .object({
+    x: z.union([z.string(), z.number()]),
+    y: z.number(),
+    size: z.number().nonnegative().optional(),
+    /** A value nobody has reported yet. See `POINT_STATUS_TYPES`. */
+    status: z
+      .enum(["forecast", "target", "estimate"])
+      .optional()
+      .describe(
+        'A value that is not a reported figure. "forecast" is an estimate of what will happen: its bar is hatched, and a lone bar\'s label says it is a forecast. ' +
+          '"target" is a level a plan calls for: its bar is drawn as a dashed outline. ' +
+          '"estimate" is a value worked out, not published: pale in a dashed outline. Bar and stacked charts only.',
+      ),
+    /** The one bar the page is about. See `POINT_EMPHASIS_TYPES`. */
+    emphasis: z
+      .boolean()
+      .optional()
+      .describe(
+        "Marks the one bar the page is about, such as the latest year in a run of years. It keeps its series' colour and the other bars step back. " +
+          "On a stacked or percent_stacked chart it marks the column the point stands in: that column keeps its colours and the other columns step back. " +
+          "One point per chart, on a bar, stacked or percent_stacked chart (not a share bar), and not together with a series' own emphasis.",
+      ),
+    /** A few words printed with the bar's value. See the describe below. */
+    note: z
+      .string()
+      .min(1)
+      .optional()
+      .describe(
+        'A few words printed with the value, such as "基准线", "低约 37%" or "62.36 元": after the value of a bar on its side or a share bar\'s part, and beside a point of a line, such as "最低" on its lowest year or "回升" on the year it recovers. Bars on their side (bar with direction "horizontal"), the parts of a share bar and lines only.',
+      ),
+    /** A symbol set before the category's name. See the describe below. */
+    icon: IconNameSchema.optional().describe("A symbol set before the category's name. Bars on their side only, on the first series."),
+    /** The high end of a value only known as a range. See the describe below. */
+    upper: z
+      .number()
+      .optional()
+      .describe(
+        'The high end when a value is only known as a range, with y its low end: y 60 and upper 70 for "60% to 70%", or y 1.8 and upper 24.2 for rates that run from 1.8% to 24.2% across 108 models. The bar is drawn solid to y and dashed on to upper, and its label names both ends. Bars on their side (bar with direction "horizontal") only.',
+      ),
+  })
+  .strict()
+
+/**
+ * Chart types whose points may carry a `status`: the ones that draw each
+ * point as a bar of its own, where a hatched or outlined bar can say the
+ * value is not a reported one. A line, an area or a slice has no such mark.
+ */
+export const POINT_STATUS_TYPES = ["bar", "stacked"] as const
+
+/**
+ * Chart types whose points may carry `emphasis`: the ones that draw each
+ * point as a bar or a segment of its own, so one can keep its colour while
+ * the others step back. A bar keeps its colour alone. A stacked column is a
+ * whole made of its series, so a marked point marks its column: the column
+ * keeps its colours and the others step back. A share bar has one column and
+ * marks a run of its parts with series emphasis instead.
+ */
+export const POINT_EMPHASIS_TYPES = ["bar", "stacked", "percent_stacked"] as const
+
+/**
+ * Chart types that can draw `changes`: a bracket between two upright bars
+ * or columns, or a figure at the end of a horizontal bar.
+ */
+export const CHANGE_TYPES = ["bar", "stacked"] as const
+
+/** The most `changes` one chart draws. Past three, the brackets crowd the bars they read. */
+export const MAX_CHART_CHANGES = 3
+
+/** The most `markers` one line chart draws. Past three, their labels crowd the band over the plot. */
+export const MAX_CHART_MARKERS = 3
+
+/** The most `gaps` one chart keeps. Past three, the empty places outweigh the values. */
+export const MAX_CHART_GAPS = 3
+
+/**
+ * Chart types that draw exactly one series and name its parts on the marks
+ * themselves: a pie, a donut, a funnel and a gauge are each one whole divided
+ * into named parts (slice labels, band labels, the gauge's own number).
+ *
+ * The renderers have always read `series[0]` and nothing else, and the legend
+ * rule (`components/chart.tsx`'s `legendApplicable`) excludes these types
+ * because a legend would either repeat the marks or name a series the chart
+ * never drew. Neither statement was an invariant until this list moved here:
+ * a two-series pie was schema-legal, and the renderer painted the first
+ * series and dropped the second's name, point names and values with no
+ * validate error and no `data-dropped` on the page. The exclusion is stated
+ * where the contract is stated, so validate can hold authors to it.
+ */
+export const SINGLE_SERIES_TYPES = ["pie", "donut", "funnel", "gauge"] as const
+
+/**
+ * Chart types whose renderer sums the series into a whole and reads each
+ * point as a share of it. A total of zero has no shares to draw: every
+ * renderer here used to return an empty fragment, so the series name, every
+ * point name and every value left the page with no error and no mark.
+ * Nothing downstream can repair that, so it is refused here.
+ */
+const WHOLE_SHARE_TYPES = ["pie", "donut", "funnel"] as const
+
+/**
+ * Chart types that fold their points onto a shared category axis, keeping the
+ * first value seen for each category and discarding every later one
+ * (`components/chart-model.ts`'s `buildChartModel`).
+ *
+ * Exactly the types where a repeated x costs the author a number: a line with
+ * `A:10, A:99, B:20` drew two ticks, printed `10` and `20`, and left `99`
+ * nowhere on the page with no `data-dropped` and no `data-truncated` to find
+ * it by.
+ *
+ * Deliberately not every chart type. A `scatter` is a point cloud whose whole
+ * job is several y's at one x, and a pie, donut, funnel or dumbbell reads its
+ * points in order without folding them, so two same-named slices are two
+ * slices and nothing is lost. Those keep `ir-quality`'s advisory
+ * `chart_duplicate_category` warning, which is what a repeated label means
+ * there: possibly a typo, never a dropped value.
+ */
+export const CATEGORY_FOLDING_TYPES = ["bar", "line", "area", "stacked", "percent_stacked", "combo"] as const
+
+/**
+ * Chart types that pile each category's series into one column: `stacked`
+ * keeps the amounts, `percent_stacked` scales every column to 100%.
+ *
+ * Both need two series at least. One series piled on nothing is a plain bar
+ * with a different name, and for `percent_stacked` it is a column that reads
+ * 100% everywhere, which says nothing at all.
+ */
+export const STACKED_TYPES = ["stacked", "percent_stacked"] as const
+
+/**
+ * The largest magnitude a value on a chart's value axis, or a stacked column
+ * total, may reach.
+ *
+ * A value axis pads its range and rounds it out to nice ticks, so its top tick
+ * lands at up to a few times the largest value it holds, and past a point no
+ * finite tick can reach it: a plain bar of 1.7e308 walked its ticks toward an
+ * end that had overflowed to `Infinity` and threw a `RangeError`, and a
+ * scatter or a dumbbell drew its points at `NaN`. A stacked total is a sum, so
+ * it can leave the doubles on its own (`1e308 + 1e308` is `Infinity`), and
+ * the column, the axis and the printed total then all come out as `Infinity`
+ * or `NaN`. The ceiling leaves eight orders of magnitude for the axis to grow
+ * into, and no figure a slide reports comes near it.
+ *
+ * It applies to every value on a value axis: every `y` of `bar` (either
+ * direction), `line`, `area`, `scatter`, `dumbbell` and `combo`, a scatter's
+ * `x`, and a stacked column's total. `percent_stacked` needs none, since it
+ * scales each column before summing it and its axis is always 0% to 100%.
+ * A `waterfall` reads its bars against a value axis of its own, so every
+ * item's value and every running total a bar ends at is held to it too
+ * (`waterfall.ts`).
+ */
+export const CHART_AXIS_LIMIT = 1e300
+
+/**
+ * Chart types that read every value against one value axis the renderer
+ * builds from the values themselves. `combo` has two axes and its own message
+ * below, and `stacked` is held to the ceiling by its column totals.
+ */
+const ONE_AXIS_TYPES = ["bar", "line", "area", "scatter", "dumbbell"] as const
+
+/**
+ * Chart types whose columns stand upright only. `direction` belongs to bar,
+ * and to the one stacked chart that lies on its side: the share bar.
+ */
+const UPRIGHT_ONLY_TYPES = ["percent_stacked", "combo"] as const
+
+/**
+ * Whether a chart is a share bar: a stacked chart turned on its side, which
+ * draws one whole as a single bar across the page cut into its parts. Each
+ * series is one part with its one value at the chart's one category, and
+ * the category's name is the bar's caption (`components/share-bar.tsx`).
+ */
+export function isShareBar(c: { chart_type: string; direction?: "horizontal" | "vertical" }): boolean {
+  return c.chart_type === "stacked" && c.direction === "horizontal"
+}
+
+/**
+ * Chart types whose series each take their own palette color on one plot box,
+ * so one of them can be singled out by keeping its color and turning the
+ * rest grey.
+ *
+ * A pie, a donut, a funnel and a gauge draw one series. A dumbbell's two
+ * series are a from and a to painted in fixed colors, so there is no third
+ * color to spend on one of them.
+ */
+export const SERIES_EMPHASIS_TYPES = ["bar", "line", "area", "scatter", "stacked", "percent_stacked", "combo"] as const
+
+/**
+ * Chart types whose series may carry a `tone`: the ones that color their
+ * series one by one in a shared plot box. A share bar colors its parts its
+ * own way and takes none.
+ */
+export const SERIES_TONE_TYPES = SERIES_EMPHASIS_TYPES
+
+type ChartInput = {
+  chart_type: string
+  direction?: "horizontal" | "vertical"
+  axes?: { y_unit?: string }
+  changes?: { from: string; to: string; at?: string }[]
+  series: { name: string; data: { x: string | number; y: number }[] }[]
+}
+
+/**
+ * The rules a chart's `changes` keep: each names two bars the chart draws,
+ * and a figure can be computed between them.
+ *
+ * Without `at`, from and to are categories, and the change runs between
+ * their columns: a stacked column's total, or the one bar a category carries
+ * on a bar chart. A category with two bars has no one value to read. With
+ * `at`, from and to are series compared at one category, which a stacked
+ * column cannot show apart and a horizontal bar chart needs, since its rows
+ * have no room for a bracket between them.
+ */
+function checkChanges(c: ChartInput, ctx: z.RefinementCtx): void {
+  if (!CHANGE_TYPES.includes(c.chart_type as (typeof CHANGE_TYPES)[number])) {
+    ctx.addIssue({
+      code: "custom",
+      path: ["changes"],
+      message:
+        `changes are drawn between two bars, and a ${c.chart_type} chart has none. ` +
+        `Use chart_type ${CHANGE_TYPES.map((t) => `"${t}"`).join(" or ")}, or state the change in the page's text.`,
+    })
+    return
+  }
+  const percent = isPercentUnit(c.axes?.y_unit)
+  const horizontal = c.chart_type === "bar" && c.direction === "horizontal"
+  const valueAt = (series: ChartInput["series"][number], x: string) =>
+    series.data.find((d) => d.x === x)?.y
+  c.changes!.forEach((change, k) => {
+    const path = ["changes", k]
+    if (change.from === change.to) {
+      ctx.addIssue({ code: "custom", path, message: `changes[${k}] runs from "${change.from}" to itself. Name two different bars.` })
+      return
+    }
+    let first: number | undefined
+    if (change.at === undefined) {
+      if (horizontal) {
+        ctx.addIssue({
+          code: "custom",
+          path,
+          message:
+            `changes[${k}] compares two categories, and a horizontal bar chart has no room for a bracket between its rows. ` +
+            `Write at with the category, and from and to with the two series whose bars it compares there.`,
+        })
+        return
+      }
+      for (const x of [change.from, change.to]) {
+        const bars = c.series.filter((s) => valueAt(s, x) !== undefined).length
+        if (bars === 0) {
+          ctx.addIssue({
+            code: "custom",
+            path,
+            message: `changes[${k}] names the category "${x}", and no series has a value there. Without at, from and to are categories (x values) of the chart.`,
+          })
+          return
+        }
+        if (bars > 1 && c.chart_type !== "stacked") {
+          ctx.addIssue({
+            code: "custom",
+            path,
+            message:
+              `changes[${k}] runs to the category "${x}", which carries ${bars} bars, so there is no one value to compare. ` +
+              `Write at with the category and name two series in from and to, or use chart_type "stacked" to compare column totals.`,
+          })
+          return
+        }
+      }
+      first = c.series.reduce((sum, s) => sum + (valueAt(s, change.from) ?? 0), 0)
+    } else {
+      if (c.chart_type === "stacked") {
+        ctx.addIssue({
+          code: "custom",
+          path: [...path, "at"],
+          message: `changes[${k}] compares two series inside one stacked column, which piles them into one bar. Remove at and compare two categories' columns instead.`,
+        })
+        return
+      }
+      for (const name of [change.from, change.to]) {
+        const series = c.series.find((s) => s.name === name)
+        if (series === undefined) {
+          ctx.addIssue({
+            code: "custom",
+            path,
+            message: `changes[${k}] names the series "${name}", and the chart has none by that name. With at, from and to are series names: ${c.series.map((s) => `"${s.name}"`).join(", ")}.`,
+          })
+          return
+        }
+        if (valueAt(series, change.at) === undefined) {
+          ctx.addIssue({
+            code: "custom",
+            path: [...path, "at"],
+            message: `changes[${k}] compares the series at "${change.at}", and series "${name}" has no value there.`,
+          })
+          return
+        }
+      }
+      first = valueAt(c.series.find((s) => s.name === change.from)!, change.at)
+    }
+    if (!percent && !(first! > 0)) {
+      ctx.addIssue({
+        code: "custom",
+        path,
+        message:
+          `changes[${k}] is stated as a relative change from ${first}, and a change relative to zero or less has no figure. ` +
+          `Compare against a bar above zero, or put the values in percent (axes.y_unit "%") to state the change in points.`,
+      })
+    }
+  })
+}
+
+export const schema = z
+  .object({
+    type: z.literal("chart"),
+    title: z
+      .string()
+      .optional()
+      .describe('A short name for the chart, printed over it, such as "参保职工与离退休人员之比" or "Workers per retiree". A theme that numbers its figures prints it after the figure\'s number.'),
+    /** dumbbell（2026-07-12 借鉴）：哑铃变化图——series[0]=起点值、
+     * series[1]=终点值（等长同 x 标签），每行「起点●———●终点」显变化。
+     * bar 可加 direction:"horizontal" 横条排名（长标签友好）。
+     * pie 可加 style:"donut" 环形+中心总值。
+     * scatter：数值 x/y 点集，点可选 size（即 bubble）。
+     * area：line 的基线闭合填充变体。donut：pie 的环形子型（可选中心总值）。
+     * gauge：单值对目标的完成度半环。 */
+    chart_type: z
+      .enum([
+        "bar",
+        "line",
+        "pie",
+        "funnel",
+        "dumbbell",
+        "scatter",
+        "area",
+        "donut",
+        "gauge",
+        "stacked",
+        "percent_stacked",
+        "combo",
+      ])
+      .describe(
+        "How to plot the series. bar/line: categories on one axis, for trends or comparisons. " +
+          "stacked: each category's series piled into one column with its total printed above (two or more series, negatives pile down from zero). " +
+          "percent_stacked: the same piles scaled to 100%, to compare make-up rather than size (two or more series, no negatives, every category above zero). " +
+          "combo: bars and lines on one category axis for two measures over one period, such as revenue and margin. Mark each line series `plot: \"line\"`, the rest are bars, at least one of each. `axis: \"right\"` gives a series its own right-hand scale, titled by axes.y2_title / axes.y2_unit. " +
+          "scatter: a numeric x-y point cloud (a per-point `size` makes bubbles); a category x takes line or bar. " +
+          "area: a line filled down to the baseline, for volume or a running total. " +
+          "pie: part-to-whole share. donut: the ring form of pie (`center_total: true` prints the total in the middle). " +
+          "funnel: one value narrowing across ordered stages. dumbbell: a from→to change per row. " +
+          "gauge: ONE value's progress toward a target as a half-ring with the number centred, such as 62% of goal. Several headline metrics side by side are `kpi_cards`, never a row of gauges.",
+      ),
+    direction: z
+      .enum(["horizontal", "vertical"])
+      .optional()
+      .describe(
+        'bar: "horizontal" lays the bars on their side. stacked: "horizontal" draws one whole as a single share bar across the page, ' +
+          "every series one part with its one value at the chart's one category, whose name captions the bar.",
+      ),
+    style: z.enum(["donut"]).optional(),
+    /** `chart_type: "donut"` only: print the summed total as a big number in
+     * the ring's hollow center (default: empty center). The legacy
+     * `chart_type: "pie"` + `style: "donut"` form always shows that center
+     * total; this flag is the opt-in switch for the dedicated `donut`
+     * chart_type. Ignored by every other chart_type. */
+    center_total: z.boolean().optional(),
+    /** `chart_type: "gauge"` only: the numeric range the filled arc spans.
+     * `min` defaults to 0 and `max` to 100, so a bare gauge reads its single
+     * value as a percentage of 100. Provide both to score against a custom
+     * target (e.g. `{ min: 0, max: 200 }` with a value of 150 fills 75%).
+     * Ignored by every other chart_type. */
+    gauge: z
+      .object({
+        min: z.number().optional(),
+        max: z.number().optional(),
+      })
+      .strict()
+      .optional(),
+    /** Renders only for `chart_type: "bar"` (either direction), `"line"`,
+     * `"scatter"`, `"area"`, `"stacked"` and `"percent_stacked"` (whose
+     * `y_unit` may only be `%`, since its axis always reads 0% to 100%) —
+     * a cartesian plot box with a real
+     * category/value axis pair to title and grid against. Ignored
+     * (schema-legal, silently dropped at render, warn-severity
+     * `chart_axes_ignored` validate finding) on `pie`/`donut`/`funnel`/
+     * `gauge`, which have no such plot box. A `dumbbell` has no plot box
+     * either, but its values run along a line, so it prints the title and
+     * unit as one line under its rows (x_* or y_*, x_* first) and ignores
+     * only `show_grid`. */
+    axes: z
+      .object({
+        x_title: z.string().optional(),
+        y_title: z.string().optional(),
+        /** Unit suffix on x-axis tick labels (`周`, `%`, `weeks`). */
+        x_unit: z.string().optional(),
+        /** Unit suffix on y-axis tick labels (`%`, `千`). A pie, a donut
+         * and a funnel, which have no axis, print it after every value. */
+        y_unit: z
+          .string()
+          .optional()
+          .describe('The unit the values are counted in, after each tick of the value axis ("%", "千"). A pie, a donut and a funnel have no axis and print it after every value they name ("1200 个", "30%").'),
+        /** `chart_type: "combo"` only: title of the right-hand value axis,
+         * which exists when a series sets `axis: "right"`. */
+        y2_title: z.string().optional(),
+        /** `chart_type: "combo"` only: unit suffix on the right-hand axis's
+         * tick labels. */
+        y2_unit: z.string().optional(),
+        show_grid: z.boolean().optional(),
+      })
+      .strict()
+      .optional(),
+    /** A small tag over the chart. See the describe below. */
+    tag: TagSchema.optional().describe(
+      'A few words over the chart saying what kind of figures it draws, such as 企业口径 or "Company figures", printed as a small tag at the start of its legend row. Give it an evidence kind to colour it by its source. Not on a share bar.',
+    ),
+    /** Changes the chart states between two of its bars. See the describe below. */
+    changes: z
+      .array(
+        z
+          .object({
+            from: z.string(),
+            to: z.string(),
+            at: z.string().optional(),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(MAX_CHART_CHANGES)
+      .optional()
+      .describe(
+        "Up to three changes between two of the chart's bars, each printed as a figure: a relative change (\"+11%\"), or points when the value axis is in percent. " +
+          "Without `at`, from and to name two categories (x values) and the change is bracketed over their columns: each category carries one bar, or the chart is stacked. " +
+          "With `at`, from and to name two series compared at that category, the change set beside the later bar. " +
+          "A change ending on the marked series takes the lead colour. Bar and stacked charts only.",
+      ),
+    /** Value ranges marked across the plot. See the describe below. */
+    bands: z
+      .array(
+        z
+          .object({
+            from: z.number().describe("Where the range starts on the value axis."),
+            to: z.number().describe("Where it ends."),
+            label: z.string().optional().describe('What the range is, printed in it, such as "2026 年目标区间 4.5%—5%" or "Target range".'),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(2)
+      .optional()
+      .describe(
+        "Up to two value ranges marked across the plot behind the data, such as a target range a line should stay in. Each runs from `from` to `to` on the value axis, which grows to hold it, and may carry a short `label`. " +
+          "line, area and bar charts only. Write a range this way rather than as two flat series at its edges.",
+      ),
+    /** The line a share bar states for its marked run. See the describe below. */
+    emphasis_label: z
+      .string()
+      .min(1)
+      .optional()
+      .describe(
+        'One line a share bar states for its marked parts, in the author\'s words, such as what they add up to: "第 73 章制品 €93.5 亿，占 69.5%" or "Downstream goods €9.35bn, 69.5%". It replaces the total the bar would compute. A share bar (stacked, direction "horizontal") with at least one marked series only.',
+      ),
+    /** One value drawn as a line across the plot. See the describe below. */
+    reference: z
+      .object({
+        value: z.number().describe("Where the line stands on the value axis."),
+        label: z.string().min(1).describe('What the value is, such as "欧盟基准 1.370" or "EU benchmark 1.370".'),
+      })
+      .strict()
+      .optional()
+      .describe(
+        'One value drawn as a dashed line across the bars, such as a benchmark, an average or a threshold the bars are read against: { "value": 1.37, "label": "EU benchmark 1.370" }. The value axis grows to hold it, and its label names the line in the legend. Bar charts only, upright or on their side. Write a benchmark this way rather than as a bar of its own.',
+      ),
+    /** Lines down a line chart where a category begins. See the describe below. */
+    markers: z
+      .array(
+        z
+          .object({
+            before: z.string().min(1).describe('The category the line stands before, halfway between it and the one before it, such as "50-54 岁" or "Age 50-54".'),
+            label: z.string().min(1).describe('What happens there, printed over the line, such as "女 50 岁" or "Women, 50".'),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(MAX_CHART_MARKERS)
+      .optional()
+      .describe(
+        'Up to three dashed lines drawn down a line chart where a category begins, such as the ages a rule changes at: [{ "before": "50-54 岁", "label": "女 50 岁" }]. Each stands halfway between the category it names and the one before it, its label over the plot. Line charts only, on a category that is not the first.',
+      ),
+    /** Places kept for categories with no published value. See the describe below. */
+    gaps: z
+      .array(
+        z
+          .object({
+            after: z.string().min(1).describe('The category it follows, such as "2017".'),
+            x: z.string().min(1).describe('Its name on the axis, such as "2018".'),
+            label: z.string().min(1).describe('What it says, such as "未公布" or "Not published".'),
+          })
+          .strict(),
+      )
+      .min(1)
+      .max(MAX_CHART_GAPS)
+      .optional()
+      .describe(
+        'Places kept for categories with no published value, such as a year a survey skipped: [{ "after": "2017", "x": "2018", "label": "未公布" }]. Upright bar and line charts only.',
+      ),
+    series: z.array(
+      z
+        .object({
+          name: z.string(),
+          data: z.array(ChartPointSchema),
+          /** `chart_type: "combo"` only: draw this series as bars (the
+           * default) or as a line. */
+          plot: z
+            .enum(["bar", "line"])
+            .optional()
+            .describe('combo only: "line" draws this series as a line over the bars, and omitted or "bar" draws it as bars.'),
+          /** `chart_type: "combo"` only: which value axis this series is
+           * read against. `"right"` gives it its own scale on a right-hand
+           * axis, and omitted or `"left"` shares the left one. */
+          axis: z
+            .enum(["left", "right"])
+            .optional()
+            .describe('combo only: "right" reads this series against its own right-hand axis (for a second unit, such as a rate beside amounts), and omitted or "left" shares the left axis.'),
+          /** Singles this series out: it keeps the first palette color and
+           * every other series turns grey. In a combo, a marked line also
+           * prints its value at each point when they all fit. */
+          emphasis: z
+            .boolean()
+            .optional()
+            .describe(
+              "Marks the one series the page is about. It keeps the lead color and the others turn grey. At most one series, on bar, line, area, scatter, stacked, percent_stacked or combo charts with two or more series. A marked combo line also prints its values. " +
+                "A share bar (a stacked chart with direction \"horizontal\") may mark a run of adjacent parts, and states the run's total and share under it.",
+            ),
+          /** A scatter series joined as steps. See the describe below. */
+          steps: z
+            .boolean()
+            .optional()
+            .describe(
+              "scatter only: joins the series' points as steps, each value held until the next point and then jumping to it, such as a statutory age by date of birth or a rate by income band. Write the points in order of x, one where each step begins. The points are not dotted.",
+            ),
+          /** What kind of news the series is. See `ToneSchema` and the describe below. */
+          tone: ToneSchema.optional().describe(
+            'What kind of news the series is, drawn in the colour every theme keeps for it: "success" for the share that got better, "danger" for the share that got worse, "warning" for one to watch. ' +
+              "Use it when a series is good or bad news by what it counts, such as the people whose burnout fell beside those whose pace rose. On bar, line, area, scatter, stacked, percent_stacked or combo charts, not a share bar.",
+          ),
+        })
+        .strict(),
+    ),
+  })
+  .strict()
+  .superRefine((c, ctx) => {
+    // A share bar is one bar across the page with its parts named on it, and
+    // has no legend row for a tag to stand in.
+    if (c.tag !== undefined && isShareBar(c)) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["tag"],
+        message: "a share bar has no row over it for a tag. Say what kind of figures it draws in the category's name, or remove tag.",
+      })
+    }
+    // A note is printed after a bar's value, which only a bar on its side
+    // and a share bar's part have a line for, or beside a point of a line.
+    const noted = (c.chart_type === "bar" && c.direction === "horizontal") || isShareBar(c) || c.chart_type === "line"
+    if (!noted) {
+      c.series.forEach((s, si) =>
+        s.data.forEach((d, di) => {
+          if (d.note === undefined) return
+          ctx.addIssue({
+            code: "custom",
+            path: ["series", si, "data", di, "note"],
+            message: `a note is printed after a bar's value, on a bar chart on its side or a share bar, or beside a point of a line, and a ${c.chart_type}${c.direction === "horizontal" ? " on its side" : ""} chart has no place for it. Use chart_type "bar" with direction "horizontal" or "line", or say it in the category's name.`,
+          })
+        }),
+      )
+    }
+    // Steps join a scatter's points in order of x, holding each value.
+    c.series.forEach((s, si) => {
+      if (!s.steps) return
+      if (c.chart_type !== "scatter") {
+        ctx.addIssue({ code: "custom", path: ["series", si, "steps"], message: `steps join a scatter's points as a staircase, and a ${c.chart_type} chart has none. Use chart_type "scatter" with numeric x, or remove steps.` })
+        return
+      }
+      const xs = s.data.map((d) => Number(d.x))
+      const back = xs.findIndex((x, i) => i > 0 && !(x >= xs[i - 1]!))
+      if (back > 0) {
+        ctx.addIssue({ code: "custom", path: ["series", si, "data", back, "x"], message: `series[${si}] joins its points as steps in order of x, and point ${back} (x ${s.data[back]!.x}) comes before point ${back - 1} (x ${s.data[back - 1]!.x}). Write the points in order of x.` })
+      }
+    })
+    // A marker stands between two categories of a line, so it needs a line
+    // and a category with one before it.
+    if (c.markers !== undefined) {
+      if (c.chart_type !== "line") {
+        ctx.addIssue({ code: "custom", path: ["markers"], message: `markers are lines drawn down a line chart between two categories, and a ${c.chart_type} chart has no place for them. Use chart_type "line", or remove markers.` })
+      } else {
+        const order: string[] = []
+        for (const s of c.series) for (const d of s.data) if (!order.includes(String(d.x))) order.push(String(d.x))
+        c.markers.forEach((m, mi) => {
+          const at = order.indexOf(m.before.trim())
+          if (at < 0) {
+            ctx.addIssue({ code: "custom", path: ["markers", mi, "before"], message: `markers[${mi}].before is "${m.before}", which is not one of the chart's categories (${order.map((x) => `"${x}"`).join(", ")}). Write a category as the series write it.` })
+          } else if (at === 0) {
+            ctx.addIssue({ code: "custom", path: ["markers", mi, "before"], message: `markers[${mi}].before is "${m.before}", the chart's first category, and a marker stands between a category and the one before it. Name a later category.` })
+          } else if (c.markers!.findIndex((other) => other.before.trim() === m.before.trim()) !== mi) {
+            ctx.addIssue({ code: "custom", path: ["markers", mi, "before"], message: `markers[${mi}] stands before "${m.before}" as an earlier marker does. Keep one marker a place.` })
+          }
+        })
+      }
+    }
+    // A symbol stands before a category's name, which only a bar on its side
+    // sets in a column of its own. It names the category, so the first series
+    // carries it.
+    const iconed = c.chart_type === "bar" && c.direction === "horizontal"
+    c.series.forEach((s, si) =>
+      s.data.forEach((d, di) => {
+        if (d.icon === undefined) return
+        const path = ["series", si, "data", di, "icon"]
+        if (!iconed) {
+          ctx.addIssue({ code: "custom", path, message: `an icon is set before a category's name, on a bar chart on its side, and a ${c.chart_type}${c.direction === "horizontal" ? " on its side" : ""} chart sets its names elsewhere. Use chart_type "bar" with direction "horizontal", or remove icon.` })
+        } else if (si > 0) {
+          ctx.addIssue({ code: "custom", path, message: `an icon names its category, and series[${si}] is not the first series. Give the category's icon on the first series' point.` })
+        }
+      }),
+    )
+    // A gap is a category kept with no value, placed after one the chart
+    // has, so it needs an axis of categories running across the page.
+    if (c.gaps !== undefined) {
+      const gapped = (c.chart_type === "bar" && c.direction !== "horizontal") || c.chart_type === "line"
+      if (!gapped) {
+        ctx.addIssue({ code: "custom", path: ["gaps"], message: `gaps keep a place on an axis of categories across the page, and a ${c.chart_type}${c.direction === "horizontal" ? " on its side" : ""} chart has none. Use an upright "bar" or a "line", or say what is missing in the page's text.` })
+      } else {
+        const order: string[] = []
+        for (const s of c.series) for (const d of s.data) if (!order.includes(String(d.x))) order.push(String(d.x))
+        const placed: string[] = []
+        c.gaps.forEach((g, gi) => {
+          if (order.includes(g.x.trim()) || placed.includes(g.x.trim())) {
+            ctx.addIssue({ code: "custom", path: ["gaps", gi, "x"], message: `gaps[${gi}].x is "${g.x}", which the chart already has. A gap is a category with no value: name one the series leave out.` })
+          } else if (!order.includes(g.after.trim()) && !placed.includes(g.after.trim())) {
+            ctx.addIssue({ code: "custom", path: ["gaps", gi, "after"], message: `gaps[${gi}].after is "${g.after}", which is not one of the chart's categories (${order.map((x) => `"${x}"`).join(", ")}) or an earlier gap. Name the category the gap follows, as the series write it.` })
+          }
+          placed.push(g.x.trim())
+        })
+      }
+    }
+    // A range is a bar on its side drawn solid to its low end and dashed on
+    // to its high end, its label naming both.
+    const ranged = c.chart_type === "bar" && c.direction === "horizontal"
+    c.series.forEach((s, si) =>
+      s.data.forEach((d, di) => {
+        if (d.upper === undefined) return
+        const path = ["series", si, "data", di, "upper"]
+        if (!ranged) {
+          ctx.addIssue({
+            code: "custom",
+            path,
+            message: `upper draws a value known only as a range, on a bar chart on its side, and a ${c.chart_type}${c.direction === "horizontal" ? " on its side" : ""} chart has no such bar. Use chart_type "bar" with direction "horizontal", or write the range in the category's name.`,
+          })
+        } else if (d.y < 0) {
+          ctx.addIssue({ code: "custom", path, message: `a range is drawn from zero to its low end ${d.y} and on to upper, and a bar below zero has no such run. Give ranges at zero or above.` })
+        } else if (!(d.upper > d.y)) {
+          ctx.addIssue({ code: "custom", path, message: `upper is ${d.upper} and y is ${d.y}. A range runs from y up to upper: give upper the higher end.` })
+        } else if (d.status !== undefined) {
+          ctx.addIssue({ code: "custom", path, message: `a bar marked "${d.status}" already says it is not a reported figure. Give it a range or a status, not both.` })
+        }
+      }),
+    )
+    if (c.emphasis_label !== undefined) {
+      if (!isShareBar(c)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["emphasis_label"],
+          message: `emphasis_label is the line a share bar states for its marked parts, and a ${c.chart_type}${c.direction === "horizontal" ? " on its side" : ""} chart is not a share bar. Use chart_type "stacked" with direction "horizontal", or say it in the page's text.`,
+        })
+      } else if (!c.series.some((s) => s.emphasis === true)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["emphasis_label"],
+          message: `emphasis_label names the marked parts, and no series has emphasis: true. Mark the parts the line speaks for, or remove emphasis_label.`,
+        })
+      }
+    }
+    if (c.reference !== undefined && c.chart_type !== "bar") {
+      ctx.addIssue({
+        code: "custom",
+        path: ["reference"],
+        message: `a reference is a line across bars, and a ${c.chart_type} chart has none. Use chart_type "bar", or mark a range with bands on a line or area chart.`,
+      })
+    }
+    if (c.reference !== undefined && !(Math.abs(c.reference.value) <= CHART_AXIS_LIMIT)) {
+      ctx.addIssue({ code: "custom", path: ["reference", "value"], message: `reference.value is ${c.reference.value}, past what a value axis can draw. Write it in the same unit as the bars.` })
+    }
+    if (c.bands !== undefined) {
+      const banded = c.chart_type === "line" || c.chart_type === "area" || c.chart_type === "bar"
+      if (!banded) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["bands"],
+          message: `bands mark a range along a value axis, and a ${c.chart_type} chart has none to mark. Use chart_type "line", "area" or "bar", or state the range in the page's text.`,
+        })
+      }
+      c.bands.forEach((band, k) => {
+        if (!Number.isFinite(band.from) || !Number.isFinite(band.to) || band.from === band.to) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["bands", k],
+            message: `bands[${k}] runs from ${band.from} to ${band.to}, which is no range. Give it two different ends.`,
+          })
+        }
+      })
+    }
+    // A line or an area series carries its identity at the end of its own
+    // line — `name value` in the label gutter, which is the only place those
+    // two types name a series now that neither draws a legend. A series with
+    // no points has no end to be named at, so the author's `name` reaches
+    // the page nowhere and nothing on the page or in the audit says so. The
+    // renderer cannot rescue it and the fidelity scan is right to call it a
+    // loss, so the boundary belongs here: an empty series is not a chart
+    // with a gap, it is a series nobody wrote.
+    if (c.chart_type === "line" || c.chart_type === "area") {
+      c.series.forEach((s, i) => {
+        if (s.data.length === 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["series", i, "data"],
+            message: `series "${s.name}" has no data points — ${c.chart_type} charts name each series at the end of its own line, so a series with nothing to draw reaches the page nowhere`,
+          })
+        }
+      })
+    }
+    // scatter needs genuine numeric coordinates on both axes — a string `x`
+    // is the model reaching for `line`/`bar` (category axis) by the wrong
+    // name. Point the message at the exact offending point so the fix is
+    // mechanical, same "name the row and key" discipline data-table's own
+    // superRefine uses.
+    if (c.chart_type === "scatter") {
+      c.series.forEach((s, si) =>
+        s.data.forEach((d, di) => {
+          if (typeof d.x !== "number") {
+            ctx.addIssue({
+              code: "custom",
+              path: ["series", si, "data", di, "x"],
+              message:
+                `scatter charts plot numeric x-y pairs, but series[${si}].data[${di}].x is the string "${d.x}". ` +
+                "Give each point a numeric x (add an optional `size` for a bubble). " +
+                'For a category x-axis use chart_type "line" or "bar" instead.',
+            })
+          }
+        }),
+      )
+    }
+    // gauge is a single value's completion, not a series — exactly one series
+    // with exactly one point. The redirect to kpi_cards is the same
+    // gauge-vs-kpi boundary the chart_type `.describe()` draws.
+    if (c.chart_type === "gauge") {
+      const points = c.series.reduce((n, s) => n + s.data.length, 0)
+      if (c.series.length !== 1 || points !== 1) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series"],
+          message:
+            `gauge shows one value's progress toward a target: provide exactly one series with exactly one data point ` +
+            `({ x: <label>, y: <value> }), got ${c.series.length} series / ${points} point(s). ` +
+            "For several independent metrics side by side use kpi_cards, not a gauge each.",
+        })
+      }
+      const min = c.gauge?.min ?? 0
+      const max = c.gauge?.max ?? 100
+      if (max <= min) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["gauge", "max"],
+          message: `gauge max (${max}) must be greater than min (${min}).`,
+        })
+      }
+    }
+    // One whole, one series. `gauge` says this in its own words above (one
+    // series, one point), so it is left to that message rather than given a
+    // second, vaguer one.
+    if (SINGLE_SERIES_TYPES.includes(c.chart_type as (typeof SINGLE_SERIES_TYPES)[number])) {
+      if (c.chart_type !== "gauge" && c.series.length !== 1) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series"],
+          message:
+            `a ${c.chart_type} divides one whole into named parts and draws exactly one series, got ${c.series.length}. ` +
+            `It names those parts on the marks themselves and has no legend, so a second series would reach the page nowhere. ` +
+            `Keep one series, or use chart_type "bar" or "line" to compare several.`,
+        })
+      }
+    }
+    if (WHOLE_SHARE_TYPES.includes(c.chart_type as (typeof WHOLE_SHARE_TYPES)[number])) {
+      c.series.forEach((s, si) => {
+        // Same boundary the empty line/area series is refused at, for the
+        // same reason. A pie, donut or funnel is one whole divided into named
+        // parts, and it names those parts on the marks themselves — with no
+        // parts there are no marks, so the series name and everything under
+        // it reach the page nowhere. The renderer's answer was a page of
+        // nothing carrying a `data-dropped` count of zero, which the export
+        // gate reads as no loss at all: validate passed, the preview was
+        // blank and the file shipped.
+        if (s.data.length === 0) {
+          ctx.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["series", si, "data"],
+            message: `series "${s.name}" has no data points — ${c.chart_type} charts divide one whole into named parts drawn from the points themselves, so a series with nothing to draw reaches the page nowhere`,
+          })
+          return
+        }
+        const total = s.data.reduce((sum, d) => sum + d.y, 0)
+        if (total > 0) return
+        ctx.addIssue({
+          code: "custom",
+          path: ["series", si, "data"],
+          message:
+            `a ${c.chart_type} draws each point as a share of the total, and series[${si}] ("${s.name}") totals ${total}. ` +
+            `Nothing can be drawn from a total of zero or less, so the whole component would leave the page. ` +
+            `Give the points values that sum above zero, or use chart_type "bar" for figures that can be negative.`,
+        })
+      })
+    }
+    // A repeated category inside one series is a value the author wrote and
+    // the page never shows. `buildChartModel` keeps the first y for each
+    // category and drops the rest, and it drops them without a mark — the
+    // chart draws a clean, complete-looking series with a number missing out
+    // of the middle of it. Nothing downstream can repair that, so it is
+    // refused here, the same rule that refuses a series whose name cannot
+    // reach the page.
+    //
+    // The key mirrors `chart-model.ts`'s own `categoryKeyOf`: the type tag
+    // keeps `x: "1"` and `x: 1` apart, since the schema admits both and the
+    // model treats them as different categories.
+    if (CATEGORY_FOLDING_TYPES.includes(c.chart_type as (typeof CATEGORY_FOLDING_TYPES)[number])) {
+      c.series.forEach((s, si) => {
+        const seen = new Set<string>()
+        s.data.forEach((d, di) => {
+          const key = typeof d.x === "number" ? `n:${d.x}` : `s:${d.x}`
+          if (!seen.has(key)) {
+            seen.add(key)
+            return
+          }
+          ctx.addIssue({
+            code: "custom",
+            path: ["series", si, "data", di, "x"],
+            message:
+              `series[${si}] ("${s.name}") repeats the category "${d.x}", and a ${c.chart_type} keeps only the first value for each category — ` +
+              `this point's y would leave the page with nothing on it or in the audit to say so. ` +
+              `Give each point in a series its own category, or split the repeats into separate series.`,
+          })
+        })
+      })
+    }
+    // A dumbbell is one row read left to right: series[0] is where each row
+    // started and series[1] is where it ended. The renderer has always taken
+    // that on trust, reading two series and `Math.min` of their lengths, so a
+    // third series drew a legend entry with no marks under it and an uneven
+    // pair silently lost the longer one's tail.
+    if (c.chart_type === "dumbbell") {
+      if (c.series.length !== 2) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series"],
+          message:
+            `a dumbbell draws one from-to change per row, so it takes exactly two series (the from values and the to values), got ${c.series.length}. ` +
+            `For more than two moments in a series use chart_type "line".`,
+        })
+      } else if (c.series[0]!.data.length !== c.series[1]!.data.length) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series", 1, "data"],
+          message:
+            `a dumbbell pairs the two series row by row, so both need the same number of points and the same labels, ` +
+            `got ${c.series[0]!.data.length} in series[0] ("${c.series[0]!.name}") and ${c.series[1]!.data.length} in series[1] ("${c.series[1]!.name}").`,
+        })
+      }
+    }
+    // A pile needs something to pile. One series in a `stacked` chart is a
+    // bar chart by another name, and one in a `percent_stacked` chart is a
+    // column that reads 100% in every category. Neither is what the author
+    // meant, so name the chart that does what one series can.
+    if (STACKED_TYPES.includes(c.chart_type as (typeof STACKED_TYPES)[number]) && c.series.length < 2) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["series"],
+        message:
+          c.chart_type === "stacked"
+            ? `a stacked chart piles several series into one column per category, so it needs at least two series, got ${c.series.length}. ` +
+              `For one series use chart_type "bar".`
+            : `a percent_stacked chart splits each category's column into the shares of its series, so it needs at least two series, got ${c.series.length}. ` +
+              `One series fills every column to 100% and says nothing. For one whole split into parts use chart_type "pie".`,
+      })
+    }
+    if (UPRIGHT_ONLY_TYPES.includes(c.chart_type as (typeof UPRIGHT_ONLY_TYPES)[number]) && c.direction === "horizontal") {
+      ctx.addIssue({
+        code: "custom",
+        path: ["direction"],
+        message:
+          `a ${c.chart_type} chart draws upright columns only, and direction "horizontal" would be ignored. ` +
+          `Remove direction, or use chart_type "bar" with direction "horizontal" for side-by-side horizontal bars.`,
+      })
+    }
+    // A stacked chart on its side is one whole as a single bar, cut into its
+    // parts: one category, one value per series, every part a share of the
+    // whole, so nothing below zero and nothing hatched, which a share has no
+    // way to show.
+    if (isShareBar(c)) {
+      const categories = new Set(c.series.flatMap((s) => s.data.map((d) => (typeof d.x === "number" ? `n:${d.x}` : `s:${d.x}`))))
+      const lone = c.series.findIndex((s) => s.data.length !== 1)
+      if (categories.size !== 1 || lone >= 0) {
+        ctx.addIssue({
+          code: "custom",
+          path: lone >= 0 ? ["series", lone, "data"] : ["series"],
+          message:
+            `a stacked chart on its side draws one whole as a single bar, so every series is one part with one value at the same category, the bar's caption. ` +
+            `This one has ${categories.size} categories${lone >= 0 ? ` and series[${lone}] ("${c.series[lone]!.name}") has ${c.series[lone]!.data.length} values` : ""}. ` +
+            `Give every series one point at one category, or remove direction to stack several upright columns.`,
+        })
+      }
+      c.series.forEach((s, si) =>
+        s.data.forEach((d, di) => {
+          if (d.y < 0) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["series", si, "data", di, "y"],
+              message: `series[${si}] ("${s.name}") is ${d.y}, and a part of a whole cannot be below zero. Give every part its size, or use chart_type "bar" for figures that can be negative.`,
+            })
+          }
+          if (d.status !== undefined) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["series", si, "data", di, "status"],
+              message: `a share bar draws every part as a share of one whole, and has no way to show that "${s.name}" is a ${d.status}. Say so in the series name, or remove status.`,
+            })
+          }
+        }),
+      )
+    }
+    // A stacked column's height is a sum. Each side of the zero line has to
+    // stay under the ceiling on its own, since the axis runs from the
+    // deepest negative pile to the tallest positive one.
+    if (c.chart_type === "stacked") {
+      const piles = new Map<string, { x: string | number; up: number; down: number }>()
+      for (const s of c.series) {
+        for (const d of s.data) {
+          const key = typeof d.x === "number" ? `n:${d.x}` : `s:${d.x}`
+          const pile = piles.get(key) ?? { x: d.x, up: 0, down: 0 }
+          if (d.y > 0) pile.up += d.y
+          else pile.down += d.y
+          piles.set(key, pile)
+        }
+      }
+      // Every series in a stacked chart sits on the one axis, so the fix is
+      // one factor for all of them. Dividing only the series that looks large
+      // would change what each column is made of.
+      const everySeries = c.series.map((s) => `"${s.name}"`).join(", ")
+      for (const { x, up, down } of piles.values()) {
+        for (const [side, sum] of [
+          ["positive", up],
+          ["negative", -down],
+        ] as const) {
+          if (sum <= CHART_AXIS_LIMIT) continue
+          ctx.addIssue({
+            code: "custom",
+            path: ["series"],
+            message:
+              `the ${side} values in category "${x}" add up to ${side === "positive" ? "more than " : "less than -"}${CHART_AXIS_LIMIT}, beyond what a chart axis can draw. ` +
+              `Divide every value in every series (${everySeries}) by the same power of ten, so the columns keep their proportions, ` +
+              `and name the unit in axes.y_unit, for example 3.2 with y_unit "M" for 3200000.`,
+          })
+        }
+      }
+    }
+    if (c.chart_type === "percent_stacked") {
+      // A share of a total is never negative. A loss inside a column is what
+      // `stacked` is for: it piles negative values down from zero.
+      let negative = false
+      c.series.forEach((s, si) =>
+        s.data.forEach((d, di) => {
+          if (d.y >= 0) return
+          negative = true
+          ctx.addIssue({
+            code: "custom",
+            path: ["series", si, "data", di, "y"],
+            message:
+              `a percent_stacked chart draws each value as a share of its category's total, and series[${si}] ("${s.name}") has ${d.y} for "${d.x}". ` +
+              `A share cannot be negative. Use chart_type "stacked" to show gains and losses, which piles negative values below the zero line.`,
+          })
+        }),
+      )
+      // A category whose values add up to zero has no shares to draw. The
+      // column would be empty with nothing on the page to say why, and an
+      // empty column reads as missing data rather than as a real zero. It is
+      // refused here, the same boundary a pie with a zero total stops at.
+      if (!negative) {
+        const totals = new Map<string, { x: string | number; total: number }>()
+        for (const s of c.series) {
+          for (const d of s.data) {
+            const key = typeof d.x === "number" ? `n:${d.x}` : `s:${d.x}`
+            const entry = totals.get(key) ?? { x: d.x, total: 0 }
+            entry.total += d.y
+            totals.set(key, entry)
+          }
+        }
+        for (const { x, total } of totals.values()) {
+          if (total > 0) continue
+          ctx.addIssue({
+            code: "custom",
+            path: ["series"],
+            message:
+              `a percent_stacked chart scales each category to 100%, and category "${x}" adds up to 0 across every series, so it has no shares to draw. ` +
+              `Remove the category, give it values, or use chart_type "stacked" to show absolute amounts.`,
+          })
+        }
+      }
+      const unit = c.axes?.y_unit
+      if (unit !== undefined && unit !== "%" && unit !== "％") {
+        ctx.addIssue({
+          code: "custom",
+          path: ["axes", "y_unit"],
+          message:
+            `a percent_stacked value axis always reads 0% to 100%, so y_unit "${unit}" cannot apply. ` +
+            `Remove y_unit, and say what the shares are of in axes.y_title.`,
+        })
+      }
+    }
+    // `plot` and `axis` choose a mark and a scale inside a combo. On any other
+    // chart type nothing reads them, and a line the author asked for would
+    // silently come out as whatever that chart draws.
+    if (c.chart_type !== "combo") {
+      c.series.forEach((s, si) => {
+        for (const key of ["plot", "axis"] as const) {
+          if (s[key] === undefined) continue
+          ctx.addIssue({
+            code: "custom",
+            path: ["series", si, key],
+            message:
+              `series[${si}].${key} only applies to chart_type "combo", which mixes bars and lines, and a ${c.chart_type} chart ignores it. ` +
+              `Remove ${key}, or use chart_type "combo" to draw some series as bars and some as lines.`,
+          })
+        }
+      })
+    }
+    // A tone colours a series in the shared plot box it is drawn in, the way
+    // the palette would. A pie, a funnel or a share bar colours its parts its
+    // own way, and the tone would reach the page nowhere.
+    c.series.forEach((s, si) => {
+      if (s.tone === undefined) return
+      const applies = SERIES_TONE_TYPES.includes(c.chart_type as (typeof SERIES_TONE_TYPES)[number]) && !isShareBar(c)
+      if (applies) return
+      ctx.addIssue({
+        code: "custom",
+        path: ["series", si, "tone"],
+        message:
+          `a series tone colours the series as good or bad news in a plot that colours its series one by one, and a ${isShareBar(c) ? "share bar" : `${c.chart_type} chart`} does not. ` +
+          `Remove tone, or use chart_type ${SERIES_TONE_TYPES.map((t) => `"${t}"`).join(", ")}.`,
+      })
+    })
+    // Emphasis takes one series out of the palette and greys the rest, which
+    // only says something where several series share one plot box in their
+    // own colors. Two marked series are two answers, and the grey is gone.
+    const marked = c.series.flatMap((s, si) => (s.emphasis === true ? [si] : []))
+    if (marked.length > 0) {
+      const applies = SERIES_EMPHASIS_TYPES.includes(c.chart_type as (typeof SERIES_EMPHASIS_TYPES)[number])
+      if (!applies || c.series.length < 2) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series", marked[0]!, "emphasis"],
+          message: !applies
+            ? `series emphasis keeps one series in color and turns the others grey, and a ${c.chart_type} chart does not color its series one by one. ` +
+              `Remove emphasis, or use chart_type ${SERIES_EMPHASIS_TYPES.map((t) => `"${t}"`).join(", ")}.`
+            : `series emphasis singles one series out from the others, and this chart has only one series. Remove emphasis, or add the series it stands out from.`,
+        })
+      } else if (marked.length > 1 && !(isShareBar(c) && marked[marked.length - 1]! - marked[0]! === marked.length - 1)) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series", marked[1]!, "emphasis"],
+          message: isShareBar(c)
+            ? `a share bar marks one run of adjacent parts, and the marked series here are not next to each other. ` +
+              `Put the parts the page is about side by side in the series, or keep emphasis on one of them.`
+            : `${marked.length} series are marked with emphasis, and a chart singles out one: two marked series read as two answers, and the grey that sets them apart is gone. ` +
+              `Keep emphasis on the one series the page is about.`,
+        })
+      }
+    }
+    // A marked bar is the one the page is about, the way a marked series is.
+    // It needs a bar of its own to mark, and one answer per chart: a second
+    // marked bar, or a marked series beside it, is a second answer.
+    const markedPoints = c.series.flatMap((s, si) =>
+      s.data.flatMap((d, di) => (d.emphasis === true ? [{ si, di, x: d.x }] : [])),
+    )
+    if (markedPoints.length > 0) {
+      const first = markedPoints[0]!
+      const path = ["series", first.si, "data", first.di, "emphasis"]
+      if (!POINT_EMPHASIS_TYPES.includes(c.chart_type as (typeof POINT_EMPHASIS_TYPES)[number]) || isShareBar(c)) {
+        ctx.addIssue({
+          code: "custom",
+          path,
+          message: isShareBar(c)
+            ? `emphasis on a point marks the column the page is about, and a share bar is one column. Mark the parts the page is about with series emphasis instead.`
+            : `emphasis on a point marks the one bar the page is about, and a ${c.chart_type} chart draws no bar of its own for "${first.x}". ` +
+              `Use chart_type ${POINT_EMPHASIS_TYPES.map((t) => `"${t}"`).join(" or ")}, or say in the page's text which value it is about.`,
+        })
+      } else if (markedPoints.length > 1) {
+        const second = markedPoints[1]!
+        ctx.addIssue({
+          code: "custom",
+          path: ["series", second.si, "data", second.di, "emphasis"],
+          message:
+            `${markedPoints.length} points are marked with emphasis, and a chart singles out one bar: two marked bars read as two answers. ` +
+            `Keep emphasis on the one bar the page is about.`,
+        })
+      } else if (marked.length > 0) {
+        ctx.addIssue({
+          code: "custom",
+          path,
+          message:
+            `the chart marks both a series and the bar "${first.x}", and each says the page is about something else. ` +
+            `Keep emphasis on the series, or on the one bar, not both.`,
+        })
+      }
+    }
+    // A status says how a bar is drawn: hatched for a forecast, a dashed
+    // outline for a target. A chart that draws no bar of its own for a
+    // point has nowhere to say it, and the reader would take the estimate
+    // for a reported figure.
+    if (!POINT_STATUS_TYPES.includes(c.chart_type as (typeof POINT_STATUS_TYPES)[number])) {
+      c.series.forEach((s, si) =>
+        s.data.forEach((d, di) => {
+          if (d.status === undefined) return
+          ctx.addIssue({
+            code: "custom",
+            path: ["series", si, "data", di, "status"],
+            message:
+              `status marks a bar as a ${d.status} rather than a reported figure, and a ${c.chart_type} chart draws no bar of its own for "${d.x}". ` +
+              `Use chart_type ${POINT_STATUS_TYPES.map((t) => `"${t}"`).join(" or ")}, or say which values are ${d.status}s in the series name.`,
+          })
+        }),
+      )
+    }
+    if (c.changes !== undefined) checkChanges(c, ctx)
+    const rightSeries = c.chart_type === "combo" ? c.series.filter((s) => s.axis === "right").length : 0
+    for (const key of ["y2_title", "y2_unit"] as const) {
+      if (c.axes?.[key] === undefined || rightSeries > 0) continue
+      ctx.addIssue({
+        code: "custom",
+        path: ["axes", key],
+        message:
+          c.chart_type === "combo"
+            ? `axes.${key} labels the right-hand axis, and no series here is on it. Set axis: "right" on the series that needs its own scale, or remove ${key}.`
+            : `axes.${key} labels the right-hand axis of a combo chart, and a ${c.chart_type} chart has none. Remove ${key}, or use chart_type "combo" with a series on axis: "right".`,
+      })
+    }
+    // Every value on a value axis stays under the ceiling, or no finite tick
+    // can reach it. The fix is one factor for every series on the axis, since
+    // they are read against one scale and one unit, and dividing only the
+    // series that is too large changes how it compares with the others.
+    if (ONE_AXIS_TYPES.includes(c.chart_type as (typeof ONE_AXIS_TYPES)[number])) {
+      const everySeries = c.series.map((s) => `"${s.name}"`).join(", ")
+      // Where the unit goes: the field that labels the value axis. A
+      // horizontal bar's value axis runs along x. A dumbbell prints no axis,
+      // and its two series' names are what its legend shows.
+      const unitAt = (axis: "x" | "y") =>
+        c.chart_type === "dumbbell"
+          ? `and name the unit in both series' names, for example 3.2 with "(M)" in the name for 3200000.`
+          : `and name the unit in axes.${axis}_unit, for example 3.2 with "M" for 3200000.`
+      const valueAxis = c.chart_type === "bar" && c.direction === "horizontal" ? "x" : "y"
+      c.series.forEach((s, si) =>
+        s.data.forEach((d, di) => {
+          if (Math.abs(d.y) > CHART_AXIS_LIMIT) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["series", si, "data", di, "y"],
+              message:
+                `series[${si}] ("${s.name}") has ${d.y} for "${d.x}", beyond plus or minus ${CHART_AXIS_LIMIT}, the largest value a chart axis can draw. ` +
+                `Divide every series (${everySeries}) by the same power of ten, so they keep their proportions, ` +
+                unitAt(valueAxis),
+            })
+          }
+          // A scatter's x is a quantity on an axis of its own.
+          if (c.chart_type === "scatter" && typeof d.x === "number" && Math.abs(d.x) > CHART_AXIS_LIMIT) {
+            ctx.addIssue({
+              code: "custom",
+              path: ["series", si, "data", di, "x"],
+              message:
+                `series[${si}] ("${s.name}") has x ${d.x}, beyond plus or minus ${CHART_AXIS_LIMIT}, the largest value a chart axis can draw. ` +
+                `Divide the x of every point in every series (${everySeries}) by the same power of ten, so they keep their proportions, ` +
+                unitAt("x"),
+            })
+          }
+        }),
+      )
+    }
+    // A combo's values sit on one of two axes, and the right one is built to
+    // share the left one's rows, which stretches its range further still.
+    // Past the ceiling neither can be built: a right line of 1.7e308 drew a
+    // point at cy="NaN".
+    // The fix is one factor for everything on that value's axis: series on
+    // one axis are read against one scale and one unit, so dividing only the
+    // series that is too large changes how it compares with the others.
+    if (c.chart_type === "combo") {
+      const peers = (right: boolean) =>
+        c.series
+          .filter((s) => (s.axis === "right") === right)
+          .map((s) => `"${s.name}"`)
+          .join(", ")
+      c.series.forEach((s, si) =>
+        s.data.forEach((d, di) => {
+          if (Math.abs(d.y) <= CHART_AXIS_LIMIT) return
+          const right = s.axis === "right"
+          ctx.addIssue({
+            code: "custom",
+            path: ["series", si, "data", di, "y"],
+            message:
+              `series[${si}] ("${s.name}") has ${d.y} for "${d.x}", beyond plus or minus ${CHART_AXIS_LIMIT}, the largest value a chart axis can draw. ` +
+              `Divide every series on the ${right ? "right" : "left"} axis (${peers(right)}) by the same power of ten, so they keep their proportions, ` +
+              `and name the unit in axes.${right ? "y2_unit" : "y_unit"}, for example 3.2 with "M" for 3200000.`,
+          })
+        }),
+      )
+    }
+    if (c.chart_type === "combo") {
+      const lines = c.series.filter((s) => s.plot === "line").length
+      const bars = c.series.length - lines
+      if (lines === 0) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series"],
+          message:
+            `a combo draws some series as bars and at least one as a line, and none of these ${c.series.length} series has plot: "line". ` +
+            `Set plot: "line" on the series to draw as a line, or use chart_type "bar" if every series is a bar.`,
+        })
+      } else if (bars === 0) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series"],
+          message:
+            `a combo draws some series as bars and at least one as a line, and every series here has plot: "line", so nothing is drawn as bars. ` +
+            `Remove plot (or set plot: "bar") on the series to draw as bars, or use chart_type "line" if every series is a line.`,
+        })
+      }
+      if (c.series.length > 0 && rightSeries === c.series.length) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["series"],
+          message:
+            `every series in this combo is on axis: "right", so the left axis would have nothing to measure. ` +
+            `Keep at least one series on the left: remove axis or set axis: "left" on it.`,
+        })
+      }
+    }
+  })
+
+export const aliases = {} satisfies ComponentAliasSpec
+
+export const traits = {
+  stretchable: true,
+  scalable: true,
+  fullBody: false,
+  evidence: true,
+} as const satisfies ComponentTraits
+
+export const story: DesignStory = {
+  name: "Plot",
+  story: "Numbers drawn as a shape: bars, stacked or 100% columns, bars under a line, a line, an area, slices, a funnel, a from-and-to pair, a point cloud, or one arc against a target.",
+  positioning: "Choose it when the audience should grasp the shape of the numbers at a glance. Use data_table when exact values must be read row by row, and comparison when the attributes are words rather than figures.",
+  audience: "A room that reads a trend faster than a column of digits.",
+  notFor: "Several independent headline figures, which belong in kpi_cards.",
+}

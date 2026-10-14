@@ -1,59 +1,42 @@
 ---
-name: image-to-editable-ppt-ja-entry
-description: 画像から編集できる図へを日本語で制作するときに使う。ningzimu/image-to-editable-ppt-skillの原典方式を使い、作例の作風を自分の題材へ展開する。
+name: image-to-editable-ppt-ja
+description: ningzimu/image-to-editable-ppt-skillの方式で日本語スライドを制作・再現する。原典固有の生成器・テンプレート・実装と個別条件を保ち、実制作例を参考に日本語の資料を作るときに使う。
 ---
 
-# 画像から編集できる図へ
+# image-to-editable-ppt-ja
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
+Studio Yebisuの日本語派生版。原作者の公式翻訳ではありません。
 
-## 元の方式で作る
+## 原典を読む
+
+- upstream/skills/image-to-editable-ppt/SKILL.md
+
+同梱references/WORKFLOW.mdで、実作例・入力・環境・コマンドと確認範囲を読む。
+
+## 固有の制作方式
+
+原典editpptのprepare→page worker→build/validate→record→finalizeで画像を再構成する。Codex内蔵image_genで分離したアイコンはbitmapとして保持し、本文・カード・単純な矢印をnative要素にする。新規案内ノートは元画像からの抽出と区別し、本文XMLと画像を保って追加する。再出力kitは保存済みmanifest・分離済み画像の再利用で、新規画像編集ではない。元画像との比較と実PowerPoint描画、編集範囲を確認する。
+
+## 日本語で完成させる
+
+- 先に読み手、目的、結論、必要なページ、出力形式を決める。
+- 入力の出典と数値を確認し、万円・件・%・ポイントを区別する。架空条件と評価目標を実績に見せない。
+- 日本語の見出しは意味の区切りで改行し、数字と単位が不自然に分かれないようにする。
+- Webは必要文字を収録したOFL書体を埋め込む。PowerPointは受け手の書体環境を案内し、主要な完成ファイルが開くことを確認する。
+- 原典の方式で実ファイルを生成し、主要な出力の初回表示を確認する。原典の必須ビルド確認は維持し、明白な欠けだけ直す。
+
+## 再現と利用条件
+
+完成例と再現キットはカタログの当該リポに掲載。環境と制約はreferences/WORKFLOW.mdに記載する。上流コードと書体の条件はupstream内の原文を保持し、カタログのCC0を上流へ適用しない。
+
+## 単体の本文から使う
+
+この本文は `skill-forks/image-to-editable-ppt-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/ningzimu/image-to-editable-ppt-skill/tree/b7be494e31a0ed56ef98716891db5474606b8cdf
 
-- https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/AGENTS.md
-- https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/LICENSE
-- https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/README.md
-- https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/README_en.md
-- https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/agents/openai.yaml
-- https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/__init__.py
-- https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/cli.py
-- https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/skills/image-to-editable-ppt/cli/editppt/runtime/__init__.py
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `image-to-editable-ppt-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-Original editppt CLI + page workers + built-in image editing
-
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-- Python3.10+ / 原典editppt CLI
-- 新規入力には内蔵画像編集とpage worker対応エージェント
-- PowerPoint（今回の表示QA）
-
-
-
-## 日本語で魅力ある資料へ
-
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
-
-## この作例を自分の題材へ
-
-作例: 画像から編集できるGit入門へ
-
-既存の日本語Git入門画像2枚を、原典image-to-editable-pptのCLIとページworkerで編集可能なPowerPointへ再構成。文字、カード、単純な矢印はnative要素。アイコンはCodex内蔵image_genによる元画像の編集で分離し、画像として配置。第三者API、購入、外部OCRは使わない。元画像と完成PowerPointの全ページを視認し、編集できる部分と画像部分を明示する。
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: ningzimu / 原典条件: MIT
+原作者: ningzimu / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
 - https://github.com/ningzimu/image-to-editable-ppt-skill/blob/b7be494e31a0ed56ef98716891db5474606b8cdf/LICENSE
-
-原文LICENSE・NOTICEと素材・依存物の条件を保持する。
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。

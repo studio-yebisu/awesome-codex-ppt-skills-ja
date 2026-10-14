@@ -1,0 +1,2130 @@
+import { META_FONT_FLOOR_PX } from "../constants"
+import { LATIN_FACE_MARK_ADVANCES, SYMBOL_ADVANCE_BOUNDS } from "./symbol-advances"
+
+/**
+ * Weight/face hint threaded through the estimator (bold-metrics fix,
+ * 2026-07-24 — see the calibration comment above `measureTextUnits` for
+ * why this exists). Both fields default to the estimator's original,
+ * Regular-calibrated behavior when omitted, so every call site this fix
+ * didn't touch stays byte-identical.
+ */
+export interface TextWeightHint {
+  /** True when the consuming text renders `font-weight >= 600` (this
+   * codebase's own bold threshold — `isBold()` in `src/render/fonts.ts`,
+   * shared with the export converter's OOXML `b="1"` decision, is the
+   * canonical judgment this mirrors). Default `false`. */
+  bold?: boolean
+  /** The CSS font-family list actually flowing to the rendered `<text>`
+   * (`ComponentCtx.fonts.heading`/`.body`/`.mono`, i.e. `resolveFontStack`'s
+   * output) — only its first member (the Windows-safe exported face) is
+   * read, mirroring `svg2pptx/text.ts`'s own `firstFontFamily`. `undefined`
+   * (the default) selects the conservative cross-face envelope — see
+   * `classifyFace` below. */
+  fontFamily?: string
+  /**
+   * Asks for the face's Regular exact hmtx table. Every face with one
+   * (Georgia, Microsoft YaHei, SimSun/KaiTi) now measures Regular from it by
+   * default, so this changes nothing today. It stays so the call sites that
+   * said it (a mark that must sit under a specific glyph) keep saying so.
+   */
+  exact?: boolean
+  /**
+   * The family the text is painted in, for a wrap that measures by the
+   * envelope (no `fontFamily`) and must still fit in the face it is painted
+   * in. Each width is then the wider of the two. The envelope runs wide of
+   * every measured face but one: Microsoft YaHei's digits (0.5864em against
+   * the envelope's 0.56). A paragraph of figures wrapped by the envelope
+   * alone set a line 19px past its column in YaHei.
+   */
+  paintedIn?: string
+}
+
+export interface SvgTextLayoutOptions extends TextWeightHint {
+  maxWidth: number
+  fontSize: number
+  maxLines?: number
+  lineHeightRatio?: number
+  /**
+   * Widow avoidance (opt-in, heading call sites via `fitHeadingLines`): after
+   * the greedy wrap, if the last line is much shorter than the widest one
+   * (「年度战略回」+「顾」), re-wrap at the balanced per-line budget so the same
+   * line count splits evenly. Off by default so body/subtitle layouts keep
+   * their established greedy geometry.
+   */
+  balanceLines?: boolean
+  /**
+   * Word-integrity retry-ladder bound (task R2 scope extension, 2026-07-24
+   * — see the comment above `layoutSvgText`'s split-free search for the
+   * full mechanism). When the retry ladder's own largest-font candidate had
+   * to cut an atomic Latin/digit run mid-run (`LATIN_RUN_OR_CHAR_RE`), the
+   * ladder searches for a smaller, split-free font instead — but never one
+   * that would size below `minPt`, since a caller passing this is
+   * declaring that floor a hard constraint (mirroring `fitHeadingLines`'s
+   * own `minPt`, which is exactly where every real call site's value comes
+   * from). Omitted (the default): no floor — the search is bounded only by
+   * its own retry budget. Purely additive: every pre-existing call site
+   * that never set this keeps its previous, unbounded-by-minPt search.
+   */
+  minPt?: number
+  /**
+   * Extra px the rendered `<text>` puts between characters (the SVG
+   * `letter-spacing` attribute), so the wrap budget can pay for it.
+   *
+   * `fitSvgLine` has had this option since the single-line kicker fix — see
+   * the `(charCount - 1) * letterSpacing` derivation in its body — but
+   * `layoutSvgText` did not, so every wrapping call site that rendered with
+   * tracking decided its line breaks against a budget that ignored it. The
+   * defect this closes: fashion-masthead's EN subtitle (71 chars at
+   * `letterSpacing={4}`) was judged to fit one 1168px line and rendered
+   * 1253.7px wide, running 29.7px off the 1280px page.
+   *
+   * Charged against the whole trimmed content, exactly like `fitSvgLine`:
+   * any single line holds at most `charCount` characters, so subtracting
+   * `(charCount - 1) * letterSpacing` from `maxWidth` up front bounds every
+   * line's real tracking, and the font size derived from that reduced width
+   * therefore cannot overflow (`units_i * fontSize + tracking_i <=
+   * (maxWidth - fullTracking) + fullTracking`). Conservative for multi-line
+   * text — a two-line wrap is charged both lines' tracking on each line —
+   * which errs toward a smaller font rather than toward overflow.
+   *
+   * Default `0`: the subtraction is then exactly zero, so every call site
+   * that omits it keeps byte-identical geometry.
+   */
+  letterSpacing?: number
+}
+
+export interface SvgTextLayout {
+  lines: string[]
+  fontSize: number
+  lineHeight: number
+  /** True when characters were dropped to keep glyphs inside `maxWidth`.
+   *  `fitHeadingLines` sets this via its own `truncateToUnits` path.
+   *  `layoutSvgText` also sets it when the wrap/merge still overruns the
+   *  width at `minPt`: the last (or any) line is clipped with
+   *  `truncateToUnits`, never an ellipsis, and the render layer stamps
+   *  `data-truncated="1"`. Wrap/shrink that lands under budget stays
+   *  `false`. */
+  truncated: boolean
+}
+
+// S3c fix. User-reported bug: a bento callout with a long em-dash-separated
+// sentence wrapped its line one character too wide, so the real glyphs then
+// overran the box and clipped the trailing "60%". CJK fonts render the em
+// dash and the curly-quote block at full ideographic width, same as the
+// ideographs, ideographic punctuation, and fullwidth forms this class
+// already covered. Two sub-ranges, though, sat outside the two ranges below
+// and used to fall through to the 0.46 "other" weight, underestimating their
+// rendered width by more than half:
+//   - U+2014 (EM DASH): doubled up, it is the idiomatic CJK long-dash mark.
+//     That underestimate is exactly what let `wrapWithUnits` accept one more
+//     character per line than actually fits.
+//   - U+2018 through U+201F: the quotation-mark sub-block of General
+//     Punctuation (left/right single and double quotes, plus the low-9 and
+//     reversed-9 variants).
+//
+// Ideographic punctuation (U+3000 through U+303F: the ideographic comma,
+// full stop, corner brackets, book-title marks, etc.) and fullwidth forms
+// (U+FF00 through U+FFEF: fullwidth colon, percent sign, Latin letters,
+// etc.) were already covered: the first range below spans 0x2E80-0x9FFF, a
+// superset of 0x3000-0x303F, and the second range below is 0xFF00-0xFFEF
+// itself. So only the two sub-ranges named above needed adding; nothing here
+// duplicates coverage the class already had.
+//
+// Half-width ASCII punctuation (period, comma, colon, parens, the ASCII
+// hyphen, etc.) intentionally stays in the "other" 0.46 bucket below: it
+// really does render narrower than a CJK glyph.
+//
+// The quotation marks, and then the em dash, have since left this class.
+// Neither is a CJK character: PowerPoint paints both from the run's Latin
+// face (see `LATIN_FACE_MARK_ADVANCES`), which sets a quote on the full em
+// in YaHei, SimSun and KaiTi and at two fifths of one in Georgia, and the
+// em dash at 1.08em in YaHei and 0.86em in Georgia. Counted wide here, a
+// quote measured a full em in every face, and Georgia's em dash YaHei's
+// 1.08em once `SYMBOL_ADVANCE_BOUNDS` raised it, so a run after an opening
+// quote or a 「——」 in Georgia, with the highlight under it, landed right of
+// where PowerPoint drew it: 0.59em per quote, 0.22em per dash.
+const WIDE_CHAR_RE = /[\u2e80-\u9fff\uff00-\uffef]/
+
+/**
+ * The marks PowerPoint paints from the run's `<a:latin>` face that a face
+ * without an advance table still measures a full em: the em dash and the
+ * curly quotation marks, U+2018 to U+201F. The export writes every run as
+ * lang="en-US", and PowerPoint then paints these, and the middle dot, from
+ * the Latin face, beside Chinese text as much as English. So they measure at
+ * the advance of the face the caller names (`LATIN_FACE_MARK_ADVANCES`, read
+ * from the face itself). A face without a table keeps the class each had
+ * before: these the full em, the middle dot a mark's 0.46.
+ */
+const FULL_EM_LATIN_MARK_RE = /[\u2014\u2018-\u201f]/
+
+// Export-font calibration (borrow-wave Task 3, 2026-07-21): this weight
+// table is font-agnostic by design, but heading/body text ultimately
+// exports in whatever `resolveFontFace` (fonts.ts) resolves -- Georgia (the
+// brief theme's default heading+body face, and thesis/ledger's
+// heading face) and Microsoft YaHei (the resolved body face for 12 of
+// pptwise's 13 themes -- declared directly by 10, and by thesis/ledger's
+// role-default fallback since neither's declared body stack hits
+// SAFE_FONTS -- every theme except brief, whose body resolves to
+// Georgia). Both were measured against the real
+// exported binaries (Georgia: the genuine macOS system font. Microsoft
+// YaHei: the genuine binary Microsoft ships inside Office for Mac's private
+// font bundle, identity-confirmed via that file's own `name` table, not a
+// visually-similar stand-in like PingFang SC) using fontTools' `hmtx`
+// advance-width table, cross-validated to 4 decimal places against a real
+// Chromium `canvas.measureText()` reading of the identical file. Per-class
+// deviation from this file's weights (positive = real wider = the
+// dangerous direction, since `wrap:false` on export turns an underestimate
+// into visible horizontal overflow, not a caught/wrapped line):
+//   Georgia   upper -0.3%, lower/digit -10.4%, space -31.1%, other -17.0%
+//   YaHei     cjk +0.2%, upper -1.4%, lower/digit -0.6%, space -15.5%, other -2.2%
+// Every Georgia class is safe-direction (real narrower, which only leaves
+// more margin). YaHei's cjk class is a hair on the dangerous side of zero
+// (+0.2%) but well inside the 3% no-action band this task's controlling
+// brief set (mirroring the `MONO_WIDTH_SAFETY` precedent's tolerance
+// discipline). Every other YaHei class is safe-direction too. Conclusion:
+// no-action -- this table needs no per-role safety factor for Georgia or
+// Microsoft YaHei. Full corpus and methodology: task-3-report.md
+// (borrow-wave scratchpad, not shipped in this repo).
+//
+// Later correction: "safe" held for overflow but not for wrapping. Over a
+// whole sentence those per-class gaps add up to 20-25% too wide for
+// Georgia and 9-16% for YaHei and SimSun/KaiTi, enough to wrap text that
+// fits on one line, so Regular text in all three now measures from each
+// face's exact table (see `measureTextUnits`).
+//
+// Separately (not a width-calibration finding, recorded here since it
+// surfaced during this same measurement): neither Georgia nor Consolas
+// (src/components/code.tsx) has any CJK glyph in its `cmap` at all --
+// a CJK character in text declared under either face never renders from
+// that face -- PowerPoint substitutes some other, currently uncontrolled
+// font at the glyph level. That is a font-identity gap, not a width-
+// estimation gap, and no width safety factor can address it -- see
+// task-3-report.md's "unexpected findings" section.
+// Bold-width correction (bold-metrics fix, 2026-07-24; upgraded to an exact
+// per-character model in round 2, same date, after a controller-ordered
+// review found the class-average approach below structurally insufficient
+// -- see "EPITAPH" further down before trusting anything about
+// "class-average factors" in old comments elsewhere in this codebase).
+// 96% of this codebase's layout heading `<text>` declarations render
+// `font-weight >= 600` (root-cause.md S5), and OOXML export collapses any
+// of those into a real Bold glyph outline (`isBold()`, `src/render/fonts.ts`).
+// The user-reported defect is exactly this gap: cover-fashion-masthead.tsx's
+// "Components Demo" line measured 1166.21 units-as-px (fits the 1168px
+// budget) under this file's original unweighted estimate, but Georgia
+// Bold's real hmtx-table width is 1366.79px (+17.2%, root-cause.md S3) --
+// comfortably over budget, with no wrap/ellipsis to catch it (`wrap="none"`
+// on export, `render.ts`).
+type WeightMode = "regular" | "bold"
+interface ClassFactor {
+  regular: number
+  bold: number
+}
+const NO_CORRECTION: ClassFactor = { regular: 1, bold: 1 }
+interface FaceFactorTable {
+  space: ClassFactor
+  wide: ClassFactor
+  upper: ClassFactor
+  lowerDigit: ClassFactor
+  other: ClassFactor
+}
+
+// EPITAPH -- round 1's `LOWER_DIGIT_MARGIN`/`JUDGMENT_BAND_MARGIN`
+// (multiplicative safety factors layered on top of the per-class-average
+// Bold factors below), retired in round 2. Recorded here, not silently
+// deleted, because the reasoning for *why* a margin-on-an-average can never
+// be the right fix is the load-bearing lesson, not just this file's own
+// history:
+//
+// Round 1 found the data pack's verbatim per-class averages insufficient
+// (real renders of "Components Demo" still clipped on both Georgia and
+// YaHei) and patched it with a flat 1.2x margin on the classes that broke.
+// A controller-ordered review (this task's own bold-metrics-fix-review,
+// scratchpad) then found real, ordinary (not synthetic) headings that
+// *still* clipped through that margin -- "Maximum Momentum Wave" (Georgia
+// Bold, "Wave"'s trailing "e" cut off the canvas edge) and "MEGAMARKET
+// MOMENTUM" (Georgia Bold, "MARKET"'s trailing "T" cut off) -- both
+// LibreOffice-confirmed. The reviewer's independent fontTools hmtx read of
+// the genuine Georgia Bold.ttf explains exactly why a margin could never
+// have closed this gap: `lowerDigit`'s single widest real character, "m",
+// has a true advance of 1.0156em -- a 1.8136x ratio over the class's
+// assumed 0.56em weight -- while round 1's margined factor
+// (1.0461 x 1.2 = 1.2553x) covered barely two thirds of that gap. Georgia's
+// `upper` class (which round 1 left *unmargined*, reasoned "independently
+// verified tight" against this corpus's own worst sampled string) has the
+// same structural problem in the other direction: "W" has a true advance
+// of 1.1265em against an assumed 0.66em weight -- a +51.8% deviation, not
+// the +12.42% the sampled corpus average suggested.
+//
+// The generalizable lesson: a class average -- however large the corpus,
+// however small the measured deviation, margined or not -- describes the
+// *typical* member of an open-ended character class, never its bound. Any
+// margin chosen to clear the worst case *known at the time* (round 1's two
+// failing strings) is definitionally unfalsifiable against a worst case
+// *not yet tried* (round 2's two new ones) -- there is no principled stopping
+// point short of the class's true maximum (1.8136x for `lowerDigit`, which
+// would in turn over-shrink the overwhelming majority of ordinary headings
+// that never come near that character). The only way to be simultaneously
+// exact for typical headings and safe for adversarial ones is to stop
+// averaging altogether -- which is what the exact per-character tables
+// below do for the two faces this task has genuine Bold binaries for.
+// SimSun/KaiTi (`SIMSUN_KAITI` below) keep a class-average model, unchanged
+// from round 1 apart from also losing their own `LOWER_DIGIT_MARGIN` factor
+// -- but that removal doesn't reopen the same hole, because SimSun/KaiTi's
+// Latin glyphs have *zero* measured per-character variance in the first
+// place (every probed character sits at exactly 0.5em, `bold-data-pack.md`
+// S2 -- a rigid design grid, not a statistical average with a long tail),
+// so there is no "worst individual character beats the average" case for a
+// class average to fail to bound. See `SIMSUN_KAITI`'s own comment for the
+// full argument.
+//
+// Per-class factors below (now used only as the exact-model faces' rare
+// fallback, and as `SIMSUN_KAITI`/`ENVELOPE`'s only model) are
+// `bold_real_em / assumed_estimator_weight`, read verbatim off this task's
+// data pack (`bold-data-pack.json` `derived_bold_factors`, `bold-data-
+// pack.md` for full methodology/provenance/corpus -- scratchpad, not
+// shipped in this repo, dated 2026-07-24), with no margin layered on top
+// (see EPITAPH above for why not). Georgia/Microsoft YaHei's numbers are
+// `genuine-file-hmtx`; SimSun/KaiTi have no genuine Bold binary anywhere
+// (exhaustively searched, `bold-data-pack.md` S1) so theirs stay
+// `conservative-proxy` (Georgia's own measured Bold growth rate applied to
+// SimSun/KaiTi's real, zero-variance Regular baseline).
+const GEORGIA: FaceFactorTable = {
+  space: { regular: 1, bold: 0.7254 },
+  wide: NO_CORRECTION,
+  upper: { regular: 1, bold: 1.1242 },
+  lowerDigit: { regular: 1, bold: 1.0461 },
+  other: { regular: 1, bold: 0.9159 },
+}
+
+const YAHEI: FaceFactorTable = {
+  space: { regular: 1, bold: 0.8511 },
+  wide: NO_CORRECTION,
+  upper: { regular: 1, bold: 1.0317 },
+  lowerDigit: { regular: 1, bold: 1.0266 },
+  other: { regular: 1, bold: 0.9593 },
+}
+
+// SimSun (heading: journal/runway) and KaiTi (heading: ink) share one
+// table -- their `hmtx` tables are byte-identical on every probed character
+// (same legacy GB font-grid design: Latin glyphs rigidly fixed at 0.5em,
+// CJK at 1.0em, zero exceptions, bold-data-pack.md S2). Still a
+// class-average model in round 2, deliberately not upgraded to an exact
+// table -- there is nothing to make "exact" about a class whose own real
+// measurement already has zero variance (every Latin glyph is precisely
+// 0.5em; see the EPITAPH comment above for why that immunizes this face
+// from the exact per-character reasoning that forced Georgia/YaHei's
+// upgrade). Where the *remaining* uncertainty comes from for this face
+// (does Georgia's own Bold growth rate even transplant validly onto
+// SimSun/KaiTi's un-measurable faux-bold rendering, a cross-face
+// extrapolation question, not a within-class variance question) was
+// already argued as a deliberately conservative choice in
+// `bold-data-pack.md` S3.3 (Georgia's growth rate picked over the smaller
+// Noto-Sans-CJK-SC-observed rate specifically for its larger, safer
+// magnitude) -- stacking round 1's now-retired margin on top of an
+// already-conservative choice would have been double-counting a safety
+// margin with no new evidence behind the second layer, unlike Georgia's
+// `lowerDigit`/`upper` where the margin was answering a real, newly-found
+// gap. `lowerDigit`/`upper` below are therefore the verbatim
+// conservative-proxy factors, no margin -- same disposition as `GEORGIA`/
+// `YAHEI` above, for a different underlying reason.
+//
+// `space`/`other` are the SimSun/KaiTi Regular gap (this fix's item 2, not
+// a bold question at all): both classes are already dangerously wrong at
+// REGULAR weight (space +42.86%, other +8.70% clean-corpus vs this file's
+// assumed weights) -- a rigid-grid artifact of the legacy 256-unitsPerEm
+// design, unrelated to font-weight. Faux-bold measured 0% incremental
+// growth for both (no ink to embolden for space; the rigid 0.5em Latin grid
+// doesn't flex for other either), so `regular` and `bold` are equal here --
+// the one asymmetry in this file, and the reason this correction folds in
+// regardless of the caller's `bold` flag. `other` uses the clean-corpus
+// value (1.2235) rather than the raw corpus's more pessimistic 1.2846: the
+// raw corpus is contaminated by one U+00B7 MIDDLE DOT character a separate,
+// pre-existing `WIDE_CHAR_RE` coverage gap misclassifies as "other" instead
+// of CJK-wide -- folding that unrelated bug into this factor would
+// overcorrect for the wrong reason (bold-data-pack.md S2 side-finding 2).
+// `wide` is `NO_CORRECTION`: three independent genuine-bold sources
+// (YaHei's own hmtx, an incidental Noto Sans CJK SC reading, SimSun/KaiTi's
+// own zero-variance Regular CJK grid) all agree CJK advance width is
+// weight-invariant.
+const SIMSUN_KAITI: FaceFactorTable = {
+  space: { regular: 1.4286, bold: 1.4286 },
+  wide: NO_CORRECTION,
+  upper: { regular: 1, bold: 0.852 },
+  lowerDigit: { regular: 1, bold: 1.048 },
+  other: { regular: 1.2235, bold: 1.2235 },
+}
+
+// Conservative envelope for any exported face this pack never measured --
+// e.g. a future theme whose heading resolves to one of fonts.ts's other
+// SAFE_FONTS members (Arial, Cambria, SimHei, FangSong, ...); none of
+// today's 13 themes' heading role resolves to any of them. Per-class MAX
+// of the three tables above, `bold` column only: 2 of the 3 measured faces
+// need no Regular-weight correction at all (only SimSun/KaiTi's proven,
+// face-specific rigid-grid design does), so defaulting an unmeasured
+// face's `regular` column to that same correction would assume data this
+// pack never measured -- `regular` stays uncorrected, `bold` gets the
+// safe-direction envelope (this fix's brief, option 1: "MAX across the
+// danger faces actually exported for that role").
+//
+// Honest caveat (round 2): this envelope is *still* a class-average model,
+// carrying the exact same structural limitation the EPITAPH comment above
+// describes for round 1's now-retired margins -- it cannot bound an
+// unmeasured face's own single-worst-character the way it can't for any
+// class average. It is unexercised by any of today's 13 themes (every
+// theme's heading resolves to one of the three named faces above, never
+// this fallback), so this is a forward-looking caveat, not a currently
+// live gap -- but a future theme that adds a heading face from
+// `SAFE_FONTS` outside {Georgia, Microsoft YaHei, SimSun, KaiTi} would
+// inherit this same risk class until that face gets its own exact table
+// (Georgia/YaHei's own treatment below) or at least a real per-character
+// worst-case reading to size an honest margin from -- not another
+// unfalsifiable guess.
+const ENVELOPE: FaceFactorTable = {
+  space: { regular: 1, bold: Math.max(GEORGIA.space.bold, YAHEI.space.bold, SIMSUN_KAITI.space.bold) },
+  wide: { regular: 1, bold: Math.max(GEORGIA.wide.bold, YAHEI.wide.bold, SIMSUN_KAITI.wide.bold) },
+  upper: { regular: 1, bold: Math.max(GEORGIA.upper.bold, YAHEI.upper.bold, SIMSUN_KAITI.upper.bold) },
+  lowerDigit: {
+    regular: 1,
+    bold: Math.max(GEORGIA.lowerDigit.bold, YAHEI.lowerDigit.bold, SIMSUN_KAITI.lowerDigit.bold),
+  },
+  other: { regular: 1, bold: Math.max(GEORGIA.other.bold, YAHEI.other.bold, SIMSUN_KAITI.other.bold) },
+}
+
+// ---------------------------------------------------------------------
+// Exact per-character advance tables (round 2). Georgia and Microsoft
+// YaHei both have genuine Regular+Bold binaries on this rig (see the
+// identity table in bold-data-pack.md S1) -- the same precondition
+// `measureMonoTextUnits` below already required before treating a face
+// exactly instead of heuristically, applied here per-character instead of
+// uniformly (a proportional face doesn't have one constant advance the way
+// a monospace one does, but it does have a *fixed, measurable* advance per
+// glyph -- the thing a class average was only ever approximating).
+//
+// Coverage: printable ASCII, 0x20 (space) through 0x7E (~), 95 codepoints
+// -- the full range any Latin character `measureTextUnits`' upper/
+// lowerDigit/other/space classes could ever match (see `WIDE_CHAR_RE`
+// above for what's classified CJK-wide instead, unaffected by this table).
+// Extraction: fontTools `hmtx`/`unitsPerEm` read of the same genuine
+// binaries and paths `bold-data-pack.md` S1's identity table documents
+// (`/System/Library/Fonts/Supplemental/Georgia.ttf` /
+// `Georgia Bold.ttf`, `.../Microsoft Word.app/.../DFonts/msyh.ttc[0]` /
+// `msyhbd.ttc[0]`), each re-confirmed against its own `name` table
+// (family/subfamily) immediately before extraction -- identical discipline
+// to the data pack's own, re-run rather than trusted secondhand
+// (`extract_exact_tables.py`, scratchpad, not shipped in this repo, dated
+// 2026-07-24). All 95 codepoints resolved on all four face/weight
+// combinations -- zero missing glyphs. Values are `advance / unitsPerEm`
+// (both faces measured at unitsPerEm=2048), rounded to 4 decimal places,
+// keyed by `charCodeAt(0)` rather than the literal character to keep a
+// machine-generated table free of string-escaping ambiguity (`"`, `'`,
+// `\` all appear as keys in this range).
+//
+// Kerning caveat (must be read before trusting this table to the last
+// decimal place): these are `hmtx` *advance* widths -- the per-glyph
+// spacing before any GPOS kerning-pair adjustment the shaping engine
+// applies at layout time. Georgia's own kerning table is small in
+// magnitude and, for the vast majority of pairs, *negative* (tightening
+// pairs like "AV"/"To" pull glyphs closer, not further apart) -- so
+// summing bare advances without kerning is, if anything, a conservative
+// (slightly wide) over-estimate for Georgia, the safe direction for this
+// fix's whole purpose. This wasn't independently re-derived for this task
+// (no on-rig tool extracted this file's actual GPOS pair list) -- it's the
+// same "advance-sum, no kerning" simplification `measureMonoTextUnits`
+// below already ships with (monospace fonts don't kern at all, so that
+// model never had this caveat), now inherited by a proportional model
+// where kerning genuinely exists but is second-order. Round-2 review
+// estimated the resulting shaping-level uncertainty at roughly 1-2
+// percentage points on a typical multi-word heading -- small next to the
+// tens-of-percent gaps the exact model closes, and safe-directional, not
+// reason to distrust the model, but not zero either.
+const GEORGIA_REGULAR_EXACT: Readonly<Record<number, number>> = {32:0.2412,33:0.3311,34:0.4116,35:0.6431,36:0.6099,37:0.8174,38:0.7104,39:0.2153,40:0.375,41:0.375,42:0.4722,43:0.6431,44:0.2695,45:0.374,46:0.2695,47:0.4688,48:0.6138,49:0.4297,50:0.5586,51:0.5518,52:0.5649,53:0.5283,54:0.5659,55:0.5024,56:0.5962,57:0.5659,58:0.3125,59:0.3125,60:0.6431,61:0.6431,62:0.6431,63:0.4785,64:0.9287,65:0.6709,66:0.6538,67:0.6421,68:0.749,69:0.6533,70:0.5991,71:0.7251,72:0.8149,73:0.3896,74:0.5176,75:0.6943,76:0.6035,77:0.9272,78:0.7671,79:0.7441,80:0.6099,81:0.7441,82:0.7017,83:0.561,84:0.6187,85:0.7563,86:0.6665,87:0.9756,88:0.7104,89:0.6152,90:0.6016,91:0.375,92:0.4688,93:0.375,94:0.6431,95:0.6431,96:0.5,97:0.5039,98:0.5601,99:0.4541,100:0.5742,101:0.4834,102:0.3252,103:0.5093,104:0.582,105:0.293,106:0.292,107:0.5356,108:0.2861,109:0.8809,110:0.5908,111:0.5391,112:0.5713,113:0.5596,114:0.4097,115:0.4321,116:0.3452,117:0.5752,118:0.4966,119:0.7373,120:0.5049,121:0.4922,122:0.4438,123:0.4302,124:0.375,125:0.4302,126:0.6431}
+const GEORGIA_BOLD_EXACT: Readonly<Record<number, number>> = {32:0.2539,33:0.3765,34:0.5098,35:0.7031,36:0.6406,37:0.8794,38:0.7993,39:0.269,40:0.4468,41:0.4468,42:0.4819,43:0.7031,44:0.3281,45:0.3789,46:0.3281,47:0.4717,48:0.7012,49:0.4897,50:0.6265,51:0.6245,52:0.6494,53:0.5991,54:0.6479,55:0.5542,56:0.6763,57:0.6479,58:0.3672,59:0.3672,60:0.7031,61:0.7031,62:0.7031,63:0.5483,64:0.9668,65:0.7583,66:0.7573,67:0.7153,68:0.834,69:0.7212,70:0.6714,71:0.8071,72:0.9131,73:0.4458,74:0.5952,75:0.8169,76:0.6855,77:1.0234,78:0.8394,79:0.8198,80:0.7012,81:0.8198,82:0.7974,83:0.6489,84:0.6841,85:0.8335,86:0.7622,87:1.1265,88:0.8086,89:0.7319,90:0.6895,91:0.4468,92:0.4717,93:0.4468,94:0.7031,95:0.7031,96:0.5,97:0.5957,98:0.6455,99:0.5312,100:0.6631,101:0.5718,102:0.3931,103:0.5767,104:0.6797,105:0.3535,106:0.3462,107:0.6318,108:0.3442,109:1.0156,110:0.6899,111:0.6357,112:0.6577,113:0.6484,114:0.52,115:0.5127,116:0.3975,117:0.6768,118:0.5669,119:0.8633,120:0.5879,121:0.562,122:0.5254,123:0.5,124:0.3877,125:0.5,126:0.7031}
+const YAHEI_REGULAR_EXACT: Readonly<Record<number, number>> = {32:0.2959,33:0.3125,34:0.4355,35:0.6382,36:0.5864,37:0.8896,38:0.8701,39:0.2563,40:0.334,41:0.334,42:0.4551,43:0.7417,44:0.2407,45:0.4326,46:0.2407,47:0.4272,48:0.5864,49:0.5864,50:0.5864,51:0.5864,52:0.5864,53:0.5864,54:0.5864,55:0.5864,56:0.5864,57:0.5864,58:0.2407,59:0.2407,60:0.7417,61:0.7417,62:0.7417,63:0.4829,64:1.0312,65:0.7036,66:0.6274,67:0.6689,68:0.7617,69:0.5498,70:0.5312,71:0.7437,72:0.7734,73:0.2939,74:0.396,75:0.6348,76:0.5132,77:0.9771,78:0.813,79:0.8149,80:0.6118,81:0.8149,82:0.6528,83:0.5771,84:0.5732,85:0.7466,86:0.6763,87:1.0176,88:0.645,89:0.6035,90:0.6201,91:0.334,92:0.416,93:0.334,94:0.7417,95:0.4482,96:0.2949,97:0.5527,98:0.6387,99:0.5015,100:0.6396,101:0.5674,102:0.3467,103:0.6396,104:0.6157,105:0.2661,106:0.2671,107:0.5444,108:0.2661,109:0.937,110:0.6162,111:0.6357,112:0.6387,113:0.6396,114:0.3818,115:0.4629,116:0.3726,117:0.6162,118:0.5249,119:0.7896,120:0.5068,121:0.5293,122:0.4917,123:0.334,124:0.269,125:0.334,126:0.7417}
+const YAHEI_BOLD_EXACT: Readonly<Record<number, number>> = {32:0.2979,33:0.3486,34:0.521,35:0.6401,36:0.6167,37:0.9312,38:0.9111,39:0.3081,40:0.3896,41:0.3896,42:0.4873,43:0.7612,44:0.2856,45:0.4365,46:0.2856,47:0.4727,48:0.6167,49:0.6167,50:0.6167,51:0.6167,52:0.6167,53:0.6167,54:0.6167,55:0.6167,56:0.6167,57:0.6167,58:0.2856,59:0.2856,60:0.7612,61:0.7612,62:0.7612,63:0.4741,64:1.0298,65:0.752,66:0.6836,67:0.6733,68:0.7915,69:0.5718,70:0.5581,71:0.7651,72:0.8213,73:0.3354,74:0.4702,75:0.6929,76:0.5469,77:1.0283,78:0.8481,79:0.8184,80:0.6572,81:0.8184,82:0.6982,83:0.6016,84:0.6255,85:0.7764,86:0.7148,87:1.0762,88:0.7002,89:0.6484,90:0.6504,91:0.3896,92:0.4644,93:0.3896,94:0.7612,95:0.4482,96:0.3335,97:0.5776,98:0.666,99:0.5166,100:0.6646,101:0.582,102:0.4053,103:0.6646,104:0.6455,105:0.2959,106:0.3018,107:0.5962,108:0.2959,109:0.9819,110:0.6479,111:0.6572,112:0.666,113:0.6646,114:0.4238,115:0.4937,116:0.4141,117:0.6479,118:0.5771,119:0.8516,120:0.585,121:0.5742,122:0.5137,123:0.3896,124:0.3413,125:0.3896,126:0.7612}
+
+// Times New Roman, Regular and Bold, read with the same cmap+hmtx parser from
+// the genuine binaries Office ships (`times.ttf` and `timesbd.ttf` in
+// PowerPoint's `DFonts`, name "Times New Roman" Regular and Bold, byte-equal
+// in their advances to macOS's Supplemental copies), each value rounded up
+// to four decimals so a stored width is never below the real one. memo sets
+// its Song headings' Latin in this face over SimSun (`fonts.ts`
+// `resolveFontStack`), the pairing a Chinese document takes for its
+// Western text.
+const TIMES_REGULAR_EXACT: Readonly<Record<number, number>> = {32:0.25,33:0.3331,34:0.4083,35:0.5,36:0.5,37:0.8331,38:0.7779,39:0.1802,40:0.3331,41:0.3331,42:0.5,43:0.564,44:0.25,45:0.3331,46:0.25,47:0.2779,48:0.5,49:0.5,50:0.5,51:0.5,52:0.5,53:0.5,54:0.5,55:0.5,56:0.5,57:0.5,58:0.2779,59:0.2779,60:0.564,61:0.564,62:0.564,63:0.4439,64:0.9209,65:0.7222,66:0.667,67:0.667,68:0.7222,69:0.6109,70:0.5562,71:0.7222,72:0.7222,73:0.3331,74:0.3892,75:0.7222,76:0.6109,77:0.8892,78:0.7222,79:0.7222,80:0.5562,81:0.7222,82:0.667,83:0.5562,84:0.6109,85:0.7222,86:0.7222,87:0.9439,88:0.7222,89:0.7222,90:0.6109,91:0.3331,92:0.2779,93:0.3331,94:0.4693,95:0.5,96:0.3331,97:0.4439,98:0.5,99:0.4439,100:0.5,101:0.4439,102:0.3331,103:0.5,104:0.5,105:0.2779,106:0.2779,107:0.5,108:0.2779,109:0.7779,110:0.5,111:0.5,112:0.5,113:0.5,114:0.3331,115:0.3892,116:0.2779,117:0.5,118:0.5,119:0.7222,120:0.5,121:0.5,122:0.4439,123:0.48,124:0.2002,125:0.48,126:0.5411}
+const TIMES_BOLD_EXACT: Readonly<Record<number, number>> = {32:0.25,33:0.3331,34:0.5552,35:0.5,36:0.5,37:1,38:0.8331,39:0.2779,40:0.3331,41:0.3331,42:0.5,43:0.5699,44:0.25,45:0.3331,46:0.25,47:0.2779,48:0.5,49:0.5,50:0.5,51:0.5,52:0.5,53:0.5,54:0.5,55:0.5,56:0.5,57:0.5,58:0.3331,59:0.3331,60:0.5699,61:0.5699,62:0.5699,63:0.5,64:0.9302,65:0.7222,66:0.667,67:0.7222,68:0.7222,69:0.667,70:0.6109,71:0.7779,72:0.7779,73:0.3892,74:0.5,75:0.7779,76:0.667,77:0.9439,78:0.7222,79:0.7779,80:0.6109,81:0.7779,82:0.7222,83:0.5562,84:0.667,85:0.7222,86:0.7222,87:1,88:0.7222,89:0.7222,90:0.667,91:0.3331,92:0.2779,93:0.3331,94:0.5811,95:0.5,96:0.3331,97:0.5,98:0.5562,99:0.4439,100:0.5562,101:0.4439,102:0.3331,103:0.5,104:0.5562,105:0.2779,106:0.3331,107:0.5562,108:0.2779,109:0.8331,110:0.5562,111:0.5,112:0.5562,113:0.5562,114:0.4439,115:0.3892,116:0.3331,117:0.5562,118:0.5,119:0.7222,120:0.5,121:0.5,122:0.4439,123:0.3941,124:0.2203,125:0.3941,126:0.5201}
+
+// SimSun and KaiTi Regular: every printable ASCII codepoint advances 128
+// units at unitsPerEm=256, exactly 0.5em, read with a standalone cmap+hmtx
+// parser from the genuine binaries Office ships (`Simsun.ttc[0]`, name
+// "SimSun" Regular, Version 5.21, and `Kaiti.ttf`, "KaiTi" Regular,
+// Version 5.01i, in PowerPoint's and Word's `DFonts`, byte-identical in
+// both). Both faces are a fixed half-em grid for Latin, so the table is
+// that one number 95 times. Neither face kerns.
+const SIMSUN_KAITI_REGULAR_EXACT: Readonly<Record<number, number>> = Object.fromEntries(
+  Array.from({ length: 95 }, (_, i) => [32 + i, 0.5]),
+)
+
+// Bahnschrift, the figure face (`fonts.ts` FontRole "figure"), Regular and
+// Bold, read with the same cmap+hmtx parser from the cut Office for Mac
+// downloads from Microsoft's cloud font service and paints the face with
+// ("Bahnschrift Rounded", Version 2.09), each value rounded up to four
+// decimals. The two weights share every advance, so one table serves both.
+// Windows ships Bahnschrift with the system, a binary this rig does not
+// have to read.
+const BAHNSCHRIFT_EXACT: Readonly<Record<number, number>> = {32:0.2686,33:0.2706,34:0.3785,35:0.6241,36:0.5767,37:0.6871,38:0.6519,39:0.1778,40:0.3394,41:0.3394,42:0.4302,43:0.5284,44:0.2266,45:0.4795,46:0.2266,47:0.3785,48:0.5518,49:0.3326,50:0.5167,51:0.5289,52:0.5689,53:0.5445,54:0.5132,55:0.5035,56:0.5625,57:0.5132,58:0.2266,59:0.2266,60:0.4244,61:0.459,62:0.4292,63:0.4317,64:0.8902,65:0.6475,66:0.6456,67:0.6187,68:0.6563,69:0.5977,70:0.5591,71:0.6465,72:0.6788,73:0.2754,74:0.5054,75:0.6417,76:0.5733,77:0.7793,78:0.7002,79:0.6456,80:0.6226,81:0.6573,82:0.6519,83:0.6158,84:0.4815,85:0.6553,86:0.587,87:0.8467,88:0.5674,89:0.503,90:0.544,91:0.294,92:0.3785,93:0.294,94:0.503,95:0.4356,96:0.2945,97:0.5323,98:0.544,99:0.4981,100:0.5391,101:0.5362,102:0.3169,103:0.5391,104:0.5586,105:0.251,106:0.2681,107:0.5289,108:0.2896,109:0.8565,110:0.5586,111:0.545,112:0.544,113:0.5391,114:0.4268,115:0.5186,116:0.3262,117:0.5562,118:0.5,119:0.7735,120:0.5171,121:0.483,122:0.4947,123:0.3604,124:0.2754,125:0.3604,126:0.5137}
+
+interface ExactFaceTable {
+  regular: Readonly<Record<number, number>>
+  bold: Readonly<Record<number, number>>
+}
+
+type FaceKey = "georgia" | "yahei" | "yahei-ui" | "simsun-kaiti" | "times" | "bahnschrift" | "unknown"
+
+const CLASS_TABLE_FOR: Readonly<Record<FaceKey, FaceFactorTable>> = {
+  georgia: GEORGIA,
+  yahei: YAHEI,
+  // Microsoft YaHei's Western cut (`fonts.ts` `WESTERN_CUT`): YaHei's own
+  // advances on every code point but the four curly quotation marks, which
+  // `LATIN_FACE_MARK_ADVANCES` holds at its own Western width.
+  "yahei-ui": YAHEI,
+  "simsun-kaiti": SIMSUN_KAITI,
+  // Its printable ASCII is exact and its symbols are bounded, so the class
+  // path only meets what neither covers, and there the envelope errs wide.
+  times: ENVELOPE,
+  bahnschrift: ENVELOPE,
+  unknown: ENVELOPE,
+}
+
+// Faces with a genuine binary at both weights. `simsun-kaiti` has no Bold
+// binary anywhere (its Bold stays the class-average proxy, see
+// `SIMSUN_KAITI`) and `unknown` has no data, so neither has an entry here,
+// and `hasExactWidthTable` reads this map for exactly that reason.
+const EXACT_TABLE_FOR: Readonly<Partial<Record<FaceKey, ExactFaceTable>>> = {
+  georgia: { regular: GEORGIA_REGULAR_EXACT, bold: GEORGIA_BOLD_EXACT },
+  yahei: { regular: YAHEI_REGULAR_EXACT, bold: YAHEI_BOLD_EXACT },
+  "yahei-ui": { regular: YAHEI_REGULAR_EXACT, bold: YAHEI_BOLD_EXACT },
+  times: { regular: TIMES_REGULAR_EXACT, bold: TIMES_BOLD_EXACT },
+  bahnschrift: { regular: BAHNSCHRIFT_EXACT, bold: BAHNSCHRIFT_EXACT },
+}
+
+/** Every face whose Regular weight has a genuine binary to read. */
+const REGULAR_EXACT_TABLE_FOR: Readonly<Partial<Record<FaceKey, Readonly<Record<number, number>>>>> = {
+  georgia: GEORGIA_REGULAR_EXACT,
+  yahei: YAHEI_REGULAR_EXACT,
+  "yahei-ui": YAHEI_REGULAR_EXACT,
+  "simsun-kaiti": SIMSUN_KAITI_REGULAR_EXACT,
+  times: TIMES_REGULAR_EXACT,
+  bahnschrift: BAHNSCHRIFT_EXACT,
+}
+
+/**
+ * Classifies a resolved CSS font-family list (`ComponentCtx.fonts.*`, i.e.
+ * `resolveFontStack`'s output) down to the face this pack measured, by its
+ * *first* member -- the Windows-safe exported face `svg2pptx/text.ts`'s own
+ * `firstFontFamily` reads (every member after it is `fonts.ts`'s macOS
+ * preview-only fallback, e.g. "Georgia, Songti SC, STSong, serif"). Matches
+ * case-insensitively with quotes/whitespace trimmed, mirroring
+ * `resolveFontFace`'s own convention.
+ *
+ * SimHei/黑体 and FangSong/仿宋 -- `fonts.ts`'s other two legacy-GB CJK
+ * faces, plausibly sharing SimSun/KaiTi's rigid grid by family design but
+ * never actually measured -- deliberately classify `"unknown"` (the
+ * `ENVELOPE` fallback), not `"simsun-kaiti"`: no current theme resolves a
+ * heading to either, and assuming unmeasured data would repeat the exact
+ * "校准替身非真身" (calibrating a stand-in, not the genuine face) mistake
+ * `bold-data-pack.md`'s own methodology exists to catch.
+ */
+function classifyFaceKey(fontFamily: string | undefined): FaceKey {
+  const first = fontFamily?.split(",")[0]?.replace(/['"]/g, "").trim().toLowerCase()
+  if (!first) return "unknown"
+  if (first === "georgia") return "georgia"
+  if (first === "microsoft yahei" || first === "微软雅黑") return "yahei"
+  if (first === "microsoft yahei ui") return "yahei-ui"
+  if (first === "simsun" || first === "宋体" || first === "kaiti" || first === "楷体") return "simsun-kaiti"
+  if (first === "times new roman") return "times"
+  if (first === "bahnschrift") return "bahnschrift"
+  return "unknown"
+}
+
+/**
+ * Per-character-class heuristic width estimator, `WIDE_CHAR_RE`-classified
+ * text and the exact-model faces' own rare fallback (see the module-level
+ * comment above `GEORGIA_REGULAR_EXACT` for the exact-vs-class-average
+ * split). For Georgia/Microsoft YaHei this path only fires for a codepoint
+ * outside printable ASCII and outside `WIDE_CHAR_RE` -- an accented Latin
+ * letter, Cyrillic, Greek, an emoji, etc. -- genuinely rare in a heading;
+ * for SimSun/KaiTi/an unmeasured face it's the *only* path, every
+ * character.
+ *
+ * Georgia's own `cmap` has zero CJK glyphs at any weight (S3c's
+ * pre-existing finding, unrelated to width) -- `wide` stays `NO_CORRECTION`
+ * there as a deliberate don't-care, not a safety claim, since no CJK
+ * character ever actually renders from that face.
+ */
+function classAverageUnits(char: string, table: FaceFactorTable, mode: WeightMode): number {
+  if (/\s/.test(char)) return 0.35 * table.space[mode]
+  if (WIDE_CHAR_RE.test(char) || FULL_EM_LATIN_MARK_RE.test(char)) return 1 * table.wide[mode]
+  if (/[A-Z]/.test(char)) return 0.66 * table.upper[mode]
+  if (/[a-z0-9]/.test(char)) return 0.56 * table.lowerDigit[mode]
+  return 0.46 * table.other[mode]
+}
+
+export function measureTextUnits(text: string, weight?: TextWeightHint): number {
+  if (weight?.paintedIn !== undefined) {
+    const { paintedIn, ...envelope } = weight
+    return Math.max(measureTextUnits(text, envelope), measureTextUnits(text, { ...envelope, fontFamily: paintedIn }))
+  }
+  const mode: WeightMode = weight?.bold ? "bold" : "regular"
+  const faceKey = classifyFaceKey(weight?.fontFamily)
+  const classTable = CLASS_TABLE_FOR[faceKey]
+  // Every printable ASCII character measures from its face's own advance
+  // table when the face has one for this weight: Bold for Georgia and
+  // YaHei, Regular for those two and SimSun/KaiTi.
+  //
+  // Regular used to stay on the class-average path for every face so that
+  // non-bold text kept its pre-bold-fix geometry, and that path runs wide.
+  // Over the brief gallery's English sentences the class sum is 20-25% over
+  // Georgia's real advances, 9-16% over YaHei's, and 5-15% over
+  // SimSun/KaiTi's half-em grid. The cause is the 0.56/0.35/0.46 class
+  // weights against these faces' narrower lowercase, spaces and marks:
+  // "Vertical playbook replication" is 15.92em by class, 12.72em in Georgia,
+  // 13.68em in YaHei and 14.5em in SimSun. Text that fits one line wrapped
+  // to two. The one class that runs the other way is YaHei's digits
+  // (0.5864em against the class's 0.56), which the class path under-priced.
+  //
+  // Checked against real layout engines, not just this file's own tables:
+  // rsvg's Georgia ink lands within 0.3% of the exact sum, and FreeType
+  // (through Pillow) reproduces the YaHei and SimSun/KaiTi sums to the
+  // fourth decimal. HarfBuzz shaping, which applies YaHei's kerning, comes
+  // out up to 1% narrower on ordinary sentences, and SimSun/KaiTi do not
+  // kern. So the exact sum errs a hair wide, never narrow.
+  const exactTable = mode === "bold" ? EXACT_TABLE_FOR[faceKey]?.bold : REGULAR_EXACT_TABLE_FOR[faceKey]
+  const symbolBounds = faceKey === "unknown" ? undefined : SYMBOL_ADVANCE_BOUNDS[faceKey][mode]
+  const latinMarks = faceKey === "unknown" ? undefined : LATIN_FACE_MARK_ADVANCES[faceKey][mode]
+  return Array.from(text).reduce((sum, char) => {
+    // The middle dot, the em dash and a curly quote are painted from the
+    // face itself, so its advance there (`LATIN_FACE_MARK_ADVANCES`) is the
+    // width.
+    const latinMark = latinMarks?.[char.charCodeAt(0)]
+    if (latinMark !== undefined) return sum + latinMark
+    // WIDE_CHAR_RE (CJK/ideographic-punctuation/fullwidth) always takes the
+    // class path, even under an exact-model face: the exact tables only
+    // cover printable ASCII, and CJK's own class factor (measured
+    // weight-invariant, see the module comment above `GEORGIA_REGULAR_EXACT`
+    // and the `wide`/cjk discussion in each face table's own comment) is
+    // already as precise as this file gets for that character set.
+    if (exactTable && !WIDE_CHAR_RE.test(char)) {
+      const exact = exactTable[char.charCodeAt(0)]
+      if (exact !== undefined) return sum + exact
+    }
+    // Outside printable ASCII the class average is a guess, and for some
+    // glyphs a low one: SimSun and KaiTi set "×" and "°" on the full em
+    // against the class's 0.46, Georgia's "‰" runs 1.21em, YaHei's "×"
+    // 0.74em, an ideographic space 1em against a space's 0.35.
+    // `SYMBOL_ADVANCE_BOUNDS` holds the widest real advance each measured
+    // face (and the face that may stand in for it) gives the character,
+    // and the estimate rises to it. It never falls below the class average,
+    // so no layout gets tighter for a glyph the tables say is narrower than
+    // the guess.
+    const estimate = classAverageUnits(char, classTable, mode)
+    const floor = symbolBounds?.[char.charCodeAt(0)]
+    return sum + (floor !== undefined && floor > estimate ? floor : estimate)
+  }, 0)
+}
+
+// Mono-role exact width model (borrow-wave Task 3 fix round, 2026-07-21).
+// `measureTextUnits` above is a *proportional* heuristic -- per-character-
+// class weights calibrated for variable-width faces, where a space really
+// is narrower than a letter. Code (`code.tsx`) renders in `ctx.fonts.mono`,
+// which resolves to Consolas for all 13 themes (`fonts.ts` ROLE_DEFAULT) --
+// a genuinely monospace face, where "character-class width" isn't a
+// heuristic to approximate, it's a known constant: every glyph advances
+// the same fixed amount, read directly off the font.
+//
+// Consolas's own `hmtx` (advance-width) table gives 1126 font units at
+// unitsPerEm=2048 for *every* glyph sampled (space, upper, lower, digit,
+// punctuation alike):
+//   MONO_ADVANCE_EM = 1126 / 2048 = 0.5498 em
+// -- the defining, unfakeable signature of a monospace face (contrast
+// Georgia's 0.24-0.66 em spread across character classes in the
+// calibration note above `measureTextUnits`. A variable-width font simply
+// cannot show this uniformity). Measured twice, independently, to the same
+// 4 decimal places: borrow-wave Task 3's fontTools `hmtx` read of the
+// genuine Consolas.ttf (Microsoft Office for Mac's private font bundle,
+// identity-confirmed via that file's own `name` table), and that task's
+// review, which re-derived it from a from-scratch Node.js sfnt/hmtx parser
+// sharing no code with fontTools (see task-3-report.md / task-3-review.md,
+// borrow-wave scratchpad, not shipped in this repo).
+//
+// The proportional weights structurally underestimate this face's
+// whitespace and punctuation as a result (+57.1%/+19.5% real-vs-assumed
+// for the space/"other" classes, same corpus) -- and that gap has no
+// ceiling: it grows with indentation depth, since a deep-indent line is
+// almost entirely the single most-underestimated class. See
+// MONO_WIDTH_SAFETY's derivation comment in code.tsx for what that did to
+// the safety-factor approach this model replaces.
+//
+// The one exception: CJK/wide characters (`WIDE_CHAR_RE`, shared with
+// `measureTextUnits` above) stay at 1.0 em/char, not 0.5498. Consolas's
+// `cmap` contains zero CJK glyphs at all (task-3-report.md's S4.1 finding,
+// exhaustively re-verified in task-3-review.md by scanning every cmap
+// segment/group, not sampling) -- a CJK character declared under a mono
+// role never actually renders from Consolas. PowerPoint silently
+// substitutes some other, uncontrolled font at the glyph level. That
+// substituted font's real metrics are unknowable (it isn't even
+// deterministic which font it will be), so this keeps the same 1.0 em/char
+// assumption `measureTextUnits`'s WIDE_CHAR_RE class already uses for CJK
+// (consistent with the sibling measurement of Microsoft YaHei's CJK class
+// landing at +0.16%, i.e. ~1em -- see the calibration note above
+// `measureTextUnits`) rather than invent a new, unmeasured number. This is
+// a font-identity gap, not a metrics gap -- fonts.ts originally recorded it
+// as a known, unresolved risk no width model could fix, and has since
+// closed it (a:ea follow-up task -- `eaFontFaceFor` plus the JSZip patch in
+// `src/pptx/pptx-ea-fonts.ts`): a mono-role CJK character now
+// deterministically renders from Microsoft YaHei, exactly the face this
+// 1.0 em/char estimate already assumed. No change needed to this model --
+// it was betting on that face before the fix existed, and the fix made the
+// bet true (see `eaFontFaceFor`'s own doc comment in fonts.ts for that
+// cross-reference).
+const MONO_ADVANCE_EM = 1126 / 2048
+
+/**
+ * The marks a Consolas run has painted from Microsoft YaHei, the `<a:ea>`
+ * face behind it, in PowerPoint for Mac: "×", "°", "±" and "÷". Counted at
+ * Consolas's own advance they came out about 0.19em narrower than drawn, and
+ * a run of them painted past its box.
+ */
+const MONO_EA_MARK_RE = /[°±×÷]/
+
+export function measureMonoTextUnits(text: string): number {
+  return Array.from(text).reduce((sum, char) => {
+    if (WIDE_CHAR_RE.test(char)) return sum + 1
+    // The wider of the two: YaHei's "°" is narrower than a Consolas cell, and an estimate may err wide, never narrow.
+    if (MONO_EA_MARK_RE.test(char)) return sum + Math.max(SYMBOL_ADVANCE_BOUNDS.yahei.regular[char.charCodeAt(0)] ?? 0, MONO_ADVANCE_EM)
+    return sum + MONO_ADVANCE_EM
+  }, 0)
+}
+
+// ---------------------------------------------------------------------
+// CJK line-break prohibition (禁则处理 / kinsoku shori).
+//
+// The defect this closes: this file's greedy packer broke a line wherever
+// the width budget ran out, with no notion of which characters may sit at a
+// line boundary. The playbill deck cover, "《候鸟旅馆》毕业公演", split as
+// 「《候鸟旅馆」/「》毕业公演」 — a closing book-title mark opening a line,
+// which no Chinese, Japanese, or Korean typesetting convention permits.
+//
+// ONE rule, one place. Every line break this repo produces for an SVG page
+// goes through `wrapWithUnits` or `splitLongToken` below (`layoutSvgText`,
+// `balanceWrappedLines`, and the floor refit all call `wrapWithUnits`;
+// `fitHeadingLines`/`fitSvgLine` and every layout/component call site reach
+// them through `layoutSvgText`), so both consult `allowsLineBreakBetween`
+// and nothing else re-implements the judgment.
+//
+// SET SELECTION. Curated from the intersection of three references — CSS
+// Text's `line-break: strict` prohibition classes, JIS X 4051's 行頭/行末
+// 禁則 tables, and 中文排版需求 (clreq) §3.1.6 — narrowed to what this
+// product's authoring corpus can actually carry (Simplified Chinese plus
+// English, with the occasional shared CJK mark). Deliberate exclusions,
+// each for a stated reason rather than an oversight:
+//
+//   - ASCII sentence punctuation (`,` `.` `:` `;` `!` `?` `%`). Their
+//     fullwidth twins are in the set; the halfwidth forms are
+//     overwhelmingly Latin-context, where `tokenize`'s space-delimited
+//     branch already glues them onto their own word, so a line can never
+//     begin with one anyway. Forbidding them buys nothing and would put
+//     English word wrapping at risk for no gain.
+//   - ASCII straight quotes (`"` `'`). Direction-ambiguous — UAX #14 class
+//     QU, the same character opens and closes — so no rule can tell whether
+//     a given one belongs at a line head or a line tail. The unambiguous
+//     curly forms are in the sets instead.
+//   - U+2014 EM DASH. Chinese uses the doubled 破折号 "——" freely at a line
+//     head (dialogue, attribution), and UAX #14 classes it B2 — a break
+//     opportunity on both sides, not a prohibition.
+//   - Currency prefixes (`$` `￥` `€`). JIS X 4051 forbids them at line end;
+//     no theme or corpus text in this repo places one before a line break,
+//     so they stay out of a set that is meant to be justified, not maximal.
+//   - Japanese small kana (ぁぃぅ…ャュョッ) and the sokuon. Standard in any
+//     Japanese kinsoku table, but this product authors Simplified Chinese
+//     and English; adding an unexercised script's rules would be guessing.
+//
+// Both classes are single-character tests. Callers pass one code unit at a
+// time; an astral-plane character arrives as a lone surrogate, matches
+// neither class, and is therefore treated as freely breakable — the safe
+// direction (no CJK punctuation lives outside the BMP).
+
+/** 行头禁则 — may not begin a line: closing brackets, closing quotes, and
+ *  punctuation that trails the character it belongs to. */
+const LINE_START_FORBIDDEN =
+  /[)\]}）］｝｠〉》」』】〕〗〙〛｣’”〞〟、。，．：；！？｡､…‥‧·・･％‰℃々〻ーゝゞヽヾ〜～~]/
+
+/** 行尾禁则 — may not end a line: opening brackets and opening quotes. */
+const LINE_END_FORBIDDEN =
+  /[([{（［｛｟〈《「『【〔〖〘〚｢‘“〝]/
+
+// A number and the unit that counts it read as one word in Chinese: 「12 个」,
+// 「38 家」, 「2,860 万元」, 「1.93 亿元」. A break between them leaves 「亿」 at
+// the end of one line and 「元」 opening the next, or a bare figure with its
+// unit on the following line, both of which a reader trips over. Two rules
+// keep them together, each a single-character test on either side of the
+// boundary like the kinsoku classes above:
+//   - a digit may not end a line when a counting unit or magnitude opens the
+//     next (「12|个」, 「2,860|万」);
+//   - a magnitude may not end a line when the unit it scales opens the next
+//     (「亿|元」, 「万|人」), and that unit may be another magnitude, as in
+//     a power figure's 「亿|千瓦」 and 「万|千瓦」, or 「千|瓦」 itself;
+//   - an energy unit may not end a line when the hour it is counted over
+//     opens the next (「千瓦|时」).
+// The sets are the measure words and units that follow numbers in business
+// prose. They hold only CJK characters, so English wrapping never meets them.
+
+const DIGIT = /[0-9０-９]/
+
+/** What may follow a figure without a break: magnitudes, currency, and the
+ *  measure words a count takes. */
+const UNIT_AFTER_NUMBER =
+  /[万亿千百元角分秒家个人位名次项件条页款台辆套张份户座所批轮倍岁度年月日天周时米吨斤克平股瓦]/
+
+const MAGNITUDE = /[万亿千百]/
+
+/** What may follow a magnitude without a break: the thing it counts. */
+const UNIT_AFTER_MAGNITUDE = /[万亿千百元人家个位名次项件条台辆套张份户座所吨平米股美港欧日英瓦]/
+
+/**
+ * The single kinsoku judgment: may a line break fall between `before` (the
+ * would-be last character of a line) and `after` (the would-be first
+ * character of the next)? Either side missing — a paragraph edge — is
+ * always breakable. A number and its unit count as one word here too (see
+ * the note above `DIGIT`).
+ *
+ * Pure-Latin text never reaches a `false` here in practice: neither class
+ * contains an ASCII letter, digit, space, or sentence mark (see the set
+ * comment above), and the only ASCII members are the bracket pairs, which
+ * `tokenize`'s space-delimited branch keeps glued to their neighbouring
+ * word.
+ */
+export function allowsLineBreakBetween(
+  before: string | undefined,
+  after: string | undefined,
+): boolean {
+  if (!before || !after) return true
+  if (DIGIT.test(before) && UNIT_AFTER_NUMBER.test(after)) return false
+  if (MAGNITUDE.test(before) && UNIT_AFTER_MAGNITUDE.test(after)) return false
+  if (before === "瓦" && after === "时") return false
+  // An em dash stays with the word before it, and 「——」 is never split: a
+  // Georgia run paints the pair as two short dashes with a gap between them
+  // (its "—" is 0.86em), and a break between or before them left a line
+  // opening on a dash.
+  if (after === "\u2014") return false
+  return !LINE_START_FORBIDDEN.test(after) && !LINE_END_FORBIDDEN.test(before)
+}
+
+/**
+ * Push-out (追い出し) applied to a character-level cut: the caller wanted to
+ * break `chars` before index `breakAt`; this retreats to the latest index at
+ * or before it whose boundary kinsoku permits, so the offending character
+ * travels down to the next line together with the neighbour that pins it.
+ *
+ * FLOOR: never retreats past `lineStart`, so a line is never emptied. When
+ * no legal boundary exists inside the line at all, the original cut stands —
+ * content beats purity, the same fallback `splitLongToken` and
+ * `retreatFromMidRun` already take.
+ */
+function retreatCharCut(chars: string[], lineStart: number, breakAt: number): number {
+  let cut = breakAt
+  while (cut > lineStart && !allowsLineBreakBetween(chars[cut - 1], chars[cut])) cut -= 1
+  return cut > lineStart ? cut : breakAt
+}
+
+function splitLongToken(token: string, maxUnits: number, weight?: TextWeightHint): string[] {
+  const chars = Array.from(token)
+  const chunks: string[] = []
+  let start = 0
+  let current = ""
+
+  for (let i = 0; i < chars.length; i += 1) {
+    const candidate = `${current}${chars[i]}`
+    if (current && measureTextUnits(candidate, weight) > maxUnits) {
+      const cut = retreatCharCut(chars, start, i)
+      chunks.push(cut === i ? current : chars.slice(start, cut).join(""))
+      start = cut
+      current = chars.slice(cut, i + 1).join("")
+    } else {
+      current = candidate
+    }
+  }
+
+  if (current) chunks.push(current)
+  return chunks
+}
+
+// Atomic-run pattern for tokenize()'s no-space branch below (task R2,
+// 2026-07-24). CJK's own wrapping convention allows a break between any
+// two ideographs but never inside a run of Latin letters/digits -- this
+// repo's own fused heading idiom glues an English brand/metric prefix
+// straight onto a CJK clause with no separating space (e.g. "DSpark：让大
+// 模型推理快..."). The old no-space tokenizer (`Array.from(normalized)`)
+// split every character individually, so a Latin run had no protection at
+// all: the greedy per-token line pack (`wrapWithUnits` below) could end a
+// line after any single character, landing squarely mid-word once the line
+// budget got tight (empirically: ~20 fused-prefix characters at
+// cover-left-anchor's 360px budget) -- silently, since a wrap/shrink that
+// still lands under budget never touched `truncateToUnits`, so `truncated`
+// stayed `false`.
+//
+// This regex instead matches a maximal run starting in `[A-Za-z0-9]`, with
+// `.`/`-`/`%` allowed *inside* the run so a hyphen/decimal/percent doesn't
+// fracture a token that reads as one visual unit ("60-85%", "v2.3.1-rc.4"
+// each stay a single atomic token). `.` and `-` are never the run's own
+// first or last character, so a trailing connector splits off as its own
+// single-char token ("etc." → ["etc", "."]) and a leading one likewise
+// ("-flag" → ["-", "flag"]): a break can still land next to those two
+// connectors, just never inside the alphanumeric run itself. `%` is exempt
+// from that trailing restriction -- it's allowed to close a run ("85%"
+// stays whole, unlike "etc.") -- and because the run keeps extending past
+// it whenever more alphanumerics follow with no space or punctuation in
+// between, a percent sign glued directly onto a following word fuses into
+// the same atomic token too: "50%off" tokenizes as the single token
+// `"50%off"`, not `["50%", "off"]`. Every
+// other character (CJK, punctuation, and deliberately -- see below --
+// anything outside ASCII) falls through to the trailing `.` alternative,
+// one token per character, unchanged from the old `Array.from` behavior --
+// which is what keeps pure-CJK and already-space-delimited text (that
+// branch is untouched) byte-identical to pre-fix output.
+//
+// Deliberately ASCII-only (`[A-Za-z0-9]`, not `\p{L}`/`\p{N}`): an accented
+// Latin letter (é, ü) or any other non-CJK, non-ASCII script does NOT
+// extend a run -- "café" tokenizes as `["caf", "é"]`, so a break could
+// still land between "caf" and "é" under a tight budget. That is a real,
+// known boundary, not silently widened past what this task's brief scoped
+// (ASCII alphanumerics) -- see the tokenize() doc comment and this task's
+// report for the full self-review of mixed-script/connector edge cases.
+//
+// `splitLongToken` below is intentionally untouched: it remains the
+// fallback for the rare case where an atomic run alone is wider than a
+// full line (a run that long still can't be rendered unbroken in a bounded
+// box -- there is no alternative to a mid-run cut there), now reached with
+// a (possibly multi-character) atomic token instead of always a single
+// character, which it already handled correctly (it's the same code path
+// `splitLongToken` already served for an over-long whitespace-delimited
+// word).
+const LATIN_RUN_OR_CHAR_RE = /[A-Za-z0-9](?:[A-Za-z0-9.\-%]*[A-Za-z0-9%])?|./gu
+
+/**
+ * One wrap token. `space` marks a token that re-joins its predecessor with a
+ * space: the first segment of each space-delimited word.
+ */
+interface WrapToken {
+  text: string
+  space: boolean
+}
+
+/**
+ * Splits one space-delimited word at every boundary that touches a CJK
+ * character, keeping each run of anything else whole.
+ *
+ * A space-delimited mixed sentence ("镜像构建从 Jenkins 迁到 GitHub Actions，
+ * 平均构建时长从 11 分钟降到 4 分钟。") used to wrap each space-delimited
+ * word as one unbreakable unit, so a Chinese clause between two spaces could
+ * only move to the next line whole. It left "BP" alone on a line in front of
+ * a clause too long to join it, and a line ending at "GitHub" with a third
+ * of its width empty. Chinese breaks between any two ideographs whether or
+ * not a space sits somewhere else in the sentence, so the clause splits per
+ * character here, exactly as the no-space branch splits it.
+ *
+ * Only a boundary with a `WIDE_CHAR_RE` character or an em dash on at least
+ * one side is cut, so a Latin word, a number, and whatever ASCII punctuation
+ * hangs on them ("GitHub,", "90%", "v2.3") stay one token, as before.
+ * Kinsoku still rules every boundary this creates.
+ *
+ * The em dash left `WIDE_CHAR_RE` for its width alone (it is painted from
+ * the Latin face), and a line may still break on either side of it, as
+ * UAX #14 class B2 allows. Glued into one token, "self-serve—automated—
+ * pipelines" in a 9em column was cut inside "automated".
+ */
+function splitWideBoundaries(word: string): string[] {
+  const out: string[] = []
+  let run = ""
+  for (const ch of word) {
+    if (WIDE_CHAR_RE.test(ch) || ch === "\u2014") {
+      if (run) out.push(run)
+      out.push(ch)
+      run = ""
+    } else {
+      run += ch
+    }
+  }
+  if (run) out.push(run)
+  return out
+}
+
+/**
+ * Splits `text` into wrap tokens. Space-delimited text (contains at least
+ * one space anywhere) splits on spaces, and then each word at its CJK
+ * boundaries (`splitWideBoundaries`), so only a word's first segment
+ * re-joins with a space. A word with no CJK character in it is one token,
+ * same as always. Text with no space at all (the common case for a CJK
+ * clause, with or without a fused Latin/digit prefix) splits per
+ * `LATIN_RUN_OR_CHAR_RE` above: one token per CJK/punctuation character,
+ * but a maximal atomic token per contiguous ASCII Latin/digit run -- see
+ * that constant's own comment for the full boundary discussion.
+ */
+function tokenize(text: string): { tokens: WrapToken[]; spaceDelimited: boolean } {
+  // Every run of white space folds to one space, except a no-break space,
+  // which an author writes to keep two words on one line.
+  const normalized = text.trim().replace(/[^\S\u00a0]+/g, " ")
+  if (!normalized) return { tokens: [], spaceDelimited: false }
+  const spaceDelimited = normalized.includes(" ")
+  if (!spaceDelimited) {
+    return {
+      tokens: glueNoBreak((normalized.match(LATIN_RUN_OR_CHAR_RE) ?? []).map((t) => ({ text: t, space: false }))),
+      spaceDelimited,
+    }
+  }
+  return {
+    tokens: glueNoBreak(
+      normalized.split(" ").flatMap((word) => splitWideBoundaries(word).map((t, i) => ({ text: t, space: i === 0 }))),
+    ),
+    spaceDelimited,
+  }
+}
+
+const NBSP = "\u00a0"
+
+/**
+ * Joins the tokens on either side of a no-break space into one, so no line
+ * ever breaks there: 「Q4 NBSP 先补」 and "in NBSP minutes" stay together.
+ */
+function glueNoBreak(tokens: WrapToken[]): WrapToken[] {
+  const out: WrapToken[] = []
+  for (const token of tokens) {
+    const prev = out[out.length - 1]
+    if (prev && !token.space && (prev.text.endsWith(NBSP) || token.text.startsWith(NBSP))) {
+      out[out.length - 1] = { text: prev.text + token.text, space: prev.space }
+      continue
+    }
+    out.push(token)
+  }
+  return out
+}
+
+/**
+ * The units the wrap keeps whole, in order: each Latin word, number or other
+ * non-CJK run as one, and each CJK character as its own. A unit wider than
+ * a line is the only thing the wrap has to cut mid-way (`splitLongToken`).
+ * For a caller that must know beforehand whether its text can wrap without
+ * breaking a word.
+ */
+export function wrapTokens(text: string): string[] {
+  return tokenize(text).tokens.map((token) => token.text)
+}
+
+// Retry-ladder word-integrity plumbing (task R2 scope extension, 2026-07-24
+// — see `layoutSvgText`'s own comment for how these two fields drive the
+// search). Deliberately scoped to the no-space branch's atomic Latin/digit
+// run tokens only (`!spaceDelimited && ` below on both fields) -- never the
+// space-delimited branch's whole-word tokens:
+//   - The Critical finding this fix answers is specifically a no-space
+//     fused-heading repro (see LATIN_RUN_OR_CHAR_RE's own comment); a long
+//     single English word inside an already-space-delimited sentence is a
+//     different, pre-existing, working-as-designed `splitLongToken` use
+//     (unchanged since before R2), not part of this task's scope.
+//   - This also makes "space-delimited paths stay byte-identical" an
+//     architectural guarantee, not an empirical one: `hadSplit` can never
+//     be `true` for space-delimited content, so the search branch below
+//     that reads it never activates there, full stop.
+// A length-1 token (every CJK/punctuation character, in either branch) can
+// never itself yield `splitLongToken(...).length > 1` regardless of
+// `maxUnits` (`splitLongToken`'s own char-by-char loop only ever splits
+// *between* two accumulated characters) -- so `hadSplit`/`minSplitFreeUnits`
+// are, in practice, exclusively about multi-character no-space runs, the
+// exact "atomic Latin run" the brief names.
+interface WrapResult {
+  lines: string[]
+  /** `true` iff some no-space multi-char run's own width exceeded this
+   * call's `maxUnits`, forcing `splitLongToken` to cut it into 2+ pieces. */
+  hadSplit: boolean
+  /** `max(measureTextUnits(run))` over every no-space multi-char run token
+   * `tokenize` produced for this `text` -- 0 when there are none (pure CJK,
+   * space-delimited, or no-space text with no run). Independent of the
+   * `maxUnits` argument (token identity/width never depends on the search
+   * budget), so it is safe to read from any one call on the same `text`
+   * and reuse verbatim as the retry ladder's direct jump target: passing
+   * this value back in as `maxUnits` is, by construction, the exact
+   * narrowest budget under which every such run stays whole. */
+  minSplitFreeUnits: number
+  /** `true` iff some paragraph ended on a lone CJK character and
+   * `avoidCjkOrphan` moved a character down to keep it company. The greedy
+   * lines had a widow even though the returned ones may no longer measure
+   * as one, so `balanceWrappedLines` reads this to still rebalance. */
+  orphanFixed: boolean
+}
+
+/**
+ * One packable unit and how it re-joins to its predecessor. `space` mirrors
+ * the pre-kinsoku loop's own `prefix` rule exactly: only the *first* chunk of
+ * a space-delimited token re-joins with a space, so a `splitLongToken`
+ * continuation still butts straight against the piece before it.
+ */
+interface WrapPiece {
+  text: string
+  space: boolean
+}
+
+function joinPieces(pieces: WrapPiece[], from: number, to: number): string {
+  let out = ""
+  for (let i = from; i < to; i += 1) {
+    out += out && pieces[i].space ? ` ${pieces[i].text}` : pieces[i].text
+  }
+  return out
+}
+
+/**
+ * Push-out (追い出し) at the token level, the sibling of `retreatCharCut`:
+ * the greedy pack wanted to break before piece `breakAt`; retreat to the
+ * latest piece boundary kinsoku permits, which sends the offending character
+ * and everything after the new boundary down to the next line together.
+ *
+ * Same FLOOR as `retreatCharCut` — never past `lineStart`, and the original
+ * cut stands when the whole line offers no legal boundary.
+ */
+function retreatPieceCut(pieces: WrapPiece[], lineStart: number, breakAt: number): number {
+  let cut = breakAt
+  while (cut > lineStart) {
+    const before = pieces[cut - 1].text
+    const after = pieces[cut].text
+    if (allowsLineBreakBetween(before[before.length - 1], after[0])) return cut
+    cut -= 1
+  }
+  // -1, not `breakAt`: the caller has to tell "the requested cut was already
+  // legal" apart from "the whole line offers no legal boundary", and both
+  // would otherwise come back as the same number.
+  return -1
+}
+
+/**
+ * A CJK orphan (孤字): a line that holds exactly one ideograph once the
+ * punctuation kinsoku pins to it is set aside: 「本」, 「审」, 「娘」」. A
+ * line with any Latin letter or digit on it is never one: a lone English
+ * word ending a paragraph is ordinary, not a broken read.
+ */
+function isCjkOrphanLine(line: string): boolean {
+  let core = 0
+  for (const ch of line) {
+    if (/\s/.test(ch) || LINE_START_FORBIDDEN.test(ch) || LINE_END_FORBIDDEN.test(ch)) continue
+    if (!WIDE_CHAR_RE.test(ch)) return false
+    core += 1
+    if (core > 1) return false
+  }
+  return core === 1
+}
+
+/**
+ * True when wrapped `lines` end on a CJK orphan. The shared wrap already
+ * settles every orphan it can at a fixed width, so this is for a caller that
+ * owns its width and can widen past what a fixed width allows (a cycle
+ * node's capsule, whose 「季后」+「赛」 has no character to spare).
+ */
+export function endsInCjkOrphan(lines: readonly string[]): boolean {
+  return lines.length > 1 && isCjkOrphanLine(lines[lines.length - 1])
+}
+
+/**
+ * Keeps a paragraph from ending on a single CJK character.
+ *
+ * The greedy pack fills every line to the budget, so a paragraph one glyph
+ * longer than a whole number of lines ends on that glyph alone: 「植物染批次
+ * 色差需沟通成」+「本」, 「方案评」+「审」. Chinese typesetting never lets one
+ * character stand as a paragraph's last line, so this moves the fewest
+ * characters it can from the end of the line before down with it, which
+ * rebalances the last two lines without touching any line above them.
+ *
+ * The move never adds a line, never widens a line past `maxUnits`, and
+ * never leaves the line above an orphan itself, so a caller's line cap and
+ * no-truncation guarantee hold exactly as before. It moves whole pieces,
+ * latest boundary first. Every CJK character is a piece of its own
+ * (`tokenize`), so a Latin word travels whole and is never split here, and
+ * every candidate boundary still has to pass kinsoku. When nothing qualifies
+ * (「季后」+「赛」 has no character to spare) the greedy lines stand.
+ *
+ * `lineStarts` holds the piece index each of `paragraphLines` starts at.
+ */
+function avoidCjkOrphan(
+  pieces: WrapPiece[],
+  lineStarts: number[],
+  paragraphLines: string[],
+  maxUnits: number,
+  weight?: TextWeightHint,
+): string[] {
+  const n = paragraphLines.length
+  if (n < 2 || !isCjkOrphanLine(paragraphLines[n - 1])) return paragraphLines
+  const prevStart = lineStarts[n - 2]
+  const lastStart = lineStarts[n - 1]
+
+  const settle = (cut: number): string[] | null => {
+    const before = pieces[cut - 1].text
+    const after = pieces[cut].text
+    if (!allowsLineBreakBetween(before[before.length - 1], after[0])) return null
+    const prev = joinPieces(pieces, prevStart, cut)
+    const last = joinPieces(pieces, cut, pieces.length)
+    if (isCjkOrphanLine(prev) || isCjkOrphanLine(last)) return null
+    if (measureTextUnits(last, weight) > maxUnits) return null
+    return [...paragraphLines.slice(0, n - 2), prev, last]
+  }
+
+  for (let cut = lastStart - 1; cut > prevStart; cut -= 1) {
+    if (measureTextUnits(joinPieces(pieces, cut, pieces.length), weight) > maxUnits) break
+    const fixed = settle(cut)
+    if (fixed) return fixed
+  }
+
+  return paragraphLines
+}
+
+/**
+ * Keeps an English paragraph from ending on a single word, the way CSS
+ * `text-wrap: pretty` sets body text.
+ *
+ * The greedy pack fills every line to the budget, so a sentence one word
+ * longer than a whole number of lines ends on that word alone: "IEA sees coal
+ * power up 1.4% in" + "2026". This moves the last word of the line before
+ * down to join it ("IEA sees coal power up 1.4%" + "in 2026") and touches no
+ * line above those two, so it holds for a paragraph of any length.
+ *
+ * Like `avoidCjkOrphan`, the move never adds a line and never leaves the line
+ * above a single word itself. It also never makes the last line wider than
+ * the paragraph's widest greedy line, so the fitted font size holds along
+ * with the caller's line cap. It moves one whole word and only across a
+ * break between words, never a piece of a word `splitLongToken` cut, and the
+ * new break still has to pass kinsoku. Text with any CJK in it is left to
+ * `avoidCjkOrphan`: a Latin word closing a Chinese paragraph is ordinary
+ * there.
+ *
+ * `lineStarts` holds the piece index each of `paragraphLines` starts at.
+ */
+function avoidLatinOrphan(
+  pieces: WrapPiece[],
+  lineStarts: number[],
+  paragraphLines: string[],
+  weight?: TextWeightHint,
+): string[] {
+  const n = paragraphLines.length
+  if (n < 2) return paragraphLines
+  const prevStart = lineStarts[n - 2]
+  const lastStart = lineStarts[n - 1]
+  // A single word: the last line opens a word and every piece after it
+  // continues that word.
+  if (!pieces[lastStart].space) return paragraphLines
+  for (let i = lastStart + 1; i < pieces.length; i += 1) if (pieces[i].space) return paragraphLines
+  if (pieces.some((piece) => WIDE_CHAR_RE.test(piece.text))) return paragraphLines
+
+  const cut = lastStart - 1
+  // The word that moves has to be whole, and the line above has to keep two.
+  if (cut <= prevStart || !pieces[cut].space) return paragraphLines
+  let wordsLeft = 1
+  for (let i = prevStart + 1; i < cut; i += 1) if (pieces[i].space) wordsLeft += 1
+  if (wordsLeft < 2) return paragraphLines
+  const before = pieces[cut - 1].text
+  if (!allowsLineBreakBetween(before[before.length - 1], pieces[cut].text[0])) return paragraphLines
+
+  const last = joinPieces(pieces, cut, pieces.length)
+  const widest = Math.max(...paragraphLines.map((line) => measureTextUnits(line, weight)))
+  if (measureTextUnits(last, weight) > widest + 1e-9) return paragraphLines
+  return [...paragraphLines.slice(0, n - 2), joinPieces(pieces, prevStart, cut), last]
+}
+
+function wrapWithUnits(text: string, maxUnits: number, weight?: TextWeightHint): WrapResult {
+  const lines: string[] = []
+  let hadSplit = false
+  let minSplitFreeUnits = 0
+  let orphanFixed = false
+
+  for (const paragraph of text.split(/\n+/)) {
+    const { tokens, spaceDelimited } = tokenize(paragraph)
+
+    // Flatten to pieces first so the pack below can address a break by index
+    // and walk it backwards. The greedy arithmetic itself is unchanged.
+    const pieces: WrapPiece[] = []
+    for (const token of tokens) {
+      const tokenUnits = measureTextUnits(token.text, weight)
+      const isRunToken = !spaceDelimited && Array.from(token.text).length > 1
+      if (isRunToken) minSplitFreeUnits = Math.max(minSplitFreeUnits, tokenUnits)
+
+      const tokenChunks = tokenUnits > maxUnits ? splitLongToken(token.text, maxUnits, weight) : [token.text]
+      if (isRunToken && tokenChunks.length > 1) hadSplit = true
+
+      for (const [chunkIndex, chunk] of tokenChunks.entries()) {
+        pieces.push({ text: chunk, space: token.space && chunkIndex === 0 })
+      }
+    }
+
+    const paragraphLines: string[] = []
+    const lineStarts: number[] = [0]
+    let lineStart = 0
+    let current = ""
+    for (let i = 0; i < pieces.length; i += 1) {
+      const prefix = current && pieces[i].space ? " " : ""
+      const candidate = `${current}${prefix}${pieces[i].text}`
+      if (current && measureTextUnits(candidate, weight) > maxUnits) {
+        // `current === joinPieces(pieces, lineStart, i)` by construction, so
+        // an unretreated cut pushes the identical string the pre-kinsoku loop
+        // pushed and allocates nothing extra. Only a real prohibition pays
+        // for the two re-joins.
+        // No legal boundary between pieces anywhere on this line: FLOOR,
+        // content beats purity, and the prohibited cut stands rather than
+        // emptying the line or dropping text. Every CJK character is its own
+        // piece (`tokenize`), so a line holding two ideographs always offers
+        // the boundary between them, and a CJK line only lands here when
+        // kinsoku forbids every one (「》》》」).
+        let cut = retreatPieceCut(pieces, lineStart, i)
+        if (cut === -1) cut = i
+        if (cut === i) {
+          paragraphLines.push(current)
+          current = pieces[i].text
+        } else {
+          paragraphLines.push(joinPieces(pieces, lineStart, cut))
+          current = joinPieces(pieces, cut, i + 1)
+        }
+        lineStart = cut
+        lineStarts.push(cut)
+      } else {
+        current = candidate
+      }
+    }
+
+    if (current) paragraphLines.push(current)
+    const settled = avoidCjkOrphan(pieces, lineStarts, paragraphLines, maxUnits, weight)
+    if (settled !== paragraphLines) orphanFixed = true
+    lines.push(...(settled === paragraphLines ? avoidLatinOrphan(pieces, lineStarts, paragraphLines, weight) : settled))
+  }
+
+  return { lines, hadSplit, minSplitFreeUnits, orphanFixed }
+}
+
+/**
+ * Re-wrap `content` so its lines split evenly instead of greedy-filling.
+ * Latin text always evens out. Text with any CJK in it does only when the
+ * greedy result ends in a widow (last line < half the widest line).
+ *
+ * The two differ in where an even split can fall. Every break in Latin text
+ * is between words, so evening the lines costs no word, which is how CSS
+ * `text-wrap: balance` sets a heading: "Guangzhou lost 2,326 tea" + "shops
+ * in a year" becomes "Guangzhou lost 2,326" + "tea shops in a year". Chinese
+ * breaks between any two characters, so an even split lands wherever the
+ * arithmetic says, often inside a word, while an author's greedy line often
+ * ends on their own comma: 「每个班组配一名种子用户，」 would become
+ * 「每个班组配一名种子用」+「户，…」. There only a widow is worth the move.
+ * An even Latin split still gives way to a break between two sentences that
+ * fits (`preferScriptBoundaries`), the way a Chinese one gives way to a
+ * comma.
+ *
+ * The balanced budget starts at `max(total/N, longest token)` — flooring at
+ * the longest whitespace-delimited token guarantees `splitLongToken` never
+ * fires, so balancing can shorten lines but never split a word mid-way (for
+ * CJK the "tokens" are single chars, so the floor is a no-op). The budget
+ * steps up ×1.06 until the re-wrap stops exceeding the original line count;
+ * if 8 steps can't get there, or the first that does sets a line wider than
+ * the greedy widest, the greedy result stands. Explicit newlines are
+ * the author's own breaks — those layouts are returned untouched.
+ *
+ * `orphanFixed` is the wrap's own report that the greedy lines ended on a
+ * lone CJK character before `avoidCjkOrphan` moved one down (「年度战略回」+
+ * 「顾」 arrives here as 「年度战略」+「回顾」). That was a widow too, so it
+ * rebalances even though the lines it is handed no longer measure as one.
+ */
+function balanceWrappedLines(
+  content: string,
+  lines: string[],
+  weight?: TextWeightHint,
+  orphanFixed = false,
+): string[] {
+  if (lines.length < 2 || content.includes("\n")) return lines
+  const units = lines.map((l) => measureTextUnits(l, weight))
+  const widest = Math.max(...units)
+  const latin = !WIDE_CHAR_RE.test(content)
+  // Chinese and mixed lines with no short last line keep their widths, and
+  // only move a break to a better seam (after a comma, at a space before a
+  // figure) when one sits within the widest line: 「…新能源出口 7–8 月」+
+  // 「是去年同期的 2.5 倍」 reads 「…新能源出口」+「7–8 月是去年同期的 2.5 倍」.
+  if (!latin && !orphanFixed && units[units.length - 1] >= widest * 0.5) {
+    const seamed = preferScriptBoundaries(content, lines, widest, weight)
+    // The better seam has to leave the lines at least as even as they were.
+    const evenness = (ls: readonly string[]) => {
+      const w = ls.map((l) => measureTextUnits(l, weight))
+      return Math.min(...w) / Math.max(...w)
+    }
+    return seamed !== lines && evenness(seamed) + 1e-9 >= evenness(lines) ? seamed : lines
+  }
+  const total = units.reduce((sum, u) => sum + u, 0)
+  // Token floor must mirror `tokenize`: space-delimited text wraps by words,
+  // so flooring at the longest word keeps `splitLongToken` from ever firing;
+  // unspaced (CJK) text wraps per character, so no floor is needed — flooring
+  // at the whole string there would collapse the wrap to one oversized line.
+  const { tokens } = tokenize(content)
+  const longestToken = Math.max(...tokens.map((t) => measureTextUnits(t.text, weight)), 0)
+  let target = Math.max(total / lines.length, longestToken)
+  for (let i = 0; i < 8; i += 1) {
+    const candidate = wrapWithUnits(content, target, weight)
+    // Same line count, evenly split — that's the goal. Fewer lines means the
+    // token floor out-widened the greedy budget (giant word): keep greedy.
+    if (candidate.lines.length === lines.length) {
+      // A budget step can pass the greedy widest line, and a candidate wider
+      // than it is no more even and sets the text smaller. Every later step
+      // is wider still, so the greedy lines stand.
+      if (Math.max(...candidate.lines.map((l) => measureTextUnits(l, weight))) > widest + 1e-9) return lines
+      return preferScriptBoundaries(content, candidate.lines, widest, weight)
+    }
+    if (candidate.lines.length < lines.length) return lines
+    target *= 1.06
+  }
+  return lines
+}
+
+/** A printable ASCII character: the Latin side of a mixed-script line. */
+const ASCII_GLYPH_RE = /[\x21-\x7e]/
+
+/**
+ * Chinese clause punctuation a line may end on: a break right after it falls
+ * between two phrases, where a reader pauses anyway.
+ */
+const CJK_CLAUSE_END_RE = /[，、：；。！？）」』]/u
+
+/**
+ * An English sentence end inside a text: a full stop, question or
+ * exclamation mark, any closing quote or bracket after it, a space, and the
+ * next sentence opening on a capital or a figure ("demand. Not settled").
+ */
+const LATIN_SENTENCE_BREAK_RE = /[.!?]["'\u2019\u201d)\]]* +["'\u2018\u201c([]*[A-Z0-9]/
+
+/**
+ * A word that ends on a full stop without ending a sentence: an initialism
+ * ("U.S.", "e.g.") or a title or short form a name or figure follows.
+ */
+const LATIN_ABBREVIATION_RE = /^(?:(?:[A-Za-z]\.){2,}|Mr\.|Mrs\.|Ms\.|Dr\.|St\.|vs\.|No\.)$/
+
+/** True when a break between `before` and `after` falls between two English sentences. */
+function isLatinSentenceBreak(before: string, after: string): boolean {
+  const word = before.trimEnd().split(" ").pop() ?? ""
+  const next = after.trimStart().split(" ")[0] ?? ""
+  return LATIN_SENTENCE_BREAK_RE.test(`${word} ${next}`) && !LATIN_ABBREVIATION_RE.test(word.replace(/["'\u2019\u201d)\]]+$/, ""))
+}
+
+/**
+ * How a line break reads, by the characters on either side of it: +2 after
+ * Chinese clause punctuation (「内需缩了两成，」+「四季度怎么打」) or between
+ * two English sentences ("Clean power met all new demand." + "Not settled
+ * yet."), +1 where Latin meets CJK (the seam a mixed line already has), -1
+ * between two Latin words (it splits a name like "Linjiang Group"), 0
+ * anywhere else, which for Chinese is between any two characters of a phrase
+ * (「四」+「季度」).
+ */
+function breakScore(before: string, after: string, insideWord = false): number {
+  const a = before.trimEnd().slice(-1)
+  const b = after.trimStart().charAt(0)
+  if (CJK_CLAUSE_END_RE.test(a)) return 2
+  if (isLatinSentenceBreak(before, after)) return 2
+  const asciiA = ASCII_GLYPH_RE.test(a)
+  const asciiB = ASCII_GLYPH_RE.test(b)
+  if ((asciiA && WIDE_CHAR_RE.test(b)) || (WIDE_CHAR_RE.test(a) && asciiB)) return 1
+  // After a comma or a colon an English line ends on a pause, the way a
+  // Chinese one does after 「，」.
+  if (asciiA && asciiB) return LATIN_CLAUSE_END_RE.test(a) ? 1 : -1
+  // Between two Chinese characters of one word (「季度」, 「新能源」), as the
+  // word segmenter reads it, a break splits the word.
+  if (insideWord) return -1
+  return 0
+}
+
+/** English clause punctuation a line may end on: a comma or a colon. */
+const LATIN_CLAUSE_END_RE = /[,:]/
+
+/** An English break after a comma or a colon, in text with a word after it. */
+const LATIN_CLAUSE_BREAK_RE = /[A-Za-z0-9)"'\u2019\u201d][,:] +["'\u2018\u201c(]*[A-Za-z0-9]/
+
+/**
+ * The UTF-16 offsets inside Chinese words, where a break would split one, as
+ * `Intl.Segmenter` reads the text. Empty for text with no Chinese in it, or
+ * where the runtime has no segmenter.
+ */
+function insideWordOffsets(content: string): ReadonlySet<number> {
+  const inside = new Set<number>()
+  if (!WIDE_CHAR_RE.test(content) || typeof Intl === "undefined" || typeof Intl.Segmenter !== "function") return inside
+  for (const { segment, index, isWordLike } of new Intl.Segmenter("zh", { granularity: "word" }).segment(content)) {
+    if (!isWordLike || !WIDE_CHAR_RE.test(segment)) continue
+    for (let at = index + 1; at < index + segment.length; at += 1) inside.add(at)
+  }
+  return inside
+}
+
+function linesScore(lines: readonly string[], content: string, inside: ReadonlySet<number>): number {
+  let score = 0
+  let cursor = 0
+  for (let i = 0; i < lines.length; i += 1) {
+    const at = content.indexOf(lines[i]!, cursor)
+    if (i > 0) score += breakScore(lines[i - 1]!, lines[i]!, at >= 0 && inside.has(at))
+    if (at >= 0) cursor = at + lines[i]!.length
+  }
+  return score
+}
+
+/** How much wider than the balanced lines' widest a preferred split may run. */
+const SCRIPT_BREAK_TOLERANCE = 0.1
+/** The same, for Chinese text with clause punctuation to break after. */
+const CLAUSE_BREAK_TOLERANCE = 0.25
+/**
+ * The same, for English text with two sentences in it: none past `limit`. A
+ * sentence set whole on its line reads better than an even split through it.
+ */
+const SENTENCE_BREAK_TOLERANCE = Infinity
+
+/**
+ * The search's bounds. Past either one the balanced lines stand: a
+ * preference between nearly equal splits is not worth a slow page. The step
+ * budget covers hundreds of pieces over dozens of lines, far more than any
+ * heading or card item carries.
+ */
+const SCRIPT_BREAK_MAX_PIECES = 2000
+const SCRIPT_BREAK_BUDGET = 2_000_000
+
+/**
+ * Among the splits of `content` into as many lines as `balanced` whose line
+ * lengths are close to the balanced ones, prefer the one that breaks where
+ * Latin meets CJK, then between CJK characters, and last between two Latin
+ * words.
+ *
+ * Balancing by width alone treats every boundary as equal, so a mixed line
+ * whose widths tie broke inside an English name: 「Linjiang Group 临江咨询」
+ * became 「Linjiang」+「Group 临江咨询」 where 「Linjiang Group」+「临江咨询」 is
+ * barely less even and reads as two things. A split replaces the balanced
+ * one only when its breaks score strictly better (`breakScore`), and only
+ * inside every constraint the balanced lines already meet: the same line
+ * count, every break legal under kinsoku, no line wider than `limit` (the
+ * widest line the caller's budget produced, so the fitted font size cannot
+ * drop), the widest line no more than `SCRIPT_BREAK_TOLERANCE` over the
+ * balanced widest, a last line at least half the widest (not the widow
+ * balancing exists to remove), and no single-character CJK last line.
+ *
+ * A break between two English sentences scores as a Chinese comma does, and
+ * it is the one break worth an uneven split: "Clean power met all new" +
+ * "demand. Not settled yet." becomes "Clean power met all new demand." +
+ * "Not settled yet.", the way a Chinese title breaks after its comma. Text
+ * with such a break may run its widest line up to `limit`, and a last line
+ * that is a whole sentence of two words or more may be under half the
+ * widest: it is a sentence, not the widow balancing removes.
+ *
+ * Text that is all Latin with one sentence, or all CJK, scores every split
+ * the same, so it returns `balanced` without searching. The search is a
+ * dynamic programme, polynomial in the pieces and lines (it used to
+ * enumerate every split and took seconds on a Latin word before 81 CJK
+ * characters in a narrow cell), and it gives up for `balanced` past
+ * `SCRIPT_BREAK_BUDGET` steps.
+ */
+function preferScriptBoundaries(
+  content: string,
+  balanced: string[],
+  limit: number,
+  weight?: TextWeightHint,
+): string[] {
+  // All-Latin text scores every break between words the same unless two
+  // sentences meet in it, and Chinese with no clause punctuation and no Latin
+  // in it scores every break 0.
+  if (balanced.length < 2) return balanced
+  const wide = WIDE_CHAR_RE.test(content)
+  const clauses = !wide && LATIN_CLAUSE_BREAK_RE.test(content)
+  if (!wide && !clauses && !LATIN_SENTENCE_BREAK_RE.test(content)) return balanced
+  const inside = insideWordOffsets(content)
+  if (wide && inside.size === 0 && !ASCII_GLYPH_RE.test(content) && !CJK_CLAUSE_END_RE.test(content)) return balanced
+  const pieces: WrapPiece[] = tokenize(content).tokens
+  const count = pieces.length
+  const n = balanced.length
+  if (count > SCRIPT_BREAK_MAX_PIECES || n > count) return balanced
+  const sentenceAt: boolean[] = [false]
+  for (let i = 1; i < count; i += 1) sentenceAt.push(isLatinSentenceBreak(pieces[i - 1].text, pieces[i].text))
+  const sentences = sentenceAt.includes(true)
+  if (!wide && !sentences && !clauses) return balanced
+  // Where each piece starts in `content`, to read the word segmenter's offsets.
+  const startOf: number[] = []
+  for (let i = 0, cursor = 0; i < count; i += 1) {
+    const at = content.indexOf(pieces[i].text, cursor)
+    startOf.push(at)
+    if (at >= 0) cursor = at + pieces[i].text.length
+  }
+
+  // Widths by prefix sums. `measureTextUnits` is a per-character sum, so a
+  // line's width is the pieces' own widths plus the spaces between them.
+  const spaceUnits = measureTextUnits(" ", weight)
+  const prefix = new Float64Array(count + 1)
+  for (let i = 0; i < count; i += 1) {
+    prefix[i + 1] = prefix[i] + measureTextUnits(pieces[i].text, weight) + (pieces[i].space ? spaceUnits : 0)
+  }
+  const width = (from: number, to: number): number =>
+    prefix[to] - prefix[from] - (pieces[from].space ? spaceUnits : 0)
+
+  // What a break before piece `i` scores, or null where kinsoku forbids one.
+  const breakAt: (number | null)[] = [null]
+  for (let i = 1; i < count; i += 1) {
+    const before = pieces[i - 1].text
+    const after = pieces[i].text
+    breakAt.push(allowsLineBreakBetween(before[before.length - 1], after[0]) ? breakScore(before, after, inside.has(startOf[i]!)) : null)
+  }
+
+  const balancedWidest = Math.max(...balanced.map((l) => measureTextUnits(l, weight)))
+  // A break after a comma is worth a less even split than a seam is: 「四季度国内目标，」
+  // +「按三季度实际走势重定」 over 「四季度国内目标，按」+「三季度实际走势重定」.
+  const tolerance = sentences
+    ? SENTENCE_BREAK_TOLERANCE
+    : CJK_CLAUSE_END_RE.test(content) || clauses
+      ? CLAUSE_BREAK_TOLERANCE
+      : SCRIPT_BREAK_TOLERANCE
+  const cap = Math.min(limit, balancedWidest * (1 + tolerance)) + 1e-9
+  const baselineScore = linesScore(balanced, content, inside)
+  let budget = SCRIPT_BREAK_BUDGET
+
+  // A split is better with a higher score, then more even lines, then
+  // earlier breaks (the order the balanced wrap itself prefers). Lines are
+  // more even with a narrower widest line, except where a sentence break
+  // lets the widest run to `limit`: the sentence's own line then sets the
+  // widest whatever the others do, so evenness is the smaller sum of squared
+  // widths, which "Wind is next, and" + "storage after it." meets and
+  // "Wind is" + "next, and storage after it." does not.
+  const evener = (widest: number, spread: number, thanWidest: number, thanSpread: number): number => {
+    const [a, b] = sentences ? [spread, thanSpread] : [widest, thanWidest]
+    return Math.abs(a - b) > 1e-9 ? Math.sign(b - a) : 0
+  }
+  const outranks = (score: number, widest: number, spread: number, starts: number[], than: typeof best): boolean => {
+    if (!than) return true
+    if (score !== than.score) return score > than.score
+    const even = evener(widest, spread, than.widest, than.spread)
+    if (even !== 0) return even > 0
+    for (let i = 0; i < starts.length; i += 1) if (starts[i] !== than.starts[i]) return starts[i] < than.starts[i]
+    return false
+  }
+  let best: { score: number; widest: number; spread: number; starts: number[] } | null = null
+
+  // The last line is fixed first: it starts at `last`, and every other line
+  // may be at most twice its width, which keeps it from being the widow
+  // balancing removed, unless it is a whole sentence. Pieces 0..last-1 then go into n - 1 lines by dynamic
+  // programming over (lines left k, start piece i), keeping per cell the
+  // best score, its widest line, its sum of squared widths and the next
+  // line's start. Each cell tries only the ends a line can reach within
+  // `lineCap`, and a cell whose pieces cannot fill its lines at that width
+  // is skipped, so one last line costs at most n * count * (pieces per
+  // line) steps, and `budget` bounds the whole search.
+  const stride = count + 1
+  const score = new Float64Array(n * stride)
+  const widest = new Float64Array(n * stride)
+  const spread = new Float64Array(n * stride)
+  const nextStart = new Int32Array(n * stride)
+  for (let last = count - 1; last >= 1; last -= 1) {
+    const lastWidth = width(last, count)
+    if (lastWidth > cap) break
+    const lastBreak = breakAt[last]
+    if (lastBreak === null || isCjkOrphanLine(joinPieces(pieces, last, count))) continue
+    // A last line that is a whole sentence of two words or more is no widow.
+    const wholeSentence = sentenceAt[last] && pieces.slice(last + 1).some((piece) => piece.space)
+    const lineCap = wholeSentence ? cap : Math.min(cap, lastWidth * 2 + 1e-9)
+    nextStart.fill(-1)
+    // Level 0: nothing left to set before `last`.
+    nextStart[last] = last
+    score[last] = 0
+    widest[last] = 0
+    spread[last] = 0
+    for (let k = 1; k < n; k += 1) {
+      const row = k * stride
+      const below = (k - 1) * stride
+      for (let i = 0; i < last; i += 1) {
+        if (i > 0 && breakAt[i] === null) continue
+        if (width(i, last) > k * lineCap) continue
+        let found = -1
+        let bestScore = 0
+        let bestWidest = 0
+        let bestSpread = 0
+        for (let j = i + 1; j <= last; j += 1) {
+          if ((budget -= 1) < 0) return balanced
+          const w = width(i, j)
+          if (w > lineCap) break
+          if (nextStart[below + j] < 0) continue
+          const s = score[below + j] + (j < last ? (breakAt[j] ?? 0) : 0)
+          const wide = Math.max(w, widest[below + j])
+          const q = w * w + spread[below + j]
+          // Ascending j with strict improvement keeps the earliest break on a tie.
+          if (found < 0 || s > bestScore || (s === bestScore && evener(wide, q, bestWidest, bestSpread) > 0)) {
+            found = j
+            bestScore = s
+            bestWidest = wide
+            bestSpread = q
+          }
+        }
+        if (found >= 0) {
+          nextStart[row + i] = found
+          score[row + i] = bestScore
+          widest[row + i] = bestWidest
+          spread[row + i] = bestSpread
+        }
+      }
+    }
+    const head = (n - 1) * stride
+    if (nextStart[head] < 0) continue
+    const starts = [0]
+    for (let k = n - 1, i = 0; k >= 1; k -= 1) {
+      i = nextStart[k * stride + i]
+      starts.push(i)
+    }
+    const total = score[head] + lastBreak
+    const wide = Math.max(widest[head], lastWidth)
+    const sq = spread[head] + lastWidth * lastWidth
+    if (outranks(total, wide, sq, starts, best)) best = { score: total, widest: wide, spread: sq, starts }
+  }
+
+  if (!best || best.score <= baselineScore) return balanced
+  const starts = best.starts
+  return starts.map((from, i) => joinPieces(pieces, from, i + 1 < starts.length ? starts[i + 1] : count))
+}
+
+/**
+ * Retreats a character-by-character ellipsis cut (`truncateToUnits`'s own
+ * `out`) off the middle of an atomic Latin/digit run (sweep2 T4, R2's
+ * recorded follow-up). `tokenize()`'s wrap/split path already treats a
+ * `LATIN_RUN_OR_CHAR_RE` run as a single indivisible unit (see that
+ * constant's own comment) — but `truncateToUnits` below cuts strictly
+ * char-by-char with no such awareness, so its own ellipsis point can still
+ * land mid-run even though the exact same text would never *wrap* mid-run
+ * ("Kubernetes…" cut down to "Kuberne…" is exactly the defect this closes).
+ *
+ * `cut` is `text`'s own prefix (`truncateToUnits`'s greedy loop only ever
+ * appends consecutive characters from `text`'s start, so `cut === text.slice(0,
+ * cut.length)` always holds) — `cut.length` is therefore both "how many
+ * UTF-16 units of `text` survived the budget" and directly comparable to a
+ * `LATIN_RUN_OR_CHAR_RE` match's own `index`/`[0].length` (both counted in
+ * the same UTF-16-code-unit terms a `u`-flag regex still reports its
+ * `index` in), with no code-point/grapheme translation needed — this
+ * codebase's Latin/CJK/digit domain never carries astral-plane input for
+ * either side of that comparison to disagree on.
+ *
+ * `text.matchAll` (not a shared-state `exec`/`lastIndex` loop) — `matchAll`
+ * clones the regex internally per its own spec contract, so this can safely
+ * share `LATIN_RUN_OR_CHAR_RE` with `tokenize()` without either call
+ * corrupting the other's `lastIndex` state.
+ *
+ * FLOOR: when the straddled run itself starts at position 0 (no leading
+ * CJK/text for the ellipsis to land after), retreating to the run's start
+ * would empty the line entirely — content beats purity here, the same
+ * fallback philosophy `splitLongToken` already uses when a run alone is
+ * wider than its budget: the mid-run cut stands rather than dropping all
+ * content. Every other case retreats to the run's own start, which can only
+ * ever *shorten* `cut` — so it can never turn a within-budget cut into an
+ * overflowing one.
+ */
+function retreatFromMidRun(text: string, cut: string): string {
+  const cutLen = cut.length
+  for (const match of text.matchAll(LATIN_RUN_OR_CHAR_RE)) {
+    const run = match[0]
+    if (run.length <= 1) continue // a single-char token can't be cut mid-run
+    const runStart = match.index
+    const runEnd = runStart + run.length
+    if (cutLen > runStart && cutLen < runEnd) {
+      return runStart === 0 ? cut : text.slice(0, runStart)
+    }
+    if (runStart >= cutLen) break // runs appear in text order — none further can straddle the cut
+  }
+  return cut
+}
+
+export function truncateToUnits(text: string, maxUnits: number, weight?: TextWeightHint): string {
+  if (measureTextUnits(text, weight) <= maxUnits) return text
+  let out = ""
+  for (const ch of Array.from(text)) {
+    if (measureTextUnits(out + ch, weight) > maxUnits) break
+    out += ch
+  }
+  if (out === "") return ""
+  return retreatFromMidRun(text, out)
+}
+
+/**
+ * Longest prefix of `text` that fits `maxWidth` at `fontSize` **with its own
+ * tracking**, cut on the same run boundary `truncateToUnits` respects.
+ *
+ * The tracking budget has to be solved together with the candidate, not
+ * deducted from the width first. `letter-spacing` costs `(n - 1) * spacing`
+ * where `n` is the length of the string that survives — deducting the *input*
+ * string's budget charges the caller for glyphs that are about to be cut, and
+ * a long enough input drives the remaining width to zero and returns nothing
+ * at all. A 500-character `image_compare` label at 485px lost both author
+ * labels whole that way, where 84 characters fit.
+ *
+ * With no tracking this is `truncateToUnits` with the division done by the
+ * caller, and it delegates to it so the untracked path stays byte-identical.
+ */
+export function truncateToWidth(
+  text: string,
+  maxWidth: number,
+  fontSize: number,
+  letterSpacing: number,
+  weight?: TextWeightHint,
+): string {
+  if (letterSpacing === 0) return truncateToUnits(text, maxWidth / fontSize, weight)
+  const fits = (candidate: string) => {
+    const glyphs = Array.from(candidate).length
+    return measureTextUnits(candidate, weight) * fontSize + Math.max(0, glyphs - 1) * letterSpacing <= maxWidth
+  }
+  if (fits(text)) return text
+  let out = ""
+  for (const ch of Array.from(text)) {
+    if (!fits(out + ch)) break
+    out += ch
+  }
+  if (out === "") return ""
+  return retreatFromMidRun(text, out)
+}
+
+// Mono sibling of `truncateToUnits` above, measuring with
+// `measureMonoTextUnits` instead of `measureTextUnits` -- a separate
+// function rather than a parameterized one so `truncateToUnits`'s existing
+// callers (bullets/kpi/steps/icon-cards/BigNumber/emphasis/
+// heading-fit, all proportional-model roles) are untouched by this borrow-
+// wave Task 3 fix-round addition. Only `code.tsx` calls this one.
+export function truncateToMonoUnits(text: string, maxUnits: number): string {
+  if (measureMonoTextUnits(text) <= maxUnits) return text
+  let out = ""
+  for (const ch of Array.from(text)) {
+    if (measureMonoTextUnits(out + ch) > maxUnits) break
+    out += ch
+  }
+  return out
+}
+
+export function fitSvgLine(
+  text: string,
+  opts: {
+    maxWidth: number
+    fontSize: number
+    minFontSize?: number
+    letterSpacing?: number
+  } & TextWeightHint,
+): { text: string; fontSize: number; truncated: boolean } {
+  const minFontSize = opts.minFontSize ?? META_FONT_FLOOR_PX
+  const startSize = Math.max(opts.fontSize, minFontSize)
+  // `letterSpacing` is an SVG attribute in absolute px, independent of
+  // font-size — unlike `measureTextUnits`' per-character weights, it doesn't
+  // scale down when the line shrinks to fit. A caller that renders this
+  // line with `letterSpacing` (kicker/section labels across every theme do)
+  // adds (charCount - 1) * letterSpacing extra px that this estimator was
+  // previously blind to — real getBBox measurement on long CJK section
+  // labels showed exactly this drift (real bbox ~80-220px wider than the
+  // declared maxWidth). Budget it out of maxWidth up front so the fitted
+  // font-size/truncation account for it.
+  const letterSpacing = opts.letterSpacing ?? 0
+  const weight: TextWeightHint = { bold: opts.bold, fontFamily: opts.fontFamily }
+  const units = measureTextUnits(text, weight)
+  if (units <= 0) return { text, fontSize: startSize, truncated: false }
+  const charCount = Array.from(text).length
+  const spacingBudget = Math.max(0, charCount - 1) * letterSpacing
+  const availableWidth = Math.max(0, opts.maxWidth - spacingBudget)
+  const fitted = Math.min(startSize, Math.floor(availableWidth / units))
+  if (fitted >= minFontSize) return { text, fontSize: fitted, truncated: false }
+  // `truncated` (bench-driven fix round, defect E): `true` exactly when the
+  // shrink-to-`minFontSize` step still wasn't enough and `truncateToUnits`
+  // had to drop characters — the caller-visible signal `deck-audit.ts`'s new
+  // `content-truncated` advisory reads to mark the rendered `<text>` with
+  // `data-truncated="1"`, so real content loss (not just a smaller font) is
+  // auditable instead of requiring a human/model to eyeball every SVG. Not
+  // `text !== originalText` — an author's own text can legitimately be
+  // shorter than what it started as for unrelated reasons upstream; this
+  // flag reports the *mechanism* (did this call take the truncate branch),
+  // which is unambiguous regardless of what the input happened to contain.
+  // Not `availableWidth` here: that width had the *input* string's tracking
+  // budget taken out of it, and the string about to be painted is shorter
+  // than the input by definition on this branch. `truncateToWidth` solves the
+  // two together — see its own doc comment for the labels this used to erase.
+  return {
+    text: truncateToWidth(text, opts.maxWidth, minFontSize, letterSpacing, weight),
+    fontSize: minFontSize,
+    truncated: true,
+  }
+}
+
+/**
+ * Wrapped lines joined back into one, with the blank the source had where a
+ * line broke at a space. A wrap drops the space it breaks at, so lines joined
+ * with nothing between them ran words together ("below the" + "target" as
+ * "below thetarget"), and the joined line measured a space narrower than the
+ * words it holds. A break inside a run, such as between two Chinese
+ * characters or inside a token too long for a line, keeps nothing between.
+ */
+export function rejoinWrapped(lines: readonly string[], source: string): string {
+  let joined = lines[0] ?? ""
+  for (let i = 1; i < lines.length; i += 1) {
+    const tail = Array.from(lines[i - 1]!).slice(-16).join("")
+    const head = Array.from(lines[i]!).slice(0, 16).join("")
+    const escape = (part: string) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+    const gap = tail !== "" && head !== "" ? new RegExp(`${escape(tail)}(\\s+)${escape(head)}`, "u").exec(source)?.[1] : undefined
+    // A blank inside a paragraph stays. A paragraph break becomes a blank
+    // between two Latin words and nothing beside a Chinese character, the way
+    // the two paragraphs read run together.
+    const cjkEdge = /[\u3000-\u303f\u3400-\u9fff\uff00-\uffef]/u
+    const spaced = gap !== undefined && (!gap.includes("\n") || !(cjkEdge.test(Array.from(tail).pop() ?? "") || cjkEdge.test(Array.from(head)[0] ?? "")))
+    joined += (spaced ? " " : "") + lines[i]!
+  }
+  return joined
+}
+
+export function layoutSvgText(
+  text: string | undefined,
+  options: SvgTextLayoutOptions
+): SvgTextLayout {
+  const content = text?.trim() ?? ""
+  const maxLines = options.maxLines ?? 2
+  const lineHeightRatio = options.lineHeightRatio ?? 1.08
+  const weight: TextWeightHint = { bold: options.bold, fontFamily: options.fontFamily, ...(options.paintedIn !== undefined ? { paintedIn: options.paintedIn } : {}) }
+  const minPt = options.minPt ?? META_FONT_FLOOR_PX
+
+  if (!content) {
+    return { lines: [], fontSize: options.fontSize, lineHeight: 0, truncated: false }
+  }
+
+  // Tracking budget (see `SvgTextLayoutOptions.letterSpacing`): `letter-spacing`
+  // is absolute px that does not scale with the font size, so it is paid out
+  // of `maxWidth` up front rather than folded into the per-character unit
+  // weights. `availableWidth` then drives both the wrap budget and the fitted
+  // font size — the two places `maxWidth` was read. Exactly `maxWidth` when
+  // the option is omitted.
+  const letterSpacing = options.letterSpacing ?? 0
+  const spacingBudget = Math.max(0, Array.from(content).length - 1) * letterSpacing
+  const availableWidth = Math.max(0, options.maxWidth - spacingBudget)
+
+  const fontSizeFor = (ls: string[]): number => {
+    const longest = Math.max(...ls.map((l) => measureTextUnits(l, weight)), 1)
+    return Math.max(minPt, Math.min(options.fontSize, Math.floor(availableWidth / longest)))
+  }
+
+  // Legacy search: byte-identical to this function's pre-task-R2-retry-
+  // ladder-fix algorithm -- the largest font size (smallest `maxUnits`)
+  // whose wrap satisfies `maxLines`, including the forced-merge fallback
+  // below when no retry step gets there. `attempt` after this loop is
+  // whichever call actually produced `legacyLines` (pre-merge), so
+  // `attempt.hadSplit` below reflects *that* candidate, not merely the
+  // first one tried.
+  const baseUnits = availableWidth / options.fontSize
+  let maxUnits = baseUnits
+  let attempt = wrapWithUnits(content, maxUnits, weight)
+  const minSplitFreeUnits = attempt.minSplitFreeUnits // content-invariant, see WrapResult
+
+  let legacyLines = attempt.lines
+  for (let i = 0; legacyLines.length > maxLines && i < 8; i += 1) {
+    maxUnits *= 1.14
+    attempt = wrapWithUnits(content, maxUnits, weight)
+    legacyLines = attempt.lines
+  }
+  const legacyHadSplit = attempt.hadSplit
+
+  // Which wrap the chosen lines came from settled an orphan. A merged
+  // fallback is no wrap's output, so it carries no such report.
+  let orphanFixed = attempt.orphanFixed
+  if (legacyLines.length > maxLines) {
+    legacyLines = [
+      ...legacyLines.slice(0, maxLines - 1),
+      rejoinWrapped(legacyLines.slice(maxLines - 1), content),
+    ]
+    orphanFixed = false
+  }
+
+  let lines = legacyLines
+
+  // Word-integrity preference (task R2 retry-ladder scope extension,
+  // 2026-07-24): the ladder above always converges on the *largest* font
+  // that satisfies `maxLines`, and character-level `splitLongToken` output
+  // can always hit any target line count at a smaller-or-equal `maxUnits`
+  // than keeping a run whole -- so whenever the legacy search needed a
+  // retry at all, it tends to land on a budget that still cuts an atomic
+  // Latin/digit run mid-run (the Critical finding: a run at string position
+  // 0, with no leading CJK to absorb line 1, hits this every time the run
+  // alone doesn't already fit the requested font size).
+  //
+  // Gate strictly on `legacyHadSplit` (the *selected* candidate's own split
+  // state, not merely whether the very first attempt had one): whenever the
+  // legacy search's own answer is already split-free -- the overwhelming
+  // majority of real content, including every pure-CJK and space-delimited
+  // input -- this whole branch is skipped and `lines` stays `legacyLines`
+  // verbatim, with zero extra `wrapWithUnits` calls beyond what today's
+  // code already makes. This is what makes "must not change any layout
+  // where no split ever occurs" a property of the selection rule, not
+  // merely an observed test result.
+  //
+  // When it *does* need to search: `minSplitFreeUnits` is the exact
+  // narrowest `maxUnits` at which every no-space run individually fits (see
+  // `WrapResult`), so jumping straight there -- rather than geometric-
+  // guessing for it -- is provably the largest-font split-free candidate,
+  // if it satisfies `maxLines`. `minSplitFreeUnits` is always strictly
+  // greater than whatever `maxUnits` the legacy search stopped at whenever
+  // `legacyHadSplit` is true (proof: `hadSplit` true means some run's own
+  // width exceeded that `maxUnits`, and `minSplitFreeUnits` is the max over
+  // every such run's width) -- so this search only ever shrinks the font
+  // from the legacy answer, never grows it. Growing `maxUnits` further from
+  // there can only keep or reduce `lines.length` and keep or reduce the
+  // resulting font size (both monotonic in `maxUnits`), so a candidate is
+  // rejected and the search advances only while a smaller font might still
+  // recover `maxLines`; the instant a candidate's own font would already
+  // sit under `minPt` (when the caller declared one), further growth can
+  // only make it worse, so the search stops rather than wasting steps.
+  //
+  // If no admissible (maxLines-satisfying, minPt-respecting) split-free
+  // candidate exists in-budget -- a run genuinely wider than a full line
+  // even at `minPt`, or `maxLines` itself unreachable without splitting --
+  // `lines` stays `legacyLines`: the documented fallback, split rather than
+  // drop content, never worse than today.
+  //
+  // Search ceiling: when the caller declared `minPt`, that floor alone
+  // bounds the search (the loop body's own `fontSizeFor(...) >= minPt`
+  // check) -- `stepCap` below is then a generous, practically-unreachable
+  // termination safety net (see the monotonicity argument above), not the
+  // real stopping condition. Without a `minPt` -- no call site in this
+  // codebase omits it except a handful of non-heading `layoutSvgText`
+  // callers and this file's own `minPt`-omitting tests -- there is no
+  // caller-declared floor to search within, so `reachCeilingUnits` instead
+  // caps the search at the exact `maxUnits` the pre-existing (pre-task-R2-
+  // retry-ladder-fix) ladder could already reach on its own
+  // (`baseUnits * 1.14^8`, the same 8-retry budget the legacy loop above
+  // uses). This is what keeps the preference from ever shrinking a
+  // `minPt`-less call's font further than the *original* algorithm's own
+  // worst case already could -- it only ever reorders which
+  // already-in-reach candidate wins, it does not grant the ladder new
+  // reach. (Concretely: without this, a run wider than any line the
+  // original ladder could ever have produced -- this file's own
+  // "Supercalifragilistic..." self-review case -- would shrink the font
+  // without bound chasing word integrity, instead of falling back to
+  // `splitLongToken` the way it always has.)
+  if (legacyHadSplit) {
+    const reachCeilingUnits = minPt === undefined ? baseUnits * 1.14 ** 8 : Infinity
+    if (minSplitFreeUnits <= reachCeilingUnits) {
+      let splitFreeUnits = minSplitFreeUnits
+      let splitFreeAttempt = wrapWithUnits(content, splitFreeUnits, weight)
+      let admissible = splitFreeAttempt.lines.length <= maxLines
+      if (admissible && minPt !== undefined) {
+        admissible = fontSizeFor(splitFreeAttempt.lines) >= minPt
+      }
+      const stepCap = minPt === undefined ? 8 : 32
+      for (
+        let i = 0;
+        !admissible &&
+        splitFreeAttempt.lines.length > maxLines &&
+        splitFreeUnits < reachCeilingUnits &&
+        i < stepCap;
+        i += 1
+      ) {
+        // Clamped, not just multiplied: without `minPt` the ceiling is a
+        // hard cap (see the comment above), and geometric growth alone
+        // could overshoot it by up to one step's worth on the iteration
+        // that crosses it -- clamping keeps `splitFreeUnits` from ever
+        // exceeding `reachCeilingUnits`, so the "never shrinks the font
+        // further than the original algorithm's own worst case" guarantee
+        // holds exactly, not just approximately. A no-op when `minPt` is
+        // defined (`reachCeilingUnits` is `Infinity` there).
+        splitFreeUnits = Math.min(splitFreeUnits * 1.14, reachCeilingUnits)
+        splitFreeAttempt = wrapWithUnits(content, splitFreeUnits, weight)
+        admissible = splitFreeAttempt.lines.length <= maxLines
+        if (admissible && minPt !== undefined) {
+          admissible = fontSizeFor(splitFreeAttempt.lines) >= minPt
+        }
+      }
+      if (admissible) {
+        lines = splitFreeAttempt.lines
+        orphanFixed = splitFreeAttempt.orphanFixed
+      }
+    }
+  }
+
+  // After the merge fallback a too-long text's last line is long, not a
+  // widow, so balancing naturally skips it — only genuine widows re-wrap.
+  if (options.balanceLines) {
+    lines = balanceWrappedLines(content, lines, weight, orphanFixed)
+  }
+
+  let fontSize = fontSizeFor(lines)
+  // Floor is a hard width bound. A split-free candidate can leave a line
+  // wider than `availableWidth` once `fontSizeFor` refuses to go below
+  // `minPt`. Re-wrap at the floor's unit budget so long Latin runs split
+  // instead of overflowing. Only then clip leftover characters, never
+  // with an ellipsis.
+  const maxUnitsAtFloor = fontSize > 0 ? availableWidth / fontSize : 0
+  let truncated = false
+  const overflows = lines.some((line) => measureTextUnits(line, weight) > maxUnitsAtFloor + 1e-9)
+  if (overflows && maxUnitsAtFloor > 0) {
+    const refit = wrapWithUnits(content, maxUnitsAtFloor, weight)
+    let fitted = refit.lines
+    if (fitted.length > maxLines) {
+      const rest = rejoinWrapped(fitted.slice(maxLines - 1), content)
+      const last = truncateToUnits(rest, maxUnitsAtFloor, weight)
+      truncated = last !== rest
+      fitted = [...fitted.slice(0, maxLines - 1), last]
+    }
+    lines = fitted
+    fontSize = fontSizeFor(lines)
+  }
+  const units = fontSize > 0 ? availableWidth / fontSize : 0
+  const clipped = lines.map((line) => {
+    const next = truncateToUnits(line, units, weight)
+    if (next !== line) truncated = true
+    return next
+  })
+
+  return {
+    lines: clipped,
+    fontSize,
+    lineHeight: Math.round(fontSize * lineHeightRatio),
+    truncated,
+  }
+}
+
+/**
+ * The CJK code points every measured face draws on the full em square:
+ * ideographic punctuation, the unified ideographs, and the fullwidth ASCII
+ * variants. Read from msyh.ttc, Simsun.ttc and Kaiti.ttf: all 20902 unified
+ * ideographs and all 94 fullwidth forms advance exactly 1em in each, and so
+ * does every ideographic punctuation mark each face carries (a mark SimSun
+ * or KaiTi lacks falls back to YaHei, which has all of them at 1em).
+ */
+const EM_SQUARE_RE = /[\u3000-\u303f\u4e00-\u9fa5\uff01-\uff5e]/
+
+/**
+ * True when `measureTextUnits` knows `text`'s width rather than estimating
+ * it: every character is either on the CJK em square (`EM_SQUARE_RE`), a
+ * mark the face paints itself (`LATIN_FACE_MARK_ADVANCES`), or in the face's own
+ * advance table for this weight. A caller that pads an
+ * estimate against the class average's worst case can skip the padding
+ * then, since there is no class average left in the number.
+ */
+export function measuresExactly(text: string, weight?: TextWeightHint): boolean {
+  const faceKey = classifyFaceKey(weight?.fontFamily)
+  const table = weight?.bold ? EXACT_TABLE_FOR[faceKey]?.bold : REGULAR_EXACT_TABLE_FOR[faceKey]
+  const latinMarks = faceKey === "unknown" ? undefined : LATIN_FACE_MARK_ADVANCES[faceKey][weight?.bold ? "bold" : "regular"]
+  for (const ch of text) {
+    if (EM_SQUARE_RE.test(ch)) continue
+    if (latinMarks?.[ch.charCodeAt(0)] !== undefined) continue
+    if (table?.[ch.charCodeAt(0)] === undefined) return false
+  }
+  return true
+}
+
+/**
+ * True when `fontFamily` resolves (via `classifyFaceKey`'s own first-member
+ * convention above) to a face this pack has a real per-character exact
+ * advance-width table for (`EXACT_TABLE_FOR` above) -- currently Georgia and
+ * Microsoft YaHei only. Every other face -- SimSun/KaiTi (classified but
+ * class-average-only, see `EXACT_TABLE_FOR`'s own comment), an unmeasured
+ * designer font, `undefined`/empty input -- falls back to
+ * `measureTextUnits`'s coarser, deliberately-conservative class-average
+ * envelope instead.
+ *
+ * Exported (backlog-sweep task I2) so a registration-time caller
+ * (`themes/definitions.ts`'s `registerTheme`, via the `../render/fonts`
+ * forwarding re-export next to `isMonoFontFamily`/`isBold`) can warn a theme
+ * author that their chosen heading/body face falls back to that envelope,
+ * without duplicating `classifyFaceKey`'s own matching rules.
+ *
+ * The list has grown since: Times New Roman, and Microsoft YaHei UI, YaHei's
+ * Western cut, which measures with YaHei's tables (`fonts.ts` `WESTERN_CUT`).
+ */
+export function hasExactWidthTable(fontFamily: string): boolean {
+  return EXACT_TABLE_FOR[classifyFaceKey(fontFamily)] !== undefined
+}

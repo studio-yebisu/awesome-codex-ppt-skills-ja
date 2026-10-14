@@ -4996,7 +4996,7 @@
   },
   {
     "repository": "jinwyp/open-ppt-skill",
-    "summary_ja": "編集可能なPPTDおよびPPTXを生成し、ローカル環境でブラウザ編集画面も提供するスキル。",
+    "summary_ja": "PPTDとローカル編集器の原典。PPTX書き出しが依存する第三者frontend・WASMの再配布条件を確認できず、現行制作集への採用を保留。",
     "kind": "pptx",
     "upstream_commit": "07eeaadcb04c32c9adb107eb5c8608e6be4e1008",
     "checked_at": "2026-10-13T13:34:38.240367+00:00",
@@ -5010,32 +5010,44 @@
     ],
     "source_refs": [
       {
+        "path": "LICENSE",
+        "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/LICENSE"
+      },
+      {
         "path": "README.md",
-        "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/README.md",
-        "bytes": 14111
+        "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/README.md"
+      },
+      {
+        "path": "editor/README.md",
+        "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/editor/README.md"
       },
       {
         "path": "skills/open-kimi-ppt/SKILL.md",
-        "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/skills/open-kimi-ppt/SKILL.md",
-        "bytes": 20903
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/LICENSE",
-        "bytes": 1073
+        "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/skills/open-kimi-ppt/SKILL.md"
       }
     ],
     "archived": false,
     "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
+    "production_status": "distribution_conditions_unconfirmed",
+    "license_review_status": "upstream_mit_third_party_runtime_unconfirmed",
+    "requirements": [
+      "Node.js、Pythonと原典が同梱するfrontend・WASM writer。製品配布前に第三者実装の条件確認が必要。"
+    ],
     "commands": [],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "root LICENSEはMIT。README.mdはKimi/Moonshot非公式・未承認・学習研究用と明記する。",
+      "editor/README.mdはofficial Kimi neo-ppt front-end mirrorとpatched WASMを説明し、export_pptx.pyとlocal-export/export-pptd.mjsがそのwriterを使用する。",
+      "取得物で確認できたLICENSEはrootの1件。第三者frontend・WASMの独立したLICENSE/NOTICE・再配布許諾は確認できなかった。root MITをそれらへ広げない。",
+      "原典内で第三者writerを使わない通常OSSの代替exporterは確認できず、独自の別rendererを使ったものを本原典の作例とはしない。",
+      "PPTD原稿のみの準備、製品作例、配布fork、ZIP、PPTX生成は今回は行っていない。配布条件の確認後に再検討できる。"
     ],
     "forks": [],
+    "execution_status": "not_executed_runtime_distribution_unconfirmed",
+    "product_status": "excluded_third_party_runtime_unconfirmed",
+    "execution_type": "PPTD DSLとneo-ppt mirror、patched WASM writerを使うローカル編集・PPTX書き出し",
+    "method_ja": "原典SKILLのPPTD DSLで原稿を作り、原典export_pptx.pyからpatched WASM writerへ渡す方式。今回は書き出しを実行していません。",
+    "license_note": "原典rootのMITと、同梱する第三者frontend・WASMの条件を区別する。固定取得物で後者の再配布条件を確認できないため、製品の現行推奨と配布キットへ追加しない。",
     "original_description_ja": "編集可能なPPTDおよびPPTXを生成し、ローカル環境でブラウザ編集画面も提供するスキル。"
   },
   {
@@ -6321,7 +6333,7 @@
   },
   {
     "repository": "liustack/pptwise",
-    "summary_ja": "ローカル環境で編集可能なPowerPointを作成するスキルおよびDSHプラグイン。レンダリングにアカウントやAPIキーは不要。",
+    "summary_ja": "原典v5 typed componentsとテーマを使う編集可能な日本語拠点提案。",
     "kind": "pptx",
     "upstream_commit": "65690bc705c1b5db41b5593015675945673da542",
     "checked_at": "2026-10-13T13:35:06.232208+00:00",
@@ -6354,17 +6366,37 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "pptwise-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node22.19+",
+      "PPTX生成に認証/API不要",
+      "Zen Kaku Gothic New / Space Grotesk",
+      "PNG/PDF: Windows Microsoft PowerPoint"
+    ],
+    "commands": [
+      "cd runtime",
+      "npm ci --ignore-scripts --no-audit --no-fund",
+      "cd ..",
+      "node runtime/dist/cli.js validate input/deck.json",
+      "node runtime/dist/cli.js render input/deck.json -o deck-rebuilt.pptx --no-git-ignore"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "図はnative shapes/textで、データchart/table objectとは異なる",
+      "全ページ詳細目視・独立レビュー・native監査・ZIP再実行は未実施"
     ],
-    "forks": [],
-    "original_description_ja": "ローカル環境で編集可能なPowerPointを作成するスキルおよびDSHプラグイン。レンダリングにアカウントやAPIキーは不要。"
+    "forks": [
+      "pptwise-ja"
+    ],
+    "guide": "examples/repositories/pptwise-showcase/README.md",
+    "source_download": "downloads/pptwise-example-ja.zip",
+    "fork_download": "downloads/pptwise-ja.zip",
+    "original_description_ja": "ローカル環境で編集可能なPowerPointを作成するスキルおよびDSHプラグイン。レンダリングにアカウントやAPIキーは不要。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "gonta223/japanese-corporate-pptx-skill",
@@ -6776,7 +6808,7 @@
   },
   {
     "repository": "Aham-AIAPP/aham-ppt",
-    "summary_ja": "パラメータ化されたレイアウト集を基に、整った編集可能なPPTXを生成するスキル。",
+    "summary_ja": "原典の凍結座標layoutIDとSVG-native converterで日本語4枚の架空ワークショップ案。",
     "kind": "pptx",
     "upstream_commit": "c2b4ece69bbac777557934f981457c1f98c2b73f",
     "checked_at": "2026-10-13T13:35:17.279798+00:00",
@@ -6791,37 +6823,78 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/README.md",
-        "bytes": 7418
+        "path": "SKILL.md",
+        "sha256": "d31e1f3f6158a1fc9818132908d55f28b2b8944a60a1eb0567fccb5cdb7aece5",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/SKILL.md"
       },
       {
-        "path": "SKILL.md",
-        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/SKILL.md",
-        "bytes": 17876
+        "path": "references/layout-library.md",
+        "sha256": "2cb076716e20e4a50aea542df13fa0b964a1892368ef12fc3b775506fa1e41dd",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/references/layout-library.md"
+      },
+      {
+        "path": "assets/components/layouts.py",
+        "sha256": "978f3bce1c6fa5f2528d3a56a0f92b7b31455b5285f4a90d804457d3904d50ed",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/layouts.py"
+      },
+      {
+        "path": "assets/components/themes.py",
+        "sha256": "8be944b838a9f2505b148bb65c92d2c3026e1962834412dcc2dcdb45a5b1c7c3",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/themes.py"
+      },
+      {
+        "path": "assets/components/structures.py",
+        "sha256": "ed5fcb6dd3ce3380ee8755277e3eb47a01bb8a3dd384449e43e18fd10a8c9ac1",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/structures.py"
+      },
+      {
+        "path": "assets/svg_to_pptx_wrapper.py",
+        "sha256": "d6d2639a43d4c4a160709317e4f7ad6c0a13bebc64d341ae702c2c0452edbdaf",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/svg_to_pptx_wrapper.py"
+      },
+      {
+        "path": "assets/svg_to_pptx/LICENSE_NOTE.md",
+        "sha256": "7f7f384d907c4a280f1b0e5c184b5336ae94f14e261f2a31b97bb62410fa95dd",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/svg_to_pptx/LICENSE_NOTE.md"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/LICENSE",
-        "bytes": 1067
-      },
-      {
-        "path": "NOTICE.md",
-        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/NOTICE.md",
-        "bytes": 167
+        "sha256": "4c770fc239092d3d2f1f10ff8ea4982fcb202de2d8bda9a0b61503fe19ffef1f",
+        "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/LICENSE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "aham-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python",
+      "python-pptx",
+      "CairoSVG（native経路ではPNG fallback不要）"
+    ],
+    "commands": [
+      "pip install -r upstream/requirements.txt",
+      "python generate.py"
+    ],
+    "steps": [
+      "入力とlayoutIDを決める",
+      "原典部品でSVGを生成する",
+      "native wrapperでPPTXへ変換",
+      "初回表示と閲覧PNG/PDFを出す"
+    ],
+    "limitations": [],
+    "forks": [
+      "aham-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_layout_functions_svg_native_conversion",
+    "case_ids": [
+      "aham-showcase"
+    ],
+    "skill": "skill-forks/aham-ja/SKILL.md",
+    "guide": "examples/repositories/aham-showcase/README.md",
     "original_description_ja": "パラメータ化されたレイアウト集を基に、整った編集可能なPPTXを生成するスキル。"
   },
   {
@@ -10219,7 +10292,7 @@
   },
   {
     "repository": "SlideSpeak/slide-design-skill",
-    "summary_ja": "内容とデザインの指示に基づき、図表や画像を含む1920×1080解像度のHTML資料を作成するエージェント向けスキル。",
+    "summary_ja": "原典SlideSpeak engineで独自briefから設計した緑の和文編集誌6枚を実HTML化。外部API不要。",
     "kind": "html",
     "upstream_commit": "5e87d8ae71f6306e0c88f4910e6c09114581d91b",
     "checked_at": "2026-10-13T13:35:02.980758+00:00",
@@ -10242,42 +10315,73 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/README.md",
-        "bytes": 11166
-      },
-      {
         "path": "SKILL.md",
-        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/SKILL.md",
-        "bytes": 2478
+        "sha256": "f6f15bccc3ecb26d1d7ceccd33f97f1be0ed74387e2b2b4967928aa8fe4251c6",
+        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/SKILL.md"
       },
       {
-        "path": "skills/opex/SKILL.md",
-        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/skills/opex/SKILL.md",
-        "bytes": 3931
+        "path": "docs/INTEGRATION.md",
+        "sha256": "123dc6261487df915372da224b6258b344ca1ae24587322554fc22b94222080c",
+        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/docs/INTEGRATION.md"
       },
       {
-        "path": "skills/pitch/SKILL.md",
-        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/skills/pitch/SKILL.md",
-        "bytes": 4183
+        "path": "engine/index.ts",
+        "sha256": "465c2253f5426f6153cb045f5f8b66ddafaf517120debf718fc53c94b40ec855",
+        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/engine/index.ts"
+      },
+      {
+        "path": "engine/renderer.ts",
+        "sha256": "0a1d042b78f4de491ce62ea0bd4a5dde9e72240e55e10b7dac803e13e5f65fa3",
+        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/engine/renderer.ts"
+      },
+      {
+        "path": "engine/skill-loader.ts",
+        "sha256": "81d629d67a6ecf59d1be2027de6db880c4a1fc367b1e877ff4d7098475b487b5",
+        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/engine/skill-loader.ts"
+      },
+      {
+        "path": "scripts/validate-skill.ts",
+        "sha256": "9c03686efa3c6c58742b93f57b61f9e66047fda37f4c42657a00f578c0fd398d",
+        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/scripts/validate-skill.ts"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/LICENSE",
-        "bytes": 1067
+        "sha256": "31d4022a125428a89eaca0da0832d6d5e2563b8d1ea5cb5f972feacb49f280fc",
+        "url": "https://github.com/SlideSpeak/slide-design-skill/blob/5e87d8ae71f6306e0c88f4910e6c09114581d91b/LICENSE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "slidespeak-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node20+",
+      "npm ci",
+      "原典engineと独自style"
+    ],
+    "commands": [
+      "cd upstream && npm ci",
+      "node upstream/node_modules/tsx/dist/cli.mjs build.mts"
+    ],
+    "steps": [
+      "briefから6ファイルstyleを作る",
+      "slide-treeに日本語完成コピーを入れる",
+      "原典API/gate/rendererで生成する",
+      "主画面の初回表示を確認する"
+    ],
+    "limitations": [],
+    "forks": [
+      "slidespeak-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_engine_bespoke_style",
+    "case_ids": [
+      "slidespeak-showcase"
+    ],
+    "skill": "skill-forks/slidespeak-ja/SKILL.md",
+    "guide": "examples/repositories/slidespeak-showcase/README.md",
     "original_description_ja": "内容とデザインの指示に基づき、図表や画像を含む1920×1080解像度のHTML資料を作成するエージェント向けスキル。"
   },
   {

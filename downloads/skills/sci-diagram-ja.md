@@ -1,56 +1,33 @@
 ---
-name: sci-diagram-ja-entry
-description: 編集できる科学の概念図を日本語で制作するときに使う。HututuWorks/sci-diagram-pptxの原典方式を使い、作例の作風を自分の題材へ展開する。
+name: sci-diagram-ja
+description: 原典SciDiagramの公式portable templateで科学の関係を日本語のnative図形・矢印としてPPTX化する。
 ---
 
-# 編集できる科学の概念図
+# 日本語の科学概念図
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
+1. 一次資料で概念を確認。量を示すデータがない図は「縮尺のない概念モデル」と明記する。
+2. upstream/SKILL.md、references/reconstruction.md、runtime-pptxgenjs.mdを読む。SCI_DIAGRAM_RUNTIME=pptxgenjsを選ぶ。全要素のnative/raster所有と矢印方向を先に決める。
+3. source/input.jsonのNODES/EDGES/INSETSを編集。EDGESのfrom/to/directionとpointsが関係を定義する。INSETSはこの例では空。配置から関係を推測しない。
+4. Node20+を用意。source/で `npm ci --ignore-scripts --no-audit --no-fund`。公式templateが要求するPptxGenJS4.0.1をpin済み。Zen Kaku Gothic NewとSpace Groteskをfonts/の公式TTFから導入。
+5. 展開先で `node source/build.mjs`。出力はsource/deck.pptx。意図的な再生成だけ`--overwrite`を指定する。
+6. Windows PowerPointで開いて主ページを確認。PNG/PDFはsource/render_powerpoint.ps1、または原典upstream/scripts/render_pptx.pyとLibreOffice/pdftoppmを使う。実施範囲だけ記録。
 
-## 元の方式で作る
+原典の単図再構成を新規概念図5枚へ明示拡張した例。SKILL本文だけでは生成できず、同梱build.mjs・input.json・MITのPptxGenJSが必要。原典Apache-2.0、commit cc8f0030edf80eeab6e52849b8c39fe638466776。原作者の公式日本語版ではありません。
 
-原典: https://github.com/HututuWorks/sci-diagram-pptx/tree/cc8f0030edf80eeab6e52849b8c39fe638466776
-
-- https://github.com/HututuWorks/sci-diagram-pptx/blob/cc8f0030edf80eeab6e52849b8c39fe638466776/README.md
-- https://github.com/HututuWorks/sci-diagram-pptx/blob/cc8f0030edf80eeab6e52849b8c39fe638466776/skills/sci-diagram-pptx/SKILL.md
-- https://github.com/HututuWorks/sci-diagram-pptx/blob/cc8f0030edf80eeab6e52849b8c39fe638466776/LICENSE
-
-原典公式PptxGenJS portable templateを直接拡張。NODES/EDGES/INSETSとnative矢印・断面図による5枚の新規科学概念図。
-
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-- Node.js20+ / PptxGenJS4.0.1 (MIT)
-- 書体: Zen Kaku Gothic New / Space Grotesk
-- 描画: Windows Microsoft PowerPoint、またはLibreOffice/pdftoppm/Python3.10+
+## この方式で気をつけること
 
 - 原典のportable PptxGenJS 4.0.1方式を使用。内部評価専用のホストSDKは必要ない。
 - 科学内容はUSGS一次解説に基づく概念モデル。定量的な実験結果ではない。
 
-## 日本語で魅力ある資料へ
+## 単体の本文から使う
 
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
+この本文は `skill-forks/sci-diagram-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
-## この作例を自分の題材へ
+原典: https://github.com/HututuWorks/sci-diagram-pptx/tree/cc8f0030edf80eeab6e52849b8c39fe638466776
 
-作例: 雨が、地下水になるまで。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `sci-diagram-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-雨が地下水になる仕組みを、一般の読者へ向けた日本語5ページの科学概念図にしてください。表題は「雨が、地下水になるまで。」。砂色・藍・鮮やかな水色、大胆な和文見出しと編集可能な断面図・矢印・注釈で構成します。USGSの一次解説を参照し、降水から地表流出、蒸発・蒸散、浸透を分け、不飽和帯と飽和帯、地下水面、涵養、川への流出を正しく説明してください。定量値や実験結果を作らず、縮尺のない概念モデルと明記。HututuWorks/sci-diagram-pptxの原典native ownershipと明示的NODES/EDGES/INSETS、source→targetのtail矢印規約を使います。原典の単図再構成を新規概念図5枚に拡張したことを明記し、native PPTXと入力JSON、実行したbuild.mjsを残してください。
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: HututuWorks / 原典条件: Apache-2.0
+原作者: HututuWorks / 原典条件: Apache-2.0。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
 - https://github.com/HututuWorks/sci-diagram-pptx/blob/cc8f0030edf80eeab6e52849b8c39fe638466776/LICENSE
 - https://github.com/HututuWorks/sci-diagram-pptx/blob/cc8f0030edf80eeab6e52849b8c39fe638466776/skills/sci-diagram-pptx/LICENSE
-
-原文LICENSE・NOTICEと素材・依存物の条件を保持する。
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。

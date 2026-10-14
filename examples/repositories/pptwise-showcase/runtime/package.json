@@ -1,0 +1,124 @@
+{
+  "name": "@liustack/pptwise",
+  "version": "0.44.0",
+  "description": "A real PowerPoint, not HTML. Editable .pptx decks for AI agents, rendered on your own machine.",
+  "homepage": "https://pptwise.com",
+  "icon": "./dsh/icon.png",
+  "type": "module",
+  "sideEffects": false,
+  "license": "MIT",
+  "bin": {
+    "pptwise": "dist/cli.js"
+  },
+  "main": "./dsh/index.js",
+  "exports": {
+    ".": "./dsh/index.js",
+    "./package.json": "./package.json",
+    "./locale/*.json": "./locale/*.json",
+    "./client": "./dsh/client.js"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "inject": [
+        "@deepseek-ai/dsh-client-ui-tool"
+      ],
+      "platform": "web",
+      "immediately": true
+    }
+  },
+  "files": [
+    "dist",
+    "dsh",
+    "cordis.patch.yml",
+    "locale",
+    "skills/pptwise/SKILL.md",
+    "skills/pptwise/SKILL.zh-CN.md",
+    "skills/pptwise/scripts",
+    "skills/pptwise/references",
+    "README.zh-CN.md"
+  ],
+  "engines": {
+    "node": ">=22.19"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "rm -rf dist && tsup",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint src scripts tests dsh evals --no-error-on-unmatched-pattern",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:no-tmp-leak": "tsx scripts/tmp-leak-check.mts -- vitest run",
+    "check": "pnpm typecheck && pnpm lint && pnpm test:no-tmp-leak",
+    "e2e": "pnpm build && tsx scripts/e2e.mts",
+    "e2e:dsh": "tsx scripts/dsh-e2e.mts",
+    "bench:score": "tsx tests/bench/score.mts",
+    "docs:list": "node scripts/docs-list.js",
+    "gallery": "tsx scripts/gallery.mts",
+    "theme-switch": "tsx scripts/theme-switch-matrix.mts",
+    "gen:skill-refs": "tsx scripts/gen-skill-refs.mts",
+    "evals:gallery": "tsx evals/gallery/run.mts",
+    "fixtures:unassigned-bytes": "tsx scripts/write-unassigned-bytes.mts",
+    "prepublishOnly": "pnpm build",
+    "release": "tsx scripts/release.mts",
+    "release:version": "changeset version && tsx scripts/sync-version.mts && tsx scripts/stamp.mts",
+    "bench:run": "tsx tests/bench/run.mts",
+    "bench:agentic": "tsx tests/bench/run-agentic.mts"
+  },
+  "keywords": [
+    "pptx",
+    "powerpoint",
+    "presentation",
+    "ai",
+    "agent",
+    "claude",
+    "svg",
+    "drawingml",
+    "cli",
+    "dsh",
+    "dsh-plugin"
+  ],
+  "author": {
+    "name": "Leon Liu",
+    "url": "https://liustack.dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liustack/pptwise.git"
+  },
+  "dependencies": {
+    "commander": "^13.1.0",
+    "jszip": "3.10.1",
+    "linkedom": "^0.18.12",
+    "pptxgenjs": "^4.0.1",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "undici": "^8.10.0",
+    "zod": "^4.3.6"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.35"
+  },
+  "devDependencies": {
+    "@changesets/cli": "^2.31.1",
+    "@eslint/js": "^9.39.0",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@types/node": "^22.19.7",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "eslint": "^9.39.0",
+    "eslint-plugin-react-refresh": "^0.5.3",
+    "jsdom": "^29.0.2",
+    "lucide": "^1.25.0",
+    "tsup": "^8.5.1",
+    "tsx": "^4.20.6",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.46.4",
+    "vitest": "^4.1.4"
+  }
+}

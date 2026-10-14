@@ -1,52 +1,36 @@
 ---
-name: react-slide-deck-ja-entry
-description: Reactで育てるスライドを日本語で制作するときに使う。code-on-sunday/slide-deck-generatorの原典方式を使い、作例の作風を自分の題材へ展開する。
+name: react-slide-deck-ja
+description: 原典React/ViteとFramer Motionで、日本語の図解・操作を含むWebスライドを制作する。
 ---
 
-# Reactで育てるスライド
+# 日本語で動くWebスライドを作る
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
+原典は code-on-sunday/slide-deck-generator。upstream/skills/slide-deck/SKILL.md と slide-guidelines.md、references/WORKFLOW.mdを読む。原典en-context-engineeringのApp、SlideLayout、useSlideScale、animation variantsを使い、別の共通rendererへ置き換えない。
 
-## 元の方式で作る
+## 日本語で渡す入力
+
+読み手、説明したいこと、実際の資料・数値、話す時間、雰囲気をまとめる。見出しは短く、問題→問い→概念→例→持ち帰りをひとつの流れにする。実例の4週間・10問は架空の企画目標で、実績として流用しない。
+
+## 制作
+
+1. 原典presetを一つ選び、色と動きの理由を原稿へ記録する。日本語は公式配布のNoto Sans JP等を使い、OFLと参照元を保持する。
+2. Reactのページと図解を組む。単純な図はSVGとnative要素、週別タブ等は独立stateで作り、操作中にページが飛ばないようにする。新しい本文の字形をfont subsetへ含める。
+3. 元のVite8/Tailwind4.2.1にはpeer衝突がある。この固定版の再現にはTailwind4.2.2と記録したlockを使う。npmの検査を--forceで無効化しない。
+4. npm ci、TypeScript、Vite buildを実行。動くページ状態・クリック・キー・reduced-motionを確認し、全ページをブラウザーで見る。
+5. index.htmlとassetsとfontsをひと組でHTTP配信する。Windowsの再現キットは短い展開先を使う。
+
+## 確認と条件
+
+原典sourceと日本語diff、入力、実行ログ、全頁の描画を保存する。外側プレイヤーと接続する場合はparentのsourceとoriginを両方確認する。PPTXは生成しない。内蔵・外部AI APIを必須にする工程ではない。制作QA、人による正式採用、外部公開を分ける。原典MIT、依存のLICENSE、書体OFLを保持する。
+
+## 単体の本文から使う
+
+この本文は `skill-forks/react-slide-deck-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/code-on-sunday/slide-deck-generator/tree/a6369f31b0cc4dd5830796455326777a8fe4c7c6
 
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `react-slide-deck-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-
-原典React App / SlideLayout / useSlideScale / Framer Motion variants / Vite build
-
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-- Python3.13 / fontTools / Brotli
-- Node.js24とnpm
-- HTTPの配信環境
-
-
-
-## 日本語で魅力ある資料へ
-
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
-
-## この作例を自分の題材へ
-
-作例: FAQを育てる4週間
-
-原典slide-deckのReact/Vite工程とen-context-engineeringのApp・SlideLayout・useSlideScale・animation variantsを使い、日本語でFAQ整備の4週間プランを5枚作る。架空の社内チームの計画で、10問は目標。Bold Signalの配色を保ち、Noto Sans JPで日本語化。問題→問い→概念→例→持ち帰りの順に、段階的な図解と週別タブを入れる。外部AI APIや画像生成は不要。
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: code-on-sunday / 原典条件: MIT
+原作者: code-on-sunday / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
 - https://github.com/code-on-sunday/slide-deck-generator/blob/a6369f31b0cc4dd5830796455326777a8fe4c7c6/LICENSE
-
-原文LICENSE・NOTICEと素材・依存物の条件を保持する。
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。

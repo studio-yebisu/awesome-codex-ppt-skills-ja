@@ -1,0 +1,41 @@
+pptwise doctor — CLI 0.44.0
+(local diagnostics only: nothing is written, no network call is made)
+
+Installed skill copies (a copy keeps its install-time version forever)
+  [-] no installed skill copy found — the CLI runs fine on its own, and dsh ships the
+      skill inside the plugin instead
+      looked in: C:\Users\owner\.claude\skills, C:\Users\owner\.codex\skills, C:\Users\owner\.agents\skills
+
+DSH plugin
+  [-] no C:\Users\owner\.dsh — not a dsh machine, this check does not apply
+
+Runtime
+  [ok] Node v24.18.0 (minimum 22.19)
+
+Optional capabilities (neither is needed by the main flow)
+  [ok] sharp: importable — preview rasterization and `audit --pixels` are available
+  [!] soffice: not on PATH — the PDF export path is unavailable. Rendering and validating .pptx files are unaffected
+      fix: install LibreOffice (https://libreoffice.org) and make sure `soffice` is on PATH
+
+Self-test render (a built-in deck through the real pipeline, in memory)
+  [ok] 2 slides validated, rendered, and packed into 20715 bytes in 630ms
+
+Workspace artifacts (where render/preview write when -o is omitted)
+  [ok] anchor M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\liustack__pptwise
+  [ok] output M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\liustack__pptwise\.pptwise
+  [-] not git-ignored — the first render will write .pptwise/.gitignore and a local exclude line
+
+Images (optional stock-photo search — rendering PPTX still needs no credentials)
+  [ok] config C:\Users\owner\.pptwise\config.json (missing)
+  [-] pexels: missing — pptwise config set pexels.apiKey
+  [-] pixabay: missing — pptwise config set pixabay.apiKey
+  [-] openverse: missing — pptwise config set openverse.clientId
+
+Image generators (optional, off until enabled)
+  [-] grok: not found
+  [ok] codex: found (C:\Users\owner\AppData\Local\nodejs\node-v24.18.0-win-x64\codex.CMD, 0.162.1) disabled — pptwise config set images.generators.codex.enabled true
+  [ok] antigravity: found (C:\Users\owner\AppData\Roaming\Antigravity\bin\antigravity.CMD) disabled — pptwise config set images.generators.antigravity.enabled true
+
+0 errors, 1 warning
+  [!] capability: soffice: not on PATH — the PDF export path is unavailable. Rendering and validating .pptx files are unaffected
+nothing blocking — the warnings above are worth fixing when convenient

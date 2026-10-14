@@ -1,0 +1,32 @@
+[
+  {
+    "repository": "jinwyp/open-ppt-skill",
+    "upstream_commit": "07eeaadcb04c32c9adb107eb5c8608e6be4e1008",
+    "summary_ja": "PPTDとローカル編集器の原典。PPTX書き出しが依存する第三者frontend・WASMの再配布条件を確認できず、現行制作集への採用を保留。",
+    "production_status": "distribution_conditions_unconfirmed",
+    "execution_status": "not_executed_runtime_distribution_unconfirmed",
+    "product_status": "excluded_third_party_runtime_unconfirmed",
+    "license_review_status": "upstream_mit_third_party_runtime_unconfirmed",
+    "execution_type": "PPTD DSLとneo-ppt mirror、patched WASM writerを使うローカル編集・PPTX書き出し",
+    "method_ja": "原典SKILLのPPTD DSLで原稿を作り、原典export_pptx.pyからpatched WASM writerへ渡す方式。今回は書き出しを実行していません。",
+    "requirements": [
+      "Node.js、Pythonと原典が同梱するfrontend・WASM writer。製品配布前に第三者実装の条件確認が必要。"
+    ],
+    "commands": [],
+    "steps": [],
+    "limitations": [
+      "root LICENSEはMIT。README.mdはKimi/Moonshot非公式・未承認・学習研究用と明記する。",
+      "editor/README.mdはofficial Kimi neo-ppt front-end mirrorとpatched WASMを説明し、export_pptx.pyとlocal-export/export-pptd.mjsがそのwriterを使用する。",
+      "取得物で確認できたLICENSEはrootの1件。第三者frontend・WASMの独立したLICENSE/NOTICE・再配布許諾は確認できなかった。root MITをそれらへ広げない。",
+      "原典内で第三者writerを使わない通常OSSの代替exporterは確認できず、独自の別rendererを使ったものを本原典の作例とはしない。",
+      "PPTD原稿のみの準備、製品作例、配布fork、ZIP、PPTX生成は今回は行っていない。配布条件の確認後に再検討できる。"
+    ],
+    "license_note": "原典rootのMITと、同梱する第三者frontend・WASMの条件を区別する。固定取得物で後者の再配布条件を確認できないため、製品の現行推奨と配布キットへ追加しない。",
+    "source_refs": [
+      {"path": "LICENSE", "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/LICENSE"},
+      {"path": "README.md", "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/README.md"},
+      {"path": "editor/README.md", "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/editor/README.md"},
+      {"path": "skills/open-kimi-ppt/SKILL.md", "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/skills/open-kimi-ppt/SKILL.md"}
+    ]
+  }
+]

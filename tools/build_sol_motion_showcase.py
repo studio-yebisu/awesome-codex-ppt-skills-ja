@@ -77,7 +77,7 @@ def main():
 ''',encoding='utf-8')
  skill=ROOT/'skill-forks/sol-motion-ja';skill.mkdir(parents=True,exist_ok=True)
  shutil.copy2(SRC/'LICENSE',skill/'LICENSE')
- (skill/'SKILL.md').write_text('''---
+ (skill/'SKILL.md').write_text((skill/'SKILL.md').read_text(encoding='utf-8') if (skill/'SKILL.md').exists() else '''---
 name: sol-motion-ja
 description: frontend-slides原典の固定stageで、日本語の広告・企画用モーションスライドを作る。
 ---
@@ -116,6 +116,7 @@ def finish_package(case,guide,skill):
  (skill/'upstream').mkdir(exist_ok=True)
  for f in (OUT/'source').iterdir():shutil.copy2(f,skill/'upstream'/f.name)
  (skill/'SKILL.md').write_text((skill/'SKILL.md').read_text(encoding='utf-8').replace('`examples/repositories/sol-motion-showcase/source/SKILL.md`、`html-template.md`、`viewport-base.css`','同梱 `upstream/SKILL.md`、`upstream/html-template.md`、`upstream/viewport-base.css`'),encoding='utf-8')
+ shutil.copy2(skill/'SKILL.md',OUT/'SKILL.md')
  source['files']=[{'path':p.relative_to(skill).as_posix(),'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in sorted(skill.rglob('*')) if p.is_file() and p.name!='SOURCE.json']
  (skill/'SOURCE.json').write_text(json.dumps(source,ensure_ascii=False,indent=2),encoding='utf-8')
  prov=json.loads((OUT/'PROVENANCE.json').read_text(encoding='utf-8'));prov['fonts']='Full Noto Sans JP, Noto Serif JP and Space Grotesk embedded; used TTF/OFL files included.';prov['viewer_bridge']='same-origin yebisu-slide input / yebisu-page output';(OUT/'PROVENANCE.json').write_text(json.dumps(prov,ensure_ascii=False,indent=2),encoding='utf-8')

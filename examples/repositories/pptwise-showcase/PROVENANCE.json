@@ -1,0 +1,34 @@
+{
+  "repository": "liustack/pptwise",
+  "upstream_commit": "65690bc705c1b5db41b5593015675945673da542",
+  "license": "MIT",
+  "runtime": "pptwise 0.44.0 original source-built CLI / Node24",
+  "read_files": [
+    "LICENSE",
+    "README.md",
+    "skills/pptwise/SKILL.md",
+    "skills/pptwise/references/spec.md",
+    "skills/pptwise/references/components.md",
+    "skills/pptwise/references/validate.md",
+    "docs/ir.md",
+    "docs/themes.md",
+    "tsup.config.ts",
+    "package.json"
+  ],
+  "original_cli_live_truth": [
+    "schema --spec",
+    "narratives --json",
+    "themes --json",
+    "schema --component flowchart/hub_spoke/architecture/paragraph",
+    "doctor"
+  ],
+  "theme_method": "Original CLI theme fork rally with exact primary/accent/bg/text/surface anchors; original marquee menu retained. Deck-local theme sets Zen Kaku Gothic New/Space Grotesk, ruled surfaces and radius0. No PPTX post-processing.",
+  "concept_method": "Typed original flowchart, hub_spoke and architecture components; direction/relations written in v5 input. Original themes/layout/export engine owns all geometry.",
+  "source_acquisition": "Fixed Git commit with sparse checkout src/skills/docs/scripts/themes; common archive acquisition stopped above200MB, so giant media/gallery were excluded. Original source tsup ESM+DTS build succeeded, no full test run.",
+  "commands": [
+    "npx --no-install tsup",
+    "node runtime/dist/cli.js validate input/deck.json",
+    "node runtime/dist/cli.js render input/deck.json -o deck-rebuilt.pptx --no-git-ignore"
+  ],
+  "pptx_sha256": "bc45ec26145429b9e1db51c653dbd217a7a902611b46d09f9891ac0530850dba"
+}

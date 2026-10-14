@@ -1,0 +1,28 @@
+{
+  "updated_at": "2026-10-14",
+  "status": "integrated_locally",
+  "scope": "必要な生成・書き出し・主要出力・本文コピー・新しいHTMLのページ送り",
+  "production_model": "gpt-6.1-sol",
+  "astra_used": false,
+  "new_repository_count": 3,
+  "new_slide_count": 16,
+  "curated_count": 29,
+  "active_deck_count": 29,
+  "active_slide_count": 161,
+  "history_repository_count": 39,
+  "history_deck_count": 44,
+  "history_slide_count": 262,
+  "cases": [
+    {"id": "slidespeak-showcase", "pages": 6, "output": "original-engine HTML and PDF", "review": "主画面と、修正した第2ページの改行だけ"},
+    {"id": "pptwise-showcase", "pages": 6, "output": "original CLI native PPTX, PowerPoint PNG/PDF", "review": "表紙の初回表示だけ"},
+    {"id": "aham-showcase", "pages": 4, "output": "original layout/native conversion PPTX, PowerPoint PNG/PDF", "review": "表紙の初回表示だけ"}
+  ],
+  "site_checks": [
+    "固有のスキル本文が表示され、本文コピー成功のstatusが出た",
+    "書店HTMLのフロートで1/6から2/6へ移動し、実HTMLの見出しが切り替わった",
+    "修正後の日本語見出しが意味の区切りで二行になった"
+  ],
+  "screenshots": ["docs/assets/atelier-skill-copy.jpg", "docs/assets/atelier-book-float.jpg"],
+  "excluded_checks": ["全ページ詳細目視", "独立モデルレビュー", "native構造監査", "全ZIP再実行"],
+  "publication_status": "local_only"
+}

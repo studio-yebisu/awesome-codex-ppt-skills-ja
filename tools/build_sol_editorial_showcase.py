@@ -141,6 +141,9 @@ description: 原典MckEngineを編集誌風へ明示拡張し、大胆な日本�
 
 原典：likaku/Mck-ppt-design-skill、commit e190e083b715b63172e1c4fea01bc5f9bb21a021。Apache-2.0のLICENSE/NOTICEを保持。これはStudio Yebisuの日本語編集誌レイアウト派生例で、原作者の公式日本語版ではない。
 '''
+    maintained_skill=ROOT/'skill-forks/sol-editorial-ja/SKILL.md'
+    if maintained_skill.exists():
+        skill=maintained_skill.read_text(encoding='utf-8')
     write(OUT/'SKILL.md',skill)
     write(ROOT/'skill-forks/sol-editorial-ja/SKILL.md',skill)
     for f in ['LICENSE','NOTICE']:shutil.copy2(UP/f,ROOT/'skill-forks/sol-editorial-ja'/f)

@@ -1,0 +1,217 @@
+import type { SvgTemplateProps } from "./types"
+import type { LayoutDefinition } from "./registry"
+import { sectionNameFor } from "../lib/derive"
+import { fitEmphasisHeading, fitEmphasisText, headingEmphasisPaint, renderEmphasisHeading } from "../render/emphasis"
+import { fitSvgLine } from "../lib/svg-text-layout"
+import { accessibleInk } from "../render/ink"
+import { latinUpper, statementLines, trackingPx } from "./minimal-shared"
+import { SourceLines, fitSourceBlock } from "./source-lines"
+import { sparseFace } from "./sparse/registry"
+
+/**
+ * 未注册的 (themeId, layoutId) 与自定义主题仍走此脸。
+ *
+ * statement 通用脸：整页就是 heading 的 2 至 4 行诗行 / 金句。主题菜单把
+ * `statement` 讲法绑定到本脸，并在需要时用 silent 同时关掉 motif 与页级品牌。
+ *
+ * 和 quote-stage 的差别不是「再居中一点」：字重 500 斜体（禁止 800），
+ * 无短棒，标签语法（tracking 眉 + 出处小字），0 组件合法，1 个组件只渲成
+ * 出处小字，不走 SvgContent 卡片。
+ *
+ * 纪律：本文件禁 theme id、禁颜色 hex 字面量，颜色 / 字体全部来自 ctx。
+ */
+
+const CENTER_X = 640
+const CONTENT_MAX_W = 920
+const KICKER_Y = 80
+const TITLE_Y = 300
+const KICKER_SIZE = 16
+const ATTR_SIZE = 16
+const KICKER_TRACKING_EM = 0.35
+const ATTR_TRACKING_EM = 0.2
+const ATTR_GAP = 56
+/** The quote block between the claim and the line naming its source. */
+const QUOTE_SIZE = 22
+const QUOTE_MAX_LINES = 3
+const QUOTE_LINE_RATIO = 1.5
+const QUOTE_GAP = 48
+const QUOTE_ATTR_GAP = 40
+
+export function StatementContent(props: SvgTemplateProps) {
+  const Face = sparseFace("statement", props.ir.theme.id)
+  // A theme's skin sets one line under the claim (`fitStatementSource`).
+  // A quote with its source is two texts, and the skin printed the source
+  // alone, so the quote went unpainted with nothing to say so. That page
+  // steps aside to this face's own drawing, which sets both.
+  return (Face && !quotesWithSource(props.slide) ? Face(props) : null) ?? GenericStatementContent(props)
+}
+
+/** Whether the page quotes someone and names them: two texts under the claim. */
+function quotesWithSource(slide: SvgTemplateProps["slide"]): boolean {
+  const { quote, source } = statementLines(slide)
+  return Boolean(quote && source)
+}
+
+function GenericStatementContent({ ir, slide, index, ctx }: SvgTemplateProps) {
+  const { colors, fonts } = ctx
+  const defaultBg = ctx.defaultBg ?? colors.bg
+
+  const section = sectionNameFor(ir.slides, index)
+  const kickerTracking = trackingPx(KICKER_SIZE, KICKER_TRACKING_EM)
+  const kicker = section
+    ? fitSvgLine(latinUpper(section), {
+        maxWidth: CONTENT_MAX_W,
+        fontSize: KICKER_SIZE,
+        minFontSize: 16,
+        letterSpacing: kickerTracking,
+      })
+    : null
+
+  const heading = fitEmphasisHeading(slide.heading, {
+    ...layoutDef.headingFit,
+    fontFamily: fonts.heading,
+    typeScale: ctx.shape?.typeScale,
+  })
+  const titleLastY = TITLE_Y + Math.max(0, heading.lines.length - 1) * heading.lineHeight
+
+  // A blockquote carries two authored texts, and this face used to set one:
+  // `source ?? quote` printed the speaker's name on a page that never showed
+  // what they said. The claim is the heading, the quote is the body, and the
+  // small line underneath names where it came from. Same split gauge-point
+  // and crayonbox-point already make.
+  const lines = statementLines(slide)
+  const quote = lines.quote
+    ? fitEmphasisText(lines.quote, {
+        maxWidth: CONTENT_MAX_W,
+        fontSize: QUOTE_SIZE,
+        maxLines: QUOTE_MAX_LINES,
+        minPt: 18,
+        lineHeightRatio: QUOTE_LINE_RATIO,
+        fontFamily: fonts.body,
+      })
+    : null
+  const quoteFirstY = titleLastY + QUOTE_GAP
+  const quoteLastY = quote
+    ? quoteFirstY + Math.max(0, quote.lines.length - 1) * quote.lineHeight
+    : quoteFirstY
+  // The page's own footnote stands under the caption (`fitSourceBlock`).
+  const attrTracking = trackingPx(ATTR_SIZE, ATTR_TRACKING_EM)
+  const attribution = fitSourceBlock(lines.source, slide.footnote, {
+    maxWidth: CONTENT_MAX_W,
+    fontSize: ATTR_SIZE,
+    minFontSize: 16,
+    letterSpacing: attrTracking,
+    transform: latinUpper,
+  })
+  // With no quote the caption keeps the baseline this face has always used,
+  // so every page that never had one stays where it was.
+  const attrY = quote ? quoteLastY + QUOTE_ATTR_GAP : titleLastY + ATTR_GAP
+
+  return (
+    <>
+      {kicker && (
+        <text
+          data-truncated={kicker.truncated ? "1" : undefined}
+          x={CENTER_X}
+          y={KICKER_Y}
+          textAnchor="middle"
+          fontFamily={fonts.body}
+          fontSize={kicker.fontSize}
+          fill={accessibleInk(colors.accent, defaultBg, kicker.fontSize)}
+          letterSpacing={kickerTracking}
+          dominantBaseline="alphabetic"
+        >
+          {kicker.text}
+        </text>
+      )}
+
+      {renderEmphasisHeading(
+        heading,
+        headingEmphasisPaint(ctx, heading, { baseFill: accessibleInk(colors.text, defaultBg, heading.fontSize), fontWeight: "500", fontFamily: fonts.heading }),
+        (_line, i) => (
+          <text
+            key={i}
+            data-truncated={heading.truncated && i === heading.lines.length - 1 ? "1" : undefined}
+            x={CENTER_X}
+            y={TITLE_Y + i * heading.lineHeight}
+            textAnchor="middle"
+            fontFamily={fonts.heading}
+            fontSize={heading.fontSize}
+            fontWeight="500"
+            fontStyle="italic"
+            fill={accessibleInk(colors.text, defaultBg, heading.fontSize)}
+            dominantBaseline="alphabetic"
+            />
+        ),
+      )}
+
+      {quote &&
+        renderEmphasisHeading(
+          quote,
+          headingEmphasisPaint(ctx, quote, {
+            baseFill: accessibleInk(colors.text, defaultBg, quote.fontSize),
+            fontFamily: fonts.body,
+            fontWeight: "600",
+            bold: false,
+          }),
+          (_line, i) => (
+            <text
+              key={i}
+              data-truncated={quote.truncated && i === quote.lines.length - 1 ? "1" : undefined}
+              x={CENTER_X}
+              y={quoteFirstY + i * quote.lineHeight}
+              textAnchor="middle"
+              fontFamily={fonts.body}
+              fontSize={quote.fontSize}
+              fill={accessibleInk(colors.text, defaultBg, quote.fontSize)}
+              dominantBaseline="alphabetic"
+            />
+          ),
+        )}
+
+      <SourceLines
+        block={attribution}
+        x={CENTER_X}
+        y={attrY}
+        textAnchor="middle"
+        fontFamily={fonts.body}
+        fill={(size) => accessibleInk(colors.accent, defaultBg, size)}
+        letterSpacing={attrTracking}
+      />
+    </>
+  )
+}
+
+export const layoutDef = {
+  branding: "none",
+  // content-statement.tsx: a editorial-verse page. Heading is the
+  // whole visual (2 to 4 italic lines, weight 500). Capacity-1 body is an
+  // attribution caption, never a card. Page decor and branding posture belong
+  // to the menu entry, not this face declaration.
+  id: "statement",
+  kind: "standard",
+  story: {
+    name: "Verse",
+    story: "Two to four italic lines at weight 500 sit centred on the page, no bar, no rule, a tracked section label above and a small source caption below. The rest is air.",
+    positioning: "Serves statement at one attribution block or none. This page carries a single declaration and has no place for a second block.",
+    audience: "The room where a speaker pauses and lets one sentence do all the work.",
+    notFor: "A page where a large number is the point, which belongs in Scoreboard.",
+  },
+  slideTypes: ["content"],
+  slots: [
+    { name: "kicker", accepts: [] },
+    { name: "heading", accepts: [] },
+    { name: "body", accepts: ["paragraph", "blockquote"], capacity: 1 },
+    { name: "meta", accepts: [] },
+  ],
+  // The one line under the claim takes the subheading only when no body fills it.
+  subheading: "in-body",
+  headingFit: {
+    maxWidth: CONTENT_MAX_W,
+    fontSize: 48,
+    maxLines: 4,
+    minPt: 28,
+    bold: false,
+    lineHeightRatio: 1.25,
+  },
+} satisfies LayoutDefinition

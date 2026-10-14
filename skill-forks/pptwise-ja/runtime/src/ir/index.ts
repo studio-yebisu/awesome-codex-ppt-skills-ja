@@ -1,0 +1,862 @@
+/**
+ * The v5 IR schema root: theme/meta/assets/brand/branding/footer/background/slide/narrative
+ * and the top-level `PptxIRSchema` a deck document parses against
+ * (`parsePptxIR`). Versions 1 through 4 are rejected at this boundary.
+ *
+ * **The `ComponentSchema` union below is a pure aggregator (src domain reorg
+ * wave 2, spec §4.3), same discipline as `src/layouts/registry.ts`'s T1d
+ * precedent.** Every one of the component schemas used to live here as a
+ * literal `z.object({...})` entry directly inside the `discriminatedUnion`
+ * array. Each now lives in its own `src/ir/components/<name>.ts` domain file
+ * instead (schema + field aliases + render-trait declaration together, spec
+ * §4.1) — imported below and referenced by name, in the exact union position
+ * its literal used to occupy, so "take one component away whole" is a
+ * single-file operation instead of an edit split across this file,
+ * `field-aliases.ts`, and `component-traits.ts`. This file's own job for
+ * components is now purely computational: import every component schema, construct
+ * `ComponentSchema` via `z.discriminatedUnion`, and derive `COMPONENT_TYPES`
+ * from the result — never a hand-copied literal, never a re-export relay. A
+ * handful of schema fragments genuinely shared by ≥2 components (only the
+ * icon-name enum, as of this wave) live in `src/ir/components/shared.ts`
+ * instead of any one domain file; every other named sub-schema that reads as
+ * "shared" at a glance (e.g. `GanttItemSchema`, `PestQuadrantSchema`,
+ * `SankeyNodeSchema`/`SankeyLinkSchema`) turned out to be single-consumer and
+ * moved into its own component's domain file with it.
+ *
+ * The rest of this module — everything outside the `// ── Components` section
+ * — is unrelated to the component-domain split and was never in its scope:
+ * background/theme/meta/assets/brand/branding/slide/narrative and the top-level
+ * `PptxIRSchema` are genuinely this file's own content, not aggregated from
+ * elsewhere.
+ */
+import { z } from "zod"
+import { HexTokenSchema } from "../themes/hex"
+import { KIND_VALUES } from "./narrative-values"
+import { componentTypeError } from "./schema-error-hints"
+import { FooterSchema, nonBlankString } from "./footer"
+import { TagSchema } from "./components/shared"
+import { schema as bulletsSchema } from "./components/bullets"
+import { schema as paragraphSchema } from "./components/paragraph"
+import { schema as blockquoteSchema } from "./components/blockquote"
+import { schema as calloutSchema } from "./components/callout"
+import { schema as codeSchema } from "./components/code"
+import { schema as kpiCardsSchema } from "./components/kpi-cards"
+import { schema as chartSchema } from "./components/chart"
+import { schema as flowchartSchema } from "./components/flowchart"
+import { schema as architectureSchema } from "./components/architecture"
+import { schema as timelineSchema } from "./components/timeline"
+import { schema as comparisonSchema } from "./components/comparison"
+import { schema as iconCardsSchema } from "./components/icon-cards"
+import { schema as rowCardsSchema } from "./components/row-cards"
+import { schema as stepsSchema } from "./components/steps"
+import { schema as ringsSchema } from "./components/rings"
+import { schema as numberedCardsSchema } from "./components/numbered-cards"
+import { schema as roadmapSchema } from "./components/roadmap"
+import { schema as matrixSchema } from "./components/matrix"
+import { schema as insightPanelSchema } from "./components/insight-panel"
+import { schema as verdictBannerSchema } from "./components/verdict-banner"
+import { schema as imageSchema } from "./components/image"
+import { schema as imageGridSchema } from "./components/image-grid"
+import { schema as imageCompareSchema } from "./components/image-compare"
+import { schema as logoWallSchema } from "./components/logo-wall"
+import { schema as productCardsSchema } from "./components/product-cards"
+import { schema as quoteWallSchema } from "./components/quote-wall"
+import { schema as swotSchema } from "./components/swot"
+import { schema as bmcSchema } from "./components/bmc"
+import { schema as waterfallSchema } from "./components/waterfall"
+import { schema as ganttSchema } from "./components/gantt"
+import { schema as pestSchema } from "./components/pest"
+import { schema as fiveForcesSchema } from "./components/five-forces"
+import { schema as heatmapSchema } from "./components/heatmap"
+import { schema as sankeySchema } from "./components/sankey"
+import { schema as dataTableSchema } from "./components/data-table"
+import { schema as deviceMockupSchema } from "./components/device-mockup"
+import { schema as cycleSchema } from "./components/cycle"
+import { schema as peopleCardsSchema } from "./components/people-cards"
+import { schema as hubSpokeSchema } from "./components/hub-spoke"
+import { schema as progressDonutsSchema } from "./components/progress-donuts"
+import { schema as staircaseSchema } from "./components/staircase"
+import { schema as chevronProcessSchema } from "./components/chevron-process"
+import { schema as swimlaneSchema } from "./components/swimlane"
+import { schema as journeyMapSchema } from "./components/journey-map"
+import { schema as decisionTreeSchema } from "./components/decision-tree"
+import { schema as fromToSchema } from "./components/from-to"
+import { schema as orgTreeSchema } from "./components/org-tree"
+import { schema as issueTreeSchema } from "./components/issue-tree"
+import { schema as pyramidSchema } from "./components/pyramid"
+import { schema as icebergSchema } from "./components/iceberg"
+import { schema as pillarModelSchema } from "./components/pillar-model"
+import { schema as valueChainSchema } from "./components/value-chain"
+import { schema as harveyBallsSchema } from "./components/harvey-balls"
+import { schema as scorecardSchema } from "./components/scorecard"
+import { schema as pictogramSchema } from "./components/pictogram"
+import { schema as wordCloudSchema } from "./components/word-cloud"
+import { schema as vennSchema } from "./components/venn"
+import { schema as fishboneSchema } from "./components/fishbone"
+import { schema as positioningMapSchema } from "./components/positioning-map"
+import { schema as conceptEquationSchema } from "./components/concept-equation"
+import { schema as segmentedWheelSchema } from "./components/segmented-wheel"
+import { schema as prosConsSchema } from "./components/pros-cons"
+import { schema as sketchSchema } from "./components/sketch"
+
+// Re-exported so IR, spec, theme menus, and public tooling share one exact
+// semantic vocabulary instead of maintaining independent string unions.
+export { KIND_VALUES }
+
+// Built-in theme ids — a registered, renderable subset, not a closed universe:
+// v0.4's theme registry can install more without a schema change (theme.id
+// below is an open z.string(), the installed-theme check lives in
+// api.ts validateIr).
+export const BUILTIN_THEME_IDS = [
+  "brief",
+  "bulletin",
+  "thesis",
+  "ledger",
+  "rally",
+  "homeroom",
+  "ink",
+  "terminal",
+  "runway",
+  "journal",
+  "luxe",
+  "clinic",
+  "almanac",
+  "ember",
+  "vermilion",
+  "crayon",
+  "museum",
+  "stage",
+  "lecture",
+  "swiss",
+  "memo",
+  "proposal",
+  "profile",
+  "recap",
+] as const
+
+// ── Background（slide 级受限覆写）──
+
+const BackgroundSpecSchema = z.discriminatedUnion("kind", [
+  z.object({ kind: z.literal("color"), value: HexTokenSchema }).strict(),
+  z
+    .object({
+      kind: z.literal("gradient"),
+      from: HexTokenSchema,
+      to: HexTokenSchema,
+      direction: z.enum(["tb", "lr", "diagonal"]).optional(),
+    })
+    .strict(),
+  z
+    .object({
+      kind: z.literal("asset"),
+      asset_id: z.string(),
+      overlay: z
+        .object({ color: HexTokenSchema, opacity: z.number().min(0).max(1) })
+        .strict()
+        .optional(),
+      fit: z.enum(["cover", "contain"]).optional(),
+    })
+    .strict(),
+])
+
+// ── Theme / Meta / Assets / Brand ──
+
+/**
+ * Brand (logical slide-master) config: branding behavior owned by a theme.
+ * W1 scope was exactly the two flags migrated from the old theme-manifest footer flags;
+ * the ink v3 redesign (2026-08-18) added a third, since retired.
+ * Single source of truth: the TS type is inferred, never hand-written.
+ *
+ * The live switches are independent, not a ladder: a theme may set any
+ * combination, and each names exactly one piece of brand footer.
+ */
+export const BrandConfigSchema = z
+  .object({
+    /** Suppress the footer entirely on content slides with a card background (bulletin legacy semantics). */
+    suppressFooterOnCardContent: z.boolean().optional(),
+    /** Skip the footer divider line, for themes that draw their own frame (ink). */
+    suppressFooterRule: z.boolean().optional(),
+    /**
+     * Retired (2026-10-02). Accepted so theme files written before then still
+     * load, and ignored. It used to skip the whole footer text row for a
+     * theme whose motif printed the organization and date elsewhere. Which
+     * footer marks a motif prints is now the motif's own declaration
+     * (`src/motifs/footer-roles.ts`), read page by page, so a page whose
+     * motif is silenced still gets its page number and marks.
+     */
+    suppressFooterMeta: z.boolean().optional(),
+  })
+  .strict()
+
+export type BrandConfig = z.infer<typeof BrandConfigSchema>
+
+/** Theme file ids, IR `theme.id`, spec `theme`, and CLI lookup names share this slug. */
+export const THEME_ID_PATTERN = /^[a-z0-9-]+$/
+
+export const THEME_ID_CONSTRAINT =
+  "theme id must match ^[a-z0-9-]+$ (lowercase letters, digits, and hyphens)"
+
+export const THEME_REQUIRED_MESSAGE =
+  'theme is required. Create one with `pptwise theme new --from <preset> --id <id>`, then bind it. Bare IR uses `"theme": { "id": "<id>" }`. Deck spec uses `"theme": "<id>"`.'
+
+export const ThemeIdSchema = z.string().regex(THEME_ID_PATTERN, THEME_ID_CONSTRAINT)
+
+export const ThemeSchema = z
+  .object({
+    // Open string, not an enum — installed-theme check happens in validateIr
+    // so a v0.4 registry can add themes without a schema change (spec §4).
+    id: ThemeIdSchema,
+  })
+  .strict()
+
+// Exported (not just used internally) so W5's plan schema can pass its own
+// `meta` field straight through to this exact schema instead of redefining
+// an equivalent shape that could drift from it (`src/spec/index.ts`).
+export const MetaSchema = z
+  .object({
+    organization: z.string().optional(),
+    authors: z
+      .array(
+        z
+          .object({
+            name: z.string(),
+            role: z.string().optional(),
+            org: z.string().optional(),
+          })
+          .strict()
+      )
+      .optional(),
+    date: z.string().optional(),
+    version: z.string().optional(),
+    confidentiality: z
+      .enum(["public", "internal", "confidential", "restricted"])
+      .optional()
+      .describe(
+        'How far the deck may travel. Prints nothing by itself: footer.confidentiality decides whether the mark goes on the cover or also on every content page. "public" never prints a mark.',
+      ),
+    /**
+     * A legal classification and its term, written exactly as the law gives
+     * it ("秘密★1年"). Unlike `confidentiality` it is not a company label
+     * and it is not a footer mark: when present it prints once, on the
+     * cover, top left, and nowhere else. See `./footer.ts`.
+     */
+    classification: nonBlankString("meta.classification")
+      .optional()
+      .describe(
+        'A legal classification and its term, written exactly as given (e.g. "秘密★1年"). Prints on the cover only, top left. Cannot be combined with footer.confidentiality.',
+      ),
+    contact: z
+      .object({
+        name: z.string().optional(),
+        email: z.string().optional(),
+        phone: z.string().optional(),
+        website: z.string().optional(),
+      })
+      .strict()
+      .optional(),
+    copyright: z.string().optional(),
+    // Deck-level animation switch (波次 C). Omitted entirely = default
+    // behavior: page-transition fade on, per-component entrance animations off.
+    // `transition: "none"` opts a deck out of the default fade transition.
+    // `elements: "auto"` opts into per-component entrance animations (S3, wired —
+    // see `pptx-generate.ts`'s `applyElementAnimations` call, gated on this
+    // exact flag).
+    animation: z
+      .object({
+        transition: z.enum(["fade", "push", "wipe", "none"]).optional(),
+        elements: z.enum(["none", "auto"]).optional(),
+      })
+      .strict()
+      .optional(),
+  })
+  .strict()
+
+const AssetSchema = z
+  .object({
+    src: z.string(),
+    alt: z.string().optional(),
+    error: z.string().optional(),
+  })
+  .strict()
+
+export const AssetsSchema = z
+  .object({ images: z.record(z.string(), AssetSchema).default({}) })
+  .strict()
+
+// Exported (not just used internally) so W5's plan schema can pass its own
+// `brand` field straight through to this exact schema instead of redefining
+// an equivalent shape that could drift from it (`src/spec/index.ts`).
+export const BrandSchema = z
+  .object({
+    logo_asset_id: z.string().optional(),
+    position: z.enum(["tl", "tr", "bl", "br"]).optional(),
+  })
+  .strict()
+
+/**
+ * Deck-level branding posture: where the brand logo appears. Omitted equals
+ * `"cover-only"` (cover and chapter keep the logo, content and ending pages
+ * carry none). The schema never bakes a default: writing `"cover-only"` back
+ * into a parsed IR would rewrite every existing deck.
+ *
+ * `"full"` and `"minimal"` keep the logo on every page. `"full"` also paints
+ * the date on cover and ending meta rows, and, when the deck writes no
+ * `footer`, stands for the footer it always drew: the organization and the
+ * confidentiality mark, read as `{ organization: true, confidentiality:
+ * "footer" }` for whichever of the two `meta` carries. Writing `footer`
+ * replaces that reading (`./footer.ts`). Layout-declared `branding: "none"`
+ * still wins. Theme motifs are not this field.
+ *
+ * Shared with `DeckSpecSchema` (`src/spec/index.ts`) so the spec and IR
+ * cannot drift on the enum.
+ */
+export const DECK_BRANDING_VALUES = ["full", "cover-only", "minimal"] as const
+export type DeckBranding = (typeof DECK_BRANDING_VALUES)[number]
+export const DeckBrandingSchema = z.enum(DECK_BRANDING_VALUES).describe(
+  'Where the brand logo appears. Omitted equals "cover-only": cover and chapter pages keep the logo, content and ending pages carry none. "full" and "minimal" keep the logo on every page. "full" also paints the date on cover and ending meta rows, and without a footer object it stands for footer {organization, confidentiality: "footer"}. Page marks such as page numbers live in footer. Layout branding:"none" still wins. Theme motifs are unaffected.',
+)
+
+export {
+  FooterSchema,
+  FOOTER_CONFIDENTIALITY_PLACEMENTS,
+  footerSettingIssues,
+  type Footer,
+  type FooterConfidentialityPlacement,
+  type FooterSettingIssue,
+} from "./footer"
+
+// ── Components（63 种）──
+
+export const ComponentSchema = z.discriminatedUnion("type", [
+  bulletsSchema,
+  paragraphSchema,
+  blockquoteSchema,
+  calloutSchema,
+  codeSchema,
+  kpiCardsSchema,
+  chartSchema,
+  flowchartSchema,
+  architectureSchema,
+  timelineSchema,
+  comparisonSchema,
+  iconCardsSchema,
+  rowCardsSchema,
+  stepsSchema,
+  ringsSchema,
+  numberedCardsSchema,
+  roadmapSchema,
+  matrixSchema,
+  insightPanelSchema,
+  verdictBannerSchema,
+  imageSchema,
+  imageGridSchema,
+  imageCompareSchema,
+  logoWallSchema,
+  productCardsSchema,
+  quoteWallSchema,
+  swotSchema,
+  bmcSchema,
+  waterfallSchema,
+  ganttSchema,
+  pestSchema,
+  fiveForcesSchema,
+  heatmapSchema,
+  sankeySchema,
+  dataTableSchema,
+  deviceMockupSchema,
+  cycleSchema,
+  peopleCardsSchema,
+  hubSpokeSchema,
+  progressDonutsSchema,
+  staircaseSchema,
+  chevronProcessSchema,
+  swimlaneSchema,
+  journeyMapSchema,
+  decisionTreeSchema,
+  fromToSchema,
+  orgTreeSchema,
+  issueTreeSchema,
+  pyramidSchema,
+  icebergSchema,
+  pillarModelSchema,
+  valueChainSchema,
+  harveyBallsSchema,
+  scorecardSchema,
+  pictogramSchema,
+  wordCloudSchema,
+  vennSchema,
+  fishboneSchema,
+  positioningMapSchema,
+  conceptEquationSchema,
+  segmentedWheelSchema,
+  prosConsSchema,
+  sketchSchema,
+], { error: componentTypeError })
+
+/**
+ * All component `type` discriminant values, derived from `ComponentSchema`
+ * itself (never hand-copied) so this list can't drift from the union above.
+ * Typed as plain `readonly string[]` rather than `Component["type"][]` —
+ * every consumer of this list (W5's plan `focus` vocabulary gate,
+ * `src/spec/index.ts`) tests membership of an arbitrary author-supplied
+ * string, and TS's `Array.includes` is invariant in its element type, so a
+ * narrower literal-union type would reject that call at the caller.
+ */
+export const COMPONENT_TYPES: readonly string[] = ComponentSchema.options.map((option) => option.shape.type.value)
+
+// ── Slide ──
+
+/** The most years a page's strip of years runs across. Past thirteen its years crowd each other's labels. */
+export const MAX_YEARS_SPAN = 13
+
+/**
+ * The run of years a deck follows, `from` to `to`, and the years one page is
+ * about (`marked`), lit on the strip. A deck that runs from a law's first
+ * year to its last writes the same run on every page and lights a different
+ * part of it on each.
+ */
+export const YearsSchema = z
+  .object({
+    from: z.number().int().describe("The first year of the run, such as 2026."),
+    to: z.number().int().describe("The last year of the run, such as 2034."),
+    marked: z
+      .array(z.number().int())
+      .min(1)
+      .describe("The years this page is about, lit on the strip, such as [2026, 2027]. Each lies between from and to."),
+  })
+  .strict()
+  .superRefine((years, ctx) => {
+    if (years.to <= years.from) {
+      ctx.addIssue({ code: "custom", path: ["to"], message: `years runs from ${years.from} to ${years.to}, which is no run. Give a last year after the first.` })
+      return
+    }
+    if (years.to - years.from + 1 > MAX_YEARS_SPAN) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["to"],
+        message: `years runs over ${years.to - years.from + 1} years, from ${years.from} to ${years.to}, and the strip holds ${MAX_YEARS_SPAN} at most. Shorten the run, or name the later years in the heading.`,
+      })
+    }
+    years.marked.forEach((year, i) => {
+      if (year < years.from || year > years.to) {
+        ctx.addIssue({ code: "custom", path: ["marked", i], message: `years.marked[${i}] is ${year}, outside the run from ${years.from} to ${years.to}. Mark a year inside it.` })
+      } else if (years.marked.indexOf(year) !== i) {
+        ctx.addIssue({ code: "custom", path: ["marked", i], message: `years.marked[${i}] repeats ${year}. Mark each year once.` })
+      }
+    })
+  })
+  .describe(
+    'The run of years a deck follows and the years this page is about, drawn as a strip of years with those years lit: { "from": 2026, "to": 2034, "marked": [2026, 2027] }. At most 13 years. Drawn only by faces that have a place for it: validate says which.',
+  )
+
+/** The most stages a course runs through. Past eight its strip of pills crowds the running head. */
+export const MAX_COURSE_STAGES = 8
+
+/**
+ * The stages a talk runs through in order, such as the parts and the quizzes
+ * of a lesson, and which of them are checks on what the room has learned.
+ * A deck writes it once; each page names its own `stage`, and a face that has
+ * a place for it draws the whole run as a strip of pills with that stage lit.
+ */
+export const CourseSchema = z
+  .object({
+    stages: z
+      .array(
+        z
+          .object({
+            label: nonBlankString("course.stages[].label").describe('The stage as the strip names it, in a few characters, such as "环节一", "小测一" or "Part 1".'),
+            quiz: z
+              .boolean()
+              .optional()
+              .describe("Marks a stage where the room checks what it has learned, such as a quiz or a test: its pill is drawn dashed."),
+          })
+          .strict(),
+      )
+      .min(2)
+      .max(MAX_COURSE_STAGES)
+      .describe(`Two to ${MAX_COURSE_STAGES} stages in the order the talk runs through them.`),
+  })
+  .strict()
+  .superRefine((course, ctx) => {
+    course.stages.forEach((stage, i) => {
+      const label = stage.label.trim()
+      if (course.stages.findIndex((other) => other.label.trim() === label) !== i) {
+        ctx.addIssue({ code: "custom", path: ["stages", i, "label"], message: `course.stages[${i}] repeats "${label}". Name each stage once, so a page's stage says which one it is.` })
+      }
+    })
+  })
+  .describe(
+    'The stages a talk runs through in order, such as the parts and quizzes of a lesson: { "stages": [{ "label": "目标" }, { "label": "环节一" }, { "label": "小测一", "quiz": true }] }. Each page names its own stage. Drawn only by faces that have a place for a page\'s stage: validate says which.',
+  )
+
+/**
+ * A ballot laid over a page's items: the boxes each item can be ticked in,
+ * and a line left blank to sign. Every page type takes it, so the printed
+ * schema keeps it once under `$defs` (`json-schema.ts`).
+ */
+export const BallotSchema = z
+  .object({
+    choices: z
+      .array(nonBlankString("ballot.choices[]"))
+      .min(2)
+      .max(4)
+      .describe('The boxes each item can be ticked in, in order, such as ["同意", "不同意", "弃权"] or ["For", "Against", "Abstain"].'),
+    signature: nonBlankString("ballot.signature")
+      .optional()
+      .describe('The label of a line left blank to sign under the items, such as "委员会主任委员签字" or "Chair\'s signature".'),
+    item_choices: z
+      .array(
+        z
+          .object({
+            item: z.number().int().min(1).describe("The item, counted from 1."),
+            choices: z.array(nonBlankString("ballot.item_choices[].choices[]")).min(2).max(4).describe("Its own boxes."),
+          })
+          .strict(),
+      )
+      .min(1)
+      .optional()
+      .describe('Items whose boxes differ from choices, such as a pick among options: [{ "item": 3, "choices": ["自投", "EMC", "融资租赁"] }].'),
+  })
+  .strict()
+  .superRefine((ballot, ctx) => {
+    const seen = new Set<number>()
+    ballot.item_choices?.forEach((entry, i) => {
+      if (seen.has(entry.item)) {
+        ctx.addIssue({ code: "custom", path: ["item_choices", i, "item"], message: `ballot.item_choices names item ${entry.item} twice. Give each item its boxes once.` })
+      }
+      seen.add(entry.item)
+    })
+  })
+
+/**
+ * The page fields only some faces draw: the label over a heading, a form's
+ * header lines, a stamp and a page's stage. Every page type takes them, so
+ * the printed schema keeps each once under `$defs` (`json-schema.ts`), its
+ * description with it.
+ */
+export const KickerSchema = z
+  .string()
+  .describe('A short label set over the heading, such as the occasion on a cover ("Investment committee") or what an ending asks for ("For decision"). Drawn only by faces that have a place for it: validate says which.')
+
+export const FieldsSchema = z
+  .array(
+    z
+      .object({
+        label: nonBlankString("fields[].label").describe('The line\'s label, such as "致", "To" or "Signed".'),
+        value: nonBlankString("fields[].value").describe('What the line says, such as "全体员工" or "All staff".'),
+        note: z.string().optional().describe('A short aside after the value, such as the date beside a signature.'),
+      })
+      .strict(),
+  )
+  .min(1)
+  .max(4)
+  .describe(
+    'One to four header lines a document form prints, each a label and its value: To, From, Date and Re on a memo\'s cover, or Signed, Drafted and Copied to under its decision. Drawn only by faces that have a place for them: validate says which.',
+  )
+
+export const StampSchema = z
+  .object({
+    text: nonBlankString("stamp.text").describe('The stamp\'s words, such as "已决定" or "Approved". Keep them to a few characters.'),
+    date: z.string().optional().describe('A line under the words, such as "2026 · 10".'),
+  })
+  .strict()
+  .describe('A stamp pressed on the page, such as "已决定" or "Approved", with an optional date line under it. Drawn only by faces that have a place for it: validate says which.')
+
+export const StageSchema = nonBlankString("stage").describe(
+  'Which stage of the deck\'s course this page belongs to, written as its label, such as "环节一" or "Part 1". Requires the deck\'s course. Drawn only by faces that have a place for it: validate says which.',
+)
+
+const CommonSlideFields = {
+  // 稳定页标识（W5 spec/assemble 注入，裸 IR 可省）。schema 层不做跨 slide
+  // 校验——同 deck 内重复 id 是 validateIr 的硬错误。
+  id: z.string().optional(),
+  // assemble 对未填充页生成的占位标记（W5）。
+  placeholder: z.literal(true).optional(),
+  heading: z.string().optional(),
+  subheading: z.string().optional(),
+  /**
+   * A short label set over the heading, such as the occasion on a cover
+   * ("投委会专题") or what an ending asks for ("请投委会定"). Only a face that
+   * declares a place for it (`LayoutDefinition.pageFields`) draws it, and
+   * validate refuses it on any other.
+   */
+  kicker: KickerSchema.optional(),
+  /**
+   * The header lines a document form prints, each a label and its value:
+   * To, From, Date and Re on a memo's cover, Signed, Drafted and Copied to
+   * under its decision. Like `kicker`, only a face that declares a place for
+   * them (`LayoutDefinition.pageFields`) draws them.
+   */
+  fields: FieldsSchema.optional(),
+  /**
+   * A stamp pressed on the page, its words and an optional date under them.
+   * Only a face that declares a place for it draws it.
+   */
+  stamp: StampSchema.optional(),
+  /**
+   * A ballot laid over the page's items: the boxes each item can be ticked
+   * in, and a line left blank to sign. Only a face that declares a place for
+   * it draws it.
+   */
+  ballot: BallotSchema.optional().describe(
+      'A ballot laid over the page\'s items, so a committee can vote on each one: the boxes each item can be ticked in, and an optional line left blank to sign. Drawn only by faces that have a place for it: validate says which.',
+    ),
+  /**
+   * A small tag set with the page's heading, saying what the page's evidence
+   * is: the trial behind every figure on it, the draft its rules come from.
+   * Only a face that declares a place for it draws it.
+   */
+  tag: TagSchema.optional().describe(
+    'A small tag set with the page\'s heading, saying what the whole page rests on, such as "RCT · NEJM 2025 · 751 例" or "Draft for comment, June 2026". Give it an evidence kind to colour it by its source. Drawn only by faces that have a place for it: validate says which.',
+  ),
+  /**
+   * The run of years a deck follows and the ones this page is about, drawn
+   * as a strip of years in the page's running head with those years lit.
+   * Only a face that declares a place for it draws it.
+   */
+  years: YearsSchema.optional(),
+  /**
+   * Which stage of the deck's `course` this page belongs to, written as the
+   * stage's label. A face that has a place for it draws the course as a
+   * strip of pills with this stage lit.
+   */
+  stage: StageSchema.optional(),
+  components: z.array(ComponentSchema).default([]),
+  background: BackgroundSpecSchema.optional(),
+  // 图片排版 P4：受控装饰原语——模型只有选择权，绘制由渲染层完成。
+  decor: z
+    .object({
+      kind: z.enum(["big_number", "corner_tag", "rule_line", "quote_marks", "geo_dots"]),
+      intensity: z.enum(["subtle", "normal"]).optional(),
+      text: z.string().max(12).optional(),
+    })
+    .strict()
+    .optional(),
+  // 仅图像脸使用：图列在左还是右。
+  image_side: z.enum(["left", "right"]).optional(),
+  footnote: z.string().optional(),
+  /** Speaker notes are exported as native PowerPoint notes and never painted on the slide canvas. */
+  notes: z.string().optional(),
+}
+
+const ExplicitSlideSchema = z.discriminatedUnion("type", [
+  z.object({ type: z.literal("cover"), ...CommonSlideFields }).strict(),
+  z.object({ type: z.literal("chapter"), ...CommonSlideFields }).strict(),
+  z
+    .object({
+      type: z.literal("content"),
+      /** The required semantic posture selected from the theme's content menu. */
+      kind: z.enum(KIND_VALUES),
+      ...CommonSlideFields,
+    })
+    .strict(),
+  z.object({ type: z.literal("ending"), ...CommonSlideFields }).strict(),
+])
+
+/**
+ * IR v5 slide contract. Content slides require `kind`. Cover, chapter, and
+ * ending slides have no `kind` field because page type already determines
+ * their menu entry. Omitting `type` still means `content`, but therefore also
+ * requires an explicit `kind`.
+ */
+export const SlideSchema = z.preprocess((input) => {
+  if (typeof input !== "object" || input === null || Array.isArray(input) || Object.hasOwn(input, "type")) {
+    return input
+  }
+  return { ...input, type: "content" }
+}, ExplicitSlideSchema)
+
+// ── Narrative（spec §5, renamed from "Scenario" — spec §8.1）──
+
+/**
+ * Object half of the top-level `narrative` field's `string | object` union
+ * (see {@link PptxIRSchema}) — deliberately as open as a record gets: any
+ * string key, any value. Same open-schema/closed-semantic split as the
+ * preset-name string branch (and this file's `theme.id`): the *actual*
+ * constraint — only `strategy`/`pacing`/`audience` are legal keys, each with
+ * its own closed enum — is enforced later, in `validateIr`, by
+ * `resolveNarrative` (`src/narrative`), not here.
+ *
+ * This was originally a `.strict()` object with a `z.enum(...)` per axis,
+ * closed right at the schema layer — wrong inside a `z.union([...])`: zod
+ * reports a failing union branch as one opaque `invalid_union` issue, not
+ * that branch's own specific issue, so an axis-value typo or an unknown key
+ * never surfaced `resolveNarrative`'s available-values message — every
+ * rejection collapsed to the same useless
+ * `{ path: "narrative", message: "Invalid input" }` (W3 task-2 review
+ * finding). Loosening this branch to a plain record makes the schema layer
+ * responsible for exactly one thing — string vs. object vs. neither — so an
+ * object input always parses far enough for `validateIr`'s existing
+ * `resolveNarrative` try/catch to run and produce a specific, listable
+ * message, the same way it already did for an unknown preset-name string.
+ * `resolveNarrative` itself still reads `./narrative-values`'s
+ * `STRATEGY_VALUES`/`PACING_VALUES`/`AUDIENCE_VALUES` tuples for its runtime
+ * checks — this schema no longer needs to import them at all.
+ *
+ * Exported so W5's plan schema (`src/spec/index.ts`) can reuse this exact
+ * object branch for its own top-level `scenario` field (plan's own field
+ * name is unchanged this task — spec §8.1's `DeckPlan`→`DeckSpec` rename is
+ * task 2's job, not this one) — same open-schema/closed-semantic split, same
+ * `resolveNarrative` consumer, one definition instead of two that could
+ * drift apart.
+ *
+ * Renamed from `ScenarioAxesInputSchema` in the vocabulary-v4 rename (task
+ * 1) — not itself named in spec §8.1's table, but derived from
+ * `ScenarioAxes`→`NarrativeProfile` the same way the rest of this module's
+ * axis vocabulary was.
+ */
+export const NarrativeProfileInputSchema = z.record(z.string(), z.unknown())
+
+// ── 顶层 IR（v5）──
+
+export const OLD_IR_VERSION_ERROR =
+  `Current IR format is version "5". Content slides require kind (${KIND_VALUES.join(", ")}). ` +
+  'Cover, chapter, and ending slides do not use kind. Slide fields "beat", "layout", and "arrangement", and deck field "seed", were removed. ' +
+  'The quotation component type is "blockquote". No migration tool is provided. Rewrite the input to the current schema.'
+
+export const PptxIRSchema = z
+  .object({
+    /** IR v5 is the only accepted format. An omitted version is authored as v5. */
+    version: z.literal("5", { error: OLD_IR_VERSION_ERROR }).default("5"),
+    filename: z.string().default("presentation"),
+    // Preset id string or a partial per-axis override object — both
+    // branches are open at the schema layer now (validity checked in
+    // validateIr, same open-schema/closed-semantic pattern as this object's
+    // own theme.id field; see NarrativeProfileInputSchema above for why the
+    // object branch reads this way too). Omitted entirely = the `general`
+    // preset (briefing × balanced × public, spec §5). Deliberately has no
+    // `.default(...)`: the resolved NarrativeProfile is never written back
+    // into the IR — validateIr and (W4) the render path each call
+    // `resolveNarrative` themselves (pure, cheap) rather than this schema
+    // baking a materialized default in, which would drift the parsed-output
+    // shape the moment NARRATIVE_PRESETS.general's axes changed.
+    //
+    // Type note: this infers as `string | Record<string, unknown> |
+    // undefined` on PptxIR — wider than the "strategy/pacing/audience" shape
+    // one might expect. `resolveNarrative` (src/narrative) is the semantic
+    // authority for that narrower shape; treat this field's static type as
+    // shape-only and go there for what's actually valid.
+    //
+    // Renamed from `scenario` (spec §8.1/§9.1). A v4-track document that
+    // still writes the pre-rename field name (`scenario`) is rejected here —
+    // this object is `.strict()`, so `scenario` surfaces as an unrecognized
+    // key (spec §16). The pre-rename axis field names `mode`/`delivery`
+    // inside `narrative` slip past this schema (it stays an open record —
+    // see `NarrativeProfileInputSchema` above) but are caught one level down
+    // by `resolveNarrative`'s own runtime axis-key check (`src/narrative`).
+    narrative: z.union([z.string(), NarrativeProfileInputSchema]).optional(),
+    theme: ThemeSchema,
+    meta: MetaSchema.default({}),
+    assets: AssetsSchema.default({ images: {} }),
+    brand: BrandSchema.optional(),
+    /**
+     * Where the brand logo appears. Optional, no default: omitted stays
+     * `undefined` and the renderer treats that as `"cover-only"`, so a deck
+     * that never mentions the field gets a clean content page. See
+     * {@link DeckBrandingSchema} for what `"full"` adds.
+     */
+    branding: DeckBrandingSchema.optional(),
+    /**
+     * Small marks printed in the page corners: page number, organization,
+     * occasion label, notice, draft mark, confidentiality placement.
+     * Optional, no default: omitted, the deck prints none of them (or, under
+     * `branding: "full"`, the older footer it always had). See `./footer.ts`.
+     */
+    footer: FooterSchema.optional(),
+    /**
+     * The stages the talk runs through, written once for the deck. Each
+     * page names its own `stage`; see {@link CourseSchema}.
+     */
+    course: CourseSchema.optional(),
+    slides: z.array(SlideSchema),
+  })
+  .strict()
+
+export type PptxIR = z.infer<typeof PptxIRSchema>
+export type Course = z.infer<typeof CourseSchema>
+export type Component = z.infer<typeof ComponentSchema>
+export type BackgroundSpec = z.infer<typeof BackgroundSpecSchema>
+export type Slide = z.infer<typeof SlideSchema>
+export type PageKind = (typeof KIND_VALUES)[number]
+export type Assets = z.infer<typeof AssetsSchema>
+export type Meta = z.infer<typeof MetaSchema>
+export type Brand = z.infer<typeof BrandSchema>
+
+// Component sub-types (extracted from ComponentSchema union members)
+export type KpiItem = {
+  value: string
+  unit?: string
+  label: string
+  delta?: "up" | "down" | "flat"
+  delta_good?: boolean
+}
+export type ChartSeries = {
+  name: string
+  /** `size` is scatter-only: an optional per-point magnitude that turns a
+   * scatter dot into a bubble (chart-depth wave). Every other chart_type
+   * ignores it. Mirrors `components/chart.ts`'s `ChartPointSchema`. */
+  data: {
+    x: string | number
+    y: number
+    size?: number
+    /** Bar and stacked only: a forecast (hatched), a target (dashed outline) or an estimate (pale in a dashed outline), not a reported figure. */
+    status?: "forecast" | "target" | "estimate"
+    /** Bar only: the one bar the page is about. It keeps its series' colour and the other bars step back. */
+    emphasis?: boolean
+    /** Bars on their side, share-bar parts and line points only: a few words printed with the value. */
+    note?: string
+    /** Bars on their side only: the high end of a value known only as a range, `y` its low end. */
+    upper?: number
+    /** Bars on their side only, on the first series: a symbol set before the category's name. */
+    icon?: string
+  }[]
+  /** `chart_type: "combo"` only: draw this series as bars (default) or a line. */
+  plot?: "bar" | "line"
+  /** `chart_type: "combo"` only: read this series against the left (default)
+   * or a right-hand value axis. */
+  axis?: "left" | "right"
+  /** Singles this series out: lead color, every other series grey. */
+  emphasis?: boolean
+}
+export type FlowNode = {
+  id: string
+  label: string
+  kind?: "rect" | "diamond" | "round"
+}
+export type FlowEdge = { from: string; to: string; label?: string }
+export type ArchitectureLayer = { title: string; items: string[] }
+export type TimelineMilestone = { date: string; title: string; desc?: string; lane?: string }
+export type ComparisonRow = { label: string; cells: string[] }
+
+function isRetiredIrVersion(input: unknown): boolean {
+  if (typeof input !== "object" || input === null || Array.isArray(input)) return false
+  const version = (input as Record<string, unknown>).version
+  return typeof version === "string" && ["1", "2", "3", "4"].includes(version)
+}
+
+export function themeIssueMessage(
+  path: string,
+  message: string,
+  input: unknown,
+  code?: string,
+): string {
+  // Zod reports some object-level issues (unrecognized keys) with
+  // `input === undefined`. Those are not an omitted theme.
+  if (code === "unrecognized_keys") return message
+  if ((path === "theme" || path === "theme.id") && input === undefined) return THEME_REQUIRED_MESSAGE
+  return message
+}
+
+export function parsePptxIR(
+  json: unknown,
+): { success: true; data: PptxIR } | { success: false; error: string } {
+  if (isRetiredIrVersion(json)) return { success: false, error: `version: ${OLD_IR_VERSION_ERROR}` }
+  const result = PptxIRSchema.safeParse(json)
+  if (result.success) return { success: true, data: result.data }
+  return {
+    success: false,
+    error: result.error.issues
+      .map((i) => `${i.path.join(".")}: ${themeIssueMessage(i.path.join("."), i.message, i.input, i.code)}`)
+      .join("\n"),
+  }
+}

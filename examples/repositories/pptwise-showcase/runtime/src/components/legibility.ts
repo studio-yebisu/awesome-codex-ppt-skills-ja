@@ -1,0 +1,481 @@
+import {
+  fitSvgLine,
+  hasExactWidthTable,
+  layoutSvgText,
+  measureTextUnits,
+  measuresExactly,
+  truncateToUnits,
+  type TextWeightHint,
+} from "../lib/svg-text-layout"
+import { isCjk } from "../lib/text-script"
+import { accessibleInk, contrastRatio } from "../render/ink"
+
+/** User-visible type floors for component-form item titles and body (1280×720 px). */
+export const FORM_TITLE_FLOOR = 20
+export const FORM_BODY_FLOOR = 16
+
+/**
+ * Card body ceiling vs the item title. Measured on thesis p03
+ * (outline_grid upscaled 41 / 29.5 ≈ 0.72) and museum p03 (cycle labels
+ * at the title floor). Body may sit above this ratio only to honor
+ * `FORM_BODY_FLOOR` when the title is still near 20px.
+ */
+export const FORM_BODY_TITLE_CAP = 0.6
+
+/** Board rhythm for vertical cards: 300×280, title 23, body 16.5. */
+export const BOARD_CARD_W = 300
+export const BOARD_CARD_H = 280
+export const BOARD_TITLE = 23
+export const BOARD_BODY = 16.5
+export const TITLE_BODY_RATIO = BOARD_TITLE / BOARD_BODY
+
+/**
+ * How far a highlighted card's fill must sit from its siblings' before it
+ * reads as a different card rather than a printing artifact. Well under the
+ * text floors on purpose: this is two panels side by side, not ink on paper.
+ */
+const HIGHLIGHT_MIN_RATIO = 2
+
+/**
+ * The fill that singles one card out from its siblings.
+ *
+ * The ruling is that a highlighted card is filled whole and its text
+ * reversed — never an edge bar, a dash, or a coloured square.
+ * `colors.primary` is the fill that says so on a light theme. A dark theme's
+ * primary is a *deeper* shade of its own surface, though (luxe paints
+ * `#171310` on `#14110E`), so filling with it there produces a card nobody
+ * can see. Those themes fall back to the text token: a light slab on a dark
+ * page is the same inversion read the other way round, and the text on it
+ * still resolves through `accessibleInk` against whatever came back.
+ */
+export function formHighlightFill(colors: { primary: string; surface: string; text: string }): string {
+  return contrastRatio(colors.primary, colors.surface) >= HIGHLIGHT_MIN_RATIO ? colors.primary : colors.text
+}
+
+/**
+ * How much wider than its estimate a fitted line may actually paint.
+ *
+ * `measureTextUnits` prices regular-weight uppercase Latin at 0.66em a
+ * character; Georgia paints "W" at about 0.94. A line fitted exactly to the
+ * room left for it can therefore still be drawn past the edge of that room —
+ * measured at 140.75px for a run the estimator priced at 95.04px. A unit the
+ * face cannot measure exactly (see `measuresExactly`) is fitted to the room
+ * divided by this factor and positioned by the padded width, so the gap
+ * between a number and its unit narrows rather than the unit leaving the
+ * card. Chinese and ASCII in a face with an advance table need no headroom.
+ */
+const WIDTH_ESTIMATE_HEADROOM = 1.5
+
+/** The characters a face's advance table covers (`measureTextUnits`' exact model). */
+const PRINTABLE_ASCII = /[\x20-\x7e]/
+
+/**
+ * An upper bound on the width `text` will actually paint at `fontSize` — the
+ * number to size a box by when nothing may cross its edge.
+ *
+ * Same estimator gap {@link WIDTH_ESTIMATE_HEADROOM} exists for, read the
+ * other way round: `fitFormUnit` divides the room it fits into, and a caller
+ * that has already fitted a line multiplies the width back out. The class
+ * estimate reads short on Latin: a 66px "LDAP" measures 148.45px and paints
+ * 170.41px, which is how two words in a cloud came to overlap while every
+ * estimated rectangle said they did not.
+ *
+ * The headroom is only for widths that are estimated, though, and two kinds
+ * are known exactly. A Han, kana or hangul glyph is drawn on the em square in
+ * every face. A printable ASCII glyph in a face with an advance table
+ * (Georgia and Microsoft YaHei, every built-in body face and most heading
+ * faces) has its advance on record at either weight. Padding those by half
+ * again made a cloud or a map look full while there was room left in it, so
+ * they go without it and the rest keeps it. ASCII is counted at the wider of
+ * its advance and `measureTextUnits`' default reading, which the page audit
+ * and the gallery's L1 check measure by: Microsoft YaHei Regular is still
+ * read by class averages there, which run wide on lowercase, and two words
+ * boxed at their advances alone were reported overlapping with 8px of page
+ * between them. Bold text in a face with a table keeps the whole-string
+ * estimate it always had.
+ *
+ * For collision boxes and hard budgets, never for fitting: `fitSvgLine`
+ * already shrinks and truncates against the estimate, and padding there would
+ * shrink type nobody needed to shrink.
+ */
+export function paintedWidthCeiling(
+  text: string,
+  fontSize: number,
+  weight?: { bold?: boolean; fontFamily?: string },
+): number {
+  const tabled = hasExactWidthTable(weight?.fontFamily ?? "")
+  if (weight?.bold === true && tabled) return measureTextUnits(text, weight) * fontSize
+  let square = 0
+  let exact = ""
+  let estimated = ""
+  for (const ch of text) {
+    if (isCjk(ch)) square += 1
+    else if (tabled && PRINTABLE_ASCII.test(ch)) exact += ch
+    else estimated += ch
+  }
+  return (
+    square * fontSize +
+    (exact
+      ? Math.max(measureTextUnits(exact, { ...weight, exact: true }), measureTextUnits(exact, weight)) * fontSize
+      : 0) +
+    (estimated ? measureTextUnits(estimated, weight) * fontSize * WIDTH_ESTIMATE_HEADROOM : 0)
+  )
+}
+
+/**
+ * A unit fitted to the room actually left beside its number, or `null` when
+ * there is no such room.
+ *
+ * `null` is a real answer, not an edge case to swallow: a unit is what a
+ * number is counted in, and half of one beside the number says less than
+ * nothing. The caller declares the loss.
+ *
+ * The headroom is for widths the estimator can only guess. A unit set in a
+ * face whose advance table covers it, or in CJK, is measured exactly
+ * (`measuresExactly`), and padding it by half again only narrowed the room a
+ * number and its unit had: "accounts" in Georgia was fitted into two thirds
+ * of its space and then charged half again for a width the font's own table
+ * already gives.
+ */
+export function fitFormUnit(
+  unit: string,
+  opts: { room: number; fontSize: number; fontFamily?: string },
+): { text: string; fontSize: number; width: number; truncated: boolean } | null {
+  const text = unit.trim()
+  if (!text) return null
+  const room = Math.max(0, opts.room)
+  const weight = { fontFamily: opts.fontFamily }
+  const headroom = measuresExactly(text, weight) ? 1 : WIDTH_ESTIMATE_HEADROOM
+  const fitted = fitFormLine(text, {
+    maxWidth: room / headroom,
+    fontSize: opts.fontSize,
+    fontFamily: opts.fontFamily,
+  })
+  const width = measureTextUnits(fitted.text, weight) * fitted.fontSize * headroom
+  if (!fitted.text || width > room) return null
+  return { text: fitted.text, fontSize: fitted.fontSize, width, truncated: fitted.truncated }
+}
+
+/**
+ * A box shorter than the drawing's own floors.
+ *
+ * A component's geometry shrinks what it can and then stops at its minimums,
+ * so a short enough box leaves it measuring past the bottom edge it was
+ * handed. Drawing anyway is the one thing a component may not do: it declines
+ * the box and declares the loss instead, and the export gate stops the page.
+ */
+export function boxTooShort(natural: number, boxH: number | undefined): boolean {
+  return boxH !== undefined && boxH > 0 && natural > boxH + 1
+}
+
+/** Keep a form's preferred text color when it is readable on its own fill. */
+export function formLegibleInk(preferredFill: string, fill: string, fontSize: number): string {
+  return accessibleInk(preferredFill, fill, fontSize)
+}
+
+/** Clamp body size to the title proportion cap without dropping the floor. */
+export function capFormBody(titleSize: number, bodySize: number): number {
+  const title = Math.max(0, titleSize)
+  const requested = Number.isFinite(bodySize) ? bodySize : FORM_BODY_FLOOR
+  return Math.max(FORM_BODY_FLOOR, Math.min(requested, title * FORM_BODY_TITLE_CAP))
+}
+
+const TITLE_LH = 1.4
+const BODY_LH = 1.4
+
+/**
+ * Icon columns are not a tall card shell. 4-across is OK when a 640-wide
+ * slot still clears the floors with wrap. Narrower slots fall back to 2×2.
+ */
+export function formIconColumnCols(n: number, boxW: number, colInset = 16): number {
+  if (n <= 3) return Math.max(1, n)
+  if (n !== 4) return 3
+  const contentW = Math.max(24, boxW / 4 - colInset)
+  const titleChars = (contentW / FORM_TITLE_FLOOR) * 2
+  const bodyChars = (contentW / FORM_BODY_FLOOR) * 4
+  if (titleChars >= 6 && bodyChars >= 16 && contentW >= FORM_TITLE_FLOOR * 2) return 4
+  return 2
+}
+
+/** Width-scaled board type, clamped to the floors. Pass cardH to cap by height. */
+export function boardTypeScale(cardW: number, cardH?: number): { title: number; body: number } {
+  const wScale = cardW / BOARD_CARD_W
+  const scale =
+    cardH != null && cardH > 0 ? Math.min(wScale, cardH / BOARD_CARD_H) : wScale
+  const title = Math.max(FORM_TITLE_FLOOR, BOARD_TITLE * scale)
+  const body = capFormBody(title, title / TITLE_BODY_RATIO)
+  return { title, body }
+}
+
+export function formLineHeight(fontSize: number, ratio = TITLE_LH): number {
+  return Math.round(fontSize * ratio)
+}
+
+/**
+ * Wrap at a frozen font size. Never shrinks below `fontSize`. Extra glyphs
+ * clip on the last of `maxLines` (host overflow), they do not shrink type.
+ */
+export function layoutAtSize(
+  text: string,
+  opts: {
+    maxWidth: number
+    fontSize: number
+    maxLines: number
+    lineHeightRatio?: number
+    fontFamily?: string
+    bold?: boolean
+  },
+): { lines: string[]; fontSize: number; lineHeight: number; truncated: boolean } {
+  const content = text?.trim() ?? ""
+  const fontSize = opts.fontSize
+  const ratio = opts.lineHeightRatio ?? BODY_LH
+  const lineHeight = formLineHeight(fontSize, ratio)
+  const weight: TextWeightHint = { bold: opts.bold, fontFamily: opts.fontFamily }
+  if (!content) return { lines: [], fontSize, lineHeight: 0, truncated: false }
+
+  const laid = layoutSvgText(content, {
+    maxWidth: opts.maxWidth,
+    fontSize,
+    maxLines: 64,
+    lineHeightRatio: ratio,
+    bold: opts.bold,
+    fontFamily: opts.fontFamily,
+    minPt: fontSize,
+  })
+  const maxUnits = opts.maxWidth / fontSize
+  const kept = laid.lines.slice(0, opts.maxLines)
+  const lines = kept.map((line) => truncateToUnits(line, maxUnits, weight))
+  return {
+    lines,
+    fontSize,
+    lineHeight,
+    truncated: laid.lines.length > kept.length || lines.some((line, i) => line !== kept[i]),
+  }
+}
+
+export function layoutFormTitle(
+  text: string,
+  opts: { maxWidth: number; fontSize: number; fontFamily?: string; maxLines?: number; floor?: number },
+) {
+  const floor = opts.floor ?? FORM_TITLE_FLOOR
+  return layoutAtSize(text, {
+    maxWidth: opts.maxWidth,
+    fontSize: Math.max(floor, opts.fontSize),
+    maxLines: opts.maxLines ?? 2,
+    lineHeightRatio: TITLE_LH,
+    bold: true,
+    fontFamily: opts.fontFamily,
+  })
+}
+
+export function layoutFormBody(
+  text: string,
+  opts: {
+    maxWidth: number
+    fontSize: number
+    fontFamily?: string
+    maxLines?: number
+    lineHeightRatio?: number
+    bold?: boolean
+    /** When set, body is capped at `titleSize * FORM_BODY_TITLE_CAP`. */
+    titleSize?: number
+  },
+) {
+  const requested = Math.max(FORM_BODY_FLOOR, opts.fontSize)
+  const fontSize = opts.titleSize != null ? capFormBody(opts.titleSize, requested) : requested
+  return layoutAtSize(text, {
+    maxWidth: opts.maxWidth,
+    fontSize,
+    maxLines: opts.maxLines ?? 4,
+    lineHeightRatio: opts.lineHeightRatio ?? BODY_LH,
+    bold: opts.bold,
+    fontFamily: opts.fontFamily,
+  })
+}
+
+type FormTextLayout = { lines: readonly string[]; truncated: boolean }
+
+/** Put the clip marker on the final visible line of a form text layout. */
+export function formTextClipMarker(
+  layout: FormTextLayout,
+  lineIndex: number,
+): "1" | undefined {
+  return layout.truncated && lineIndex === layout.lines.length - 1 ? "1" : undefined
+}
+
+/**
+ * A zero-line fit is still content loss and must remain visible to audit.
+ *
+ * The words it left out, when a fit gave `sourceText` no line at all, or
+ * undefined. A clip leaves its mark on the last line it set, and the line
+ * names its field by the words it shows (`render/cut-fields.ts`). An
+ * omission sets no line, and a mark on the card or row around it showed
+ * that card's other words, so it named no field, or the wrong one. The mark
+ * carries the words instead (`OmittedText`, `./omitted-text.tsx`).
+ */
+export function formTextOmission(sourceText: string, layout: Pick<FormTextLayout, "lines">): string | undefined {
+  return sourceText.trim() && layout.lines.length === 0 ? sourceText : undefined
+}
+
+/** Single-line fit that will truncate rather than drop below `floor`. */
+export function fitFormLine(
+  text: string,
+  opts: {
+    maxWidth: number
+    fontSize: number
+    floor?: number
+    bold?: boolean
+    fontFamily?: string
+  },
+) {
+  const floor = opts.floor ?? FORM_BODY_FLOOR
+  const fontSize = Math.max(floor, opts.fontSize)
+  return fitSvgLine(text, {
+    maxWidth: opts.maxWidth,
+    fontSize,
+    minFontSize: floor,
+    bold: opts.bold,
+    fontFamily: opts.fontFamily,
+  })
+}
+
+export function fitFormTitleLine(
+  text: string,
+  opts: { maxWidth: number; fontSize: number; fontFamily?: string; bold?: boolean },
+) {
+  return fitFormLine(text, {
+    maxWidth: opts.maxWidth,
+    fontSize: Math.max(FORM_TITLE_FLOOR, opts.fontSize),
+    floor: FORM_TITLE_FLOOR,
+    bold: opts.bold ?? true,
+    fontFamily: opts.fontFamily,
+  })
+}
+
+function maxTitleSize(contentW: number, titles: string[], fontFamily?: string): number {
+  let cap = 72
+  for (const title of titles) {
+    const units = measureTextUnits(title, { bold: true, fontFamily })
+    if (units <= 0) continue
+    cap = Math.min(cap, (2 * contentW) / units)
+  }
+  return Math.max(FORM_TITLE_FLOOR, cap)
+}
+
+function bodyLineCount(
+  text: string,
+  maxWidth: number,
+  fontSize: number,
+  maxLines: number,
+  fontFamily?: string,
+): number {
+  if (!text.trim()) return 0
+  return layoutFormBody(text, { maxWidth, fontSize, maxLines, fontFamily }).lines.length
+}
+
+/** How many title/body lines fit in `innerH` at the frozen sizes. */
+export function linesThatFit(opts: {
+  innerH: number
+  titleSize: number
+  bodySize: number
+  gap: number
+  extraAbove?: number
+  titleMax?: number
+  bodyMax?: number
+}): { titleMaxLines: number; bodyMaxLines: number } {
+  const extra = opts.extraAbove ?? 0
+  const budget = Math.max(0, opts.innerH - extra)
+  const tLH = formLineHeight(opts.titleSize)
+  const bLH = formLineHeight(opts.bodySize)
+  const titleMax = opts.titleMax ?? 2
+  const bodyMax = opts.bodyMax ?? 8
+  if (tLH <= 0) return { titleMaxLines: 1, bodyMaxLines: 0 }
+  let titleLines = Math.min(titleMax, Math.max(1, Math.floor(budget / tLH)))
+  if (
+    titleLines >= 2 &&
+    budget - 2 * tLH - opts.gap < bLH &&
+    budget - tLH - opts.gap >= bLH
+  ) {
+    titleLines = 1
+  }
+  const leftover = budget - titleLines * tLH - opts.gap
+  const bodyLines = leftover >= bLH ? Math.min(bodyMax, Math.floor(leftover / bLH)) : 0
+  return { titleMaxLines: titleLines, bodyMaxLines: bodyLines }
+}
+
+export function fillCardType(opts: {
+  innerH: number
+  contentW: number
+  titleSize: number
+  bodySize: number
+  gap: number
+  extraAbove?: number
+  longestBody?: string
+  titles?: string[]
+  fonts?: { heading?: string; body?: string }
+  titleLhRatio?: number
+  bodyLhRatio?: number
+}): { titleSize: number; bodySize: number; bodyMaxLines: number; titleMaxLines: number } {
+  const titleLh = opts.titleLhRatio ?? TITLE_LH
+  const bodyLh = opts.bodyLhRatio ?? BODY_LH
+  const extra = opts.extraAbove ?? 0
+  let titleSize = Math.max(FORM_TITLE_FLOOR, opts.titleSize)
+  let bodySize = capFormBody(titleSize, Math.max(FORM_BODY_FLOOR, opts.bodySize))
+  const longest = opts.longestBody ?? ""
+  const titles = opts.titles ?? []
+  const cap = maxTitleSize(opts.contentW, titles, opts.fonts?.heading)
+
+  // The lines the longest-wrapping title really takes at size `t`, at most
+  // two. Sizing the type and handing out lines have to count the same
+  // title lines: sizing against one line while the page then reserved two
+  // left the body a line short, and its last line was cut.
+  const titleLinesAt = (t: number) =>
+    Math.max(
+      1,
+      ...titles.map(
+        (title) =>
+          layoutFormTitle(title, { maxWidth: opts.contentW, fontSize: t, maxLines: 2, fontFamily: opts.fonts?.heading })
+            .lines.length,
+      ),
+    )
+  const stackH = (t: number, b: number, lines: number) =>
+    extra + titleLinesAt(t) * formLineHeight(t, titleLh) + opts.gap + lines * formLineHeight(b, bodyLh)
+
+  const linesFor = (b: number, maxLines: number) =>
+    Math.max(longest.trim() ? 1 : 0, bodyLineCount(longest, opts.contentW, b, maxLines, opts.fonts?.body))
+
+  let bodyMaxLines = Math.max(longest.trim() ? 2 : 0, linesFor(bodySize, 8))
+  let h = stackH(titleSize, bodySize, bodyMaxLines)
+
+  if (opts.innerH > 0 && h < opts.innerH * 0.55) {
+    const lo0 = 1
+    let hi = Math.min(cap / titleSize, Math.max(1.15, (opts.innerH * 0.78) / Math.max(h, 1)))
+    hi = Math.max(lo0, hi)
+    let lo = lo0
+    for (let i = 0; i < 10; i++) {
+      const mid = (lo + hi) / 2
+      const t = titleSize * mid
+      const b = capFormBody(t, t / TITLE_BODY_RATIO)
+      const lines = Math.max(bodyMaxLines, linesFor(b, 8))
+      const ns = stackH(t, b, lines)
+      if (ns > opts.innerH * 0.92 || t > cap) hi = mid
+      else lo = mid
+    }
+    titleSize *= lo
+    bodySize = capFormBody(titleSize, titleSize / TITLE_BODY_RATIO)
+    bodyMaxLines = Math.max(bodyMaxLines, linesFor(bodySize, 8))
+  } else if (opts.innerH > 0 && h > opts.innerH && longest.trim()) {
+    for (let extraLines = bodyMaxLines; extraLines <= 8; extraLines++) {
+      const lines = linesFor(bodySize, extraLines)
+      bodyMaxLines = Math.max(2, lines)
+      h = stackH(titleSize, bodySize, bodyMaxLines)
+      if (h <= opts.innerH) break
+    }
+  }
+
+  titleSize = Math.min(Math.max(FORM_TITLE_FLOOR, titleSize), cap)
+  bodySize = capFormBody(titleSize, titleSize / TITLE_BODY_RATIO)
+  if (!longest.trim()) bodyMaxLines = 0
+  else bodyMaxLines = Math.max(2, bodyMaxLines)
+  return { titleSize, bodySize, bodyMaxLines, titleMaxLines: titleLinesAt(titleSize) }
+}

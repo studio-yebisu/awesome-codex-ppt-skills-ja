@@ -1,0 +1,484 @@
+/**
+ * Deck project directory fs shell (spec §7's "deck project directory"
+ * scheme, W5 task 5). Everything here touches disk — the pure half
+ * (locked-field injection, placeholder/orphan semantics) lives in
+ * `../spec/assemble.ts`'s `assembleDeck`, zero-fs by design (`AGENTS.md`'s
+ * layout rule: this module is the *only* place that reads `deck.spec.json`
+ * / `pages/*.json` / `assets/*` off disk and calls straight through to it,
+ * the same posture `./load-ir.ts` already holds for a single IR file). It
+ * is also the only place that *writes* `assets/*`, on the disassemble side
+ * ({@link writeDeckAssets}) — the mirror image of {@link scanAssets} below,
+ * and the CLI-shell half of `disassembleDeck`'s otherwise-lossy asset
+ * handling (see that function's own doc comment in `../spec/assemble.ts`).
+ *
+ * Directory layout:
+ * ```
+ * my-deck/
+ *   deck.spec.json        the locked spec — page order's sole source of truth
+ *   pages/<page-id>.json  one file per filled page, content only (no type/heading)
+ *   assets/                local images, auto-registered by filename
+ * ```
+ *
+ */
+import { copyFile, mkdir, readdir, stat, writeFile } from "node:fs/promises"
+import { basename, extname, isAbsolute, join, relative, resolve } from "node:path"
+import { PptwiseError } from "../errors"
+import { assembleDeck, type AssembleResult, type PageContent } from "../spec/assemble"
+import type { ThemeDefinition } from "../themes/definitions"
+import { EXT_BY_MIME, loadIrFile } from "./load-ir"
+
+export const SPEC_FILENAME = "deck.spec.json"
+// Exported (serve wave, task S1) so `./serve.ts` can build its fs.watch
+// roots from the exact same directory names this module already treats as
+// the deck-project layout's source of truth, instead of a second hardcoded
+// "pages"/"assets" literal that could drift from these.
+export const PAGES_DIRNAME = "pages"
+export const ASSETS_DIRNAME = "assets"
+/** Optional deck-local brand theme file (brand-extract wave, 裁定 3's
+ *  zero-flag convention): a `theme.json` sitting in the deck project
+ *  directory — typically `pptwise brand extract`'s output — is resolved by
+ *  name before the deck is assembled and its compiled definition is passed
+ *  into `readDeckDir`, so the spec/IR can reference its `id` with no
+ *  `--theme-file` flag. Lookup happens in `./commands.ts`
+ *  (`loadDeckTarget`/`runAssemble`), not here — this module stays a pure fs
+ *  shell. */
+export const THEME_FILENAME = "theme.json"
+
+// ── path-traversal safety (CWE-22 defense) ──────────────────────────────
+
+/**
+ * Rejects an `id` that is unsafe to join into a page/asset file path (W5
+ * whole-branch review finding 1, CRITICAL — reproduced by the reviewer
+ * against both call sites below). `slide.id` and `assets.images` keys are
+ * both open, unrestricted `z.string()` at the schema layer (`../ir/index.ts`
+ * — no format rule there by design, cross-slide/id rules are `validateIr`'s
+ * job, see `SlideSchema.id`'s own doc comment), so a hand-authored IR can set
+ * either to anything, including `"../../../../escape"` — and both
+ * {@link writeOneAsset} below and `runDisassemble`'s page write
+ * (`./commands.ts`) join that value straight into a write path with no
+ * check of their own before this task. Call this before building any path
+ * from an id sourced off a parsed IR.
+ *
+ * A value `join()`'d as (a possibly-suffixed) single trailing path segment
+ * can only ever escape `base` if it is itself absolute, contains a `/` or
+ * `\` separator (smuggling in extra segments, e.g. `"../../../escape"`), or
+ * is exactly `".."` (the one separator-free value that is still a traversal
+ * on its own, e.g. when a sink appends an empty suffix) — those lexical
+ * checks alone already make every call site in this file safe regardless of
+ * what it joins `id` under. `relative(base, resolve(base, id))` escaping
+ * `base` (starts with `".."`, or is itself absolute) is checked too, as
+ * defense-in-depth on top of the lexical checks, not a substitute for them —
+ * `base` here is a fixed stand-in directory rather than either real sink's
+ * actual `assetsDir`/`pagesDir`: the property under test ("can this id ever
+ * resolve outside whatever directory it's joined under") is a function of
+ * `id` alone once the lexical checks above hold, true for any base, so a
+ * real caller-supplied base would add no extra precision — see this
+ * function's own test suite for the two attack shapes this closes.
+ *
+ * `context` names the offending id's role (`"slide id"`, `"asset id"`) so
+ * the thrown message points at which field was unsafe.
+ */
+export function assertSafeFileSegment(id: string, context: string): void {
+  const safeBase = resolve("/pptwise-safe-base")
+  const rel = relative(safeBase, resolve(safeBase, id))
+  const safe =
+    !isAbsolute(id) && !id.includes("/") && !id.includes("\\") && id !== ".." && !rel.startsWith("..") && !isAbsolute(rel)
+  if (!safe) {
+    throw new PptwiseError(
+      `${context} "${id}" is not a safe file name — ids used as page/asset file names must not contain path separators or ".."`,
+    )
+  }
+}
+
+// ── bare-name / path resolution ─────────────────────────────────────────
+
+/**
+ * Returns true when `stat(path)` succeeds and names a directory — the
+ * single source of truth every deck-accepting CLI command (`assemble`,
+ * `disassemble`'s input is always a file so it never calls this, `validate`/
+ * `render`/`preview`) uses to branch between single-file IR and deck-project
+ * directory mode. A missing path (`ENOENT`) reads as "not a directory"
+ * rather than propagating — the caller's next step (`loadIrFile` for the
+ * single-file branch) already has its own readable "cannot read" error for
+ * a path that turns out not to exist at all, and re-deriving that
+ * distinction here would just duplicate it. Any *other* `stat` failure
+ * (`EACCES`, `ENOTDIR` via a non-directory path segment, ...) rethrows
+ * wrapped in {@link PptwiseError} instead — silently reading a real
+ * permission or filesystem problem as "not a directory, try it as a single
+ * IR file" produces a strictly more confusing downstream error than
+ * surfacing the actual failure here.
+ */
+export async function isDeckDirectory(path: string): Promise<boolean> {
+  try {
+    return (await stat(path)).isDirectory()
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return false
+    throw new PptwiseError(`cannot check ${path}: ${(e as Error).message}`)
+  }
+}
+
+/**
+ * true when `stat(path)` succeeds (file or directory, no distinction) — the
+ * same ENOENT-vs-everything-else posture as {@link isDeckDirectory} just
+ * above, factored out because `resolveDeckTarget` below needs plain
+ * existence (a candidate can legitimately be a file *or* a directory) at
+ * two different points, and `runAssemble` (`../cli/commands.ts`) needs it
+ * once more, to tell "target does not exist at all" (the existing, detailed
+ * `readDeckDir` error, expected-layout hint included) apart from "target
+ * exists but is not a directory" (a friendlier, immediate error — see that
+ * function).
+ */
+export async function pathExists(path: string): Promise<boolean> {
+  try {
+    await stat(path)
+    return true
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return false
+    throw new PptwiseError(`cannot check path ${path}: ${(e as Error).message}`)
+  }
+}
+
+/**
+ * Where a deck target argument points: `arg` resolved against `cwd`, a deck
+ * project directory or an IR file in the project. There is no deck home to
+ * fall back to, so a name that does not exist here is reported by whatever
+ * reads it next, naming the path the user typed. The path comes back
+ * resolved because every later fs call resolves a relative path against the
+ * real `process.cwd()`, which only matches `cwd` in production.
+ *
+ * An empty or whitespace-only `arg` is rejected up front: `resolve(cwd, "")`
+ * is `cwd` itself, which would surface later as a confusing missing
+ * `deck.spec.json` instead of naming the empty argument.
+ */
+export async function resolveDeckTarget(arg: string, cwd: string = process.cwd()): Promise<string> {
+  if (arg.trim() === "") throw new PptwiseError("deck target must not be empty")
+  return resolve(cwd, arg)
+}
+
+// ── deck.spec.json ──────────────────────────────────────────────────────
+
+/** The expected-layout block of {@link readSpecFile}'s missing-file error —
+ *  `padEnd`-aligned programmatically (not hand-counted spaces in a template
+ *  literal) so the three column widths can't silently drift out of line
+ *  when one of the three filename/`*_DIRNAME` constants above changes. */
+function expectedLayoutHint(): string {
+  const rows: [string, string][] = [
+    [SPEC_FILENAME, "the locked spec (see `pptwise spec validate`)"],
+    [`${PAGES_DIRNAME}/<page-id>.json`, "one file per filled page (missing pages become placeholders)"],
+    [`${ASSETS_DIRNAME}/`, "optional local images"],
+  ]
+  const width = Math.max(...rows.map(([name]) => name.length)) + 2
+  return rows.map(([name, desc]) => `  ${name.padEnd(width)}${desc}`).join("\n")
+}
+
+/** Reads `deck.spec.json` and reports the current expected layout when
+ *  absent. The read itself is `loadIrFile`'s, the one every spec, IR, and
+ *  theme file goes through, so the theme-input record (`./theme-inputs.ts`)
+ *  reads the spec exactly as assembly does. */
+export async function readSpecFile(dir: string): Promise<unknown> {
+  const specPath = join(dir, SPEC_FILENAME)
+  if (!(await pathExists(specPath))) {
+    throw new PptwiseError(
+      `no ${SPEC_FILENAME} in ${dir} — expected a deck project directory:\n${expectedLayoutHint()}`,
+    )
+  }
+  return loadIrFile(specPath, "spec")
+}
+
+// ── pages/<id>.json ──────────────────────────────────────────────────────
+
+/**
+ * Reads every `pages/<id>.json` file into a `{ id: parsedContent }` record —
+ * `id` is the filename sans `.json` (spec §7: one file per page, named by a
+ * stable id). A missing `pages/` directory (`ENOENT`) is not an error, just
+ * an empty record (a brand-new deck project with a spec and no filled pages
+ * yet is exactly `assembleDeck`'s "every page becomes a placeholder" case)
+ * — but `pages/` existing as something that cannot be read as a directory
+ * (e.g. a file sitting where a directory was expected, `ENOTDIR`) is a real
+ * problem and throws {@link PptwiseError} naming the path, not silently
+ * "zero pages" (same ENOENT-vs-everything-else posture as
+ * {@link isDeckDirectory} above). Non-`.json` entries (a stray `.DS_Store`,
+ * an editor swap file, a subdirectory) are silently skipped rather than fed
+ * to `JSON.parse` — `.json` is the only declared file shape for this
+ * directory, so anything else was never a page file to begin with, not a
+ * malformed one. `pages` is deliberately typed `Record<string, unknown>`
+ * here (not `Record<string, PageContent>`) — each value's actual shape is
+ * checked by `assembleDeck` itself, the same `unknown`-until-validated
+ * boundary its own doc comment describes. Entries are read concurrently
+ * (`Promise.all`) — independent files, each writing its own `pages[id]` key,
+ * nothing to race on.
+ */
+async function readPages(dir: string): Promise<Record<string, unknown>> {
+  const pagesDir = join(dir, PAGES_DIRNAME)
+  let entries: string[]
+  try {
+    entries = (await readdir(pagesDir, { withFileTypes: true }))
+      .filter((entry) => entry.isFile() && extname(entry.name) === ".json")
+      .map((entry) => entry.name)
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return {}
+    throw new PptwiseError(`cannot read ${PAGES_DIRNAME}/ directory ${pagesDir}: ${(e as Error).message}`)
+  }
+  const pages: Record<string, unknown> = {}
+  await Promise.all(
+    entries.map(async (entry) => {
+      const id = basename(entry, ".json")
+      pages[id] = await loadIrFile(join(pagesDir, entry), `page "${id}"`)
+    }),
+  )
+  return pages
+}
+
+// ── assets/ ──────────────────────────────────────────────────────────────
+
+/**
+ * Scans `assets/` and maps each file to an `assets.images` entry (spec §7's
+ * assets-mapping rule): `id` is the filename sans extension, `src` is the
+ * `assets/<filename>` path *relative to the deck directory* — resolved to
+ * actual bytes later by the existing `resolveLocalAssets` (`./load-ir.ts`),
+ * called with the deck directory as its base (see `commands.ts`). A missing
+ * `assets/` directory (`ENOENT`) is zero assets, same as a missing `pages/`
+ * above — anything else (`ENOTDIR`, a permission error, ...) throws
+ * {@link PptwiseError} naming the path rather than silently reading as "no
+ * assets here" (see {@link readPages}'s own note on this). A `.json` file
+ * is the provenance sidecar `pptwise images fetch` and `generate` pin beside
+ * a picture (`hero.json` beside `hero.jpg`), never a picture, so it is not
+ * registered either: it would claim its picture's id. Dotfiles
+ * (`.DS_Store` and friends — `extname` returns `""` for these, so their
+ * "id" would otherwise be the whole filename) are skipped: they are never a
+ * legitimate image, and `resolveLocalAssets` inlines *every* registered
+ * entry unconditionally, so a stray metadata file left registered would
+ * fail the whole render with a confusing "unsupported image format" error
+ * for an asset nothing in the deck ever references. Two files that
+ * normalize to the same id (`logo.png` and `logo.jpg`) is a genuine
+ * authoring ambiguity — same "structural mismatch always errors" posture as
+ * `assembleDeck`'s orphan-page check — reported with both filenames so the
+ * fix (rename one) is obvious.
+ */
+async function scanAssets(dir: string): Promise<Record<string, { src: string }>> {
+  const assetsDir = join(dir, ASSETS_DIRNAME)
+  let entries: string[]
+  try {
+    entries = (await readdir(assetsDir, { withFileTypes: true }))
+      .filter((entry) => entry.isFile() && !entry.name.startsWith("."))
+      .map((entry) => entry.name)
+  } catch (e) {
+    if ((e as NodeJS.ErrnoException).code === "ENOENT") return {}
+    throw new PptwiseError(`cannot read ${ASSETS_DIRNAME}/ directory ${assetsDir}: ${(e as Error).message}`)
+  }
+  const images: Record<string, { src: string }> = {}
+  const sourceFile = new Map<string, string>()
+  for (const entry of entries) {
+    if (extname(entry).toLowerCase() === ".json") continue
+    const id = basename(entry, extname(entry))
+    const previous = sourceFile.get(id)
+    if (previous !== undefined) {
+      throw new PptwiseError(
+        `${ASSETS_DIRNAME}/${previous} and ${ASSETS_DIRNAME}/${entry} both register image id "${id}" — rename one of the files`,
+      )
+    }
+    sourceFile.set(id, entry)
+    images[id] = { src: `${ASSETS_DIRNAME}/${entry}` }
+  }
+  return images
+}
+
+// ── readDeckDir ──────────────────────────────────────────────────────────
+
+export interface DeckDirResult extends AssembleResult {
+  /** Absolute path to the deck directory — the base `resolveLocalAssets`
+   *  should resolve this IR's (relative) asset paths against. */
+  deckDir: string
+  /** Absolute path to `deck.spec.json`. */
+  specPath: string
+  /** Spec's own `theme` string. Extracted from the raw spec before assemble,
+   *  which always writes `theme.id` from the required spec theme. */
+  specTheme?: string
+}
+
+/**
+ * Reads a deck project directory end to end: spec + pages → `assembleDeck`
+ * (locked-field injection, placeholder/orphan semantics — see that
+ * function's own doc comment) → assets/ scan merged into the assembled IR's
+ * `assets.images` (assemble first, then inject — a deck spec has no `assets`
+ * field of its own, so there is never a pre-existing id for a scanned asset
+ * to collide with, only the intra-`assets/`-directory collision
+ * {@link scanAssets} itself guards against).
+ *
+ * The merge rebuilds `ir.assets` as a fresh object (`{ images: { ...,
+ * ...images } }`) rather than assigning into `ir.assets.images` in place —
+ * deliberately, not just style: `PptxIRSchema`'s `assets` field defaults to
+ * a *static* object literal (`AssetsSchema.default({ images: {} })`,
+ * `../ir/index.ts`), and a deck spec never sets its own `assets` (assembleDeck's
+ * raw object omits the key entirely, same as every other field it lets the
+ * schema default), so *every* assembled deck's `ir.assets.images` starts out
+ * as that one schema-default object — zod does not deep-clone a static
+ * default per parse, only the immediately-defaulted field itself, so nested
+ * defaults below it (`images: {}` inside `AssetsSchema`'s own default) keep
+ * one shared identity across unrelated parses. Mutating that shared object
+ * in place (`ir.assets.images[id] = asset`, the first version of this
+ * function) would silently register one deck project's local images onto
+ * every other deck assembled in the same process — confirmed with a
+ * standalone repro against this exact schema shape before writing this
+ * comment. Rebuilding the object sidesteps the shared reference without
+ * needing to touch the schema itself.
+ *
+ * The merged result is spliced in via a shallow clone of the whole `ir`
+ * object (`{ ...ir, assets: ... }`), not a `ir.assets = ...` reassignment
+ * onto the object `assembleDeck` returned (post-v0.3 W8 fix round, backlog
+ * item 4, `.issues/notes/engineering-history.md` #4). Cloning instead of
+ * mutating means the object `assembleDeck` returned is never touched, and
+ * this function's own return value is a distinct identity.
+ */
+function specThemeFromRaw(spec: unknown): string | undefined {
+  if (typeof spec !== "object" || spec === null) return undefined
+  const theme = (spec as Record<string, unknown>).theme
+  return typeof theme === "string" ? theme : undefined
+}
+
+/**
+ * Reads one `pages/<id>.json` for a single-page read ({@link readDeckDir}'s
+ * `page` option): that record alone, or none when the page is not filled
+ * yet. The id is checked as a file name before it becomes part of a path.
+ */
+async function readOnePage(dir: string, id: string): Promise<Record<string, unknown>> {
+  assertSafeFileSegment(id, "page id")
+  const path = join(dir, PAGES_DIRNAME, `${id}.json`)
+  if (!(await pathExists(path))) return {}
+  return { [id]: await loadIrFile(path, `page "${id}"`) }
+}
+
+/**
+ * `opts.spec` is the spec as the caller already read it (the theme-input
+ * record, `./theme-inputs.ts`): assembly takes that object and the file is
+ * not read again, so a caller that read the binding off it assembles the
+ * binding it read. Without it, the spec is read here.
+ *
+ * `opts.page` reads one page's file and no other (`pptwise inspect`): every
+ * other page assembles as a placeholder, so a broken or half-written page
+ * elsewhere in the deck cannot hide what this one page holds. The deck keeps
+ * its full page order, so the page's number and every per-page route are
+ * the ones the whole deck gives it.
+ */
+export async function readDeckDir(
+  dir: string,
+  opts?: { theme?: ThemeDefinition; spec?: { parsed: unknown }; page?: string },
+): Promise<DeckDirResult> {
+  const deckDir = resolve(dir)
+  const specPath = join(deckDir, SPEC_FILENAME)
+  const spec = opts?.spec !== undefined ? opts.spec.parsed : await readSpecFile(deckDir)
+  const specTheme = specThemeFromRaw(spec)
+  const pages = opts?.page !== undefined ? await readOnePage(deckDir, opts.page) : await readPages(deckDir)
+  const assembled = assembleDeck(spec, pages as Record<string, PageContent>, opts)
+  const images = await scanAssets(deckDir)
+  const merged = { ...assembled.ir, assets: { images: { ...assembled.ir.assets.images, ...images } } }
+  return {
+    ir: merged,
+    spec: assembled.spec,
+    deckDir,
+    specPath,
+    ...(specTheme !== undefined ? { specTheme } : {}),
+  }
+}
+
+// ── assets/ (write direction — disassemble) ─────────────────────────────
+
+export interface WriteDeckAssetsResult {
+  /** Number of `ir.assets.images` entries materialized into `assets/`. */
+  count: number
+  /** Absolute path to the `assets/` directory written into — never created
+   *  (and this path never exists) when `count` is 0. */
+  assetsDir: string
+}
+
+/**
+ * Write direction of the assets/ concept — the mirror image of
+ * {@link scanAssets} above, and the CLI-shell half of `disassembleDeck`'s
+ * documented-lossy `assets` handling (`../spec/assemble.ts`'s own doc
+ * comment on that function): that pure function never touches
+ * `ir.assets.images` at all (its `{ spec, pages }` return has no `assets`
+ * field), so without this step a disassembled directory would carry
+ * `asset_id` references inside `pages/*.json` with nothing under `assets/`
+ * backing them — exactly the "image deck round-trips to a missing image"
+ * bug this function exists to close. Called by `runDisassemble`
+ * (`../cli/commands.ts`) with the source IR's own `assets.images` map and
+ * `sourceBaseDir` (the *input* IR file's own directory — the same base
+ * `resolveLocalAssets`, `./load-ir.ts`, would resolve a relative local src
+ * against at render time).
+ *
+ * Three source shapes, three outcomes (per entry, all independent —
+ * written concurrently via `Promise.all`):
+ * - `data:<mime>;base64,<payload>` → decoded and written to
+ *   `assets/<id><ext>`, `ext` looked up from `mime` via `EXT_BY_MIME`
+ *   (`./load-ir.ts`). An unrecognized mime or a non-base64 data URI is a
+ *   hard {@link PptwiseError} naming the asset, not a silent skip.
+ * - a local file path (relative resolves against `sourceBaseDir`, the same
+ *   `isAbsolute(src) ? src : resolve(base, src)` rule `resolveLocalAssets`
+ *   itself uses) → copied byte-for-byte into `assets/<id><origExt>`. An
+ *   unreadable source (moved/deleted/permission-denied since the IR was
+ *   generated) is a hard {@link PptwiseError} naming the asset and the path
+ *   that could not be read.
+ * - `http(s)://` → always a hard {@link PptwiseError} — a URL asset has no
+ *   local bytes to write at all. The fix is on the deck author's side
+ *   (inline it as a data URI, or download it first), not something this
+ *   function can paper over.
+ *
+ * Written entries need no spec or page record of their own: `readDeckDir`'s
+ * own {@link scanAssets} re-registers every file under `assets/` purely by
+ * scanning the directory, the same way it would for a hand-added image —
+ * this function's only job is making sure the bytes are there.
+ */
+export async function writeDeckAssets(
+  images: Record<string, { src: string }>,
+  outDir: string,
+  sourceBaseDir: string,
+): Promise<WriteDeckAssetsResult> {
+  const entries = Object.entries(images)
+  const assetsDir = join(outDir, ASSETS_DIRNAME)
+  if (entries.length === 0) return { count: 0, assetsDir }
+  await mkdir(assetsDir, { recursive: true })
+  await Promise.all(entries.map(([id, asset]) => writeOneAsset(id, asset.src, assetsDir, sourceBaseDir)))
+  return { count: entries.length, assetsDir }
+}
+
+/** `data:<mime>;base64,<payload>` — the only data-URI shape any producer in
+ *  this codebase ever writes (`resolveLocalAssets`, `./load-ir.ts`, and the
+ *  sharp/canvas recode paths in `../platform/`) — matched strictly rather
+ *  than handling arbitrary charset params or non-base64 payloads nothing
+ *  here produces. */
+const DATA_URI_RE = /^data:([^;,]+);base64,(.*)$/s
+
+async function writeOneAsset(id: string, src: string, assetsDir: string, sourceBaseDir: string): Promise<void> {
+  // W5 whole-branch review finding 1: one guard at the top covers both
+  // write branches below (data-URI and local-file-copy) — `id` is the same
+  // value regardless of which branch runs, so there is nothing branch-
+  // specific about the check itself, only about what gets appended after it.
+  assertSafeFileSegment(id, "asset id")
+  if (src.startsWith("data:")) {
+    const match = DATA_URI_RE.exec(src)
+    if (!match) {
+      throw new PptwiseError(`asset "${id}": only base64-encoded data URIs can be disassembled (malformed data URI)`)
+    }
+    const mime = match[1]
+    const payload = match[2]
+    const ext = EXT_BY_MIME[mime]
+    if (!ext) {
+      throw new PptwiseError(
+        `asset "${id}": cannot disassemble a data URI with mime "${mime}" — expected one of ${Object.keys(EXT_BY_MIME).join(", ")}`,
+      )
+    }
+    await writeFile(join(assetsDir, `${id}${ext}`), Buffer.from(payload, "base64"))
+    return
+  }
+  if (/^https?:\/\//.test(src)) {
+    throw new PptwiseError(
+      `asset "${id}": URL assets cannot be disassembled into a deck directory — inline it as a data URI or download it first`,
+    )
+  }
+  const abs = isAbsolute(src) ? src : resolve(sourceBaseDir, src)
+  try {
+    await copyFile(abs, join(assetsDir, `${id}${extname(abs)}`))
+  } catch {
+    throw new PptwiseError(`asset "${id}": cannot read source image ${abs} (from src "${src}") — cannot disassemble`)
+  }
+}

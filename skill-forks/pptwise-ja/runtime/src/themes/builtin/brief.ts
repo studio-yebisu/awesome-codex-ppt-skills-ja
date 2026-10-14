@@ -1,0 +1,155 @@
+import type { StyleTokens } from "../tokens";
+import type { BuiltinThemeDeclaration } from "../schema";
+
+/**
+ * brief（先结论报告）——藏青 + 一线黄的咨询报告腔。
+ *
+ * **编辑组皮肤重设计（2026-08-20，`.issues/2026-08-18-theme-redesign/skins/`
+ * 的 `group5-editorial-boards.dc.html` 里 `section#g5` brief 的色板
+ * 角色表 + 封面样例）**：编辑组三家都靠排印立身、装饰预算全组最低，
+ * brief 拿到的语域是「先结论的报告腔」——藏青承结构，黄只当一把高亮
+ * 尺，全页只许亮一次。逐条来历：
+ *   - `bg` `#F7F7F2` → `#F7F6F2`：报告纸白，几乎不动，只把绿味收掉半档
+ *     （旧值偏绿，与新藏青同框时纸面发青）。
+ *   - `surface` `#FFFFFF` 不变：图表卡仍是纯白，与纸底拉开一档。
+ *   - `primary` `#051C2C` → `#1E2A4A`：近黑墨蓝 → 藏青。旧值黑到分不出
+ *     色相，横幅、色块、图表首格全靠它，读起来是「黑」不是「藏青」；
+ *     提亮偏蓝之后色相立住，实测压 bg 13.07:1（板上自标 12:1），横幅承
+ *     白字 14.14:1。
+ *   - `accent` `#FFC72C` → `#F5C518`：一线黄压深半档。它的角色本轮写死：
+ *     **只作色块与下划，永不承字**——实测压 bg 1.51:1（板上自标 1.6:1），
+ *     两个数都远在任何文字门槛之下，这一格是设计意图不是缺陷。
+ *   - `text` `#051C2C` → `#1C1E23`：正文从「与 primary 同一格」拆出来。
+ *     旧表 text 与 primary 是同一个值，等于正文与结构色不分家；拆开之后
+ *     正文是中性墨黑 15.42:1（板上自标 15:1），primary 专职结构。
+ *   - `muted` `#6B6B6B` → `#5B6069`：脚注灰脱开纯中性，跟着藏青偏一点蓝。
+ *     实测压 bg 5.85:1、压 surface 6.32:1（板上自标 5.5:1）。
+ *   - `border` `#D5D5CB` → `#DDDCD4`：表格线，跟着纸底走。
+ *   - `chartPalette` 换成板上的四色：藏青 / 高亮黄 / 数据蓝 / 中性灰
+ *     ——「黄永远只标一个『所以呢』」。实测 13.07 / 1.51 / 4.47 / 3.81:1。
+ *
+ * **板上 hex 与板上自标数字矛盾时以数字为准**（本组纪律，前四组同）：
+ * chartPalette 两格照数字改了 hex，其余一律留板上的 hex、把实测差记在这里
+ * （primary 13.07 vs 12、accent 1.51 vs 1.6、text 15.42 vs 15、muted 5.85
+ * vs 5.5）。改的两格：
+ *   - **中性灰 `#8B909A` → `#797D86`**：板上 hex 实测压 bg 只有 2.96:1，
+ *     落在 3.0 装饰可见度线**之下**，而板上自标 3.8:1。保色相压明度解到
+ *     3.81:1。
+ *   - **数据蓝 `#3E7CB1` → `#3B76A8`**：这一格不是压 bg 出的事，是压它
+ *     自己。`people-cards.tsx` 拿 chartPalette 当头像徽章底、在上面写姓名
+ *     首字，墨色走 `readableOn(fill)` 两墨取优——而 `#3E7CB1` 正落在明度
+ *     谷底：白压它 4.45:1、近黑压它 4.35:1，**两条路都过不了 4.5:1**，
+ *     全库审计因此新增 3 条 low-contrast。压深一档到 `#3B76A8` 之后白墨
+ *     4.84:1，压 bg 4.47:1（板上自标 4:1，实测高 0.47，方向安全）。
+ *
+ * chapter 底色仍取 primary（同 thesis/clinic/almanac 先例），白字压藏青
+ * 14.14:1，`readableOn` 两墨取优后稳态可读。
+ *
+ * 装饰见 `src/motifs/motif-banner-motif.tsx`（批注线 v2：顶缘藏青细线
+ * + 左上黄色高亮块 + 底缘页码线）。brief 的旧锚点 motif 是
+ * `banner-motif`，thesis / bulletin 两家在各自的候选集里也借它。
+ *
+ * 第八波（2026-08-22）：封面锁 `verdict-index`，用 `shape.cover` 的
+ * verdict* knobs 把几何收到板上（kicker y150、标题 y304/60、论据
+ * y560/592、底线 y640、落款 y676）。色板本轮不动。
+ *
+ * **量规重构（2026-08-25）**：brief 从顶缘通栏批注线切换为左上
+ * 定位角标，正文轴移到 x160，meta 移到右上眉线。新建 `gauge-motif` 与
+ * 五个 `gauge-*` 版式，而不是修改 `banner-motif`、`verdict-index`、
+ * `ghost-rule-chapter` 或 `action-pad-ending`。当时这些旧构件仍由既有主题和
+ * 页面引用，原地修改会把 brief 的设计变更扩散给借用方（2026-10-12 它们随孤儿
+ * 版式一起删除，`shape.cover` 的 verdict* knobs 也一并删掉）。本轮只改
+ * brief 的锁，色板不动。
+ *
+ * **菜单分派（S1-B）**：量规家族承主场（data 走 gauge-stats，statement 走同族的 gauge-point），先结论的报告腔靠 points 的窄栏与 evidence 的单证据页说话，不借别人的嘴，故无 quote。
+ *
+ * **样例重做（2026-10-02，`.issues/2026-10-02-brief-sample-redesign/`）**：
+ * 按定稿样例去掉左上取景框角标（gauge-motif 保留注册，brief 不再挂），
+ * 每张内容页改为同一副骨架：36px 常规字重标题压在 y172 藏青线上，来源行
+ * 收底，页脚交给新 motif `folio-motif`（机构名 + 保密级别，不印页码），
+ * Branding 自己的页脚线与 meta 行因此关掉。内容页换成三张新脸：
+ * `gauge-sheet` 按内容分派到定稿手排的构图（编号分隔行、方案表、阶段列、
+ * 组织树、带变化栏的趋势图），所以一张脸服务 points / list / comparison /
+ * process / data / hierarchy 六个 kind 不会单调；`gauge-exhibit` 承证据页，
+ * `gauge-figure` 承事实页的单个大数字。黄色只来自作者的标记。photo 页的
+ * 图片自带画面，motif 静音。
+ *
+ * **茶饮样例（2026-10-02，`design/rounds/2026-10-02-brief-tea/`）**：photo 页
+ * 改用 image-split 的 `column: "report"` 文字栏（600px 照片、40px 常规字重
+ * 标题、48×6 黄条、「标签：数值」清单排成分隔线对子），来源行收在文字栏底。
+ */
+export const CONSULTING_TOKENS: StyleTokens = {
+  id: "brief",
+  colors: {
+    bg: "#F7F6F2", // 报告纸白。页底，正文墨压它 15.42:1，答 4.5
+    surface: "#FFFFFF", // 图表卡纯白。卡面，正文墨压它 16.68:1，答 4.5
+    primary: "#1E2A4A", // 藏青（13.07:1），横幅承白字 14.14:1
+    accent: "#F5C518", // 一线黄（1.51:1）——只作色块与下划，永不承字
+    text: "#1C1E23", // 正文黑（15.42:1）
+    muted: "#5B6069", // 脚注灰（5.85:1）
+    border: "#DDDCD4", // 表格线。只作线，永不承字，不答文字门槛
+    danger: "#B3261E", // 报告红。kpi 箭头当字，压 surface 6.54:1，答 4.5
+    warning: "#9A7404", // 只作线与图标。压 surface 4.31:1，不答文字门槛
+    success: "#1F6B52", // 克制森绿。kpi 箭头当字，压 surface 6.40:1，答 4.5
+    // 藏青 / 高亮黄 / 数据蓝 / 中性灰。末格照板上自标的 3.8:1 解出，
+    // 板上 hex `#8B909A` 实测 2.96:1 过不了 3.0 装饰线——见文件头。
+    // c0 可作徽章底承白字 14.14:1，答 4.5。c1 只作色块与标记，永不承字，不答文字门槛。
+    // c3 只作标记，压 bg 3.81:1 答 3.0 装饰线，永不承小字。
+    chartPalette: ["#1E2A4A", "#F5C518", "#3B76A8", "#797D86"],
+  },
+  fonts: {
+    heading: ["Bower", "Georgia", "Source Han Serif SC", "serif"],
+    body: ["Bower", "Georgia", "Source Han Serif SC", "serif"],
+  },
+  shape: {
+    radius: 2,
+    gapScale: 1, // 微圆克制（咨询报告利落，全推广批次 2026-07-10）
+  },
+  defaultBackgrounds: {
+    cover: { kind: "color", value: "#F7F6F2" },
+    chapter: { kind: "color", value: "#1E2A4A" },
+    content: { kind: "color", value: "#F7F6F2" },
+    ending: { kind: "color", value: "#F7F6F2" },
+  },
+};
+
+export const CONSULTING_THEME = {
+  version: 2,
+  id: "brief",
+  label: "Brief",
+  story: {
+    name: "Brief",
+    story: "Navy ink, one line of yellow, a serif that reads like a bound report. The conclusion comes first and every page after it is the evidence that earns it.",
+    positioning: "Choose it when the audience wants the answer before the argument and will judge you on how tightly the numbers support it.",
+    audience: "A team presenting a verdict to people who decide.",
+    notFor: "Storytelling that needs suspense, warmth, or a slow reveal.",
+    lineage: "The brief deliverable: assertion headings, quiet gauges, a single highlight that points.",
+  },
+  style: CONSULTING_TOKENS,
+  // A marker-pen swipe behind the marked run — the board-room habit of
+  // highlighting the one phrase the room should leave with.
+  emphasis: "pad",
+  menu: {
+    cover: { face: "gauge-verdict" },
+    chapter: { face: "gauge-section" },
+    content: {
+      points: { face: "gauge-sheet" },
+      list: { face: "gauge-sheet" },
+      comparison: { face: "gauge-sheet" },
+      process: { face: "gauge-sheet" },
+      data: { face: "gauge-sheet" },
+      photo: { face: "image-split", params: { column: "report" }, decor: { kind: "silent" } },
+      statement: { face: "gauge-point" },
+      fact: { face: "gauge-figure" },
+      evidence: { face: "gauge-exhibit" },
+      hierarchy: { face: "gauge-sheet" },
+    },
+    ending: { face: "gauge-next" },
+  },
+  motif: { id: "folio-motif" },
+  // folio-motif draws the content footer row itself, rule included
+  // (`motifs/footer-roles.ts`), so the shared Branding footer keeps out of
+  // its way. On a page whose motif is silenced the shared footer prints the
+  // same marks, and this keeps its rule off there too.
+  brand: { suppressFooterRule: true },
+} satisfies BuiltinThemeDeclaration;

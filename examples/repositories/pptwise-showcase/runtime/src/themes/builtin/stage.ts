@@ -1,0 +1,143 @@
+import type { StyleTokens } from "../tokens";
+import type { BuiltinThemeDeclaration } from "../schema";
+
+/**
+ * stage（黑场）——2026-08-21 新增第 21 个 theme id（第 20 个结构身份）。
+ * 性格：灯灭之后只剩一句话。
+ * 目标场景：产品发布会、主题演讲、keynote 式叙事。极简版式家族
+ * statement / pull-quote 的天然宿主（版式本轮不动，倾向只用现有池）。
+ *
+ * v2b 重肤（2026-08-21，设计定稿 `theme-wave7/Main.dc.html`）：冷玄黑
+ * 单色系，旧 v1 冰蓝 `#6BB7E8` 全线退役。结构行不动（C / bottom-right /
+ * none / airy，封面 poster-center / tone-adaptive-header，无 motif）。
+ *
+ * 与 luxe 分家（同是深底、同是 C / bottom-right，不能塌成一家）：
+ *   - 底：stage 冷玄黑 `#0F0F12`（15,15,18，B ≥ R）对 luxe 暖真黑
+ *     `#0B0908`（11,9,8，R > B）。RGB 距离 12.3，缩略图里是冷的那一块。
+ *   - 字族：stage 标题雅黑无衬线，luxe 标题 SimSun 衬线。
+ *   - 强调色：stage 哑银金属灰（H ~39、S ~0.11），luxe 香槟金
+ *     `#C6A15B`（H 39.3、S 0.48）。色相近但饱和度差一截，不是金。
+ *
+ * 板上「然后呢」斜体气口词是封面排印签名。引擎现无 heading 内混排
+ * 机制，记录为不做，不硬造。板上 heading 100 细字重落地为不加粗
+ *（导出只有粗/不粗两档），版式各自写 `fontWeight`（poster-center 仍
+ * 是 800，statement 已是 500）。本轮不新开 headingWeight 杠杆。
+ *
+ * 逐条来历（本仓库 `svg/ink.ts` 的 `contrastRatio` 压 `bg #0F0F12`
+ * 实测，语义三色压 `surface`）：
+ *   - `bg` `#0F0F12`：冷玄黑。
+ *   - `surface` `#1A1A1F`：一档冷抬升。深底不出白卡。
+ *   - `primary` `#1E1E22`：深色块，让哑银唱主角。白字压 primary 14.49:1。
+ *   - `accent` `#C4BFB6`：哑银（10.46:1），可直接承大标题。
+ *   - `text` `#F3EFE7`：暖纸白（16.69:1），板上正文色。
+ *   - `muted` `#B0A694`：暖砂注脚。板上 `#8E8778` 压 bg 5.36:1，但
+ *     matrix 格子的 tone 混合底 `#353437` 上只有 3.47:1，过不了 4.5。
+ *     同色相提亮后压 bg 7.95:1、压最深格子 5.14:1。更深一档 `#6F6A61`
+ *     （3.56:1）只作层次注释，不另开 token。
+ *   - `border` `#4A463F`：发丝线。
+ *   - `chartPalette` 四色：哑银 `#C4BFB6`（10.46:1）/ 暖砂 `#B8A888`
+ *     （8.20:1）/ 石墨 `#6F6A61`（3.56:1，板上第二档 muted）/ 钢灰
+ *     `#8A96A2`（6.35:1）。全低饱和，无一格饱和彩，不进蓝橙禁忌。
+ *
+ * 语义三色压 `surface` 校准（kpi 箭头是字，callout 的 warning 是线与图标）：
+ *   - `danger` `#B88880`：铁锈（5.67:1）。
+ *   - `warning` `#C4B49A`：暖砂（8.54:1），只作线与图标。
+ *   - `success` `#8A9480`：钢青苔（5.47:1）。
+ *
+ * 字体：sans，发布会语域。Microsoft YaHei 打头保导出无 tofu。圆角 0 +
+ * gapScale 1.3（airy 档）+ typeScale 1.5（标题/展示级，fit 仍兜底缩字）。
+ *
+ * 装饰：无。`THEME_DEFINITIONS.stage.motif` 留空，照 runway 先例。
+ * 无框就是身份，一件极轻的框都会把黑场读成 luxe / museum 的亲戚。
+ *（2026-10 起 motif 是进度线 `stage-motif`，见文末，仍然无框。）
+ *
+ * **第八波批 4（2026-08-23，`.issues/design-boards/wave8/b4/Stage.dc.html`）**：
+ * 封面继续锁 `poster-center`，几何不动。章节锁 pinOnly `one-word-chapter`
+ * （一个词满场，幕次退成注脚，标题钉板上 120px，不乘 typeScale）。ending
+ * 锁 pinOnly `release-close-ending`（发布句 + 一行地址，不放二维码不写
+ * Thank you）。decor=none 继续是官方身份，本轮不补 motif。四页
+ * defaultBackgrounds 仍是冷玄黑 `#0F0F12`。角色色 hex 与 fonts 一处不改。
+ *
+ * **菜单分派（S1-B）**：黑场发布会一页一件事，points 用透气的 quiet-frame，data 用单张主角图的 stacked-poster，evidence 的举证腔与台上节奏相斥，不上。
+ *
+ * **2026-10 样例重画（设计源 `design/rounds/2026-10-08-stage/`）**：按游戏
+ * 开发者大会主题演讲的定稿整套重画，配色与字体一处不改。内容页（quote 以外
+ * 的九种）都交给 `keynote-sheet`，正文交给 keynote 设定的构图：一句话、主张
+ * 大数、单线走势、巨数对峙、斜率图、双榜、比例三条、点阵、半版三数、两柱一
+ * 句、拱门、五件事。封面 `keynote-cover`、章节 `keynote-chapter`、结尾
+ * `keynote-ending`。quote 留在已定的 `pull-quote`。
+ *
+ * motif 从无到有：`stage-motif` 是演讲遥控器的进度线，每页底部 y676 一根
+ * 轨道，已讲比例那段哑银，右端「5 / 18」。2026-08「无框就是身份」那条裁决
+ * 不要的是框和装饰，进度线只有一根线和页码，是讲台结构，标为 `structure`。
+ *
+ * 强调：设计稿把 `**…**` 的词（「人数」「留得住」）和每页唯一的重点都给了
+ * 哑银。keynote 设定的构图照稿用 accent 画强调词。`emphasisInk` 暖砂仍管共享
+ * 版式里的 `**…**`（哑银在正文小字里压纸白只有 1.60:1），本轮不动。
+ */
+export const STAGE_TOKENS: StyleTokens = {
+  id: "stage",
+  colors: {
+    bg: "#0F0F12", // 冷玄黑。页底，正文墨压它 16.69:1，答 4.5
+    surface: "#1A1A1F", // 冷抬升面板。卡面，正文墨压它 15.12:1，答 4.5
+    primary: "#1E1E22", // 深色块（让 accent 唱主角，白字 14.49:1）
+    accent: "#C4BFB6", // 哑银（10.46:1）——旧冰蓝 #6BB7E8 退役
+    // 强调墨与 accent 分家：哑银压正文墨 #F3EFE7 只有 1.60:1，两者又同是
+    // 近中性（彩度 14 与 12），`**` 词读成褪色而非重音。暖砂取自本表
+    // chartPalette 第二格，压底 8.20:1、压正文墨 2.04:1、彩度 48，不是新造色。
+    emphasisInk: "#B8A888", // 暖砂（压 bg 8.20:1，压 text 2.04:1）
+    text: "#F3EFE7", // 暖纸白（16.69:1）
+    muted: "#B0A694", // 暖砂注脚（7.95:1，板上 #8E8778 在 matrix 格子上不够）
+    border: "#4A463F", // 发丝线，永不承字，不答文字门槛
+    danger: "#B88880", // 铁锈（压 surface 5.67:1）
+    warning: "#C4B49A", // 暖砂（8.54:1），只作线与图标
+    success: "#8A9480", // 钢青苔（5.47:1）
+    // 四格只作图系列与色块。可作徽章底，字走 readableOn 并答 4.5。
+    // 深底上取深墨，永不让白色小字直接压这些系列色。
+    chartPalette: ["#C4BFB6", "#B8A888", "#6F6A61", "#8A96A2"], // 哑银/暖砂/石墨/钢灰
+  },
+  fonts: {
+    heading: ["Microsoft YaHei", "PingFang SC", "Helvetica Neue", "system-ui"],
+    body: ["Microsoft YaHei", "PingFang SC", "Helvetica Neue", "system-ui"],
+  },
+  shape: { radius: 0, gapScale: 1.3, typeScale: 1.5 }, // keynote 直角 + airy + 标题 1.5×
+  defaultBackgrounds: {
+    cover: { kind: "color", value: "#0F0F12" },
+    chapter: { kind: "color", value: "#0F0F12" },
+    content: { kind: "color", value: "#0F0F12" },
+    ending: { kind: "color", value: "#0F0F12" },
+  },
+};
+
+export const STAGE_THEME = {
+  version: 2,
+  id: "stage",
+  label: "Stage",
+  story: {
+    name: "Stage",
+    story: "The house lights go down and one sentence is left on a black field. Nothing competes with it.",
+    positioning: "Choose it for a launch or keynote where each page carries a single claim and the speaker carries the rest.",
+    audience: "A founder or presenter on a big screen in front of a full room.",
+    notFor: "Dense reporting, tables, or any page that needs more than one idea.",
+    lineage: "The keynote tradition of one giant line per slide.",
+  },
+  style: STAGE_TOKENS,
+  motif: { id: "stage-motif" },
+  menu: {
+    cover: { face: "keynote-cover" },
+    chapter: { face: "keynote-chapter" },
+    content: {
+      points: { face: "keynote-sheet" },
+      list: { face: "keynote-sheet" },
+      comparison: { face: "keynote-sheet" },
+      process: { face: "keynote-sheet" },
+      data: { face: "keynote-sheet" },
+      photo: { face: "keynote-sheet" },
+      statement: { face: "keynote-sheet" },
+      quote: { face: "pull-quote" },
+      fact: { face: "keynote-sheet" },
+      hierarchy: { face: "keynote-sheet" },
+    },
+    ending: { face: "keynote-ending" },
+  },
+} satisfies BuiltinThemeDeclaration;

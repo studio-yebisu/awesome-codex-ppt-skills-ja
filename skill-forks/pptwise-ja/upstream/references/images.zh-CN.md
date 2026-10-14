@@ -1,0 +1,64 @@
+---
+summary: 'skills/pptwise/references/images.md 的中文阅读镜像'
+mirror_of: skills/pptwise/references/images.md
+---
+
+# 配图
+
+何时读：声明图片资产，选择 `photo` 或 `evidence`，搜索图库，或生成图片时。
+
+## 先选择语义动作
+
+图像本身就是主角时用 `kind: "photo"`。一件展品支持一个断言时用 `kind: "evidence"`。已绑定主题的菜单为这个 kind 选择脸。作者不点名图片几何。
+
+封面与章节页可以使用资产背景。渲染器会采用专门的压图处理，并加深色可读性遮罩。内容页与结尾页的资产背景保留主题色调遮罩。只有页面确实需要全画布场景时才使用背景图。
+
+`color` 背景要么明显偏浅，要么明显偏深。`#777777`、`#6B7B8C` 这类中间调上，白字和近黑字都到不了正文需要的 4.5:1。渲染器会把这样的字改成纯黑，能读清，卡片也挑纯黑读得清的一侧加深或提亮，封面左上角的标记按它落在的色带取色。`audit` 仍报 `low-contrast` 时，换一个更浅或更深的颜色。
+
+每张图片只在 `assets.images` 中声明一次，再由 `image`、`image_grid`、`image_compare` 或 `device_mockup` 通过 `asset_id` 引用。逐个检查 key。`validate` 会报告悬空引用，没有解析到来源的资产不能变成真实图片。
+
+`image_side: "left"` 或 `"right"` 是给支持侧图的脸使用的可选偏好。其他脸不需要处理作者几何，因为作者没有提供这类信息。
+
+## 先取简报再找图
+
+为任何缺失资产找图之前，先运行真实渲染器：
+
+```bash
+pptwise asset-brief <target>
+```
+
+简报会给出实际画框、裁切方式、安全区、建议像素尺寸、主题配色和可直接使用的提示词。素材应匹配它报告的宽高比与色调。
+
+## 图库照片
+
+使用两到四个词的具体英文查询，例如 `office desk` 或 `wind farm`。查询中不要写情绪词、质量描述或否定关键词。搜索顺序是 Pexels，已配置时再查 Pixabay，最后查经过商业用途过滤的 Openverse 来源。
+
+```bash
+pptwise config set pexels.apiKey
+pptwise images search "office desk" --orientation landscape
+```
+
+不要自动选择第一张结果。由人或视觉模型从缩略图中选择，再拉取目标资产。
+
+```bash
+pptwise images fetch pexels:123 --deck <dir> --as hero
+pptwise images list --deck <dir>
+```
+
+## 生成图片
+
+```bash
+pptwise images generate --deck <dir> --as <asset_id>
+```
+
+本地生成器默认关闭，只有用户启用后才使用：
+
+```bash
+pptwise config set images.generators.grok.enabled true
+pptwise config set images.generators.codex.enabled true
+pptwise config set images.generators.antigravity.enabled true
+```
+
+生成器把登录状态和会话放在自己的主目录里（例如 `~/.codex`、`~/.grok`），出图前先往那里写。agent 沙箱把主目录设成只读时，它会报 `Operation not permitted`、`EPERM` 或 `FS_PERMISSION_DENIED` 失败，`images generate` 会点名说明。这时在沙箱外运行这条命令，或请用户在宿主的沙箱设置里允许这个生成器写自己的主目录。绝不把任何登录或凭据文件复制、移动或重定向到可写的地方来绕过这个错误。
+
+目标是 deck 项目时，拉取与生成的图存进这个 deck 自己的 `assets/`，文件名是 `<asset_id>.jpg`，旁边带 `<asset_id>.json` sidecar，deck 换目录图也跟着走。目标是单个 IR 文件时，图存到 `.pptwise/<deck>/assets/`。不要为了重跑某一步而删除这两个目录，因为其中保存了已经选定的资产。validate 警告某个 `asset_id` 没有定义时，会给出这张图该放的路径。没有可用来源时，保留缺失状态并如实汇报。不要虚构照片，也不要抓取未支持的提供方。除非许可或用户要求在页面署名，归属信息默认打印在终端。

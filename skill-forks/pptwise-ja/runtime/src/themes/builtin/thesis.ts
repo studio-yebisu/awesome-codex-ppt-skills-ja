@@ -1,0 +1,145 @@
+import type { StyleTokens } from "../tokens";
+import type { BuiltinThemeDeclaration } from "../schema";
+
+/**
+ * thesis（学术/研究报告）——祖母绿 + 稿纸白的书卷气质。
+ *
+ * **冷调组皮肤重设计（2026-08-20，`.issues/2026-08-18-theme-redesign/skins/`
+ * 的 `group3-cool-boards.dc.html` 里 thesis 的色板角色表 + 封面样例）**：
+ * thesis 在冷调三家里拿到的语域是「书卷祖母绿」——绿是书脊的绿，不是
+ * 实验室的绿，靠一张暖象牙纸压住它的寒气。这一轮与 clinic 一起拆青绿双胞胎
+ * （两家 primary 肉眼几乎同色）：thesis 走偏绿 + 学者金暖配角 + 暖底，
+ * clinic 走偏蓝 + 全冷配角 + 冷底，两家 bg 色温相反。逐条来历：
+ *   - `bg` `#FAFAF6` → `#F5F3EC`：近白 → 暖象牙纸。旧值几乎是纸白，绿压
+ *     上去发寒；压暖压深之后才是书页而不是实验台，也把它与 clinic 的薄荷
+ *     冷底拉到色温的两头。
+ *   - `surface` `#FFFFFF` → `#FCFBF6`：稿纸白，跟着底色暖半档。
+ *   - `primary` `#006A4E` → `#0E6245`：祖母绿压深偏绿，实测压 bg 6.63:1
+ *     （板上自标 6.5:1），色块直接承白字（白压 primary 7.36:1）。
+ *   - `accent` `#00A878` → `#A8861D`：亮翡翠 → 学者金。旧值是 primary 的
+ *     高饱和亮版，与 primary 同色相、只差明度，等于没有配角；学者金是绿的
+ *     暖配角，也是与 clinic 全冷配角形成对照的那一处。只给线与点，不承小字，
+ *     实测 3.10:1（板上自标 3.1:1）。
+ *     大字 3.0 门槛的余量只有 0.10，字号掉到 24px 以下就会翻车。
+ *   - `text` `#1A2421` → `#23251F`：墨绿黑 → 油墨黑，13.95:1。
+ *   - `muted` `#5D6B65` → `#62655B`：铅笔灰（脱开青绿色相，走中性暖灰）。
+ *     实测压 bg 5.36:1、压 surface 5.74:1、压 `content-matrix` 的三档 tone
+ *     混合格底 4.86/5.09/5.16:1，全部过 4.5:1 正文门槛。
+ *   - `border` `#D5D5CB` → `#DDD9C8`：稿纸格线，跟着暖底走。
+ *   - `chartPalette` 换成板上的期刊克制四色：祖母绿 / 学者金 / 靛青 /
+ *     卵石灰。实测压 bg 6.63 / 3.10 / 6.13 / 3.37:1，四格全过 3.0 装饰线。
+ *     旧表后两格直接复用 `muted`/`border`（`#5D6B65`/`#D5D5CB`），其中
+ *     border 那一格压 bg 只有 1.29:1，是四色里读不出来的一格。
+ *
+ * 对比度实测（本仓库 `svg/audit/deck-audit.ts` 的 `contrastRatio`，压 `bg`
+ * `#F5F3EC`）：primary 6.63:1、accent 3.10:1、text 13.95:1、muted 5.36:1
+ * （压 surface 5.74:1）、chart 祖母绿 6.63 / 学者金 3.10 / 靛青 6.13 /
+ * 卵石灰 3.37。设计板自查写的 6.5 / 3.1 / 14 / 5 / 6.5·3.1·5·3.5 与实测
+ * 同向（靛青一格实测比板上高 1.1，卵石灰低 0.13 仍过 3.0 装饰线），以实测
+ * 为准。
+ *   - chapter 底色（第八波批 2）：从 primary 改为象牙纸 `#F5F3EC`，与封面 /
+ *     内容 / ending 同纸。浅底章首，不再铺满版祖母绿。白字对 primary 的
+ *     7.36:1 仍给封面绿块用（`readableOn(primary)`）。
+ *   - 板上「块上金一律用浅金 `#E5D9A8` 承小字」是封面样例里绿块内的取色
+ *     主张。token 表没有第二枚 accent 的格位，而 `left-anchor` 今天在绿块
+ *     里只画反白标题、不画金色小字，所以本轮无处安放这一档——记在冷调组
+ *     报告的「板与版式差距清单」里，等版式级裁定（同暖纸组把 heritage
+ *     报头对齐、vermilion 通栏红条留给版式级的处理）。
+ *
+ * 装饰见 `src/motifs/motif-rail-motif.tsx`（第八波批 2 演化：封面开卷
+ * 金线，退役五枚空心点与右上双线角标）。thesis 的锚点 motif 仍是
+ * `rail-motif`，id 不改。章节金短线与幽灵章号归章节版式，不进 motif。
+ *
+ * **菜单分派（S1-B）**：论文腔十一词全上：photo 用带角注的 image-annotate（学术里的图就是配注的图版），evidence 是断言加展品的本行，虽然旧 sparse 表没给 one-evidence，本轮按词表补齐。
+ *
+ * **2026-10 开题答辩手稿定稿**（设计源 `design/rounds/2026-10-06-thesis/`，规则见
+ * `docs/design-thesis.md`）：每一页是一份论文的一页。书眉左边是 deck 的标签
+ * （`footer.label`，motif 画），右边是祖母绿的分节号（页面的 `stage`，「§2
+ * 文献与缺口」），下面一条学者金细线；标题 30px 衬线粗体，底部对齐；图和表像
+ * 论文一样按 deck 顺序编号（「图 3」「表 1」），来源写成页脚注，正文里用祖母绿
+ * 上标数字指过去；页码居中在底部。封面 `manuscript-cover`（题名页加右侧照片），
+ * 章节页 `manuscript-chapter`（照片上压象牙纸渐变、120px 分节号、全片目录），
+ * 结尾 `manuscript-ending`（作者写的小标题、三条要点、46px 结束语）。statement
+ * 和 quote 照旧用 statement 与 pull-quote，其余内容页全走 `manuscript-sheet`，
+ * 正文交给 manuscript 设定里的构图。色值不动。标题字体从 Georgia 换成 Times New
+ * Roman 配宋体：定稿是宋体排的，数字是等高数字，Georgia 的旧式数字在「5 个月」
+ * 「23.0%」这类大数字上会掉到基线下面。
+ *
+ * **共享组件照论文排（2026-10，`shape.surfaces: "ruled"`）**：manuscript
+ * 构图之外由共享渲染器画的页（矩阵、SWOT、编号卡、表格之类）也照论文的
+ * 版面画，不铺卡、不画圆角，细线和留白撑结构，编号就是数字，强调靠字重、
+ * 墨色和一条学者金细线（`components/surfaces.ts`）。卡面 `surface` 和
+ * `radius` 不收：稿纸白本来就是从纸底抬半档的真实卡色，不是为了装作没有卡
+ * 设的，打开后它只剩缺图垫底和热力图起色，仍压得住正文墨（14.95:1），
+ * muted、success 等压卡面的实测照旧成立。圆角只剩图表自己的标记（热力
+ * 图格子）还在用，组件一律直角。
+ */
+export const ACADEMIC_TOKENS: StyleTokens = {
+  id: "thesis",
+  colors: {
+    bg: "#F5F3EC", // 暖象牙纸。页底，正文墨压它 13.95:1，答 4.5
+    surface: "#FCFBF6", // 稿纸白。卡面，正文墨压它 14.95:1，答 4.5
+    primary: "#0E6245", // 祖母绿偏绿（6.63:1），色块直接承白字
+    accent: "#A8861D", // 学者金（3.10:1，只给线与点，不承小字）
+    text: "#23251F", // 油墨黑（13.95:1）
+    muted: "#62655B", // 铅笔灰（5.36:1）
+    border: "#DDD9C8", // 稿纸格线。只作线，永不承字，不答文字门槛
+    danger: "#9E2B25", // 朱批红（压 surface 7.17:1，可作正文级）
+    warning: "#9C5A18", // 焦茶褐。只作线与图标，压 surface 5.21:1，不答文字门槛
+    success: "#16704F", // 祖母绿一档亮。kpi 箭头当字，压 surface 5.85:1，答 4.5
+    // 四格只作图系列。c0、c2、c3 可作徽章底，字走 readableOn 并答 4.5。
+    // c1 同 accent，只作线与点，压 bg 3.10:1，答 3.0 装饰线。余量仅 0.10，永不承小字。
+    chartPalette: ["#0E6245", "#A8861D", "#3F5B8C", "#8A8471"], // 祖母绿/学者金/靛青/卵石灰
+  },
+  fonts: {
+    // Times New Roman for the Latin and its lining figures, SimSun for the
+    // Chinese, Songti where the preview has no SimSun: the board's Songti.
+    heading: ["Times New Roman", "SimSun", "宋体", "Songti SC", "STSong", "serif"],
+    body: ["Inter", "PingFang SC", "system-ui"],
+  },
+  shape: {
+    radius: 2,
+    gapScale: 1.05, // 学术严谨微圆+论文留白
+    surfaces: "ruled", // 共享组件照论文排：无卡底、细线分隔，见上
+  },
+  defaultBackgrounds: {
+    cover: { kind: "color", value: "#F5F3EC" },
+    chapter: { kind: "color", value: "#F5F3EC" },
+    content: { kind: "color", value: "#F5F3EC" },
+    ending: { kind: "color", value: "#F5F3EC" },
+  },
+};
+
+export const ACADEMIC_THEME = {
+  version: 2,
+  id: "thesis",
+  label: "Thesis",
+  story: {
+    name: "Thesis",
+    story: "Emerald on manuscript white, set in a bookish serif. It argues the way a defense does: hypothesis, method, evidence, and an honest account of the limits.",
+    positioning: "Choose it for research, a defense, or any talk where the credibility of the method is the point.",
+    audience: "A researcher speaking to peers who will probe the reasoning.",
+    notFor: "Sales, hype, or pages that need to move fast.",
+    lineage: "The dissertation and the seminar handout, with the footnote rule as its signature.",
+  },
+  style: ACADEMIC_TOKENS,
+  menu: {
+    cover: { face: "manuscript-cover" },
+    chapter: { face: "manuscript-chapter" },
+    content: {
+      points: { face: "manuscript-sheet" },
+      list: { face: "manuscript-sheet" },
+      comparison: { face: "manuscript-sheet" },
+      process: { face: "manuscript-sheet" },
+      data: { face: "manuscript-sheet" },
+      photo: { face: "manuscript-sheet" },
+      statement: { face: "statement" },
+      quote: { face: "pull-quote" },
+      fact: { face: "manuscript-sheet" },
+      evidence: { face: "manuscript-sheet" },
+      hierarchy: { face: "manuscript-sheet" },
+    },
+    ending: { face: "manuscript-ending" },
+  },
+  motif: { id: "rail-motif" },
+} satisfies BuiltinThemeDeclaration;

@@ -1,0 +1,161 @@
+{
+  "version": "5",
+  "filename": "deck.pptx",
+  "narrative": {
+    "strategy": "storytelling",
+    "pacing": "spacious",
+    "audience": "public"
+  },
+  "theme": {
+    "id": "machi-kobo"
+  },
+  "footer": {
+    "page_number": true,
+    "notice": "架空の企画 / 概念モデル"
+  },
+  "slides": [
+    {
+      "id": "open",
+      "type": "cover",
+      "heading": "ひらく、\n街の作業場。",
+      "subheading": "架空のものづくり拠点の提案",
+      "notes": "架空の拠点企画。設備、利用条件、実績を確定する資料ではなく、場所のあり方を提案する。"
+    },
+    {
+      "id": "promise",
+      "type": "content",
+      "kind": "statement",
+      "heading": "道具より先に、\n入口をつくる。",
+      "components": [
+        {
+          "type": "paragraph",
+          "text": "見るだけの日も、手を動かす日も。\nものづくりに近づける場所を、街の中へ。"
+        }
+      ],
+      "background": {
+        "kind": "color",
+        "value": "#171716"
+      },
+      "notes": "高度な道具の保有より、見学や相談から入りやすいことを企画の約束とする。成果を保証する説明ではない。"
+    },
+    {
+      "id": "journey",
+      "type": "content",
+      "kind": "process",
+      "heading": "見る。試す。つくる。",
+      "components": [
+        {
+          "type": "flowchart",
+          "direction": "LR",
+          "nodes": [
+            {
+              "id": "look",
+              "label": "ひとまず見る"
+            },
+            {
+              "id": "try",
+              "label": "小さく試す"
+            },
+            {
+              "id": "make",
+              "label": "相談して作る"
+            },
+            {
+              "id": "show",
+              "label": "作品を見せる"
+            }
+          ],
+          "edges": [
+            {
+              "to": "try",
+              "from": "look"
+            },
+            {
+              "to": "make",
+              "from": "try"
+            },
+            {
+              "to": "show",
+              "from": "make"
+            }
+          ]
+        }
+      ],
+      "notes": "来訪者の体験の一例。必ずこの順を通る制度ではなく、見学だけ、制作だけの参加も想定する。"
+    },
+    {
+      "id": "network",
+      "type": "content",
+      "kind": "hierarchy",
+      "heading": "制作を、ひとりにしない。",
+      "components": [
+        {
+          "type": "hub_spoke",
+          "center": "街の作業場",
+          "items": [
+            {
+              "label": "つくる人",
+              "description": "経験を持ち寄る"
+            },
+            {
+              "label": "道具と材料",
+              "description": "試せる環境"
+            },
+            {
+              "label": "地域のお店",
+              "description": "相談と展示"
+            },
+            {
+              "label": "近隣の人",
+              "description": "見に来る入口"
+            }
+          ]
+        }
+      ],
+      "notes": "拠点を中心とする関係の概念図。実在の協力者や契約を表していない。"
+    },
+    {
+      "id": "space",
+      "type": "content",
+      "kind": "hierarchy",
+      "heading": "作業も、会話も、同じ屋根に。",
+      "components": [
+        {
+          "type": "architecture",
+          "direction": "top_down",
+          "layers": [
+            {
+              "title": "ひらく",
+              "items": [
+                "入口の展示",
+                "見学する場所"
+              ]
+            },
+            {
+              "title": "つくる",
+              "items": [
+                "共同作業台",
+                "予約する工具"
+              ]
+            },
+            {
+              "title": "交わる",
+              "items": [
+                "相談の席",
+                "小さな発表"
+              ]
+            }
+          ]
+        }
+      ],
+      "notes": "空間の概念構成。建築図、縮尺、動線の確定、安全設計や営業条件を示すものではない。"
+    },
+    {
+      "id": "close",
+      "type": "ending",
+      "heading": "つくった先に、\n街がある。",
+      "subheading": "完成品も、途中の手も、街へひらく。",
+      "notes": "次の具体化では地域の利用者と場所の条件を確かめる。ここでは架空企画の約束を締めくくる。"
+    }
+  ]
+}

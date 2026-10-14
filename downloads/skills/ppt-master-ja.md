@@ -1,64 +1,46 @@
 ---
-name: ppt-master-ja-entry
-description: 編集できる日本語PPTXを日本語で制作するときに使う。hugohe3/ppt-masterの原典方式を使い、作例の作風を自分の題材へ展開する。
+name: ppt-master-ja
+description: PPT Masterの元のチェッカーとネイティブ変換器で、日本語の編集可能なPPTXを作る。PPT Master日本語版やSVGからの日本語PowerPoint制作を指定されたときに使う。
+metadata:
+  copyright: "Copyright (c) 2025-2026 Hugo He"
+  license: "MIT"
+  official_repository: "https://github.com/hugohe3/ppt-master"
+  sponsors:
+    - "SPONSORS.md"
+    - "SPONSORS_CN.md"
+  upstream: https://github.com/hugohe3/ppt-master
+  upstream_commit: ca04346de145ed6462ddf34682848e71df5e20a2
 ---
 
-# 編集できる日本語PPTX
+# PPT Master 日本語版の制作経路
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
+日本語の提案・報告は [references/japanese-business-workflow.md](references/japanese-business-workflow.md) を読む。入力・単位・前年差・講稿・PPTX実アプリ確認と当地の再現コマンドを収録。書体の変更・配布は [references/japanese-fonts.md](references/japanese-fonts.md) を参照する。
 
-## 元の方式で作る
+上流の[SKILL.upstream.md](SKILL.upstream.md)を参照し、文字・図形を編集できるPPTXという目的を維持する。上流の通常ルートを使う場合は、そのルーティングと計画契約に従う。
+
+この日本語版には、カタログの作例や文字・図形中心の小規模な資料を制作する専用経路を追加している。これは上流Default Generateの全工程の実行を意味しない。上流のQuick Generate変換契約を内部で使う。外部画像、アイコン、音源を要しない日本語スライド向けであり、素材ライブラリーは同梱していない。
+
+- references/shared-standards-core.md、executor-base.md、semantic-svg.md、preset-shape-vocabulary.mdとworkflows/profiles/quick-generate.mdの技術契約を読む。
+- 1280×720のSVGをsvg_outputへ作る。日本語のNoto Sans JP、自然な改行、役割別の字号を指定。意味グループのidとdata-pptx-bounds、rootのdata-pptx-page-roleを付ける。
+- scripts/svg_quality_checker.py PROJECT --quick-generate --canonical-authoring --stage final --jsonを実行する。
+- 講稿をnotesに保存し、scripts/svg_to_pptx.py PROJECT --quick-generate --primary-language ja-JP --with-notes -t fade -o OUTPUT.pptxで出力する。
+- チェッカーと変換器は本体を無改変で使う。画像へ丸ごと変換する代替出力を成功と扱わない。PPTX内に日本語文字、図形、講稿があることを確認する。
+- ブラウザーのプレビューは変換入力SVGであり、PowerPointアプリの表示検証と区別する。PPTXの受け手にもNoto Sans JPの導入が必要。警告が残った場合は制作記録に残す。
+
+上流のMIT原文とHugo Heの著作権表示を保持する。素材を追加する場合は、その素材ごとの利用条件も確認する。
+
+元の帰属ガードを保持する。制作前に `python3 "${SKILL_DIR}/scripts/attribution_guard.py"` を実行する。元の著作権・ライセンス・スポンサーの表示は削除しない。
+
+## 単体の本文から使う
+
+この本文は `skill-forks/ppt-master-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/hugohe3/ppt-master/tree/ca04346de145ed6462ddf34682848e71df5e20a2
 
-- https://github.com/hugohe3/ppt-master/blob/ca04346de145ed6462ddf34682848e71df5e20a2/README.md
-- https://github.com/hugohe3/ppt-master/blob/ca04346de145ed6462ddf34682848e71df5e20a2/skills/ppt-master/SKILL.md
-- https://github.com/hugohe3/ppt-master/blob/ca04346de145ed6462ddf34682848e71df5e20a2/LICENSE
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `ppt-master-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-日本語の文字・図形profile。上流guard・checker・native SVG→PPTX変換器を使用。Default全工程ではない。PowerPoint本体でPNG/PDF出力。
-
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-- 原典のスキルを読めるコーディングエージェント
-- 各作例のPROVENANCE.jsonに記録した制作環境
-- Noto Sans JP（PowerPointでの表示）
-
-
-
-## 日本語で魅力ある資料へ
-
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
-
-## この作例を自分の題材へ
-
-作例: 喫茶つむぎ 2号店出店提案
-
-$ppt-master-ja を使ってください。
-
-「喫茶つむぎ 2号店出店提案」をppt-master-jaで日本語の8枚にしてください。
-input/data.jsonを数値・事実・仮定の正本とします。読者：店舗経営者・店長。8分の決裁説明と、後日の店内説明会。
-構成：運河沿いB案を、調査・交渉へ → 新店の顧客と、既存店との役割 → 候補地の比較：B案は82点 → 損益分岐は、一日60人 → 仕込みと購買を共通化する → 契約前に、3つのリスクを確認 → 5週目に、投資判断を置く → 今日の決裁：B案の調査を進める。
-出力：編集可能なPPTX、閲覧用PDF、ページ別講稿。
-単位・比較期間を揃え、仮説と事実、目標と実績を区別。日本語字形と改行を実表示で確認。架空のサンプルと明記し、原典・条件・制作ソースを保持。実施した検証だけを記録してください。
-
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: hugohe3 / 原典条件: MIT
+原作者: hugohe3 / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
 - https://github.com/hugohe3/ppt-master/blob/ca04346de145ed6462ddf34682848e71df5e20a2/LICENSE
 - https://github.com/hugohe3/ppt-master/blob/ca04346de145ed6462ddf34682848e71df5e20a2/skills/ppt-master/LICENSE
 - https://github.com/hugohe3/ppt-master/blob/ca04346de145ed6462ddf34682848e71df5e20a2/skills/ppt-master/scripts/pptx_shapes/data/NOTICE.md
-- https://github.com/hugohe3/ppt-master/blob/ca04346de145ed6462ddf34682848e71df5e20a2/skills/ppt-master/templates/icons/tabler-outline/license.svg
-
-原文LICENSE・NOTICEと素材・依存物の条件を保持する。
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。

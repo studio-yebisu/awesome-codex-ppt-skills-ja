@@ -1,7 +1,7 @@
 """Select useful, produced skills and provide short, standalone Japanese entries."""
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
-import json
+import hashlib, json
 
 ROOT = Path(__file__).resolve().parents[1]
 SELECTION = [
@@ -10,6 +10,9 @@ SELECTION = [
     ('HututuWorks/sci-diagram-pptx','編集できる科学の概念図','diagram','sci-diagram-showcase','原典のnative図解ルールで、矢印と注釈まで編集できる教材へ。'),
     ('Hasasasa/html-to-editable-pptx','HTMLから文字と図形のPPTXへ','editorial','html-editable-showcase','原典CLIで日本語HTMLを変換し、編集できるブランド資料へ。'),
     ('ABYR1206/claude-skill-hand-drawn-slides','手描きイラストの章扉','editorial','hand-drawn-showcase','原典SVGと組版レシピで、章のはじまりを親しみのある一枚に。'),
+    ('SlideSpeak/slide-design-skill','自分のブランドをWeb資料へ','editorial','slidespeak-showcase','原典エンジンへ独自の書体・色・版式を渡して、緑の誌面を組む。'),
+    ('liustack/pptwise','図解から組む編集できる企画書','diagram','pptwise-showcase','原典CLIの図形と構成を使い、拠点の関係を編集できるPPTXへ。'),
+    ('Aham-AIAPP/aham-ppt','短い図解で伝えるワークショップ','diagram','aham-showcase','原典の固定版式で、行程や段階を編集できる図解資料へ。'),
     ('op7418/guizang-ppt-skill','雑誌とSwissのレイアウト','editorial','port-town','原典テンプレートで、企画を余白とグリッドに落とし込む。'),
     ('crazyykhllc-bit/CyberPPT','情報を整理するPPTX','work','cyberppt','原典の内容設計を活かし、文字と図形を編集できる資料へ。'),
     ('gongnyang/awesome-html-scrolline-deck','スクロールで語る企画','motion','html-scrolline','横断する図形と流れで、体験を一つのストーリーに。'),
@@ -37,65 +40,35 @@ def load(path): return json.loads((ROOT/path).read_text(encoding='utf-8-sig'))
 def dump(path,value): (ROOT/path).write_text(json.dumps(value,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 
 def skill_text(entry,profile,case):
-    repo=entry['repository']; commit=profile['upstream_commit']
-    refs=profile.get('source_refs') or profile.get('skill_paths') or []
-    paths=[r if isinstance(r,str) else r.get('path','') for r in refs]
-    paths=list(dict.fromkeys(p for p in paths if p))[:8]
-    links='\n'.join('- https://github.com/'+repo+'/blob/'+commit+'/'+p for p in paths if not p.startswith('examples/'))
-    legal_links='\n'.join('- https://github.com/'+repo+'/blob/'+commit+'/'+p for p in profile.get('license_paths',[]) if not p.startswith('examples/'))
-    requirements='\n'.join('- '+str(r) for r in profile.get('requirements',[])[:6])
-    method=profile.get('method_ja') or case['method']
-    recipe_notes='\n'.join('- '+v for v in profile.get('recipe_notes',[]))
-    return f'''---
-name: {case['fork_id']}-entry
-description: {entry['title_ja']}を日本語で制作するときに使う。{repo}の原典方式を使い、作例の作風を自分の題材へ展開する。
----
+    """Ship the maintained skill itself, with a small guide for a loose .md file."""
+    source=ROOT/'skill-forks'/case['fork_id']/'SKILL.md'
+    text=source.read_text(encoding='utf-8-sig').strip()
+    if not text.startswith('---\n'):
+        raise ValueError('Maintained skill has no frontmatter: '+str(source))
+    # These sentences were our superseded review policy, not upstream build gates.
+    text=text.replace('PowerPointは受け手の書体環境と全ページの実描画を確認する。',
+                      'PowerPointは受け手の書体環境を案内し、主要な完成ファイルが開くことを確認する。')
+    text=text.replace('原典の方式で実ファイルを生成し、全ページの本文、グラフ、図、ノート、移動を確認する。',
+                      '原典の方式で実ファイルを生成し、主要な出力の初回表示を確認する。原典の必須ビルド確認は維持し、明白な欠けだけ直す。')
+    repo=entry['repository'];commit=profile['upstream_commit']
+    notes=profile.get('recipe_notes',[])
+    specific=('\n\n## この方式で気をつけること\n\n'+
+              '\n'.join('- '+note for note in notes)) if notes else ''
+    license_paths=profile.get('license_paths',[])[:3]
+    legal='\n'.join('- https://github.com/'+repo+'/blob/'+commit+'/'+p for p in license_paths)
+    return text+specific+f'''
 
-# {entry['title_ja']}
+## 単体の本文から使う
 
-Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありません。
-
-## 元の方式で作る
+この本文は `skill-forks/{case['fork_id']}/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/{repo}/tree/{commit}
 
-{links}
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `{Path(case['fork_download']).name}` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
 
-{method}
+原作者: {repo.split('/')[0]} / 原典条件: {profile.get('license') or '個別条件'}。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
-このMarkdownは指示本文です。実装・テンプレートを内包しません。上の固定原典から必要ファイルを読むか、サイトの「一式ZIP」から日本語派生と原典を取得してから制作する。別の汎用rendererへ置き換えて、この原典の作例と呼ばない。
-
-## 必要なもの
-
-{requirements or '- 原典の方式を実行できるコーディングエージェントと依存環境。'}
-
-{recipe_notes}
-
-## 日本語で魅力ある資料へ
-
-1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。
-2. 原典のテンプレート・controller・生成器に沿って構成する。日本語見出しは意味の区切りで改行し、本文を詰め込まない。
-3. 見出し・本文・英数字の書体を分ける。誌面はShippori Mincho × Zen Kaku Gothic New × Manrope、動く資料はZen Kaku Gothic New × Space Groteskがこのサイトの推奨。公式OFL配布物を使い、条件を保持する。
-4. 大胆な表紙、余白、大きな図形・数字、ページごとの構図の変化を作る。角丸カードをただ繰り返さない。Webの動きは主張を順に見せるために使う。
-5. 原典方式で実ファイルを生成する。主要な出力が開くことと明白な欠けだけ確認し、必要な箇所を直す。
-
-## この作例を自分の題材へ
-
-作例: {case['title']}
-
-{case['prompt_text']}
-
-上の施設名・企画・数値を、自分の入力に置き換える。生成方法の変更は短く記す。完成資料と必要な入力・制作ソースを渡す。
-
-## 帰属と配布条件
-
-原作者: {repo.split('/')[0]} / 原典条件: {profile.get('license') or '個別条件'}
-
-{legal_links}
-
-{profile.get('license_note','原文LICENSE・NOTICEと素材・依存物の条件を保持する。')}
-
-サイトのカタログ条件を、原典コードや書体の再許諾に用いない。詳細な実装と原文条件は一式ZIPまたは固定原典を参照する。
+{legal}
 '''
 
 if __name__=='__main__':
@@ -109,7 +82,8 @@ if __name__=='__main__':
         if repo in excluded_repos:continue
         if case_id not in by_case:continue
         case=by_case[case_id];profile=profiles[repo]
-        entry={'repository':repo,'title_ja':title,'description_ja':description,'style':style,'featured_case_id':case_id,'skill_download':'downloads/skills/'+case['fork_id']+'.md','fork_download':case.get('fork_download'),'license':profile.get('license')}
+        skill_source='skill-forks/'+case['fork_id']+'/SKILL.md'
+        entry={'repository':repo,'title_ja':title,'description_ja':description,'style':style,'featured_case_id':case_id,'skill_download':'downloads/skills/'+case['fork_id']+'.md','skill_source':skill_source,'skill_source_sha256':hashlib.sha256((ROOT/skill_source).read_bytes()).hexdigest(),'fork_download':case.get('fork_download'),'license':profile.get('license')}
         (ROOT/entry['skill_download']).write_text(skill_text(entry,profile,case),encoding='utf-8')
         entries.append(entry)
     active_case_ids=[e['featured_case_id'] for e in entries]

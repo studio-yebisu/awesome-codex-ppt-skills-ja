@@ -58,6 +58,7 @@ guide='''<main class="shell doc-shell"><section class="doc-hero"><p class="eyebr
 出力：編集できるPowerPoint、または再生できるWebスライド
 元スキルのテンプレート・生成器・controllerを活かしてください。
 完成資料と必要な制作ソースをください。</pre></section><section class="doc-section"><h2>書体も一緒に用意する。</h2><p>PowerPointでは使う書体を作成者と受け手の両方へ導入。Webでは必要なフォントと条件を一式に同梱します。</p><p><a href="./#fonts">書体を試す →</a> · <a href="downloads/fonts/AI-FONT-GUIDE.md" download>AI向け書体指示 ↓</a> · <a href="downloads/yebisu-oss-font-kit.zip" download>OSS書体一式 ↓</a></p></section><section class="doc-section"><h2>原典の強みを、日本語へ。</h2><p>元のスキルをこの環境で使い、コピー・書体・レイアウト・動きを改良しています。新作はSol 6.1の並列制作で完成。必要なビルドと初回表示だけを確認し、制作に時間を使う方針です。</p><p><a href="docs/PROJECT.md">制作方針</a> · <a href="docs/PRODUCT_SPEC.md">製品仕様</a> · <a href="licenses.html">原典・利用条件</a></p></section></main>'''
+guide=guide.replace('気になる資料を再生し、「スキル本文」をダウンロード。','気になる資料を再生して作り方を開く。スキル本文はその場で読んでコピー、またはMarkdownとして取得。')
 write('guide.html',guide,'使い方')
 
 terms='''<main class="shell doc-shell"><section class="doc-hero"><p class="eyebrow">CREDITS / LICENSES</p><h1>原典と、書体への敬意。</h1></section><section class="doc-section"><h2>原典を使った、日本語の独自プロジェクト。</h2><p>各スキルの作者と固定原典、原文LICENSE・NOTICEを保持しています。日本語派生・制作コードの変更は各キットに記載。カタログのCC0を原典コード、素材、書体の条件へ広げません。</p><div class="license-table-wrap"><table class="doc-table"><thead><tr><th>原典</th><th>条件</th><th>日本語版</th></tr></thead><tbody>'''

@@ -1,0 +1,38 @@
+[
+  {
+    "repository": "liustack/pptwise",
+    "summary_ja": "原典v5 typed componentsとテーマを使う編集可能な日本語拠点提案。",
+    "example_ids": [
+      "pptwise-showcase"
+    ],
+    "upstream_commit": "65690bc705c1b5db41b5593015675945673da542",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/pptwise-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/pptwise-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Node22.19+",
+      "PPTX生成に認証/API不要",
+      "Zen Kaku Gothic New / Space Grotesk",
+      "PNG/PDF: Windows Microsoft PowerPoint"
+    ],
+    "commands": [
+      "cd runtime",
+      "npm ci --ignore-scripts --no-audit --no-fund",
+      "cd ..",
+      "node runtime/dist/cli.js validate input/deck.json",
+      "node runtime/dist/cli.js render input/deck.json -o deck-rebuilt.pptx --no-git-ignore"
+    ],
+    "guide": "examples/repositories/pptwise-showcase/README.md",
+    "source_download": "downloads/pptwise-example-ja.zip",
+    "fork_download": "downloads/pptwise-ja.zip",
+    "limitations": [
+      "図はnative shapes/textで、データchart/table objectとは異なる",
+      "全ページ詳細目視・独立レビュー・native監査・ZIP再実行は未実施"
+    ]
+  }
+]
