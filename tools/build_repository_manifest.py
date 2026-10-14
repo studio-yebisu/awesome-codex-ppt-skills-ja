@@ -28,7 +28,9 @@ def main():
                 continue
             by_id[c['id']] = c
     cases = list(by_id.values())
+    integration_notes = load('data/case-integration-notes.json') if (ROOT/'data/case-integration-notes.json').exists() else {}
     for c in cases:
+        c.update(integration_notes.get(c['id'], {}))
         if 'repository.html?' not in c['guide']:
             c['case_guide'] = c['guide']
         c['guide'] = 'repository.html?repo=' + quote(c['repository'], safe='/')
@@ -47,7 +49,7 @@ def main():
             'license_note': r['license']['scope_and_distribution_ja'],
             'source_refs': r['source_refs'],
             'execution_status': r['execution_status'],
-            'steps': ['原典の環境と個別条件を確認する', '記載したコマンドの外部API使用条件を確認する', '入力を用意し、原典の方式で生成する', '完成ファイルを開いて全ページを確認する']}
+            'steps': ['原典の環境と個別条件を確認する', '記載したコマンドの外部API使用条件を確認する', '入力を用意し、原典の方式で生成する', '原典のビルドと主要な完成ファイルの初回表示を確認する']}
     for name in ['native-repository-guides', 'japanese-repository-guides', 'web-repository-guides','dashi-repository-guides','codex-image-repository-guides','pptagent-repository-guides','multiagent-repository-guides','knowledgecat-repository-guides','spacemulti-repository-guides','presenter-repository-guides','starry-repository-guides','seaslides-repository-guides','pptdesign-repository-guides','magicslide-repository-guides','imageeditable-repository-guides','reactdeck-repository-guides','claudeoffice-repository-guides','slidemaker-repository-guides','businesscarousel-repository-guides','cyberppt-repository-guides','handsondeck-repository-guides','slidewriter-repository-guides','htmlscrolline-repository-guides','designsystem-repository-guides','htmlconversion-repository-guides','pradaslides-repository-guides','delivery-repository-guides']:
         if (ROOT / ('data/' + name + '.json')).exists():
             authored.update({r['repository']: r for r in load('data/' + name + '.json')})
@@ -88,8 +90,8 @@ def main():
             provenance = load(c['provenance'])
             profile['execution_type'] = provenance.get('execution_type', 'original_skill_workflow')
             profile['method_ja'] = c['method']
-            profile['requirements'] = ['原典のスキルを読めるコーディングエージェント', '各作例のPROVENANCE.jsonに記録した制作環境', 'Noto Sans JP（PowerPointでの表示）']
-            profile['steps'] = ['日本語派生版を取得し、そのSKILL.mdを読む', '作例の入力資料を、自分の題材へ置き換える', '日本語の依頼文を添付して制作を依頼', '完成した実ファイルを開き、日本語と全ページを確認']
+            profile['requirements'] = ['原典のスキルを読めるコーディングエージェント', '各作例のPROVENANCE.jsonに記録した制作環境', '作例のREADMEに指定した書体と個別条件']
+            profile['steps'] = ['日本語派生版を取得し、そのSKILL.mdを読む', '作例の入力資料を、自分の題材へ置き換える', '日本語の依頼文を添付して制作を依頼', '原典のビルドと主要な完成ファイルの初回表示を確認する']
         profiles.append(profile)
     dump('data/repository-guides.json', profiles)
     dump('data/production-ledger.json', {'catalog_count': len(original),

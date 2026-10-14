@@ -1,0 +1,112 @@
+{
+  "repository": "LearnAIHubC/LearnDeck",
+  "commit": "d5ea12ca88f9a87edaf20b6bb48847790baed698",
+  "license": "MIT",
+  "author": "LearnAIHubC",
+  "official": false,
+  "method": "Original HTML-to-PPT alias and converter: Chromium DOM measurement, native text/rectangle/ellipse reconstruction, inline SVG extraction with individual PNG compatibility images.",
+  "original_source_preserved": true,
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "af235cad0f4270d8ad8df004f56ddce33c68ac36263200a2b3edca91dca9bc28",
+      "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/SKILL.md"
+    },
+    {
+      "path": "scripts/html_to_ppt.js",
+      "sha256": "788136cca09f3bc8e22e468542aa7316f0b5a374ca82d11f9b1d3ee996e16790",
+      "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/html_to_ppt.js"
+    },
+    {
+      "path": "scripts/html_to_editable_pptx.js",
+      "sha256": "a9e74b1071d654dddd79ffc188d6468864f3b218b6d3c59e931a20babbb8ba1c",
+      "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/html_to_editable_pptx.js"
+    },
+    {
+      "path": "scripts/generate_ppt.js",
+      "sha256": "71dda6e3e908a12cf981f4c224074c40d4b90bcec924bd80971074039ecfce81",
+      "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/generate_ppt.js"
+    },
+    {
+      "path": "LICENSE.txt",
+      "sha256": "6a7c8c5b686d968cc09b19ca4351797f7358c04fb8c8727c4af0940674f2ac29",
+      "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/LICENSE.txt"
+    }
+  ],
+  "original_cli_executed": "runtime/scripts/html_to_ppt.js --input source.html --out-dir . --name deck --no-preview --font-face \"BIZ UDPGothic\" --viewport-width 1280 --viewport-height 720",
+  "modifications": [
+    "Local converter only: collect computed fontFamily for elements/text runs and use its first family instead of forcing every run to one font.",
+    "Local converter language metadata changed zh-CN to ja-JP.",
+    "Original DOM measurement, PptxGenJS native reconstruction, SVG/PNG extraction and gradient patch pipeline unchanged."
+  ],
+  "editability": {
+    "text": "Native editable text boxes with Dela/Shippori/BIZ roles.",
+    "shapes": "Native background, bar, ellipse, vase, shelf and divider shapes.",
+    "flowers": "Separate PNG image objects from SVG; SVG sources retained. Petals are not native editable PowerPoint shapes."
+  },
+  "font_notice": "Actual unmodified Google Fonts TTF and OFL included; PPTX does not embed fonts. Registered fonts used for local PowerPoint rendering.",
+  "fonts": [
+    {
+      "family": "Dela Gothic One",
+      "file": "DelaGothicOne-Regular.ttf",
+      "weight": 400,
+      "source_commit": "66928797f271fed5ee428544e7229685e2d90127",
+      "license": "OFL-1.1"
+    },
+    {
+      "family": "Shippori Mincho",
+      "file": "ShipporiMincho-Bold.ttf",
+      "weight": 700,
+      "source_commit": "66928797f271fed5ee428544e7229685e2d90127",
+      "license": "OFL-1.1"
+    },
+    {
+      "family": "BIZ UDPGothic",
+      "file": "BIZUDPGothic-Regular.ttf",
+      "weight": 400,
+      "source_commit": "66928797f271fed5ee428544e7229685e2d90127",
+      "license": "OFL-1.1"
+    },
+    {
+      "family": "BIZ UDPGothic",
+      "file": "BIZUDPGothic-Bold.ttf",
+      "weight": 700,
+      "source_commit": "66928797f271fed5ee428544e7229685e2d90127",
+      "license": "OFL-1.1"
+    },
+    {
+      "family": "Manrope",
+      "file": "Manrope[wght].ttf",
+      "weight": "200 800",
+      "source_commit": "66928797f271fed5ee428544e7229685e2d90127",
+      "license": "OFL-1.1"
+    }
+  ],
+  "dependencies": [
+    {
+      "package": "playwright",
+      "version": "1.62.1",
+      "license": "Apache-2.0",
+      "bundled_in_kit": false
+    },
+    {
+      "package": "pptxgenjs",
+      "version": "4.0.1",
+      "license": "MIT",
+      "bundled_in_kit": false
+    },
+    {
+      "package": "sharp",
+      "version": "0.35.5",
+      "license": "Apache-2.0",
+      "bundled_in_kit": false
+    },
+    {
+      "package": "jszip",
+      "version": "3.10.1",
+      "license": "(MIT OR GPL-3.0-or-later)",
+      "bundled_in_kit": false
+    }
+  ],
+  "artifact_tool_used": false
+}

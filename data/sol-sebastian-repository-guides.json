@@ -1,0 +1,87 @@
+[
+  {
+    "repository": "MURMURE11118586/codex-xkppt-skill",
+    "example_ids": [
+      "sebastian-207"
+    ],
+    "upstream_commit": "978b46d116fd8fd971f9cd963f745da62f7f1f26",
+    "summary_ja": "editorial-inkの原典native PowerPoint生成器とdesign-systemを日本語化し、架空の書店文化企画8ページを編集可能PPTXにした作例。",
+    "production_status": "light_check_complete",
+    "execution_type": "upstream-native-pptx-generator-with-japanese-adaptations",
+    "requirements": [
+      "Node.jsとpptxgenjs。依存条件は同梱package.jsonを参照。自動installなし。",
+      "Noto Serif CJK JP、Noto Sans CJK JP、DejaVu Sans。環境書体は同梱していない。",
+      "表紙のページ固有AI画像は同梱。再生成はbuilt-in imagegen。",
+      "プレビュー再生成にはartifact-toolなど完成PPTXを実レンダリングできる環境。"
+    ],
+    "commands": [
+      "node source/upstream-adapted/codex-ppt-skill/scripts/build_native_pptx.mjs --spec input/spec_lock.json --slides input/slides_plan.json --asset-plan input/asset_plan.json --notes input/speaker_notes.json --style-card source/upstream-adapted/codex-ppt-skill/assets/style-cards/editorial-ink.json --output reproduced.pptx"
+    ],
+    "steps": [
+      "日本語SKILLとREADMEを読み、原典固定commitとMIT LICENSEを確認。",
+      "input/BRIEF.mdとdata.jsonを自分の題材へ更新。架空・仮定を明示。",
+      "編集可能な文字・比較・工程・ロードマップと、ページ固有の表紙画像を計画。",
+      "原典native生成器を実行し、完成PPTXを実レンダリング。",
+      "初回表示で画像欠け、日本語の意味区切り、重複を確認し、由来と変更を記録。"
+    ],
+    "limitations": [
+      "原典aesthetic_qaは80.7点FAIL。紙色の占有と文字主体ページの右余白を警告。報告を保持し、原典85点qualified合格とは表示しない。",
+      "PowerPointやLibreOfficeでの実機確認ではなく、artifact-toolによる完成PPTXのimportレンダリング。",
+      "PDFは実レンダリングPNGをまとめた画像ベース。直接PDF exportはruntime依存不足で失敗。",
+      "PPTXはCJK明朝指定を含むが、artifact-toolの日本語表示はゴシック調に見える。厳密な明朝再現は保証しない。",
+      "原典自動画像計画を日本語派生で変更。表紙にはAI挿絵、体験・工程・締めにはネイティブ要素を使用。",
+      "原典全テキストを同梱。PNGギャラリーは未取得・未同梱。"
+    ],
+    "source_refs": [
+      "https://github.com/MURMURE11118586/codex-xkppt-skill/tree/978b46d116fd8fd971f9cd963f745da62f7f1f26",
+      "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/LICENSE",
+      "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/codex-ppt-skill/scripts/build_native_pptx.mjs"
+    ],
+    "guide": "examples/repositories/sebastian-207/README.md",
+    "source_download": "downloads/sebastian-207-example-ja.zip",
+    "fork_download": "downloads/sebastian-207-ja.zip"
+  },
+  {
+    "repository": "demoolight/academic-image-ppt",
+    "example_ids": [
+      "sebastian-208"
+    ],
+    "upstream_commit": "2aac1a711ff658ab67d79a0e98cc54b5a0468751",
+    "summary_ja": "imagegenの全頁画像を原典スクリプトでノート付きPPTXにした、日本語の架空空間デザイン研究提案11頁。",
+    "production_status": "light_check_complete",
+    "execution_type": "upstream-imagegen-with-original-pptx-notes-packager-ja",
+    "requirements": [
+      "built-in imagegen。CLI/API生成未使用",
+      "Node.jsとpptxgenjs 4.0.1",
+      "本文・図の変更は画像の再生成または差替え"
+    ],
+    "commands": [
+      "npm install --ignore-scripts --cache /tmp/slide208-npm-cache",
+      "node source/package_image_pptx_with_notes.mjs --images image_pages --notes NOTES.md --out deck.pptx --title 雨の図書室"
+    ],
+    "steps": [
+      "入力・Blueprintを作る。架空提案と未検証仮説を明示",
+      "3案style boardとアンカーをimagegenで生成。判断の主体を記録",
+      "頁別imagegenで画像正本を生成。日本語と未検証表示を確認",
+      "話者ノートを記し、原典スクリプトでPPTXを包装",
+      "主な表示と頁数・画像数・ノート数を確認"
+    ],
+    "limitations": [
+      "PPTX not opened in Microsoft PowerPoint or LibreOffice",
+      "HTML player navigation code and image paths checked statically; no browser runtime check",
+      "No OCR, exhaustive typography review, or independent scored audit",
+      "Original style-board miniatures are not strict 16:9; final pages are 16:9",
+      "Generated font appearance is not verified embedding",
+      "原典の個別ユーザー承認ゲートを、明示された自律完遂指示の下で担当判断へ改変",
+      "画像内の書体は意図指定で、実フォントファイル同梱や埋込はない"
+    ],
+    "source_refs": [
+      "https://github.com/demoolight/academic-image-ppt/tree/2aac1a711ff658ab67d79a0e98cc54b5a0468751",
+      "https://github.com/demoolight/academic-image-ppt/blob/2aac1a711ff658ab67d79a0e98cc54b5a0468751/skills/academic-image-ppt/SKILL.md",
+      "https://github.com/demoolight/academic-image-ppt/blob/2aac1a711ff658ab67d79a0e98cc54b5a0468751/LICENSE"
+    ],
+    "guide": "examples/repositories/sebastian-208/README.md",
+    "source_download": "downloads/sebastian-208-example-ja.zip",
+    "fork_download": "downloads/sebastian-208-ja.zip"
+  }
+]

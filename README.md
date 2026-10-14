@@ -6,10 +6,10 @@ GitHubの原典スキルを実際に使い、魅力ある日本語資料・短�
 
 ## 現在のアトリエ
 
-- 厳選31スキルと、日本語の作例31冊・168枚。
-- Sol 6.1の並列制作で、原典CLIによる一枚の企画書と、原典Morphエンジンによる6枚の動く資料を追加。
+- 厳選36スキルと、日本語の作例36冊・203枚。
+- Sol 6.1の並列制作で、原典HTML教材・Beamer・DOM変換器による新作3冊16枚を追加。別制作セッションの2冊19枚も、その制作環境と編集範囲を示して接続。
 - 各派生スキル固有の本文を直接Markdown取得。サイトで本文を開いてコピーでき、原典・テンプレート・入力の一式ZIPも取得。
-- 新しいOSS書体6ファミリー・10ファイルと、4作風の実フォント見本・AI向け指示コピー。
+- OSS書体8ファミリー・14ファイルと、6作風の実フォント見本・AI向け指示コピー。BIZ UDPGothic／BIZ UDPMinchoを公式配布物とOFL付きで追加。
 
 原典のSKILL、固有テンプレート・controller・生成器を使います。日本語向けの改良と実施範囲は各作例に記載。主な出力が開く範囲の軽い確認を行い、制作を中心に進めています。
 
@@ -33,13 +33,19 @@ python tools/build_atelier_site.py
 
 [制作方針](docs/PROJECT.md) · [製品仕様](docs/PRODUCT_SPEC.md) · [現在の実行目標](data/project-goal.json) · [厳選掲載](data/product-collection.json)
 
-Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は41リポ・46冊で、現在の厳選掲載と区別します。
+Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は46リポ・51冊で、現在の厳選掲載と区別します。
 
 原作者、固定原典、LICENSE・NOTICEと書体のOFLを保持します。カタログのCC0は各スキル・コード・素材・書体の条件を変更しません。[原典・条件](licenses.html)を参照してください。
 
 公開更新・merge・deployはローカル制作と別に扱います。
 
-最新バッチ： [土曜日を、街の作業場に。](examples/repositories/agent-slides-showcase/README.md) · [街を歩く、寄り道を選ぶ。](examples/repositories/slidefly-showcase/README.md)。作例選択に合わせて依頼文・本文・ZIPを切り替え、Web作例のPowerPoint版も取得できます。PPTX内のMorph実再生は未確認です。
+最新バッチ： [割合は、全体との比べ方。](examples/repositories/soil-teaching-showcase/README.md) · [待ち時間のしくみ](examples/repositories/beamer-showcase/README.md) · [花を、一本から。](examples/repositories/learndeck-showcase/README.md)。原典のHTML段階表示、Beamer、DOMからのPPTX変換を実使用。PDFの絞り込みとフロート表示にも対応しました。
+
+別制作セッションの取り込み： [まちを、余白から。](examples/repositories/sebastian-207/README.md) · [雨の図書室](examples/repositories/sebastian-208/README.md)。制作元は各PROVENANCEへ記録。前者の原典美術QAは80.7点FAILを維持。後者の本文・図は画像で、ノートと画像差替えを編集できます。両方ともPowerPoint実機表示は未確認です。
+
+SOILは実行ソフトウェアがMIT、設計文・スキルの派生がCC BY-NC-SA 4.0です。本文の取得前と日本語キットへ非商用・帰属・継承条件を表示し、独自の教材出力を一括で非商用と解釈しません。Beamerの欧文書体は同梱のGFL／LPPL、和文と書体アトリエはOFLの原文を保持します。
+
+前のバッチ： [土曜日を、街の作業場に。](examples/repositories/agent-slides-showcase/README.md) · [街を歩く、寄り道を選ぶ。](examples/repositories/slidefly-showcase/README.md)。作例選択に合わせて依頼文・本文・ZIPを切り替え、Web作例のPowerPoint版も取得できます。PPTX内のMorph実再生は未確認です。
 
 ひとつ前のバッチ： [本の向こうへ。](examples/repositories/slidespeak-showcase/README.md) · [ひらく、街の作業場。](examples/repositories/pptwise-showcase/README.md) · [朝の20分を、組み直す。](examples/repositories/aham-showcase/README.md)。
 

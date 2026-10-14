@@ -57,7 +57,7 @@
       "原典の環境と個別条件を確認する",
       "記載したコマンドの外部API使用条件を確認する",
       "入力を用意し、原典の方式で生成する",
-      "完成ファイルを開いて全ページを確認する"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "固定commitの巨大archiveは取得ツールの200MB上限を超えたため、監査済み文書と同commitの必要なコード3ファイルのみ取得。これは生成失敗ではない。",
@@ -2770,7 +2770,7 @@
   },
   {
     "repository": "xukp20/build-beamer-slides",
-    "summary_ja": "Beamer資料の構成設計、レンダリング、表示確認を行うCodex向けスキル。",
+    "summary_ja": "Warm Editorialを日本語に対応させ、数式・TikZの編集可能なTeXとPDFへ。",
     "kind": "general",
     "upstream_commit": "e63b61b140a00596e5260ec7611e42bfde7efb5f",
     "checked_at": "2026-10-13T13:35:24.966139+00:00",
@@ -2800,66 +2800,135 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "beamer-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "XeLaTeX standard workflow or official Tectonic 0.17.0 XeTeX adapter",
+      "Shippori Mincho / Zen Kaku Gothic New (同梱TTF, OFL)",
+      "Python + PyMuPDF (PNG出力のみ)"
+    ],
+    "commands": [
+      "xelatex -interaction=nonstopmode -halt-on-error deck.tex (2回)",
+      "python build.py --tectonic C:/path/to/tectonic.exe"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "学習用の一定時間モデル。実測ではない",
+      "PDFが主出力、.texで編集、PPTX未生成",
+      "代表表示の最小確認のみ。全ページ詳細監査・独立レビュー・ZIP再実行なし"
     ],
-    "forks": [],
-    "original_description_ja": "Beamer資料の構成設計、レンダリング、表示確認を行うCodex向けスキル。"
+    "forks": [
+      "beamer-ja"
+    ],
+    "guide": "examples/repositories/beamer-showcase/README.md",
+    "source_download": "downloads/beamer-example-ja.zip",
+    "fork_download": "downloads/beamer-ja.zip",
+    "original_description_ja": "Beamer資料の構成設計、レンダリング、表示確認を行うCodex向けスキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "chunyifish/soil-teaching-slides",
-    "summary_ja": "SOIL形式の授業資料を作成するスキル。PPTX、NotebookLM、オフライン用HTMLに対応。",
+    "summary_ja": "原典SOILの認知的ページ役割とMode C template/controllerを実使用した、割合の日本語6枚教材。",
     "kind": "general",
     "upstream_commit": "ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f",
     "checked_at": "2026-10-13T13:35:36.470494+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": "MIT",
+    "license": "MIT (software / HTML template); CC BY-NC-SA-4.0 (SOIL content / adapted skill)",
     "license_paths": [
       "LICENSE",
-      "NOTICE.md"
+      "NOTICE.md",
+      "LICENSE-CONTENT.md"
     ],
     "skill_paths": [
       "soil-teaching-slides/SKILL.md"
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/README.md",
-        "bytes": 3954
+        "path": "soil-teaching-slides/SKILL.md",
+        "sha256": "d4621d4397ce9a3e13b3186fc0c200956a5e90fe5611e2df6dc6766adacbb565",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/soil-teaching-slides/SKILL.md"
       },
       {
-        "path": "soil-teaching-slides/SKILL.md",
-        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/soil-teaching-slides/SKILL.md",
-        "bytes": 19398
+        "path": "soil-teaching-slides/assets/html-deck-template/index.html",
+        "sha256": "e02e69570433dda1603e567dab36aa7adaf4f64cade37391df46515211f60fd2",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/soil-teaching-slides/assets/html-deck-template/index.html"
+      },
+      {
+        "path": "soil-teaching-slides/assets/html-deck-template/slides.js",
+        "sha256": "8944f9b3ca8fbb3bffb694d6c44e939d005efb29625c2ec73c0b4f1f5d7e751c",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/soil-teaching-slides/assets/html-deck-template/slides.js"
+      },
+      {
+        "path": "soil-teaching-slides/assets/html-deck-template/styles.css",
+        "sha256": "df971a807c3e8d328faf5990e7ca29cbb57d8702646f2dc049744ba2139e594b",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/soil-teaching-slides/assets/html-deck-template/styles.css"
+      },
+      {
+        "path": "soil-teaching-slides/references/html-slide-deck.md",
+        "sha256": "7c65123f2920ac9daaec3820fdf2099fede3827e9e71fe5e2d4934dbc6639137",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/soil-teaching-slides/references/html-slide-deck.md"
+      },
+      {
+        "path": "soil-teaching-slides/references/html-style-selection.md",
+        "sha256": "7fc53b83b257ca29db7327dbf0a4986b13142b481328a99022410f279e47c912",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/soil-teaching-slides/references/html-style-selection.md"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/LICENSE",
-        "bytes": 1066
+        "sha256": "74202e0cc8a2fa8f4c4b258d1037a17ff9c17eaef521e471cc16f96d74568323",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/LICENSE"
+      },
+      {
+        "path": "LICENSE-CONTENT.md",
+        "sha256": "bf40ae835033af82077d9183671dba8051b45048c508eefeba8ccbad385735f0",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/LICENSE-CONTENT.md"
       },
       {
         "path": "NOTICE.md",
-        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/NOTICE.md",
-        "bytes": 1399
+        "sha256": "09035e2570aac261f364bce3457b1b87da84e511974439eae0aeee5a813a9d27",
+        "url": "https://github.com/chunyifish/soil-teaching-slides/blob/ebeb43ce0e4360ba2ffc91dcfb4be5ba203bb09f/NOTICE.md"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "soil-teaching-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Chrome/Edge等のbrowser（offline可）",
+      "再生成のみPython3.10+"
+    ],
+    "commands": [
+      "python tools/build_soil_teaching_showcase.py"
+    ],
+    "steps": [
+      "各ページの学習者taskとSOIL役割を記録",
+      "原典HTML/CSS/JSをコピーして日本語contentと図を作る",
+      "原典fragmentで根拠から答えを順に表示",
+      "主要完成画面を一度開く"
+    ],
+    "limitations": [],
+    "forks": [
+      "soil-teaching-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_soil_mode_c_html_template_controller",
+    "case_ids": [
+      "soil-teaching-showcase"
+    ],
+    "license_note": "softwareはMIT、SOIL method/SKILL/referencesと派生日本語SKILLはCC BY-NC-SA 4.0。非商用・帰属・継承条件を保持。",
+    "caveats": [
+      "SOIL method/skill/reference text and adapted Japanese SKILL: CC BY-NC-SA-4.0; noncommercial, attribution and share-alike required.",
+      "Executable HTML/CSS/JS template: MIT. Fonts: OFL-1.1.",
+      "Unofficial adaptation; no endorsement or lesson-effectiveness claim."
+    ],
+    "skill": "skill-forks/soil-teaching-ja/SKILL.md",
+    "guide": "examples/repositories/soil-teaching-showcase/README.md",
+    "license_notice_ja": "ソフトウェアはMIT。SOIL方法説明と日本語スキルの派生はCC BY-NC-SA 4.0で、非商用・帰属・継承条件があります。",
     "original_description_ja": "SOIL形式の授業資料を作成するスキル。PPTX、NotebookLM、オフライン用HTMLに対応。"
   },
   {
@@ -3015,7 +3084,7 @@
       "原典の環境と個別条件を確認する",
       "記載したコマンドの外部API使用条件を確認する",
       "入力を用意し、原典の方式で生成する",
-      "完成ファイルを開いて全ページを確認する"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "SKILL冒頭の非商用説明は広いがLICENSE/NOTICEはcodeとassetsを明確に分ける。この不一致も保持し、template再配布の一般的許可は推定しない。",
@@ -3576,7 +3645,7 @@
       "原典の環境と個別条件を確認する",
       "記載したコマンドの外部API使用条件を確認する",
       "入力を用意し、原典の方式で生成する",
-      "完成ファイルを開いて全ページを確認する"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "stylesの外部テンプレ由来情報や第三者画像の権利はコードLICENSEだけで解決済みとしない。検証候補はinitial/editorial-mono。",
@@ -6082,7 +6151,7 @@
   },
   {
     "repository": "LearnAIHubC/LearnDeck",
-    "summary_ja": "テーマ、メモ、教材、アウトラインから編集可能なPowerPoint資料を作成するCodex向けツール。",
+    "summary_ja": "LearnDeck原典DOM実測converterで花の提供案5枚をPPTX化。大きな和文、native基本図形、個別花SVG/PNG。",
     "kind": "pptx",
     "upstream_commit": "d5ea12ca88f9a87edaf20b6bb48847790baed698",
     "checked_at": "2026-10-13T13:35:02.162391+00:00",
@@ -6096,32 +6165,70 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/README.md",
-        "bytes": 4531
+        "path": "SKILL.md",
+        "sha256": "af235cad0f4270d8ad8df004f56ddce33c68ac36263200a2b3edca91dca9bc28",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/SKILL.md"
       },
       {
-        "path": "SKILL.md",
-        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/SKILL.md",
-        "bytes": 6376
+        "path": "scripts/html_to_ppt.js",
+        "sha256": "788136cca09f3bc8e22e468542aa7316f0b5a374ca82d11f9b1d3ee996e16790",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/html_to_ppt.js"
+      },
+      {
+        "path": "scripts/html_to_editable_pptx.js",
+        "sha256": "a9e74b1071d654dddd79ffc188d6468864f3b218b6d3c59e931a20babbb8ba1c",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/html_to_editable_pptx.js"
+      },
+      {
+        "path": "scripts/generate_ppt.js",
+        "sha256": "71dda6e3e908a12cf981f4c224074c40d4b90bcec924bd80971074039ecfce81",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/generate_ppt.js"
       },
       {
         "path": "LICENSE.txt",
-        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/LICENSE.txt",
-        "bytes": 1068
+        "sha256": "6a7c8c5b686d968cc09b19ca4351797f7358c04fb8c8727c4af0940674f2ac29",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/LICENSE.txt"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "learndeck-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node18+",
+      "playwright/pptxgenjs/sharp/jszip",
+      "Chromium",
+      "PPTX閲覧用PowerPoint等"
+    ],
+    "commands": [
+      "node runtime/scripts/html_to_ppt.js --input source.html --out-dir . --name deck --no-preview --font-face \"BIZ UDPGothic\" --viewport-width 1280 --viewport-height 720"
+    ],
+    "steps": [
+      "source.htmlで日本語bold構図を作る",
+      "原典HTML-to-PPT alias/converterを--no-preview実行",
+      "SVG元と実TTF/OFLを保全",
+      "完成PPTXを初回表示する"
+    ],
+    "limitations": [],
+    "forks": [
+      "learndeck-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_html_to_ppt_dom_native_with_local_font_family_extension",
+    "case_ids": [
+      "learndeck-showcase"
+    ],
+    "license_notice_ja": "原典softwareはMIT、同梱書体はOFL。日本語改変と未変更原本を保持。",
+    "caveats": [
+      "PPTX flower SVG visuals are separate PNG compatibility images, not editable petal shapes.",
+      "PPTX fonts are not embedded; full original TTF/OFL supplied.",
+      "Local converter adds computed fontFamily and ja-JP metadata only.",
+      "Fictional offer; prices, shipping area and terms undecided."
+    ],
+    "skill": "skill-forks/learndeck-ja/SKILL.md",
+    "guide": "examples/repositories/learndeck-showcase/README.md",
     "original_description_ja": "テーマ、メモ、教材、アウトラインから編集可能なPowerPoint資料を作成するCodex向けツール。"
   },
   {
@@ -8255,7 +8362,7 @@
       "原典の環境と個別条件を確認する",
       "記載したコマンドの外部API使用条件を確認する",
       "入力を用意し、原典の方式で生成する",
-      "完成ファイルを開いて全ページを確認する"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "原典3種類のshellは必須。自作viewerへ置換するとそのワークフローの試用にならない。",
@@ -8617,14 +8724,14 @@
     "requirements": [
       "原典のスキルを読めるコーディングエージェント",
       "各作例のPROVENANCE.jsonに記録した制作環境",
-      "Noto Sans JP（PowerPointでの表示）"
+      "作例のREADMEに指定した書体と個別条件"
     ],
     "commands": [],
     "steps": [
       "日本語派生版を取得し、そのSKILL.mdを読む",
       "作例の入力資料を、自分の題材へ置き換える",
       "日本語の依頼文を添付して制作を依頼",
-      "完成した実ファイルを開き、日本語と全ページを確認"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [],
     "forks": [
@@ -8879,14 +8986,14 @@
     "requirements": [
       "原典のスキルを読めるコーディングエージェント",
       "各作例のPROVENANCE.jsonに記録した制作環境",
-      "Noto Sans JP（PowerPointでの表示）"
+      "作例のREADMEに指定した書体と個別条件"
     ],
     "commands": [],
     "steps": [
       "日本語派生版を取得し、そのSKILL.mdを読む",
       "作例の入力資料を、自分の題材へ置き換える",
       "日本語の依頼文を添付して制作を依頼",
-      "完成した実ファイルを開き、日本語と全ページを確認"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "今回使用したのは参照HTMLのオブジェクト編集方式。34テンプレートの全移植やPPT/PDF入力は未検証。"
@@ -9528,14 +9635,14 @@
     "requirements": [
       "原典のスキルを読めるコーディングエージェント",
       "各作例のPROVENANCE.jsonに記録した制作環境",
-      "Noto Sans JP（PowerPointでの表示）"
+      "作例のREADMEに指定した書体と個別条件"
     ],
     "commands": [],
     "steps": [
       "日本語派生版を取得し、そのSKILL.mdを読む",
       "作例の入力資料を、自分の題材へ置き換える",
       "日本語の依頼文を添付して制作を依頼",
-      "完成した実ファイルを開き、日本語と全ページを確認"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "CSSグラフは数値の表示だけでなく、高さ・角度の更新も必要。今回のグラフ値は元入力と一致することを確認。"
@@ -10445,14 +10552,14 @@
     "requirements": [
       "原典のスキルを読めるコーディングエージェント",
       "各作例のPROVENANCE.jsonに記録した制作環境",
-      "Noto Sans JP（PowerPointでの表示）"
+      "作例のREADMEに指定した書体と個別条件"
     ],
     "commands": [],
     "steps": [
       "日本語派生版を取得し、そのSKILL.mdを読む",
       "作例の入力資料を、自分の題材へ置き換える",
       "日本語の依頼文を添付して制作を依頼",
-      "完成した実ファイルを開き、日本語と全ページを確認"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "PowerPointの出力経路はありません。今回の作例は単一HTMLの6ページ。日本語書体と初期ページ数の表示を調整。"
@@ -12778,14 +12885,14 @@
     "requirements": [
       "原典のスキルを読めるコーディングエージェント",
       "各作例のPROVENANCE.jsonに記録した制作環境",
-      "Noto Sans JP（PowerPointでの表示）"
+      "作例のREADMEに指定した書体と個別条件"
     ],
     "commands": [],
     "steps": [
       "日本語派生版を取得し、そのSKILL.mdを読む",
       "作例の入力資料を、自分の題材へ置き換える",
       "日本語の依頼文を添付して制作を依頼",
-      "完成した実ファイルを開き、日本語と全ページを確認"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [],
     "forks": [
@@ -12840,7 +12947,7 @@
       "原典の環境と個別条件を確認する",
       "記載したコマンドの外部API使用条件を確認する",
       "入力を用意し、原典の方式で生成する",
-      "完成ファイルを開いて全ページを確認する"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "API未実行は動作不能を意味しない。",
@@ -13092,7 +13199,7 @@
       "原典の環境と個別条件を確認する",
       "記載したコマンドの外部API使用条件を確認する",
       "入力を用意し、原典の方式で生成する",
-      "完成ファイルを開いて全ページを確認する"
+      "原典のビルドと主要な完成ファイルの初回表示を確認する"
     ],
     "limitations": [
       "未実行をblockedとしない。独立生成器ではないという分類。",
@@ -14124,7 +14231,7 @@
   },
   {
     "repository": "MURMURE11118586/codex-xkppt-skill",
-    "summary_ja": "テーマ、文書、PDF、Markdown、既存PPTから資料を作成。スタイル参照、単一ページの修正、出力と品質確認に対応。",
+    "summary_ja": "editorial-inkの原典native PowerPoint生成器とdesign-systemを日本語化し、架空の書店文化企画8ページを編集可能PPTXにした作例。",
     "kind": "convert",
     "upstream_commit": "978b46d116fd8fd971f9cd963f745da62f7f1f26",
     "checked_at": "2026-10-13T13:35:46.342968+00:00",
@@ -14137,38 +14244,53 @@
       "codex-ppt-skill/SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/README.md",
-        "bytes": 2907
-      },
-      {
-        "path": "codex-ppt-skill/SKILL.md",
-        "url": "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/codex-ppt-skill/SKILL.md",
-        "bytes": 8944
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/LICENSE",
-        "bytes": 1056
-      }
+      "https://github.com/MURMURE11118586/codex-xkppt-skill/tree/978b46d116fd8fd971f9cd963f745da62f7f1f26",
+      "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/LICENSE",
+      "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/codex-ppt-skill/scripts/build_native_pptx.mjs"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-207"
     ],
-    "forks": [],
-    "original_description_ja": "テーマ、文書、PDF、Markdown、既存PPTから資料を作成。スタイル参照、単一ページの修正、出力と品質確認に対応。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node.jsとpptxgenjs。依存条件は同梱package.jsonを参照。自動installなし。",
+      "Noto Serif CJK JP、Noto Sans CJK JP、DejaVu Sans。環境書体は同梱していない。",
+      "表紙のページ固有AI画像は同梱。再生成はbuilt-in imagegen。",
+      "プレビュー再生成にはartifact-toolなど完成PPTXを実レンダリングできる環境。"
+    ],
+    "commands": [
+      "node source/upstream-adapted/codex-ppt-skill/scripts/build_native_pptx.mjs --spec input/spec_lock.json --slides input/slides_plan.json --asset-plan input/asset_plan.json --notes input/speaker_notes.json --style-card source/upstream-adapted/codex-ppt-skill/assets/style-cards/editorial-ink.json --output reproduced.pptx"
+    ],
+    "steps": [
+      "日本語SKILLとREADMEを読み、原典固定commitとMIT LICENSEを確認。",
+      "input/BRIEF.mdとdata.jsonを自分の題材へ更新。架空・仮定を明示。",
+      "編集可能な文字・比較・工程・ロードマップと、ページ固有の表紙画像を計画。",
+      "原典native生成器を実行し、完成PPTXを実レンダリング。",
+      "初回表示で画像欠け、日本語の意味区切り、重複を確認し、由来と変更を記録。"
+    ],
+    "limitations": [
+      "原典aesthetic_qaは80.7点FAIL。紙色の占有と文字主体ページの右余白を警告。報告を保持し、原典85点qualified合格とは表示しない。",
+      "PowerPointやLibreOfficeでの実機確認ではなく、artifact-toolによる完成PPTXのimportレンダリング。",
+      "PDFは実レンダリングPNGをまとめた画像ベース。直接PDF exportはruntime依存不足で失敗。",
+      "PPTXはCJK明朝指定を含むが、artifact-toolの日本語表示はゴシック調に見える。厳密な明朝再現は保証しない。",
+      "原典自動画像計画を日本語派生で変更。表紙にはAI挿絵、体験・工程・締めにはネイティブ要素を使用。",
+      "原典全テキストを同梱。PNGギャラリーは未取得・未同梱。"
+    ],
+    "forks": [
+      "sebastian-207-ja"
+    ],
+    "execution_type": "upstream-native-pptx-generator-with-japanese-adaptations",
+    "guide": "examples/repositories/sebastian-207/README.md",
+    "source_download": "downloads/sebastian-207-example-ja.zip",
+    "fork_download": "downloads/sebastian-207-ja.zip",
+    "original_description_ja": "テーマ、文書、PDF、Markdown、既存PPTから資料を作成。スタイル参照、単一ページの修正、出力と品質確認に対応。",
+    "execution_status": "generated_with_review_record"
   },
   {
     "repository": "demoolight/academic-image-ppt",
-    "summary_ja": "学術発表向けの画像形式PowerPoint資料を作成するCodex向けスキル。",
+    "summary_ja": "imagegenの全頁画像を原典スクリプトでノート付きPPTXにした、日本語の架空空間デザイン研究提案11頁。",
     "kind": "convert",
     "upstream_commit": "2aac1a711ff658ab67d79a0e98cc54b5a0468751",
     "checked_at": "2026-10-13T13:35:46.568990+00:00",
@@ -14181,34 +14303,50 @@
       "skills/academic-image-ppt/SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/demoolight/academic-image-ppt/blob/2aac1a711ff658ab67d79a0e98cc54b5a0468751/README.md",
-        "bytes": 9385
-      },
-      {
-        "path": "skills/academic-image-ppt/SKILL.md",
-        "url": "https://github.com/demoolight/academic-image-ppt/blob/2aac1a711ff658ab67d79a0e98cc54b5a0468751/skills/academic-image-ppt/SKILL.md",
-        "bytes": 15793
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/demoolight/academic-image-ppt/blob/2aac1a711ff658ab67d79a0e98cc54b5a0468751/LICENSE",
-        "bytes": 1088
-      }
+      "https://github.com/demoolight/academic-image-ppt/tree/2aac1a711ff658ab67d79a0e98cc54b5a0468751",
+      "https://github.com/demoolight/academic-image-ppt/blob/2aac1a711ff658ab67d79a0e98cc54b5a0468751/skills/academic-image-ppt/SKILL.md",
+      "https://github.com/demoolight/academic-image-ppt/blob/2aac1a711ff658ab67d79a0e98cc54b5a0468751/LICENSE"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-208"
     ],
-    "forks": [],
-    "original_description_ja": "学術発表向けの画像形式PowerPoint資料を作成するCodex向けスキル。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "built-in imagegen。CLI/API生成未使用",
+      "Node.jsとpptxgenjs 4.0.1",
+      "本文・図の変更は画像の再生成または差替え"
+    ],
+    "commands": [
+      "npm install --ignore-scripts --cache /tmp/slide208-npm-cache",
+      "node source/package_image_pptx_with_notes.mjs --images image_pages --notes NOTES.md --out deck.pptx --title 雨の図書室"
+    ],
+    "steps": [
+      "入力・Blueprintを作る。架空提案と未検証仮説を明示",
+      "3案style boardとアンカーをimagegenで生成。判断の主体を記録",
+      "頁別imagegenで画像正本を生成。日本語と未検証表示を確認",
+      "話者ノートを記し、原典スクリプトでPPTXを包装",
+      "主な表示と頁数・画像数・ノート数を確認"
+    ],
+    "limitations": [
+      "PPTX not opened in Microsoft PowerPoint or LibreOffice",
+      "HTML player navigation code and image paths checked statically; no browser runtime check",
+      "No OCR, exhaustive typography review, or independent scored audit",
+      "Original style-board miniatures are not strict 16:9; final pages are 16:9",
+      "Generated font appearance is not verified embedding",
+      "原典の個別ユーザー承認ゲートを、明示された自律完遂指示の下で担当判断へ改変",
+      "画像内の書体は意図指定で、実フォントファイル同梱や埋込はない"
+    ],
+    "forks": [
+      "sebastian-208-ja"
+    ],
+    "execution_type": "upstream-imagegen-with-original-pptx-notes-packager-ja",
+    "guide": "examples/repositories/sebastian-208/README.md",
+    "source_download": "downloads/sebastian-208-example-ja.zip",
+    "fork_download": "downloads/sebastian-208-ja.zip",
+    "original_description_ja": "学術発表向けの画像形式PowerPoint資料を作成するCodex向けスキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "sujunmin/agy-ppt",

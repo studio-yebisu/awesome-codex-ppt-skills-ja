@@ -1,0 +1,35 @@
+[
+  {
+    "repository": "xukp20/build-beamer-slides",
+    "summary_ja": "Warm Editorialを日本語に対応させ、数式・TikZの編集可能なTeXとPDFへ。",
+    "example_ids": [
+      "beamer-showcase"
+    ],
+    "upstream_commit": "e63b61b140a00596e5260ec7611e42bfde7efb5f",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/beamer-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/beamer-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "XeLaTeX standard workflow or official Tectonic 0.17.0 XeTeX adapter",
+      "Shippori Mincho / Zen Kaku Gothic New (同梱TTF, OFL)",
+      "Python + PyMuPDF (PNG出力のみ)"
+    ],
+    "commands": [
+      "xelatex -interaction=nonstopmode -halt-on-error deck.tex (2回)",
+      "python build.py --tectonic C:/path/to/tectonic.exe"
+    ],
+    "guide": "examples/repositories/beamer-showcase/README.md",
+    "source_download": "downloads/beamer-example-ja.zip",
+    "fork_download": "downloads/beamer-ja.zip",
+    "limitations": [
+      "学習用の一定時間モデル。実測ではない",
+      "PDFが主出力、.texで編集、PPTX未生成",
+      "代表表示の最小確認のみ。全ページ詳細監査・独立レビュー・ZIP再実行なし"
+    ]
+  }
+]

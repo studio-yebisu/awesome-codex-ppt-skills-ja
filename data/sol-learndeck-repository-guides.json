@@ -1,0 +1,65 @@
+[
+  {
+    "repository": "LearnAIHubC/LearnDeck",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_html_to_ppt_dom_native_with_local_font_family_extension",
+    "case_ids": [
+      "learndeck-showcase"
+    ],
+    "summary_ja": "LearnDeck原典DOM実測converterで花の提供案5枚をPPTX化。大きな和文、native基本図形、個別花SVG/PNG。",
+    "requirements": [
+      "Node18+",
+      "playwright/pptxgenjs/sharp/jszip",
+      "Chromium",
+      "PPTX閲覧用PowerPoint等"
+    ],
+    "steps": [
+      "source.htmlで日本語bold構図を作る",
+      "原典HTML-to-PPT alias/converterを--no-preview実行",
+      "SVG元と実TTF/OFLを保全",
+      "完成PPTXを初回表示する"
+    ],
+    "commands": [
+      "node runtime/scripts/html_to_ppt.js --input source.html --out-dir . --name deck --no-preview --font-face \"BIZ UDPGothic\" --viewport-width 1280 --viewport-height 720"
+    ],
+    "source_refs": [
+      {
+        "path": "SKILL.md",
+        "sha256": "af235cad0f4270d8ad8df004f56ddce33c68ac36263200a2b3edca91dca9bc28",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/SKILL.md"
+      },
+      {
+        "path": "scripts/html_to_ppt.js",
+        "sha256": "788136cca09f3bc8e22e468542aa7316f0b5a374ca82d11f9b1d3ee996e16790",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/html_to_ppt.js"
+      },
+      {
+        "path": "scripts/html_to_editable_pptx.js",
+        "sha256": "a9e74b1071d654dddd79ffc188d6468864f3b218b6d3c59e931a20babbb8ba1c",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/html_to_editable_pptx.js"
+      },
+      {
+        "path": "scripts/generate_ppt.js",
+        "sha256": "71dda6e3e908a12cf981f4c224074c40d4b90bcec924bd80971074039ecfce81",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/scripts/generate_ppt.js"
+      },
+      {
+        "path": "LICENSE.txt",
+        "sha256": "6a7c8c5b686d968cc09b19ca4351797f7358c04fb8c8727c4af0940674f2ac29",
+        "url": "https://github.com/LearnAIHubC/LearnDeck/blob/d5ea12ca88f9a87edaf20b6bb48847790baed698/LICENSE.txt"
+      }
+    ],
+    "upstream_commit": "d5ea12ca88f9a87edaf20b6bb48847790baed698",
+    "license": "MIT",
+    "license_notice_ja": "原典softwareはMIT、同梱書体はOFL。日本語改変と未変更原本を保持。",
+    "caveats": [
+      "PPTX flower SVG visuals are separate PNG compatibility images, not editable petal shapes.",
+      "PPTX fonts are not embedded; full original TTF/OFL supplied.",
+      "Local converter adds computed fontFamily and ja-JP metadata only.",
+      "Fictional offer; prices, shipping area and terms undecided."
+    ],
+    "skill": "skill-forks/learndeck-ja/SKILL.md",
+    "guide": "examples/repositories/learndeck-showcase/README.md"
+  }
+]

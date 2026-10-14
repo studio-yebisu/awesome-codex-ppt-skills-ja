@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>SOIL HTML 簡報範本</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="theme-structured">
+  <main class="deck" aria-label="簡報">
+    <div class="stage" id="stage" tabindex="-1">
+      <section class="slide layout-title is-active" data-slide-id="opening" aria-labelledby="slide-01-title">
+        <p class="eyebrow">示範單元</p>
+        <h1 id="slide-01-title">SOIL HTML 簡報</h1>
+        <p class="lead">離線、可編輯、以教學結構為優先。</p>
+      </section>
+
+      <section class="slide layout-comparison" data-slide-id="comparison" aria-labelledby="slide-02-title" hidden>
+        <p class="eyebrow">比較</p>
+        <h2 id="slide-02-title">用結構呈現差異</h2>
+        <div class="comparison-grid slide-content">
+          <article class="panel">
+            <h3>左側概念</h3>
+            <p>放置第一組可比較的資訊。</p>
+          </article>
+          <article class="panel panel-accent">
+            <h3>右側概念</h3>
+            <p>清楚指出需要看見的差異。</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="slide layout-statement" data-slide-id="closing" aria-labelledby="slide-03-title" hidden>
+        <p class="eyebrow">總結</p>
+        <h2 id="slide-03-title">每一頁，只完成一個教學任務。</h2>
+      </section>
+    </div>
+  </main>
+
+  <nav class="controls" aria-label="簡報控制">
+    <button type="button" data-action="previous" aria-label="上一步">←</button>
+    <p class="status" aria-live="polite"><span data-current>1</span> / <span data-total>3</span><span class="step-status" data-step></span></p>
+    <button type="button" data-action="next" aria-label="下一步">→</button>
+    <button type="button" data-action="fullscreen" aria-label="切換全螢幕">⛶</button>
+  </nav>
+  <div class="progress" aria-hidden="true"><span data-progress></span></div>
+
+  <script src="slides.js"></script>
+</body>
+</html>

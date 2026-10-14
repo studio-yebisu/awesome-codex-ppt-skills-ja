@@ -14,12 +14,13 @@ function caseUse(c){if(/企画/.test(c.use_case))return '企画';if(/研修/.tes
 const dialog=$('#case-dialog');
 function previewUrl(c,path){const q=new URLSearchParams(path===c.preview?c.preview_options||{}:{});q.set('v',c.content_revision);return path+(path.includes('?')?'&':'?')+q}
 function imagePath(c,i){return previewUrl(c,c.pages?.[i]||'examples/cases/'+c.id+'/render/slide-'+String(i+1).padStart(2,'0')+'.png')}
+function formatLabel(c){return c.format==='pptx'?'PowerPoint':c.format==='pdf'?'PDF':'Web'}
 function caseCards(){
   if(!$('#case-grid'))return;
   const format=$('#case-format').value;
   const list=activeCases.filter(c=>(use==='all'||caseUse(c)===use)&&(look==='all'||entryByRepo.get(c.repository)?.style===look)&&(format==='all'||c.format===format||(format==='pptx'&&c.pptx_download)));
   $('#case-results').textContent=list.length+'冊 / '+list.reduce((n,c)=>n+c.page_count,0)+'枚';
-  $('#case-grid').innerHTML=list.length?list.map((c,i)=>'<article class="case-card" data-style="'+esc(entryByRepo.get(c.repository)?.style)+'"><button class="case-card-image'+(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+'のスライドを見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライドを見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(entryByRepo.get(c.repository)?.title_ja||c.use_case)+'</span><span>'+(c.format==='pptx'?'PowerPoint':'Web')+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.style)+'</p><div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">再生する ↗</button><a href="'+esc(entryByRepo.get(c.repository)?.skill_download)+'" download>スキル本文 ↓</a><a href="'+esc(recipeUrl(c))+'">作り方 →</a></div></div></article>').join(''):'<p class="case-empty">この作風の制作事例はまだありません。別の作風・形式を選んでください。</p>';
+  $('#case-grid').innerHTML=list.length?list.map((c,i)=>'<article class="case-card" data-style="'+esc(entryByRepo.get(c.repository)?.style)+'"><button class="case-card-image'+(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+'のスライドを見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライドを見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(entryByRepo.get(c.repository)?.title_ja||c.use_case)+'</span><span>'+formatLabel(c)+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.style)+'</p><div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">再生する ↗</button><a href="'+esc(entryByRepo.get(c.repository)?.skill_download)+'" download>スキル本文 ↓</a><a href="'+esc(recipeUrl(c))+'">作り方 →</a></div></div></article>').join(''):'<p class="case-empty">この作風の制作事例はまだありません。別の作風・形式を選んでください。</p>';
 }
 function previewFor(repo){return Array.isArray(previews)?previews.find(p=>p.repository===repo||p.repo_full_name===repo):previews.images?.[repo]||previews[repo]}
 function skillCards(){
@@ -76,7 +77,7 @@ function nativeSync(frame){
 }
 function go(n){
   if(!current)return;page=Math.max(0,Math.min(n,current.page_count-1));
-  if(current.preview_kind==='powerpoint-render')$('#case-stage').innerHTML='<img src="'+esc(imagePath(current,page))+'" alt="'+esc(current.titles[page])+'">';
+  if(['powerpoint-render','pdf-render','artifact-tool-pptx-import-render','image-slides'].includes(current.preview_kind))$('#case-stage').innerHTML='<img src="'+esc(imagePath(current,page))+'" alt="'+esc(current.titles[page])+'">';
   else send();
   $('#case-counter').textContent=(page+1)+' / '+current.page_count;
   $('#case-prev').disabled=page===0;$('#case-next').disabled=page===current.page_count-1;
@@ -90,10 +91,12 @@ function open(id,button){
   dialog.classList.toggle('square-preview',Boolean(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height));
   $('#case-owner').textContent=c.repository+' / '+c.style;
   $('#case-title').textContent=c.title;
-  $('#case-state').textContent=c.preview_notice||(c.format==='pptx'?(c.editability==='raster_slides'?'原典で生成・組版した画像のPPTX / 発表ノート付き・ページ内の文字と図は画像です':'完成PPTXをPowerPointで出力したプレビュー / 文字・図形・ノートを編集できます'):'元のスキルを適用したHTML / スライド固有の演出を再生');
+  $('#case-state').textContent=c.preview_notice||(c.format==='pptx'?(c.editability==='raster_slides'?'原典で生成・組版した画像のPPTX / 発表ノート付き・ページ内の文字と図は画像です':'完成PPTXをPowerPointで出力したプレビュー / 文字・図形・ノートを編集できます'):c.format==='pdf'?'完成PDFのプレビュー / 制作ソースから編集できます':'元のスキルを適用したHTML / スライド固有の演出を再生');
+  let licenseNotice=$('#case-license');if(!licenseNotice){licenseNotice=document.createElement('p');licenseNotice.id='case-license';licenseNotice.className='case-sample-note';$('#case-state').after(licenseNotice)}
+  licenseNotice.textContent=profileByRepo.get(c.repository)?.license_notice_ja||'';licenseNotice.hidden=!licenseNotice.textContent;
   $('#case-download').href=c.artifact_download;
-  $('#case-download').textContent=c.format==='pptx'?'PowerPointをダウンロード ↓':'Webスライド一式をダウンロード ↓';
-  for(const [id,path,label] of [['case-pptx',c.pptx_download,'PowerPoint版 ↓'],['case-pdf',c.pdf_download,'PDF ↓']]){
+  $('#case-download').textContent=c.format==='pptx'?'PowerPointをダウンロード ↓':c.format==='pdf'?'PDFをダウンロード ↓':'Webスライド一式をダウンロード ↓';
+  for(const [id,path,label] of [['case-pptx',c.pptx_download===c.artifact_download?null:c.pptx_download,'PowerPoint版 ↓'],['case-pdf',c.pdf_download===c.artifact_download?null:c.pdf_download,'PDF ↓']]){
     let link=$('#'+id);if(!link){link=document.createElement('a');link.id=id;link.className='button outline';link.setAttribute('download','');$('#case-download').after(link);}
     link.hidden=!path;link.href=path||'#';link.textContent=label;
   }

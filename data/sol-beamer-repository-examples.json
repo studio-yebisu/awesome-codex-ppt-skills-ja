@@ -1,0 +1,75 @@
+[
+  {
+    "id": "beamer-showcase",
+    "title": "待ち時間のしくみ",
+    "use_case": "数式とTikZで説明する5枚の学習教材",
+    "repository": "xukp20/build-beamer-slides",
+    "skill_repository": "xukp20/build-beamer-slides",
+    "upstream_commit": "e63b61b140a00596e5260ec7611e42bfde7efb5f",
+    "fork_id": "beamer-ja",
+    "page_count": 5,
+    "format": "pdf",
+    "preview_kind": "pdf-render",
+    "preview_notice": "PDFを表示。編集は.texで行います。PPTX未生成。",
+    "style": "Warm Editorial / 紙色・墨紺・銅色 / 明朝・ゴシック / 数式・TikZ",
+    "cover": "examples/repositories/beamer-showcase/render/slide-01.png",
+    "interior": "examples/repositories/beamer-showcase/render/slide-04.png",
+    "preview": "examples/repositories/beamer-showcase/index.html",
+    "artifact_download": "examples/repositories/beamer-showcase/deck.pdf",
+    "pdf_download": "examples/repositories/beamer-showcase/deck.pdf",
+    "source_download": "downloads/beamer-example-ja.zip",
+    "fork_download": "downloads/beamer-ja.zip",
+    "input": "examples/repositories/beamer-showcase/input/BRIEF.md",
+    "input_data": "examples/repositories/beamer-showcase/input/model.json",
+    "prompt": "examples/repositories/beamer-showcase/PROMPT.md",
+    "prompt_text": "日本語で5枚の学習用Beamer資料「待ち時間のしくみ」を制作してください。\n原典xukp20/build-beamer-slidesのWarm Editorial template-169.texとtheme.texを実際に使ってください。\n温かい紙色、墨紺、銅色。明朝の大見出し、ゴシックの本文、数式とTikZの流れ・タイムライン・グラフ、余白のある構図。\n一つの窓口、受付順、一定処理時間5秒、一定到着間隔を仮定します。実測や性能実績として扱わないでください。\n図はベクトルで編集可能な.texとして作成し、PDFを主成果にします。PowerPoint形式と称しません。\n生成成功と代表完成物の初回表示のみ確認。独立レビュー、全ページ詳細監査、ZIP再実行は不要。\n編集可能な.tex、PDF、各ページPNG、日本語ガイド、入力、依頼文、出典、原典source/license、字体OFLを含む制作ZIPと日本語skill ZIPを仕上げてください。",
+    "provenance": "examples/repositories/beamer-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/beamer-showcase/QA.json",
+    "guide": "examples/repositories/beamer-showcase/README.md",
+    "titles": [
+      "待ち時間のしくみ",
+      "一つの窓口に、仕事が届く",
+      "待ち時間を式にする",
+      "間隔が1秒違うと、待ちは積み上がる",
+      "待ち時間を減らす、三つの方法"
+    ],
+    "notes": [
+      "学習用の一定到着・一定処理時間モデル。実測値・性能実績ではありません。",
+      "学習用の一定到着・一定処理時間モデル。実測値・性能実績ではありません。",
+      "学習用の一定到着・一定処理時間モデル。実測値・性能実績ではありません。",
+      "学習用の一定到着・一定処理時間モデル。実測値・性能実績ではありません。",
+      "学習用の一定到着・一定処理時間モデル。実測値・性能実績ではありません。"
+    ],
+    "method": "原典Warm Editorial template/themeを直接使用し、xeCJK和文字体adapterを追加。原典の数学字体行を同じ公式OTFのパス指定にしたadapterを使い、Tectonic 0.17.0のXeTeX engineでBeamer/TikZ .texをPDFへcompile。",
+    "sample_notice": "仮定に基づく教材。PDFが主成果、編集は.tex。PPTXは生成していません。",
+    "pages": [
+      "examples/repositories/beamer-showcase/render/slide-01.png",
+      "examples/repositories/beamer-showcase/render/slide-02.png",
+      "examples/repositories/beamer-showcase/render/slide-03.png",
+      "examples/repositories/beamer-showcase/render/slide-04.png",
+      "examples/repositories/beamer-showcase/render/slide-05.png"
+    ],
+    "slides": [
+      {
+        "title": "待ち時間のしくみ",
+        "image": "examples/repositories/beamer-showcase/render/slide-01.png"
+      },
+      {
+        "title": "一つの窓口に、仕事が届く",
+        "image": "examples/repositories/beamer-showcase/render/slide-02.png"
+      },
+      {
+        "title": "待ち時間を式にする",
+        "image": "examples/repositories/beamer-showcase/render/slide-03.png"
+      },
+      {
+        "title": "間隔が1秒違うと、待ちは積み上がる",
+        "image": "examples/repositories/beamer-showcase/render/slide-04.png"
+      },
+      {
+        "title": "待ち時間を減らす、三つの方法",
+        "image": "examples/repositories/beamer-showcase/render/slide-05.png"
+      }
+    ]
+  }
+]

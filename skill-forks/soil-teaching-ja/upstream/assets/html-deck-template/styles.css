@@ -1,0 +1,229 @@
+:root {
+  --stage-width: 1600;
+  --stage-height: 900;
+  --background: #f7f5f0;
+  --surface: #ffffff;
+  --text: #171717;
+  --muted: #686868;
+  --line: #d8d4cb;
+  --accent: #d35230;
+  --safe-x: 96px;
+  --safe-y: 72px;
+  --font-sans: "Microsoft JhengHei", "PingFang TC", "Noto Sans TC", system-ui, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #222;
+  color: var(--text);
+  font-family: var(--font-sans);
+}
+
+button { font: inherit; }
+
+.deck {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.stage {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 1600px;
+  height: 900px;
+  overflow: hidden;
+  background: var(--background);
+  transform-origin: center center;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: var(--safe-y) var(--safe-x);
+  background: var(--background);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms ease;
+}
+
+.slide.is-active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.js .fragment {
+  transition: opacity 190ms ease, transform 190ms ease, visibility 190ms linear;
+}
+
+.js .fragment:not(.is-revealed) {
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+}
+
+.js .fragment.is-revealed {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.eyebrow {
+  margin: 0 0 24px;
+  color: var(--accent);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+h1,
+h2,
+h3,
+p { margin-top: 0; }
+
+h1,
+h2 {
+  max-width: 1320px;
+  margin-bottom: 40px;
+  font-size: 74px;
+  line-height: 1.16;
+  letter-spacing: -.025em;
+}
+
+h3 { font-size: 34px; }
+
+p,
+li { font-size: 30px; line-height: 1.55; }
+
+.lead { max-width: 980px; color: var(--muted); font-size: 38px; }
+
+.layout-title,
+.layout-statement { justify-content: center; }
+
+.layout-statement h2 { max-width: 1360px; font-size: 86px; }
+
+.slide-content { flex: 1; min-height: 0; }
+
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 36px;
+}
+
+.panel {
+  min-height: 400px;
+  padding: 48px;
+  border: 2px solid var(--line);
+  border-radius: 28px;
+  background: var(--surface);
+}
+
+.panel-accent { border-color: var(--accent); }
+
+.controls {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 999px;
+  background: rgb(0 0 0 / 62%);
+  color: #fff;
+}
+
+.controls button {
+  width: 42px;
+  height: 42px;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.controls button:hover,
+.controls button:focus-visible { background: rgb(255 255 255 / 18%); }
+
+.status { min-width: 118px; margin: 0; text-align: center; font-size: 16px; }
+
+.step-status { margin-left: 8px; color: #f2b5a1; font-size: 13px; font-weight: 700; }
+
+.progress {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 11;
+  height: 4px;
+  background: rgb(255 255 255 / 20%);
+}
+
+.progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--accent);
+  transition: width 180ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@media print {
+  @page { size: 16in 9in; margin: 0; }
+
+  html,
+  body {
+    width: auto;
+    height: auto;
+    overflow: visible;
+    background: #fff;
+  }
+
+  .deck,
+  .stage { display: block; width: auto; height: auto; overflow: visible; }
+
+  .stage { position: static; transform: none !important; }
+
+  .slide,
+  .slide.is-active {
+    position: relative;
+    display: flex !important;
+    width: 16in;
+    height: 9in;
+    break-after: page;
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .fragment,
+  .fragment.is-revealed {
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .controls,
+  .progress { display: none !important; }
+}

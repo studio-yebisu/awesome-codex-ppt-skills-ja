@@ -1,0 +1,107 @@
+\usepackage{fontspec}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{amsmath}
+\usepackage{unicode-math}
+\usetikzlibrary{arrows.meta,backgrounds,calc,fit,positioning,shapes.geometric}
+
+\setmainfont{TeX Gyre Pagella}
+\setsansfont{TeX Gyre Heros}
+\setmathfont{TeX Gyre Pagella Math}
+
+\definecolor{BMEIvory}{HTML}{F7F2E8}
+\definecolor{BMEInk}{HTML}{2F3437}
+\definecolor{BMEBrown}{HTML}{5C433B}
+\definecolor{BMETerracotta}{HTML}{B66A50}
+\definecolor{BMESage}{HTML}{7D9276}
+\definecolor{BMESand}{HTML}{E7DAC7}
+\definecolor{BMEStone}{HTML}{C9BBA8}
+\definecolor{BMEMuted}{HTML}{77716B}
+\definecolor{BMEWhite}{HTML}{FFFDFC}
+\definecolor{BMEFlow}{HTML}{655A54}
+\definecolor{BMEReturn}{HTML}{718C80}
+\definecolor{BMEOptional}{HTML}{938B83}
+
+\setbeamercolor{normal text}{fg=BMEInk,bg=BMEIvory}
+\setbeamercolor{structure}{fg=BMEBrown}
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{footline}{}
+\setbeamertemplate{headline}{}
+\AtBeginEnvironment{frame}{\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000\relax}
+
+\newcommand{\WarmFrameHeader}[3]{%
+  \node[anchor=north west,inner sep=0pt,text=BMETerracotta,
+        font=\sffamily\fontsize{6.2}{7.5}\selectfont\bfseries]
+    at ([xshift=0.86cm,yshift=-0.30cm]current page.north west) {\MakeUppercase{#2}};
+  \node[anchor=north west,inner sep=0pt,text=BMEBrown,
+        font=\rmfamily\fontsize{16.2}{19.2}\selectfont\bfseries]
+    at ([xshift=0.86cm,yshift=-0.58cm]current page.north west)
+    {\makebox[11.9cm][l]{#1}};
+  \draw[BMETerracotta,line width=1.25pt]
+    ([xshift=0.86cm,yshift=-1.29cm]current page.north west) -- ++(0.74cm,0);
+  \draw[BMEStone,line width=0.45pt]
+    ([xshift=1.72cm,yshift=-1.29cm]current page.north west) --
+    ([xshift=-0.86cm,yshift=-1.29cm]current page.north east);
+  \node[anchor=north east,inner sep=0pt,text=BMEBrown,
+        font=\sffamily\fontsize{8.5}{10}\selectfont\bfseries]
+    at ([xshift=-0.86cm,yshift=-0.58cm]current page.north east) {#3};
+}
+
+\newcommand{\WarmFrameFooter}[1]{%
+  \node[anchor=south west,inner sep=0pt,text=BMEMuted,
+        font=\sffamily\fontsize{5.8}{7}\selectfont]
+    at ([xshift=0.86cm,yshift=0.20cm]current page.south west) {#1};
+  \fill[BMETerracotta]
+    ([xshift=-1.02cm,yshift=0.24cm]current page.south east) circle[radius=1.2pt];
+}
+
+\newcommand{\WarmTag}[2][BMESand]{%
+  \tikz[baseline=(warmtag.base)]{%
+    \node[rounded corners=3pt,fill=#1,draw=none,minimum width=0pt,minimum height=0pt,
+          outer sep=0pt,inner xsep=3.6pt,inner ysep=1.2pt,text height=1.15ex,text depth=0.20ex,
+          text=BMEBrown,font=\sffamily\fontsize{4.9}{5.8}\selectfont\bfseries] (warmtag) {#2};}%
+}
+
+\newcommand{\WarmBodyText}{%
+  \color{BMEInk}\sffamily\mdseries\fontsize{6.8}{8.8}\selectfont
+  \raggedright\rightskip=0pt plus 1fil\spaceskip=0.30em plus 0.05em minus 0.03em\xspaceskip=0.45em\relax}
+\newcommand{\WarmBodySmall}{%
+  \color{BMEInk}\sffamily\mdseries\fontsize{6.5}{8.3}\selectfont
+  \raggedright\rightskip=0pt plus 1fil\spaceskip=0.30em plus 0.05em minus 0.03em\xspaceskip=0.45em\relax}
+\newcommand{\WarmDisplayMath}{%
+  \color{BMEBrown}\rmfamily\fontsize{13.5}{16.2}\selectfont}
+
+\tikzset{
+  slide/prose/.style={align=left,execute at begin node={\raggedright\hyphenpenalty=10000\exhyphenpenalty=10000\relax}},
+  warm/panel/.style={rounded corners=3.5pt,draw=BMEStone,line width=0.45pt,fill=BMEWhite},
+  warm/node/.style={rounded corners=2.8pt,draw=BMEStone,line width=0.55pt,fill=BMEWhite,
+    minimum height=0.72cm,inner xsep=0.18cm,inner ysep=0.12cm,align=center,
+    text=BMEInk,font=\sffamily\fontsize{6.5}{7.8}\selectfont},
+  warm/action/.style={warm/node,align=left,inner xsep=0.22cm,inner ysep=0.16cm},
+  warm/decision/.style={diamond,aspect=1.55,draw=BMEBrown,line width=0.62pt,fill=BMEWhite,
+    minimum width=1.18cm,minimum height=0.76cm,inner sep=0.05cm,align=center,
+    text=BMEBrown,font=\sffamily\fontsize{5.8}{6.9}\selectfont\bfseries},
+  warm/terminal/.style={rounded corners=8pt,draw=BMEStone,line width=0.55pt,fill=BMEWhite,
+    minimum height=0.58cm,inner xsep=0.22cm,inner ysep=0.10cm,align=center,
+    text=BMEBrown,font=\sffamily\fontsize{6.0}{7.2}\selectfont\bfseries},
+  warm/graph edge/.style={draw=BMEStone,line width=1.08pt,line cap=round,line join=round},
+  warm/graph node/.style={circle,draw=BMEBrown,line width=0.75pt,fill=BMEWhite,
+    minimum size=0.68cm,inner sep=0pt,text=BMEBrown,font=\sffamily\fontsize{9}{10}\selectfont\bfseries},
+  warm/graph current/.style={warm/graph node,draw=BMETerracotta,line width=0.95pt,fill=BMESand},
+  warm/graph route/.style={draw=BMETerracotta,line width=1.25pt,line cap=round,line join=round,
+    shorten <=3.4mm,shorten >=3.4mm},
+  warm/graph route arrow/.style={warm/graph route,-{Stealth[length=1.35mm,width=1.0mm]}},
+  warm/flow/.style={-{Stealth[length=1.35mm,width=1.0mm]},draw=BMEFlow,line width=0.66pt,
+    line cap=round,line join=round},
+  warm/return/.style={-{Stealth[length=1.30mm,width=0.95mm]},draw=BMEReturn,line width=0.61pt,
+    line cap=round,line join=round},
+  warm/optional/.style={-{Stealth[length=1.25mm,width=0.92mm]},draw=BMEOptional,line width=0.56pt,
+    dashed,dash pattern=on 3.1pt off 2.5pt,line cap=round,line join=round},
+  warm/highlight/.style={-{Stealth[length=1.35mm,width=1.0mm]},draw=BMETerracotta,line width=0.78pt,
+    line cap=round,line join=round},
+  warm/arrow/.style={warm/flow},
+  warm/edge label/.style={text=BMEMuted,font=\sffamily\fontsize{5.4}{6.6}\selectfont,fill=BMEIvory,
+    rounded corners=1.5pt,inner xsep=2.4pt,inner ysep=1.1pt},
+  warm/adjacent label/.style={text=BMEMuted,font=\sffamily\fontsize{5.4}{6.6}\selectfont,inner sep=0pt},
+  warm/label/.style={warm/edge label}
+}

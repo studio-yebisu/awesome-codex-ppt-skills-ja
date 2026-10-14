@@ -15,6 +15,11 @@ SELECTION = [
     ('Aham-AIAPP/aham-ppt','短い図解で伝えるワークショップ','diagram','aham-showcase','原典の固定版式で、行程や段階を編集できる図解資料へ。'),
     ('mpuig/agent-slides','企画を一枚で伝えるPowerPoint','work','agent-slides-showcase','原典CLIの文字と図形で、行程と関係図を一枚の企画書に。'),
     ('andyluu98/slidefly','図形がつながるモーション資料','motion','slidefly-showcase','原典Morphエンジンで、同じ図形が動いて話をつなぐ。'),
+    ('chunyifish/soil-teaching-slides','図解で学べるWeb教材','diagram','soil-teaching-showcase','原典の授業構成と段階表示で、割合を図から理解する教材へ。'),
+    ('xukp20/build-beamer-slides','数式と図を組む発表資料','diagram','beamer-showcase','原典Beamerの書式と数式で、説明をPDFへ組み上げる。'),
+    ('MURMURE11118586/codex-xkppt-skill','大きな文字で組む編集室の企画','editorial','sebastian-207','原典の誌面用生成器で、文字と図形を編集できる企画へ。原典美術QAは未合格。'),
+    ('demoolight/academic-image-ppt','画像で描く研究提案','editorial','sebastian-208','原典のページ別画像生成とノート付き包装で、空間の提案を資料へ。'),
+    ('LearnAIHubC/LearnDeck','HTMLから花の企画書を作る','editorial','learndeck-showcase','原典のDOM変換器で、書体の役割を保った編集可能PPTXへ。'),
     ('op7418/guizang-ppt-skill','雑誌とSwissのレイアウト','editorial','port-town','原典テンプレートで、企画を余白とグリッドに落とし込む。'),
     ('crazyykhllc-bit/CyberPPT','情報を整理するPPTX','work','cyberppt','原典の内容設計を活かし、文字と図形を編集できる資料へ。'),
     ('gongnyang/awesome-html-scrolline-deck','スクロールで語る企画','motion','html-scrolline','横断する図形と流れで、体験を一つのストーリーに。'),
@@ -85,7 +90,7 @@ if __name__=='__main__':
         if case_id not in by_case:continue
         case=by_case[case_id];profile=profiles[repo]
         skill_source='skill-forks/'+case['fork_id']+'/SKILL.md'
-        entry={'repository':repo,'title_ja':title,'description_ja':description,'style':style,'featured_case_id':case_id,'skill_download':'downloads/skills/'+case['fork_id']+'.md','skill_source':skill_source,'skill_source_sha256':hashlib.sha256((ROOT/skill_source).read_bytes()).hexdigest(),'fork_download':case.get('fork_download'),'license':profile.get('license')}
+        entry={'repository':repo,'title_ja':title,'description_ja':description,'style':style,'featured_case_id':case_id,'skill_download':'downloads/skills/'+case['fork_id']+'.md','skill_source':skill_source,'skill_source_sha256':hashlib.sha256((ROOT/skill_source).read_bytes()).hexdigest(),'fork_download':case.get('fork_download'),'license':profile.get('license'),'license_notice_ja':profile.get('license_notice_ja','')}
         (ROOT/entry['skill_download']).write_text(skill_text(entry,profile,case),encoding='utf-8')
         entries.append(entry)
     active_case_ids=[e['featured_case_id'] for e in entries]

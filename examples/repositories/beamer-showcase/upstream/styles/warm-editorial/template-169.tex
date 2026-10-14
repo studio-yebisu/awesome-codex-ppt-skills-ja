@@ -1,0 +1,79 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+\input{theme.tex}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[BMEIvory] (current page.south west) rectangle (current page.north east);
+    \fill[BMETerracotta]
+      ([xshift=0.88cm,yshift=-1.22cm]current page.north west) rectangle ++(0.14cm,-0.86cm);
+    \node[anchor=north west,inner sep=0pt,text=BMETerracotta,
+          font=\sffamily\fontsize{6.5}{8}\selectfont\bfseries]
+      at ([xshift=1.24cm,yshift=-1.25cm]current page.north west)
+      {RESEARCH NOTE};
+    \node[anchor=north west,inner sep=0pt,text=BMEBrown,
+          font=\rmfamily\fontsize{23}{27}\selectfont\bfseries,text width=13.3cm]
+      at ([xshift=1.22cm,yshift=-2.60cm]current page.north west)
+      {An editorial presentation title};
+    \node[anchor=north west,inner sep=0pt,text=BMEMuted,
+          font=\sffamily\fontsize{9.8}{12.5}\selectfont,text width=8.8cm]
+      at ([xshift=1.25cm,yshift=-3.76cm]current page.north west)
+      {A restrained subtitle for a mathematical or research talk};
+    \draw[BMEStone,line width=0.55pt]
+      ([xshift=1.25cm,yshift=-4.76cm]current page.north west) -- ++(6.5cm,0);
+    \node[anchor=south west,inner sep=0pt,text=BMEMuted,
+          font=\sffamily\fontsize{7}{8.8}\selectfont]
+      at ([xshift=1.25cm,yshift=0.72cm]current page.south west)
+      {Presenter · Organization · Date};
+    \fill[BMESage]
+      ([xshift=-1.12cm,yshift=0.82cm]current page.south east) circle[radius=2.1pt];
+  \end{tikzpicture}
+\end{frame}
+
+\begin{frame}[plain]
+  \begin{tikzpicture}[remember picture,overlay]
+    \fill[BMEIvory] (current page.south west) rectangle (current page.north east);
+    \WarmFrameHeader{Structure follows the argument}{EXPOSITION}{02}
+
+    \node[anchor=north west,inner sep=0pt,slide/prose,text width=3.65cm]
+      at ([xshift=0.98cm,yshift=-1.72cm]current page.north west)
+      {\color{BMETerracotta}\sffamily\fontsize{6.1}{7.4}\selectfont\bfseries 01 · PREMISE\par
+       \vspace{0.13cm}
+       \color{BMEBrown}\rmfamily\fontsize{10.2}{12.5}\selectfont\bfseries
+       Define the object\par
+       \vspace{0.18cm}
+       \WarmBodyText
+       Use a short paragraph with enough leading and a visible end margin.\par};
+    \node[anchor=north west,inner sep=0pt,slide/prose,text width=3.65cm]
+      at ([xshift=5.55cm,yshift=-1.72cm]current page.north west)
+      {\color{BMESage}\sffamily\fontsize{6.1}{7.4}\selectfont\bfseries 02 · METHOD\par
+       \vspace{0.13cm}
+       \color{BMEBrown}\rmfamily\fontsize{10.2}{12.5}\selectfont\bfseries
+       Show the relation\par
+       \vspace{0.18cm}
+       \WarmBodyText
+       Let spacing, alignment, and a fine rule establish the structure.\par};
+    \node[anchor=north west,inner sep=0pt,slide/prose,text width=3.65cm]
+      at ([xshift=10.12cm,yshift=-1.72cm]current page.north west)
+      {\color{BMETerracotta}\sffamily\fontsize{6.1}{7.4}\selectfont\bfseries 03 · CONSEQUENCE\par
+       \vspace{0.13cm}
+       \color{BMEBrown}\rmfamily\fontsize{10.2}{12.5}\selectfont\bfseries
+       State one implication\par
+       \vspace{0.18cm}
+       \WarmBodyText
+       Whitespace can separate the idea without another container.\par};
+
+    \draw[BMEStone,line width=0.45pt]
+      ([xshift=0.98cm,yshift=-5.33cm]current page.north west) --
+      ([xshift=-0.98cm,yshift=-5.33cm]current page.north east);
+    \node[anchor=north west,inner sep=0pt,slide/prose,text width=12.8cm]
+      at ([xshift=1.02cm,yshift=-5.67cm]current page.north west)
+      {\color{BMEBrown}\rmfamily\fontsize{9.2}{11.4}\selectfont\bfseries
+       Use hierarchy and spacing before adding decoration.\par};
+
+    \WarmFrameFooter{Warm Editorial · reusable 16:9 starter}
+  \end{tikzpicture}
+\end{frame}
+
+\end{document}

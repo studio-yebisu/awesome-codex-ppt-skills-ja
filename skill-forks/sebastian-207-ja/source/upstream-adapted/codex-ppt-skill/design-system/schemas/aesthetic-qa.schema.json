@@ -1,0 +1,26 @@
+{
+  "type": "object",
+  "required": [
+    "status",
+    "score",
+    "dimensions",
+    "failure_modes"
+  ],
+  "properties": {
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "score": {
+      "type": "number"
+    },
+    "dimensions": {
+      "type": "object"
+    },
+    "failure_modes": {
+      "type": "array"
+    }
+  }
+}
