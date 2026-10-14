@@ -1,0 +1,66 @@
+[
+  {
+    "id": "slidepoise-showcase",
+    "title": "クリックを減らす、予約の流れ。",
+    "repository": "henryhyw/slidepoise",
+    "skill_repository": "henryhyw/slidepoise",
+    "upstream_commit": "481a028486b528e65706c4e14aa9b74a5e340f12",
+    "fork_id": "slidepoise-ja",
+    "page_count": 3,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "preview_canvas": {
+      "width": 1600,
+      "height": 900
+    },
+    "style": "墨 × コバルト × 朱赤 / 生成画像をnative図解へ",
+    "use_case": "仮想予約サイトの改善案",
+    "preview": "examples/repositories/slidepoise-showcase/index.html",
+    "cover": "examples/repositories/slidepoise-showcase/render/slide-01.png",
+    "interior": "examples/repositories/slidepoise-showcase/render/slide-02.png",
+    "pages": [
+      "examples/repositories/slidepoise-showcase/render/slide-01.png",
+      "examples/repositories/slidepoise-showcase/render/slide-02.png",
+      "examples/repositories/slidepoise-showcase/render/slide-03.png"
+    ],
+    "artifact_download": "examples/repositories/slidepoise-showcase/deck.pptx",
+    "source_download": "downloads/slidepoise-example-ja.zip",
+    "fork_download": "downloads/slidepoise-ja.zip",
+    "pptx_download": "examples/repositories/slidepoise-showcase/deck.pptx",
+    "pdf_download": "examples/repositories/slidepoise-showcase/render/deck.pdf",
+    "input": "examples/repositories/slidepoise-showcase/input/SOURCE.md",
+    "input_data": "examples/repositories/slidepoise-showcase/input/case-data.json",
+    "prompt": "examples/repositories/slidepoise-showcase/PROMPT.md",
+    "prompt_text": "SlidePoise原典の生成画像→semantic map→OpenCV計測→reconstruction contract→constructor scene→固有render-deckを実際に使い、日本語「クリックを減らす、予約の流れ。」を制作してください。仮想の地域ワークショップ予約サイトを題材に、8操作から4操作への設計目標、空席による分岐と予約前の情報、4操作/入力完了率90%/入力60秒の目標と実装順を3枚へまとめる。数値は仮想設定・目標で、実測としない。大きな和文、墨、コバルト/朱赤、意味のある図形関係。角丸カードの格子は避ける。自作AI生成画像だけを原典計測コードでnative文字/図形/freeform/connectorへ再構成し、汎用builderで代替しない。原典MITとOSS TTF/OFLを保持。原典に必要なbuildと代表完成物初回表示までを確認し、全詳細目視/構造監査/独立review/ZIP再実行を追加しない。PowerPoint Application.Quitは禁止、自分のdeckだけClose。",
+    "provenance": "examples/repositories/slidepoise-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/slidepoise-showcase/QA.json",
+    "guide": "examples/repositories/slidepoise-showcase/README.md",
+    "titles": [
+      "迷う操作を、半分に。",
+      "分岐は、空席で決まる。",
+      "目標を決めて、順に直す。"
+    ],
+    "notes": [
+      "仮想の地域ワークショップ予約サイトの設計案です。現在案8操作から目標4操作へ。計測した改善実績ではありません。",
+      "空席による分岐と予約前の判断材料を一画面へ。会場名、120分、持ち物は画面例の架空設定です。",
+      "4操作・入力完了率90%・入力60秒は目標値です。情報統合、空席分岐、計測と見直しの順で実装する案です。"
+    ],
+    "sample_notice": "仮想サイトの設計案。操作数/完了率/入力時間は目標値、実測ではありません。会場名と120分も画面例の設定。",
+    "method": "Original prepare_generation compiled exact bound requests → builtin image_gen → original normalize_generation_canvas → host-authored semantic map → original OpenCV measurement → original reconstruction contract → original constructor scene → original slidepoise_runtime render-deck / scene_to_pptx renderer and native postprocess.",
+    "navigation": "native-runtime-bridge",
+    "editability": "native_elements",
+    "editable_features": [
+      "text",
+      "shapes",
+      "connectors"
+    ],
+    "status": "light_check_complete",
+    "execution_status": "light_check_complete",
+    "preview_notice": "原典AI画像→OpenCV→contract→constructorでnative文字/図形/connectorへ再構成。字形や紙の陰影の完全一致は未保証。",
+    "representative_previews": [
+      "examples/repositories/slidepoise-showcase/render/slide-01.png",
+      "examples/repositories/slidepoise-showcase/render/slide-02.png"
+    ],
+    "preview_image_notice": "3枚をPowerPoint export。代表完成物の初回表示と句点修正まで確認、全詳細目視なし。"
+  }
+]

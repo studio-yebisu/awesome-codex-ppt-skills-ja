@@ -1,0 +1,59 @@
+[
+  {
+    "id": "ppt-agent-showcase",
+    "title": "小さな展示を、ひとつの体験に。",
+    "use_case": "大胆な和文版式で伝える5枚の展示企画",
+    "repository": "Akxan/ppt-agent-skill",
+    "skill_repository": "Akxan/ppt-agent-skill",
+    "upstream_commit": "01825dee2ad40a8c719824252605396b9a570d57",
+    "fork_id": "ppt-agent-ja",
+    "page_count": 5,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "原典DOM→SVG→native PPTX。文字と形状をPowerPoint内で編集。Web previewも同梱。",
+    "editability": "native_shapes",
+    "editable_features": [
+      "text",
+      "shapes"
+    ],
+    "style": "原典Bauhaus Block / 赤・青・黄の幾何 / 巨大ゴシック見出し・明朝本文",
+    "cover": "examples/repositories/ppt-agent-showcase/render/slide-01.png",
+    "interior": "examples/repositories/ppt-agent-showcase/render/slide-03.png",
+    "preview": "examples/repositories/ppt-agent-showcase/index.html",
+    "web_preview": "examples/repositories/ppt-agent-showcase/preview.html",
+    "artifact_download": "examples/repositories/ppt-agent-showcase/deck.pptx",
+    "pdf_download": "examples/repositories/ppt-agent-showcase/render/deck.pdf",
+    "source_download": "downloads/ppt-agent-example-ja.zip",
+    "fork_download": "downloads/ppt-agent-ja.zip",
+    "input": "examples/repositories/ppt-agent-showcase/input/BRIEF.md",
+    "input_data": "examples/repositories/ppt-agent-showcase/input/planning.json",
+    "prompt": "examples/repositories/ppt-agent-showcase/PROMPT.md",
+    "prompt_text": "日本語5枚の仮想展示企画「小さな展示を、ひとつの体験に。」を制作してください。\nAkxan/ppt-agent-skillの26作風から実在するbauhaus_blockを選び、原典のmock/styleとHTML→dom-to-svg→svg2pptxのOSS生成器を実際に使う。\n三原色の円・四角・三角、硬い版式、大きな和文タイトル、展示の関係図、来場導線、準備日程を少ない要素で見せる。\nZen Kaku Gothic New Blackの大見出し、BIZ UDPMinchoの短い説明、Manropeの英数字。角丸カードや無難な業務資料に揃えない。\n全5枚は表紙、関係図、来場導線、準備日程、開く前の体験確認。展示は仮想、日時・会場・参加条件は未定、日程は相対的な仮案。\nユーザー指定の内部判断・軽い確認を優先し、追加インタビュー、全ページ目視、独立レビュー、構造監査、ZIP再実行は行わない。\n実生成と代表完成物の初回表示まで進め、完成PPTX/PNG/PDFと原典Webプレビュー、入力/原稿/依頼/再生成コード、未変更原本/局所差分、字体許諾、日本語SKILL、SOURCE、2ZIPまで完成させる。\nartifact-tool SDKを使わず、原典の許されるOSS経路で実行。別レンダラーへの名前貼りや黙った画像PPTX代替をしない。",
+    "provenance": "examples/repositories/ppt-agent-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/ppt-agent-showcase/QA.json",
+    "guide": "examples/repositories/ppt-agent-showcase/README.md",
+    "titles": [
+      "小さな展示を、ひとつの体験に。",
+      "作品・場所・言葉を、つなぐ",
+      "入口から、余韻まで。",
+      "準備は、四つの区切りで。",
+      "開く前に、一度だけ歩く。"
+    ],
+    "notes": [
+      "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。",
+      "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。",
+      "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。",
+      "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。",
+      "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。"
+    ],
+    "method": "原典bauhaus_block mock/styleを日本語へ局所対応し、html_packager→html2svg(dom-to-svg/Puppeteer)→svg2pptx.pyでnative OOXML文字・図形を生成。PowerPoint16でPNG/PDF描画。",
+    "sample_notice": "仮想の展示企画。native text/shapesのみ、native chart/table/数式は使用していません。",
+    "pages": [
+      "examples/repositories/ppt-agent-showcase/render/slide-01.png",
+      "examples/repositories/ppt-agent-showcase/render/slide-02.png",
+      "examples/repositories/ppt-agent-showcase/render/slide-03.png",
+      "examples/repositories/ppt-agent-showcase/render/slide-04.png",
+      "examples/repositories/ppt-agent-showcase/render/slide-05.png"
+    ]
+  }
+]

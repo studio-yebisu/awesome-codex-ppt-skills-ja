@@ -1,0 +1,112 @@
+name: Optimize showcase previews
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - "showcase/*.png"
+      - ".github/workflows/optimize-showcase.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  optimize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Pillow
+        run: python -m pip install "Pillow>=10.0"
+
+      - name: Build WebP previews and update README references
+        shell: bash
+        run: |
+          python - <<'PY'
+          from __future__ import annotations
+
+          import io
+          import re
+          from pathlib import Path
+
+          from PIL import Image, ImageOps
+
+          showcase = Path("showcase")
+          preview_dir = showcase / "preview"
+          preview_dir.mkdir(parents=True, exist_ok=True)
+
+          target_bytes = 350 * 1024
+          min_bytes = 180 * 1024
+          max_bytes = 500 * 1024
+          max_width = 1400
+
+          def encode_webp(image: Image.Image, quality: int) -> bytes:
+              buf = io.BytesIO()
+              image.save(buf, "WEBP", quality=quality, method=6)
+              return buf.getvalue()
+
+          for source in sorted(showcase.glob("*.png")):
+              with Image.open(source) as opened:
+                  image = ImageOps.exif_transpose(opened).convert("RGB")
+
+              if image.width > max_width:
+                  height = round(image.height * max_width / image.width)
+                  image = image.resize((max_width, height), Image.Resampling.LANCZOS)
+
+              low, high = 45, 90
+              best = encode_webp(image, 78)
+
+              while low <= high:
+                  quality = (low + high) // 2
+                  candidate = encode_webp(image, quality)
+                  best = candidate
+                  if len(candidate) > target_bytes:
+                      high = quality - 1
+                  else:
+                      low = quality + 1
+
+              # Prefer a useful README preview size without forcing unnecessary bytes.
+              if len(best) > max_bytes:
+                  best = encode_webp(image, 45)
+              elif len(best) < min_bytes:
+                  best = encode_webp(image, 90)
+
+              output = preview_dir / f"{source.stem}.webp"
+              output.write_bytes(best)
+              print(
+                  f"{source.name}: {source.stat().st_size / 1024:.0f} KB -> "
+                  f"{output.as_posix()}: {len(best) / 1024:.0f} KB"
+              )
+
+          for readme_name in ("README.md", "README.en.md"):
+              path = Path(readme_name)
+              text = path.read_text(encoding="utf-8")
+
+              # Keep the <a href> pointing to the original PNG; only swap the
+              # embedded README image to the lightweight WebP preview.
+              text = re.sub(
+                  r'src="showcase/([^"]+)\.png"',
+                  r'src="showcase/preview/\1.webp"',
+                  text,
+              )
+              path.write_text(text, encoding="utf-8")
+          PY
+
+      - name: Commit optimized previews
+        shell: bash
+        run: |
+          if git diff --quiet -- README.md README.en.md showcase/preview; then
+            echo "No showcase preview changes."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add README.md README.en.md showcase/preview
+          git commit -m "docs: use lightweight WebP previews for showcase"
+          git push

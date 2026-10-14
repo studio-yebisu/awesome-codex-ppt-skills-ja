@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  real-render:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Install real renderer and fonts
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libreoffice-impress poppler-utils fonts-noto-cjk fonts-liberation
+          python -m pip install -r requirements.txt
+      - name: Real six-page backend regression
+        run: python scripts/verify_render_backend.py render-regression --backend libreoffice
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: libreoffice-render-regression
+          path: render-regression
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.10", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt -r requirements-dev.txt
+      - name: Lint
+        run: ruff check .
+      - name: Test
+        run: python -m pytest tests/ -v
+      - name: Validate Page Spec example
+        run: python scripts/validate_page_spec.py examples/page-spec.example.json --strict
+      - name: Rebuild public editable sample
+        run: python showcase/editable-irena/reproduce.py --verify --output "${{ runner.temp }}/editable-sample"
+      - name: Validate installer registration
+        run: |
+          python install.py --client codex --home "${{ runner.temp }}/skill-home" --skip-deps
+          python -c "import os; from pathlib import Path; p = Path(os.environ['RUNNER_TEMP']) / 'skill-home' / '.agents' / 'skills' / 'slidemuse' / 'SKILL.md'; assert p.is_file(), p"
+      - name: Validate installed unified CLI
+        run: |
+          python -c "import os, subprocess, sys; from pathlib import Path; p = Path(os.environ['RUNNER_TEMP']) / 'skill-home' / '.agents' / 'skills' / 'slidemuse'; subprocess.run([sys.executable, str(p / 'slidemuse.py'), 'doctor', '--json'], check=True); subprocess.run([sys.executable, str(p / 'slidemuse.py'), 'validate', str(p / 'examples' / 'page-spec.example.json'), '--strict'], check=True)"
+      - name: Validate isolated install and upgrade
+        if: matrix.python-version == '3.13'
+        run: |
+          python install.py --client codex --home "${{ runner.temp }}/skill-home"
+          python -c "import os, subprocess; from pathlib import Path; p = Path(os.environ['RUNNER_TEMP']) / 'skill-home' / '.agents' / 'skills' / 'slidemuse'; py = Path((p / '.skill-python').read_text().strip()); assert py.is_file(), py; subprocess.run([str(py), str(p / 'scripts' / 'validate_page_spec.py'), str(p / 'examples' / 'page-spec.example.json'), '--strict'], check=True)"
+          python -c "import os, subprocess, sys; from pathlib import Path; p = Path(os.environ['RUNNER_TEMP']) / 'skill-home' / '.agents' / 'skills' / 'slidemuse'; subprocess.run([sys.executable, str(p / 'slidemuse.py'), 'doctor', '--json'], check=True)"

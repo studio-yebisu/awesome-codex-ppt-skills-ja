@@ -1,0 +1,60 @@
+{
+  "title": "クリックを減らす、予約の流れ。",
+  "cases": [
+    {
+      "id": "reduce-steps",
+      "title": "迷う操作を、半分に。",
+      "required": [
+        "見出し「迷う操作を、半分に。」",
+        "上段の現在案は「8操作」、下段の改善目標は「4操作」",
+        "現在案は 一覧 / 詳細 / 日程 / 空席 / 会員登録 / 入力 / 確認 / 完了 の8つ",
+        "改善案は 内容と空席 / 日程 / 入力 / 完了 の4つ",
+        "資格注記「仮想サイトの設計案。数値は目標値、実測ではありません。」"
+      ],
+      "relationships": [
+        "Upper chain is the original eight-step concept; lower chain is the four-step target. The two are alternative flows, not cumulative stages."
+      ],
+      "visual": [
+        "Make two spacious horizontal chains with large 8 and 4 at their left. Top chain ink outlined boxes, lower chain cobalt solid rectangles with white labels. Compare the number of required operations, not measured performance."
+      ],
+      "message": "内容と空席をまとめ、登録と確認の独立画面を省く設計目標。"
+    },
+    {
+      "id": "branch-and-information",
+      "title": "分岐は、空席で決まる。",
+      "required": [
+        "見出し「分岐は、空席で決まる。」",
+        "左側は「開催日」から「空席？」へ、空席ありなら「予約入力」、満席なら「次の日程」へ分岐",
+        "分岐ラベルは「空席あり」「満席」",
+        "右側は予約画面のwireframe、文字は「地域ワークショップ」「会場」「所要時間」「持ち物」「この日程で予約」",
+        "資格注記「仮想サイトの設計案。数値は目標値、実測ではありません。」"
+      ],
+      "relationships": [
+        "Seat availability controls one of two alternative paths. The right wireframe shows information visible before reservation."
+      ],
+      "visual": [
+        "Left half uses a true branch diagram, straight flat rectangles and one diamond, arrows clearly point to alternatives. Right half contains only one large plain rectangular screen, a heading, three aligned information lines, and one blue wide action button. Use cobalt for available path and orange for full path."
+      ],
+      "message": "空席を最初に伝え、予約前の判断材料を一画面に集める。"
+    },
+    {
+      "id": "targets-and-order",
+      "title": "目標を決めて、順に直す。",
+      "required": [
+        "見出し「目標を決めて、順に直す。」",
+        "大きな目標値「4操作」「90%」「60秒」",
+        "それぞれのラベル「完了までの操作数」「入力完了率」「入力時間」",
+        "下半分に実装順「01 情報をまとめる」「02 空席分岐を実装」「03 計測して見直す」",
+        "資格注記「仮想サイトの設計案。数値は目標値、実測ではありません。」"
+      ],
+      "relationships": [
+        "Three independent target metrics are not existing results. Implementation is sequential: combine information, implement branches, instrument and revise."
+      ],
+      "visual": [
+        "Top half has three giant numbers on a flat open canvas, separated only by thin vertical rules. Bottom half is one three-stage horizontal timeline with numbered dots and short labels. No cards. Numbers cobalt, large heading ink, orange final stage accent."
+      ],
+      "message": "実測前に目標と計測項目を置き、実装後に見直す。"
+    }
+  ],
+  "study_status": "fictional concept and target metrics, not observations"
+}

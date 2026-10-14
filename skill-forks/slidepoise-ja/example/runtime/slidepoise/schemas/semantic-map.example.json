@@ -1,0 +1,265 @@
+{
+  "schema_version": "3.2.0",
+  "provenance": {
+    "created_by": "host_agent_visual_reasoning",
+    "source": "accepted_generated_image",
+    "composition_policy": "accepted_target_geometry_frozen"
+  },
+  "entities": [
+    {
+      "id": "panel-a",
+      "kind": "shape",
+      "role": "supporting_evidence_region",
+      "shape": "rounded_rectangle",
+      "shape_intent": "ordinary_container",
+      "corner_radius_px": 6,
+      "bbox_hint": [
+        80,
+        90,
+        340,
+        190
+      ],
+      "geometry_policy": "agent_logical",
+      "style_hint": {
+        "fill": "#FFFFFF",
+        "stroke": "#DFE3E6",
+        "stroke_width_px": 1,
+        "style_authority": "agent_visual_observation"
+      },
+      "z": 10,
+      "reconstruction_significance": "independent_object"
+    },
+    {
+      "id": "heading-a",
+      "kind": "text",
+      "role": "evidence_summary",
+      "text_style_role": "heading",
+      "text": "Example heading",
+      "parent_id": "panel-a",
+      "bbox_hint": [
+        105,
+        112,
+        210,
+        48
+      ],
+      "geometry_policy": "agent_logical",
+      "typography_group": "peer-evidence-headings",
+      "style_hint": {
+        "observed_foreground_color": "#000000",
+        "font_weight": "bold",
+        "alignment": "left",
+        "style_authority": "agent_visual_observation",
+        "target_font_size_px": 20
+      },
+      "z": 30,
+      "reconstruction_significance": "independent_object",
+      "meaningful_visible": true
+    },
+    {
+      "id": "heading-b",
+      "kind": "text",
+      "role": "evidence_summary",
+      "text_style_role": "heading",
+      "text": "Another peer heading",
+      "parent_id": "group-b",
+      "bbox_hint": [
+        600,
+        112,
+        210,
+        48
+      ],
+      "geometry_policy": "agent_logical",
+      "typography_group": "peer-evidence-headings",
+      "style_hint": {
+        "observed_foreground_color": "#000000",
+        "font_weight": "bold",
+        "alignment": "left",
+        "style_authority": "agent_visual_observation",
+        "target_font_size_px": 20
+      },
+      "z": 30,
+      "reconstruction_significance": "independent_object",
+      "meaningful_visible": true
+    },
+    {
+      "id": "icon-a",
+      "kind": "icon",
+      "role": "supporting_visual",
+      "upstream_asset_id": "remix-hierarchy-line",
+      "bbox_hint": [
+        330,
+        112,
+        64,
+        64
+      ],
+      "slot_bbox_hint": [
+        326,
+        108,
+        72,
+        72
+      ],
+      "geometry_policy": "agent_logical",
+      "slot_surface": {
+        "visible": true,
+        "shape": "rectangle",
+        "style_hint": {
+          "fill": "#FFF5ED",
+          "stroke": "none"
+        }
+      },
+      "style_hint": {
+        "preserve_canonical_color": false,
+        "icon_inset_fraction": 0.14
+      },
+      "z": 30,
+      "reconstruction_significance": "independent_object",
+      "meaningful_visible": true,
+      "icon_treatment_group": "peer-supporting-icons",
+      "icon_treatment": "black_proxy",
+      "icon_variant": "line",
+      "icon_variant_review": {
+        "stage": "post_generation_visual_review",
+        "reviewed_by": "host_agent_visual_reasoning",
+        "evaluated_asset_ids": [
+          "remix-hierarchy-line",
+          "remix-hierarchy-fill"
+        ],
+        "decision": "The line variant matches the approved target's sparse rules and supporting-level visual weight.",
+        "observations": [
+          "At the final slot size the line silhouette remains legible.",
+          "The fill candidate is visually heavier than peer labels and connectors."
+        ]
+      }
+    },
+    {
+      "id": "flow-a",
+      "kind": "connector",
+      "bbox_hint": [
+        420,
+        130,
+        160,
+        80
+      ],
+      "connector_intent": {
+        "connector_family": "direct_flow",
+        "directed": true,
+        "source_entities": [
+          "group-a"
+        ],
+        "target_entities": [
+          "group-b"
+        ],
+        "source_attachment_sides": [
+          "right"
+        ],
+        "target_attachment_sides": [
+          "left"
+        ],
+        "source_attachment_fractions": [
+          0.5
+        ],
+        "target_attachment_fractions": [
+          0.5
+        ],
+        "semantic_topology_verified": true,
+        "route_mode": "minimal_orthogonal",
+        "junction_style": "none",
+        "visual_route_reviewed": true,
+        "visual_route_decision": "One clean horizontal route preserves reading order and crosses no content.",
+        "visual_route_review_artifact": "work/connector-route-review.png"
+      },
+      "visual_constraints": {
+        "start_anchors_px": [
+          [
+            840,
+            470
+          ]
+        ],
+        "end_anchors_px": [
+          [
+            1210,
+            470
+          ]
+        ],
+        "route_waypoints_px": [],
+        "arrowhead_treatment": "triangle_at_target"
+      },
+      "z": 20,
+      "reconstruction_significance": "independent_object"
+    },
+    {
+      "id": "illustration-a",
+      "kind": "image",
+      "role": "concept_illustration",
+      "visual_source_class": "novel_illustration",
+      "bbox_hint": [
+        900,
+        100,
+        260,
+        180
+      ],
+      "geometry_policy": "agent_logical",
+      "raster_fit": "contain",
+      "z": 10,
+      "illustration_refinement_candidate": true,
+      "reconstruction_significance": "independent_object",
+      "meaningful_visible": true,
+      "style_hint": {
+        "style_authority": "accepted_generated_image"
+      }
+    }
+  ],
+  "groups": [
+    {
+      "id": "group-a",
+      "display_label": "Evidence and interpretation",
+      "semantic_class": "source argument group",
+      "group_reason": "The panel, heading, and supporting icon form one input-side claim.",
+      "role": "source_argument_group",
+      "bbox_hint": [
+        80,
+        90,
+        340,
+        190
+      ],
+      "children": [
+        "panel-a",
+        "heading-a",
+        "icon-a"
+      ]
+    },
+    {
+      "id": "group-b",
+      "display_label": "Recommended outcome",
+      "semantic_class": "target argument group",
+      "group_reason": "The heading forms the target-side conclusion of the relationship.",
+      "role": "target_argument_group",
+      "bbox_hint": [
+        580,
+        90,
+        300,
+        190
+      ],
+      "children": [
+        "heading-b"
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "id": "relationship-a",
+      "type": "directed transformation",
+      "display_label": "evidence supports recommendation",
+      "source": "group-a",
+      "target": "group-b"
+    }
+  ],
+  "layout_constraints": {
+    "non_overlap_pairs": [
+      [
+        "icon-a",
+        "heading-a"
+      ]
+    ]
+  }
+}

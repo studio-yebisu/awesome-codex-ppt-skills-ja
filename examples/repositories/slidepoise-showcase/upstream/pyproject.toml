@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "slidepoise"
+version = "0.9.0"
+description = "AI presentation design with editable PowerPoint output"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+keywords = ["agent", "powerpoint", "presentations", "pptx"]
+dependencies = ["Pillow>=10", "python-pptx>=1.0.2", "resvg-py>=0.5,<0.6"]
+
+[project.optional-dependencies]
+runtime = ["numpy>=1.26", "opencv-python>=4.10"]
+dev = ["build>=1.2", "pytest>=8", "ruff>=0.9"]
+
+[project.scripts]
+slidepoise = "framework.cli:main"
+slidepoise-console = "webapp.server:main"
+
+[tool.setuptools]
+packages = ["framework", "webapp"]
+include-package-data = false
+
+[tool.setuptools.package-data]
+webapp = ["ui/*.html", "ui/*.css", "ui/*.js", "console/*.html", "console/*.css", "console/*.js", "console/*.svg"]
+framework = ["defaults/*.json", "templates/*.json", "node-runtime-package.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = [".", "slidepoise/runtime/src"]
+cache_dir = "workspace/pytest-cache"
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+cache-dir = "workspace/ruff-cache"

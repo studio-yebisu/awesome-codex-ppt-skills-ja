@@ -1,0 +1,224 @@
+name: slidemuse
+display_name: SlideMuse
+version: 2.17.0
+description: >-
+  SlideMuse 是视觉优先的 AI PPT Skill，重点适用于挑战杯（大挑/小挑）、中国国际大学生创新大赛、全国大学生交通运输科技大赛（交科赛）、三创赛、正大杯、大创等竞赛 PPT，同时适用于电影质感 PPT、比赛答辩、创新创业路演、学术汇报、论文答辩、项目汇报、课程展示和图片转可编辑 PPT。
+  按固定三阶段流程将材料制作成图片版 PPT，并在明确授权后还原为可编辑 PPTX：
+  需求确认与逐页内容稿自检/确认 → 四套幻灯片浏览视图选型 → Page Spec 驱动的逐页图片生成 →
+  Scene v1 可编辑重建。
+  默认不得自行推断缺失需求、跳过选型或改走编辑优先路线。最佳推荐 Codex + GPT Image 2.5；
+  也可在其他 Agent 中调用该 Agent 自身的生图能力。宿主 Agent 负责内容、识别与生图，
+  本地脚本负责图片合并、Scene 编译、素材裁剪和对象审查。
+author: 风清云影 (helloo1568)
+license: MIT
+category: content
+triggers:
+  - SlideMuse
+  - slidemuse
+  - 图片PPT
+  - 可编辑PPT
+  - 图片转PPT
+  - PPT元素拆分
+  - 读书分享PPT
+  - 竞赛PPT
+  - 比赛答辩PPT
+  - 国赛PPT
+  - 电影质感PPT
+  - 电影感PPT
+  - 海报风PPT
+  - 创新创业PPT
+  - 挑战杯PPT
+  - 大挑PPT
+  - 小挑PPT
+  - 中国国际大学生创新大赛PPT
+  - 大学生创新大赛PPT
+  - 互联网+PPT
+  - 全国大学生交通运输科技大赛PPT
+  - 交科赛PPT
+  - 交通运输科技大赛PPT
+  - 三创赛PPT
+  - 正大杯PPT
+  - 市调大赛PPT
+  - 大创PPT
+  - 学术汇报PPT
+  - 论文答辩PPT
+  - 组会PPT
+  - 商业路演PPT
+  - 项目汇报PPT
+  - 课程展示PPT
+  - AI生成PPT
+  - PDF转PPT
+  - 图片转可编辑PPT
+  - cinematic-presentation
+  - competition-presentation
+  - pitch-deck
+  - image-to-pptx
+  - doc-to-editable-ppt
+requires_api_keys: false
+platforms:
+  - Codex with image generation and local file tools (recommended with GPT Image 2.5)
+  - Other agents with document reading, vision, native or connected image generation, and Python
+security_notes: >-
+  Local scripts do not make network requests or handle API keys.
+  Host vision/image services may upload supplied content and require separate credentials.
+  Page Spec image paths and Scene assets are confined to their specification directories.
+  Exported PPTX embeds referenced assets.
+files:
+  - slidemuse.py
+  - scripts/doctor.py
+  - scripts/runtime_environment.py
+  - tests/test_cli.py
+  - tests/test_doctor.py
+  - docs/cli.md
+  - docs/cli.en.md
+  - docs/open-source-improvements-2026-10-08.md
+  - scripts/json_io.py
+  - scripts/render_process.py
+  - scripts/cleanup_powerpoint.ps1
+  - scripts/render_environment.py
+  - scripts/measured_layout.py
+  - scripts/record_work.py
+  - scripts/verify_render_backend.py
+  - tests/test_reliability.py
+  - references/production-metrics.md
+  - references/text-layout.md
+  - scripts/text_layout.py
+  - tests/test_text_layout.py
+  - manifest.yaml
+  - SKILL.md
+  - install.py
+  - README.md
+  - README.en.md
+  - CONTRIBUTING.md
+  - docs/guide.md
+  - docs/guide.en.md
+  - docs/editable-sample.md
+  - docs/editable-sample.en.md
+  - docs/acceptance-2026-09-18.md
+  - docs/acceptance-2026-09-30.md
+  - docs/acceptance-2026-10-01.md
+  - docs/assets/hero.webp
+  - CHANGELOG.md
+  - LICENSE
+  - requirements.txt
+  - agents/openai.yaml
+  - references/prompts.md
+  - references/content-outline.md
+  - references/material-reading.md
+  - references/speaker-notes.md
+  - references/style-options.md
+  - references/deck-spec-template.md
+  - references/models.md
+  - references/page-spec.md
+  - references/page-spec.schema.json
+  - references/workflow-updates.md
+  - references/reconstruction.md
+  - references/scene-format.md
+  - references/scene.schema.json
+  - references/research.md
+  - references/evaluation.md
+  - references/benchmark.md
+  - references/chart-reliability.md
+  - references/data-bindings.md
+  - references/pipeline.md
+  - references/review-panel.md
+  - scripts/scene.py
+  - scripts/validate_page_spec.py
+  - scripts/validate_style_options.py
+  - scripts/build_style_overview.py
+  - scripts/build_editable_ppt.py
+  - scripts/audit_editability.py
+  - scripts/extract_assets.py
+  - scripts/build_image_ppt.py
+  - scripts/overlay_text.py
+  - scripts/render_deck.py
+  - scripts/run_deck.py
+  - scripts/init_deck.py
+  - scripts/deck_diagnostics.py
+  - scripts/review_panel.py
+  - scripts/review_panel.html
+  - scripts/render_powerpoint.ps1
+  - scripts/audit_page_content.py
+  - scripts/plan_deck_update.py
+  - scripts/evaluate_delivery.py
+  - scripts/evaluate_benchmark.py
+  - scripts/chart_style.py
+  - scripts/audit_chart_geometry.py
+  - scripts/build_chart_image.py
+  - scripts/update_data_bindings.py
+  - scripts/speaker_notes.py
+  - scripts/audit_speaker_notes.py
+  - scripts/export_speaker_notes.py
+  - examples/data-update/README.md
+  - examples/data-update/job.json
+  - examples/data-update/page-spec.json
+  - examples/data-update/scene.json
+  - examples/data-update/data-bindings.json
+  - examples/data-update/grouped-column.layout.json
+  - examples/data-update/grouped-bar.layout.json
+  - examples/page-spec.example.json
+  - examples/overlay-spec.example.json
+  - showcase/red-gold-competition-02.png
+  - showcase/red-gold-competition-03.png
+  - showcase/red-gold-competition-04.png
+  - showcase/snowline-watch-01.png
+  - showcase/snowline-watch-02.png
+  - showcase/snowline-watch-03.png
+  - showcase/snowline-watch-04.png
+  - showcase/preview/red-gold-competition-02.webp
+  - showcase/preview/red-gold-competition-03.webp
+  - showcase/preview/red-gold-competition-04.webp
+  - showcase/preview/snowline-watch-01.webp
+  - showcase/preview/snowline-watch-02.webp
+  - showcase/preview/snowline-watch-03.webp
+  - showcase/preview/snowline-watch-04.webp
+  - showcase/editable-irena/.gitattributes
+  - showcase/editable-irena/decks/chart-edit.pptx
+  - showcase/editable-irena/decks/editable.pptx
+  - showcase/editable-irena/decks/image.pptx
+  - showcase/editable-irena/decks/object-move.pptx
+  - showcase/editable-irena/decks/table-edit.pptx
+  - showcase/editable-irena/decks/text-edit.pptx
+  - showcase/editable-irena/demo.mp4
+  - showcase/editable-irena/evidence/historical-limitations.md
+  - showcase/editable-irena/evidence/historical-review.md
+  - showcase/editable-irena/evidence/verification.json
+  - showcase/editable-irena/index.html
+  - showcase/editable-irena/manifest.json
+  - showcase/editable-irena/NOTICE.md
+  - showcase/editable-irena/page-spec-chart-edit.json
+  - showcase/editable-irena/page-spec-object-move.json
+  - showcase/editable-irena/page-spec-table-edit.json
+  - showcase/editable-irena/page-spec-text-edit.json
+  - showcase/editable-irena/page-spec.json
+  - showcase/editable-irena/previews/chart-edit.webp
+  - showcase/editable-irena/previews/editable-01.webp
+  - showcase/editable-irena/previews/editable-02.webp
+  - showcase/editable-irena/previews/editable-03.webp
+  - showcase/editable-irena/previews/editable-04.webp
+  - showcase/editable-irena/previews/editable-05.webp
+  - showcase/editable-irena/previews/editable-06.webp
+  - showcase/editable-irena/previews/object-move.webp
+  - showcase/editable-irena/previews/table-edit.webp
+  - showcase/editable-irena/previews/text-edit.webp
+  - showcase/editable-irena/previews/video-cover.webp
+  - showcase/editable-irena/README.en.md
+  - showcase/editable-irena/README.md
+  - showcase/editable-irena/reproduce.py
+  - showcase/editable-irena/sample.zip
+  - showcase/editable-irena/scene-chart-edit.json
+  - showcase/editable-irena/scene-object-move.json
+  - showcase/editable-irena/scene-table-edit.json
+  - showcase/editable-irena/scene-text-edit.json
+  - showcase/editable-irena/scene.json
+  - showcase/editable-irena/SHA256SUMS.txt
+  - showcase/editable-irena/slides/01-page.png
+  - showcase/editable-irena/slides/02-page.png
+  - showcase/editable-irena/slides/03-word-repair.png
+  - showcase/editable-irena/slides/04-repair.png
+  - showcase/editable-irena/slides/05-exact-v2.png
+  - showcase/editable-irena/slides/06-page.png
+  - showcase/editable-irena/source/IRENA_Renewable_Capacity_Statistics_2025.pdf
+  - showcase/editable-irena/source/source.json
+  - showcase/editable-irena/speaker-notes.md
+  - showcase/editable-irena/styles/03-sorter.png

@@ -1,0 +1,235 @@
+{
+  "selected_assets": [],
+  "speaker_notes": [
+    "仮想の地域ワークショップ予約サイトの設計案。操作数・完了率・時間は仮想設定と目標であり、実測ではありません。",
+    "画面例の会場名と120分も架空の設定です。"
+  ],
+  "content_obligations": [
+    {
+      "id": "preserve-headline",
+      "description": "Preserve 分岐は、空席で決まる。 from the inspected generated target",
+      "entity_ids": [
+        "headline"
+      ]
+    },
+    {
+      "id": "preserve-date-node",
+      "description": "Preserve date-node from the inspected generated target",
+      "entity_ids": [
+        "date-node"
+      ]
+    },
+    {
+      "id": "preserve-date-label",
+      "description": "Preserve 開催日 from the inspected generated target",
+      "entity_ids": [
+        "date-label"
+      ]
+    },
+    {
+      "id": "preserve-seat-node",
+      "description": "Preserve seat-node from the inspected generated target",
+      "entity_ids": [
+        "seat-node"
+      ]
+    },
+    {
+      "id": "preserve-seat-label",
+      "description": "Preserve 空席？ from the inspected generated target",
+      "entity_ids": [
+        "seat-label"
+      ]
+    },
+    {
+      "id": "preserve-available-node",
+      "description": "Preserve available-node from the inspected generated target",
+      "entity_ids": [
+        "available-node"
+      ]
+    },
+    {
+      "id": "preserve-available-label",
+      "description": "Preserve 予約入力 from the inspected generated target",
+      "entity_ids": [
+        "available-label"
+      ]
+    },
+    {
+      "id": "preserve-full-node",
+      "description": "Preserve full-node from the inspected generated target",
+      "entity_ids": [
+        "full-node"
+      ]
+    },
+    {
+      "id": "preserve-full-label",
+      "description": "Preserve 次の日程 from the inspected generated target",
+      "entity_ids": [
+        "full-label"
+      ]
+    },
+    {
+      "id": "preserve-date-to-seat",
+      "description": "Preserve date-to-seat from the inspected generated target",
+      "entity_ids": [
+        "date-to-seat"
+      ],
+      "connection": {
+        "entity_id": "date-to-seat",
+        "source_entities": [
+          "date-node"
+        ],
+        "target_entities": [
+          "seat-node"
+        ],
+        "directed": true
+      }
+    },
+    {
+      "id": "preserve-seat-to-input",
+      "description": "Preserve seat-to-input from the inspected generated target",
+      "entity_ids": [
+        "seat-to-input"
+      ],
+      "connection": {
+        "entity_id": "seat-to-input",
+        "source_entities": [
+          "seat-node"
+        ],
+        "target_entities": [
+          "available-node"
+        ],
+        "directed": true
+      }
+    },
+    {
+      "id": "preserve-seat-to-next",
+      "description": "Preserve seat-to-next from the inspected generated target",
+      "entity_ids": [
+        "seat-to-next"
+      ],
+      "connection": {
+        "entity_id": "seat-to-next",
+        "source_entities": [
+          "seat-node"
+        ],
+        "target_entities": [
+          "full-node"
+        ],
+        "directed": true
+      }
+    },
+    {
+      "id": "preserve-available-branch",
+      "description": "Preserve 空席あり from the inspected generated target",
+      "entity_ids": [
+        "available-branch"
+      ]
+    },
+    {
+      "id": "preserve-full-branch",
+      "description": "Preserve 満席 from the inspected generated target",
+      "entity_ids": [
+        "full-branch"
+      ]
+    },
+    {
+      "id": "preserve-vertical-rule",
+      "description": "Preserve vertical-rule from the inspected generated target",
+      "entity_ids": [
+        "vertical-rule"
+      ]
+    },
+    {
+      "id": "preserve-screen",
+      "description": "Preserve screen from the inspected generated target",
+      "entity_ids": [
+        "screen"
+      ]
+    },
+    {
+      "id": "preserve-screen-title",
+      "description": "Preserve 地域ワークショップ from the inspected generated target",
+      "entity_ids": [
+        "screen-title"
+      ]
+    },
+    {
+      "id": "preserve-field-0",
+      "description": "Preserve 会場 from the inspected generated target",
+      "entity_ids": [
+        "field-0"
+      ]
+    },
+    {
+      "id": "preserve-value-0",
+      "description": "Preserve みどり市民センター from the inspected generated target",
+      "entity_ids": [
+        "value-0"
+      ]
+    },
+    {
+      "id": "preserve-screen-rule-0",
+      "description": "Preserve screen-rule-0 from the inspected generated target",
+      "entity_ids": [
+        "screen-rule-0"
+      ]
+    },
+    {
+      "id": "preserve-field-1",
+      "description": "Preserve 所要時間 from the inspected generated target",
+      "entity_ids": [
+        "field-1"
+      ]
+    },
+    {
+      "id": "preserve-value-1",
+      "description": "Preserve 120分 from the inspected generated target",
+      "entity_ids": [
+        "value-1"
+      ]
+    },
+    {
+      "id": "preserve-screen-rule-1",
+      "description": "Preserve screen-rule-1 from the inspected generated target",
+      "entity_ids": [
+        "screen-rule-1"
+      ]
+    },
+    {
+      "id": "preserve-field-2",
+      "description": "Preserve 持ち物 from the inspected generated target",
+      "entity_ids": [
+        "field-2"
+      ]
+    },
+    {
+      "id": "preserve-value-2",
+      "description": "Preserve 筆記用具・飲み物 from the inspected generated target",
+      "entity_ids": [
+        "value-2"
+      ]
+    },
+    {
+      "id": "preserve-book-button",
+      "description": "Preserve book-button from the inspected generated target",
+      "entity_ids": [
+        "book-button"
+      ]
+    },
+    {
+      "id": "preserve-book-button-text",
+      "description": "Preserve この日程で予約 from the inspected generated target",
+      "entity_ids": [
+        "book-button-text"
+      ]
+    },
+    {
+      "id": "preserve-qualification",
+      "description": "Preserve 仮想サイトの設計案。数値は目標値、実測ではありません。 from the inspected generated target",
+      "entity_ids": [
+        "qualification"
+      ]
+    }
+  ]
+}

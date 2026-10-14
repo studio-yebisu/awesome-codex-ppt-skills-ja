@@ -1,0 +1,115 @@
+[
+  {
+    "repository": "wp-a/paper2ppt",
+    "example_ids": [
+      "sebastian-205"
+    ],
+    "upstream_commit": "bb98ce95ca5942fc6551dddc723cbdfe2d637d59",
+    "summary_ja": "原典evidence-first研究ノートworkflowとpython-pptx fallbackを使う日本語8頁の未実施研究計画。",
+    "production_status": "light_check_complete",
+    "execution_type": "upstream-evidence-first-python-pptx-fallback",
+    "requirements": [
+      "Python、python-pptx 1.0.2+",
+      "既存Noto Sans CJK JP（再配布なし）",
+      "実レンダリング用LibreOffice・PyMuPDF"
+    ],
+    "commands": [
+      "python source/build.py"
+    ],
+    "steps": [
+      "原典SKILLと日本語SKILLを読む",
+      "資料充足性を分類し主張を入力へ対応",
+      "ネイティブ編集可能PPTXと話者ノートを生成",
+      "実PPTXをレンダリングし初回表示を確認"
+    ],
+    "limitations": [
+      "PowerPoint実機で未確認",
+      "架空の研究ノートのみ。実測・査読論文・定量効果なし",
+      "原典自動preflight/inspector未実行。最小QAは原典全検査と同等を保証しない",
+      "完成PPTXはLibreOfficeで実レンダリング。PowerPoint環境の差は未検証"
+    ],
+    "source_refs": [
+      "https://github.com/wp-a/paper2ppt/tree/bb98ce95ca5942fc6551dddc723cbdfe2d637d59"
+    ],
+    "guide": "examples/repositories/sebastian-205/README.md",
+    "source_download": "downloads/sebastian-205-example-ja.zip",
+    "fork_download": "downloads/sebastian-205-ja.zip"
+  },
+  {
+    "repository": "ficooooo/Paper2ScholarSlides",
+    "example_ids": [
+      "sebastian-203"
+    ],
+    "upstream_commit": "207f2b6c8493c569f6caf466c87d868c42936cf6",
+    "summary_ja": "原典の学術テンプレを再利用し、図書館の未実施研究提案を8頁の編集可能PPTXにした作例。",
+    "production_status": "light_check_complete",
+    "execution_type": "upstream-template-reuse-with-python-pptx",
+    "requirements": [
+      "Pythonとpython-pptx",
+      "Noto Sans CJK JP（環境書体、同梱なし）",
+      "実PPTXプレビュー再生成はNode.jsと@oai/artifact-tool"
+    ],
+    "commands": [
+      "python source/build_deck.py",
+      "node source/render.mjs"
+    ],
+    "steps": [
+      "日本語SKILLと原典参考文書を読む",
+      "入力を事実・仮説・計画へ分ける",
+      "原典テンプレを再利用してネイティブ編集可能な図表を組む",
+      "完成PPTXを実レンダリングして初回表示を確認"
+    ],
+    "limitations": [
+      "Fictional unperformed study. No quantitative results or citations.",
+      "Renderer may differ from Microsoft PowerPoint.",
+      "Template header/body content replaced; master and layout relationships retained."
+    ],
+    "source_refs": [
+      "https://github.com/ficooooo/Paper2ScholarSlides/tree/207f2b6c8493c569f6caf466c87d868c42936cf6",
+      "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/LICENSE",
+      "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/assets/templates/academic-template.pptx"
+    ],
+    "guide": "examples/repositories/sebastian-203/README.md",
+    "source_download": "downloads/sebastian-203-example-ja.zip",
+    "fork_download": "downloads/sebastian-203-ja.zip"
+  },
+  {
+    "repository": "deathcats4/scholar-ppt-cn",
+    "example_ids": [
+      "sebastian-193"
+    ],
+    "upstream_commit": "6fca3dc0f0fd6033279cc1bd29467967cc185272",
+    "summary_ja": "Route BのPptxGenJS作者方式で、日本語の公共空間サイン研究計画8頁を編集可能に制作。defaultテンプレートmaster/themeを保全。",
+    "production_status": "light_check_complete",
+    "execution_type": "upstream-route-b-author-pptxgenjs-native-template",
+    "requirements": [
+      "Node.js / PptxGenJS 4.0.1",
+      "Python 3 / lxml",
+      "Noto Sans CJK JP",
+      "実レンダリングにはartifact-tool等"
+    ],
+    "commands": [
+      "node source/build.cjs",
+      "python source/preserve_master.py"
+    ],
+    "steps": [
+      "架空・未実施の入力と話者ノートを確認",
+      "原典Template DNAとnative master/themeを保全",
+      "研究内容に応じて8種の誌面を生成",
+      "完成PPTXを初回実描画し主要表示を確認"
+    ],
+    "limitations": [
+      "原典QAスクリプトは実行せず、日本語派生の最小検査へ置換",
+      "PowerPoint実機確認ではなくartifact-tool importレンダリング",
+      "環境書体は同梱していない"
+    ],
+    "source_refs": [
+      "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272",
+      "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272/LICENSE",
+      "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272/SKILL.md"
+    ],
+    "guide": "examples/repositories/sebastian-193/README.md",
+    "source_download": "downloads/sebastian-193-example-ja.zip",
+    "fork_download": "downloads/sebastian-193-ja.zip"
+  }
+]

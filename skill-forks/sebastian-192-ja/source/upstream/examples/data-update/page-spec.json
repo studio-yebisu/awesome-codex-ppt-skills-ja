@@ -1,0 +1,130 @@
+{
+  "version": "1.0",
+  "title": "Synthetic transport data update example",
+  "content_approved": true,
+  "content_version": "outline-v1",
+  "content_authorization": "Engineering fixture with explicitly synthetic figures; not a real transport finding",
+  "canvas": {
+    "width": 1600,
+    "height": 900
+  },
+  "style": {
+    "decision": "skipped",
+    "authorization": "Deterministic engineering fixture",
+    "visual_spec": "White background, blue and orange grouped chart, dark text"
+  },
+  "slides": [
+    {
+      "id": "s01",
+      "page_number": 1,
+      "title": "Grouped column: synthetic traffic",
+      "core_message": "After total 190 vehicles/hour; North share 47.4%; change -5.0%",
+      "visual_brief": "Two categories and two series; shared zero baseline",
+      "source_refs": [
+        "Synthetic fixture; no observed traffic or performance claim"
+      ],
+      "image_file": "slides/01.png",
+      "image_status": "pending",
+      "elements": [
+        {
+          "id": "finding",
+          "kind": "text",
+          "role": "finding",
+          "native_intent": "native",
+          "source_ref": "Synthetic fixture",
+          "confirmation_status": "confirmed",
+          "text": "After total 190 vehicles/hour; North share 47.4%; change -5.0%"
+        },
+        {
+          "id": "traffic",
+          "kind": "chart",
+          "role": "evidence",
+          "native_intent": "native",
+          "source_ref": "Synthetic fixture",
+          "confirmation_status": "confirmed",
+          "data": {
+            "chart_type": "column",
+            "categories": [
+              "North",
+              "East"
+            ],
+            "series": [
+              {
+                "name": "Before",
+                "values": [
+                  120,
+                  80
+                ]
+              },
+              {
+                "name": "After",
+                "values": [
+                  90,
+                  100
+                ]
+              }
+            ],
+            "unit": "vehicles/hour"
+          }
+        }
+      ],
+      "speaker_notes": "SYNTHETIC demonstration only. Before 200; after 190; North 90 / 190 = 47.4%; total change -5.0%."
+    },
+    {
+      "id": "s02",
+      "page_number": 2,
+      "title": "Grouped bar: synthetic traffic",
+      "core_message": "After total 190 vehicles/hour; North share 47.4%; change -5.0%",
+      "visual_brief": "Two categories and two series; shared zero baseline",
+      "source_refs": [
+        "Synthetic fixture; no observed traffic or performance claim"
+      ],
+      "image_file": "slides/02.png",
+      "image_status": "pending",
+      "elements": [
+        {
+          "id": "finding",
+          "kind": "text",
+          "role": "finding",
+          "native_intent": "native",
+          "source_ref": "Synthetic fixture",
+          "confirmation_status": "confirmed",
+          "text": "After total 190 vehicles/hour; North share 47.4%; change -5.0%"
+        },
+        {
+          "id": "traffic",
+          "kind": "chart",
+          "role": "evidence",
+          "native_intent": "native",
+          "source_ref": "Synthetic fixture",
+          "confirmation_status": "confirmed",
+          "data": {
+            "chart_type": "bar",
+            "categories": [
+              "North",
+              "East"
+            ],
+            "series": [
+              {
+                "name": "Before",
+                "values": [
+                  120,
+                  80
+                ]
+              },
+              {
+                "name": "After",
+                "values": [
+                  90,
+                  100
+                ]
+              }
+            ],
+            "unit": "vehicles/hour"
+          }
+        }
+      ],
+      "speaker_notes": "SYNTHETIC demonstration only. Before 200; after 190; North 90 / 190 = 47.4%; total change -5.0%."
+    }
+  ]
+}

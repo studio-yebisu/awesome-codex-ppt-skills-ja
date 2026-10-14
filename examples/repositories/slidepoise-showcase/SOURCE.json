@@ -1,0 +1,98 @@
+{
+  "repository": "henryhyw/slidepoise",
+  "commit": "481a028486b528e65706c4e14aa9b74a5e340f12",
+  "license": "MIT",
+  "author": "SlidePoise contributors (henryhyw/slidepoise)",
+  "official": false,
+  "source_refs": [
+    {
+      "path": "slidepoise/SKILL.md",
+      "sha256": "3f1bd8cd123fd412a7eacdd00c581f55d7048d47ff560db525af5d9cf98785b6",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/SKILL.md"
+    },
+    {
+      "path": "slidepoise/scripts/prepare_generation.py",
+      "sha256": "a7276c28a2d0034ff5f7c327dd1d97c81d69bee73ff2ce5e6164f3938b948781",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/prepare_generation.py"
+    },
+    {
+      "path": "slidepoise/scripts/normalize_generation_canvas.py",
+      "sha256": "98be496ad432f89378e158a4f8463f12141f3bc96e418cfdc952794dffb5ace1",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/normalize_generation_canvas.py"
+    },
+    {
+      "path": "slidepoise/scripts/slidepoise_runtime.py",
+      "sha256": "492b655986d29ce188f7c4466a24abc99ef4405ea19747d87da3293726876707",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/slidepoise_runtime.py"
+    },
+    {
+      "path": "slidepoise/runtime/scripts/measure_visual_scene.py",
+      "sha256": "d5fc637b8a14091adafe217f0f216f3c9c61a41fc9655aa4d50f96acf50cef38",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/scripts/measure_visual_scene.py"
+    },
+    {
+      "path": "slidepoise/runtime/src/slidepoise/reconstruction/contract.py",
+      "sha256": "6ce78669e90d5624732f386b364111f672bc6c54b4f209fe1b8ba6a1c90f3f24",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/contract.py"
+    },
+    {
+      "path": "slidepoise/runtime/src/slidepoise/reconstruction/scene.py",
+      "sha256": "a959e4a0f9d6ee9b7261453ff2ef2d48cf4e405de6187e411ad5f482afca89a5",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/scene.py"
+    },
+    {
+      "path": "slidepoise/runtime/js/scene_to_pptx.mjs",
+      "sha256": "38d6a165912de87e065d8ef39459d0c0c94fe7ab1707db769b9181412c942aa2",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/js/scene_to_pptx.mjs"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/LICENSE"
+    }
+  ],
+  "method": "Original prepare_generation compiled exact bound requests → builtin image_gen → original normalize_generation_canvas → host-authored semantic map → original OpenCV measurement → original reconstruction contract → original constructor scene → original slidepoise_runtime render-deck / scene_to_pptx renderer and native postprocess.",
+  "generation_tool": "image_gen__imagegen",
+  "image_count": 3,
+  "measure_engine": "OpenCV 4.12.0",
+  "constructor_objects": [
+    34,
+    28,
+    24
+  ],
+  "editability": "native_elements",
+  "editable_features": [
+    "text",
+    "shapes",
+    "connectors"
+  ],
+  "native_scope": "Native Japanese/Latin text, rectangles/roundRect/ellipses, editable freeform chevrons and diamond, native connectors; no full-slide screenshot image objects.",
+  "not_exercised": [
+    "External library reference retrieval, Console/profile installation, SAM, image editing, third-party photographs/logos, independent review, all-page detailed visual QA, ZIP re-execution."
+  ],
+  "upstream_preserved": true,
+  "modifications": [
+    "Local runtime text_fit.py only: map requested Dela/BIZ/Manrope families to the bundled original OSS TTF metrics on Windows rather than falling back to Arial.",
+    "Reconstruction config explicitly uses agent_observed font-family policy so Manrope is preserved; original generation config/request remain unchanged.",
+    "Headline target-size/weight adjusted in semantic map after the first PowerPoint display wrapped the Japanese final period. The second native render shows the full sentence.",
+    "Local export_case.ps1 omits Application.Quit and closes only its openedDeck.",
+    "Three substantive pages replace the initial six-page proposal so the original image/OpenCV/constructor path is fully exercised.",
+    "Scoped source acquisition excludes media/examples/library-set assets; each pinned source blob matches the audited Git tree."
+  ],
+  "visual_limitations": [
+    "Native font shaping and flat fills differ from generated text ink and paper shading; pixel-perfect fidelity is not claimed.",
+    "Third final page was generated/opened/exported but not detailed visually reviewed."
+  ],
+  "fonts": {
+    "source_commit": "66928797f271fed5ee428544e7229685e2d90127",
+    "families": [
+      "Dela Gothic One",
+      "BIZ UDPGothic",
+      "Manrope"
+    ],
+    "license": "OFL-1.1",
+    "full_original_TTF_and_OFL_included": true,
+    "PPTX_font_embedding": false
+  },
+  "artifact_tool_used": false
+}

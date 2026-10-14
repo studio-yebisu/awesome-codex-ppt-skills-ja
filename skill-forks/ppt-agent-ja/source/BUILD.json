@@ -1,0 +1,22 @@
+{
+  "route": "original html_packager -> html2svg (dom-to-svg) -> svg2pptx native OOXML shape conversion",
+  "steps": {
+    "package": {
+      "exit_code": 0,
+      "log": "source/package.log"
+    },
+    "dom-svg": {
+      "exit_code": 0,
+      "log": "source/dom-svg.log"
+    },
+    "native-pptx": {
+      "exit_code": 0,
+      "log": "source/native-pptx.log"
+    }
+  },
+  "bundle": "esbuild + original BUNDLE_ENTRY API",
+  "image_fallback_used": false,
+  "artifact_tool_used": false,
+  "slide_count_expected": 5,
+  "full_structure_audit": false
+}

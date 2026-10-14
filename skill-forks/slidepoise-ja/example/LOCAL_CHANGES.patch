@@ -1,0 +1,15 @@
+--- upstream/slidepoise/runtime/src/slidepoise/reconstruction/text_fit.py
++++ runtime/slidepoise/runtime/src/slidepoise/reconstruction/text_fit.py
+@@ -63,6 +63,12 @@
+         "/usr/share/fonts/truetype/dejavu/DejaVuSerif-BoldItalic.ttf",
+     ),
+ }
++
++# Japanese example only: registered OSS families use bundled original TTF metrics.
++_case_fonts = Path(__file__).resolve().parents[6] / "fonts"
++for _family, _regular, _bold in [("Dela Gothic One","DelaGothicOne-Regular.ttf","DelaGothicOne-Regular.ttf"),("BIZ UDPGothic","BIZUDPGothic-Regular.ttf","BIZUDPGothic-Bold.ttf"),("Manrope","Manrope[wght].ttf","Manrope[wght].ttf")]:
++    FONT_PATHS[(_family,False,False)] = (str(_case_fonts / _regular),)
++    FONT_PATHS[(_family,True,False)] = (str(_case_fonts / _bold),)
+ 
+ def _authored_text(entity: dict[str, Any]) -> str:
+     text = str(entity.get("authored_text") or entity.get("source_text") or entity.get("text") or "")

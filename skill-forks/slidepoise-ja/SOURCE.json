@@ -1,0 +1,1771 @@
+{
+  "repository": "henryhyw/slidepoise",
+  "commit": "481a028486b528e65706c4e14aa9b74a5e340f12",
+  "license": "MIT",
+  "author": "SlidePoise contributors (henryhyw/slidepoise)",
+  "official": false,
+  "source_refs": [
+    {
+      "path": "slidepoise/SKILL.md",
+      "sha256": "3f1bd8cd123fd412a7eacdd00c581f55d7048d47ff560db525af5d9cf98785b6",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/SKILL.md"
+    },
+    {
+      "path": "slidepoise/scripts/prepare_generation.py",
+      "sha256": "a7276c28a2d0034ff5f7c327dd1d97c81d69bee73ff2ce5e6164f3938b948781",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/prepare_generation.py"
+    },
+    {
+      "path": "slidepoise/scripts/normalize_generation_canvas.py",
+      "sha256": "98be496ad432f89378e158a4f8463f12141f3bc96e418cfdc952794dffb5ace1",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/normalize_generation_canvas.py"
+    },
+    {
+      "path": "slidepoise/scripts/slidepoise_runtime.py",
+      "sha256": "492b655986d29ce188f7c4466a24abc99ef4405ea19747d87da3293726876707",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/slidepoise_runtime.py"
+    },
+    {
+      "path": "slidepoise/runtime/scripts/measure_visual_scene.py",
+      "sha256": "d5fc637b8a14091adafe217f0f216f3c9c61a41fc9655aa4d50f96acf50cef38",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/scripts/measure_visual_scene.py"
+    },
+    {
+      "path": "slidepoise/runtime/src/slidepoise/reconstruction/contract.py",
+      "sha256": "6ce78669e90d5624732f386b364111f672bc6c54b4f209fe1b8ba6a1c90f3f24",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/contract.py"
+    },
+    {
+      "path": "slidepoise/runtime/src/slidepoise/reconstruction/scene.py",
+      "sha256": "a959e4a0f9d6ee9b7261453ff2ef2d48cf4e405de6187e411ad5f482afca89a5",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/scene.py"
+    },
+    {
+      "path": "slidepoise/runtime/js/scene_to_pptx.mjs",
+      "sha256": "38d6a165912de87e065d8ef39459d0c0c94fe7ab1707db769b9181412c942aa2",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/js/scene_to_pptx.mjs"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f",
+      "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/LICENSE"
+    }
+  ],
+  "method": "Original prepare_generation compiled exact bound requests → builtin image_gen → original normalize_generation_canvas → host-authored semantic map → original OpenCV measurement → original reconstruction contract → original constructor scene → original slidepoise_runtime render-deck / scene_to_pptx renderer and native postprocess.",
+  "generation_tool": "image_gen__imagegen",
+  "image_count": 3,
+  "measure_engine": "OpenCV 4.12.0",
+  "constructor_objects": [
+    34,
+    28,
+    24
+  ],
+  "editability": "native_elements",
+  "editable_features": [
+    "text",
+    "shapes",
+    "connectors"
+  ],
+  "native_scope": "Native Japanese/Latin text, rectangles/roundRect/ellipses, editable freeform chevrons and diamond, native connectors; no full-slide screenshot image objects.",
+  "not_exercised": [
+    "External library reference retrieval, Console/profile installation, SAM, image editing, third-party photographs/logos, independent review, all-page detailed visual QA, ZIP re-execution."
+  ],
+  "upstream_preserved": true,
+  "modifications": [
+    "Local runtime text_fit.py only: map requested Dela/BIZ/Manrope families to the bundled original OSS TTF metrics on Windows rather than falling back to Arial.",
+    "Reconstruction config explicitly uses agent_observed font-family policy so Manrope is preserved; original generation config/request remain unchanged.",
+    "Headline target-size/weight adjusted in semantic map after the first PowerPoint display wrapped the Japanese final period. The second native render shows the full sentence.",
+    "Local export_case.ps1 omits Application.Quit and closes only its openedDeck.",
+    "Three substantive pages replace the initial six-page proposal so the original image/OpenCV/constructor path is fully exercised.",
+    "Scoped source acquisition excludes media/examples/library-set assets; each pinned source blob matches the audited Git tree."
+  ],
+  "visual_limitations": [
+    "Native font shaping and flat fills differ from generated text ink and paper shading; pixel-perfect fidelity is not claimed.",
+    "Third final page was generated/opened/exported but not detailed visually reviewed."
+  ],
+  "fonts": {
+    "source_commit": "66928797f271fed5ee428544e7229685e2d90127",
+    "families": [
+      "Dela Gothic One",
+      "BIZ UDPGothic",
+      "Manrope"
+    ],
+    "license": "OFL-1.1",
+    "full_original_TTF_and_OFL_included": true,
+    "PPTX_font_embedding": false
+  },
+  "artifact_tool_used": false,
+  "case_studies": [
+    "slidepoise-showcase"
+  ],
+  "files": [
+    {
+      "path": "example/.gitignore",
+      "sha256": "5c224722d428cdb1d0c6b79b3b6e85d69a42bc3cf171f2360f12c3d0d6989ae5"
+    },
+    {
+      "path": "example/deck.pptx",
+      "sha256": "f0d9c79bf7a9d29ea421f5e51c10aac9d99044ce3c8dfc304cc87ac5065fee91"
+    },
+    {
+      "path": "example/DEPENDENCIES.json",
+      "sha256": "13bf3ca54b328fed0866cba8a19b7e34c73d9a20032722d6b012eac7a15c52c5"
+    },
+    {
+      "path": "example/export_case.ps1",
+      "sha256": "70c3728ace4956ff97d6948733bfc44d7817cf2b200afebe9f964d1691898fa4"
+    },
+    {
+      "path": "example/fonts/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "example/fonts/bizudpgothic-OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "example/fonts/BIZUDPGothic-Regular.ttf",
+      "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01"
+    },
+    {
+      "path": "example/fonts/delagothicone-OFL.txt",
+      "sha256": "c0014792d4f4abc0508c295b277f2b17ae44465c8dc88d12af9cea48279b5fda"
+    },
+    {
+      "path": "example/fonts/DelaGothicOne-Regular.ttf",
+      "sha256": "4ff87a0965f1b0505e5a2c58424bc6ad3cff27e56a82f21c2fc9d6b0e3857ee2"
+    },
+    {
+      "path": "example/fonts/manrope-OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "example/fonts/Manrope[wght].ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    {
+      "path": "example/index.html",
+      "sha256": "8c40a767861a702a9e48d50abb6cb46526c158de2d0333b95d395ca07b9f3552"
+    },
+    {
+      "path": "example/input/BRIEF.md",
+      "sha256": "d0f05103a296b78296471160b43f99669ea15b31cfaf4c08f4467572bbf97a25"
+    },
+    {
+      "path": "example/input/case-data.json",
+      "sha256": "8c67054feaa9c02ad340592e114fe74382f1b06788aec74d8e1e04d90d5e6dcc"
+    },
+    {
+      "path": "example/input/SOURCE.md",
+      "sha256": "0c91ff1a6b3202f12b5c1b209ede8d0aed6344f1a9543e360deb82826253dc6c"
+    },
+    {
+      "path": "example/LICENSE",
+      "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f"
+    },
+    {
+      "path": "example/LOCAL_CHANGES.patch",
+      "sha256": "e0f61d7a3af3d3f5ef6bc43aded4ae8f72067167f31db5e93db54d811618751c"
+    },
+    {
+      "path": "example/PROMPT.md",
+      "sha256": "157f9885460e12e3857837f7e16c6e6663607c0fd6d16d81e4b4253473c16a74"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "2b35037398e69b7e581355787e956f3e3c02809c79dec684c7079a52745fea80"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "5e664266d48720dfe7955e2a726faaf685c6102be22fd4737672c5b761fc860a"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "90aa41613b2ee4ef14aec80f41f1e4b6d289f9b51de82daf1b950eb2cd76150c"
+    },
+    {
+      "path": "example/rebuild.py",
+      "sha256": "e1ffce9b6fba2047fe24ce4dbaa5236e54a9cb092144949d090f1d882542a882"
+    },
+    {
+      "path": "example/render/deck.pdf",
+      "sha256": "d99ff7a9d31c06e38f23da8577fe03a382f29803bb6b0bf252e05cfa0f5adfd1"
+    },
+    {
+      "path": "example/render/powerpoint-render.json",
+      "sha256": "efaaa83a33a45dfc141a4a49ca36450bc2e0d102d755943cb5565986a9dfd94f"
+    },
+    {
+      "path": "example/render/slide-01.png",
+      "sha256": "785c2187ddb79e6f3a745c2988107a33e77af3a826d488c871a5fccfad060570"
+    },
+    {
+      "path": "example/render/slide-02.png",
+      "sha256": "eb9280fe40857fd16801c820d7532587c66646e76dde13e01a46ef4f1b996056"
+    },
+    {
+      "path": "example/render/slide-03.png",
+      "sha256": "994c2db4c76e446ea1d7d38d1c1a5811027e3e1561b24140d28103f848bb5602"
+    },
+    {
+      "path": "example/runtime/ACQUISITION.json",
+      "sha256": "40c34055dafc9e08cc5cb7a3c434603101b0cc34489b0b1b5b5a0b221a0905a5"
+    },
+    {
+      "path": "example/runtime/AGENTS.md",
+      "sha256": "ca300ce66af653f4bba4f7d24c3fbafedb6d86b5cb2d7825c16a295ca8039aa0"
+    },
+    {
+      "path": "example/runtime/framework/__init__.py",
+      "sha256": "b2e3aaeda0ab017b197790d34a594db10ba1a65760b2b9848aa30cc7b21b0d32"
+    },
+    {
+      "path": "example/runtime/framework/cli.py",
+      "sha256": "95b556b7491195d169a0ba08a54ab277cd17a3b9de38a51fc83536b12feb106b"
+    },
+    {
+      "path": "example/runtime/framework/components.py",
+      "sha256": "407843513b1c3a239582437ef1fe8d1ebe364d506b452b7fd4a27d995ca4ba76"
+    },
+    {
+      "path": "example/runtime/framework/defaults/slidepoise-config.json",
+      "sha256": "889c1676e2f69114ceb5487061f2ba54894a11e9e8f7a70ebc06fecb02b76196"
+    },
+    {
+      "path": "example/runtime/framework/design.py",
+      "sha256": "208d60a3fc3c30dca68ea138795ea1b502b6d53a959c139efdfa799c90d11d5b"
+    },
+    {
+      "path": "example/runtime/framework/host_notifications.py",
+      "sha256": "be02570bb177ca4a75b3b77043a4943cedf8019aea36676a0735374a51f14dd7"
+    },
+    {
+      "path": "example/runtime/framework/image_generation.py",
+      "sha256": "de9696562da7129c1d6cc5c98bf0cd2533a1c534149fc981f156adb38bb53d46"
+    },
+    {
+      "path": "example/runtime/framework/installer.py",
+      "sha256": "96d62de7d57e67ebb30630f4da7f5b76e16405cb40b349c1c8ca5f688e80b6fa"
+    },
+    {
+      "path": "example/runtime/framework/library_sets.py",
+      "sha256": "12413c2b3870982a422875bcb99253cbed46bb5fba4cf39f6f8968dd61dc35d1"
+    },
+    {
+      "path": "example/runtime/framework/migration.py",
+      "sha256": "3b0a1b337707f26e2f00c71ec4eb164963bf73218e6ac827aa6df9ce366add37"
+    },
+    {
+      "path": "example/runtime/framework/node-runtime-package.json",
+      "sha256": "84dccead61c1456787d20705a6d47f100c4c443fcee95afa0be582b4a9821ada"
+    },
+    {
+      "path": "example/runtime/framework/panel.py",
+      "sha256": "8fbf9f31bbfb9c7dca7eaab29f484a278e600faddf91d38c49f763916d6b3755"
+    },
+    {
+      "path": "example/runtime/framework/panel_binding.py",
+      "sha256": "7f30e08d5e20537a0718ec3c3b34e04c9dc3beded9e6796cfc98bccc34a6bb1c"
+    },
+    {
+      "path": "example/runtime/framework/paths.py",
+      "sha256": "d4eacc0fb0648899c776092a6836ab30b6c71ad2c4d7b3c66f4efe739c3bde25"
+    },
+    {
+      "path": "example/runtime/framework/preview_install.py",
+      "sha256": "1e7b0a302cfc7b68d68807ea86e6550dc13ff3401538e5e9d3279d8853247f4d"
+    },
+    {
+      "path": "example/runtime/framework/profile_authoring.py",
+      "sha256": "2dc294dcfc18c30823979eeb33bdb796f366bb504d3ac7b272d85d118b92a9e4"
+    },
+    {
+      "path": "example/runtime/framework/profiles.py",
+      "sha256": "f2321e407c80dbb8679b60bfc916bee457e46a035e23331cfacc4636659da570"
+    },
+    {
+      "path": "example/runtime/framework/reference_library.py",
+      "sha256": "b0ded60680245434c19de8927a32e4c686a92d22c740978907288b02b209a157"
+    },
+    {
+      "path": "example/runtime/framework/run_events.py",
+      "sha256": "afd1c8b9c2a97e1df88d594c41c66f6ef82d88030831b1313390fc6ca79e76ce"
+    },
+    {
+      "path": "example/runtime/framework/run_versions.py",
+      "sha256": "b9b612393cc59824f68ca96e0b724c1a0be909f0566212af3c14beaf2c2b0a24"
+    },
+    {
+      "path": "example/runtime/framework/sessions.py",
+      "sha256": "f89b18226a58e8b712caf4dfcfdce282870a9e21fb55fc24984c2837ea8da7df"
+    },
+    {
+      "path": "example/runtime/framework/shared_resource_migration.py",
+      "sha256": "ebd08747d3ad8b5c4c7ca1b2add76ad7988793d5d37862ae7dc008ac43477547"
+    },
+    {
+      "path": "example/runtime/framework/storage.py",
+      "sha256": "44bfd367a5ab5d325e6e9e2df2a0e1d8e9f86e872478b10768889a5c3cc7da89"
+    },
+    {
+      "path": "example/runtime/framework/templates/session-overrides-template.json",
+      "sha256": "af67c0dd340d1368b7adacf30ad9303c3223baf0e39d6763acc0620bb055b250"
+    },
+    {
+      "path": "example/runtime/LICENSE",
+      "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f"
+    },
+    {
+      "path": "example/runtime/pyproject.toml",
+      "sha256": "47764143b32202ff2402c57b6106bbba1aa03895dcaa094529092272c68ed898"
+    },
+    {
+      "path": "example/runtime/README.md",
+      "sha256": "17fa8caabf120d4075785e8e89aa139d39fdaa758f62798169c6f3b50417deec"
+    },
+    {
+      "path": "example/runtime/slidepoise/agents/openai.yaml",
+      "sha256": "9300a8afa7cbd6d387172c16b79c418e161a606761c8f733b9088cd32ea02fcf"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/case-studies.md",
+      "sha256": "a246cab14583dd3c5479143b1b5e65ac454818c3679e9c5bdf15b15204bc29c4"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/connectors.md",
+      "sha256": "719717a800618a91fc58adc9c8322d552e2422c72095322f7c5bf6852c658ce0"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/content-refinement.md",
+      "sha256": "c876e2992973d2bf861d2b6fd1cb67c0909ecfae07a5aa3993ce4bbfb57ef96b"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/deck-orchestration.md",
+      "sha256": "a0cbcc023de8be6c1603b1f6516786f9fd1cad475326d3c5ea9d99e8d329b33e"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/human-approval.md",
+      "sha256": "701b99a669a29704ec76467b6a6de13e31447b184e32a5e4ab36404bd26f5c41"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/icon-variants.md",
+      "sha256": "9f34e78e3f0bf2f6cb75dbf2342414cf93bfd602a8a14c0503547b06dbd9e9d6"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/illustration-refinement.md",
+      "sha256": "0d82c1a81a12e4c83ed96a1fd2784212badcba8d5cc850457e3f988fece373af"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/image-generation.md",
+      "sha256": "3551e525fa4c1a5c0312de537a602dc997b203c7c4efe7e03263ac49698e05d7"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/maintenance.md",
+      "sha256": "6509c5fe43078bdc96d24697e669089b380c25e56ec3ff53aa62e91572e275c9"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/multi-agent-review.md",
+      "sha256": "6922a7ca56387bbd6f2352374a7b0b558f55a0cd72a7addaf8c6beec557b6b11"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/portable-artifacts.md",
+      "sha256": "dd4d78df727d0b0318a1ca59f31e4347ef46edeee5684e0bf5e13d5076d57664"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/profile-authoring.md",
+      "sha256": "2ac40996b59ceac14ec1f3f975005ce001a0071d5ae4df6f3a0dcad0354602d5"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/raster-composition.md",
+      "sha256": "3208b17752487f43d0ab96d36ad4553440919857c19ba4ef38a11ffc2111d7ca"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/reconstruction.md",
+      "sha256": "3c27c133d4317bb698d141273237dc46dc5bd61b8eb4e1bebff8bf77fb2c7b56"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/reference-retrieval.md",
+      "sha256": "6d78a35e50b4ccc72894f4ca3f4c6fd25453e7185586b6cf412a962fd74c93dd"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/resource-library.md",
+      "sha256": "b0866830d55aeac237e661700248f21a9ffc450a504d18297fafd0c8ecfb9f78"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/runtime-host.md",
+      "sha256": "060e8d995a68bdd9a3c70393d951f67be62d566f436ba561253530ba9f8101cb"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/session-panel.md",
+      "sha256": "09ccb0b47a5afa8b7db3d85475b1deae9bc6316c98fb3d6cba2065e5c8d8d6d7"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/user-language.md",
+      "sha256": "73e7b68f8157a0a0b01c52d6449475336236e530ab03477be7743b75878d7e06"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/visual-exploration.md",
+      "sha256": "961302f1b7729d4ecafb7a8162ef30d81a426dee160393e577e2b697d0d4e017"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/visual-reasoning.md",
+      "sha256": "ee62888d08d647e64082a4cdb7e7d0e6da7ae2ea71533d4a532e589205886567"
+    },
+    {
+      "path": "example/runtime/slidepoise/references/workflow.md",
+      "sha256": "7d34257df38d202f4149ada04ef2a90b59919fe1ad4668d78b22663ee8a7fe17"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/js/scene_to_pptx.mjs",
+      "sha256": "38d6a165912de87e065d8ef39459d0c0c94fe7ab1707db769b9181412c942aa2"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/scripts/audit_powerpoint_text.py",
+      "sha256": "54244d76e519a50ea95948e5ab5b0380677956e6d544db2b7c4606f1b32ff568"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/scripts/measure_visual_scene.py",
+      "sha256": "d5fc637b8a14091adafe217f0f216f3c9c61a41fc9655aa4d50f96acf50cef38"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/scripts/postprocess_pptx.py",
+      "sha256": "55864ef435626c6f94982d5e4a65604e045b5908ce60037b2ef54bee4e717c60"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/scripts/raster_sources.py",
+      "sha256": "f023b330df00b1acadecbf464b0b7350fc16bda00a8337fb8bc3bfb29c6cfdf0"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/scripts/sam_optional.py",
+      "sha256": "a27a12294eb6bbcb74b21ae212a58c4a969502a5a3299cfd69e21be912bbe965"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/__init__.py",
+      "sha256": "4b43f2b1979a58ad57247468a0e01ff9de794f4c8e09e61dff648b6b530b9cdc"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/artifacts.py",
+      "sha256": "b5fcc3bf5b19b6039411d7e03e9ad265b9ac82fc317a1b9af56ae8d052191257"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/canvas.py",
+      "sha256": "84fb70da7eaa0bec05855b081e682947604610b52005f0462c2ba74a10759142"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/generation.py",
+      "sha256": "ad2536f5503068cc34583e2fbbbe2ca7f53ae54322b468008283e15a37b1a163"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/preview_tools.py",
+      "sha256": "92df015b41871bb644c60aee0c9e5178e537fffc7194ccad0a46c68691311b5f"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/reconstruction/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/reconstruction/conformance.py",
+      "sha256": "4d87e85cabf9b6dfed40601e4ff1c15acf83e6aabfc72578267871db858996e1"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/reconstruction/contract.py",
+      "sha256": "6ce78669e90d5624732f386b364111f672bc6c54b4f209fe1b8ba6a1c90f3f24"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/reconstruction/coverage.py",
+      "sha256": "0bf9afe91a3df0a3e05678c981f08d428eeccf9b72a9ee8faeeb161efe512184"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/reconstruction/scene.py",
+      "sha256": "a959e4a0f9d6ee9b7261453ff2ef2d48cf4e405de6187e411ad5f482afca89a5"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/reconstruction/text_fit.py",
+      "sha256": "8a1fa9d0974719ac82eaf623be21e648888e948908db742f598c9cdce4b5917e"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/reference_retrieval.py",
+      "sha256": "4022390b2d4f6cc6e4dc063de4c064d61e228b6a38ce55ec3e92e8e3e9d4ec39"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/rendered_text.py",
+      "sha256": "baeb6fc2b89716e0df1180f1eb33bb4e97f9218a062fc93e642b64ba74228696"
+    },
+    {
+      "path": "example/runtime/slidepoise/runtime/src/slidepoise/resource_catalogs.py",
+      "sha256": "c046a892190431390777789611713ce248cfe7bc45eb3607ea9f36f41c3f55f6"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/agent-review.example.json",
+      "sha256": "9ae021be66d2899fb326fd7ba29c48d19dbbbbd88e58289470241ac77b146fad"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/deck-design.example.json",
+      "sha256": "da0ad57f88a142dcbde0abc4d3611af40d60708a235f9b6eaa94a5859bee310d"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/deck-outline.example.json",
+      "sha256": "6407ef0588bed35c6d2043bfe4c4435ac92e7bd6b197dc3d221af33236dfe2f6"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/deck-scenes.example.json",
+      "sha256": "acf2b3e20f390db4b3a8fae4af61631e610e6b0dd1abb486e1a985bb644eac49"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/generation-contract.example.json",
+      "sha256": "20d1f58d5d298b702eb44ffd32135e78024af70b93ac51bd8218d0a514eb6970"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/panel.example.json",
+      "sha256": "cf1a5b5740c42d45d34a0c88129756a7230bac8048e930f284f09e06f3ab644b"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/reconstruction-handoff.example.json",
+      "sha256": "b8f8545e91cc5c884883fab9438fedc59f55d4bddf380123f6a041d15f7a8102"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/resource-selection.example.json",
+      "sha256": "57128533dbceaa05460be8550bb71e9812af787b7ee8b7de325d1d7e52299175"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/semantic-map.example.json",
+      "sha256": "bb8bffbf16a3b5af21fbf3cdb87f8b584286bbb7bd218b48b6a5e3719ae98f17"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/slide-intent.example.json",
+      "sha256": "25688c0018a504e2be1ea7cda2bfee2791a399ea6ecd93c69a93352328de5607"
+    },
+    {
+      "path": "example/runtime/slidepoise/schemas/visual-review.example.json",
+      "sha256": "dfd3a01cec67d08ad160fb5374677569cb4aca6754644f3731c93b7c22925a09"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/apply_illustration_sources.py",
+      "sha256": "3020c878ab020d760af01282b126c076df15d8e41754deaad3b4212da6457537"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/audit_skill_boundaries.py",
+      "sha256": "b04af471121af0e775ee1a001957be696065a540a464cf447157d7ba14d6fed4"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/collect_release_evidence.py",
+      "sha256": "b107238f3506f7660adb1901d558ab864c4032ce24654623a16c7a313bfc5ecd"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/collect_semantic_evidence.py",
+      "sha256": "7fd8d7c39dea13f9d8d724d26dc819203f0525c1c3eb2eeb8769fc656a2f21d9"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/component_preview.py",
+      "sha256": "dfa56ac3eb95982d6a81168d80e7c5e85ffd0a21fc46cda4027fd5dffd8cb3c3"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/extract_refined_illustrations.py",
+      "sha256": "a1f4550e985af1d308428af0614ae69cdafb359515d3230d8ba3863a14d940fd"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/fetch_remix_icon_pair.py",
+      "sha256": "c346c2c0dbb75fdb9f7b05ae30776f52fe492d951024cd54cb5a129bc8b83894"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/fetch_remote_asset.py",
+      "sha256": "158dca9339e59d2c571929a0a0074fafce798e28eec6b017c228c7ec95803bc9"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/fetch_wikimedia_commons_asset.py",
+      "sha256": "3a0a40443514fde9e7cf92c42219d148f220d6dd7526fd0220e595bba36425f1"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/generation_handoff.py",
+      "sha256": "64f9574dd7bc3cbc2f8e4b33278507b1f0b39a69204b4a911f1446c1c8c35e03"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/inspect_asset.py",
+      "sha256": "0f414080bed3e430ef49c6c466fb3cf43c35345d49aebea83629f35dc25fc448"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/list_library.py",
+      "sha256": "7a2debac14a628cfc6beea585e2dfb341c07374c32c6d96004f0a931963b2dc2"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/make_asset_contact_sheet.py",
+      "sha256": "e82245c11ef3e7811c304f7d9e70d351a5983627b92aff1a2df9e7c39893d5fc"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/make_semantic_explanation_overlay.py",
+      "sha256": "d4901503ab3c553cb454e03353db4232862edec4457323270d1ae92946f8526a"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/make_visual_comparison.py",
+      "sha256": "14f4824733090658c1132f6994422ee42c1174a205c37d7e06dfb79c4a072e00"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/normalize_generation_canvas.py",
+      "sha256": "98be496ad432f89378e158a4f8463f12141f3bc96e418cfdc952794dffb5ace1"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/package_self.py",
+      "sha256": "808ce9583dc2a105b02859afe43308151d7930909a301557836aeb3159931463"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/preflight_catalogs.py",
+      "sha256": "8c2b29df99596336a3d755115b35777441c749ae8b012dbe8e173388744e47bf"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/preflight_config.py",
+      "sha256": "ce91882dced3f3be98f432c97d5c9d0fb921fcc5be3ddc49721dea41f38bcd9c"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/prepare_generation.py",
+      "sha256": "a7276c28a2d0034ff5f7c327dd1d97c81d69bee73ff2ce5e6164f3938b948781"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/prepare_illustration_refinement.py",
+      "sha256": "e066a05c5e4aef06e9cf6101915af4e39585810562eba6e136d2189a26361c34"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/prepare_image_edit.py",
+      "sha256": "aee5ae39e008e980d7a8342dfa54f6663818547317817401e72b51b69ef2d19e"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/prepare_resource_context.py",
+      "sha256": "00b1da4586d08360797624c820fe0ca7887087dae89e23ee8a01fd626fc7a19b"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/raster_decisions.py",
+      "sha256": "c4e4cdcca977ec43582f2789586fb8aaa1a7377381aef86d88e0db6b9f2b8dcc"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/resolve_config.py",
+      "sha256": "e2663256e470f9fcac11186bbba1a207b0c0ed43f0dbc6cd5f0e71c39e05c9a6"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/retrieve_references.py",
+      "sha256": "ce47ad8d507025b2d34cdf25d8ce42239f67300f5d16956b97cdde9564ef33f1"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/search_wikimedia_commons.py",
+      "sha256": "d6e0046d690c802ae567bb09e4ea09e01dd5eda9ae1a147b4b545f6e6b1eb683"
+    },
+    {
+      "path": "example/runtime/slidepoise/scripts/slidepoise_runtime.py",
+      "sha256": "492b655986d29ce188f7c4466a24abc99ef4405ea19747d87da3293726876707"
+    },
+    {
+      "path": "example/runtime/slidepoise/SKILL.md",
+      "sha256": "3f1bd8cd123fd412a7eacdd00c581f55d7048d47ff560db525af5d9cf98785b6"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/accepted-slide.png",
+      "sha256": "d1678cb9866ae455e85817665e9874035439c40e6f8a656f68c1ac6bc701a07f"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/generated-original.png",
+      "sha256": "09c58a71537e62ae8dcb8921f94c9aae12cacfb6bff8fe5ff089acc543220b3d"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/generation-brief.md",
+      "sha256": "fe55799c4b9326eaa877610399dcec5c044810ba39e986595cf38f49e94495c5"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/generation-contract.json",
+      "sha256": "9272e178abe9e2a36f4a9f90dc7fd879492c7a18984eeeb04eacbee05a5acee3"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/generation-request.json",
+      "sha256": "aac6fdd266a8600fed7e837c2281c4f65b9e68792ff77c7e1b6a31a76e8e5bfb"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/generation-review.json",
+      "sha256": "dc33b1b9b731fa74b147285d1966f6e3ea409c111aad496267bfbdbd5819b67d"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/measurement-review.json",
+      "sha256": "29b7cec425b2fe70e42ea0e113b831fc8e391daae7d2b658b29d9b9f397fc926"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/reconstruction/constructor-scene.json",
+      "sha256": "e39d8ab212be28472e57c2dd4cc6a862c341ae8d9019428c8d9946da8d633613"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/reconstruction/measurement/debug_overlay.png",
+      "sha256": "28d1d4855e6108b6e455c387c06e6f8f0bdfffc48ab19e0e9508aa904b60b73b"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/reconstruction/measurement/report.md",
+      "sha256": "b17587c5ab2570f1617ee01fe4cc0623d362d134d2a87efb88296224aff0041a"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/reconstruction/measurement/slide_entities.json",
+      "sha256": "d46827ac0d3411e0639f7d29d28a452eaf324ad57013e4c3f030cd26461aaf5d"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/reconstruction/reconstruction-contract.json",
+      "sha256": "c423c3d16a91edb08bfd53cd292432cc997dc393b179c4d76e4a22a70e59ed80"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/reconstruction-handoff.json",
+      "sha256": "766cce95413e883359015832378c5d39e2e522a509939991068c7c188424ef25"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/resource-selection.json",
+      "sha256": "71b0bc276f4dddf60a0a5cce2fdda530ad15f0496372890f1680c2f6522cce35"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/semantic-map.json",
+      "sha256": "69d766a549b2794994d374c9688448f232ff32f3a3cc9f75b71a885673a2b394"
+    },
+    {
+      "path": "example/slides/branch-and-information/work/slide-intent.json",
+      "sha256": "971de706632e95ec56b32075a84de8bde5587dd015b29adb5b84536bef2fb0fc"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/accepted-slide.png",
+      "sha256": "b9b12f448409ddb9853a55e6256a10bfae6cec0247a7a3749d5477befb8953cb"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/generated-original.png",
+      "sha256": "b071584ac41384ab683fde9294294b345c2ca50c60843f525dcbfd1525246669"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/generation-brief.md",
+      "sha256": "bde5627e3319f7c1b44b58c91c05f600d4546d8f1d7eb06b00c84fb6a35d4274"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/generation-contract.json",
+      "sha256": "b0f20ed31d724bcc8548894cc6e47dc738fad8d3ea1bf47c83b33aa4e507f98f"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/generation-request.json",
+      "sha256": "0066dcbd26fca61ed43e106bec10ac44542bee4ccd2f85eade2727f2a6ee8f73"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/generation-review.json",
+      "sha256": "dc33b1b9b731fa74b147285d1966f6e3ea409c111aad496267bfbdbd5819b67d"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/measurement-review.json",
+      "sha256": "29b7cec425b2fe70e42ea0e113b831fc8e391daae7d2b658b29d9b9f397fc926"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/reconstruction/constructor-scene.json",
+      "sha256": "34a131c992a227bfa1f9c4a35b72e87733031f593b8b6f0659252f815229599a"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/reconstruction/measurement/debug_overlay.png",
+      "sha256": "2b4b23d3fc382cb54ea9af4d52dd8a5142936382176ab0ea3ae71a20310e97f7"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/reconstruction/measurement/report.md",
+      "sha256": "b5d10248295e324a637faa56d77b12c3ffc63c81c1ec877e084b1c4b5c90a7b7"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/reconstruction/measurement/slide_entities.json",
+      "sha256": "af51a4c7e1f88fa2333de84ecfe96ebdee665b35b7210ca5758ffdcaccbbab05"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/reconstruction/reconstruction-contract.json",
+      "sha256": "689f83d627ce6617910674311fecfb79a12166b2e581e453b05a3d3aacc0579f"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/reconstruction-handoff.json",
+      "sha256": "2a9c6ed7e0ecbb1583c54e1485a82d293149967b071bf771b20be2357b7b99f8"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/resource-selection.json",
+      "sha256": "71b0bc276f4dddf60a0a5cce2fdda530ad15f0496372890f1680c2f6522cce35"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/semantic-map.json",
+      "sha256": "a5e7ef5d3590c8908ed6ef4884f8f0c260371c0e8be22e14a668de4cdc8a54ca"
+    },
+    {
+      "path": "example/slides/reduce-steps/work/slide-intent.json",
+      "sha256": "13d9b9cfd875da5bce35168ef27b1080e70f6638263dabf8fcb809d99471e89d"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/accepted-slide.png",
+      "sha256": "0b0b86399f09405672932e5919a6b083b5d39aff511bbbb25b44365f6dee56ec"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/generated-original.png",
+      "sha256": "e4df5c665941fe93b97e974b7e0e460a394eeb531005ff7fa74b22192e05cae4"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/generation-brief.md",
+      "sha256": "7d5389c74cc9e220fc616a0a3b7127078abf92807626cbc831287e6b723498ce"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/generation-contract.json",
+      "sha256": "ac440ce4c2f02a55bc9e5dc40d2de794c573b29261230a13633360095cd1c25a"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/generation-request.json",
+      "sha256": "6f0891f4883079144775adf707d5f75e72d9fd4ee28b1584a52499a8ebdf1667"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/generation-review.json",
+      "sha256": "dc33b1b9b731fa74b147285d1966f6e3ea409c111aad496267bfbdbd5819b67d"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/measurement-review.json",
+      "sha256": "29b7cec425b2fe70e42ea0e113b831fc8e391daae7d2b658b29d9b9f397fc926"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/reconstruction/constructor-scene.json",
+      "sha256": "6d11ff2789d92427571c7f09b0681e35725727836da0f68cacf118bb56277809"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/reconstruction/measurement/debug_overlay.png",
+      "sha256": "3404e39a1555ae862a42ae55ff76a01f89fe59aad75f2707ea822b7d1746dca6"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/reconstruction/measurement/report.md",
+      "sha256": "d79ac85e9c75f3c3ad70f1b04f74a6124413d9b19a46f139ba5aab7fea4eab12"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/reconstruction/measurement/slide_entities.json",
+      "sha256": "29b046f8efca0da670e8a522a15d650b7c2a81b1032effe293ae7f2744ac25b8"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/reconstruction/reconstruction-contract.json",
+      "sha256": "2fc29a1005e6bf2b5510228ce0808f4664aa7093fc44ffa34d7bff03d79fe6e2"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/reconstruction-handoff.json",
+      "sha256": "4674ba43f9393a01a09aee465cbf2bb7cf64530be4798949f7e9be057f46505e"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/resource-selection.json",
+      "sha256": "71b0bc276f4dddf60a0a5cce2fdda530ad15f0496372890f1680c2f6522cce35"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/semantic-map.json",
+      "sha256": "ef63319973ac3c48692c687787d13847b2b1a73a7d8b207ebae39d908c32ed2e"
+    },
+    {
+      "path": "example/slides/targets-and-order/work/slide-intent.json",
+      "sha256": "0e1e386c7e89cb5528ef9e040f0b08bd0becda52e849425b658543626070446e"
+    },
+    {
+      "path": "example/upstream/ACQUISITION.json",
+      "sha256": "40c34055dafc9e08cc5cb7a3c434603101b0cc34489b0b1b5b5a0b221a0905a5"
+    },
+    {
+      "path": "example/upstream/AGENTS.md",
+      "sha256": "ca300ce66af653f4bba4f7d24c3fbafedb6d86b5cb2d7825c16a295ca8039aa0"
+    },
+    {
+      "path": "example/upstream/framework/__init__.py",
+      "sha256": "b2e3aaeda0ab017b197790d34a594db10ba1a65760b2b9848aa30cc7b21b0d32"
+    },
+    {
+      "path": "example/upstream/framework/cli.py",
+      "sha256": "95b556b7491195d169a0ba08a54ab277cd17a3b9de38a51fc83536b12feb106b"
+    },
+    {
+      "path": "example/upstream/framework/components.py",
+      "sha256": "407843513b1c3a239582437ef1fe8d1ebe364d506b452b7fd4a27d995ca4ba76"
+    },
+    {
+      "path": "example/upstream/framework/defaults/slidepoise-config.json",
+      "sha256": "889c1676e2f69114ceb5487061f2ba54894a11e9e8f7a70ebc06fecb02b76196"
+    },
+    {
+      "path": "example/upstream/framework/design.py",
+      "sha256": "208d60a3fc3c30dca68ea138795ea1b502b6d53a959c139efdfa799c90d11d5b"
+    },
+    {
+      "path": "example/upstream/framework/host_notifications.py",
+      "sha256": "be02570bb177ca4a75b3b77043a4943cedf8019aea36676a0735374a51f14dd7"
+    },
+    {
+      "path": "example/upstream/framework/image_generation.py",
+      "sha256": "de9696562da7129c1d6cc5c98bf0cd2533a1c534149fc981f156adb38bb53d46"
+    },
+    {
+      "path": "example/upstream/framework/installer.py",
+      "sha256": "96d62de7d57e67ebb30630f4da7f5b76e16405cb40b349c1c8ca5f688e80b6fa"
+    },
+    {
+      "path": "example/upstream/framework/library_sets.py",
+      "sha256": "12413c2b3870982a422875bcb99253cbed46bb5fba4cf39f6f8968dd61dc35d1"
+    },
+    {
+      "path": "example/upstream/framework/migration.py",
+      "sha256": "3b0a1b337707f26e2f00c71ec4eb164963bf73218e6ac827aa6df9ce366add37"
+    },
+    {
+      "path": "example/upstream/framework/node-runtime-package.json",
+      "sha256": "84dccead61c1456787d20705a6d47f100c4c443fcee95afa0be582b4a9821ada"
+    },
+    {
+      "path": "example/upstream/framework/panel.py",
+      "sha256": "8fbf9f31bbfb9c7dca7eaab29f484a278e600faddf91d38c49f763916d6b3755"
+    },
+    {
+      "path": "example/upstream/framework/panel_binding.py",
+      "sha256": "7f30e08d5e20537a0718ec3c3b34e04c9dc3beded9e6796cfc98bccc34a6bb1c"
+    },
+    {
+      "path": "example/upstream/framework/paths.py",
+      "sha256": "d4eacc0fb0648899c776092a6836ab30b6c71ad2c4d7b3c66f4efe739c3bde25"
+    },
+    {
+      "path": "example/upstream/framework/preview_install.py",
+      "sha256": "1e7b0a302cfc7b68d68807ea86e6550dc13ff3401538e5e9d3279d8853247f4d"
+    },
+    {
+      "path": "example/upstream/framework/profile_authoring.py",
+      "sha256": "2dc294dcfc18c30823979eeb33bdb796f366bb504d3ac7b272d85d118b92a9e4"
+    },
+    {
+      "path": "example/upstream/framework/profiles.py",
+      "sha256": "f2321e407c80dbb8679b60bfc916bee457e46a035e23331cfacc4636659da570"
+    },
+    {
+      "path": "example/upstream/framework/reference_library.py",
+      "sha256": "b0ded60680245434c19de8927a32e4c686a92d22c740978907288b02b209a157"
+    },
+    {
+      "path": "example/upstream/framework/run_events.py",
+      "sha256": "afd1c8b9c2a97e1df88d594c41c66f6ef82d88030831b1313390fc6ca79e76ce"
+    },
+    {
+      "path": "example/upstream/framework/run_versions.py",
+      "sha256": "b9b612393cc59824f68ca96e0b724c1a0be909f0566212af3c14beaf2c2b0a24"
+    },
+    {
+      "path": "example/upstream/framework/sessions.py",
+      "sha256": "f89b18226a58e8b712caf4dfcfdce282870a9e21fb55fc24984c2837ea8da7df"
+    },
+    {
+      "path": "example/upstream/framework/shared_resource_migration.py",
+      "sha256": "ebd08747d3ad8b5c4c7ca1b2add76ad7988793d5d37862ae7dc008ac43477547"
+    },
+    {
+      "path": "example/upstream/framework/storage.py",
+      "sha256": "44bfd367a5ab5d325e6e9e2df2a0e1d8e9f86e872478b10768889a5c3cc7da89"
+    },
+    {
+      "path": "example/upstream/framework/templates/session-overrides-template.json",
+      "sha256": "af67c0dd340d1368b7adacf30ad9303c3223baf0e39d6763acc0620bb055b250"
+    },
+    {
+      "path": "example/upstream/LICENSE",
+      "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f"
+    },
+    {
+      "path": "example/upstream/pyproject.toml",
+      "sha256": "47764143b32202ff2402c57b6106bbba1aa03895dcaa094529092272c68ed898"
+    },
+    {
+      "path": "example/upstream/README.md",
+      "sha256": "17fa8caabf120d4075785e8e89aa139d39fdaa758f62798169c6f3b50417deec"
+    },
+    {
+      "path": "example/upstream/slidepoise/agents/openai.yaml",
+      "sha256": "9300a8afa7cbd6d387172c16b79c418e161a606761c8f733b9088cd32ea02fcf"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/case-studies.md",
+      "sha256": "a246cab14583dd3c5479143b1b5e65ac454818c3679e9c5bdf15b15204bc29c4"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/connectors.md",
+      "sha256": "719717a800618a91fc58adc9c8322d552e2422c72095322f7c5bf6852c658ce0"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/content-refinement.md",
+      "sha256": "c876e2992973d2bf861d2b6fd1cb67c0909ecfae07a5aa3993ce4bbfb57ef96b"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/deck-orchestration.md",
+      "sha256": "a0cbcc023de8be6c1603b1f6516786f9fd1cad475326d3c5ea9d99e8d329b33e"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/human-approval.md",
+      "sha256": "701b99a669a29704ec76467b6a6de13e31447b184e32a5e4ab36404bd26f5c41"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/icon-variants.md",
+      "sha256": "9f34e78e3f0bf2f6cb75dbf2342414cf93bfd602a8a14c0503547b06dbd9e9d6"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/illustration-refinement.md",
+      "sha256": "0d82c1a81a12e4c83ed96a1fd2784212badcba8d5cc850457e3f988fece373af"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/image-generation.md",
+      "sha256": "3551e525fa4c1a5c0312de537a602dc997b203c7c4efe7e03263ac49698e05d7"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/maintenance.md",
+      "sha256": "6509c5fe43078bdc96d24697e669089b380c25e56ec3ff53aa62e91572e275c9"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/multi-agent-review.md",
+      "sha256": "6922a7ca56387bbd6f2352374a7b0b558f55a0cd72a7addaf8c6beec557b6b11"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/portable-artifacts.md",
+      "sha256": "dd4d78df727d0b0318a1ca59f31e4347ef46edeee5684e0bf5e13d5076d57664"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/profile-authoring.md",
+      "sha256": "2ac40996b59ceac14ec1f3f975005ce001a0071d5ae4df6f3a0dcad0354602d5"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/raster-composition.md",
+      "sha256": "3208b17752487f43d0ab96d36ad4553440919857c19ba4ef38a11ffc2111d7ca"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/reconstruction.md",
+      "sha256": "3c27c133d4317bb698d141273237dc46dc5bd61b8eb4e1bebff8bf77fb2c7b56"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/reference-retrieval.md",
+      "sha256": "6d78a35e50b4ccc72894f4ca3f4c6fd25453e7185586b6cf412a962fd74c93dd"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/resource-library.md",
+      "sha256": "b0866830d55aeac237e661700248f21a9ffc450a504d18297fafd0c8ecfb9f78"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/runtime-host.md",
+      "sha256": "060e8d995a68bdd9a3c70393d951f67be62d566f436ba561253530ba9f8101cb"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/session-panel.md",
+      "sha256": "09ccb0b47a5afa8b7db3d85475b1deae9bc6316c98fb3d6cba2065e5c8d8d6d7"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/user-language.md",
+      "sha256": "73e7b68f8157a0a0b01c52d6449475336236e530ab03477be7743b75878d7e06"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/visual-exploration.md",
+      "sha256": "961302f1b7729d4ecafb7a8162ef30d81a426dee160393e577e2b697d0d4e017"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/visual-reasoning.md",
+      "sha256": "ee62888d08d647e64082a4cdb7e7d0e6da7ae2ea71533d4a532e589205886567"
+    },
+    {
+      "path": "example/upstream/slidepoise/references/workflow.md",
+      "sha256": "7d34257df38d202f4149ada04ef2a90b59919fe1ad4668d78b22663ee8a7fe17"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/js/scene_to_pptx.mjs",
+      "sha256": "38d6a165912de87e065d8ef39459d0c0c94fe7ab1707db769b9181412c942aa2"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/scripts/audit_powerpoint_text.py",
+      "sha256": "54244d76e519a50ea95948e5ab5b0380677956e6d544db2b7c4606f1b32ff568"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/scripts/measure_visual_scene.py",
+      "sha256": "d5fc637b8a14091adafe217f0f216f3c9c61a41fc9655aa4d50f96acf50cef38"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/scripts/postprocess_pptx.py",
+      "sha256": "55864ef435626c6f94982d5e4a65604e045b5908ce60037b2ef54bee4e717c60"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/scripts/raster_sources.py",
+      "sha256": "f023b330df00b1acadecbf464b0b7350fc16bda00a8337fb8bc3bfb29c6cfdf0"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/scripts/sam_optional.py",
+      "sha256": "a27a12294eb6bbcb74b21ae212a58c4a969502a5a3299cfd69e21be912bbe965"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/__init__.py",
+      "sha256": "4b43f2b1979a58ad57247468a0e01ff9de794f4c8e09e61dff648b6b530b9cdc"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/artifacts.py",
+      "sha256": "b5fcc3bf5b19b6039411d7e03e9ad265b9ac82fc317a1b9af56ae8d052191257"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/canvas.py",
+      "sha256": "84fb70da7eaa0bec05855b081e682947604610b52005f0462c2ba74a10759142"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/generation.py",
+      "sha256": "ad2536f5503068cc34583e2fbbbe2ca7f53ae54322b468008283e15a37b1a163"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/preview_tools.py",
+      "sha256": "92df015b41871bb644c60aee0c9e5178e537fffc7194ccad0a46c68691311b5f"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/reconstruction/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/reconstruction/conformance.py",
+      "sha256": "4d87e85cabf9b6dfed40601e4ff1c15acf83e6aabfc72578267871db858996e1"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/reconstruction/contract.py",
+      "sha256": "6ce78669e90d5624732f386b364111f672bc6c54b4f209fe1b8ba6a1c90f3f24"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/reconstruction/coverage.py",
+      "sha256": "0bf9afe91a3df0a3e05678c981f08d428eeccf9b72a9ee8faeeb161efe512184"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/reconstruction/scene.py",
+      "sha256": "a959e4a0f9d6ee9b7261453ff2ef2d48cf4e405de6187e411ad5f482afca89a5"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/reconstruction/text_fit.py",
+      "sha256": "aff93b8bd28a09971bf635b52f399a297ee6a8bbe770e0d10997c0a257a71002"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/reference_retrieval.py",
+      "sha256": "4022390b2d4f6cc6e4dc063de4c064d61e228b6a38ce55ec3e92e8e3e9d4ec39"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/rendered_text.py",
+      "sha256": "baeb6fc2b89716e0df1180f1eb33bb4e97f9218a062fc93e642b64ba74228696"
+    },
+    {
+      "path": "example/upstream/slidepoise/runtime/src/slidepoise/resource_catalogs.py",
+      "sha256": "c046a892190431390777789611713ce248cfe7bc45eb3607ea9f36f41c3f55f6"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/agent-review.example.json",
+      "sha256": "9ae021be66d2899fb326fd7ba29c48d19dbbbbd88e58289470241ac77b146fad"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/deck-design.example.json",
+      "sha256": "da0ad57f88a142dcbde0abc4d3611af40d60708a235f9b6eaa94a5859bee310d"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/deck-outline.example.json",
+      "sha256": "6407ef0588bed35c6d2043bfe4c4435ac92e7bd6b197dc3d221af33236dfe2f6"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/deck-scenes.example.json",
+      "sha256": "acf2b3e20f390db4b3a8fae4af61631e610e6b0dd1abb486e1a985bb644eac49"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/generation-contract.example.json",
+      "sha256": "20d1f58d5d298b702eb44ffd32135e78024af70b93ac51bd8218d0a514eb6970"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/panel.example.json",
+      "sha256": "cf1a5b5740c42d45d34a0c88129756a7230bac8048e930f284f09e06f3ab644b"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/reconstruction-handoff.example.json",
+      "sha256": "b8f8545e91cc5c884883fab9438fedc59f55d4bddf380123f6a041d15f7a8102"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/resource-selection.example.json",
+      "sha256": "57128533dbceaa05460be8550bb71e9812af787b7ee8b7de325d1d7e52299175"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/semantic-map.example.json",
+      "sha256": "bb8bffbf16a3b5af21fbf3cdb87f8b584286bbb7bd218b48b6a5e3719ae98f17"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/slide-intent.example.json",
+      "sha256": "25688c0018a504e2be1ea7cda2bfee2791a399ea6ecd93c69a93352328de5607"
+    },
+    {
+      "path": "example/upstream/slidepoise/schemas/visual-review.example.json",
+      "sha256": "dfd3a01cec67d08ad160fb5374677569cb4aca6754644f3731c93b7c22925a09"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/apply_illustration_sources.py",
+      "sha256": "3020c878ab020d760af01282b126c076df15d8e41754deaad3b4212da6457537"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/audit_skill_boundaries.py",
+      "sha256": "b04af471121af0e775ee1a001957be696065a540a464cf447157d7ba14d6fed4"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/collect_release_evidence.py",
+      "sha256": "b107238f3506f7660adb1901d558ab864c4032ce24654623a16c7a313bfc5ecd"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/collect_semantic_evidence.py",
+      "sha256": "7fd8d7c39dea13f9d8d724d26dc819203f0525c1c3eb2eeb8769fc656a2f21d9"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/component_preview.py",
+      "sha256": "dfa56ac3eb95982d6a81168d80e7c5e85ffd0a21fc46cda4027fd5dffd8cb3c3"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/extract_refined_illustrations.py",
+      "sha256": "a1f4550e985af1d308428af0614ae69cdafb359515d3230d8ba3863a14d940fd"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/fetch_remix_icon_pair.py",
+      "sha256": "c346c2c0dbb75fdb9f7b05ae30776f52fe492d951024cd54cb5a129bc8b83894"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/fetch_remote_asset.py",
+      "sha256": "158dca9339e59d2c571929a0a0074fafce798e28eec6b017c228c7ec95803bc9"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/fetch_wikimedia_commons_asset.py",
+      "sha256": "3a0a40443514fde9e7cf92c42219d148f220d6dd7526fd0220e595bba36425f1"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/generation_handoff.py",
+      "sha256": "64f9574dd7bc3cbc2f8e4b33278507b1f0b39a69204b4a911f1446c1c8c35e03"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/inspect_asset.py",
+      "sha256": "0f414080bed3e430ef49c6c466fb3cf43c35345d49aebea83629f35dc25fc448"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/list_library.py",
+      "sha256": "7a2debac14a628cfc6beea585e2dfb341c07374c32c6d96004f0a931963b2dc2"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/make_asset_contact_sheet.py",
+      "sha256": "e82245c11ef3e7811c304f7d9e70d351a5983627b92aff1a2df9e7c39893d5fc"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/make_semantic_explanation_overlay.py",
+      "sha256": "d4901503ab3c553cb454e03353db4232862edec4457323270d1ae92946f8526a"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/make_visual_comparison.py",
+      "sha256": "14f4824733090658c1132f6994422ee42c1174a205c37d7e06dfb79c4a072e00"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/normalize_generation_canvas.py",
+      "sha256": "98be496ad432f89378e158a4f8463f12141f3bc96e418cfdc952794dffb5ace1"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/package_self.py",
+      "sha256": "808ce9583dc2a105b02859afe43308151d7930909a301557836aeb3159931463"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/preflight_catalogs.py",
+      "sha256": "8c2b29df99596336a3d755115b35777441c749ae8b012dbe8e173388744e47bf"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/preflight_config.py",
+      "sha256": "ce91882dced3f3be98f432c97d5c9d0fb921fcc5be3ddc49721dea41f38bcd9c"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/prepare_generation.py",
+      "sha256": "a7276c28a2d0034ff5f7c327dd1d97c81d69bee73ff2ce5e6164f3938b948781"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/prepare_illustration_refinement.py",
+      "sha256": "e066a05c5e4aef06e9cf6101915af4e39585810562eba6e136d2189a26361c34"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/prepare_image_edit.py",
+      "sha256": "aee5ae39e008e980d7a8342dfa54f6663818547317817401e72b51b69ef2d19e"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/prepare_resource_context.py",
+      "sha256": "00b1da4586d08360797624c820fe0ca7887087dae89e23ee8a01fd626fc7a19b"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/raster_decisions.py",
+      "sha256": "c4e4cdcca977ec43582f2789586fb8aaa1a7377381aef86d88e0db6b9f2b8dcc"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/resolve_config.py",
+      "sha256": "e2663256e470f9fcac11186bbba1a207b0c0ed43f0dbc6cd5f0e71c39e05c9a6"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/retrieve_references.py",
+      "sha256": "ce47ad8d507025b2d34cdf25d8ce42239f67300f5d16956b97cdde9564ef33f1"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/search_wikimedia_commons.py",
+      "sha256": "d6e0046d690c802ae567bb09e4ea09e01dd5eda9ae1a147b4b545f6e6b1eb683"
+    },
+    {
+      "path": "example/upstream/slidepoise/scripts/slidepoise_runtime.py",
+      "sha256": "492b655986d29ce188f7c4466a24abc99ef4405ea19747d87da3293726876707"
+    },
+    {
+      "path": "example/upstream/slidepoise/SKILL.md",
+      "sha256": "3f1bd8cd123fd412a7eacdd00c581f55d7048d47ff560db525af5d9cf98785b6"
+    },
+    {
+      "path": "example/work/deck-scenes.json",
+      "sha256": "be226bd9a1409323052a10e101a1f1f0fc6432dc0703bb5e3ec3cc89edcd1b61"
+    },
+    {
+      "path": "example/work/reconstruction-config.json",
+      "sha256": "ff62a1ab42f1eb758e52ca157acc56c7b5039e3d7e54cdad147a6bb71adf5764"
+    },
+    {
+      "path": "example/work/resolved-config.json",
+      "sha256": "1c62079e0c2441809568ce86aa7e4963f6580ce4c767ae849d4cd68c51d4a4f1"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f"
+    },
+    {
+      "path": "README.md",
+      "sha256": "3a986251eab46e387624ca6a910af9979f354be6a088a9c51aedf1fc9d08a2f2"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "903557b715275762634dadcc6f45de67daf69e299d5830a66302a8b4b38dc4e3"
+    },
+    {
+      "path": "upstream/ACQUISITION.json",
+      "sha256": "40c34055dafc9e08cc5cb7a3c434603101b0cc34489b0b1b5b5a0b221a0905a5"
+    },
+    {
+      "path": "upstream/AGENTS.md",
+      "sha256": "ca300ce66af653f4bba4f7d24c3fbafedb6d86b5cb2d7825c16a295ca8039aa0"
+    },
+    {
+      "path": "upstream/framework/__init__.py",
+      "sha256": "b2e3aaeda0ab017b197790d34a594db10ba1a65760b2b9848aa30cc7b21b0d32"
+    },
+    {
+      "path": "upstream/framework/cli.py",
+      "sha256": "95b556b7491195d169a0ba08a54ab277cd17a3b9de38a51fc83536b12feb106b"
+    },
+    {
+      "path": "upstream/framework/components.py",
+      "sha256": "407843513b1c3a239582437ef1fe8d1ebe364d506b452b7fd4a27d995ca4ba76"
+    },
+    {
+      "path": "upstream/framework/defaults/slidepoise-config.json",
+      "sha256": "889c1676e2f69114ceb5487061f2ba54894a11e9e8f7a70ebc06fecb02b76196"
+    },
+    {
+      "path": "upstream/framework/design.py",
+      "sha256": "208d60a3fc3c30dca68ea138795ea1b502b6d53a959c139efdfa799c90d11d5b"
+    },
+    {
+      "path": "upstream/framework/host_notifications.py",
+      "sha256": "be02570bb177ca4a75b3b77043a4943cedf8019aea36676a0735374a51f14dd7"
+    },
+    {
+      "path": "upstream/framework/image_generation.py",
+      "sha256": "de9696562da7129c1d6cc5c98bf0cd2533a1c534149fc981f156adb38bb53d46"
+    },
+    {
+      "path": "upstream/framework/installer.py",
+      "sha256": "96d62de7d57e67ebb30630f4da7f5b76e16405cb40b349c1c8ca5f688e80b6fa"
+    },
+    {
+      "path": "upstream/framework/library_sets.py",
+      "sha256": "12413c2b3870982a422875bcb99253cbed46bb5fba4cf39f6f8968dd61dc35d1"
+    },
+    {
+      "path": "upstream/framework/migration.py",
+      "sha256": "3b0a1b337707f26e2f00c71ec4eb164963bf73218e6ac827aa6df9ce366add37"
+    },
+    {
+      "path": "upstream/framework/node-runtime-package.json",
+      "sha256": "84dccead61c1456787d20705a6d47f100c4c443fcee95afa0be582b4a9821ada"
+    },
+    {
+      "path": "upstream/framework/panel.py",
+      "sha256": "8fbf9f31bbfb9c7dca7eaab29f484a278e600faddf91d38c49f763916d6b3755"
+    },
+    {
+      "path": "upstream/framework/panel_binding.py",
+      "sha256": "7f30e08d5e20537a0718ec3c3b34e04c9dc3beded9e6796cfc98bccc34a6bb1c"
+    },
+    {
+      "path": "upstream/framework/paths.py",
+      "sha256": "d4eacc0fb0648899c776092a6836ab30b6c71ad2c4d7b3c66f4efe739c3bde25"
+    },
+    {
+      "path": "upstream/framework/preview_install.py",
+      "sha256": "1e7b0a302cfc7b68d68807ea86e6550dc13ff3401538e5e9d3279d8853247f4d"
+    },
+    {
+      "path": "upstream/framework/profile_authoring.py",
+      "sha256": "2dc294dcfc18c30823979eeb33bdb796f366bb504d3ac7b272d85d118b92a9e4"
+    },
+    {
+      "path": "upstream/framework/profiles.py",
+      "sha256": "f2321e407c80dbb8679b60bfc916bee457e46a035e23331cfacc4636659da570"
+    },
+    {
+      "path": "upstream/framework/reference_library.py",
+      "sha256": "b0ded60680245434c19de8927a32e4c686a92d22c740978907288b02b209a157"
+    },
+    {
+      "path": "upstream/framework/run_events.py",
+      "sha256": "afd1c8b9c2a97e1df88d594c41c66f6ef82d88030831b1313390fc6ca79e76ce"
+    },
+    {
+      "path": "upstream/framework/run_versions.py",
+      "sha256": "b9b612393cc59824f68ca96e0b724c1a0be909f0566212af3c14beaf2c2b0a24"
+    },
+    {
+      "path": "upstream/framework/sessions.py",
+      "sha256": "f89b18226a58e8b712caf4dfcfdce282870a9e21fb55fc24984c2837ea8da7df"
+    },
+    {
+      "path": "upstream/framework/shared_resource_migration.py",
+      "sha256": "ebd08747d3ad8b5c4c7ca1b2add76ad7988793d5d37862ae7dc008ac43477547"
+    },
+    {
+      "path": "upstream/framework/storage.py",
+      "sha256": "44bfd367a5ab5d325e6e9e2df2a0e1d8e9f86e872478b10768889a5c3cc7da89"
+    },
+    {
+      "path": "upstream/framework/templates/session-overrides-template.json",
+      "sha256": "af67c0dd340d1368b7adacf30ad9303c3223baf0e39d6763acc0620bb055b250"
+    },
+    {
+      "path": "upstream/LICENSE",
+      "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f"
+    },
+    {
+      "path": "upstream/pyproject.toml",
+      "sha256": "47764143b32202ff2402c57b6106bbba1aa03895dcaa094529092272c68ed898"
+    },
+    {
+      "path": "upstream/README.md",
+      "sha256": "17fa8caabf120d4075785e8e89aa139d39fdaa758f62798169c6f3b50417deec"
+    },
+    {
+      "path": "upstream/slidepoise/agents/openai.yaml",
+      "sha256": "9300a8afa7cbd6d387172c16b79c418e161a606761c8f733b9088cd32ea02fcf"
+    },
+    {
+      "path": "upstream/slidepoise/references/case-studies.md",
+      "sha256": "a246cab14583dd3c5479143b1b5e65ac454818c3679e9c5bdf15b15204bc29c4"
+    },
+    {
+      "path": "upstream/slidepoise/references/connectors.md",
+      "sha256": "719717a800618a91fc58adc9c8322d552e2422c72095322f7c5bf6852c658ce0"
+    },
+    {
+      "path": "upstream/slidepoise/references/content-refinement.md",
+      "sha256": "c876e2992973d2bf861d2b6fd1cb67c0909ecfae07a5aa3993ce4bbfb57ef96b"
+    },
+    {
+      "path": "upstream/slidepoise/references/deck-orchestration.md",
+      "sha256": "a0cbcc023de8be6c1603b1f6516786f9fd1cad475326d3c5ea9d99e8d329b33e"
+    },
+    {
+      "path": "upstream/slidepoise/references/human-approval.md",
+      "sha256": "701b99a669a29704ec76467b6a6de13e31447b184e32a5e4ab36404bd26f5c41"
+    },
+    {
+      "path": "upstream/slidepoise/references/icon-variants.md",
+      "sha256": "9f34e78e3f0bf2f6cb75dbf2342414cf93bfd602a8a14c0503547b06dbd9e9d6"
+    },
+    {
+      "path": "upstream/slidepoise/references/illustration-refinement.md",
+      "sha256": "0d82c1a81a12e4c83ed96a1fd2784212badcba8d5cc850457e3f988fece373af"
+    },
+    {
+      "path": "upstream/slidepoise/references/image-generation.md",
+      "sha256": "3551e525fa4c1a5c0312de537a602dc997b203c7c4efe7e03263ac49698e05d7"
+    },
+    {
+      "path": "upstream/slidepoise/references/maintenance.md",
+      "sha256": "6509c5fe43078bdc96d24697e669089b380c25e56ec3ff53aa62e91572e275c9"
+    },
+    {
+      "path": "upstream/slidepoise/references/multi-agent-review.md",
+      "sha256": "6922a7ca56387bbd6f2352374a7b0b558f55a0cd72a7addaf8c6beec557b6b11"
+    },
+    {
+      "path": "upstream/slidepoise/references/portable-artifacts.md",
+      "sha256": "dd4d78df727d0b0318a1ca59f31e4347ef46edeee5684e0bf5e13d5076d57664"
+    },
+    {
+      "path": "upstream/slidepoise/references/profile-authoring.md",
+      "sha256": "2ac40996b59ceac14ec1f3f975005ce001a0071d5ae4df6f3a0dcad0354602d5"
+    },
+    {
+      "path": "upstream/slidepoise/references/raster-composition.md",
+      "sha256": "3208b17752487f43d0ab96d36ad4553440919857c19ba4ef38a11ffc2111d7ca"
+    },
+    {
+      "path": "upstream/slidepoise/references/reconstruction.md",
+      "sha256": "3c27c133d4317bb698d141273237dc46dc5bd61b8eb4e1bebff8bf77fb2c7b56"
+    },
+    {
+      "path": "upstream/slidepoise/references/reference-retrieval.md",
+      "sha256": "6d78a35e50b4ccc72894f4ca3f4c6fd25453e7185586b6cf412a962fd74c93dd"
+    },
+    {
+      "path": "upstream/slidepoise/references/resource-library.md",
+      "sha256": "b0866830d55aeac237e661700248f21a9ffc450a504d18297fafd0c8ecfb9f78"
+    },
+    {
+      "path": "upstream/slidepoise/references/runtime-host.md",
+      "sha256": "060e8d995a68bdd9a3c70393d951f67be62d566f436ba561253530ba9f8101cb"
+    },
+    {
+      "path": "upstream/slidepoise/references/session-panel.md",
+      "sha256": "09ccb0b47a5afa8b7db3d85475b1deae9bc6316c98fb3d6cba2065e5c8d8d6d7"
+    },
+    {
+      "path": "upstream/slidepoise/references/user-language.md",
+      "sha256": "73e7b68f8157a0a0b01c52d6449475336236e530ab03477be7743b75878d7e06"
+    },
+    {
+      "path": "upstream/slidepoise/references/visual-exploration.md",
+      "sha256": "961302f1b7729d4ecafb7a8162ef30d81a426dee160393e577e2b697d0d4e017"
+    },
+    {
+      "path": "upstream/slidepoise/references/visual-reasoning.md",
+      "sha256": "ee62888d08d647e64082a4cdb7e7d0e6da7ae2ea71533d4a532e589205886567"
+    },
+    {
+      "path": "upstream/slidepoise/references/workflow.md",
+      "sha256": "7d34257df38d202f4149ada04ef2a90b59919fe1ad4668d78b22663ee8a7fe17"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/js/scene_to_pptx.mjs",
+      "sha256": "38d6a165912de87e065d8ef39459d0c0c94fe7ab1707db769b9181412c942aa2"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/scripts/audit_powerpoint_text.py",
+      "sha256": "54244d76e519a50ea95948e5ab5b0380677956e6d544db2b7c4606f1b32ff568"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/scripts/measure_visual_scene.py",
+      "sha256": "d5fc637b8a14091adafe217f0f216f3c9c61a41fc9655aa4d50f96acf50cef38"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/scripts/postprocess_pptx.py",
+      "sha256": "55864ef435626c6f94982d5e4a65604e045b5908ce60037b2ef54bee4e717c60"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/scripts/raster_sources.py",
+      "sha256": "f023b330df00b1acadecbf464b0b7350fc16bda00a8337fb8bc3bfb29c6cfdf0"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/scripts/sam_optional.py",
+      "sha256": "a27a12294eb6bbcb74b21ae212a58c4a969502a5a3299cfd69e21be912bbe965"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/__init__.py",
+      "sha256": "4b43f2b1979a58ad57247468a0e01ff9de794f4c8e09e61dff648b6b530b9cdc"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/artifacts.py",
+      "sha256": "b5fcc3bf5b19b6039411d7e03e9ad265b9ac82fc317a1b9af56ae8d052191257"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/canvas.py",
+      "sha256": "84fb70da7eaa0bec05855b081e682947604610b52005f0462c2ba74a10759142"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/generation.py",
+      "sha256": "ad2536f5503068cc34583e2fbbbe2ca7f53ae54322b468008283e15a37b1a163"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/preview_tools.py",
+      "sha256": "92df015b41871bb644c60aee0c9e5178e537fffc7194ccad0a46c68691311b5f"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/reconstruction/__init__.py",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/reconstruction/conformance.py",
+      "sha256": "4d87e85cabf9b6dfed40601e4ff1c15acf83e6aabfc72578267871db858996e1"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/reconstruction/contract.py",
+      "sha256": "6ce78669e90d5624732f386b364111f672bc6c54b4f209fe1b8ba6a1c90f3f24"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/reconstruction/coverage.py",
+      "sha256": "0bf9afe91a3df0a3e05678c981f08d428eeccf9b72a9ee8faeeb161efe512184"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/reconstruction/scene.py",
+      "sha256": "a959e4a0f9d6ee9b7261453ff2ef2d48cf4e405de6187e411ad5f482afca89a5"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/reconstruction/text_fit.py",
+      "sha256": "aff93b8bd28a09971bf635b52f399a297ee6a8bbe770e0d10997c0a257a71002"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/reference_retrieval.py",
+      "sha256": "4022390b2d4f6cc6e4dc063de4c064d61e228b6a38ce55ec3e92e8e3e9d4ec39"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/rendered_text.py",
+      "sha256": "baeb6fc2b89716e0df1180f1eb33bb4e97f9218a062fc93e642b64ba74228696"
+    },
+    {
+      "path": "upstream/slidepoise/runtime/src/slidepoise/resource_catalogs.py",
+      "sha256": "c046a892190431390777789611713ce248cfe7bc45eb3607ea9f36f41c3f55f6"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/agent-review.example.json",
+      "sha256": "9ae021be66d2899fb326fd7ba29c48d19dbbbbd88e58289470241ac77b146fad"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/deck-design.example.json",
+      "sha256": "da0ad57f88a142dcbde0abc4d3611af40d60708a235f9b6eaa94a5859bee310d"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/deck-outline.example.json",
+      "sha256": "6407ef0588bed35c6d2043bfe4c4435ac92e7bd6b197dc3d221af33236dfe2f6"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/deck-scenes.example.json",
+      "sha256": "acf2b3e20f390db4b3a8fae4af61631e610e6b0dd1abb486e1a985bb644eac49"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/generation-contract.example.json",
+      "sha256": "20d1f58d5d298b702eb44ffd32135e78024af70b93ac51bd8218d0a514eb6970"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/panel.example.json",
+      "sha256": "cf1a5b5740c42d45d34a0c88129756a7230bac8048e930f284f09e06f3ab644b"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/reconstruction-handoff.example.json",
+      "sha256": "b8f8545e91cc5c884883fab9438fedc59f55d4bddf380123f6a041d15f7a8102"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/resource-selection.example.json",
+      "sha256": "57128533dbceaa05460be8550bb71e9812af787b7ee8b7de325d1d7e52299175"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/semantic-map.example.json",
+      "sha256": "bb8bffbf16a3b5af21fbf3cdb87f8b584286bbb7bd218b48b6a5e3719ae98f17"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/slide-intent.example.json",
+      "sha256": "25688c0018a504e2be1ea7cda2bfee2791a399ea6ecd93c69a93352328de5607"
+    },
+    {
+      "path": "upstream/slidepoise/schemas/visual-review.example.json",
+      "sha256": "dfd3a01cec67d08ad160fb5374677569cb4aca6754644f3731c93b7c22925a09"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/apply_illustration_sources.py",
+      "sha256": "3020c878ab020d760af01282b126c076df15d8e41754deaad3b4212da6457537"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/audit_skill_boundaries.py",
+      "sha256": "b04af471121af0e775ee1a001957be696065a540a464cf447157d7ba14d6fed4"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/collect_release_evidence.py",
+      "sha256": "b107238f3506f7660adb1901d558ab864c4032ce24654623a16c7a313bfc5ecd"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/collect_semantic_evidence.py",
+      "sha256": "7fd8d7c39dea13f9d8d724d26dc819203f0525c1c3eb2eeb8769fc656a2f21d9"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/component_preview.py",
+      "sha256": "dfa56ac3eb95982d6a81168d80e7c5e85ffd0a21fc46cda4027fd5dffd8cb3c3"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/extract_refined_illustrations.py",
+      "sha256": "a1f4550e985af1d308428af0614ae69cdafb359515d3230d8ba3863a14d940fd"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/fetch_remix_icon_pair.py",
+      "sha256": "c346c2c0dbb75fdb9f7b05ae30776f52fe492d951024cd54cb5a129bc8b83894"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/fetch_remote_asset.py",
+      "sha256": "158dca9339e59d2c571929a0a0074fafce798e28eec6b017c228c7ec95803bc9"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/fetch_wikimedia_commons_asset.py",
+      "sha256": "3a0a40443514fde9e7cf92c42219d148f220d6dd7526fd0220e595bba36425f1"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/generation_handoff.py",
+      "sha256": "64f9574dd7bc3cbc2f8e4b33278507b1f0b39a69204b4a911f1446c1c8c35e03"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/inspect_asset.py",
+      "sha256": "0f414080bed3e430ef49c6c466fb3cf43c35345d49aebea83629f35dc25fc448"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/list_library.py",
+      "sha256": "7a2debac14a628cfc6beea585e2dfb341c07374c32c6d96004f0a931963b2dc2"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/make_asset_contact_sheet.py",
+      "sha256": "e82245c11ef3e7811c304f7d9e70d351a5983627b92aff1a2df9e7c39893d5fc"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/make_semantic_explanation_overlay.py",
+      "sha256": "d4901503ab3c553cb454e03353db4232862edec4457323270d1ae92946f8526a"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/make_visual_comparison.py",
+      "sha256": "14f4824733090658c1132f6994422ee42c1174a205c37d7e06dfb79c4a072e00"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/normalize_generation_canvas.py",
+      "sha256": "98be496ad432f89378e158a4f8463f12141f3bc96e418cfdc952794dffb5ace1"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/package_self.py",
+      "sha256": "808ce9583dc2a105b02859afe43308151d7930909a301557836aeb3159931463"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/preflight_catalogs.py",
+      "sha256": "8c2b29df99596336a3d755115b35777441c749ae8b012dbe8e173388744e47bf"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/preflight_config.py",
+      "sha256": "ce91882dced3f3be98f432c97d5c9d0fb921fcc5be3ddc49721dea41f38bcd9c"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/prepare_generation.py",
+      "sha256": "a7276c28a2d0034ff5f7c327dd1d97c81d69bee73ff2ce5e6164f3938b948781"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/prepare_illustration_refinement.py",
+      "sha256": "e066a05c5e4aef06e9cf6101915af4e39585810562eba6e136d2189a26361c34"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/prepare_image_edit.py",
+      "sha256": "aee5ae39e008e980d7a8342dfa54f6663818547317817401e72b51b69ef2d19e"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/prepare_resource_context.py",
+      "sha256": "00b1da4586d08360797624c820fe0ca7887087dae89e23ee8a01fd626fc7a19b"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/raster_decisions.py",
+      "sha256": "c4e4cdcca977ec43582f2789586fb8aaa1a7377381aef86d88e0db6b9f2b8dcc"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/resolve_config.py",
+      "sha256": "e2663256e470f9fcac11186bbba1a207b0c0ed43f0dbc6cd5f0e71c39e05c9a6"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/retrieve_references.py",
+      "sha256": "ce47ad8d507025b2d34cdf25d8ce42239f67300f5d16956b97cdde9564ef33f1"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/search_wikimedia_commons.py",
+      "sha256": "d6e0046d690c802ae567bb09e4ea09e01dd5eda9ae1a147b4b545f6e6b1eb683"
+    },
+    {
+      "path": "upstream/slidepoise/scripts/slidepoise_runtime.py",
+      "sha256": "492b655986d29ce188f7c4466a24abc99ef4405ea19747d87da3293726876707"
+    },
+    {
+      "path": "upstream/slidepoise/SKILL.md",
+      "sha256": "3f1bd8cd123fd412a7eacdd00c581f55d7048d47ff560db525af5d9cf98785b6"
+    }
+  ]
+}

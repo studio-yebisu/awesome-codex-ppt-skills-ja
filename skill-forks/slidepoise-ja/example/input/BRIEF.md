@@ -1,0 +1,3 @@
+# 制作依頼
+
+SlidePoise原典の生成画像→semantic map→OpenCV計測→reconstruction contract→constructor scene→固有render-deckを実際に使い、日本語「クリックを減らす、予約の流れ。」を制作してください。仮想の地域ワークショップ予約サイトを題材に、8操作から4操作への設計目標、空席による分岐と予約前の情報、4操作/入力完了率90%/入力60秒の目標と実装順を3枚へまとめる。数値は仮想設定・目標で、実測としない。大きな和文、墨、コバルト/朱赤、意味のある図形関係。角丸カードの格子は避ける。自作AI生成画像だけを原典計測コードでnative文字/図形/freeform/connectorへ再構成し、汎用builderで代替しない。原典MITとOSS TTF/OFLを保持。原典に必要なbuildと代表完成物初回表示までを確認し、全詳細目視/構造監査/独立review/ZIP再実行を追加しない。PowerPoint Application.Quitは禁止、自分のdeckだけClose。

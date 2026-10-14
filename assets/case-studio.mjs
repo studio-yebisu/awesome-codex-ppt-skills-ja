@@ -19,7 +19,7 @@ function editingKind(c){
   if(c.format==='html')return 'web';
   if(c.format==='pdf')return c.editability==='tex_source'?'tex':'';
   if(c.format!=='pptx')return '';
-  if(c.editability==='raster_slides')return 'image';
+  if(['raster_slides','image_only_with_editable_speaker_notes'].includes(c.editability))return 'image';
   if(c.editability==='native_math'||c.editable_features?.includes('formulas'))return 'math';
   return /native/i.test(c.editability||'')?'native':'';
 }
@@ -86,7 +86,7 @@ function nativeSync(frame){
 }
 function go(n){
   if(!current)return;page=Math.max(0,Math.min(n,current.page_count-1));
-  if(['powerpoint-render','pdf-render','artifact-tool-pptx-import-render','image-slides'].includes(current.preview_kind))$('#case-stage').innerHTML='<img src="'+esc(imagePath(current,page))+'" alt="'+esc(current.titles[page])+'">';
+  if(['powerpoint-render','pdf-render','artifact-tool-pptx-import-render','libreoffice-pptx-pdf-render','generated-png-byte-matched-to-pptx-media','image-slides'].includes(current.preview_kind))$('#case-stage').innerHTML='<img src="'+esc(imagePath(current,page))+'" alt="'+esc(current.titles[page])+'">';
   else send();
   $('#case-counter').textContent=(page+1)+' / '+current.page_count;
   $('#case-prev').disabled=page===0;$('#case-next').disabled=page===current.page_count-1;

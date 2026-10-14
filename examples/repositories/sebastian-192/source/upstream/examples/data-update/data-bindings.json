@@ -1,0 +1,167 @@
+{
+  "version": "1.0",
+  "documents": {
+    "page_spec": "page-spec.json",
+    "scene": "scene.json"
+  },
+  "inputs": {
+    "north_before": {
+      "value": 120,
+      "unit": "vehicles/hour",
+      "source_ref": "Synthetic fixture; demonstration only"
+    },
+    "east_before": {
+      "value": 80,
+      "unit": "vehicles/hour",
+      "source_ref": "Synthetic fixture; demonstration only"
+    },
+    "north_after": {
+      "value": 90,
+      "unit": "vehicles/hour",
+      "source_ref": "Synthetic fixture; demonstration only"
+    },
+    "east_after": {
+      "value": 100,
+      "unit": "vehicles/hour",
+      "source_ref": "Synthetic fixture; demonstration only"
+    }
+  },
+  "formulas": {
+    "before_total": "north_before + east_before",
+    "after_total": "north_after + east_after",
+    "north_share": "north_after / after_total * 100",
+    "change_percent": "(after_total - before_total) / before_total * 100"
+  },
+  "bindings": [
+    {
+      "document": "page_spec",
+      "pointer": "/slides/0/elements/0/text",
+      "template": "After total {after_total:.0f} vehicles/hour; North share {north_share:.1f}%; change {change_percent:.1f}%"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/0/core_message",
+      "template": "After total {after_total:.0f} vehicles/hour; North share {north_share:.1f}%; change {change_percent:.1f}%"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/0/elements/1/text",
+      "template": "After total {after_total:.0f} vehicles/hour; North share {north_share:.1f}%; change {change_percent:.1f}%"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/0/speaker_notes",
+      "template": "SYNTHETIC demonstration only. Before {before_total:.0f}; after {after_total:.0f}; North {north_after:.0f} / {after_total:.0f} = {north_share:.1f}%; total change {change_percent:.1f}%."
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/0/elements/1/data/series/0/values/0",
+      "value": "north_before"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/0/elements/1/data/series/0/values/1",
+      "value": "east_before"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/0/elements/1/data/series/1/values/0",
+      "value": "north_after"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/0/elements/1/data/series/1/values/1",
+      "value": "east_after"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/0/speaker_notes",
+      "template": "SYNTHETIC demonstration only. Before {before_total:.0f}; after {after_total:.0f}; North {north_after:.0f} / {after_total:.0f} = {north_share:.1f}%; total change {change_percent:.1f}%."
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/0/elements/2/series/0/values/0",
+      "value": "north_before"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/0/elements/2/series/0/values/1",
+      "value": "east_before"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/0/elements/2/series/1/values/0",
+      "value": "north_after"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/0/elements/2/series/1/values/1",
+      "value": "east_after"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/1/elements/0/text",
+      "template": "After total {after_total:.0f} vehicles/hour; North share {north_share:.1f}%; change {change_percent:.1f}%"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/1/core_message",
+      "template": "After total {after_total:.0f} vehicles/hour; North share {north_share:.1f}%; change {change_percent:.1f}%"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/1/elements/1/text",
+      "template": "After total {after_total:.0f} vehicles/hour; North share {north_share:.1f}%; change {change_percent:.1f}%"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/1/speaker_notes",
+      "template": "SYNTHETIC demonstration only. Before {before_total:.0f}; after {after_total:.0f}; North {north_after:.0f} / {after_total:.0f} = {north_share:.1f}%; total change {change_percent:.1f}%."
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/1/elements/1/data/series/0/values/0",
+      "value": "north_before"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/1/elements/1/data/series/0/values/1",
+      "value": "east_before"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/1/elements/1/data/series/1/values/0",
+      "value": "north_after"
+    },
+    {
+      "document": "page_spec",
+      "pointer": "/slides/1/elements/1/data/series/1/values/1",
+      "value": "east_after"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/1/speaker_notes",
+      "template": "SYNTHETIC demonstration only. Before {before_total:.0f}; after {after_total:.0f}; North {north_after:.0f} / {after_total:.0f} = {north_share:.1f}%; total change {change_percent:.1f}%."
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/1/elements/2/series/0/values/0",
+      "value": "north_before"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/1/elements/2/series/0/values/1",
+      "value": "east_before"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/1/elements/2/series/1/values/0",
+      "value": "north_after"
+    },
+    {
+      "document": "scene",
+      "pointer": "/slides/1/elements/2/series/1/values/1",
+      "value": "east_after"
+    }
+  ]
+}

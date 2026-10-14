@@ -1,0 +1,45 @@
+--- upstream/scripts/html2svg.py
++++ runtime/scripts/html2svg.py
+@@ -39,13 +39,14 @@
+         const page = await browser.newPage();
+         await page.setViewport({ width: 1280, height: 720 });
+ 
+-        await page.goto('file://' + item.html, {
++        await page.goto(require('url').pathToFileURL(item.html).href, {
+             waitUntil: 'networkidle0',
+             timeout: 30000
+         });
+         await new Promise(r => setTimeout(r, 500));
+ 
+         // 注入预打包的 dom-to-svg bundle
++        await page.evaluate(async () => { await document.fonts.ready; });
+         await page.addScriptTag({ path: config.bundlePath });
+ 
+         // 预处理：在 Node.js 端读取图片文件转 base64，传给浏览器替换 src
+@@ -419,7 +420,7 @@
+     for (const item of config.files) {
+         const page = await browser.newPage();
+         await page.setViewport({ width: 1280, height: 720 });
+-        await page.goto('file://' + item.html, {
++        await page.goto(require('url').pathToFileURL(item.html).href, {
+             waitUntil: 'networkidle0',
+             timeout: 30000
+         });
+@@ -588,7 +589,7 @@
+ 
+     # work_dir 固定为项目根（脚本所在目录的父目录），让 puppeteer 一次性安装可跨调用复用
+     # 否则每个 ppt-output/<test_dir>/ 都会单独装 ~55MB 的 puppeteer
+-    work_dir = Path(__file__).resolve().parent.parent
++    work_dir = Path(os.environ.get("PPT_AGENT_WORK_DIR", str(Path(__file__).resolve().parent.parent))).resolve()
+ 
+     if not html_files:
+         print(f"No HTML files in {html_dir}", file=sys.stderr)
+@@ -605,7 +606,7 @@
+             return True
+         print("dom-to-svg failed, falling back to pdf2svg...")
+ 
+-    return convert_pdf2svg(html_files, output_dir, work_dir)
++    raise RuntimeError("Original DOM-to-SVG route failed; fallback disabled for this example")
+ 
+ 
+ def main():

@@ -1,0 +1,109 @@
+{
+  "schema_version": "1.4.0",
+  "purpose": "authoritative_first_image_generation_handoff",
+  "canvas": {
+    "dimensions_px": [
+      2048,
+      1070
+    ],
+    "aspect_ratio": 1.914019,
+    "full_slide_offset_y_px": 41,
+    "master_frame_excluded": true,
+    "forbidden_frame_content": [
+      "header",
+      "footer",
+      "page number",
+      "master-frame rules or decorations"
+    ]
+  },
+  "communication_intent": {
+    "audience_question": "What should the audience understand or decide?",
+    "dominant_message": "One precise slide message",
+    "required_content": [],
+    "semantic_relationships": [],
+    "hierarchy": [],
+    "visual_obligations": []
+  },
+  "user_language": {
+    "preserve_user_language_and_wording": true,
+    "reader_first": true,
+    "new_copy_em_dash": "avoid",
+    "new_copy_semicolon": "avoid",
+    "new_copy_colon": "use_only_when_materially_clearer",
+    "avoid_stock_assistant_phrasing": true,
+    "avoid_meta_interface_explanations": true,
+    "profile_may_extend_voice": true
+  },
+  "non_negotiable_design": {
+    "title": {},
+    "style": {},
+    "text_style_policies": {},
+    "semantic_style_tokens": {},
+    "explicit_user_visual_requirements": [],
+    "data_visualization": {},
+    "icon_slot_rule": "Reserve a bounded logical slot for every icon. A bare-icon slot may use a subtle generation-only localization boundary that is not reconstructed; intentional background surfaces are reconstructed separately."
+  },
+  "resources": {
+    "selected_visual_references": [],
+    "selected_assets": [],
+    "selected_components": [
+      {
+        "component_id": "component-chart-column-compact",
+        "preview_file": "/absolute/path/to/slidepoise-home/library-sets/components/selected-set/component-preview.png",
+        "canonical_file": "/absolute/path/to/slidepoise-home/library-sets/components/selected-set/native-components.pptx",
+        "native_source_slide_number": 3,
+        "reason": "Adaptable chart grammar selected for this slide."
+      }
+    ],
+    "generation_asset_descriptions": [
+      {
+        "asset_id": "asset-hierarchy",
+        "role": "supporting icon",
+        "generation_description": "Compact line icon representing hierarchy or structured levels with an approximately square footprint.",
+        "intrinsic_aspect_ratio": 1.0,
+        "require_exact_identity": false,
+        "contact_sheet_label": "A01"
+      }
+    ],
+    "asset_vocabulary_policy": {
+      "mode": "closed",
+      "generation_representation": "full_context_sheet",
+      "attach_selected_asset_files_to_image_generation": false
+    },
+    "generation_context_sheet": {
+      "path": "/absolute/path/to/work/generation-context-sheet.png",
+      "item_count": 4,
+      "rendered_preview_count": 4,
+      "role": "Image-generation context sheet containing useful retrieved candidates, visual references, component previews, packaged assets, and user uploads."
+    }
+  },
+  "composition_freedom": [],
+  "profile": {
+    "profile_id": "active-profile",
+    "name": "Selected presentation profile",
+    "purpose": "Profile purpose",
+    "hard_rules": {},
+    "reasoning_principles": [],
+    "visual_principles": [],
+    "writing_principles": [],
+    "review_questions": [],
+    "anti_patterns": [],
+    "visual_reference_priorities": {},
+    "density_profile": "information_rich",
+    "density_guidance": {},
+    "resolution_precedence": [
+      "base_config",
+      "external_profile",
+      "session_overrides",
+      "explicit_slide_intent"
+    ]
+  },
+  "generation_budget": {
+    "initial_candidates_per_slide": 1,
+    "revision_guidance": "Inspect the current candidate and choose a focused edit or fresh generation from the actual defect and the user's intent."
+  },
+  "generation_model_default": "gpt-image-2",
+  "host_generation_adapter": {
+    "mode": "host_native_or_delegated_image_generation"
+  }
+}

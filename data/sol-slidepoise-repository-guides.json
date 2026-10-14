@@ -1,0 +1,84 @@
+[
+  {
+    "repository": "henryhyw/slidepoise",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_image_opencv_contract_constructor_native_renderer",
+    "case_ids": [
+      "slidepoise-showcase"
+    ],
+    "summary_ja": "原典の画像生成→OpenCV→contract→constructor→固有rendererを3枚で完走。予約サイトの仮想改善案をnative文字/図形/connectorへ。",
+    "requirements": [
+      "Python3.10+ / OpenCV / numpy / Pillow / python-pptx",
+      "Node / pptxgenjs4.0.1 / jszip3.10.1",
+      "画像再生成のみbuiltin image tool等",
+      "PowerPoint16（PNG/PDF表示）"
+    ],
+    "steps": [
+      "元prepare_generationでprompt/requestをcompile",
+      "builtin toolで画像生成しAgentがsemantic mapを作る",
+      "元reconstruct-slideでOpenCV/contract/constructor",
+      "元render-deckでnative PPTXと代表初回表示"
+    ],
+    "commands": [
+      "python rebuild.py",
+      "powershell -NoProfile -File export_case.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
+    "source_refs": [
+      {
+        "path": "slidepoise/SKILL.md",
+        "sha256": "3f1bd8cd123fd412a7eacdd00c581f55d7048d47ff560db525af5d9cf98785b6",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/SKILL.md"
+      },
+      {
+        "path": "slidepoise/scripts/prepare_generation.py",
+        "sha256": "a7276c28a2d0034ff5f7c327dd1d97c81d69bee73ff2ce5e6164f3938b948781",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/prepare_generation.py"
+      },
+      {
+        "path": "slidepoise/scripts/normalize_generation_canvas.py",
+        "sha256": "98be496ad432f89378e158a4f8463f12141f3bc96e418cfdc952794dffb5ace1",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/normalize_generation_canvas.py"
+      },
+      {
+        "path": "slidepoise/scripts/slidepoise_runtime.py",
+        "sha256": "492b655986d29ce188f7c4466a24abc99ef4405ea19747d87da3293726876707",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/slidepoise_runtime.py"
+      },
+      {
+        "path": "slidepoise/runtime/scripts/measure_visual_scene.py",
+        "sha256": "d5fc637b8a14091adafe217f0f216f3c9c61a41fc9655aa4d50f96acf50cef38",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/scripts/measure_visual_scene.py"
+      },
+      {
+        "path": "slidepoise/runtime/src/slidepoise/reconstruction/contract.py",
+        "sha256": "6ce78669e90d5624732f386b364111f672bc6c54b4f209fe1b8ba6a1c90f3f24",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/contract.py"
+      },
+      {
+        "path": "slidepoise/runtime/src/slidepoise/reconstruction/scene.py",
+        "sha256": "a959e4a0f9d6ee9b7261453ff2ef2d48cf4e405de6187e411ad5f482afca89a5",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/scene.py"
+      },
+      {
+        "path": "slidepoise/runtime/js/scene_to_pptx.mjs",
+        "sha256": "38d6a165912de87e065d8ef39459d0c0c94fe7ab1707db769b9181412c942aa2",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/js/scene_to_pptx.mjs"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/LICENSE"
+      }
+    ],
+    "upstream_commit": "481a028486b528e65706c4e14aa9b74a5e340f12",
+    "license": "MIT",
+    "license_notice_ja": "原典MIT、書体OFLを保持。外部library media・PwC素材・大学logoは含みません。",
+    "caveats": [
+      "Native font shaping and flat fills differ from generated text ink and paper shading; pixel-perfect fidelity is not claimed.",
+      "Third final page was generated/opened/exported but not detailed visually reviewed."
+    ],
+    "skill": "skill-forks/slidepoise-ja/SKILL.md",
+    "guide": "examples/repositories/slidepoise-showcase/README.md"
+  }
+]

@@ -1,0 +1,100 @@
+{
+  "selected_assets": [
+    {
+      "asset_id": "remix-hierarchy-line",
+      "canonical_file": "/absolute/run-cache/remix-hierarchy-line.svg",
+      "role": "supporting public icon candidate",
+      "generation_description": "Remix Icon hierarchy line candidate; neutral 24 x 24 footprint.",
+      "provider": "Remix Icon",
+      "provider_version": "4.9.0",
+      "license": "Remix Icon License v1.0",
+      "style_variant": "line",
+      "style_pair_id": "remix-hierarchy",
+      "pair_asset_ids": [
+        "remix-hierarchy-line",
+        "remix-hierarchy-fill"
+      ],
+      "preserve_canonical_color": false,
+      "treatment_recolorable": true,
+      "recolor_mode": "fill_all"
+    },
+    {
+      "asset_id": "remix-hierarchy-fill",
+      "canonical_file": "/absolute/run-cache/remix-hierarchy-fill.svg",
+      "role": "supporting public icon candidate",
+      "generation_description": "Remix Icon hierarchy fill candidate; neutral 24 x 24 footprint.",
+      "provider": "Remix Icon",
+      "provider_version": "4.9.0",
+      "license": "Remix Icon License v1.0",
+      "style_variant": "fill",
+      "style_pair_id": "remix-hierarchy",
+      "pair_asset_ids": [
+        "remix-hierarchy-line",
+        "remix-hierarchy-fill"
+      ],
+      "preserve_canonical_color": false,
+      "treatment_recolorable": true,
+      "recolor_mode": "fill_all"
+    }
+  ],
+  "speaker_notes": [
+    "The figures are illustrative planning assumptions and require validation before a funding decision."
+  ],
+  "frame_content": {
+    "header": {
+      "left_text": "",
+      "right_text": ""
+    },
+    "footer": {
+      "left_text": "",
+      "center_text": ""
+    },
+    "slide_number": 1
+  },
+  "deck_design_source": {
+    "path": "../../../work/deck-design.json",
+    "sha256": "replace_with_current_deck_design_file_sha256"
+  },
+  "recurring_role_bindings": [
+    {
+      "role_id": "series_marker",
+      "entity_ids": [
+        "series-label"
+      ],
+      "typography_group": "series-marker",
+      "style_source": "repeated_roles.series_marker.chosen_style",
+      "exception_id": null,
+      "application_note": "The Agent writes the chosen treatment into these entities in semantic-map.json, resolving native point units into source-pixel target values. This binding does not apply styles automatically."
+    },
+    {
+      "role_id": "main_claim",
+      "entity_ids": [
+        "headline"
+      ],
+      "typography_group": "cover-display",
+      "style_source": "repeated_roles.main_claim.exceptions[cover-display].chosen_style",
+      "exception_id": "cover-display",
+      "application_note": "The Agent materializes this explicit cover exception in the headline style_hint and inspects it beside the peer content pages."
+    }
+  ],
+  "content_obligations": [
+    {
+      "id": "review-feedback",
+      "description": "Rejected work returns from review to drafting",
+      "entity_ids": [
+        "feedback-label",
+        "review-to-draft"
+      ],
+      "connection": {
+        "entity_id": "review-to-draft",
+        "source_entities": [
+          "review-stage"
+        ],
+        "target_entities": [
+          "draft-stage"
+        ],
+        "directed": true
+      }
+    }
+  ]
+}

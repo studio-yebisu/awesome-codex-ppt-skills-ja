@@ -1,0 +1,38 @@
+[
+  {
+    "repository": "Akxan/ppt-agent-skill",
+    "summary_ja": "Bauhaus Blockの実mockと原典DOM/SVG converterで大胆な日本語展示企画をnative PPTXへ。",
+    "example_ids": [
+      "ppt-agent-showcase"
+    ],
+    "upstream_commit": "01825dee2ad40a8c719824252605396b9a570d57",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/ppt-agent-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/ppt-agent-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Node.js24+ / puppeteer25.13.0 / dom-to-svg0.12.2 / esbuild0.28.2",
+      "Python3.12 / python-pptx / lxml / Pillow",
+      "Chrome / Microsoft PowerPoint16 for export",
+      "Zen Kaku Gothic New Black / BIZ UDPMincho / Manrope (OFL)"
+    ],
+    "commands": [
+      "npm install --ignore-scripts",
+      "python -m pip install -r requirements.txt",
+      "python source/build.py --node C:/path/to/node.exe --chrome C:/path/to/chrome.exe",
+      "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
+    "guide": "examples/repositories/ppt-agent-showcase/README.md",
+    "source_download": "downloads/ppt-agent-example-ja.zip",
+    "fork_download": "downloads/ppt-agent-ja.zip",
+    "limitations": [
+      "仮想の企画・日程相対案・会場日時参加条件未定",
+      "native text/shapes、native chart/table/数式は未使用",
+      "全ページ詳細目視・独立レビュー・構造監査・ZIP再実行なし"
+    ]
+  }
+]

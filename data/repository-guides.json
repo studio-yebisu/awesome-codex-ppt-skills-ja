@@ -5163,7 +5163,7 @@
   },
   {
     "repository": "Akxan/ppt-agent-skill",
-    "summary_ja": "26種のスタイルと18種の図表を備え、HTMLおよび編集可能なPPTXを作成するClaude Code向けスキル。",
+    "summary_ja": "Bauhaus Blockの実mockと原典DOM/SVG converterで大胆な日本語展示企画をnative PPTXへ。",
     "kind": "pptx",
     "upstream_commit": "01825dee2ad40a8c719824252605396b9a570d57",
     "checked_at": "2026-10-13T13:34:38.927297+00:00",
@@ -5193,17 +5193,37 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "ppt-agent-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node.js24+ / puppeteer25.13.0 / dom-to-svg0.12.2 / esbuild0.28.2",
+      "Python3.12 / python-pptx / lxml / Pillow",
+      "Chrome / Microsoft PowerPoint16 for export",
+      "Zen Kaku Gothic New Black / BIZ UDPMincho / Manrope (OFL)"
+    ],
+    "commands": [
+      "npm install --ignore-scripts",
+      "python -m pip install -r requirements.txt",
+      "python source/build.py --node C:/path/to/node.exe --chrome C:/path/to/chrome.exe",
+      "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "仮想の企画・日程相対案・会場日時参加条件未定",
+      "native text/shapes、native chart/table/数式は未使用",
+      "全ページ詳細目視・独立レビュー・構造監査・ZIP再実行なし"
     ],
-    "forks": [],
-    "original_description_ja": "26種のスタイルと18種の図表を備え、HTMLおよび編集可能なPPTXを作成するClaude Code向けスキル。"
+    "forks": [
+      "ppt-agent-ja"
+    ],
+    "guide": "examples/repositories/ppt-agent-showcase/README.md",
+    "source_download": "downloads/ppt-agent-example-ja.zip",
+    "fork_download": "downloads/ppt-agent-ja.zip",
+    "original_description_ja": "26種のスタイルと18種の図表を備え、HTMLおよび編集可能なPPTXを作成するClaude Code向けスキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "knight6669/knight-imagetopptx-skill",
@@ -5346,7 +5366,7 @@
   },
   {
     "repository": "henryhyw/slidepoise",
-    "summary_ja": "柔軟なビジュアル設計と編集可能なPowerPoint出力を両立したエージェント向けツール。",
+    "summary_ja": "原典の画像生成→OpenCV→contract→constructor→固有rendererを3枚で完走。予約サイトの仮想改善案をnative文字/図形/connectorへ。",
     "kind": "pptx",
     "upstream_commit": "481a028486b528e65706c4e14aa9b74a5e340f12",
     "checked_at": "2026-10-13T13:34:43.426095+00:00",
@@ -5361,32 +5381,89 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/README.md",
-        "bytes": 10745
+        "path": "slidepoise/SKILL.md",
+        "sha256": "3f1bd8cd123fd412a7eacdd00c581f55d7048d47ff560db525af5d9cf98785b6",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/SKILL.md"
       },
       {
-        "path": "slidepoise/SKILL.md",
-        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/SKILL.md",
-        "bytes": 19640
+        "path": "slidepoise/scripts/prepare_generation.py",
+        "sha256": "a7276c28a2d0034ff5f7c327dd1d97c81d69bee73ff2ce5e6164f3938b948781",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/prepare_generation.py"
+      },
+      {
+        "path": "slidepoise/scripts/normalize_generation_canvas.py",
+        "sha256": "98be496ad432f89378e158a4f8463f12141f3bc96e418cfdc952794dffb5ace1",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/normalize_generation_canvas.py"
+      },
+      {
+        "path": "slidepoise/scripts/slidepoise_runtime.py",
+        "sha256": "492b655986d29ce188f7c4466a24abc99ef4405ea19747d87da3293726876707",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/slidepoise_runtime.py"
+      },
+      {
+        "path": "slidepoise/runtime/scripts/measure_visual_scene.py",
+        "sha256": "d5fc637b8a14091adafe217f0f216f3c9c61a41fc9655aa4d50f96acf50cef38",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/scripts/measure_visual_scene.py"
+      },
+      {
+        "path": "slidepoise/runtime/src/slidepoise/reconstruction/contract.py",
+        "sha256": "6ce78669e90d5624732f386b364111f672bc6c54b4f209fe1b8ba6a1c90f3f24",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/contract.py"
+      },
+      {
+        "path": "slidepoise/runtime/src/slidepoise/reconstruction/scene.py",
+        "sha256": "a959e4a0f9d6ee9b7261453ff2ef2d48cf4e405de6187e411ad5f482afca89a5",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/scene.py"
+      },
+      {
+        "path": "slidepoise/runtime/js/scene_to_pptx.mjs",
+        "sha256": "38d6a165912de87e065d8ef39459d0c0c94fe7ab1707db769b9181412c942aa2",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/js/scene_to_pptx.mjs"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/LICENSE",
-        "bytes": 1080
+        "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f",
+        "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/LICENSE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "slidepoise-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python3.10+ / OpenCV / numpy / Pillow / python-pptx",
+      "Node / pptxgenjs4.0.1 / jszip3.10.1",
+      "画像再生成のみbuiltin image tool等",
+      "PowerPoint16（PNG/PDF表示）"
+    ],
+    "commands": [
+      "python rebuild.py",
+      "powershell -NoProfile -File export_case.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
+    "steps": [
+      "元prepare_generationでprompt/requestをcompile",
+      "builtin toolで画像生成しAgentがsemantic mapを作る",
+      "元reconstruct-slideでOpenCV/contract/constructor",
+      "元render-deckでnative PPTXと代表初回表示"
+    ],
+    "limitations": [],
+    "forks": [
+      "slidepoise-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_image_opencv_contract_constructor_native_renderer",
+    "case_ids": [
+      "slidepoise-showcase"
+    ],
+    "license_notice_ja": "原典MIT、書体OFLを保持。外部library media・PwC素材・大学logoは含みません。",
+    "caveats": [
+      "Native font shaping and flat fills differ from generated text ink and paper shading; pixel-perfect fidelity is not claimed.",
+      "Third final page was generated/opened/exported but not detailed visually reviewed."
+    ],
+    "skill": "skill-forks/slidepoise-ja/SKILL.md",
+    "guide": "examples/repositories/slidepoise-showcase/README.md",
     "original_description_ja": "柔軟なビジュアル設計と編集可能なPowerPoint出力を両立したエージェント向けツール。"
   },
   {
@@ -13597,7 +13674,7 @@
   },
   {
     "repository": "helloo1568/slidemuse",
-    "summary_ja": "研究発表、論文審査、学生コンテスト、ピッチ向けに、4種のスタイルで編集可能なPPTXを作成するスキル。",
+    "summary_ja": "同じ8頁内容の4独立style比較後に白い模型案を選び、各頁をAI画像生成した画像主体PPTX作例。",
     "kind": "convert",
     "upstream_commit": "7034412b4c19915c17f8d7206e3723e9e53cf8d2",
     "checked_at": "2026-10-13T13:34:49.722173+00:00",
@@ -13612,38 +13689,50 @@
       "SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/helloo1568/slidemuse/blob/7034412b4c19915c17f8d7206e3723e9e53cf8d2/README.md",
-        "bytes": 23577
-      },
-      {
-        "path": "SKILL.md",
-        "url": "https://github.com/helloo1568/slidemuse/blob/7034412b4c19915c17f8d7206e3723e9e53cf8d2/SKILL.md",
-        "bytes": 21055
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/helloo1568/slidemuse/blob/7034412b4c19915c17f8d7206e3723e9e53cf8d2/LICENSE",
-        "bytes": 1069
-      }
+      "https://github.com/helloo1568/slidemuse/tree/7034412b4c19915c17f8d7206e3723e9e53cf8d2",
+      "https://github.com/helloo1568/slidemuse/blob/7034412b4c19915c17f8d7206e3723e9e53cf8d2/LICENSE"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-192"
     ],
-    "forks": [],
-    "original_description_ja": "研究発表、論文審査、学生コンテスト、ピッチ向けに、4種のスタイルで編集可能なPPTXを作成するスキル。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "宿主native imagegen。モデル選択非露出なら名称を指定したと主張しない。",
+      "再包装はPython 3、python-pptx、Pillow。自動installなし。",
+      "画像主体のPPTX。話者ノートは編集可、文字/図はラスタ。"
+    ],
+    "commands": [
+      "python source/build_images.py reproduced.pptx"
+    ],
+    "steps": [
+      "入力と5要件を固定、頁別稿と内容自検。",
+      "同内容4styleを独立4callで生成し委任に基づき選択。",
+      "Page Spec exact content/stable IDs/tokensを固定。",
+      "逐頁8call生成し各頁直後に目視。",
+      "独立包装、頁数/ノート/画像バイト一致/画幅を最小確認。"
+    ],
+    "limitations": [
+      "overview内部縮略頁の16:9要件は未達。比較用の4案を保持。",
+      "PPTX実レンダラーは未使用。プレビューは完成PPTX内とバイト一致した生成PNG。",
+      "原典validator/packer/renderおよび原典全QAは未実行。",
+      "PPTX本体は画像主体。文字・図形はラスタで、話者ノートのみ編集可能。",
+      "03/08など図内の補助注釈はAI生成、仮説・想定/未実施境界内の説明。完全な文字OCR照合は未実施。"
+    ],
+    "forks": [
+      "sebastian-192-ja"
+    ],
+    "execution_type": "upstream-image-first-workflow-with-independent-japanese-packager",
+    "guide": "examples/repositories/sebastian-192/README.md",
+    "source_download": "downloads/sebastian-192-example-ja.zip",
+    "fork_download": "downloads/sebastian-192-ja.zip",
+    "original_description_ja": "研究発表、論文審査、学生コンテスト、ピッチ向けに、4種のスタイルで編集可能なPPTXを作成するスキル。",
+    "execution_status": "generated_with_review_record"
   },
   {
     "repository": "deathcats4/scholar-ppt-cn",
-    "summary_ja": "論文から構成案と参考レイアウトを作成し、編集可能な学術PPTXに仕上げるCodex・ChatGPT向けスキル。",
+    "summary_ja": "Route BのPptxGenJS作者方式で、日本語の公共空間サイン研究計画8頁を編集可能に制作。defaultテンプレートmaster/themeを保全。",
     "kind": "convert",
     "upstream_commit": "6fca3dc0f0fd6033279cc1bd29467967cc185272",
     "checked_at": "2026-10-13T13:34:52.745422+00:00",
@@ -13656,34 +13745,46 @@
       "SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/deathcats4/scholar-ppt-cn/blob/6fca3dc0f0fd6033279cc1bd29467967cc185272/README.md",
-        "bytes": 5130
-      },
-      {
-        "path": "SKILL.md",
-        "url": "https://github.com/deathcats4/scholar-ppt-cn/blob/6fca3dc0f0fd6033279cc1bd29467967cc185272/SKILL.md",
-        "bytes": 32853
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/deathcats4/scholar-ppt-cn/blob/6fca3dc0f0fd6033279cc1bd29467967cc185272/LICENSE",
-        "bytes": 1067
-      }
+      "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272",
+      "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272/LICENSE",
+      "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272/SKILL.md"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-193"
     ],
-    "forks": [],
-    "original_description_ja": "論文から構成案と参考レイアウトを作成し、編集可能な学術PPTXに仕上げるCodex・ChatGPT向けスキル。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node.js / PptxGenJS 4.0.1",
+      "Python 3 / lxml",
+      "Noto Sans CJK JP",
+      "実レンダリングにはartifact-tool等"
+    ],
+    "commands": [
+      "node source/build.cjs",
+      "python source/preserve_master.py"
+    ],
+    "steps": [
+      "架空・未実施の入力と話者ノートを確認",
+      "原典Template DNAとnative master/themeを保全",
+      "研究内容に応じて8種の誌面を生成",
+      "完成PPTXを初回実描画し主要表示を確認"
+    ],
+    "limitations": [
+      "原典QAスクリプトは実行せず、日本語派生の最小検査へ置換",
+      "PowerPoint実機確認ではなくartifact-tool importレンダリング",
+      "環境書体は同梱していない"
+    ],
+    "forks": [
+      "sebastian-193-ja"
+    ],
+    "execution_type": "upstream-route-b-author-pptxgenjs-native-template",
+    "guide": "examples/repositories/sebastian-193/README.md",
+    "source_download": "downloads/sebastian-193-example-ja.zip",
+    "fork_download": "downloads/sebastian-193-ja.zip",
+    "original_description_ja": "論文から構成案と参考レイアウトを作成し、編集可能な学術PPTXに仕上げるCodex・ChatGPT向けスキル。",
+    "execution_status": "generated_with_review_record"
   },
   {
     "repository": "joeseesun/qiaomu-ppt",
@@ -14100,7 +14201,7 @@
   },
   {
     "repository": "ficooooo/Paper2ScholarSlides",
-    "summary_ja": "論文や文献レビュー原稿から引用・図表・数式を整理し、出力を検証した学術発表資料を作成するスキル。",
+    "summary_ja": "原典の学術テンプレを再利用し、図書館の未実施研究提案を8頁の編集可能PPTXにした作例。",
     "kind": "convert",
     "upstream_commit": "207f2b6c8493c569f6caf466c87d868c42936cf6",
     "checked_at": "2026-10-13T13:35:35.382128+00:00",
@@ -14113,34 +14214,45 @@
       "SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/README.md",
-        "bytes": 7732
-      },
-      {
-        "path": "SKILL.md",
-        "url": "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/SKILL.md",
-        "bytes": 5705
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/LICENSE",
-        "bytes": 1095
-      }
+      "https://github.com/ficooooo/Paper2ScholarSlides/tree/207f2b6c8493c569f6caf466c87d868c42936cf6",
+      "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/LICENSE",
+      "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/assets/templates/academic-template.pptx"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-203"
     ],
-    "forks": [],
-    "original_description_ja": "論文や文献レビュー原稿から引用・図表・数式を整理し、出力を検証した学術発表資料を作成するスキル。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Pythonとpython-pptx",
+      "Noto Sans CJK JP（環境書体、同梱なし）",
+      "実PPTXプレビュー再生成はNode.jsと@oai/artifact-tool"
+    ],
+    "commands": [
+      "python source/build_deck.py",
+      "node source/render.mjs"
+    ],
+    "steps": [
+      "日本語SKILLと原典参考文書を読む",
+      "入力を事実・仮説・計画へ分ける",
+      "原典テンプレを再利用してネイティブ編集可能な図表を組む",
+      "完成PPTXを実レンダリングして初回表示を確認"
+    ],
+    "limitations": [
+      "Fictional unperformed study. No quantitative results or citations.",
+      "Renderer may differ from Microsoft PowerPoint.",
+      "Template header/body content replaced; master and layout relationships retained."
+    ],
+    "forks": [
+      "sebastian-203-ja"
+    ],
+    "execution_type": "upstream-template-reuse-with-python-pptx",
+    "guide": "examples/repositories/sebastian-203/README.md",
+    "source_download": "downloads/sebastian-203-example-ja.zip",
+    "fork_download": "downloads/sebastian-203-ja.zip",
+    "original_description_ja": "論文や文献レビュー原稿から引用・図表・数式を整理し、出力を検証した学術発表資料を作成するスキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "SHALINS428/Academic-PPT-Skill",
@@ -14188,7 +14300,7 @@
   },
   {
     "repository": "wp-a/paper2ppt",
-    "summary_ja": "学術論文を、編集可能で出典を追跡できる中国語PPTXに変換するスキル。CodexとClaude Codeに対応。",
+    "summary_ja": "原典evidence-first研究ノートworkflowとpython-pptx fallbackを使う日本語8頁の未実施研究計画。",
     "kind": "convert",
     "upstream_commit": "bb98ce95ca5942fc6551dddc723cbdfe2d637d59",
     "checked_at": "2026-10-13T13:35:39.377219+00:00",
@@ -14202,39 +14314,43 @@
       "plugins/paper2ppt/skills/paper2ppt/SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/wp-a/paper2ppt/blob/bb98ce95ca5942fc6551dddc723cbdfe2d637d59/README.md",
-        "bytes": 9085
-      },
-      {
-        "path": "SKILL.md",
-        "url": "https://github.com/wp-a/paper2ppt/blob/bb98ce95ca5942fc6551dddc723cbdfe2d637d59/SKILL.md",
-        "bytes": 5366
-      },
-      {
-        "path": "plugins/paper2ppt/skills/paper2ppt/SKILL.md",
-        "url": "https://github.com/wp-a/paper2ppt/blob/bb98ce95ca5942fc6551dddc723cbdfe2d637d59/plugins/paper2ppt/skills/paper2ppt/SKILL.md",
-        "bytes": 5366
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/wp-a/paper2ppt/blob/bb98ce95ca5942fc6551dddc723cbdfe2d637d59/LICENSE",
-        "bytes": 1061
-      }
+      "https://github.com/wp-a/paper2ppt/tree/bb98ce95ca5942fc6551dddc723cbdfe2d637d59"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-205"
     ],
-    "forks": [],
-    "original_description_ja": "学術論文を、編集可能で出典を追跡できる中国語PPTXに変換するスキル。CodexとClaude Codeに対応。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python、python-pptx 1.0.2+",
+      "既存Noto Sans CJK JP（再配布なし）",
+      "実レンダリング用LibreOffice・PyMuPDF"
+    ],
+    "commands": [
+      "python source/build.py"
+    ],
+    "steps": [
+      "原典SKILLと日本語SKILLを読む",
+      "資料充足性を分類し主張を入力へ対応",
+      "ネイティブ編集可能PPTXと話者ノートを生成",
+      "実PPTXをレンダリングし初回表示を確認"
+    ],
+    "limitations": [
+      "PowerPoint実機で未確認",
+      "架空の研究ノートのみ。実測・査読論文・定量効果なし",
+      "原典自動preflight/inspector未実行。最小QAは原典全検査と同等を保証しない",
+      "完成PPTXはLibreOfficeで実レンダリング。PowerPoint環境の差は未検証"
+    ],
+    "forks": [
+      "sebastian-205-ja"
+    ],
+    "execution_type": "upstream-evidence-first-python-pptx-fallback",
+    "guide": "examples/repositories/sebastian-205/README.md",
+    "source_download": "downloads/sebastian-205-example-ja.zip",
+    "fork_download": "downloads/sebastian-205-ja.zip",
+    "original_description_ja": "学術論文を、編集可能で出典を追跡できる中国語PPTXに変換するスキル。CodexとClaude Codeに対応。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "2654400439/Paper2Seminar",

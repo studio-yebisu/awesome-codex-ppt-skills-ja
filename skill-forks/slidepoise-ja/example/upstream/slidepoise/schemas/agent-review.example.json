@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0.0",
+  "checkpoint": "plan",
+  "review_mode": "independent_subagent",
+  "reviewer": "plan_critic",
+  "reviewed_artifacts": [],
+  "findings": [
+    {
+      "id": "plan-001",
+      "severity": "material",
+      "criterion": "premature_visual_commitments",
+      "evidence": "The draft assigns specific content to left and right regions although the user did not request a layout.",
+      "recommended_action": "Return to a content-led plan and defer visual composition until after retrieval."
+    }
+  ],
+  "root_dispositions": [
+    {
+      "finding_id": "plan-001",
+      "status": "accepted",
+      "evidence": "The revised intent retains hierarchy and relationships while removing positional layout instructions."
+    }
+  ]
+}

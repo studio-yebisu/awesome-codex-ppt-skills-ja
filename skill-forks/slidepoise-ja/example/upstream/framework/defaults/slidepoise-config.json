@@ -1,0 +1,591 @@
+{
+  "schema_version": "3.10.0",
+  "user_design_overrides": {},
+  "library_locations": {},
+  "scope": {
+    "mode": "adaptive_presentation",
+    "default_slide_role": "content_slide"
+  },
+  "libraries": {
+    "resolution": "selected_profile_private_libraries",
+    "profiles_root": null
+  },
+  "library_policy": {
+    "retrieval_method": "read local catalogs, inspect plausible candidates, and choose by semantic and visual fit; never use a numeric relevance score as the final decision",
+    "priority": [
+      "user_required_assets",
+      "current_session_assets",
+      "selected_profile_components",
+      "selected_profile_visual_references",
+      "selected_profile_icons",
+      "remote_public_icon_fallback"
+    ],
+    "maximum_visual_references_per_generation": 3,
+    "brand_logos": "exact assets only; never replace a brand logo with a generic icon",
+    "user_asset_handling": "Treat current-chat uploads as first-class run resources. Inspect dimensions/aspect ratio, preserve exact identity where required, and carry the selected canonical path into reconstruction.",
+    "maximum_optional_assets_per_generation": 12
+  },
+  "remote_sources": {
+    "remix_icon": {
+      "enabled": false,
+      "resource_role": "generic_icon",
+      "provider": "Remix Icon",
+      "provider_version": "4.9.0",
+      "allowed_repository": "Remix-Design/RemixIcon",
+      "pair_styles": ["line", "fill"],
+      "repository_tree_url": "https://api.github.com/repos/Remix-Design/RemixIcon/git/trees/v{version}?recursive=1",
+      "raw_url_template": "https://raw.githubusercontent.com/Remix-Design/RemixIcon/v{version}/{repository_path}",
+      "license": "Remix Icon License v1.0",
+      "license_url": "https://github.com/Remix-Design/RemixIcon/blob/v{version}/License",
+      "selection_stage": "post_generation_visual_review",
+      "selection_owner": "host_agent_visual_reasoning",
+      "selection_rule": "retrieve both official variants before generation, then select one variant per peer treatment group through post-generation visual inspection"
+    },
+    "wikimedia_commons": {
+      "enabled": false,
+      "resource_role": "exact_logo_and_public_media",
+      "provider": "Wikimedia Commons",
+      "api_url": "https://commons.wikimedia.org/w/api.php",
+      "site_url": "https://commons.wikimedia.org/",
+      "selection_owner": "host_agent",
+      "selection_rule": "inspect the exact Commons file page and verify identity, source, author, license, attribution, and any trademark restrictions before use",
+      "require_file_page": true,
+      "require_license_metadata": true,
+      "allowed_media_types": ["image/svg+xml", "image/png"]
+    },
+    "shared_policy": {
+      "persist_location": "run_cache_only",
+      "record_provenance": true,
+      "never_synthesize_brand_identity": true
+    }
+  },
+  "agent_reviews": {
+    "mode": "use_when_host_supports_subagents",
+    "maximum_concurrent_reviewers": 2,
+    "reviewer_write_access": false,
+    "root_agent_owns_final_decision": true,
+    "ordinary_checkpoint_revision_rounds": 1,
+    "ordinary_checkpoint_policy": "use one independent review and one root-Agent correction pass when the review would materially improve the work",
+    "reconstruction_policy": "continue focused visual correction while material visual issues remain; after two unsuccessful correction rounds stop and return upstream or ask the user instead of looping",
+    "checkpoints": {
+      "plan": [
+        "user_instruction_compliance",
+        "communication_completeness",
+        "premature_visual_commitments"
+      ],
+      "resources": [
+        "semantic_coverage",
+        "profile_fit",
+        "source_and_license_provenance"
+      ],
+      "semantic_map": [
+        "entity_ownership",
+        "relationship_completeness",
+        "reconstruction_route_risk"
+      ],
+      "reconstruction": [
+        "visual_fidelity",
+        "editability",
+        "unresolved_material_difference"
+      ]
+    }
+  },
+  "generation": {
+    "required_for_information_bearing_slide": true,
+    "canvas_recovery": {
+      "enabled": true,
+      "decision_owner": "host_agent_visual_reasoning",
+      "allowed_when": "candidate substantive composition is acceptable but the model added removable out-of-region chrome or returned a non-contract aspect ratio",
+      "requirements": [
+        "host Agent visually defines the crop; scripts never discover it",
+        "crop must not remove required substantive content",
+        "result must be normalized to the resolved generation_region_px without stretching",
+        "normalized result must pass a new generation visual review before semantic mapping"
+      ],
+      "script": "scripts/normalize_generation_canvas.py"
+    },
+    "initial_candidates_per_slide": 1,
+    "revision_guidance": "Inspect the current candidate and choose a focused edit or fresh generation from the actual defect and the user's intent.",
+    "default_model": "",
+    "host_adapter": {
+      "mode": "agent_discovered_or_manual",
+      "max_prompt_chars": 32000
+    },
+    "illustration_refinement": {
+      "enabled_by_default": true,
+      "trigger_visual_source_class": "novel_illustration",
+      "ask_user_when_material_choice_or_extra_cost_is_unresolved": true,
+      "default_decline_behavior": "keep_original_crop",
+      "one_refinement_call_per_confirmation": true,
+      "board_max_size_px": [
+        2048,
+        2048
+      ],
+      "board_outer_margin_px": 80,
+      "board_gutter_px": 72,
+      "no_visible_borders_or_labels_in_model_input": true,
+      "preserve_each_source_aspect_ratio": true,
+      "preferred_output_use": "crop deterministic board slots and insert the refined rasters into the original measured slide boxes with aspect-preserving contain-fit"
+    },
+    "preferences": {
+      "mode": "auto",
+      "tool": "",
+      "model": "",
+      "instructions": ""
+    }
+  },
+  "measurement": {
+    "engine": "OpenCV",
+    "semantic_meaning_owner": "host_agent",
+    "geometry_role": "measure and corroborate visible geometry; never decide visual quality or semantic ownership",
+    "text_color_role": "estimate foreground/background color evidence; host Agent remains visual authority",
+    "segmentation": {
+      "mode": "never",
+      "provider": "sam2",
+      "checkpoint": null,
+      "model_config": "configs/sam2.1/sam2.1_hiera_t.yaml",
+      "device": "auto",
+      "eligible_roles": [
+        "irregular_filled_boundary",
+        "photo_subject",
+        "overlapping_filled_object"
+      ],
+      "selection_policy": "Use a SAM mask only for a host-authored eligible entity and only when it supplies a coherent filled boundary inside the prompt box. Record both OpenCV and SAM evidence. Fall back cleanly to OpenCV in auto mode.",
+      "semantic_authority": "host_agent",
+      "visual_acceptance_authority": "host_agent"
+    },
+    "layout_geometry_policy": {
+      "selection_owner": "host_agent_visual_reasoning",
+      "allowed_values": ["agent_logical", "opencv_visible"],
+      "require_explicit_policy_for_every_emitting_entity": true,
+      "opencv_role": "supply visible-bound evidence when the host Agent selects opencv_visible",
+      "connector": "agent_semantics_plus_deterministic_boundary_ports"
+    },
+    "local_geometry_normalization": {
+      "enabled": true,
+      "mode": "agent_authored_only",
+      "policy": "Apply only explicit host-reviewed geometry_adjustments. Preserve measured positions when no decision is supplied. Scripts validate the edit structure without judging whether the movement is visually appropriate."
+    }
+  },
+  "design": {
+    "full_slide_px": [
+      2048,
+      1152
+    ],
+    "frame": {
+      "header": {
+        "enabled": true,
+        "height_px": 41,
+        "implementation": "slide_master_inherited_content",
+        "left_text": "",
+        "right_text": "",
+        "font_family": "Arial",
+        "font_size_px": 13,
+        "font_weight": "bold",
+        "text_color": "#4A4A4A",
+        "secondary_text_color": "#968C6D",
+        "rule_color": "#DED7CF",
+        "rule_width_px": 1,
+        "accent_color": "#222222",
+        "accent_rule_width_px": 120,
+        "outer_padding_px": 40
+      },
+      "footer": {
+        "enabled": true,
+        "height_px": 41,
+        "implementation": "slide_master_inherited_content",
+        "left_text": "",
+        "center_text": "",
+        "font_family": "Arial",
+        "font_size_px": 12,
+        "font_weight": "regular",
+        "left_font_weight": "bold",
+        "text_color": "#4A4A4A",
+        "secondary_text_color": "#968C6D",
+        "rule_color": "#DED7CF",
+        "rule_width_px": 1,
+        "outer_padding_px": 40,
+        "slide_number": {
+          "enabled": true,
+          "implementation": "native_slide_number_field_on_master",
+          "format": "{slide_number}"
+        }
+      },
+      "generation_region": {
+        "derive_from_frame_heights": true
+      }
+    },
+    "title": {
+      "anchor_px": [
+        64,
+        48
+      ],
+      "max_width_px": 1860,
+      "font_family": "Georgia",
+      "weight": "regular",
+      "nominal_size_px": 76,
+      "color": "#111111",
+      "alignment": "left",
+      "allowed_lines": [
+        1,
+        2
+      ],
+      "minimum_gap_to_body_px": 36
+    },
+    "style": {
+      "icon_treatment": "agent_decides",
+      "background": "#FFFFFF",
+      "display_font": "Georgia",
+      "body_font": "Arial",
+      "density": "balanced",
+      "accent_colors": [
+        "#222222",
+        "#666666",
+        "#AAAAAA"
+      ],
+      "neutral_colors": [
+        "#111111",
+        "#4A4A4A",
+        "#E1E1E1",
+        "#F2F2F2",
+        "#FFFFFF"
+      ],
+      "visual_language": "clear hierarchy, crisp alignment, disciplined spacing, purposeful relationships, and no generic dashboard styling",
+      "whitespace": "intentional around the information structure and consistent inside repeated components"
+    },
+    "semantic_style_tokens": {
+      "accent_badge": {
+        "fill": "#222222",
+        "text_color": "#FFFFFF",
+        "font_weight": "bold"
+      },
+      "muted_panel": {
+        "fill": "#F2F2F2",
+        "text_color": "#111111"
+      },
+      "primary_text": {
+        "color": "#111111"
+      },
+      "secondary_text": {
+        "color": "#4A4A4A"
+      },
+      "symbol_surface": {
+        "fill": "#F2F2F2",
+        "glyph_color": "#222222",
+        "border": "none"
+      }
+    },
+    "icon_slots": {
+      "generation_inset_suggestion": 0.14,
+      "reconstruction_authority": "entity.style_hint.icon_inset_fraction"
+    },
+    "text_reconstruction": {
+      "font_size_quantization_pt": 0.5,
+      "technical_font_size_step_pt": 0.5,
+      "text_style_policies": {
+        "default": {
+          "font_size_range_px": [
+            14,
+            24
+          ],
+          "line_spacing": 1.1,
+          "inset_px": 2
+        },
+        "slide_title": {
+          "font_family": "Georgia",
+          "font_size_range_px": [
+            30,
+            76
+          ],
+          "line_spacing": 1.04,
+          "inset_px": 0
+        },
+        "subtitle": {
+          "font_size_range_px": [
+            20,
+            30
+          ],
+          "line_spacing": 1.08,
+          "inset_px": 2
+        },
+        "section_number": {
+          "font_size_range_px": [
+            22,
+            34
+          ],
+          "line_spacing": 1.0,
+          "inset_px": 0
+        },
+        "heading_large": {
+          "font_size_range_px": [
+            20,
+            28
+          ],
+          "line_spacing": 1.06,
+          "inset_px": 2
+        },
+        "body": {
+          "font_size_range_px": [
+            16,
+            22
+          ],
+          "line_spacing": 1.12,
+          "inset_px": 2
+        },
+        "heading": {
+          "font_size_range_px": [
+            16,
+            24
+          ],
+          "line_spacing": 1.06,
+          "inset_px": 2
+        },
+        "body_standard": {
+          "font_size_range_px": [
+            15,
+            22
+          ],
+          "line_spacing": 1.1,
+          "inset_px": 2
+        },
+        "heading_compact": {
+          "font_size_range_px": [
+            15.5,
+            23
+          ],
+          "line_spacing": 1.06,
+          "inset_px": 2
+        },
+        "body_compact": {
+          "font_size_range_px": [
+            14,
+            20
+          ],
+          "line_spacing": 1.1,
+          "inset_px": 2
+        },
+        "label": {
+          "font_size_range_px": [
+            14,
+            21
+          ],
+          "line_spacing": 1.05,
+          "inset_px": 2
+        },
+        "emphasis_label": {
+          "font_size_range_px": [
+            20,
+            34
+          ],
+          "line_spacing": 1.05,
+          "inset_px": 2
+        }
+      },
+      "legacy_semantic_role_style_aliases": {
+        "stage_number": "section_number",
+        "stage_title": "heading_large",
+        "stage_body": "body",
+        "card_title": "heading",
+        "card_body": "body_standard",
+        "module_title": "heading_compact",
+        "module_body": "body_compact",
+        "output_label": "emphasis_label"
+      },
+      "enforce_text_style_minimum": true
+    },
+    "connectors": {
+      "allowed_families": [
+        "direct_flow",
+        "orthogonal_dependency",
+        "merge_split",
+        "grouping_bracket",
+        "grouping_brace",
+        "annotation_leader"
+      ],
+      "stroke": {
+        "color": "#222222",
+        "width_px": 3,
+        "dash": "solid",
+        "line_cap": "round",
+        "line_join": "round"
+      },
+      "arrowhead": {
+        "type": "triangle",
+        "powerpoint_size": "med",
+        "minimum_visible_endpoint_px": 18,
+        "minimum_clear_segment_px": 16,
+        "length_px": 14,
+        "width_px": 12
+      },
+      "routing": {
+        "minimum_clearance_px": 12,
+        "maximum_ordinary_bends": 2,
+        "grouping_brace_depth_px": 34,
+        "grouping_bracket_depth_px": 22,
+        "grouping_brace_preset_depth_factor": 1.7
+      }
+    },
+    "density_profiles": {
+      "spacious": {
+        "generation_guidance": [
+          "Use generous whitespace and fewer, larger information groups.",
+          "Allow intentionally quiet regions when they strengthen focus and hierarchy.",
+          "Do not fill space merely to increase occupancy."
+        ],
+        "visual_review_guidance": [
+          "Confirm that empty regions feel intentional rather than unfinished.",
+          "Prefer calm hierarchy over compactness."
+        ]
+      },
+      "balanced": {
+        "generation_guidance": [
+          "Use the substantive canvas efficiently while retaining clear separation between information groups.",
+          "Balance whitespace across the composition rather than leaving one large accidental dead zone."
+        ],
+        "visual_review_guidance": [
+          "Reject conspicuous unused peripheral regions that do not support hierarchy.",
+          "Keep the page readable without making it sparse or crowded."
+        ]
+      },
+      "information_rich": {
+        "generation_guidance": [
+          "Use the substantive canvas actively with compact, well-structured information groups and strong alignment.",
+          "Avoid large isolated blank regions unless they clearly serve hierarchy, pacing, or emphasis.",
+          "Prefer expanding, aligning, or redistributing meaningful content before adding decoration.",
+          "Keep spacing disciplined and readable; dense does not mean cramped."
+        ],
+        "visual_review_guidance": [
+          "Inspect the whole canvas for avoidable dead zones or lopsided whitespace.",
+          "Reject a composition that feels under-filled for the selected density even if individual components look good.",
+          "Preserve breathing room inside groups while using the overall slide area efficiently.",
+          "Judge empty regions by whether they support the argument, hierarchy, or pacing rather than by the semantic type of the nearby element."
+        ]
+      }
+    },
+    "shape_geometry": {
+      "rounding": {
+        "semantic_authority": "host_agent_shape_intent_and_observed_corner_radius",
+        "require_explicit_intent_for_rounded_rectangles": true,
+        "intent_values": [
+          "ordinary_container",
+          "deliberately_rounded",
+          "pill_or_capsule"
+        ],
+        "ordinary_container": {
+          "default_corner_radius_px": 6,
+          "suggested_corner_radius_px": 6,
+          "rationale": "Generation guidance only. Reconstruction uses the host Agent's observed radius from the accepted image."
+        },
+        "deliberately_rounded": {
+          "maximum_corner_radius_fraction_of_short_side": 0.48
+        },
+        "pill_or_capsule": {
+          "maximum_corner_radius_fraction_of_short_side": 0.5
+        },
+        "visual_review_required_after_reconstruction": true
+      }
+    },
+    "asset_placement": {
+      "preserve_intrinsic_aspect_ratio": true,
+      "generation_slot_policy": "When an exact user/current-chat asset is selected, attach it to image generation when possible and ask the selected image-generation model to allocate a compatible, non-distorted slot. The generated depiction is composition guidance; the canonical file is restored downstream.",
+      "reconstruction_policy": "Restore the exact selected file with contain-fit by default. Never stretch to match a generated placeholder. If the slot is visually incompatible with the intrinsic aspect ratio, the host Agent must revise the logical slot or upstream composition and rerun.",
+      "brand_identity": "exact asset only",
+      "allow_user_requested_crop_when_explicit": true
+    },
+    "profile": "consulting",
+    "data_visualization": {
+      "default_level": 1,
+      "default_series_colors": [
+        "#222222",
+        "#666666",
+        "#E1E1E1",
+        "#4A4A4A"
+      ]
+    }
+  },
+  "reconstruction": {
+    "native_first": true,
+    "routes": [
+      "native_text",
+      "native_shape",
+      "native_table",
+      "native_chart",
+      "canonical_svg",
+      "native_connector_graph",
+      "fitted_freeform",
+      "screenshot_crop"
+    ],
+    "image_region_fallback": "use screenshot crop when a region is genuinely raster/illustrative, no exact asset exists, and an editable decomposition would invent structure",
+    "render_back_review_required": true,
+    "layout_integrity": {
+      "agent_authors_non_overlap_constraints": true,
+      "default_high_risk_pairs": "Within the same semantic module, icons/icon slots and independent text regions should be declared non-overlapping unless overlap is intentionally part of the design.",
+      "mechanically_enforce_declared_pairs_after_asset_placement_and_text_fitting": true,
+      "visual_review_still_required": true
+    }
+  },
+  "validation": {
+    "require_fresh_measurement": true,
+    "forbid_fixture_measurement": true,
+    "require_agent_generation_review": true,
+    "require_agent_measurement_review": true,
+    "require_agent_reconstruction_review": true,
+    "mechanical_hard_fail_on": [
+      "text_overflow",
+      "explicit_parent_containment_violation",
+      "missing_required_asset",
+      "peer_typography_contract_violation",
+      "invalid_connector_endpoint_or_direction",
+      "frame_configuration_mismatch",
+      "invalid_pptx_package"
+    ],
+    "visual_acceptance_owner": "host_agent",
+    "scripts_must_not_decide": [
+      "visual hierarchy",
+      "visual balance",
+      "spacing quality",
+      "alignment quality",
+      "color fidelity",
+      "connector aesthetics",
+      "whether a bend is visually necessary",
+      "overall design quality",
+      "shape corner fidelity",
+      "content collision acceptability",
+      "density and whitespace utilization",
+      "user-asset slot appropriateness"
+    ]
+  },
+  "session_overrides": {
+    "allowed": [
+      "slide_role",
+      "density",
+      "palette",
+      "profile",
+      "generation_model",
+      "header.enabled",
+      "header.height_px",
+      "header.left_text",
+      "header.right_text",
+      "footer.enabled",
+      "footer.height_px",
+      "footer.left_text",
+      "footer.center_text",
+      "footer.slide_number.enabled",
+      "remote_sources.remix_icon.enabled",
+      "remote_sources.wikimedia_commons.enabled",
+      "measurement.segmentation.mode",
+      "measurement.segmentation.checkpoint",
+      "measurement.segmentation.model_config",
+      "measurement.segmentation.device",
+      "design_overrides (existing design keys only)"
+    ]
+  },
+  "self_update": {
+    "mode": "framework_managed",
+    "persistent_state": "outside_skill_bundle",
+    "config_location": "$SLIDEPOISE_HOME/config.json",
+    "profiles_location": "$SLIDEPOISE_HOME/profiles",
+    "manifest_location": "$SLIDEPOISE_HOME/manifest.json",
+    "rule": "Update the stable skill and configurable profiles independently. Never put profile libraries into the installed skill."
+  }
+}

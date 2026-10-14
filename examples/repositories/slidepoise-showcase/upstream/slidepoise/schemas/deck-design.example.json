@@ -1,0 +1,93 @@
+{
+  "schema_version": "1.0",
+  "design_id": "presentation-visual-direction",
+  "purpose": "Illustrative host-authored role inventory. Replace these role names, members and style values with decisions discovered from the actual presentation. This is not an exhaustive role list or a default theme.",
+  "frame_source": "resolved-config.json#/design/frame",
+  "repeated_roles": {
+    "series_marker": {
+      "purpose": "Identify the continuing series across pages while the page suffix changes.",
+      "recognition_evidence": "The Agent observed a recurring small margin label with the same identity and sequence function. Its page-local names differ.",
+      "chosen_style": {
+        "font_family": "Arial",
+        "font_size_pt": 10,
+        "font_weight": "regular",
+        "italic": false,
+        "character_spacing_pt": 0,
+        "color": "#333333",
+        "alignment": "left"
+      },
+      "placement_convention": "Use the chosen series-label margin and baseline. Determine whether this is substantive content or inherited frame content from its actual role.",
+      "page_aliases": [
+        {
+          "slide_id": "s01-cover",
+          "entity_ids": [
+            "series-label"
+          ],
+          "typography_group": "series-marker"
+        },
+        {
+          "slide_id": "s02-context",
+          "entity_ids": [
+            "issue-label"
+          ],
+          "typography_group": "context-folio"
+        }
+      ],
+      "exceptions": []
+    },
+    "main_claim": {
+      "purpose": "State the page-level argument.",
+      "recognition_evidence": "Different claim wording serves the same function on content pages. The cover deliberately gives its claim a separate display treatment.",
+      "chosen_style": {
+        "font_family": "Georgia",
+        "font_size_pt": 32,
+        "font_weight": "regular",
+        "color": "#222222"
+      },
+      "page_aliases": [
+        {
+          "slide_id": "s01-cover",
+          "entity_ids": [
+            "headline"
+          ],
+          "typography_group": "cover-display"
+        },
+        {
+          "slide_id": "s02-context",
+          "entity_ids": [
+            "conclusion"
+          ],
+          "typography_group": "context-title"
+        }
+      ],
+      "exceptions": [
+        {
+          "exception_id": "cover-display",
+          "slide_id": "s01-cover",
+          "entity_ids": [
+            "headline"
+          ],
+          "chosen_style": {
+            "font_family": "Georgia",
+            "font_size_pt": 44,
+            "font_weight": "regular",
+            "color": "#222222"
+          },
+          "reason": "The opening has a single display statement and a deliberate change of pace. The series marker retains the shared treatment.",
+          "review_focus": "Inspect the cover beside the content pages to confirm the display distinction preserves the shared identity."
+        }
+      ]
+    }
+  },
+  "allowed_variations": [
+    "Layouts follow the communication job. Each named style exception identifies its exact page and entities.",
+    "Discover additional roles from generated candidates and actual renders, including small repeated marks that were not in the original plan."
+  ],
+  "reference_images": [],
+  "cross_slide_review_focus": [
+    "Search all actual pages for undeclared recurring functions before comparing the existing role inventory.",
+    "Resolve page aliases to actual entities, inspect native style facts and full-resolution appearance, and record the applied correction or explicit exception.",
+    "Inspect labels, captions, source lines, section markers, folios and any other discovered peers. Examples are not a whitelist.",
+    "Check shared geometric treatments, inherited frame content and narrative pacing. Revisit the inventory after corrections."
+  ]
+}

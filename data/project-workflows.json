@@ -1,7 +1,7 @@
 {
   "catalog_count": 209,
-  "case_count": 53,
-  "slide_count": 315,
+  "case_count": 59,
+  "slide_count": 355,
   "history": {
     "withdrawn_examples": "data/actual-examples.json",
     "included_in_current_counts": false
@@ -5554,11 +5554,73 @@
         }
       ],
       "upstream_commit": "01825dee2ad40a8c719824252605396b9a570d57",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "ppt-agent-showcase",
+          "title": "小さな展示を、ひとつの体験に。",
+          "use_case": "大胆な和文版式で伝える5枚の展示企画",
+          "repository": "Akxan/ppt-agent-skill",
+          "skill_repository": "Akxan/ppt-agent-skill",
+          "upstream_commit": "01825dee2ad40a8c719824252605396b9a570d57",
+          "fork_id": "ppt-agent-ja",
+          "page_count": 5,
+          "format": "pptx",
+          "preview_kind": "powerpoint-render",
+          "preview_notice": "原典DOM→SVG→native PPTX。文字と形状をPowerPoint内で編集。Web previewも同梱。",
+          "editability": "native_shapes",
+          "editable_features": [
+            "text",
+            "shapes"
+          ],
+          "style": "原典Bauhaus Block / 赤・青・黄の幾何 / 巨大ゴシック見出し・明朝本文",
+          "cover": "examples/repositories/ppt-agent-showcase/render/slide-01.png",
+          "interior": "examples/repositories/ppt-agent-showcase/render/slide-03.png",
+          "preview": "examples/repositories/ppt-agent-showcase/index.html",
+          "web_preview": "examples/repositories/ppt-agent-showcase/preview.html",
+          "artifact_download": "examples/repositories/ppt-agent-showcase/deck.pptx",
+          "pdf_download": "examples/repositories/ppt-agent-showcase/render/deck.pdf",
+          "source_download": "downloads/ppt-agent-example-ja.zip",
+          "fork_download": "downloads/ppt-agent-ja.zip",
+          "input": "examples/repositories/ppt-agent-showcase/input/BRIEF.md",
+          "input_data": "examples/repositories/ppt-agent-showcase/input/planning.json",
+          "prompt": "examples/repositories/ppt-agent-showcase/PROMPT.md",
+          "prompt_text": "日本語5枚の仮想展示企画「小さな展示を、ひとつの体験に。」を制作してください。\nAkxan/ppt-agent-skillの26作風から実在するbauhaus_blockを選び、原典のmock/styleとHTML→dom-to-svg→svg2pptxのOSS生成器を実際に使う。\n三原色の円・四角・三角、硬い版式、大きな和文タイトル、展示の関係図、来場導線、準備日程を少ない要素で見せる。\nZen Kaku Gothic New Blackの大見出し、BIZ UDPMinchoの短い説明、Manropeの英数字。角丸カードや無難な業務資料に揃えない。\n全5枚は表紙、関係図、来場導線、準備日程、開く前の体験確認。展示は仮想、日時・会場・参加条件は未定、日程は相対的な仮案。\nユーザー指定の内部判断・軽い確認を優先し、追加インタビュー、全ページ目視、独立レビュー、構造監査、ZIP再実行は行わない。\n実生成と代表完成物の初回表示まで進め、完成PPTX/PNG/PDFと原典Webプレビュー、入力/原稿/依頼/再生成コード、未変更原本/局所差分、字体許諾、日本語SKILL、SOURCE、2ZIPまで完成させる。\nartifact-tool SDKを使わず、原典の許されるOSS経路で実行。別レンダラーへの名前貼りや黙った画像PPTX代替をしない。",
+          "provenance": "examples/repositories/ppt-agent-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/ppt-agent-showcase/QA.json",
+          "guide": "repository.html?repo=Akxan/ppt-agent-skill",
+          "titles": [
+            "小さな展示を、ひとつの体験に。",
+            "作品・場所・言葉を、つなぐ",
+            "入口から、余韻まで。",
+            "準備は、四つの区切りで。",
+            "開く前に、一度だけ歩く。"
+          ],
+          "notes": [
+            "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。",
+            "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。",
+            "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。",
+            "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。",
+            "仮想の展示企画。日時・会場・参加条件未定。準備日程は相対的な仮案。"
+          ],
+          "method": "原典bauhaus_block mock/styleを日本語へ局所対応し、html_packager→html2svg(dom-to-svg/Puppeteer)→svg2pptx.pyでnative OOXML文字・図形を生成。PowerPoint16でPNG/PDF描画。",
+          "sample_notice": "仮想の展示企画。native text/shapesのみ、native chart/table/数式は使用していません。",
+          "pages": [
+            "examples/repositories/ppt-agent-showcase/render/slide-01.png",
+            "examples/repositories/ppt-agent-showcase/render/slide-02.png",
+            "examples/repositories/ppt-agent-showcase/render/slide-03.png",
+            "examples/repositories/ppt-agent-showcase/render/slide-04.png",
+            "examples/repositories/ppt-agent-showcase/render/slide-05.png"
+          ],
+          "case_guide": "examples/repositories/ppt-agent-showcase/README.md",
+          "content_revision": "e75bd82c0c27c504"
+        }
+      ],
+      "derived_skills": [
+        "ppt-agent-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "knight6669/knight-imagetopptx-skill",
@@ -5774,27 +5836,126 @@
       "license_checked_at": "2026-10-13T13:34:43.426095+00:00",
       "license_evidence": [
         {
-          "path": "README.md",
-          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/README.md",
-          "bytes": 10745
+          "path": "slidepoise/SKILL.md",
+          "sha256": "3f1bd8cd123fd412a7eacdd00c581f55d7048d47ff560db525af5d9cf98785b6",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/SKILL.md"
         },
         {
-          "path": "slidepoise/SKILL.md",
-          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/SKILL.md",
-          "bytes": 19640
+          "path": "slidepoise/scripts/prepare_generation.py",
+          "sha256": "a7276c28a2d0034ff5f7c327dd1d97c81d69bee73ff2ce5e6164f3938b948781",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/prepare_generation.py"
+        },
+        {
+          "path": "slidepoise/scripts/normalize_generation_canvas.py",
+          "sha256": "98be496ad432f89378e158a4f8463f12141f3bc96e418cfdc952794dffb5ace1",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/normalize_generation_canvas.py"
+        },
+        {
+          "path": "slidepoise/scripts/slidepoise_runtime.py",
+          "sha256": "492b655986d29ce188f7c4466a24abc99ef4405ea19747d87da3293726876707",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/scripts/slidepoise_runtime.py"
+        },
+        {
+          "path": "slidepoise/runtime/scripts/measure_visual_scene.py",
+          "sha256": "d5fc637b8a14091adafe217f0f216f3c9c61a41fc9655aa4d50f96acf50cef38",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/scripts/measure_visual_scene.py"
+        },
+        {
+          "path": "slidepoise/runtime/src/slidepoise/reconstruction/contract.py",
+          "sha256": "6ce78669e90d5624732f386b364111f672bc6c54b4f209fe1b8ba6a1c90f3f24",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/contract.py"
+        },
+        {
+          "path": "slidepoise/runtime/src/slidepoise/reconstruction/scene.py",
+          "sha256": "a959e4a0f9d6ee9b7261453ff2ef2d48cf4e405de6187e411ad5f482afca89a5",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/src/slidepoise/reconstruction/scene.py"
+        },
+        {
+          "path": "slidepoise/runtime/js/scene_to_pptx.mjs",
+          "sha256": "38d6a165912de87e065d8ef39459d0c0c94fe7ab1707db769b9181412c942aa2",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/slidepoise/runtime/js/scene_to_pptx.mjs"
         },
         {
           "path": "LICENSE",
-          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/LICENSE",
-          "bytes": 1080
+          "sha256": "f64a42666e879488698df6308fb84166a2614fb9e3563adcad4715977358767f",
+          "url": "https://github.com/henryhyw/slidepoise/blob/481a028486b528e65706c4e14aa9b74a5e340f12/LICENSE"
         }
       ],
       "upstream_commit": "481a028486b528e65706c4e14aa9b74a5e340f12",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "slidepoise-showcase",
+          "title": "クリックを減らす、予約の流れ。",
+          "repository": "henryhyw/slidepoise",
+          "skill_repository": "henryhyw/slidepoise",
+          "upstream_commit": "481a028486b528e65706c4e14aa9b74a5e340f12",
+          "fork_id": "slidepoise-ja",
+          "page_count": 3,
+          "format": "pptx",
+          "preview_kind": "powerpoint-render",
+          "preview_canvas": {
+            "width": 1600,
+            "height": 900
+          },
+          "style": "墨 × コバルト × 朱赤 / 生成画像をnative図解へ",
+          "use_case": "仮想予約サイトの改善案",
+          "preview": "examples/repositories/slidepoise-showcase/index.html",
+          "cover": "examples/repositories/slidepoise-showcase/render/slide-01.png",
+          "interior": "examples/repositories/slidepoise-showcase/render/slide-02.png",
+          "pages": [
+            "examples/repositories/slidepoise-showcase/render/slide-01.png",
+            "examples/repositories/slidepoise-showcase/render/slide-02.png",
+            "examples/repositories/slidepoise-showcase/render/slide-03.png"
+          ],
+          "artifact_download": "examples/repositories/slidepoise-showcase/deck.pptx",
+          "source_download": "downloads/slidepoise-example-ja.zip",
+          "fork_download": "downloads/slidepoise-ja.zip",
+          "pptx_download": "examples/repositories/slidepoise-showcase/deck.pptx",
+          "pdf_download": "examples/repositories/slidepoise-showcase/render/deck.pdf",
+          "input": "examples/repositories/slidepoise-showcase/input/SOURCE.md",
+          "input_data": "examples/repositories/slidepoise-showcase/input/case-data.json",
+          "prompt": "examples/repositories/slidepoise-showcase/PROMPT.md",
+          "prompt_text": "SlidePoise原典の生成画像→semantic map→OpenCV計測→reconstruction contract→constructor scene→固有render-deckを実際に使い、日本語「クリックを減らす、予約の流れ。」を制作してください。仮想の地域ワークショップ予約サイトを題材に、8操作から4操作への設計目標、空席による分岐と予約前の情報、4操作/入力完了率90%/入力60秒の目標と実装順を3枚へまとめる。数値は仮想設定・目標で、実測としない。大きな和文、墨、コバルト/朱赤、意味のある図形関係。角丸カードの格子は避ける。自作AI生成画像だけを原典計測コードでnative文字/図形/freeform/connectorへ再構成し、汎用builderで代替しない。原典MITとOSS TTF/OFLを保持。原典に必要なbuildと代表完成物初回表示までを確認し、全詳細目視/構造監査/独立review/ZIP再実行を追加しない。PowerPoint Application.Quitは禁止、自分のdeckだけClose。",
+          "provenance": "examples/repositories/slidepoise-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/slidepoise-showcase/QA.json",
+          "guide": "repository.html?repo=henryhyw/slidepoise",
+          "titles": [
+            "迷う操作を、半分に。",
+            "分岐は、空席で決まる。",
+            "目標を決めて、順に直す。"
+          ],
+          "notes": [
+            "仮想の地域ワークショップ予約サイトの設計案です。現在案8操作から目標4操作へ。計測した改善実績ではありません。",
+            "空席による分岐と予約前の判断材料を一画面へ。会場名、120分、持ち物は画面例の架空設定です。",
+            "4操作・入力完了率90%・入力60秒は目標値です。情報統合、空席分岐、計測と見直しの順で実装する案です。"
+          ],
+          "sample_notice": "仮想サイトの設計案。操作数/完了率/入力時間は目標値、実測ではありません。会場名と120分も画面例の設定。",
+          "method": "Original prepare_generation compiled exact bound requests → builtin image_gen → original normalize_generation_canvas → host-authored semantic map → original OpenCV measurement → original reconstruction contract → original constructor scene → original slidepoise_runtime render-deck / scene_to_pptx renderer and native postprocess.",
+          "navigation": "native-runtime-bridge",
+          "editability": "native_elements",
+          "editable_features": [
+            "text",
+            "shapes",
+            "connectors"
+          ],
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "preview_notice": "原典AI画像→OpenCV→contract→constructorでnative文字/図形/connectorへ再構成。字形や紙の陰影の完全一致は未保証。",
+          "representative_previews": [
+            "examples/repositories/slidepoise-showcase/render/slide-01.png",
+            "examples/repositories/slidepoise-showcase/render/slide-02.png"
+          ],
+          "preview_image_notice": "3枚をPowerPoint export。代表完成物の初回表示と句点修正まで確認、全詳細目視なし。",
+          "case_guide": "examples/repositories/slidepoise-showcase/README.md",
+          "content_revision": "5e664266d48720df"
+        }
+      ],
+      "derived_skills": [
+        "slidepoise-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "Hasasasa/html-to-editable-pptx",
@@ -15446,28 +15607,81 @@
       "license": "MIT",
       "license_checked_at": "2026-10-13T13:34:49.722173+00:00",
       "license_evidence": [
-        {
-          "path": "README.md",
-          "url": "https://github.com/helloo1568/slidemuse/blob/7034412b4c19915c17f8d7206e3723e9e53cf8d2/README.md",
-          "bytes": 23577
-        },
-        {
-          "path": "SKILL.md",
-          "url": "https://github.com/helloo1568/slidemuse/blob/7034412b4c19915c17f8d7206e3723e9e53cf8d2/SKILL.md",
-          "bytes": 21055
-        },
-        {
-          "path": "LICENSE",
-          "url": "https://github.com/helloo1568/slidemuse/blob/7034412b4c19915c17f8d7206e3723e9e53cf8d2/LICENSE",
-          "bytes": 1069
-        }
+        "https://github.com/helloo1568/slidemuse/tree/7034412b4c19915c17f8d7206e3723e9e53cf8d2",
+        "https://github.com/helloo1568/slidemuse/blob/7034412b4c19915c17f8d7206e3723e9e53cf8d2/LICENSE"
       ],
       "upstream_commit": "7034412b4c19915c17f8d7206e3723e9e53cf8d2",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "sebastian-192",
+          "repository": "helloo1568/slidemuse",
+          "skill_repository": "helloo1568/slidemuse",
+          "upstream_commit": "7034412b4c19915c17f8d7206e3723e9e53cf8d2",
+          "title": "夏の余白",
+          "use_case": "日陰をつなぐ小広場。架空・未実施のデザイン研究",
+          "fork_id": "sebastian-192-ja",
+          "page_count": 8,
+          "format": "pptx",
+          "preview_kind": "generated-png-byte-matched-to-pptx-media",
+          "editability": "image_only_with_editable_speaker_notes",
+          "style": "白い地中海模型：砂色、深緑、白い建築、断面と透明レイヤー",
+          "cover": "examples/repositories/sebastian-192/pages/01-slide.png",
+          "interior": "examples/repositories/sebastian-192/pages/06-slide.png",
+          "preview": "examples/repositories/sebastian-192/pages/index.html",
+          "pages": [
+            "examples/repositories/sebastian-192/pages/01-slide.png",
+            "examples/repositories/sebastian-192/pages/02-slide.png",
+            "examples/repositories/sebastian-192/pages/03-slide.png",
+            "examples/repositories/sebastian-192/pages/04-slide.png",
+            "examples/repositories/sebastian-192/pages/05-slide.png",
+            "examples/repositories/sebastian-192/pages/06-slide.png",
+            "examples/repositories/sebastian-192/pages/07-slide.png",
+            "examples/repositories/sebastian-192/pages/08-slide.png"
+          ],
+          "artifact_download": "examples/repositories/sebastian-192/deck.pptx",
+          "source_download": "downloads/sebastian-192-example-ja.zip",
+          "fork_download": "downloads/sebastian-192-ja.zip",
+          "input": "examples/repositories/sebastian-192/input/BRIEF.md",
+          "input_data": "examples/repositories/sebastian-192/input/data.json",
+          "prompt": "examples/repositories/sebastian-192/PROMPT.txt",
+          "prompt_text": "原典helloo1568/slidemuseの固定commit 7034412b4c19915c17f8d7206e3723e9e53cf8d2 と同梱日本語派生SKILLを使い、『夏の余白』を8頁の日本語画像主体PowerPointとして作成してください。\n入力はinput/BRIEF.mdとdata.json。架空・未実施のデザイン研究として、日陰、通過、休憩を組み合わせる検討を示します。実測温度、環境効果、健康効果、利用実績を捏造しないでください。概念図・仮設定・影が日影計算結果ではないことを可視で残します。\n要件→完全な頁別内容稿と自己点検→同内容の4style overviewを独立4call→ユーザー委任に基づく選択→Page Specのexact content/stable IDs/tokens→各頁PNGを逐次生成し直後レビュー→画像主体PPTXの順を守ってください。\n砂色、深い樹木の緑、白い建築模型。原典の4案後に選んだ白い地中海模型の方向。俯瞰、敷地図、時間連作、配置、断面、透明レイヤー、環境模式図、記録/模型/仮設の連作で変化させます。全頁同じ都市背景や箱カードにしません。\n各頁は宿主native imagegenを利用。モデルが露出されない場合GPT Image2.5を指定したと偽らない。生成PNGのプログラム画像加工はしません。\n原典validator/packer/render codeは実行せず、同梱の独立最小チェック/包装へ変えた日本語派生です。原典完全QA合格と呼ばない。PPTX画像主体・ノート編集可を明示し、生成PNGプレビューと完成PPTXレンダリングを区別します。課金API、公開push、秘密情報、認証変更は含みません。\n",
+          "provenance": "examples/repositories/sebastian-192/PROVENANCE.json",
+          "qa": "examples/repositories/sebastian-192/QA.json",
+          "guide": "repository.html?repo=helloo1568/slidemuse",
+          "titles": [
+            "日陰を、点から道へ",
+            "休める場所は、通り道にあるか",
+            "影は動く。使い方も動く",
+            "三つの居場所をつなぐ",
+            "座る高さで、風景を確かめる",
+            "評価計画：影と行動を重ねる",
+            "日陰だけでは、快適さを決められない",
+            "次の一歩：影の記録から、配置の試作へ"
+          ],
+          "notes": [
+            "暑さを解決できると断言せず、日陰と動線の配置を検討する計画として紹介する。",
+            "敷地条件は説明用。現地で取り組む際は樹木、地面、周辺建物、管理条件を調べ直す。",
+            "静止した一枚の平面図だけでは見えない変化を扱う。実際の影は現地確認と計算で確かめる必要がある。",
+            "日陰を追うことと、誰でも通れることは両立させる。通路幅などの具体条件は実施設計時に確認する。",
+            "見通しを失わずに落ち着ける場所を探る。設備の構造、安全、管理は専門的な確認が必要。",
+            "観察記録に個人を特定できる情報を残さない。夏の現地調査は暑さへの安全対策を整えてから行う。",
+            "要因を分けて記録し、配置による影響と天候の影響を混同しない。",
+            "完成形を先に決めず、影と人の動きを読みながら設計を更新する。"
+          ],
+          "method": "原典の画像優先手順、独立4style+逐頁8call native imagegen。独立最小包装/チェックへ置換。",
+          "sample_notice": "日陰をつなぐ小広場の、架空のデザイン研究。模型と影は概念表現です。",
+          "preview_notice": "原典の手順で生成したPNGのプレビュー / 本文と図は画像です。画像差替え・発表ノートを編集できます。",
+          "production_origin": "separate_cloud_session",
+          "case_guide": "examples/repositories/sebastian-192/README.md",
+          "content_revision": "10b8e32d083d8821"
+        }
+      ],
+      "derived_skills": [
+        "sebastian-192-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_with_review_record"
     },
     {
       "repository": "deathcats4/scholar-ppt-cn",
@@ -15491,28 +15705,83 @@
       "license": "MIT",
       "license_checked_at": "2026-10-13T13:34:52.745422+00:00",
       "license_evidence": [
-        {
-          "path": "README.md",
-          "url": "https://github.com/deathcats4/scholar-ppt-cn/blob/6fca3dc0f0fd6033279cc1bd29467967cc185272/README.md",
-          "bytes": 5130
-        },
-        {
-          "path": "SKILL.md",
-          "url": "https://github.com/deathcats4/scholar-ppt-cn/blob/6fca3dc0f0fd6033279cc1bd29467967cc185272/SKILL.md",
-          "bytes": 32853
-        },
-        {
-          "path": "LICENSE",
-          "url": "https://github.com/deathcats4/scholar-ppt-cn/blob/6fca3dc0f0fd6033279cc1bd29467967cc185272/LICENSE",
-          "bytes": 1067
-        }
+        "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272",
+        "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272/LICENSE",
+        "https://github.com/deathcats4/scholar-ppt-cn/tree/6fca3dc0f0fd6033279cc1bd29467967cc185272/SKILL.md"
       ],
       "upstream_commit": "6fca3dc0f0fd6033279cc1bd29467967cc185272",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "sebastian-193",
+          "repository": "deathcats4/scholar-ppt-cn",
+          "skill_repository": "deathcats4/scholar-ppt-cn",
+          "upstream_commit": "6fca3dc0f0fd6033279cc1bd29467967cc185272",
+          "title": "小さな道案内",
+          "use_case": "公共空間サインの読みやすさに関する架空・未実施研究提案",
+          "fork_id": "sebastian-193-ja",
+          "page_count": 8,
+          "format": "pptx",
+          "preview_kind": "artifact-tool-pptx-import-render",
+          "editability": "native_elements",
+          "style": "academic-wayfinding：白・濃青、余白と進路線",
+          "cover": "examples/repositories/sebastian-193/render/slide-01.png",
+          "interior": "examples/repositories/sebastian-193/render/slide-04.png",
+          "preview": "examples/repositories/sebastian-193/index.html",
+          "pages": [
+            "examples/repositories/sebastian-193/render/slide-01.png",
+            "examples/repositories/sebastian-193/render/slide-02.png",
+            "examples/repositories/sebastian-193/render/slide-03.png",
+            "examples/repositories/sebastian-193/render/slide-04.png",
+            "examples/repositories/sebastian-193/render/slide-05.png",
+            "examples/repositories/sebastian-193/render/slide-06.png",
+            "examples/repositories/sebastian-193/render/slide-07.png",
+            "examples/repositories/sebastian-193/render/slide-08.png"
+          ],
+          "artifact_download": "examples/repositories/sebastian-193/deck.pptx",
+          "source_download": "downloads/sebastian-193-example-ja.zip",
+          "fork_download": "downloads/sebastian-193-ja.zip",
+          "input": "examples/repositories/sebastian-193/input/BRIEF.md",
+          "input_data": "examples/repositories/sebastian-193/input/data.json",
+          "prompt": "examples/repositories/sebastian-193/PROMPT.txt",
+          "prompt_text": "原典deathcats4/scholar-ppt-cnの固定commit 6fca3dc0f0fd6033279cc1bd29467967cc185272と同梱日本語SKILLで「小さな道案内」を8頁の日本語編集可能PPTXにしてください。入力はinput/BRIEF.mdとdata.json。架空・未実施の公共空間サイン研究提案です。仮説を結果とせず、実測値・参加者数・引用文献を作らないでください。\nRoute BのPptxGenJS作者方式を用い、defaultテンプレートのTemplate DNAとネイティブmaster/themeを保全します。著者・組織・ロゴ・見本内容は流用しません。研究内容に合わせ、表紙の進路線、行動フロー、比較、架空平面、注釈、観察経路、条件図、循環へ誌面を切り替えます。白と濃青、読みやすいNoto日本語、意味区切り改行。本文と図形、ノートを編集可能にします。\n原典QAスクリプトを実行せず、明示的な日本語派生として最小構造検査と完成PPTXの初回実描画へ置換してください。主要表示の明白な欠けだけ修正。原典全QA合格を偽らず、レンダラーと未検証部分を記録します。未知コード実行・課金・公開・認証変更・OS書体の抽出配布はしません。\n",
+          "provenance": "examples/repositories/sebastian-193/PROVENANCE.json",
+          "qa": "examples/repositories/sebastian-193/QA.json",
+          "guide": "repository.html?repo=deathcats4/scholar-ppt-cn",
+          "titles": [
+            "小さな道案内",
+            "問いは「読めるか」だけではない",
+            "分岐に情報を集めすぎない",
+            "サインを一枚ではなく、連続として設計する",
+            "小さな仕様が、読み方をそろえる",
+            "評価は、迷った場所を記録する",
+            "万能な案内にはならない",
+            "次の一歩：一つの分岐で確かめる"
+          ],
+          "notes": [
+            "サインの見た目だけでなく、利用者が次の一歩を選ぶ瞬間に注目する。",
+            "文字が読みやすくても、見つからない、方向が曖昧という問題は残る。",
+            "これは優劣を確定した結果ではない。比較して確かめたい設計仮説である。",
+            "到着の確認も案内の一部。利用者が「ここで合っている」と判断できる仕組みを含める。",
+            "ここでは寸法を正解として固定しない。実際に使われる距離と環境に合わせて試作する。",
+            "速さだけを成功の基準にしない。参加者の安全を優先し、参加条件と同意手順は実施前に整える。",
+            "同じ案内でも使う条件が違う。多様な利用者による確認と現地調整が必要になる。",
+            "結果を先取りせず、迷いの原因を見つけて設計を更新する。"
+          ],
+          "method": "原典Route BのPptxGenJS作者方式とdefaultテンプレートのネイティブmaster/theme保全。日本語派生の最小検査。",
+          "sample_notice": "公共空間のサインを考える、架空・未実施の研究提案。仮説と評価の計画を示します。",
+          "preview_notice": "別セッションで制作したPPTXのSDK描画プレビュー / 文字・図形を編集できます。PowerPoint実機表示は未確認です。",
+          "production_origin": "separate_cloud_session",
+          "font_download": "downloads/fonts/notosanscjkjp.zip",
+          "case_guide": "examples/repositories/sebastian-193/README.md",
+          "content_revision": "a60007268fb2b692"
+        }
+      ],
+      "derived_skills": [
+        "sebastian-193-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_with_review_record"
     },
     {
       "repository": "joeseesun/qiaomu-ppt",
@@ -15963,28 +16232,83 @@
       "license": "MIT",
       "license_checked_at": "2026-10-13T13:35:35.382128+00:00",
       "license_evidence": [
-        {
-          "path": "README.md",
-          "url": "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/README.md",
-          "bytes": 7732
-        },
-        {
-          "path": "SKILL.md",
-          "url": "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/SKILL.md",
-          "bytes": 5705
-        },
-        {
-          "path": "LICENSE",
-          "url": "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/LICENSE",
-          "bytes": 1095
-        }
+        "https://github.com/ficooooo/Paper2ScholarSlides/tree/207f2b6c8493c569f6caf466c87d868c42936cf6",
+        "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/LICENSE",
+        "https://github.com/ficooooo/Paper2ScholarSlides/blob/207f2b6c8493c569f6caf466c87d868c42936cf6/assets/templates/academic-template.pptx"
       ],
       "upstream_commit": "207f2b6c8493c569f6caf466c87d868c42936cf6",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "sebastian-203",
+          "repository": "ficooooo/Paper2ScholarSlides",
+          "skill_repository": "ficooooo/Paper2ScholarSlides",
+          "upstream_commit": "207f2b6c8493c569f6caf466c87d868c42936cf6",
+          "title": "静けさを選べる図書館",
+          "use_case": "音環境のゾーニングを考える、架空の未実施研究提案",
+          "fork_id": "sebastian-203-ja",
+          "page_count": 8,
+          "format": "pptx",
+          "preview_kind": "artifact-tool-pptx-import-render",
+          "editability": "native_elements",
+          "style": "原典academic-template：白地・深青・静かな余白",
+          "cover": "examples/repositories/sebastian-203/render/slide-01.png",
+          "interior": "examples/repositories/sebastian-203/render/slide-03.png",
+          "preview": "examples/repositories/sebastian-203/index.html",
+          "pages": [
+            "examples/repositories/sebastian-203/render/slide-01.png",
+            "examples/repositories/sebastian-203/render/slide-02.png",
+            "examples/repositories/sebastian-203/render/slide-03.png",
+            "examples/repositories/sebastian-203/render/slide-04.png",
+            "examples/repositories/sebastian-203/render/slide-05.png",
+            "examples/repositories/sebastian-203/render/slide-06.png",
+            "examples/repositories/sebastian-203/render/slide-07.png",
+            "examples/repositories/sebastian-203/render/slide-08.png"
+          ],
+          "artifact_download": "examples/repositories/sebastian-203/deck.pptx",
+          "source_download": "downloads/sebastian-203-example-ja.zip",
+          "fork_download": "downloads/sebastian-203-ja.zip",
+          "input": "examples/repositories/sebastian-203/input/BRIEF.md",
+          "input_data": "examples/repositories/sebastian-203/input/data.json",
+          "prompt": "examples/repositories/sebastian-203/PROMPT.txt",
+          "prompt_text": "原典ficooooo/Paper2ScholarSlidesの固定commit 207f2b6c8493c569f6caf466c87d868c42936cf6 と同梱日本語SKILLを使い、input/BRIEF.mdの「静けさを選べる図書館」を8頁の日本語研究提案にしてください。架空・未実施を明記し、調査結果、数値、外部引用を作らないでください。原典academic-template.pptxをpython-pptxで再利用し、master、白地、青い線、余白、フッター、ページ番号を保ちます。見本情報を除去し、日本語の短いコピーとネイティブ編集可能なゾーン図、仮説関係、比較表、工程で構成を変えます。背景／空間モデル／検証する関係／配置比較／試行手順／評価／実施条件へ再編。実ファイルをレンダリングし、初回表示の欠けを直し、固定版・変更・書体・制約を記録してください。公開・課金・認証変更は不要です。",
+          "provenance": "examples/repositories/sebastian-203/PROVENANCE.json",
+          "qa": "examples/repositories/sebastian-203/QA.json",
+          "guide": "repository.html?repo=ficooooo/Paper2ScholarSlides",
+          "titles": [
+            "静けさを選べる図書館",
+            "利用目的と音環境のずれ",
+            "ゾーンの境界と音の伝わり方",
+            "検証する関係",
+            "配置案の比較",
+            "試行と観察の順序",
+            "評価項目と判断の条件",
+            "実施前に確認すること"
+          ],
+          "notes": [
+            "表紙。架空の未実施研究提案。",
+            "利用目的と期待する音環境の対応。分類は設計仮説。",
+            "縮尺のないゾーニング概念図。建築図や実測音分布ではない。",
+            "配置・表示と席選択・評価の仮説モデル。実証済み因果関係ではない。",
+            "二つの未実施配置案の比較。席数・面積の実績を含まない。",
+            "現状把握・仮設試行・再観察・比較修正の研究手順。未実施。",
+            "評価項目と予定取得方法。調査結果・基準値を捏造しない。",
+            "施設合意、任意参加、個人識別情報を集めない方針。効果未確認。"
+          ],
+          "method": "python-pptx reuse of upstream academic-template.pptx with original layout/master retained",
+          "sample_notice": "架空の図書館に関する研究提案。空間の比較条件・仮説・評価計画を示します。",
+          "preview_notice": "別セッションで制作したPPTXのSDK描画プレビュー / 文字・図形を編集できます。PowerPoint実機表示は未確認です。",
+          "production_origin": "separate_cloud_session",
+          "font_download": "downloads/fonts/notosanscjkjp.zip",
+          "case_guide": "examples/repositories/sebastian-203/README.md",
+          "content_revision": "807e508012f5182b"
+        }
+      ],
+      "derived_skills": [
+        "sebastian-203-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "SHALINS428/Academic-PPT-Skill",
@@ -16055,33 +16379,81 @@
       "license": "MIT",
       "license_checked_at": "2026-10-13T13:35:39.377219+00:00",
       "license_evidence": [
-        {
-          "path": "README.md",
-          "url": "https://github.com/wp-a/paper2ppt/blob/bb98ce95ca5942fc6551dddc723cbdfe2d637d59/README.md",
-          "bytes": 9085
-        },
-        {
-          "path": "SKILL.md",
-          "url": "https://github.com/wp-a/paper2ppt/blob/bb98ce95ca5942fc6551dddc723cbdfe2d637d59/SKILL.md",
-          "bytes": 5366
-        },
-        {
-          "path": "plugins/paper2ppt/skills/paper2ppt/SKILL.md",
-          "url": "https://github.com/wp-a/paper2ppt/blob/bb98ce95ca5942fc6551dddc723cbdfe2d637d59/plugins/paper2ppt/skills/paper2ppt/SKILL.md",
-          "bytes": 5366
-        },
-        {
-          "path": "LICENSE",
-          "url": "https://github.com/wp-a/paper2ppt/blob/bb98ce95ca5942fc6551dddc723cbdfe2d637d59/LICENSE",
-          "bytes": 1061
-        }
+        "https://github.com/wp-a/paper2ppt/tree/bb98ce95ca5942fc6551dddc723cbdfe2d637d59"
       ],
       "upstream_commit": "bb98ce95ca5942fc6551dddc723cbdfe2d637d59",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "sebastian-205",
+          "repository": "wp-a/paper2ppt",
+          "skill_repository": "wp-a/paper2ppt",
+          "upstream_commit": "bb98ce95ca5942fc6551dddc723cbdfe2d637d59",
+          "title": "捨てる前の一目",
+          "use_case": "食品在庫可視化UIの架空・未実施研究計画",
+          "fork_id": "sebastian-205-ja",
+          "page_count": 8,
+          "format": "pptx",
+          "preview_kind": "libreoffice-pptx-pdf-render",
+          "editability": "native_elements",
+          "style": "墨緑×ライム：生活道具のUIと力強い研究図解",
+          "cover": "examples/repositories/sebastian-205/render/slide-01.png",
+          "interior": "examples/repositories/sebastian-205/render/slide-04.png",
+          "preview": "examples/repositories/sebastian-205/index.html",
+          "pages": [
+            "examples/repositories/sebastian-205/render/slide-01.png",
+            "examples/repositories/sebastian-205/render/slide-02.png",
+            "examples/repositories/sebastian-205/render/slide-03.png",
+            "examples/repositories/sebastian-205/render/slide-04.png",
+            "examples/repositories/sebastian-205/render/slide-05.png",
+            "examples/repositories/sebastian-205/render/slide-06.png",
+            "examples/repositories/sebastian-205/render/slide-07.png",
+            "examples/repositories/sebastian-205/render/slide-08.png"
+          ],
+          "artifact_download": "examples/repositories/sebastian-205/deck.pptx",
+          "source_download": "downloads/sebastian-205-example-ja.zip",
+          "fork_download": "downloads/sebastian-205-ja.zip",
+          "input": "examples/repositories/sebastian-205/input/BRIEF.md",
+          "input_data": "examples/repositories/sebastian-205/input/data.json",
+          "prompt": "examples/repositories/sebastian-205/PROMPT.txt",
+          "prompt_text": "同梱の日本語SKILLと原典wp-a/paper2ppt固定commit bb98ce95ca5942fc6551dddc723cbdfe2d637d59に従い、input/BRIEF.mdの「捨てる前の一目」を8頁の編集可能な日本語PPTXにしてください。notes-onlyの架空・未実施研究計画です。実測結果・削減効果・引用は作らないでください。期限・更新時点・可食判断を区別してください。python-pptx 1.0.2+の正規fallbackでネイティブ文字・図形、全頁の出典と話者ノートを作成。墨緑とライム、棚・時間帯・天秤・提案UI・操作連作・評価マトリクス・限界の対比・次の段階で頁ごとの構図を変えてください。実PPTXをレンダリングし初回表示の欠けを確認。原典scriptsは許可なく実行せず、その差異と限界をPROVENANCEへ記録。PowerPoint実機確認や原典QA合格を未実施のまま主張しない。",
+          "provenance": "examples/repositories/sebastian-205/PROVENANCE.json",
+          "qa": "examples/repositories/sebastian-205/QA.json",
+          "guide": "repository.html?repo=wp-a/paper2ppt",
+          "titles": [
+            "捨てる前の一目",
+            "買う前と、使う前に思い出せるか",
+            "入力の負担が、見える在庫を支える",
+            "場所から探し、状態で選ぶ",
+            "「使った」を、短い操作にする",
+            "見つけやすさと、更新しやすさを評価する",
+            "画面の在庫と、実物はずれる",
+            "一つの棚から、始める"
+          ],
+          "notes": [
+            "入力§1。架空・未実施のデザイン研究計画。廃棄原因全体ではなく、何があるか分からない情報の問題に絞る。図は入力記述に基づく説明図。",
+            "入力§2。研究の問いと三つの利用場面。毎回アプリを開く前提は未検証。見る価値が生じる場面を確かめる。",
+            "入力§3。仮説Aは保存場所の一覧、仮説Bは粗い残量段階。記録精度と更新負担のトレードオフであり、優劣の結果ではない。",
+            "入力§4。提案UIは説明用の架空表示。食品名・残量・更新時点・包装表示からの期限転記を区別。期限未登録は期限がないことを意味しない。安全を保証しない。",
+            "入力§5。選択→残量変更→保存場所確認の提案。使い切りを取り消せる設計を検討。家族の共有は同意・権限を要し、自動的には許可されない。",
+            "入力§6。紙試作→操作可能な試作の計画。課題、観察、操作記録、振り返りを組み合わせる。数値・結果なし。家庭で継続評価する場合はデータ最小化と参加・共有の別の同意が必要。",
+            "入力§7。未入力・更新忘れ・家族の利用でずれる。UIだけで食品ロス削減の証明はできない。期限表示は安全保証ではなく、実物と包装表示を確認する。",
+            "入力§8。未実施研究計画の次の一歩。棚を決める→試作→課題→修正。通知やレシピを最初から増やさず、基本一覧と更新が判断に使えるかを検証する。"
+          ],
+          "method": "original evidence-first workflow → methods/tools research-notes → python-pptx 1.0.2 authorized fallback",
+          "sample_notice": "架空の食品在庫UIの研究計画。食品ロス削減や食品の安全性を実証した資料ではありません。",
+          "preview_notice": "別セッションで制作したPPTXのLibreOffice描画プレビュー / 文字・図形を編集できます。PowerPoint実機表示は未確認です。",
+          "production_origin": "separate_cloud_session",
+          "font_download": "downloads/fonts/notosanscjkjp.zip",
+          "case_guide": "examples/repositories/sebastian-205/README.md",
+          "content_revision": "4ba981839ab1e6a9"
+        }
+      ],
+      "derived_skills": [
+        "sebastian-205-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "2654400439/Paper2Seminar",

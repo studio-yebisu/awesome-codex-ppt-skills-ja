@@ -1,0 +1,65 @@
+{
+  "style_direction": {
+    "intent": "Optional visual emphasis or mood specific to this slide",
+    "freedom": "Describe what is fixed and what the Agent may decide"
+  },
+  "selection_reasoning": {
+    "icons": {
+      "communication_roles": ["Make the source, review and release stages faster to distinguish"],
+      "candidates_inspected": ["Remix Icon file-search line/fill pair", "Remix Icon shield-check line/fill pair"],
+      "decision": "Use one coherent icon family for the operating stages. The marks clarify stage ownership without replacing the labels."
+    },
+    "components": {
+      "communication_roles": ["Structure a compact decision comparison"],
+      "candidates_inspected": ["Consulting decision table"],
+      "decision": "Use the table as adaptable grammar because the content contains comparable criteria and owners."
+    },
+    "visual_references": {
+      "communication_roles": ["Establish hierarchy and pacing"],
+      "candidates_inspected": ["Primary profile reference"],
+      "decision": "Use the reference for visual language only."
+    }
+  },
+  "selected_visual_references": [
+    {
+      "id": "reference-primary",
+      "canonical_file": "/absolute/path/to/slidepoise-home/profiles/active-profile/libraries/visual_references/reference-primary.png",
+      "full_resolution_attachment": true,
+      "reason": "This reference best supports the intended hierarchy, pacing, and visual tone for the current slide."
+    }
+  ],
+  "selected_assets": [
+    {
+      "asset_id": "asset-primary-symbol",
+      "canonical_file": "/absolute/path/to/slide-run/cache/remix/remix-brain-line.svg",
+      "role": "supporting icon asset",
+      "selection_mode": "host_agent_selected",
+      "user_required": false,
+      "required_for_slide": false,
+      "preserve_canonical_color": false,
+      "generation_description": "A profile-compatible icon for the selected concept with an approximately square footprint.",
+      "treatment_recolorable": true,
+      "recolor_mode": "fill_all"
+    },
+    {
+      "asset_id": "asset-client-mark",
+      "canonical_file": "/absolute/path/to/current-chat/upload.png",
+      "role": "exact user-provided identity asset",
+      "selection_mode": "user_required_current_chat_asset",
+      "source": "current_chat_upload",
+      "user_required": true,
+      "required_for_slide": true,
+      "require_exact_identity": true,
+      "preserve_canonical_color": true,
+      "intrinsic_aspect_ratio": 1.777778,
+      "generation_instruction": "Show this exact user-provided asset in the generation context sheet so the image model can reserve an aspect-compatible slot and reason about its identity. The canonical file is still restored downstream for exact reconstruction.",
+      "generation_description": "Horizontal exact identity mark supplied by the user; predominantly dark artwork with a wide aspect ratio."
+    }
+  ],
+  "selected_components": [
+    {
+      "component_id": "component-chart-column-compact",
+      "reason": "A compact category comparison supports the slide. Use the component as adaptable chart grammar without copying its sample data or geometry."
+    }
+  ]
+}

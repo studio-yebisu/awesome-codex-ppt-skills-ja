@@ -1,0 +1,1013 @@
+{
+  "schema_version": "2.0.0",
+  "source_scene_evidence": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slidepoise-showcase\\slides\\branch-and-information\\work\\accepted-slide.png",
+  "full_slide_dimensions_px": [
+    1600,
+    900
+  ],
+  "generation_region": {
+    "offset_y_px": 0,
+    "dimensions_px": [
+      1600,
+      900
+    ]
+  },
+  "coordinate_transform_to_full_slide": {
+    "scale_xy": [
+      1.0,
+      1.0
+    ],
+    "translation_px": [
+      0,
+      0
+    ]
+  },
+  "frame_configuration": {
+    "header": {
+      "enabled": false,
+      "height_px": 0
+    },
+    "footer": {
+      "enabled": false,
+      "height_px": 0
+    },
+    "slide_number": 1
+  },
+  "speaker_notes": [
+    "仮想の地域ワークショップ予約サイトの設計案。操作数・完了率・時間は仮想設定と目標であり、実測ではありません。",
+    "画面例の会場名と120分も架空の設定です。"
+  ],
+  "content_obligations": [
+    {
+      "id": "preserve-headline",
+      "description": "Preserve 分岐は、空席で決まる。 from the inspected generated target",
+      "entity_ids": [
+        "headline"
+      ]
+    },
+    {
+      "id": "preserve-date-node",
+      "description": "Preserve date-node from the inspected generated target",
+      "entity_ids": [
+        "date-node"
+      ]
+    },
+    {
+      "id": "preserve-date-label",
+      "description": "Preserve 開催日 from the inspected generated target",
+      "entity_ids": [
+        "date-label"
+      ]
+    },
+    {
+      "id": "preserve-seat-node",
+      "description": "Preserve seat-node from the inspected generated target",
+      "entity_ids": [
+        "seat-node"
+      ]
+    },
+    {
+      "id": "preserve-seat-label",
+      "description": "Preserve 空席？ from the inspected generated target",
+      "entity_ids": [
+        "seat-label"
+      ]
+    },
+    {
+      "id": "preserve-available-node",
+      "description": "Preserve available-node from the inspected generated target",
+      "entity_ids": [
+        "available-node"
+      ]
+    },
+    {
+      "id": "preserve-available-label",
+      "description": "Preserve 予約入力 from the inspected generated target",
+      "entity_ids": [
+        "available-label"
+      ]
+    },
+    {
+      "id": "preserve-full-node",
+      "description": "Preserve full-node from the inspected generated target",
+      "entity_ids": [
+        "full-node"
+      ]
+    },
+    {
+      "id": "preserve-full-label",
+      "description": "Preserve 次の日程 from the inspected generated target",
+      "entity_ids": [
+        "full-label"
+      ]
+    },
+    {
+      "id": "preserve-date-to-seat",
+      "description": "Preserve date-to-seat from the inspected generated target",
+      "entity_ids": [
+        "date-to-seat"
+      ],
+      "connection": {
+        "entity_id": "date-to-seat",
+        "source_entities": [
+          "date-node"
+        ],
+        "target_entities": [
+          "seat-node"
+        ],
+        "directed": true
+      }
+    },
+    {
+      "id": "preserve-seat-to-input",
+      "description": "Preserve seat-to-input from the inspected generated target",
+      "entity_ids": [
+        "seat-to-input"
+      ],
+      "connection": {
+        "entity_id": "seat-to-input",
+        "source_entities": [
+          "seat-node"
+        ],
+        "target_entities": [
+          "available-node"
+        ],
+        "directed": true
+      }
+    },
+    {
+      "id": "preserve-seat-to-next",
+      "description": "Preserve seat-to-next from the inspected generated target",
+      "entity_ids": [
+        "seat-to-next"
+      ],
+      "connection": {
+        "entity_id": "seat-to-next",
+        "source_entities": [
+          "seat-node"
+        ],
+        "target_entities": [
+          "full-node"
+        ],
+        "directed": true
+      }
+    },
+    {
+      "id": "preserve-available-branch",
+      "description": "Preserve 空席あり from the inspected generated target",
+      "entity_ids": [
+        "available-branch"
+      ]
+    },
+    {
+      "id": "preserve-full-branch",
+      "description": "Preserve 満席 from the inspected generated target",
+      "entity_ids": [
+        "full-branch"
+      ]
+    },
+    {
+      "id": "preserve-vertical-rule",
+      "description": "Preserve vertical-rule from the inspected generated target",
+      "entity_ids": [
+        "vertical-rule"
+      ]
+    },
+    {
+      "id": "preserve-screen",
+      "description": "Preserve screen from the inspected generated target",
+      "entity_ids": [
+        "screen"
+      ]
+    },
+    {
+      "id": "preserve-screen-title",
+      "description": "Preserve 地域ワークショップ from the inspected generated target",
+      "entity_ids": [
+        "screen-title"
+      ]
+    },
+    {
+      "id": "preserve-field-0",
+      "description": "Preserve 会場 from the inspected generated target",
+      "entity_ids": [
+        "field-0"
+      ]
+    },
+    {
+      "id": "preserve-value-0",
+      "description": "Preserve みどり市民センター from the inspected generated target",
+      "entity_ids": [
+        "value-0"
+      ]
+    },
+    {
+      "id": "preserve-screen-rule-0",
+      "description": "Preserve screen-rule-0 from the inspected generated target",
+      "entity_ids": [
+        "screen-rule-0"
+      ]
+    },
+    {
+      "id": "preserve-field-1",
+      "description": "Preserve 所要時間 from the inspected generated target",
+      "entity_ids": [
+        "field-1"
+      ]
+    },
+    {
+      "id": "preserve-value-1",
+      "description": "Preserve 120分 from the inspected generated target",
+      "entity_ids": [
+        "value-1"
+      ]
+    },
+    {
+      "id": "preserve-screen-rule-1",
+      "description": "Preserve screen-rule-1 from the inspected generated target",
+      "entity_ids": [
+        "screen-rule-1"
+      ]
+    },
+    {
+      "id": "preserve-field-2",
+      "description": "Preserve 持ち物 from the inspected generated target",
+      "entity_ids": [
+        "field-2"
+      ]
+    },
+    {
+      "id": "preserve-value-2",
+      "description": "Preserve 筆記用具・飲み物 from the inspected generated target",
+      "entity_ids": [
+        "value-2"
+      ]
+    },
+    {
+      "id": "preserve-book-button",
+      "description": "Preserve book-button from the inspected generated target",
+      "entity_ids": [
+        "book-button"
+      ]
+    },
+    {
+      "id": "preserve-book-button-text",
+      "description": "Preserve この日程で予約 from the inspected generated target",
+      "entity_ids": [
+        "book-button-text"
+      ]
+    },
+    {
+      "id": "preserve-qualification",
+      "description": "Preserve 仮想サイトの設計案。数値は目標値、実測ではありません。 from the inspected generated target",
+      "entity_ids": [
+        "qualification"
+      ]
+    }
+  ],
+  "reconstruction_units": [
+    {
+      "id": "headline",
+      "semantic_kind": "text",
+      "semantic_role": "page_title",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "headline",
+      "bbox_px": [
+        64,
+        56,
+        1366,
+        144
+      ],
+      "component_id": null
+    },
+    {
+      "id": "date-node",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "native_shape",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "date-node",
+      "bbox_px": [
+        262,
+        253,
+        314,
+        121
+      ],
+      "component_id": null
+    },
+    {
+      "id": "date-label",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "date-label",
+      "bbox_px": [
+        292,
+        285,
+        255,
+        61
+      ],
+      "component_id": null
+    },
+    {
+      "id": "seat-node",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "fitted_freeform",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "seat-node",
+      "bbox_px": [
+        266,
+        435,
+        304,
+        214
+      ],
+      "component_id": null
+    },
+    {
+      "id": "seat-label",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "seat-label",
+      "bbox_px": [
+        335,
+        512,
+        165,
+        62
+      ],
+      "component_id": null
+    },
+    {
+      "id": "available-node",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "native_shape",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "available-node",
+      "bbox_px": [
+        60,
+        662,
+        296,
+        109
+      ],
+      "component_id": null
+    },
+    {
+      "id": "available-label",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "available-label",
+      "bbox_px": [
+        89,
+        689,
+        239,
+        62
+      ],
+      "component_id": null
+    },
+    {
+      "id": "full-node",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "native_shape",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "full-node",
+      "bbox_px": [
+        480,
+        662,
+        265,
+        109
+      ],
+      "component_id": null
+    },
+    {
+      "id": "full-label",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "full-label",
+      "bbox_px": [
+        496,
+        689,
+        232,
+        62
+      ],
+      "component_id": null
+    },
+    {
+      "id": "date-to-seat",
+      "semantic_kind": "connector",
+      "semantic_role": "directional_relationship",
+      "selected_route": "native_connector_graph",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "date-to-seat",
+      "bbox_px": [
+        405,
+        374,
+        28,
+        64
+      ],
+      "component_id": null
+    },
+    {
+      "id": "seat-to-input",
+      "semantic_kind": "connector",
+      "semantic_role": "directional_relationship",
+      "selected_route": "native_connector_graph",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "seat-to-input",
+      "bbox_px": [
+        161,
+        540,
+        124,
+        120
+      ],
+      "component_id": null
+    },
+    {
+      "id": "seat-to-next",
+      "semantic_kind": "connector",
+      "semantic_role": "directional_relationship",
+      "selected_route": "native_connector_graph",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "seat-to-next",
+      "bbox_px": [
+        562,
+        540,
+        89,
+        120
+      ],
+      "component_id": null
+    },
+    {
+      "id": "available-branch",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "available-branch",
+      "bbox_px": [
+        108,
+        485,
+        193,
+        55
+      ],
+      "component_id": null
+    },
+    {
+      "id": "full-branch",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "full-branch",
+      "bbox_px": [
+        613,
+        485,
+        112,
+        55
+      ],
+      "component_id": null
+    },
+    {
+      "id": "vertical-rule",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "native_shape",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "vertical-rule",
+      "bbox_px": [
+        800,
+        253,
+        1,
+        518
+      ],
+      "component_id": null
+    },
+    {
+      "id": "screen",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "native_shape",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "screen",
+      "bbox_px": [
+        870,
+        247,
+        666,
+        550
+      ],
+      "component_id": null
+    },
+    {
+      "id": "screen-title",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "screen-title",
+      "bbox_px": [
+        918,
+        303,
+        576,
+        69
+      ],
+      "component_id": null
+    },
+    {
+      "id": "field-0",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "field-0",
+      "bbox_px": [
+        919,
+        410,
+        209,
+        45
+      ],
+      "component_id": null
+    },
+    {
+      "id": "value-0",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "value-0",
+      "bbox_px": [
+        1136,
+        410,
+        364,
+        45
+      ],
+      "component_id": null
+    },
+    {
+      "id": "screen-rule-0",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "native_shape",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "screen-rule-0",
+      "bbox_px": [
+        918,
+        464,
+        570,
+        1
+      ],
+      "component_id": null
+    },
+    {
+      "id": "field-1",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "field-1",
+      "bbox_px": [
+        919,
+        485,
+        209,
+        45
+      ],
+      "component_id": null
+    },
+    {
+      "id": "value-1",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "value-1",
+      "bbox_px": [
+        1136,
+        485,
+        364,
+        45
+      ],
+      "component_id": null
+    },
+    {
+      "id": "screen-rule-1",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "native_shape",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "screen-rule-1",
+      "bbox_px": [
+        918,
+        538,
+        570,
+        1
+      ],
+      "component_id": null
+    },
+    {
+      "id": "field-2",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "field-2",
+      "bbox_px": [
+        919,
+        560,
+        209,
+        45
+      ],
+      "component_id": null
+    },
+    {
+      "id": "value-2",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "value-2",
+      "bbox_px": [
+        1136,
+        560,
+        364,
+        45
+      ],
+      "component_id": null
+    },
+    {
+      "id": "book-button",
+      "semantic_kind": "shape",
+      "semantic_role": "diagram_structure",
+      "selected_route": "native_shape",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "book-button",
+      "bbox_px": [
+        912,
+        654,
+        582,
+        99
+      ],
+      "component_id": null
+    },
+    {
+      "id": "book-button-text",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "book-button-text",
+      "bbox_px": [
+        956,
+        677,
+        496,
+        63
+      ],
+      "component_id": null
+    },
+    {
+      "id": "qualification",
+      "semantic_kind": "text",
+      "semantic_role": "content_label",
+      "selected_route": "native_text",
+      "node_class": "reconstruction_unit",
+      "emits_ppt_object": true,
+      "render_owner": "qualification",
+      "bbox_px": [
+        62,
+        832,
+        1435,
+        41
+      ],
+      "component_id": null
+    }
+  ],
+  "canonical_asset_mappings": [],
+  "connector_reconstruction_plans": [
+    {
+      "entity_id": "date-to-seat",
+      "relationship_intent": {
+        "connector_family": "direct_flow",
+        "directed": true,
+        "source_entities": [
+          "date-node"
+        ],
+        "target_entities": [
+          "seat-node"
+        ],
+        "source_attachment_sides": [
+          "bottom"
+        ],
+        "target_attachment_sides": [
+          "top"
+        ],
+        "source_attachment_fractions": [
+          0.5
+        ],
+        "target_attachment_fractions": [
+          0.5
+        ],
+        "semantic_topology_verified": true,
+        "route_mode": "minimal_orthogonal",
+        "junction_style": "none",
+        "visual_route_reviewed": true,
+        "visual_route_decision": "The selected target shows this one direction and the logical owners are explicitly mapped; route avoids neighboring content.",
+        "visual_route_review_artifact": "accepted-slide.png"
+      },
+      "approximate_start_anchors_px": [
+        [
+          419.0,
+          374.0
+        ]
+      ],
+      "approximate_end_anchors_px": [
+        [
+          418.0,
+          435.0
+        ]
+      ],
+      "junction_positions_px": [],
+      "measured_junction_evidence_px": [],
+      "stroke_style": {
+        "color": "#112132",
+        "stroke": "#112132",
+        "width_px": 4,
+        "stroke_width_px": 4
+      },
+      "arrowhead_treatment": "triangle_at_target",
+      "arrowhead": {},
+      "junction_treatment": "none",
+      "junction_diameter_px": null,
+      "grouping_depth_px": null,
+      "routing_corridor_px": null,
+      "route_waypoints_px": [],
+      "route_mode": "minimal_orthogonal",
+      "route_visual_review": {
+        "reviewed": true,
+        "decision": "The selected target shows this one direction and the logical owners are explicitly mapped; route avoids neighboring content.",
+        "review_artifact": "accepted-slide.png"
+      },
+      "endpoint_ownership_audit": [
+        {
+          "endpoint": "date-node",
+          "role": "source",
+          "side": "bottom"
+        },
+        {
+          "endpoint": "seat-node",
+          "role": "target",
+          "side": "top"
+        }
+      ],
+      "source_attachment_sides": [
+        "bottom"
+      ],
+      "target_attachment_sides": [
+        "top"
+      ],
+      "connector_family": "direct_flow"
+    },
+    {
+      "entity_id": "seat-to-input",
+      "relationship_intent": {
+        "connector_family": "direct_flow",
+        "directed": true,
+        "source_entities": [
+          "seat-node"
+        ],
+        "target_entities": [
+          "available-node"
+        ],
+        "source_attachment_sides": [
+          "left"
+        ],
+        "target_attachment_sides": [
+          "top"
+        ],
+        "source_attachment_fractions": [
+          0.5
+        ],
+        "target_attachment_fractions": [
+          0.5
+        ],
+        "semantic_topology_verified": true,
+        "route_mode": "minimal_orthogonal",
+        "junction_style": "none",
+        "visual_route_reviewed": true,
+        "visual_route_decision": "The selected target shows this one direction and the logical owners are explicitly mapped; route avoids neighboring content.",
+        "visual_route_review_artifact": "accepted-slide.png"
+      },
+      "approximate_start_anchors_px": [
+        [
+          266.0,
+          542.0
+        ]
+      ],
+      "approximate_end_anchors_px": [
+        [
+          208.0,
+          662.0
+        ]
+      ],
+      "junction_positions_px": [],
+      "measured_junction_evidence_px": [],
+      "stroke_style": {
+        "color": "#246AF1",
+        "stroke": "#246AF1",
+        "width_px": 4,
+        "stroke_width_px": 4
+      },
+      "arrowhead_treatment": "triangle_at_target",
+      "arrowhead": {},
+      "junction_treatment": "none",
+      "junction_diameter_px": null,
+      "grouping_depth_px": null,
+      "routing_corridor_px": null,
+      "route_waypoints_px": [],
+      "route_mode": "minimal_orthogonal",
+      "route_visual_review": {
+        "reviewed": true,
+        "decision": "The selected target shows this one direction and the logical owners are explicitly mapped; route avoids neighboring content.",
+        "review_artifact": "accepted-slide.png"
+      },
+      "endpoint_ownership_audit": [
+        {
+          "endpoint": "seat-node",
+          "role": "source",
+          "side": "left"
+        },
+        {
+          "endpoint": "available-node",
+          "role": "target",
+          "side": "top"
+        }
+      ],
+      "source_attachment_sides": [
+        "left"
+      ],
+      "target_attachment_sides": [
+        "top"
+      ],
+      "connector_family": "direct_flow"
+    },
+    {
+      "entity_id": "seat-to-next",
+      "relationship_intent": {
+        "connector_family": "direct_flow",
+        "directed": true,
+        "source_entities": [
+          "seat-node"
+        ],
+        "target_entities": [
+          "full-node"
+        ],
+        "source_attachment_sides": [
+          "right"
+        ],
+        "target_attachment_sides": [
+          "top"
+        ],
+        "source_attachment_fractions": [
+          0.5
+        ],
+        "target_attachment_fractions": [
+          0.5
+        ],
+        "semantic_topology_verified": true,
+        "route_mode": "minimal_orthogonal",
+        "junction_style": "none",
+        "visual_route_reviewed": true,
+        "visual_route_decision": "The selected target shows this one direction and the logical owners are explicitly mapped; route avoids neighboring content.",
+        "visual_route_review_artifact": "accepted-slide.png"
+      },
+      "approximate_start_anchors_px": [
+        [
+          570.0,
+          542.0
+        ]
+      ],
+      "approximate_end_anchors_px": [
+        [
+          612.5,
+          662.0
+        ]
+      ],
+      "junction_positions_px": [],
+      "measured_junction_evidence_px": [],
+      "stroke_style": {
+        "color": "#E44D25",
+        "stroke": "#E44D25",
+        "width_px": 4,
+        "stroke_width_px": 4
+      },
+      "arrowhead_treatment": "triangle_at_target",
+      "arrowhead": {},
+      "junction_treatment": "none",
+      "junction_diameter_px": null,
+      "grouping_depth_px": null,
+      "routing_corridor_px": null,
+      "route_waypoints_px": [],
+      "route_mode": "minimal_orthogonal",
+      "route_visual_review": {
+        "reviewed": true,
+        "decision": "The selected target shows this one direction and the logical owners are explicitly mapped; route avoids neighboring content.",
+        "review_artifact": "accepted-slide.png"
+      },
+      "endpoint_ownership_audit": [
+        {
+          "endpoint": "seat-node",
+          "role": "source",
+          "side": "right"
+        },
+        {
+          "endpoint": "full-node",
+          "role": "target",
+          "side": "top"
+        }
+      ],
+      "source_attachment_sides": [
+        "right"
+      ],
+      "target_attachment_sides": [
+        "top"
+      ],
+      "connector_family": "direct_flow"
+    }
+  ],
+  "connector_configuration": {
+    "allowed_families": [
+      "direct_flow",
+      "orthogonal_dependency",
+      "merge_split",
+      "grouping_bracket",
+      "grouping_brace",
+      "annotation_leader"
+    ],
+    "stroke": {
+      "color": "#222222",
+      "width_px": 3,
+      "dash": "solid",
+      "line_cap": "round",
+      "line_join": "round"
+    },
+    "arrowhead": {
+      "type": "triangle",
+      "powerpoint_size": "med",
+      "minimum_visible_endpoint_px": 18,
+      "minimum_clear_segment_px": 16,
+      "length_px": 14,
+      "width_px": 12
+    },
+    "routing": {
+      "minimum_clearance_px": 12,
+      "maximum_ordinary_bends": 2,
+      "grouping_brace_depth_px": 34,
+      "grouping_bracket_depth_px": 22,
+      "grouping_brace_preset_depth_factor": 1.7
+    }
+  },
+  "z_order_relations": [],
+  "fitted_text_contracts": [],
+  "layout_constraints": {
+    "non_overlap_pairs": []
+  },
+  "evidence_policy": {
+    "pixel_evidence_emits_objects": false,
+    "generated_icon_glyphs_emit_objects": false,
+    "meaningful_visible_entity_must_emit_or_have_emitted_owner": true,
+    "accepted_target_geometry_frozen": true
+  }
+}

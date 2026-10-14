@@ -6,10 +6,10 @@ GitHubの原典スキルを実際に使い、魅力ある日本語資料・短�
 
 ## 現在のアトリエ
 
-- 厳選38スキルと、日本語の作例38冊・214枚。
-- Sol 6.1の並列制作で、原典の数式注入器と研究テンプレートによる新作2冊11枚を追加。数式も編集できる教材と、文字・経路図・表を編集できる発表資料を用意。
+- 厳選44スキルと、日本語の作例44冊・254枚。
+- Sol 6.1の2並列で、原典Bauhausの変換器とAI画像の計測・復元処理による新作2冊8枚を追加。別制作4冊32枚も、制作方式と編集範囲を保持して接続。
 - 各派生スキル固有の本文を直接Markdown取得。サイトで本文を開いてコピーでき、原典・テンプレート・入力の一式ZIPも取得。
-- OSS書体8ファミリー・14ファイルと、6作風の実フォント見本・AI向け指示コピー。BIZ UDPGothic／BIZ UDPMinchoを公式配布物とOFL付きで追加。
+- OSS書体9ファミリー・16ファイルと、7作風の実フォント見本・AI向け指示コピー。Noto Sans CJK JPの公式OTF/OFLを追加し、研究作例から同じ書体を直接取得。
 
 原典のSKILL、固有テンプレート・controller・生成器を使います。日本語向けの改良と実施範囲は各作例に記載。主な出力が開く範囲の軽い確認を行い、制作を中心に進めています。
 
@@ -33,13 +33,17 @@ python tools/build_atelier_site.py
 
 [制作方針](docs/PROJECT.md) · [製品仕様](docs/PRODUCT_SPEC.md) · [現在の実行目標](data/project-goal.json) · [厳選掲載](data/product-collection.json)
 
-Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は48リポ・53冊で、現在の厳選掲載と区別します。
+Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は54リポ・59冊で、現在の厳選掲載と区別します。
 
 原作者、固定原典、LICENSE・NOTICEと書体のOFLを保持します。カタログのCC0は各スキル・コード・素材・書体の条件を変更しません。[原典・条件](licenses.html)を参照してください。
 
 公開更新・merge・deployはローカル制作と別に扱います。
 
-最新バッチ： [平均の、その先。](examples/repositories/native-math-showcase/README.md) · [雨の日の、通学ルート。](examples/repositories/thesis-defense-showcase/README.md)。原典で9個の数式をPowerPointへ注入し、研究テンプレートの複製・置換で6枚を生成。「編集したいもの」の絞り込みとPPTX本体・日本語本文の直接取得を接続。[制作記録](docs/PRODUCTION_BATCH_20261014_06.md)。
+最新バッチ： [小さな展示を、ひとつの体験に。](examples/repositories/ppt-agent-showcase/README.md) · [クリックを減らす、予約の流れ。](examples/repositories/slidepoise-showcase/README.md)。原典のBauhaus変換とAI画像→OpenCV→native図形の復元を実行。[制作記録](docs/PRODUCTION_BATCH_20261014_07.md)。
+
+別制作の取り込み： [捨てる前の一目](examples/repositories/sebastian-205/README.md) · [静けさを選べる図書館](examples/repositories/sebastian-203/README.md) · [小さな道案内](examples/repositories/sebastian-193/README.md) · [夏の余白](examples/repositories/sebastian-192/README.md)。研究提案3冊の文字・図形は編集可。夏の余白は本文と図が画像で、画像差替え・話者ノートを編集できます。描画元と確認範囲を各ガイドへ記載。
+
+前のバッチ： [平均の、その先。](examples/repositories/native-math-showcase/README.md) · [雨の日の、通学ルート。](examples/repositories/thesis-defense-showcase/README.md)。原典で9個の数式をPowerPointへ注入し、研究テンプレートの複製・置換で6枚を生成。「編集したいもの」の絞り込みとPPTX本体・日本語本文の直接取得を接続。[制作記録](docs/PRODUCTION_BATCH_20261014_06.md)。
 
 前のバッチ： [割合は、全体との比べ方。](examples/repositories/soil-teaching-showcase/README.md) · [待ち時間のしくみ](examples/repositories/beamer-showcase/README.md) · [花を、一本から。](examples/repositories/learndeck-showcase/README.md)。原典のHTML段階表示、Beamer、DOMからのPPTX変換を実使用。PDFの絞り込みとフロート表示にも対応しました。
 

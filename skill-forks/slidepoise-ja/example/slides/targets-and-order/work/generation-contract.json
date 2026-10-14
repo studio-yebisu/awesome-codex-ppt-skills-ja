@@ -1,0 +1,640 @@
+{
+  "schema_version": "1.4.0",
+  "purpose": "authoritative_first_image_generation_handoff",
+  "generation_model_default": "",
+  "host_generation_adapter": {
+    "mode": "agent_discovered_or_manual",
+    "max_prompt_chars": 32000
+  },
+  "generation_budget": {
+    "initial_candidates_per_slide": 1,
+    "revision_guidance": "Inspect the current candidate and choose a focused edit or fresh generation from the actual defect and the user's intent."
+  },
+  "canvas": {
+    "dimensions_px": [
+      1600,
+      900
+    ],
+    "aspect_ratio": 1.777778,
+    "full_slide_offset_y_px": 0,
+    "master_frame_excluded": true,
+    "forbidden_frame_content": [
+      "header",
+      "footer",
+      "page number",
+      "master-frame rules or decorations"
+    ]
+  },
+  "communication_intent": {
+    "audience_question": "予約サイトのどの操作と分岐を変え、何を測るか？",
+    "reading_context": "Community workshop booking design proposal, read without a presenter. Japanese adult audience.",
+    "dominant_message": "実測前に目標と計測項目を置き、実装後に見直す。",
+    "information_structure": {
+      "type": "sequence",
+      "description": "実測前に目標と計測項目を置き、実装後に見直す。"
+    },
+    "required_content": [
+      "見出し「目標を決めて、順に直す。」",
+      "大きな目標値「4操作」「90%」「60秒」",
+      "それぞれのラベル「完了までの操作数」「入力完了率」「入力時間」",
+      "下半分に実装順「01 情報をまとめる」「02 空席分岐を実装」「03 計測して見直す」",
+      "資格注記「仮想サイトの設計案。数値は目標値、実測ではありません。」"
+    ],
+    "semantic_relationships": [
+      "Three independent target metrics are not existing results. Implementation is sequential: combine information, implement branches, instrument and revise."
+    ],
+    "hierarchy": [
+      "Large Japanese headline",
+      "Primary diagram / major numbers",
+      "Short labels",
+      "Assumption qualifier"
+    ],
+    "evidence": [
+      "Original fictional booking concept written for this example; no observed analytics."
+    ],
+    "assumptions": [
+      "All counts and percentages are targets, not measurements."
+    ],
+    "open_questions": [
+      "Actual booking abandonment and user preference to be measured after implementation."
+    ],
+    "avoid": [
+      "No logo, no photograph, no false measured-result claim, no card grids."
+    ],
+    "visual_obligations": [
+      "Top half has three giant numbers on a flat open canvas, separated only by thin vertical rules. Bottom half is one three-stage horizontal timeline with numbered dots and short labels. No cards. Numbers cobalt, large heading ink, orange final stage accent."
+    ],
+    "explicit_user_visual_requirements": [
+      "Landscape wide slide 1600 × 900, all substantive content safely inside 80px margin. No header/footer/page numbers.",
+      "Japanese text exactly as specified; clean heavy Japanese gothic headings resembling Dela, BIZ body. English/Arabic numbers clean geometric sans like Manrope.",
+      "Flat ivory background #F7F5EE, ink #112132, vivid cobalt #2B74EE and vermilion #E34F2D. Raster design will be reconstructed with native PowerPoint objects, so only simple flat shapes."
+    ],
+    "user_required_assets": []
+  },
+  "user_language": {
+    "preserve_user_language_and_wording": true,
+    "reader_first": true,
+    "new_copy_em_dash": "avoid",
+    "new_copy_semicolon": "avoid",
+    "new_copy_colon": "use_only_when_materially_clearer",
+    "avoid_stock_assistant_phrasing": true,
+    "avoid_meta_interface_explanations": true,
+    "profile_may_extend_voice": true
+  },
+  "non_negotiable_design": {
+    "title": {
+      "anchor_px": [
+        90,
+        60
+      ],
+      "max_width_px": 1860,
+      "font_family": "Dela Gothic One",
+      "weight": "regular",
+      "nominal_size_px": 74,
+      "color": "#112132",
+      "alignment": "left",
+      "allowed_lines": [
+        1,
+        2
+      ],
+      "minimum_gap_to_body_px": 36
+    },
+    "style": {
+      "icon_treatment": "agent_decides",
+      "background": "#F7F5EE",
+      "display_font": "Dela Gothic One",
+      "body_font": "BIZ UDPGothic",
+      "density": "balanced",
+      "accent_colors": [
+        "#E34F2D",
+        "#2B74EE"
+      ],
+      "neutral_colors": [
+        "#111111",
+        "#4A4A4A",
+        "#E1E1E1",
+        "#F2F2F2",
+        "#FFFFFF"
+      ],
+      "visual_language": "Flat Japanese editorial diagrams; giant headings, broad whitespace, crisp rectangles and paths. Only meaningful diagram shapes. No photos, no logo, no repeated card grid.",
+      "whitespace": "intentional around the information structure and consistent inside repeated components"
+    },
+    "text_style_policies": {
+      "default": {
+        "font_size_range_px": [
+          14,
+          24
+        ],
+        "line_spacing": 1.1,
+        "inset_px": 2
+      },
+      "slide_title": {
+        "font_family": "Georgia",
+        "font_size_range_px": [
+          30,
+          76
+        ],
+        "line_spacing": 1.04,
+        "inset_px": 0
+      },
+      "subtitle": {
+        "font_size_range_px": [
+          20,
+          30
+        ],
+        "line_spacing": 1.08,
+        "inset_px": 2
+      },
+      "section_number": {
+        "font_size_range_px": [
+          22,
+          34
+        ],
+        "line_spacing": 1.0,
+        "inset_px": 0
+      },
+      "heading_large": {
+        "font_size_range_px": [
+          20,
+          28
+        ],
+        "line_spacing": 1.06,
+        "inset_px": 2
+      },
+      "body": {
+        "font_size_range_px": [
+          16,
+          22
+        ],
+        "line_spacing": 1.12,
+        "inset_px": 2
+      },
+      "heading": {
+        "font_size_range_px": [
+          16,
+          24
+        ],
+        "line_spacing": 1.06,
+        "inset_px": 2
+      },
+      "body_standard": {
+        "font_size_range_px": [
+          15,
+          22
+        ],
+        "line_spacing": 1.1,
+        "inset_px": 2
+      },
+      "heading_compact": {
+        "font_size_range_px": [
+          15.5,
+          23
+        ],
+        "line_spacing": 1.06,
+        "inset_px": 2
+      },
+      "body_compact": {
+        "font_size_range_px": [
+          14,
+          20
+        ],
+        "line_spacing": 1.1,
+        "inset_px": 2
+      },
+      "label": {
+        "font_size_range_px": [
+          14,
+          21
+        ],
+        "line_spacing": 1.05,
+        "inset_px": 2
+      },
+      "emphasis_label": {
+        "font_size_range_px": [
+          20,
+          34
+        ],
+        "line_spacing": 1.05,
+        "inset_px": 2
+      }
+    },
+    "semantic_style_tokens": {
+      "accent_badge": {
+        "fill": "#222222",
+        "text_color": "#FFFFFF",
+        "font_weight": "bold"
+      },
+      "muted_panel": {
+        "fill": "#F2F2F2",
+        "text_color": "#111111"
+      },
+      "primary_text": {
+        "color": "#111111"
+      },
+      "secondary_text": {
+        "color": "#4A4A4A"
+      },
+      "symbol_surface": {
+        "fill": "#F2F2F2",
+        "glyph_color": "#222222",
+        "border": "none"
+      }
+    },
+    "data_visualization": {
+      "default_level": 1,
+      "default_series_colors": [
+        "#222222",
+        "#666666",
+        "#E1E1E1",
+        "#4A4A4A"
+      ]
+    },
+    "explicit_user_visual_requirements": [
+      "Landscape wide slide 1600 × 900, all substantive content safely inside 80px margin. No header/footer/page numbers.",
+      "Japanese text exactly as specified; clean heavy Japanese gothic headings resembling Dela, BIZ body. English/Arabic numbers clean geometric sans like Manrope.",
+      "Flat ivory background #F7F5EE, ink #112132, vivid cobalt #2B74EE and vermilion #E34F2D. Raster design will be reconstructed with native PowerPoint objects, so only simple flat shapes."
+    ],
+    "icon_slot_rule": "For every icon, reserve a visually unambiguous bounded slot that protects its room from surrounding content. The icon may have no designed surface or may sit on a profile-approved background surface. When there is no designed surface, a subtle generation-only boundary may mark the slot for localization; that boundary is scaffolding, not a decorative container and is not reconstructed downstream. When the icon sits on a larger colored panel/card and no distinct icon tile is intended, the downstream reconstruction should keep the icon background transparent rather than turning the scaffold into a white box."
+  },
+  "profile": {
+    "profile_id": "japanese-booking-case",
+    "name": "日本語予約サイト設計",
+    "purpose": "Create a clear visual argument for fictional booking flow",
+    "style_agency": {
+      "composition": "host authored"
+    },
+    "hard_rules": {
+      "typography": {
+        "font_family_policy": "agent_observed"
+      }
+    },
+    "reasoning_principles": [],
+    "visual_principles": [
+      "Wide editorial compositions, flat native-friendly geometry and controlled color"
+    ],
+    "writing_principles": [],
+    "review_questions": [],
+    "anti_patterns": [
+      "No card grid, no decorative icons, no photographs"
+    ],
+    "visual_reference_priorities": {},
+    "density_profile": null,
+    "density_guidance": {},
+    "resolution_precedence": []
+  },
+  "resources": {
+    "style_context": {
+      "profile": {
+        "profile_id": "japanese-booking-case",
+        "name": "日本語予約サイト設計",
+        "purpose": "Create a clear visual argument for fictional booking flow"
+      },
+      "style_agency": {
+        "composition": "host authored"
+      },
+      "design": {
+        "full_slide_px": [
+          1600,
+          900
+        ],
+        "frame": {
+          "header": {
+            "enabled": false,
+            "height_px": 0
+          },
+          "footer": {
+            "enabled": false,
+            "height_px": 0
+          }
+        },
+        "title": {
+          "anchor_px": [
+            90,
+            60
+          ],
+          "max_width_px": 1860,
+          "font_family": "Dela Gothic One",
+          "weight": "regular",
+          "nominal_size_px": 74,
+          "color": "#112132",
+          "alignment": "left",
+          "allowed_lines": [
+            1,
+            2
+          ],
+          "minimum_gap_to_body_px": 36
+        },
+        "style": {
+          "icon_treatment": "agent_decides",
+          "background": "#F7F5EE",
+          "display_font": "Dela Gothic One",
+          "body_font": "BIZ UDPGothic",
+          "density": "balanced",
+          "accent_colors": [
+            "#E34F2D",
+            "#2B74EE"
+          ],
+          "neutral_colors": [
+            "#111111",
+            "#4A4A4A",
+            "#E1E1E1",
+            "#F2F2F2",
+            "#FFFFFF"
+          ],
+          "visual_language": "Flat Japanese editorial diagrams; giant headings, broad whitespace, crisp rectangles and paths. Only meaningful diagram shapes. No photos, no logo, no repeated card grid.",
+          "whitespace": "intentional around the information structure and consistent inside repeated components"
+        },
+        "semantic_style_tokens": {
+          "accent_badge": {
+            "fill": "#222222",
+            "text_color": "#FFFFFF",
+            "font_weight": "bold"
+          },
+          "muted_panel": {
+            "fill": "#F2F2F2",
+            "text_color": "#111111"
+          },
+          "primary_text": {
+            "color": "#111111"
+          },
+          "secondary_text": {
+            "color": "#4A4A4A"
+          },
+          "symbol_surface": {
+            "fill": "#F2F2F2",
+            "glyph_color": "#222222",
+            "border": "none"
+          }
+        },
+        "icon_slots": {
+          "generation_inset_suggestion": 0.14,
+          "reconstruction_authority": "entity.style_hint.icon_inset_fraction"
+        },
+        "text_reconstruction": {
+          "font_size_quantization_pt": 0.5,
+          "technical_font_size_step_pt": 0.5,
+          "text_style_policies": {
+            "default": {
+              "font_size_range_px": [
+                14,
+                24
+              ],
+              "line_spacing": 1.1,
+              "inset_px": 2
+            },
+            "slide_title": {
+              "font_family": "Georgia",
+              "font_size_range_px": [
+                30,
+                76
+              ],
+              "line_spacing": 1.04,
+              "inset_px": 0
+            },
+            "subtitle": {
+              "font_size_range_px": [
+                20,
+                30
+              ],
+              "line_spacing": 1.08,
+              "inset_px": 2
+            },
+            "section_number": {
+              "font_size_range_px": [
+                22,
+                34
+              ],
+              "line_spacing": 1.0,
+              "inset_px": 0
+            },
+            "heading_large": {
+              "font_size_range_px": [
+                20,
+                28
+              ],
+              "line_spacing": 1.06,
+              "inset_px": 2
+            },
+            "body": {
+              "font_size_range_px": [
+                16,
+                22
+              ],
+              "line_spacing": 1.12,
+              "inset_px": 2
+            },
+            "heading": {
+              "font_size_range_px": [
+                16,
+                24
+              ],
+              "line_spacing": 1.06,
+              "inset_px": 2
+            },
+            "body_standard": {
+              "font_size_range_px": [
+                15,
+                22
+              ],
+              "line_spacing": 1.1,
+              "inset_px": 2
+            },
+            "heading_compact": {
+              "font_size_range_px": [
+                15.5,
+                23
+              ],
+              "line_spacing": 1.06,
+              "inset_px": 2
+            },
+            "body_compact": {
+              "font_size_range_px": [
+                14,
+                20
+              ],
+              "line_spacing": 1.1,
+              "inset_px": 2
+            },
+            "label": {
+              "font_size_range_px": [
+                14,
+                21
+              ],
+              "line_spacing": 1.05,
+              "inset_px": 2
+            },
+            "emphasis_label": {
+              "font_size_range_px": [
+                20,
+                34
+              ],
+              "line_spacing": 1.05,
+              "inset_px": 2
+            }
+          },
+          "legacy_semantic_role_style_aliases": {
+            "stage_number": "section_number",
+            "stage_title": "heading_large",
+            "stage_body": "body",
+            "card_title": "heading",
+            "card_body": "body_standard",
+            "module_title": "heading_compact",
+            "module_body": "body_compact",
+            "output_label": "emphasis_label"
+          },
+          "enforce_text_style_minimum": true
+        },
+        "connectors": {
+          "allowed_families": [
+            "direct_flow",
+            "orthogonal_dependency",
+            "merge_split",
+            "grouping_bracket",
+            "grouping_brace",
+            "annotation_leader"
+          ],
+          "stroke": {
+            "color": "#222222",
+            "width_px": 3,
+            "dash": "solid",
+            "line_cap": "round",
+            "line_join": "round"
+          },
+          "arrowhead": {
+            "type": "triangle",
+            "powerpoint_size": "med",
+            "minimum_visible_endpoint_px": 18,
+            "minimum_clear_segment_px": 16,
+            "length_px": 14,
+            "width_px": 12
+          },
+          "routing": {
+            "minimum_clearance_px": 12,
+            "maximum_ordinary_bends": 2,
+            "grouping_brace_depth_px": 34,
+            "grouping_bracket_depth_px": 22,
+            "grouping_brace_preset_depth_factor": 1.7
+          }
+        },
+        "density_profiles": {
+          "spacious": {
+            "generation_guidance": [
+              "Use generous whitespace and fewer, larger information groups.",
+              "Allow intentionally quiet regions when they strengthen focus and hierarchy.",
+              "Do not fill space merely to increase occupancy."
+            ],
+            "visual_review_guidance": [
+              "Confirm that empty regions feel intentional rather than unfinished.",
+              "Prefer calm hierarchy over compactness."
+            ]
+          },
+          "balanced": {
+            "generation_guidance": [
+              "Use the substantive canvas efficiently while retaining clear separation between information groups.",
+              "Balance whitespace across the composition rather than leaving one large accidental dead zone."
+            ],
+            "visual_review_guidance": [
+              "Reject conspicuous unused peripheral regions that do not support hierarchy.",
+              "Keep the page readable without making it sparse or crowded."
+            ]
+          },
+          "information_rich": {
+            "generation_guidance": [
+              "Use the substantive canvas actively with compact, well-structured information groups and strong alignment.",
+              "Avoid large isolated blank regions unless they clearly serve hierarchy, pacing, or emphasis.",
+              "Prefer expanding, aligning, or redistributing meaningful content before adding decoration.",
+              "Keep spacing disciplined and readable; dense does not mean cramped."
+            ],
+            "visual_review_guidance": [
+              "Inspect the whole canvas for avoidable dead zones or lopsided whitespace.",
+              "Reject a composition that feels under-filled for the selected density even if individual components look good.",
+              "Preserve breathing room inside groups while using the overall slide area efficiently.",
+              "Judge empty regions by whether they support the argument, hierarchy, or pacing rather than by the semantic type of the nearby element."
+            ]
+          }
+        },
+        "shape_geometry": {
+          "rounding": {
+            "semantic_authority": "host_agent_shape_intent_and_observed_corner_radius",
+            "require_explicit_intent_for_rounded_rectangles": true,
+            "intent_values": [
+              "ordinary_container",
+              "deliberately_rounded",
+              "pill_or_capsule"
+            ],
+            "ordinary_container": {
+              "default_corner_radius_px": 6,
+              "suggested_corner_radius_px": 6,
+              "rationale": "Generation guidance only. Reconstruction uses the host Agent's observed radius from the accepted image."
+            },
+            "deliberately_rounded": {
+              "maximum_corner_radius_fraction_of_short_side": 0.48
+            },
+            "pill_or_capsule": {
+              "maximum_corner_radius_fraction_of_short_side": 0.5
+            },
+            "visual_review_required_after_reconstruction": true
+          }
+        },
+        "asset_placement": {
+          "preserve_intrinsic_aspect_ratio": true,
+          "generation_slot_policy": "When an exact user/current-chat asset is selected, attach it to image generation when possible and ask the selected image-generation model to allocate a compatible, non-distorted slot. The generated depiction is composition guidance; the canonical file is restored downstream.",
+          "reconstruction_policy": "Restore the exact selected file with contain-fit by default. Never stretch to match a generated placeholder. If the slot is visually incompatible with the intrinsic aspect ratio, the host Agent must revise the logical slot or upstream composition and rerun.",
+          "brand_identity": "exact asset only",
+          "allow_user_requested_crop_when_explicit": true
+        },
+        "profile": "consulting",
+        "data_visualization": {
+          "default_level": 1,
+          "default_series_colors": [
+            "#222222",
+            "#666666",
+            "#E1E1E1",
+            "#4A4A4A"
+          ]
+        }
+      },
+      "frame": {
+        "header": {
+          "enabled": false,
+          "height_px": 0
+        },
+        "footer": {
+          "enabled": false,
+          "height_px": 0
+        }
+      },
+      "canvas": [
+        1600,
+        900
+      ],
+      "guidance": {
+        "hard_rules": {
+          "typography": {
+            "font_family_policy": "agent_observed"
+          }
+        },
+        "visual_principles": [
+          "Wide editorial compositions, flat native-friendly geometry and controlled color"
+        ],
+        "anti_patterns": [
+          "No card grid, no decorative icons, no photographs"
+        ]
+      }
+    },
+    "style_direction": {},
+    "selection_reasoning": "The content is entirely original abstract booking flows. External publisher templates/photos/logos are excluded; simple geometric relationships and Japanese typography carry the argument.",
+    "selected_visual_references": [],
+    "selected_assets": [],
+    "generation_asset_descriptions": [],
+    "generation_context_sheet": null,
+    "asset_vocabulary_policy": {},
+    "selected_components": []
+  },
+  "composition_freedom": [
+    "Choose the visual composition, grouping structure, exact object placement, connector arrangement, and emphasis system that best communicates the semantic intent.",
+    "Do not force a fixed template, grid, card count, chart archetype, component precedent, or one icon treatment when another composition better supports the slide.",
+    "Preserve compositional freedom without relaxing resolved design values, profile hard rules, content, asset, or canvas constraints.",
+    "Density is a separate user/session control. Apply the selected density inside the profile rather than equating the profile with sparse or dense composition."
+  ]
+}

@@ -1,0 +1,570 @@
+{
+  "version": "1.0",
+  "title": "夏の余白",
+  "content_approved": true,
+  "content_version": "outline-v1",
+  "content_authorization": "親がユーザー委任に基づき選択。「君の判断で全部やりきって、完成するまで話しかけないで」「いいじゃん。もうバンバンやって。」",
+  "canvas": {
+    "width": 1600,
+    "height": 900
+  },
+  "style": {
+    "decision": "delegated",
+    "choice": "方案 3 / 白い地中海模型",
+    "authorization": "親がユーザー委任に基づき選択。「君の判断で全部やりきって、完成するまで話しかけないで」「いいじゃん。もうバンバンやって。」",
+    "visual_spec": "白い石灰模型、鮮明な深緑の樹冠、砂色の地面。明瞭な立体関係、非対称な誌面。頁ごとに俯瞰/計画/三連/断面/透明レイヤーを変化。温度成果・測量図を作らない。",
+    "tokens": {
+      "palette": {
+        "background": "#FAF8F2",
+        "text": "#1E2F22",
+        "primary": "#28553C",
+        "accent": "#B99B73"
+      },
+      "typography": {
+        "heading_font": "Noto Serif CJK JP (生成意図、ラスタ画像内の実フォント保証なし)",
+        "body_font": "Noto Sans CJK JP (生成意図、実フォント保証なし)",
+        "heading_size": 52,
+        "body_size": 26
+      },
+      "layout": {
+        "grid": "頁内容ごとの非対称、模型主体",
+        "margin_px": 72,
+        "spacing_px": 28
+      },
+      "image_treatment": "建築模型と実景の間のAIビジュアル、細線、柔らかな影",
+      "reference_images": [
+        "styles/03-sorter.png"
+      ]
+    }
+  },
+  "slides": [
+    {
+      "id": "s01",
+      "page_number": 1,
+      "title": "日陰を、点から道へ",
+      "core_message": "小広場の木陰と休憩場所をつなぎ、夏に短く立ち止まれる場所を考える。目指すのは、通り抜ける人と休む人が無理なく共存する空間。",
+      "visual_brief": "見下ろしの白い広場に、樹木の影を柔らかな面として置く。影の間を一本の歩行線がつなぐ。タイトル周辺は余白を大きく取る。",
+      "source_refs": [
+        "input/BRIEF.md §1"
+      ],
+      "image_file": "slides/01-slide.png",
+      "image_status": "approved",
+      "speaker_notes": "暑さを解決できると断言せず、日陰と動線の配置を検討する計画として紹介する。",
+      "required_visible_values": [
+        "01 / 08"
+      ],
+      "depends_on_slide_count": true,
+      "elements": [
+        {
+          "id": "s01-title",
+          "kind": "text",
+          "role": "title",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §1",
+          "confirmation_status": "source-verified",
+          "text": "日陰を、点から道へ"
+        },
+        {
+          "id": "s01-body",
+          "kind": "text",
+          "role": "body",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §1",
+          "confirmation_status": "source-verified",
+          "text": "小広場の木陰と休憩場所をつなぎ、夏に短く立ち止まれる場所を考える。目指すのは、通り抜ける人と休む人が無理なく共存する空間。"
+        },
+        {
+          "id": "s01-visual",
+          "kind": "image",
+          "role": "visual",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §1",
+          "confirmation_status": "source-verified",
+          "visual_brief": "見下ろしの白い広場に、樹木の影を柔らかな面として置く。影の間を一本の歩行線がつなぐ。タイトル周辺は余白を大きく取る。"
+        },
+        {
+          "id": "s01-notice",
+          "kind": "text",
+          "role": "notice",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §1",
+          "confirmation_status": "source-verified",
+          "text": "架空・未実施の研究計画｜概念図"
+        },
+        {
+          "id": "s01-page",
+          "kind": "text",
+          "role": "page",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §1",
+          "confirmation_status": "source-verified",
+          "text": "01 / 08"
+        }
+      ],
+      "prompt": "Create ONE finished Japanese presentation slide, landscape 16:9, intended 1600×900. This is slide 01 of 08, no slide-sorter grid. Theme 夏の余白. 地中海の白い模型。Bright limestone white, strong forest green canopies, sandy beige ground, sunlit surreal yet plausible Mediterranean miniature public squares. Bold asymmetrical Japanese layout, fine black architectural annotations. Typography intent Noto Serif CJK JP title 52px, Noto Sans CJK JP body 26px, generous margin72px. Huge beautiful surreal architectural model dominates RIGHT 65%: a tiny white limestone neighborhood plaza with lush forest-green tree crowns whose soft shadows make stepping-stone shapes, a thin green walking line connecting those shadows. Top-down aerial rotated in space, sandy floor, white micro buildings, tiny believable people. NOT a real project. Left generous negative space and large title exact『日陰を、点から道へ』 with smaller project name『夏の余白』. Exact body (clear, can use intentional line breaks):『小広場の木陰と休憩場所をつなぎ、夏に短く立ち止まれる場所を考える。』『目指すのは、通り抜ける人と休む人が無理なく共存する空間。』. Footer exact『架空・未実施の研究計画｜概念図』 and page『01 / 08』. No fabricated metrics, temperature map, chart, photos of a real site. Refined bright white, forest green, sandy neutral palette.\n",
+      "image_sha256": "44e531a2e600f5f8f33c0fa8e920f54f0b4459dda6fdc35a3d37cc8f445d400b"
+    },
+    {
+      "id": "s02",
+      "page_number": 2,
+      "title": "休める場所は、通り道にあるか",
+      "core_message": "問い：日陰、座る場所、歩行動線をどう組み合わせれば、小さな広場を使いやすくできるか。架空の対象は、商店街と住宅地をつなぐ小広場。",
+      "visual_brief": "概念敷地図に「商店街側」「住宅地側」「主な通り抜け」「既存樹木」「広場の縁」を示す。方位は仮設定と明記。寸法・面積は表示しない。",
+      "source_refs": [
+        "input/BRIEF.md §2"
+      ],
+      "image_file": "slides/02-slide.png",
+      "image_status": "approved",
+      "speaker_notes": "敷地条件は説明用。現地で取り組む際は樹木、地面、周辺建物、管理条件を調べ直す。",
+      "required_visible_values": [
+        "02 / 08"
+      ],
+      "depends_on_slide_count": true,
+      "elements": [
+        {
+          "id": "s02-title",
+          "kind": "text",
+          "role": "title",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §2",
+          "confirmation_status": "source-verified",
+          "text": "休める場所は、通り道にあるか"
+        },
+        {
+          "id": "s02-body",
+          "kind": "text",
+          "role": "body",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §2",
+          "confirmation_status": "source-verified",
+          "text": "問い：日陰、座る場所、歩行動線をどう組み合わせれば、小さな広場を使いやすくできるか。架空の対象は、商店街と住宅地をつなぐ小広場。"
+        },
+        {
+          "id": "s02-visual",
+          "kind": "image",
+          "role": "visual",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §2",
+          "confirmation_status": "source-verified",
+          "visual_brief": "概念敷地図に「商店街側」「住宅地側」「主な通り抜け」「既存樹木」「広場の縁」を示す。方位は仮設定と明記。寸法・面積は表示しない。"
+        },
+        {
+          "id": "s02-notice",
+          "kind": "text",
+          "role": "notice",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §2",
+          "confirmation_status": "source-verified",
+          "text": "架空・未実施の研究計画｜概念図"
+        },
+        {
+          "id": "s02-page",
+          "kind": "text",
+          "role": "page",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §2",
+          "confirmation_status": "source-verified",
+          "text": "02 / 08"
+        }
+      ],
+      "prompt": "Create ONE finished slide 02/08 for Japanese architecture research 夏の余白. Landscape16:9 intended1600×900. 地中海の白い模型。Bright limestone white, strong forest green canopies, sandy beige ground, sunlit surreal yet plausible Mediterranean miniature public squares. Bold asymmetrical Japanese layout, fine black architectural annotations. Palette #FAF8F2,#28553C,#B99B73. Noto Serif CJK JP heading intent52px and Sans body26, margin72. Layout DIFFERENT from cover: large precise overhead site plan on right70%, compact typography left30%. Fictional site, no scale/dimensions/area. A sculptural white miniature block links small shops on one edge and residential houses opposite, central green trees; show a dashed deepgreen pedestrian route. Clearly label 商店街側 / 住宅地側 / 主な通り抜け / 既存樹木 / 広場の縁. If north arrow present label 方位は仮設定. Title exact『休める場所は、通り道にあるか』. Body exact『問い：日陰、座る場所、歩行動線をどう組み合わせれば、小さな広場を使いやすくできるか。』『架空の対象は、商店街と住宅地をつなぐ小広場。』 Bottom footer『架空・未実施の研究計画｜概念図』 page『02 / 08』. Do not include speaker notes. Site plan only illustrative not survey or built work. Japanese accurate, no extra data.\n",
+      "image_sha256": "89af8e30ab0b1031e98a69f99bfd87d6b94d33ac520eaea37bbbf9a564416f18"
+    },
+    {
+      "id": "s03",
+      "page_number": 3,
+      "title": "影は動く。使い方も動く",
+      "core_message": "仮説A：日陰の切れ目を小さくすると、休憩場所へ立ち寄りやすくなる。仮説B：座る向きと歩行線を分けると、休憩と通過の干渉が小さくなる。時間帯によって成立条件は変わる。",
+      "visual_brief": "同じ敷地を3つ並べ、「朝の想定」「昼の想定」「午後の想定」。影は模式的に変える。注記「影の形は説明用。日影計算の結果ではない」。",
+      "source_refs": [
+        "input/BRIEF.md §3"
+      ],
+      "image_file": "slides/03-slide.png",
+      "image_status": "approved",
+      "speaker_notes": "静止した一枚の平面図だけでは見えない変化を扱う。実際の影は現地確認と計算で確かめる必要がある。",
+      "required_visible_values": [
+        "03 / 08"
+      ],
+      "depends_on_slide_count": true,
+      "elements": [
+        {
+          "id": "s03-title",
+          "kind": "text",
+          "role": "title",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §3",
+          "confirmation_status": "source-verified",
+          "text": "影は動く。使い方も動く"
+        },
+        {
+          "id": "s03-body",
+          "kind": "text",
+          "role": "body",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §3",
+          "confirmation_status": "source-verified",
+          "text": "仮説A：日陰の切れ目を小さくすると、休憩場所へ立ち寄りやすくなる。仮説B：座る向きと歩行線を分けると、休憩と通過の干渉が小さくなる。時間帯によって成立条件は変わる。"
+        },
+        {
+          "id": "s03-visual",
+          "kind": "image",
+          "role": "visual",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §3",
+          "confirmation_status": "source-verified",
+          "visual_brief": "同じ敷地を3つ並べ、「朝の想定」「昼の想定」「午後の想定」。影は模式的に変える。注記「影の形は説明用。日影計算の結果ではない」。"
+        },
+        {
+          "id": "s03-notice",
+          "kind": "text",
+          "role": "notice",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §3",
+          "confirmation_status": "source-verified",
+          "text": "架空・未実施の研究計画｜概念図"
+        },
+        {
+          "id": "s03-page",
+          "kind": "text",
+          "role": "page",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §3",
+          "confirmation_status": "source-verified",
+          "text": "03 / 08"
+        }
+      ],
+      "prompt": "Create ONE finished Japanese presentation slide 03 / 08, landscape16:9 intended1600×900, not grid of slides. 地中海の白い模型。Bright limestone white, strong forest green canopies, sandy beige ground, sunlit surreal yet plausible Mediterranean miniature public squares. Bold asymmetrical Japanese layout, fine black architectural annotations. White limestone tiny architectural model / lush deepgreen trees / sandy paving. Palette white sand forest green, typography Noto Serif CJK JP title52 intent, body26 Sans, margins72. DIFFERENT layout: full-width large title top『影は動く。使い方も動く』, beneath TWO short hypothesis lines exact『仮説A：日陰の切れ目を小さくすると、休憩場所へ立ち寄りやすくなる。』『仮説B：座る向きと歩行線を分けると、休憩と通過の干渉が小さくなる。』『時間帯によって成立条件は変わる。』. Main lower center is THREE matching overhead miniature site views side by side, same buildings/trees/benches in identical positions but soft shadow shapes change. Label exact『朝の想定』『昼の想定』『午後の想定』. Gentle green pedestrian route. Shadow shapes illustrative, no sun angle quantities or temperature numbers. Clear visible note『影の形は説明用。日影計算の結果ではない』. Footer『架空・未実施の研究計画｜概念図』 and『03 / 08』. Dramatic but precise, generous whitespace, no box-card dashboard.\n",
+      "image_sha256": "9095fc97e9855ecd577632a6b65be17ed1ec01951bb0d3ee3f4f96fa4a6e2dc4"
+    },
+    {
+      "id": "s04",
+      "page_number": 4,
+      "title": "三つの居場所をつなぐ",
+      "core_message": "提案要素は、通過の脇で短く休む「縁の腰かけ」、木陰で少し滞在する「木陰の席」、立ち寄りの目印になる「入口の余白」。主動線は物で塞がず、段差や障害物に配慮する。",
+      "visual_brief": "一つの大きな配置図に3要素を直接ラベルで記載。主動線を太い線、立ち寄りを細い線、滞在を面で描く。「通過」「立ち寄り」「滞在」の凡例。",
+      "source_refs": [
+        "input/BRIEF.md §4"
+      ],
+      "image_file": "slides/04-slide.png",
+      "image_status": "approved",
+      "speaker_notes": "日陰を追うことと、誰でも通れることは両立させる。通路幅などの具体条件は実施設計時に確認する。",
+      "required_visible_values": [
+        "04 / 08"
+      ],
+      "depends_on_slide_count": true,
+      "elements": [
+        {
+          "id": "s04-title",
+          "kind": "text",
+          "role": "title",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §4",
+          "confirmation_status": "source-verified",
+          "text": "三つの居場所をつなぐ"
+        },
+        {
+          "id": "s04-body",
+          "kind": "text",
+          "role": "body",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §4",
+          "confirmation_status": "source-verified",
+          "text": "提案要素は、通過の脇で短く休む「縁の腰かけ」、木陰で少し滞在する「木陰の席」、立ち寄りの目印になる「入口の余白」。主動線は物で塞がず、段差や障害物に配慮する。"
+        },
+        {
+          "id": "s04-visual",
+          "kind": "image",
+          "role": "visual",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §4",
+          "confirmation_status": "source-verified",
+          "visual_brief": "一つの大きな配置図に3要素を直接ラベルで記載。主動線を太い線、立ち寄りを細い線、滞在を面で描く。「通過」「立ち寄り」「滞在」の凡例。"
+        },
+        {
+          "id": "s04-notice",
+          "kind": "text",
+          "role": "notice",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §4",
+          "confirmation_status": "source-verified",
+          "text": "架空・未実施の研究計画｜概念図"
+        },
+        {
+          "id": "s04-page",
+          "kind": "text",
+          "role": "page",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §4",
+          "confirmation_status": "source-verified",
+          "text": "04 / 08"
+        }
+      ],
+      "prompt": "Create ONE final Japanese slide 04 /08 landscape16:9 intended1600×900. 地中海の白い模型。Bright limestone white, strong forest green canopies, sandy beige ground, sunlit surreal yet plausible Mediterranean miniature public squares. Bold asymmetrical Japanese layout, fine black architectural annotations. Bright white limestone model, lush darkgreen canopies, sand paving, typography serif52/sans26 intent, margin72. DIFFERENT arrangement: title top left exact『三つの居場所をつなぐ』. Main large single high axonometric seating layout diagram across bottom2/3 with three directly labeled zones. Exact labels『縁の腰かけ』『木陰の席』『入口の余白』. A thick deepgreen arrow path avoids benches; thinner orange dashed branching paths; translucent sage stay-areas. Visible legend exact『通過』『立ち寄り』『滞在』. Body top two-three lines exact『提案要素は、通過の脇で短く休む「縁の腰かけ」、木陰で少し滞在する「木陰の席」、立ち寄りの目印になる「入口の余白」。』『主動線は物で塞がず、段差や障害物に配慮する。』. Include unobstructed accessible route, not obstacles or steps across main route. Footer『架空・未実施の研究計画｜概念図』 and『04 / 08』. No measurements, percentages, temperatures, actual construction claim. Accurate Japanese. Not repeat cover left-right, no boxcard dashboard.\n",
+      "image_sha256": "2a410e378ec43e74e86369096154a7f83028bf3ff0f7009912f06f2e1a3b0cdd"
+    },
+    {
+      "id": "s05",
+      "page_number": 5,
+      "title": "座る高さで、風景を確かめる",
+      "core_message": "平面だけでなく、座ったときの見通し、背後の安心感、通行人との距離を検討する。樹木や日除けは管理と安全性の確認が前提となる。",
+      "visual_brief": "広場の模式断面。「通過する人」「腰かける人」「樹冠」「見通し」「地面」をラベル。日除け案は破線で示し「候補」とする。温度分布のヒートマップは描かない。",
+      "source_refs": [
+        "input/BRIEF.md §5"
+      ],
+      "image_file": "slides/05-slide.png",
+      "image_status": "approved",
+      "speaker_notes": "見通しを失わずに落ち着ける場所を探る。設備の構造、安全、管理は専門的な確認が必要。",
+      "required_visible_values": [
+        "05 / 08"
+      ],
+      "depends_on_slide_count": true,
+      "elements": [
+        {
+          "id": "s05-title",
+          "kind": "text",
+          "role": "title",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §5",
+          "confirmation_status": "source-verified",
+          "text": "座る高さで、風景を確かめる"
+        },
+        {
+          "id": "s05-body",
+          "kind": "text",
+          "role": "body",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §5",
+          "confirmation_status": "source-verified",
+          "text": "平面だけでなく、座ったときの見通し、背後の安心感、通行人との距離を検討する。樹木や日除けは管理と安全性の確認が前提となる。"
+        },
+        {
+          "id": "s05-visual",
+          "kind": "image",
+          "role": "visual",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §5",
+          "confirmation_status": "source-verified",
+          "visual_brief": "広場の模式断面。「通過する人」「腰かける人」「樹冠」「見通し」「地面」をラベル。日除け案は破線で示し「候補」とする。温度分布のヒートマップは描かない。"
+        },
+        {
+          "id": "s05-notice",
+          "kind": "text",
+          "role": "notice",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §5",
+          "confirmation_status": "source-verified",
+          "text": "架空・未実施の研究計画｜概念図"
+        },
+        {
+          "id": "s05-page",
+          "kind": "text",
+          "role": "page",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §5",
+          "confirmation_status": "source-verified",
+          "text": "05 / 08"
+        }
+      ],
+      "prompt": "Create ONE finished Japanese architecture presentation slide05/08 landscape16:9 intended1600×900. 地中海の白い模型。Bright limestone white, strong forest green canopies, sandy beige ground, sunlit surreal yet plausible Mediterranean miniature public squares. Bold asymmetrical Japanese layout, fine black architectural annotations. White limestone model / forestgreen / sandy floor. Noto Serif JP heading52 and Sans body26 intent, margins72. COMPLETELY DIFFERENT visual: large precise architectural SECTION elevation cut across a plaza at seated-person height, centered over lower2/3. Horizontal ground cut line with subtle soil strata, foreground walking white miniature figures at left, seated figure in middle with tree behind, broad green canopy overhead, white buildings faint background. A dashed architectural outline of optional sunshade at right labeled『日除け案（候補）』. Sightline dotted green horizontal arrow from seated eyes toward open plaza. Direct exact labels『通過する人』『腰かける人』『樹冠』『見通し』『地面』. Title exact『座る高さで、風景を確かめる』. Body exact『平面だけでなく、座ったときの見通し、背後の安心感、通行人との距離を検討する。』『樹木や日除けは管理と安全性の確認が前提となる。』. No temperature heatmap, no measurements, no real performance. Footer exact『架空・未実施の研究計画｜概念図』 and page『05 / 08』. Elegant white breathing space, few concise direct callout labels, not overhead city image, not cards.\n",
+      "image_sha256": "8657e56006b534f3f7f3bca2beed50e909225082a5911ffd7715bda12e39b9fb"
+    },
+    {
+      "id": "s06",
+      "page_number": 6,
+      "title": "評価計画：影と行動を重ねる",
+      "core_message": "現地を想定した調査項目は、時間帯別の日陰、歩行経路、立ち止まる位置、座る向き、利用者が感じる使いやすさ。配置の比較は模型や仮設配置から始める。環境条件も同時に記録する計画。",
+      "visual_brief": "透明な3層をずらして重ねる図。「日陰の範囲」「人の動き」「居場所の配置」。横に「現況確認→試作→観察→振り返り」。各層は記録様式の概念と明記。",
+      "source_refs": [
+        "input/BRIEF.md §6"
+      ],
+      "image_file": "slides/06-slide.png",
+      "image_status": "approved",
+      "speaker_notes": "観察記録に個人を特定できる情報を残さない。夏の現地調査は暑さへの安全対策を整えてから行う。",
+      "required_visible_values": [
+        "06 / 08"
+      ],
+      "depends_on_slide_count": true,
+      "elements": [
+        {
+          "id": "s06-title",
+          "kind": "text",
+          "role": "title",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §6",
+          "confirmation_status": "source-verified",
+          "text": "評価計画：影と行動を重ねる"
+        },
+        {
+          "id": "s06-body",
+          "kind": "text",
+          "role": "body",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §6",
+          "confirmation_status": "source-verified",
+          "text": "現地を想定した調査項目は、時間帯別の日陰、歩行経路、立ち止まる位置、座る向き、利用者が感じる使いやすさ。配置の比較は模型や仮設配置から始める。環境条件も同時に記録する計画。"
+        },
+        {
+          "id": "s06-visual",
+          "kind": "image",
+          "role": "visual",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §6",
+          "confirmation_status": "source-verified",
+          "visual_brief": "透明な3層をずらして重ねる図。「日陰の範囲」「人の動き」「居場所の配置」。横に「現況確認→試作→観察→振り返り」。各層は記録様式の概念と明記。"
+        },
+        {
+          "id": "s06-notice",
+          "kind": "text",
+          "role": "notice",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §6",
+          "confirmation_status": "source-verified",
+          "text": "架空・未実施の研究計画｜概念図"
+        },
+        {
+          "id": "s06-page",
+          "kind": "text",
+          "role": "page",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §6",
+          "confirmation_status": "source-verified",
+          "text": "06 / 08"
+        }
+      ],
+      "prompt": "Create ONE finished Japanese slide06/08 landscape16:9 intended1600×900. 地中海の白い模型。Bright limestone white, strong forest green canopies, sandy beige ground, sunlit surreal yet plausible Mediterranean miniature public squares. Bold asymmetrical Japanese layout, fine black architectural annotations. DIFFERENT visual composition: three large transparent glass/vellum architectural study layers hovering and separated diagonally in space on LEFT two thirds, a sculptural impossible-but-clear exploded model. Top transparent layer soft forestgreen shadow patches labeled『日陰の範囲』; middle transparent sheet orange walking traces/tiny white figures labeled『人の動き』; bottom white limestone base tiny trees and sandy benches labeled『居場所の配置』. Each layer represents a conceptual record template, not measurements. Right third clear vertical four-stage typography and arrows exact『現況確認 → 試作 → 観察 → 振り返り』. Title across top exact『評価計画：影と行動を重ねる』. Body exact in short lines『現地を想定した調査項目は、時間帯別の日陰、歩行経路、立ち止まる位置、座る向き、利用者が感じる使いやすさ。』『配置の比較は模型や仮設配置から始める。』『環境条件も同時に記録する計画。』 Visible note『各層は記録様式の概念』. White/sand/deepgreen with pale bluegray glass, Noto Serif title52/Sans body26 intent margins72. Footer『架空・未実施の研究計画｜概念図』 and『06 / 08』. No charts or fabricated numeric evidence. Beautiful architecture publication aesthetic, no cards.\n",
+      "image_sha256": "a5c21172fa48f3d35ddf30af9f2b13817515df009b3f797663108e57ea239cc5"
+    },
+    {
+      "id": "s07",
+      "page_number": 7,
+      "title": "日陰だけでは、快適さを決められない",
+      "core_message": "風、湿度、照り返し、騒音、混雑、利用目的も体験を左右する。植栽の成長や季節で条件は変わる。短い観察だけで通年の快適さや健康効果を判断しない。",
+      "visual_brief": "日陰の面に、風の線、地面からの反射、音の波、通過動線を重ねる環境の模式図。ラベルは「風」「地面」「音」「人の流れ」「季節」。",
+      "source_refs": [
+        "input/BRIEF.md §7"
+      ],
+      "image_file": "slides/07-slide.png",
+      "image_status": "approved",
+      "speaker_notes": "要因を分けて記録し、配置による影響と天候の影響を混同しない。",
+      "required_visible_values": [
+        "07 / 08"
+      ],
+      "depends_on_slide_count": true,
+      "elements": [
+        {
+          "id": "s07-title",
+          "kind": "text",
+          "role": "title",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §7",
+          "confirmation_status": "source-verified",
+          "text": "日陰だけでは、快適さを決められない"
+        },
+        {
+          "id": "s07-body",
+          "kind": "text",
+          "role": "body",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §7",
+          "confirmation_status": "source-verified",
+          "text": "風、湿度、照り返し、騒音、混雑、利用目的も体験を左右する。植栽の成長や季節で条件は変わる。短い観察だけで通年の快適さや健康効果を判断しない。"
+        },
+        {
+          "id": "s07-visual",
+          "kind": "image",
+          "role": "visual",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §7",
+          "confirmation_status": "source-verified",
+          "visual_brief": "日陰の面に、風の線、地面からの反射、音の波、通過動線を重ねる環境の模式図。ラベルは「風」「地面」「音」「人の流れ」「季節」。"
+        },
+        {
+          "id": "s07-notice",
+          "kind": "text",
+          "role": "notice",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §7",
+          "confirmation_status": "source-verified",
+          "text": "架空・未実施の研究計画｜概念図"
+        },
+        {
+          "id": "s07-page",
+          "kind": "text",
+          "role": "page",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §7",
+          "confirmation_status": "source-verified",
+          "text": "07 / 08"
+        }
+      ],
+      "prompt": "Create ONE finished Japanese architecture research slide07/08 landscape16:9 intended1600×900. 地中海の白い模型。Bright limestone white, strong forest green canopies, sandy beige ground, sunlit surreal yet plausible Mediterranean miniature public squares. Bold asymmetrical Japanese layout, fine black architectural annotations. Strong white limestone/forestgreen/sand. Noto Serif JP title52, Sans body26 intent margins72. DIFFERENT visual: right60% an ISOLATED miniature circular island cutaway of plaza, no repeated whole city background, hovering on neutral white space. Lush tree and white seated/passers figures, two tiny white building facades. Delicate visible environmental metaphor arrows: blue flowing lines for 風, warm reflected arrows from paving for 地面, redorange gentle soundwave arcs 音, darkgreen flow path 人の流れ, small subtly changing foliage/leaf sequence 季節. These are NONQUANTITATIVE schematic relationships, no plot, temperature heatmap, numerical data. Left40% large exact title『日陰だけでは、快適さを決められない』 use meaningful line breaks. Body exact『風、湿度、照り返し、騒音、混雑、利用目的も体験を左右する。』『植栽の成長や季節で条件は変わる。』『短い観察だけで通年の快適さや健康効果を判断しない。』. Exact direct labels『風』『地面』『音』『人の流れ』『季節』. Footer『架空・未実施の研究計画｜概念図』 and『07 / 08』. Beautiful architecture model diagrams, no cards, do not embellish with claims.\n",
+      "image_sha256": "e47eb488c3d4bfe22aa05bdd384540aa91bf027805f47d51f19194d02653712f"
+    },
+    {
+      "id": "s08",
+      "page_number": 8,
+      "title": "次の一歩：影の記録から、配置の試作へ",
+      "core_message": "架空案を検討用模型にする。実施先を選ぶ場合は管理者と相談し、現況・利用・安全条件を確認する。そのうえで小さな仮設配置を検証する。",
+      "visual_brief": "左に影を記録するスケッチ、中央に模型、右に仮設の席。「記録」「試作」「検証」の3つを横につなぐ。末尾に「未実施の研究計画」。",
+      "source_refs": [
+        "input/BRIEF.md §8"
+      ],
+      "image_file": "slides/08-slide.png",
+      "image_status": "approved",
+      "speaker_notes": "完成形を先に決めず、影と人の動きを読みながら設計を更新する。",
+      "required_visible_values": [
+        "08 / 08"
+      ],
+      "depends_on_slide_count": true,
+      "elements": [
+        {
+          "id": "s08-title",
+          "kind": "text",
+          "role": "title",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §8",
+          "confirmation_status": "source-verified",
+          "text": "次の一歩：影の記録から、配置の試作へ"
+        },
+        {
+          "id": "s08-body",
+          "kind": "text",
+          "role": "body",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §8",
+          "confirmation_status": "source-verified",
+          "text": "架空案を検討用模型にする。実施先を選ぶ場合は管理者と相談し、現況・利用・安全条件を確認する。そのうえで小さな仮設配置を検証する。"
+        },
+        {
+          "id": "s08-visual",
+          "kind": "image",
+          "role": "visual",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §8",
+          "confirmation_status": "source-verified",
+          "visual_brief": "左に影を記録するスケッチ、中央に模型、右に仮設の席。「記録」「試作」「検証」の3つを横につなぐ。末尾に「未実施の研究計画」。"
+        },
+        {
+          "id": "s08-notice",
+          "kind": "text",
+          "role": "notice",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §8",
+          "confirmation_status": "source-verified",
+          "text": "架空・未実施の研究計画｜概念図"
+        },
+        {
+          "id": "s08-page",
+          "kind": "text",
+          "role": "page",
+          "native_intent": "raster",
+          "source_ref": "input/BRIEF.md §8",
+          "confirmation_status": "source-verified",
+          "text": "08 / 08"
+        }
+      ],
+      "prompt": "Create ONE finished final Japanese architecture research slide08/08 landscape16:9 intended1600×900. 地中海の白い模型。Bright limestone white, strong forest green canopies, sandy beige ground, sunlit surreal yet plausible Mediterranean miniature public squares. Bold asymmetrical Japanese layout, fine black architectural annotations. White/sand/forestgreen palette, Noto Serif JP title52 and Sans body26 intent, margins72. DIFFERENT layout: title top exact『次の一歩：影の記録から、配置の試作へ』. Under title concise exact body『架空案を検討用模型にする。』『実施先を選ぶ場合は管理者と相談し、現況・利用・安全条件を確認する。』『そのうえで小さな仮設配置を検証する。』. Main lower middle three large meaningful illustrations horizontally connected by fine deepgreen arrows, NOT separate boxcards. LEFT actual-looking sand sketchbook with ink/green shade sketches, pencil and tracing overlay (no real measured values) labeled『記録』. CENTER beautiful physically handcrafted miniature white plaza on tabletop with tiny white limestone buildings, lush green trees and movable wooden benches labeled『試作』. RIGHT a staged conceptual close ground view of simple temporary wooden seat beneath tree and neutral white figures labeled『検証』. Consistent conceptual project, tiny tabletop physical models, do not imply completed construction. Ending large but restrained『未実施の研究計画』. Footer『架空・未実施の研究計画｜概念図』 and『08 / 08』. No fabricated measured outcomes. Rich architectural AI visuals with enough whitespace and legible Japanese. No charts.\n",
+      "image_sha256": "b4de5377a346b4728c17a64eeb4ef18bf1d0c9dcdbda754de141052c2d45463a"
+    }
+  ]
+}

@@ -1,0 +1,350 @@
+<!doctype html><html lang="ja"><meta charset="utf-8"><title>入口から、余韻まで。</title><style>
+  :root {
+    --bg: #f4f0e8;
+    --ink: #1a1a1a;
+    --ink-soft: #5a5a5a;
+    --ink-mute: #8a8a85;
+    --red: #d62828;
+    --blue: #003049;
+    --yellow: #ffd60a;
+    --rule: #1a1a1a;
+    --display-font: 'Helvetica Neue', 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --body-font: 'Helvetica Neue', 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1280px; height: 720px; overflow: hidden; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--body-font);
+    font-feature-settings: 'kern', 'liga', 'calt', 'ss01', 'cv11';
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    position: relative;
+  }
+
+  .stage {
+    position: relative;
+    width: 1280px; height: 720px;
+    padding: 56px 80px 56px 80px;
+  }
+
+  .top-bar {
+    position: absolute;
+    top: 28px; left: 80px; right: 80px;
+    height: 28px;
+    border-top: 1.5px solid var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 8px;
+  }
+  .top-bar .left {
+    font-family: var(--body-font);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--red);
+  }
+  .top-bar .right {
+    font-family: var(--body-font);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+
+  .grid {
+    position: relative;
+    width: 100%; height: 100%;
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    grid-template-rows: 1fr;
+    column-gap: 48px;
+    margin-top: 32px;
+  }
+
+  .left-col {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding-top: 8px;
+  }
+
+  .label-row {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .label-row .swatch {
+    width: 14px; height: 14px;
+    background: var(--red);
+    display: inline-block;
+  }
+  .label-row .text {
+    font-family: var(--body-font);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .label-row .text .acc {
+    color: var(--red);
+  }
+
+  .headline {
+    font-family: var(--display-font);
+    font-size: 92px;
+    font-weight: 800;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+    color: var(--ink);
+    margin-top: 22px;
+  }
+
+  .deck {
+    font-family: var(--body-font);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    letter-spacing: -0.005em;
+    max-width: 460px;
+    margin-top: 22px;
+  }
+  .deck .em {
+    color: var(--ink);
+    font-weight: 600;
+  }
+
+  .principles {
+    margin-top: 36px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    max-width: 560px;
+  }
+  .pcard {
+    position: relative;
+    height: 138px;
+    background: #fff;
+    border: 1.5px solid var(--ink);
+    overflow: hidden;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .pcard .num {
+    font-family: var(--display-font);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--ink);
+  }
+  .pcard .pname {
+    font-family: var(--display-font);
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    line-height: 1.1;
+  }
+  .pcard .pmeta {
+    font-family: var(--body-font);
+    font-size: 9.5px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+
+  .pcard .shape-stage {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .right-col {
+    position: relative;
+    height: 100%;
+  }
+
+  .poster {
+    position: relative;
+    width: 100%;
+    height: 480px;
+    background: #efe9dc;
+    border: 1.5px solid var(--ink);
+    overflow: hidden;
+  }
+  .poster .grid-lines {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(26,26,26,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,26,26,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .poster .pcircle {
+    position: absolute;
+    right: -60px; top: -60px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: var(--red);
+  }
+  .poster .psquare {
+    position: absolute;
+    left: -24px; bottom: -24px;
+    width: 168px; height: 168px;
+    background: var(--blue);
+  }
+  .poster .pquarter {
+    position: absolute;
+    right: 90px; bottom: 110px;
+    width: 110px; height: 110px;
+  }
+  .poster .ptri {
+    position: absolute;
+    right: 60px; top: 130px;
+    width: 96px; height: 120px;
+  }
+  .poster .pbar {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 4px;
+    background: var(--ink);
+    transform: translateX(-50%);
+  }
+  .poster .pdot {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: var(--ink);
+    transform: translate(-50%, -50%);
+  }
+  .poster .pmeta-tl {
+    position: absolute;
+    top: 16px; left: 18px;
+    font-family: var(--body-font);
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+    color: var(--ink);
+    z-index: 4;
+  }
+  .poster .pmeta-bl {
+    position: absolute;
+    bottom: 18px; right: 22px;
+    font-family: var(--display-font);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #fff;
+    z-index: 4;
+    text-align: right;
+    line-height: 1.4;
+  }
+  .poster .pmeta-bl .small {
+    display: block;
+    font-weight: 500;
+    font-size: 9px;
+    letter-spacing: 0.32em;
+    color: rgba(255,255,255,0.75);
+    margin-top: 4px;
+  }
+
+  .right-foot {
+    margin-top: 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding-top: 12px;
+    border-top: 1px solid rgba(26,26,26,0.25);
+  }
+  .right-foot .col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .right-foot .k {
+    font-family: var(--body-font);
+    font-size: 9px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  .right-foot .v {
+    font-family: var(--display-font);
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+  }
+  .right-foot .v .accent-r { color: var(--red); }
+  .right-foot .v .accent-b { color: var(--blue); }
+
+  .bottom-rule {
+    position: absolute;
+    left: 80px; right: 80px;
+    bottom: 36px;
+    height: 1.5px;
+    background: var(--ink);
+  }
+
+  .footer {
+    position: absolute;
+    left: 80px; right: 80px;
+    bottom: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: var(--body-font);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.28em;
+    color: var(--ink);
+    text-transform: uppercase;
+  }
+  .footer .right { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+  .corner-mark {
+    position: absolute;
+    bottom: 36px;
+    right: 80px;
+    transform: translateY(-100%);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 3;
+  }
+
+
+@font-face{font-family:'Zen Kaku Gothic New';src:url('../fonts/zenkakugothicnew/ZenKakuGothicNew-Black.ttf') format('truetype');font-weight:900}
+@font-face{font-family:'BIZ UDPMincho';src:url('../fonts/bizudpmincho/BIZUDPMincho-Regular.ttf') format('truetype');font-weight:400}
+@font-face{font-family:'Manrope';src:url('../fonts/manrope/Manrope[wght].ttf') format('truetype');font-weight:200 800}
+:root{--display-font:'Zen Kaku Gothic New',sans-serif;--body-font:'BIZ UDPMincho',serif;--number-font:'Manrope',sans-serif;--paper:var(--bg)}
+.jp-stage{width:1280px;height:720px;position:relative;overflow:hidden}
+.jp-head{font-family:var(--display-font);font-weight:900;letter-spacing:-.04em;line-height:1.1;position:absolute;color:var(--ink)}
+.jp-text{font-family:var(--body-font);font-size:28px;line-height:1.55;position:absolute;letter-spacing:0;color:var(--ink)}
+.jp-num{font-family:var(--number-font);font-variant-numeric:tabular-nums;font-weight:800;letter-spacing:-.04em;position:absolute;color:var(--ink)}
+.jp-foot{position:absolute;left:80px;top:666px;font:16px var(--body-font);color:var(--ink-soft)}
+.jp-page{position:absolute;right:80px;top:654px;font:26px var(--number-font);font-weight:800;color:var(--ink)}
+.jp-label{position:absolute;font-family:var(--display-font);font-weight:900;font-size:34px;color:var(--ink)}
+.top-bar .left,.top-bar .right{font-family:var(--number-font);font-size:13px}
+.native-svg{position:absolute;left:0;top:0;width:1280px;height:720px}
+</style><body><main class="jp-stage"><svg class="native-svg" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg"><circle cx="172" cy="327" r="66" fill="var(--red)"/><rect x="414" y="261" width="132" height="132" fill="var(--blue)"/><circle cx="788" cy="327" r="66" fill="var(--red)"/><path d="M1091 251 L1179 402 L1003 402 Z" fill="var(--yellow)"/></svg><svg class="native-svg" viewBox="0 0 1280 720" xmlns="http://www.w3.org/2000/svg"><line x1="238" y1="327" x2="398" y2="327" stroke="var(--ink)" stroke-width="2"/><path d="M388 315 L410 327 L388 339 Z" fill="var(--ink)"/><line x1="546" y1="327" x2="706" y2="327" stroke="var(--ink)" stroke-width="2"/><path d="M696 315 L718 327 L696 339 Z" fill="var(--ink)"/><line x1="854" y1="327" x2="986" y2="327" stroke="var(--ink)" stroke-width="2"/><path d="M976 315 L998 327 L976 339 Z" fill="var(--ink)"/></svg><div class="jp-head" style="left:80px;top:110px;width:1110px;font-size:72px">入口から、余韻まで。</div><div class="jp-num" style="left:74px;top:425px;width:210px;font-size:35px">01</div><div class="jp-head" style="left:74px;top:477px;width:250px;font-size:37px">入口</div><div class="jp-text" style="left:74px;top:545px;width:250px;font-size:24px;color:var(--ink)">ひとこと案内</div><div class="jp-num" style="left:382px;top:425px;width:210px;font-size:35px">02</div><div class="jp-head" style="left:382px;top:477px;width:250px;font-size:37px">見る</div><div class="jp-text" style="left:382px;top:545px;width:250px;font-size:24px;color:var(--ink)">作品を比べる</div><div class="jp-num" style="left:690px;top:425px;width:210px;font-size:35px">03</div><div class="jp-head" style="left:690px;top:477px;width:250px;font-size:37px">話す</div><div class="jp-text" style="left:690px;top:545px;width:250px;font-size:24px;color:var(--ink)">短い問いを置く</div><div class="jp-num" style="left:998px;top:425px;width:210px;font-size:35px">04</div><div class="jp-head" style="left:998px;top:477px;width:250px;font-size:37px">持ち帰る</div><div class="jp-text" style="left:998px;top:545px;width:250px;font-size:24px;color:var(--ink)">次の一歩を添える</div><div class="top-bar"><span class="left">EXHIBITION / CONCEPT</span><span class="right">BAUHAUS BLOCK / JA</span></div><div class="jp-foot">仮想の展示企画 / 日時・会場・参加条件は未定</div><div class="jp-page">03</div></main></body></html>
