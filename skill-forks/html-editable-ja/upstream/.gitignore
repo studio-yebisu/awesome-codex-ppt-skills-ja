@@ -1,0 +1,22 @@
+# 本地沉淀工作副本（每用户一份；首次运行 convert.py 自动从 lessons-learned.md.example 生成）
+references/lessons-learned.md
+
+# 本机偏好配置，不上游（模板见 .config.local.toml.example）
+.config.local.toml
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# 临时调试 / agent 工作残留（**不要**用 `_*.py` 这种宽 glob，会误吞 `_helpers.py`/`_snippets.py` 等真实模块）
+*_dump_*.py
+_scratch_*.py
+*.tmp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# 单页 audit 调试截图（每轮排查产物，不入库）
+assets/compare/_check/

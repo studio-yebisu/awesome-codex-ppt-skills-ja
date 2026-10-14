@@ -1,0 +1,102 @@
+# 症状索引
+
+读完 self-check 报告 + compare 图后用这份文件挑下一步排查方向。条目不是终极答案，是 checkpoint。
+
+## 写到哪
+
+本文件首次 `convert.py` 会 seed 出本机的工作副本（gitignored）供 agent 自由加 / 改 / 整理。机制、路径、入口命令以主 skill 文档为准，不在这里重复。
+
+- 通用问题（任何 deck 都可能撞）→ **HTML 反模式** 或 **OOXML 边界** 表
+- 本地业务 / 特定客户专属写法 → 任意 section 自由加新行（不会上游）
+- 想让上游 skill 一起收某条：由作者手动复制到上游模板；选择性 curate，不是全推
+- 历史已修 bug 的具体诊断看版本历史，不在此处沉淀
+- 这里**不要写具体本地文件名、模板名、页面号、客户名、源码文件名**；只写可复用的症状、触发模式、规避规则
+
+## 快速分流
+
+1. 整页 / 空白页 → adapter activate + 隐藏态清理
+2. 文字缺失 → text-leaf 识别 + inline / block 混合容器
+3. SVG / canvas / 装饰缺失 → screenshot marker 记录 + PNG
+4. CJK / 字体渲染错 → OOXML `a:latin` / `a:ea` 和字体嵌入
+5. 不该换行的换行了 → 单行检测 + `bodyPr wrap`
+6. 颜色 / 透明度错 → rgba 解析 + alpha 传递
+7. 旋转错 → 区分 OOXML 形状 / 文字 vs 截图记录
+
+## 已知 regression checkpoint
+
+仍可能复发的非平凡 guard，撞到符号症状先查这里：
+
+- **整页变空，测量结果只剩 1 条 `deco_snapshot`**：slide 根节点被误判为需整块截图。测量阶段必须保留 slide-root 守卫，避免把整页子元素都吞掉
+- **`flex + align-items:center` 文字掉到容器下方**：display = flex/grid + alignItems 是 center / flex-end / end 的容器，文字框高度应取实际 box 高度，不要再按行高放大；放大了文字会跌出容器底部
+- **带 `<br>` 多行段盖到下一兄弟**：含显式 `<br>` 的记录文字框高度应取实际 box 高度（不放大）；纯自然换行（无 `<br>`）仍按 1.3× 行高撑
+- **OOXML 重影 / 假粗体；typeface 是 `-apple-system` / `BlinkMacSystemFont`**：浏览器系统别名漏过 generic family 过滤；组装阶段应跳过这些别名，让真实字体 family 落到输出里
+- **GF 字体已嵌入但 PowerPoint 渲染错字面**：GF `wght@400` src 可能指向 Medium 文件，缓存 TTF nameID=1 是 "Family Medium"，PowerPoint 匹配不上 → 回退系统字体。字体解析阶段需把 family 名和权重槽正规化
+- **HTML 只用 weight 500+600，PPT 里两个权重一样**：字体权重分配要按当前 deck 的实际权重选 regular / bold 槽；组装阶段的加粗阈值要和该分配一致
+- **`overflow:hidden` 容器塞 transform 子（ribbon），PPT 变成一大块覆盖前景**："裁切容器 + 旋转子元素"模式应命中 `hasComplexDecoration` 走 deco_snapshot 整块截图，并停止下钻该子树
+- **`<p>` 里 `<br><br>` 空段把尾部内容挤出框**：OOXML 空段 `<a:p>` 没设 `endParaRPr.sz` 会回退到 PowerPoint 默认 18pt × 行高；组装时必须给空段显式写 `endParaRPr.sz`（取该段实际字号的 OOXML 单位值，避免空段被强撑成大行高）
+- **`h1`/`h2` 带 `<br>` + 内联块，`<br>` 后那行盖下一段**：内联分组在测量阶段必须剥掉 group 首尾的 `<br>`。**辨识**：measurement 记录里若出现 `tag` 字段值为 `br#inline` 的项，一定是 bug
+- **Latin run 在 WPS Office 里被错误地用 CJK 字体 advance width 渲染**：纯 Latin run 不应写 CJK east-asian typeface；否则 WPS 可能把 CJK 字体宽度应用到 Latin 字符。PowerPoint 标准行为下 ea 只对 CJK 字符生效，audit 通过 PowerPoint COM 看不出来
+- **`::after` / `::before` 用 `content: ''` + `background-color` 实色填充 + asym `border-radius` 装饰整个丢失**：空 content 不能只检测 `background-image`；只要伪元素存在 image / color / border 任一非默认装饰，就应触发 deco_snapshot 截图
+- **偏移双线框只剩主框 / 外层 `::before` 右下边被裁掉**：简单空伪元素线框应走 PPT shape，保持可编辑；不要归入 `deco_snapshot`。若伪元素是复杂形状必须截图，截图 clip 要包含伪元素的绝对定位可见框，且复杂装饰命中后不要再为同一 host 发普通 shape
+- **极薄 border-only 条在 PPT 里变空心框**：CSS border 画在 border box 内部，若 `height <= border-top + border-bottom`，上下边框会贴合成实心条；PowerPoint shape line 画在轮廓中心，同样尺寸会露出中间空隙。四边框、无填充、内容区塌陷的盒子应改画为 border 色实心 shape
+- **WPS 里能选中一个满页同底色色块 / 干扰编辑**：满页背景色应通过 slide 背景填充实现，不要发普通根节点满页 shape — 它在 WPS 里会成为可选可拖对象
+- **线框卡片里能拖出同底色、无线条的独立色块**：不要把 `background + 四边等宽 border` 拆成"填充矩形 + 四条线"。这会产生一个视觉上像背景、但可选可拖的多余对象。简单矩形四边等宽边框应合并成一个 PPT shape（fill + line），后层偏移伪元素线框再单独用 shape
+- **slide 内多个同 tag 装饰 div 把 deck 误识别成 N 张假页 / 负坐标装饰"跳进" slide 叠压前景**：slide 发现的同 tag 兄弟组必须过滤成员尺寸——成员要么视窗级尺寸、要么零尺寸（被切页机制 display:none 隐藏）；可见但小于半屏的同 tag 兄弟（装饰圆 / 遮罩 / 徽章 / 导航）不是 slide。误识别后装饰 div 被当 slide force-position 钉到 (0,0)，负 left/top 的装饰看起来被"移进" slide 内。**辨识**：measure 页数多于肉眼页数、或某"页"只有 1 条记录。shape 通道本身正确支持负 `<a:off>`，无需 HTML workaround
+- **`flex-direction:column` 堆叠的 inline 元素（多 `<span>` 各占一行）在 PPT 里全部叠在同一坐标**：line-height ≤ 1 时相邻行的视觉 rect 含 ascender/descender 会有少量重叠（如 144px 字号 line-height:1 → rect 173px 高 / 行距 144px → 重叠 29px）。measure 的 `sameLine` 若仅按"区间重叠 > tolerance"判同行，会把栈式相邻行错并到一行。**辨识**：measurement runs 缺 `linebreak: true` 但 HTML 里子元素明显在不同 y。**修复点**：`measure.py:applyNaturalLineBreaks` 的 `sameLine` 需加比例阈值——重叠占较小元素高度的 50% 以上才算同行
+- **容器小字号 + 子节点大字号（如 `.stat { font-size:14px } .stat .num { font-size:96px }`）在 PPT 里行距按容器算导致大字号叠压**：leaf 节点 `style.lineHeight` 取自容器 computed 值（已为 px），不反映 runs 内更大字号子节点的实际行距。**辨识**：measurement 记录里 `style.fontSize` << `runs[].fontSize`，PPT 输出多行文字垂直叠压。**修复点**：measure 给每个 run 加 `lineHeight` 字段；assemble 计算行距时取 `max(leaf_lh, runs 内 lh 极值)`
+- **`<br><br>` 分隔的两段长正文在 PPT 里串成一坨横铺**：assemble 旧启发"有显式 `<br>` → wrap=none 让作者完全决定分行"过宽，触发即关掉框内 word-wrap，长段落溢出整框。**辨识**：双列 / 多段布局里左右列文字在 PPT 里挤到同一行。**修复点**：`no_auto_wrap` 改为「真单行」或「紧排版（框高 ≈ (br_count + 1) × 有效行高）」才禁 wrap；松排版（框高远大于 BR 分段数所需）应保持 wrap=square 让 PPT 按宽切
+
+- **行内上下标（`<sup>` / `<sub>` / `vertical-align`）保持自然行内写法，不要用 absolute / hidden 拆元素做 workaround**：skill 已原生支持——run 记录墨迹底边，assemble 换算成 OOXML `rPr baseline=` 偏移（63%、$1.4M、x² 类大数字+上标场景）。把行内子元素改 absolute / visibility:hidden 反而会让宿主从 text-leaf 掉进 inline-group 测量路径，产出错误几何。**辨识**：measurement 记录 `tag` 带 `#inline` 后缀、或 `style.lineHeight` 取了子元素的值
+
+- **暗底 deck 的弱化次级文字（kicker / 页脚 / muted label）在 PPT 里变成不透明主文色**：CSS 用 `rgba(r,g,b,a)` 文字色做弱化时，run 的 fill 必须带 `<a:alpha>`；只写 srgbClr 会把 58% 透明的压暗文字渲成全亮，明暗层级全丢。**辨识**：compare 图里次级文字两半亮度差 >50%，且该色在 CSS 里是带 alpha 的 rgba
+- **× ÷ ° ± 等符号在 PPT 里变细笔画回退字形（相邻数字字重正常）**：PowerPoint 把这类 EA-ambiguous 码点路由到 ea 字体槽；非 CJK run 不写 `<a:ea>` 时它们落到主题默认 EA 字体。修法：含非 ASCII 字符的非 CJK run 把 ea 指回 latin 同字体（同字体同 metrics，不触发 WPS 的 ea advance-width 问题——那条 lesson 针对的是 CJK 字体作 ea）
+
+## Self-Check 记录
+
+| 症状 | 原因 | 修复 |
+|---|---|---|
+| Stage 5a / 5b 跳过 — 没可用 pptx 渲染器 | PowerPoint COM 和 LibreOffice 都没装 | 装渲染器依赖；详情见主 skill 文档的渲染器要求 |
+| Stage 5a FULL-PIC 告警 | `<p:pic>` 盖了页面 ≥ ~98%，大概率 `deco_snapshot` 双层 bug | 用结构记录查看工具定位；确认后用当前 deck HTML workaround，并报告作者 |
+| Stage 5a LAYOUT 告警 | 两个文本框横向重叠但 HTML 度量分开 | 用结构记录查看工具查该页；通常 flex/grid gap 折掉或字体度量差异 |
+| Audit compare 大面积字体回退 + 多页"标题与正文叠压" | PowerPoint COM 导出不读 pptx 嵌入 TTF，用系统字体；回退字体更宽 → 标题多换行挤压 | 安装用户字体后重跑；详情见主 skill 文档的字体安装确认 |
+
+## HTML 反模式
+
+源 HTML 应避免的通用写法。
+
+| 模式 | 为什么破坏 PPT | HTML 改写 |
+|---|---|---|
+| 自定义元素 shadow DOM 在 `:host` 上声明了 `font-family`（slot 包裹整个 deck，body font 不再继承到 slide）<br>*preflight R010 自动告警* | 浏览器渲染时所有 slot 内文字实际用 :host 的字体链而不是 body 的；measure 阶段记录的 fontFamily 就是 :host 的回退链（多半是 system aliases），resolver 永远不会去拉 body 声明的 GF 字体 → PPT 用 Office 默认 fallback（甚至打字机字形）| 在 `section.slide`（或其它真正承载内容的 selector）上**显式再声明一次** `font-family: "<GF 字体>", ...`，让 slide 的子元素从 slide 处继承到正确字体；不要依赖 body 字体穿透 shadow DOM |
+| 同行 inline flex / grid 容器只靠 `gap` 隔开多个 `<span>`（如 `<span class="meta"><span>X</span><span>Y</span></span>`，CSS 设 `display:flex; gap:64px`）| 跨 span 的视觉间距是 CSS gap，HTML 文本里两 span 之间没有任何字面字符；measure / OOXML 拿到的是相邻 text run，PPT 渲染时两段字符直接粘连 | 合并成单 span 并塞入字面分隔符（` · ` / `<span>&nbsp;·&nbsp;</span>` 等），让两段字符之间在 DOM 层就有 literal 字符 |
+
+## OOXML 边界
+
+OOXML 或 PPT 渲染器表达不了的 CSS / DOM 模式；HTML 源要走替代通路。
+
+| CSS / DOM 模式 | OOXML 缺的能力 | HTML 替代通路 |
+|---|---|---|
+| 彩色 emoji（COLR / CPAL 字体） | PowerPoint / WPS 字形渲染不支持彩色字体；emoji 字符走文字通道丢色 | 替换 emoji 字符为 Twemoji SVG `<img src="https://cdn.jsdelivr.net/gh/twitter/twemoji@14.0.2/assets/svg/{cp}.svg">` + `.emoji-img { width: 1em; height: 1em; vertical-align: -0.125em; }`。skill 走 `<img>` 截图通道嵌入 |
+| CSS `background-clip: text` + `linear-gradient` 文字渐变 | OOXML 文字 fill 只有实色 / pattern，没文字渐变裁切 | 替换为 inline `<svg>` + `<text fill="url(#grad)">` + `<linearGradient>`。skill 走 SVG 截图通道。`viewBox` 留余量（例 320 × 64），用 `text-anchor="middle"` + `x="50%"` 居中 |
+| `backdrop-filter` / `filter` / `mix-blend-mode` / `skew` / 非均匀 scale | OOXML 无对应原语 | skill 已让这类容器走 `deco_snapshot` 像素截图，视觉保留（HTML 不用改）。文字仍走矢量画在截图之上，所以文字 crisp 可编辑——代价：filter/blend/skew 不会作用到文字本身。最终扁平观感不能接受时 HTML 改成实色背景 |
+| 多层硬 `text-shadow`（堆叠零模糊阴影） | OOXML 只支持单 `outerShdw`，不支持堆叠硬阴影 | HTML 减成单层轻阴影，或接受简化。单层软阴影仍能转好 |
+| 紧 `line-height`（例 `.85`） | PPT 文字排版稳定地比浏览器松，小行高差异最显眼 | 单行标题通常没事。多行标题接受稍松，或在 HTML 把标题拆成每个 `<p>` 单行 |
+| CJK 斜体（`font-style: italic` 作用到中文字符） | CJK 字体通常没真斜体；PPT 渲染成正体或假斜 | 只有 Latin 需要斜体的话，只把那些 run 标 `italic` |
+| 一条 text leaf 里 inline flex / grid `gap` 跨 span | text leaf 当一条记录导出；PPT 收到普通空格，没 CSS gap | 把 span 拆成独立 block / inline-block 元素，每个独立成记录；或接受稍紧间距 |
+| 含内容的 `<video>` | 截首帧像素嵌入，无播放 / 无控制条 / 无音轨 | 接受静帧；想要"画面+控制条+音轨"必须换 `<img>` 或保留 HTML 链路 |
+| WebGL / 动画 `<canvas>` | 截一帧静态；动画和交互丢失 | 预渲想要的帧换 `<img>`，或接受静态截图 |
+| 大旋转全宽 ribbon | 极端旋转下几何路径和元素截图 AABB 都吃紧；微小视觉差异预期内 | 确认 ribbon 没意外遮住前景。接受微差，或把装饰重构成更小的 clipped 容器走 `deco_snapshot` |
+| `::before` / `::after` `content: url(...)` / `attr(...)` / `counter(...)` / `open-quote` 等非 string literal | walker 只收 string literal content；其余值无对应 OOXML 通路 | 把要显示的内容直接 inline 到 HTML，或用 `<img>` 替代 url() |
+| Google Fonts 没有的字体（商业 / 自托管 / 拼错） | 字体解析阶段抓不到，字体回退到 viewer 系统字体 | 检查 family 名拼写。改名或换成 GF 有的同类字体。转换日志里的字体解析 warning 会提示 |
+| `<div>` + 非对称 `border-radius`（每角不同，如 `40% 60% 70% 30% / 40% 50% 60% 50%`），不论是否带 `::after` 填充 | OOXML 几何原语只有正圆 / 标准圆角；asym 路径走 shape 档时四角全部归零变方块 | 替换为 inline `<svg>` + `<path>` 走 SVG 截图通道；外环 + 内填充用两条 path（stroke + fill） |
+
+## 渲染端边界（不是转换 bug）
+
+不是转换器 bug，渲染端预期行为：
+
+- **PowerPoint 嵌入字体信任提示** — PPTX 嵌入字体正常提示；源可信就在 PowerPoint 里信任文档
+- **iOS / 网页版 PowerPoint 忽略嵌入字体** — 这些环境不认嵌入字体。改转换器代码前先在桌面 PowerPoint 复核
+- **浏览器专属交互**（动效 / 滚动 / 触控） — PPT 只保留 slide 页，不保留浏览器交互。确认静态状态抓对了即可
+
+## 调试入口
+
+具体命令、路径和调试工具以主 skill 文档为准；本文件只记录可复用的症状和判断规则。

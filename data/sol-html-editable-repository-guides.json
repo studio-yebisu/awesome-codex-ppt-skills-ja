@@ -1,0 +1,67 @@
+[
+  {
+    "repository": "Hasasasa/html-to-editable-pptx",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_cli_conversion_local_font_adapter",
+    "case_ids": [
+      "html-editable-showcase"
+    ],
+    "summary_ja": "原典HTML-to-editable-PPTXで架空焙煎所の日本語5枚を実制作。局所日本語TTF登録で書体を維持。",
+    "requirements": [
+      "Python 3",
+      "原典requirements依存",
+      "Playwright Chromium"
+    ],
+    "steps": [
+      "HTMLとデータを作る",
+      "日本語原TTFを局所登録",
+      "原典CLIでmeasure/assemble/embed",
+      "主ファイルの初回表示を軽く確認"
+    ],
+    "commands": [
+      "python convert_local_fonts.py index.html --out deck.pptx --keep-screenshots --no-embed-fonts --no-verify --no-visual-audit"
+    ],
+    "source_refs": [
+      {
+        "path": "SKILL.md",
+        "sha256": "1d3859ef9e38687ff0ea127796e05295b625159f43dc197aeceabaea769e2b5b",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/SKILL.md"
+      },
+      {
+        "path": "convert.py",
+        "sha256": "fb0a1d0c421dd1e3ab15db559d3f052dfc294d384955a05edd4d018463417180",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/convert.py"
+      },
+      {
+        "path": "scripts/measure.py",
+        "sha256": "6a220586a670f02dd7eeda1ed8fdac83313de2e9fc8fa4c9eb9bebc25ee4d78d",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/measure.py"
+      },
+      {
+        "path": "scripts/assemble.py",
+        "sha256": "db4e6a9c305336bab882534cf31931caa7e4f431c7ef2ebcca2c481b838713da",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/assemble.py"
+      },
+      {
+        "path": "scripts/embed_fonts.py",
+        "sha256": "e53e1d986183cd2a855f5b55d2697a8c2ad8bc90377d109d907fa187b5a939a3",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/embed_fonts.py"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "2c660995fdf9061243c0e83cf52a26d5b05a77eb15aa16a9d838992ba8cd56a1",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/LICENSE"
+      }
+    ],
+    "upstream_commit": "17c1dbb76e958543dc2741a7d50ca374354f33b7",
+    "license": "MIT",
+    "skill": "skill-forks/html-editable-ja/SKILL.md",
+    "guide": "examples/repositories/html-editable-showcase/README.md",
+    "compatibility_notice": "配布PPTXは原典 --no-embed-fonts で生成。PowerPointで5ページとして開けた。端末に書体が無い場合は代替表示。原TTF/OFLはZIP同梱。",
+    "recipe_notes": [
+      "PowerPointで開ける配布版は、原典の --no-embed-fonts を使用。日本語書体は公式TTFを端末へ導入する。",
+      "原典FONT_PLANへの日本語フォント登録アダプターを使用。変換本体は原典の measure/assemble を維持。"
+    ]
+  }
+]

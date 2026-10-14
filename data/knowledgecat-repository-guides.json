@@ -97,12 +97,15 @@
     "limitations": [
       "artifact-toolをローカルで利用できる環境が必要。",
       "原典の日本語action-title警告は意味を別途読む必要がある。",
-      "原稿・図表を外部AIサービスが生成した実証ではない。"
+      "原稿・図表を外部AIサービスが生成した実証ではない。",
+      "ホストruntimeの条件を確認し、独立した実用rendererとして推奨しない。別の原典方式で再制作するまで現行掲載を除外。"
     ],
     "commands": [
       "python tools/build_knowledge_cat_repository_example.py --node \"node.exeのパス\" --workspace \"artifact-tool workspaceのパス\" --render"
     ],
     "method_ja": "原典のnativeビルダーを使い、本文・表・図形・講稿を編集できる5枚のPowerPointを作成。Codexのartifact-tool環境を使用します。",
-    "fork": "knowledge-cat-ppt-ja"
+    "fork": "knowledge-cat-ppt-ja",
+    "product_status": "excluded_host_runtime_evaluation_only",
+    "license_note": "原典はMIT。既存native制作は、内部評価・テスト用途のホスト専有SDKに依存するため、現在は評価制作の履歴として保管し現行推奨から外している。原典のMITはホストSDKの使用許諾を変更しない。ホストSDKコードは同梱していない。"
   }
 ]

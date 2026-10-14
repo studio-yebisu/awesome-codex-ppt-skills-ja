@@ -1080,7 +1080,8 @@
     "limitations": [
       "artifact-toolをローカルで利用できる環境が必要。",
       "原典の日本語action-title警告は意味を別途読む必要がある。",
-      "原稿・図表を外部AIサービスが生成した実証ではない。"
+      "原稿・図表を外部AIサービスが生成した実証ではない。",
+      "ホストruntimeの条件を確認し、独立した実用rendererとして推奨しない。別の原典方式で再制作するまで現行掲載を除外。"
     ],
     "forks": [
       "knowledge-cat-ppt-ja"
@@ -1088,6 +1089,8 @@
     "guide_markdown": "# Knowledge Cat：迷わない議事録のまとめ方\n\n原典のnative-pptx laneと専用 `scripts/build_native_pptx.mjs` で、架空の青葉企画向けに日本語5枚を制作。計画JSONを原典validatorで確認し、@oai/artifact-toolでnative text/shape/table/notesへ出力した。原典ビルダーは出力PPTXを再importしてpreviewとinspectionも作る。\n\n固定原典: gnipbao/knowledge-cat-ppt-skill / 889c3dc00b356607fa9af935eb807056c3394886。MIT Copyright 2026 Knowledge Cat contributors。原文LICENSEを保持。ランタイム依存@oai/artifact-tool本体はこのキットへ複製せず、利用環境で用意する。\n\n## 再制作\n\nPython + python-pptx/Pillow、Node、@oai/artifact-toolを解決できるworkspaceが必要。今回の利用環境はenvironment.json。外部API・キー・画像サービスは不要。PowerPointを使う場合はNoto Sans JPも導入する。\n\nキット内の配置は `tools/build_knowledge_cat_repository_example.py` と `examples/repositories/knowledge-cat/input/data.json`、同case内の `source/upstream/`（原典scripts、references、assets、LICENSE）。カタログの固定原典が存在しない場合は同梱source/upstreamを使う。\n\n```text\npython tools/build_knowledge_cat_repository_example.py --node <node.exe> --workspace <artifact-workspace>\n```\n\n上記だけならPPTXと原典preview・検査結果を生成し、QAはgenerated_awaiting_reviewとなる。input/data.jsonの各頁を自分の内容へ変更する。原稿は人名・日程とも架空の教材で、実在組織の規則ではない。\n\nWindows版PowerPointとtools/render_powerpoint.ps1がある環境では `--render` を追加し、完成PPTXを描画する。全頁を目視した後だけ `--finalize-only --reviewed` で記録を確定する。既存のPNGを新しい原稿の確認証拠として流用しない。\n\n固有の表紙・statement・table・process・closingを使い、原典ビルダー自体は無変更。表紙の固定技術デモ文と出力書体だけ日本語教材に合わせて補正した。変更範囲はsource/local-changes.json。原典plan validatorの日本語action-title警告は抑制せず保持し、内容を実読して確認した。\n\n## 検証\n\n原典extract_pptx_textでplaceholder検査、check_pptx_editabilityで5枚・native table・notes・image-only排除を確認。probe_pptx_editabilityは一時ファイルの文字を編集して再読込し、原本不変を確認する。構造検査は目視品質の保証ではない。PowerPoint UIでの手編集試験はしていない。\n\n原典previewは日本語局所化前の出力、render/は局所化後のPowerPoint描画。両者の役割を分けて保持している。PPTX・原稿・講稿・原典・実行ログを同梱し、元のMIT表示を保持する。\n",
     "method_ja": "原典のnativeビルダーを使い、本文・表・図形・講稿を編集できる5枚のPowerPointを作成。Codexのartifact-tool環境を使用します。",
     "fork": "knowledge-cat-ppt-ja",
+    "product_status": "excluded_host_runtime_evaluation_only",
+    "license_note": "原典はMIT。既存native制作は、内部評価・テスト用途のホスト専有SDKに依存するため、現在は評価制作の履歴として保管し現行推奨から外している。原典のMITはホストSDKの使用許諾を変更しない。ホストSDKコードは同梱していない。",
     "original_description_ja": "ストーリー構成に基づきPPT・HTML・画像形式で資料を作成し、出力先の選択と品質確認を行うスキル。",
     "execution_status": "generated_verified_locally"
   },
@@ -5244,7 +5247,7 @@
   },
   {
     "repository": "Hasasasa/html-to-editable-pptx",
-    "summary_ja": "HTML資料をPowerPointのテキストボックスなどに変換。エージェント向けスキルとPython CLIを提供。",
+    "summary_ja": "原典HTML-to-editable-PPTXで架空焙煎所の日本語5枚を実制作。局所日本語TTF登録で書体を維持。",
     "kind": "pptx",
     "upstream_commit": "17c1dbb76e958543dc2741a7d50ca374354f33b7",
     "checked_at": "2026-10-13T13:34:45.821503+00:00",
@@ -5258,32 +5261,72 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/README.md",
-        "bytes": 10945
+        "path": "SKILL.md",
+        "sha256": "1d3859ef9e38687ff0ea127796e05295b625159f43dc197aeceabaea769e2b5b",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/SKILL.md"
       },
       {
-        "path": "SKILL.md",
-        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/SKILL.md",
-        "bytes": 26600
+        "path": "convert.py",
+        "sha256": "fb0a1d0c421dd1e3ab15db559d3f052dfc294d384955a05edd4d018463417180",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/convert.py"
+      },
+      {
+        "path": "scripts/measure.py",
+        "sha256": "6a220586a670f02dd7eeda1ed8fdac83313de2e9fc8fa4c9eb9bebc25ee4d78d",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/measure.py"
+      },
+      {
+        "path": "scripts/assemble.py",
+        "sha256": "db4e6a9c305336bab882534cf31931caa7e4f431c7ef2ebcca2c481b838713da",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/assemble.py"
+      },
+      {
+        "path": "scripts/embed_fonts.py",
+        "sha256": "e53e1d986183cd2a855f5b55d2697a8c2ad8bc90377d109d907fa187b5a939a3",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/embed_fonts.py"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/LICENSE",
-        "bytes": 1061
+        "sha256": "2c660995fdf9061243c0e83cf52a26d5b05a77eb15aa16a9d838992ba8cd56a1",
+        "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/LICENSE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "html-editable-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python 3",
+      "原典requirements依存",
+      "Playwright Chromium"
+    ],
+    "commands": [
+      "python convert_local_fonts.py index.html --out deck.pptx --keep-screenshots --no-embed-fonts --no-verify --no-visual-audit"
+    ],
+    "steps": [
+      "HTMLとデータを作る",
+      "日本語原TTFを局所登録",
+      "原典CLIでmeasure/assemble/embed",
+      "主ファイルの初回表示を軽く確認"
+    ],
+    "limitations": [],
+    "forks": [
+      "html-editable-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_cli_conversion_local_font_adapter",
+    "case_ids": [
+      "html-editable-showcase"
+    ],
+    "skill": "skill-forks/html-editable-ja/SKILL.md",
+    "guide": "examples/repositories/html-editable-showcase/README.md",
+    "compatibility_notice": "配布PPTXは原典 --no-embed-fonts で生成。PowerPointで5ページとして開けた。端末に書体が無い場合は代替表示。原TTF/OFLはZIP同梱。",
+    "recipe_notes": [
+      "PowerPointで開ける配布版は、原典の --no-embed-fonts を使用。日本語書体は公式TTFを端末へ導入する。",
+      "原典FONT_PLANへの日本語フォント登録アダプターを使用。変換本体は原典の measure/assemble を維持。"
+    ],
     "original_description_ja": "HTML資料をPowerPointのテキストボックスなどに変換。エージェント向けスキルとPython CLIを提供。"
   },
   {
@@ -5961,7 +6004,7 @@
   },
   {
     "repository": "HututuWorks/sci-diagram-pptx",
-    "summary_ja": "科学分野の概念図・機構図・フロー図を、出典に基づく編集可能なPowerPoint標準の要素に再構成するスキル。",
+    "summary_ja": "原典の意味・矢印・native所有を守る科学概念図の日本語派生。",
     "kind": "pptx",
     "upstream_commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
     "checked_at": "2026-10-13T13:35:01.560282+00:00",
@@ -5992,17 +6035,38 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "sci-diagram-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node.js20+ / PptxGenJS4.0.1 (MIT)",
+      "書体: Zen Kaku Gothic New / Space Grotesk",
+      "描画: Windows Microsoft PowerPoint、またはLibreOffice/pdftoppm/Python3.10+"
+    ],
+    "commands": [
+      "cd source",
+      "npm ci --ignore-scripts --no-audit --no-fund",
+      "node build.mjs"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "新規概念図5枚への明示拡張。画像の忠実再構成ではない",
+      "全ページ詳細検査、構造監査、ZIP再実行は未実施"
     ],
-    "forks": [],
-    "original_description_ja": "科学分野の概念図・機構図・フロー図を、出典に基づく編集可能なPowerPoint標準の要素に再構成するスキル。"
+    "forks": [
+      "sci-diagram-ja"
+    ],
+    "source_download": "downloads/sci-diagram-example-ja.zip",
+    "fork_download": "downloads/sci-diagram-ja.zip",
+    "guide": "examples/repositories/sci-diagram-showcase/README.md",
+    "recipe_notes": [
+      "原典のportable PptxGenJS 4.0.1方式を使用。内部評価専用のホストSDKは必要ない。",
+      "科学内容はUSGS一次解説に基づく概念モデル。定量的な実験結果ではない。"
+    ],
+    "original_description_ja": "科学分野の概念図・機構図・フロー図を、出典に基づく編集可能なPowerPoint標準の要素に再構成するスキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "LearnAIHubC/LearnDeck",
@@ -6556,7 +6620,7 @@
   },
   {
     "repository": "ABYR1206/claude-skill-hand-drawn-slides",
-    "summary_ja": "手描きスケッチ風のPowerPoint章扉スライドを作成するClaude向けスキル。40種類のSVGイラストを収録。",
+    "summary_ja": "原典の手描きSVGとPptxGenJS雛形で日本語章扉5枚。フル業務資料ではなく表紙＋4章のサンプル。",
     "kind": "pptx",
     "upstream_commit": "322a265344e73cd54f77f3f07b6a9f15bb7d2d99",
     "checked_at": "2026-10-13T13:35:11.683232+00:00",
@@ -6570,32 +6634,63 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/README.md",
-        "bytes": 3811
+        "path": "hand-drawn-chapter-slides/SKILL.md",
+        "sha256": "a9948eadf49f7cb5d4a586ea81f8baaf8390e4cb8c7b1631bf115b0fafe02887",
+        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/hand-drawn-chapter-slides/SKILL.md"
       },
       {
-        "path": "hand-drawn-chapter-slides/SKILL.md",
-        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/hand-drawn-chapter-slides/SKILL.md",
-        "bytes": 8352
+        "path": "hand-drawn-chapter-slides/scripts/illustrations.md",
+        "sha256": "4aad8d2fb7884bc6a03b9da53ec98cfd84ace0721ca45657a3a691ba54dd896f",
+        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/hand-drawn-chapter-slides/scripts/illustrations.md"
+      },
+      {
+        "path": "examples/demo-chapter-slides.pptx",
+        "sha256": "03523776bea6de78eefb7d819c6e1ede926b668bedbe31086d34dd4dfe272a54",
+        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/examples/demo-chapter-slides.pptx"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/LICENSE",
-        "bytes": 1065
+        "sha256": "939cf67b24635f051b6a7ba8e0bcbb3e95d8bb22edcd98c12975de2a031e6277",
+        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/LICENSE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "hand-drawn-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node.js",
+      "PptxGenJS",
+      "sharp",
+      "任意:指定TTFの手動導入"
+    ],
+    "commands": [
+      "npm install",
+      "npm run build"
+    ],
+    "steps": [
+      "章の役割を決める",
+      "原SVGを選ぶ",
+      "原典雛形へ和文コピーを適用",
+      "PowerPointから閲覧PNG/PDFを出す"
+    ],
+    "limitations": [],
+    "forks": [
+      "hand-drawn-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_instruction_recipe_pptxgenjs",
+    "case_ids": [
+      "hand-drawn-showcase"
+    ],
+    "skill": "skill-forks/hand-drawn-ja/SKILL.md",
+    "guide": "examples/repositories/hand-drawn-showcase/README.md",
+    "recipe_notes": [
+      "表紙と4章の章扉サンプル。全文の業務資料ではない。",
+      "見出し・ノートはPPTXで編集できる。手描きイラストは原典SVGからの画像で、原SVGはキットに収録。"
+    ],
     "original_description_ja": "手描きスケッチ風のPowerPoint章扉スライドを作成するClaude向けスキル。40種類のSVGイラストを収録。"
   },
   {

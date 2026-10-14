@@ -30,6 +30,8 @@ Original editppt CLI + page workers + built-in image editing
 - 新規入力には内蔵画像編集とpage worker対応エージェント
 - PowerPoint（今回の表示QA）
 
+
+
 ## 日本語で魅力ある資料へ
 
 1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。

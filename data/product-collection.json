@@ -25,6 +25,36 @@
       "license": "Apache-2.0"
     },
     {
+      "repository": "HututuWorks/sci-diagram-pptx",
+      "title_ja": "編集できる科学の概念図",
+      "description_ja": "原典のnative図解ルールで、矢印と注釈まで編集できる教材へ。",
+      "style": "diagram",
+      "featured_case_id": "sci-diagram-showcase",
+      "skill_download": "downloads/skills/sci-diagram-ja.md",
+      "fork_download": "downloads/sci-diagram-ja.zip",
+      "license": "Apache-2.0"
+    },
+    {
+      "repository": "Hasasasa/html-to-editable-pptx",
+      "title_ja": "HTMLから文字と図形のPPTXへ",
+      "description_ja": "原典CLIで日本語HTMLを変換し、編集できるブランド資料へ。",
+      "style": "editorial",
+      "featured_case_id": "html-editable-showcase",
+      "skill_download": "downloads/skills/html-editable-ja.md",
+      "fork_download": "downloads/html-editable-ja.zip",
+      "license": "MIT"
+    },
+    {
+      "repository": "ABYR1206/claude-skill-hand-drawn-slides",
+      "title_ja": "手描きイラストの章扉",
+      "description_ja": "原典SVGと組版レシピで、章のはじまりを親しみのある一枚に。",
+      "style": "editorial",
+      "featured_case_id": "hand-drawn-showcase",
+      "skill_download": "downloads/skills/hand-drawn-ja.md",
+      "fork_download": "downloads/hand-drawn-ja.zip",
+      "license": "MIT"
+    },
+    {
       "repository": "op7418/guizang-ppt-skill",
       "title_ja": "雑誌とSwissのレイアウト",
       "description_ja": "原典テンプレートで、企画を余白とグリッドに落とし込む。",
@@ -145,16 +175,6 @@
       "license": "Apache-2.0"
     },
     {
-      "repository": "gnipbao/knowledge-cat-ppt-skill",
-      "title_ja": "図解でわかる教材",
-      "description_ja": "原典の組版と図解で、学ぶ順番を見える形に。",
-      "style": "diagram",
-      "featured_case_id": "knowledge-cat",
-      "skill_download": "downloads/skills/knowledge-cat-ppt-ja.md",
-      "fork_download": "downloads/knowledge-cat-ppt-ja.zip",
-      "license": "MIT"
-    },
-    {
       "repository": "sunchaokun/PPT-Design-Skill",
       "title_ja": "企画をビジュアルにする",
       "description_ja": "元スキルの制作方式を、日本語の企画提案へ。",
@@ -248,6 +268,9 @@
   "active_case_ids": [
     "sol-motion-showcase",
     "sol-editorial-showcase",
+    "sci-diagram-showcase",
+    "html-editable-showcase",
+    "hand-drawn-showcase",
     "port-town",
     "cyberppt",
     "html-scrolline",
@@ -260,7 +283,6 @@
     "qiaomu-bento",
     "seaslides",
     "minorun-marp",
-    "knowledge-cat",
     "ppt-design-skill",
     "ppt-design-system",
     "hands-on-deck",
@@ -270,5 +292,13 @@
     "business-carousel",
     "magic-slide",
     "revealjs-skill"
+  ],
+  "excluded": [
+    {
+      "repository": "gnipbao/knowledge-cat-ppt-skill",
+      "reason": "既存のnative制作例は、内部評価・テスト用途のホスト専有runtimeに依存する。原典のMITとホストruntimeの条件は別。実用サイトの現行推奨から外し、制作履歴として保全する。",
+      "history_case": "knowledge-cat",
+      "resume_condition": "原典の配布可能な別方式で制作するか、当該ホストruntimeの目的に合う使用許諾を確認する。"
+    }
   ]
 }

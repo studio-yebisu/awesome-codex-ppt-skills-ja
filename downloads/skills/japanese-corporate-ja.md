@@ -30,6 +30,8 @@ Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありま�
 - Microsoft PowerPoint 16.0 と PowerShell 7（PNG/PDF描画）
 - 同梱の japanese-corporate-ponchi-template.pptx
 
+
+
 ## 日本語で魅力ある資料へ
 
 1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。

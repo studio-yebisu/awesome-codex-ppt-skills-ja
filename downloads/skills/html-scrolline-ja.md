@@ -31,6 +31,8 @@ Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありま�
 - ChromeまたはEdge / ffmpeg（smoke描画）
 - 日本語フォント（WindowsではYu Mincho / Yu Gothic）
 
+
+
 ## 日本語で魅力ある資料へ
 
 1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。

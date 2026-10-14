@@ -1,17 +1,17 @@
 {
   "updated_at": "2026-10-14",
   "status": "in_progress",
-  "objective": "Studio Yebisu独自の日本語AIスライドサイトへ改修する。Sol 6.1の並列制作で原典GitHubスキルを実際に活かした美しい日本語作例を完成させ、厳選一覧・フロート再生・短い日本語スキルの直接取得・一式ZIP・OSSフォントとAI向けの書体指示を結び付ける。確認は生成成功と主要出力の初回表示に絞り、Astraと大規模QAを使わない。209件全消化を要求しない。",
+  "objective": "Studio Yebisu独自の日本語AIスライドサイトを育てる。幅広いGitHub原典の固有スキル・テンプレート・CLIを実際に使い、日本語の美しい資料と具体的な作り方をリポごとに揃える。Sol 6.1の並列制作で、完成作例・短い日本語スキルの直接取得・制作一式・OSS書体とAI向け指示を結び付ける。元209件は棚卸しと資料を保持し、使わないものを現行掲載から外せる。Astraと大規模QAを使わず、必要なビルドと主要出力の初回表示を確認する。少数の新作バッチだけを全体完了に読み替えない。",
   "production_model": "gpt-6.1-sol",
   "parallel_production": true,
   "astra_enabled": false,
   "quality_policy": "build_and_primary_output_only",
   "completion": [
-    "制作方針と製品仕様の更新",
-    "原典方式の日本語新作2冊以上",
-    "厳選一覧とフロート再生",
-    "日本語スキル本文の直接取得と一式ZIP",
-    "OSS書体の拡充とAI向けの書体指示"
+    "現行掲載の各リポに原典方式で生成した日本語作例と入力・作り方がある",
+    "原典を使った魅力ある日本語資料が複数の制作方式・作風をカバーする",
+    "作風から選ぶ一覧とフロート再生が完成資料へつながる",
+    "日本語スキル本文の直接取得、一式ZIP、固定原典と個別条件を案内する",
+    "OSS書体とAI向けの書体・デザイン指示を実制作で活用できる"
   ],
   "excluded_requirements": [
     "209件すべての制作",
@@ -20,5 +20,17 @@
     "全キットの完全再実行",
     "巨大QA台帳と採点"
   ],
-  "app_goal_note": "アプリの既存goal APIはobjectiveの編集を提供しないため、実行目標の改訂はこのファイルとdocs/PROJECT.mdを正本にする。未達成の旧goalを完了扱いにしない。"
+  "app_goal_note": "アプリの既存goal APIはobjectiveの編集を提供しないため、実行目標の改訂はこのファイルとdocs/PROJECT.mdを正本にする。未達成の旧goalを完了扱いにしない。",
+  "last_completed_batch": "2026-10-14: 原典3リポの新作15枚、制作一式と直接取得スキルを厳選26スキルのサイトへ統合",
+  "current_batch": {
+    "status": "integrated_locally",
+    "repositories": [
+      "HututuWorks/sci-diagram-pptx",
+      "Hasasasa/html-to-editable-pptx",
+      "ABYR1206/claude-skill-hand-drawn-slides"
+    ],
+    "production_model": "gpt-6.1-sol",
+    "new_slides": 15,
+    "checks": "必要な生成と主要出力の初回表示"
+  }
 }

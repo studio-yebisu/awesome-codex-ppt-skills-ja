@@ -1,0 +1,58 @@
+[
+  {
+    "repository": "ABYR1206/claude-skill-hand-drawn-slides",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_instruction_recipe_pptxgenjs",
+    "case_ids": [
+      "hand-drawn-showcase"
+    ],
+    "summary_ja": "原典の手描きSVGとPptxGenJS雛形で日本語章扉5枚。フル業務資料ではなく表紙＋4章のサンプル。",
+    "requirements": [
+      "Node.js",
+      "PptxGenJS",
+      "sharp",
+      "任意:指定TTFの手動導入"
+    ],
+    "steps": [
+      "章の役割を決める",
+      "原SVGを選ぶ",
+      "原典雛形へ和文コピーを適用",
+      "PowerPointから閲覧PNG/PDFを出す"
+    ],
+    "commands": [
+      "npm install",
+      "npm run build"
+    ],
+    "source_refs": [
+      {
+        "path": "hand-drawn-chapter-slides/SKILL.md",
+        "sha256": "a9948eadf49f7cb5d4a586ea81f8baaf8390e4cb8c7b1631bf115b0fafe02887",
+        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/hand-drawn-chapter-slides/SKILL.md"
+      },
+      {
+        "path": "hand-drawn-chapter-slides/scripts/illustrations.md",
+        "sha256": "4aad8d2fb7884bc6a03b9da53ec98cfd84ace0721ca45657a3a691ba54dd896f",
+        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/hand-drawn-chapter-slides/scripts/illustrations.md"
+      },
+      {
+        "path": "examples/demo-chapter-slides.pptx",
+        "sha256": "03523776bea6de78eefb7d819c6e1ede926b668bedbe31086d34dd4dfe272a54",
+        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/examples/demo-chapter-slides.pptx"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "939cf67b24635f051b6a7ba8e0bcbb3e95d8bb22edcd98c12975de2a031e6277",
+        "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/LICENSE"
+      }
+    ],
+    "upstream_commit": "322a265344e73cd54f77f3f07b6a9f15bb7d2d99",
+    "license": "MIT",
+    "skill": "skill-forks/hand-drawn-ja/SKILL.md",
+    "guide": "examples/repositories/hand-drawn-showcase/README.md",
+    "recipe_notes": [
+      "表紙と4章の章扉サンプル。全文の業務資料ではない。",
+      "見出し・ノートはPPTXで編集できる。手描きイラストは原典SVGからの画像で、原SVGはキットに収録。"
+    ]
+  }
+]

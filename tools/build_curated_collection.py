@@ -7,6 +7,9 @@ ROOT = Path(__file__).resolve().parents[1]
 SELECTION = [
     ('zarazhangrui/frontend-slides','動きで魅せるWebスライド','motion','sol-motion-showcase','固定ステージとSVGで、大きな日本語タイポを動かす。'),
     ('likaku/Mck-ppt-design-skill','編集誌のようなPowerPoint','editorial','sol-editorial-showcase','公式エンジンを活かし、文字と図形を編集できる誌面へ。'),
+    ('HututuWorks/sci-diagram-pptx','編集できる科学の概念図','diagram','sci-diagram-showcase','原典のnative図解ルールで、矢印と注釈まで編集できる教材へ。'),
+    ('Hasasasa/html-to-editable-pptx','HTMLから文字と図形のPPTXへ','editorial','html-editable-showcase','原典CLIで日本語HTMLを変換し、編集できるブランド資料へ。'),
+    ('ABYR1206/claude-skill-hand-drawn-slides','手描きイラストの章扉','editorial','hand-drawn-showcase','原典SVGと組版レシピで、章のはじまりを親しみのある一枚に。'),
     ('op7418/guizang-ppt-skill','雑誌とSwissのレイアウト','editorial','port-town','原典テンプレートで、企画を余白とグリッドに落とし込む。'),
     ('crazyykhllc-bit/CyberPPT','情報を整理するPPTX','work','cyberppt','原典の内容設計を活かし、文字と図形を編集できる資料へ。'),
     ('gongnyang/awesome-html-scrolline-deck','スクロールで語る企画','motion','html-scrolline','横断する図形と流れで、体験を一つのストーリーに。'),
@@ -19,7 +22,6 @@ SELECTION = [
     ('joeseesun/qiaomu-bento-ppt','Bentoで整理する提案','diagram','qiaomu-bento','原典のshellとグリッドで情報の優先順位を見せる。'),
     ('touying-typ/seaslides','構成から組むWebスライド','diagram','seaslides','原典のTCSとHTMLコンパイラーで、話の順番を資料へ。'),
     ('minorun365/minorun-marp-skill','Markdownで育てる資料','work','minorun-marp','原稿を短く書き、Marpの原典テーマで発表資料へ。'),
-    ('gnipbao/knowledge-cat-ppt-skill','図解でわかる教材','diagram','knowledge-cat','原典の組版と図解で、学ぶ順番を見える形に。'),
     ('sunchaokun/PPT-Design-Skill','企画をビジュアルにする','editorial','ppt-design-skill','元スキルの制作方式を、日本語の企画提案へ。'),
     ('att6113/ppt-design-system','デザインを揃えるPPTX','work','ppt-design-system','原典のデザインシステムで、資料の基準を揃える。'),
     ('EveryInc/hands-on-deck','JSONで編集するPowerPoint','work','hands-on-deck','原典CLIの編集指示で、文字・図形・図表を組み立てる。'),
@@ -43,6 +45,7 @@ def skill_text(entry,profile,case):
     legal_links='\n'.join('- https://github.com/'+repo+'/blob/'+commit+'/'+p for p in profile.get('license_paths',[]) if not p.startswith('examples/'))
     requirements='\n'.join('- '+str(r) for r in profile.get('requirements',[])[:6])
     method=profile.get('method_ja') or case['method']
+    recipe_notes='\n'.join('- '+v for v in profile.get('recipe_notes',[]))
     return f'''---
 name: {case['fork_id']}-entry
 description: {entry['title_ja']}を日本語で制作するときに使う。{repo}の原典方式を使い、作例の作風を自分の題材へ展開する。
@@ -65,6 +68,8 @@ Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありま�
 ## 必要なもの
 
 {requirements or '- 原典の方式を実行できるコーディングエージェントと依存環境。'}
+
+{recipe_notes}
 
 ## 日本語で魅力ある資料へ
 
@@ -96,16 +101,19 @@ Studio Yebisuの日本語制作指示。原作者の公式翻訳ではありま�
 if __name__=='__main__':
     cases=load('data/case-studies.json'); by_case={c['id']:c for c in cases}
     profiles={p['repository']:p for p in load('data/repository-guides.json')}
+    exclusions=load('data/product-exclusions.json')['excluded'] if (ROOT/'data/product-exclusions.json').exists() else []
+    excluded_repos={e['repository'] for e in exclusions}
     entries=[]
     out=ROOT/'downloads/skills';out.mkdir(parents=True,exist_ok=True)
     for repo,title,style,case_id,description in SELECTION:
+        if repo in excluded_repos:continue
         if case_id not in by_case:continue
         case=by_case[case_id];profile=profiles[repo]
         entry={'repository':repo,'title_ja':title,'description_ja':description,'style':style,'featured_case_id':case_id,'skill_download':'downloads/skills/'+case['fork_id']+'.md','fork_download':case.get('fork_download'),'license':profile.get('license')}
         (ROOT/entry['skill_download']).write_text(skill_text(entry,profile,case),encoding='utf-8')
         entries.append(entry)
     active_case_ids=[e['featured_case_id'] for e in entries]
-    dump('data/product-collection.json',{'updated_at':'2026-10-14','title':'Studio Yebisu AIスライドアトリエ','policy':'原典方式で制作した実例から選ぶ日本語の厳選スキル集','archive':'data/skills.json','entries':entries,'active_case_ids':active_case_ids})
+    dump('data/product-collection.json',{'updated_at':'2026-10-14','title':'Studio Yebisu AIスライドアトリエ','policy':'原典方式で制作した実例から選ぶ日本語の厳選スキル集','archive':'data/skills.json','entries':entries,'active_case_ids':active_case_ids,'excluded':exclusions})
     with ZipFile(ROOT/'downloads/yebisu-japanese-skill-entries.zip','w',ZIP_DEFLATED) as z:
         for e in entries:z.write(ROOT/e['skill_download'],Path(e['skill_download']).name)
         z.writestr('README.md','日本語の指示本文集です。各本文の固定原典と個別ライセンスを参照してください。実装・原文LICENSEはサイトの一式ZIPから別途取得できます。\n')

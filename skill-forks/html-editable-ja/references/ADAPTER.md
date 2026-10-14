@@ -1,0 +1,1 @@
+ローカル例のconvert_local_fonts.pyは作品フォルダー内で実行します。upstream/とfonts/を隣接配置。原典CLIのmeasure/assemble/embedは変更せず、FONT_PLANへ日本語TTFを登録する例です。実行例とフルフォントは作品ZIPを参照。

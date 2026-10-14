@@ -1,0 +1,57 @@
+{
+  "repository": "Hasasasa/html-to-editable-pptx",
+  "commit": "17c1dbb76e958543dc2741a7d50ca374354f33b7",
+  "license": "MIT",
+  "scope": "Original converter plus local full-TTF Japanese font registry adapter",
+  "upstream_preserved": true,
+  "case_studies": [
+    "html-editable-showcase"
+  ],
+  "method": "Original convert.py CLI → preflight → original Playwright measure → python-pptx assemble; original --no-embed-fonts compatibility option. Wrapper registers local Japanese font families and maps seeded Noto SC aliases to JP fonts; no converter replacement.",
+  "command": "python convert_local_fonts.py index.html --out deck.pptx --keep-screenshots --no-embed-fonts --no-verify --no-visual-audit",
+  "modifications": [
+    "Local font resolver adapter only; core converter remains unchanged.",
+    "No OS font installation. Detailed structural/visual audit disabled per project scope.",
+    "Embedded-TTF output failed PowerPoint COM open; original --no-embed-fonts output opened successfully. Full original TTFs/OFL provided for manual font installation."
+  ],
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "1d3859ef9e38687ff0ea127796e05295b625159f43dc197aeceabaea769e2b5b",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/SKILL.md"
+    },
+    {
+      "path": "convert.py",
+      "sha256": "fb0a1d0c421dd1e3ab15db559d3f052dfc294d384955a05edd4d018463417180",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/convert.py"
+    },
+    {
+      "path": "scripts/measure.py",
+      "sha256": "6a220586a670f02dd7eeda1ed8fdac83313de2e9fc8fa4c9eb9bebc25ee4d78d",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/measure.py"
+    },
+    {
+      "path": "scripts/assemble.py",
+      "sha256": "db4e6a9c305336bab882534cf31931caa7e4f431c7ef2ebcca2c481b838713da",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/assemble.py"
+    },
+    {
+      "path": "scripts/embed_fonts.py",
+      "sha256": "e53e1d986183cd2a855f5b55d2697a8c2ad8bc90377d109d907fa187b5a939a3",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/embed_fonts.py"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "2c660995fdf9061243c0e83cf52a26d5b05a77eb15aa16a9d838992ba8cd56a1",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/LICENSE"
+    }
+  ],
+  "preview_export": {
+    "method": "tools/render_powerpoint.ps1 run once on no-embed deck.pptx",
+    "application": "Microsoft PowerPoint 16.0",
+    "pages": 5,
+    "output": "render/slide-01.png through slide-05.png and render/deck.pdf",
+    "source_html": "index.html",
+    "detail_review": false
+  }
+}

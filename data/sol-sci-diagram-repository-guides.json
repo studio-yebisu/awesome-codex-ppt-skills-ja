@@ -1,0 +1,39 @@
+[
+  {
+    "repository": "HututuWorks/sci-diagram-pptx",
+    "summary_ja": "原典の意味・矢印・native所有を守る科学概念図の日本語派生。",
+    "example_ids": [
+      "sci-diagram-showcase"
+    ],
+    "upstream_commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
+    "license": "Apache-2.0",
+    "license_paths": [
+      "examples/repositories/sci-diagram-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/sci-diagram-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Node.js20+ / PptxGenJS4.0.1 (MIT)",
+      "書体: Zen Kaku Gothic New / Space Grotesk",
+      "描画: Windows Microsoft PowerPoint、またはLibreOffice/pdftoppm/Python3.10+"
+    ],
+    "commands": [
+      "cd source",
+      "npm ci --ignore-scripts --no-audit --no-fund",
+      "node build.mjs"
+    ],
+    "source_download": "downloads/sci-diagram-example-ja.zip",
+    "fork_download": "downloads/sci-diagram-ja.zip",
+    "guide": "examples/repositories/sci-diagram-showcase/README.md",
+    "limitations": [
+      "新規概念図5枚への明示拡張。画像の忠実再構成ではない",
+      "全ページ詳細検査、構造監査、ZIP再実行は未実施"
+    ],
+    "recipe_notes": [
+      "原典のportable PptxGenJS 4.0.1方式を使用。内部評価専用のホストSDKは必要ない。",
+      "科学内容はUSGS一次解説に基づく概念モデル。定量的な実験結果ではない。"
+    ]
+  }
+]

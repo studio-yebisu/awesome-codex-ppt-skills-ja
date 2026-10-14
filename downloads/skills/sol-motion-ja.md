@@ -27,6 +27,8 @@ Original viewport-base.css included verbatim; html-template.md stage and SlidePr
 - モダンブラウザ
 - 取得済み原典とフル日本語フォント
 
+
+
 ## 日本語で魅力ある資料へ
 
 1. 読者、目的、最後に伝えたいこと、形式を決める。入力の数字・単位・出典を維持する。架空の企画はそう表示する。

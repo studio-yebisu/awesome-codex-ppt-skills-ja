@@ -1,0 +1,52 @@
+{
+  "repository": "HututuWorks/sci-diagram-pptx",
+  "upstream_commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
+  "license": "Apache-2.0",
+  "runtime": "PptxGenJS 4.0.1 (MIT)",
+  "read_files": [
+    "skills/sci-diagram-pptx/SKILL.md",
+    "skills/sci-diagram-pptx/references/reconstruction.md",
+    "skills/sci-diagram-pptx/references/runtime-pptxgenjs.md",
+    "skills/sci-diagram-pptx/assets/pptxgenjs-build-template.mjs",
+    "skills/sci-diagram-pptx/scripts/probe_runtime.mjs"
+  ],
+  "applied_rules": {
+    "official_template": "source/build.mjs adapts original pptxgenjs-build-template.mjs directly, retaining validation, one source-to-slide transform, and connectExactPath/connectOneWay/connectBothWays helpers.",
+    "ownership": "Every plate, label and relation is native; INSETS empty. No bitmap background or tracing layer.",
+    "topology": "NODES/EDGES/INSETS per page; from/to/direction and explicit path; final segment endArrowType targets destination.",
+    "native_geometry": "Standard editable rectangles, ellipses, textboxes and exact native line-arrow paths. No freeform path clouds.",
+    "z_order": "Earth/water region plates first -> exact path relations -> standard textboxes; prevents filled scientific regions hiding arrows."
+  },
+  "changes": "Original single-image reconstruction explicitly extended to five new Japanese concept diagrams. Concept labels and scientific relationships retained. Final terrain simplified to standard rectangular region plates with a river-channel notch, under original portable phase-one geometry limits; not a calibrated landscape section. Source map is adjacent input.json. Locked dependency manifest included for a normal Node installation.",
+  "runtime_probe": "Original probe passed with bundled Python3.12 ahead of LibreOffice3.8 Python on local PATH and LibreOffice24.2.5.2 executable available. PptxGenJS4.0.1 resolves from the source task directory.",
+  "science_sources": [
+    {
+      "title": "USGS: Unsaturated Zone",
+      "url": "https://water.usgs.gov/ogw/unsaturated.html",
+      "supports": "不飽和帯のすき間には空気と水があり、地下水涵養の量と質に影響する。",
+      "pages": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "title": "USGS: Ground Water — Recharge and Discharge Areas",
+      "url": "https://water.usgs.gov/outreach/Posters/groundwater/middle_school/Page2.html",
+      "supports": "浸透、涵養、飽和帯、地下水面、地表水との相互作用、川への地下水流出。",
+      "pages": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ]
+    }
+  ],
+  "commands": [
+    "node source/build.mjs",
+    "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath source/deck.pptx -OutputDirectory render"
+  ],
+  "pptx_sha256": "a76f6a6dfb96bca9edca5e6f5ed1f1df6bbf57c604c53d57cef5ffc645d9b3e7",
+  "history": "Prior host-specific internal trial lives only under .build/sci-diagram-internal-trial-20261014. It is not the published runtime or source kit."
+}
