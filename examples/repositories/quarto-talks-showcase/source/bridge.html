@@ -1,0 +1,7 @@
+<script>
+// Added outside the original Reveal runtime. Same-origin, zero-based horizontal slides.
+(()=>{const send=()=>{if(window.parent!==window&&window.Reveal)window.parent.postMessage({type:'yebisu-page',index:Reveal.getIndices().h},location.origin);};
+window.addEventListener('message',e=>{if(e.origin!==location.origin||e.source!==window.parent||e.data?.type!=='yebisu-slide'||!Number.isInteger(e.data.index))return;if(window.Reveal)Reveal.slide(Math.max(0,Math.min(5,e.data.index)));});
+const bind=()=>{if(!window.Reveal)return;Reveal.on('ready',send);Reveal.on('slidechanged',send);if(Reveal.isReady())send();};
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',bind);else bind();})();
+</script>

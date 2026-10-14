@@ -1,0 +1,44 @@
+--- upstream/scripts/subset-cover-font.py
++++ japanese-runtime/scripts/subset-cover-font.py
+@@ -110,7 +110,7 @@
+     name_table.names = [record for record in name_table.names if record.nameID not in replaced_ids]
+ 
+     values = {
+-        0: "Copyright (c) 2020, Lingdong Huang. Modified and redistributed under SIL OFL 1.1.",
++        0: "Copyright 2021 The Shippori Mincho Project Authors. Modified and redistributed under SIL OFL 1.1.",
+         1: "Zhongguose Cover",
+         2: "Regular",
+         3: "ZhongguoseCover-Regular;1.000",
+@@ -119,7 +119,7 @@
+         6: "ZhongguoseCover-Regular",
+         13: (
+             "Licensed under the SIL Open Font License, Version 1.1. "
+-            "This is a Modified Version and does not use the Reserved Font Name QIJI as its primary font name."
++            "This is a Modified Version and does not use the Reserved Font Name Shippori Mincho as its primary font name."
+         ),
+         14: "https://openfontlicense.org",
+         16: "Zhongguose Cover",
+@@ -174,9 +174,9 @@
+         missing = requested.difference(source_cmap)
+         missing_cover = {ord(char) for char in cover_text if not char.isspace()}.difference(source_cmap)
+         missing_cover_han = {codepoint for codepoint in missing_cover if is_han_codepoint(codepoint)}
+-        if missing_cover_han:
+-            preview = "".join(chr(codepoint) for codepoint in sorted(missing_cover_han)[:24])
+-            raise RuntimeError(f"The source font is missing cover-title Han characters: {preview}")
++        if missing_cover:
++            preview = "".join(chr(codepoint) for codepoint in sorted(missing_cover)[:24])
++            raise RuntimeError(f"The source font is missing cover-title characters (including Japanese kana): {preview}")
+ 
+         options = subset_module.Options()
+         options.flavor = "woff2"
+@@ -242,8 +242,8 @@
+         "font_file": font_path.name,
+         "font_sha256": sha256_bytes(font_bytes),
+         "font_bytes": len(font_bytes),
+-        "source_archive_sha256": SOURCE_ARCHIVE_SHA256,
+-        "source_ttf_sha256": ORIGINAL_TTF_SHA256,
++        "source_archive_sha256": None,
++        "source_ttf_sha256": sha256_bytes((SKILL_DIR / "assets/font-sources/ShipporiMincho-Regular.ttf").read_bytes()),
+         "fonttools_version": fontTools.__version__,
+         "brotli_version": getattr(brotli, "__version__", "unknown"),
+         "visible_character_count": len(unique_characters),

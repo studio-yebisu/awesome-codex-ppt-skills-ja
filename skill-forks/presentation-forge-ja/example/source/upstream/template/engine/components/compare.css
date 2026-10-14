@@ -1,0 +1,104 @@
+/*
+ * compare - a comparison table with check / cross / partial marks.
+ * @component: compare
+ *
+ * <table class="compare compare--last">
+ *   <thead><tr><th></th><th>PowerPoint</th><th>Forge</th></tr></thead>
+ *   <tbody>
+ *     <tr><td>Opens with no software</td><td class="no"></td><td class="yes"></td></tr>
+ *     <tr><td>Fonts travel inside</td><td class="partial"></td><td class="yes"></td></tr>
+ *   </tbody>
+ * </table>
+ *
+ * An empty .yes / .no / .partial cell draws its mark; with text inside, the
+ * text is coloured instead. .compare--last highlights the last column (yours).
+ * Keep it to about 8 rows. Rows appear one after the other.
+ */
+
+.compare {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: var(--type-small, 26px);
+  border: 1px solid var(--rule, rgba(127, 127, 127, 0.25));
+  border-radius: 20px;
+  background: var(--bg-soft, rgba(127, 127, 127, 0.05));
+  overflow: hidden;
+}
+
+.compare th,
+.compare td {
+  padding: 15px 28px;
+  text-align: center;
+  border-bottom: 1px solid var(--rule, rgba(127, 127, 127, 0.2));
+}
+
+.compare tr:last-child td {
+  border-bottom: none;
+}
+
+.compare th {
+  font-size: calc(var(--type-small, 26px) * 0.72);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--muted, inherit);
+  border-bottom: 2px solid var(--accent, #5b8bd0);
+}
+
+.compare th:first-child,
+.compare td:first-child {
+  text-align: left;
+  color: var(--ink, inherit);
+}
+
+/* the option columns hug their content; the first column takes the rest */
+.compare :is(th, td):not(:first-child) {
+  width: 1%;
+  white-space: nowrap;
+  padding-inline: 44px;
+}
+
+.compare--last :is(th, td):last-child {
+  background: var(--accent-tint, rgba(91, 139, 208, 0.1));
+}
+
+.compare--last th:last-child {
+  color: var(--accent, inherit);
+}
+
+/* marks */
+.compare td:is(.yes, .no, .partial) {
+  font-weight: 700;
+}
+.compare td.yes     { color: var(--good, #22a565); }
+.compare td.no      { color: var(--bad, #e5484d); }
+.compare td.partial { color: var(--warn, #d9921a); }
+
+.compare td:is(.yes, .no, .partial):empty::before {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  font-size: 22px;
+  background: color-mix(in srgb, currentColor 16%, transparent);
+}
+.compare td.yes:empty::before     { content: "\2713"; }
+.compare td.no:empty::before      { content: "\2715"; }
+.compare td.partial:empty::before { content: "~"; }
+
+/* ---- motion: rows in turn ---- */
+
+.compare tbody > :nth-child(2) { --pf-i: 1; }
+.compare tbody > :nth-child(3) { --pf-i: 2; }
+.compare tbody > :nth-child(4) { --pf-i: 3; }
+.compare tbody > :nth-child(5) { --pf-i: 4; }
+.compare tbody > :nth-child(6) { --pf-i: 5; }
+.compare tbody > :nth-child(7) { --pf-i: 6; }
+.compare tbody > :nth-child(n+8) { --pf-i: 7; }
+
+.pf-canvas:not([data-dir="prev"]) > [data-active] .compare tbody > tr:not(.fragment) {
+  animation: pf-fade var(--pf-dur, 0.6s) var(--pf-ease, ease) backwards;
+  animation-delay: calc(var(--delay, 0s) + 0.1s + var(--pf-i, 0) * var(--pf-step, 90ms));
+}

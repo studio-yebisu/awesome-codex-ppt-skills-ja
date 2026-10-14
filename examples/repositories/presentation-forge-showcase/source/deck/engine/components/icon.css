@@ -1,0 +1,42 @@
+/*
+ * icon - line icons from the bundled set (engine/icons.json, Lucide).
+ * @component: [data-icon]
+ *
+ * <i data-icon="rocket"></i>                      inline, sized like the text
+ * <i data-icon="shield-check" class="icon-tile"></i>   in a tinted square
+ *
+ * build.py inlines only the icons a deck uses. Size with font-size, colour
+ * with color. Add data-anim="draw" to have the icon trace itself in.
+ */
+
+i[data-icon] {
+  display: inline-flex;
+  width: 1em;
+  height: 1em;
+  flex: 0 0 auto;
+  vertical-align: -0.14em;
+  font-style: normal;
+}
+
+i[data-icon] > svg {
+  width: 100%;
+  height: 100%;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  overflow: visible;
+}
+
+i[data-icon].icon-tile {
+  box-sizing: content-box;
+  width: 1.1em;
+  height: 1.1em;
+  padding: 0.45em;
+  font-size: 48px;
+  border-radius: 0.36em;
+  color: var(--accent, currentColor);
+  background: var(--accent-tint, rgba(127, 127, 127, 0.12));
+  border: 1px solid var(--rule, transparent);
+}

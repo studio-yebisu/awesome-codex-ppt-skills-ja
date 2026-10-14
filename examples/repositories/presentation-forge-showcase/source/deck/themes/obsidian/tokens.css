@@ -1,0 +1,62 @@
+/*
+ * tokens.css - the dials of the "obsidian" theme (dark).
+ *
+ * Only design tokens live here: colours, type scale, spacing and the font-family
+ * names. Same token names as every other theme, so a deck can switch themes
+ * without breaking. Tweak these to recolour or retype the whole deck without
+ * touching the block styling (slides.css) or the engine.
+ *
+ * The look: deep blue-black canvas, a luminous violet -> cyan accent pair, and an
+ * editorial serif (Fraunces) over a clean sans (Inter).
+ */
+
+:root {
+  /* Type scale */
+  --type-display: 136px;
+  --type-title: 70px;
+  --type-subtitle: 44px;
+  --type-lead: 36px;
+  --type-body: 30px;
+  --type-small: 25px;
+  --type-eyebrow: 23px;
+  --type-mono: 25px;
+
+  /* Spacing */
+  --pad-x: 120px;
+  --pad-top: 104px;
+  --pad-bottom: 96px;
+  --gap-title: 40px;
+  --gap-item: 28px;
+
+  /* Colour - dark canvas */
+  --bg: #0a0e17;
+  --bg-soft: #121829;
+  --ink: #eef2fb;
+  --muted: #95a2c0;
+  --rule: #ffffff1f;
+
+  /* Accent pair: violet (primary) -> cyan (secondary) */
+  --accent: #8b7bff;
+  --accent-deep: #06080f;
+  --accent-soft: #4fd6e6;
+  --accent-tint: #8b7bff1f;
+
+  /* Marks in comparison tables (yes / no / partial) */
+  --good: #74e3ad;
+  --bad: #ff8a8a;
+  --warn: #f3c178;
+
+  /* Engine chrome (rail, buttons) derives from --accent / --accent-deep, but we
+     pin it for a deliberately dark, on-brand UI. */
+  --pf-rail-bg: #080b13;
+  --pf-rail-fg: #aeb9d6;
+  --pf-accent: #8b7bff;
+
+  /* Fonts - faces declared in fonts.css, files embedded by build.py */
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+/* Japanese type roles; original palette/scale/blocks remain. */
+:root{--font-serif:"Forge Serif",serif;--font-sans:"Forge Sans",sans-serif;--font-mono:"JetBrains Mono","Forge Sans",monospace}

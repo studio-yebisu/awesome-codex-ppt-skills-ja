@@ -6,13 +6,13 @@ GitHubの原典スキルを実際に使い、魅力ある日本語資料・短�
 
 ## 現在のアトリエ
 
-- 厳選57スキルと、日本語の作例57冊・328枚、15段階の演出。
-- Sol 6.1の2並列で、原典テンプレート・ブランド方式の12枚、PPTX生成と美化の6枚、React舞台の6場面15段階を追加制作。
+- 厳選61スキルと、日本語の作例61冊・346枚、23段階の演出。
+- Sol 6.1の並列担当でQuarto・文字と色の企画・共通画面の8段階、親が1頁1HTMLの発表を追加。今回通常18枚と8段階を制作。
 - 各派生スキル固有の本文を直接Markdown取得。サイトで本文を開いてコピーでき、原典・テンプレート・入力の一式ZIPも取得。
 - 作例の詳細で、自分の原稿・読み手・希望枚数・書体を入れ、そのスキル向けの依頼文を組み立ててコピー。実際の制作依頼も別に読めます。
 - 完成HTML・PDF・PPTXは資料の題名でダウンロード。作風を参考にした資料も、フロート内で行き来できます。
 - 題材・作風・スキル名で作例を検索。段階表示は枚数と分け、元資料の縦横比で再生します。PPTX美化の変更前ファイルも直接取得。
-- OSS書体9ファミリー・16ファイルと、7作風の実フォント見本・AI向け指示コピー。Noto Sans CJK JPの公式OTF/OFLを追加し、研究作例から同じ書体を直接取得。
+- OSS書体10ファミリー・17ファイルと、8作風の実フォント見本・AI向け指示コピー。JetBrains Monoの公式TTF/OFLを追加し、技術発表でコードと日本語説明を使い分け。
 
 原典のSKILL、固有テンプレート・controller・生成器を使います。日本語向けの改良と実施範囲は各作例に記載。主な出力が開く範囲の軽い確認を行い、制作を中心に進めています。
 
@@ -36,13 +36,15 @@ python tools/build_atelier_site.py
 
 [制作方針](docs/PROJECT.md) · [製品仕様](docs/PRODUCT_SPEC.md) · [現在の実行目標](data/project-goal.json) · [厳選掲載](data/product-collection.json)
 
-Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は67リポ・72冊で、現在の厳選掲載と区別します。
+Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は71リポ・76冊で、現在の厳選掲載と区別します。
 
 原作者、固定原典、LICENSE・NOTICEと書体のOFLを保持します。カタログのCC0は各スキル・コード・素材・書体の条件を変更しません。[原典・条件](licenses.html)を参照してください。
 
 公開更新・merge・deployはローカル制作と別に扱います。
 
-最新バッチ： [香りを、贈る。](examples/repositories/cogine-templates-showcase/README.md) · [紙と、インクの休日。](examples/repositories/keynot-showcase/README.md) · [パンが、店先に届くまで。](examples/repositories/beatdeck-showcase/README.md) · [遠くの席へ、伝わる資料。](examples/repositories/scene-graph-showcase/README.md)。原典テンプレートの選択と差し替え、ブランド抽出と元controller、Reactの一段ずつ展開する舞台、元PPTX生成・美化を使用。[制作記録](docs/PRODUCTION_BATCH_20261014_10.md)。
+最新バッチ： [五つの点から、一本の線を。](examples/repositories/quarto-talks-showcase/README.md) · [町の手仕事を、ひらく。](examples/repositories/zhongguose-showcase/README.md) · [待つ時間にも、道しるべを。](examples/repositories/presentation-forge-showcase/README.md) · [一冊の本が、次の人へ。](examples/repositories/and-scene-showcase/README.md)。元Quartoの実renderと最小二乗の実計算、元字体subset生成と章ナビ、1頁1HTMLの原典ビルド、同じ本が移動する共通scene kitを使用。公式JetBrains Monoと技術発表指示を追加。[制作記録](docs/PRODUCTION_BATCH_20261014_11.md)。
+
+前のバッチ： [香りを、贈る。](examples/repositories/cogine-templates-showcase/README.md) · [紙と、インクの休日。](examples/repositories/keynot-showcase/README.md) · [パンが、店先に届くまで。](examples/repositories/beatdeck-showcase/README.md) · [遠くの席へ、伝わる資料。](examples/repositories/scene-graph-showcase/README.md)。原典テンプレートの選択と差し替え、ブランド抽出と元controller、Reactの一段ずつ展開する舞台、元PPTX生成・美化を使用。[制作記録](docs/PRODUCTION_BATCH_20261014_10.md)。
 
 前のバッチ： [ひとつの服を、もう一度。](examples/repositories/marp-mcp-showcase/README.md) · [文字のかたちを、観察する。](examples/repositories/sketch-note-showcase/README.md) · [星を待つ、夜の天文台。](examples/repositories/slide-wright-showcase/README.md) · [町の道具を、借り合う。](examples/repositories/design-dna-showcase/README.md)。原典の実MCP、手描きCSSとページ操作、2枚を保持して育てる独自テーマ、参考画像からのDNA抽出を使用。短い日本語本文と制作一式を直接取得できます。[制作記録](docs/PRODUCTION_BATCH_20261014_09.md)。
 

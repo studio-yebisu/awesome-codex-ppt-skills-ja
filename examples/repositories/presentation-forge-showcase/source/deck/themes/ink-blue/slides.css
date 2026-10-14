@@ -1,0 +1,223 @@
+/*
+ * slides.css - how the "ink-blue" theme styles each slide and block.
+ *
+ * Uses only the tokens from tokens.css and the assets in images/ and logos/.
+ * The slide vocabulary it styles (kept stable across every theme):
+ *   <section class="slide">              standard content slide
+ *   <section class="slide slide--title"> opening / hero slide
+ *   <section class="slide slide--section">  section divider (dark)
+ *   <section class="slide slide--conclude"> closing slide
+ *   blocks: .eyebrow .display h1/.title h2/.subtitle .lead .muted .accent
+ *           ul.bullets .two-col .card blockquote pre/code .footer
+ */
+
+/* ---- base slide ---- */
+
+.slide {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: var(--pad-top) var(--pad-x) var(--pad-bottom);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  font-size: var(--type-body);
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+.slide > * {
+  margin: 0;
+}
+
+.slide > * + * {
+  margin-top: var(--gap-item);
+}
+
+/* ---- text building blocks ---- */
+
+.eyebrow {
+  font-size: var(--type-eyebrow);
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.display {
+  font-family: var(--font-serif);
+  font-size: var(--type-display);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+
+h1,
+.title {
+  font-size: var(--type-title);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.015em;
+}
+
+h2,
+.subtitle {
+  font-size: var(--type-subtitle);
+  font-weight: 500;
+  line-height: 1.15;
+  color: var(--accent-deep);
+}
+
+.lead {
+  font-size: var(--type-lead);
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.accent {
+  color: var(--accent);
+}
+
+/* ---- lists ---- */
+
+ul.bullets {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap-item);
+}
+
+ul.bullets li {
+  position: relative;
+  padding-left: 48px;
+}
+
+ul.bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.55em;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--accent);
+}
+
+/* ---- layout helpers ---- */
+
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+}
+
+.card {
+  background: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: 16px;
+  padding: 40px;
+}
+
+blockquote {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: var(--type-subtitle);
+  line-height: 1.3;
+  border-left: 6px solid var(--accent-soft);
+  padding-left: 40px;
+  color: var(--accent-deep);
+}
+
+code,
+pre {
+  font-family: var(--font-mono);
+  font-size: var(--type-mono, var(--type-small));
+}
+
+pre {
+  background: var(--accent-deep);
+  color: #e8eef8;
+  border-radius: 14px;
+  padding: 36px 40px;
+  overflow: auto;
+  line-height: 1.5;
+}
+
+/* one .line span per code line (lets data-stagger="type" type them in) */
+pre code .line {
+  display: block;
+  white-space: pre;
+}
+
+.footer {
+  position: absolute;
+  left: var(--pad-x);
+  right: var(--pad-x);
+  bottom: 44px;
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--type-small);
+  color: var(--muted);
+  border-top: 1px solid var(--rule);
+  padding-top: 22px;
+}
+
+/* ---- slide variants ---- */
+
+.slide--title {
+  background: var(--bg);
+  gap: var(--gap-title);
+}
+
+.slide--title .display {
+  color: var(--ink);
+}
+
+.slide--section {
+  background: var(--accent-deep);
+  color: #fff;
+}
+
+.slide--section .eyebrow {
+  color: var(--accent-soft);
+}
+
+.slide--section h1,
+.slide--section .title {
+  color: #fff;
+}
+
+.slide--section .lead {
+  color: #c7d4e8;
+}
+
+.slide--conclude {
+  background: var(--bg-soft);
+  align-items: flex-start;
+}
+
+/*
+ * ---- backgrounds & logo (examples - uncomment and drop files in images/ / logos/) ----
+ *
+ * .slide--title {
+ *   background: var(--accent-deep) url("images/cover.jpg") center / cover;
+ * }
+ *
+ * Put a logo on every slide via a corner element:
+ * .slide::after {
+ *   content: "";
+ *   position: absolute;
+ *   right: var(--pad-x);
+ *   top: 48px;
+ *   width: 160px;
+ *   height: 48px;
+ *   background: url("logos/logo.svg") right center / contain no-repeat;
+ *   opacity: .85;
+ * }
+ */

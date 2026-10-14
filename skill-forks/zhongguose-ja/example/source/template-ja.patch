@@ -1,0 +1,350 @@
+--- upstream/assets/template-zhongguose/index.html
++++ index.html
+@@ -1,14 +1,11 @@
+ <!DOCTYPE html>
+-<html lang="zh-CN">
++<html lang="ja">
+ <head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+-<title>中国色 PPT 模板 · 示例</title>
++<title>町の手仕事を、ひらく。</title>
+ <!-- zhongguose-ppt-skill 种子模板 · 【木渡川】制作 · 产品思路参考 guizang-ppt-skill（归藏，github.com/op7418/guizang-ppt-skill） -->
+ 
+-<link rel="preconnect" href="https://fonts.googleapis.com">
+-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&family=LXGW+WenKai&family=Noto+Serif+SC:wght@200;300;400;500;600;700;900&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+ <style>
+   /* 封面标题本地字体：逐稿生成的 Zhongguose Cover WOFF2 子集，OFL-1.1 */
+   @font-face{font-family:"Zhongguose Cover";src:url("./assets/fonts/zhongguose-cover.woff2") format("woff2");font-display:swap}
+@@ -557,6 +554,19 @@
+     .grid-2-7-5,.grid-2-6-6,.grid-2-8-4,.grid-2-4-8{grid-template-columns:1fr}
+     .grid-12{grid-template-columns:repeat(6,1fr)}
+   }
++
++/* Japanese adaptation: local fonts, paired upstream Chinese color, case-specific pattern tuning. */
++@font-face{font-family:"Craft Serif";src:url("./assets/fonts/shipporimincho/ShipporiMincho-Regular.ttf");font-display:block}
++@font-face{font-family:"Craft Body";src:url("./assets/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf");font-display:block}
++@font-face{font-family:"Craft Latin";src:url("./assets/fonts/manrope/Manrope[wght].ttf");font-weight:200 800;font-display:block}
++:root{--accent:#9E3B3B;--accent-rgb:158,59,59;--accent-on:#ffffff;--accent-bright:var(--accent);--zh-title:"Craft Serif",serif;--zh-body:"Craft Body",sans-serif;--zh-cover-title:"Zhongguose Cover","Craft Serif",serif;--latin-display:"Craft Latin","Craft Body",sans-serif;--mono:"Craft Latin","Craft Body",sans-serif;--sans-zh:var(--zh-body)}
++.section-tabs{font-family:"Craft Body",sans-serif!important;font-size:clamp(13px,.9vw,19px);gap:1.6vw}.section-tabs small{font:500 .65em "Craft Latin";margin-left:.4em;letter-spacing:.08em}
++.craft-cover{flex:1;display:grid;grid-template-rows:auto 1fr auto;gap:3vh}.craft-cover>div:nth-child(2){align-self:center}.craft-cover .cover-title{font-size:min(9vw,17vh);line-height:1.24;font-weight:400;letter-spacing:.015em}.craft-cover .hero-subtitle{font-size:clamp(21px,1.65vw,34px);margin-top:3vh;opacity:.88}.craft-cover-foot{border-top:1px solid rgba(255,255,255,.4);padding-top:2.5vh;display:flex;justify-content:space-between;font-size:clamp(17px,1.1vw,25px)}
++.craft-heading{font-size:clamp(36px,4vw,78px);line-height:1.28;font-weight:400;letter-spacing:.01em}.craft-body{font-family:var(--zh-body)!important;font-size:clamp(21px,1.5vw,31px);line-height:1.65;opacity:.84}.craft-intro{margin-top:2vh}.craft-note{font-family:var(--zh-body);font-size:clamp(15px,.94vw,20px);line-height:1.5;color:var(--text-helper);margin-top:3vh}.craft-principles{margin-top:5vh;gap:4vw}.craft-glyph{font-family:"Craft Serif";font-size:min(9vw,18vh);line-height:1.4;color:var(--accent);margin-top:2vh}.craft-principles h3{font-family:"Craft Serif";font-size:clamp(26px,2.3vw,46px);font-weight:400}.craft-principles .wn-col{border-bottom:1px solid var(--border-subtle);padding-bottom:4vh;gap:2vh}
++.craft-routes{margin-top:5vh;gap:1vh}.craft-route{grid-template-columns:1fr 7fr 1fr;gap:3vw;padding:3vh 0}.craft-route .ledger-num{font-size:min(5vw,9vh);color:var(--accent)}.craft-route .ledger-label{font-family:"Craft Serif"!important;font-size:clamp(30px,2.5vw,48px)}.craft-route small{font:500 .38em "Craft Latin";letter-spacing:.12em;vertical-align:middle;margin-left:1em}.craft-route p{margin-top:1vh}.route-end{font-family:"Craft Serif";border:1px solid var(--accent);color:var(--accent);font-size:clamp(27px,2.3vw,45px);display:grid;place-content:center;width:4.7vw;height:4.7vw}
++.craft-duo{margin-top:5vh;gap:0 4vw}.craft-duo .col{gap:2vh}.craft-duo .col-ttl{font-size:min(6.4vw,12vh);color:var(--accent);font-weight:400}.craft-observation{margin-top:auto;font-family:"Craft Serif";font-size:clamp(26px,2.4vw,45px);border-top:2px solid var(--accent);padding:3vh 0}.craft-sequence{display:grid;grid-template-columns:repeat(3,1fr);gap:3vw;margin-top:auto}.craft-step{border-top:2px solid var(--accent);padding:3vh 0}.craft-step h3{font-family:"Craft Serif";color:var(--accent);font-weight:400;font-size:min(5.5vw,10vh);margin:3vh 0}.craft-closing{font-size:min(5.8vw,11vh);line-height:1.35;font-weight:400;margin:auto 0;letter-spacing:.01em}.craft-close-copy{margin:auto 0}.craft-close-copy p{font-family:"Craft Serif";font-size:min(4.6vw,8vh);line-height:1.4;margin:4vh 0}.craft-memory-line{height:1px;background:var(--accent);margin:4vh 0;width:100%}.craft-closing+.craft-body{color:var(--accent-on)}
++.slide .craft-heading,.craft-duo .col-ttl{font-family:var(--zh-title)!important}.slide h2.cover-title{font-family:var(--zh-cover-title)!important}
++
+ </style>
+ </head>
+ <body class="canvas-mode">
+@@ -593,277 +603,25 @@
+ <!-- ====== P01 · 封面 · 满屏主题色 + ASCII ====== -->
+ <!-- ====== P01 · 封面 ====== -->
+ <section class="slide accent" data-role="cover" data-animate="hero" data-layout="SWISS-COVER-ASCII">
+-  <div class="canvas-card">
+-    <canvas class="ascii-bg" aria-hidden="true"></canvas>
+-    <div class="chrome-min">
+-      <div class="l">种子模板 · Template Seed</div>
+-      <div class="r">01 / 13</div>
+-    </div>
+-    <div style="flex:1;padding:0;display:grid;grid-template-rows:auto 1fr auto;gap:2.6vh">
+-      <div data-anim="kicker" class="t-meta" style="color:rgba(255,255,255,.78);letter-spacing:.22em">ZHONGGUOSE · LOGIC-FIRST · HTML DECK</div>
+-      <div data-anim="title" style="align-self:center;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center">
+-        <h1 class="cover-title" style="font-weight:300;font-size:min(11.6vw,19vh);line-height:.94;letter-spacing:-.025em;color:#fff;text-align:center">飞泉绿主题色<br><span style="font-style:italic;font-weight:300">示例模版</span></h1>
+-        <p class="hero-subtitle">把定稿 Markdown 文稿，变成逻辑优先的 16:9 HTML 演示。</p>
+-      </div>
+-      <div data-anim="bottom" style="display:grid;grid-template-rows:auto auto;gap:1.2vh;border-top:1px solid rgba(255,255,255,.22);padding-top:2vh">
+-        <div class="zh-body" style="max-width:52ch;color:rgba(255,255,255,.84);font-size:max(18px,1.22vw);font-weight:400;letter-spacing:.04em;line-height:1.45">此页为种子模板示例，所有文案均需按源文稿替换。</div>
+-        <div class="t-meta" style="color:rgba(255,255,255,.68);font-size:max(17px,1.12vw);font-weight:500;letter-spacing:.08em">TEMPLATE SEED · REPLACE ALL COPY</div>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P02 · 01 版块分隔扉页 ====== -->
+-<section class="slide light" data-animate="field-notes" data-layout="S09">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab active">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab">04 合 · CLOSING</span></div><div class="r">02 / 13</div></div>
+-    <div class="section-divider-body">
+-      <span class="dot-mat xl section-divider-dot"></span>
+-      <span class="ring-mat section-divider-ring"></span>
+-      <div data-anim="up" class="section-divider-stack">
+-        <h1 class="section-divider-title">
+-          01 起
+-          <span class="section-divider-caption">版块标题占位 · 来自源文稿一级标题</span>
+-        </h1>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P03 · 01 内容页 ====== -->
+-<section class="slide light origin-page" data-animate="four-cards" data-layout="S19">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab active">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab">04 合 · CLOSING</span></div><div class="r">03 / 13</div></div>
+-    <div style="flex:1;padding:0;min-height:0">
+-      <div data-anim="up" class="origin-layout">
+-        <div class="origin-copy">
+-          <div data-anim="line" class="origin-head">
+-            <div style="width:80px;height:2px;background:var(--accent)"></div>
+-            <div class="t-meta">PATTERN · 四模块页 <span style="font-weight:300;opacity:.6;font-size:.85em">/ Four sibling points</span></div>
+-          <h2 style="font-family:var(--sans),var(--sans-zh);font-weight:700;font-size:min(4.5vw,8.2vh);line-height:1;letter-spacing:0">页面主标题占位</h2>
+-          </div>
+-          <div class="origin-card-grid">
+-            <div class="fc-col"><div class="fc-num fc-pill">01 / 要点一</div><div class="fc-ttl">要点标题占位</div><div class="fc-desc">要点说明文字占位，保留源文稿中的核心表述<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div>
+-            <div class="fc-col"><div class="fc-num fc-pill">02 / 要点二</div><div class="fc-ttl">要点标题占位</div><div class="fc-desc">要点说明文字占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div>
+-            <div class="fc-col"><div class="fc-num fc-pill">03 / 要点三</div><div class="fc-ttl">要点标题占位</div><div class="fc-desc">要点说明文字占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div>
+-            <div class="fc-col"><div class="fc-num fc-pill">04 / 要点四</div><div class="fc-ttl">要点标题占位</div><div class="fc-desc">要点说明文字占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div>
+-          </div>
+-        </div>
+-        <figure class="origin-profile-shot"><img src="assets/placeholder-profile.svg" alt="竖版配图占位"></figure>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P04 · 02 版块分隔扉页 ====== -->
+-<section class="slide light" data-animate="field-notes" data-layout="S09">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab active">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab">04 合 · CLOSING</span></div><div class="r">04 / 13</div></div>
+-    <div class="section-divider-body">
+-      <span class="dot-mat xl section-divider-dot"></span>
+-      <span class="ring-mat section-divider-ring"></span>
+-      <div data-anim="up" class="section-divider-stack">
+-        <h1 class="section-divider-title">
+-          02 承
+-          <span class="section-divider-caption">版块标题占位 · 来自源文稿一级标题</span>
+-        </h1>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P05 · 02 内容页一 ====== -->
+-<section class="slide light" data-animate="four-cards" data-layout="S18">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab active">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab">04 合 · CLOSING</span></div><div class="r">05 / 13</div></div>
+-    <div style="flex:1;padding:0;display:grid;grid-template-rows:auto 1fr;gap:3vh;min-height:0">
+-      <div data-anim="line" style="display:flex;flex-direction:column;gap:1.2vh">
+-        <div class="t-meta">PATTERN · 三洞察页 <span style="font-weight:300;opacity:.6;font-size:.85em">/ Three insights with image band</span></div>
+-          <h2 style="font-family:var(--sans),var(--sans-zh);font-weight:700;font-size:min(4.5vw,8.2vh);line-height:1;letter-spacing:0">页面主标题占位</h2>
+-      </div>
+-      <div data-anim="up" style="display:grid;grid-template-rows:auto 1fr;gap:1.15vh;min-height:0">
+-        <div class="why-now-grid" style="margin-top:0;flex:0">
+-          <div class="wn-col"><div class="t-cat wn-pill">洞察一 <span class="en-label">INSIGHT 01</span></div><h4 style="font-family:var(--sans),var(--sans-zh);font-weight:400;font-size:max(18px,1.4vw);line-height:1.2;letter-spacing:0">洞察标题占位</h4><p class="t-body-sm" style="color:var(--text-secondary)">洞察说明文字占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></p></div>
+-          <div class="wn-col"><div class="t-cat wn-pill">洞察二 <span class="en-label">INSIGHT 02</span></div><h4 style="font-family:var(--sans),var(--sans-zh);font-weight:400;font-size:max(18px,1.4vw);line-height:1.2;letter-spacing:0">洞察标题占位</h4><p class="t-body-sm" style="color:var(--text-secondary)">洞察说明文字占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></p></div>
+-          <div class="wn-col"><div class="t-cat wn-pill">洞察三 <span class="en-label">INSIGHT 03</span></div><h4 style="font-family:var(--sans),var(--sans-zh);font-weight:400;font-size:max(18px,1.4vw);line-height:1.2;letter-spacing:0">洞察标题占位</h4><p class="t-body-sm" style="color:var(--text-secondary)">洞察说明文字占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></p></div>
+-        </div>
+-        <div class="stills-band">
+-          <figure class="still"><img src="assets/placeholder-wide.svg" alt="宽幅配图占位一"></figure>
+-          <figure class="still"><img src="assets/placeholder-wide.svg" alt="宽幅配图占位二"></figure>
+-        </div>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P06 · 02 内容页二 ====== -->
+-<section class="slide light" data-animate="duo-mirror" data-layout="S08">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab active">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab">04 合 · CLOSING</span></div><div class="r">06 / 13</div></div>
+-    <div style="flex:1;padding:0;display:flex;flex-direction:column;gap:4vh">
+-      <div data-anim="line" style="display:flex;flex-direction:column;gap:1vh">
+-        <div class="t-meta">PATTERN · 对照分屏页</div>
+-        <h2 style="font-family:var(--sans),var(--sans-zh);font-weight:700;font-size:min(4.8vw,8.6vh);line-height:1;letter-spacing:0">页面主标题占位</h2>
+-      </div>
+-      <div class="duo-compare">
+-          <div class="col"><span class="t-cat" style="font-size:14px;letter-spacing:.16em">左栏标签占位 <span class="en-label">LEFT</span></span><h3 class="col-ttl" style="line-height:1.14;letter-spacing:0">左栏标题占位</h3><figure class="scroll-shot"><img src="assets/placeholder-scroll.svg" alt="横幅配图占位"></figure><ul class="col-list"><li>支撑要点占位一<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></li><li>支撑要点占位二<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></li></ul></div>
+-        <span class="vrule"></span>
+-          <div class="col"><span class="t-cat accent" style="font-size:14px;letter-spacing:.16em">右栏标签占位 <span class="en-label">RIGHT</span></span><h3 class="col-ttl">右栏标题占位</h3><div class="dilemma-groups"><div class="dilemma-group"><div class="dilemma-label">分组一 <span class="en-label">GROUP A</span></div><ul class="dilemma-list"><li>要点占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></li><li>要点占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></li></ul></div><div class="dilemma-group accent"><div class="dilemma-label">分组二 <span class="en-label">GROUP B</span></div><ul class="dilemma-list"><li>要点占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></li><li>要点占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></li></ul></div></div></div>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P07 · 03 版块分隔扉页 ====== -->
+-<section class="slide light" data-animate="field-notes" data-layout="S09">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab active">03 转 · PIVOT</span><span class="tab">04 合 · CLOSING</span></div><div class="r">07 / 13</div></div>
+-    <div class="section-divider-body">
+-      <span class="dot-mat xl section-divider-dot"></span>
+-      <span class="ring-mat section-divider-ring"></span>
+-      <div data-anim="up" class="section-divider-stack">
+-        <h1 class="section-divider-title">
+-          03 转
+-          <span class="section-divider-caption">版块标题占位 · 来自源文稿一级标题</span>
+-        </h1>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P08 · 03 内容页一 ====== -->
+-<section class="slide split" data-animate="statement" data-layout="S03">
+-  <div class="canvas-card">
+-    <div class="chrome-min" style="position:absolute;top:5.6vh;right:3.6vw;margin:0;z-index:4;color:var(--text-helper)"><div class="r">08 / 13</div></div>
+-    <div class="split-half">
+-      <div class="half b-accent" style="padding:5.6vh 3.6vw 4.4vh;justify-content:space-between">
+-        <canvas class="ascii-bg" aria-hidden="true"></canvas>
+-        <div class="chrome-min" style="color:#fff"><div class="l section-tabs" style="color:#fff"><span class="tab">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab active">03 转 · PIVOT</span><span class="tab">04 合 · CLOSING</span></div></div>
+-        <div data-anim="up" style="display:flex;flex-direction:column;gap:2.4vh;margin:auto 0">
+-          <div style="font-family:var(--sans),var(--sans-zh);font-size:max(34px,2.6vw);font-weight:300;line-height:1;color:#fff;letter-spacing:-.015em">短语占位</div>
+-          <div class="t-meta" style="color:#fff;letter-spacing:.22em">EYEBROW · 眉标占位</div>
+-          <h1 style="font-family:var(--sans),var(--sans-zh);font-weight:200;font-size:min(7vw,12vh);line-height:.94;letter-spacing:-.025em;color:#fff">核心陈述占位</h1>
+-        </div>
+-        <div class="t-meta" style="color:#fff;border-top:1px solid rgba(255,255,255,.45);padding-top:2vh">底部注释占位 <span style="opacity:1;color:#fff">/ Footer note placeholder</span></div>
+-      </div>
+-      <div class="half" style="padding:5.6vh 2.6vw 4.4vh;justify-content:center">
+-        <div data-anim="up" style="display:flex;flex-direction:column;gap:3vh;width:100%;max-width:46vw">
+-          <p class="lead" style="font-weight:300;color:var(--text-primary);font-size:min(1.72vw,33px);line-height:1.34;max-width:28em">导语段落占位：一句话说明本页的核心论点，保留源文稿表述。<span class="en-gloss">A CONCISE ENGLISH TRANSLATION OF THE CORE ARGUMENT.</span></p>
+-          <div style="display:grid;gap:2.05vh">
+-            <div style="border-top:2px solid var(--accent);padding-top:1.85vh"><span class="t-cat" style="display:inline-block;background:var(--accent);color:var(--accent-on);font-size:max(18px,1vw);font-weight:700;letter-spacing:.18em;padding:.55vh .72vw">标签一 <span class="en-label">LABEL 01</span></span><p class="t-body-sm" style="font-size:max(24px,1.32vw);line-height:1.38;font-weight:800;color:var(--text-primary);margin-top:.68vh">支柱陈述占位一<span class="en-gloss">SUPPORTING STATEMENT 01</span></p></div>
+-            <div style="border-top:2px solid var(--accent);padding-top:1.85vh"><span class="t-cat" style="display:inline-block;background:var(--accent);color:var(--accent-on);font-size:max(18px,1vw);font-weight:700;letter-spacing:.18em;padding:.55vh .72vw">标签二 <span class="en-label">LABEL 02</span></span><p class="t-body-sm" style="font-size:max(24px,1.32vw);line-height:1.38;font-weight:800;color:var(--text-primary);margin-top:.68vh">支柱陈述占位二<span class="en-gloss">SUPPORTING STATEMENT 02</span></p></div>
+-            <div style="border-top:2px solid var(--accent);padding-top:1.85vh"><span class="t-cat" style="display:inline-block;background:var(--accent);color:var(--accent-on);font-size:max(18px,1vw);font-weight:700;letter-spacing:.18em;padding:.55vh .72vw">标签三 <span class="en-label">LABEL 03</span></span><p class="t-body-sm" style="font-size:max(24px,1.32vw);line-height:1.38;font-weight:800;color:var(--text-primary);margin-top:.68vh">支柱陈述占位三<span class="en-gloss">SUPPORTING STATEMENT 03</span></p></div>
+-          </div>
+-        </div>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P09 · 03 内容页二 · 模块网格 ====== -->
+-<section class="slide light module-page" data-animate="four-cards" data-layout="S19">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab active">03 转 · PIVOT</span><span class="tab">04 合 · CLOSING</span></div><div class="r">09 / 13</div></div>
+-    <div class="module-content-page">
+-      <div data-anim="line" style="display:flex;flex-direction:column;gap:1.2vh">
+-        <div class="t-meta">PATTERN · 模块网格页</div>
+-        <h2 style="font-family:var(--sans),var(--sans-zh);font-weight:700;font-size:min(4.5vw,8.2vh);line-height:1;letter-spacing:0">版块标题占位</h2>
+-      </div>
+-      <div data-anim="up" class="p07-module-grid">
+-        <div class="p07-module-card"><span class="mod-num">01 / 模块一</span><div class="mod-title">模块标题占位</div><div class="mod-desc"><span>模块说明占位一</span><span>模块说明占位二</span><span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div>
+-        <div class="p07-module-card"><span class="mod-num">02 / 模块二</span><div class="mod-title">模块标题占位</div><div class="mod-desc"><span>模块说明占位一</span><span>模块说明占位二</span><span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div>
+-        <div class="p07-module-card"><span class="mod-num">03 / 模块三</span><div class="mod-title">模块标题占位</div><div class="mod-desc"><span>模块说明占位一</span><span>模块说明占位二</span><span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div>
+-        <div class="p07-module-card"><span class="mod-num">04 / 模块四</span><div class="mod-title">模块标题占位</div><div class="mod-desc"><span>模块说明占位一</span><span>模块说明占位二</span><span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div>
+-      </div>
+-    </div>
+-    <a class="p07-deploy-link" href="#" aria-label="部署链接占位">部署链接占位 · replace-with-your-url</a>
+-  </div>
+-</section>
+-
+-<!-- ====== P10 · 04 版块分隔扉页 ====== -->
+-<section class="slide light" data-animate="field-notes" data-layout="S09">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab active">04 合 · CLOSING</span></div><div class="r">10 / 13</div></div>
+-    <div class="section-divider-body">
+-      <span class="dot-mat xl section-divider-dot"></span>
+-      <span class="ring-mat section-divider-ring"></span>
+-      <div data-anim="up" class="section-divider-stack">
+-        <h1 class="section-divider-title">
+-          04 合
+-          <span class="section-divider-caption">版块标题占位 · 来自源文稿一级标题</span>
+-        </h1>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P11 · 04 内容页一 ====== -->
+-<section class="slide light" data-animate="timeline-walk" data-layout="S11">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab active">04 合 · CLOSING</span></div><div class="r">11 / 13</div></div>
+-    <div class="lesson-frame" style="flex:1;padding:0;display:grid;grid-template-rows:auto 1fr auto;gap:5vh">
+-      <div data-anim="line" style="display:flex;flex-direction:column;gap:1.2vh">
+-        <div class="t-meta">PATTERN · 时间线页 <span style="font-weight:300;opacity:.6;font-size:.85em">/ Horizontal timeline</span></div>
+-        <h2 style="font-family:var(--sans),var(--sans-zh);font-weight:700;font-size:min(4.8vw,8.6vh);line-height:1.04;letter-spacing:0">页面主标题占位</h2>
+-      </div>
+-      <div class="timeline-h" style="padding:0 2vw">
+-          <div class="th-node up"><div class="label"><span class="yr">STEP 01</span><span class="name">阶段名称占位</span><figure class="th-thumb"><img src="assets/placeholder-wide.svg" alt="阶段配图占位一"></figure></div><div class="dot"></div></div>
+-          <div class="th-node down"><div class="dot"></div><div class="label"><span class="yr">STEP 02</span><span class="name">阶段名称占位</span><figure class="th-thumb"><img src="assets/placeholder-wide.svg" alt="阶段配图占位二"></figure></div></div>
+-          <div class="th-node up"><div class="label"><span class="yr">STEP 03</span><span class="name">阶段名称占位</span><figure class="th-thumb"><img src="assets/placeholder-wide.svg" alt="阶段配图占位三"></figure></div><div class="dot"></div></div>
+-          <div class="th-node down"><div class="dot"></div><div class="label"><span class="yr">STEP 04</span><span class="name">阶段名称占位</span><figure class="th-thumb"><img src="assets/placeholder-wide.svg" alt="阶段配图占位四"></figure></div></div>
+-      </div>
+-      <div data-anim="foot" class="callout" style="border-left-color:var(--accent);font-size:max(16px,1.1vw);font-weight:500">结论句占位：一句话收束本页时间线的含义。<span class="en-gloss">A CONCISE ENGLISH CONCLUSION.</span></div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P12 · 04 内容页二 ====== -->
+-<section class="slide light roadmap-page" data-animate="stacked-ledger" data-layout="S20">
+-  <div class="canvas-card">
+-    <div class="chrome-min"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab active">04 合 · CLOSING</span></div><div class="r">12 / 13</div></div>
+-    <div style="flex:1;padding:0;display:grid;grid-template-rows:auto 1fr;gap:3vh">
+-      <div data-anim="line" style="display:flex;flex-direction:column;gap:1vh">
+-        <div class="t-meta">PATTERN · 台账页 <span style="font-weight:300;opacity:.6;font-size:.85em">/ Stacked ledger</span></div>
+-          <h2 style="font-family:var(--sans),var(--sans-zh);font-weight:700;font-size:min(4.1vw,7.4vh);line-height:1;letter-spacing:-.025em">页面主标题占位</h2>
+-      </div>
+-      <div data-anim="ledger" class="stacked-ledger" style="margin-top:1vh">
+-        <div class="ledger-row" style="padding:1.2vh 0"><span class="ledger-num" style="font-size:min(5.2vw,8vh)">01</span><div><div class="ledger-label">阶段一 · <span class="roadmap-core">关键词占位</span><span class="en-label">STAGE 01 · KEYWORD</span></div><div class="t-body-sm">阶段说明占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div><span class="ledger-icon">T1</span></div>
+-        <div class="ledger-row" style="padding:1.2vh 0"><span class="ledger-num" style="font-size:min(5.2vw,8vh)">02</span><div><div class="ledger-label">阶段二 · <span class="roadmap-core">关键词占位</span><span class="en-label">STAGE 02 · KEYWORD</span></div><div class="t-body-sm">阶段说明占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div><span class="ledger-icon">T2</span></div>
+-        <div class="ledger-row" style="padding:1.2vh 0"><span class="ledger-num" style="font-size:min(5.2vw,8vh);color:var(--accent)">03</span><div><div class="ledger-label" style="color:var(--accent)">阶段三 · <span class="roadmap-core">关键词占位</span><span class="en-label">STAGE 03 · KEYWORD</span></div><div class="t-body-sm">阶段说明占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></div></div><span class="ledger-icon" style="color:var(--accent)">T3</span></div>
+-      </div>
+-    </div>
+-  </div>
+-</section>
+-
+-<!-- ====== P13 · 收尾页 ====== -->
+-<section class="slide split" data-animate="split-statement" data-layout="S10">
+-  <div class="canvas-card">
+-    <div class="chrome-min" style="position:absolute;top:5.6vh;right:3.6vw;z-index:5;margin-bottom:0"><div class="l"></div><div class="r">13 / 13</div></div>
+-    <div class="split-half">
+-      <div class="half b-accent" style="padding:5.6vh 3.6vw 4.4vh;justify-content:space-between;position:relative;overflow:hidden">
+-        <canvas class="ascii-bg" aria-hidden="true"></canvas>
+-        <div class="chrome-min" style="margin-bottom:0;position:relative;z-index:1"><div class="l section-tabs"><span class="tab">01 起 · OPENING</span><span class="tab">02 承 · UNFOLDING</span><span class="tab">03 转 · PIVOT</span><span class="tab active">04 合 · CLOSING</span></div><div class="r"></div></div>
+-        <div data-anim="manifesto" style="display:flex;flex-direction:column;gap:2vh;position:relative;z-index:1">
+-          <div class="t-meta" style="color:rgba(255,255,255,.78);letter-spacing:.22em">AFTERWORD · 结语</div>
+-          <!-- 收尾大字须呼应封面主标题。换行规则：按字数断行；若断成三行后第三行只剩一个字加句号，则并成两行；第三行有两个以上字加句号时，保持三行 -->
+-          <h2 class="cover-title" style="font-weight:300;font-size:min(8vw,14vh);line-height:.94;letter-spacing:-.025em;color:#fff">收尾大字<br><span style="font-style:italic;font-weight:300">呼应封面</span>。</h2>
+-          <div style="font-family:var(--sans),var(--sans-zh);font-size:clamp(14px,.9vw,18px);line-height:1.5;color:rgba(255,255,255,.82);font-weight:400;max-width:none;margin-top:1.4vh">收束句占位：呼应封面概念，尽量保持一行。</div>
+-        </div>
+-        <div data-anim="signature" style="display:flex;justify-content:space-between;align-items:end;border-top:1px solid rgba(255,255,255,.22);padding-top:2vh;position:relative;z-index:1">
+-          <div class="t-meta" style="color:rgba(255,255,255,.72);font-size:max(18px,1.16vw);font-weight:600;letter-spacing:.08em">署名/出处占位 · SIGNATURE PLACEHOLDER</div>
+-        </div>
+-      </div>
+-      <div class="half" style="padding:5.6vh 3.6vw 4.4vh;justify-content:space-between">
+-        <div class="chrome-min" aria-hidden="true" style="visibility:hidden"><div class="l"></div><div class="r"></div></div>
+-        <div data-anim="rules" style="display:flex;flex-direction:column;gap:0">
+-          <div style="display:grid;grid-template-columns:min(6.2vw,11vh) 1fr;gap:2.2vw;align-items:start;padding:2.6vh 0;border-top:1px solid var(--border-subtle)"><div style="font-family:var(--sans);font-weight:200;font-size:min(4.4vw,7.8vh);line-height:.9;color:var(--accent);text-align:left">01</div><div style="text-align:left"><h3 style="font-family:var(--sans),var(--sans-zh);font-weight:400;font-size:max(18px,1.8vw);line-height:1.2;letter-spacing:-.015em;color:var(--accent);margin-bottom:1vh;text-align:left">收尾要点占位一</h3><p style="font-family:var(--sans),var(--sans-zh);font-size:max(16px,.94vw);line-height:1.6;color:var(--text-secondary);font-weight:400;text-align:left">要点说明占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></p></div></div>
+-          <div style="display:grid;grid-template-columns:min(6.2vw,11vh) 1fr;gap:2.2vw;align-items:start;padding:2.6vh 0;border-top:1px solid var(--border-subtle)"><div style="font-family:var(--sans);font-weight:200;font-size:min(4.4vw,7.8vh);line-height:.9;color:var(--accent);text-align:left">02</div><div style="text-align:left"><h3 style="font-family:var(--sans),var(--sans-zh);font-weight:400;font-size:max(18px,1.8vw);line-height:1.2;letter-spacing:-.015em;color:var(--accent);margin-bottom:1vh;text-align:left">收尾要点占位二</h3><p style="font-family:var(--sans),var(--sans-zh);font-size:max(16px,.94vw);line-height:1.6;color:var(--text-secondary);font-weight:400;text-align:left">要点说明占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></p></div></div>
+-          <div style="display:grid;grid-template-columns:min(6.2vw,11vh) 1fr;gap:2.2vw;align-items:start;padding:2.6vh 0;border-top:1px solid var(--border-subtle);border-bottom:2px solid var(--accent)"><div style="font-family:var(--sans);font-weight:200;font-size:min(4.4vw,7.8vh);line-height:.9;color:var(--accent);text-align:left">03</div><div style="text-align:left"><h3 style="font-family:var(--sans),var(--sans-zh);font-weight:400;font-size:max(18px,1.8vw);line-height:1.2;letter-spacing:-.015em;color:var(--accent);margin-bottom:1vh;text-align:left">收尾要点占位三</h3><p style="font-family:var(--sans),var(--sans-zh);font-size:max(16px,.94vw);line-height:1.6;color:var(--text-secondary);font-weight:400;text-align:left">要点说明占位<span class="en-gloss">ENGLISH GLOSS PLACEHOLDER</span></p></div></div>
+-        </div>
+-      </div>
+-    </div>
+-  </div>
+-</section>
++    <div class="canvas-card"><canvas class="ascii-bg" aria-hidden="true"></canvas>
++    <div class="chrome-min"><div class="l">手仕事のある町を歩く</div><div class="r">01 / 06</div></div>
++    <div class="craft-cover"><div data-anim="kicker" class="t-meta">A WALK THROUGH LOCAL CRAFT</div>
++    <div data-anim="title"><h1 class="cover-title">町の手仕事を、<br>ひらく。</h1><p class="hero-subtitle">見つける。めぐる。持ち帰る。</p></div>
++    <div data-anim="bottom" class="craft-cover-foot"><span>暮らしのそばにある、つくる仕事へ。</span><span class="t-meta">回遊の体験提案</span></div></div></div></section>
++
++<section class="slide light" data-animate="why-now" data-layout="PRINCIPLES"><div class="canvas-card"><div class="chrome-min"><div class="l section-tabs"><span class="tab active" aria-current="step">01 見つける <small>DISCOVER</small></span><span class="tab">02 めぐる <small>WALK</small></span><span class="tab">03 持ち帰る <small>TAKE HOME</small></span></div><div class="r">02 / 06</div></div><header data-anim="head"><h2 class="craft-heading">つくる人に、会いに行く。</h2><p class="craft-body craft-intro">まずは、気になる手仕事を一つ。</p></header><div class="why-now-grid craft-principles"><div data-anim="up" class="wn-col"><span class="wn-pill">01 DYE</span><div class="craft-glyph">染</div><h3>色が生まれる</h3><p class="craft-body">布に重なる色を、眺める。</p></div><div data-anim="up" class="wn-col"><span class="wn-pill">02 WEAVE</span><div class="craft-glyph">織</div><h3>糸がつながる</h3><p class="craft-body">縦と横の糸を、たどる。</p></div><div data-anim="up" class="wn-col"><span class="wn-pill">03 CLAY</span><div class="craft-glyph">土</div><h3>かたちが残る</h3><p class="craft-body">手に沿うかたちを、探す。</p></div></div></div></section>
++
++<section class="slide light" data-animate="stacked-ledger" data-layout="LEDGER"><div class="canvas-card"><div class="chrome-min"><div class="l section-tabs"><span class="tab">01 見つける <small>DISCOVER</small></span><span class="tab active" aria-current="step">02 めぐる <small>WALK</small></span><span class="tab">03 持ち帰る <small>TAKE HOME</small></span></div><div class="r">03 / 06</div></div><header data-anim="head"><h2 class="craft-heading">一つの町を、三つの道で。</h2></header><div class="stacked-ledger craft-routes"><div data-anim="row" class="ledger-row craft-route"><span class="ledger-num">01</span><div><h3 class="ledger-label">色の道 <small>COLOR</small></h3><p class="craft-body">染まる布を入口に、色の違いを見つける。</p></div><span class="route-end">染</span></div><div data-anim="row" class="ledger-row craft-route"><span class="ledger-num">02</span><div><h3 class="ledger-label">糸の道 <small>THREAD</small></h3><p class="craft-body">織り目を入口に、つながりをたどる。</p></div><span class="route-end">織</span></div><div data-anim="row" class="ledger-row craft-route"><span class="ledger-num">03</span><div><h3 class="ledger-label">土の道 <small>FORM</small></h3><p class="craft-body">器を入口に、手に沿うかたちを探す。</p></div><span class="route-end">土</span></div></div><p class="craft-note" data-anim="foot">概念ルート。実際の地図や順路を示すものではありません。</p></div></section>
++
++<section class="slide light" data-animate="duo-mirror" data-layout="DUO"><div class="canvas-card"><div class="chrome-min"><div class="l section-tabs"><span class="tab">01 見つける <small>DISCOVER</small></span><span class="tab active" aria-current="step">02 めぐる <small>WALK</small></span><span class="tab">03 持ち帰る <small>TAKE HOME</small></span></div><div class="r">04 / 06</div></div><header data-anim="head"><h2 class="craft-heading">気になる手仕事で、<br>少し止まる。</h2></header>
++    <div class="duo-compare craft-duo"><div class="col" data-anim="left"><span class="t-meta">LOOK</span><h3 class="col-ttl">見る</h3><p class="craft-body">色、織り目、手触り。<br>気づいた違いを、言葉にしてみる。</p><div class="craft-observation">どこに、目が止まった？</div></div><div class="vrule"></div>
++    <div class="col" data-anim="right"><span class="t-meta">TALK</span><h3 class="col-ttl">話す</h3><p class="craft-body">素材や道具、かたちのこと。<br>聞いてみたいことを、一つ。</p><div class="craft-observation">何を、聞いてみたい？</div></div></div></div></section>
++
++<section class="slide light" data-animate="timeline-walk" data-layout="SEQUENCE"><div class="canvas-card"><div class="chrome-min"><div class="l section-tabs"><span class="tab">01 見つける <small>DISCOVER</small></span><span class="tab">02 めぐる <small>WALK</small></span><span class="tab active" aria-current="step">03 持ち帰る <small>TAKE HOME</small></span></div><div class="r">05 / 06</div></div><header data-anim="head"><h2 class="craft-heading">持ち帰るのは、<br>次のきっかけ。</h2></header><div class="craft-sequence"><div class="craft-step" data-anim="up"><span class="t-meta">01 / BOOKLET</span><h3>冊子</h3><p class="craft-body">見つけた手仕事を、あとで読み返す。</p></div><div class="craft-step" data-anim="up"><span class="t-meta">02 / SMALL PIECE</span><h3>小片</h3><p class="craft-body">色や手触りを、暮らしのそばへ。</p></div><div class="craft-step" data-anim="up"><span class="t-meta">03 / NOTE</span><h3>メモ</h3><p class="craft-body">気づいたことを、自分の言葉で残す。</p></div></div><p class="craft-note" data-anim="foot">冊子・小片・メモは、体験を持ち帰るための提案です。</p></div></section>
++
++<section class="slide split" data-role="closing" data-animate="split-statement" data-layout="S10"><div class="canvas-card"><div class="split-half" style="width:100%;height:100%">
++    <div class="half b-accent"><canvas class="ascii-bg" aria-hidden="true"></canvas><div class="t-meta">TAKE HOME</div><h2 class="cover-title craft-closing" data-anim="title">手仕事の<br>名前を、<br>一つ覚える。</h2><p class="craft-body">町とのつながりを、暮らしへ。</p></div>
++    <div class="half"><div class="chrome-min"><span>町の手仕事を、ひらく。</span><span>06 / 06</span></div><div class="craft-close-copy" data-anim="right"><div class="t-meta">AFTER THE WALK</div><p>今日、気になった<br>手仕事は？</p><div class="craft-memory-line"></div><span class="craft-body">名前を一つ、書きとめる。</span></div><p class="craft-note">架空の回遊体験案</p></div></div></div></section>
+ 
+ 
+ 
+@@ -1289,5 +1047,13 @@
+   wake();
+ })();
+ </script>
++<script>
++// Same-origin 0-based catalog adapter. Native jumpTo/easing/input controller retained.
++window.__slideCatalogGo = i => {if(Number.isInteger(i)&&i>=0&&i<document.querySelectorAll('#deck>.slide').length)window.__jumpToPage(i)};
++window.__slideCatalogCurrent = () => window.__pageIndex || 0;
++function catalogNotify(){if(parent!==window&&location.origin!=='null')parent.postMessage({type:'yebisu-page',index:window.__slideCatalogCurrent()},location.origin)}
++addEventListener('message', e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.type==='yebisu-slide')window.__slideCatalogGo(e.data.index)});
++new MutationObserver(catalogNotify).observe(document.getElementById('nav'),{subtree:true,attributes:true,attributeFilter:['class']});catalogNotify();
++</script>
+ </body>
+ </html>

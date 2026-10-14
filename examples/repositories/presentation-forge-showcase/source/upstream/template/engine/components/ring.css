@@ -1,0 +1,72 @@
+/*
+ * ring - a donut gauge for one percentage.
+ * @component: ring
+ *
+ * <div class="ring" style="--value: 64">
+ *   <p class="ring__value">64%</p>
+ *   <p class="ring__label">of teams adopted it</p>
+ * </div>
+ *
+ * --value is 0 to 100. Put several rings in a .stats row to compare them.
+ * The arc fills when the slide appears.
+ */
+
+@property --pf-ring {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+.ring {
+  --ring-size: 300px;
+  --ring-width: 28px;
+  display: grid;
+  justify-items: center;
+  row-gap: 22px;
+}
+
+.slide .ring > * {
+  margin: 0;
+}
+
+.ring::before {
+  content: "";
+  grid-column: 1;
+  grid-row: 1;
+  width: var(--ring-size);
+  height: var(--ring-size);
+  border-radius: 50%;
+  --pf-ring: var(--value, 0);
+  background: conic-gradient(
+    from -90deg,
+    var(--accent, #5b8bd0) calc(var(--pf-ring) * 1%),
+    var(--rule, rgba(127, 127, 127, 0.2)) 0
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-width)), #000 calc(100% - var(--ring-width) + 1px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - var(--ring-width)), #000 calc(100% - var(--ring-width) + 1px));
+}
+
+.ring__value {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: center;
+  font-size: calc(var(--type-title, 68px) * 1.1);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink, inherit);
+}
+
+.ring__label {
+  grid-row: 2;
+  text-align: center;
+  font-size: var(--type-small, 26px);
+  color: var(--muted, inherit);
+  max-width: 18ch;
+}
+
+.pf-canvas:not([data-dir="prev"]) > [data-active] .ring::before {
+  animation: pf-ring-fill calc(var(--pf-dur, 0.6s) * 2) var(--pf-ease, ease) backwards;
+  animation-delay: calc(var(--delay, 0s) + 0.15s);
+}
+
+@keyframes pf-ring-fill { from { --pf-ring: 0; } }

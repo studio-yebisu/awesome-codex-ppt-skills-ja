@@ -1,0 +1,160 @@
+{
+  "common_canvas": [
+    880,
+    380
+  ],
+  "stable_namespace": [
+    "book",
+    "owner",
+    "shelf",
+    "reader",
+    "arrow"
+  ],
+  "groupKey": "book-world",
+  "steps": [
+    {
+      "index": 0,
+      "title": "一冊の本が、次の人へ。",
+      "caption": "架空の交換本棚の提案。同じ一冊が、置く・見つける・戻すをつなぎます。",
+      "payload": {
+        "book": [
+          340,
+          55,
+          200,
+          270
+        ],
+        "owner": 0,
+        "shelf": 0,
+        "reader": 0,
+        "arrow": "",
+        "note": false
+      }
+    },
+    {
+      "index": 1,
+      "title": "読み終えた一冊を、本棚へ。",
+      "caption": "持ち主から、共通の本棚へ。一冊の位置が変わり、関係が見えてきます。",
+      "payload": {
+        "book": [
+          290,
+          132,
+          106,
+          145
+        ],
+        "owner": 1,
+        "shelf": 1,
+        "reader": 0,
+        "arrow": "place",
+        "note": false
+      }
+    },
+    {
+      "index": 2,
+      "title": "本の名前と、ひとことを添える。",
+      "caption": "本の名前と短いひとことを添える、という参加の案。",
+      "payload": {
+        "book": [
+          433,
+          153,
+          66,
+          95
+        ],
+        "owner": 0.18,
+        "shelf": 1,
+        "reader": 0,
+        "arrow": "",
+        "note": true
+      }
+    },
+    {
+      "index": 3,
+      "title": "次の読み手が、一冊を見つける。",
+      "caption": "本棚を眺める次の読み手と、同じ一冊をつなぎます。",
+      "payload": {
+        "book": [
+          433,
+          153,
+          66,
+          95
+        ],
+        "owner": 0.12,
+        "shelf": 1,
+        "reader": 1,
+        "arrow": "find",
+        "note": false
+      }
+    },
+    {
+      "index": 4,
+      "title": "読みたい本を、持ち帰る。",
+      "caption": "本棚の一冊が、次の読み手の側へ移ります。",
+      "payload": {
+        "book": [
+          635,
+          142,
+          86,
+          122
+        ],
+        "owner": 0.12,
+        "shelf": 0.45,
+        "reader": 1,
+        "arrow": "take",
+        "note": false
+      }
+    },
+    {
+      "index": 5,
+      "title": "読み終えたら、次へつなぐ。",
+      "caption": "読み終わった一冊を、次の人へつなぐことを考えます。",
+      "payload": {
+        "book": [
+          428,
+          82,
+          155,
+          214
+        ],
+        "owner": 0.12,
+        "shelf": 0.12,
+        "reader": 1,
+        "arrow": "",
+        "note": false
+      }
+    },
+    {
+      "index": 6,
+      "title": "もう一度、本棚へ。",
+      "caption": "同じ一冊を共通の本棚へ戻す。交換の輪をもう一度。",
+      "payload": {
+        "book": [
+          433,
+          153,
+          66,
+          95
+        ],
+        "owner": 0.12,
+        "shelf": 1,
+        "reader": 0.22,
+        "arrow": "return",
+        "note": false
+      }
+    },
+    {
+      "index": 7,
+      "title": "一冊を、次の人へ。",
+      "caption": "本棚を介して、一冊を次の人へ。料金・住所・営業実績は未設定です。",
+      "payload": {
+        "book": [
+          354,
+          80,
+          174,
+          236
+        ],
+        "owner": 0.18,
+        "shelf": 0.12,
+        "reader": 0.18,
+        "arrow": "cycle",
+        "note": false
+      }
+    }
+  ]
+}

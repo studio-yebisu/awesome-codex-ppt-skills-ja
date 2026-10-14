@@ -1,0 +1,59 @@
+---
+title: "From averages to updates"
+subtitle: "A compact math-and-code example"
+author: "Quarto Talks example"
+date: "2026-01-15"
+format:
+  quarto-talks-revealjs: default
+---
+
+## The mean is a balancing point {.statement}
+
+Every observation pulls; the residuals sum to zero.
+
+## One definition {.math}
+
+$$
+\bar{x}_n = \frac{1}{n}\sum_{i=1}^{n} x_i
+$$
+
+## The update form {.math}
+
+$$
+\bar{x}_n
+= \bar{x}_{n-1} + \frac{x_n - \bar{x}_{n-1}}{n}
+$$
+
+The new observation changes the old mean by a shrinking fraction of its surprise.
+
+# From notation to implementation
+
+## Translate the equation directly {.code}
+
+```python
+def running_mean(values):
+    """Yield the mean after each observed value."""
+    mean = 0.0
+    for n, value in enumerate(values, start=1):
+        mean += (value - mean) / n
+        yield mean
+```
+
+## Readability is part of correctness {.statement}
+
+If the code only fits when microscopic, show less code.
+
+## The two forms answer different needs
+
+| Form | Makes visible | Useful when |
+|---|---|---|
+| Sum | All observations contribute equally | Explaining the estimand |
+| Update | One state changes at a time | Streaming or teaching |
+
+## Preserve the invariant {.question}
+
+After each update, what quantity should equal the mean of all values seen so far?
+
+## End at the idea {.statement}
+
+Good code can reveal the structure already present in the mathematics.

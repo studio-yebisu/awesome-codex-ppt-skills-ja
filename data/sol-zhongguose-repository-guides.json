@@ -1,0 +1,250 @@
+[
+  {
+    "repository": "tanglele110-hash/zhongguose-ppt-skill",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_zhongguose_logic_template_font_subset_html",
+    "case_ids": [
+      "zhongguose-showcase"
+    ],
+    "summary_ja": "原稿logic/architectureから元template一式を使用。3章の和文6枚、中国色の対、元navigation/ASCII/helpersを保持。最終原稿で元字体subsetgeneratorを実実行。",
+    "requirements": [
+      "Browser + index.html/assets一式を配信するWeb server",
+      "Python3.10+ with FontTools/Brotli（再生成）",
+      "Node18+（原典の任意outline/validation scripts）"
+    ],
+    "steps": [
+      "固定原稿→source logic",
+      "頁の役割と3章navigationをlock",
+      "元template一式を複製し日本語局所diff",
+      "原典generatorへ日本語全TTFを渡し最終HTMLでsubset",
+      "代表初回表示と元navigation1→2"
+    ],
+    "commands": [
+      "python source/rebuild.py"
+    ],
+    "source_refs": [
+      {
+        "path": "LICENSE",
+        "preserved_path": "source/upstream/LICENSE",
+        "sha256": "876b2b1a8cabbae8f3d4993c808de884386c15ad3aca82144cb31792b3d1ec70",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/LICENSE"
+      },
+      {
+        "path": "package-lock.json",
+        "preserved_path": "source/upstream/package-lock.json",
+        "sha256": "3556f8eeaea85ea08ddee515a232c0876606e0830ed6e1c5fe5761edffd6b2ab",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/package-lock.json"
+      },
+      {
+        "path": "package.json",
+        "preserved_path": "source/upstream/package.json",
+        "sha256": "03348393764a82a6232f43da94aee51373b29f9033e1dd1c2aa3f1fbc2425fd3",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/package.json"
+      },
+      {
+        "path": "README.md",
+        "preserved_path": "source/upstream/README.md",
+        "sha256": "d98b4889a912fc4018bbe592deec2a48f957e0673dc934c0599817ca03740827",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/README.md"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/agents/openai.yaml",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/agents/openai.yaml",
+        "sha256": "4663ace572ed191aa6b535e5b5a1f24339af15b44c697e1c4a3e8c261a23846a",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/agents/openai.yaml"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/font-sources/FONT-NOTICE.txt",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/font-sources/FONT-NOTICE.txt",
+        "sha256": "6592483e77e1f78328a44920fef9c07d450362d57f5460eabd5e2ab7d54c6223",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/font-sources/FONT-NOTICE.txt"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/font-sources/OFL-1.1.txt",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/font-sources/OFL-1.1.txt",
+        "sha256": "eb78b6a2c5755bc873dc1857e4776e45b238768ed85c4a84fe78300f2451180d",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/font-sources/OFL-1.1.txt"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/FONT-NOTICE.txt",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/FONT-NOTICE.txt",
+        "sha256": "6592483e77e1f78328a44920fef9c07d450362d57f5460eabd5e2ab7d54c6223",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/FONT-NOTICE.txt"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/OFL-1.1.txt",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/OFL-1.1.txt",
+        "sha256": "eb78b6a2c5755bc873dc1857e4776e45b238768ed85c4a84fe78300f2451180d",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/OFL-1.1.txt"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.manifest.json",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.manifest.json",
+        "sha256": "85017090dea15ed3712c97668793cae17596389b078f605efd6abfed4b55ecf2",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.manifest.json"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.woff2",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.woff2",
+        "sha256": "d865f6d20ec514ff7ea93cc1ec51a1c01f98647cfa97ff0efd724e5202aef782",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.woff2"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/LUCIDE-ISC-AND-FEATHER-MIT.txt",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/LUCIDE-ISC-AND-FEATHER-MIT.txt",
+        "sha256": "3a9b6f18a8f9a324a5fb89e13cd7c900184123bfd85c7fdbf61d6257682b11bf",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/LUCIDE-ISC-AND-FEATHER-MIT.txt"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/MOTION-MIT.txt",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/MOTION-MIT.txt",
+        "sha256": "5ff46083b88563822b0560dd6221ab89d2f74bc97a52d4c97a75020fd62c6f32",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/MOTION-MIT.txt"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/lucide.min.js",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/lucide.min.js",
+        "sha256": "2e8b4b1c419d4d41442a497a19b7ab5a727fefb3d25202af3c4f97d3aac14d0d",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/lucide.min.js"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/motion.min.js",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/motion.min.js",
+        "sha256": "45615c1e7639fb9828942d0689c897e745690b0f6df13022223c9409fc01557c",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/motion.min.js"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-profile.svg",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-profile.svg",
+        "sha256": "ccbcf86c5ca3f42774363751c51267cd00da2df3921a3cee76bf54d6d390a88a",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-profile.svg"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-scroll.svg",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-scroll.svg",
+        "sha256": "d56dfd5198bcd085136fe645a56d754e118592a8a96cd300c2e1dcee09db17c1",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-scroll.svg"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-wide.svg",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-wide.svg",
+        "sha256": "a448f8189cfed65539915b6f3b754595c25c4574995bebc5bcc5ef23b0e6acec",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-wide.svg"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/index.html",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/index.html",
+        "sha256": "d21b9b7b385ea665ff93577e9140055ddce6184bfd6bb97b45b8a5f669f79328",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/index.html"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/assets/theme-cover-gallery.html",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/theme-cover-gallery.html",
+        "sha256": "bf3f8ead2ee6c040b4b92ddc28bbcc221ebe5f44c7e6a37a8b20f23003fda478",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/theme-cover-gallery.html"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/LICENSE.txt",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/LICENSE.txt",
+        "sha256": "876b2b1a8cabbae8f3d4993c808de884386c15ad3aca82144cb31792b3d1ec70",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/LICENSE.txt"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/references/content-architecture.md",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/references/content-architecture.md",
+        "sha256": "5d201ad56065ba53c6dfdc4bfe31e5b8efc0ad553fe62ff5d81fcf3aedb808ab",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/references/content-architecture.md"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/references/layout-patterns.md",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/references/layout-patterns.md",
+        "sha256": "1f687f87c65af448132670d5827d4454411f41108f77d6ea15d3d652fe0ac2b7",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/references/layout-patterns.md"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/references/quality-checklist.md",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/references/quality-checklist.md",
+        "sha256": "4f1b31025f03193693aa054adf774e956dbac0099b95859c59f90a580ea0a1e7",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/references/quality-checklist.md"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/references/visual-system.md",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/references/visual-system.md",
+        "sha256": "3102504e4dfc6c848918f8e807743b27e9e6c66bb35bd3cdaf7359e4e27a69c8",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/references/visual-system.md"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/requirements.txt",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/requirements.txt",
+        "sha256": "9246279fc638cbce691051c89cfabd7c6a7171884ab4fd4ceb26bce0913700ed",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/requirements.txt"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/scripts/browser-qa.mjs",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/browser-qa.mjs",
+        "sha256": "e62204e429d848294f6da7b9a66858031fff03f1a641827cc6d8034e492b733e",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/browser-qa.mjs"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/scripts/check-cover-glyphs.py",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/check-cover-glyphs.py",
+        "sha256": "a5bd29a4986dff3475124f577c8f34bc088d56b18530a700d1c7a0f5dce7299d",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/check-cover-glyphs.py"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/scripts/extract-deck-outline.mjs",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/extract-deck-outline.mjs",
+        "sha256": "a86e153206c82b9552792775bd3ad066ae90899eedfb05e4e96ff660343bbe5e",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/extract-deck-outline.mjs"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/scripts/preview-deck.mjs",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/preview-deck.mjs",
+        "sha256": "fb17d983232e502e4683991b6210c4637f68269f138cffa9ac8c33c1577e9f47",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/preview-deck.mjs"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/scripts/subset-cover-font.py",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/subset-cover-font.py",
+        "sha256": "45a86ab059d8d3a1c153e645b3ac248d431affc2d862d4a0e920a63d8a7f817d",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/subset-cover-font.py"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/scripts/validate-deck.mjs",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/validate-deck.mjs",
+        "sha256": "862b62b67fc50ec4ff05c714c23bc8c2d07e7e5400a5d2be95e0fb5604773a96",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/validate-deck.mjs"
+      },
+      {
+        "path": "skills/zhongguose-ppt-skill/SKILL.md",
+        "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/SKILL.md",
+        "sha256": "5887153330ab5fbccc8ca5f854a432ca339051bc3ff1043f71acdcc65ec2d276",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/SKILL.md"
+      },
+      {
+        "path": "THIRD_PARTY_NOTICES.md",
+        "preserved_path": "source/upstream/THIRD_PARTY_NOTICES.md",
+        "sha256": "73512f09103fc73f90d0064ecf12068620f93c6755e7c1d5da1744ca1736b793",
+        "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/THIRD_PARTY_NOTICES.md"
+      }
+    ],
+    "upstream_commit": "f4c2af8ff832133822afdce87ed2d6d760631ef4",
+    "license": "MIT",
+    "license_notice_ja": "root/nested MIT ©2026木渡川。全日本語TTF/OFL、元Motion MIT/Lucide ISC/Feather MITを保持。",
+    "caveats": [
+      "Multi-file index.html + assets, not single HTML",
+      "qiji original source archive not fetched; pinned seed preserved as unused original and full Japanese replacement TTF shipped",
+      "All-page detailed QA/independent review/scoring/ZIP reexecution not performed",
+      "Catalog parent integration/touch/overview/static switch not separately exercised"
+    ],
+    "skill": "skill-forks/zhongguose-ja/SKILL.md",
+    "guide": "examples/repositories/zhongguose-showcase/README.md",
+    "limitations": [
+      "編集はHTML/CSS/JS。PPTX生成なし。",
+      "原典100vw×100vhのresponsive viewport。固定1920×1080scale stageではありません。",
+      "確認は代表2頁と元送り1→2。全頁詳細QA・採点・独立reviewなし。",
+      "中国色绛缨を使う日本語作例。日本の伝統色とは表示しません。"
+    ]
+  }
+]

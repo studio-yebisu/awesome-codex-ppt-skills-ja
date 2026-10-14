@@ -1,0 +1,71 @@
+[
+  {
+    "id": "quarto-talks-showcase",
+    "title": "五つの点から、一本の線を。",
+    "use_case": "合成5点の表・図・式・実計算・限界をつなぐ初学者向け6枚教材",
+    "repository": "alfredo-hs/quarto-talks",
+    "skill_repository": "alfredo-hs/quarto-talks",
+    "upstream_commit": "60f69c3568181898767470382d5599d4bb86b7b6",
+    "fork_id": "quarto-talks-ja",
+    "page_count": 6,
+    "format": "html",
+    "preview_kind": "html",
+    "preview_canvas": {
+      "width": 1600,
+      "height": 900
+    },
+    "navigation": "native-runtime-bridge",
+    "preview_notice": "原典Quarto/RevealのHTML6枚。字体・図・runtime/mathを内包。編集はQMD/計算Python/SVG/SCSS、PPTXは生成していません。",
+    "editability": "quarto_qmd",
+    "editable_features": [
+      "qmd_text",
+      "tables",
+      "equations",
+      "code",
+      "computed_svg",
+      "scss"
+    ],
+    "style": "原典white/blue・semantic visual/math/code/question / Shippori・BIZ・JetBrains Mono",
+    "cover": "examples/repositories/quarto-talks-showcase/render/major-01.png",
+    "interior": "examples/repositories/quarto-talks-showcase/render/major-02.png",
+    "preview": "examples/repositories/quarto-talks-showcase/index.html",
+    "artifact_download": "examples/repositories/quarto-talks-showcase/index.html",
+    "source_download": "downloads/quarto-talks-example-ja.zip",
+    "fork_download": "downloads/quarto-talks-ja.zip",
+    "input": "examples/repositories/quarto-talks-showcase/input/BRIEF.md",
+    "input_data": "examples/repositories/quarto-talks-showcase/input/data.csv",
+    "prompt": "examples/repositories/quarto-talks-showcase/PROMPT.md",
+    "prompt_text": "# 制作依頼\n\n日本語6枚「五つの点から、一本の線を。」。初学者向けの約5分教材。原典alfredo-hs/quarto-talks固定60f69c3568181898767470382d5599d4bb86b7b6のtemplate.qmdとquarto-talks-revealjs拡張、SCSS/意味クラスを実Quarto CLIでrenderする。\n\n入力は単位のない合成5点[(0,1),(1,3),(2,2),(3,5),(4,4)]。NumPy lstsqで実計算しSVGへ。現実データ・研究成果・予測精度は作らない。表→散布図→式→短いコードと実結果→残差と限界→問いの順。原典16–24枚の既定を指定6枚へ上書きする。\n\n原典white/blueとsemantic classesを保ち、公式Shippori Mincho見出し・BIZ UDPGothic本文・JetBrains Mono英数字/コードの字体役割を局所SCSSへ。合字off、日本語コメントはBIZ fallback。独自controllerへ置換しない。0-based same-origin bridgeは元Reveal APIへ小追加。\n\n実計算、Quarto render、初回主要表示と元navigation1→2、短い日本語SKILL quick_validateだけ確認。全頁詳細検査・独立採点・全ZIP再実行はしない。\n",
+    "provenance": "examples/repositories/quarto-talks-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/quarto-talks-showcase/QA.json",
+    "guide": "examples/repositories/quarto-talks-showcase/README.md",
+    "titles": [
+      "五つの点から、一本の線を。",
+      "表を、点にする。",
+      "直線を、二つの数で表す。",
+      "コードで、線を求める。",
+      "線が言えること、言えないこと。",
+      "点が一つ変わると、線はどう動く？"
+    ],
+    "notes": [
+      "単位なしの合成5点。現実の観測値・研究成果ではない。",
+      "表と同じ点を散布図へ。",
+      "直線y=ax+b。縦のずれの二乗合計を小さくする。",
+      "同梱Pythonを実行しa0.8/b1.4を得た。QMD表示fenceの実行を称さない。",
+      "実計算SSE3.6はこの合成5点だけ。外挿・予測精度・因果は分からない。",
+      "一点を変え同じコードを実行する、次の学習実験を問う。"
+    ],
+    "method": "Original template.qmd → argument spine/select → six ordinary/visual/math/code/question sections → original quarto-talks-revealjs0.4.1 + SCSS → actual Quarto1.9.38 render/embed-resources/self-contained-math. NumPy2.5.4 lstsq executed from synthetic CSV → SVG/results. Original Reveal5.1.0 + small same-origin API bridge.",
+    "sample_notice": "単位のない合成5点。現実の観測・研究成果・予測性能なし。表示用fenceと実Python計算を区別。",
+    "status": "light_check_complete",
+    "execution_status": "light_check_complete",
+    "representative_previews": [
+      "examples/repositories/quarto-talks-showcase/render/major-01.png",
+      "examples/repositories/quarto-talks-showcase/render/major-02.png"
+    ],
+    "representative_indices": [
+      0,
+      1
+    ]
+  }
+]

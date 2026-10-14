@@ -10,7 +10,7 @@ function requestComposer({section,caseStudy,official,skillDownload,fontKit}){
  section.querySelector('.case-sample-note').textContent='スキル本文と一式ZIPをAIへ添付し、ここで作った依頼文も渡してください。'+(/\.pptx$/i.test(caseStudy.input||'')?' 変換したいPowerPointも添付し、原稿欄には変更したい点を書きます。':'');
  const inputs=document.createElement('div');inputs.className='repository-request-inputs';
  inputs.innerHTML='<label for="repository-topic">何の資料を作る？</label><input id="repository-topic" placeholder="例：新しく入るメンバーへの引き継ぎ"><label for="repository-content">自分の原稿・伝えたいこと</label><textarea id="repository-content" placeholder="箇条書きのメモでも大丈夫。使いたい情報を貼り付けてください。"></textarea><div class="repository-request-options"><div><label for="repository-audience">読み手・目的</label><input id="repository-audience" placeholder="例：初めて担当する人が、次の作業を始められる"></div><div><label for="repository-pages">希望枚数</label><input id="repository-pages" type="number" min="1" max="100" value="'+esc(desiredCount)+'"></div></div>';
- if(caseStudy.page_unit==='段階')inputs.querySelector('label[for=repository-pages]').textContent='希望する場面数';
+ if(caseStudy.page_unit==='段階')inputs.querySelector('label[for=repository-pages]').textContent=caseStudy.scene_count?'希望する場面数':'希望する段階数';
  fontSelect.previousElementSibling.before(inputs);
  const assemble=document.createElement('button');assemble.className='button outline';assemble.type='button';assemble.id='repository-assemble';assemble.textContent='この内容で依頼文を組み立てる ↓';
  field.before(assemble);
@@ -20,7 +20,7 @@ function requestComposer({section,caseStudy,official,skillDownload,fontKit}){
  const raw=document.createElement('pre');raw.textContent=caseStudy.prompt_text;used.append(summary,raw);section.append(used);
  const fontInstruction=()=>{
   const f=fontKit.presets.find(x=>x.id===fontSelect.value);
-  return f?'書体：見出し '+f.heading+'、本文 '+f.body+'、英数字 '+f.latin+'。'+f.instruction+' 公式配布のフォントと原文OFLを使う。':'書体：添付したスキルと作例の書体指定を使う。必要な公式配布フォントと原文OFLも用意する。';
+  return f?'書体：見出し '+f.heading+'、本文 '+f.body+'、英数字 '+f.latin+(f.code?'、コード '+f.code:'')+'。'+f.instruction+' 公式配布のフォントと原文OFLを使う。':'書体：添付したスキルと作例の書体指定を使う。必要な公式配布フォントと原文OFLも用意する。';
  };
  const compose=()=>{
   const topic=inputs.querySelector('#repository-topic').value.trim()||'［作りたい資料の題材］';
@@ -28,13 +28,13 @@ function requestComposer({section,caseStudy,official,skillDownload,fontKit}){
   const audience=inputs.querySelector('#repository-audience').value.trim()||'［読み手と、この資料で伝えたいこと］';
   const pages=Number(inputs.querySelector('#repository-pages').value);
   const count=Number.isInteger(pages)&&pages>=1&&pages<=100?pages:desiredCount;
-  const structure=caseStudy.page_unit==='段階'?'希望する場面数：'+count+'場面。各場面の中で、一度の操作につき一つの考えを段階表示する。':'希望枚数：'+count+'枚。固定の版式など原典の制約があれば、その方式に合わせる。';
+  const structure=caseStudy.page_unit==='段階'?(caseStudy.scene_count?'希望する場面数：'+count+'場面。各場面の中で、一度の操作につき一つの考えを段階表示する。':'希望する段階数：'+count+'段階。原典の共通画面と同じ図形を使い、一度の操作につき一つの考えを見せる。'):'希望枚数：'+count+'枚。固定の版式など原典の制約があれば、その方式に合わせる。';
   const output=caseStudy.format==='pptx'?'PowerPoint（PPTX）と制作ソース。文字・図などを編集できる範囲は、この方式に合わせて明記する。':caseStudy.format==='pdf'?'PDFと原典方式の制作ソース。':'ブラウザーで再生できるWebスライドと制作ソース。';
   field.value='添付の日本語スキル「'+skillDownload.split('/').pop()+'」を使い、次の内容で日本語の資料を完成させてください。\n\n題材：'+topic+'\n読み手・目的：'+audience+'\n'+structure+'\n\n原稿：\n'+content+'\n\n作風の参考：「'+caseStudy.title+'」\n'+(caseStudy.style?'見た目：'+caseStudy.style+'\n':'')+fontInstruction()+'\n日本語は意味のまとまりで改行する。見出しは短く、余白と文字の強弱で伝える。情報が過密なら内容を分ける。\n\n使う原典：'+official+'\nこの作例の制作方法：'+(caseStudy.method||'添付したスキル本文の固有テンプレート・生成器・変換工程')+'\n原典SKILLにある必要な入力と、固有テンプレート・生成器・変換工程を使う。制作一式ZIP内の実装や、固定原典の参照ファイルを利用する。必須の入力が足りなければ、その内容を確認してから制作する。\n原稿の事実・仮説・仮の数字を区別し、根拠や実測値を補完しない。\n\n完成物：'+output+'\n必要な生成工程と、主要な完成ファイルの初回表示まで進めてください。';
   status.textContent='依頼文を組み立てました。必要なら下で編集できます。';
  };
  assemble.addEventListener('click',compose);
- fontSelect.addEventListener('change',()=>{const f=fontKit.presets.find(x=>x.id===fontSelect.value);section.querySelector('#repository-font-recipe').textContent=(f?f.heading+' / '+f.body+' / '+f.latin:'作例と同じ書体')+'。選んだ書体は「組み立てる」で依頼文へ入ります。';});
+ fontSelect.addEventListener('change',()=>{const f=fontKit.presets.find(x=>x.id===fontSelect.value);section.querySelector('#repository-font-recipe').textContent=(f?f.heading+' / '+f.body+' / '+f.latin+(f.code?' / コード '+f.code:''):'作例と同じ書体')+'。選んだ書体は「組み立てる」で依頼文へ入ります。';});
  section.querySelector('#repository-copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(field.value);status.textContent='依頼文をコピーしました。スキル本文と一緒にAIへ渡してください。';}catch{field.focus();field.select();status.textContent='依頼文を選択しました。Ctrl+Cでコピーしてください。';}});
  compose();status.textContent='入力はこの画面の中だけで使います。依頼文をコピーして、使っているAIへ。';
 }

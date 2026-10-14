@@ -1,0 +1,134 @@
+/*
+ * bars - a bar chart from plain values, no library.
+ * @component: bars
+ *
+ * <ul class="bars">
+ *   <li style="--value: 72"><span class="bars__label">France</span><span class="bars__value">72%</span></li>
+ *   <li style="--value: 48" class="is-highlight">...</li>
+ * </ul>
+ *
+ * --value is the bar length, 0 to 100 (percent of the full track): scale your
+ * data so the largest bar is 100. Add .bars--vertical for columns. Bars grow
+ * in one after the other when the slide appears.
+ */
+
+.bars {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.bars > li {
+  display: grid;
+  grid-template-columns: minmax(180px, 26%) 1fr minmax(110px, auto);
+  align-items: center;
+  column-gap: 28px;
+  font-size: var(--type-small, 26px);
+}
+
+.slide .bars > li {
+  margin: 0;
+  padding: 0;
+}
+
+/* the track (::after) and the bar (::before) share the middle cell */
+.bars > li::before,
+.bars > li::after {
+  content: "";
+  grid-column: 2;
+  grid-row: 1;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.bars > li::after {
+  width: 100%;
+  background: var(--rule, rgba(127, 127, 127, 0.2));
+}
+
+.bars > li::before {
+  position: relative;
+  z-index: 1;
+  width: calc(var(--value, 0) * 1%);
+  background: var(--accent, #5b8bd0);
+  transform-origin: left center;
+}
+
+.bars > li.is-highlight::before {
+  background: linear-gradient(90deg, var(--accent, #5b8bd0), var(--accent-soft, #7da8d8));
+}
+
+.bars__label {
+  grid-column: 1;
+  color: var(--ink, inherit);
+}
+
+.bars__value {
+  grid-column: 3;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink, inherit);
+}
+
+.bars > li:not(.is-highlight) .bars__value {
+  color: var(--muted, inherit);
+}
+
+/* ---- columns ---- */
+
+.bars--vertical {
+  flex-direction: row;
+  align-items: stretch;
+  height: 520px;
+  gap: 36px;
+}
+
+.bars--vertical > li {
+  flex: 1 1 0;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr auto;
+  align-items: end;
+  justify-items: center;
+  row-gap: 16px;
+}
+
+.bars--vertical > li::before,
+.bars--vertical > li::after {
+  grid-column: 1;
+  grid-row: 2;
+  width: 100%;
+  max-width: 120px;
+  height: 100%;
+  border-radius: 14px 14px 4px 4px;
+}
+
+.bars--vertical > li::before {
+  height: calc(var(--value, 0) * 1%);
+  transform-origin: center bottom;
+}
+
+.bars--vertical .bars__value { grid-column: 1; grid-row: 1; }
+.bars--vertical .bars__label { grid-column: 1; grid-row: 3; text-align: center; }
+
+/* ---- motion: bars grow in turn ---- */
+
+.bars > :nth-child(2) { --pf-i: 1; }
+.bars > :nth-child(3) { --pf-i: 2; }
+.bars > :nth-child(4) { --pf-i: 3; }
+.bars > :nth-child(5) { --pf-i: 4; }
+.bars > :nth-child(6) { --pf-i: 5; }
+.bars > :nth-child(7) { --pf-i: 6; }
+.bars > :nth-child(n+8) { --pf-i: 7; }
+
+.pf-canvas:not([data-dir="prev"]) > [data-active] .bars > li::before {
+  animation: pf-bar-grow calc(var(--pf-dur, 0.6s) * 1.6) var(--pf-ease, ease) backwards;
+  animation-delay: calc(var(--delay, 0s) + 0.15s + var(--pf-i, 0) * var(--pf-step, 90ms));
+}
+.pf-canvas:not([data-dir="prev"]) > [data-active] .bars--vertical > li::before {
+  animation-name: pf-bar-rise;
+}
+
+@keyframes pf-bar-grow { from { transform: scaleX(0); } }
+@keyframes pf-bar-rise { from { transform: scaleY(0); } }

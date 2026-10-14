@@ -1,0 +1,512 @@
+/*-- scss:defaults --*/
+
+$body-bg: #ffffff;
+$body-color: #20262a;
+$link-color: #315f7d;
+$selection-bg: #dce9f0;
+$selection-color: #18262f;
+
+/* RevealJS theme variables use camelCase; keep them aligned with Quarto's. */
+$backgroundColor: #ffffff;
+$mainColor: #20262a;
+$headingColor: #315f7d;
+$linkColor: #315f7d;
+$selectionBackgroundColor: #dce9f0;
+$selectionColor: #18262f;
+$mainFont: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+$headingFont: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+$codeFont: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+$headingTextTransform: none;
+$headingFontWeight: 600;
+$headingLetterSpacing: -0.018em;
+
+$presentation-font-size-root: 42px;
+$presentation-font-size: 36px;
+$presentation-line-height: 1.34;
+$presentation-heading-font: ui-serif, Georgia, Cambria, "Times New Roman", serif;
+$presentation-heading-color: #315f7d;
+$presentation-heading-font-weight: 600;
+$presentation-heading-line-height: 1.08;
+$presentation-heading-letter-spacing: -0.018em;
+$presentation-h1-font-size: 2.65em;
+$presentation-h2-font-size: 1.58em;
+$presentation-h3-font-size: 1em;
+
+$font-family-sans-serif: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+$font-family-monospace: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+$code-block-bg: #f4f6f7;
+$code-block-border-color: #d5dde1;
+$code-color: #7b3f46;
+
+/*-- scss:rules --*/
+
+:root {
+  --qt-ink: #20262a;
+  --qt-muted: #62717a;
+  --qt-accent: #315f7d;
+  --qt-accent-soft: #dce9f0;
+  --qt-paper: #ffffff;
+  --qt-rule: #d5dde1;
+  --qt-code: #f4f6f7;
+}
+
+.reveal {
+  font-family: $font-family-sans-serif;
+  color: var(--qt-ink);
+  font-weight: 400;
+  letter-spacing: -0.006em;
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides section {
+  box-sizing: border-box;
+}
+
+.reveal .slides section.smaller {
+  font-size: 0.82em;
+}
+
+/* Keep Quarto's native .smaller as one controlled density step. Technical
+   content receives a floor so nested scaling does not make it microscopic. */
+.reveal .slides section.smaller pre {
+  font-size: 0.78em;
+}
+
+.reveal .slides section.smaller table {
+  font-size: 0.82em;
+}
+
+.reveal .slides section.smaller figcaption,
+.reveal .slides section.smaller .figure-caption {
+  font-size: 0.64em;
+}
+
+.reveal h1,
+.reveal h2,
+.reveal h3 {
+  text-transform: none;
+}
+
+.reveal h2 {
+  margin-bottom: 0.72em;
+  font-size: clamp(1.5em, 4.15vw, 1.62em);
+}
+
+.reveal .slides section > h1 {
+  max-width: 18ch;
+  margin-right: auto;
+  margin-left: auto;
+  font-size: clamp(2.55em, 6.6vw, 2.9em);
+  line-height: 1.04;
+  text-align: center;
+}
+
+.reveal h3 {
+  color: var(--qt-muted);
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.reveal p,
+.reveal li {
+  line-height: 1.34;
+}
+
+.reveal p {
+  margin: 0.45em 0;
+}
+
+.reveal ul,
+.reveal ol {
+  margin-left: 1.05em;
+}
+
+.reveal li {
+  margin: 0.25em 0;
+  padding-left: 0.12em;
+}
+
+.reveal li::marker {
+  color: var(--qt-accent);
+}
+
+.reveal a {
+  color: var(--qt-accent);
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.12em;
+}
+
+.reveal strong {
+  color: var(--qt-accent);
+  font-weight: 650;
+}
+
+/* Title slide */
+.reveal .quarto-title-block .title,
+.reveal #title-slide .title {
+  max-width: 18ch;
+  margin-right: auto;
+  margin-bottom: 0.22em;
+  margin-left: auto;
+  color: var(--qt-accent);
+  font-size: 2.6em;
+  line-height: 1.02;
+  text-align: center;
+}
+
+.reveal #title-slide .subtitle {
+  max-width: 32ch;
+  margin-right: auto;
+  margin-top: 0;
+  margin-left: auto;
+  color: var(--qt-ink);
+  font-size: 1.02em;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.reveal #title-slide .quarto-title-author-name,
+.reveal #title-slide .date {
+  color: var(--qt-muted);
+  font-size: 0.62em;
+}
+
+/* RevealJS-native centring for one short interpretive block. */
+.reveal .slides section.center {
+  display: flex !important;
+  height: 100%;
+  flex-direction: column;
+  justify-content: safe center;
+  align-items: center;
+  text-align: center;
+}
+
+.reveal .slides section.center > h2 {
+  max-width: 20ch;
+  margin-right: auto;
+  margin-bottom: 0.55em;
+  margin-left: auto;
+  font-size: clamp(1.7em, 4.4vw, 2.1em);
+  line-height: 1.08;
+  text-align: center;
+}
+
+.reveal .slides section.center > p {
+  max-width: 34ch;
+  margin: 0.35em auto;
+  font-size: clamp(1.05em, 2.8vw, 1.2em);
+  text-align: center;
+}
+
+.reveal .slides section.center > ul,
+.reveal .slides section.center > ol {
+  max-width: 30ch;
+  text-align: left;
+}
+
+/* Small semantic vocabulary: apply classes to slide headings. */
+.reveal .slides section.statement,
+.reveal .slides section.question,
+.reveal .slides section.quote,
+.reveal .slides section.math,
+.reveal .slides section.visual,
+.reveal .slides section.code {
+  display: flex !important;
+  height: 100%;
+  flex-direction: column;
+  justify-content: safe center;
+}
+
+.reveal .slides section.statement,
+.reveal .slides section.question,
+.reveal .slides section.quote {
+  align-items: center;
+  text-align: center;
+}
+
+.reveal .slides section.statement h2,
+.reveal .slides section.question h2 {
+  max-width: 20ch;
+  margin: 0;
+  font-size: clamp(2.2em, 5.8vw, 2.6em);
+  line-height: 1.06;
+  text-align: center;
+}
+
+.reveal .slides section.statement p,
+.reveal .slides section.question p {
+  max-width: 34ch;
+  margin-top: 0.9em;
+  color: var(--qt-muted);
+  font-size: clamp(1em, 2.7vw, 1.16em);
+  text-align: center;
+}
+
+.reveal .slides section.question::before {
+  margin-bottom: 0.8em;
+  color: var(--qt-accent);
+  font-size: 0.48em;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  content: "Question";
+}
+
+.reveal .slides section.quote h2 {
+  margin-bottom: 0.5em;
+  color: var(--qt-muted);
+  font-size: 0.78em;
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.reveal blockquote {
+  width: auto;
+  max-width: 22ch;
+  margin: 0;
+  padding: 0.05em 0 0.05em 0.72em;
+  border-left: 0.09em solid var(--qt-accent);
+  background: transparent;
+  box-shadow: none;
+  color: var(--qt-ink);
+  font-size: clamp(1.45em, 3.9vw, 1.72em);
+  font-style: italic;
+  line-height: 1.22;
+}
+
+.reveal blockquote p:first-child::before,
+.reveal blockquote p:last-child::after {
+  color: var(--qt-accent);
+}
+
+.reveal .quote-source {
+  align-self: center;
+  max-width: 32ch;
+  margin: 1.1em auto 0;
+  color: var(--qt-muted);
+  font-size: 0.68em;
+  text-align: center;
+}
+
+.reveal .slides section.visual figure {
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.reveal .slides section.visual img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin: 0 auto;
+  max-height: 640px;
+  object-fit: contain;
+}
+
+.reveal figcaption,
+.reveal .figure-caption {
+  margin-top: 0.45em;
+  color: var(--qt-muted);
+  font-size: clamp(0.54em, 1.5vw, 0.6em);
+  line-height: 1.3;
+  text-align: left;
+}
+
+.reveal .slides section.math {
+  align-items: center;
+  text-align: center;
+}
+
+.reveal .slides section.math h2 {
+  align-self: stretch;
+  margin-bottom: 0.6em;
+  color: var(--qt-accent);
+  font-size: 1.58em;
+  letter-spacing: -0.018em;
+  text-align: left;
+  text-transform: none;
+}
+
+.reveal .slides section.math .MathJax_Display,
+.reveal .slides section.math mjx-container[display="true"],
+.reveal .slides section.math .katex-display {
+  margin: 0.8em 0 !important;
+  font-size: clamp(145%, 3.95vw, 155%) !important;
+}
+
+.reveal pre {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0.65em 0;
+  border: 1px solid var(--qt-rule);
+  border-radius: 0.12em;
+  box-shadow: none;
+  font-size: clamp(0.66em, 1.8vw, 0.7em);
+  line-height: 1.42;
+}
+
+.reveal pre code {
+  padding: 0.95em 1.1em;
+  background: var(--qt-code);
+}
+
+.reveal div.sourceCode {
+  box-sizing: border-box;
+  width: 100%;
+  margin: 0.65em 0;
+}
+
+.reveal div.sourceCode > pre.sourceCode {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+}
+
+.reveal code {
+  font-family: $font-family-monospace;
+}
+
+.reveal :not(pre) > code {
+  padding: 0.08em 0.28em;
+  border-radius: 0.14em;
+  background: var(--qt-code);
+  color: $code-color;
+  font-size: 0.86em;
+}
+
+.reveal table {
+  width: 100%;
+  margin: 0.65em 0;
+  border-collapse: collapse;
+  font-size: clamp(0.72em, 2vw, 0.76em);
+}
+
+.reveal table th {
+  border-top: 2px solid var(--qt-ink);
+  border-bottom: 1px solid var(--qt-ink);
+  color: var(--qt-ink);
+  font-weight: 650;
+}
+
+.reveal table td {
+  border-bottom: 1px solid var(--qt-rule);
+}
+
+.reveal table th,
+.reveal table td {
+  padding: 0.42em 0.58em;
+}
+
+/* Optional Bluesky post enhancement; the link card is always the fallback. */
+.reveal .bluesky-post {
+  box-sizing: border-box;
+  width: min(100%, var(--qt-bluesky-width, 600px));
+  margin: 0.7em auto;
+  color: var(--qt-ink);
+}
+
+.reveal .bluesky-fallback,
+.reveal .bluesky-post blockquote.bluesky-embed {
+  box-sizing: border-box;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0.85em 0.95em;
+  border: 1px solid var(--qt-rule);
+  border-left: 0.12em solid var(--qt-accent);
+  border-radius: 0.12em;
+  background: #fff;
+  box-shadow: none;
+  color: var(--qt-ink);
+  font-size: 0.66em;
+  font-style: normal;
+  line-height: 1.35;
+}
+
+.reveal .bluesky-fallback p,
+.reveal .bluesky-post blockquote.bluesky-embed p {
+  margin: 0.25em 0;
+}
+
+.reveal .bluesky-kicker {
+  color: var(--qt-muted);
+  font-size: 0.72em;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.reveal .bluesky-fallback-note {
+  color: var(--qt-muted);
+  font-size: 0.78em;
+}
+
+.reveal .bluesky-post iframe,
+.reveal .bluesky-post .bluesky-embed {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+.reveal .citation,
+.reveal .citeproc-not-found {
+  color: var(--qt-muted);
+}
+
+.reveal #refs {
+  width: min(100%, 52ch);
+  margin-right: auto;
+  margin-left: auto;
+  font-size: clamp(0.68em, 2vw, 0.78em);
+  line-height: 1.35;
+}
+
+.reveal #refs .csl-entry {
+  margin-bottom: 0.65em;
+}
+
+.reveal .slides section:has(#refs) {
+  display: flex !important;
+  height: 100%;
+  flex-direction: column;
+  justify-content: safe center;
+  font-size: 1em;
+}
+
+.reveal .slides section:has(#refs) > h2 {
+  margin-bottom: 0.8em;
+  font-size: clamp(1.58em, 4vw, 1.9em);
+  text-align: center;
+}
+
+.reveal .slide-number {
+  right: 1.25em;
+  bottom: 0.9em;
+  color: var(--qt-muted);
+  background: transparent;
+  font-size: 0.42em;
+}
+
+.reveal .muted {
+  color: var(--qt-muted);
+}
+
+.reveal .accent {
+  color: var(--qt-accent);
+}
+
+.reveal .small {
+  font-size: 0.78em;
+}
+
+@media (max-width: 900px) {
+  .reveal {
+    font-size: 30px;
+  }
+}

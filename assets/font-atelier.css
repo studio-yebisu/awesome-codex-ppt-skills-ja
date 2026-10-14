@@ -9,6 +9,7 @@
 @font-face{font-family:"Atelier Dela Gothic One";src:url("../downloads/fonts/delagothicone/DelaGothicOne-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
 @font-face{font-family:"Atelier Manrope";src:url("../downloads/fonts/manrope/Manrope[wght].ttf") format("truetype");font-weight:200 800;font-display:swap}
 @font-face{font-family:"Atelier Space Grotesk";src:url("../downloads/fonts/spacegrotesk/SpaceGrotesk[wght].ttf") format("truetype");font-weight:300 700;font-display:swap}
+@font-face{font-family:"Atelier JetBrains Mono";src:url("../downloads/fonts/jetbrainsmono/JetBrainsMono[wght].ttf") format("truetype");font-weight:100 800;font-display:swap}
 @font-face{font-family:"Atelier BIZ UDPGothic";src:url("../downloads/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
 @font-face{font-family:"Atelier BIZ UDPGothic";src:url("../downloads/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf") format("truetype");font-weight:700;font-display:swap}
 @font-face{font-family:"Atelier BIZ UDPMincho";src:url("../downloads/fonts/bizudpmincho/BIZUDPMincho-Regular.ttf") format("truetype");font-weight:400;font-display:swap}
@@ -23,12 +24,15 @@
 @media(max-width:760px){.font-atelier .fa-tabs{grid-template-columns:1fr 1fr}.font-atelier .fa-tabs button:nth-child(2){border-right:0}.font-atelier .fa-tabs button:nth-child(-n+2){border-bottom:1px solid #151b1d42}.font-atelier .fa-specimen{grid-template-columns:1fr}.font-atelier .fa-sample{padding:30px 15px}.font-atelier .fa-sample h4{font-size:39px;letter-spacing:-1.6px}.font-atelier [data-style=poster] h4{font-size:34px}.font-atelier .fa-recipe{border-left:0;border-top:1px solid #151b1d42;padding:28px 0}.font-atelier .fa-downloads{grid-template-columns:1fr 1fr}.font-atelier .fa-family{padding-right:12px}.font-atelier .fa-family h5{font-size:18px}.font-atelier .fa-download-head{align-items:flex-start;flex-direction:column}.font-atelier .fa-latin{font-size:42px}.font-atelier .fa-family>div{gap:13px}}
 @media(max-width:400px){.font-atelier .fa-tabs button{padding:16px 9px;gap:8px}.font-atelier .fa-tabs span{font-size:12px}.font-atelier .fa-downloads{grid-template-columns:1fr}}
 @media(prefers-reduced-motion:reduce){.font-atelier *{scroll-behavior:auto;animation:none;transition:none}}
-.font-atelier .fa-tabs{grid-template-columns:repeat(3,1fr)}
-.font-atelier .fa-tabs button:nth-child(3){border-right:0}
-.font-atelier .fa-tabs button:nth-child(-n+3){border-bottom:1px solid #151b1d42}
+.font-atelier .fa-tabs{grid-template-columns:repeat(4,1fr)}
+.font-atelier .fa-tabs button:nth-child(4n){border-right:0}
+.font-atelier .fa-tabs button:nth-child(-n+4){border-bottom:1px solid #151b1d42}
 .font-atelier [data-style=work] .fa-sample{background:#fffdf6;padding-left:28px}
 .font-atelier [data-style=work] .fa-latin{color:#c24b2e}
 .font-atelier [data-style=explain] .fa-sample{background:#163c32;color:#fff8e9;padding-left:28px}
 .font-atelier [data-style=explain] h4{letter-spacing:-1px}
 .font-atelier [data-style=explain] .fa-latin{color:#f1b77e;font-size:clamp(27px,3.4vw,44px)}
+.font-atelier [data-style=technical] .fa-sample{background:#fff;color:#202b49;padding-left:28px}
+.font-atelier [data-style=technical] h4{color:#225cbe;letter-spacing:-1px}
+.font-atelier [data-style=technical] .fa-latin{font-family:var(--fa-code),var(--fa-body),monospace;font-size:clamp(24px,3vw,41px);font-variant-ligatures:none;letter-spacing:0;color:#225cbe}
 @media(max-width:760px){.font-atelier .fa-tabs{grid-template-columns:1fr 1fr}.font-atelier .fa-tabs button:nth-child(3){border-right:1px solid #151b1d42}.font-atelier .fa-tabs button:nth-child(2n){border-right:0}.font-atelier .fa-tabs button:nth-child(-n+4){border-bottom:1px solid #151b1d42}}

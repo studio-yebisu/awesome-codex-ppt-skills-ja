@@ -9,6 +9,7 @@ const samples = {
  work: ['数字にも、\n読む順番がある。', '結論を先に、説明は短く。単位と比較対象を添えると、同じ数字を同じ意味で読める。', '120 / 30%'],
  research: ['図と出典が、\n主張を支える。', '変数と単位を揃え、仮説と結果を分ける。図の読み方を短く添えると、研究の道筋が伝わる。', 'N = 24 / 95%'],
  explain: ['図を見て、\n関係がわかる。', '題名は明朝、説明はゴシック。式と図のラベルを対応させ、学ぶ人が次に考えることを示す。', '12 / 40 = 30%'],
+ technical: ['コードから、\n図へ。', '短いコードと実行結果を対応させる。説明は日本語のゴシック、コードと変数は等幅にすると、読む順番が見つかる。', 'y = 0.80x + 1.40'],
 };
 const escape = value => String(value).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
@@ -32,10 +33,12 @@ export async function mountFontAtelier(target = document.querySelector('#font-at
    panel.style.setProperty('--fa-heading',`"Atelier ${active.heading}"`);
    panel.style.setProperty('--fa-body',`"Atelier ${active.body}"`);
    panel.style.setProperty('--fa-latin',`"Atelier ${active.latin}"`);
+   panel.style.setProperty('--fa-code',`"Atelier ${active.code || active.latin}"`);
    panel.querySelector('h4').textContent=sample[0];
    panel.querySelector('.fa-body').textContent=sample[1];
    panel.querySelector('.fa-latin').textContent=sample[2];
-   panel.querySelector('dl').innerHTML=[['見出し',active.heading],['本文',active.body],['英数字',active.latin]].map(([k,v])=>`<div><dt>${k}</dt><dd>${escape(v)}</dd></div>`).join('');
+   panel.querySelector('.fa-label').textContent=active.code ? '見出し / 本文 / 英数字 / コード' : '見出し / 本文 / 英数字';
+   panel.querySelector('dl').innerHTML=[['見出し',active.heading],['本文',active.body],['英数字',active.latin],...(active.code ? [['コード',active.code]] : [])].map(([k,v])=>`<div><dt>${k}</dt><dd>${escape(v)}</dd></div>`).join('');
    panel.querySelector('.fa-direction').textContent=active.instruction;
    host.querySelector('.fa-status').textContent='';
    host.querySelector('.fa-copy-fallback').hidden=true;
@@ -43,7 +46,7 @@ export async function mountFontAtelier(target = document.querySelector('#font-at
   }
   buttons.forEach((b,i)=>{b.onclick=()=>select(b.dataset.preset);b.onkeydown=e=>{let n;if(e.key==='ArrowRight')n=(i+1)%buttons.length;if(e.key==='ArrowLeft')n=(i+buttons.length-1)%buttons.length;if(e.key==='Home')n=0;if(e.key==='End')n=buttons.length-1;if(n!==undefined){e.preventDefault();select(buttons[n].dataset.preset,true)}}});
   host.querySelector('.fa-copy').onclick=async()=>{
-   const text=`原典スライドスキルを適用し、その固有テンプレート・制作方式を使ってください。書体は「${active.title}」：見出し ${active.heading}、本文 ${active.body}、英数字・大きな数値 ${active.latin}。\n${active.instruction}\n日本語は意味のまとまりで改行し、句読点や助詞を行頭に孤立させない。見出し・本文・英数字の役割とサイズ差を明確にする。文字を小さくして詰め込まず、過密なら内容を分けて余白を保つ。配布時は使用フォントの原文OFLを同梱する。`;
+   const text=`原典スライドスキルを適用し、その固有テンプレート・制作方式を使ってください。書体は「${active.title}」：見出し ${active.heading}、本文 ${active.body}、英数字・大きな数値 ${active.latin}${active.code ? `、コード ${active.code}` : ''}。\n${active.instruction}\n日本語は意味のまとまりで改行し、句読点や助詞を行頭に孤立させない。見出し・本文・英数字の役割とサイズ差を明確にする。文字を小さくして詰め込まず、過密なら内容を分けて余白を保つ。配布時は使用フォントの原文OFLを同梱する。`;
    try{await navigator.clipboard.writeText(text);host.querySelector('.fa-status').textContent='書体指示をコピーしました。'}catch{const field=host.querySelector('.fa-copy-fallback');field.value=text;field.hidden=false;field.focus();field.select();host.querySelector('.fa-status').textContent='この欄を選択してコピーしてください。'}
   };
   select(data.presets[0].id);

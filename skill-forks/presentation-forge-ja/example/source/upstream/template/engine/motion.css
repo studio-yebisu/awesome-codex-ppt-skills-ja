@@ -1,0 +1,223 @@
+/*
+ * motion.css - the animation toolkit, theme-agnostic.
+ *
+ * build.py includes it unless deck.config.json sets "motion": "none". Every
+ * rule keys off the live canvas (.pf-canvas) and its active slide, so the
+ * thumbnails, the overview and the next-slide preview always show the finished
+ * state, and the audience window animates exactly like the main one.
+ *
+ * Authoring (full catalogue in reference/motion.md):
+ *   data-anim="rise"                  one element enters when its slide appears
+ *   data-stagger="rise"               each child enters, one after the other
+ *   class="fragment" data-anim="pop"  revealed on click, with that effect
+ *   data-loop="float"                 ambient loop (lively and extra only)
+ *   <section data-transition="zoom">  this slide's own transition
+ *   style="--delay: .4s"              wait before an entrance
+ *
+ * Effects: fade rise drop from-left from-right zoom pop blur wipe type flip draw
+ * Loops:   float drift pulse spin glow
+ * Transitions: none fade slide zoom rise blur flip
+ *
+ * The level (deck.config.json "motion") lands on .pf-canvas as data-motion and
+ * only scales these dials - slides never change with it:
+ *   subtle    short and small, transitions become a plain fade, no loops
+ *   balanced  the default
+ *   lively    longer travel, ambient loops on
+ *   extra     big travel, springy easing, deep 3D, strong loops
+ * Going back to a slide shows it finished: entrances only play forwards.
+ */
+
+/* ---- the dials, per level ---- */
+
+.pf-canvas {
+  --pf-dur: 0.6s;           /* one entrance */
+  --pf-step: 90ms;          /* gap between staggered children */
+  --pf-dist: 36px;          /* travel of rise / drop / from-left / from-right */
+  --pf-scale: 0.88;         /* start scale of zoom / pop */
+  --pf-blur: 10px;          /* start blur */
+  --pf-tilt: 28deg;         /* start angle of flip */
+  --pf-ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --pf-ease-pop: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --pf-loops: paused;       /* ambient loops: running from lively up */
+  --pf-float: 12px;         /* loop amplitude */
+  --pf-pulse: 1.04;
+  --pf-t-dur: 0.45s;        /* slide transition */
+  --pf-t-dist: 90px;
+  --pf-t-scale: 0.92;
+  --pf-t-angle: 30deg;
+}
+
+.pf-canvas[data-motion="subtle"] {
+  --pf-dur: 0.45s;
+  --pf-step: 60ms;
+  --pf-dist: 12px;
+  --pf-scale: 0.97;
+  --pf-blur: 4px;
+  --pf-tilt: 8deg;
+  --pf-ease-pop: var(--pf-ease);
+}
+
+.pf-canvas[data-motion="lively"] {
+  --pf-dur: 0.75s;
+  --pf-step: 110ms;
+  --pf-dist: 64px;
+  --pf-scale: 0.8;
+  --pf-blur: 16px;
+  --pf-tilt: 45deg;
+  --pf-loops: running;
+  --pf-float: 16px;
+  --pf-pulse: 1.06;
+  --pf-t-dur: 0.55s;
+  --pf-t-dist: 160px;
+  --pf-t-scale: 0.84;
+  --pf-t-angle: 50deg;
+}
+
+.pf-canvas[data-motion="extra"] {
+  --pf-dur: 0.95s;
+  --pf-step: 140ms;
+  --pf-dist: 120px;
+  --pf-scale: 0.55;
+  --pf-blur: 28px;
+  --pf-tilt: 80deg;
+  --pf-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --pf-ease-pop: cubic-bezier(0.34, 1.9, 0.5, 1);
+  --pf-loops: running;
+  --pf-float: 28px;
+  --pf-pulse: 1.1;
+  --pf-t-dur: 0.8s;
+  --pf-t-dist: 320px;
+  --pf-t-scale: 0.6;
+  --pf-t-angle: 88deg;
+}
+
+/* ---- entrances: data-anim and data-stagger ---- */
+
+[data-anim="fade"],      [data-stagger="fade"] > *      { --pf-a: pf-fade; }
+[data-anim="rise"],      [data-stagger="rise"] > *      { --pf-a: pf-rise; }
+[data-anim="drop"],      [data-stagger="drop"] > *      { --pf-a: pf-drop; }
+[data-anim="from-left"], [data-stagger="from-left"] > * { --pf-a: pf-from-left; }
+[data-anim="from-right"],[data-stagger="from-right"] > *{ --pf-a: pf-from-right; }
+[data-anim="zoom"],      [data-stagger="zoom"] > *      { --pf-a: pf-zoom; }
+[data-anim="blur"],      [data-stagger="blur"] > *      { --pf-a: pf-blur; }
+[data-anim="wipe"],      [data-stagger="wipe"] > *      { --pf-a: pf-wipe; }
+[data-anim="flip"],      [data-stagger="flip"] > *      { --pf-a: pf-flip; }
+[data-anim="pop"],       [data-stagger="pop"] > *       { --pf-a: pf-pop;  --pf-ease: var(--pf-ease-pop); }
+/* type: a wipe in character-sized jumps - for one line, or code .line spans */
+[data-anim="type"],      [data-stagger="type"] > *      { --pf-a: pf-wipe; --pf-ease: steps(26, end); }
+
+/* stagger order: each child waits one more step (capped at the 12th) */
+[data-stagger] > :nth-child(2)  { --pf-i: 1; }
+[data-stagger] > :nth-child(3)  { --pf-i: 2; }
+[data-stagger] > :nth-child(4)  { --pf-i: 3; }
+[data-stagger] > :nth-child(5)  { --pf-i: 4; }
+[data-stagger] > :nth-child(6)  { --pf-i: 5; }
+[data-stagger] > :nth-child(7)  { --pf-i: 6; }
+[data-stagger] > :nth-child(8)  { --pf-i: 7; }
+[data-stagger] > :nth-child(9)  { --pf-i: 8; }
+[data-stagger] > :nth-child(10) { --pf-i: 9; }
+[data-stagger] > :nth-child(11) { --pf-i: 10; }
+[data-stagger] > :nth-child(n+12) { --pf-i: 11; }
+
+/* fill-mode backwards: hidden while waiting, then back to the element's own
+   styles once done - nothing lingers that a theme's own transform would fight */
+.pf-canvas > [data-active] :is([data-anim], [data-stagger] > *):not(.fragment):not([data-anim="draw"]) {
+  animation: var(--pf-a, pf-fade) var(--pf-dur) var(--pf-ease) backwards;
+  animation-delay: calc(var(--delay, 0s) + var(--pf-i, 0) * var(--pf-step));
+}
+
+/* fragments animate when revealed, not when the slide appears (a highlight
+   fragment is always visible: base.css marks it instead) */
+.pf-canvas > [data-active] :is(.fragment[data-anim], [data-stagger] > .fragment).is-visible:not(.pf-instant):not([data-anim="draw"]):not([data-anim="highlight"]) {
+  animation: var(--pf-a, pf-fade) var(--pf-dur) var(--pf-ease) backwards;
+  animation-delay: var(--delay, 0s);
+}
+
+/* draw: an SVG (or an icon) traces its own strokes. The engine sets
+   pathLength="1" on its shapes so every stroke draws over the same time. */
+.pf-canvas > [data-active] [data-anim="draw"]:not(.fragment) :is(path, line, polyline, polygon, circle, rect, ellipse),
+.pf-canvas > [data-active] .fragment[data-anim="draw"].is-visible:not(.pf-instant) :is(path, line, polyline, polygon, circle, rect, ellipse) {
+  stroke-dasharray: 1;
+  animation: pf-draw calc(var(--pf-dur) * 2) var(--pf-ease) backwards;
+  animation-delay: calc(var(--delay, 0s) + var(--pf-i, 0) * var(--pf-step));
+}
+
+/* back to a slide already seen: show it finished */
+.pf-canvas[data-dir="prev"] > [data-active] :is([data-anim], [data-stagger] > *):not(.fragment),
+.pf-canvas[data-dir="prev"] > [data-active] [data-anim="draw"] :is(path, line, polyline, polygon, circle, rect, ellipse) {
+  animation: none;
+}
+
+@keyframes pf-fade       { from { opacity: 0; } }
+@keyframes pf-rise       { from { opacity: 0; transform: translateY(var(--pf-dist)); } }
+@keyframes pf-drop       { from { opacity: 0; transform: translateY(calc(-1 * var(--pf-dist))); } }
+@keyframes pf-from-left  { from { opacity: 0; transform: translateX(calc(-1 * var(--pf-dist))); } }
+@keyframes pf-from-right { from { opacity: 0; transform: translateX(var(--pf-dist)); } }
+@keyframes pf-zoom       { from { opacity: 0; transform: scale(var(--pf-scale)); } }
+@keyframes pf-pop        { from { opacity: 0; transform: scale(var(--pf-scale)); } }
+@keyframes pf-blur       { from { opacity: 0; filter: blur(var(--pf-blur)); } }
+@keyframes pf-wipe       { from { clip-path: inset(0 100% 0 0); } to { clip-path: inset(0 0 0 0); } }
+@keyframes pf-flip       { from { opacity: 0; transform: perspective(1200px) rotateX(var(--pf-tilt)); } }
+@keyframes pf-draw       { from { stroke-dashoffset: 1; } to { stroke-dashoffset: 0; } }
+
+/* ---- ambient loops: data-loop (paused below lively) ---- */
+/* A loop owns the element's animation: put data-loop on a wrapper or a
+   decorative element, not on one that also has a data-anim entrance. */
+
+.pf-canvas > [data-active] [data-loop] {
+  animation-duration: 6s;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-play-state: var(--pf-loops);
+}
+.pf-canvas > [data-active] [data-loop="float"] { animation-name: pf-loop-float; }
+.pf-canvas > [data-active] [data-loop="drift"] { animation-name: pf-loop-drift; animation-duration: 14s; }
+.pf-canvas > [data-active] [data-loop="pulse"] { animation-name: pf-loop-pulse; animation-duration: 2.4s; }
+.pf-canvas > [data-active] [data-loop="glow"]  { animation-name: pf-loop-glow;  animation-duration: 2.8s; }
+.pf-canvas > [data-active] [data-loop="spin"]  {
+  animation-name: pf-loop-spin;
+  animation-duration: 24s;
+  animation-timing-function: linear;
+  animation-direction: normal;
+}
+
+@keyframes pf-loop-float { to { transform: translateY(calc(-1 * var(--pf-float))); } }
+@keyframes pf-loop-drift { to { transform: translate(calc(2 * var(--pf-float)), var(--pf-float)) rotate(4deg); } }
+@keyframes pf-loop-pulse { to { transform: scale(var(--pf-pulse)); } }
+@keyframes pf-loop-glow  { to { filter: drop-shadow(0 0 calc(var(--pf-float) * 1.5) var(--accent, #5b8bd0)); } }
+@keyframes pf-loop-spin  { to { transform: rotate(1turn); } }
+
+/* ---- slide transitions (deck.config.json "transition", or per slide) ---- */
+/* Only the incoming slide moves; the outgoing one fades (base.css). A subtle
+   deck keeps every transition a plain fade. */
+
+.pf-canvas:not([data-motion="subtle"])[data-transition="zoom"] > [data-active] {
+  animation: pf-t-zoom var(--pf-t-dur) var(--pf-ease) backwards;
+}
+.pf-canvas:not([data-motion="subtle"])[data-transition="rise"] > [data-active] {
+  animation: pf-t-rise var(--pf-t-dur) var(--pf-ease) backwards;
+}
+.pf-canvas:not([data-motion="subtle"])[data-transition="blur"] > [data-active] {
+  animation: pf-t-blur var(--pf-t-dur) var(--pf-ease) backwards;
+}
+.pf-canvas:not([data-motion="subtle"])[data-transition="slide"][data-dir="next"] > [data-active] {
+  animation: pf-t-from-right var(--pf-t-dur) var(--pf-ease) backwards;
+}
+.pf-canvas:not([data-motion="subtle"])[data-transition="slide"][data-dir="prev"] > [data-active] {
+  animation: pf-t-from-left var(--pf-t-dur) var(--pf-ease) backwards;
+}
+.pf-canvas:not([data-motion="subtle"])[data-transition="flip"][data-dir="next"] > [data-active] {
+  animation: pf-t-flip-next var(--pf-t-dur) var(--pf-ease) backwards;
+}
+.pf-canvas:not([data-motion="subtle"])[data-transition="flip"][data-dir="prev"] > [data-active] {
+  animation: pf-t-flip-prev var(--pf-t-dur) var(--pf-ease) backwards;
+}
+
+@keyframes pf-t-zoom       { from { opacity: 0; transform: scale(var(--pf-t-scale)); } }
+@keyframes pf-t-rise       { from { opacity: 0; transform: translateY(var(--pf-t-dist)); } }
+@keyframes pf-t-blur       { from { opacity: 0; filter: blur(calc(var(--pf-t-dist) / 8)); } }
+@keyframes pf-t-from-right { from { opacity: 0; transform: translateX(var(--pf-t-dist)); } }
+@keyframes pf-t-from-left  { from { opacity: 0; transform: translateX(calc(-1 * var(--pf-t-dist))); } }
+@keyframes pf-t-flip-next  { from { opacity: 0; transform: perspective(2400px) rotateY(calc(-1 * var(--pf-t-angle))); } }
+@keyframes pf-t-flip-prev  { from { opacity: 0; transform: perspective(2400px) rotateY(var(--pf-t-angle)); } }

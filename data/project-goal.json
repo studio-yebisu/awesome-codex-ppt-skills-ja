@@ -1,6 +1,6 @@
 {
   "updated_at": "2026-10-14",
-  "status": "in_progress",
+  "status": "complete",
   "objective": "Studio Yebisu独自の日本語AIスライドサイトを育てる。幅広いGitHub原典の固有スキル・テンプレート・CLIを実際に使い、日本語の美しい資料と具体的な作り方をリポごとに揃える。Sol 6.1の並列制作で、完成作例・短い日本語スキルの直接取得・制作一式・OSS書体とAI向け指示を結び付ける。元209件は棚卸しと資料を保持し、使わないものを現行掲載から外せる。Astraと大規模QAを使わず、必要なビルドと主要出力の初回表示を確認する。少数の新作バッチだけを全体完了に読み替えない。",
   "production_model": "gpt-6.1-sol",
   "parallel_production": true,
@@ -21,39 +21,85 @@
     "巨大QA台帳と採点"
   ],
   "app_goal_note": "アプリの既存goal APIはobjectiveの編集を提供しないため、実行目標の改訂はこのファイルとdocs/PROJECT.mdを正本にする。未達成の旧goalを完了扱いにしない。",
-  "last_completed_batch": "2026-10-14: 原典テンプレートとブランド方式で12枚、元PPTX生成・美化で6枚、元React舞台で6場面15段階を制作。厳選57スキル328枚＋15段階、題材検索・元の縦横比・変更前PPTXの取得を接続。候補4件の配布条件を記録",
+  "last_completed_batch": "2026-10-14: 原典Quarto・字体生成と色彩・1頁1HTMLで18枚、元scene kitで8段階。厳選61スキル346枚＋23段階。公式JetBrains Monoと技術発表指示を追加。",
   "current_batch": {
     "status": "integrated_locally",
     "production_model": "gpt-6.1-sol",
     "repositories": [
-      "cogine-ai/ai-slide-templates",
-      "shawnzam/keynot",
-      "borjaperfra/beatdeck",
-      "eluckydog/ppt-scene-graph"
+      "alfredo-hs/quarto-talks",
+      "tanglele110-hash/zhongguose-ppt-skill",
+      "thmsgo18/presentation-forge",
+      "Codagent-AI/and-scene"
     ],
-    "checks": "原典の必要ビルドと主要出力の初回表示、新しい検索と操作系のみ",
-    "site_improvement": "日本語の題材・作風・スキル名で作例を探す。段階のある原典モーションと、編集できる元資料の原典変換を増やす。",
-    "documentation": "docs/PRODUCTION_BATCH_20261014_10.md",
+    "checks": "各原典の必要ビルドと主な出力の初回表示・元1→2のみ。追加検査は具体的不具合の修復時だけ。",
+    "site_improvement": "等幅コード書体と技術発表指示、QMD教材・色彩の企画・1頁1HTMLの発表・共通canvasの連続演出。元に場面区分のない資料は希望段階数で依頼。",
+    "documentation": "docs/PRODUCTION_BATCH_20261014_11.md",
     "new_decks": 4,
     "new_slides": 18,
-    "new_steps": 15,
-    "new_scenes": 6,
+    "new_steps": 8,
     "counts": {
-      "active_skills": 57,
-      "active_decks": 57,
-      "active_pages": 328,
-      "active_steps": 15,
-      "historical_repositories": 67,
-      "historical_decks": 72,
-      "historical_pages": 429,
-      "historical_steps": 15,
-      "case_recipes": 62,
-      "direct_markdown_files": 59,
-      "maintained_forks": 69,
-      "downloadable_artifacts": 227,
-      "oss_font_families": 9,
-      "oss_font_files": 16,
-      "font_presets": 7
+      "active_skills": 61,
+      "active_decks": 61,
+      "active_pages": 346,
+      "active_steps": 23,
+      "historical_repositories": 71,
+      "historical_decks": 76,
+      "historical_pages": 447,
+      "historical_steps": 23,
+      "case_recipes": 66,
+      "direct_markdown_files": 63,
+      "maintained_forks": 73,
+      "downloadable_artifacts": 237,
+      "oss_font_families": 10,
+      "oss_font_files": 17,
+      "font_presets": 8
     }
-  }
+  },
+  "completed_scope": "現行61スキルの原典実制作・日本語キット・サイト改修・書体指示まで。ユーザー最新指示により未掲載の原209件の全件制作・阻害条件調査・大規模QAは完了条件から除外。",
+  "completion_evidence": [
+    {
+      "requirement": "現行掲載の各リポに原典方式で生成した日本語作例と入力・作り方がある",
+      "evidence": [
+        "data/product-collection.json",
+        "data/case-studies.json",
+        "data/repository-guides.json"
+      ],
+      "result": "現行61リポに実制作作例・入力・原典方式・日本語案内を接続"
+    },
+    {
+      "requirement": "原典を使った魅力ある日本語資料が複数の制作方式・作風をカバーする",
+      "evidence": [
+        "docs/PRODUCTION_BATCH_20261014_11.md",
+        "data/production-ledger.json"
+      ],
+      "result": "編集可能PPTX、PDF、Web、画像、数式、テンプレート、変換、共通画面の制作方式を収録。現在61冊346枚＋23段階"
+    },
+    {
+      "requirement": "作風から選ぶ一覧とフロート再生が完成資料へつながる",
+      "evidence": [
+        "index.html",
+        "assets/case-studio.mjs",
+        "docs/assets/atelier-and-scene-float.png"
+      ],
+      "result": "題材・作風・スキルの検索、形式・編集対象の絞り込み、元runtime/縦横比のフロート再生。今回AndSceneの親1/8→2/8と元02/08へ同期"
+    },
+    {
+      "requirement": "日本語スキル本文の直接取得、一式ZIP、固定原典と個別条件を案内する",
+      "evidence": [
+        "downloads/skills/",
+        "data/case-downloads.json",
+        "licenses.html"
+      ],
+      "result": "日本語スキルの直接MD、本文閲覧・コピー、完成物、制作ZIP、固定GitHubと個別条件。今回4件分を配布作成"
+    },
+    {
+      "requirement": "OSS書体とAI向けの書体・デザイン指示を実制作で活用できる",
+      "evidence": [
+        "data/oss-font-kit.json",
+        "downloads/fonts/AI-FONT-GUIDE.md",
+        "docs/assets/atelier-technical-fonts.png"
+      ],
+      "result": "公式原配布10ファミリー17ファイル/8セット。見出し・本文・英数字・コードの指示と実字体。依頼フォームのコード役/希望8段階を実表示"
+    }
+  ]
 }

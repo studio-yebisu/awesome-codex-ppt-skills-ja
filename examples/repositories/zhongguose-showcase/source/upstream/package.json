@@ -1,0 +1,17 @@
+{
+  "name": "zhongguose-presentation-skill",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Validation tooling for the Zhongguose presentation Agent Skill.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "validate:package": "node scripts/validate-package.mjs skills/zhongguose-ppt-skill",
+    "capture:preview": "node scripts/capture-preview.mjs"
+  },
+  "devDependencies": {
+    "playwright-core": "1.61.1"
+  }
+}

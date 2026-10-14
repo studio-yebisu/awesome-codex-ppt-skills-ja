@@ -1,0 +1,43 @@
+/*
+ * tokens.css - the dials of the "ink-blue" theme.
+ *
+ * Only design tokens live here: colours, type scale, spacing and the font-family
+ * names. Tweak these to recolour or retype the whole deck without touching the
+ * block styling (slides.css) or the engine. Every theme must define the same
+ * token names so a deck can switch themes without breaking - this is the
+ * contract slides rely on.
+ */
+
+:root {
+  /* Type scale */
+  --type-display: 132px;
+  --type-title: 68px;
+  --type-subtitle: 44px;
+  --type-lead: 36px;
+  --type-body: 30px;
+  --type-small: 26px;
+  --type-eyebrow: 24px;
+
+  /* Spacing */
+  --pad-x: 110px;
+  --pad-top: 100px;
+  --pad-bottom: 90px;
+  --gap-title: 48px;
+  --gap-item: 28px;
+
+  /* Colour */
+  --bg: #ffffff;
+  --bg-soft: #f6f8fc;
+  --ink: #0f1e3a;
+  --muted: #6b7a8f;
+  --rule: #0f1e3a22;
+  --accent: #2a4f8a;
+  --accent-deep: #0f1e3a;
+  --accent-soft: #7da8d8;
+  --accent-tint: #2a4f8a14;
+
+  /* Fonts - declare the actual @font-face files in fonts.css */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}

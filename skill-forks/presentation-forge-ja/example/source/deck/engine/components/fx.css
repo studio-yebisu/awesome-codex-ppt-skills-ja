@@ -1,0 +1,99 @@
+/*
+ * fx - decorative shapes behind the content. Always aria-hidden.
+ * @component: fx
+ *
+ * <div class="fx fx--glow fx--tr" aria-hidden="true"></div>
+ * <div class="fx fx--glass fx--br" data-loop="float" aria-hidden="true"></div>
+ *
+ * Shapes:    fx--glow (soft light) · fx--grid (dot grid) · fx--glass (floating
+ *            pane) · fx--ring (outline circle) · fx--aurora (moving colour band)
+ * Placement: fx--tl · fx--tr · fx--bl · fx--br · fx--center (or your own
+ *            style="top: ...; left: ...")
+ * Sizes:     fx--sm · fx--lg
+ * Add data-loop="float" / "drift" / "spin" to move them (lively and extra).
+ * Decor never takes clicks and sits under the slide's content.
+ */
+
+.slide .fx {
+  position: absolute;
+  z-index: 0;
+  margin: 0;
+  pointer-events: none;
+  --fx-size: 620px;
+  width: var(--fx-size);
+  height: var(--fx-size);
+}
+
+.slide .fx--sm { --fx-size: 340px; }
+.slide .fx--lg { --fx-size: 980px; }
+
+.slide .fx--tl     { top: calc(var(--fx-size) / -3); left: calc(var(--fx-size) / -3); }
+.slide .fx--tr     { top: calc(var(--fx-size) / -3); right: calc(var(--fx-size) / -3); }
+.slide .fx--bl     { bottom: calc(var(--fx-size) / -3); left: calc(var(--fx-size) / -3); }
+.slide .fx--br     { bottom: calc(var(--fx-size) / -3); right: calc(var(--fx-size) / -3); }
+.slide .fx--center { top: 50%; left: 50%; margin: calc(var(--fx-size) / -2) 0 0 calc(var(--fx-size) / -2); }
+
+.slide .fx--glow {
+  border-radius: 50%;
+  background: radial-gradient(closest-side, var(--accent, #5b8bd0), transparent);
+  opacity: 0.32;
+  filter: blur(40px);
+}
+
+.slide .fx--grid {
+  inset: 0;
+  width: auto;
+  height: auto;
+  background-image: radial-gradient(var(--rule, rgba(127, 127, 127, 0.3)) 2px, transparent 2.5px);
+  background-size: 48px 48px;
+  -webkit-mask: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+  mask: radial-gradient(ellipse at center, #000 30%, transparent 75%);
+}
+
+/* the glass pane sits closer than the corner placements put it */
+.slide .fx--glass {
+  --fx-size: 360px;
+  height: calc(var(--fx-size) * 0.62);
+  border-radius: 24px;
+  border: 1px solid color-mix(in srgb, var(--ink, #888) 22%, transparent);
+  background: linear-gradient(135deg,
+    color-mix(in srgb, var(--accent, #5b8bd0) 22%, transparent),
+    color-mix(in srgb, var(--accent-soft, #7da8d8) 6%, transparent));
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 40px 80px -40px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.28);
+  transform: perspective(1400px) rotate3d(1, 1, 0, 16deg);
+}
+.slide .fx--glass.fx--sm { --fx-size: 220px; }
+.slide .fx--glass.fx--lg { --fx-size: 520px; }
+.slide .fx--glass.fx--tl { top: 8%;  left: 5%; }
+.slide .fx--glass.fx--tr { top: 10%; right: 5%; }
+.slide .fx--glass.fx--bl { bottom: 10%; left: 5%; }
+.slide .fx--glass.fx--br { bottom: 8%; right: 5%; }
+
+.slide .fx--ring {
+  border-radius: 50%;
+  border: 2px solid var(--accent, #5b8bd0);
+  opacity: 0.35;
+}
+
+.slide .fx--aurora {
+  inset: auto -10% -30% -10%;
+  width: auto;
+  height: 70%;
+  background: linear-gradient(100deg,
+    transparent 10%,
+    color-mix(in srgb, var(--accent, #5b8bd0) 45%, transparent) 35%,
+    color-mix(in srgb, var(--accent-soft, #7da8d8) 40%, transparent) 60%,
+    transparent 90%);
+  filter: blur(70px);
+  opacity: 0.55;
+  border-radius: 50%;
+}
+
+/* a floating pane keeps its tilt while it moves */
+.pf-canvas > [data-active] .fx--glass[data-loop="float"] { animation-name: pf-fx-glass-float; }
+
+@keyframes pf-fx-glass-float {
+  to { transform: perspective(1400px) rotate3d(1, 1, 0, 22deg) translate3d(0, calc(-1 * var(--pf-float, 12px)), 40px); }
+}

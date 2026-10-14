@@ -1,0 +1,106 @@
+/*
+ * timeline - dated milestones along a line (best with 3 to 6 items).
+ * @component: timeline
+ *
+ * <ol class="timeline">
+ *   <li><p class="timeline__date">2019</p><h3>Founded</h3><p>Two people, one idea.</p></li>
+ *   <li class="is-now">...</li>
+ * </ol>
+ *
+ * .is-now marks the current milestone. The line draws itself, then the
+ * milestones appear one by one.
+ */
+
+.timeline {
+  list-style: none;
+  padding: 0;
+  position: relative;
+  display: grid;
+  grid-auto-columns: 1fr;
+  grid-auto-flow: column;
+  gap: 40px;
+}
+
+/* the line, through the dots */
+.timeline::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(var(--type-small, 26px) * 1.4 + 26px);
+  height: 3px;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--accent, #5b8bd0), var(--accent-soft, #7da8d8));
+  transform-origin: left center;
+}
+
+.timeline > li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 0;
+}
+
+.slide .timeline > li,
+.slide .timeline > li > * {
+  margin: 0;
+}
+
+.timeline__date {
+  font-size: var(--type-small, 26px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  line-height: 1.4;
+  color: var(--accent, inherit);
+}
+
+/* the dot, on the line, after the date */
+.timeline__date::after {
+  content: "";
+  display: block;
+  width: 22px;
+  height: 22px;
+  margin: 15px 0 18px;
+  border-radius: 50%;
+  background: var(--bg, #fff);
+  border: 4px solid var(--accent, #5b8bd0);
+  box-sizing: border-box;
+}
+
+.timeline > li.is-now .timeline__date::after {
+  background: var(--accent, #5b8bd0);
+  box-shadow: 0 0 0 8px var(--accent-tint, rgba(91, 139, 208, 0.15));
+}
+
+.timeline h3 {
+  font-size: calc(var(--type-body, 30px) * 1.05);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink, inherit);
+}
+
+.timeline p:not(.timeline__date) {
+  font-size: var(--type-small, 26px);
+  line-height: 1.4;
+  color: var(--muted, inherit);
+}
+
+/* ---- motion: draw the line, then each milestone ---- */
+
+.timeline > :nth-child(2) { --pf-i: 1; }
+.timeline > :nth-child(3) { --pf-i: 2; }
+.timeline > :nth-child(4) { --pf-i: 3; }
+.timeline > :nth-child(5) { --pf-i: 4; }
+.timeline > :nth-child(n+6) { --pf-i: 5; }
+
+.pf-canvas:not([data-dir="prev"]) > [data-active] .timeline::before {
+  animation: pf-line-grow calc(var(--pf-dur, 0.6s) * 2) var(--pf-ease, ease) backwards;
+  animation-delay: var(--delay, 0s);
+}
+.pf-canvas:not([data-dir="prev"]) > [data-active] .timeline > li:not(.fragment) {
+  animation: pf-rise var(--pf-dur, 0.6s) var(--pf-ease, ease) backwards;
+  animation-delay: calc(var(--delay, 0s) + 0.2s + var(--pf-i, 0) * var(--pf-step, 90ms) * 2);
+}
+
+@keyframes pf-line-grow { from { transform: scaleX(0); } }

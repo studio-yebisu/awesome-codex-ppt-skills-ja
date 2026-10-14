@@ -1,0 +1,1116 @@
+/*
+ * base.css - engine mechanics and chrome, theme-agnostic.
+ *
+ * Owns the plumbing: the scaled canvas, the thumbnail rail, the control
+ * buttons, the slide counter, and the presenter sidebar. No
+ * slide-content styles here - those live in a theme file (e.g. ink-blue.css).
+ *
+ * Browser support: Chrome 88+, Firefox 89+, Safari 14+, Edge 88+.
+ * (aspect-ratio requires Safari 15+; thumbs proportions degrade gracefully below.)
+ *
+ * Chrome variables (override in a theme or inline to restyle the UI shell):
+ *   --pf-rail-bg      rail / sidebar background
+ *   --pf-rail-fg      rail text and icon colour
+ *   --pf-chrome-bg    button / overlay pill background (semi-transparent)
+ *   --pf-chrome-fg    button / overlay text colour
+ *   --pf-accent       thumbnail active-border and hover colour
+ */
+
+/*
+ * Hide the deck before the custom element is defined to prevent a flash of
+ * unstyled content. `display: block` avoids the default `inline` rendering
+ * if the browser doesn't recognise the element name.
+ */
+deck-stage:not(:defined) {
+  display: block;
+  visibility: hidden;
+}
+
+html, body {
+  margin: 0;
+  height: 100%;
+  background: #000;
+  overflow: hidden;
+}
+
+deck-stage {
+  position: fixed;
+  /* inset: 0 - written as explicit properties for Safari < 14.1 */
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  overflow: hidden;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+
+  --pf-rail-bg:    var(--accent-deep, #0f1722);
+  --pf-rail-fg:    #c7d4e8;
+  --pf-chrome-bg:  rgba(0, 0, 0, 0.6);
+  --pf-chrome-fg:  #ffffff;
+  --pf-accent:     var(--accent, #5b8bd0);
+}
+
+/* ---- stage: the area that contains the scaled canvas ---- */
+
+.pf-stage {
+  position: relative;
+  flex: 1 1 auto;
+  overflow: hidden;
+  background: #000;
+}
+
+.pf-canvas {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform-origin: center center;
+}
+
+.pf-canvas > * {
+  /* These positioning properties are engine-owned: every slide is absolutely
+     stacked to fill the scaled canvas. They are !important on purpose. The
+     selector .pf-canvas > * has the same specificity (0,1,0) as a theme's
+     .slide rule, and the theme CSS loads after the engine CSS, so without
+     !important a stray `.slide { position: relative }` (or top/left/etc.) in a
+     theme would win, drop slides back into normal flow, and break the whole
+     deck's layout. Themes must never set these on .slide; the engine enforces it. */
+  position: absolute !important;
+  top: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  visibility: hidden;
+  opacity: 0;
+  -webkit-transition: opacity 0.35s ease;
+  transition: opacity 0.35s ease;
+}
+
+.pf-canvas > [data-active] {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Speaker notes are invisible in every mode except the presenter sidebar. */
+aside.notes { display: none !important; }
+
+/* ---- rail resize handle ---- */
+
+.pf-rail-resizer {
+  flex: 0 0 5px;
+  cursor: col-resize;
+  background: transparent;
+  -webkit-transition: background 0.15s ease;
+  transition: background 0.15s ease;
+}
+
+.pf-rail-resizer:hover,
+.pf-rail-resizer.is-dragging {
+  background: var(--pf-accent);
+}
+
+deck-stage.is-fullscreen .pf-rail-resizer,
+deck-stage.is-presenter  .pf-rail-resizer { display: none; }
+
+/* ---- thumbnail rail (windowed only) ---- */
+
+.pf-rail {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  flex: 0 0 248px;
+  height: 100%;
+  overflow-y: auto;
+  padding: 14px;
+  background: var(--pf-rail-bg);
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pf-thumb {
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 10px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+  text-align: left;
+}
+
+.pf-thumb-num {
+  flex: 0 0 auto;
+  width: 20px;
+  text-align: right;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--pf-rail-fg);
+  opacity: 0.6;
+}
+
+/*
+ * Thumbnail frame - aspect-ratio 16:9.
+ * Fallback for browsers without aspect-ratio support (Safari < 15):
+ * a position:relative + padding-bottom trick keeps the 16:9 shape.
+ */
+.pf-thumb-frame {
+  position: relative;
+  flex: 1 1 auto;
+  /* Fallback: padding-bottom creates the 16:9 height */
+  height: 0;
+  padding-bottom: 56.25%;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  -webkit-box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+@supports (aspect-ratio: 1) {
+  .pf-thumb-frame {
+    height: auto;
+    padding-bottom: 0;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.pf-thumb-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.pf-thumb-canvas > * {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  visibility: visible;
+  opacity: 1;
+}
+
+.pf-thumb:hover .pf-thumb-frame { border-color: var(--pf-accent); }
+
+.pf-thumb.is-active .pf-thumb-frame {
+  border-color: var(--pf-accent);
+  outline: 2px solid var(--pf-accent);
+}
+.pf-thumb.is-active .pf-thumb-num { opacity: 1; color: #fff; }
+
+/* ---- control buttons (bottom-right of the stage) ---- */
+
+.pf-controls {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+}
+
+.pf-btn {
+  width: 44px;
+  height: 44px;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 50%;
+  background: var(--pf-chrome-bg);
+  color: var(--pf-chrome-fg);
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  -webkit-transition: background 0.2s ease;
+  transition: background 0.2s ease;
+}
+
+.pf-btn:hover   { background: rgba(0, 0, 0, 0.82); }
+.pf-btn:disabled { opacity: 0.35; cursor: default; }
+
+.pf-btn svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ---- in-place text editing (local files only) --------------------- */
+
+.pf-edit-controls {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  display: flex;
+  gap: 10px;
+  z-index: 20;
+}
+
+.pf-save { display: none; }
+deck-stage.is-editing .pf-save { display: flex; }
+
+deck-stage.is-fullscreen .pf-edit-controls,
+deck-stage.is-presenter  .pf-edit-controls { display: none !important; }
+
+.pf-editable {
+  border-radius: 4px;
+  cursor: text;
+  outline: 1px dashed transparent;
+  -webkit-transition: outline-color 0.15s ease, background 0.15s ease;
+  transition: outline-color 0.15s ease, background 0.15s ease;
+}
+deck-stage.is-editing .pf-editable:hover {
+  outline-color: rgba(255, 255, 255, 0.35);
+  background: rgba(255, 255, 255, 0.05);
+}
+.pf-editable:focus {
+  outline: 1px dashed var(--pf-accent);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ---- speaker notes (windowed mode only) ---- */
+
+/* Toggle button - bottom-left of the stage */
+.pf-notes-btn {
+  position: absolute;
+  left: 18px;
+  bottom: 18px;
+  z-index: 30;
+  -webkit-transition: background 0.15s ease;
+  transition: background 0.15s ease;
+}
+.pf-notes-btn.is-active { background: var(--pf-accent); }
+deck-stage.is-fullscreen .pf-notes-btn,
+deck-stage.is-presenter  .pf-notes-btn { display: none; }
+
+/* Backdrop: full-stage transparent layer that captures "click outside" */
+.pf-notes-backdrop {
+  display: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 24;
+}
+.pf-notes-backdrop.is-open { display: block; }
+
+/* Floating panel: appears just above the toggle button */
+.pf-notes-panel {
+  display: none;
+  position: absolute;
+  left: 18px;
+  bottom: 78px; /* 18px margin + 44px button + 16px gap */
+  width: 480px;
+  max-width: calc(100% - 36px);
+  height: 220px;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background: rgba(8, 12, 25, 0.96);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  -webkit-box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  z-index: 25;
+}
+
+.pf-notes-panel.is-open {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-animation: pf-notes-in 0.14s ease both;
+  animation: pf-notes-in 0.14s ease both;
+}
+
+@-webkit-keyframes pf-notes-in {
+  from { opacity: 0; -webkit-transform: translateY(6px); transform: translateY(6px); }
+  to   { opacity: 1; -webkit-transform: none; transform: none; }
+}
+@keyframes pf-notes-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* Header row inside the panel */
+.pf-notes-header {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  flex: 0 0 auto;
+}
+
+.pf-notes-heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(220, 232, 248, 0.45);
+}
+
+.pf-notes-close {
+  width: 22px;
+  height: 22px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  font-size: 17px;
+  line-height: 1;
+  cursor: pointer;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-transition: background 0.15s ease;
+  transition: background 0.15s ease;
+}
+.pf-notes-close:hover { background: rgba(255, 255, 255, 0.22); }
+
+.pf-notes-ta {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  width: 100%;
+  padding: 9px 12px;
+  background: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  color: #dce8f8;
+  font-family: var(--font-sans, -apple-system, sans-serif);
+  font-size: 14px;
+  line-height: 1.55;
+  resize: none;
+}
+.pf-notes-ta:focus {
+  outline: none;
+  border-color: var(--pf-accent);
+}
+
+deck-stage.is-fullscreen .pf-notes-panel,
+deck-stage.is-presenter  .pf-notes-panel { display: none !important; }
+
+/* ---- slide counter (bottom-centre, inside the stage) ---- */
+
+.pf-overlay {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--pf-chrome-fg);
+  background: var(--pf-chrome-bg);
+  z-index: 20;
+  pointer-events: none;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+}
+
+/* ---- full-screen hint toast (top-centre) ---- */
+
+.pf-toast {
+  position: absolute;
+  top: 32px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  max-width: 80%;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 16px;
+  color: var(--pf-chrome-fg);
+  background: var(--pf-chrome-bg);
+  z-index: 30;
+  opacity: 0;
+  pointer-events: none;
+  -webkit-transition: opacity 0.4s ease;
+  transition: opacity 0.4s ease;
+}
+.pf-toast.is-visible { opacity: 1; }
+
+/* ---- single-screen full screen behaviour ---- */
+
+deck-stage.is-fullscreen .pf-rail { display: none; }
+
+deck-stage.is-fullscreen .pf-controls,
+deck-stage.is-fullscreen .pf-overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+deck-stage.is-fullscreen.is-active-ui .pf-controls { opacity: 1; pointer-events: auto; }
+deck-stage.is-fullscreen.is-active-ui .pf-overlay  { opacity: 1; }
+deck-stage.is-fullscreen:not(.is-active-ui)         { cursor: none; }
+
+/* ---- presenter mode ---- */
+
+deck-stage.is-presenter .pf-rail     { display: none; }
+deck-stage.is-presenter .pf-controls { display: none; }
+deck-stage.is-presenter .pf-overlay  { display: none; }
+
+.pf-presenter-sidebar {
+  flex: 0 0 50%;
+  display: flex;
+  -webkit-flex-direction: column;
+  flex-direction: column;
+  background: var(--pf-rail-bg);
+  color: var(--pf-rail-fg);
+  overflow: hidden;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pf-presenter-label {
+  margin: 14px 16px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.5;
+  flex: 0 0 auto;
+}
+
+/* Next-slide preview - same 16:9 aspect-ratio trick as thumbnails */
+.pf-next-frame {
+  position: relative;
+  margin: 0 16px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #1a2030;
+  flex: 0 0 auto;
+  /* Fallback height for Safari < 15 */
+  height: 0;
+  padding-bottom: calc(56.25% - 32px); /* 56.25% of sidebar minus margins */
+}
+
+@supports (aspect-ratio: 1) {
+  .pf-next-frame {
+    height: auto;
+    padding-bottom: 0;
+    aspect-ratio: 16 / 9;
+  }
+}
+
+.pf-next-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+  pointer-events: none;
+}
+
+.pf-next-slot {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.pf-next-slot > * {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 100% !important;
+  height: 100% !important;
+  /* Reset absolute positioning applied by .pf-canvas > * */
+  position: relative !important;
+  top: auto !important;
+  right: auto !important;
+  bottom: auto !important;
+  left: auto !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  -webkit-transition: none !important;
+  transition: none !important;
+}
+
+.pf-next-end {
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  height: 100%;
+  font-size: 18px;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+}
+
+/* Notes */
+.pf-notes {
+  flex: 1 1 0;
+  min-height: 0;
+  margin: 0 16px 8px;
+  overflow-y: auto;
+  font-size: 17px;
+  line-height: 1.65;
+  color: #dce8f8;
+}
+
+.pf-notes p { margin: 0 0 0.6em; }
+.pf-no-notes { opacity: 0.4; font-style: italic; }
+
+/* Presenter bar */
+.pf-presenter-bar {
+  flex: 0 0 auto;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.pf-presenter-bar .pf-btn {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.1);
+  flex: 0 0 auto;
+}
+.pf-presenter-bar .pf-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+.pf-presenter-count {
+  flex: 1;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.pf-timer {
+  font-size: 14px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.6;
+  flex: 0 0 auto;
+}
+
+/* Per-slide timer overlay (bottom of the stage, presenter mode only) */
+.pf-slide-timer {
+  display: none;
+  position: absolute;
+  bottom: 16px;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%);
+  padding: 4px 14px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: #fff;
+  background: rgba(0, 0, 0, 0.6);
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  z-index: 20;
+  pointer-events: none;
+}
+deck-stage.is-presenter .pf-slide-timer { display: block; }
+
+/* Auto-scroll controls in the notes section */
+.pf-scroll-bar {
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 16px 6px;
+  flex: 0 0 auto;
+}
+
+.pf-scroll-toggle {
+  width: 28px;
+  height: 28px;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+}
+.pf-scroll-toggle:hover   { background: rgba(255, 255, 255, 0.2); }
+.pf-scroll-toggle.is-scrolling { background: var(--pf-accent); }
+
+.pf-scroll-speed {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 6px;
+  color: var(--pf-rail-fg);
+  font-size: 12px;
+  padding: 3px 6px;
+  cursor: pointer;
+}
+
+/* Timer reset button */
+.pf-timer-reset {
+  width: 30px;
+  height: 30px;
+}
+
+/* Notes font-size controls */
+.pf-scroll-spacer { flex: 1 1 auto; }
+
+.pf-font-btn {
+  flex: 0 0 auto;
+  min-width: 32px;
+  height: 28px;
+  padding: 0 8px;
+  border: 0;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--pf-rail-fg);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-transition: background 0.15s ease;
+  transition: background 0.15s ease;
+}
+.pf-font-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+/* Presenter tools row (pen / eraser / laser) */
+.pf-presenter-tools {
+  flex: 0 0 auto;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-align-items: center;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px 2px;
+}
+.pf-presenter-tools .pf-btn {
+  width: 34px;
+  height: 34px;
+  background: rgba(255, 255, 255, 0.1);
+  flex: 0 0 auto;
+}
+.pf-presenter-tools .pf-btn:hover { background: rgba(255, 255, 255, 0.2); }
+
+/* Draggable divider between the slide and the presenter sidebar */
+.pf-presenter-resizer {
+  flex: 0 0 6px;
+  cursor: col-resize;
+  background: rgba(255, 255, 255, 0.06);
+  -webkit-transition: background 0.15s ease;
+  transition: background 0.15s ease;
+}
+.pf-presenter-resizer:hover,
+.pf-presenter-resizer.is-dragging { background: var(--pf-accent); }
+deck-stage:not(.is-presenter) .pf-presenter-resizer { display: none; }
+
+/* Exit confirmation popover (anchored above the presenter bar) */
+.pf-exit-confirm {
+  display: none;
+  position: absolute;
+  right: 14px;
+  bottom: 64px;
+  width: 230px;
+  padding: 14px 16px;
+  background: rgba(8, 12, 25, 0.98);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  -webkit-box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.55);
+  z-index: 40;
+}
+.pf-exit-confirm.is-open { display: block; }
+
+.pf-exit-confirm-msg {
+  margin: 0 0 12px;
+  font-size: 14px;
+  color: #dce8f8;
+}
+
+.pf-exit-confirm-btns {
+  display: flex;
+  -webkit-justify-content: flex-end;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.pf-exit-confirm-btns button {
+  border: 0;
+  border-radius: 7px;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.pf-exit-confirm-no  { background: rgba(255, 255, 255, 0.12); color: #dce8f8; }
+.pf-exit-confirm-no:hover  { background: rgba(255, 255, 255, 0.2); }
+.pf-exit-confirm-yes { background: rgba(210, 55, 55, 0.9); color: #fff; }
+.pf-exit-confirm-yes:hover { background: rgba(225, 65, 65, 1); }
+
+/* The presenter sidebar anchors the absolutely-positioned exit popover. */
+.pf-presenter-sidebar { position: relative; }
+
+/* ---- draw mode SVG overlay ---- */
+
+.pf-draw-svg {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+  pointer-events: none;
+  overflow: visible;
+  z-index: 15;
+}
+
+.pf-stage.pf-draw-mode { cursor: crosshair; }
+
+/* ---- laser pointer dot ---- */
+
+.pf-laser-dot {
+  display: none;
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: rgba(255, 30, 30, 0.88);
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 50;
+  box-shadow: 0 0 8px rgba(255, 30, 30, 0.6), 0 0 24px rgba(255, 30, 30, 0.3);
+}
+.pf-laser-dot.is-active { display: block; }
+
+/* ---- progress bar ---- */
+
+.pf-progress-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: var(--pf-accent);
+  z-index: 20;
+  -webkit-transition: width 0.25s ease;
+  transition: width 0.25s ease;
+  pointer-events: none;
+}
+deck-stage.is-presenter .pf-progress-bar { display: none; }
+
+/* ---- active button state (draw, laser) ---- */
+
+.pf-btn.is-active {
+  background: var(--pf-accent) !important;
+}
+
+/* ---- keyboard shortcuts overlay ---- */
+
+.pf-shortcuts-overlay {
+  display: none;
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: rgba(0, 0, 0, 0.72);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  z-index: 60;
+  -webkit-align-items: center;
+  align-items: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.pf-shortcuts-overlay.is-open { display: -webkit-flex; display: flex; }
+
+.pf-shortcuts-box {
+  background: rgba(8, 12, 25, 0.97);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 16px;
+  padding: 24px 28px;
+  min-width: 340px;
+  max-width: min(90%, 480px);
+  -webkit-box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.6);
+  color: #dce8f8;
+}
+
+.pf-shortcuts-title {
+  margin: 0 0 16px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  opacity: 0.45;
+}
+
+.pf-shortcuts-grid {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 9px 18px;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.pf-shortcut-key {
+  display: inline-block;
+  font-family: "SFMono-Regular", Consolas, monospace;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 5px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  color: #fff;
+  text-align: center;
+}
+
+.pf-shortcut-label {
+  font-size: 13px;
+  opacity: 0.8;
+}
+
+.pf-shortcuts-close-row {
+  margin-top: 20px;
+  text-align: right;
+}
+
+.pf-shortcuts-close-btn {
+  width: auto !important;
+  height: auto !important;
+  border-radius: 8px !important;
+  padding: 8px 20px !important;
+  font-size: 13px !important;
+  font-family: inherit !important;
+}
+
+/* ---- fragments: progressive reveal ---- */
+/* Baseline contract: a fragment in the live slide is hidden until revealed.
+   Themes may override the reveal (e.g. add transform); this guarantees it works
+   even if a theme says nothing. Scoped to .pf-canvas so thumbnails, the
+   next-slide preview and the overview always show fragments in full. */
+
+.pf-canvas .fragment {
+  opacity: 0;
+  -webkit-transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease;
+}
+.pf-canvas .fragment.is-visible { opacity: 1; }
+
+/* Fragments already seen (arriving back on a slide) show at once. */
+.pf-canvas .fragment.pf-instant {
+  -webkit-transition: none;
+  transition: none;
+}
+
+/* A highlight fragment is always visible; the click marks it instead. */
+.pf-canvas .fragment[data-anim="highlight"] {
+  opacity: 1;
+  background: linear-gradient(var(--pf-highlight, rgba(255, 214, 10, 0.45)), var(--pf-highlight, rgba(255, 214, 10, 0.45)))
+    no-repeat 0 88% / 0% 42%;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+  -webkit-transition: background-size 0.5s ease;
+  transition: background-size 0.5s ease;
+}
+.pf-canvas .fragment[data-anim="highlight"].is-visible { background-size: 100% 42%; }
+
+/* ---- motion level "none": nothing moves ---- */
+/* The level comes from deck.config.json ("motion"); with "none", build.py
+   leaves motion.css out and this stops every other animation too (the theme's
+   and the deck's), so the deck is perfectly still. */
+
+.pf-canvas[data-motion="none"] *,
+.pf-canvas[data-motion="none"] *::before,
+.pf-canvas[data-motion="none"] *::after {
+  -webkit-animation: none !important;
+  animation: none !important;
+  -webkit-transition: none !important;
+  transition: none !important;
+}
+.pf-canvas[data-motion="none"] > * {
+  -webkit-transition: none;
+  transition: none;
+}
+.pf-canvas[data-transition="none"] > * {
+  -webkit-transition: none;
+  transition: none;
+}
+
+/* ---- blank screen (B / W) ---- */
+
+.pf-blank {
+  display: none;
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 55;
+}
+.pf-blank.is-black { display: block; background: #000; }
+.pf-blank.is-white { display: block; background: #fff; }
+
+/* ---- presenter wall clock ---- */
+
+.pf-clock {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.85;
+  flex: 0 0 auto;
+}
+
+/* ---- overview: a grid of every slide ---- */
+
+.pf-overview {
+  display: none;
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: 60;
+  overflow-y: auto;
+  padding: 24px;
+  background: rgba(8, 12, 25, 0.96);
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 18px;
+  align-content: start;
+}
+.pf-overview.is-open { display: grid; }
+
+.pf-ov-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font: inherit;
+}
+
+.pf-ov-frame {
+  position: relative;
+  width: 100%;
+  height: 0;
+  padding-bottom: 56.25%;
+  border-radius: 6px;
+  overflow: hidden;
+  background: #fff;
+  border: 2px solid rgba(255, 255, 255, 0.14);
+}
+.pf-ov-cell:hover .pf-ov-frame { border-color: var(--pf-accent); }
+.pf-ov-cell.is-current .pf-ov-frame {
+  border-color: var(--pf-accent);
+  outline: 2px solid var(--pf-accent);
+}
+
+.pf-ov-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  -webkit-transform-origin: top left;
+  transform-origin: top left;
+  pointer-events: none;
+}
+.pf-ov-canvas > * {
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  visibility: visible;
+  opacity: 1;
+}
+
+.pf-ov-num {
+  font-size: 12px;
+  text-align: center;
+  color: var(--pf-rail-fg);
+  opacity: 0.7;
+}
+
+/* ---- reduced motion: honour the OS "reduce motion" setting ---- */
+
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    -webkit-animation-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    -webkit-animation-iteration-count: 1 !important;
+    animation-iteration-count: 1 !important;
+    -webkit-transition-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---- slide copies inside buttons ---- */
+/* The rail thumbnails and the overview cells are <button>s, which centre and
+   restyle their text; a slide copy inside one must look like the slide. */
+
+.pf-thumb-canvas,
+.pf-ov-canvas {
+  text-align: start;
+  white-space: normal;
+  font-weight: normal;
+  font-style: normal;
+  letter-spacing: normal;
+  word-spacing: normal;
+  line-height: normal;
+  text-transform: none;
+  text-indent: 0;
+}
+
+/* ---- render mode (?pf=shot / ?pf=sheet) ---- */
+/* Used by scripts/check_deck.py to screenshot a deck with headless Chrome:
+   the slide alone at full size, finished (every fragment shown, no motion),
+   or every slide on one contact sheet. */
+
+deck-stage.pf-render .pf-rail,
+deck-stage.pf-render .pf-rail-resizer,
+deck-stage.pf-render .pf-controls,
+deck-stage.pf-render .pf-edit-controls,
+deck-stage.pf-render .pf-notes-btn,
+deck-stage.pf-render .pf-overlay,
+deck-stage.pf-render .pf-progress-bar,
+deck-stage.pf-render .pf-toast,
+deck-stage.pf-render .pf-laser-dot {
+  display: none !important;
+}
+
+/* The sheet fills the window; check_deck.py sizes the window to fit it. */
+deck-stage.pf-sheet .pf-overview {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+  padding: 18px;
+  background: #0b0f1a;
+}
+deck-stage.pf-sheet .pf-canvas > * { visibility: hidden !important; }
+deck-stage.pf-sheet .pf-ov-num {
+  font: 600 15px/1.2 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  opacity: 0.9;
+}
+deck-stage.pf-sheet .pf-ov-cell.is-flagged .pf-ov-frame {
+  border-color: #ff3b30;
+  outline: 3px solid #ff3b30;
+}
+deck-stage.pf-sheet .pf-ov-cell.is-flagged .pf-ov-num { color: #ff6b61; }
+
+/* ---- opt-out / narrow viewports ---- */
+
+deck-stage[no-rail] .pf-rail { display: none; }
+
+@media (max-width: 820px) {
+  .pf-rail { display: none; }
+}

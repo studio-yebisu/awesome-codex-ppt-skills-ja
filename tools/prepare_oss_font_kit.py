@@ -19,7 +19,8 @@ FAMILIES = [
     ('spacegrotesk', 'Space Grotesk', ['SpaceGrotesk[wght].ttf'], 'モーション資料の英数字'),
     ('bizudpgothic', 'BIZ UDPGothic', ['BIZUDPGothic-Regular.ttf', 'BIZUDPGothic-Bold.ttf'], '業務資料・表・教材の日本語本文'),
     ('bizudpmincho', 'BIZ UDPMincho', ['BIZUDPMincho-Regular.ttf', 'BIZUDPMincho-Bold.ttf'], '説明資料の明朝見出しと和文本文'),
-    ('notosanscjkjp', 'Noto Sans CJK JP', ['NotoSansCJKjp-Regular.otf', 'NotoSansCJKjp-Bold.otf'], '研究資料・図表・CJKを含む日本語本文')
+    ('notosanscjkjp', 'Noto Sans CJK JP', ['NotoSansCJKjp-Regular.otf', 'NotoSansCJKjp-Bold.otf'], '研究資料・図表・CJKを含む日本語本文'),
+    ('jetbrainsmono', 'JetBrains Mono', ['JetBrainsMono[wght].ttf'], 'コード・変数・端末出力の等幅英数字。日本語説明はBIZ UDPGothicと組み合わせる')
 ]
 SOURCE_OVERRIDES = {
     'notosanscjkjp': {'repository': 'notofonts/noto-cjk', 'commit': 'f8d157532fbfaeda587e826d4cd5b21a49186f7c',
@@ -75,12 +76,14 @@ if __name__=='__main__':
         {'id':'poster','title':'強い表紙','heading':'Dela Gothic One','body':'Zen Kaku Gothic New','latin':'Space Grotesk','instruction':'Delaは短い見出しのみ。大胆な一色と大きな文字・図形で表紙を作る。本文に太い装飾書体を使わず、ページで構図を変える。'},
         {'id':'work','title':'業務と数字','heading':'BIZ UDPGothic','body':'BIZ UDPGothic','latin':'Manrope','instruction':'BIZ UDPGothicの太字で結論、標準ウェイトで説明を組む。数字の単位と比較対象を明記し、表は罫線を減らして列を揃える。白地と墨紺に赤橙を一点。見出しを大きく、本文は短い段落にする。'},
         {'id':'explain','title':'説明と教材','heading':'BIZ UDPMincho','body':'BIZ UDPGothic','latin':'Manrope','instruction':'BIZ UDPMinchoの太字で題名、BIZ UDPGothicで説明と図のラベルを組む。紙色と深緑を基調に、赤橙は注目する量だけに使う。式・図・説明を対応させ、学習用の設定と実測値を区別する。'},
-        {'id':'research','title':'研究と図表','heading':'Noto Sans CJK JP','body':'Noto Sans CJK JP','latin':'Manrope','instruction':'Noto Sans CJK JPの太字で主張、標準ウェイトで図のラベルと説明を組む。白地と墨紺を基調に、青は比較する系列だけに使う。図・式・出典を近くに置き、単位と仮定を明記する。Noto Sans JPとNoto Sans CJK JPはフォント名が異なるため、原稿とPPTXに指定した名前を揃える。'}
+        {'id':'research','title':'研究と図表','heading':'Noto Sans CJK JP','body':'Noto Sans CJK JP','latin':'Manrope','instruction':'Noto Sans CJK JPの太字で主張、標準ウェイトで図のラベルと説明を組む。白地と墨紺を基調に、青は比較する系列だけに使う。図・式・出典を近くに置き、単位と仮定を明記する。Noto Sans JPとNoto Sans CJK JPはフォント名が異なるため、原稿とPPTXに指定した名前を揃える。'},
+        {'id':'technical','title':'コードと技術発表','heading':'BIZ UDPMincho','body':'BIZ UDPGothic','latin':'Manrope','code':'JetBrains Mono','instruction':'明朝の短い主張、ゴシックの日本語説明、JetBrains Monoのコードと変数を使い分ける。白地と青を基調に、コード・図・実行結果を順に見せる。コードは重要な数行に絞り、字幅を揃える。合字で演算子を省略せず、読み上げる記号を見せる。JetBrains Monoには日本語を任せず、コード内の日本語コメントにはBIZ UDPGothicをフォールバックする。学習用データと実測値を区別し、実行していないコードを結果として扱わない。'}
     ]
     MANIFEST.write_text(json.dumps({'families':families,'presets':presets},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
-    guide='''# AIへ渡す日本語スライドの書体指示\n\n見出し・本文・英数字の役割を分け、同じ書体を漫然と並べない。日本語は意味の区切りで改行し、強い表紙と余白を作る。装飾書体は短い見出しに限る。Google FontsとNoto CJK公式リポジトリの固定commitから取得した未改変原配布物に、OFL原文を同梱。フォント単体販売をしない。\n\n'''
+    guide='''# AIへ渡す日本語スライドの書体指示\n\n見出し・本文・英数字・コードの役割を分け、同じ書体を漫然と並べない。日本語は意味の区切りで改行し、強い表紙と余白を作る。装飾書体は短い見出しに限る。Google FontsとNoto CJK公式リポジトリの固定commitから取得した未改変原配布物に、OFL原文を同梱。フォント単体販売をしない。\n\n'''
     for p in presets:
-        guide+='## '+p['title']+'\n\n見出し: '+p['heading']+' / 本文: '+p['body']+' / 英数字: '+p['latin']+'\n\n'+p['instruction']+'\n\n'
+        code=' / コード: '+p['code'] if p.get('code') else ''
+        guide+='## '+p['title']+'\n\n見出し: '+p['heading']+' / 本文: '+p['body']+' / 英数字: '+p['latin']+code+'\n\n'+p['instruction']+'\n\n'
     guide+='PowerPointでは使う書体を作成者と受け手の両方へ導入。Webでは配布元フォントを同梱し、font-faceで読ませる。未改変TTF/OTFとOFLを同じフォルダーに保持する。Noto Sans CJK JPは研究発表の取り込み3作例にも指定されている書体。環境だけにあった書体をコピーせず、公式配布のRegular/Boldを取得できる。\n'
     (ROOT/'downloads/fonts/AI-FONT-GUIDE.md').write_text(guide,encoding='utf-8')
     with ZipFile(ROOT/'downloads/yebisu-oss-font-kit.zip','w',ZIP_DEFLATED) as z:

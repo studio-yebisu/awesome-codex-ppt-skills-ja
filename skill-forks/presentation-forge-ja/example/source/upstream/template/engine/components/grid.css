@@ -1,0 +1,44 @@
+/*
+ * grid - 2 to 4 equal columns of anything (cards, features, logos, stats).
+ * @component: grid
+ *
+ * <div class="grid grid--3">
+ *   <div class="card"><i data-icon="zap" class="icon-tile"></i><h3>Fast</h3><p>...</p></div>
+ *   ...
+ * </div>
+ *
+ * .grid alone fits as many columns as there is room for; .grid--2, .grid--3
+ * and .grid--4 fix the count. Pair with data-stagger to bring items in turn.
+ */
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 40px;
+  align-items: stretch;
+}
+
+.grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.grid--4 { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 32px; }
+
+.slide .grid > * {
+  margin: 0;
+}
+
+.grid h3 {
+  font-size: calc(var(--type-body, 30px) * 1.05);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink, inherit);
+}
+
+.grid :is(.card, div) > p {
+  font-size: var(--type-small, 26px);
+  line-height: 1.4;
+  color: var(--muted, inherit);
+}
+
+.slide .grid :is(.card, div) > * + * {
+  margin-top: 14px;
+}

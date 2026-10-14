@@ -1,7 +1,7 @@
 {
   "catalog_count": 209,
-  "case_count": 72,
-  "slide_count": 429,
+  "case_count": 76,
+  "slide_count": 447,
   "history": {
     "withdrawn_examples": "data/actual-examples.json",
     "included_in_current_counts": false
@@ -13771,11 +13771,85 @@
         }
       ],
       "upstream_commit": "60f69c3568181898767470382d5599d4bb86b7b6",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "quarto-talks-showcase",
+          "title": "五つの点から、一本の線を。",
+          "use_case": "五つの合成点から、表・図・数式・実計算をつなぐ初学者向け教材",
+          "repository": "alfredo-hs/quarto-talks",
+          "skill_repository": "alfredo-hs/quarto-talks",
+          "upstream_commit": "60f69c3568181898767470382d5599d4bb86b7b6",
+          "fork_id": "quarto-talks-ja",
+          "page_count": 6,
+          "format": "html",
+          "preview_kind": "html",
+          "preview_canvas": {
+            "width": 1600,
+            "height": 900
+          },
+          "navigation": "native-runtime-bridge",
+          "preview_notice": "原典Quarto/RevealのHTML6枚。字体・図・runtime/mathを内包。編集はQMD/計算Python/SVG/SCSS、PPTXは生成していません。",
+          "editability": "quarto_qmd",
+          "editable_features": [
+            "qmd_text",
+            "tables",
+            "equations",
+            "code",
+            "computed_svg",
+            "scss"
+          ],
+          "style": "白と青の技術発表・明朝見出しと等幅コード",
+          "cover": "examples/repositories/quarto-talks-showcase/render/major-01.png",
+          "interior": "examples/repositories/quarto-talks-showcase/render/major-02.png",
+          "preview": "examples/repositories/quarto-talks-showcase/index.html",
+          "artifact_download": "examples/repositories/quarto-talks-showcase/index.html",
+          "source_download": "downloads/quarto-talks-example-ja.zip",
+          "fork_download": "downloads/quarto-talks-ja.zip",
+          "input": "examples/repositories/quarto-talks-showcase/input/BRIEF.md",
+          "input_data": "examples/repositories/quarto-talks-showcase/input/data.csv",
+          "prompt": "examples/repositories/quarto-talks-showcase/PROMPT.md",
+          "prompt_text": "# 制作依頼\n\n日本語6枚「五つの点から、一本の線を。」。初学者向けの約5分教材。原典alfredo-hs/quarto-talks固定60f69c3568181898767470382d5599d4bb86b7b6のtemplate.qmdとquarto-talks-revealjs拡張、SCSS/意味クラスを実Quarto CLIでrenderする。\n\n入力は単位のない合成5点[(0,1),(1,3),(2,2),(3,5),(4,4)]。NumPy lstsqで実計算しSVGへ。現実データ・研究成果・予測精度は作らない。表→散布図→式→短いコードと実結果→残差と限界→問いの順。原典16–24枚の既定を指定6枚へ上書きする。\n\n原典white/blueとsemantic classesを保ち、公式Shippori Mincho見出し・BIZ UDPGothic本文・JetBrains Mono英数字/コードの字体役割を局所SCSSへ。合字off、日本語コメントはBIZ fallback。独自controllerへ置換しない。0-based same-origin bridgeは元Reveal APIへ小追加。\n\n実計算、Quarto render、初回主要表示と元navigation1→2、短い日本語SKILL quick_validateだけ確認。全頁詳細検査・独立採点・全ZIP再実行はしない。\n",
+          "provenance": "examples/repositories/quarto-talks-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/quarto-talks-showcase/QA.json",
+          "guide": "repository.html?repo=alfredo-hs/quarto-talks",
+          "titles": [
+            "五つの点から、一本の線を。",
+            "表を、点にする。",
+            "直線を、二つの数で表す。",
+            "コードで、線を求める。",
+            "線が言えること、言えないこと。",
+            "点が一つ変わると、線はどう動く？"
+          ],
+          "notes": [
+            "単位なしの合成5点。現実の観測値・研究成果ではない。",
+            "表と同じ点を散布図へ。",
+            "直線y=ax+b。縦のずれの二乗合計を小さくする。",
+            "同梱Pythonを実行しa0.8/b1.4を得た。QMD表示fenceの実行を称さない。",
+            "実計算SSE3.6はこの合成5点だけ。外挿・予測精度・因果は分からない。",
+            "一点を変え同じコードを実行する、次の学習実験を問う。"
+          ],
+          "method": "Original template.qmd → argument spine/select → six ordinary/visual/math/code/question sections → original quarto-talks-revealjs0.4.1 + SCSS → actual Quarto1.9.38 render/embed-resources/self-contained-math. NumPy2.5.4 lstsq executed from synthetic CSV → SVG/results. Original Reveal5.1.0 + small same-origin API bridge.",
+          "sample_notice": "教材用の合成5点を実計算。現実の観測値や予測精度の報告ではありません。",
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "representative_previews": [
+            "examples/repositories/quarto-talks-showcase/render/major-01.png",
+            "examples/repositories/quarto-talks-showcase/render/major-02.png"
+          ],
+          "representative_indices": [
+            0,
+            1
+          ],
+          "case_guide": "examples/repositories/quarto-talks-showcase/README.md",
+          "content_revision": "6ff295727f29f452"
+        }
+      ],
+      "derived_skills": [
+        "quarto-talks-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "embabel/decker",
@@ -13943,27 +14017,369 @@
       "license_checked_at": "2026-10-13T13:35:24.206411+00:00",
       "license_evidence": [
         {
+          "path": "LICENSE",
+          "preserved_path": "source/upstream/LICENSE",
+          "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/LICENSE"
+        },
+        {
           "path": "README.md",
-          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/README.md",
-          "bytes": 11078
+          "preserved_path": "source/upstream/README.md",
+          "sha256": "4ed661370612a582a866d5ecd9b2e687aef096039a135acc8c79640e93ff2051",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/README.md"
         },
         {
           "path": "SKILL.md",
-          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/SKILL.md",
-          "bytes": 16767
+          "preserved_path": "source/upstream/SKILL.md",
+          "sha256": "90894464fe3588ccf90770327930b353e96e8683ba19681ba1e7f8d028f4a740",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/SKILL.md"
         },
         {
-          "path": "LICENSE",
-          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/LICENSE",
-          "bytes": 1073
+          "path": "reference/components.md",
+          "preserved_path": "source/upstream/reference/components.md",
+          "sha256": "89a71b59986224eb00473d994c077fc51f80f5b84751a978203d0f7b5239bf1f",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/reference/components.md"
+        },
+        {
+          "path": "reference/import-theme.md",
+          "preserved_path": "source/upstream/reference/import-theme.md",
+          "sha256": "ec28f5d41dd820159c41c8f4a6b9db0fa82af8ac2fbfe9bd979e56ece6ba4afa",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/reference/import-theme.md"
+        },
+        {
+          "path": "reference/layouts.md",
+          "preserved_path": "source/upstream/reference/layouts.md",
+          "sha256": "f1e34834090c5f6d27d4a441f112bc86cbec9ac5baa91def7458ca4758c7c98d",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/reference/layouts.md"
+        },
+        {
+          "path": "reference/motion.md",
+          "preserved_path": "source/upstream/reference/motion.md",
+          "sha256": "ef95e3df6e846d46b999d39d9ddf59cbf6b7b6ddd15b3170dacf42050a461302",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/reference/motion.md"
+        },
+        {
+          "path": "reference/writing-decks.md",
+          "preserved_path": "source/upstream/reference/writing-decks.md",
+          "sha256": "9d670d9925956529faa1725906ca244de49678ad88fce776cad84a62321cdb1a",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/reference/writing-decks.md"
+        },
+        {
+          "path": "scripts/check_deck.py",
+          "preserved_path": "source/upstream/scripts/check_deck.py",
+          "sha256": "97406f54ace3acec45b9cb15a42c9ddf7e6762be91bae612a7649e404b1af0c6",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/scripts/check_deck.py"
+        },
+        {
+          "path": "scripts/fetch_font.py",
+          "preserved_path": "source/upstream/scripts/fetch_font.py",
+          "sha256": "06fcf0a16412aa75ed7693618db4455ee5583ff5168d1dac13e2b4f9f25ecfe3",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/scripts/fetch_font.py"
+        },
+        {
+          "path": "scripts/image_colors.py",
+          "preserved_path": "source/upstream/scripts/image_colors.py",
+          "sha256": "110eba714cdd152a82bd1a700dac00acd6a0d1db5ed8fb0fe4d194c626bc1340",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/scripts/image_colors.py"
+        },
+        {
+          "path": "scripts/new_deck.py",
+          "preserved_path": "source/upstream/scripts/new_deck.py",
+          "sha256": "c6745b90cc678acad1dc79611f4a7275dae41072a898372385cfd6f3e38f84be",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/scripts/new_deck.py"
+        },
+        {
+          "path": "scripts/pf_venv.py",
+          "preserved_path": "source/upstream/scripts/pf_venv.py",
+          "sha256": "fa8b04da0a7e3eef52386637f38f2f404876b9409d8e80e172f1d2fe61e31188",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/scripts/pf_venv.py"
+        },
+        {
+          "path": "scripts/pptx_theme.py",
+          "preserved_path": "source/upstream/scripts/pptx_theme.py",
+          "sha256": "ee46c32fa61770c0e3212a81dc86909db00b78f8170691616a9ac7f42692fdab",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/scripts/pptx_theme.py"
+        },
+        {
+          "path": "scripts/theme_bundle.py",
+          "preserved_path": "source/upstream/scripts/theme_bundle.py",
+          "sha256": "2707f2734c51a7e0ff72595bf3a1007d504e8dcb60fe5869be2b4882a2ccf979",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/scripts/theme_bundle.py"
+        },
+        {
+          "path": "template/LICENSE",
+          "preserved_path": "source/upstream/template/LICENSE",
+          "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/LICENSE"
+        },
+        {
+          "path": "template/README.fr.md",
+          "preserved_path": "source/upstream/template/README.fr.md",
+          "sha256": "773a06717a03118d91d97136310e315ab28a8966a889897fd29b2d72caae8ab8",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/README.fr.md"
+        },
+        {
+          "path": "template/README.md",
+          "preserved_path": "source/upstream/template/README.md",
+          "sha256": "b641feb9ab9df49ff099bcbcd449234d98711993d254a680952b76655a49c4c2",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/README.md"
+        },
+        {
+          "path": "template/assets/.gitkeep",
+          "preserved_path": "source/upstream/template/assets/.gitkeep",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/assets/.gitkeep"
+        },
+        {
+          "path": "template/build.py",
+          "preserved_path": "source/upstream/template/build.py",
+          "sha256": "db50c69167cfa3f9368adabb5f950126c854f32a4ca60481c24badbfd70fdffe",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/build.py"
+        },
+        {
+          "path": "template/deck.config.json",
+          "preserved_path": "source/upstream/template/deck.config.json",
+          "sha256": "6faf9494f8172158082b6389b0d46f581721288187e41cc4b66f2313ddbdb4e2",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/deck.config.json"
+        },
+        {
+          "path": "template/docs/writing-slides.md",
+          "preserved_path": "source/upstream/template/docs/writing-slides.md",
+          "sha256": "dbcc597e8bb4bfb83cc5a6648ad277ec81b6e964b3089ac9ceb2235ae92e323f",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/docs/writing-slides.md"
+        },
+        {
+          "path": "template/engine/base.css",
+          "preserved_path": "source/upstream/template/engine/base.css",
+          "sha256": "6761309108d21bb4d88cfe99ae68437c22293e5db3c11eb3c1632467842a1073",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/base.css"
+        },
+        {
+          "path": "template/engine/components/bars.css",
+          "preserved_path": "source/upstream/template/engine/components/bars.css",
+          "sha256": "91b888ed904228dd0ecf59c2f7fa976685b68313a958935dfcdbdc8e88613e72",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/bars.css"
+        },
+        {
+          "path": "template/engine/components/compare.css",
+          "preserved_path": "source/upstream/template/engine/components/compare.css",
+          "sha256": "4d68d2f1b1885995e214da650ca13b4f18fb3d9d5ecdc50004dbd1e66c320f1d",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/compare.css"
+        },
+        {
+          "path": "template/engine/components/fx.css",
+          "preserved_path": "source/upstream/template/engine/components/fx.css",
+          "sha256": "a53f7125af6b7307684bddb1b990df1efb1498f164d359d2f1b9c69df2dad021",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/fx.css"
+        },
+        {
+          "path": "template/engine/components/grid.css",
+          "preserved_path": "source/upstream/template/engine/components/grid.css",
+          "sha256": "25954fb744482049e2a4ad2b79f86b2268abfadb5644186c2d12c8dff20a6600",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/grid.css"
+        },
+        {
+          "path": "template/engine/components/icon.css",
+          "preserved_path": "source/upstream/template/engine/components/icon.css",
+          "sha256": "d41abd5f9382f078cc456aa002222c2f31611ed773ab9c2b026de45350acd0b3",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/icon.css"
+        },
+        {
+          "path": "template/engine/components/ring.css",
+          "preserved_path": "source/upstream/template/engine/components/ring.css",
+          "sha256": "f7263f8776ef89330943efe193f67dcf7f91c84bca362e701818655a2b7065b7",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/ring.css"
+        },
+        {
+          "path": "template/engine/components/stats.css",
+          "preserved_path": "source/upstream/template/engine/components/stats.css",
+          "sha256": "588fcf2ecfa0b14c2740ded58d34dd08e1f67f609f18e7faad3ae1250153dc99",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/stats.css"
+        },
+        {
+          "path": "template/engine/components/steps.css",
+          "preserved_path": "source/upstream/template/engine/components/steps.css",
+          "sha256": "d1369ea5aaf5154aa8c84c671fa1e56f9ed2d2c52aef885cd9fd36a3e631ec1c",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/steps.css"
+        },
+        {
+          "path": "template/engine/components/timeline.css",
+          "preserved_path": "source/upstream/template/engine/components/timeline.css",
+          "sha256": "552e87039e8992178b6a161a90c080ca9675d7cc7e7f807d669d29e6a9375b0c",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/components/timeline.css"
+        },
+        {
+          "path": "template/engine/deck-stage.js",
+          "preserved_path": "source/upstream/template/engine/deck-stage.js",
+          "sha256": "f0c961621d987fd015e5e6b11844f7432b15c9593a8a0e04c4ba309e7544b1aa",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/deck-stage.js"
+        },
+        {
+          "path": "template/engine/icons-LICENSE",
+          "preserved_path": "source/upstream/template/engine/icons-LICENSE",
+          "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/icons-LICENSE"
+        },
+        {
+          "path": "template/engine/icons.json",
+          "preserved_path": "source/upstream/template/engine/icons.json",
+          "sha256": "603a02c80234b49ff32388264f2bfe20045319e8cdcc5211ba7e71991754d56f",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/icons.json"
+        },
+        {
+          "path": "template/engine/motion.css",
+          "preserved_path": "source/upstream/template/engine/motion.css",
+          "sha256": "7db372b632b4d694ef1b5b086edca3f5e22d8e4d58ac367285f8cc13acbd6d79",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/engine/motion.css"
+        },
+        {
+          "path": "template/slides/.gitkeep",
+          "preserved_path": "source/upstream/template/slides/.gitkeep",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/slides/.gitkeep"
+        },
+        {
+          "path": "template/themes/ink-blue/fonts.css",
+          "preserved_path": "source/upstream/template/themes/ink-blue/fonts.css",
+          "sha256": "6a90b1e83aa3d1e6813101661b3282bcb6bacbb1b1339d52a44fef73f75e167d",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/ink-blue/fonts.css"
+        },
+        {
+          "path": "template/themes/ink-blue/fonts/.gitkeep",
+          "preserved_path": "source/upstream/template/themes/ink-blue/fonts/.gitkeep",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/ink-blue/fonts/.gitkeep"
+        },
+        {
+          "path": "template/themes/ink-blue/images/.gitkeep",
+          "preserved_path": "source/upstream/template/themes/ink-blue/images/.gitkeep",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/ink-blue/images/.gitkeep"
+        },
+        {
+          "path": "template/themes/ink-blue/logos/.gitkeep",
+          "preserved_path": "source/upstream/template/themes/ink-blue/logos/.gitkeep",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/ink-blue/logos/.gitkeep"
+        },
+        {
+          "path": "template/themes/ink-blue/slides.css",
+          "preserved_path": "source/upstream/template/themes/ink-blue/slides.css",
+          "sha256": "eeba1546273739e206a8a221d655b613a8361d80a7cb5d482c3dd0d6d34fe3cc",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/ink-blue/slides.css"
+        },
+        {
+          "path": "template/themes/ink-blue/tokens.css",
+          "preserved_path": "source/upstream/template/themes/ink-blue/tokens.css",
+          "sha256": "9a186221ca9dd2dc9a60e1062879b978ef5e96d697d361ac08b38b5cc9834b67",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/ink-blue/tokens.css"
+        },
+        {
+          "path": "template/themes/obsidian/fonts.css",
+          "preserved_path": "source/upstream/template/themes/obsidian/fonts.css",
+          "sha256": "ca45ba0045b5dcda46a32192db3f2bdc6abab63bf1b057943897f945ed48f85d",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/obsidian/fonts.css"
+        },
+        {
+          "path": "template/themes/obsidian/images/.gitkeep",
+          "preserved_path": "source/upstream/template/themes/obsidian/images/.gitkeep",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/obsidian/images/.gitkeep"
+        },
+        {
+          "path": "template/themes/obsidian/logos/.gitkeep",
+          "preserved_path": "source/upstream/template/themes/obsidian/logos/.gitkeep",
+          "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/obsidian/logos/.gitkeep"
+        },
+        {
+          "path": "template/themes/obsidian/slides.css",
+          "preserved_path": "source/upstream/template/themes/obsidian/slides.css",
+          "sha256": "44cf3a223b7b127230ce1c0fbecdd291565681bc6b661c0a076da98990bc8992",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/obsidian/slides.css"
+        },
+        {
+          "path": "template/themes/obsidian/tokens.css",
+          "preserved_path": "source/upstream/template/themes/obsidian/tokens.css",
+          "sha256": "a5af3200293d654e9a33984bdee0aff5358e7cd9a2b2acda8849f941f1708477",
+          "url": "https://github.com/thmsgo18/presentation-forge/blob/8268d3433af89a2f86e773ed8c84bbd9dd441896/template/themes/obsidian/tokens.css"
         }
       ],
       "upstream_commit": "8268d3433af89a2f86e773ed8c84bbd9dd441896",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "presentation-forge-showcase",
+          "title": "待つ時間にも、道しるべを。",
+          "repository": "thmsgo18/presentation-forge",
+          "skill_repository": "thmsgo18/presentation-forge",
+          "upstream_commit": "8268d3433af89a2f86e773ed8c84bbd9dd441896",
+          "fork_id": "presentation-forge-ja",
+          "page_count": 6,
+          "format": "html",
+          "preview_kind": "html",
+          "preview_canvas": {
+            "width": 1920,
+            "height": 1080
+          },
+          "runtime": "Original Presentation Forge DeckStage.show/index, obsidian components/motion",
+          "preview": "examples/repositories/presentation-forge-showcase/index.html",
+          "artifact_download": "examples/repositories/presentation-forge-showcase/index.html",
+          "source_download": "downloads/presentation-forge-example-ja.zip",
+          "fork_download": "downloads/presentation-forge-ja.zip",
+          "cover": "examples/repositories/presentation-forge-showcase/render/slide-01.png",
+          "pages": null,
+          "input": "examples/repositories/presentation-forge-showcase/input/MANUSCRIPT.md",
+          "input_data": "examples/repositories/presentation-forge-showcase/input/deck-plan.json",
+          "prompt": "examples/repositories/presentation-forge-showcase/PROMPT.md",
+          "prompt_text": "# 制作に使った依頼文\n\nthmsgo18/presentation-forgeの固定原典8268d3433af89a2f86e773ed8c84bbd9dd441896のSKILLとtemplate、new_deck.py、build.pyを使い、日本語6枚「待つ時間にも、道しるべを。」を作る。input/deck-plan.jsonの主張と聞き手、各頁の形を先に決め、ひとつの読込画面の設計案として書く。全て一度に制作、balanced、元obsidianの青黒・紫・シアンのpalette/blocksを保持。明朝の大見出し、BIZ本文、Manropeの数字、JetBrains Monoのコード役を公式TTF/OFLで使い分ける。コードを使っていないこの作例で実行済みコードと称さない。スライド1ファイルずつ、one assertion + light support + original notes。engineを改変せず、original stats/count、steps、timeline、icons、motionを使う。進捗率・時間・導入効果は発明しない。\n\nユーザーは自律制作を承認済みのため原典の初回2質問/構成待ちは省略。生成は元stdlib build。原典check_deckの全頁問題検査/contact sheetは今回のユーザー確認範囲に合わせて省略し、元screenshot helperで代表2頁を初回表示、元navigation1→2だけ確認。PPTX/PDF変換、独立モデル評価、全ZIP再実行はしない。原典原本、局所テーマdiff、原稿/入力/方式、実TTF/OFL、MITとLucide ISC/Feather MITを保持。\n",
+          "provenance": "examples/repositories/presentation-forge-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/presentation-forge-showcase/QA.json",
+          "guide": "repository.html?repo=thmsgo18/presentation-forge",
+          "titles": [
+            "待つ時間にも、道しるべを。",
+            "待つ人に伝えるのは、三つだけ。",
+            "終わった作業と、次の作業を並べる。",
+            "進捗が分からないときは、状態を伝える。",
+            "失敗したあとにも、進む道を残す。",
+            "待つ人が、次を選べる画面へ。"
+          ],
+          "notes": [
+            "架空のファイル読込画面の設計提案。効果測定や実装済み製品の報告ではない。",
+            "何をしているか、次に何が起きるか、待つ人が何を選べるか。画面から短く答える。",
+            "この三工程は企画の説明例。実装は処理の完了イベントから状態を決める。",
+            "実際の処理割合が不明な場合の表示案。時刻やパーセントの数字を作らない。",
+            "再試行・選び直し・中止の行動案。データ保持や再開が実装されているとは仮定しない。",
+            "まず一つの読込画面の言葉を、自分の工程と利用者の選択へ置き換える。"
+          ],
+          "sample_notice": "架空の画面設計案。進捗率・所要時間・導入効果の実績は含みません。",
+          "method": "Original new_deck.py, per-slide HTML + notes, obsidian components/motion, unchanged engine/build.py; official Japanese font adaptation and post-build bridge/notices.",
+          "navigation": "native-runtime-bridge",
+          "editability": "html_svg",
+          "editable_features": [
+            "html_text",
+            "svg",
+            "css_motion"
+          ],
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "preview_notice": "未変更の元DeckStage engine、元obsidian、stats/steps/timeline/icons/motionを実利用。公式TTFと原文条件を内包した単独HTML。",
+          "representative_previews": [
+            "examples/repositories/presentation-forge-showcase/render/slide-01.png",
+            "examples/repositories/presentation-forge-showcase/render/slide-02.png"
+          ],
+          "preview_image_notice": "代表2枚だけ。全頁詳細検査/contact sheetは実施しない。",
+          "use_case": "読む人が次を選べる、架空の読込画面の設計案",
+          "style": "青黒の舞台・紫とシアン・大きな明朝と流れ",
+          "case_guide": "examples/repositories/presentation-forge-showcase/README.md",
+          "content_revision": "a6701d1b02ab7e4c"
+        }
+      ],
+      "derived_skills": [
+        "presentation-forge-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "andyluu98/slidefly",
@@ -14589,11 +15005,93 @@
         }
       ],
       "upstream_commit": "5ce44dff61f181db35b0c98a1cb86c71c7e062cb",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "and-scene-showcase",
+          "title": "一冊の本が、次の人へ。",
+          "use_case": "同じ一冊の本が動いてつなぐ、架空の交換本棚の案",
+          "repository": "Codagent-AI/and-scene",
+          "skill_repository": "Codagent-AI/and-scene",
+          "upstream_commit": "5ce44dff61f181db35b0c98a1cb86c71c7e062cb",
+          "fork_id": "and-scene-ja",
+          "page_count": 8,
+          "page_unit": "段階",
+          "format": "html",
+          "preview_kind": "html",
+          "preview_canvas": {
+            "width": 1600,
+            "height": 900
+          },
+          "design_canvas": {
+            "width": 880,
+            "height": 380
+          },
+          "navigation": "native-runtime-bridge",
+          "preview_notice": "原典React scene kitの共通canvasを進める8段階。同じ一冊が移動・morph。dist/assets/fontsのWeb一式で単独HTMLではありません。TSX Step/payload/SVG/CSSから編集。",
+          "editability": "evolving_scene",
+          "editable_features": [
+            "tsx_text",
+            "step_payload",
+            "svg_entities",
+            "layout_morph",
+            "local_css"
+          ],
+          "style": "深青と電光青・同じ図形が動く共通画面",
+          "cover": "examples/repositories/and-scene-showcase/render/major-01.png",
+          "interior": "examples/repositories/and-scene-showcase/render/major-02.png",
+          "preview": "examples/repositories/and-scene-showcase/dist/index.html",
+          "artifact_download": "downloads/and-scene-example-ja.zip",
+          "source_download": "downloads/and-scene-example-ja.zip",
+          "fork_download": "downloads/and-scene-ja.zip",
+          "input": "examples/repositories/and-scene-showcase/input/BRIEF.md",
+          "input_data": "examples/repositories/and-scene-showcase/input/steps.json",
+          "prompt": "examples/repositories/and-scene-showcase/PROMPT.md",
+          "prompt_text": "# 制作依頼\n\n架空の交換本棚提案「一冊の本が、次の人へ。」8段階。読み手は本棚企画の参加者。題材・スタイル・全stepは指定済みなので、追加質問せず制作する。\n\n原典Codagent-AI/and-scene固定5ce44dff61f181db35b0c98a1cb86c71c7e062cb。空の私有appへ原典bootstrapをscaffoldし、必要npm依存を実install/build。Presentation/Stage/types、Stepテンプレートとregistryを実使用。同じgroupKeyの共通canvasとstable layoutId book/owner/shelf/readerで連続を作る。別々のslide shellに置き換えない。\n\n深青・電光青・淡い珊瑚、余白と一冊の主役。Shippori Minchoの和文題名、BIZ UDPGothic本文/ラベル、Manrope数字。公式未改変TTF/OFLをlocalへ。独自SVGは本・本棚・役割記号・関係線のみ。写真・商標ロゴ・API・料金・人名・住所・営業実績なし。\n\n置く: 1中央大きな一冊、2持ち主→本棚、3棚へ小さく収め名前とひとこと。見つける: 4次の読み手が一冊を見つける、5同じ一冊が読み手の側へ。戻す: 6読み終わったら次へ、7同じ本が本棚へ戻る、8主役の一冊と薄い3つの役割をつなぐ。\n\n原典controller hookへの小さなsame-origin0-based bridge。必要build、主要初回表示と元1→2、短SKILL quick_validateのみ。原典fullverify/inspectの全段階・last/dense/mobileは最新ユーザー確認範囲に合わせ実施しない。制作/スキル2ZIPと2fragmentを完成。\n",
+          "provenance": "examples/repositories/and-scene-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/and-scene-showcase/QA.json",
+          "guide": "repository.html?repo=Codagent-AI/and-scene",
+          "titles": [
+            "一冊の本が、次の人へ。",
+            "読み終えた一冊を、本棚へ。",
+            "本の名前と、ひとことを添える。",
+            "次の読み手が、一冊を見つける。",
+            "読みたい本を、持ち帰る。",
+            "読み終えたら、次へつなぐ。",
+            "もう一度、本棚へ。",
+            "一冊を、次の人へ。"
+          ],
+          "notes": [
+            "架空の交換本棚の提案。同じ一冊が、置く・見つける・戻すをつなぎます。",
+            "持ち主から、共通の本棚へ。一冊の位置が変わり、関係が見えてきます。",
+            "本の名前と短いひとことを添える、という参加の案。",
+            "本棚を眺める次の読み手と、同じ一冊をつなぎます。",
+            "本棚の一冊が、次の読み手の側へ移ります。",
+            "読み終わった一冊を、次の人へつなぐことを考えます。",
+            "同じ一冊を共通の本棚へ戻す。交換の輪をもう一度。",
+            "本棚を介して、一冊を次の人へ。料金・住所・営業実績は未設定です。"
+          ],
+          "method": "Original bootstrap scaffold into verified private empty app → actual npm install full required dependencies → original typed Step contract/registry + persistent BookWorld with groupKey and stable layoutIds → original Presentation/Stage/common880×380 canvas → npm run build (tsc -b && vite build). Original usePresentationNav with minimal same-origin0-based adapter.",
+          "sample_notice": "架空の交換本棚の案。場所・運営者・日程・利用実績は未定。",
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "representative_previews": [
+            "examples/repositories/and-scene-showcase/render/major-01.png",
+            "examples/repositories/and-scene-showcase/render/major-02.png"
+          ],
+          "representative_indices": [
+            0,
+            1
+          ],
+          "case_guide": "examples/repositories/and-scene-showcase/README.md",
+          "content_revision": "6f1fdf5c343a47bc"
+        }
+      ],
+      "derived_skills": [
+        "and-scene-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "clearfunction/cf-devtools",
@@ -14754,27 +15252,285 @@
       "license_checked_at": "2026-10-13T13:35:44.575061+00:00",
       "license_evidence": [
         {
+          "path": "LICENSE",
+          "preserved_path": "source/upstream/LICENSE",
+          "sha256": "876b2b1a8cabbae8f3d4993c808de884386c15ad3aca82144cb31792b3d1ec70",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/LICENSE"
+        },
+        {
+          "path": "package-lock.json",
+          "preserved_path": "source/upstream/package-lock.json",
+          "sha256": "3556f8eeaea85ea08ddee515a232c0876606e0830ed6e1c5fe5761edffd6b2ab",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/package-lock.json"
+        },
+        {
+          "path": "package.json",
+          "preserved_path": "source/upstream/package.json",
+          "sha256": "03348393764a82a6232f43da94aee51373b29f9033e1dd1c2aa3f1fbc2425fd3",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/package.json"
+        },
+        {
           "path": "README.md",
-          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/README.md",
-          "bytes": 9673
+          "preserved_path": "source/upstream/README.md",
+          "sha256": "d98b4889a912fc4018bbe592deec2a48f957e0673dc934c0599817ca03740827",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/README.md"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/agents/openai.yaml",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/agents/openai.yaml",
+          "sha256": "4663ace572ed191aa6b535e5b5a1f24339af15b44c697e1c4a3e8c261a23846a",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/agents/openai.yaml"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/font-sources/FONT-NOTICE.txt",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/font-sources/FONT-NOTICE.txt",
+          "sha256": "6592483e77e1f78328a44920fef9c07d450362d57f5460eabd5e2ab7d54c6223",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/font-sources/FONT-NOTICE.txt"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/font-sources/OFL-1.1.txt",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/font-sources/OFL-1.1.txt",
+          "sha256": "eb78b6a2c5755bc873dc1857e4776e45b238768ed85c4a84fe78300f2451180d",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/font-sources/OFL-1.1.txt"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/FONT-NOTICE.txt",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/FONT-NOTICE.txt",
+          "sha256": "6592483e77e1f78328a44920fef9c07d450362d57f5460eabd5e2ab7d54c6223",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/FONT-NOTICE.txt"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/OFL-1.1.txt",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/OFL-1.1.txt",
+          "sha256": "eb78b6a2c5755bc873dc1857e4776e45b238768ed85c4a84fe78300f2451180d",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/OFL-1.1.txt"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.manifest.json",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.manifest.json",
+          "sha256": "85017090dea15ed3712c97668793cae17596389b078f605efd6abfed4b55ecf2",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.manifest.json"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.woff2",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.woff2",
+          "sha256": "d865f6d20ec514ff7ea93cc1ec51a1c01f98647cfa97ff0efd724e5202aef782",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/fonts/zhongguose-cover.woff2"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/LUCIDE-ISC-AND-FEATHER-MIT.txt",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/LUCIDE-ISC-AND-FEATHER-MIT.txt",
+          "sha256": "3a9b6f18a8f9a324a5fb89e13cd7c900184123bfd85c7fdbf61d6257682b11bf",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/LUCIDE-ISC-AND-FEATHER-MIT.txt"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/MOTION-MIT.txt",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/MOTION-MIT.txt",
+          "sha256": "5ff46083b88563822b0560dd6221ab89d2f74bc97a52d4c97a75020fd62c6f32",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/licenses/MOTION-MIT.txt"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/lucide.min.js",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/lucide.min.js",
+          "sha256": "2e8b4b1c419d4d41442a497a19b7ab5a727fefb3d25202af3c4f97d3aac14d0d",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/lucide.min.js"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/motion.min.js",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/motion.min.js",
+          "sha256": "45615c1e7639fb9828942d0689c897e745690b0f6df13022223c9409fc01557c",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/motion.min.js"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-profile.svg",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-profile.svg",
+          "sha256": "ccbcf86c5ca3f42774363751c51267cd00da2df3921a3cee76bf54d6d390a88a",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-profile.svg"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-scroll.svg",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-scroll.svg",
+          "sha256": "d56dfd5198bcd085136fe645a56d754e118592a8a96cd300c2e1dcee09db17c1",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-scroll.svg"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-wide.svg",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-wide.svg",
+          "sha256": "a448f8189cfed65539915b6f3b754595c25c4574995bebc5bcc5ef23b0e6acec",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/assets/placeholder-wide.svg"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/template-zhongguose/index.html",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/template-zhongguose/index.html",
+          "sha256": "d21b9b7b385ea665ff93577e9140055ddce6184bfd6bb97b45b8a5f669f79328",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose/index.html"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/assets/theme-cover-gallery.html",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/assets/theme-cover-gallery.html",
+          "sha256": "bf3f8ead2ee6c040b4b92ddc28bbcc221ebe5f44c7e6a37a8b20f23003fda478",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/theme-cover-gallery.html"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/LICENSE.txt",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/LICENSE.txt",
+          "sha256": "876b2b1a8cabbae8f3d4993c808de884386c15ad3aca82144cb31792b3d1ec70",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/LICENSE.txt"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/references/content-architecture.md",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/references/content-architecture.md",
+          "sha256": "5d201ad56065ba53c6dfdc4bfe31e5b8efc0ad553fe62ff5d81fcf3aedb808ab",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/references/content-architecture.md"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/references/layout-patterns.md",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/references/layout-patterns.md",
+          "sha256": "1f687f87c65af448132670d5827d4454411f41108f77d6ea15d3d652fe0ac2b7",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/references/layout-patterns.md"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/references/quality-checklist.md",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/references/quality-checklist.md",
+          "sha256": "4f1b31025f03193693aa054adf774e956dbac0099b95859c59f90a580ea0a1e7",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/references/quality-checklist.md"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/references/visual-system.md",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/references/visual-system.md",
+          "sha256": "3102504e4dfc6c848918f8e807743b27e9e6c66bb35bd3cdaf7359e4e27a69c8",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/references/visual-system.md"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/requirements.txt",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/requirements.txt",
+          "sha256": "9246279fc638cbce691051c89cfabd7c6a7171884ab4fd4ceb26bce0913700ed",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/requirements.txt"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/scripts/browser-qa.mjs",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/browser-qa.mjs",
+          "sha256": "e62204e429d848294f6da7b9a66858031fff03f1a641827cc6d8034e492b733e",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/browser-qa.mjs"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/scripts/check-cover-glyphs.py",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/check-cover-glyphs.py",
+          "sha256": "a5bd29a4986dff3475124f577c8f34bc088d56b18530a700d1c7a0f5dce7299d",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/check-cover-glyphs.py"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/scripts/extract-deck-outline.mjs",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/extract-deck-outline.mjs",
+          "sha256": "a86e153206c82b9552792775bd3ad066ae90899eedfb05e4e96ff660343bbe5e",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/extract-deck-outline.mjs"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/scripts/preview-deck.mjs",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/preview-deck.mjs",
+          "sha256": "fb17d983232e502e4683991b6210c4637f68269f138cffa9ac8c33c1577e9f47",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/preview-deck.mjs"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/scripts/subset-cover-font.py",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/subset-cover-font.py",
+          "sha256": "45a86ab059d8d3a1c153e645b3ac248d431affc2d862d4a0e920a63d8a7f817d",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/subset-cover-font.py"
+        },
+        {
+          "path": "skills/zhongguose-ppt-skill/scripts/validate-deck.mjs",
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/scripts/validate-deck.mjs",
+          "sha256": "862b62b67fc50ec4ff05c714c23bc8c2d07e7e5400a5d2be95e0fb5604773a96",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/scripts/validate-deck.mjs"
         },
         {
           "path": "skills/zhongguose-ppt-skill/SKILL.md",
-          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/SKILL.md",
-          "bytes": 32824
+          "preserved_path": "source/upstream/skills/zhongguose-ppt-skill/SKILL.md",
+          "sha256": "5887153330ab5fbccc8ca5f854a432ca339051bc3ff1043f71acdcc65ec2d276",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/SKILL.md"
         },
         {
-          "path": "LICENSE",
-          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/LICENSE",
-          "bytes": 1066
+          "path": "THIRD_PARTY_NOTICES.md",
+          "preserved_path": "source/upstream/THIRD_PARTY_NOTICES.md",
+          "sha256": "73512f09103fc73f90d0064ecf12068620f93c6755e7c1d5da1744ca1736b793",
+          "url": "https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/THIRD_PARTY_NOTICES.md"
         }
       ],
       "upstream_commit": "f4c2af8ff832133822afdce87ed2d6d760631ef4",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "zhongguose-showcase",
+          "title": "町の手仕事を、ひらく。",
+          "repository": "tanglele110-hash/zhongguose-ppt-skill",
+          "skill_repository": "tanglele110-hash/zhongguose-ppt-skill",
+          "upstream_commit": "f4c2af8ff832133822afdce87ed2d6d760631ef4",
+          "fork_id": "zhongguose-ja",
+          "page_count": 6,
+          "format": "html",
+          "preview_kind": "html",
+          "preview_canvas": {
+            "width": 1920,
+            "height": 1080
+          },
+          "runtime": "Original template vertical native viewport paginator jumpTo/easeGlide; wheel/key/click/touch, Esc index, B static mode, original Motion/Lucide/ASCII canvas and appended catalog bridge.",
+          "style": "赤の中国色・大きな明朝・罫線と章のナビ",
+          "use_case": "町の手仕事に出会う、架空の回遊企画",
+          "preview": "examples/repositories/zhongguose-showcase/index.html",
+          "cover": "examples/repositories/zhongguose-showcase/render/slide-01.png",
+          "interior": "examples/repositories/zhongguose-showcase/render/slide-02.png",
+          "artifact_download": "downloads/zhongguose-example-ja.zip",
+          "source_download": "downloads/zhongguose-example-ja.zip",
+          "fork_download": "downloads/zhongguose-ja.zip",
+          "input": "examples/repositories/zhongguose-showcase/input/MANUSCRIPT.md",
+          "input_data": "examples/repositories/zhongguose-showcase/input/slide-architecture.json",
+          "prompt": "examples/repositories/zhongguose-showcase/PROMPT.md",
+          "prompt_text": "# 自分の題材へ置き換える依頼文\n\ntanglele110-hash/zhongguose-ppt-skill、固定commit `f4c2af8ff832133822afdce87ed2d6d760631ef4`の原典SKILLとassets/template-zhongguoseを実際に使い、input/MANUSCRIPT.mdから日本語6枚「町の手仕事を、ひらく。」を完成してください。章は見つける・めぐる・持ち帰る。架空の手仕事回遊案です。人物・実在会場・日程・費用・実績を発明しません。\n\ncontent-architecture/layout-patterns/visual-systemを読み、source-logicとslide-architectureを記録し、確定原稿を保持してください。中国色「绛缨」#9E3B3B/158,59,59とaccent-on #ffffffを対で設定し、日本の伝統色とは表示しません。自律制作は承認済みのため、追加のテーマ選択・確認待ちは挟みません。\n\n原典templateを一式複製し、縦pagination、wheel/key/click/touch、Esc索引、B静帧、ASCII背景、animation helpers、local motion/lucideと条件文を保持。日本語のlocal @font-face・原稿・版式調整は局所diffに記録します。原典subset-cover-font.pyへ完全配布の日本語TTFを渡し、最終HTMLで実際に実行。copyright/source-hash/licenseを日本語字体に合わせる局所patchを残し、kanaも欠落検査の対象にしてください。\n\n表紙・並列・ledger・二列・sequence・closingを内容に合わせて使い分けます。字体は公式google/fonts固定commitのShippori Mincho/BIZ UDPGothic/Manrope、未改変の全TTF/OFLを同梱。元テンプレートの原本を改変せず保存。完了物はindex.html＋assets/のWeb一式、代表PNG、原稿/依頼/再生成Python、原典hash/条件、日本語SKILL、一式ZIPです。PPTXではありません。\n\n確認は元の必要build、表紙と2頁目の初回表示、原典navigation1→2、skill-creator quick_validateだけ。全page詳細目視・採点・独立reviewは不要です。\n",
+          "provenance": "examples/repositories/zhongguose-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/zhongguose-showcase/QA.json",
+          "guide": "repository.html?repo=tanglele110-hash/zhongguose-ppt-skill",
+          "titles": [
+            "町の手仕事を、ひらく。",
+            "つくる人に、会いに行く。",
+            "一つの町を、三つの道で。",
+            "気になる手仕事で、少し止まる。",
+            "持ち帰るのは、次のきっかけ。",
+            "手仕事の名前を、一つ覚える。"
+          ],
+          "notes": [
+            "架空の手仕事回遊体験案。",
+            "染・織・土の観察を提案。",
+            "実地図ではない三つの概念ルート。",
+            "見る・話すという二つの立ち止まり方。",
+            "冊子・小片・メモは持ち帰る提案。",
+            "気になった手仕事を一つ記憶へ。"
+          ],
+          "sample_notice": "中国色「绛缨」を使った架空の企画。日時・会場・費用・実施実績は未定。",
+          "method": "source logic → locked manuscript → slide architecture → real upstream template copy → local Japanese typography/color/content patch → original cover subset generator adapted and executed",
+          "navigation": "native-runtime-bridge",
+          "editability": "html_css",
+          "editable_features": [
+            "html_text",
+            "css_motion"
+          ],
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "preview_notice": "元template CSS・縦navigation・animation/ASCIIを実使用。HTML+local assetsの複数ファイルWeb一式。PPTXは生成なし。",
+          "representative_previews": [
+            "examples/repositories/zhongguose-showcase/render/slide-01.png",
+            "examples/repositories/zhongguose-showcase/render/slide-02.png"
+          ],
+          "preview_image_notice": "表紙と2頁目の代表PNG2枚。全頁PNG・詳細検査は未実施。",
+          "pages": null,
+          "case_guide": "examples/repositories/zhongguose-showcase/README.md",
+          "content_revision": "3b516e106ca63a0e"
+        }
+      ],
+      "derived_skills": [
+        "zhongguose-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "carnot-tech/jinba-consulting-pptx-skill",
@@ -17788,5 +18544,5 @@
       "execution_status": "not_started"
     }
   ],
-  "step_count": 15
+  "step_count": 23
 }

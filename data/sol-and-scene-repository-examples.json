@@ -1,0 +1,79 @@
+[
+  {
+    "id": "and-scene-showcase",
+    "title": "一冊の本が、次の人へ。",
+    "use_case": "架空の交換本棚を、一冊の移動とmorphで提案する共通canvasの8段階",
+    "repository": "Codagent-AI/and-scene",
+    "skill_repository": "Codagent-AI/and-scene",
+    "upstream_commit": "5ce44dff61f181db35b0c98a1cb86c71c7e062cb",
+    "fork_id": "and-scene-ja",
+    "page_count": 8,
+    "page_unit": "段階",
+    "format": "html",
+    "preview_kind": "html",
+    "preview_canvas": {
+      "width": 1600,
+      "height": 900
+    },
+    "design_canvas": {
+      "width": 880,
+      "height": 380
+    },
+    "navigation": "native-runtime-bridge",
+    "preview_notice": "原典React scene kitの共通canvasを進める8段階。同じ一冊が移動・morph。dist/assets/fontsのWeb一式で単独HTMLではありません。TSX Step/payload/SVG/CSSから編集。",
+    "editability": "evolving_scene",
+    "editable_features": [
+      "tsx_text",
+      "step_payload",
+      "svg_entities",
+      "layout_morph",
+      "local_css"
+    ],
+    "style": "指定brand深青・電光青・淡い珊瑚 / Shippori大題名・BIZ本文・Manrope数字 / 原典BYO styles",
+    "cover": "examples/repositories/and-scene-showcase/render/major-01.png",
+    "interior": "examples/repositories/and-scene-showcase/render/major-02.png",
+    "preview": "examples/repositories/and-scene-showcase/dist/index.html",
+    "artifact_download": "downloads/and-scene-example-ja.zip",
+    "source_download": "downloads/and-scene-example-ja.zip",
+    "fork_download": "downloads/and-scene-ja.zip",
+    "input": "examples/repositories/and-scene-showcase/input/BRIEF.md",
+    "input_data": "examples/repositories/and-scene-showcase/input/steps.json",
+    "prompt": "examples/repositories/and-scene-showcase/PROMPT.md",
+    "prompt_text": "# 制作依頼\n\n架空の交換本棚提案「一冊の本が、次の人へ。」8段階。読み手は本棚企画の参加者。題材・スタイル・全stepは指定済みなので、追加質問せず制作する。\n\n原典Codagent-AI/and-scene固定5ce44dff61f181db35b0c98a1cb86c71c7e062cb。空の私有appへ原典bootstrapをscaffoldし、必要npm依存を実install/build。Presentation/Stage/types、Stepテンプレートとregistryを実使用。同じgroupKeyの共通canvasとstable layoutId book/owner/shelf/readerで連続を作る。別々のslide shellに置き換えない。\n\n深青・電光青・淡い珊瑚、余白と一冊の主役。Shippori Minchoの和文題名、BIZ UDPGothic本文/ラベル、Manrope数字。公式未改変TTF/OFLをlocalへ。独自SVGは本・本棚・役割記号・関係線のみ。写真・商標ロゴ・API・料金・人名・住所・営業実績なし。\n\n置く: 1中央大きな一冊、2持ち主→本棚、3棚へ小さく収め名前とひとこと。見つける: 4次の読み手が一冊を見つける、5同じ一冊が読み手の側へ。戻す: 6読み終わったら次へ、7同じ本が本棚へ戻る、8主役の一冊と薄い3つの役割をつなぐ。\n\n原典controller hookへの小さなsame-origin0-based bridge。必要build、主要初回表示と元1→2、短SKILL quick_validateのみ。原典fullverify/inspectの全段階・last/dense/mobileは最新ユーザー確認範囲に合わせ実施しない。制作/スキル2ZIPと2fragmentを完成。\n",
+    "provenance": "examples/repositories/and-scene-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/and-scene-showcase/QA.json",
+    "guide": "examples/repositories/and-scene-showcase/README.md",
+    "titles": [
+      "一冊の本が、次の人へ。",
+      "読み終えた一冊を、本棚へ。",
+      "本の名前と、ひとことを添える。",
+      "次の読み手が、一冊を見つける。",
+      "読みたい本を、持ち帰る。",
+      "読み終えたら、次へつなぐ。",
+      "もう一度、本棚へ。",
+      "一冊を、次の人へ。"
+    ],
+    "notes": [
+      "架空の交換本棚の提案。同じ一冊が、置く・見つける・戻すをつなぎます。",
+      "持ち主から、共通の本棚へ。一冊の位置が変わり、関係が見えてきます。",
+      "本の名前と短いひとことを添える、という参加の案。",
+      "本棚を眺める次の読み手と、同じ一冊をつなぎます。",
+      "本棚の一冊が、次の読み手の側へ移ります。",
+      "読み終わった一冊を、次の人へつなぐことを考えます。",
+      "同じ一冊を共通の本棚へ戻す。交換の輪をもう一度。",
+      "本棚を介して、一冊を次の人へ。料金・住所・営業実績は未設定です。"
+    ],
+    "method": "Original bootstrap scaffold into verified private empty app → actual npm install full required dependencies → original typed Step contract/registry + persistent BookWorld with groupKey and stable layoutIds → original Presentation/Stage/common880×380 canvas → npm run build (tsc -b && vite build). Original usePresentationNav with minimal same-origin0-based adapter.",
+    "sample_notice": "架空の交換本棚の企画。実施/料金/人名/住所/営業実績なし。第三者写真/ロゴ/APIなし。8枚ではなくひとつの共通canvasの8段階。",
+    "status": "light_check_complete",
+    "execution_status": "light_check_complete",
+    "representative_previews": [
+      "examples/repositories/and-scene-showcase/render/major-01.png",
+      "examples/repositories/and-scene-showcase/render/major-02.png"
+    ],
+    "representative_indices": [
+      0,
+      1
+    ]
+  }
+]

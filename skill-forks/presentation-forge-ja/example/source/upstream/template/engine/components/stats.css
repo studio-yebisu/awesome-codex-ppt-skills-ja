@@ -1,0 +1,53 @@
+/*
+ * stats - big key figures, optionally counting up.
+ * @component: stats stat
+ *
+ * <div class="stats">
+ *   <div class="stat">
+ *     <p class="stat__value" data-count>+18%</p>
+ *     <p class="stat__label">revenue, year on year</p>
+ *   </div>
+ * </div>
+ *
+ * data-count (optional) counts the first number up from 0 when the slide
+ * appears (balanced level and up). The real figure stays in the markup.
+ */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 48px;
+  align-items: start;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.slide .stat > * {
+  margin: 0;
+}
+
+.stat__value {
+  font-family: var(--font-serif, inherit);
+  font-size: calc(var(--type-display, 132px) * 0.86);
+  font-weight: 600;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent, currentColor);
+}
+
+.stat__label {
+  font-size: var(--type-small, 26px);
+  line-height: 1.35;
+  color: var(--muted, inherit);
+  max-width: 22ch;
+}
+
+/* a lone stat as the hero of the slide */
+.stat--hero .stat__value {
+  font-size: calc(var(--type-display, 132px) * 1.7);
+}

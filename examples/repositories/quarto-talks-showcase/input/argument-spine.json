@@ -1,0 +1,41 @@
+{
+  "argument": "5点のばらつきを一本の直線で要約できる。ただし線から言える範囲を限定する。",
+  "data": "synthetic, unitless; input/data.csv",
+  "audience": "初学者 / 約5分",
+  "upstream_default_override": "16–24 slides → explicitly requested 6 slides",
+  "select": [
+    {
+      "slide": 1,
+      "class": "ordinary + opening local",
+      "job": "表と問い、合成の明示"
+    },
+    {
+      "slide": 2,
+      "class": "visual",
+      "job": "同じ5点を散布図へ"
+    },
+    {
+      "slide": 3,
+      "class": "math",
+      "job": "y=ax+bと最小二乗の選び方"
+    },
+    {
+      "slide": 4,
+      "class": "code",
+      "job": "6行のコードと実際の係数"
+    },
+    {
+      "slide": 5,
+      "class": "visual",
+      "job": "直線/残差と解釈の限界"
+    },
+    {
+      "slide": 6,
+      "class": "question",
+      "job": "一点を変える次の実験"
+    }
+  ],
+  "design": "原典white #ffffff / blue #315f7d、meaning-first composition; serif heading/sans body/mono code",
+  "automatic_title": "pagetitle metadata + authored first section; suppress extra automatic title slide",
+  "execution": "plain code fence follows original template; compute_fit.py actually executed separately, not a claimed Quarto notebook execution"
+}

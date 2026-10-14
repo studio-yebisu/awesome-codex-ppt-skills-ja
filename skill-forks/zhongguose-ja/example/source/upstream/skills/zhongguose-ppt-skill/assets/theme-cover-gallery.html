@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中国色 PPT · 主题色封面示例</title>
+<!-- zhongguose-ppt-skill 主题色封面示例集 · 【木渡川】制作 · 选色时打开本页供用户预览 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai&family=Noto+Serif+SC:wght@300;400;600&family=Orbitron:wght@500;700&display=swap" rel="stylesheet">
+<style>
+  /* 封面标题本地字体：与模板共用逐稿生成的 WOFF2 子集，OFL-1.1 */
+  @font-face{font-family:"Zhongguose Cover";src:url("./template-zhongguose/assets/fonts/zhongguose-cover.woff2") format("woff2");font-display:swap}
+  :root{
+    --paper:#fafaf8;
+    --grey-text:#3a3a3a;
+    --grey-soft:#6b6b6b;
+    --grey-faint:#9a9a9a;
+    /* 与模板 index.html 一致的字体角色 */
+    --zh-title:"LXGW WenKai","Kaiti SC","STKaiti","KaiTi","楷体","Noto Serif SC","Source Han Serif SC","Songti SC","SimSun","宋体",serif;
+    --zh-cover-title:"Zhongguose Cover","Noto Serif SC","Source Han Serif SC","Songti SC","SimSun","宋体",serif;
+    --zh-body:"一点明体","I.Ming","Noto Serif SC","Source Han Serif SC","Songti SC","SimSun","宋体",serif;
+    --mono:"Orbitron","JetBrains Mono","Consolas",monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--paper);color:var(--grey-text);font-family:var(--zh-body);padding:6vh 6vw 8vh}
+
+  header.page-head{max-width:1240px;margin:0 auto 2.4vh;display:flex;flex-direction:column;gap:1.4vh}
+  .page-head .head-rule{width:64px;height:2px;background:var(--grey-text);opacity:.85}
+  .page-head .k{font-family:var(--mono);font-size:12px;font-weight:500;letter-spacing:.32em;color:var(--grey-soft);text-transform:uppercase}
+  .page-head h1{font-family:var(--zh-cover-title);font-weight:400;font-size:clamp(28px,3vw,46px);letter-spacing:.06em;color:var(--grey-text)}
+  .page-head p{font-size:clamp(14px,1vw,17px);line-height:1.9;color:var(--grey-soft);max-width:52ch;letter-spacing:.03em}
+
+  .divider{max-width:1240px;margin:3.2vh auto 4vh;display:flex;align-items:center;gap:1.4em}
+  .divider::before,.divider::after{content:"";flex:1;height:1px;background:rgba(58,58,58,.16)}
+  .divider span{font-family:var(--mono);font-size:12px;letter-spacing:.3em;color:var(--grey-faint);text-transform:uppercase}
+
+  .gallery{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:5.5vh 3vw}
+  figure.sample{display:flex;flex-direction:column;gap:1.5vh}
+
+  /* ===== 封面小样：对齐模板 P01 三段式（chrome / 眉标+居中主题块 / 底部信息） ===== */
+  .mock{
+    container-type:inline-size;
+    aspect-ratio:16/9;overflow:hidden;position:relative;
+    background:var(--c);color:var(--on);
+    border:1px solid rgba(58,58,58,.1);
+    display:flex;flex-direction:column;
+    padding:4.4cqw 4.6cqw 3.8cqw;
+    background-image:radial-gradient(var(--on-dot) 1px,transparent 1.2px);
+    background-size:24px 24px;
+  }
+  .mock .chrome{display:flex;justify-content:space-between;font-family:var(--mono);font-size:1.9cqw;font-weight:500;letter-spacing:.18em;color:var(--on-soft);text-transform:uppercase}
+  .mock .frame{flex:1;display:grid;grid-template-rows:auto 1fr auto;gap:2.2cqw;margin-top:2.6cqw}
+  .mock .eyebrow{font-family:var(--mono);font-size:1.8cqw;font-weight:500;letter-spacing:.28em;color:var(--on-soft);text-transform:uppercase}
+  .mock .title-block{align-self:center;justify-self:center;display:flex;flex-direction:column;align-items:center;text-align:center;gap:2cqw}
+  .mock h2{font-family:var(--zh-cover-title);font-weight:400;font-size:13cqw;line-height:1;letter-spacing:.04em;color:var(--on)}
+  .mock .sub{font-family:var(--zh-body);font-size:2.5cqw;letter-spacing:.08em;color:var(--on-soft)}
+  .mock .bottom{border-top:1px solid var(--on-line);padding-top:1.8cqw;display:flex;flex-direction:column;gap:.9cqw}
+  .mock .bottom .note-zh{font-family:var(--zh-body);font-size:2.1cqw;letter-spacing:.06em;color:var(--on-soft)}
+  .mock .bottom .note-en{font-family:var(--mono);font-size:1.8cqw;font-weight:500;letter-spacing:.16em;color:var(--on-soft);text-transform:uppercase}
+
+  figcaption{display:flex;align-items:baseline;gap:1em;flex-wrap:wrap}
+  figcaption .swatch{width:14px;height:14px;background:var(--c);border:1px solid rgba(58,58,58,.18);align-self:center}
+  figcaption strong{font-family:var(--zh-cover-title);font-size:clamp(18px,1.35vw,23px);font-weight:400;letter-spacing:.06em;color:var(--grey-text)}
+  figcaption code{font-family:var(--mono);font-size:12px;letter-spacing:.1em;color:var(--grey-soft)}
+  figcaption .note{font-family:var(--zh-body);font-size:13px;color:var(--grey-faint);letter-spacing:.04em}
+  figcaption .badge{font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.2em;background:var(--grey-text);color:#fafaf8;padding:3px 9px}
+
+  footer.page-foot{max-width:1240px;margin:7vh auto 0;display:flex;align-items:center;gap:1.4em;font-family:var(--zh-body);font-size:12px;color:var(--grey-faint);letter-spacing:.08em}
+  footer.page-foot::before{content:"";width:28px;height:1px;background:rgba(58,58,58,.3)}
+</style>
+</head>
+<body>
+
+<header class="page-head">
+  <div class="head-rule"></div>
+  <div class="k">ZHONGGUOSE · THEME COLOR GALLERY</div>
+  <h1>主题色封面示例</h1>
+  <p>每份 deck 只用一种主题色，经 <code>--accent</code> 全局应用。六色封面预览如下：浅色配深灰墨字，深色配白字，示例即真实效果。选定后告知色名即可，默认飞泉绿。</p>
+</header>
+
+<div class="divider"><span>SIX THEME COLORS · 可选六色</span></div>
+
+<div id="app" class="gallery"></div>
+
+<!-- Declarative source for both the gallery renderer and the static font subsetter. -->
+<div id="color-data" hidden aria-hidden="true">
+  <span data-cover-font-text="飞泉绿" data-hex="#497568" data-on="white" data-note="沉静青绿" data-badge="DEFAULT"></span>
+  <span data-cover-font-text="藕丝秋" data-hex="#D9C6B3" data-on="ink" data-note="浅暖茶色"></span>
+  <span data-cover-font-text="湘蓝" data-hex="#4A76A8" data-on="white" data-note="沉稳青蓝"></span>
+  <span data-cover-font-text="绛缨" data-hex="#9E3B3B" data-on="white" data-note="深绛红"></span>
+  <span data-cover-font-text="鸦黄" data-hex="#E6C24D" data-on="ink" data-note="明亮秋黄"></span>
+  <span data-cover-font-text="山岚" data-hex="#B2C9B2" data-on="ink" data-note="雾霭青绿"></span>
+</div>
+
+<footer class="page-foot">zhongguose-ppt-skill · 主题色表见 references/visual-system.md · 新增主题色时在本页 #color-data 中补一行</footer>
+
+<script>
+const INK = '#2e2e2e';   /* 深灰墨色，不用纯黑 */
+const WHITE = '#ffffff';
+
+const COLORS = Array.from(document.querySelectorAll('#color-data [data-cover-font-text]'), function(node){
+  return {
+    name: node.dataset.coverFontText,
+    hex: node.dataset.hex,
+    on: node.dataset.on,
+    note: node.dataset.note,
+    badge: node.dataset.badge || ''
+  };
+});
+
+function vars(item){
+  if (item.on === 'white'){
+    return '--c:' + item.hex + ';--on:' + WHITE + ';--on-soft:rgba(255,255,255,.76);--on-line:rgba(255,255,255,.3);--on-dot:rgba(255,255,255,.13)';
+  }
+  return '--c:' + item.hex + ';--on:' + INK + ';--on-soft:rgba(46,46,46,.66);--on-line:rgba(46,46,46,.28);--on-dot:rgba(46,46,46,.11)';
+}
+
+const app = document.getElementById('app');
+COLORS.forEach(function(item){
+  const onNote = item.on === 'white' ? '白字' : '深灰字';
+  const fig = document.createElement('figure');
+  fig.className = 'sample';
+  fig.innerHTML =
+    '<div class="mock" style="' + vars(item) + '">' +
+      '<div class="chrome"><span>种子模板 · Template Seed</span><span>01 / 10</span></div>' +
+      '<div class="frame">' +
+        '<div class="eyebrow">ZHONGGUOSE · LOGIC-FIRST · HTML DECK</div>' +
+        '<div class="title-block">' +
+          '<h2>' + item.name + '</h2>' +
+          '<div class="sub">把定稿 Markdown 文稿，变成逻辑优先的 16:9 HTML 演示。</div>' +
+        '</div>' +
+        '<div class="bottom">' +
+          '<div class="note-zh">此页为主题色封面示例，所有文案均需按源文稿替换。</div>' +
+          '<div class="note-en">Theme · ' + item.name + ' ' + item.hex + '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+    '<figcaption><span class="swatch" style="--c:' + item.hex + '"></span>' +
+    '<strong>' + item.name + '</strong><code>' + item.hex + '</code>' +
+    '<span class="note">' + item.note + ' · ' + onNote + '</span>' +
+    (item.badge ? '<span class="badge">' + item.badge + '</span>' : '') +
+    '</figcaption>';
+  app.appendChild(fig);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+[
+  {
+    "repository": "Codagent-AI/and-scene",
+    "summary_ja": "原典React scene kitを実scaffold/buildし、同じ一冊が移動・縮小・戻る日本語8段階のWeb提案を作る。",
+    "example_ids": [
+      "and-scene-showcase"
+    ],
+    "upstream_commit": "5ce44dff61f181db35b0c98a1cb86c71c7e062cb",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/and-scene-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/and-scene-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Node.js/npm（今回Node24.18.0、versionはPROVENANCE）",
+      "原典runtime React/React-DOM/Motion/Lucideと元dev/build依存を実install、固定解決package-lock.json",
+      "公式Shippori Mincho/BIZ UDPGothic/Manrope未改変TTF/OFL"
+    ],
+    "commands": [
+      "app/で npm ci",
+      "npm run build",
+      "python -m http.server 8000 --bind 127.0.0.1 --directory dist",
+      "ブラウザでindex.html、元next/prev/→/←キー"
+    ],
+    "guide": "examples/repositories/and-scene-showcase/README.md",
+    "source_download": "downloads/and-scene-example-ja.zip",
+    "fork_download": "downloads/and-scene-ja.zip",
+    "limitations": [
+      "1つの共通canvasの8 Stepで、独立した8枚ではない。元modelにないscene_countを付けない。",
+      "Web一式、単独HTMLではない。PPTX/PDFは原典対象外で未生成。",
+      "実install/build/初回主要表示/元1→2/代表2PNG/shortSKILL quick_validateのみ。fullverify/全段階/last/dense/mobile/独立レビュー/ZIP再実行なし。"
+    ]
+  }
+]

@@ -1,0 +1,37 @@
+[
+  {
+    "repository": "alfredo-hs/quarto-talks",
+    "summary_ja": "原典QMDとQuarto拡張の意味クラスで、日本語6枚・実最小二乗計算をReveal HTMLへrenderする。",
+    "example_ids": [
+      "quarto-talks-showcase"
+    ],
+    "upstream_commit": "60f69c3568181898767470382d5599d4bb86b7b6",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/quarto-talks-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/quarto-talks-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Quarto>=1.4 / 今回公式portable1.9.38 (CLIバイナリは非同梱)",
+      "Python3 + NumPy/Matplotlib (今回2.5.4/3.11.2)",
+      "Shippori Mincho/BIZ UDPGothic/JetBrains Mono公式未改変TTFとOFL"
+    ],
+    "commands": [
+      "python source/compute_fit.py",
+      "quarto render talk.qmd",
+      "index.htmlをブラウザで開く（→/←キー）"
+    ],
+    "guide": "examples/repositories/quarto-talks-showcase/README.md",
+    "source_download": "downloads/quarto-talks-example-ja.zip",
+    "fork_download": "downloads/quarto-talks-ja.zip",
+    "limitations": [
+      "合成5点・単位なし。現実の予測精度・因果・研究成果は示さない。",
+      "PPTX/PDFなし。本文/式/表はQMD、図は計算Python/SVGから編集。",
+      "実計算/render/初回主要表示/元1→2/short SKILL quick_validateだけ。全頁詳細検査/独立レビュー/ZIP再実行なし。",
+      "非致命的Quarto SCSS CSS-variable export warningをログへ保持。原典CSSを生成して主要表示を確認。"
+    ]
+  }
+]

@@ -1,0 +1,103 @@
+/*
+ * steps - a process or a flow: boxes joined by arrows (2 to 5 steps).
+ * @component: steps
+ *
+ * <ol class="steps">
+ *   <li><h3>Write</h3><p>One HTML file per slide.</p></li>
+ *   <li><h3>Build</h3><p>One command.</p></li>
+ *   <li class="is-highlight"><h3>Share</h3><p>One file.</p></li>
+ * </ol>
+ *
+ * Add .steps--numbered for 1, 2, 3 badges. A <i data-icon> as the first child
+ * of a step becomes its icon. The steps appear one after the other.
+ */
+
+.steps {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  align-items: stretch;
+  gap: 72px;
+  counter-reset: pf-step;
+}
+
+.steps > li {
+  position: relative;
+  flex: 1 1 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 36px 32px;
+  border-radius: 20px;
+  border: 1px solid var(--rule, rgba(127, 127, 127, 0.25));
+  background: var(--bg-soft, rgba(127, 127, 127, 0.06));
+  counter-increment: pf-step;
+}
+
+.slide .steps > li,
+.slide .steps > li > * {
+  margin: 0;
+}
+
+.steps > li.is-highlight {
+  border-color: var(--accent, #5b8bd0);
+  box-shadow: 0 0 0 1px var(--accent, #5b8bd0), 0 24px 60px -30px var(--accent, #5b8bd0);
+}
+
+/* the arrow into every step but the first */
+.steps > li + li::before {
+  content: "";
+  position: absolute;
+  left: -52px;
+  top: 50%;
+  width: 30px;
+  height: 30px;
+  margin-top: -15px;
+  background: var(--accent-soft, #7da8d8);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M4 12h15M13 6l6 6-6 6'/%3E%3C/svg%3E") center / contain no-repeat;
+}
+
+.steps--numbered > li::after {
+  content: counter(pf-step);
+  order: -1;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--bg, #fff);
+  background: var(--accent, #5b8bd0);
+}
+
+.steps h3 {
+  font-size: calc(var(--type-body, 30px) * 1.1);
+  font-weight: 600;
+  line-height: 1.2;
+  color: var(--ink, inherit);
+}
+
+.steps p {
+  font-size: var(--type-small, 26px);
+  line-height: 1.4;
+  color: var(--muted, inherit);
+}
+
+.steps > li > i[data-icon]:first-child {
+  font-size: 44px;
+  color: var(--accent, inherit);
+}
+
+/* ---- motion: one step after the other ---- */
+
+.steps > :nth-child(2) { --pf-i: 1; }
+.steps > :nth-child(3) { --pf-i: 2; }
+.steps > :nth-child(4) { --pf-i: 3; }
+.steps > :nth-child(n+5) { --pf-i: 4; }
+
+.pf-canvas:not([data-dir="prev"]) > [data-active] .steps > li:not(.fragment) {
+  animation: pf-rise var(--pf-dur, 0.6s) var(--pf-ease, ease) backwards;
+  animation-delay: calc(var(--delay, 0s) + var(--pf-i, 0) * var(--pf-step, 90ms) * 2.5);
+}
