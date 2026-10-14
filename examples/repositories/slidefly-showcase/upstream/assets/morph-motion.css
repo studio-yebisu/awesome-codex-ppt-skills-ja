@@ -1,0 +1,95 @@
+/* ===========================================================
+   MORPH-SLIDES MOTION: effects named by the VERB the content
+   says (grow, draw, sort, gather, warn, stamp...). Load after
+   morph-layouts.css. Guide: references/hieu-ung-va-so-do.md
+   Rules:
+   - final look = the element's normal style, so frozen
+     screenshots and deck.audit() see the finished slide;
+   - an effect plays when its slide is active and it is not
+     waiting for a click (.pending, set by morph-steps.js);
+   - --d = extra delay in seconds. Inside a [data-step] block
+     delays count from the click, not from the slide change.
+   =========================================================== */
+/* shared tokens for motion + diagrams; a style may override any of them */
+:where(.deck-stage) {
+  --viz-ink: var(--fg); --viz-paper: var(--bg); --viz-muted: var(--muted);
+  --viz-hot: #E5484D;   /* wrong, missing, about to break */
+  --viz-fill: color-mix(in srgb, var(--fg) 8%, transparent);
+  --viz-faint: color-mix(in srgb, var(--fg) 20%, transparent);
+  --viz-mono: var(--font-mono, ui-monospace, Consolas, monospace);
+}
+[data-step] { --t0: 0s; }
+
+/* ---------- entrances ---------- */
+.fx { opacity: 0; transition: opacity .5s ease, transform .9s var(--morph-ease), clip-path .9s ease, filter .7s ease; }
+.slide.active .fx:not(.pending, .pending .fx) {
+  opacity: 1; transform: rotate(var(--rot, 0deg)); clip-path: inset(-400px); filter: none;
+  transition-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s);
+}
+.fx-up    { transform: translateY(50px); }
+.fx-left  { transform: translateX(-120px); }
+.fx-right { transform: translateX(120px); }
+.fx-pop   { transform: scale(.5); }
+.fx-blur  { filter: blur(16px); transform: scale(1.06); }
+.fx-from  { transform: var(--from); }                       /* fly in from a named spot (sorting) */
+.fx-drop  { transform: translateY(-260px) rotate(-8deg); }    /* falls with a bounce */
+.slide.active :is(.fx-pop, .fx-drop):not(.pending, .pending .fx) { transition-timing-function: ease, cubic-bezier(.34, 1.56, .64, 1), ease, ease; }
+.fx-growx { opacity: 1; clip-path: inset(0 100% 0 0); transition: clip-path .9s var(--morph-ease); }   /* grow / stretch */
+.fx-growy { opacity: 1; clip-path: inset(100% 0 0 0); transition: clip-path 1s var(--morph-ease); }
+.fx-type  { opacity: 1; clip-path: inset(0 100% 0 0); transition: clip-path 1s steps(30, end); }
+
+/* containers that wait for a click (no .fx of their own) */
+[data-step]:not(.fx) { transition: opacity .4s ease; }
+[data-step].pending:not(.fx, .keep) { opacity: 0; }
+
+/* ---------- draw: SVG strokes (give the shape pathLength="1") ---------- */
+.draw { stroke-dasharray: 1; stroke-dashoffset: 1; transition: stroke-dashoffset 1.3s cubic-bezier(.6, 0, .2, 1); }
+.slide.active .draw:not(.pending, .pending .draw) { stroke-dashoffset: 0; transition-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s); }
+
+/* ---------- count: numbers run up to --to ---------- */
+@property --n { syntax: '<integer>'; inherits: false; initial-value: 0; }
+.count { --n: 0; counter-reset: n var(--n); transition: --n 1.6s cubic-bezier(.2, .7, .2, 1); }
+.count::before { content: counter(n); }
+.slide.active .count:not(.pending, .pending .count) { --n: var(--to); transition-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s); }
+
+/* ---------- stamp: slams down and settles ---------- */
+@keyframes sf-slam {
+  0%   { opacity: 0; transform: rotate(var(--rot, -8deg)) scale(2.6); }
+  65%  { opacity: 1; transform: rotate(var(--rot, -8deg)) scale(.9); }
+  100% { opacity: 1; transform: rotate(var(--rot, -8deg)) scale(1); }
+}
+.slam { transform: rotate(var(--rot, -8deg)); }
+.slide:not(.active) .slam, .slam.pending { opacity: 0; }
+.slide.active .slam:not(.pending, .pending .slam) { animation: sf-slam .7s ease-out both; animation-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s); }
+
+/* ---------- warn: shake twice after appearing ---------- */
+@keyframes sf-shake { 0%, 100% { translate: 0; } 20%, 60% { translate: -9px 0; } 40%, 80% { translate: 9px 0; } }
+.slide.active .shake:not(.pending, .pending .shake) { animation: sf-shake .45s ease 2; animation-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s + .5s); }
+
+/* ---------- strike: a line crosses the element out ---------- */
+.strike { position: relative; }
+.strike::after { content: ""; position: absolute; left: -4%; right: -4%; top: 52%; height: 4px; background: var(--viz-hot); transform: scaleX(0); transform-origin: left; transition: transform .45s ease; }
+.slide.active .strike:not(.pending, .pending .strike)::after { transform: scaleX(1); transition-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s); }
+
+/* ---------- ping: a ring keeps calling attention ---------- */
+@keyframes sf-ping { from { transform: scale(.6); opacity: .9; } to { transform: scale(1.9); opacity: 0; } }
+.ping { position: relative; }
+.ping::after { content: ""; position: absolute; inset: 0; border: 2px solid currentColor; border-radius: inherit; opacity: 0; }
+.slide.active .ping:not(.pending, .pending .ping)::after { animation: sf-ping 1.6s ease-out infinite; animation-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s); }
+
+/* ---------- travel: a dot runs along an offset-path forever ---------- */
+@keyframes sf-travel { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+.travel { offset-rotate: 0deg; opacity: 0; }
+.slide.active .travel:not(.pending, .pending .travel) { opacity: 1; animation: sf-travel var(--dur, 4s) linear infinite; animation-delay: calc(var(--reveal-base) + var(--d, 0) * 1s); transition: opacity .3s ease calc(var(--reveal-base) + var(--d, 0) * 1s); }
+
+/* ---------- gather: pieces fly to one point when their step comes ---------- */
+.gather { transition: transform .9s cubic-bezier(.7, 0, .2, 1), opacity .4s ease; transition-delay: calc(var(--i, 0) * .03s); }
+.slide.active [data-step]:not(.pending) .gather { transform: var(--to); opacity: 0; transition-delay: calc(var(--i, 0) * .03s), calc(.6s + var(--i, 0) * .03s); }
+
+@media (prefers-reduced-motion: reduce) {
+  .fx, .fx-growx, .fx-growy, .fx-type, .draw, .gather { transition-duration: .3s !important; }
+  .travel { animation: none !important; }
+}
+
+/* deck.audit() measures every slide finished, all steps shown */
+.deck-stage.auditing :is(.fx, .pending) { opacity: 1 !important; transform: rotate(var(--rot, 0deg)); clip-path: none; filter: none; transition: none; }

@@ -1,0 +1,43 @@
+/* ===========================================================
+   MORPH-SLIDES BRAND: one logo that lives on the stage, not on a
+   slide, and flies between poses like an actor:
+   hero (cover, closing) = big and centred at the top,
+   corner (inner slides) = small in the top-right corner,
+   hide (quote, photo)   = slides up out of the frame.
+   Markup, inside .deck-stage and before the first slide:
+     <div class="brand"><i class="ico" data-icon="leaf"></i><span class="brand-name">Tên</span></div>
+   or a logo file: <div class="brand"><img src="logo.svg" alt="Tên"></div>
+   One slide picks another pose with data-brand="hero|corner|hide".
+   A style or deck moves the poses with the --brand-* variables.
+   =========================================================== */
+.deck-stage {
+  /* a = anchor: -50% centres the logo on x, -100% puts its right edge on x */
+  --brand-hero-x: 960px;    --brand-hero-y: 84px;   --brand-hero-s: 1;    --brand-hero-a: -50%;
+  --brand-corner-x: 1840px; --brand-corner-y: 34px; --brand-corner-s: .4; --brand-corner-a: -100%;
+}
+.brand {
+  --bx: var(--brand-corner-x); --by: var(--brand-corner-y); --bs: var(--brand-corner-s); --ba: var(--brand-corner-a); --bo: 1;
+  position: absolute; left: 0; top: 0; z-index: 30;
+  display: flex; align-items: center; gap: 24px; height: 120px; white-space: nowrap;
+  color: var(--brand-color, var(--accent)); pointer-events: none;
+  font: var(--title-weight, 800) 52px/1 var(--font-display, var(--font-body)); letter-spacing: -.01em;
+  transform-origin: 0 0;
+  transform: translate(var(--bx), var(--by)) translateX(calc(var(--ba) * var(--bs))) scale(var(--bs));
+  opacity: var(--bo);
+  transition: transform var(--morph-dur) var(--morph-ease), opacity var(--morph-dur) var(--morph-ease);
+}
+.brand .ico { font-size: 120px; --ico-stroke: 1.4; }
+.brand img, .brand svg { height: 120px; width: auto; }
+.brand-name { color: var(--brand-name-color, var(--fg)); }
+
+/* poses: the layout decides, a slide's data-brand has the last word */
+.deck-stage:not([data-layout]) .brand { --by: -200px; --bo: 0; }
+.deck-stage:is([data-layout="cover"], [data-layout="closing"]) .brand,
+.deck-stage[data-brand="hero"] .brand {
+  --bx: var(--brand-hero-x); --by: var(--brand-hero-y); --bs: var(--brand-hero-s); --ba: var(--brand-hero-a);
+}
+.deck-stage[data-brand="corner"] .brand {
+  --bx: var(--brand-corner-x); --by: var(--brand-corner-y); --bs: var(--brand-corner-s); --ba: var(--brand-corner-a);
+}
+.deck-stage:is([data-layout="quote"], [data-layout="photo"]):not([data-brand="hero"], [data-brand="corner"]) .brand,
+.deck-stage[data-brand="hide"] .brand { --by: -200px; --bo: 0; }

@@ -13,6 +13,8 @@ SELECTION = [
     ('SlideSpeak/slide-design-skill','自分のブランドをWeb資料へ','editorial','slidespeak-showcase','原典エンジンへ独自の書体・色・版式を渡して、緑の誌面を組む。'),
     ('liustack/pptwise','図解から組む編集できる企画書','diagram','pptwise-showcase','原典CLIの図形と構成を使い、拠点の関係を編集できるPPTXへ。'),
     ('Aham-AIAPP/aham-ppt','短い図解で伝えるワークショップ','diagram','aham-showcase','原典の固定版式で、行程や段階を編集できる図解資料へ。'),
+    ('mpuig/agent-slides','企画を一枚で伝えるPowerPoint','work','agent-slides-showcase','原典CLIの文字と図形で、行程と関係図を一枚の企画書に。'),
+    ('andyluu98/slidefly','図形がつながるモーション資料','motion','slidefly-showcase','原典Morphエンジンで、同じ図形が動いて話をつなぐ。'),
     ('op7418/guizang-ppt-skill','雑誌とSwissのレイアウト','editorial','port-town','原典テンプレートで、企画を余白とグリッドに落とし込む。'),
     ('crazyykhllc-bit/CyberPPT','情報を整理するPPTX','work','cyberppt','原典の内容設計を活かし、文字と図形を編集できる資料へ。'),
     ('gongnyang/awesome-html-scrolline-deck','スクロールで語る企画','motion','html-scrolline','横断する図形と流れで、体験を一つのストーリーに。'),
@@ -50,7 +52,7 @@ def skill_text(entry,profile,case):
                       'PowerPointは受け手の書体環境を案内し、主要な完成ファイルが開くことを確認する。')
     text=text.replace('原典の方式で実ファイルを生成し、全ページの本文、グラフ、図、ノート、移動を確認する。',
                       '原典の方式で実ファイルを生成し、主要な出力の初回表示を確認する。原典の必須ビルド確認は維持し、明白な欠けだけ直す。')
-    repo=entry['repository'];commit=profile['upstream_commit']
+    repo=entry['repository'];commit=case.get('upstream_commit') or profile['upstream_commit']
     notes=profile.get('recipe_notes',[])
     specific=('\n\n## この方式で気をつけること\n\n'+
               '\n'.join('- '+note for note in notes)) if notes else ''
@@ -87,8 +89,17 @@ if __name__=='__main__':
         (ROOT/entry['skill_download']).write_text(skill_text(entry,profile,case),encoding='utf-8')
         entries.append(entry)
     active_case_ids=[e['featured_case_id'] for e in entries]
-    dump('data/product-collection.json',{'updated_at':'2026-10-14','title':'Studio Yebisu AIスライドアトリエ','policy':'原典方式で制作した実例から選ぶ日本語の厳選スキル集','archive':'data/skills.json','entries':entries,'active_case_ids':active_case_ids,'excluded':exclusions})
+    by_repo={entry['repository']:entry for entry in entries}
+    case_recipes={}
+    for case in cases:
+        entry=by_repo.get(case['repository'])
+        if not entry:continue
+        source='skill-forks/'+case['fork_id']+'/SKILL.md'
+        download='downloads/skills/'+case['fork_id']+'.md'
+        (ROOT/download).write_text(skill_text(entry,profiles[case['repository']],case),encoding='utf-8')
+        case_recipes[case['id']]={'skill_download':download,'skill_source':source,'skill_source_sha256':hashlib.sha256((ROOT/source).read_bytes()).hexdigest(),'fork_download':case.get('fork_download'),'source_download':case.get('source_download'),'upstream_commit':case.get('upstream_commit') or profiles[case['repository']]['upstream_commit']}
+    dump('data/product-collection.json',{'updated_at':'2026-10-14','title':'Studio Yebisu AIスライドアトリエ','policy':'原典方式で制作した実例から選ぶ日本語の厳選スキル集','archive':'data/skills.json','entries':entries,'active_case_ids':active_case_ids,'case_recipes':case_recipes,'excluded':exclusions})
     with ZipFile(ROOT/'downloads/yebisu-japanese-skill-entries.zip','w',ZIP_DEFLATED) as z:
-        for e in entries:z.write(ROOT/e['skill_download'],Path(e['skill_download']).name)
+        for download in sorted({r['skill_download'] for r in case_recipes.values()}):z.write(ROOT/download,Path(download).name)
         z.writestr('README.md','日本語の指示本文集です。各本文の固定原典と個別ライセンスを参照してください。実装・原文LICENSEはサイトの一式ZIPから別途取得できます。\n')
-    print(f'{len(entries)} curated skills and direct Markdown downloads built')
+    print(f'{len(entries)} curated skills, {len(case_recipes)} linked cases and {len(set(r["skill_download"] for r in case_recipes.values()))} direct Markdown files built')

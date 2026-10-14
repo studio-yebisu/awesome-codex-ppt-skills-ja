@@ -25,7 +25,7 @@ for name in fork_names:
     for pin in pins:
         if pin["repository"]==source["repository"]:pin["generated_case_ids"]=case_ids
 for c in cases:
-    for key in ["artifact_download","source_download","pdf_download"]:
+    for key in ["artifact_download","source_download","pdf_download","pptx_download"]:
         value=c.get(key)
         if value and not any(r["file"]==value for r in records):
             path=ROOT/value

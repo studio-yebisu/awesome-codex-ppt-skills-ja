@@ -1,7 +1,7 @@
 {
   "catalog_count": 209,
-  "case_count": 44,
-  "slide_count": 262,
+  "case_count": 46,
+  "slide_count": 269,
   "history": {
     "withdrawn_examples": "data/actual-examples.json",
     "included_in_current_counts": false
@@ -6942,11 +6942,54 @@
         }
       ],
       "upstream_commit": "820782a5fb8cb8f251d7c0750e4299c321cd068c",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "agent-slides-showcase",
+          "title": "土曜日を、街の作業場に。",
+          "use_case": "1枚のワークショップ企画書",
+          "repository": "mpuig/agent-slides",
+          "skill_repository": "mpuig/agent-slides",
+          "upstream_commit": "820782a5fb8cb8f251d7c0750e4299c321cd068c",
+          "fork_id": "agent-slides-ja",
+          "page_count": 1,
+          "format": "pptx",
+          "preview_kind": "powerpoint-render",
+          "style": "紺・橙・白 / 大和文 / split-panel timeline・関係図",
+          "cover": "examples/repositories/agent-slides-showcase/render/slide-01.png",
+          "interior": "examples/repositories/agent-slides-showcase/render/slide-01.png",
+          "preview": "examples/repositories/agent-slides-showcase/index.html",
+          "artifact_download": "examples/repositories/agent-slides-showcase/deck.pptx",
+          "pdf_download": "examples/repositories/agent-slides-showcase/render/deck.pdf",
+          "source_download": "downloads/agent-slides-example-ja.zip",
+          "fork_download": "downloads/agent-slides-ja.zip",
+          "input": "examples/repositories/agent-slides-showcase/input/BRIEF.md",
+          "input_data": "examples/repositories/agent-slides-showcase/input/slides.json",
+          "prompt": "examples/repositories/agent-slides-showcase/PROMPT.txt",
+          "prompt_text": "架空の一日ワークショップ企画「土曜日を、街の作業場に。」を、企画の意図がすぐ伝わる完成1枚のネイティブ編集可能なPowerPointにしてください。紺、鮮やかな橙、白。巨大な日本語見出し、短い企画の約束、仮の一日の流れ、人・道具・街と場の関係図を組みます。原典mpuig/agent-slidesのtemplate extract→preflight→plan+ops→dry-run→render CLIを実際に使い、別の汎用rendererへ名前を貼らないでください。自作の空16:9コンテナを元extractで契約化し、表示要素は元operationで生成。1枚指定を優先して表紙・免責・終頁を追加しない。日時・人数・会場・参加条件は未定、行程は仮案と表示し、実績を捏造しない。全ページ検査やZIP再実行は不要。入力、依頼文、原典source/license、短い日本語SKILL、PPTX、PNG/PDF、2ZIPを完成させてください。",
+          "provenance": "examples/repositories/agent-slides-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/agent-slides-showcase/QA.json",
+          "guide": "repository.html?repo=mpuig/agent-slides",
+          "titles": [
+            "土曜日を、街の作業場に。"
+          ],
+          "notes": [
+            "架空の一日ワークショップ企画。原典の1枚企画書として生成。午前10時・正午・午後3時は仮の行程案で開催実績や確定予定ではない。開催日時、人数、会場、材料、安全管理、参加条件は未定。右の関係図は、人・道具・街が場に関わる概念で、時系列や相互契約を意味しない。"
+          ],
+          "method": "原典extract→preflight→plan+ops dry-run/render CLIで、全表示要素をnative ops生成した独立1ページ。",
+          "sample_notice": "架空の企画。行程は仮、日時・人数・会場・参加条件は未定。",
+          "pages": [
+            "examples/repositories/agent-slides-showcase/render/slide-01.png"
+          ],
+          "case_guide": "examples/repositories/agent-slides-showcase/README.md",
+          "content_revision": "c4af8ce9d06bbc21"
+        }
+      ],
+      "derived_skills": [
+        "agent-slides-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "zsc58/ustc-ppt-template",
@@ -12583,27 +12626,112 @@
       "license_checked_at": "2026-10-13T13:35:27.273008+00:00",
       "license_evidence": [
         {
-          "path": "README.md",
-          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/README.md",
-          "bytes": 12869
+          "path": "skill/slidefly/SKILL.md",
+          "sha256": "35d48d7694d9cdaadd58f1574fcda0d0dbb370011424b04baf986f6ea9af779c",
+          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/SKILL.md"
         },
         {
-          "path": "skill/slidefly/SKILL.md",
-          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/SKILL.md",
-          "bytes": 13552
+          "path": "skill/slidefly/assets/morph-engine.js",
+          "sha256": "30f814cbfb3bcaf5d3d0c9245c64315b120974a84b82a39c2686278ffac5ac2f",
+          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-engine.js"
+        },
+        {
+          "path": "skill/slidefly/assets/morph-nav.js",
+          "sha256": "278b79e250c76b56d23ddfba5513e32719f8dc96c158bb6a1188f2f13fcd5b94",
+          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-nav.js"
+        },
+        {
+          "path": "skill/slidefly/assets/morph-frames.js",
+          "sha256": "2a26fe0751fed353a2d46aaa469dfcea91cc51248690d7e75cae1233ba4569d1",
+          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-frames.js"
+        },
+        {
+          "path": "skill/slidefly/scripts/inline-assets.py",
+          "sha256": "d40716d4c7334d3de4c23dea48a8320c0e29968eea3bcad1f6b7f7cd72806715",
+          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/scripts/inline-assets.py"
+        },
+        {
+          "path": "skill/slidefly/scripts/export-pptx.py",
+          "sha256": "b803a015a6da25993736c46baeb7988b857c2067f1d4a0c75e378f90aa0254b5",
+          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/scripts/export-pptx.py"
         },
         {
           "path": "LICENSE",
-          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/LICENSE",
-          "bytes": 1066
+          "sha256": "d943d2afe8e8d109dea3f90969f86225a6b6fba8b5afe1398fd6a821d24f15e7",
+          "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/LICENSE"
         }
       ],
       "upstream_commit": "7de466df3f2e0199c4939ccbe4490688d4165fa3",
-      "examples": [],
-      "derived_skills": [],
-      "generation_status": "not_generated_here",
-      "license_status": "not_manually_reviewed",
-      "execution_status": "not_started"
+      "examples": [
+        {
+          "id": "slidefly-showcase",
+          "title": "街を歩く、寄り道を選ぶ。",
+          "repository": "andyluu98/slidefly",
+          "skill_repository": "andyluu98/slidefly",
+          "upstream_commit": "7de466df3f2e0199c4939ccbe4490688d4165fa3",
+          "fork_id": "slidefly-ja",
+          "page_count": 6,
+          "format": "html",
+          "preview_kind": "html",
+          "preview_notice": "Webの図形移動と変形を再生 / PowerPoint版は文字と図形を編集できます。PowerPoint内のMorph再生は未確認です。",
+          "preview_canvas": {
+            "width": 1920,
+            "height": 1080
+          },
+          "style": "暖かな紙 × 朱橙 × 深緑 / 持続actorの6pose",
+          "use_case": "架空の散歩企画・Morph状プレゼン",
+          "preview": "examples/repositories/slidefly-showcase/index.html",
+          "cover": "examples/repositories/slidefly-showcase/render/slide-01.png",
+          "interior": "examples/repositories/slidefly-showcase/render/slide-03.png",
+          "artifact_download": "downloads/slidefly-example-ja.zip",
+          "source_download": "downloads/slidefly-example-ja.zip",
+          "fork_download": "downloads/slidefly-ja.zip",
+          "pptx_download": "examples/repositories/slidefly-showcase/deck.pptx",
+          "input": "examples/repositories/slidefly-showcase/input/BRIEF.md",
+          "input_data": "examples/repositories/slidefly-showcase/input/data.json",
+          "prompt": "examples/repositories/slidefly-showcase/PROMPT.txt",
+          "prompt_text": "SlideFlyの原典morph-engine/nav/frames/free-layoutとinline-assets.pyを使い、日本語6枚「街を歩く、寄り道を選ぶ。」を制作。架空の散歩企画で実在地点・営業情報・天気・実績は主張しない。同じnamed actorの旅人・道・目印が6poseで動き、道の分岐はSVGで説明。暖かな紙・朱橙・深緑、大きな和文とSpace Groteskの英数字。日本語は意味の切れ目で明示改行。カード反復なし。原典の標準Python export-pptxで文字/actor編集とMorph設定を作り、実再生を確かめた範囲と区別する。",
+          "provenance": "examples/repositories/slidefly-showcase/PROVENANCE.json",
+          "qa": "examples/repositories/slidefly-showcase/QA.json",
+          "guide": "repository.html?repo=andyluu98/slidefly",
+          "titles": [
+            "街を歩く、寄り道を選ぶ。",
+            "目的地を、\nひとつ減らす。",
+            "曲がる理由は、\n気分でいい。",
+            "立ち止まる場所も、\n予定のひとつ。",
+            "帰り道には、\n違う曲がり角。",
+            "歩いたあとに、\n次の寄り道を。"
+          ],
+          "notes": [
+            "架空の散歩企画。地図・道の位置は説明用の創作です。",
+            "行きたい場所を詰め込む前に、一つだけ選ぶ案です。距離や所要時間を保証するものではありません。",
+            "明るい通りか静かな道か、気分で選ぶ分岐の例。実在地点の道案内ではありません。",
+            "途中で立ち止まりたい場所を選ぶ案です。ベンチの設置や営業時間の情報ではありません。",
+            "行きと違う曲がり角を選ぶ、という余地を残します。通行の可否や安全を確認した地図ではありません。",
+            "見つけたことを一言残して、次の散歩の選択肢にする提案です。効果の実績ではありません。"
+          ],
+          "sample_notice": "架空企画。道の位置は創作、実在地点・営業時間・天気・実績ではありません。",
+          "method": "Original morph-engine/nav/frames/free-layout and inline-assets/export-pptx; custom actors/poses.",
+          "navigation": "native-runtime-bridge",
+          "editability": "HTML; native PPTX text/actor shapes, vector SVG artwork",
+          "status": "light_check_complete",
+          "execution_status": "light_check_complete",
+          "representative_previews": [
+            "examples/repositories/slidefly-showcase/render/slide-01.png",
+            "examples/repositories/slidefly-showcase/render/slide-03.png"
+          ],
+          "preview_image_notice": "HTML全6枚をposeごとにPNG化。代表表示は表紙/分岐の2枚、全ページ詳細目視は未実施。動きは単一HTMLで再生。",
+          "pdf_download": "examples/repositories/slidefly-showcase/render/deck.pdf",
+          "case_guide": "examples/repositories/slidefly-showcase/README.md",
+          "content_revision": "c1fd8eed1079ef47"
+        }
+      ],
+      "derived_skills": [
+        "slidefly-ja"
+      ],
+      "generation_status": "japanese_cases_generated",
+      "license_status": "reviewed_for_example",
+      "execution_status": "generated_light_check"
     },
     {
       "repository": "bjoern2000/deckpipe",

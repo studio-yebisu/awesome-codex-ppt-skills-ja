@@ -3,6 +3,8 @@ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&
 const [cases,collection,previews,pins,profiles,product]=await Promise.all(['data/case-studies.json','data/skills.json','data/previews.json','data/upstreams.json','data/repository-guides.json','data/product-collection.json'].map(async url=>{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(url);return r.json()}));
 const profileByRepo=new Map(profiles.map(p=>[p.repository,p]));
 const entryByRepo=new Map(product.entries.map(e=>[e.repository,e]));
+const caseRecipes=product.case_recipes||{};
+const recipeUrl=c=>{const url=new URL(c.guide,location.href);if(url.pathname.endsWith('/repository.html'))url.searchParams.set('case',c.id);return url.href;};
 const caseById=new Map(cases.map(c=>[c.id,c]));
 const activeCases=product.active_case_ids.map(id=>caseById.get(id)).filter(Boolean);
 const skills=collection.skills.filter(s=>entryByRepo.has(s.repo_full_name)),categories={general:'資料制作総合',pptx:'パワーポイント',html:'ウェブスライド',image:'画像スライド',business:'ビジネス資料',convert:'発表資料'};
@@ -15,9 +17,9 @@ function imagePath(c,i){return previewUrl(c,c.pages?.[i]||'examples/cases/'+c.id
 function caseCards(){
   if(!$('#case-grid'))return;
   const format=$('#case-format').value;
-  const list=activeCases.filter(c=>(use==='all'||caseUse(c)===use)&&(look==='all'||entryByRepo.get(c.repository)?.style===look)&&(format==='all'||c.format===format));
+  const list=activeCases.filter(c=>(use==='all'||caseUse(c)===use)&&(look==='all'||entryByRepo.get(c.repository)?.style===look)&&(format==='all'||c.format===format||(format==='pptx'&&c.pptx_download)));
   $('#case-results').textContent=list.length+'冊 / '+list.reduce((n,c)=>n+c.page_count,0)+'枚';
-  $('#case-grid').innerHTML=list.length?list.map((c,i)=>'<article class="case-card" data-style="'+esc(entryByRepo.get(c.repository)?.style)+'"><button class="case-card-image'+(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+'のスライドを見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライドを見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(entryByRepo.get(c.repository)?.title_ja||c.use_case)+'</span><span>'+(c.format==='pptx'?'PowerPoint':'Web')+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.style)+'</p><div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">再生する ↗</button><a href="'+esc(entryByRepo.get(c.repository)?.skill_download)+'" download>スキル本文 ↓</a><a href="'+esc(c.guide)+'">作り方 →</a></div></div></article>').join(''):'<p class="case-empty">この作風の制作事例はまだありません。別の作風・形式を選んでください。</p>';
+  $('#case-grid').innerHTML=list.length?list.map((c,i)=>'<article class="case-card" data-style="'+esc(entryByRepo.get(c.repository)?.style)+'"><button class="case-card-image'+(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+'のスライドを見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライドを見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(entryByRepo.get(c.repository)?.title_ja||c.use_case)+'</span><span>'+(c.format==='pptx'?'PowerPoint':'Web')+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.style)+'</p><div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">再生する ↗</button><a href="'+esc(entryByRepo.get(c.repository)?.skill_download)+'" download>スキル本文 ↓</a><a href="'+esc(recipeUrl(c))+'">作り方 →</a></div></div></article>').join(''):'<p class="case-empty">この作風の制作事例はまだありません。別の作風・形式を選んでください。</p>';
 }
 function previewFor(repo){return Array.isArray(previews)?previews.find(p=>p.repository===repo||p.repo_full_name===repo):previews.images?.[repo]||previews[repo]}
 function skillCards(){
@@ -91,13 +93,17 @@ function open(id,button){
   $('#case-state').textContent=c.preview_notice||(c.format==='pptx'?(c.editability==='raster_slides'?'原典で生成・組版した画像のPPTX / 発表ノート付き・ページ内の文字と図は画像です':'完成PPTXをPowerPointで出力したプレビュー / 文字・図形・ノートを編集できます'):'元のスキルを適用したHTML / スライド固有の演出を再生');
   $('#case-download').href=c.artifact_download;
   $('#case-download').textContent=c.format==='pptx'?'PowerPointをダウンロード ↓':'Webスライド一式をダウンロード ↓';
-  $('#case-make').href=c.guide;
+  for(const [id,path,label] of [['case-pptx',c.pptx_download,'PowerPoint版 ↓'],['case-pdf',c.pdf_download,'PDF ↓']]){
+    let link=$('#'+id);if(!link){link=document.createElement('a');link.id=id;link.className='button outline';link.setAttribute('download','');$('#case-download').after(link);}
+    link.hidden=!path;link.href=path||'#';link.textContent=label;
+  }
+  $('#case-make').href=recipeUrl(c);
   $('#case-origin').href='https://github.com/'+c.repository+'/tree/'+c.upstream_commit;
   $('#case-compare').hidden=!c.compare;
   if(c.compare){$('#case-compare').dataset.openCase=c.compare;$('#case-compare').href=cases.find(x=>x.id===c.compare).guide;$('#case-compare').textContent=c.format==='pptx'?'同じ入力のWeb版と比べる ↗':'同じ入力のPPTX版と比べる ↗'}
   $('#case-note').hidden=true;$('#case-notes').setAttribute('aria-expanded','false');
   $('#case-pages').innerHTML=c.titles.map((t,i)=>'<button type="button" data-page="'+i+'" aria-label="'+(i+1)+'ページ目 '+esc(t)+'">'+(c.preview_kind==='html'&&!c.pages?'':'<img src="'+esc(imagePath(c,i))+'" alt="">')+'<span>'+String(i+1).padStart(2,'0')+' '+esc(t)+'</span></button>').join('');
-  const skillLink=$('#case-skill');if(skillLink){const entry=entryByRepo.get(c.repository);skillLink.hidden=!entry;skillLink.href=entry?.skill_download||'#'}
+  const skillLink=$('#case-skill');if(skillLink){const download=caseRecipes[c.id]?.skill_download||entryByRepo.get(c.repository)?.skill_download;skillLink.hidden=!download;skillLink.href=download||'#'}
   if(c.preview_kind==='html'){
     const frame=document.createElement('iframe');frame.src=previewUrl(c,c.preview);frame.title=c.title;frame.setAttribute('sandbox','allow-scripts allow-same-origin');frame.addEventListener('load',()=>{fit();send();const doc=frame.contentDocument;if(!doc)return;doc.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();dialog.close()}},true);const config=nativeDOM[c.id],slides=config&&doc.querySelector(config[2]);if(slides){nativeObserver=new MutationObserver(()=>nativeSync(frame));nativeObserver.observe(slides,{attributes:true,childList:true,subtree:true,attributeFilter:['class']});nativeSync(frame)}});$('#case-stage').replaceChildren(frame);
   }

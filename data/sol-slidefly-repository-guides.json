@@ -1,0 +1,68 @@
+[
+  {
+    "repository": "andyluu98/slidefly",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_morph_engine_inline_export",
+    "case_ids": [
+      "slidefly-showcase"
+    ],
+    "summary_ja": "原典persistent actor方式で架空の散歩企画6枚。単一HTMLと原典標準Python exporterのPPTX。",
+    "requirements": [
+      "Python3.10+",
+      "Chrome/Edge",
+      "PPTXはPowerPoint2019/365でMorph対応"
+    ],
+    "steps": [
+      "named actorと6poseを作る",
+      "free-layoutとframeで和文を配置",
+      "原典inline-assetsで単一HTML化",
+      "原典auditと一回の動きを確認する"
+    ],
+    "commands": [
+      "python upstream/scripts/inline-assets.py source.html index.html",
+      "python upstream/scripts/export-pptx.py index.html deck.pptx"
+    ],
+    "source_refs": [
+      {
+        "path": "skill/slidefly/SKILL.md",
+        "sha256": "35d48d7694d9cdaadd58f1574fcda0d0dbb370011424b04baf986f6ea9af779c",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/SKILL.md"
+      },
+      {
+        "path": "skill/slidefly/assets/morph-engine.js",
+        "sha256": "30f814cbfb3bcaf5d3d0c9245c64315b120974a84b82a39c2686278ffac5ac2f",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-engine.js"
+      },
+      {
+        "path": "skill/slidefly/assets/morph-nav.js",
+        "sha256": "278b79e250c76b56d23ddfba5513e32719f8dc96c158bb6a1188f2f13fcd5b94",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-nav.js"
+      },
+      {
+        "path": "skill/slidefly/assets/morph-frames.js",
+        "sha256": "2a26fe0751fed353a2d46aaa469dfcea91cc51248690d7e75cae1233ba4569d1",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-frames.js"
+      },
+      {
+        "path": "skill/slidefly/scripts/inline-assets.py",
+        "sha256": "d40716d4c7334d3de4c23dea48a8320c0e29968eea3bcad1f6b7f7cd72806715",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/scripts/inline-assets.py"
+      },
+      {
+        "path": "skill/slidefly/scripts/export-pptx.py",
+        "sha256": "b803a015a6da25993736c46baeb7988b857c2067f1d4a0c75e378f90aa0254b5",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/scripts/export-pptx.py"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "d943d2afe8e8d109dea3f90969f86225a6b6fba8b5afe1398fd6a821d24f15e7",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/LICENSE"
+      }
+    ],
+    "upstream_commit": "7de466df3f2e0199c4939ccbe4490688d4165fa3",
+    "license": "MIT",
+    "skill": "skill-forks/slidefly-ja/SKILL.md",
+    "guide": "examples/repositories/slidefly-showcase/README.md"
+  }
+]

@@ -28,5 +28,30 @@
       {"path": "editor/README.md", "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/editor/README.md"},
       {"path": "skills/open-kimi-ppt/SKILL.md", "url": "https://github.com/jinwyp/open-ppt-skill/blob/07eeaadcb04c32c9adb107eb5c8608e6be4e1008/skills/open-kimi-ppt/SKILL.md"}
     ]
+  },
+  {
+    "repository": "marcozhou26/one-slide",
+    "upstream_commit": "80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207",
+    "summary_ja": "Markdownから一枚のnative PPTXを作る原典。この環境の必須ホストSDKが内部評価用途に限定されるため、製品の制作例・配布キットへの追加を保留。",
+    "production_status": "runtime_license_restricted",
+    "execution_status": "not_executed_required_runtime_license_restricted",
+    "product_status": "excluded_required_evaluation_runtime",
+    "license_review_status": "upstream_apache2_host_runtime_evaluation_only",
+    "execution_type": "原典Bridge/Implementer/Verifierと@oai/artifact-toolを使用する一枚のnative PPTX制作",
+    "method_ja": "原典SKILLはMarkdownをBridgeへ渡し、Implementerがartifact-toolでnative施工する方式。runtime contractはこのSDKの継続使用を明記している。今回は書き出しを実行していない。",
+    "requirements": ["Node.js、原典runtime contractのホストSDKと、その用途に適合する使用許諾"],
+    "commands": [],
+    "steps": [],
+    "limitations": [
+      "原典コードのApache-2.0と、この環境へ供給されたホストSDKの使用条件を区別する。",
+      "references/presentation-runtime-contract.mdはartifact-toolを指定し、python-pptxや旧Python APIへの置換を認めていない。",
+      "このホストに付属するSDKのLICENSEは内部評価・テストに用途を限定し、production/commercial利用とソフトウェア再配布には事前許諾を要求する。",
+      "本原典の製品作例、fork、ZIP、PPTXの生成は今回は行っていない。別の汎用rendererで作り、本原典の実績とは呼ばない。"
+    ],
+    "license_note": "原典Apache-2.0はホストSDKの用途制限を変更しない。この環境のSDK条件により現行の実用制作集へ追加しない。原典runtimeの製品用途が許可された使用条件、または原典側のOSS経路が確認できたときに再検討する。",
+    "source_refs": [
+      {"path": "SKILL.md", "url": "https://github.com/marcozhou26/one-slide/blob/80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207/SKILL.md"},
+      {"path": "references/presentation-runtime-contract.md", "url": "https://github.com/marcozhou26/one-slide/blob/80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207/references/presentation-runtime-contract.md"}
+    ]
   }
 ]

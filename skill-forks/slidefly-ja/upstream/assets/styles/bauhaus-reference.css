@@ -1,0 +1,147 @@
+/* ===========================================================
+   STYLE: BAUHAUS. Cream paper, flat primary geometry, no
+   shadows. A red circle, a blue square, a yellow half-disc, a
+   thick black bar, a black triangle and a thin black ring
+   recompose into a new balanced composition on every layout,
+   mostly on the right side or the edges, leaving text clear.
+   Signature motion: shapes slide, rotate and resize.
+   Actors: half, square, circle, ring, bar, tri. DOM order = z-order.
+   =========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@600;700&family=Archivo:wght@400;500;600;700&display=swap');
+
+.deck-stage {
+  --dense-stage: diagram;   /* own diagram pose below */
+  --actors: "half square circle ring bar tri";
+  --font-display: 'Josefin Sans', sans-serif;
+  --font-body: 'Archivo', sans-serif;
+  --bg: #F2EBDD; --fg: #111111; --muted: #4A4A4A; --accent: #D7263D;
+  --red: #D7263D; --blue: #1B4E9B; --yellow: #F2B705; --ink: #111111;
+  --card-bg: transparent; --card-fg: #111111; --card-radius: 0px;
+  --title-weight: 700; --title-tracking: 0.02em; --title-case: uppercase; --bullet-radius: 0;
+}
+
+/* ---------- actor looks + off-stage defaults ---------- */
+[data-actor="circle"] { background-color: var(--red); border-radius: 50%; --x: 2000px; --y: 200px; --w: 300px; }
+[data-actor="square"] { background-color: var(--blue); --x: -400px; --y: 600px; --w: 240px; }
+[data-actor="half"]   { background-color: var(--yellow); border-radius: 999px 999px 0 0; --x: 900px; --y: 1120px; --w: 480px; --h: 240px; }
+[data-actor="bar"]    { background-color: var(--ink); --x: 960px; --y: -120px; --w: 0px; --h: 24px; }
+[data-actor="tri"]    { background-color: var(--ink); clip-path: polygon(50% 0, 100% 100%, 0 100%); --x: 2000px; --y: 900px; --w: 120px; }
+[data-actor="ring"]   { border: 8px solid var(--ink); border-radius: 50%; --x: 2000px; --y: -300px; --w: 200px; }
+
+/* ---------- 1. cover: full composition on the right half ---------- */
+[data-layout="cover"] [data-actor="bar"]    { --x: 1140px; --y: 100px; --w: 24px; --h: 880px; }
+[data-layout="cover"] [data-actor="square"] { --x: 1200px; --y: 140px; --w: 420px; }
+[data-layout="cover"] [data-actor="circle"] { --x: 1440px; --y: 400px; --w: 400px; }
+[data-layout="cover"] [data-actor="half"]   { --x: 1200px; --y: 740px; --w: 480px; --h: 240px; }
+[data-layout="cover"] [data-actor="tri"]    { --x: 1690px; --y: 140px; --w: 130px; --r: 90deg; }
+[data-layout="cover"] [data-actor="ring"]   { --x: 1680px; --y: 820px; --w: 140px; }
+
+/* ---------- 2. agenda: rule under the title, small trio top right ---------- */
+[data-layout="agenda"] [data-actor="bar"]    { --x: 120px;  --y: 200px; --w: 1680px; --h: 12px; }
+[data-layout="agenda"] [data-actor="circle"] { --x: 1660px; --y: 50px;  --w: 140px; }
+[data-layout="agenda"] [data-actor="square"] { --x: 1540px; --y: 100px; --w: 90px; --r: 45deg; }
+[data-layout="agenda"] [data-actor="tri"]    { --x: 1430px; --y: 120px; --w: 70px; }
+[data-layout="agenda"] [data-actor="half"]   { --x: 1620px; --y: 1000px; --w: 180px; --h: 90px; }
+
+/* ---------- 3. section: monument on the right ---------- */
+[data-layout="section"] [data-actor="half"]   { --x: 1140px; --y: 600px; --w: 720px; --h: 360px; }
+[data-layout="section"] [data-actor="bar"]    { --x: 1100px; --y: 960px; --w: 800px; --h: 24px; }
+[data-layout="section"] [data-actor="circle"] { --x: 1280px; --y: 180px; --w: 400px; }
+[data-layout="section"] [data-actor="square"] { --x: 1620px; --y: 100px; --w: 220px; }
+[data-layout="section"] [data-actor="tri"]    { --x: 1140px; --y: 140px; --w: 140px; --r: -90deg; }
+[data-layout="section"] [data-actor="ring"]   { --x: 1660px; --y: 420px; --w: 160px; }
+
+/* ---------- 4. content (odd): bar divides, shapes hug the edges ---------- */
+[data-layout="content"] [data-actor="bar"]    { --x: 1196px; --y: 250px; --w: 16px; --h: 740px; }
+[data-layout="content"] [data-actor="square"] { --x: 1840px; --y: 250px; --w: 80px; }
+[data-layout="content"] [data-actor="circle"] { --x: 1440px; --y: 930px; --w: 300px; }
+[data-layout="content"] [data-actor="half"]   { --x: 1240px; --y: 1000px; --w: 160px; --h: 80px; }
+[data-layout="content"] [data-actor="tri"]    { --x: 1720px; --y: 92px; --w: 72px; --r: 180deg; }
+/* even: circle rises to the corner, bar lies down under the title */
+[data-layout="content"][data-parity="even"] [data-actor="bar"]    { --x: 120px; --y: 196px; --w: 480px; --h: 14px; }
+[data-layout="content"][data-parity="even"] [data-actor="circle"] { --x: 1640px; --y: -170px; --w: 420px; }
+[data-layout="content"][data-parity="even"] [data-actor="square"] { --x: 1220px; --y: 990px; --w: 110px; --r: 45deg; }
+[data-layout="content"][data-parity="even"] [data-actor="half"]   { --x: 1600px; --y: 920px; --w: 320px; --h: 160px; }
+[data-layout="content"][data-parity="even"] [data-actor="tri"]    { --x: 1840px; --y: 560px; --w: 64px; --r: 90deg; }
+[data-layout="content"][data-parity="even"] [data-actor="ring"]   { --x: 1400px; --y: 1000px; --w: 180px; }
+
+/* ---------- 5. two-col: black bar between columns ---------- */
+[data-layout="two-col"] [data-actor="bar"]    { --x: 952px;  --y: 270px; --w: 16px; --h: 720px; }
+[data-layout="two-col"] [data-actor="circle"] { --x: 1680px; --y: -140px; --w: 360px; }
+[data-layout="two-col"] [data-actor="square"] { --x: -80px;  --y: 1000px; --w: 180px; --r: 20deg; }
+[data-layout="two-col"] [data-actor="half"]   { --x: 1520px; --y: 1000px; --w: 200px; --h: 100px; }
+[data-layout="two-col"] [data-actor="tri"]    { --x: 1580px; --y: 96px; --w: 64px; }
+.deck-stage[data-layout="two-col"]:has(.slide.active .takeaway) [data-actor="bar"] { --h: 560px; }
+
+/* ---------- 6. stats: title rule, colour accents on the edges ---------- */
+[data-layout="stats"] [data-actor="bar"]    { --x: 120px;  --y: 200px; --w: 1680px; --h: 12px; }
+[data-layout="stats"] [data-actor="circle"] { --x: 1700px; --y: 40px;  --w: 140px; }
+[data-layout="stats"] [data-actor="square"] { --x: 1590px; --y: 96px;  --w: 84px; }
+[data-layout="stats"] [data-actor="half"]   { --x: 120px;  --y: 1000px; --w: 320px; --h: 160px; }
+[data-layout="stats"] [data-actor="tri"]    { --x: 1680px; --y: 1000px; --w: 70px; --r: -90deg; }
+[data-layout="stats"] [data-actor="ring"]   { --x: 460px;  --y: 1010px; --w: 120px; }
+
+/* ---------- 7. timeline: the bar becomes the axis, square and circle cap it ---------- */
+[data-layout="timeline"] [data-actor="bar"]    { --x: 120px;  --y: 624px; --w: 1680px; --h: 12px; }
+[data-layout="timeline"] [data-actor="square"] { --x: 40px;   --y: 600px; --w: 60px; }
+[data-layout="timeline"] [data-actor="circle"] { --x: 1812px; --y: 590px; --w: 80px; }
+[data-layout="timeline"] [data-actor="tri"]    { --x: 1720px; --y: 96px; --w: 72px; --r: 90deg; }
+[data-layout="timeline"] [data-actor="half"]   { --x: 1460px; --y: 1000px; --w: 240px; --h: 120px; }
+
+/* ---------- 8. quote: red disc opens, bar and ring frame the words ---------- */
+[data-layout="quote"] [data-actor="circle"] { --x: 100px;  --y: 110px; --w: 150px; }
+[data-layout="quote"] [data-actor="bar"]    { --x: 168px;  --y: 300px; --w: 16px; --h: 480px; }
+[data-layout="quote"] [data-actor="square"] { --x: 1680px; --y: 830px; --w: 140px; --r: 45deg; }
+[data-layout="quote"] [data-actor="half"]   { --x: 1500px; --y: 960px; --w: 240px; --h: 120px; }
+[data-layout="quote"] [data-actor="tri"]    { --x: 1760px; --y: 110px; --w: 100px; --r: 180deg; }
+[data-layout="quote"] [data-actor="ring"]   { --x: 1700px; --y: 560px; --w: 170px; }
+[data-layout="quote"] [data-actor="circle"]::before {
+  content: "\201C"; position: absolute; inset: 0; color: var(--bg); text-align: center;
+  font: 700 190px/1.1 'Josefin Sans', sans-serif;
+}
+
+/* ---------- 9. closing: shapes gather in the four corners ---------- */
+[data-layout="closing"] [data-actor="circle"] { --x: -160px; --y: -160px; --w: 520px; }
+[data-layout="closing"] [data-actor="square"] { --x: 1560px; --y: 740px; --w: 260px; --r: 0deg; }
+[data-layout="closing"] [data-actor="half"]   { --x: 160px;  --y: 860px; --w: 440px; --h: 220px; }
+[data-layout="closing"] [data-actor="bar"]    { --x: 1580px; --y: 100px; --w: 24px; --h: 340px; }
+[data-layout="closing"] [data-actor="tri"]    { --x: 1660px; --y: 140px; --w: 140px; }
+[data-layout="closing"] [data-actor="ring"]   { --x: 1400px; --y: -120px; --w: 280px; }
+
+/* ---------- diagram: slim frame at the corners only ---------- */
+[data-layout="diagram"] [data-actor="square"] { --x: 1830px; --y: -50px; --w: 120px; }
+[data-layout="diagram"] [data-actor="circle"] { --x: -90px;  --y: 960px; --w: 180px; }
+[data-layout="diagram"] [data-actor="tri"]    { --x: 1730px; --y: 96px; --w: 64px; }
+[data-layout="diagram"] [data-actor="bar"]    { --x: 0px; --y: 1066px; --w: 1920px; --h: 14px; }
+
+/* ---------- content tweaks: geometric caps, plain grotesk body ---------- */
+.slide .title { line-height: 1.2; }
+.slide .kicker { font-family: var(--font-display); letter-spacing: 0.2em; }
+.num, .stat-num, .hl-big, .when { line-height: 1.1; }
+.slide[data-layout="cover"] { align-items: flex-start; text-align: left; padding: 0 820px 0 160px; }
+.slide[data-layout="cover"] .title { font-size: 80px; }
+.slide[data-layout="closing"] .title { font-size: 120px; }
+.slide[data-layout="agenda"] { --title-w: 1240px; }
+.agenda-list { --agenda-gap: 200px; }
+.agenda-list li.is-right { flex-direction: row; text-align: left; }
+.agenda-list li.is-right .num { text-align: left; }
+.agenda-list h3 { text-transform: uppercase; line-height: 1.25; }
+.slide[data-layout="section"] { padding: 0 860px 0 160px; }
+.slide[data-layout="section"] .title { font-size: 76px; }
+.slide[data-kind="chapter"] .ch-num { left: 150px; right: auto; bottom: -70px; font-size: 520px; -webkit-text-stroke-width: 3px; opacity: 0.4; }
+.slide[data-layout="content"] { --title-w: 1540px; }
+.slide[data-layout="content"][data-density="md"] .bullets { --b-fs: 40px; --b-gap: 48px; }
+.slide[data-layout="content"][data-parity="even"] { --title-w: 1460px; }
+.col h3, .step h3 { text-transform: uppercase; line-height: 1.25; }
+.takeaway { border-left-color: var(--blue); }
+.stat:nth-child(3n+2) .stat-num { color: var(--blue); }
+.stat:nth-child(3n) .stat-num { color: var(--ink); }
+.timeline::before { display: none; }
+.step::before { border-radius: 0; background: var(--ink); }
+.step:nth-child(3n+1)::before { border-radius: 50%; background: var(--red); }
+.step:nth-child(3n+2)::before { background: var(--blue); }
+.slide[data-layout="quote"] { padding: 0 300px 0 280px; }
+.slide[data-layout="quote"] .quote { text-transform: uppercase; line-height: 1.25; font-size: 60px; }
+.bento .cell { border: 3px solid var(--ink); background: transparent; }
+.bento .hot { background: var(--red); border-color: var(--red); color: #fff; }
+.process > li:nth-child(even) .n { background: var(--blue); color: #fff; }

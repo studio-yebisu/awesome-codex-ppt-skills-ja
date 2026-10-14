@@ -1,0 +1,36 @@
+[
+  {
+    "repository": "mpuig/agent-slides",
+    "summary_ja": "原典template契約とnative opsで企画を1枚へ完成する日本語派生。",
+    "example_ids": [
+      "agent-slides-showcase"
+    ],
+    "upstream_commit": "820782a5fb8cb8f251d7c0750e4299c321cd068c",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/agent-slides-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/agent-slides-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Python3.12+ / agent-slides native runtime",
+      "Zen Kaku Gothic New / Manrope",
+      "PNG/PDF: Windows Microsoft PowerPoint"
+    ],
+    "commands": [
+      "python -m pip install ./runtime",
+      "python -m slides_cli.cli preflight --project-dir input/project --profile input/project/design-profile.json --compact",
+      "python -m slides_cli.cli render --slides-json @input/slides.json --profile input/project/design-profile.json --output deck-rebuilt.pptx --compact"
+    ],
+    "guide": "examples/repositories/agent-slides-showcase/README.md",
+    "source_download": "downloads/agent-slides-example-ja.zip",
+    "fork_download": "downloads/agent-slides-ja.zip",
+    "limitations": [
+      "独立1ページの企画書",
+      "仮行程、会場・日時・人数未定",
+      "native監査・独立レビュー・ZIP再実行未実施"
+    ]
+  }
+]

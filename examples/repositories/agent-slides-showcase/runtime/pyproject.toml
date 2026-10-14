@@ -1,0 +1,79 @@
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agent-slides"
+version = "0.1.0a0"
+description = "Agent skill for generating professional PowerPoint (.pptx) presentations, powered by an agent-ready CLI and Python library"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.12"
+authors = [{ name = "Marc Puig", email = "marc.puig@gmail.com" }]
+keywords = ["pptx", "openxml", "agents", "powerpoint", "automation"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+  "lxml>=5.3.0",
+  "python-pptx>=1.0.2",
+  "pydantic>=2.11.0",
+  "typing-extensions>=4.12.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/mpuig/agent-slides"
+Repository = "https://github.com/mpuig/agent-slides"
+Issues = "https://github.com/mpuig/agent-slides/issues"
+
+[project.scripts]
+slides = "slides_cli.cli:main"
+
+[dependency-groups]
+dev = [
+  "pre-commit>=4.2.0",
+  "pytest>=8.3.0",
+  "pytest-cov>=6.0.0",
+  "ruff>=0.11.0",
+  "ty>=0.0.20",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/slides_cli"]
+
+[tool.pytest.ini_options]
+addopts = "-q --cov=slides_cli --cov-report=term-missing"
+testpaths = ["tests"]
+
+[tool.ty.environment]
+python-version = "3.12"
+root = ["src"]
+
+[tool.ty.src]
+include = ["src", "tests", "scripts"]
+
+[tool.ty.rules]
+all = "error"
+
+[tool.ty.analysis]
+allowed-unresolved-imports = ["lxml", "lxml.etree"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "C4", "SIM", "PIE"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+
+[tool.uv]
+managed = true

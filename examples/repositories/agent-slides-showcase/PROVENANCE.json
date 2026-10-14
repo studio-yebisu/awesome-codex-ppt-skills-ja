@@ -1,0 +1,38 @@
+{
+  "repository": "mpuig/agent-slides",
+  "upstream_commit": "820782a5fb8cb8f251d7c0750e4299c321cd068c",
+  "license": "MIT",
+  "runtime": "Original agent-slides Python3.12+ CLI / python-pptx",
+  "read_files": [
+    "LICENSE",
+    "README.md",
+    "pyproject.toml",
+    "skills/slides-build/SKILL.md",
+    "skills/slides-full/SKILL.md",
+    "skills/slides-extract/SKILL.md",
+    "skills/slides-build/references/storytelling.md",
+    "skills/slides-build/references/content-density.md",
+    "skills/slides-build/references/layout-patterns.md",
+    "skills/slides-build/references/operations.md",
+    "skills/slides-build/references/process-patterns.md",
+    "skills/slides-build/references/common-mistakes.md",
+    "src/slides_cli/api.py",
+    "src/slides_cli/model.py"
+  ],
+  "applied_rules": {
+    "WWWH": "Who=local operators/makers, Why=shared concept, What=open one day of making, How=one statement+journey+hub relation",
+    "native_ops": "Original add_slide/add_text/add_rectangle/add_oval/add_line_shape/add_notes/set_core_properties, through actual CLI",
+    "layout_patterns": "Original split-panel hierarchy and number-badge/time-line primitives adapted without repeated cards",
+    "process": "Left directed schedule is separate from right unordered center relationships",
+    "template_contract": "Only blank16:9 container authored locally; original extraction/preflight provides native Blank layout contracts",
+    "user_overrides": "One finished slide, no automatic cover/disclaimer/ending. Giant Japanese headline and requested palette override standard 24pt business defaults. Extensive audit workflow omitted per current user scope."
+  },
+  "commands": [
+    "python -m slides_cli.cli extract input/blank-wide.pptx --output-dir input/project --base-template-out input/project/base_template.pptx --compact",
+    "python -m slides_cli.cli preflight --project-dir input/project --profile input/project/design-profile.json --compact",
+    "python -m slides_cli.cli render --slides-json @input/slides.json --profile input/project/design-profile.json --dry-run --compact",
+    "python -m slides_cli.cli render --slides-json @input/slides.json --profile input/project/design-profile.json --output deck-rebuilt.pptx --compact"
+  ],
+  "pptx_sha256": "45628edaecbec3b8218d097296da93c02e23de6a07b824f2d0f6311e4972e70b",
+  "font_embedding": false
+}

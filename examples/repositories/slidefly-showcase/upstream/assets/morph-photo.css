@@ -1,0 +1,43 @@
+/* ===========================================================
+   MORPH-SLIDES PHOTO: a full-bleed photo slide used as a pause
+   between parts (section break, a scene, a strong statement).
+   <section class="slide" data-layout="photo">
+     <img class="photo-bg" src="anh.jpg" alt="">
+     <div class="photo-text"> kicker / title / subtitle </div>
+     <p class="photo-credit">Ảnh: tác giả, nguồn, giấy phép</p>
+   </section>
+   No style has a pose for "photo", so the actors leave the stage.
+   A dark veil keeps white text readable on any picture; the photo
+   settles from a slow zoom. Text sits bottom-left by default,
+   .photo-text.center puts it in the middle. deck.audit() asks for
+   .photo-credit, because every photo needs a source and a licence.
+   =========================================================== */
+.slide[data-layout="photo"] { color: #fff; }
+.photo-bg {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  object-position: var(--focus, 50% 50%);   /* keep the subject in frame: --focus: 30% 40% */
+  transform: scale(1.08); transition: transform 7s cubic-bezier(.2, .6, .2, 1);
+}
+.slide.active .photo-bg { transform: scale(1); }
+/* veil: darker where the text sits */
+.slide[data-layout="photo"]::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(20deg, rgba(0, 0, 0, var(--veil, .72)) 0%, rgba(0, 0, 0, calc(var(--veil, .72) * .45)) 45%, rgba(0, 0, 0, .05) 80%);
+}
+.slide[data-layout="photo"]:has(.photo-text.center)::after { background: rgba(0, 0, 0, calc(var(--veil, .72) * .7)); }
+.photo-text {
+  position: absolute; z-index: 1; left: 120px; bottom: 120px; width: 1180px;
+  display: flex; flex-direction: column; gap: 22px;
+}
+.photo-text.center { left: 240px; right: 240px; bottom: auto; top: 50%; width: auto; transform: translateY(-50%); align-items: center; text-align: center; }
+.photo-text .title { font-size: 96px; color: #fff; text-shadow: 0 2px 30px rgba(0, 0, 0, .35); }
+.photo-text .kicker { color: var(--photo-accent, #fff); opacity: .9;
+  background: none; border: 0; box-shadow: none; padding: 0; }   /* a style's kicker chip would put white on a pale chip */
+.photo-text .subtitle { color: rgba(255, 255, 255, .86); }
+.photo-credit {
+  position: absolute; z-index: 1; right: 120px; bottom: 44px; margin: 0;
+  font: 400 16px/1.3 var(--font-body); color: rgba(255, 255, 255, .7);
+}
+
+@media (prefers-reduced-motion: reduce) { .photo-bg { transition-duration: .3s; } }
+.deck-stage.auditing .photo-bg { transform: none; }

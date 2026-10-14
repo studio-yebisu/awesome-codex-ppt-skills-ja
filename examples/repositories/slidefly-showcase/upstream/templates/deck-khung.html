@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mẫu khung bố cục SlideFly</title>
+<!-- Mẫu 13 slide: 12 bố cục mới (morph-layouts-plus.css). Đổi style: thay 1 dòng link styles/*.css.
+     Markup từng bố cục: references/layouts.md, mục "12 bố cục mới". -->
+<link rel="stylesheet" href="../assets/morph-base.css">
+<link rel="stylesheet" href="../assets/morph-layouts.css">
+<link rel="stylesheet" href="../assets/morph-layouts-plus.css">
+<link rel="stylesheet" href="../assets/morph-frames.css">
+<link rel="stylesheet" href="../assets/styles/soft-editorial.css">
+<link rel="stylesheet" href="../assets/morph-motion.css">
+<link rel="stylesheet" href="../assets/morph-icons.css">
+</head>
+<body>
+<div class="deck-viewport">
+<div class="deck-stage">
+
+  <!-- 1 cover -->
+  
+  <section class="slide" data-layout="cover">
+    <p class="kicker reveal">Mẫu SlideFly · khung bố cục</p>
+    <h1 class="title reveal">Mười hai cách chia một slide</h1>
+    <p class="subtitle reveal">Cùng nội dung, đổi khung là đổi dáng: gắn data-frame lên slide</p>
+  </section>
+  <!-- data-frame="split-left" -->
+  <section class="slide" data-layout="content" data-frame="split-left">
+    <h2 class="title reveal">Mảng màu bên trái giữ tiêu đề</h2>
+    <ul class="bullets">
+      <li class="reveal">Tiêu đề và điểm nhấn nằm trên mảng màu nhấn.</li>
+      <li class="reveal">Nội dung chiếm phần còn lại bên phải.</li>
+      <li class="reveal">Chữ trên mảng màu tự đổi sang màu dễ đọc.</li>
+    </ul>
+    <aside class="highlight reveal-scale"><i class="ico ico-xl accent" data-icon="layout-sidebar"></i><p class="hl-text">Hợp để mở một ý quan trọng</p></aside>
+  </section>
+  <!-- data-frame="band" trên slide mẫu của deck-bo-cuc -->
+  <section class="slide" data-frame="band" data-layout="process">
+    <h2 class="title reveal">Dựng một deck trong bốn bước</h2>
+    <ol class="process">
+      <li class="reveal"><span class="n">1</span><h3>Dàn ý</h3><p>Mỗi slide một ý, gán sẵn một bố cục</p></li>
+      <li class="reveal"><span class="n">2</span><h3>Chọn style</h3><p>Xem ba bản thử rồi chọn</p></li>
+      <li class="reveal"><span class="n">3</span><h3>Dựng</h3><p>Chép khung từ deck mẫu</p></li>
+      <li class="reveal"><span class="n">4</span><h3>Kiểm tra</h3><p>deck.audit() tới khi sạch</p></li>
+    </ol>
+  </section>
+  <!-- data-frame="rail" -->
+  <section class="slide" data-layout="content" data-frame="rail">
+    <h2 class="title reveal">Tiêu đề đứng trong cột riêng</h2>
+    <ul class="bullets">
+      <li class="reveal">Cột trái giữ tiêu đề, sau một vạch dọc.</li>
+      <li class="reveal">Cột phải rộng cho nhiều chữ.</li>
+      <li class="reveal">Điểm nhấn nằm dưới tiêu đề.</li>
+    </ul>
+    <aside class="highlight reveal-scale"><i class="ico ico-xl accent" data-icon="columns-2"></i><p class="hl-text">Hợp với slide nhiều chữ</p></aside>
+  </section>
+  <!-- data-frame="corner" trên slide mẫu của deck-bo-cuc -->
+  <section class="slide" data-frame="corner" data-layout="bento">
+    <h2 class="title reveal">Một slide, nhiều ô to nhỏ</h2>
+    <div class="bento">
+      <div class="cell hot wide tall reveal"><i class="ico" data-icon="layout-grid"></i><h3>Ô lớn cho ý chính</h3><p>Ý quan trọng nhất chiếm nhiều chỗ nhất</p></div>
+      <div class="cell reveal"><p class="big">2</p><p>cỡ ô: rộng và cao</p></div>
+      <div class="cell reveal"><h3>Một ô nhấn</h3><p>Lớp hot đổi sang màu nhấn</p></div>
+      <div class="cell wide reveal"><h3>Ô ngang cho câu dài</h3><p>Lớp wide chiếm hai cột</p></div>
+    </div>
+  </section>
+  <!-- data-frame="zigzag" -->
+  <section class="slide" data-layout="content" data-frame="zigzag">
+    <h2 class="title reveal">Các ý thành thẻ so le</h2>
+    <ul class="bullets">
+      <li class="reveal">Mỗi ý một thẻ có nền nhạt.</li>
+      <li class="reveal">Thẻ chẵn lùi sang phải, mắt đi theo đường gấp khúc.</li>
+      <li class="reveal">Hợp 3 đến 5 ý ngắn.</li>
+    </ul>
+    <aside class="highlight reveal-scale"><i class="ico ico-xl accent" data-icon="layout-distribute-horizontal"></i><p class="hl-text">Không còn hàng chấm đầu dòng</p></aside>
+  </section>
+  <!-- data-frame="poster" trên slide mẫu của deck-bo-cuc -->
+  <section class="slide" data-frame="poster" data-layout="compare-table">
+    <h2 class="title reveal">Chọn bố cục theo việc cần làm</h2>
+    <table class="ctable reveal">
+      <thead><tr><th></th><th>Bố cục cũ</th><th class="pick">Bố cục mới</th></tr></thead>
+      <tbody>
+        <tr><th>Một con số lớn</th><td>stats</td><td class="pick"><span class="yes">big-number</span></td></tr>
+        <tr><th>Nhiều ý không đều nhau</th><td>content</td><td class="pick"><span class="yes">bento</span></td></tr>
+        <tr><th>So sánh nhiều tiêu chí</th><td>two-col</td><td class="pick"><span class="yes">compare-table</span></td></tr>
+        <tr><th>Câu hỏi gợi mở</th><td class="no">không có</td><td class="pick"><span class="yes">qa</span></td></tr>
+      </tbody>
+    </table>
+  </section>
+  <!-- data-frame="split-right" -->
+  <section class="slide" data-layout="content" data-frame="split-right">
+    <h2 class="title reveal">Mảng màu đổi sang bên phải</h2>
+    <ul class="bullets">
+      <li class="reveal">Cùng ý với split-left, đổi bên để hai slide liền nhau không giống nhau.</li>
+      <li class="reveal">Điểm nhấn đi theo mảng màu.</li>
+    </ul>
+    <aside class="highlight reveal-scale"><i class="ico ico-xl accent" data-icon="layout-sidebar-right"></i><p class="hl-text">Xen kẽ trái và phải</p></aside>
+  </section>
+  <!-- data-frame="bottom" trên slide mẫu của deck-bo-cuc -->
+  <section class="slide" data-frame="bottom" data-layout="countdown">
+    <h2 class="title reveal">Bốn lỗi làm slide rập khuôn</h2>
+    <ol class="countdown">
+      <li class="reveal"><span class="rk">4</span><h3>Cùng một màu nhấn</h3><p>Mọi điểm nhấn trông giống nhau</p></li>
+      <li class="reveal"><span class="rk">3</span><h3>Gạch đầu dòng mọi nơi</h3><p>Ý nào cũng thành một dòng chữ</p></li>
+      <li class="reveal"><span class="rk">2</span><h3>Không có nhịp nghỉ</h3><p>Hai mươi slide dày đặc liên tục</p></li>
+      <li class="reveal"><span class="rk">1</span><h3>Một dáng cho mọi ý</h3><p>Số liệu, quy trình, câu hỏi đều chung một khung</p></li>
+    </ol>
+  </section>
+  <!-- data-frame="numbered" -->
+  <section class="slide" data-layout="content" data-frame="numbered">
+    <h2 class="title reveal">Bốn bước có số thứ tự</h2>
+    <ul class="bullets">
+      <li class="reveal">Gạch đầu dòng thành số lớn.</li>
+      <li class="reveal">Thứ tự đọc rõ từ xa.</li>
+      <li class="reveal">Hợp các bước làm, quy trình ngắn.</li>
+      <li class="reveal">Số tự đếm, không phải gõ.</li>
+    </ul>
+    <aside class="highlight reveal-scale"><i class="ico ico-xl accent" data-icon="list-numbers"></i><p class="hl-text">Số lớn thay chấm đầu dòng</p></aside>
+  </section>
+  <!-- data-frame="frame" trên slide mẫu của deck-bo-cuc -->
+  <section class="slide" data-frame="frame" data-layout="before-after">
+    <h2 class="title reveal">Trước và sau khi có bộ bố cục</h2>
+    <div class="ba">
+      <div class="ba-side before reveal-left"><span class="ba-tag">Trước</span><h3>9 dáng slide</h3><ul><li>Tiêu đề trái, ý trái, nhấn phải</li><li>Đổi style chỉ đổi màu</li></ul></div>
+      <div class="ba-arrow reveal">&rarr;</div>
+      <div class="ba-side after fx fx-right" data-step="1"><span class="ba-tag">Sau</span><h3>21 dáng slide</h3><ul><li>Chọn dáng theo ý cần nói</li><li>Đổi style vẫn giữ dáng</li></ul></div>
+    </div>
+  </section>
+  <!-- data-frame="diagonal" -->
+  <section class="slide" data-layout="content" data-frame="diagonal">
+    <h2 class="title reveal">Mảng chéo mang điểm nhấn</h2>
+    <ul class="bullets">
+      <li class="reveal">Một mảng màu cắt chéo bên phải.</li>
+      <li class="reveal">Điểm nhấn nằm trong mảng chéo.</li>
+      <li class="reveal">Nội dung bên trái.</li>
+    </ul>
+    <aside class="highlight reveal-scale"><i class="ico ico-xl accent" data-icon="slash"></i><p class="hl-text">Có góc cạnh, có chuyển động</p></aside>
+  </section>
+  <!-- data-frame="stack" -->
+  <section class="slide" data-layout="content" data-frame="stack">
+    <h2 class="title reveal">Một cột hẹp để đọc chậm</h2>
+    <ul class="bullets">
+      <li class="reveal">Tiêu đề giữa, có gạch ngắn bên dưới.</li>
+      <li class="reveal">Nội dung gom vào cột giữa.</li>
+      <li class="reveal">Hợp trích ý, nguyên tắc, lời dặn.</li>
+    </ul>
+    <aside class="highlight reveal-scale"><i class="ico ico-xl accent" data-icon="align-center"></i><p class="hl-text">Ít chữ, nhiều khoảng thở</p></aside>
+  </section>
+  <section class="slide" data-layout="closing">
+    <h2 class="title reveal">Đổi khung, đổi dáng</h2>
+    <p class="subtitle reveal">Deck từ 12 slide: ít nhất 3 khung khác nhau, mỗi khung dưới một phần ba số slide</p>
+  </section>
+</div>
+</div>
+<script src="../assets/morph-frames.js"></script>
+<script src="../assets/morph-engine.js"></script>
+<script src="../assets/morph-nav.js"></script>
+<script src="../assets/morph-audit.js"></script>
+<script src="../assets/morph-steps.js"></script>
+<script src="../assets/morph-icons.js"></script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-slides.com/schemas/content_layout.schema.json",
+  "title": "ContentLayoutCatalog",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "template_fingerprint",
+    "content_layouts",
+    "archetypes",
+    "layout_content_matrix"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "template_fingerprint": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "content_layouts": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/contentLayoutRule"
+      }
+    },
+    "archetypes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/archetypeBinding"
+      }
+    },
+    "layout_content_matrix": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "type": "object",
+        "minProperties": 1,
+        "additionalProperties": {
+          "$ref": "#/$defs/compatibility"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "contentLayoutRule": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_roles",
+        "preferred_tokens",
+        "preferred_layout_families"
+      ],
+      "properties": {
+        "required_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preferred_tokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "preferred_layout_families": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "min_body_placeholders": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "max_body_placeholders": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "archetypeBinding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_layout",
+        "story_roles"
+      ],
+      "properties": {
+        "content_layout": {
+          "type": "string",
+          "minLength": 1
+        },
+        "story_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "compatibility": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "layout_id",
+        "status",
+        "reason",
+        "score",
+        "layout_family",
+        "matched_rules"
+      ],
+      "properties": {
+        "layout_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "preferred",
+            "allowed",
+            "blocked"
+          ]
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1
+        },
+        "score": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "layout_family": {
+          "type": "string"
+        },
+        "matched_rules": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

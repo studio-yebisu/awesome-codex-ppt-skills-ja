@@ -6498,7 +6498,7 @@
   },
   {
     "repository": "mpuig/agent-slides",
-    "summary_ja": "組み合わせ可能な7種類のスキルと専用CLIで構成された、PowerPoint資料生成ツール。",
+    "summary_ja": "原典template契約とnative opsで企画を1枚へ完成する日本語派生。",
     "kind": "pptx",
     "upstream_commit": "820782a5fb8cb8f251d7c0750e4299c321cd068c",
     "checked_at": "2026-10-13T13:35:08.518742+00:00",
@@ -6544,17 +6544,35 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "agent-slides-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python3.12+ / agent-slides native runtime",
+      "Zen Kaku Gothic New / Manrope",
+      "PNG/PDF: Windows Microsoft PowerPoint"
+    ],
+    "commands": [
+      "python -m pip install ./runtime",
+      "python -m slides_cli.cli preflight --project-dir input/project --profile input/project/design-profile.json --compact",
+      "python -m slides_cli.cli render --slides-json @input/slides.json --profile input/project/design-profile.json --output deck-rebuilt.pptx --compact"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "独立1ページの企画書",
+      "仮行程、会場・日時・人数未定",
+      "native監査・独立レビュー・ZIP再実行未実施"
     ],
-    "forks": [],
-    "original_description_ja": "組み合わせ可能な7種類のスキルと専用CLIで構成された、PowerPoint資料生成ツール。"
+    "forks": [
+      "agent-slides-ja"
+    ],
+    "guide": "examples/repositories/agent-slides-showcase/README.md",
+    "source_download": "downloads/agent-slides-example-ja.zip",
+    "fork_download": "downloads/agent-slides-ja.zip",
+    "original_description_ja": "組み合わせ可能な7種類のスキルと専用CLIで構成された、PowerPoint資料生成ツール。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "zsc58/ustc-ppt-template",
@@ -6986,7 +7004,7 @@
   },
   {
     "repository": "marcozhou26/one-slide",
-    "summary_ja": "短いメモや完成原稿から、出典情報を保持した編集可能な1枚のスライドを作成するスキル。",
+    "summary_ja": "Markdownから一枚のnative PPTXを作る原典。この環境の必須ホストSDKが内部評価用途に限定されるため、製品の制作例・配布キットへの追加を保留。",
     "kind": "pptx",
     "upstream_commit": "80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207",
     "checked_at": "2026-10-13T13:35:18.994345+00:00",
@@ -7001,37 +7019,35 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/marcozhou26/one-slide/blob/80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207/README.md",
-        "bytes": 3648
-      },
-      {
         "path": "SKILL.md",
-        "url": "https://github.com/marcozhou26/one-slide/blob/80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207/SKILL.md",
-        "bytes": 5453
+        "url": "https://github.com/marcozhou26/one-slide/blob/80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207/SKILL.md"
       },
       {
-        "path": "LICENSE",
-        "url": "https://github.com/marcozhou26/one-slide/blob/80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207/LICENSE",
-        "bytes": 11358
-      },
-      {
-        "path": "NOTICE",
-        "url": "https://github.com/marcozhou26/one-slide/blob/80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207/NOTICE",
-        "bytes": 645
+        "path": "references/presentation-runtime-contract.md",
+        "url": "https://github.com/marcozhou26/one-slide/blob/80fbcd419c03a1e8a7d5ae709b3ea0cfb6523207/references/presentation-runtime-contract.md"
       }
     ],
     "archived": false,
     "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
+    "production_status": "runtime_license_restricted",
+    "license_review_status": "upstream_apache2_host_runtime_evaluation_only",
+    "requirements": [
+      "Node.js、原典runtime contractのホストSDKと、その用途に適合する使用許諾"
+    ],
     "commands": [],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "原典コードのApache-2.0と、この環境へ供給されたホストSDKの使用条件を区別する。",
+      "references/presentation-runtime-contract.mdはartifact-toolを指定し、python-pptxや旧Python APIへの置換を認めていない。",
+      "このホストに付属するSDKのLICENSEは内部評価・テストに用途を限定し、production/commercial利用とソフトウェア再配布には事前許諾を要求する。",
+      "本原典の製品作例、fork、ZIP、PPTXの生成は今回は行っていない。別の汎用rendererで作り、本原典の実績とは呼ばない。"
     ],
     "forks": [],
+    "execution_status": "not_executed_required_runtime_license_restricted",
+    "product_status": "excluded_required_evaluation_runtime",
+    "execution_type": "原典Bridge/Implementer/Verifierと@oai/artifact-toolを使用する一枚のnative PPTX制作",
+    "method_ja": "原典SKILLはMarkdownをBridgeへ渡し、Implementerがartifact-toolでnative施工する方式。runtime contractはこのSDKの継続使用を明記している。今回は書き出しを実行していない。",
+    "license_note": "原典Apache-2.0はホストSDKの用途制限を変更しない。この環境のSDK条件により現行の実用制作集へ追加しない。原典runtimeの製品用途が許可された使用条件、または原典側のOSS経路が確認できたときに再検討する。",
     "original_description_ja": "短いメモや完成原稿から、出典情報を保持した編集可能な1枚のスライドを作成するスキル。"
   },
   {
@@ -11293,7 +11309,7 @@
   },
   {
     "repository": "andyluu98/slidefly",
-    "summary_ja": "PowerPointの変形（Morph）風トランジションと47種のスタイルを備えた、ベトナム語対応のHTML資料作成スキル。",
+    "summary_ja": "原典persistent actor方式で架空の散歩企画6枚。単一HTMLと原典標準Python exporterのPPTX。",
     "kind": "html",
     "upstream_commit": "7de466df3f2e0199c4939ccbe4490688d4165fa3",
     "checked_at": "2026-10-13T13:35:27.273008+00:00",
@@ -11307,32 +11323,73 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/README.md",
-        "bytes": 12869
+        "path": "skill/slidefly/SKILL.md",
+        "sha256": "35d48d7694d9cdaadd58f1574fcda0d0dbb370011424b04baf986f6ea9af779c",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/SKILL.md"
       },
       {
-        "path": "skill/slidefly/SKILL.md",
-        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/SKILL.md",
-        "bytes": 13552
+        "path": "skill/slidefly/assets/morph-engine.js",
+        "sha256": "30f814cbfb3bcaf5d3d0c9245c64315b120974a84b82a39c2686278ffac5ac2f",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-engine.js"
+      },
+      {
+        "path": "skill/slidefly/assets/morph-nav.js",
+        "sha256": "278b79e250c76b56d23ddfba5513e32719f8dc96c158bb6a1188f2f13fcd5b94",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-nav.js"
+      },
+      {
+        "path": "skill/slidefly/assets/morph-frames.js",
+        "sha256": "2a26fe0751fed353a2d46aaa469dfcea91cc51248690d7e75cae1233ba4569d1",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/assets/morph-frames.js"
+      },
+      {
+        "path": "skill/slidefly/scripts/inline-assets.py",
+        "sha256": "d40716d4c7334d3de4c23dea48a8320c0e29968eea3bcad1f6b7f7cd72806715",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/scripts/inline-assets.py"
+      },
+      {
+        "path": "skill/slidefly/scripts/export-pptx.py",
+        "sha256": "b803a015a6da25993736c46baeb7988b857c2067f1d4a0c75e378f90aa0254b5",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/skill/slidefly/scripts/export-pptx.py"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/LICENSE",
-        "bytes": 1066
+        "sha256": "d943d2afe8e8d109dea3f90969f86225a6b6fba8b5afe1398fd6a821d24f15e7",
+        "url": "https://github.com/andyluu98/slidefly/blob/7de466df3f2e0199c4939ccbe4490688d4165fa3/LICENSE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "slidefly-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python3.10+",
+      "Chrome/Edge",
+      "PPTXはPowerPoint2019/365でMorph対応"
+    ],
+    "commands": [
+      "python upstream/scripts/inline-assets.py source.html index.html",
+      "python upstream/scripts/export-pptx.py index.html deck.pptx"
+    ],
+    "steps": [
+      "named actorと6poseを作る",
+      "free-layoutとframeで和文を配置",
+      "原典inline-assetsで単一HTML化",
+      "原典auditと一回の動きを確認する"
+    ],
+    "limitations": [],
+    "forks": [
+      "slidefly-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_morph_engine_inline_export",
+    "case_ids": [
+      "slidefly-showcase"
+    ],
+    "skill": "skill-forks/slidefly-ja/SKILL.md",
+    "guide": "examples/repositories/slidefly-showcase/README.md",
     "original_description_ja": "PowerPointの変形（Morph）風トランジションと47種のスタイルを備えた、ベトナム語対応のHTML資料作成スキル。"
   },
   {
