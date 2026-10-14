@@ -1,0 +1,2264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>re:Invent Keynote — Presentation</title>
+
+    <!-- Fonts: Urbanist (display) + Albert Sans (body) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@400;500;600&family=Urbanist:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- Icons: Lucide (CDN). Use <i data-lucide="name"></i>. NEVER emoji. -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+    <style>
+        /* ============================================================
+           RE:INVENT KEYNOTE — REFINED DESIGN SYSTEM
+           Self-contained. viewport-base.css is folded in below.
+           Downstream agents write ONLY <section> markup using these
+           classes. See _classref.md for the exact HTML skeletons.
+           ============================================================ */
+
+        /* === THEME TOKENS === */
+        :root {
+            /* Palette — re:Invent */
+            --bg-primary: #0A0A0A;
+            --bg-title: #0B0015;
+            --accent-purple: #8B5CF6;
+            --accent-pink: #D946EF;
+            --accent-blue: #3B82F6;
+            --accent-orange: #FF9900;
+            --up: #34D399;          /* delta positive / green */
+            --warn: #FBBF24;        /* delta caution / amber */
+            --down: #F472B6;        /* delta negative / rose */
+            --text-primary: #FFFFFF;
+            --text-secondary: rgba(255, 255, 255, 0.55);
+            --text-faint: rgba(255, 255, 255, 0.38);
+            --glow-purple: rgba(139, 92, 246, 0.4);
+
+            /* Surfaces */
+            --card-bg: rgba(139, 92, 246, 0.07);
+            --card-border: rgba(139, 92, 246, 0.2);
+            --card-border-hover: rgba(139, 92, 246, 0.45);
+            --frame-border: rgba(139, 92, 246, 0.16);
+            --hairline: rgba(255, 255, 255, 0.1);
+            --grad-accent: linear-gradient(135deg, #a78bfa, #e879f9, #f472b6);
+            --grad-bar: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-orange));
+
+            /* Fonts */
+            --font-display: 'Urbanist', sans-serif;
+            --font-body: 'Albert Sans', sans-serif;
+
+            /* Type scale — ALL clamp() */
+            --title-size: clamp(2.4rem, 7vw, 5.5rem);
+            --h2-size: clamp(1.5rem, 4vw, 3.2rem);
+            --h3-size: clamp(1rem, 2vw, 1.6rem);
+            --subtitle-size: clamp(0.9rem, 2vw, 1.4rem);
+            --body-size: clamp(0.8rem, 1.6vw, 1.25rem);
+            --small-size: clamp(0.7rem, 1.2vw, 1rem);
+            --micro-size: clamp(0.6rem, 0.9vw, 0.8rem);
+
+            /* Spacing — ALL clamp() */
+            --slide-padding: clamp(2rem, 5vw, 5rem);
+            --content-gap: clamp(0.8rem, 2vw, 1.8rem);
+            --content-max: min(92vw, 1180px);
+
+            /* Motion */
+            --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+            --duration-normal: 0.7s;
+        }
+
+        /* === BASE (folds viewport-base.css rules 1-3) === */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: var(--font-body);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            -webkit-font-smoothing: antialiased;
+        }
+        html, body { height: 100%; overflow-x: hidden; scrollbar-width: none; }
+        html::-webkit-scrollbar, body::-webkit-scrollbar { display: none; }
+        html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+
+        /* Each .slide = exact viewport height, no overflow (NON-NEGOTIABLE) */
+        .slide {
+            width: 100vw; height: 100vh; height: 100dvh;
+            overflow: hidden; scroll-snap-align: start;
+            display: flex; flex-direction: column; position: relative;
+        }
+        /* Content container centers + clamps height so chrome never pushes it */
+        .slide-content {
+            flex: 1; display: flex; flex-direction: column; justify-content: center;
+            align-items: center;
+            max-height: 100%; overflow: hidden;
+            padding: var(--slide-padding);
+            /* leave headroom for the top header chrome + bottom pips/footer */
+            padding-top: clamp(3.2rem, 7vh, 5rem);
+            padding-bottom: clamp(3rem, 6vh, 4.5rem);
+            position: relative; z-index: 2;
+        }
+        /* Shared inner wrapper width for content layouts */
+        .slide-content > .section-head,
+        .slide-content > .cs-body { width: 100%; max-width: var(--content-max); }
+
+        /* === VIEWPORT BREAKPOINTS (700 / 600 / 500 + max-width 600) === */
+        @media (max-height: 700px) {
+            :root {
+                --slide-padding: clamp(1rem, 3vw, 2rem);
+                --content-gap: clamp(0.5rem, 1.5vw, 1rem);
+                --title-size: clamp(1.6rem, 5vw, 3rem);
+                --h2-size: clamp(1.1rem, 3vw, 1.8rem);
+                --h3-size: clamp(0.9rem, 1.8vw, 1.3rem);
+            }
+            .slide-content { padding-top: clamp(2.6rem, 6vh, 3.6rem); padding-bottom: clamp(2.4rem, 5vh, 3.2rem); }
+        }
+        @media (max-height: 600px) {
+            :root {
+                --slide-padding: clamp(0.75rem, 2.5vw, 1.5rem);
+                --content-gap: clamp(0.4rem, 1vw, 0.8rem);
+                --title-size: clamp(1.3rem, 4vw, 2.2rem);
+                --h2-size: clamp(1rem, 2.6vw, 1.5rem);
+                --body-size: clamp(0.68rem, 1.2vw, 0.92rem);
+                --small-size: clamp(0.6rem, 1vw, 0.8rem);
+            }
+            .nav-dots, .floating-orb { display: none; }
+            .slide-content { padding-top: clamp(2.2rem, 5vh, 3rem); padding-bottom: clamp(2rem, 4vh, 2.6rem); }
+        }
+        @media (max-height: 500px) {
+            :root {
+                --slide-padding: clamp(0.5rem, 2vw, 1rem);
+                --title-size: clamp(1.1rem, 3.5vw, 1.6rem);
+                --h2-size: clamp(0.9rem, 2.4vw, 1.3rem);
+            }
+        }
+        @media (max-width: 600px) {
+            :root { --title-size: clamp(1.5rem, 8vw, 2.8rem); }
+            .content-layout,
+            .features-grid,
+            .tag-grid,
+            .org-layout,
+            .reflect-grid,
+            .outlook-row,
+            .compare-grid { grid-template-columns: 1fr !important; }
+            .metric-row { flex-wrap: wrap; }
+            .metric-card { flex: 0 0 calc(50% - clamp(0.3rem, 0.6vw, 0.5rem)); }
+            .stats-row { flex-wrap: wrap; }
+            .stat-item { flex: 0 0 50%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.2s !important; }
+            html { scroll-behavior: auto; }
+        }
+
+        /* === REVEAL ANIMATIONS (d1–d7) === */
+        .reveal {
+            opacity: 0; transform: translateY(25px);
+            transition: opacity var(--duration-normal) var(--ease-out-expo),
+                        transform var(--duration-normal) var(--ease-out-expo);
+        }
+        .slide.visible .reveal { opacity: 1; transform: translateY(0); }
+        .slide.visible .reveal.d1 { transition-delay: 0.1s; }
+        .slide.visible .reveal.d2 { transition-delay: 0.2s; }
+        .slide.visible .reveal.d3 { transition-delay: 0.3s; }
+        .slide.visible .reveal.d4 { transition-delay: 0.4s; }
+        .slide.visible .reveal.d5 { transition-delay: 0.5s; }
+        .slide.visible .reveal.d6 { transition-delay: 0.6s; }
+        .slide.visible .reveal.d7 { transition-delay: 0.7s; }
+
+        /* === FLOATING GRADIENT ORBS (content slides) === */
+        .floating-orb { position: absolute; border-radius: 50%; pointer-events: none; z-index: 0; }
+        .orb-purple { background: radial-gradient(circle, rgba(139,92,246,0.30) 0%, rgba(139,92,246,0) 70%); }
+        .orb-pink   { background: radial-gradient(circle, rgba(217,70,239,0.26) 0%, rgba(217,70,239,0) 70%); }
+        .orb-blue   { background: radial-gradient(circle, rgba(59,130,246,0.22) 0%, rgba(59,130,246,0) 70%); }
+        @keyframes orbFloat1 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(20px,-30px) scale(1.05); } }
+        @keyframes orbFloat2 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-25px,20px) scale(0.95); } }
+        @keyframes orbFloat3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(15px,25px) scale(1.03); } }
+
+        /* === TITLE / DIVIDER ANIMATED BLOBS === */
+        .blob-canvas { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0; }
+        .blob { position: absolute; border-radius: 50%; filter: blur(80px); will-change: transform, opacity; }
+        @keyframes blob1 {
+            0%   { transform: translate(0, 0) scale(1);          background: rgba(139,92,246,0.55); }
+            25%  { transform: translate(8vw, -12vh) scale(1.2);  background: rgba(217,70,239,0.6); }
+            50%  { transform: translate(-5vw, 8vh) scale(0.9);   background: rgba(59,130,246,0.5); }
+            75%  { transform: translate(12vw, 5vh) scale(1.15);  background: rgba(236,72,153,0.55); }
+            100% { transform: translate(0, 0) scale(1);          background: rgba(139,92,246,0.55); }
+        }
+        @keyframes blob2 {
+            0%   { transform: translate(0, 0) scale(1);          background: rgba(217,70,239,0.5); }
+            25%  { transform: translate(-10vw, 6vh) scale(1.15); background: rgba(59,130,246,0.55); }
+            50%  { transform: translate(6vw, -10vh) scale(0.85); background: rgba(255,153,0,0.4); }
+            75%  { transform: translate(-8vw, -4vh) scale(1.1);  background: rgba(139,92,246,0.5); }
+            100% { transform: translate(0, 0) scale(1);          background: rgba(217,70,239,0.5); }
+        }
+        @keyframes blob3 {
+            0%   { transform: translate(0, 0) scale(1);          background: rgba(59,130,246,0.45); }
+            33%  { transform: translate(10vw, 8vh) scale(1.25);  background: rgba(139,92,246,0.55); }
+            66%  { transform: translate(-6vw, -12vh) scale(0.8); background: rgba(217,70,239,0.45); }
+            100% { transform: translate(0, 0) scale(1);          background: rgba(59,130,246,0.45); }
+        }
+        @keyframes blob4 {
+            0%   { transform: translate(0, 0) scale(1);          background: rgba(236,72,153,0.35); }
+            30%  { transform: translate(-12vw, 10vh) scale(1.3); background: rgba(139,92,246,0.45); }
+            60%  { transform: translate(8vw, -6vh) scale(0.85);  background: rgba(59,200,180,0.35); }
+            100% { transform: translate(0, 0) scale(1);          background: rgba(236,72,153,0.35); }
+        }
+
+        /* ============================================================
+           CONTENT-PAGE CHROME
+           .slide-frame  : rounded inset border + faint inner glow
+           .slide-header : top bar — eyebrow (L) + index (R)
+           .slide-progress : centered segmented pip row at bottom
+           ALL are absolutely-positioned overlays (z-index 5/6) so they
+           NEVER push content or break the 100vh fit.
+           ============================================================ */
+        .slide-frame {
+            position: absolute;
+            inset: clamp(10px, 1.6vw, 22px);
+            border: 1px solid var(--frame-border);
+            border-radius: clamp(14px, 1.6vw, 22px);
+            box-shadow: inset 0 0 60px rgba(139,92,246,0.06),
+                        inset 0 0 1px rgba(255,255,255,0.05);
+            pointer-events: none;
+            z-index: 5;
+        }
+        .slide-header {
+            position: absolute;
+            top: clamp(18px, 2.6vw, 34px);
+            left: clamp(24px, 3.4vw, 48px);
+            right: clamp(24px, 3.4vw, 48px);
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 1rem;
+            z-index: 6; pointer-events: none;
+        }
+        .slide-eyebrow {
+            font-family: var(--font-body);
+            font-size: var(--micro-size);
+            font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+            color: var(--text-faint);
+            display: inline-flex; align-items: center; gap: 0.5em;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .slide-eyebrow b { color: rgba(255,255,255,0.7); font-weight: 600; }
+        .slide-index {
+            font-family: var(--font-display);
+            font-size: var(--micro-size);
+            font-weight: 700; letter-spacing: 0.12em;
+            color: var(--text-faint);
+            font-variant-numeric: tabular-nums; white-space: nowrap;
+        }
+        .slide-index b {
+            background: var(--grad-accent);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        /* Centered segmented progress pips (filled by controller JS) */
+        .slide-progress {
+            position: absolute;
+            bottom: clamp(20px, 2.6vw, 34px);
+            left: 50%; transform: translateX(-50%);
+            display: flex; align-items: center; gap: clamp(4px, 0.6vw, 7px);
+            z-index: 6; pointer-events: none;
+        }
+        .slide-progress .pip {
+            width: clamp(8px, 1vw, 14px); height: clamp(3px, 0.4vw, 4px);
+            border-radius: 3px; background: rgba(255,255,255,0.16);
+            transition: background 0.3s, width 0.3s;
+        }
+        .slide-progress .pip.on {
+            width: clamp(18px, 2.2vw, 28px);
+            background: var(--grad-bar);
+            box-shadow: 0 0 8px rgba(217,70,239,0.4);
+        }
+        @media (max-height: 600px) { .slide-progress { display: none; } }
+
+        /* === FOOTER (AWS disclaimer) === */
+        .slide-footer {
+            position: absolute; bottom: 0; left: 0; right: 0;
+            padding: clamp(0.5rem, 1vw, 0.85rem) var(--slide-padding);
+            font-size: clamp(0.5rem, 0.7vw, 0.65rem);
+            color: var(--text-faint); text-align: center; z-index: 4;
+            letter-spacing: 0.05em;
+        }
+        @media (max-height: 500px) { .slide-footer { display: none; } }
+
+        /* === PAGE NUMBER (fixed, redundant w/ .slide-index) === */
+        .page-number {
+            position: fixed;
+            bottom: clamp(8px, 1.2vh, 16px);
+            right: clamp(12px, 2vw, 24px);
+            z-index: 999;
+            font-family: var(--font-body);
+            font-size: clamp(0.55rem, 0.8vw, 0.7rem);
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 0.05em; font-variant-numeric: tabular-nums;
+        }
+        @media (max-height: 600px) { .page-number { display: none; } }
+
+        /* ============================================================
+           SECTION HEADER PATTERN
+           Big gradient .section-num + .section-title (+ optional desc)
+           Use .section-head as the header block at top of content.
+           ============================================================ */
+        .section-head {
+            display: flex; flex-direction: column; align-items: flex-start;
+            gap: clamp(0.2rem, 0.6vw, 0.5rem);
+            margin-bottom: clamp(0.8rem, 2vh, 1.6rem);
+        }
+        .section-head.center { align-items: center; text-align: center; }
+        .section-titlebar {
+            display: flex; align-items: baseline; gap: clamp(0.6rem, 1.4vw, 1.1rem);
+        }
+        .section-num {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5.5vw, 4.2rem);
+            font-weight: 900; line-height: 0.9; letter-spacing: -0.03em;
+            background: var(--grad-accent);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            filter: drop-shadow(0 0 24px rgba(217,70,239,0.35));
+            flex-shrink: 0;
+        }
+        .section-title {
+            font-family: var(--font-display);
+            font-size: var(--h2-size);
+            font-weight: 700; line-height: 1.12; letter-spacing: -0.01em;
+        }
+        .section-desc {
+            font-size: var(--body-size); color: var(--text-secondary); line-height: 1.6;
+            max-width: min(90vw, 760px);
+        }
+        /* legacy alias kept for compatibility with the old eyebrow label */
+        .section-label {
+            font-family: var(--font-body); font-size: var(--small-size); font-weight: 500;
+            letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent-purple);
+            margin-bottom: clamp(0.3rem, 0.7vw, 0.5rem);
+        }
+
+        /* ============================================================
+           TITLE SLIDE (KEPT AS-IS — cover treatment)
+           ============================================================ */
+        .title-slide { background: var(--bg-title); }
+        .title-slide::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 90% 90% at 50% 50%, transparent 40%, rgba(11,0,21,0.6) 100%);
+            pointer-events: none; z-index: 1;
+        }
+        .title-slide .slide-content {
+            align-items: center; text-align: center;
+            gap: clamp(0.6rem, 1.5vw, 1.2rem);
+            padding-top: var(--slide-padding); padding-bottom: var(--slide-padding);
+        }
+        .title-label {
+            font-family: var(--font-body); font-size: var(--small-size); font-weight: 500;
+            letter-spacing: 0.35em; text-transform: uppercase; color: rgba(255,255,255,0.6);
+        }
+        .title-main {
+            font-family: var(--font-display); font-size: var(--title-size);
+            font-weight: 800; line-height: 1.05; letter-spacing: -0.025em;
+            text-shadow: 0 0 30px rgba(139,92,246,0.3), 0 0 80px rgba(139,92,246,0.15);
+        }
+        .title-main em {
+            font-style: normal; position: relative;
+            background: var(--grad-accent);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            filter: drop-shadow(0 0 25px rgba(217,70,239,0.5)) drop-shadow(0 0 60px rgba(139,92,246,0.3));
+        }
+        .title-accent {
+            width: clamp(40px, 5vw, 56px); height: 3px;
+            background: linear-gradient(90deg, var(--accent-orange), var(--accent-pink));
+            border-radius: 2px;
+            box-shadow: 0 0 12px rgba(255,153,0,0.4), 0 0 30px rgba(217,70,239,0.2);
+        }
+        .title-sub {
+            font-size: var(--subtitle-size); color: rgba(255,255,255,0.65);
+            max-width: min(90vw, 550px); line-height: 1.6;
+            text-shadow: 0 0 20px rgba(0,0,0,0.5);
+        }
+
+        /* ============================================================
+           SECTION DIVIDER (big number, richer gradient backdrop)
+           id: section-divider
+           ============================================================ */
+        .divider-slide { background: var(--bg-title); }
+        .divider-slide::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 80% 80% at 50% 45%, rgba(124,58,237,0.18) 0%, transparent 60%),
+                        radial-gradient(ellipse 70% 70% at 50% 55%, transparent 45%, rgba(11,0,21,0.55) 100%);
+            pointer-events: none; z-index: 1;
+        }
+        .divider-slide .slide-content { align-items: center; text-align: center; gap: clamp(0.4rem, 1vw, 0.9rem); }
+        .divider-num {
+            font-family: var(--font-display);
+            font-size: clamp(4.5rem, 16vw, 13rem);
+            font-weight: 900; line-height: 0.85; letter-spacing: -0.04em;
+            background: var(--grad-accent);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            filter: drop-shadow(0 0 50px rgba(217,70,239,0.4));
+        }
+        .divider-title {
+            font-family: var(--font-display); font-size: var(--h2-size);
+            font-weight: 800; line-height: 1.1;
+        }
+        .divider-sub {
+            font-size: var(--subtitle-size); color: var(--text-secondary);
+            max-width: min(85vw, 620px); line-height: 1.55;
+        }
+
+        /* ============================================================
+           NEW: METRIC CARDS ROW (id: metric-cards)
+           Row of 4: category tag, big gradient number + unit, delta line.
+           ============================================================ */
+        .metric-row {
+            display: flex; gap: clamp(0.6rem, 1.4vw, 1.1rem);
+            width: 100%; max-width: var(--content-max);
+        }
+        .metric-card {
+            flex: 1; min-width: 0;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: clamp(12px, 1.4vw, 18px);
+            padding: clamp(0.8rem, 1.8vw, 1.4rem);
+            box-shadow: 0 0 0 rgba(139,92,246,0);
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .metric-card:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 0 28px rgba(139,92,246,0.16);
+            transform: translateY(-3px);
+        }
+        .metric-tag {
+            display: inline-flex; align-items: center; gap: 0.4em;
+            font-size: var(--micro-size); font-weight: 600;
+            letter-spacing: 0.08em; text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: clamp(0.4rem, 1vw, 0.7rem);
+        }
+        .metric-tag i { width: clamp(12px, 1.4vw, 16px); height: clamp(12px, 1.4vw, 16px); color: var(--accent-purple); }
+        .metric-value {
+            font-family: var(--font-display);
+            font-size: clamp(1.7rem, 4.5vw, 3.2rem);
+            font-weight: 800; line-height: 1; letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            display: inline-flex; align-items: baseline;
+        }
+        .metric-unit {
+            font-family: var(--font-display);
+            font-size: clamp(0.8rem, 1.6vw, 1.2rem); font-weight: 700;
+            color: var(--text-secondary);
+            -webkit-text-fill-color: var(--text-secondary);
+            margin-left: 0.18em;
+        }
+        .metric-delta {
+            display: inline-flex; align-items: center; gap: 0.3em;
+            margin-top: clamp(0.4rem, 0.9vw, 0.65rem);
+            font-size: var(--small-size); font-weight: 600;
+        }
+        .metric-delta i { width: clamp(13px, 1.5vw, 17px); height: clamp(13px, 1.5vw, 17px); }
+        .metric-delta.up   { color: var(--up); }
+        .metric-delta.down { color: var(--down); }
+        .metric-delta.warn { color: var(--warn); }
+        .metric-delta span { color: var(--text-faint); font-weight: 400; }
+
+        /* ============================================================
+           NEW: CALLOUT BAR (id used inline under metric rows)
+           Editorial insight strip — NO solid colored left rail (that reads
+           as generic AI/dashboard slop). Direction is carried by a soft
+           horizontal gradient wash + a leading inline icon and a small
+           monospace tag; the border stays uniform.
+           ============================================================ */
+        .callout-bar {
+            display: flex; align-items: center; gap: clamp(0.7rem, 1.5vw, 1.1rem);
+            width: 100%; max-width: var(--content-max);
+            margin-top: clamp(0.7rem, 1.6vh, 1.2rem);
+            padding: clamp(0.7rem, 1.4vw, 1.05rem) clamp(1rem, 2vw, 1.6rem);
+            background: linear-gradient(90deg, rgba(217,70,239,0.10), rgba(139,92,246,0.04) 45%, transparent);
+            border: 1px solid var(--card-border);
+            border-radius: clamp(10px, 1.2vw, 14px);
+        }
+        .callout-bar i {
+            width: clamp(18px, 2vw, 24px); height: clamp(18px, 2vw, 24px);
+            color: var(--accent-pink); flex-shrink: 0;
+        }
+        .callout-bar .callout-tag {
+            font-family: var(--font-body); font-size: var(--micro-size); font-weight: 600;
+            letter-spacing: 0.18em; text-transform: uppercase; color: var(--accent-pink);
+            flex-shrink: 0; align-self: center;
+            padding-right: clamp(0.7rem, 1.5vw, 1.1rem);
+            border-right: 1px solid var(--hairline);
+        }
+        .callout-bar p {
+            font-size: var(--body-size); line-height: 1.45; color: rgba(255,255,255,0.85);
+        }
+        .callout-bar strong {
+            font-weight: 700;
+            background: var(--grad-accent);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        @media (max-width: 600px) { .callout-bar .callout-tag { display: none; } }
+
+        /* ============================================================
+           NEW: TAGGED CARD GRID (id: tagged-grid)
+           3x2 grid: colored chip, bold title, 2-line desc, metric foot.
+           ============================================================ */
+        .tag-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.6rem, 1.3vw, 1rem);
+            width: 100%; max-width: var(--content-max);
+        }
+        .tag-card {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: clamp(10px, 1.2vw, 15px);
+            padding: clamp(0.7rem, 1.5vw, 1.15rem);
+            display: flex; flex-direction: column;
+            gap: clamp(0.25rem, 0.6vw, 0.45rem);
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .tag-card:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 0 26px rgba(139,92,246,0.14);
+            transform: translateY(-3px);
+        }
+        .tag-chip {
+            align-self: flex-start;
+            display: inline-flex; align-items: center; gap: 0.35em;
+            font-size: var(--micro-size); font-weight: 600;
+            letter-spacing: 0.06em; text-transform: uppercase;
+            padding: clamp(2px, 0.4vw, 4px) clamp(7px, 1vw, 11px);
+            border-radius: 999px;
+            color: #fff;
+            background: rgba(139,92,246,0.18);
+            border: 1px solid rgba(139,92,246,0.35);
+        }
+        /* chip color variants — set via class on .tag-chip */
+        .tag-chip.purple { background: rgba(139,92,246,0.18); border-color: rgba(139,92,246,0.4); color: #c4b5fd; }
+        .tag-chip.pink   { background: rgba(217,70,239,0.16); border-color: rgba(217,70,239,0.4); color: #f0abfc; }
+        .tag-chip.blue   { background: rgba(59,130,246,0.16);  border-color: rgba(59,130,246,0.4);  color: #93c5fd; }
+        .tag-chip.green  { background: rgba(52,211,153,0.15);  border-color: rgba(52,211,153,0.4);  color: #6ee7b7; }
+        .tag-chip.orange { background: rgba(255,153,0,0.15);   border-color: rgba(255,153,0,0.4);   color: #fcd34d; }
+        .tag-chip i { width: clamp(11px, 1.3vw, 14px); height: clamp(11px, 1.3vw, 14px); }
+        .tag-card h3 {
+            font-family: var(--font-display);
+            font-size: var(--h3-size); font-weight: 700; line-height: 1.2;
+        }
+        .tag-card p {
+            font-size: var(--small-size); color: var(--text-secondary); line-height: 1.45;
+            flex: 1;
+        }
+        .tag-foot {
+            font-family: var(--font-display);
+            font-size: var(--small-size); font-weight: 700;
+            color: var(--accent-pink);
+            padding-top: clamp(0.25rem, 0.6vw, 0.45rem);
+            border-top: 1px solid var(--hairline);
+            display: inline-flex; align-items: center; gap: 0.35em;
+        }
+        .tag-foot i { width: clamp(12px, 1.4vw, 15px); height: clamp(12px, 1.4vw, 15px); }
+        @media (max-width: 900px) { .tag-grid { grid-template-columns: repeat(2, 1fr); } }
+
+        /* ============================================================
+           NEW: METRIC + SIDE LIST SPLIT (id: metric-side-list)
+           Left 2x2 metric cards, right labeled list (label | value).
+           ============================================================ */
+        .org-layout {
+            display: grid; grid-template-columns: 3fr 2fr;
+            gap: clamp(1rem, 3vw, 2.4rem); align-items: stretch;
+            width: 100%; max-width: var(--content-max);
+        }
+        .org-metrics {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: clamp(0.6rem, 1.3vw, 1rem);
+        }
+        /* reuse .metric-card styling inside .org-metrics */
+        .org-side {
+            display: flex; flex-direction: column;
+            padding: clamp(0.8rem, 1.8vw, 1.3rem) clamp(0.9rem, 2vw, 1.5rem);
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: clamp(12px, 1.4vw, 18px);
+        }
+        .org-side-title {
+            font-family: var(--font-display);
+            font-size: var(--small-size); font-weight: 700;
+            letter-spacing: 0.1em; text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: clamp(0.3rem, 0.8vw, 0.6rem);
+        }
+        .org-list { display: flex; flex-direction: column; }
+        .org-row {
+            display: flex; align-items: center; justify-content: space-between;
+            gap: 0.8rem;
+            padding: clamp(0.4rem, 1vw, 0.7rem) 0;
+            border-bottom: 1px solid var(--hairline);
+        }
+        .org-row:last-child { border-bottom: none; }
+        .org-row .label {
+            font-size: var(--small-size); color: var(--text-secondary);
+            display: inline-flex; align-items: center; gap: 0.45em;
+        }
+        .org-row .label i { width: clamp(13px, 1.5vw, 16px); height: clamp(13px, 1.5vw, 16px); color: var(--accent-purple); }
+        .org-row .value {
+            font-family: var(--font-display);
+            font-size: var(--body-size); font-weight: 700;
+            color: var(--text-primary); white-space: nowrap;
+        }
+
+        /* ============================================================
+           NEW: TWO-COLUMN REFLECTION (id: reflection)
+           Editorial split — NO filled cards, NO colored left rail (that
+           combo reads as generic AI/dashboard slop). Two open columns share
+           a neutral center hairline; color is carried by an inline heading
+           icon, a short underline tick, and hanging leading-zero indices.
+           ============================================================ */
+        .reflect-grid {
+            display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+            width: 100%; max-width: min(90vw, 1020px);
+        }
+        .reflect-col { padding: clamp(0.3rem, 1.2vw, 0.9rem) clamp(1.1rem, 3.2vw, 2.6rem); }
+        .reflect-col + .reflect-col { border-left: 1px solid var(--hairline); }
+        .reflect-head {
+            position: relative;
+            padding-bottom: clamp(0.55rem, 1.3vw, 0.95rem);
+            margin-bottom: clamp(0.7rem, 1.7vw, 1.25rem);
+            border-bottom: 1px solid var(--hairline);
+        }
+        .reflect-head h3 {
+            display: flex; align-items: center; gap: clamp(0.4rem, 0.9vw, 0.65rem);
+            font-family: var(--font-display); font-size: var(--h3-size);
+            font-weight: 800; line-height: 1.15; letter-spacing: -0.01em;
+        }
+        .reflect-head h3 i {
+            width: clamp(18px, 2.2vw, 26px); height: clamp(18px, 2.2vw, 26px);
+            flex-shrink: 0; color: var(--accent-purple);
+        }
+        .reflect-col.warm .reflect-head h3 i { color: var(--warn); }
+        .reflect-col.cool .reflect-head h3 i { color: var(--up); }
+        /* the accent — a short thick tick sitting on the header hairline */
+        .reflect-head::after {
+            content: ''; position: absolute; left: 0; bottom: -1.5px;
+            width: clamp(32px, 5vw, 54px); height: 2.5px; border-radius: 2px;
+            background: var(--accent-purple);
+        }
+        .reflect-col.warm .reflect-head::after { background: var(--warn); box-shadow: 0 0 10px rgba(251,191,36,0.4); }
+        .reflect-col.cool .reflect-head::after { background: var(--up);  box-shadow: 0 0 10px rgba(52,211,153,0.4); }
+        .reflect-list {
+            list-style: none; display: flex; flex-direction: column;
+            gap: clamp(0.6rem, 1.5vw, 1.05rem); counter-reset: rf;
+        }
+        .reflect-list li {
+            position: relative; padding-left: clamp(1.7rem, 3.2vw, 2.5rem);
+            font-size: var(--body-size); color: var(--text-secondary); line-height: 1.5;
+            counter-increment: rf;
+        }
+        .reflect-list li::before {
+            content: counter(rf, decimal-leading-zero);
+            position: absolute; left: 0; top: 0.08em;
+            font-family: var(--font-display); font-weight: 800; font-size: 0.82em;
+            color: var(--accent-purple); font-variant-numeric: tabular-nums;
+        }
+        .reflect-col.warm .reflect-list li::before { color: var(--warn); }
+        .reflect-col.cool .reflect-list li::before { color: var(--up); }
+        @media (max-width: 768px) {
+            .reflect-grid { grid-template-columns: 1fr; }
+            .reflect-col { padding-left: 0; padding-right: 0; }
+            .reflect-col + .reflect-col { border-left: none; border-top: 1px solid var(--hairline); padding-top: clamp(0.8rem, 2vw, 1.2rem); }
+        }
+
+        /* ============================================================
+           NEW: NUMBERED OUTLOOK COLUMNS (id: outlook)
+           Richer gradient backdrop, centered tagline, 3 numbered columns.
+           ============================================================ */
+        .outlook-slide { background: var(--bg-title); }
+        .outlook-slide::after {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(ellipse 90% 80% at 50% 40%, rgba(124,58,237,0.16) 0%, transparent 60%),
+                        radial-gradient(ellipse 70% 70% at 50% 60%, transparent 45%, rgba(11,0,21,0.5) 100%);
+            pointer-events: none; z-index: 1;
+        }
+        .outlook-tagline {
+            font-family: var(--font-display);
+            font-size: var(--subtitle-size); font-weight: 600;
+            color: rgba(255,255,255,0.85); text-align: center;
+            max-width: min(85vw, 700px); line-height: 1.4;
+            margin-bottom: clamp(0.8rem, 2vh, 1.6rem);
+        }
+        .outlook-tagline em {
+            font-style: normal;
+            background: var(--grad-accent);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .outlook-row {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.9rem, 2.4vw, 2rem);
+            width: 100%; max-width: var(--content-max);
+        }
+        .outlook-col {
+            display: flex; flex-direction: column;
+            gap: clamp(0.3rem, 0.8vw, 0.55rem);
+            padding-top: clamp(0.4rem, 1vw, 0.7rem);
+            border-top: 2px solid rgba(139,92,246,0.3);
+        }
+        .outlook-num {
+            font-family: var(--font-display);
+            font-size: clamp(2.2rem, 6vw, 4.2rem);
+            font-weight: 800; line-height: 0.9; letter-spacing: -0.03em;
+            -webkit-text-stroke: 1.5px rgba(196,181,253,0.7);
+            -webkit-text-fill-color: transparent;
+            color: transparent;
+        }
+        .outlook-col h3 {
+            font-family: var(--font-display); font-size: var(--h3-size);
+            font-weight: 700; line-height: 1.2;
+        }
+        .outlook-col p {
+            font-size: var(--small-size); color: var(--text-secondary); line-height: 1.5;
+        }
+
+        /* ============================================================
+           REFRESHED: CONTENT LAYOUT — left header + right pill cards
+           (id: pill-cards)
+           ============================================================ */
+        .content-layout {
+            display: grid; grid-template-columns: 2fr 3fr;
+            gap: clamp(1.5rem, 4vw, 3.5rem); align-items: center;
+            width: 100%; max-width: var(--content-max);
+        }
+        .pill-cards { display: flex; flex-direction: column; gap: clamp(0.45rem, 1vw, 0.7rem); }
+        .pill-card {
+            display: flex; align-items: center; gap: clamp(0.6rem, 1.2vw, 1rem);
+            padding: clamp(0.65rem, 1.3vw, 0.95rem) clamp(0.8rem, 1.5vw, 1.2rem);
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: clamp(10px, 1.2vw, 14px);
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .pill-card:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 0 25px rgba(139,92,246,0.15);
+            transform: translateX(4px);
+        }
+        .pill-icon {
+            width: clamp(28px, 3vw, 36px); height: clamp(28px, 3vw, 36px);
+            border-radius: clamp(6px, 0.8vw, 10px); flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(217,70,239,0.12));
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pill-icon i { width: 55%; height: 55%; color: var(--accent-purple); }
+        .pill-text { font-size: var(--body-size); font-weight: 500; line-height: 1.3; }
+        .pill-text span { color: var(--text-secondary); font-weight: 400; }
+        .pill-arrow {
+            margin-left: auto; flex-shrink: 0;
+            width: clamp(16px, 1.8vw, 22px); height: clamp(16px, 1.8vw, 22px);
+            border-radius: 50%; background: rgba(139,92,246,0.12);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .pill-arrow i { width: 55%; height: 55%; color: rgba(255,255,255,0.4); }
+
+        /* ============================================================
+           REFRESHED: STATS ROW + FEATURE GRID (id: stats-features)
+           ============================================================ */
+        .stats-row {
+            display: flex; width: 100%; max-width: min(90vw, 940px);
+            border: 1px solid var(--card-border);
+            border-radius: clamp(12px, 1.3vw, 16px);
+            background: var(--card-bg); overflow: hidden;
+            margin-bottom: var(--content-gap);
+        }
+        .stat-item {
+            flex: 1; text-align: center;
+            padding: clamp(0.6rem, 1.5vw, 1.2rem) clamp(0.5rem, 1vw, 1rem);
+            border-right: 1px solid rgba(139,92,246,0.15);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-value {
+            font-family: var(--font-display); font-size: clamp(1.4rem, 3.5vw, 2.6rem);
+            font-weight: 800; line-height: 1.1;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .stat-label {
+            font-size: var(--small-size); color: var(--text-secondary);
+            text-transform: uppercase; letter-spacing: 0.08em;
+            margin-top: clamp(0.15rem, 0.4vw, 0.3rem);
+        }
+        .features-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.5rem, 1.1vw, 0.8rem);
+            width: 100%; max-width: min(90vw, 940px);
+        }
+        .feature-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: clamp(8px, 1vw, 12px);
+            padding: clamp(0.7rem, 1.5vw, 1.1rem);
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .feature-card:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 0 25px rgba(139,92,246,0.12);
+            transform: translateY(-3px);
+        }
+        .feat-icon {
+            width: clamp(26px, 2.8vw, 34px); height: clamp(26px, 2.8vw, 34px);
+            border-radius: clamp(5px, 0.7vw, 8px);
+            background: linear-gradient(135deg, rgba(139,92,246,0.18), rgba(217,70,239,0.1));
+            display: flex; align-items: center; justify-content: center;
+            margin-bottom: clamp(0.3rem, 0.7vw, 0.5rem);
+        }
+        .feat-icon i { width: 55%; height: 55%; color: var(--accent-purple); }
+        .feature-card h3 {
+            font-family: var(--font-display); font-size: var(--h3-size);
+            font-weight: 700; margin-bottom: clamp(0.1rem, 0.3vw, 0.2rem);
+        }
+        .feature-card p { font-size: var(--small-size); color: var(--text-secondary); line-height: 1.45; }
+
+        /* ============================================================
+           REFRESHED: SPLIT DIVIDER (id: split-divider)
+           ============================================================ */
+        .split-layout {
+            display: grid; grid-template-columns: 1fr auto 1fr;
+            align-items: center; width: 100%; max-width: var(--content-max); gap: 0;
+        }
+        .split-left { padding-right: clamp(1.5rem, 4vw, 3rem); }
+        .split-product-name {
+            font-family: var(--font-display); font-size: var(--h2-size);
+            font-weight: 400; line-height: 1.2; margin-bottom: clamp(0.2rem, 0.5vw, 0.4rem);
+        }
+        .split-product-name strong { font-weight: 800; }
+        .split-product-sub { font-size: var(--body-size); color: var(--accent-purple); font-weight: 500; }
+        .split-divider-line {
+            width: 1px; height: clamp(120px, 25vh, 250px);
+            background: linear-gradient(180deg, transparent, rgba(139,92,246,0.4), rgba(217,70,239,0.3), transparent);
+        }
+        .split-right { padding-left: clamp(1.5rem, 4vw, 3rem); }
+        .split-bullets { display: flex; flex-direction: column; gap: clamp(0.8rem, 2vh, 1.5rem); list-style: none; }
+        .split-bullets li { font-size: clamp(0.85rem, 1.6vw, 1.15rem); line-height: 1.4; color: var(--text-secondary); }
+        @media (max-width: 768px) {
+            .split-layout { grid-template-columns: 1fr; text-align: center; }
+            .split-left { padding-right: 0; margin-bottom: 1rem; }
+            .split-divider-line { width: 60%; height: 1px; margin: 0 auto;
+                background: linear-gradient(90deg, transparent, rgba(139,92,246,0.4), transparent); }
+            .split-right { padding-left: 0; margin-top: 1rem; }
+        }
+
+        /* ============================================================
+           REFRESHED: PIPELINE COLUMNS (id: pipeline-columns)
+           ============================================================ */
+        .pipeline-row {
+            display: grid; grid-template-columns: repeat(5, 1fr);
+            gap: clamp(0.4rem, 1vw, 0.8rem); width: 100%; max-width: var(--content-max);
+        }
+        .pipeline-col { text-align: center; }
+        .pipeline-col-title {
+            font-family: var(--font-display); font-size: var(--small-size);
+            font-weight: 700; margin-bottom: clamp(0.3rem, 0.6vw, 0.5rem); line-height: 1.3;
+        }
+        .pipeline-bar { height: clamp(3px, 0.5vw, 5px); border-radius: 3px; margin-bottom: clamp(0.4rem, 0.8vw, 0.6rem); }
+        .pipeline-items { display: flex; flex-direction: column; gap: clamp(0.2rem, 0.4vw, 0.35rem); }
+        .pipeline-items span { font-size: var(--small-size); color: var(--text-secondary); line-height: 1.3; }
+        .pipeline-footer {
+            width: 100%; max-width: var(--content-max); text-align: center;
+            font-size: var(--small-size); color: var(--text-secondary);
+            letter-spacing: 0.15em; text-transform: uppercase;
+            margin-top: clamp(0.6rem, 1.4vh, 1rem);
+            padding-top: clamp(0.5rem, 1vw, 0.8rem); border-top: 1px solid var(--hairline);
+        }
+        @media (max-width: 768px) { .pipeline-row { grid-template-columns: repeat(2, 1fr); } }
+
+        /* ============================================================
+           REFRESHED: QUOTE (id: quote)
+           ============================================================ */
+        .quote-slide .slide-content { align-items: center; text-align: center; gap: var(--content-gap); }
+        .quote-mark {
+            font-family: var(--font-display); font-size: clamp(3rem, 8vw, 6rem);
+            line-height: 1; font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            opacity: 0.5;
+        }
+        .quote-text {
+            font-family: var(--font-display); font-size: clamp(1.1rem, 2.5vw, 2rem);
+            font-weight: 500; line-height: 1.5; max-width: min(85vw, 800px); color: rgba(255,255,255,0.9);
+        }
+        .quote-attr { font-size: var(--body-size); color: var(--text-secondary); }
+        .quote-attr strong { color: var(--text-primary); font-weight: 600; }
+
+        /* ============================================================
+           REFRESHED: BIG NUMBER HERO (id: big-number)
+           ============================================================ */
+        .bignumber-slide .slide-content { align-items: center; text-align: center; gap: clamp(0.4rem, 1vw, 0.8rem); }
+        .bignumber {
+            font-family: var(--font-display); font-size: clamp(4rem, 14vw, 12rem);
+            font-weight: 800; line-height: 1;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink), var(--accent-orange));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            filter: drop-shadow(0 0 40px rgba(139,92,246,0.3));
+        }
+        .bignumber-label { font-family: var(--font-display); font-size: var(--h2-size); font-weight: 700; }
+        .bignumber-desc { font-size: var(--subtitle-size); color: var(--text-secondary); max-width: min(80vw, 600px); line-height: 1.6; }
+
+        /* ============================================================
+           REFRESHED: COMPARISON SPLIT (id: comparison)
+           ============================================================ */
+        .compare-grid {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: clamp(0.8rem, 2vw, 1.5rem); width: 100%; max-width: min(92vw, 1000px);
+        }
+        .compare-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: clamp(10px, 1.2vw, 16px); padding: clamp(1rem, 2.5vw, 2rem);
+        }
+        .compare-card-title {
+            font-family: var(--font-display); font-size: var(--h3-size);
+            font-weight: 700; margin-bottom: clamp(0.5rem, 1vw, 0.8rem);
+            display: flex; align-items: center; gap: clamp(0.3rem, 0.6vw, 0.5rem);
+        }
+        .compare-dot { width: clamp(8px, 1vw, 12px); height: clamp(8px, 1vw, 12px); border-radius: 50%; flex-shrink: 0; }
+        .compare-list { list-style: none; display: flex; flex-direction: column; gap: clamp(0.3rem, 0.7vw, 0.5rem); }
+        .compare-list li {
+            font-size: var(--body-size); color: var(--text-secondary);
+            padding-left: clamp(0.8rem, 1.5vw, 1.2rem); position: relative;
+        }
+        .compare-list li::before {
+            content: ''; position: absolute; left: 0; top: clamp(0.35rem, 0.7vw, 0.5rem);
+            width: clamp(4px, 0.5vw, 6px); height: clamp(4px, 0.5vw, 6px);
+            border-radius: 50%; background: var(--accent-purple);
+        }
+        @media (max-width: 768px) { .compare-grid { grid-template-columns: 1fr; } }
+
+        /* ============================================================
+           REFRESHED: PROCESS FLOW (id: process-flow)
+           ============================================================ */
+        .process-row {
+            display: flex; align-items: flex-start;
+            width: 100%; max-width: var(--content-max); gap: 0; position: relative;
+        }
+        .process-step { flex: 1; text-align: center; position: relative; padding: 0 clamp(0.3rem, 0.8vw, 0.6rem); }
+        .step-num {
+            width: clamp(32px, 4vw, 48px); height: clamp(32px, 4vw, 48px);
+            border-radius: 50%; margin: 0 auto clamp(0.4rem, 0.8vw, 0.6rem);
+            display: flex; align-items: center; justify-content: center;
+            font-family: var(--font-display); font-size: var(--body-size); font-weight: 800;
+            background: linear-gradient(135deg, rgba(139,92,246,0.2), rgba(217,70,239,0.15));
+            border: 1px solid var(--card-border); position: relative; z-index: 1;
+        }
+        .process-step:not(:last-child)::after {
+            content: ''; position: absolute;
+            top: clamp(16px, 2vw, 24px); left: calc(50% + clamp(20px, 2.5vw, 30px));
+            width: calc(100% - clamp(40px, 5vw, 60px)); height: 1px;
+            background: linear-gradient(90deg, rgba(139,92,246,0.3), rgba(217,70,239,0.2)); z-index: 0;
+        }
+        .step-title { font-family: var(--font-display); font-size: var(--h3-size); font-weight: 700; margin-bottom: clamp(0.15rem, 0.3vw, 0.25rem); }
+        .step-desc { font-size: var(--small-size); color: var(--text-secondary); line-height: 1.4; }
+        @media (max-width: 768px) {
+            .process-row { flex-direction: column; gap: clamp(0.5rem, 1.5vw, 1rem); align-items: center; }
+            .process-step { width: 100%; max-width: 300px; }
+            .process-step:not(:last-child)::after { display: none; }
+        }
+
+        /* ============================================================
+           REFRESHED: TIMELINE ZIGZAG (id: timeline)
+           ============================================================ */
+        .timeline {
+            width: 100%; max-width: var(--content-max);
+            display: grid; grid-template-rows: auto auto auto; grid-template-columns: repeat(5, 1fr);
+            row-gap: 0; column-gap: 0;
+        }
+        .tl-top { grid-row: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+        .tl-top .tl-card { margin-bottom: clamp(0.5rem, 1.2vw, 1rem); }
+        .tl-top.empty { visibility: hidden; }
+        .tl-mid { grid-row: 2; display: flex; align-items: center; justify-content: center; position: relative; height: clamp(20px, 2.5vw, 30px); }
+        .tl-mid::before {
+            content: ''; position: absolute; left: 0; right: 0; top: 50%; height: 3px;
+            transform: translateY(-50%); background: rgba(139,92,246,0.3);
+        }
+        .tl-col1.tl-mid::before { left: 50%; background: linear-gradient(90deg, rgba(59,130,246,0.5), rgba(139,92,246,0.4)); }
+        .tl-col5.tl-mid::before { right: 50%; background: linear-gradient(90deg, rgba(217,70,239,0.4), rgba(236,72,153,0.3)); }
+        .tl-dot {
+            width: clamp(14px, 1.6vw, 20px); height: clamp(14px, 1.6vw, 20px);
+            border-radius: 50%; border: 2.5px solid currentColor;
+            background: var(--bg-primary); position: relative; z-index: 1; box-shadow: 0 0 14px currentColor;
+        }
+        .tl-bot { grid-row: 3; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+        .tl-bot .tl-card { margin-top: clamp(0.5rem, 1.2vw, 1rem); }
+        .tl-bot.empty { visibility: hidden; }
+        .tl-stem-up { width: 2px; height: clamp(16px, 3vh, 30px); background: linear-gradient(180deg, transparent, currentColor); margin-bottom: clamp(0.15rem, 0.3vw, 0.25rem); }
+        .tl-stem-down { width: 2px; height: clamp(16px, 3vh, 30px); background: linear-gradient(180deg, currentColor, transparent); margin-top: clamp(0.15rem, 0.3vw, 0.25rem); }
+        .tl-card { text-align: center; padding: 0 clamp(0.2rem, 0.5vw, 0.4rem); }
+        .tl-year { font-family: var(--font-display); font-size: var(--h3-size); font-weight: 800; color: currentColor; }
+        .tl-desc { font-size: var(--small-size); color: var(--text-secondary); line-height: 1.35; margin-top: clamp(0.1rem, 0.3vw, 0.2rem); }
+        .tl-col1 { color: #3b82f6; } .tl-col2 { color: #8b5cf6; } .tl-col3 { color: #a855f7; }
+        .tl-col4 { color: #d946ef; } .tl-col5 { color: #ec4899; }
+        @media (max-width: 768px) {
+            .tl-year { font-size: var(--small-size); }
+            .tl-desc { font-size: clamp(0.55rem, 1vw, 0.75rem); }
+        }
+
+        /* ============================================================
+           CHART CONTAINERS (used only when ### chart blocks present)
+           Chart palette: #8B5CF6,#D946EF,#FF9900,#06B6D4,#34D399,#F472B6
+           ============================================================ */
+        .chart-card {
+            background: var(--card-bg); border: 1px solid var(--card-border);
+            border-radius: clamp(8px, 1vw, 14px); padding: clamp(12px, 2vw, 22px);
+            width: 100%; max-width: var(--content-max);
+        }
+        .chart-container { position: relative; width: 100%; height: clamp(150px, 32vh, 300px); }
+
+        /* ============================================================
+           NEW: BENTO GRID (id: bento) — asymmetric feature mosaic
+           ============================================================ */
+        .bento-grid {
+            display: grid; grid-template-columns: repeat(4, 1fr);
+            grid-auto-rows: minmax(0, 1fr);
+            gap: clamp(0.5rem, 1.1vw, 0.9rem);
+            width: 100%; max-width: var(--content-max); max-height: min(68vh, 620px);
+        }
+        .bento-cell {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: clamp(12px, 1.4vw, 18px);
+            padding: clamp(0.8rem, 1.6vw, 1.3rem);
+            display: flex; flex-direction: column;
+            gap: clamp(0.3rem, 0.7vw, 0.55rem);
+            min-width: 0; overflow: hidden;
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .bento-cell:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 0 28px rgba(139,92,246,0.16);
+            transform: translateY(-3px);
+        }
+        .bento-icon {
+            width: clamp(28px, 3vw, 38px); height: clamp(28px, 3vw, 38px);
+            border-radius: clamp(6px, 0.8vw, 10px); flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(139,92,246,0.18), rgba(217,70,239,0.1));
+            display: flex; align-items: center; justify-content: center;
+        }
+        .bento-icon i { width: 55%; height: 55%; color: var(--accent-purple); }
+        .bento-cell h3 {
+            font-family: var(--font-display);
+            font-size: var(--h3-size); font-weight: 700; line-height: 1.2;
+        }
+        .bento-cell p {
+            font-size: var(--small-size); color: var(--text-secondary); line-height: 1.45;
+        }
+        .bento-hero {
+            grid-column: span 2; grid-row: span 2;
+            justify-content: flex-end; gap: clamp(0.4rem, 1vw, 0.75rem);
+            overflow: visible; /* let the border beam render outside the box */
+        }
+        .bento-hero h3 {
+            font-size: var(--h2-size); font-weight: 800; letter-spacing: -0.01em; line-height: 1.1;
+        }
+        .bento-hero p { font-size: var(--body-size); }
+        .bento-stat {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5.5vw, 3.6rem);
+            font-weight: 800; line-height: 1; letter-spacing: -0.02em;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+            display: inline-flex; align-items: baseline; margin-top: clamp(0.1rem, 0.4vw, 0.3rem);
+        }
+        .bento-wide { grid-column: 1 / -1; flex-direction: row; align-items: center; }
+        .bento-wide h3 { font-size: var(--h3-size); }
+        .bento-wide p { margin-left: auto; text-align: right; }
+        /* Short viewports: 1fr rows shrink below the text height — drop the
+           small-cell descriptions (icon + title still read fine). */
+        @media (max-height: 700px) {
+            .bento-cell:not(.bento-hero):not(.bento-wide) p { display: none; }
+        }
+        @media (max-width: 900px) {
+            .bento-grid { grid-template-columns: repeat(2, 1fr); max-height: none; }
+            .bento-hero { grid-column: span 2; grid-row: span 1; }
+            .bento-wide { grid-column: span 2; }
+        }
+        @media (max-width: 600px) {
+            .bento-grid { grid-template-columns: 1fr; }
+            .bento-hero, .bento-wide { grid-column: span 1; }
+        }
+
+        /* ============================================================
+           NEW: BORDER BEAM (bento hero rotating conic outline)
+           ============================================================ */
+        @property --beam-angle { syntax: '<angle>'; initial-value: 0deg; inherits: false; }
+        .beam-border { position: relative; }
+        .beam-border::before {
+            content: ''; position: absolute; inset: -1px; border-radius: inherit; padding: 1.5px;
+            background: conic-gradient(from var(--beam-angle), transparent 0 62%, #8B5CF6 78%, #D946EF 90%, #FF9900 96%, transparent 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            animation: beamSpin 6s linear infinite; pointer-events: none;
+        }
+        @keyframes beamSpin { to { --beam-angle: 360deg; } }
+        @media (prefers-reduced-motion: reduce) { .beam-border::before { animation: none; } }
+
+        /* ============================================================
+           NEW: SPOTLIGHT CARDS (id: spotlight) — pointer-follow glow
+           ============================================================ */
+        .spot-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: clamp(0.8rem, 2vw, 1.5rem);
+            width: 100%; max-width: var(--content-max);
+        }
+        .spot-card {
+            position: relative; overflow: hidden;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: clamp(12px, 1.4vw, 18px);
+            padding: clamp(1rem, 2.2vw, 1.8rem);
+            display: flex; flex-direction: column;
+            gap: clamp(0.4rem, 1vw, 0.7rem);
+            transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        .spot-card:hover {
+            border-color: var(--card-border-hover);
+            box-shadow: 0 0 28px rgba(139,92,246,0.16);
+            transform: translateY(-3px);
+        }
+        .spot-card::before {
+            content: ''; position: absolute; inset: 0; z-index: 0; pointer-events: none;
+            background: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(139,92,246,0.16), transparent 60%);
+            opacity: 0; transition: opacity 0.35s;
+        }
+        .spot-card:hover::before { opacity: 1; }
+        .spot-card > * { position: relative; z-index: 1; }
+        .spot-num {
+            font-family: var(--font-display);
+            font-size: clamp(2rem, 5vw, 3.6rem); font-weight: 800; line-height: 1;
+            -webkit-text-stroke: 1.5px rgba(196,181,253,0.5);
+            -webkit-text-fill-color: transparent; color: transparent;
+        }
+        .spot-icon {
+            width: clamp(30px, 3.4vw, 42px); height: clamp(30px, 3.4vw, 42px);
+            border-radius: clamp(8px, 1vw, 11px); flex-shrink: 0;
+            background: linear-gradient(135deg, rgba(139,92,246,0.18), rgba(217,70,239,0.1));
+            display: flex; align-items: center; justify-content: center;
+        }
+        .spot-icon i { width: 55%; height: 55%; color: var(--accent-purple); }
+        .spot-card h3 {
+            font-family: var(--font-display); font-size: var(--h3-size);
+            font-weight: 700; line-height: 1.2;
+        }
+        .spot-card p { font-size: var(--small-size); color: var(--text-secondary); line-height: 1.45; }
+        @media (max-width: 768px) { .spot-grid { grid-template-columns: 1fr; } }
+
+        /* ============================================================
+           NEW: MARQUEE (id: ecosystem) — dual scrolling service rows
+           ============================================================ */
+        .marquee-block {
+            width: 100%; display: flex; flex-direction: column;
+            gap: clamp(0.8rem, 2vh, 1.6rem);
+        }
+        .marquee {
+            width: 100vw; margin-left: calc(50% - 50vw);
+            overflow: hidden;
+            -webkit-mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+            mask: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+        }
+        .marquee-track {
+            display: flex; align-items: center;
+            gap: clamp(1.2rem, 3vw, 2.6rem);
+            width: max-content;
+            animation: marqueeMove 32s linear infinite;
+        }
+        .marquee-track.rev { animation-duration: 40s; animation-direction: reverse; }
+        @keyframes marqueeMove { to { transform: translateX(-50%); } }
+        .mq-item {
+            font-family: var(--font-display); font-weight: 700;
+            font-size: clamp(1.3rem, 3.2vw, 2.4rem);
+            color: rgba(255,255,255,0.22); white-space: nowrap;
+        }
+        .mq-item.hl {
+            background: var(--grad-accent);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .mq-dot {
+            width: clamp(6px, 0.9vw, 10px); height: clamp(6px, 0.9vw, 10px);
+            flex-shrink: 0; background: var(--accent-pink);
+            transform: rotate(45deg); border-radius: 1px;
+            box-shadow: 0 0 8px rgba(217,70,239,0.5);
+        }
+        @media (prefers-reduced-motion: reduce) { .marquee-track { animation: none; } }
+
+        /* ============================================================
+           NEW: TITLE WORD REVEAL + EM SHIMMER
+           ============================================================ */
+        .title-main .tw {
+            display: inline-block; opacity: 0;
+            transform: translateY(0.5em); filter: blur(8px);
+        }
+        .slide.visible .title-main .tw {
+            animation: wordRise 0.8s var(--ease-out-expo) both;
+            animation-delay: calc(var(--i) * 90ms);
+        }
+        @keyframes wordRise { to { opacity: 1; transform: none; filter: blur(0); } }
+        .title-main em {
+            background-size: 200% 100%;
+            animation: emShimmer 5s ease-in-out 1.2s infinite;
+        }
+        @keyframes emShimmer {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            .title-main .tw { opacity: 1; transform: none; filter: none; }
+        }
+
+        /* === PROGRESS BAR (fixed, top) === */
+        .progress-bar {
+            position: fixed; top: 0; left: 0; height: 2px;
+            background: var(--grad-bar);
+            box-shadow: 0 0 12px var(--glow-purple);
+            z-index: 1000; transition: width 0.3s ease;
+        }
+
+        /* === NAV DOTS === */
+        .nav-dots {
+            position: fixed; right: clamp(0.8rem, 2vw, 1.5rem); top: 50%; transform: translateY(-50%);
+            display: flex; flex-direction: column; gap: clamp(0.4rem, 0.8vw, 0.6rem); z-index: 1000;
+        }
+        .nav-dot {
+            width: clamp(6px, 0.7vw, 9px); height: clamp(6px, 0.7vw, 9px);
+            border-radius: 50%; background: rgba(255,255,255,0.15);
+            cursor: pointer; transition: all 0.3s; border: none; padding: 0;
+        }
+        .nav-dot.active { background: var(--accent-purple); box-shadow: 0 0 8px var(--glow-purple); transform: scale(1.4); }
+        .nav-dot:hover { background: rgba(139,92,246,0.5); }
+    </style>
+</head>
+<body>
+
+<!-- Fixed overlay chrome (shared across all slides) -->
+<div class="progress-bar" id="progressBar"></div>
+<nav class="nav-dots" id="navDots" aria-label="Slide navigation"></nav>
+<div class="page-number" id="pageNumber">1</div>
+<!-- ============================================================
+     SLIDE 1 — TITLE / COVER (id: title) — kept as-is
+     ============================================================ -->
+<section class="slide title-slide" aria-label="Title">
+    <div class="blob-canvas">
+        <div class="blob" style="width:55vw;height:55vw;top:-10%;left:40%;background:rgba(139,92,246,0.5);animation:blob1 12s ease-in-out infinite;"></div>
+        <div class="blob" style="width:50vw;height:50vw;bottom:-5%;left:-10%;background:rgba(217,70,239,0.45);animation:blob2 15s ease-in-out infinite;"></div>
+        <div class="blob" style="width:40vw;height:40vw;top:20%;left:10%;background:rgba(59,80,200,0.4);animation:blob3 18s ease-in-out infinite;"></div>
+        <div class="blob" style="width:35vw;height:35vw;bottom:10%;right:5%;background:rgba(236,72,153,0.3);animation:blob4 20s ease-in-out infinite;"></div>
+    </div>
+    <div class="slide-content">
+        <div class="title-label reveal d1">AMAZON WEB SERVICES</div>
+        <h1 class="title-main reveal d2"><span class="tw" style="--i:0">Building</span> <span class="tw" style="--i:1">the</span> <span class="tw" style="--i:2">Future</span> <span class="tw" style="--i:3">with</span><br><span class="tw" style="--i:4"><em>Generative AI</em></span></h1>
+        <div class="title-accent reveal d3"></div>
+        <p class="title-sub reveal d4">re:Invent 2026 Keynote — the platform, the silicon,<br>and the agents reinventing every application.</p>
+    </div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2 — PILL CARDS (id: pill-cards) — left header + right pill list
+     ============================================================ -->
+<section class="slide content-slide" aria-label="End-to-End AI Platform">
+    <div class="floating-orb orb-purple" style="width:28vw;height:28vw;top:8%;right:6%;animation:orbFloat2 15s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:20vw;height:20vw;bottom:12%;left:4%;animation:orbFloat3 17s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>AI PLATFORM</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="content-layout">
+            <div>
+                <div class="section-head reveal d1">
+                    <div class="section-titlebar">
+                        <span class="section-num">01</span>
+                        <h2 class="section-title">End-to-End<br>AI Platform</h2>
+                    </div>
+                    <p class="section-desc">A complete, integrated stack to build, train, and deploy generative AI — from custom silicon to managed agents.</p>
+                </div>
+            </div>
+            <div class="pill-cards">
+                <div class="pill-card reveal d2">
+                    <div class="pill-icon"><i data-lucide="layers"></i></div>
+                    <div class="pill-text">Amazon Bedrock<br><span>Access leading foundation models via one API</span></div>
+                    <div class="pill-arrow"><i data-lucide="chevron-right"></i></div>
+                </div>
+                <div class="pill-card reveal d3">
+                    <div class="pill-icon"><i data-lucide="brain"></i></div>
+                    <div class="pill-text">Amazon SageMaker<br><span>Build, train, and tune models at any scale</span></div>
+                    <div class="pill-arrow"><i data-lucide="chevron-right"></i></div>
+                </div>
+                <div class="pill-card reveal d4">
+                    <div class="pill-icon"><i data-lucide="bot"></i></div>
+                    <div class="pill-text">Amazon Q<br><span>Generative AI assistant for work and developers</span></div>
+                    <div class="pill-arrow"><i data-lucide="chevron-right"></i></div>
+                </div>
+                <div class="pill-card reveal d5">
+                    <div class="pill-icon"><i data-lucide="cpu"></i></div>
+                    <div class="pill-text">AWS Trainium<br><span>Purpose-built silicon for high-performance training</span></div>
+                    <div class="pill-arrow"><i data-lucide="chevron-right"></i></div>
+                </div>
+                <div class="pill-card reveal d6">
+                    <div class="pill-icon"><i data-lucide="zap"></i></div>
+                    <div class="pill-text">AWS Inferentia<br><span>Low-cost, low-latency inference in production</span></div>
+                    <div class="pill-arrow"><i data-lucide="chevron-right"></i></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3 — METRIC CARDS ROW (id: metric-cards) — 4 metrics + callout
+     ============================================================ -->
+<section class="slide content-slide" aria-label="Key Metrics">
+    <div class="floating-orb orb-blue"   style="width:24vw;height:24vw;top:15%;left:60%;animation:orbFloat1 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-purple" style="width:22vw;height:22vw;bottom:10%;left:6%;animation:orbFloat3 18s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>BY THE NUMBERS</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head reveal d1">
+            <div class="section-titlebar">
+                <span class="section-num">02</span>
+                <h2 class="section-title">Key Metrics</h2>
+            </div>
+            <p class="section-desc">Generative AI momentum on AWS over the past twelve months.</p>
+        </div>
+
+        <div class="metric-row">
+            <div class="metric-card reveal d2">
+                <div class="metric-tag"><i data-lucide="users"></i>Customers</div>
+                <div class="metric-value"><span class="count" data-count="100" data-decimals="0">0</span><span class="metric-unit">K+</span></div>
+                <div class="metric-delta up"><i data-lucide="arrow-up-right"></i>42% <span>vs 2024</span></div>
+            </div>
+            <div class="metric-card reveal d3">
+                <div class="metric-tag"><i data-lucide="zap"></i>Throughput</div>
+                <div class="metric-value"><span class="count" data-count="6" data-decimals="0">0</span><span class="metric-unit">x</span></div>
+                <div class="metric-delta up"><i data-lucide="arrow-up-right"></i>Trainium2 <span>vs prior gen</span></div>
+            </div>
+            <div class="metric-card reveal d4">
+                <div class="metric-tag"><i data-lucide="coins"></i>Cost / Token</div>
+                <div class="metric-value"><span class="count" data-count="40" data-decimals="0">0</span><span class="metric-unit">%</span></div>
+                <div class="metric-delta down"><i data-lucide="arrow-down-right"></i>40% <span>vs 2024</span></div>
+            </div>
+            <div class="metric-card reveal d5">
+                <div class="metric-tag"><i data-lucide="map-pin"></i>Regions</div>
+                <div class="metric-value"><span class="count" data-count="33" data-decimals="0">0</span><span class="metric-unit">live</span></div>
+                <div class="metric-delta up"><i data-lucide="arrow-up-right"></i>+4 <span>new in 2025</span></div>
+            </div>
+        </div>
+
+        <div class="callout-bar reveal d6">
+            <i data-lucide="sparkles"></i>
+            <span class="callout-tag">Insight</span>
+            <p><strong>Record year:</strong> generative AI workloads on Amazon Bedrock more than doubled across every region, with inference cost per token falling for the fourth consecutive quarter.</p>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4 — TAGGED CARD GRID (id: tagged-grid) — 3x2 launches
+     ============================================================ -->
+<section class="slide content-slide" aria-label="Core Results">
+    <div class="floating-orb orb-purple" style="width:26vw;height:26vw;top:6%;left:8%;animation:orbFloat2 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:20vw;height:20vw;bottom:8%;right:6%;animation:orbFloat1 19s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>LAUNCHES</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head reveal d1">
+            <div class="section-titlebar">
+                <span class="section-num">03</span>
+                <h2 class="section-title">Core Results</h2>
+            </div>
+            <p class="section-desc">What shipped this year across the AWS generative AI stack.</p>
+        </div>
+
+        <div class="tag-grid">
+            <div class="tag-card reveal d2">
+                <span class="tag-chip purple"><i data-lucide="cpu"></i>Compute</span>
+                <h3>AWS Trainium4</h3>
+                <p>Next-gen training silicon delivering higher throughput per watt for frontier-scale models.</p>
+                <span class="tag-foot"><i data-lucide="trending-up"></i>3x performance</span>
+            </div>
+            <div class="tag-card reveal d3">
+                <span class="tag-chip pink"><i data-lucide="bot"></i>Agents</span>
+                <h3>Bedrock Agents</h3>
+                <p>Orchestrate multi-step tasks across tools and APIs with built-in reasoning and memory.</p>
+                <span class="tag-foot"><i data-lucide="trending-up"></i>72% faster builds</span>
+            </div>
+            <div class="tag-card reveal d4">
+                <span class="tag-chip blue"><i data-lucide="database"></i>Data</span>
+                <h3>Knowledge Bases</h3>
+                <p>Fully managed RAG that grounds responses in your enterprise data with one click.</p>
+                <span class="tag-foot"><i data-lucide="trending-up"></i>5 vector stores</span>
+            </div>
+            <div class="tag-card reveal d5">
+                <span class="tag-chip green"><i data-lucide="shield-check"></i>Safety</span>
+                <h3>Bedrock Guardrails</h3>
+                <p>Configurable safety policies filtering harmful content and blocking sensitive data leaks.</p>
+                <span class="tag-foot"><i data-lucide="trending-up"></i>88% harmful blocked</span>
+            </div>
+            <div class="tag-card reveal d6">
+                <span class="tag-chip orange"><i data-lucide="wrench"></i>DevTools</span>
+                <h3>Amazon Q Developer</h3>
+                <p>AI coding companion that writes, reviews, and refactors across your private codebase.</p>
+                <span class="tag-foot"><i data-lucide="trending-up"></i>57% accepted</span>
+            </div>
+            <div class="tag-card reveal d7">
+                <span class="tag-chip purple"><i data-lucide="globe"></i>Global</span>
+                <h3>Edge Inference</h3>
+                <p>Run optimized models at 600+ edge locations for single-digit-millisecond latency.</p>
+                <span class="tag-foot"><i data-lucide="trending-up"></i>9ms median</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: bento — Bento Grid (NEW) — asymmetric platform mosaic
+     ============================================================ -->
+<section class="slide content-slide" aria-label="Platform Map">
+    <div class="floating-orb orb-purple" style="width:26vw;height:26vw;top:8%;right:7%;animation:orbFloat2 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-blue"   style="width:20vw;height:20vw;bottom:10%;left:5%;animation:orbFloat1 18s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>PLATFORM MAP</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head reveal d1">
+            <div class="section-titlebar">
+                <span class="section-num">04</span>
+                <h2 class="section-title">One Map, Every Layer</h2>
+            </div>
+            <p class="section-desc">The full generative AI stack on AWS &mdash; models, agents, silicon, and safety in one platform.</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-cell bento-hero beam-border reveal d2">
+                <div class="bento-icon"><i data-lucide="layers"></i></div>
+                <h3>One Platform, Every Model</h3>
+                <p>From foundation models to custom silicon &mdash; build, tune, and ship generative AI without leaving AWS.</p>
+                <div class="bento-stat"><span class="count" data-count="200" data-decimals="0">0</span>+</div>
+            </div>
+            <div class="bento-cell reveal d3">
+                <div class="bento-icon"><i data-lucide="bot"></i></div>
+                <h3>Bedrock AgentCore</h3>
+                <p>Managed reasoning agents with memory and tool use.</p>
+            </div>
+            <div class="bento-cell reveal d4">
+                <div class="bento-icon"><i data-lucide="brain"></i></div>
+                <h3>SageMaker Unified</h3>
+                <p>One studio for data, training, and MLOps.</p>
+            </div>
+            <div class="bento-cell reveal d5">
+                <div class="bento-icon"><i data-lucide="cpu"></i></div>
+                <h3>Trainium3</h3>
+                <p>Frontier-scale training at higher perf per watt.</p>
+            </div>
+            <div class="bento-cell reveal d6">
+                <div class="bento-icon"><i data-lucide="shield-check"></i></div>
+                <h3>Guardrails</h3>
+                <p>Configurable safety and PII controls by default.</p>
+            </div>
+            <div class="bento-cell bento-wide reveal d7">
+                <div class="bento-icon"><i data-lucide="zap"></i></div>
+                <h3>Sub-second inference at global scale</h3>
+                <p>Optimized serving across 33 Regions and 600+ edge locations.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: spotlight — Spotlight Cards (NEW) — pointer-follow glow
+     ============================================================ -->
+<section class="slide content-slide" aria-label="Why Builders Choose AWS">
+    <div class="floating-orb orb-pink"   style="width:24vw;height:24vw;top:10%;left:8%;animation:orbFloat3 17s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-purple" style="width:22vw;height:22vw;bottom:10%;right:6%;animation:orbFloat1 19s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>WHY AWS</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head center reveal d1">
+            <div class="section-titlebar"><h2 class="section-title">Why Builders Choose AWS</h2></div>
+            <p class="section-desc">Three reasons teams bet their generative AI roadmap on AWS.</p>
+        </div>
+
+        <div class="spot-grid">
+            <div class="spot-card reveal d2">
+                <span class="spot-num">01</span>
+                <div class="spot-icon"><i data-lucide="shield-check"></i></div>
+                <h3>Security by Design</h3>
+                <p>VPC isolation, end-to-end encryption, and fine-grained IAM protect every workload from prototype to production.</p>
+            </div>
+            <div class="spot-card reveal d3">
+                <span class="spot-num">02</span>
+                <div class="spot-icon"><i data-lucide="trending-up"></i></div>
+                <h3>Proven Scale</h3>
+                <p>100K+ customers run generative AI across 33 Regions, backed by a decade of relentless infrastructure invention.</p>
+            </div>
+            <div class="spot-card reveal d4">
+                <span class="spot-num">03</span>
+                <div class="spot-icon"><i data-lucide="zap"></i></div>
+                <h3>Fastest Time to Value</h3>
+                <p>Managed models, agents, and guardrails take you from a blank prompt to a governed app in days, not quarters.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5 — BIG NUMBER HERO (id: big-number)
+     ============================================================ -->
+<section class="slide bignumber-slide content-slide" aria-label="Adoption">
+    <div class="floating-orb orb-purple" style="width:30vw;height:30vw;top:10%;left:50%;animation:orbFloat1 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:24vw;height:24vw;bottom:8%;left:10%;animation:orbFloat3 18s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>ADOPTION</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-label reveal d1">ADOPTION</div>
+        <div class="bignumber reveal d2"><span class="count" data-count="100" data-decimals="0">0</span>K+</div>
+        <div class="bignumber-label reveal d3">Customers Building AI on AWS</div>
+        <p class="bignumber-desc reveal d4">From early-stage startups to the world's largest enterprises, generative AI on Amazon Bedrock now powers production workloads across every industry and region.</p>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+<section class="slide content-slide" aria-label="Proven at Scale">
+    <div class="floating-orb orb-purple" style="width:28vw;height:28vw;top:6%;right:8%;animation:orbFloat2 15s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:20vw;height:20vw;bottom:10%;left:5%;animation:orbFloat3 17s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>PLATFORM SCALE</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head center reveal d1">
+            <div class="section-titlebar"><span class="section-num">04</span><h2 class="section-title">Proven at Scale</h2></div>
+        </div>
+        <div class="stats-row reveal d2">
+            <div class="stat-item"><div class="stat-value"><span class="count" data-count="100" data-decimals="0">0</span>K+</div><div class="stat-label">Customers</div></div>
+            <div class="stat-item"><div class="stat-value"><span class="count" data-count="6" data-decimals="0">0</span>x</div><div class="stat-label">Performance</div></div>
+            <div class="stat-item"><div class="stat-value"><span class="count" data-count="4" data-decimals="0">0</span>x</div><div class="stat-label">Bandwidth</div></div>
+            <div class="stat-item"><div class="stat-value"><span class="count" data-count="33" data-decimals="0">0</span></div><div class="stat-label">Regions</div></div>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card reveal d3">
+                <div class="feat-icon"><i data-lucide="shield-check"></i></div>
+                <h3>Enterprise Security</h3>
+                <p>VPC isolation, end-to-end encryption, and fine-grained IAM across every Bedrock workload.</p>
+            </div>
+            <div class="feature-card reveal d4">
+                <div class="feat-icon"><i data-lucide="globe"></i></div>
+                <h3>Global Infrastructure</h3>
+                <p>33 Regions and 105 Availability Zones put SageMaker training close to your data.</p>
+            </div>
+            <div class="feature-card reveal d5">
+                <div class="feat-icon"><i data-lucide="coins"></i></div>
+                <h3>Optimized Cost</h3>
+                <p>Trainium2 and Inferentia2 cut training and inference spend by up to 50%.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<section class="slide content-slide" aria-label="Amazon Q Developer">
+    <div class="floating-orb orb-blue"   style="width:24vw;height:24vw;top:12%;left:58%;animation:orbFloat1 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-purple" style="width:22vw;height:22vw;bottom:8%;left:6%;animation:orbFloat2 18s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>DEVELOPER TOOLS</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="split-layout">
+            <div class="split-left">
+                <div class="section-label reveal d1">NEW ENHANCEMENTS</div>
+                <div class="split-product-name reveal d2">Amazon<br><strong>Q Developer</strong></div>
+                <div class="split-product-sub reveal d3">Your AI-powered code companion</div>
+            </div>
+            <div class="split-divider-line reveal d2"></div>
+            <div class="split-right">
+                <ul class="split-bullets">
+                    <li class="reveal d3">Infrastructure as Code agents for CloudFormation, AWS CDK, and Terraform</li>
+                    <li class="reveal d4">Customize completions with your private codebase and internal libraries</li>
+                    <li class="reveal d5">Automated security scans across 10+ languages with one-click remediation</li>
+                    <li class="reveal d6">Native IDE coverage in VS Code, JetBrains, Visual Studio, and the CLI</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<section class="slide content-slide" aria-label="Amazon Bedrock Platform">
+    <div class="floating-orb orb-pink"   style="width:26vw;height:26vw;top:8%;right:5%;animation:orbFloat3 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-purple" style="width:20vw;height:20vw;bottom:10%;left:8%;animation:orbFloat1 19s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>GENERATIVE AI</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head center reveal d1">
+            <div class="section-titlebar"><h2 class="section-title">Amazon Bedrock</h2></div>
+            <p class="section-desc">The easiest way to build and scale generative AI applications.</p>
+        </div>
+        <div class="pipeline-row">
+            <div class="pipeline-col reveal d3">
+                <div class="pipeline-col-title">Broadest Model Choice</div>
+                <div class="pipeline-bar" style="background:linear-gradient(90deg,#3b82f6,#6366f1);"></div>
+                <div class="pipeline-items"><span>Claude &amp; Nova families</span><span>Custom Model Import</span></div>
+            </div>
+            <div class="pipeline-col reveal d4">
+                <div class="pipeline-col-title">Cost &amp; Latency</div>
+                <div class="pipeline-bar" style="background:linear-gradient(90deg,#6366f1,#8b5cf6);"></div>
+                <div class="pipeline-items"><span>Prompt Caching</span><span>Intelligent Routing</span></div>
+            </div>
+            <div class="pipeline-col reveal d5">
+                <div class="pipeline-col-title">Customize with Data</div>
+                <div class="pipeline-bar" style="background:linear-gradient(90deg,#8b5cf6,#a855f7);"></div>
+                <div class="pipeline-items"><span>Knowledge Bases</span><span>Fine-tuning</span></div>
+            </div>
+            <div class="pipeline-col reveal d6">
+                <div class="pipeline-col-title">Safety &amp; Responsible AI</div>
+                <div class="pipeline-bar" style="background:linear-gradient(90deg,#a855f7,#d946ef);"></div>
+                <div class="pipeline-items"><span>Guardrails</span><span>Automated Reasoning</span></div>
+            </div>
+            <div class="pipeline-col reveal d7">
+                <div class="pipeline-col-title">Agents</div>
+                <div class="pipeline-bar" style="background:linear-gradient(90deg,#d946ef,#ec4899);"></div>
+                <div class="pipeline-items"><span>Multi-agent Orchestration</span><span>Action Groups</span></div>
+            </div>
+        </div>
+        <div class="pipeline-footer reveal d7">AWS Security, Privacy &amp; Reliability Built-in</div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<section class="slide content-slide" aria-label="Team and Org">
+    <div class="floating-orb orb-purple" style="width:26vw;height:26vw;top:10%;left:6%;animation:orbFloat2 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-blue"   style="width:22vw;height:22vw;bottom:8%;right:6%;animation:orbFloat1 18s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>BY THE NUMBERS</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head reveal d1">
+            <div class="section-titlebar"><span class="section-num">05</span><h2 class="section-title">Team &amp; Org</h2></div>
+            <p class="section-desc">The people and footprint powering AWS AI services worldwide.</p>
+        </div>
+        <div class="org-layout">
+            <div class="org-metrics">
+                <div class="metric-card reveal d2">
+                    <div class="metric-tag"><i data-lucide="users"></i>Engineers</div>
+                    <div class="metric-value"><span class="count" data-count="12" data-decimals="0">0</span><span class="metric-unit">K+</span></div>
+                    <div class="metric-delta up"><i data-lucide="arrow-up-right"></i>18% <span>vs 2024</span></div>
+                </div>
+                <div class="metric-card reveal d3">
+                    <div class="metric-tag"><i data-lucide="boxes"></i>Teams</div>
+                    <div class="metric-value"><span class="count" data-count="340" data-decimals="0">0</span><span class="metric-unit">+</span></div>
+                    <div class="metric-delta up"><i data-lucide="arrow-up-right"></i>9% <span>vs 2024</span></div>
+                </div>
+                <div class="metric-card reveal d4">
+                    <div class="metric-tag"><i data-lucide="git-branch"></i>Deploys / day</div>
+                    <div class="metric-value"><span class="count" data-count="8.4" data-decimals="1">0.0</span><span class="metric-unit">K</span></div>
+                    <div class="metric-delta up"><i data-lucide="arrow-up-right"></i>27% <span>vs 2024</span></div>
+                </div>
+                <div class="metric-card reveal d5">
+                    <div class="metric-tag"><i data-lucide="shield-check"></i>Uptime</div>
+                    <div class="metric-value"><span class="count" data-count="99.99" data-decimals="2">0.00</span><span class="metric-unit">%</span></div>
+                    <div class="metric-delta up"><i data-lucide="arrow-up-right"></i>SLA <span>met</span></div>
+                </div>
+            </div>
+            <div class="org-side reveal d3">
+                <div class="org-side-title">By the org</div>
+                <div class="org-list">
+                    <div class="org-row"><span class="label"><i data-lucide="map-pin"></i>Regions</span><span class="value">33</span></div>
+                    <div class="org-row"><span class="label"><i data-lucide="server"></i>Availability Zones</span><span class="value">105</span></div>
+                    <div class="org-row"><span class="label"><i data-lucide="boxes"></i>New services</span><span class="value">240+</span></div>
+                    <div class="org-row"><span class="label"><i data-lucide="globe"></i>Edge locations</span><span class="value">600+</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<section class="slide content-slide" aria-label="SageMaker vs Bedrock">
+    <div class="floating-orb orb-purple" style="width:24vw;height:24vw;top:8%;left:10%;animation:orbFloat1 15s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:24vw;height:24vw;bottom:8%;right:8%;animation:orbFloat3 17s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>CHOOSING YOUR PATH</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head center reveal d1">
+            <div class="section-titlebar"><h2 class="section-title">SageMaker vs Bedrock</h2></div>
+            <p class="section-desc">Full-control custom ML or fully-managed foundation-model apps.</p>
+        </div>
+        <div class="compare-grid">
+            <div class="compare-card reveal d2">
+                <div class="compare-card-title"><div class="compare-dot" style="background:var(--accent-purple);"></div>Amazon SageMaker</div>
+                <ul class="compare-list">
+                    <li>Full control over training and tuning</li>
+                    <li>Bring your own architecture and framework</li>
+                    <li>Distributed training on Trainium2 clusters</li>
+                    <li>End-to-end MLOps with pipelines and registries</li>
+                </ul>
+            </div>
+            <div class="compare-card reveal d3">
+                <div class="compare-card-title"><div class="compare-dot" style="background:var(--accent-pink);"></div>Amazon Bedrock</div>
+                <ul class="compare-list">
+                    <li>Fully managed foundation models, serverless</li>
+                    <li>Built-in RAG, Agents, and Guardrails</li>
+                    <li>Single API across leading model providers</li>
+                    <li>From prototype to production in days</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+<!-- ============================================================
+     id: reflection — Two-Column Reflection (NEW)
+     ============================================================ -->
+<section class="slide content-slide" aria-label="Challenges & Learnings">
+    <div class="floating-orb orb-purple" style="width:30vw;height:30vw;top:6%;right:5%;animation:orbFloat2 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:22vw;height:22vw;bottom:10%;left:4%;animation:orbFloat3 18s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>Generative AI Platform</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head reveal d1">
+            <div class="section-titlebar">
+                <span class="section-num">06</span>
+                <h2 class="section-title">Challenges &amp; Learnings</h2>
+            </div>
+            <p class="section-desc">A year of scaling generative AI in production — what slowed us down, and what moved the needle.</p>
+        </div>
+
+        <div class="reflect-grid">
+            <div class="reflect-col warm reveal d2">
+                <div class="reflect-head">
+                    <h3><i data-lucide="alert-triangle"></i>Challenges</h3>
+                </div>
+                <ul class="reflect-list">
+                    <li>Balancing inference cost against tightening latency SLAs as token volume grew 8x.</li>
+                    <li>A widening skills gap blocked teams from shipping production-grade agents.</li>
+                    <li>Governance fragmented across hundreds of multi-account, multi-region estates.</li>
+                </ul>
+            </div>
+            <div class="reflect-col cool reveal d3">
+                <div class="reflect-head">
+                    <h3><i data-lucide="lightbulb"></i>Learnings</h3>
+                </div>
+                <ul class="reflect-list">
+                    <li>Managed services on Amazon Bedrock cut time-to-first-token by 63%.</li>
+                    <li>Guardrails-by-default raised customer trust and lifted adoption 2.4x.</li>
+                    <li>Custom silicon on AWS Trainium unlocked 40% margin headroom at scale.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: process-flow — Process Flow (REFRESHED)
+     ============================================================ -->
+<section class="slide content-slide" aria-label="From Idea to Production">
+    <div class="floating-orb orb-blue"   style="width:26vw;height:26vw;top:12%;left:8%;animation:orbFloat1 15s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:20vw;height:20vw;bottom:8%;right:6%;animation:orbFloat3 19s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>Build & Deploy</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head center reveal d1">
+            <div class="section-titlebar">
+                <h2 class="section-title">From Idea to Production</h2>
+            </div>
+            <p class="section-desc">Five steps from a blank prompt to a governed, agentic application on AWS.</p>
+        </div>
+
+        <div class="process-row">
+            <div class="process-step reveal d3">
+                <div class="step-num">1</div>
+                <div class="step-title">Choose Model</div>
+                <div class="step-desc">Pick a leading FM in Amazon Bedrock or import your own weights.</div>
+            </div>
+            <div class="process-step reveal d4">
+                <div class="step-num">2</div>
+                <div class="step-title">Customize</div>
+                <div class="step-desc">Fine-tune and ground on private data with RAG and Knowledge Bases.</div>
+            </div>
+            <div class="process-step reveal d5">
+                <div class="step-num">3</div>
+                <div class="step-title">Build Agents</div>
+                <div class="step-desc">Orchestrate multi-step tasks with Bedrock Agents and tool use.</div>
+            </div>
+            <div class="process-step reveal d6">
+                <div class="step-num">4</div>
+                <div class="step-title">Add Guardrails</div>
+                <div class="step-desc">Apply safety policies, PII redaction, and contextual grounding.</div>
+            </div>
+            <div class="process-step reveal d7">
+                <div class="step-num">5</div>
+                <div class="step-title">Deploy</div>
+                <div class="step-desc">Ship to production with auto-scaling, monitoring, and cost controls.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: timeline — Timeline Zigzag (REFRESHED)
+     ============================================================ -->
+<section class="slide content-slide" aria-label="AWS AI Journey">
+    <div class="floating-orb orb-purple" style="width:28vw;height:28vw;top:8%;left:55%;animation:orbFloat2 17s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-blue"   style="width:22vw;height:22vw;bottom:12%;left:6%;animation:orbFloat1 16s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>The AI Journey</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head center reveal d1">
+            <div class="section-titlebar">
+                <h2 class="section-title">AWS AI Journey</h2>
+            </div>
+            <p class="section-desc">Nearly a decade of relentless invention across the AI and ML stack.</p>
+        </div>
+
+        <div class="timeline reveal d3">
+            <!-- Row 1: top cards (odd cols content, even cols .empty) -->
+            <div class="tl-top tl-col1"><div class="tl-card"><div class="tl-year">2017</div><div class="tl-desc">Amazon SageMaker</div></div><div class="tl-stem-up"></div></div>
+            <div class="tl-top tl-col2 empty"><div class="tl-card"><div class="tl-year">&nbsp;</div><div class="tl-desc">&nbsp;</div></div><div class="tl-stem-up"></div></div>
+            <div class="tl-top tl-col3"><div class="tl-card"><div class="tl-year">2023</div><div class="tl-desc">Amazon Bedrock</div></div><div class="tl-stem-up"></div></div>
+            <div class="tl-top tl-col4 empty"><div class="tl-card"><div class="tl-year">&nbsp;</div><div class="tl-desc">&nbsp;</div></div><div class="tl-stem-up"></div></div>
+            <div class="tl-top tl-col5"><div class="tl-card"><div class="tl-year">2025</div><div class="tl-desc">Trainium4 &amp; Kiro</div></div><div class="tl-stem-up"></div></div>
+            <!-- Row 2: dots (all 5 cols) -->
+            <div class="tl-mid tl-col1"><div class="tl-dot"></div></div>
+            <div class="tl-mid tl-col2"><div class="tl-dot"></div></div>
+            <div class="tl-mid tl-col3"><div class="tl-dot"></div></div>
+            <div class="tl-mid tl-col4"><div class="tl-dot"></div></div>
+            <div class="tl-mid tl-col5"><div class="tl-dot"></div></div>
+            <!-- Row 3: bottom cards (even cols content, odd cols .empty) -->
+            <div class="tl-bot tl-col1 empty"><div class="tl-stem-down"></div><div class="tl-card"><div class="tl-year">&nbsp;</div><div class="tl-desc">&nbsp;</div></div></div>
+            <div class="tl-bot tl-col2"><div class="tl-stem-down"></div><div class="tl-card"><div class="tl-year">2022</div><div class="tl-desc">AWS Trainium</div></div></div>
+            <div class="tl-bot tl-col3 empty"><div class="tl-stem-down"></div><div class="tl-card"><div class="tl-year">&nbsp;</div><div class="tl-desc">&nbsp;</div></div></div>
+            <div class="tl-bot tl-col4"><div class="tl-stem-down"></div><div class="tl-card"><div class="tl-year">2024</div><div class="tl-desc">Amazon Q</div></div></div>
+            <div class="tl-bot tl-col5 empty"><div class="tl-stem-down"></div><div class="tl-card"><div class="tl-year">&nbsp;</div><div class="tl-desc">&nbsp;</div></div></div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: ecosystem — Marquee (NEW) — dual scrolling service rows
+     ============================================================ -->
+<section class="slide content-slide" aria-label="The Ecosystem">
+    <div class="floating-orb orb-purple" style="width:26vw;height:26vw;top:8%;left:10%;animation:orbFloat2 16s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:22vw;height:22vw;bottom:10%;right:8%;animation:orbFloat3 18s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>ECOSYSTEM</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="section-head center reveal d1">
+            <div class="section-titlebar"><h2 class="section-title">The Ecosystem</h2></div>
+            <p class="section-desc">Hundreds of integrated services &mdash; one cloud to build, run, and scale on.</p>
+        </div>
+
+        <div class="marquee-block reveal d2">
+            <div class="marquee">
+                <div class="marquee-track">
+                    <span class="mq-item hl">Amazon Bedrock</span><span class="mq-dot"></span>
+                    <span class="mq-item">SageMaker</span><span class="mq-dot"></span>
+                    <span class="mq-item hl">Amazon Q</span><span class="mq-dot"></span>
+                    <span class="mq-item">EC2</span><span class="mq-dot"></span>
+                    <span class="mq-item">S3</span><span class="mq-dot"></span>
+                    <span class="mq-item">Lambda</span><span class="mq-dot"></span>
+                    <span class="mq-item">DynamoDB</span><span class="mq-dot"></span>
+                    <span class="mq-item">EKS</span><span class="mq-dot"></span>
+                    <span class="mq-item hl">Amazon Bedrock</span><span class="mq-dot"></span>
+                    <span class="mq-item">SageMaker</span><span class="mq-dot"></span>
+                    <span class="mq-item hl">Amazon Q</span><span class="mq-dot"></span>
+                    <span class="mq-item">EC2</span><span class="mq-dot"></span>
+                    <span class="mq-item">S3</span><span class="mq-dot"></span>
+                    <span class="mq-item">Lambda</span><span class="mq-dot"></span>
+                    <span class="mq-item">DynamoDB</span><span class="mq-dot"></span>
+                    <span class="mq-item">EKS</span><span class="mq-dot"></span>
+                </div>
+            </div>
+            <div class="marquee">
+                <div class="marquee-track rev">
+                    <span class="mq-item hl">Trainium</span><span class="mq-dot"></span>
+                    <span class="mq-item">Inferentia</span><span class="mq-dot"></span>
+                    <span class="mq-item hl">Graviton</span><span class="mq-dot"></span>
+                    <span class="mq-item">Nitro</span><span class="mq-dot"></span>
+                    <span class="mq-item">Aurora</span><span class="mq-dot"></span>
+                    <span class="mq-item">Redshift</span><span class="mq-dot"></span>
+                    <span class="mq-item">Kinesis</span><span class="mq-dot"></span>
+                    <span class="mq-item">CloudFront</span><span class="mq-dot"></span>
+                    <span class="mq-item hl">Trainium</span><span class="mq-dot"></span>
+                    <span class="mq-item">Inferentia</span><span class="mq-dot"></span>
+                    <span class="mq-item hl">Graviton</span><span class="mq-dot"></span>
+                    <span class="mq-item">Nitro</span><span class="mq-dot"></span>
+                    <span class="mq-item">Aurora</span><span class="mq-dot"></span>
+                    <span class="mq-item">Redshift</span><span class="mq-dot"></span>
+                    <span class="mq-item">Kinesis</span><span class="mq-dot"></span>
+                    <span class="mq-item">CloudFront</span><span class="mq-dot"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: quote — Quote (REFRESHED)
+     ============================================================ -->
+<section class="slide quote-slide content-slide" aria-label="Executive Quote">
+    <div class="floating-orb orb-purple" style="width:30vw;height:30vw;top:10%;left:12%;animation:orbFloat2 18s ease-in-out infinite;"></div>
+    <div class="floating-orb orb-pink"   style="width:24vw;height:24vw;bottom:8%;right:8%;animation:orbFloat3 16s ease-in-out infinite;"></div>
+
+    <div class="slide-frame"></div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>Keynote</b></span>
+        <span class="slide-index"></span>
+    </div>
+
+    <div class="slide-content">
+        <div class="quote-mark reveal d1">&ldquo;</div>
+        <p class="quote-text reveal d2">Every application will be reinvented with generative AI built in &mdash; and the companies that move fastest will rewrite their industries.</p>
+        <div class="quote-attr reveal d3"><strong>Swami Sivasubramanian</strong> &mdash; VP of Agentic AI, AWS</div>
+    </div>
+
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: section-divider — Section Divider, big number (NEW)
+     ============================================================ -->
+<section class="slide divider-slide" aria-label="Section Divider">
+    <div class="blob-canvas">
+        <div class="blob" style="width:50vw;height:50vw;top:-8%;left:35%;background:rgba(139,92,246,0.45);animation:blob1 14s ease-in-out infinite;"></div>
+        <div class="blob" style="width:42vw;height:42vw;bottom:-6%;left:-8%;background:rgba(217,70,239,0.4);animation:blob2 17s ease-in-out infinite;"></div>
+    </div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>Platform Innovation</b></span>
+        <span class="slide-index"></span>
+    </div>
+    <div class="slide-content">
+        <div class="divider-num reveal d1">02</div>
+        <h2 class="divider-title reveal d2">Platform Innovation</h2>
+        <p class="divider-sub reveal d3">What's new across the AWS AI stack &mdash; from Trainium silicon to Amazon Q and Bedrock Agents.</p>
+    </div>
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+<!-- ============================================================
+     id: outlook | Numbered Outlook Columns | kind=new
+     ============================================================ -->
+<section class="slide outlook-slide" aria-label="2026 Outlook">
+    <div class="blob-canvas">
+        <div class="blob" style="width:48vw;height:48vw;top:-6%;left:30%;background:rgba(139,92,246,0.4);animation:blob1 15s ease-in-out infinite;"></div>
+        <div class="blob" style="width:40vw;height:40vw;bottom:-6%;right:-6%;background:rgba(217,70,239,0.35);animation:blob3 18s ease-in-out infinite;"></div>
+    </div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>OUTLOOK</b></span>
+        <span class="slide-index"></span>
+    </div>
+    <div class="slide-content">
+        <p class="outlook-tagline reveal d1">Where AWS invests <em>next</em> &mdash; the three forces shaping the 2026 agenda.</p>
+        <div class="outlook-row">
+            <div class="outlook-col reveal d2">
+                <span class="outlook-num">01</span>
+                <h3>Agentic by Default</h3>
+                <p>Every workflow ships with a reasoning agent built on Amazon Bedrock AgentCore, with guardrails on by default.</p>
+            </div>
+            <div class="outlook-col reveal d3">
+                <span class="outlook-num">02</span>
+                <h3>Cost Collapse</h3>
+                <p>Trainium3 and inference optimization drive token economics down 70%, making frontier models everyday infrastructure.</p>
+            </div>
+            <div class="outlook-col reveal d4">
+                <span class="outlook-num">03</span>
+                <h3>Trust at Scale</h3>
+                <p>Automated reasoning checks and end-to-end provenance turn enterprise governance into a built-in platform primitive.</p>
+            </div>
+        </div>
+    </div>
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: closing | Closing / Call to Action | kind=refreshed
+     Closing cover variant (reuses title-slide chrome).
+     ============================================================ -->
+<section class="slide title-slide" aria-label="Build with AWS">
+    <div class="blob-canvas">
+        <div class="blob" style="width:55vw;height:55vw;top:-10%;left:40%;background:rgba(139,92,246,0.5);animation:blob1 12s ease-in-out infinite;"></div>
+        <div class="blob" style="width:50vw;height:50vw;bottom:-5%;left:-10%;background:rgba(217,70,239,0.45);animation:blob2 15s ease-in-out infinite;"></div>
+        <div class="blob" style="width:40vw;height:40vw;top:20%;left:10%;background:rgba(59,80,200,0.4);animation:blob3 18s ease-in-out infinite;"></div>
+        <div class="blob" style="width:35vw;height:35vw;bottom:10%;right:5%;background:rgba(236,72,153,0.3);animation:blob4 20s ease-in-out infinite;"></div>
+    </div>
+    <div class="slide-content">
+        <div class="title-label reveal d1">THANK YOU &middot; GET STARTED</div>
+        <h1 class="title-main reveal d2">Build with<br><em>AWS</em></h1>
+        <div class="title-accent reveal d3"></div>
+        <p class="title-sub reveal d4">Spin up your first agent on Amazon Bedrock today.<br>Start free in the console &middot; aws.amazon.com/bedrock &middot; docs.aws.amazon.com</p>
+    </div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+
+<!-- ============================================================
+     id: divider-agenda | Agenda Divider | kind=refreshed
+     Section-divider layout used as an agenda opener.
+     ============================================================ -->
+<section class="slide divider-slide" aria-label="Today's Agenda">
+    <div class="blob-canvas">
+        <div class="blob" style="width:50vw;height:50vw;top:-8%;left:35%;background:rgba(139,92,246,0.45);animation:blob1 14s ease-in-out infinite;"></div>
+        <div class="blob" style="width:42vw;height:42vw;bottom:-6%;left:-8%;background:rgba(217,70,239,0.4);animation:blob2 17s ease-in-out infinite;"></div>
+    </div>
+    <div class="slide-header">
+        <span class="slide-eyebrow">&mdash; re:Invent &middot; <b>AGENDA</b></span>
+        <span class="slide-index"></span>
+    </div>
+    <div class="slide-content">
+        <div class="divider-num reveal d1">01</div>
+        <h2 class="divider-title reveal d2">Today's Agenda</h2>
+        <p class="divider-sub reveal d3">Three themes for the next hour: the <strong>Platform</strong> powering generative AI, the <strong>Results</strong> customers are shipping today, and our <strong>Outlook</strong> for 2026.</p>
+    </div>
+    <div class="slide-progress"></div>
+    <div class="slide-footer">&copy; 2026, Amazon Web Services, Inc. or its affiliates. All rights reserved.</div>
+</section>
+<script>
+/* ============================================================
+   RE:INVENT KEYNOTE — SLIDE CONTROLLER
+   Extends the proven preview/13 IIFE:
+   - IntersectionObserver toggles .visible (fires reveal d1–d7)
+   - keyboard / wheel / touch navigation
+   - progress bar + nav dots + fixed page-number
+   - fills each slide's .slide-index text  -> "(i+1) / total"
+   - builds each slide's .slide-progress pip row + marks current
+   ============================================================ */
+(function () {
+    const slides = document.querySelectorAll('.slide');
+    const total = slides.length;
+    const bar = document.getElementById('progressBar');
+    const dotsContainer = document.getElementById('navDots');
+    const pageNum = document.getElementById('pageNumber');
+    let current = 0;
+
+    /* --- One-time chrome setup: per-slide index text + pip rows --- */
+    slides.forEach((slide, i) => {
+        // Set the top-right "NN / NN" index. Markup may include a
+        // <span class="cur"></span> / <b class="cur"></b> for the current
+        // number; if a .slide-index exists but is empty, fill the whole thing.
+        const idx = slide.querySelector('.slide-index');
+        if (idx) {
+            const human = String(i + 1).padStart(2, '0');
+            const tot = String(total).padStart(2, '0');
+            idx.innerHTML = '<b>' + human + '</b> / ' + tot;
+        }
+        // Build the centered segmented pip row (one pip per slide).
+        const prog = slide.querySelector('.slide-progress');
+        if (prog && prog.children.length === 0) {
+            for (let p = 0; p < total; p++) {
+                const pip = document.createElement('span');
+                pip.className = 'pip' + (p === i ? ' on' : '');
+                prog.appendChild(pip);
+            }
+        }
+    });
+
+    function refreshPips() {
+        slides.forEach((slide, i) => {
+            const prog = slide.querySelector('.slide-progress');
+            if (!prog) return;
+            [...prog.children].forEach((pip, p) => pip.classList.toggle('on', p === current));
+        });
+    }
+
+    /* --- Reveal-on-scroll via IntersectionObserver --- */
+    const obs = new IntersectionObserver(entries => {
+        entries.forEach(e => {
+            if (e.isIntersecting) {
+                e.target.classList.add('visible');
+                if (!e.target.dataset.fx) { e.target.dataset.fx = '1'; runCounters(e.target); }
+                current = [...slides].indexOf(e.target);
+                updateUI();
+            }
+        });
+    }, { threshold: 0.5 });
+    slides.forEach(s => obs.observe(s));
+
+    /* --- One-shot count-up animation for .count spans --- */
+    const REDUCE = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function runCounters(slide) {
+        slide.querySelectorAll('.count').forEach(el => {
+            const target = parseFloat(el.dataset.count || '0');
+            const dec = parseInt(el.dataset.decimals || '0', 10);
+            if (REDUCE) { el.textContent = target.toFixed(dec); return; }
+            const t0 = performance.now(), dur = 1300;
+            (function tick(now) {
+                const p = Math.min(1, (now - t0) / dur), e2 = 1 - Math.pow(1 - p, 3);
+                el.textContent = (target * e2).toFixed(dec);
+                if (p < 1) requestAnimationFrame(tick);
+            })(performance.now());
+        });
+    }
+
+    /* --- Nav dots --- */
+    slides.forEach((_, i) => {
+        const d = document.createElement('button');
+        d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+        d.setAttribute('aria-label', 'Slide ' + (i + 1));
+        d.addEventListener('click', () => go(i));
+        dotsContainer.appendChild(d);
+    });
+    const dots = dotsContainer.querySelectorAll('.nav-dot');
+
+    function updateUI() {
+        bar.style.width = ((current + 1) / total * 100) + '%';
+        dots.forEach((d, i) => d.classList.toggle('active', i === current));
+        if (pageNum) pageNum.textContent = (current + 1) + ' / ' + total;
+        refreshPips();
+    }
+
+    function go(i) {
+        if (i < 0 || i >= total) return;
+        current = i;
+        slides[i].scrollIntoView({ behavior: 'smooth' });
+        updateUI();
+    }
+
+    /* --- Keyboard navigation --- */
+    document.addEventListener('keydown', e => {
+        if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); go(current + 1); }
+        else if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(current - 1); }
+        else if (e.key === 'Home') { e.preventDefault(); go(0); }
+        else if (e.key === 'End') { e.preventDefault(); go(total - 1); }
+    });
+
+    /* --- Mouse wheel navigation (throttled) --- */
+    let wt = null;
+    document.addEventListener('wheel', e => {
+        if (wt) return;
+        wt = setTimeout(() => wt = null, 800);
+        if (e.deltaY > 30) go(current + 1);
+        else if (e.deltaY < -30) go(current - 1);
+    }, { passive: true });
+
+    /* --- Touch / swipe navigation --- */
+    let ty = 0;
+    document.addEventListener('touchstart', e => { ty = e.touches[0].clientY; }, { passive: true });
+    document.addEventListener('touchend', e => {
+        const d = ty - e.changedTouches[0].clientY;
+        if (Math.abs(d) > 50) go(current + (d > 0 ? 1 : -1));
+    }, { passive: true });
+
+    updateUI();
+})();
+
+/* --- Spotlight cards: pointer-follow glow position --- */
+document.querySelectorAll('.spot-card').forEach(card => {
+    card.addEventListener('pointermove', e => {
+        const r = card.getBoundingClientRect();
+        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+    });
+});
+
+// Render Lucide icons (converts <i data-lucide="name"> to inline SVGs)
+if (typeof lucide !== 'undefined') lucide.createIcons();
+</script>
+</body>
+</html>

@@ -1,0 +1,53 @@
+--- original-controller.js
++++ local-controller.js
+@@ -8,7 +8,7 @@
+     /* HUD index overlays */
+     slides.forEach(function (s, i) {
+         var idx = s.querySelector('.hud-index');
+-        if (idx) idx.textContent = 'IDX ' + String(i + 1).padStart(2, '0') + '/' + String(total).padStart(2, '0');
++        if (idx) idx.textContent = '頁 ' + String(i + 1).padStart(2, '0') + '/' + String(total).padStart(2, '0');
+     });
+ 
+     /* Intersection Observer -> reveal + one-shot FX */
+@@ -19,6 +19,7 @@
+                 current = [].indexOf.call(slides, e.target);
+                 updateUI();
+                 if (window.runFX) window.runFX(e.target);
++            } else { e.target.classList.remove('visible');
+             }
+         });
+     }, { threshold: 0.5 });
+@@ -28,7 +29,7 @@
+     slides.forEach(function (_, i) {
+         var d = document.createElement('button');
+         d.className = 'nav-dot' + (i === 0 ? ' active' : '');
+-        d.setAttribute('aria-label', 'Slide ' + (i + 1));
++        d.setAttribute('aria-label', 'スライド ' + (i + 1));
+         d.addEventListener('click', function () { go(i); });
+         dotsContainer.appendChild(d);
+     });
+@@ -37,12 +38,15 @@
+     function updateUI() {
+         bar.style.width = ((current + 1) / total * 100) + '%';
+         dots.forEach(function (d, i) { d.classList.toggle('active', i === current); });
++        document.getElementById('pageNumber').textContent=(current+1)+' / '+total;
++        if(parent!==window)parent.postMessage({type:'yebisu-page',index:current,total:total},location.origin);
+     }
+     function go(i) {
+         if (i < 0 || i >= total) return;
+         current = i; slides[i].scrollIntoView({ behavior: 'smooth' }); updateUI();
+     }
+ 
++    window.awsDeck={go:go,get index(){return current;}};
+     document.addEventListener('keydown', function (e) {
+         if (['ArrowDown', 'ArrowRight', ' ', 'PageDown'].includes(e.key)) { e.preventDefault(); go(current + 1); }
+         else if (['ArrowUp', 'ArrowLeft', 'PageUp'].includes(e.key)) { e.preventDefault(); go(current - 1); }
+@@ -169,4 +173,8 @@
+ 
+     /* Fire FX for any slide already visible at load (usually slide 1) */
+     document.querySelectorAll('.slide.visible').forEach(function (s) { window.runFX(s); });
+-})();+})();
++/* === LOCAL SAME-ORIGIN PLAYER ADAPTER + OVERVIEW === */
++addEventListener('message',e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.type==='yebisu-slide'&&Number.isInteger(e.data.index))window.awsDeck.go(e.data.index)});
++if(parent!==window)document.body.classList.add('embed');
++const overview=document.getElementById('overview');document.querySelectorAll('.slide').forEach((s,i)=>{const b=document.createElement('button');b.innerHTML=s.querySelector('svg').outerHTML+'<p>'+String(i+1)+' / 5　'+s.getAttribute('aria-label')+'</p>';b.onclick=()=>{overview.classList.remove('open');window.awsDeck.go(i)};overview.appendChild(b)});addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();overview.classList.toggle('open')}});

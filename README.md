@@ -6,9 +6,10 @@ GitHubの原典スキルを実際に使い、魅力ある日本語資料・短�
 
 ## 現在のアトリエ
 
-- 厳選44スキルと、日本語の作例44冊・254枚。
-- Sol 6.1の2並列で、原典Bauhausの変換器とAI画像の計測・復元処理による新作2冊8枚を追加。別制作4冊32枚も、制作方式と編集範囲を保持して接続。
+- 厳選49スキルと、日本語の作例49冊・286枚。
+- Sol 6.1の2並列で、原典PptxGenJSの引き継ぎ資料6枚と、既存PPTXからのモーションHTML5枚を制作。別制作のSVG・教材化・文化イベント資料3冊21枚も接続。
 - 各派生スキル固有の本文を直接Markdown取得。サイトで本文を開いてコピーでき、原典・テンプレート・入力の一式ZIPも取得。
+- 作例の詳細で、自分の原稿・読み手・希望枚数・書体を入れ、そのスキル向けの依頼文を組み立ててコピー。実際の制作依頼も別に読めます。
 - OSS書体9ファミリー・16ファイルと、7作風の実フォント見本・AI向け指示コピー。Noto Sans CJK JPの公式OTF/OFLを追加し、研究作例から同じ書体を直接取得。
 
 原典のSKILL、固有テンプレート・controller・生成器を使います。日本語向けの改良と実施範囲は各作例に記載。主な出力が開く範囲の軽い確認を行い、制作を中心に進めています。
@@ -33,13 +34,17 @@ python tools/build_atelier_site.py
 
 [制作方針](docs/PROJECT.md) · [製品仕様](docs/PRODUCT_SPEC.md) · [現在の実行目標](data/project-goal.json) · [厳選掲載](data/product-collection.json)
 
-Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は54リポ・59冊で、現在の厳選掲載と区別します。
+Sol 6.1の並列制作を中心とし、Astraを使いません。209件をすべて制作することや、大規模QAを完了条件にしません。原カタログは [記録](data/skills.json) と [以前のREADME](docs/history/catalog-readme-before-atelier.md) に保存しています。制作履歴は59リポ・64冊で、現在の厳選掲載と区別します。
 
 原作者、固定原典、LICENSE・NOTICEと書体のOFLを保持します。カタログのCC0は各スキル・コード・素材・書体の条件を変更しません。[原典・条件](licenses.html)を参照してください。
 
 公開更新・merge・deployはローカル制作と別に扱います。
 
-最新バッチ： [小さな展示を、ひとつの体験に。](examples/repositories/ppt-agent-showcase/README.md) · [クリックを減らす、予約の流れ。](examples/repositories/slidepoise-showcase/README.md)。原典のBauhaus変換とAI画像→OpenCV→native図形の復元を実行。[制作記録](docs/PRODUCTION_BATCH_20261014_07.md)。
+最新バッチ： [仕事の引き継ぎを、迷わない一枚に。](examples/repositories/presentation-skill-showcase/README.md) · [小さな展示を、ひとつの体験に。動く展示案内](examples/repositories/aws-html-showcase/README.md)。原典のJSON・role contract・PptxGenJSで文字・図形・表を生成し、原典extractor・Neon controllerでPPTXをHTMLへ変換。変換前後の資料を行き来できます。[制作記録](docs/PRODUCTION_BATCH_20261014_08.md)。
+
+別制作の取り込み： [AIに任せる前の設計図](examples/repositories/sebastian-188/README.md) · [動画一本を、教材へ。](examples/repositories/sebastian-178/README.md) · [音を、地図にする。](examples/repositories/sebastian-173/README.md)。SVG→PDF、原典CSSの図解部品と教材化、13slotのHTML編集誌面。178のroot Apache-2.0とSKILL内MITの記載差を保持し、埋め込み字体は公式固定配布のNotoへ揃えました。
+
+前のバッチ： [小さな展示を、ひとつの体験に。](examples/repositories/ppt-agent-showcase/README.md) · [クリックを減らす、予約の流れ。](examples/repositories/slidepoise-showcase/README.md)。原典のBauhaus変換とAI画像→OpenCV→native図形の復元を実行。[制作記録](docs/PRODUCTION_BATCH_20261014_07.md)。
 
 別制作の取り込み： [捨てる前の一目](examples/repositories/sebastian-205/README.md) · [静けさを選べる図書館](examples/repositories/sebastian-203/README.md) · [小さな道案内](examples/repositories/sebastian-193/README.md) · [夏の余白](examples/repositories/sebastian-192/README.md)。研究提案3冊の文字・図形は編集可。夏の余白は本文と図が画像で、画像差替え・話者ノートを編集できます。描画元と確認範囲を各ガイドへ記載。
 

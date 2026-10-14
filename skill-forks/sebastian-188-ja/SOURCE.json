@@ -1,0 +1,228 @@
+{
+  "id": "sebastian-188-ja",
+  "upstream": {
+    "repository": "vigorX777/ppt-svg-generator",
+    "url": "https://github.com/vigorX777/ppt-svg-generator",
+    "commit": "c873b61673ab0ada5c09f863bff89c8f1b3248fb",
+    "license": "MIT",
+    "copyright": "Copyright (c) 2025 vigorX777",
+    "license_file": "LICENSE",
+    "pinned_source_url": "https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb"
+  },
+  "received_example": {
+    "path": "examples/repositories/sebastian-188",
+    "title": "AIに任せる前の設計図",
+    "pages": 7,
+    "fictional": true,
+    "production_zip": "downloads/sebastian-188-example-ja.zip",
+    "provenance_copy": "IMPORT_PROVENANCE.json",
+    "qa_copy": "IMPORT_QA.json"
+  },
+  "method": {
+    "author_workflow": "Markdown → structure/design → authored 1920×1080 SVG; Swiss style",
+    "implemented_export": "受領した独自補助 source/build.py による Inkscape CLI → PDF、PyMuPDF → 結合PDF・PNG",
+    "upstream_exporters_executed": false,
+    "unexecuted_upstream_scripts": [
+      "scripts/export_pdf.js",
+      "scripts/export_pptx.js"
+    ],
+    "browser_runtime_checked": false,
+    "browser_note": "受領記録ではChromiumがsocket permissionで起動失敗。HTML実行確認は主張しない。",
+    "original_materials_scope": "使用したSKILL、commands/quick・generate・export、specs/design-system・page-templates・svg-compatibility、styles/04-swiss-styleの選択抜粋。完全な原典一式ではない。"
+  },
+  "editability": {
+    "primary_format": "pdf",
+    "pdf": "固定レイアウト",
+    "editable_source": "SVGのtext・図形・配色・配置をソース編集",
+    "native_pptx_delivered": false,
+    "powerpoint_conversion_checked": false
+  },
+  "preserved_implementation_changes": [
+    "日本語の架空教材内容と改行・組版",
+    "Microsoft YaHeiの後にNoto Sans CJK JPの日本語fallback",
+    "頁ごとに変化する編集的レイアウト",
+    "独自Inkscape PDF exportとPyMuPDF preview",
+    "軽量HTMLプレイヤーは作例側に保持"
+  ],
+  "fork_changes": [
+    "frontmatter nameをsebastian-188-jaへ統一",
+    "日本語SKILLの相対参照を実fork配置へ調整",
+    "README・SOURCE・外部字体取得案内を追加",
+    "原文LICENSEをrootとsource/upstreamへ保持",
+    "受領した日本語SKILLとREADMEを未変更原本として保存",
+    "render/.gitkeepで再生成時の出力先を保持"
+  ],
+  "originals": {
+    "upstream_documents": "source/upstream/",
+    "received_japanese_skill": "source/japanese-original-SKILL.md",
+    "received_japanese_readme": "source/japanese-original-README.md",
+    "local_diff": "source/japanese-fork.diff",
+    "build_script_modified": false,
+    "svg_modified": false
+  },
+  "fonts": {
+    "name": "Noto Sans CJK JP",
+    "license": "SIL OFL 1.1",
+    "source": "https://github.com/notofonts/noto-cjk",
+    "official_files_url": "https://github.com/notofonts/noto-cjk/tree/main/Sans/OTF/Japanese",
+    "files": [
+      "NotoSansCJKjp-Regular.otf",
+      "NotoSansCJKjp-Bold.otf"
+    ],
+    "external_site_archive": "downloads/fonts/notosanscjkjp.zip",
+    "binaries_in_fork": false,
+    "license_file": "fonts/OFL.txt",
+    "original_stack": "Microsoft YaHei,Noto Sans CJK JP,SimHei,PingFang SC,sans-serif",
+    "os_fonts_extracted": false,
+    "note": "公式の未改変字体を外部取得。先行字体の有無でfallbackと組版が変わる。"
+  },
+  "import": {
+    "scope": "日本語forkの配置整理・出所記録・配布ZIP作成のみ",
+    "regenerated": false,
+    "additional_qa": false,
+    "received_zip_sha256": "71c9d686caee197f4e8a010543531c818b1216f92e4f2947a5604a740555362e",
+    "received_zip_preserved_at": ".build/incoming-sebastian-batch08/sebastian-188-ja.received-71c9d686caee.zip",
+    "public_fork_zip": "downloads/sebastian-188-ja.zip",
+    "production_example_changed": false
+  },
+  "case_studies": [
+    "sebastian-188"
+  ],
+  "files": [
+    {
+      "path": ".ppt-session/design.json",
+      "sha256": "b5392a95a327f479516a36d0aa969eb0d34db618403e35e944ce854c818b2c06"
+    },
+    {
+      "path": ".ppt-session/structure.json",
+      "sha256": "fbea7e6ffe203efe7301be45369c0867ea3b5c60be36cef97b11a4f9afd53c7e"
+    },
+    {
+      "path": "fonts/OFL.txt",
+      "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+    },
+    {
+      "path": "fonts/README.md",
+      "sha256": "f57f99126f0047a741404633bbb1e2f48c334a16e672f5a7e36d05688294efe7"
+    },
+    {
+      "path": "IMPORT_PROVENANCE.json",
+      "sha256": "224643e34f4f2636463cac94684cb2341cf67aafd7a36b4a3af18d5c76666e88"
+    },
+    {
+      "path": "IMPORT_QA.json",
+      "sha256": "c654bb733bcadb8c47cecf60f2b9a995c4c7e87261857d0196dde4cb98e278e3"
+    },
+    {
+      "path": "input/BRIEF.md",
+      "sha256": "15e241d10c4fb43467a8e6319107192513fcccdf208271354874e6205ae7a6c1"
+    },
+    {
+      "path": "input/data.json",
+      "sha256": "6a42f354048a76979efc1655c2f0057ddee0b2416f3a00c84dd347c25c271c7b"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "cba28df6483ebab88dfc9b8f13f7c7aa36cedde811c0aeeffdbff00b1e7522c9"
+    },
+    {
+      "path": "PROMPT.txt",
+      "sha256": "9211da9a75e97cf6914739695c5f2ef8c36d8d0424834c628f9e5b8f76c37681"
+    },
+    {
+      "path": "README.md",
+      "sha256": "019fd9644e8f3e807c7712d06d244a78be68a5310aabf87490cadc4859474dd8"
+    },
+    {
+      "path": "render/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "c4cde2a757cb39bccf042e612b44cd832f1d62a9cc3b0625e52b7b552669020d"
+    },
+    {
+      "path": "source/build.py",
+      "sha256": "0749a5bc8ec4cad76a36632bb9cf7da73a7875b2034884b0970431209780cc72"
+    },
+    {
+      "path": "source/japanese-fork.diff",
+      "sha256": "d93ee481a2d03663906c5e3fea9ca2556a77a6b06993e0f71c4ce98e352d8424"
+    },
+    {
+      "path": "source/japanese-original-README.md",
+      "sha256": "b9267e8f69698a27e2618e47851e2e75745c56fb6e526c3306d76a604b11a01f"
+    },
+    {
+      "path": "source/japanese-original-SKILL.md",
+      "sha256": "7a96ba11791bb3b4e9332551e010a1e5cfa47657376c833f5bc3083aa1ef06d9"
+    },
+    {
+      "path": "source/upstream/commands/export.md",
+      "sha256": "8438f259dfdf61997a339f6b7309091e27b1236753e4d4449463e9d82cedd858"
+    },
+    {
+      "path": "source/upstream/commands/generate.md",
+      "sha256": "8deab425c28fc69a37187dc8fa81f1427b5d84efc274b6d0790dc133c3c53ea5"
+    },
+    {
+      "path": "source/upstream/commands/quick.md",
+      "sha256": "1a172ea209671b29da86b3fae74199c01bbd8e423e7d1f388f6d2b1f9e0263c6"
+    },
+    {
+      "path": "source/upstream/LICENSE",
+      "sha256": "cba28df6483ebab88dfc9b8f13f7c7aa36cedde811c0aeeffdbff00b1e7522c9"
+    },
+    {
+      "path": "source/upstream/SKILL.md",
+      "sha256": "abfa58c0ff4a9904277b8a99d67beaef33886cfa79b44038232e375710da892c"
+    },
+    {
+      "path": "source/upstream/specs/design-system.md",
+      "sha256": "20494a5e8e60989270baffa677bb2a0a3289dcb329a144fb7cb73cafd2ac5f7f"
+    },
+    {
+      "path": "source/upstream/specs/page-templates.md",
+      "sha256": "c2b0336857841f199cf459c292672fcb10f1c4b3d67d466d0b292b7c92c62873"
+    },
+    {
+      "path": "source/upstream/specs/svg-compatibility.md",
+      "sha256": "9b5573cebec1bf4e665d73f89709567299d129b2a9f80ac555910c9f93e1db5d"
+    },
+    {
+      "path": "source/upstream/styles/04-swiss-style.md",
+      "sha256": "f8f0b644f664795cd6e8f95371e108e2af35bd5d5d851ab87f7c38046ef7c731"
+    },
+    {
+      "path": "svg/slide-01-cover.svg",
+      "sha256": "dee4fec38e6bb9c3aeddca65e7c51c58f9bb392c50b3dbb5dbd3cfff0c86aa9d"
+    },
+    {
+      "path": "svg/slide-02-summary.svg",
+      "sha256": "f5c90d32efdae86281a8179df5a53de29cc79a66d6c81c19a6549e33c2d0f777"
+    },
+    {
+      "path": "svg/slide-03-contrast.svg",
+      "sha256": "bc339dbf1e3e026923e521ab9f363c9e2013491fa48c0366f38d40d4b3fe7efd"
+    },
+    {
+      "path": "svg/slide-04-input.svg",
+      "sha256": "aa0accb7eac468b603d35346a3be956eadf70b44f489e57f95f00b7d4e403b56"
+    },
+    {
+      "path": "svg/slide-05-constraints.svg",
+      "sha256": "0fd015ae49da7a7a83dd9cdf8734a039bf2def8a466950c76b0e611110cdf2e8"
+    },
+    {
+      "path": "svg/slide-06-checks.svg",
+      "sha256": "48aea6e522936291319fa9bc2846c71146ff3da3f5a41c1cda223facaf7ad35b"
+    },
+    {
+      "path": "svg/slide-07-ending.svg",
+      "sha256": "e6caae63d4374dc1d957d88595763009da3157c4a8d19c4425cf76f3506e91d7"
+    }
+  ],
+  "repository": "vigorX777/ppt-svg-generator",
+  "commit": "c873b61673ab0ada5c09f863bff89c8f1b3248fb",
+  "license": "MIT"
+}

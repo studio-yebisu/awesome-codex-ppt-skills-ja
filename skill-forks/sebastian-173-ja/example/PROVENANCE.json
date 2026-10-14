@@ -1,0 +1,43 @@
+{
+  "repository": "kimsh-1/deck-factory",
+  "commit": "11d456351763b0efbc2a4989da688334f709dd9b",
+  "source_url": "https://github.com/kimsh-1/deck-factory/tree/11d456351763b0efbc2a4989da688334f709dd9b/skills/deck-factory",
+  "license": "MIT",
+  "copyright": "2026 kimsh-1",
+  "used_files": [
+    "SKILL.md",
+    "reference.md",
+    "assets/styles.css"
+  ],
+  "styles_css": "unmodified upstream file, linked by index.html",
+  "route": "brief → upstream CSS → 13-slot author HTML → Chromium PNG/PDF → gs lite PDF",
+  "adaptations": [
+    "Japanese typography with existing Noto Sans CJK JP / no font redistribution",
+    "7 original fictional-content slides",
+    "Editable inline SVG explanatory map and abstract waveform symbols",
+    "Responsive whole-slide scaling and print rules",
+    "Keyboard/button navigation and same-origin yebisu-slide/yebisu-page bridge",
+    "Direct Ghostscript command instead of unknown compact-pdf.sh",
+    "Theme-local ink rule .slide { color: var(--ink) } fixes inherited white text on paper slides",
+    "Print @page1920px1080px margin0 overrides original16in9in to match export canvas and eliminate outer white margin"
+  ],
+  "not_used": [
+    "work/premium/slides examples (absent from fixed repository)",
+    "scripts/compact-pdf.sh"
+  ],
+  "limitations": [
+    "No audio files or playback",
+    "Fictional map/records, no real personal location data",
+    "No native PPTX",
+    "Font substitution may change layout",
+    "Full upstream QA not performed",
+    "Page5 tail author safe-boundary warning retained, visible within slide canvas"
+  ],
+  "render_status": "complete: existing Google Chrome on Windows via Playwright, 7 PNG and7-page PDF; lite PDF via existing cloud Ghostscript",
+  "render_environment": {
+    "local_cloud_chromium": "failed: socket() Operation not permitted",
+    "cloud_cua": "file protocol blocked; stopped",
+    "verified_pc_browser": "existing Google Chrome / no install",
+    "compression": "cloud Ghostscript /ebook direct command"
+  }
+}

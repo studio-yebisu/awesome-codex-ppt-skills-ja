@@ -1,0 +1,392 @@
+{
+  "repository": "lanceli93/aws-html-slides",
+  "commit": "5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2",
+  "license": "MIT",
+  "copyright": "2025 Zara Zhang, retained original MIT",
+  "method": "Original PPT conversion route: unmodified extract-pptx.py extracts all 5 slide texts/media/notes; source-specific native OOXML supplement maps actual input shape coordinates/colors/paths to editable SVG; original Neon preview controller/FX, whole viewport-base.css, reveal stagger and SVG edge choreography drive HTML playback.",
+  "input_repository": "Akxan/ppt-agent-skill",
+  "input_commit": "01825dee2ad40a8c719824252605396b9a570d57",
+  "input_license": "MIT",
+  "input_pptx_sha256": "a57652396782363b3d0b186063e9f80e066030cf8a04f5d67140551de241427a",
+  "page_count": 5,
+  "pptx_generated_here": false,
+  "editability": "HTML / SVG text, geometry, colors and animations",
+  "source_refs": [
+    {
+      "path": "aws-html-slides/SKILL.md",
+      "sha256": "febe8498e4bbcca7596a1b2bca0eb70af33e031ec8e8cfd17fb36a14e7589837",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/SKILL.md"
+    },
+    {
+      "path": "aws-html-slides/scripts/extract-pptx.py",
+      "sha256": "4f5e7603c99b8b53e20c5b2a65abdf5edf9422b4c490dca9f2b872a752c17d2a",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/scripts/extract-pptx.py"
+    },
+    {
+      "path": "aws-html-slides/scripts/gen-content.py",
+      "sha256": "aac72051a56e19e446d0b9add2641bb193084e814106e401e9b919556cd85034",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/scripts/gen-content.py"
+    },
+    {
+      "path": "aws-html-slides/html-template.md",
+      "sha256": "67e57e9e52289d55bd0c47882f8133f1ae9ad21c4e0fcef956faa3f211f7fbc0",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/html-template.md"
+    },
+    {
+      "path": "aws-html-slides/viewport-base.css",
+      "sha256": "3bfd0d274e9467b74229dab314356f0bbf09f8b5fb59f03c20e2cb3ff8a70a5a",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/viewport-base.css"
+    },
+    {
+      "path": "aws-html-slides/preview/01-neon-cyber.html",
+      "sha256": "a0c209258eec12747810d577af5b2d691e7c5d851062534352c1eaef71f33516",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/preview/01-neon-cyber.html"
+    },
+    {
+      "path": "aws-html-slides/animation-patterns.md",
+      "sha256": "9531a9ed9ac15872cd31d5ba2524b2d24385a82564bc6830050c75ff70a66a82",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/animation-patterns.md"
+    },
+    {
+      "path": "aws-html-slides/diagram-reference.md",
+      "sha256": "a97ee81d2ce1878da73b249af326f7bfc514a48bc8caaaaef76112ae1abdc66c",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/diagram-reference.md"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "62928eb197fe4662d1efc3af0735b3ba5df3c0308badd9a2baf2b619009f5366",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/LICENSE"
+    }
+  ],
+  "upstream_preserved": true,
+  "modifications": [
+    "Original extractor does not export non-picture native geometry or recognize Akxan free text boxes as title placeholders; separate native-shapes.json records actual OOXML geometry/font data and generates SVG without guessing shapes.",
+    "Original complete viewport CSS and real Neon preview navigation/FX are retained; footer/HUD/dot labels localized to Japanese and Studio Yebisu.",
+    "Mandatory AWS affiliation-looking footer replaced under explicit no-officiality instruction. No AWS logo/brand/service icons used.",
+    "Full local TTF embedded in single HTML instead of remote fonts/Lucide CDN; input contains no raster images, icons or new licensed assets.",
+    "Original intersection observer additionally clears visible on leave to replay geometry explanation; same-origin minimal player adapter and page counter recorded in source/controller.diff.",
+    "Original gen-content.py is a new-presentation-only path and is not executed for this PPT conversion.",
+    "PPT source geometry remains inside a fixed SVG viewBox, scaled by viewport; HTML page sizes/spacing use original clamp/breakpoints."
+  ],
+  "fonts": {
+    "families": [
+      "Zen Kaku Gothic New",
+      "BIZ UDPMincho",
+      "Manrope"
+    ],
+    "license": "OFL-1.1",
+    "commit": "66928797f271fed5ee428544e7229685e2d90127",
+    "TTF_and_OFL_included": true
+  },
+  "source_shape_counts": [
+    13,
+    15,
+    28,
+    24,
+    13
+  ],
+  "extracted_picture_counts": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "case_studies": [
+    "aws-html-showcase"
+  ],
+  "files": [
+    {
+      "path": "example/.gitignore",
+      "sha256": "3eb02c1d5c9ec6c4bc27e728d1bfef4614a20fe765b5c8b2583efcb74c85d29b"
+    },
+    {
+      "path": "example/DEPENDENCIES.json",
+      "sha256": "deb9b33e72d44dc59fb17742d321d7b5e952109073e43d1d5f5c149f3c0134ec"
+    },
+    {
+      "path": "example/extraction/extracted-slides.json",
+      "sha256": "180ca100620cebb80267716e2329a5e14fff5ecdce560d783578feeb4340bf3a"
+    },
+    {
+      "path": "example/extraction/native-shapes.json",
+      "sha256": "e6254f26b611195167b974e81006f8650f32d2c795e6a875fe6bfb03b41da24a"
+    },
+    {
+      "path": "example/fonts/bizudpmincho-OFL.txt",
+      "sha256": "ef0ed524b3bd012f37015e986809eed6f67905456ebfc1ebd7fcc2765282ee01"
+    },
+    {
+      "path": "example/fonts/BIZUDPMincho-Regular.ttf",
+      "sha256": "dbcea04578ac1e9d3484525e870ce491bd04361768f4d2ba4b827d96e20f891d"
+    },
+    {
+      "path": "example/fonts/manrope-OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "example/fonts/Manrope[wght].ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    {
+      "path": "example/fonts/ZenKakuGothicNew-Black.ttf",
+      "sha256": "795819a979184981842994d8f4eb9e14ce443d687bd5e731d6ca67ded8f92261"
+    },
+    {
+      "path": "example/fonts/zenkakugothicnew-OFL.txt",
+      "sha256": "0fac78a235c98d640cb06332eb5362c211d86fa03c011df438c35005d22ad2c7"
+    },
+    {
+      "path": "example/index.html",
+      "sha256": "6255051859d7b49430444da257b6cd10cec9e92c5c2ec55eeed857f49c93039a"
+    },
+    {
+      "path": "example/input/AKXAN-LICENSE",
+      "sha256": "aed1737775ce6ece93d34f100418eb1f34a10f0ba8a28fa2dab9af2efe28642d"
+    },
+    {
+      "path": "example/input/AKXAN-MANUSCRIPT.md",
+      "sha256": "8288f9bc5617a79fc3cae342450245247878ac9da143422ada05449f193ac624"
+    },
+    {
+      "path": "example/input/AKXAN-PROVENANCE.json",
+      "sha256": "8bb36cd7525f6f7de75f301e2f0cb27a6da73d58c6e3796dd5643546ed19f3d9"
+    },
+    {
+      "path": "example/input/AKXAN-SOURCE.json",
+      "sha256": "8788b5de456ad281e8e472501f99840e4d0fa509d0904a382f94b48f1a61a15c"
+    },
+    {
+      "path": "example/input/BRIEF.md",
+      "sha256": "38d836cf5c78ecb84cc97d3b73f58a4b5760969e549941936611ea51a22e9eb4"
+    },
+    {
+      "path": "example/input/data.json",
+      "sha256": "67347000d360a50d85bef3b75ead926fe1010f8552b9b00fcae485d856a79b6a"
+    },
+    {
+      "path": "example/input/deck.pptx",
+      "sha256": "a57652396782363b3d0b186063e9f80e066030cf8a04f5d67140551de241427a"
+    },
+    {
+      "path": "example/LICENSE",
+      "sha256": "62928eb197fe4662d1efc3af0735b3ba5df3c0308badd9a2baf2b619009f5366"
+    },
+    {
+      "path": "example/MANUSCRIPT.md",
+      "sha256": "982c8109dcfaa52667d7f0909bd6f853e4caee3d37eaa8c6d5187e6fd8fa8edb"
+    },
+    {
+      "path": "example/PROMPT.md",
+      "sha256": "0ad03adb6aa4505d31242485b3348e21cfb102333e046cc8fa951589f066218f"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "6659a90550ae6131d9622e927bb0354da0048bd3cca33e69c4456cf271ae18ea"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "76d86e3c734e4c9e1bef7cf02571b16cb7820cf2932c83c7920713dbce6e16a9"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "1b3c97d178d07bf791e3344d40726067374f7b281a807afe9fa14cb56b27d83f"
+    },
+    {
+      "path": "example/rebuild.py",
+      "sha256": "53534040947d3bc07115087a52b627065906cb2647eb2b48200d61349559d53d"
+    },
+    {
+      "path": "example/render/slide-01.png",
+      "sha256": "08575835dd09c337e85eb387009cba87284330ed77afc06de7073880d582dd89"
+    },
+    {
+      "path": "example/render/slide-02.png",
+      "sha256": "c8db27117944d4de94e4ca36aeb647c16add5b2c32c9e4a9c80f85500adae9b3"
+    },
+    {
+      "path": "example/source/controller.diff",
+      "sha256": "22c2d0fb2ca3c2c08bd34e1dab63bd70fed54609295b257077803dd3de2bc8af"
+    },
+    {
+      "path": "example/source/local-controller.js",
+      "sha256": "ec9a80fe05979426b9ffbabd1496111ab913de107dcebb523466a1ff0cc3afd1"
+    },
+    {
+      "path": "example/source/original-controller.js",
+      "sha256": "70929e73314f96d3dbb45b1ded06e7efe8c197b409f33ad80ecad4252d4d8c32"
+    },
+    {
+      "path": "example/source/slide-01.svg",
+      "sha256": "92605d187ba4ff22c7aa21237b16888a4435e02d12905a0f155324a2ad50ea59"
+    },
+    {
+      "path": "example/source/slide-02.svg",
+      "sha256": "750b0ade69d6ae86796f774d652853016478983ffa48d39467d7c3eabb7e3f18"
+    },
+    {
+      "path": "example/source/slide-03.svg",
+      "sha256": "2468d80d52fc536515fafe01bc26bcd996d0be1d4a6f2d46e15e8445b14f4de5"
+    },
+    {
+      "path": "example/source/slide-04.svg",
+      "sha256": "a239024eaf03a58c00583b012bfa3ec5dde45429c0b533400088948efed5b285"
+    },
+    {
+      "path": "example/source/slide-05.svg",
+      "sha256": "c27af252a3645bc46252172636a0641771f33bf12160b702e978eec497edbc2d"
+    },
+    {
+      "path": "example/source/theme.css",
+      "sha256": "563d2d4633e4bad2730431d0a4057d7faee890aff7cac422368419737650fec4"
+    },
+    {
+      "path": "example/upstream/ACQUISITION.json",
+      "sha256": "487ee76977e7bdf37fdf0c70cbed0d341a725e7d174f8c5d834d71675a7e1d8f"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/animation-patterns.md",
+      "sha256": "9531a9ed9ac15872cd31d5ba2524b2d24385a82564bc6830050c75ff70a66a82"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/chart-reference.md",
+      "sha256": "2f4e64bc101ca9add931081666afea8093adde457e4b2681ad2e7a7c0c5faee2"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/diagram-reference.md",
+      "sha256": "a97ee81d2ce1878da73b249af326f7bfc514a48bc8caaaaef76112ae1abdc66c"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/effects-reference.md",
+      "sha256": "a6025357117e34162d3353c44a783d9d67ee436e6d6b832801dbfdd6dee8c9de"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/html-template.md",
+      "sha256": "67e57e9e52289d55bd0c47882f8133f1ae9ad21c4e0fcef956faa3f211f7fbc0"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/layout-neon.md",
+      "sha256": "ffd394b2396e2c0fcd9d19835dfbd239f60ceed6b99701695492c54bb63e5782"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/layout-reinvent.md",
+      "sha256": "dc2ccaf1940b925ab601e9143d7d8b3af9fa95b673f20e8af95ee20b60d2f026"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/preview/01-neon-cyber.html",
+      "sha256": "a0c209258eec12747810d577af5b2d691e7c5d851062534352c1eaef71f33516"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/preview/02-reinvent-keynote.html",
+      "sha256": "00a3f4b5673193e9a674e6b4ea31aafbe8b7f607d274c9377e3642a6b71da201"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/scripts/extract-pptx.py",
+      "sha256": "4f5e7603c99b8b53e20c5b2a65abdf5edf9422b4c490dca9f2b872a752c17d2a"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/scripts/gen-content.py",
+      "sha256": "aac72051a56e19e446d0b9add2641bb193084e814106e401e9b919556cd85034"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/SKILL.md",
+      "sha256": "febe8498e4bbcca7596a1b2bca0eb70af33e031ec8e8cfd17fb36a14e7589837"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/STYLE_PRESETS.md",
+      "sha256": "a2624966c8dee4fbb5bcfa1bde9e5646618b3677be1f6fc3364f6d1fcb4e3de1"
+    },
+    {
+      "path": "example/upstream/aws-html-slides/viewport-base.css",
+      "sha256": "3bfd0d274e9467b74229dab314356f0bbf09f8b5fb59f03c20e2cb3ff8a70a5a"
+    },
+    {
+      "path": "example/upstream/LICENSE",
+      "sha256": "62928eb197fe4662d1efc3af0735b3ba5df3c0308badd9a2baf2b619009f5366"
+    },
+    {
+      "path": "example/upstream/README.md",
+      "sha256": "fe6b34e0c258af468b519016f6604229e524fc1c680768f7db33c10dab7e20e1"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "62928eb197fe4662d1efc3af0735b3ba5df3c0308badd9a2baf2b619009f5366"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ca69cade4f3de1ba1c0c21be373ef8ea868710bb5ce74b4c791d79fbc4ba94bc"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "140d4c8e37e5a9206f0d7607763dec51ee4a2efbb31c69b1a1311a9f263b136c"
+    },
+    {
+      "path": "upstream/ACQUISITION.json",
+      "sha256": "487ee76977e7bdf37fdf0c70cbed0d341a725e7d174f8c5d834d71675a7e1d8f"
+    },
+    {
+      "path": "upstream/aws-html-slides/animation-patterns.md",
+      "sha256": "9531a9ed9ac15872cd31d5ba2524b2d24385a82564bc6830050c75ff70a66a82"
+    },
+    {
+      "path": "upstream/aws-html-slides/chart-reference.md",
+      "sha256": "2f4e64bc101ca9add931081666afea8093adde457e4b2681ad2e7a7c0c5faee2"
+    },
+    {
+      "path": "upstream/aws-html-slides/diagram-reference.md",
+      "sha256": "a97ee81d2ce1878da73b249af326f7bfc514a48bc8caaaaef76112ae1abdc66c"
+    },
+    {
+      "path": "upstream/aws-html-slides/effects-reference.md",
+      "sha256": "a6025357117e34162d3353c44a783d9d67ee436e6d6b832801dbfdd6dee8c9de"
+    },
+    {
+      "path": "upstream/aws-html-slides/html-template.md",
+      "sha256": "67e57e9e52289d55bd0c47882f8133f1ae9ad21c4e0fcef956faa3f211f7fbc0"
+    },
+    {
+      "path": "upstream/aws-html-slides/layout-neon.md",
+      "sha256": "ffd394b2396e2c0fcd9d19835dfbd239f60ceed6b99701695492c54bb63e5782"
+    },
+    {
+      "path": "upstream/aws-html-slides/layout-reinvent.md",
+      "sha256": "dc2ccaf1940b925ab601e9143d7d8b3af9fa95b673f20e8af95ee20b60d2f026"
+    },
+    {
+      "path": "upstream/aws-html-slides/preview/01-neon-cyber.html",
+      "sha256": "a0c209258eec12747810d577af5b2d691e7c5d851062534352c1eaef71f33516"
+    },
+    {
+      "path": "upstream/aws-html-slides/preview/02-reinvent-keynote.html",
+      "sha256": "00a3f4b5673193e9a674e6b4ea31aafbe8b7f607d274c9377e3642a6b71da201"
+    },
+    {
+      "path": "upstream/aws-html-slides/scripts/extract-pptx.py",
+      "sha256": "4f5e7603c99b8b53e20c5b2a65abdf5edf9422b4c490dca9f2b872a752c17d2a"
+    },
+    {
+      "path": "upstream/aws-html-slides/scripts/gen-content.py",
+      "sha256": "aac72051a56e19e446d0b9add2641bb193084e814106e401e9b919556cd85034"
+    },
+    {
+      "path": "upstream/aws-html-slides/SKILL.md",
+      "sha256": "febe8498e4bbcca7596a1b2bca0eb70af33e031ec8e8cfd17fb36a14e7589837"
+    },
+    {
+      "path": "upstream/aws-html-slides/STYLE_PRESETS.md",
+      "sha256": "a2624966c8dee4fbb5bcfa1bde9e5646618b3677be1f6fc3364f6d1fcb4e3de1"
+    },
+    {
+      "path": "upstream/aws-html-slides/viewport-base.css",
+      "sha256": "3bfd0d274e9467b74229dab314356f0bbf09f8b5fb59f03c20e2cb3ff8a70a5a"
+    },
+    {
+      "path": "upstream/LICENSE",
+      "sha256": "62928eb197fe4662d1efc3af0735b3ba5df3c0308badd9a2baf2b619009f5366"
+    },
+    {
+      "path": "upstream/README.md",
+      "sha256": "fe6b34e0c258af468b519016f6604229e524fc1c680768f7db33c10dab7e20e1"
+    }
+  ]
+}

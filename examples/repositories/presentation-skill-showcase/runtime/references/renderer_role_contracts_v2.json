@@ -1,0 +1,504 @@
+{
+  "schema_version": "renderer_role_contract_catalog_v2",
+  "contract_version": "renderer_role_contracts_v2",
+  "supported_layout_variants": ["primary", "alternate", "dense"],
+  "roles": ["title", "section", "evidence", "comparison", "chart", "table", "decision", "references"],
+  "grammars": {
+    "consulting-answer-pyramid": {
+      "title": {
+        "system_id": "title-answer-ledger",
+        "layout_family": "answer-ledger",
+        "coordinate_space": "slide",
+        "reading_order": ["headline", "support", "anchor"],
+        "anchor_slot": "headline",
+        "density": {"level": "medium", "max_items": 3},
+        "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "title-answer-ledger"},
+        "slots": {"headline": [0.08, 0.18, 0.78, 0.23], "support": [0.08, 0.49, 0.50, 0.18], "anchor": [0.68, 0.50, 0.26, 0.32]}
+      },
+      "section": {
+        "system_id": "section-claim-chapters",
+        "layout_family": "claim-chapter",
+        "coordinate_space": "slide",
+        "reading_order": ["index", "headline", "support"],
+        "anchor_slot": "headline",
+        "density": {"level": "low", "max_items": 3},
+        "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "section-claim-chapters"},
+        "slots": {"index": [0.05, 0.18, 0.10, 0.14], "headline": [0.20, 0.18, 0.74, 0.26], "support": [0.20, 0.54, 0.58, 0.18]}
+      },
+      "evidence": {
+        "system_id": "evidence-proof-stack",
+        "layout_family": "proof-stack",
+        "coordinate_space": "body",
+        "reading_order": ["evidence_0", "evidence_1", "evidence_2", "evidence_3"],
+        "anchor_slot": "evidence_0",
+        "density": {"level": "high", "max_items": 5},
+        "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "evidence-proof-stack"},
+        "slots": {"evidence_0": [0.00, 0.00, 0.30, 1.00], "evidence_1": [0.35, 0.00, 0.65, 0.29], "evidence_2": [0.35, 0.355, 0.65, 0.29], "evidence_3": [0.35, 0.71, 0.65, 0.29]}
+      },
+      "comparison": {
+        "system_id": "comparison-option-scorecard",
+        "layout_family": "criteria-scorecard",
+        "coordinate_space": "body",
+        "reading_order": ["option_0", "option_1", "verdict"],
+        "anchor_slot": "option_0",
+        "density": {"level": "high", "max_items": 7},
+        "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "comparison-option-scorecard"},
+        "slots": {"option_0": [0.00, 0.00, 0.47, 0.62], "option_1": [0.53, 0.00, 0.47, 0.62], "verdict": [0.00, 0.70, 1.00, 0.24]}
+      },
+      "chart": {
+        "system_id": "data-executive-exhibit",
+        "layout_family": "executive-exhibit",
+        "coordinate_space": "body",
+        "reading_order": ["chart", "insight", "facts"],
+        "anchor_slot": "chart",
+        "density": {"level": "high", "max_items": 4},
+        "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-executive-exhibit"},
+        "slots": {"chart": [0.00, 0.00, 0.72, 1.00], "insight": [0.77, 0.00, 0.23, 0.42], "facts": [0.77, 0.49, 0.23, 0.51]}
+      },
+      "table": {
+        "system_id": "table-executive-ledger",
+        "layout_family": "executive-ledger",
+        "coordinate_space": "body",
+        "reading_order": ["table", "readout"],
+        "anchor_slot": "table",
+        "density": {"level": "high", "max_items": 8},
+        "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-executive-exhibit"},
+        "slots": {"table": [0.00, 0.00, 0.72, 1.00], "readout": [0.77, 0.00, 0.23, 1.00]}
+      },
+      "decision": {
+        "system_id": "decision-owner-commitment",
+        "layout_family": "owner-commitment",
+        "coordinate_space": "body",
+        "reading_order": ["decision_0", "decision_1", "decision_2", "decision_3", "commitment"],
+        "anchor_slot": "commitment",
+        "density": {"level": "high", "max_items": 5},
+        "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "decision-owner-commitment"},
+        "slots": {"decision_0": [0.00, 0.00, 0.46, 0.34], "decision_1": [0.54, 0.00, 0.46, 0.34], "decision_2": [0.00, 0.42, 0.46, 0.30], "decision_3": [0.54, 0.42, 0.46, 0.30], "commitment": [0.00, 0.80, 1.00, 0.20]}
+      },
+      "references": {
+        "system_id": "references-executive-notes",
+        "layout_family": "executive-notes",
+        "coordinate_space": "body",
+        "reading_order": ["register", "notes"],
+        "anchor_slot": "register",
+        "density": {"level": "high", "max_items": 10},
+        "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "references-executive-notes"},
+        "slots": {"register": [0.00, 0.00, 0.74, 1.00], "notes": [0.79, 0.00, 0.21, 1.00]}
+      }
+    },
+    "scientific-evidence-plate": {
+      "title": {
+        "system_id": "title-study-plate", "layout_family": "study-plate", "coordinate_space": "slide",
+        "reading_order": ["study_id", "headline", "support", "method"], "anchor_slot": "headline",
+        "density": {"level": "high", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "title-study-plate"},
+        "slots": {"study_id": [0.18, 0.09, 0.64, 0.10], "headline": [0.18, 0.31, 0.64, 0.30], "support": [0.18, 0.69, 0.64, 0.12], "method": [0.87, 0.31, 0.09, 0.50]}
+      },
+      "section": {
+        "system_id": "section-method-result", "layout_family": "method-result-turn", "coordinate_space": "slide",
+        "reading_order": ["stage", "headline", "support"], "anchor_slot": "stage",
+        "density": {"level": "medium", "max_items": 3}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "section-method-result"},
+        "slots": {"stage": [0.08, 0.10, 0.84, 0.10], "headline": [0.08, 0.32, 0.84, 0.22], "support": [0.08, 0.68, 0.84, 0.12]}
+      },
+      "evidence": {
+        "system_id": "evidence-multipanel-plate", "layout_family": "multipanel-plate", "coordinate_space": "body",
+        "reading_order": ["evidence_0", "evidence_1", "evidence_2", "evidence_3"], "anchor_slot": "evidence_0",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "evidence-multipanel-plate"},
+        "slots": {"evidence_0": [0.00, 0.00, 0.46, 0.58], "evidence_1": [0.52, 0.00, 0.48, 0.58], "evidence_2": [0.00, 0.65, 0.30, 0.35], "evidence_3": [0.36, 0.65, 0.64, 0.35]}
+      },
+      "comparison": {
+        "system_id": "comparison-control-cohort", "layout_family": "control-cohort", "coordinate_space": "body",
+        "reading_order": ["option_0", "option_1", "verdict"], "anchor_slot": "option_0",
+        "density": {"level": "high", "max_items": 7}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "comparison-control-cohort"},
+        "slots": {"option_0": [0.00, 0.00, 0.48, 0.64], "option_1": [0.52, 0.00, 0.48, 0.64], "verdict": [0.18, 0.72, 0.64, 0.28]}
+      },
+      "chart": {
+        "system_id": "data-assay-readout", "layout_family": "assay-readout", "coordinate_space": "body",
+        "reading_order": ["chart", "register"], "anchor_slot": "chart",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-assay-readout"},
+        "slots": {"chart": [0.08, 0.00, 0.84, 0.72], "register": [0.00, 0.80, 1.00, 0.20]}
+      },
+      "table": {
+        "system_id": "table-assay-register", "layout_family": "assay-register", "coordinate_space": "body",
+        "reading_order": ["index", "table", "readout"], "anchor_slot": "table",
+        "density": {"level": "high", "max_items": 10}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-assay-readout"},
+        "slots": {"index": [0.00, 0.00, 1.00, 0.11], "table": [0.00, 0.17, 1.00, 0.63], "readout": [0.00, 0.87, 1.00, 0.13]}
+      },
+      "decision": {
+        "system_id": "decision-evidence-threshold", "layout_family": "evidence-threshold", "coordinate_space": "body",
+        "reading_order": ["decision_0", "decision_1", "decision_2", "decision_3", "commitment"], "anchor_slot": "commitment",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "decision-evidence-threshold"},
+        "slots": {"decision_0": [0.00, 0.00, 0.31, 0.45], "decision_1": [0.345, 0.00, 0.31, 0.45], "decision_2": [0.69, 0.00, 0.31, 0.45], "decision_3": [0.18, 0.53, 0.64, 0.18], "commitment": [0.18, 0.78, 0.64, 0.22]}
+      },
+      "references": {
+        "system_id": "references-scientific-register", "layout_family": "scientific-register", "coordinate_space": "body",
+        "reading_order": ["index", "register", "notes"], "anchor_slot": "register",
+        "density": {"level": "high", "max_items": 12}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "references-scientific-register"},
+        "slots": {"index": [0.00, 0.00, 1.00, 0.10], "register": [0.00, 0.17, 1.00, 0.60], "notes": [0.00, 0.84, 1.00, 0.13]}
+      }
+    },
+    "clinical-care-pathway": {
+      "title": {
+        "system_id": "title-clinical-status", "layout_family": "clinical-status", "coordinate_space": "slide",
+        "reading_order": ["status", "headline", "support", "pathway"], "anchor_slot": "status",
+        "density": {"level": "medium", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "title-clinical-status"},
+        "slots": {"status": [0.08, 0.09, 0.45, 0.10], "headline": [0.08, 0.29, 0.45, 0.34], "support": [0.62, 0.33, 0.31, 0.30], "pathway": [0.62, 0.72, 0.31, 0.12]}
+      },
+      "section": {
+        "system_id": "section-care-stage", "layout_family": "care-stage", "coordinate_space": "slide",
+        "reading_order": ["stage", "headline", "support"], "anchor_slot": "stage",
+        "density": {"level": "medium", "max_items": 3}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "section-care-stage"},
+        "slots": {"stage": [0.06, 0.20, 0.14, 0.54], "headline": [0.25, 0.23, 0.34, 0.30], "support": [0.66, 0.25, 0.28, 0.28]}
+      },
+      "evidence": {
+        "system_id": "evidence-clinical-cohort", "layout_family": "clinical-cohort", "coordinate_space": "body",
+        "reading_order": ["evidence_0", "evidence_1", "evidence_2"], "anchor_slot": "evidence_0",
+        "density": {"level": "medium-high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "evidence-clinical-cohort"},
+        "slots": {"evidence_0": [0.18, 0.00, 0.64, 0.34], "evidence_1": [0.00, 0.48, 0.42, 0.52], "evidence_2": [0.58, 0.48, 0.42, 0.52]}
+      },
+      "comparison": {
+        "system_id": "comparison-care-options", "layout_family": "care-options", "coordinate_space": "body",
+        "reading_order": ["option_0", "option_1", "verdict"], "anchor_slot": "option_0",
+        "density": {"level": "medium-high", "max_items": 7}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "comparison-care-options"},
+        "slots": {"option_0": [0.00, 0.00, 1.00, 0.35], "option_1": [0.00, 0.43, 1.00, 0.35], "verdict": [0.48, 0.84, 0.52, 0.16]}
+      },
+      "chart": {
+        "system_id": "data-clinical-outcomes", "layout_family": "clinical-outcomes", "coordinate_space": "body",
+        "reading_order": ["insight", "facts", "chart", "register"], "anchor_slot": "chart",
+        "density": {"level": "medium-high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-clinical-outcomes"},
+        "slots": {"insight": [0.00, 0.00, 1.00, 0.20], "chart": [0.00, 0.28, 0.66, 0.72], "facts": [0.72, 0.28, 0.28, 0.38], "register": [0.72, 0.70, 0.28, 0.30]}
+      },
+      "table": {
+        "system_id": "table-clinical-cohort", "layout_family": "clinical-cohort-ledger", "coordinate_space": "body",
+        "reading_order": ["index", "table", "readout"], "anchor_slot": "table",
+        "density": {"level": "medium-high", "max_items": 9}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-clinical-outcomes"},
+        "slots": {"index": [0.00, 0.00, 0.17, 1.00], "table": [0.22, 0.00, 0.78, 0.72], "readout": [0.22, 0.80, 0.78, 0.20]}
+      },
+      "decision": {
+        "system_id": "decision-care-gate", "layout_family": "care-gate", "coordinate_space": "body",
+        "reading_order": ["decision_0", "decision_1", "decision_2", "decision_3", "commitment"], "anchor_slot": "commitment",
+        "density": {"level": "medium-high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "decision-care-gate"},
+        "slots": {"decision_0": [0.00, 0.00, 1.00, 0.20], "decision_1": [0.00, 0.30, 0.25, 0.46], "decision_2": [0.32, 0.30, 0.25, 0.46], "decision_3": [0.64, 0.30, 0.36, 0.28], "commitment": [0.64, 0.66, 0.36, 0.18]}
+      },
+      "references": {
+        "system_id": "references-clinical-evidence", "layout_family": "clinical-evidence", "coordinate_space": "body",
+        "reading_order": ["index", "register", "notes"], "anchor_slot": "register",
+        "density": {"level": "medium-high", "max_items": 10}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "references-clinical-evidence"},
+        "slots": {"index": [0.00, 0.00, 0.17, 1.00], "register": [0.22, 0.00, 0.78, 0.68], "notes": [0.22, 0.76, 0.78, 0.24]}
+      }
+    },
+    "editorial-spread": {
+      "title": {
+        "system_id": "title-editorial-masthead", "layout_family": "editorial-masthead", "coordinate_space": "slide",
+        "reading_order": ["masthead", "headline", "support", "folio"], "anchor_slot": "headline",
+        "density": {"level": "medium", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "title-editorial-masthead"},
+        "slots": {"masthead": [0.08, 0.09, 0.84, 0.12], "headline": [0.08, 0.47, 0.60, 0.30], "support": [0.73, 0.50, 0.21, 0.30], "folio": [0.73, 0.27, 0.21, 0.10]}
+      },
+      "section": {
+        "system_id": "section-editorial-folio", "layout_family": "editorial-folio", "coordinate_space": "slide",
+        "reading_order": ["folio", "headline", "support"], "anchor_slot": "headline",
+        "density": {"level": "low", "max_items": 3}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "section-editorial-folio"},
+        "slots": {"folio": [0.06, 0.13, 0.20, 0.12], "headline": [0.06, 0.46, 0.56, 0.30], "support": [0.70, 0.47, 0.24, 0.30]}
+      },
+      "evidence": {
+        "system_id": "evidence-captioned-feature", "layout_family": "captioned-feature", "coordinate_space": "body",
+        "reading_order": ["evidence_0", "evidence_1", "evidence_2", "evidence_3"], "anchor_slot": "evidence_0",
+        "density": {"level": "medium", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "evidence-captioned-feature"},
+        "slots": {"evidence_0": [0.00, 0.00, 0.57, 1.00], "evidence_1": [0.64, 0.00, 0.36, 0.28], "evidence_2": [0.64, 0.36, 0.36, 0.28], "evidence_3": [0.64, 0.72, 0.36, 0.28]}
+      },
+      "comparison": {
+        "system_id": "comparison-editorial-columns", "layout_family": "editorial-juxtaposition", "coordinate_space": "body",
+        "reading_order": ["option_0", "option_1", "verdict"], "anchor_slot": "option_0",
+        "density": {"level": "medium", "max_items": 6}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "comparison-editorial-columns"},
+        "slots": {"option_0": [0.00, 0.00, 0.55, 0.72], "option_1": [0.61, 0.16, 0.39, 0.56], "verdict": [0.61, 0.80, 0.39, 0.20]}
+      },
+      "chart": {
+        "system_id": "data-annotated-graphic", "layout_family": "annotated-graphic", "coordinate_space": "body",
+        "reading_order": ["insight", "chart", "facts"], "anchor_slot": "chart",
+        "density": {"level": "medium", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-annotated-graphic"},
+        "slots": {"chart": [0.00, 0.00, 0.68, 0.76], "insight": [0.74, 0.00, 0.26, 0.48], "facts": [0.74, 0.58, 0.26, 0.42]}
+      },
+      "table": {
+        "system_id": "table-editorial-notes", "layout_family": "editorial-ledger", "coordinate_space": "body",
+        "reading_order": ["index", "table", "readout"], "anchor_slot": "table",
+        "density": {"level": "medium", "max_items": 8}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-annotated-graphic"},
+        "slots": {"index": [0.00, 0.00, 0.20, 1.00], "table": [0.26, 0.08, 0.74, 0.66], "readout": [0.52, 0.82, 0.48, 0.18]}
+      },
+      "decision": {
+        "system_id": "decision-editorial-takeaway", "layout_family": "editorial-takeaway", "coordinate_space": "body",
+        "reading_order": ["decision_0", "decision_1", "decision_2", "decision_3", "commitment"], "anchor_slot": "decision_0",
+        "density": {"level": "medium", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "decision-editorial-takeaway"},
+        "slots": {"decision_0": [0.00, 0.00, 0.54, 0.36], "decision_1": [0.12, 0.48, 0.42, 0.28], "decision_2": [0.62, 0.10, 0.38, 0.30], "decision_3": [0.62, 0.48, 0.38, 0.28], "commitment": [0.62, 0.82, 0.38, 0.18]}
+      },
+      "references": {
+        "system_id": "references-editorial-notes", "layout_family": "editorial-notes", "coordinate_space": "body",
+        "reading_order": ["notes", "register"], "anchor_slot": "register",
+        "density": {"level": "medium", "max_items": 9}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "references-editorial-notes"},
+        "slots": {"notes": [0.00, 0.00, 0.22, 1.00], "register": [0.29, 0.08, 0.71, 0.84]}
+      }
+    },
+    "investor-thesis-stage": {
+      "title": {
+        "system_id": "title-investor-thesis", "layout_family": "investor-thesis", "coordinate_space": "slide",
+        "reading_order": ["thesis", "headline", "support", "signal"], "anchor_slot": "thesis",
+        "density": {"level": "medium", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "title-investor-thesis"},
+        "slots": {"thesis": [0.14, 0.10, 0.54, 0.12], "headline": [0.14, 0.46, 0.76, 0.24], "support": [0.14, 0.78, 0.70, 0.12], "signal": [0.75, 0.10, 0.15, 0.18]}
+      },
+      "section": {
+        "system_id": "section-thesis-stage", "layout_family": "thesis-stage", "coordinate_space": "slide",
+        "reading_order": ["stage", "headline", "support", "signal"], "anchor_slot": "headline",
+        "density": {"level": "low", "max_items": 3}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "section-thesis-stage"},
+        "slots": {"stage": [0.14, 0.10, 0.56, 0.10], "headline": [0.14, 0.38, 0.76, 0.24], "support": [0.14, 0.73, 0.68, 0.13], "signal": [0.77, 0.10, 0.13, 0.15]}
+      },
+      "evidence": {
+        "system_id": "evidence-market-proof", "layout_family": "market-proof-stage", "coordinate_space": "body",
+        "reading_order": ["evidence_0", "evidence_1", "evidence_2", "evidence_3"], "anchor_slot": "evidence_0",
+        "density": {"level": "medium", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "evidence-market-proof"},
+        "slots": {"evidence_0": [0.00, 0.00, 1.00, 0.48], "evidence_1": [0.00, 0.58, 0.30, 0.42], "evidence_2": [0.35, 0.58, 0.30, 0.42], "evidence_3": [0.70, 0.58, 0.30, 0.42]}
+      },
+      "comparison": {
+        "system_id": "comparison-market-position", "layout_family": "market-position-stage", "coordinate_space": "body",
+        "reading_order": ["option_0", "verdict", "option_1"], "anchor_slot": "verdict",
+        "density": {"level": "medium", "max_items": 6}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "comparison-market-position"},
+        "slots": {"option_0": [0.00, 0.00, 0.58, 0.42], "option_1": [0.00, 0.50, 0.58, 0.42], "verdict": [0.66, 0.12, 0.34, 0.68]}
+      },
+      "chart": {
+        "system_id": "data-unit-economics", "layout_family": "unit-economics", "coordinate_space": "body",
+        "reading_order": ["insight", "chart", "facts"], "anchor_slot": "insight",
+        "density": {"level": "medium", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-unit-economics"},
+        "slots": {"insight": [0.00, 0.00, 0.23, 1.00], "chart": [0.29, 0.00, 0.71, 0.72], "facts": [0.29, 0.80, 0.71, 0.20]}
+      },
+      "table": {
+        "system_id": "table-investor-economics", "layout_family": "investor-economics", "coordinate_space": "body",
+        "reading_order": ["readout", "table", "index"], "anchor_slot": "readout",
+        "density": {"level": "medium-high", "max_items": 8}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-unit-economics"},
+        "slots": {"readout": [0.00, 0.00, 0.22, 1.00], "table": [0.28, 0.00, 0.72, 0.72], "index": [0.28, 0.80, 0.72, 0.20]}
+      },
+      "decision": {
+        "system_id": "decision-investment-ask", "layout_family": "investment-ask", "coordinate_space": "body",
+        "reading_order": ["decision_0", "decision_1", "decision_2", "decision_3", "commitment"], "anchor_slot": "commitment",
+        "density": {"level": "medium", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "decision-investment-ask"},
+        "slots": {"decision_0": [0.00, 0.00, 0.20, 0.74], "decision_1": [0.25, 0.00, 0.20, 0.74], "decision_2": [0.50, 0.00, 0.20, 0.74], "decision_3": [0.75, 0.00, 0.25, 0.74], "commitment": [0.15, 0.82, 0.70, 0.18]}
+      },
+      "references": {
+        "system_id": "references-investor-diligence", "layout_family": "investor-diligence", "coordinate_space": "body",
+        "reading_order": ["register", "notes", "index"], "anchor_slot": "register",
+        "density": {"level": "medium-high", "max_items": 9}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "references-investor-diligence"},
+        "slots": {"register": [0.00, 0.00, 0.70, 1.00], "notes": [0.75, 0.00, 0.25, 0.44], "index": [0.75, 0.52, 0.25, 0.48]}
+      }
+    },
+    "operations-grid": {
+      "title": {
+        "system_id": "title-operations-state", "layout_family": "operations-state", "coordinate_space": "slide",
+        "reading_order": ["status", "headline", "support", "controls"], "anchor_slot": "status",
+        "density": {"level": "high", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "title-operations-state"},
+        "slots": {"status": [0.06, 0.23, 0.27, 0.23], "headline": [0.40, 0.23, 0.54, 0.31], "support": [0.40, 0.62, 0.50, 0.19], "controls": [0.06, 0.55, 0.27, 0.25]}
+      },
+      "section": {
+        "system_id": "section-operating-cycle", "layout_family": "operating-cycle", "coordinate_space": "slide",
+        "reading_order": ["cycle", "headline", "support", "control"], "anchor_slot": "cycle",
+        "density": {"level": "medium", "max_items": 3}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "section-operating-cycle"},
+        "slots": {"cycle": [0.05, 0.16, 0.27, 0.23], "headline": [0.39, 0.18, 0.56, 0.29], "support": [0.39, 0.60, 0.56, 0.16], "control": [0.05, 0.55, 0.27, 0.26]}
+      },
+      "evidence": {
+        "system_id": "evidence-operations-signal", "layout_family": "operations-signal-board", "coordinate_space": "body",
+        "reading_order": ["evidence_0", "evidence_1", "evidence_2", "evidence_3"], "anchor_slot": "evidence_0",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "evidence-operations-signal"},
+        "slots": {"evidence_0": [0.00, 0.00, 0.23, 1.00], "evidence_1": [0.28, 0.00, 0.33, 0.46], "evidence_2": [0.66, 0.00, 0.34, 0.46], "evidence_3": [0.28, 0.55, 0.72, 0.45]}
+      },
+      "comparison": {
+        "system_id": "comparison-plan-actual", "layout_family": "plan-actual-control", "coordinate_space": "body",
+        "reading_order": ["option_0", "option_1", "verdict"], "anchor_slot": "verdict",
+        "density": {"level": "high", "max_items": 7}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "comparison-plan-actual"},
+        "slots": {"option_0": [0.00, 0.00, 0.46, 0.76], "option_1": [0.54, 0.00, 0.46, 0.76], "verdict": [0.20, 0.84, 0.60, 0.16]}
+      },
+      "chart": {
+        "system_id": "data-operations-grid", "layout_family": "operations-grid", "coordinate_space": "body",
+        "reading_order": ["facts", "chart"], "anchor_slot": "chart",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-operations-grid"},
+        "slots": {"facts": [0.00, 0.00, 1.00, 0.19], "chart": [0.00, 0.27, 1.00, 0.73]}
+      },
+      "table": {
+        "system_id": "table-operations-queue", "layout_family": "operations-queue", "coordinate_space": "body",
+        "reading_order": ["index", "table", "readout"], "anchor_slot": "table",
+        "density": {"level": "high", "max_items": 11}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-operations-grid"},
+        "slots": {"index": [0.00, 0.00, 1.00, 0.13], "table": [0.00, 0.20, 1.00, 0.55], "readout": [0.18, 0.82, 0.64, 0.18]}
+      },
+      "decision": {
+        "system_id": "decision-control-action", "layout_family": "control-action", "coordinate_space": "body",
+        "reading_order": ["decision_0", "decision_1", "decision_2", "decision_3", "commitment"], "anchor_slot": "decision_3",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "decision-control-action"},
+        "slots": {"decision_0": [0.00, 0.00, 0.48, 0.38], "decision_1": [0.52, 0.00, 0.48, 0.38], "decision_2": [0.00, 0.46, 0.31, 0.36], "decision_3": [0.36, 0.46, 0.64, 0.36], "commitment": [0.70, 0.88, 0.30, 0.12]}
+      },
+      "references": {
+        "system_id": "references-operations-log", "layout_family": "operations-log", "coordinate_space": "body",
+        "reading_order": ["index", "register"], "anchor_slot": "register",
+        "density": {"level": "high", "max_items": 12}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "references-operations-log"},
+        "slots": {"index": [0.00, 0.00, 1.00, 0.15], "register": [0.00, 0.22, 1.00, 0.78]}
+      }
+    },
+    "policy-public-docket": {
+      "title": {
+        "system_id": "title-public-question", "layout_family": "public-question", "coordinate_space": "slide",
+        "reading_order": ["docket", "headline", "support", "stakeholders"], "anchor_slot": "headline",
+        "density": {"level": "medium-high", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "title-public-question"},
+        "slots": {"docket": [0.068, 0.078, 0.38, 0.05], "headline": [0.068, 0.206, 0.855, 0.302], "support": [0.068, 0.597, 0.73, 0.181], "stakeholders": [0.82, 0.82, 0.14, 0.06]}
+      },
+      "section": {
+        "system_id": "section-policy-docket", "layout_family": "policy-docket", "coordinate_space": "slide",
+        "reading_order": ["docket", "headline", "support", "accountability"], "anchor_slot": "docket",
+        "density": {"level": "medium", "max_items": 3}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "section-policy-docket"},
+        "slots": {"docket": [0.068, 0.078, 0.38, 0.05], "headline": [0.068, 0.306, 0.62, 0.270], "support": [0.742, 0.316, 0.202, 0.313], "accountability": [0.742, 0.73, 0.202, 0.12]}
+      },
+      "evidence": {
+        "system_id": "evidence-public-record", "layout_family": "public-record", "coordinate_space": "body",
+        "reading_order": ["evidence_0", "evidence_1", "evidence_2", "evidence_3"], "anchor_slot": "evidence_0",
+        "density": {"level": "medium-high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "evidence-public-record"},
+        "slots": {"evidence_0": [0.00, 0.00, 0.36, 0.34], "evidence_1": [0.42, 0.00, 0.58, 0.26], "evidence_2": [0.00, 0.42, 0.58, 0.26], "evidence_3": [0.64, 0.36, 0.36, 0.64]}
+      },
+      "comparison": {
+        "system_id": "comparison-policy-options", "layout_family": "policy-option-docket", "coordinate_space": "body",
+        "reading_order": ["option_0", "option_1", "verdict"], "anchor_slot": "verdict",
+        "density": {"level": "medium-high", "max_items": 7}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "comparison-policy-options"},
+        "slots": {"option_0": [0.12, 0.00, 0.63, 0.43], "option_1": [0.12, 0.50, 0.63, 0.43], "verdict": [0.80, 0.00, 0.20, 1.00]}
+      },
+      "chart": {
+        "system_id": "data-public-impact", "layout_family": "public-impact", "coordinate_space": "body",
+        "reading_order": ["chart", "insight", "register"], "anchor_slot": "chart",
+        "density": {"level": "medium-high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-public-impact"},
+        "slots": {"chart": [0.00, 0.00, 1.00, 0.62], "insight": [0.00, 0.72, 0.30, 0.28], "register": [0.36, 0.72, 0.64, 0.28]}
+      },
+      "table": {
+        "system_id": "table-public-record", "layout_family": "public-record-ledger", "coordinate_space": "body",
+        "reading_order": ["index", "table", "readout"], "anchor_slot": "table",
+        "density": {"level": "medium-high", "max_items": 10}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-public-impact"},
+        "slots": {"index": [0.00, 0.00, 0.15, 1.00], "table": [0.20, 0.00, 0.60, 1.00], "readout": [0.85, 0.00, 0.15, 1.00]}
+      },
+      "decision": {
+        "system_id": "decision-policy-recommendation", "layout_family": "policy-implementation", "coordinate_space": "body",
+        "reading_order": ["decision_0", "decision_1", "decision_2", "decision_3", "commitment"], "anchor_slot": "commitment",
+        "density": {"level": "medium-high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "decision-policy-recommendation"},
+        "slots": {"decision_0": [0.00, 0.00, 0.46, 0.30], "decision_1": [0.54, 0.00, 0.46, 0.30], "decision_2": [0.00, 0.40, 0.30, 0.30], "decision_3": [0.38, 0.40, 0.62, 0.30], "commitment": [0.00, 0.80, 1.00, 0.20]}
+      },
+      "references": {
+        "system_id": "references-public-docket", "layout_family": "public-docket", "coordinate_space": "body",
+        "reading_order": ["index", "register", "notes"], "anchor_slot": "register",
+        "density": {"level": "medium-high", "max_items": 11}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "references-public-docket"},
+        "slots": {"register": [0.00, 0.00, 0.68, 0.72], "notes": [0.74, 0.00, 0.26, 0.72], "index": [0.00, 0.80, 1.00, 0.20]}
+      }
+    },
+    "technical-telemetry-canvas": {
+      "title": {
+        "system_id": "title-telemetry-state", "layout_family": "telemetry-state", "coordinate_space": "slide",
+        "reading_order": ["layer", "support", "headline", "signals"], "anchor_slot": "signals",
+        "density": {"level": "high", "max_items": 4}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "title-telemetry-state"},
+        "slots": {"layer": [0.05, 0.05, 0.90, 0.09], "headline": [0.05, 0.48, 0.90, 0.24], "support": [0.05, 0.25, 0.90, 0.14], "signals": [0.05, 0.79, 0.90, 0.08]}
+      },
+      "section": {
+        "system_id": "section-system-layer", "layout_family": "system-layer", "coordinate_space": "slide",
+        "reading_order": ["layer", "headline", "support", "verification"], "anchor_slot": "layer",
+        "density": {"level": "medium", "max_items": 3}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "section-system-layer"},
+        "slots": {"layer": [0.05, 0.10, 0.42, 0.08], "headline": [0.05, 0.43, 0.90, 0.24], "support": [0.05, 0.74, 0.64, 0.12], "verification": [0.74, 0.74, 0.21, 0.12]}
+      },
+      "evidence": {
+        "system_id": "evidence-signal-trace", "layout_family": "signal-trace", "coordinate_space": "body",
+        "reading_order": ["evidence_0", "evidence_1", "evidence_2", "evidence_3"], "anchor_slot": "evidence_0",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "evidence-signal-trace"},
+        "slots": {"evidence_0": [0.38, 0.00, 0.62, 0.38], "evidence_1": [0.00, 0.52, 0.30, 0.48], "evidence_2": [0.38, 0.52, 0.28, 0.48], "evidence_3": [0.72, 0.52, 0.28, 0.48]}
+      },
+      "comparison": {
+        "system_id": "comparison-architecture-tradeoff", "layout_family": "architecture-tradeoff", "coordinate_space": "body",
+        "reading_order": ["option_0", "verdict", "option_1"], "anchor_slot": "verdict",
+        "density": {"level": "high", "max_items": 7}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "comparison-architecture-tradeoff"},
+        "slots": {"option_0": [0.00, 0.24, 0.46, 0.76], "verdict": [0.36, 0.00, 0.28, 0.20], "option_1": [0.54, 0.24, 0.46, 0.76]}
+      },
+      "chart": {
+        "system_id": "data-telemetry-canvas", "layout_family": "telemetry-canvas", "coordinate_space": "body",
+        "reading_order": ["insight", "chart", "facts"], "anchor_slot": "chart",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-telemetry-canvas"},
+        "slots": {"insight": [0.00, 0.00, 0.18, 1.00], "chart": [0.23, 0.12, 0.61, 0.76], "facts": [0.89, 0.00, 0.11, 1.00]}
+      },
+      "table": {
+        "system_id": "table-technical-register", "layout_family": "technical-register", "coordinate_space": "body",
+        "reading_order": ["index", "table", "readout"], "anchor_slot": "table",
+        "density": {"level": "high", "max_items": 12}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "data-telemetry-canvas"},
+        "slots": {"index": [0.00, 0.00, 0.17, 1.00], "table": [0.22, 0.10, 0.62, 0.80], "readout": [0.89, 0.00, 0.11, 1.00]}
+      },
+      "decision": {
+        "system_id": "decision-remediation-gate", "layout_family": "remediation-gate", "coordinate_space": "body",
+        "reading_order": ["decision_0", "decision_1", "decision_2", "decision_3", "commitment"], "anchor_slot": "decision_0",
+        "density": {"level": "high", "max_items": 5}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "decision-remediation-gate"},
+        "slots": {"decision_0": [0.00, 0.00, 0.18, 1.00], "decision_1": [0.23, 0.00, 0.35, 0.36], "decision_2": [0.63, 0.00, 0.37, 0.36], "decision_3": [0.23, 0.44, 0.77, 0.30], "commitment": [0.63, 0.82, 0.37, 0.18]}
+      },
+      "references": {
+        "system_id": "references-technical-register", "layout_family": "technical-evidence-register", "coordinate_space": "body",
+        "reading_order": ["index", "register", "notes"], "anchor_slot": "register",
+        "density": {"level": "high", "max_items": 12}, "supported_variants": ["primary", "alternate", "dense"],
+        "fallback": {"version": "renderer_role_systems_v1", "system_id": "references-technical-register"},
+        "slots": {"index": [0.00, 0.00, 0.17, 1.00], "register": [0.22, 0.10, 0.61, 0.80], "notes": [0.88, 0.00, 0.12, 1.00]}
+      }
+    }
+  }
+}

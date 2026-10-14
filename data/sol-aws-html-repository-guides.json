@@ -1,0 +1,87 @@
+[
+  {
+    "repository": "lanceli93/aws-html-slides",
+    "production_status": "generated",
+    "execution_status": "light_check_complete",
+    "execution_type": "original_pptx_extract_native_geometry_svg_neon_runtime_conversion",
+    "case_ids": [
+      "aws-html-showcase"
+    ],
+    "summary_ja": "既存Akxan自作PPTX5枚を原典extract→native geometry SVG→元Neon controller/FXへ変換。",
+    "requirements": [
+      "Python3.10+ / python-pptx（再生成のみ）",
+      "Browser（single HTMLでoffline）"
+    ],
+    "steps": [
+      "既存PPTXを原本保全",
+      "原典PPT conversion extractorを実行",
+      "Native geometryを補助抽出し元viewport/controllerでWeb化",
+      "主要出力とページ送りを初回表示"
+    ],
+    "commands": [
+      "python rebuild.py"
+    ],
+    "source_refs": [
+      {
+        "path": "aws-html-slides/SKILL.md",
+        "sha256": "febe8498e4bbcca7596a1b2bca0eb70af33e031ec8e8cfd17fb36a14e7589837",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/SKILL.md"
+      },
+      {
+        "path": "aws-html-slides/scripts/extract-pptx.py",
+        "sha256": "4f5e7603c99b8b53e20c5b2a65abdf5edf9422b4c490dca9f2b872a752c17d2a",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/scripts/extract-pptx.py"
+      },
+      {
+        "path": "aws-html-slides/scripts/gen-content.py",
+        "sha256": "aac72051a56e19e446d0b9add2641bb193084e814106e401e9b919556cd85034",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/scripts/gen-content.py"
+      },
+      {
+        "path": "aws-html-slides/html-template.md",
+        "sha256": "67e57e9e52289d55bd0c47882f8133f1ae9ad21c4e0fcef956faa3f211f7fbc0",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/html-template.md"
+      },
+      {
+        "path": "aws-html-slides/viewport-base.css",
+        "sha256": "3bfd0d274e9467b74229dab314356f0bbf09f8b5fb59f03c20e2cb3ff8a70a5a",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/viewport-base.css"
+      },
+      {
+        "path": "aws-html-slides/preview/01-neon-cyber.html",
+        "sha256": "a0c209258eec12747810d577af5b2d691e7c5d851062534352c1eaef71f33516",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/preview/01-neon-cyber.html"
+      },
+      {
+        "path": "aws-html-slides/animation-patterns.md",
+        "sha256": "9531a9ed9ac15872cd31d5ba2524b2d24385a82564bc6830050c75ff70a66a82",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/animation-patterns.md"
+      },
+      {
+        "path": "aws-html-slides/diagram-reference.md",
+        "sha256": "a97ee81d2ce1878da73b249af326f7bfc514a48bc8caaaaef76112ae1abdc66c",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/diagram-reference.md"
+      },
+      {
+        "path": "LICENSE",
+        "sha256": "62928eb197fe4662d1efc3af0735b3ba5df3c0308badd9a2baf2b619009f5366",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/LICENSE"
+      }
+    ],
+    "upstream_commit": "5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2",
+    "license": "MIT",
+    "license_notice_ja": "原典MIT ©2025 Zara Zhang、入力Akxan MIT、書体OFLを保持。AWS公式性・提携表示は使いません。",
+    "caveats": [
+      "Conversion output is editable HTML/SVG, not a newly generated PPTX.",
+      "PPTX text baseline and motion HTML are not pixel-identical.",
+      "Akxan original input is a fictitious exhibition concept."
+    ],
+    "skill": "skill-forks/aws-html-ja/SKILL.md",
+    "guide": "examples/repositories/aws-html-showcase/README.md",
+    "limitations": [
+      "完成物はHTML/SVG/CSS。入力PPTXを原本保全し、新規PPTXは生成していません。",
+      "PPTXの文字位置とWeb表示が完全に一致するとは限りません。",
+      "日時・会場・参加条件が未定の仮想展示案です。"
+    ]
+  }
+]

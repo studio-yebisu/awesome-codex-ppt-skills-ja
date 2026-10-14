@@ -1,0 +1,67 @@
+{
+  "repository": "NomiciAI/mbb-page-maker",
+  "upstream_commit": "36074669b8041783d9637a87dfed2a8733d47357",
+  "source_url": "https://github.com/NomiciAI/mbb-page-maker/tree/36074669b8041783d9637a87dfed2a8733d47357",
+  "root_license": "Apache-2.0",
+  "upstream_skill_license_claim": "MIT",
+  "license_conflict": "原典不一致を原文保持。配布はroot Apache条件を維持",
+  "attribution": "Saitop at NomiciAI <saitop@nomici.ai>",
+  "changes": [
+    "日本語7頁の架空教材化企画",
+    "starter DOM契約＋既存CSS/blue themeを使用",
+    "日本語向け文字サイズとexhibitレイアウト調整",
+    "原典runtime.jsを自作最小navigationへ差替え",
+    "原典webfontを公式固定OTF由来のNoto Sans CJK JPサブセットへ差替え",
+    "単一HTMLは自作packagingでCSS/font/JS内包"
+  ],
+  "upstream_executables_run": false,
+  "content": "架空・未実施の企画例。効果実績と見込み利益なし",
+  "font": {
+    "repository": "notofonts/noto-cjk",
+    "commit": "f8d157532fbfaeda587e826d4cd5b21a49186f7c",
+    "source_url": "https://raw.githubusercontent.com/notofonts/noto-cjk/f8d157532fbfaeda587e826d4cd5b21a49186f7c/Sans/OTF/Japanese/NotoSansCJKjp-Regular.otf",
+    "source": "source/fonts/NotoSansCJKjp-Regular.otf",
+    "sha256": "68a3fc98800b2a27b371f2fb79991daf3633bd89309d4ffaa6946fd587f375b5",
+    "license": "SIL Open Font License 1.1",
+    "notice": "source/fonts/OFL.txt",
+    "subset": true,
+    "subset_file": "source/noto-ja-subset.otf",
+    "subset_sha256": "3967638969c7dfab7b9a8cef3a3a90bf07618229dabf9f8e5bfe3e3aac9ed294",
+    "modified": "Subset of official OTF; original official font preserved unchanged",
+    "old_font_origin": "Historical cloud OS TTC is recorded only in PROVENANCE-CLOUD.json; its font binary is absent from current deliverables",
+    "metrics_check": {
+      "used_characters": 326,
+      "horizontal_differences": 0,
+      "glyph_outline_differences": 0,
+      "units_per_em": 1000,
+      "vertical_metrics_equal": true,
+      "font_version": "2.004"
+    },
+    "render_reuse": "Existing 7 PNG/PDF retained because used glyph outlines and metrics match; not re-rendered"
+  },
+  "html_route": [
+    "starter-deck.html",
+    "fonts.css（差替）",
+    "base.css",
+    "layouts.css",
+    "components.css",
+    "illustrations.css",
+    "blue.css"
+  ],
+  "render": {
+    "environment": "user PC",
+    "browser": "installed Google Chrome via Playwright",
+    "author_renderer": "self-authored source/render.py; only installed browser executable path changed in render-pc.py",
+    "png_count": 7,
+    "pdf_page_count": 7,
+    "upstream_runtime_qa_export_executed": false,
+    "targeted_initial_display_fix": "page05 display:block line-height:1.4 padding:20px 24px",
+    "limitations": "原典全QA未実行。PDF別個全頁精査未実施。PC外側フロートは親の統合確認へ"
+  },
+  "font_replacement": {
+    "date": "2026-10-14",
+    "historical_record": "PROVENANCE-CLOUD.json",
+    "method": "Official pinned OTF subset and embedded replacement; all layout/controller/CSS unchanged",
+    "rerendered": false
+  }
+}

@@ -1,0 +1,120 @@
+[
+  {
+    "repository": "vigorX777/ppt-svg-generator",
+    "example_ids": [
+      "sebastian-188"
+    ],
+    "upstream_commit": "c873b61673ab0ada5c09f863bff89c8f1b3248fb",
+    "summary_ja": "原典の作者SVG workflowとSwiss presetで作る日本語7頁。",
+    "production_status": "light_check_complete",
+    "execution_type": "upstream-authored-svg-swiss",
+    "requirements": [
+      "Python 3 / Inkscape / PyMuPDF",
+      "Noto Sans CJK JP（再配布なし）"
+    ],
+    "commands": [
+      "python source/build.py"
+    ],
+    "steps": [
+      "Markdown入力を構成JSONに拆解",
+      "Swiss design JSONを固定",
+      "兼容仕様に従い1920×1080 SVGを著述",
+      "InkscapeでPDFを書き出し主要出力確認"
+    ],
+    "limitations": [
+      "PowerPoint native要素変換は未検証",
+      "Chromium起動は環境のsocket制限で失敗",
+      "PDF固定レイアウト、HTMLのブラウザruntime未確認"
+    ],
+    "source_refs": [
+      "https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb"
+    ],
+    "guide": "examples/repositories/sebastian-188/README.md",
+    "source_download": "downloads/sebastian-188-example-ja.zip",
+    "fork_download": "downloads/sebastian-188-ja.zip",
+    "license": "MIT"
+  },
+  {
+    "repository": "NomiciAI/mbb-page-maker",
+    "example_ids": [
+      "sebastian-178"
+    ],
+    "upstream_commit": "36074669b8041783d9637a87dfed2a8733d47357",
+    "summary_ja": "原典starter/CSS/exhibitの論理を保ち、日本語7頁の静的HTML教材化デッキを制作。navigationのみ自作差替え。",
+    "production_status": "light_check_complete",
+    "execution_type": "upstream-starter-css-exhibits-custom-minimal-navigation",
+    "requirements": [
+      "編集用テキストエディタ",
+      "HTML表示用ブラウザ",
+      "再描画用Python・Playwright・既存Chromium"
+    ],
+    "commands": [
+      "index.htmlをブラウザで開く",
+      "python -m http.server 8178 --directory .",
+      "python source/render.py"
+    ],
+    "steps": [
+      "原典SKILLとauthoring guide、thinking、content router、componentsを読む",
+      "到達点と素材の対応から章を組む",
+      "原典CSS6層とコンポーネントを適用",
+      "自作navigationでページ送り/overview",
+      "実ブラウザでPNG/PDFを出力し初回表示を確認"
+    ],
+    "limitations": [
+      "原典root ApacheとSKILL MITの不一致を保持",
+      "原典webfontは不使用、OFL Noto CJK JPへ代用",
+      "原典runtime.js/QA/export scriptsは未実行",
+      "自作最小QAは原典全QAと同等ではない",
+      "架空・未実施で効果実績なし",
+      "cloud起動制限のため、許可済ユーザーPCの既存ChromeでHTML実描画。原典全QAとPDF別個全頁精査は未実施"
+    ],
+    "source_refs": [
+      "https://github.com/NomiciAI/mbb-page-maker/tree/36074669b8041783d9637a87dfed2a8733d47357"
+    ],
+    "guide": "examples/repositories/sebastian-178/README.md",
+    "source_download": "downloads/sebastian-178-example-ja.zip",
+    "fork_download": "downloads/sebastian-178-ja.zip",
+    "license": "Apache-2.0 / SKILL内MIT記載",
+    "license_notice_ja": "原典root LICENSEはApache-2.0、SKILL本文にはMITと記載されています。原文双方を保持し、配布はrootのApache条件を残しています。",
+    "license_note": "原典root Apache-2.0とSKILL内MIT記載の不一致を保持。原文LICENSE・SKILL、変更後ソースと派生差分を添付し、一括MITへの再許諾は行わない。書体はNoto公式配布のOFLを保持。"
+  },
+  {
+    "repository": "kimsh-1/deck-factory",
+    "example_ids": [
+      "sebastian-173"
+    ],
+    "upstream_commit": "11d456351763b0efbc2a4989da688334f709dd9b",
+    "summary_ja": "原典CSSを実利用した日本語7頁HTML編集誌面。暗色/紙色を切り替える架空文化イベント企画。",
+    "production_status": "light_check_complete",
+    "execution_type": "upstream-css-13slot-html",
+    "requirements": [
+      "Python / Playwright / Chromium / Ghostscript",
+      "既存Noto Sans CJK JPまたはNoto Sans JP（再配布なし）"
+    ],
+    "commands": [
+      "python source/build.py",
+      "python source/render.py"
+    ],
+    "steps": [
+      "briefと入力内容を確認",
+      "原典CSSをリンクし13slot HTML構成",
+      "Chromiumで初回表示と頁送りを確認",
+      "PNG・PDF・lite PDF出力"
+    ],
+    "limitations": [
+      "音源未収録、実測なし",
+      "PPTX形式なし",
+      "フォント代替時の改行差あり",
+      "原典work/premium例は未使用",
+      "原典全QA未実施",
+      "5頁tailの内側安全境界8.7px超過warning保持。見切れ・重複なし"
+    ],
+    "source_refs": [
+      "https://github.com/kimsh-1/deck-factory/tree/11d456351763b0efbc2a4989da688334f709dd9b/skills/deck-factory"
+    ],
+    "guide": "examples/repositories/sebastian-173/README.md",
+    "source_download": "downloads/sebastian-173-example-ja.zip",
+    "fork_download": "downloads/sebastian-173-ja.zip",
+    "license": "MIT"
+  }
+]

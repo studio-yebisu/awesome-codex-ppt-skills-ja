@@ -1,0 +1,95 @@
+{
+  "repository": "lanceli93/aws-html-slides",
+  "commit": "5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2",
+  "license": "MIT",
+  "copyright": "2025 Zara Zhang, retained original MIT",
+  "method": "Original PPT conversion route: unmodified extract-pptx.py extracts all 5 slide texts/media/notes; source-specific native OOXML supplement maps actual input shape coordinates/colors/paths to editable SVG; original Neon preview controller/FX, whole viewport-base.css, reveal stagger and SVG edge choreography drive HTML playback.",
+  "input_repository": "Akxan/ppt-agent-skill",
+  "input_commit": "01825dee2ad40a8c719824252605396b9a570d57",
+  "input_license": "MIT",
+  "input_pptx_sha256": "a57652396782363b3d0b186063e9f80e066030cf8a04f5d67140551de241427a",
+  "page_count": 5,
+  "pptx_generated_here": false,
+  "editability": "HTML / SVG text, geometry, colors and animations",
+  "source_refs": [
+    {
+      "path": "aws-html-slides/SKILL.md",
+      "sha256": "febe8498e4bbcca7596a1b2bca0eb70af33e031ec8e8cfd17fb36a14e7589837",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/SKILL.md"
+    },
+    {
+      "path": "aws-html-slides/scripts/extract-pptx.py",
+      "sha256": "4f5e7603c99b8b53e20c5b2a65abdf5edf9422b4c490dca9f2b872a752c17d2a",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/scripts/extract-pptx.py"
+    },
+    {
+      "path": "aws-html-slides/scripts/gen-content.py",
+      "sha256": "aac72051a56e19e446d0b9add2641bb193084e814106e401e9b919556cd85034",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/scripts/gen-content.py"
+    },
+    {
+      "path": "aws-html-slides/html-template.md",
+      "sha256": "67e57e9e52289d55bd0c47882f8133f1ae9ad21c4e0fcef956faa3f211f7fbc0",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/html-template.md"
+    },
+    {
+      "path": "aws-html-slides/viewport-base.css",
+      "sha256": "3bfd0d274e9467b74229dab314356f0bbf09f8b5fb59f03c20e2cb3ff8a70a5a",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/viewport-base.css"
+    },
+    {
+      "path": "aws-html-slides/preview/01-neon-cyber.html",
+      "sha256": "a0c209258eec12747810d577af5b2d691e7c5d851062534352c1eaef71f33516",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/preview/01-neon-cyber.html"
+    },
+    {
+      "path": "aws-html-slides/animation-patterns.md",
+      "sha256": "9531a9ed9ac15872cd31d5ba2524b2d24385a82564bc6830050c75ff70a66a82",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/animation-patterns.md"
+    },
+    {
+      "path": "aws-html-slides/diagram-reference.md",
+      "sha256": "a97ee81d2ce1878da73b249af326f7bfc514a48bc8caaaaef76112ae1abdc66c",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/diagram-reference.md"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "62928eb197fe4662d1efc3af0735b3ba5df3c0308badd9a2baf2b619009f5366",
+      "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/LICENSE"
+    }
+  ],
+  "upstream_preserved": true,
+  "modifications": [
+    "Original extractor does not export non-picture native geometry or recognize Akxan free text boxes as title placeholders; separate native-shapes.json records actual OOXML geometry/font data and generates SVG without guessing shapes.",
+    "Original complete viewport CSS and real Neon preview navigation/FX are retained; footer/HUD/dot labels localized to Japanese and Studio Yebisu.",
+    "Mandatory AWS affiliation-looking footer replaced under explicit no-officiality instruction. No AWS logo/brand/service icons used.",
+    "Full local TTF embedded in single HTML instead of remote fonts/Lucide CDN; input contains no raster images, icons or new licensed assets.",
+    "Original intersection observer additionally clears visible on leave to replay geometry explanation; same-origin minimal player adapter and page counter recorded in source/controller.diff.",
+    "Original gen-content.py is a new-presentation-only path and is not executed for this PPT conversion.",
+    "PPT source geometry remains inside a fixed SVG viewBox, scaled by viewport; HTML page sizes/spacing use original clamp/breakpoints."
+  ],
+  "fonts": {
+    "families": [
+      "Zen Kaku Gothic New",
+      "BIZ UDPMincho",
+      "Manrope"
+    ],
+    "license": "OFL-1.1",
+    "commit": "66928797f271fed5ee428544e7229685e2d90127",
+    "TTF_and_OFL_included": true
+  },
+  "source_shape_counts": [
+    13,
+    15,
+    28,
+    24,
+    13
+  ],
+  "extracted_picture_counts": [
+    0,
+    0,
+    0,
+    0,
+    0
+  ]
+}

@@ -21,26 +21,28 @@
     "巨大QA台帳と採点"
   ],
   "app_goal_note": "アプリの既存goal APIはobjectiveの編集を提供しないため、実行目標の改訂はこのファイルとdocs/PROJECT.mdを正本にする。未達成の旧goalを完了扱いにしない。",
-  "last_completed_batch": "2026-10-14: 原典Bauhaus変換と画像計測復元の日本語新作2冊8枚、別制作4冊32枚を統合。厳選44スキル254枚、OSS9書体16ファイル7セットと作例の書体取得を接続",
+  "last_completed_batch": "2026-10-14: 原典の引き継ぎPPTX6枚と既存PPTXのHTML変換5枚、別制作3冊21枚を統合。厳選49スキル286枚、原稿・OSS書体からの依頼文作成、変換前後のフロート切替を接続",
   "current_batch": {
     "status": "integrated_locally",
     "production_model": "gpt-6.1-sol",
     "repositories": [
-      "Akxan/ppt-agent-skill",
-      "henryhyw/slidepoise"
+      "siril9/presentation-skill",
+      "lanceli93/aws-html-slides"
     ],
     "imports": [
-      "wp-a/paper2ppt",
-      "ficooooo/Paper2ScholarSlides",
-      "deathcats4/scholar-ppt-cn",
-      "helloo1568/slidemuse"
+      "vigorX777/ppt-svg-generator",
+      "NomiciAI/mbb-page-maker",
+      "kimsh-1/deck-factory"
     ],
-    "font_addition": "Noto Sans CJK JP公式OTFとOFL、研究と図表セット、作例の書体取得",
-    "checks": "原典の生成工程と主要完成物の初回表示、新しいPNG経路と書体表示だけ",
+    "site_improvement": "自分の原稿・読み手・希望枚数・OSS書体から選んだ原典スキル向けの依頼文を組み立ててコピー。PPTXと変換HTMLのフロート切替、SVGソースの絞り込み。",
+    "font_work": "178のcloud OS由来subsetを公式固定Noto OTF由来へ置換。使用glyphの一致により既存PNG/PDFを保持し、3作例へ公式字体の取得リンク。",
+    "checks": "原典の生成と主要完成物の初回表示、依頼文コピー、変換前後のフロート切替と1回の親子ページ同期のみ。取り込み担当の確認を親で繰り返さない。",
     "new_decks": 2,
-    "new_slides": 8,
-    "imported_decks": 4,
-    "imported_slides": 32,
-    "documentation": "docs/PRODUCTION_BATCH_20261014_07.md"
+    "new_slides": 11,
+    "imported_decks": 3,
+    "imported_slides": 21,
+    "active_skills": 49,
+    "active_slides": 286,
+    "documentation": "docs/PRODUCTION_BATCH_20261014_08.md"
   }
 }

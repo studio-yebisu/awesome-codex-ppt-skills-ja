@@ -5589,7 +5589,7 @@
   },
   {
     "repository": "siril9/presentation-skill",
-    "summary_ja": "JSONからの再生成、標準図表、画像確認に対応し、内容重視で編集可能なPowerPointを作成するスキル。",
+    "summary_ja": "原典のoutline/Operating Grid/role contractsを通してnative引継ぎ図解と表を作る。",
     "kind": "pptx",
     "upstream_commit": "efd899c5ddf866af2ce0001c4c9340af775d4d55",
     "checked_at": "2026-10-13T13:34:47.019245+00:00",
@@ -5626,17 +5626,35 @@
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
+    "example_ids": [
+      "presentation-skill-showcase"
+    ],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Node.js / PptxGenJS4.0.1 / jszip3.10.1",
+      "Microsoft PowerPoint16 for PNG/PDF",
+      "Shippori Mincho / BIZ UDPGothic / Manrope (OFL)"
+    ],
+    "commands": [
+      "npm install",
+      "node runtime/scripts/build_deck_pptxgenjs.js --outline input/outline.json --output deck.pptx --style-preset lavender-ops",
+      "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
     "steps": [],
     "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+      "架空の運用・期限相対案・実績なし",
+      "Full Python scientific data pipeline未整備。原典既定Node routeのみ実行",
+      "全ページ詳細目視・独立review・包括finalize/構造監査・ZIP再実行なし"
     ],
-    "forks": [],
-    "original_description_ja": "JSONからの再生成、標準図表、画像確認に対応し、内容重視で編集可能なPowerPointを作成するスキル。"
+    "forks": [
+      "presentation-skill-ja"
+    ],
+    "guide": "examples/repositories/presentation-skill-showcase/README.md",
+    "source_download": "downloads/presentation-skill-example-ja.zip",
+    "fork_download": "downloads/presentation-skill-ja.zip",
+    "original_description_ja": "JSONからの再生成、標準図表、画像確認に対応し、内容重視で編集可能なPowerPointを作成するスキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "wiltonesten-web/codeximage-to-editable-ppt-v2-1",
@@ -11020,7 +11038,7 @@
   },
   {
     "repository": "lanceli93/aws-html-slides",
-    "summary_ja": "アニメーション付きHTML資料の新規作成および、既存PowerPointからの変換に対応したスキル。",
+    "summary_ja": "既存Akxan自作PPTX5枚を原典extract→native geometry SVG→元Neon controller/FXへ変換。",
     "kind": "html",
     "upstream_commit": "5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2",
     "checked_at": "2026-10-13T13:35:14.075653+00:00",
@@ -11034,32 +11052,91 @@
     ],
     "source_refs": [
       {
-        "path": "README.md",
-        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/README.md",
-        "bytes": 26248
+        "path": "aws-html-slides/SKILL.md",
+        "sha256": "febe8498e4bbcca7596a1b2bca0eb70af33e031ec8e8cfd17fb36a14e7589837",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/SKILL.md"
       },
       {
-        "path": "aws-html-slides/SKILL.md",
-        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/SKILL.md",
-        "bytes": 21152
+        "path": "aws-html-slides/scripts/extract-pptx.py",
+        "sha256": "4f5e7603c99b8b53e20c5b2a65abdf5edf9422b4c490dca9f2b872a752c17d2a",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/scripts/extract-pptx.py"
+      },
+      {
+        "path": "aws-html-slides/scripts/gen-content.py",
+        "sha256": "aac72051a56e19e446d0b9add2641bb193084e814106e401e9b919556cd85034",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/scripts/gen-content.py"
+      },
+      {
+        "path": "aws-html-slides/html-template.md",
+        "sha256": "67e57e9e52289d55bd0c47882f8133f1ae9ad21c4e0fcef956faa3f211f7fbc0",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/html-template.md"
+      },
+      {
+        "path": "aws-html-slides/viewport-base.css",
+        "sha256": "3bfd0d274e9467b74229dab314356f0bbf09f8b5fb59f03c20e2cb3ff8a70a5a",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/viewport-base.css"
+      },
+      {
+        "path": "aws-html-slides/preview/01-neon-cyber.html",
+        "sha256": "a0c209258eec12747810d577af5b2d691e7c5d851062534352c1eaef71f33516",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/preview/01-neon-cyber.html"
+      },
+      {
+        "path": "aws-html-slides/animation-patterns.md",
+        "sha256": "9531a9ed9ac15872cd31d5ba2524b2d24385a82564bc6830050c75ff70a66a82",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/animation-patterns.md"
+      },
+      {
+        "path": "aws-html-slides/diagram-reference.md",
+        "sha256": "a97ee81d2ce1878da73b249af326f7bfc514a48bc8caaaaef76112ae1abdc66c",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/aws-html-slides/diagram-reference.md"
       },
       {
         "path": "LICENSE",
-        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/LICENSE",
-        "bytes": 1067
+        "sha256": "62928eb197fe4662d1efc3af0735b3ba5df3c0308badd9a2baf2b619009f5366",
+        "url": "https://github.com/lanceli93/aws-html-slides/blob/5ae3d68b66277e8a0d0b6ceea479a4b5117f16b2/LICENSE"
       }
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "aws-html-showcase"
     ],
-    "forks": [],
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python3.10+ / python-pptx（再生成のみ）",
+      "Browser（single HTMLでoffline）"
+    ],
+    "commands": [
+      "python rebuild.py"
+    ],
+    "steps": [
+      "既存PPTXを原本保全",
+      "原典PPT conversion extractorを実行",
+      "Native geometryを補助抽出し元viewport/controllerでWeb化",
+      "主要出力とページ送りを初回表示"
+    ],
+    "limitations": [
+      "完成物はHTML/SVG/CSS。入力PPTXを原本保全し、新規PPTXは生成していません。",
+      "PPTXの文字位置とWeb表示が完全に一致するとは限りません。",
+      "日時・会場・参加条件が未定の仮想展示案です。"
+    ],
+    "forks": [
+      "aws-html-ja"
+    ],
+    "execution_status": "generated_light_check",
+    "execution_type": "original_pptx_extract_native_geometry_svg_neon_runtime_conversion",
+    "case_ids": [
+      "aws-html-showcase"
+    ],
+    "license_notice_ja": "原典MIT ©2025 Zara Zhang、入力Akxan MIT、書体OFLを保持。AWS公式性・提携表示は使いません。",
+    "caveats": [
+      "Conversion output is editable HTML/SVG, not a newly generated PPTX.",
+      "PPTX text baseline and motion HTML are not pixel-identical.",
+      "Akxan original input is a fictitious exhibition concept."
+    ],
+    "skill": "skill-forks/aws-html-ja/SKILL.md",
+    "guide": "examples/repositories/aws-html-showcase/README.md",
     "original_description_ja": "アニメーション付きHTML資料の新規作成および、既存PowerPointからの変換に対応したスキル。"
   },
   {
@@ -12641,7 +12718,7 @@
   },
   {
     "repository": "kimsh-1/deck-factory",
-    "summary_ja": "簡潔な指示からダークトーンの雑誌風HTMLプレゼン資料を作成するClaude Code向けスキル。",
+    "summary_ja": "原典CSSを実利用した日本語7頁HTML編集誌面。暗色/紙色を切り替える架空文化イベント企画。",
     "kind": "business",
     "upstream_commit": "11d456351763b0efbc2a4989da688334f709dd9b",
     "checked_at": "2026-10-13T13:34:46.632143+00:00",
@@ -12654,34 +12731,45 @@
       "skills/deck-factory/SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/kimsh-1/deck-factory/blob/11d456351763b0efbc2a4989da688334f709dd9b/README.md",
-        "bytes": 7560
-      },
-      {
-        "path": "skills/deck-factory/SKILL.md",
-        "url": "https://github.com/kimsh-1/deck-factory/blob/11d456351763b0efbc2a4989da688334f709dd9b/skills/deck-factory/SKILL.md",
-        "bytes": 7488
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/kimsh-1/deck-factory/blob/11d456351763b0efbc2a4989da688334f709dd9b/LICENSE",
-        "bytes": 1064
-      }
+      "https://github.com/kimsh-1/deck-factory/tree/11d456351763b0efbc2a4989da688334f709dd9b/skills/deck-factory"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-173"
     ],
-    "forks": [],
-    "original_description_ja": "簡潔な指示からダークトーンの雑誌風HTMLプレゼン資料を作成するClaude Code向けスキル。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python / Playwright / Chromium / Ghostscript",
+      "既存Noto Sans CJK JPまたはNoto Sans JP（再配布なし）"
+    ],
+    "commands": [
+      "python source/build.py",
+      "python source/render.py"
+    ],
+    "steps": [
+      "briefと入力内容を確認",
+      "原典CSSをリンクし13slot HTML構成",
+      "Chromiumで初回表示と頁送りを確認",
+      "PNG・PDF・lite PDF出力"
+    ],
+    "limitations": [
+      "音源未収録、実測なし",
+      "PPTX形式なし",
+      "フォント代替時の改行差あり",
+      "原典work/premium例は未使用",
+      "原典全QA未実施",
+      "5頁tailの内側安全境界8.7px超過warning保持。見切れ・重複なし"
+    ],
+    "forks": [
+      "sebastian-173-ja"
+    ],
+    "execution_type": "upstream-css-13slot-html",
+    "guide": "examples/repositories/sebastian-173/README.md",
+    "source_download": "downloads/sebastian-173-example-ja.zip",
+    "fork_download": "downloads/sebastian-173-ja.zip",
+    "original_description_ja": "簡潔な指示からダークトーンの雑誌風HTMLプレゼン資料を作成するClaude Code向けスキル。",
+    "execution_status": "generated_with_review_record"
   },
   {
     "repository": "FW1201/visual-presentation-production",
@@ -12850,12 +12938,12 @@
   },
   {
     "repository": "NomiciAI/mbb-page-maker",
-    "summary_ja": "HTML・CSS・JavaScriptを用いて、コンサルティング風のHTMLプレゼン資料を作成するスキル。",
+    "summary_ja": "原典starter/CSS/exhibitの論理を保ち、日本語7頁の静的HTML教材化デッキを制作。navigationのみ自作差替え。",
     "kind": "business",
     "upstream_commit": "36074669b8041783d9637a87dfed2a8733d47357",
     "checked_at": "2026-10-13T13:35:20.603534+00:00",
     "inspection_status": "entrypoints_downloaded",
-    "license": "Apache-2.0",
+    "license": "Apache-2.0 / SKILL内MIT記載",
     "license_paths": [
       "LICENSE"
     ],
@@ -12863,34 +12951,50 @@
       "SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/NomiciAI/mbb-page-maker/blob/36074669b8041783d9637a87dfed2a8733d47357/README.md",
-        "bytes": 10141
-      },
-      {
-        "path": "SKILL.md",
-        "url": "https://github.com/NomiciAI/mbb-page-maker/blob/36074669b8041783d9637a87dfed2a8733d47357/SKILL.md",
-        "bytes": 18726
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/NomiciAI/mbb-page-maker/blob/36074669b8041783d9637a87dfed2a8733d47357/LICENSE",
-        "bytes": 10393
-      }
+      "https://github.com/NomiciAI/mbb-page-maker/tree/36074669b8041783d9637a87dfed2a8733d47357"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-178"
     ],
-    "forks": [],
-    "original_description_ja": "HTML・CSS・JavaScriptを用いて、コンサルティング風のHTMLプレゼン資料を作成するスキル。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "編集用テキストエディタ",
+      "HTML表示用ブラウザ",
+      "再描画用Python・Playwright・既存Chromium"
+    ],
+    "commands": [
+      "index.htmlをブラウザで開く",
+      "python -m http.server 8178 --directory .",
+      "python source/render.py"
+    ],
+    "steps": [
+      "原典SKILLとauthoring guide、thinking、content router、componentsを読む",
+      "到達点と素材の対応から章を組む",
+      "原典CSS6層とコンポーネントを適用",
+      "自作navigationでページ送り/overview",
+      "実ブラウザでPNG/PDFを出力し初回表示を確認"
+    ],
+    "limitations": [
+      "原典root ApacheとSKILL MITの不一致を保持",
+      "原典webfontは不使用、OFL Noto CJK JPへ代用",
+      "原典runtime.js/QA/export scriptsは未実行",
+      "自作最小QAは原典全QAと同等ではない",
+      "架空・未実施で効果実績なし",
+      "cloud起動制限のため、許可済ユーザーPCの既存ChromeでHTML実描画。原典全QAとPDF別個全頁精査は未実施"
+    ],
+    "forks": [
+      "sebastian-178-ja"
+    ],
+    "execution_type": "upstream-starter-css-exhibits-custom-minimal-navigation",
+    "guide": "examples/repositories/sebastian-178/README.md",
+    "source_download": "downloads/sebastian-178-example-ja.zip",
+    "fork_download": "downloads/sebastian-178-ja.zip",
+    "license_notice_ja": "原典root LICENSEはApache-2.0、SKILL本文にはMITと記載されています。原文双方を保持し、配布はrootのApache条件を残しています。",
+    "license_note": "原典root Apache-2.0とSKILL内MIT記載の不一致を保持。原文LICENSE・SKILL、変更後ソースと派生差分を添付し、一括MITへの再許諾は行わない。書体はNoto公式配布のOFLを保持。",
+    "original_description_ja": "HTML・CSS・JavaScriptを用いて、コンサルティング風のHTMLプレゼン資料を作成するスキル。",
+    "execution_status": "generated_with_review_record"
   },
   {
     "repository": "GZPengyuyan/PengyuyanPPT",
@@ -13478,7 +13582,7 @@
   },
   {
     "repository": "vigorX777/ppt-svg-generator",
-    "summary_ja": "Markdown原稿から複数のスタイルを選択し、PPTやPDF形式の資料を作成するスキル。",
+    "summary_ja": "原典の作者SVG workflowとSwiss presetで作る日本語7頁。",
     "kind": "convert",
     "upstream_commit": "c873b61673ab0ada5c09f863bff89c8f1b3248fb",
     "checked_at": "2026-10-13T13:34:33.518310+00:00",
@@ -13491,34 +13595,41 @@
       "SKILL.md"
     ],
     "source_refs": [
-      {
-        "path": "README.md",
-        "url": "https://github.com/vigorX777/ppt-svg-generator/blob/c873b61673ab0ada5c09f863bff89c8f1b3248fb/README.md",
-        "bytes": 16082
-      },
-      {
-        "path": "SKILL.md",
-        "url": "https://github.com/vigorX777/ppt-svg-generator/blob/c873b61673ab0ada5c09f863bff89c8f1b3248fb/SKILL.md",
-        "bytes": 10770
-      },
-      {
-        "path": "LICENSE",
-        "url": "https://github.com/vigorX777/ppt-svg-generator/blob/c873b61673ab0ada5c09f863bff89c8f1b3248fb/LICENSE",
-        "bytes": 1066
-      }
+      "https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb"
     ],
     "archived": false,
-    "example_ids": [],
-    "production_status": "not_started",
-    "license_review_status": "not_manually_reviewed",
-    "requirements": [],
-    "commands": [],
-    "steps": [],
-    "limitations": [
-      "この環境での制作は未着手です。原典の入口は取得済みです。"
+    "example_ids": [
+      "sebastian-188"
     ],
-    "forks": [],
-    "original_description_ja": "Markdown原稿から複数のスタイルを選択し、PPTやPDF形式の資料を作成するスキル。"
+    "production_status": "generated",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python 3 / Inkscape / PyMuPDF",
+      "Noto Sans CJK JP（再配布なし）"
+    ],
+    "commands": [
+      "python source/build.py"
+    ],
+    "steps": [
+      "Markdown入力を構成JSONに拆解",
+      "Swiss design JSONを固定",
+      "兼容仕様に従い1920×1080 SVGを著述",
+      "InkscapeでPDFを書き出し主要出力確認"
+    ],
+    "limitations": [
+      "PowerPoint native要素変換は未検証",
+      "Chromium起動は環境のsocket制限で失敗",
+      "PDF固定レイアウト、HTMLのブラウザruntime未確認"
+    ],
+    "forks": [
+      "sebastian-188-ja"
+    ],
+    "execution_type": "upstream-authored-svg-swiss",
+    "guide": "examples/repositories/sebastian-188/README.md",
+    "source_download": "downloads/sebastian-188-example-ja.zip",
+    "fork_download": "downloads/sebastian-188-ja.zip",
+    "original_description_ja": "Markdown原稿から複数のスタイルを選択し、PPTやPDF形式の資料を作成するスキル。",
+    "execution_status": "generated_light_check"
   },
   {
     "repository": "M1n-n9/academic-ppt-master",

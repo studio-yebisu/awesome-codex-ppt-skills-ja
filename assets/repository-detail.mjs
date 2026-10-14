@@ -1,6 +1,38 @@
 const root=document.querySelector('#repository-detail');
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const json=async path=>{const r=await fetch(path,{cache:'no-store'});if(!r.ok)throw Error(path);return r.json()};
+function requestComposer({section,caseStudy,official,skillDownload,fontKit}){
+ const fontSelect=section.querySelector('#repository-font'),field=section.querySelector('#repository-prompt'),status=section.querySelector('#repository-copy-state');
+ section.querySelector('h2').textContent='あなたの原稿で、作る。';
+ section.querySelector('.case-sample-note').textContent='スキル本文と一式ZIPをAIへ添付し、ここで作った依頼文も渡してください。'+(/\.pptx$/i.test(caseStudy.input||'')?' 変換したいPowerPointも添付し、原稿欄には変更したい点を書きます。':'');
+ const inputs=document.createElement('div');inputs.className='repository-request-inputs';
+ inputs.innerHTML='<label for="repository-topic">何の資料を作る？</label><input id="repository-topic" placeholder="例：新しく入るメンバーへの引き継ぎ"><label for="repository-content">自分の原稿・伝えたいこと</label><textarea id="repository-content" placeholder="箇条書きのメモでも大丈夫。使いたい情報を貼り付けてください。"></textarea><div class="repository-request-options"><div><label for="repository-audience">読み手・目的</label><input id="repository-audience" placeholder="例：初めて担当する人が、次の作業を始められる"></div><div><label for="repository-pages">希望枚数</label><input id="repository-pages" type="number" min="1" max="100" value="'+esc(caseStudy.page_count)+'"></div></div>';
+ fontSelect.previousElementSibling.before(inputs);
+ const assemble=document.createElement('button');assemble.className='button outline';assemble.type='button';assemble.id='repository-assemble';assemble.textContent='この内容で依頼文を組み立てる ↓';
+ field.before(assemble);
+ const label=document.createElement('label');label.htmlFor='repository-prompt';label.textContent='AIへ渡す依頼文（編集できます）';field.before(label);
+ const used=document.createElement('details');used.className='repository-used-prompt';
+ const summary=document.createElement('summary');summary.textContent='この作例を作った依頼文';
+ const raw=document.createElement('pre');raw.textContent=caseStudy.prompt_text;used.append(summary,raw);section.append(used);
+ const fontInstruction=()=>{
+  const f=fontKit.presets.find(x=>x.id===fontSelect.value);
+  return f?'書体：見出し '+f.heading+'、本文 '+f.body+'、英数字 '+f.latin+'。'+f.instruction+' 公式配布のフォントと原文OFLを使う。':'書体：添付したスキルと作例の書体指定を使う。必要な公式配布フォントと原文OFLも用意する。';
+ };
+ const compose=()=>{
+  const topic=inputs.querySelector('#repository-topic').value.trim()||'［作りたい資料の題材］';
+  const content=inputs.querySelector('#repository-content').value.trim()||'［自分の原稿をここに入れる。原典が必要とする論文・画像・PPTX等は別途添付する］';
+  const audience=inputs.querySelector('#repository-audience').value.trim()||'［読み手と、この資料で伝えたいこと］';
+  const pages=Number(inputs.querySelector('#repository-pages').value);
+  const count=Number.isInteger(pages)&&pages>=1&&pages<=100?pages:caseStudy.page_count;
+  const output=caseStudy.format==='pptx'?'PowerPoint（PPTX）と制作ソース。文字・図などを編集できる範囲は、この方式に合わせて明記する。':caseStudy.format==='pdf'?'PDFと原典方式の制作ソース。':'ブラウザーで再生できるWebスライドと制作ソース。';
+  field.value='添付の日本語スキル「'+skillDownload.split('/').pop()+'」を使い、次の内容で日本語の資料を完成させてください。\n\n題材：'+topic+'\n読み手・目的：'+audience+'\n希望枚数：'+count+'枚。固定の版式など原典の制約があれば、その方式に合わせる。\n\n原稿：\n'+content+'\n\n作風の参考：「'+caseStudy.title+'」\n'+(caseStudy.style?'見た目：'+caseStudy.style+'\n':'')+fontInstruction()+'\n日本語は意味のまとまりで改行する。見出しは短く、余白と文字の強弱で伝える。情報が過密なら内容を分ける。\n\n使う原典：'+official+'\nこの作例の制作方法：'+(caseStudy.method||'添付したスキル本文の固有テンプレート・生成器・変換工程')+'\n原典SKILLにある必要な入力と、固有テンプレート・生成器・変換工程を使う。制作一式ZIP内の実装や、固定原典の参照ファイルを利用する。必須の入力が足りなければ、その内容を確認してから制作する。\n原稿の事実・仮説・仮の数字を区別し、根拠や実測値を補完しない。\n\n完成物：'+output+'\n必要な生成工程と、主要な完成ファイルの初回表示まで進めてください。';
+  status.textContent='依頼文を組み立てました。必要なら下で編集できます。';
+ };
+ assemble.addEventListener('click',compose);
+ fontSelect.addEventListener('change',()=>{const f=fontKit.presets.find(x=>x.id===fontSelect.value);section.querySelector('#repository-font-recipe').textContent=(f?f.heading+' / '+f.body+' / '+f.latin:'作例と同じ書体')+'。選んだ書体は「組み立てる」で依頼文へ入ります。';});
+ section.querySelector('#repository-copy').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(field.value);status.textContent='依頼文をコピーしました。スキル本文と一緒にAIへ渡してください。';}catch{field.focus();field.select();status.textContent='依頼文を選択しました。Ctrl+Cでコピーしてください。';}});
+ compose();status.textContent='入力はこの画面の中だけで使います。依頼文をコピーして、使っているAIへ。';
+}
 if(root){
  try{
   const [profiles,cases,product,fontKit]=await Promise.all(['data/repository-guides.json','data/case-studies.json','data/product-collection.json','data/oss-font-kit.json'].map(json));
@@ -51,10 +83,7 @@ if(root){
     chooser.querySelector('select').addEventListener('change',event=>{const c=works.find(c=>c.id===event.target.value);if(c)location.assign(recipeHref(c));});
    }
    if(first?.case_guide){const sourceGuide=document.createElement('p');sourceGuide.className='case-sample-note';sourceGuide.innerHTML='<a href="'+esc(first.case_guide)+'">この作例の詳しい作り方 →</a>';root.querySelector('.detail-cover')?.after(sourceGuide);}
-   const fontSelect=document.querySelector('#repository-font');
-   let fontSuffix='';
-   fontSelect?.addEventListener('change',()=>{const f=fontKit.presets.find(f=>f.id===fontSelect.value);fontSuffix=f?'\n\n書体指示：見出し '+f.heading+'、本文 '+f.body+'、英数字 '+f.latin+'。'+f.instruction+' 日本語は意味のまとまりで改行し、過密ならページを分ける。公式配布フォントと原文OFLを使う。':'';document.querySelector('#repository-font-recipe').textContent=f?f.heading+' / '+f.body+' / '+f.latin:'作例の書体指定を使います。'});
-   document.querySelector('#repository-copy')?.addEventListener('click',async()=>{const field=document.querySelector('#repository-prompt'),status=document.querySelector('#repository-copy-state'),text=field.value+'\n\n原典スキル：'+official+fontSuffix;try{await navigator.clipboard.writeText(text);status.textContent=fontSuffix?'依頼文と書体指示をコピーしました':'依頼文をコピーしました'}catch{field.value=text;field.focus();field.select();status.textContent='依頼文を選択しました。Ctrl+Cでコピーしてください'}});
+   if(first&&!evaluationOnly)requestComposer({section:root.querySelector('#repository-prompt').closest('section'),caseStudy:first,official,skillDownload:skillDownload||first.prompt,fontKit});
   }
  }catch(error){root.innerHTML='<p>案内を読み込めませんでした。<a href="./#skills">一覧へ戻る</a></p>';console.error(error)}
 }

@@ -1,0 +1,455 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/siril9/presentation-skill/schemas/deck_ir.schema.json",
+  "title": "Presentation Skill Deck IR",
+  "description": "A versioned, renderer-neutral intermediate representation for editable presentation semantics. It intentionally excludes slide coordinates.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ir_version",
+    "deck_id",
+    "title",
+    "semantic_role",
+    "intent",
+    "source_outline",
+    "evidence",
+    "slides",
+    "constraints"
+  ],
+  "properties": {
+    "ir_version": {
+      "const": "1.0.0"
+    },
+    "deck_id": {
+      "$ref": "#/$defs/stableId"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "semantic_role": {
+      "const": "deck"
+    },
+    "intent": {
+      "$ref": "#/$defs/intent"
+    },
+    "source_outline": {
+      "$ref": "#/$defs/sourceOutline"
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    "slides": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/slide"
+      }
+    },
+    "constraints": {
+      "$ref": "#/$defs/constraints"
+    }
+  },
+  "$defs": {
+    "stableId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9]*(?:[-_.][a-z0-9]+)*$",
+      "maxLength": 96
+    },
+    "sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "sourceOutlineRef": {
+      "type": "string",
+      "pattern": "^(/(?:[^~/]|~[01])*)+$"
+    },
+    "sourceOutline": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "format",
+        "sha256",
+        "root_ref"
+      ],
+      "properties": {
+        "format": {
+          "const": "presentation-skill-outline"
+        },
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "root_ref": {
+          "const": ""
+        }
+      }
+    },
+    "intent": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "purpose"
+      ],
+      "properties": {
+        "purpose": {
+          "enum": [
+            "introduce",
+            "inform",
+            "explain",
+            "compare",
+            "evidence",
+            "persuade",
+            "decide",
+            "navigate",
+            "summarize",
+            "process"
+          ]
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        },
+        "audience": {
+          "type": "string",
+          "minLength": 1
+        },
+        "outcome": {
+          "type": "string",
+          "minLength": 1
+        },
+        "visual_intent": {
+          "enum": [
+            "none",
+            "hero",
+            "timeline",
+            "comparison",
+            "flow",
+            "data",
+            "diagram",
+            "image",
+            "table"
+          ]
+        }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "kind",
+        "citation",
+        "source_outline_refs"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "kind": {
+          "enum": [
+            "source",
+            "data",
+            "image",
+            "analysis",
+            "quote"
+          ]
+        },
+        "citation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "uri": {
+          "type": "string",
+          "minLength": 1
+        },
+        "locator": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_outline_refs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/sourceOutlineRef"
+          }
+        }
+      }
+    },
+    "slide": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_outline_ref",
+        "semantic_role",
+        "intent",
+        "elements",
+        "evidence_refs",
+        "constraints"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "source_outline_ref": {
+          "$ref": "#/$defs/sourceOutlineRef"
+        },
+        "semantic_role": {
+          "enum": [
+            "title",
+            "section",
+            "content",
+            "evidence",
+            "comparison",
+            "data",
+            "process",
+            "decision",
+            "references",
+            "closing"
+          ]
+        },
+        "intent": {
+          "$ref": "#/$defs/intent"
+        },
+        "elements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/element"
+          }
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "constraints": {
+          "$ref": "#/$defs/constraints"
+        }
+      }
+    },
+    "element": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "source_outline_ref",
+        "semantic_role",
+        "intent",
+        "editable_object_kind",
+        "content",
+        "evidence_refs",
+        "constraints"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/stableId"
+        },
+        "source_outline_ref": {
+          "$ref": "#/$defs/sourceOutlineRef"
+        },
+        "semantic_role": {
+          "enum": [
+            "title",
+            "subtitle",
+            "heading",
+            "body",
+            "list",
+            "callout",
+            "metric",
+            "evidence",
+            "citation",
+            "image",
+            "chart",
+            "table",
+            "diagram",
+            "decision",
+            "navigation",
+            "decoration"
+          ]
+        },
+        "intent": {
+          "$ref": "#/$defs/intent"
+        },
+        "editable_object_kind": {
+          "enum": [
+            "text",
+            "image",
+            "chart",
+            "table",
+            "diagram",
+            "shape",
+            "group",
+            "media"
+          ]
+        },
+        "content": {
+          "$ref": "#/$defs/elementContent"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidenceRefs"
+        },
+        "constraints": {
+          "$ref": "#/$defs/constraints"
+        }
+      }
+    },
+    "elementContent": {
+      "type": "object",
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/contentItem"
+          }
+        },
+        "asset_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "data_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "table_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "diagram_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "alt_text": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "contentItem": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "text",
+        "source_outline_ref"
+      ],
+      "properties": {
+        "text": {
+          "type": "string"
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "level": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 8
+        },
+        "source_outline_ref": {
+          "$ref": "#/$defs/sourceOutlineRef"
+        },
+        "evidence_refs": {
+          "$ref": "#/$defs/evidenceRefs"
+        }
+      }
+    },
+    "evidenceRefs": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/stableId"
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/constraint"
+      }
+    },
+    "constraint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "strength"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "reading_order",
+            "keep_together",
+            "must_include",
+            "must_precede",
+            "max_count",
+            "min_count",
+            "aspect_ratio",
+            "content_length",
+            "editable",
+            "evidence_required",
+            "visual_priority"
+          ]
+        },
+        "strength": {
+          "enum": [
+            "required",
+            "preferred"
+          ]
+        },
+        "subject_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "related_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/stableId"
+          }
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "boolean"
+            }
+          ]
+        },
+        "unit": {
+          "enum": [
+            "characters",
+            "items",
+            "ratio",
+            "rank"
+          ]
+        },
+        "description": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    }
+  }
+}

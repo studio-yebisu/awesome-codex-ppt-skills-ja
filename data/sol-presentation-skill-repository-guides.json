@@ -1,0 +1,36 @@
+[
+  {
+    "repository": "siril9/presentation-skill",
+    "summary_ja": "原典のoutline/Operating Grid/role contractsを通してnative引継ぎ図解と表を作る。",
+    "example_ids": [
+      "presentation-skill-showcase"
+    ],
+    "upstream_commit": "efd899c5ddf866af2ce0001c4c9340af775d4d55",
+    "license": "MIT",
+    "license_paths": [
+      "examples/repositories/presentation-skill-showcase/LICENSE"
+    ],
+    "skill_paths": [
+      "skill-forks/presentation-skill-ja/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Node.js / PptxGenJS4.0.1 / jszip3.10.1",
+      "Microsoft PowerPoint16 for PNG/PDF",
+      "Shippori Mincho / BIZ UDPGothic / Manrope (OFL)"
+    ],
+    "commands": [
+      "npm install",
+      "node runtime/scripts/build_deck_pptxgenjs.js --outline input/outline.json --output deck.pptx --style-preset lavender-ops",
+      "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render"
+    ],
+    "guide": "examples/repositories/presentation-skill-showcase/README.md",
+    "source_download": "downloads/presentation-skill-example-ja.zip",
+    "fork_download": "downloads/presentation-skill-ja.zip",
+    "limitations": [
+      "架空の運用・期限相対案・実績なし",
+      "Full Python scientific data pipeline未整備。原典既定Node routeのみ実行",
+      "全ページ詳細目視・独立review・包括finalize/構造監査・ZIP再実行なし"
+    ]
+  }
+]
