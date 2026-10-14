@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark light">
+  <title>PradaSlides Presenter</title>
+  <link rel="stylesheet" href="presenter.css">
+  <link rel="stylesheet" href="deck.css">
+</head>
+<body>
+  <div class="console" id="console">
+    <header class="console-toolbar" aria-label="Presenter toolbar">
+      <div class="console-brand">
+        <span class="status-dot" aria-hidden="true"></span>
+        <strong id="deck-title">PradaSlides</strong>
+        <span class="toolbar-counter" id="toolbar-counter">1 / 1</span>
+        <span class="draft-badge" id="draft-badge" hidden>Draft</span>
+      </div>
+      <div class="toolbar-actions">
+        <button class="primary-button" id="present-button" type="button" title="Present (F)">
+          <span aria-hidden="true">▶</span> Present
+        </button>
+        <details class="export-menu">
+          <summary class="toolbar-button">Export <span aria-hidden="true">⌄</span></summary>
+          <div class="menu-popover">
+            <button type="button" id="print-button">Print / PDF</button>
+            <button type="button" id="state-button">Download state JSON</button>
+            <p>Editable PPTX is a separate production route.</p>
+          </div>
+        </details>
+        <button class="toolbar-button" id="reset-button" type="button">↻ Reset</button>
+        <span class="toolbar-separator" aria-hidden="true"></span>
+        <button class="icon-button" id="ui-theme-button" type="button" aria-label="Toggle console theme">◐</button>
+        <button class="icon-button" id="panels-button" type="button" aria-label="Toggle side panels">▣</button>
+      </div>
+    </header>
+
+    <aside class="slide-rail" aria-label="Slides">
+      <div class="panel-heading">
+        <strong>Slides</strong>
+        <span id="slide-count">0</span>
+      </div>
+      <nav class="thumbnail-list" id="thumbnail-list" aria-label="Slide thumbnails"></nav>
+    </aside>
+
+    <main class="stage-area">
+      <div class="stage-viewport" id="stage-viewport">
+        <div class="stage-scaler" id="stage-scaler">
+          <div id="active-slide"></div>
+        </div>
+      </div>
+      <div class="stage-context" aria-label="Presentation context">
+        <span id="stage-label">PradaSlides</span>
+        <i aria-hidden="true"></i>
+        <span id="stage-section">Slide</span>
+      </div>
+      <div class="stage-navigation" aria-label="Slide navigation">
+        <button id="previous-button" type="button" aria-label="Previous slide">‹</button>
+        <span id="stage-counter">01 / 01</span>
+        <button id="next-button" type="button" aria-label="Next slide">›</button>
+      </div>
+    </main>
+
+    <aside class="inspector" aria-label="Slide display controls">
+      <section class="inspector-section">
+        <label for="transition-select">Transition</label>
+        <select id="transition-select">
+          <option value="none">None</option>
+          <option value="fade">Fade</option>
+          <option value="slide">Slide</option>
+        </select>
+      </section>
+
+      <section class="inspector-section">
+        <span class="control-label">Page tone</span>
+        <div class="segmented" id="tone-control" role="group" aria-label="Page tone">
+          <button type="button" data-value="dark">Dark</button>
+          <button type="button" data-value="light">Light</button>
+          <button type="button" data-value="accent">Accent</button>
+          <button type="button" data-value="media">Media</button>
+        </div>
+      </section>
+
+      <section class="inspector-section">
+        <span class="control-label">Density</span>
+        <div class="segmented" id="density-control" role="group" aria-label="Display density">
+          <button type="button" data-value="air">Air</button>
+          <button type="button" data-value="standard">Standard</button>
+          <button type="button" data-value="compact">Compact</button>
+        </div>
+      </section>
+
+      <section class="inspector-section control-stack">
+        <span class="control-label">Slide furniture</span>
+        <div id="furniture-controls"></div>
+      </section>
+
+      <section class="inspector-section notes-section">
+        <div class="notes-heading">
+          <span class="control-label">Speaker notes</span>
+          <button type="button" class="text-button" id="notes-toggle">Hide</button>
+        </div>
+        <div class="notes-copy" id="notes-copy"></div>
+      </section>
+
+      <footer class="inspector-footer">
+        <span>Local controls affect preview state only.</span>
+        <span id="slide-meta"></span>
+      </footer>
+    </aside>
+  </div>
+
+  <div class="print-deck" id="print-deck" aria-hidden="true"></div>
+  <div class="live-region" id="live-region" aria-live="polite"></div>
+
+  <script src="deck.js"></script>
+  <script src="presenter.js"></script>
+</body>
+</html>

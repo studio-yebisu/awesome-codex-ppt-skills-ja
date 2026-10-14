@@ -325,6 +325,42 @@ def provenance(row):
     licenses=[f for f in folder.rglob('*') if f.is_file() and ('license' in f.name.lower() or 'ofl' in f.name.lower())]
     need(licenses,'No packaged source/font license notices')
     need(any('license' in f.name.lower() and f.stat().st_size>100 for f in licenses),'Empty upstream license')
+    if data.get('execution_type')=='original_workflow_native_pptx_render_parity':
+        need(row['repository']=='prodigeproject/pradaslides','Unexpected PradaSlides workflow identity')
+        stages={Path(c['argv'][1]).name for c in commands if len(c.get('argv',[]))>1}
+        required={'bootstrap_project.py','self_test.py','lint_deck_plan.py','inspect_pptx.py','build_pptx_preview.py','validate_brief.py','validate_design_system.py','validate_source_ledger.py','validate_layout_manifest.py','validate_asset_manifest.py','validate_visual_generation_plan.py','qa_http.mjs'}
+        need(required<=stages,'Original PradaSlides workflow stage missing: '+str(required-stages))
+        for c in commands:
+            need(sha(record_path(folder,c['log']))==c['log_sha256'],'PradaSlides log hash stale')
+            receipt=load(record_path(folder,c['receipt']))
+            need(all(receipt.get(k)==c.get(k) for k in ['argv','cwd','exit_code','log_sha256']),'PradaSlides command differs from actual receipt')
+        failures=data.get('resolved_incidental_failures',[])
+        need(len(failures)==1,'Initial design-system failure/recovery not retained')
+        failed=failures[0]['failed']
+        need(failed['exit_code']!=0 and sha(record_path(folder,failed['log']))==failed['log_sha256'],'Initial PradaSlides failure log missing/stale')
+        need(any(c['exit_code']==0 and c['log']==failures[0]['recovered_by_log'] and Path(c['argv'][1]).name=='validate_design_system.py' for c in commands),'Original design-system validator recovery absent')
+    if data.get('execution_type')=='original_html_first_dom_to_native_pptx_http_fork':
+        need(row['repository']=='ConnorRX56/presentation-delivery-skills','Unexpected Visual Deck Studio identity')
+        raw=read(local(folder,'source/upstream/skills/visual-deck-studio/scripts/html2pptx.js'))
+        runtime=read(local(folder,'source/runtime/html2pptx.js'))
+        prefix=raw.split('async function html2pptx(')[0]
+        need(runtime.startswith(prefix),'Original DOM conversion / dimension / overflow / text validators changed')
+        need("new URL('slides/'+path.basename(filePath),process.env.YEBISU_DECK_BASE_URL)" in runtime and 'await page.goto(`file://${filePath}`)' not in runtime,'Declared HTTP conversion route missing')
+        raw_pdf=read(local(folder,'source/upstream/skills/visual-deck-studio/scripts/export_deck_pdf.mjs'))
+        runtime_pdf=read(local(folder,'source/runtime/export_deck_pdf.mjs'))
+        need(raw_pdf.split('const merged = await PDFDocument.create();')[1]==runtime_pdf.split('const merged = await PDFDocument.create();')[1],'Original PDF merge changed')
+        for c in commands:need(sha(record_path(folder,c['log']))==c['log_sha256'],'Visual Deck Studio log stale')
+        package=load(local(folder,'source/runtime/package.json'))
+        need(package['dependencies']['pptxgenjs']=='4.0.1' and package['dependencies']['sharp']=='0.35.5' and package['overrides']['image-size']=='2.0.3','Fixed converter dependencies changed')
+        audit=load(local(folder,data['dependency_audit']))
+        need(audit['metadata']['vulnerabilities']['total']==0,'Converter dependency audit did not pass')
+        regression=load(local(folder,data['regression_proof']))
+        need(regression['fixed_pptx_sha256']==sha(output) and regression['body_notes_and_media_identical'] is True and regression['twelve_rendered_pages_identical'] is True,'Dependency change lacks content / rendering regression proof')
+        peer=load(local(folder,'review/astra-visual-review.json'))
+        need(peer['verdict']=='passed' and peer['artifact_sha256']==regression['initial_pptx_sha256'],'Independent pre-fix review identity missing')
+        for page in peer['pages']:
+            need(sha(record_path(folder,page['html_image']))==page['html_sha256'] and sha(record_path(folder,page['powerpoint_image']))==page['powerpoint_sha256'],'Independent reviewed pixels changed')
+        need(all(r['native_text_shapes']>0 and r['pictures']==0 for r in load(local(folder,'QA.json'))['native_objects']),'Editable native content replaced by pictures')
     if row['repository']=='FeeiCN/slide-writer':
         review=load(local(folder,'QA.json'));blocked=load(local(folder,'source/direct-file-launch.json'))
         need(row.get('original_gate_not_passed') is True and review.get('original_gate_not_passed') is True,'Direct-file gate limitation missing')

@@ -1,0 +1,147 @@
+{
+  "schema_version": "1.2",
+  "name": "Editorial executive default",
+  "direction": {
+    "communication_mode": "hybrid",
+    "visual_cluster": "corporate-editorial",
+    "character": ["clear", "confident", "crafted"],
+    "reference_principles": [
+      "one unmistakable focal point per slide",
+      "large display type paired with compact support copy",
+      "light-dark section rhythm",
+      "evidence shown at useful scale",
+      "coherent identity without repeated card grids"
+    ],
+    "avoid": [
+      "generic title-and-bullets",
+      "dashboard-like card walls",
+      "tiny screenshots",
+      "decorative diagrams",
+      "weak contrast",
+      "marketplace-layout cloning"
+    ]
+  },
+  "art_direction": {
+    "visual_thesis": "An evidence-led editorial executive deck that makes consequential decisions feel clear, deliberate, and crafted rather than dashboard-like.",
+    "reference_scope": {
+      "selected_cluster": "corporate-editorial",
+      "quality_floor": "Decisive type hierarchy, inspectable proof, controlled light-dark rhythm, and composition-led variety.",
+      "anti_copy": "Transfer craft principles only; do not copy a marketplace layout, source image, or distinctive reference geometry."
+    },
+    "material_language": {
+      "background": "Warm matte paper-like light field or charcoal field, selected by slide tone rather than a generic gradient.",
+      "surface": "Quiet flat surfaces with restrained border contrast; cards appear only when information is genuinely modular.",
+      "depth": "Subtle separation through scale, tonal contrast, and one soft shadow treatment; no decorative glassmorphism."
+    },
+    "edge_language": {
+      "primary": "Rectilinear editorial grid with occasional contained image windows and fine rules.",
+      "secondary": "One intentional rounded or framed motif may recur as furniture, never as a universal card shape.",
+      "overlap_policy": "Overlap only when it creates a clear figure-ground relationship and keeps editable text fully legible."
+    },
+    "image_system": {
+      "roles": ["hero", "evidence", "context", "detail"],
+      "treatments": ["full-bleed stage", "split crop", "contained proof", "detail crop"],
+      "reuse_policy": "One hero has one primary narrative job. Reuse only for an intentional continuity anchor or low-contrast background texture.",
+      "factual_visual_policy": "Actual people, products, UI, charts, and outcomes use supplied or traceable media; generated visuals remain illustrative."
+    },
+    "native_raster_strategy": {
+      "native": ["all audience-facing copy", "shapes and rules", "charts and tables", "exact labels", "page furniture", "links and accessibility metadata"],
+      "raster": ["photographs", "approved texture", "complex illustrative art", "high-fidelity product detail"],
+      "prohibited": ["flattened full slide as default", "generated text image", "rasterized chart labels", "remote hotlink in final artifact"]
+    },
+    "slide_families": [
+      {"id":"entry","purpose":"Orientation or high-stakes claim","macro_composition":"stage or asymmetric split","image_occupation":"high","tone":"light-or-dark"},
+      {"id":"proof","purpose":"Inspectable evidence","macro_composition":"frame, axis, or annotated split","image_occupation":"medium","tone":"light"},
+      {"id":"mechanism","purpose":"Explain a process or decision logic","macro_composition":"spine, network, or field","image_occupation":"low","tone":"light-or-dark"},
+      {"id":"synthesis","purpose":"Resolve the argument and name the action","macro_composition":"stage or decisive frame","image_occupation":"low-or-high","tone":"contrast-shift"}
+    ]
+  },
+  "canvas": {
+    "aspect_ratio": "16:9",
+    "width_px": 1600,
+    "height_px": 900,
+    "safe_margin_px": 72,
+    "columns": 12,
+    "gutter_px": 24,
+    "baseline_px": 8
+  },
+  "typography": {
+    "display_family": "Aptos Display, Inter, Arial, sans-serif",
+    "body_family": "Aptos, Inter, Arial, sans-serif",
+    "mono_family": "IBM Plex Mono, Consolas, monospace",
+    "fallback_policy": "system-font-safe",
+    "selection": {
+      "category_prior": "corporate-editorial",
+      "product_archetype": "executive decision presentation",
+      "positioning": "crafted, credible, and direct",
+      "audience": "decision makers reviewing evidence and a bounded next action",
+      "personality": ["clear", "confident", "crafted"],
+      "proof_density": "balanced narrative and evidence",
+      "interaction_model": "hybrid spoken presentation and review",
+      "rationale": "Use a confident display sans, neutral readable body, and precise mono labels because the audience needs fast claims, inspectable proof, and unambiguous sources without a generic dashboard tone."
+    },
+    "sizes_px": {
+      "hero": 88,
+      "headline": 54,
+      "subhead": 32,
+      "body": 25,
+      "caption": 18,
+      "micro": 14
+    },
+    "max_headline_lines": 3,
+    "max_body_line_length_characters": 62,
+    "body_line_height": 1.28
+  },
+  "color": {
+    "accent": "#F15A3A",
+    "positive": "#1F9D78",
+    "warning": "#D89A2B",
+    "negative": "#C84242",
+    "tones": {
+      "light": {
+        "background": "#F2EEE6",
+        "surface": "#FFFFFF",
+        "text": "#171817",
+        "muted": "#6E706C",
+        "line": "#CEC8BD"
+      },
+      "dark": {
+        "background": "#111311",
+        "surface": "#1D201D",
+        "text": "#F7F1E8",
+        "muted": "#A8AAA4",
+        "line": "#3A3E39"
+      },
+      "accent": {
+        "background": "#F15A3A",
+        "surface": "#E34D30",
+        "text": "#171817",
+        "muted": "#4A251D",
+        "line": "#B73A25"
+      }
+    }
+  },
+  "furniture": {
+    "default_enabled": ["kicker", "page-number", "progress", "frame-corners"],
+    "optional": ["section-rail", "ghost-marker", "metric-strip", "page-hint", "source-line"],
+    "max_decorative_motifs_per_slide": 2,
+    "chrome_must_not_compete_with_claim": true
+  },
+  "rhythm": {
+    "min_distinct_topologies_per_10_slides": 5,
+    "max_consecutive_same_topology": 2,
+    "max_consecutive_same_tone": 3,
+    "min_tone_shifts_per_10_slides": 2,
+    "max_card_grid_ratio": 0.25,
+    "preferred_emphasis_sequence": ["claim", "evidence", "claim", "mechanism", "proof", "decision"]
+  },
+  "quality_floor": {
+    "thumbnail_test": "Primary hierarchy and deck rhythm remain visible at 12 percent scale",
+    "squint_test": "One focal region is unmistakable before copy is read",
+    "evidence_scale": "Proof objects are large enough to inspect rather than merely decorate",
+    "contrast": "Text and critical marks meet WCAG AA where applicable",
+    "copy_fit": "No headline wraps beyond its budget and no body is shrunk to solve overflow",
+    "reference_floor": "Visual identity, layout variation, and evidence staging must be at least as deliberate as the relevant supplied reference cluster",
+    "target_runtime": "Final visuals must be inspected in the requested delivery runtime"
+  }
+}

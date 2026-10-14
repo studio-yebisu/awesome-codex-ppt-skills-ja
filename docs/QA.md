@@ -1,10 +1,16 @@
+# 2026-10-14以降の確認方針
+
+Sol 6.1の新作はビルド成功と主な出力の初回表示を確認しています。状態はlight_check_complete。全ページ詳細目視、独立レビュー、native構造監査、完全ZIP再実行は必須にしません。以下は過去に実施した確認の履歴です。今後の制作条件へ広げません。
+
+---
+
 # リポジトリ別制作事例の確認記録
 
 2026-10-14。製品仕様の正本は [PRODUCT_SPEC.md](PRODUCT_SPEC.md)、制作範囲の正本は [case-studies.json](../data/case-studies.json) と [production-ledger.json](../data/production-ledger.json)。ローカル実装と制作QAの記録であり、人による正式採用・外部公開は未実施。
 
 ## 現行の制作範囲
 
-31リポジトリ、34冊、207ページ（Scrollineの6停止点を含む）。編集可能PPTX 13冊71枚、画像主体PPTX 2冊10枚、固有HTML 19冊126ページ。元209件は作者・分類・データを保持し、原典入口を取得・棚卸し済み。残178件は未制作で、取得だけを生成成功に数えない。
+33リポジトリ、36冊、219ページ（Scrollineの6停止点を含む）。編集可能PPTX 15冊83枚、画像主体PPTX 2冊10枚、固有HTML 19冊126ページ。元209件は作者・分類・データを保持し、原典入口を取得・棚卸し済み。残176件は未制作で、取得だけを生成成功に数えない。
 
 各リポのCLI、MCP、指示型スキル、テンプレート、変換器を使用し、実行記録と原典ファイルのハッシュを保存している。旧共通renderer試作・自己紹介題材の試作は現行件数に含めない。
 
@@ -44,10 +50,12 @@
 | [html-scrolline](../examples/repositories/html-scrolline/QA.json) | gongnyang/awesome-html-scrolline-deck | 6 | HTML |
 | [ppt-design-system](../examples/repositories/ppt-design-system/QA.json) | att6113/ppt-design-system | 6 | HTML |
 | [html-to-ppt-pdf](../examples/repositories/html-to-ppt-pdf/QA.json) | wangzan101/html-to-ppt-pdf | 7 | 画像PPTX |
+| [pradaslides](../examples/repositories/pradaslides/QA.json) | prodigeproject/pradaslides | 6 | 編集可能PPTX |
+| [presentation-delivery](../examples/repositories/presentation-delivery/QA.json) | ConnorRX56/presentation-delivery-skills | 6 | 編集可能PPTX |
 
 ## 全ページの描画・目視
 
-全207ページの制作担当による目視確認が完了。PPTXは完成ファイルをMicrosoft PowerPointで開いた81枚のPNGとPDFを生成し、入力SVGや元HTMLだけで代替していない。各冊の描画receiptにPPTXのSHA、ページ順序と出力を記録した。HTML126ページは固有ランタイムで再生し、実表示を確認している。連続スクロールでは6停止点の実表示を確認した範囲であり、全motionの全フレーム確認ではない。
+全219ページの制作担当による目視確認が完了。PPTXは完成ファイルをMicrosoft PowerPointで開いた93枚のPNGとPDFを生成し、入力SVGや元HTMLだけで代替していない。各冊の描画receiptにPPTXのSHA、ページ順序と出力を記録した。HTML126ページは固有ランタイムで再生し、実表示を確認している。連続スクロールでは6停止点の実表示を確認した範囲であり、全motionの全フレーム確認ではない。
 
 今回追加したWeb7冊49枚は全ページを実ブラウザーで再生し、DOMの見出し・ページ位置を照合、実キャプチャを全頁視認した。対象はReveal.js 6枚、Lewis HTML 8枚、minorun Marp 9枚、Neon 6枚、Bento 6枚、make-slide 8枚、Frontend Editable 6枚。Dashi 6枚は別途同じく実ブラウザーで全頁を確認した。先行6冊45枚に、上表の原典別制作を追加している。新規PPTXは実ファイルのPowerPoint描画、HTMLは原典ランタイムの実表示を確認する。
 
@@ -75,9 +83,9 @@ python tools/verify_repository_release.py
 
 この検査は元209件の一致、リポ・冊数・枚数の対応、原典と出力のハッシュ、PNG/PPTX構造、固有HTML runtime、記録された全ページレビュー、ZIPの内容と更新一致を検査する。画像PPTXではjobs/style/state、native生成記録、原典assembler実行、画像media一致、日本語ノートと画像内日本語の目視記録を追加条件とする。失敗した初期コマンドは消さず、同一コマンドの後続成功とログのハッシュで復旧を検証する。
 
-**最終自動検査：206項目合格、問題0件、警告9件。** [実行結果](../data/release-qa.json)を保存。Jinba 7枚・Japanese Corporate 6枚・Image to Editable 2枚・slides_maker 5枚・CyberPPT 5枚・Hands-on-deck 5枚のXML run locale省略、CyberPPT原典画像一致の未達、Slide-Writer直接ファイル起動の未確認、Scrolline原典全体CIの未達を警告として残す。日本語文字列と実描画の字形は別途確認している。検査の成功を、美術品質の自動判定や正式採用として扱わない。
+**最終自動検査：今回の統合後の実行待ち。** [実行結果](../data/release-qa.json)を保存。Jinba 7枚・Japanese Corporate 6枚・Image to Editable 2枚・slides_maker 5枚・CyberPPT 5枚・Hands-on-deck 5枚のXML run locale省略、CyberPPT原典画像一致の未達、Slide-Writer直接ファイル起動の未確認、Scrolline原典全体CIの未達を警告として残す。日本語文字列と実描画の字形は別途確認している。検査の成功を、美術品質の自動判定や正式採用として扱わない。
 
-31派生版と96配布ファイルの内容・SHAを検査。[別フォルダー再現](../data/reproduction-kit-qa.json)では、配布ZIPを新しいフォルダーへ展開し新venvから17形式（minorun-marp-skill9枚、Office-PowerPoint-MCP-Server6枚、MultiAgentPPT4枚、knowledge-cat-ppt-skill5枚、seaslides5枚、PPT-Design-Skill5枚、magic-slide5枚、image-to-editable-ppt-skill2枚、slides_maker5枚、slide-deck-generator5枚、ai-business-skills6枚、CyberPPT5枚、hands-on-deck5枚、slide-writer8枚、awesome-html-scrolline-deck6枚、ppt-design-system6枚、html-to-ppt-pdf7枚）の生成に成功。他キットの独立実行や、全リポの再現確認へ読み替えない。再生成した出力は確認前として扱う。
+33派生版と104配布ファイルの内容・SHAを検査。[別フォルダー再現](../data/reproduction-kit-qa.json)では、配布ZIPを新しいフォルダーへ展開し新venvから17形式（minorun-marp-skill9枚、Office-PowerPoint-MCP-Server6枚、MultiAgentPPT4枚、knowledge-cat-ppt-skill5枚、seaslides5枚、PPT-Design-Skill5枚、magic-slide5枚、image-to-editable-ppt-skill2枚、slides_maker5枚、slide-deck-generator5枚、ai-business-skills6枚、CyberPPT5枚、hands-on-deck5枚、slide-writer8枚、awesome-html-scrolline-deck6枚、ppt-design-system6枚、html-to-ppt-pdf7枚）の生成に成功。他キットの独立実行や、全リポの再現確認へ読み替えない。再生成した出力は確認前として扱う。
 
 ## 現行サイトのUI検証
 

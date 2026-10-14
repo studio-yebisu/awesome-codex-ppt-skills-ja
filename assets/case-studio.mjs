@@ -1,10 +1,13 @@
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const [cases,collection,previews,pins,profiles]=await Promise.all(['data/case-studies.json','data/skills.json','data/previews.json','data/upstreams.json','data/repository-guides.json'].map(async url=>{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(url);return r.json()}));
+const [cases,collection,previews,pins,profiles,product]=await Promise.all(['data/case-studies.json','data/skills.json','data/previews.json','data/upstreams.json','data/repository-guides.json','data/product-collection.json'].map(async url=>{const r=await fetch(url,{cache:'no-store'});if(!r.ok)throw Error(url);return r.json()}));
 const profileByRepo=new Map(profiles.map(p=>[p.repository,p]));
-const skills=collection.skills,categories={general:'資料制作総合',pptx:'パワーポイント',html:'ウェブスライド',image:'画像スライド',business:'ビジネス資料',convert:'発表資料'};
+const entryByRepo=new Map(product.entries.map(e=>[e.repository,e]));
+const caseById=new Map(cases.map(c=>[c.id,c]));
+const activeCases=product.active_case_ids.map(id=>caseById.get(id)).filter(Boolean);
+const skills=collection.skills.filter(s=>entryByRepo.has(s.repo_full_name)),categories={general:'資料制作総合',pptx:'パワーポイント',html:'ウェブスライド',image:'画像スライド',business:'ビジネス資料',convert:'発表資料'};
 for(const c of cases)c.compare=c.compare||c.compare_id;
-let use='all',category='all',current=null,page=0,playing=false,timer=null,trigger=null,nativeObserver=null;
+let use='all',look='all',category='all',current=null,page=0,playing=false,timer=null,trigger=null,nativeObserver=null;
 function caseUse(c){if(/企画/.test(c.use_case))return '企画';if(/研修/.test(c.use_case))return '研修';if(/報告/.test(c.use_case))return '報告';if(/提案|改善/.test(c.use_case))return '提案';return c.use_case}
 const dialog=$('#case-dialog');
 function previewUrl(c,path){const q=new URLSearchParams(path===c.preview?c.preview_options||{}:{});q.set('v',c.content_revision);return path+(path.includes('?')?'&':'?')+q}
@@ -12,23 +15,23 @@ function imagePath(c,i){return previewUrl(c,c.pages?.[i]||'examples/cases/'+c.id
 function caseCards(){
   if(!$('#case-grid'))return;
   const format=$('#case-format').value;
-  const list=cases.filter(c=>(use==='all'||caseUse(c)===use)&&(format==='all'||c.format===format));
+  const list=activeCases.filter(c=>(use==='all'||caseUse(c)===use)&&(look==='all'||entryByRepo.get(c.repository)?.style===look)&&(format==='all'||c.format===format));
   $('#case-results').textContent=list.length+'冊 / '+list.reduce((n,c)=>n+c.page_count,0)+'枚';
-  $('#case-grid').innerHTML=list.length?list.map(c=>'<article class="case-card"><button class="case-card-image'+(c.preview_canvas?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+' '+esc(c.style)+'のスライド事例を見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライド事例を見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(c.use_case)+'</span><span>'+(c.format==='pptx'?'PowerPoint':'Web')+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.repository)+' / '+esc(c.style)+'</p><div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">事例を見る ↗</button><a href="'+esc(c.guide)+'">このスキルで作る →</a></div></div></article>').join(''):'<p class="case-empty">この条件の制作事例はまだありません。別の用途・形式を選んでください。</p>';
+  $('#case-grid').innerHTML=list.length?list.map((c,i)=>'<article class="case-card" data-style="'+esc(entryByRepo.get(c.repository)?.style)+'"><button class="case-card-image'+(c.preview_canvas&&c.preview_canvas.width===c.preview_canvas.height?' square-preview':'')+'" data-open-case="'+esc(c.id)+'" aria-label="'+esc(c.title)+'のスライドを見る"><img src="'+esc(previewUrl(c,c.cover))+'" alt="'+esc(c.title)+'の表紙" loading="lazy"><img class="interior-thumb" src="'+esc(previewUrl(c,c.interior))+'" alt="本文の見本" loading="lazy"><span class="watch">▶ スライドを見る</span></button><div class="case-card-copy"><div class="case-tag"><span>'+esc(entryByRepo.get(c.repository)?.title_ja||c.use_case)+'</span><span>'+(c.format==='pptx'?'PowerPoint':'Web')+' · '+c.page_count+'枚</span></div><h3>'+esc(c.title)+'</h3><p class="skill-name">'+esc(c.style)+'</p><div class="case-card-actions"><button data-open-case="'+esc(c.id)+'">再生する ↗</button><a href="'+esc(entryByRepo.get(c.repository)?.skill_download)+'" download>スキル本文 ↓</a><a href="'+esc(c.guide)+'">作り方 →</a></div></div></article>').join(''):'<p class="case-empty">この作風の制作事例はまだありません。別の作風・形式を選んでください。</p>';
 }
 function previewFor(repo){return Array.isArray(previews)?previews.find(p=>p.repository===repo||p.repo_full_name===repo):previews.images?.[repo]||previews[repo]}
 function skillCards(){
   if(!$('#skill-grid'))return;
   const term=$('#skill-query').value.trim().normalize('NFKC').toLowerCase(),local=$('#skill-status').value==='local';
   const hasExamples=s=>cases.some(c=>c.repository===s.repo_full_name);
-  const list=skills.filter(s=>(category==='all'||s.kind===category)&&(!term||(s.repo_full_name+' '+s.description_ja).normalize('NFKC').toLowerCase().includes(term))&&(!local||hasExamples(s))).sort((a,b)=>{const order=$('#skill-order').value;if(order==='produced'){const diff=Number(hasExamples(b))-Number(hasExamples(a));if(diff)return diff}return order==='name'?a.repo_full_name.localeCompare(b.repo_full_name):b.stars-a.stars||a.repo_full_name.localeCompare(b.repo_full_name)});
+  const list=skills.filter(s=>(category==='all'||s.kind===category)&&(!term||(s.repo_full_name+' '+s.description_ja+' '+entryByRepo.get(s.repo_full_name).title_ja).normalize('NFKC').toLowerCase().includes(term))&&(!local||hasExamples(s))).sort((a,b)=>{const order=$('#skill-order').value;if(order==='produced')return product.entries.findIndex(e=>e.repository===a.repo_full_name)-product.entries.findIndex(e=>e.repository===b.repo_full_name);return order==='name'?a.repo_full_name.localeCompare(b.repo_full_name):b.stars-a.stars||a.repo_full_name.localeCompare(b.repo_full_name)});
   $('#skill-results').textContent=skills.length+'件中 '+list.length+'件'+(term?' /「'+term+'」':'');
   $('#skill-grid').innerHTML=list.map(s=>{
-    const repo=s.repo_full_name,works=cases.filter(c=>c.repository===repo),p=previewFor(repo),profile=profileByRepo.get(repo),trial=profile?.execution_status==='local_trial_generated_not_packaged',[owner,name]=repo.split('/');
+    const repo=s.repo_full_name,entry=entryByRepo.get(repo),works=cases.filter(c=>c.repository===repo).sort((a,b)=>Number(b.id===entry.featured_case_id)-Number(a.id===entry.featured_case_id)),p=previewFor(repo),profile=profileByRepo.get(repo),trial=profile?.execution_status==='local_trial_generated_not_packaged',[owner,name]=repo.split('/');
     const cover=(works[0]?previewUrl(works[0],works[0].interior):null)||(p?.kind==='project'&&p.license&&!/非商用|不一致|未確定/.test(profile?.license_note||'')?(p.src||p.image||p.local_path):null);
     const guide='repository.html?repo='+encodeURIComponent(repo);
-    const visual=cover?(works.length?'<button class="repo-image'+(works[0].preview_canvas?' square-preview':'')+'" data-open-case="'+esc(works[0].id)+'" aria-label="'+esc(repo)+'の日本語スライドを見る"><img src="'+esc(cover)+'" alt="ここで制作した日本語資料" loading="lazy"><span class="watch">▶ このリポの実例を見る</span></button>':'<div class="repo-image repo-original-visual"><img src="'+esc(cover)+'" alt="原作者の公開作例・紹介画像" loading="lazy"></div>'):'<div class="repo-placeholder"><span>'+esc(name.slice(0,2).toUpperCase())+'</span><small>'+(trial?'ローカル試用 / 配布条件を確認中':'日本語の作例は制作前')+'</small></div>';
-    return '<article class="skill-item" id="skill-'+esc(repo.replace('/','--'))+'">'+visual+'<span class="owner">'+esc(owner)+' / '+esc(categories[s.kind])+'</span><h3><a href="'+guide+'">'+esc(name)+'</a></h3><p>'+esc(s.description_ja)+'</p><p class="skill-state">'+(works.length?'ここで実制作：日本語 '+works.length+'冊・'+works.reduce((n,c)=>n+c.page_count,0)+'枚':trial?'ローカル試用済み / 配布条件の確認待ち':'日本語の作例は未制作 / 原典の入口を取得済み')+'</p><div class="skill-item-actions">'+(works.length?'<button data-open-case="'+esc(works[0].id)+'">スライドを見る ↗</button>':'')+'<a href="'+guide+'">'+(works.length?'使い方を見る →':trial?'試用結果と条件 →':'リポの情報を見る →')+'</a><a href="https://github.com/'+esc(repo)+'" target="_blank" rel="noopener noreferrer">原典 ↗</a></div><p class="case-sample-note">★ '+Number(s.stars).toLocaleString('ja-JP')+' / '+esc(s.license||'条件を原典で確認')+(cover&&!works.length?' / 原作者の公開画像':'')+'</p></article>';
+    const visual=cover?(works.length?'<button class="repo-image'+(works[0].preview_canvas&&works[0].preview_canvas.width===works[0].preview_canvas.height?' square-preview':'')+'" data-open-case="'+esc(works[0].id)+'" aria-label="'+esc(repo)+'の日本語スライドを見る"><img src="'+esc(cover)+'" alt="ここで制作した日本語資料" loading="lazy"><span class="watch">▶ このリポの実例を見る</span></button>':'<div class="repo-image repo-original-visual"><img src="'+esc(cover)+'" alt="原作者の公開作例・紹介画像" loading="lazy"></div>'):'<div class="repo-placeholder"><span>'+esc(name.slice(0,2).toUpperCase())+'</span><small>'+(trial?'ローカル試用 / 配布条件を確認中':'日本語の作例は制作前')+'</small></div>';
+    return '<article class="skill-item" id="skill-'+esc(repo.replace('/','--'))+'">'+visual+'<span class="owner">'+esc(owner)+' / '+esc(categories[s.kind])+'</span><h3><a href="'+guide+'">'+esc(entry.title_ja)+'</a></h3><p>'+esc(entry.description_ja)+'</p><div class="skill-item-actions"><a href="'+esc(entry.skill_download)+'" download>スキル本文 ↓</a>'+(entry.fork_download?'<a href="'+esc(entry.fork_download)+'" download>一式ZIP ↓</a>':'')+'<a href="'+guide+'">作り方 →</a><a href="https://github.com/'+esc(repo)+'" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div><p class="case-sample-note">'+esc(name)+' / '+esc(entry.license||s.license||'個別条件')+'</p></article>';
   }).join('')||'<p class="case-empty">該当するスキルがありません。</p>';
 }
 function stop(){playing=false;clearTimeout(timer);timer=null;$('#case-play').textContent='▶ 再生'}
@@ -93,7 +96,8 @@ function open(id,button){
   $('#case-compare').hidden=!c.compare;
   if(c.compare){$('#case-compare').dataset.openCase=c.compare;$('#case-compare').href=cases.find(x=>x.id===c.compare).guide;$('#case-compare').textContent=c.format==='pptx'?'同じ入力のWeb版と比べる ↗':'同じ入力のPPTX版と比べる ↗'}
   $('#case-note').hidden=true;$('#case-notes').setAttribute('aria-expanded','false');
-  $('#case-pages').innerHTML=c.titles.map((t,i)=>'<button type="button" data-page="'+i+'" aria-label="'+(i+1)+'ページ目 '+esc(t)+'"><img src="'+esc(imagePath(c,i))+'" alt=""><span>'+String(i+1).padStart(2,'0')+' '+esc(t)+'</span></button>').join('');
+  $('#case-pages').innerHTML=c.titles.map((t,i)=>'<button type="button" data-page="'+i+'" aria-label="'+(i+1)+'ページ目 '+esc(t)+'">'+(c.preview_kind==='html'&&!c.pages?'':'<img src="'+esc(imagePath(c,i))+'" alt="">')+'<span>'+String(i+1).padStart(2,'0')+' '+esc(t)+'</span></button>').join('');
+  const skillLink=$('#case-skill');if(skillLink){const entry=entryByRepo.get(c.repository);skillLink.hidden=!entry;skillLink.href=entry?.skill_download||'#'}
   if(c.preview_kind==='html'){
     const frame=document.createElement('iframe');frame.src=previewUrl(c,c.preview);frame.title=c.title;frame.setAttribute('sandbox','allow-scripts allow-same-origin');frame.addEventListener('load',()=>{fit();send();const doc=frame.contentDocument;if(!doc)return;doc.addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();dialog.close()}},true);const config=nativeDOM[c.id],slides=config&&doc.querySelector(config[2]);if(slides){nativeObserver=new MutationObserver(()=>nativeSync(frame));nativeObserver.observe(slides,{attributes:true,childList:true,subtree:true,attributeFilter:['class']});nativeSync(frame)}});$('#case-stage').replaceChildren(frame);
   }
@@ -121,6 +125,7 @@ document.addEventListener('click',e=>{
   const opener=e.target.closest('[data-open-case]');if(opener){e.preventDefault();open(opener.dataset.openCase,opener);return}
   const pageButton=e.target.closest('[data-page]');if(pageButton){stop();go(Number(pageButton.dataset.page));return}
   const u=e.target.closest('[data-use]');if(u){use=u.dataset.use;document.querySelectorAll('[data-use]').forEach(b=>b.setAttribute('aria-pressed',String(b===u)));caseCards()}
+  const l=e.target.closest('[data-look]');if(l){look=l.dataset.look;document.querySelectorAll('[data-look]').forEach(b=>b.setAttribute('aria-pressed',String(b===l)));caseCards()}
   const cat=e.target.closest('[data-category]');if(cat){category=cat.dataset.category;document.querySelectorAll('[data-category]').forEach(b=>b.setAttribute('aria-pressed',String(b===cat)));skillCards()}
 });
 $('#case-close').onclick=()=>dialog.close();$('#case-prev').onclick=()=>{stop();go(page-1)};$('#case-next').onclick=()=>{stop();go(page+1)};$('#case-play').onclick=play;

@@ -1,0 +1,140 @@
+--- original/assets/deck_index.html
++++ Japanese/index.html
+@@ -1,8 +1,8 @@
+ <!DOCTYPE html>
+-<html lang="zh-CN">
++<html lang="ja">
+ <head>
+ <meta charset="UTF-8">
+-<title>Deck · Multi-file Slide Index</title>
++<title>引き継ぎは、次の一手まで。</title>
+ <!--
+   deck_index.html — 多文件 slide deck 拼接器 · 双概览模式
+ 
+@@ -17,11 +17,9 @@
+   键盘（演示）：← / → / Space / PgUp / PgDown / Home / End / 1-9 / P 打印 / ESC 回概览
+ -->
+ <script>
+-  window.DECK_MANIFEST = [
+-    { file: "slides/01-cover.html", label: "Cover" /*, thumb: "thumbs/01.jpg" */ },
+-  ];
+-  window.DECK_WIDTH = 1920;
+-  window.DECK_HEIGHT = 1080;
++  window.DECK_MANIFEST = [{"file": "slides/01-slide.html", "label": "引き継ぎは、次の一手まで。", "thumb": "thumbs/01-slide.jpg"}, {"file": "slides/02-slide.html", "label": "渡す前に、三つをそろえる", "thumb": "thumbs/02-slide.jpg"}, {"file": "slides/03-slide.html", "label": "ファイル名で、用途と版を伝える", "thumb": "thumbs/03-slide.jpg"}, {"file": "slides/04-slide.html", "label": "完了と保留を、書き分ける", "thumb": "thumbs/04-slide.jpg"}, {"file": "slides/05-slide.html", "label": "受け取る側の画面で、確かめる", "thumb": "thumbs/05-slide.jpg"}, {"file": "slides/06-slide.html", "label": "最後に、次の一行を添える", "thumb": "thumbs/06-slide.jpg"}];
++  window.DECK_WIDTH = 1280;
++  window.DECK_HEIGHT = 720;
+   window.GALLERY_CARD_W = 300;       // 画廊卡片基准宽度
+   window.GALLERY_DRIFT_SECONDS = 80; // 画廊漂移一圈时长
+   // window.DECK_OVERVIEW = 'grid';  // 取消注释可固定概览模式
+@@ -80,8 +78,8 @@
+   @keyframes breathe { 0%,100% { transform: scale(1.0); } 50% { transform: scale(1.045); } }
+ 
+   /* 卡片通用内容 */
+-  .card .thumb { position: absolute; top: 0; left: 0; width: 1920px; height: 1080px; transform-origin: top left; pointer-events: none; }
+-  .card .thumb iframe { width: 1920px; height: 1080px; border: 0; display: block; background: #fff; pointer-events: none; }
++  .card .thumb { position: absolute; top: 0; left: 0; width: 1280px; height: 720px; transform-origin: top left; pointer-events: none; }
++  .card .thumb iframe { width: 1280px; height: 720px; border: 0; display: block; background: #fff; pointer-events: none; }
+   .card .thumb-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; display: block; pointer-events: none; }
+   .card .num { position: absolute; bottom: 6px; left: 7px; background: rgba(16,12,7,0.76); color: #fff; font-size: 11px; line-height: 1; padding: 4px 7px; border-radius: 5px; font-variant-numeric: tabular-nums; letter-spacing: 0.03em; z-index: 3; pointer-events: none; max-width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+   #ov-gallery .card .num { opacity: 0; transition: opacity .25s; }
+@@ -110,34 +108,34 @@
+   .nav-zone:hover .nav-hint { opacity: 1; }
+ 
+   @media print {
+-    @page { size: 1920px 1080px; margin: 0; }
++    @page { size: 1280px 720px; margin: 0; }
+     html, body { background: #fff; overflow: visible; height: auto; }
+     body[data-mode] .overview { display: none !important; }
+     #stage { position: static; transform: none !important; box-shadow: none; }
+     .counter, .nav-zone, .overview-btn, .start-btn { display: none !important; }
+     .print-stack { display: block; }
+-    .print-stack iframe { width: 1920px; height: 1080px; page-break-after: always; display: block; }
++    .print-stack iframe { width: 1280px; height: 720px; page-break-after: always; display: block; }
+   }
+ </style>
+-</head>
++<style>.catalog-frame .counter,.catalog-frame .overview-btn,.catalog-frame .nav-zone{display:none}@media(prefers-reduced-motion:reduce){.breathe,.drift-layer{animation:none!important}.card{transition:none!important}}</style></head>
+ <body data-mode="overview">
+ 
+ <div id="ov-grid" class="overview">
+-  <div class="overview-title">Overview · 点击任意页进入演示</div>
++  <div class="overview-title">ページ一覧 · クリックして再生</div>
+   <div class="wall-wrap"><div class="wall" id="wall"></div></div>
+ </div>
+ 
+ <div id="ov-gallery" class="overview">
+   <div class="stage3d"><div class="breathe"><div class="drift-layer" id="driftLayer"><div class="gallery" id="gallery"></div></div></div></div>
+   <div class="vignette"></div>
+-  <div class="overview-title">Infinite Gallery · 悬停暂停 · 点击任意页进入演示</div>
++  <div class="overview-title">ギャラリー · 触れると停止 · クリックして再生</div>
+ </div>
+ 
+-<button class="start-btn" id="startBtn">▶ 开始演示</button>
++<button class="start-btn" id="startBtn">再生する</button>
+ 
+ <div id="present-ui">
+   <div id="stage"><iframe id="frame" src="about:blank"></iframe></div>
+-  <button class="overview-btn" id="overviewBtn">⊞ 概览</button>
++  <button class="overview-btn" id="overviewBtn">ページ一覧</button>
+   <div class="nav-zone left"  id="navL"><div class="nav-hint">‹</div></div>
+   <div class="nav-zone right" id="navR"><div class="nav-hint">›</div></div>
+   <div class="counter" id="counter">1 / 1</div>
+@@ -147,8 +145,8 @@
+ 
+ <script>
+ (function () {
+-  const W = window.DECK_WIDTH || 1920;
+-  const H = window.DECK_HEIGHT || 1080;
++  const W = window.DECK_WIDTH || 1280;
++  const H = window.DECK_HEIGHT || 720;
+   const deck = window.DECK_MANIFEST || [];
+   const CARD_W = window.GALLERY_CARD_W || 300;
+   const DRIFT_SEC = window.GALLERY_DRIFT_SECONDS || 80;
+@@ -173,7 +171,19 @@
+ 
+   function setMode(mode) {
+     document.body.setAttribute('data-mode', mode);
+-    if (mode === 'present') { fit(); show(current); }
++    if (mode === 'present') { fit(); show(current);
++  // Japanese catalog adapter: call the original show/setMode functions.
++  function publish(){ if(parent!==window)parent.postMessage({type:'yebisu-page',index:current},location.origin); }
++  window.addEventListener('message',e=>{
++    if(e.origin!==location.origin || e.source!==parent)return;
++    if(e.data && e.data.type==='yebisu-slide' && Number.isInteger(e.data.index)){
++      current=Math.max(0,Math.min(deck.length-1,e.data.index));setMode('present');publish();
++    }
++  });
++  const catalogFrame=new URLSearchParams(location.search).get('catalog')==='1';
++  if(catalogFrame){document.body.classList.add('catalog-frame');current=0;setMode('present');}
++  publish();
++ }
+     else { requestAnimationFrame(buildOverview); }
+   }
+ 
+@@ -307,6 +317,7 @@
+     counter.innerHTML = (idx + 1) + ' / ' + deck.length + ' <span class="label">' + (deck[idx].label || '') + '</span>';
+     try { localStorage.setItem(storageKey, String(idx)); } catch (_) {}
+     if (location.hash !== '#' + (idx + 1)) history.replaceState(null, '', '#' + (idx + 1));
++    publish();
+   }
+   function next() { show(Math.min(current + 1, deck.length - 1)); }
+   function prev() { show(Math.max(current - 1, 0)); }
+@@ -338,6 +349,18 @@
+   else { try { const v = parseInt(localStorage.getItem(storageKey), 10); if (!isNaN(v) && v >= 0 && v < deck.length) current = v; } catch (_) {} }
+ 
+   fit(); show(current);
++  // Japanese catalog adapter: call the original show/setMode functions.
++  function publish(){ if(parent!==window)parent.postMessage({type:'yebisu-page',index:current},location.origin); }
++  window.addEventListener('message',e=>{
++    if(e.origin!==location.origin || e.source!==parent)return;
++    if(e.data && e.data.type==='yebisu-slide' && Number.isInteger(e.data.index)){
++      current=Math.max(0,Math.min(deck.length-1,e.data.index));setMode('present');publish();
++    }
++  });
++  const catalogFrame=new URLSearchParams(location.search).get('catalog')==='1';
++  if(catalogFrame){document.body.classList.add('catalog-frame');current=0;setMode('present');}
++  publish();
++
+   if (hashMatch) setMode('present'); else { setMode('overview'); buildOverview(); }
+ 
+   // Reclaim focus after clicking inside iframe so keyboard nav keeps working (#23)

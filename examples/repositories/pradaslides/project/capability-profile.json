@@ -1,0 +1,115 @@
+{
+  "schema_version": "1.0",
+  "declared_by": "host-agent",
+  "separate_tools_allowed": true,
+  "handoff_mode": "file-contract",
+  "capabilities": [
+    {
+      "id": "text_reasoning",
+      "kind": "model",
+      "status": "available",
+      "provider": "current-agent",
+      "constraints": []
+    },
+    {
+      "id": "image_understanding",
+      "kind": "model",
+      "status": "available",
+      "provider": "Agent visual review",
+      "constraints": []
+    },
+    {
+      "id": "video_understanding",
+      "kind": "model",
+      "status": "unknown",
+      "provider": null,
+      "constraints": []
+    },
+    {
+      "id": "image_generation",
+      "kind": "model-or-tool",
+      "status": "available",
+      "provider": "Available image tool; deliberately unused",
+      "constraints": []
+    },
+    {
+      "id": "image_editing",
+      "kind": "model-or-tool",
+      "status": "unknown",
+      "provider": null,
+      "constraints": []
+    },
+    {
+      "id": "video_generation",
+      "kind": "model-or-tool",
+      "status": "unknown",
+      "provider": null,
+      "constraints": []
+    },
+    {
+      "id": "web_research",
+      "kind": "tool",
+      "status": "unknown",
+      "provider": null,
+      "constraints": []
+    },
+    {
+      "id": "code_execution",
+      "kind": "tool",
+      "status": "available",
+      "provider": "Python and Node local runtime",
+      "constraints": []
+    },
+    {
+      "id": "filesystem",
+      "kind": "tool",
+      "status": "available",
+      "provider": "Local workspace",
+      "constraints": []
+    },
+    {
+      "id": "native_pptx_authoring",
+      "kind": "runtime",
+      "status": "available",
+      "provider": "python-pptx 1.0.2",
+      "constraints": []
+    },
+    {
+      "id": "web_slide_authoring",
+      "kind": "runtime",
+      "status": "available",
+      "provider": "Original PradaSlides presenter",
+      "constraints": []
+    },
+    {
+      "id": "slide_rendering",
+      "kind": "runtime",
+      "status": "available",
+      "provider": "Microsoft PowerPoint 16.0",
+      "constraints": []
+    },
+    {
+      "id": "pptx_roundtrip",
+      "kind": "runtime",
+      "status": "available",
+      "provider": "PowerPoint COM",
+      "constraints": []
+    },
+    {
+      "id": "video_keyframe_extraction",
+      "kind": "tool",
+      "status": "unknown",
+      "provider": null,
+      "constraints": []
+    },
+    {
+      "id": "pdf_rasterization",
+      "kind": "tool",
+      "status": "unknown",
+      "provider": null,
+      "constraints": []
+    }
+  ],
+  "constraints": [],
+  "notes": "Unknown means not yet verified. Never silently upgrade unknown to available."
+}

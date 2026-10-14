@@ -1,0 +1,25 @@
+{
+  "repository": "likaku/Mck-ppt-design-skill",
+  "upstream_commit": "e190e083b715b63172e1c4fea01bc5f9bb21a021",
+  "method": "Original DeckBuilder type/data schema -> EditorialEngine(MckEngine) -> original core native shapes and text -> inherited save/full_cleanup",
+  "read_files": [
+    "SKILL.md",
+    "references/framework/engine-api.md",
+    "references/team/brand-guide.md",
+    "references/framework/guard-rails.md",
+    "references/layout-matrix.yaml",
+    "mck_ppt/engine.py",
+    "mck_ppt/core.py",
+    "mck_ppt/deck_builder.py"
+  ],
+  "changes": "Six layout methods explicitly overridden; Japanese editorial palette/type scale replaces consulting brand rules under the requested art direction. Upstream files unmodified.",
+  "command": "python tools/build_sol_editorial_showcase.py --render",
+  "license": "Apache-2.0; upstream LICENSE and NOTICE retained",
+  "pptx_sha256": "a7aac93bba54c15c7ae0c3e9f2a579187d067e90d63dd1d69b9439130f5640cf",
+  "fonts": [
+    "Zen Kaku Gothic New",
+    "Shippori Mincho",
+    "Space Grotesk"
+  ],
+  "verification_scope": "Light check only. Original S3/S4 gates, independent review and exhaustive all-page QA were not run."
+}

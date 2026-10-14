@@ -33,8 +33,10 @@ SPECS = {
  'html-scrolline': ('html-scrolline-ja','build_htmlscrolline_repository_example.py',[]),
  'ppt-design-system': ('ppt-design-system-ja','build_ppt_design_system_repository_example.py',[]),
  'html-to-ppt-pdf': ('html-to-ppt-pdf-ja','build_html_to_ppt_pdf_repository_example.py',[]),
+ 'pradaslides': ('pradaslides-ja','build_pradaslides_repository_example.py',[]),
+ 'presentation-delivery': ('presentation-delivery-ja','build_presentation_delivery_repository_example.py',[]),
 }
-FRAGMENTS = ['web','native','japanese','dashi','codex-image','multiagent','knowledgecat','seaslides','pptdesign','magicslide','imageeditable','reactdeck','slidemaker','businesscarousel','cyberppt','handsondeck','slidewriter','htmlscrolline','designsystem','htmlconversion']
+FRAGMENTS = ['web','native','japanese','dashi','codex-image','multiagent','knowledgecat','seaslides','pptdesign','magicslide','imageeditable','reactdeck','slidemaker','businesscarousel','cyberppt','handsondeck','slidewriter','htmlscrolline','designsystem','htmlconversion','pradaslides','delivery']
 CODE_SUFFIXES = {'.py','.js','.mjs','.cjs','.jsx','.ts','.tsx','.css','.html','.json','.yaml','.yml','.md','.txt','.toml','.xml','.csv','.svg','.sh','.ps1','.psm1','.ini','.cfg','.in','.sql','.ttf','.woff','.woff2'}
 SKIP_PARTS = {'.git','node_modules','__pycache__','.venv','venv','.pytest_cache','.cache','releases','public'}
 SPECIAL = {
@@ -43,6 +45,8 @@ SPECIAL = {
  'johnson7788/MultiAgentPPT': ['backend/save_ppt/ppt_template_0717.pptx'],
 }
 NOTES = {
+ 'pradaslides':'原典のbootstrap、brief・出典・設計・レイアウト等の契約validatorとstrict plan lintを使い、native PPTXを作る。原典はauthoring engineを固定しないため、この作例では専用python-pptxソースを使用する。PowerPoint実描画から無改変の原典build_pptx_preview.pyでrender-parity presenterを作り、原典由来HTTP QAを実行する。ブラウザー表示の本文は画像、編集正本はPPTX。OS游ゴシックは配布せず、MITの原文を保持する。',
+ 'presentation-delivery':'原典Visual Deck StudioのHTML-first Path A、960×540ptの4条件、無改変の変換・寸法・overflow検査とDOM要素変換を使う。原典deck_index.htmlの概覧・キー操作とPDF結合を保持する。明示HTTP入口、字体待ち、日本語ノート、Windows環境継承だけをadapterで補う。本文文字と図形はnative PPTX。HTML/PPTXの字間・太さ・br行間には差があり、pixel一致・動画・TTS・人の早期承認は主張しない。BIZ UDPGothicのOFL原本を同梱する。',
  'html-to-ppt-pdf':'既存Guizang HTMLを、無改変の原典build.mjsでPNG・画像PPTX・PDFへ変換する。原文HTMLとAGPL対応ソースを保持し、export.htmlだけでdotからの移動をforce:trueへ補正する。原典の短い撮影間隔と700ms待ちの競合によるページ重複を、全ページと一意なPNGで確認する。日本語発表ノートの後処理は本文画像とスライドXMLを保持する。本文編集・motion保持・新規資料構成の生成ではない。MIT変換器、AGPL入力ソース、OFL書体を区別する。',
  'ppt-design-system':'原典template.html、Forest Ink配色、cover・cards・body・question・comparison・closingのレイアウトを使う。固有ナビゲーションJSを保持し、日本語の行間・字体・同じ重要度の比較欄を調整する。HTTPで全ページとキー・dot操作を確認。HTML生成CLIは原典にないため、同梱Pythonは原典テンプレートを埋める再現入口である。PPTX出力と印刷は今回未検証。',
  'hands-on-deck':'原典deck.pyのinspect・atomic JSON patch・apply・fix・diffで既存PPTXを編集する。自作日本語ドナーの図形構造を保って本文・文字サイズ・ノートを更新。元shape ID、入力と差分を残し、全ページを独立レビューする。fix advisoryと実際の見切れを区別し、新しい出力へ元QAを移さない。',
@@ -90,6 +94,10 @@ def files(folder):
 def source_files(folder,repo):
  for p in files(folder):
   name=p.relative_to(folder).as_posix()
+  if repo in {'prodigeproject/pradaslides','ConnorRX56/presentation-delivery-skills'}:
+   fragment='pradaslides' if repo=='prodigeproject/pradaslides' else 'delivery'
+   refs=load(ROOT/'data'/f'{fragment}-repository-guides.json')[0]['source_refs']
+   if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
   if repo=='FeeiCN/slide-writer':
    refs=load(ROOT/'data/slidewriter-repository-guides.json')[0]['source_refs']
    if name not in {r['path'] for r in refs}|{'ACQUISITION.json'}:continue
@@ -169,7 +177,7 @@ def make_kit(case,fork):
  workspace=kit/'reproduce/workspace';workspace.mkdir(parents=True,exist_ok=True)
  for name in ['case-inputs.json','fonts.json','preset-fonts.json','repository-audit.json']:
   copy(ROOT/'data'/name,workspace/'data'/name)
- if cid not in {'ppt-design-system','html-to-ppt-pdf'}:
+ if cid not in {'ppt-design-system','html-to-ppt-pdf','pradaslides','presentation-delivery'}:
   for p in files(ROOT/'assets/fonts'):copy(p,workspace/'assets/fonts'/p.relative_to(ROOT/'assets/fonts'))
  for name in {generator,'repository_example_support.py','acquire_repository.py','render_powerpoint.ps1','build_more_repository_examples.py'}:
   copy(ROOT/'tools'/name,workspace/'tools'/name)
@@ -201,7 +209,7 @@ def make_kit(case,fork):
   for p in files(folder):copy(p,workspace/'.build/recorded-image-editable'/p.relative_to(folder))
  if cid=='seaslides':
   for p in files(folder):copy(p,workspace/'examples/repositories'/cid/p.relative_to(folder))
- if cid in {'cyberppt','hands-on-deck','slide-writer','html-scrolline','ppt-design-system','html-to-ppt-pdf'}:
+ if cid in {'cyberppt','hands-on-deck','slide-writer','html-scrolline','ppt-design-system','html-to-ppt-pdf','pradaslides','presentation-delivery'}:
   for p in files(folder):copy(p,workspace/'examples/repositories'/cid/p.relative_to(folder))
  requirements=['python-pptx==1.0.2','Pillow==12.3.0','lxml==6.1.3','fonttools==4.63.0','brotli==1.2.0','beautifulsoup4==4.15.0','filelock==4.1.1']
  if cid=='react-slide-deck':requirements=[r.replace('fonttools==4.63.0','fonttools==4.66.1')for r in requirements]
@@ -210,6 +218,8 @@ def make_kit(case,fork):
  if cid=='hands-on-deck':requirements=['python-pptx==1.0.2','Pillow==12.3.0','lxml==6.1.3']
  if cid=='slide-writer':requirements=['fonttools==4.66.1','brotli==1.2.0']
  if cid in {'html-scrolline','ppt-design-system','html-to-ppt-pdf'}:requirements=[]
+ if cid=='presentation-delivery':requirements=[]
+ if cid=='pradaslides':requirements=['python-pptx==1.0.2']
  if cid=='office-powerpoint-mcp':requirements.append('mcp[cli]==1.30.0')
  if cid=='multiagent-ppt':requirements.append('requests==2.34.2')
  if cid=='seaslides':requirements.append('pypdf==6.20.1')
@@ -239,6 +249,10 @@ def make_kit(case,fork):
   generation='    $taskArgs = @("--input","examples/repositories/'+cid+'/input/data.json")\n    if ($Render) { $taskArgs += "--render" }\n    & $taskPy examples/repositories/'+cid+'/source/reproduce.py @taskArgs\n'
  if cid=='html-to-ppt-pdf':
   generation='    $taskArgs = @()\n    if ($NodePath) { $taskArgs += @("--node",$NodePath) }\n    if ($Render) { $taskArgs += "--powerpoint" }\n    & $taskPy examples/repositories/html-to-ppt-pdf/source/reproduce.py @taskArgs\n'
+ if cid=='presentation-delivery':
+  generation='    $taskArgs = @()\n    if ($NodePath) { $taskArgs += @("--node",$NodePath) }\n    if ($Render) { $taskArgs += "--powerpoint" }\n    & $taskPy examples/repositories/presentation-delivery/source/reproduce.py @taskArgs\n'
+ if cid=='pradaslides':
+  generation='    & $taskPy examples/repositories/pradaslides/source/reproduce.py\n    if ($LASTEXITCODE) { throw "PradaSlides generation failed" }\n    if ($Render) {\n        $taskArgs = @()\n        if ($NodePath) { $taskArgs += @("--node",$NodePath) }\n        & $taskPy examples/repositories/pradaslides/source/qa.py @taskArgs\n    }\n'
  if cid=='knowledge-cat':
   generation='    $taskArgs = @("--node",$NodePath,"--workspace",$ArtifactWorkspace)\n    if ($Render) { $taskArgs += "--render" }\n    & $taskPy tools/'+generator+' @taskArgs\n'
  if cid=='image-to-editable':
@@ -248,16 +262,17 @@ def make_kit(case,fork):
  if cid=='codex-image-ppt':
   generation+='    if ($Render) { & pwsh -NoProfile -File tools/render_powerpoint.ps1 -PresentationPath examples/repositories/codex-image-ppt/codex-image-ppt.pptx -OutputDirectory examples/repositories/codex-image-ppt/render }\n'
  fontsetup=''
- if cid not in {'codex-image-ppt','business-carousel','cyberppt','hands-on-deck','slide-writer','html-scrolline','ppt-design-system','html-to-ppt-pdf'}:
+ if cid not in {'codex-image-ppt','business-carousel','cyberppt','hands-on-deck','slide-writer','html-scrolline','ppt-design-system','html-to-ppt-pdf','pradaslides','presentation-delivery'}:
   fontsetup='    $taskFont = Join-Path $taskRoot ".build/fonts/NotoSansJP[wght].ttf"\n    if (-not (Test-Path -LiteralPath $taskFont)) {\n        New-Item -ItemType Directory -Path (Split-Path $taskFont) -Force | Out-Null\n        Invoke-WebRequest -Uri "'+font['source_url']+'" -OutFile $taskFont\n    }\n    if ((Get-FileHash -LiteralPath $taskFont -Algorithm SHA256).Hash.ToLower() -ne "'+font['source_sha256']+'") { throw "Pinned font hash mismatch" }\n'
  script='param([switch]$Render)\n$ErrorActionPreference = "Stop"\n$taskRoot = Join-Path $PSScriptRoot "workspace"\nPush-Location -LiteralPath $taskRoot\ntry {\n    & python -m venv .build/ppt-master-venv\n    if ($LASTEXITCODE) { throw "Python environment failed" }\n    $taskPy = Join-Path $taskRoot ".build/ppt-master-venv/Scripts/python.exe"\n    & $taskPy -m pip install -r requirements-reproduce.txt\n    if ($LASTEXITCODE) { throw "Python dependencies failed" }\n'+fontsetup+setup+generation+'    if ($LASTEXITCODE) { throw "Generation failed" }\n    & $taskPy tools/mark_reproduced.py\n    Write-Host "Generated: $taskRoot/examples/repositories/'+cid+'"\n    Write-Host "Open the actual output and review all pages before using it."\n} finally { Pop-Location }\n'
  if cid=='knowledge-cat':
   script=script.replace('param([switch]$Render)','param([switch]$Render, [Parameter(Mandatory=$true)][string]$ArtifactWorkspace, [string]$NodePath="node")')
  if cid=='react-slide-deck':script=script.replace('param([switch]$Render)','param([string]$NodePath="node")')
- if cid=='html-to-ppt-pdf':script=script.replace('param([switch]$Render)','param([switch]$Render, [string]$NodePath="")')
+ if cid in {'html-to-ppt-pdf','pradaslides','presentation-delivery'}:script=script.replace('param([switch]$Render)','param([switch]$Render, [string]$NodePath="")')
  if cid=='business-carousel':script=script.replace('param([switch]$Render)','param()')
  write(kit/'reproduce/Reproduce.ps1',script)
- mark="from pathlib import Path\nimport json, hashlib\np=Path('examples/repositories/"+cid+"')\nartifact=p/"+repr(Path(case['artifact_download']).name if case['format']=='pptx' else Path(case['preview']).name)+"\n(p/'QA.json').write_text(json.dumps({'status':'generated_awaiting_review','artifact_sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),'visual_review':'Review your reproduced output; the original catalog QA is not transferred to a new run.'},ensure_ascii=False,indent=2),encoding='utf-8')\n"
+ artifact_name=Path(case['artifact_download'] if case['format']=='pptx' else case['preview']).relative_to(folder.relative_to(ROOT)).as_posix()
+ mark="from pathlib import Path\nimport json, hashlib\np=Path('examples/repositories/"+cid+"')\nartifact=p/"+repr(artifact_name)+"\n(p/'QA.json').write_text(json.dumps({'status':'generated_awaiting_review','artifact_sha256':hashlib.sha256(artifact.read_bytes()).hexdigest(),'visual_review':'Review your reproduced output; the original catalog QA is not transferred to a new run.'},ensure_ascii=False,indent=2),encoding='utf-8')\n"
  write(workspace/'tools/mark_reproduced.py',mark)
  readme='# '+case['title']+'の再現キット\n\n完成資料はこのフォルダー直下。生成経路・使用した原典・当時の確認範囲はPROVENANCE.jsonとQA.jsonに記録しています。\n\n## Windowsで同じ作例を生成\n\n1. ZIPを展開。PowerShellでこのフォルダーへ移動。\n2. Python 3.13、Node.js、必要に応じてGit Bashを用意。\n3. 次を実行（project内venv・固定npm依存・公式固定commitの書体を取得します）。\n\n    .\\reproduce\\Reproduce.ps1\n\n生成先: reproduce/workspace/examples/repositories/'+cid+'/\n\nPowerPoint本体でPNG/PDFを描画する場合は、Noto Sans JPをインストール済みのWindows / PowerPoint / pwshを使用し、-Renderを指定します。HTMLは生成したファイルを開き、原典のページ操作を使います。再生成した出力は確認前として記録し、元のQAを成功扱いで引き継ぎません。\n\n## 自分の題材へ\n\n完成例のinputとPROMPT.txtを参考に、読み手・目的・数値・結論を用意。日本語派生版SKILL.mdから当該原典の手順へ進みます。この再現スクリプトは比較用の固定原稿を作るもので、input/data.jsonだけを変えれば全ページの文章が自動で変わる汎用アプリではありません。\n\n'+NOTES[cid]+'\n\n## 原典と権利\n\nhttps://github.com/'+repo+'/tree/'+case['upstream_commit']+'\n\n原典のコード、個別のライセンス、書体のOFLを保持。原典の広告用画像・動画・不要な既存デッキや実行環境はキットへ収録しません。\n'
  if cid=='codex-image-ppt':readme+='\nこのスクリプトは生成済みの3画像を原典assemble_ppt.pyで組み直すだけです。画像を新たに作るには、promptsとstyleを添えてCodex native image_genへ依頼し、原典のjobs/result記録と画像確認を行ってください。APIや画像生成をこのスクリプトから自動実行しません。\n'
@@ -304,8 +319,11 @@ def make_kit(case,fork):
   readme='# '+case['title']+'の日本語派生・再現キット\n\n標準生成はPython3の標準ライブラリだけで実行します。Webの書体は端末の游明朝・游ゴシックなどを使用し、フォントファイルは配布しません。\n\n1. ZIPを展開してPowerShellを開く。\n2. `.\\reproduce\\Reproduce.ps1` を実行。\n3. 出力は `reproduce/workspace/examples/repositories/ppt-design-system/deck.html`。新出力のQAは確認前です。\n4. そのフォルダーで `python -m http.server 8000 --bind 127.0.0.1` を実行し、`http://127.0.0.1:8000/deck.html` で全ページを確認します。\n\n`-Render` を追加すると、Node.js22以上とインストール済みChrome/EdgeでHTTP描画・原典操作を検査します。\n\n'+NOTES[cid]+'\n\n自分の内容にはinput/data.jsonの見出し・本文HTMLを更新し、日本語SKILLと原典レイアウトを使って調整します。6ページ・Forest Inkの再現用経路で、他テーマ・PPTX・印刷の対応を確認したものではありません。原典MIT表示を保持し、正式採用と公開は未実施です。\n'
  if cid=='html-to-ppt-pdf':
   readme='# '+case['title']+'の変換・再現キット\n\nPython3、Node.js22以上とnpm、初回依存・公式Chromium取得のネット接続が必要です。\n\n1. ZIPを展開してPowerShellを開く。\n2. `.\\reproduce\\Reproduce.ps1` を実行。既存HTML7ページを再撮影し、画像PPTXとPDFへ変換します。\n3. 出力は `reproduce/workspace/examples/repositories/html-to-ppt-pdf/`。新出力のQAは確認前です。\n4. `-Render` を追加するとWindows / Microsoft PowerPoint / PowerShell7で実描画を確認します。必要なら `-NodePath "Node.jsの実行ファイルの絶対パス"` を指定します。\n\n'+NOTES[cid]+'\n\nこのキットは既存の7ページを変換する再現用経路です。異なる資料には原典SKILLと日本語派生版から入力HTML・ページ数・静止状態を確認し、すべてのページを比較してください。入力HTML自体の再制作はsource/reproduce-input.pyと対応ソースを参照。初期の重複ソース試行はローカルに保存し、配布には使用中の対応ソースだけを含めています。\n'
+ if cid in {'pradaslides','presentation-delivery'}:
+  conditions=('Windows、Microsoft PowerPoint、PowerShell7、Python3、OS游ゴシックが必要。HTTP QAを行う-RenderにはNode.js22以上とChrome/Edgeも必要。' if cid=='pradaslides' else 'Python3、Node.js22以上とnpm、公式Chromium取得の接続が必要。PowerPoint描画を行う-RenderにはWindows、Microsoft PowerPoint、PowerShell7とインストール済みBIZ UDPGothicも必要。')
+  readme='# '+case['title']+'の日本語再現キット\n\n'+conditions+'\n\n1. ZIPを展開しPowerShellを開く。\n2. `.\\reproduce\\Reproduce.ps1 -Render` を実行。必要なら `-NodePath "node.exeの絶対パス"` を添える。\n3. 出力は `reproduce/workspace/examples/repositories/'+cid+'/`。新しい出力は確認前の状態で記録する。全6ページを改めて確認してください。\n4. 出力フォルダーで `python -m http.server 8000 --bind 127.0.0.1` を起動し、localhostのHTML入口を開く。\n\n'+NOTES[cid]+'\n\n制作原稿と構成はinput/data.json、日本語ノートと制作手順はREADME.mdとPROVENANCE.jsonを参照。構成の変更時は原典の計画・寸法・配置検査と全ページの表示確認を行う。原典MITと素材・依存の各条件を保持し、人の正式採用や公開は別とする。\n'
  write(kit/'REPRODUCE.md',readme);write(folder/'REPRODUCE.md',readme)
- if cid in {'cyberppt','hands-on-deck','slide-writer','html-scrolline','ppt-design-system','html-to-ppt-pdf'}:
+ if cid in {'cyberppt','hands-on-deck','slide-writer','html-scrolline','ppt-design-system','html-to-ppt-pdf','pradaslides','presentation-delivery'}:
   copy(folder/'REPRODUCE.md',workspace/'examples/repositories'/cid/'REPRODUCE.md')
  zip_folder(kit,ROOT/'downloads'/(cid+'-example-ja.zip'),cid)
  return 'downloads/'+cid+'-example-ja.zip'

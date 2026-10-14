@@ -1,0 +1,62 @@
+[
+  {
+    "id": "pradaslides",
+    "repository": "prodigeproject/pradaslides",
+    "skill_repository": "prodigeproject/pradaslides",
+    "upstream_commit": "b9219b238d812d0dd7b4ed9fb514effbad0d0928",
+    "fork_id": "pradaslides-ja",
+    "title": "町内会の備品貸出を、迷わない手順に",
+    "page_count": 6,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "style": "受付用紙・工程・照合表を大きな日本語で説明",
+    "use_case": "町内会の備品貸出の説明会と配布資料",
+    "cover": "examples/repositories/pradaslides/render/slide-01.png",
+    "interior": "examples/repositories/pradaslides/render/slide-02.png",
+    "preview": "examples/repositories/pradaslides/presenter/index.html",
+    "artifact_download": "examples/repositories/pradaslides/output/deck.pptx",
+    "pdf_download": "examples/repositories/pradaslides/render/deck.pdf",
+    "source_download": "downloads/pradaslides-example-ja.zip",
+    "fork_download": "downloads/pradaslides-ja.zip",
+    "input": "examples/repositories/pradaslides/input/BRIEF.md",
+    "input_data": "examples/repositories/pradaslides/input/data.json",
+    "input_sha256": "cc573c2c40733651a93f59b56b044edafbfb406fa172f5cee0e98c9d4a74e8a1",
+    "prompt": "examples/repositories/pradaslides/PROMPT.txt",
+    "prompt_text": "PradaSlidesの原典ワークフローで「町内会の備品貸出を、迷わない手順に」を日本語6ページにする。既定の編集可能PPTXを正本とし、原典build_pptx_preview.pyでPowerPoint実描画からHTML presenterを作る。町内会で備品を借りる人が申込み・受取り・異常時の連絡・返却を確認できる内容にする。すべて架空の手順案。生成画像を使わず、申込書の例と手順図・照合表をnative要素で作る。原典の計画lint、PPTX検査、HTML QAを使い、全ページを実描画・目視する。\n",
+    "provenance": "examples/repositories/pradaslides/PROVENANCE.json",
+    "qa": "examples/repositories/pradaslides/QA.json",
+    "guide": "repository.html?repo=prodigeproject/pradaslides",
+    "pages": [
+      "examples/repositories/pradaslides/render/slide-01.png",
+      "examples/repositories/pradaslides/render/slide-02.png",
+      "examples/repositories/pradaslides/render/slide-03.png",
+      "examples/repositories/pradaslides/render/slide-04.png",
+      "examples/repositories/pradaslides/render/slide-05.png",
+      "examples/repositories/pradaslides/render/slide-06.png"
+    ],
+    "titles": [
+      "町内会の備品貸出を、迷わない手順に",
+      "品名・数量・日時を、まとめて伝える",
+      "数と状態を、その場で一緒に確認する",
+      "不具合に気づいたら、使う前に窓口へ",
+      "返却は、置くだけで終わらせない",
+      "借りる前に、返却方法まで聞こう。"
+    ],
+    "notes": [
+      "架空の町内会を想定した手順案です。実際の貸出規則ではありません。申込みから返却までの確認事項を、借りる人と担当者が同じ順序で使うことを目指します。",
+      "申込書の例を見せます。折りたたみ椅子10脚、10月20日9時から16時、集会所前での受取りと返却という架空の設定です。実際の担当窓口と貸出条件を確認して記入します。",
+      "借りる人だけで判断せず、担当者と一緒に数、傷や欠品、返却日時と場所を確かめる手順案です。気づいた点は受取り時の記録に残します。",
+      "受取り時でも使用中でも、異常に気づいたら使い続けず担当者に知らせる案です。破損の原因や弁償をこの資料で決めるものではなく、実際のルールと担当者の指示を確認します。",
+      "数量、付属品、状態を記録と照合し、担当者の確認を受けて返却を完了する案です。無人で置いていく可否も各町内会のルールによるため、事前に返却方法を聞きます。",
+      "実際の貸出ルールと窓口を確認することが次の行動です。この6ページは相談用の架空の手順案で、既存の運用規則の代わりにはなりません。"
+    ],
+    "method": "原典計画契約とlint → native PPTX → PowerPoint実描画 → 原典render-parity presenter",
+    "editability": "native_text_and_shapes",
+    "sample_notice": "架空の町内会を想定した手順案",
+    "preview_notice": "全6枚。編集可能な日本語PPTXと原典HTML presenter。全ページのPowerPoint描画を作者と別エージェントが確認。",
+    "reproduce_script": "reproduce/Reproduce.ps1",
+    "original_gate_not_passed": false,
+    "comparison": "examples/repositories/pradaslides/presenter/index.html",
+    "comparison_label": "HTML版を再生 →"
+  }
+]

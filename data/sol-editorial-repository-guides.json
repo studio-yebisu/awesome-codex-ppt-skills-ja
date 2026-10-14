@@ -1,0 +1,40 @@
+[
+  {
+    "repository": "likaku/Mck-ppt-design-skill",
+    "example_ids": [
+      "sol-editorial-showcase"
+    ],
+    "summary_ja": "原典MckEngineのnative PPTXを編集誌風に拡張した日本語ブランド提案。",
+    "upstream_commit": "e190e083b715b63172e1c4fea01bc5f9bb21a021",
+    "license": "Apache-2.0",
+    "license_paths": [
+      "examples/repositories/sol-editorial-showcase/LICENSE",
+      "examples/repositories/sol-editorial-showcase/NOTICE"
+    ],
+    "skill_paths": [
+      "examples/repositories/sol-editorial-showcase/SKILL.md"
+    ],
+    "production_status": "light_check_complete",
+    "requirements": [
+      "Python / python-pptx / lxml",
+      "固定原典Mck-ppt-design-skill",
+      "描画: Windows Microsoft PowerPoint",
+      "Zen Kaku Gothic New / Shippori Mincho / Space Grotesk"
+    ],
+    "commands": [
+      "python source/rebuild.py --input input/storyline.json --output deck-rebuilt.pptx"
+    ],
+    "steps": [
+      "input/storyline.jsonとPROMPT.txtを読む",
+      "6版式のMckEngine派生コードを実行",
+      "主スライドが開くことを確認"
+    ],
+    "guide": "examples/repositories/sol-editorial-showcase/README.md",
+    "limitations": [
+      "原典の標準ブランドルールをユーザー指定の編集誌風へ置換した明示派生",
+      "S3/S4 gateと全ページ詳細QAは未実施"
+    ],
+    "source_download": "downloads/sol-editorial-example-ja.zip",
+    "fork_download": "downloads/sol-editorial-ja.zip"
+  }
+]

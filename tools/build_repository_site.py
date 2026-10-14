@@ -1,43 +1,6 @@
-"""Repository-first UI; examples are children of the collected original projects."""
+"""Compatibility entry point for the current Japanese atelier."""
 from pathlib import Path
-import hashlib, html, json, runpy
-
-ROOT = Path(__file__).resolve().parents[1]
-shared = runpy.run_path(str(ROOT / 'tools/build_case_site.py'))
-head = shared['head'].replace('<a class="skip" href="#examples">制作事例へ</a>', '<a class="skip" href="#skills">スキル一覧へ</a>').replace('<a href="./#examples">制作事例</a><a href="./#skills">209件のスキル</a>', '<a href="./#skills">スキルから探す</a><a href="./#examples">制作した資料</a>')
-head = head.replace('</head>', '<link rel="stylesheet" href="assets/repository-studio.css"><script type="module" src="assets/repository-detail.mjs"></script></head>')
-for asset in ['assets/studio.css', 'assets/case-studio.css', 'assets/case-studio.mjs', 'assets/repository-studio.css', 'assets/repository-detail.mjs']:
-    version = hashlib.sha256((ROOT / asset).read_bytes()).hexdigest()[:16]
-    head = head.replace('"' + asset + '"', '"' + asset + '?v=' + version + '"')
-foot, dialog, category, fonts = [shared[k] for k in ['foot', 'dialog', 'category', 'fonts']]
-ledger = json.loads((ROOT / 'data/production-ledger.json').read_text(encoding='utf-8'))
-n = ledger['produced_repository_count']
-cases = json.loads((ROOT / 'data/case-studies.json').read_text(encoding='utf-8'))
-hero = next(c for c in cases if c['id'] == 'mck-design')
-home = head + '''<main><section class="shell hero collection-hero"><div class="hero-copy"><p class="eyebrow">209 GITHUB PROJECTS / JAPANESE SLIDE SKILLS</p><h1>このリポで、<br><span class="title-underline">どんな資料が作れる？</span></h1><p class="hero-description">GitHubで集めたスキルを、実際に使う。<br>日本語で作ったスライドと、その作り方をリポごとに。</p><div class="hero-actions"><a class="button primary" href="#skills">スキルと実例を見る ↓</a><a class="text-link" href="guide.html">使い始めるには ↗</a></div><p class="hero-caption">完成資料を再生 / PowerPoint・HTMLを取得 / 環境と手順を確認</p></div><div class="hero-art case-hero-art"><button class="hero-stage hero-case-button" data-open-case="''' + hero['id'] + '''" aria-label="Mckのエンジンで制作した日本語スライドを見る"><img src="''' + hero['interior'] + '''" width="640" height="360" alt="Mck公式エンジンで生成した日本語資料"><span>▶ このリポの実例を見る</span></button><div class="hero-stage-meta"><span>likaku / Mck-ppt-design-skill</span><span>公式エンジン → 実PowerPoint</span></div></div></section>
-<div class="feature-strip"><div class="shell"><span>元のスキル集 209リポ</span><span>この環境で制作したリポ ''' + str(n) + '''件</span><span>生成物と作り方をひと組に</span><span>個別の原典・条件を保持</span></div></div>
-<section class="shell section repository-catalog" id="skills"><div class="section-heading"><div><p class="eyebrow">REPOSITORY → REAL OUTPUT → HOW TO MAKE</p><h2>スキルを選んで、実例を見よう。</h2><p>実例のあるリポには、ここで生成した日本語の完成資料と使い方を付けています。</p></div></div>''' + category + '''
-<div class="catalog-tools"><label class="search"><span>⌕</span><input id="skill-query" type="search" placeholder="リポ名・作りたい資料で検索" aria-label="スキルを検索"></label><label>作例<select id="skill-status"><option value="all">すべての209リポ</option><option value="local">日本語の実例あり</option></select></label><label>並び順<select id="skill-order"><option value="produced">実例ありを先頭に</option><option value="stars">GitHubの人気順</option><option value="name">リポ名順</option></select></label></div>
-<p id="skill-results" class="results" aria-live="polite"></p><div id="skill-grid" class="skill-grid"></div></section>
-<section class="shell section repository-overview"><div><p class="eyebrow">YOUR NEXT DECK</p><h2>見るだけで終わらず、自分の内容で作る。</h2><p>リポごとの案内で、使用したスキル・必要な環境・入力・実行した手順を確認。日本語の依頼文をコピーし、元の方式で制作できます。</p><a href="guide.html" class="text-link">利用の流れ →</a></div><div class="repository-progress"><strong>''' + str(n) + ' / 209</strong><p>日本語の制作例があるリポ</p><p>残る' + str(ledger['remaining_repository_count']) + '''件も、原典の入口を確認済み。制作前のリポは「未制作」として掲載しています。</p><a class="text-link" href="data/production-ledger.json">リポ単位の制作記録 ↗</a></div></section>
-<section class="shell section" id="examples"><div class="section-heading"><div><p class="eyebrow">GENERATED WITH EACH ORIGINAL PROJECT</p><h2>制作した資料を、用途から見る。</h2><p>それぞれの原典のテンプレート・実装・生成方法で制作しています。</p></div></div><div class="case-filters" role="group" aria-label="制作事例の用途"><button data-use="all" aria-pressed="true">すべて</button><button data-use="提案" aria-pressed="false">提案</button><button data-use="報告" aria-pressed="false">報告</button><button data-use="研修" aria-pressed="false">研修</button><button data-use="企画" aria-pressed="false">企画</button><label>形式<select id="case-format"><option value="all">すべて</option><option value="pptx">PowerPoint</option><option value="html">Web</option></select></label></div><p id="case-results" class="results" aria-live="polite"></p><div id="case-grid" class="case-grid"></div></section>''' + fonts + '</main>' + foot + dialog + '</body></html>'
-(ROOT / 'index.html').write_text(home, encoding='utf-8', newline='\n')
-(ROOT / 'repository.html').write_text(head + '<main class="shell doc-shell"><div id="repository-detail"></div></main>' + foot + dialog + '</body></html>', encoding='utf-8', newline='\n')
-guide = '''<section class="doc-section"><h2>リポを選ぶところから。</h2><ol><li>一覧で「日本語の実例あり」を選び、気になるリポのスライドを再生する。</li><li>「使い方を見る」を開く。何を作ったか、原典のどの方法を使ったかを確認。</li><li>そのリポの手順で環境を用意。派生版がある場合は日本語版スキルを取得。</li><li>作例の入力と依頼文を、自分の題材・数値・読み手に合わせる。</li><li>資料を生成し、完成したPowerPointやHTMLを開いて全ページを確認する。</li></ol><p>リポには、指示を読むスキル、JSON生成器、MCP、Marp、変換器などがあります。導入と制作手順はリポの案内に記載しています。</p></section><section class="doc-section"><h2>実際の資料と確認範囲</h2><p>PowerPointの作例は実PPTXをPowerPoint本体で描画。HTMLはそのリポのruntimeで再生します。日本語の制作例、原作者の公開画像、制作前の状態を区別して掲載しています。</p><p>原典を取得した209件すべての動作を確認した表示ではありません。各作例の確認記録をご覧ください。</p></section><section class="doc-section"><h2>日本語の書体</h2><p>Noto Sans JP、Noto Serif JP、BIZ UDPGothicなどを用途と元スキルに合わせて使用。Web用には公式配布元のOFLと収録文字の記録を添付し、PowerPointは受け手のフォント環境も確認します。</p><a href="./#fonts">フォントの案内 →</a></section><section class="doc-section"><h2>制作の記録</h2><p><a href="data/production-ledger.json">掲載リポごとの制作台帳</a> · <a href="docs/PRODUCT_SPEC.md">Astraが改訂した仕様</a> · <a href="licenses.html">原典・個別条件</a></p></section>'''
-(ROOT / 'guide.html').write_text(head + '<main class="shell doc-shell"><section class="doc-hero"><h1>スキルを、自分の資料制作へ。</h1></section>' + guide + '</main>' + foot + dialog + '</body></html>', encoding='utf-8', newline='\n')
-
-profiles = json.loads((ROOT / 'data/repository-guides.json').read_text(encoding='utf-8'))
-terms = '''<section class="doc-section"><h2>カタログと、各リポの条件</h2><p>このカタログのCC0は、上流のスキル・コード・テンプレート・書体・作例画像へ広がりません。日本語派生版は原作者、固定コミット、原文のLICENSEとNOTICE、改良点を保持しています。</p><p>209件の原典入口を棚卸しし、実制作したリポについて使用範囲と配布対象を確認しています。原典取得だけを、実行確認や全素材の利用許可として表示していません。</p></section><section class="doc-section"><h2>実制作したリポと配布ソース</h2><p>各案内には、今回使った方式・入力・生成物・確認範囲があります。日本語派生版ZIPと制作ソースZIPから、対応する原文の条件を確認できます。</p><div class="license-table-wrap"><table class="doc-table"><thead><tr><th>原典リポジトリ</th><th>対象ソースの条件</th><th>案内・配布物</th></tr></thead><tbody>'''
-for p in sorted((p for p in profiles if p.get('example_ids')), key=lambda p: p['repository'].lower()):
-    repo = p['repository']
-    works = [c for c in cases if c['repository'] == repo]
-    first = works[0]
-    origin = 'https://github.com/' + repo + '/tree/' + p['upstream_commit']
-    legal = []
-    for name in p.get('license_paths', []):
-        legal.append('<a href="https://github.com/' + html.escape(repo) + '/blob/' + p['upstream_commit'] + '/' + html.escape(name) + '">' + html.escape(name) + '</a>')
-    fork = first.get('fork_download')
-    terms += '<tr><td><a href="' + origin + '">' + html.escape(repo) + '</a><br><small>' + p['upstream_commit'][:12] + '</small></td><td>' + html.escape(p.get('license') or '個別条件') + '<br>' + ' · '.join(legal) + '</td><td><a href="' + html.escape(first['guide']) + '">作例と作り方</a><br>' + ('<a href="' + html.escape(fork) + '" download>日本語派生ソース</a><br>' if fork else '') + '<a href="' + html.escape(first['source_download']) + '" download>制作ソース</a></td></tr>'
-terms += '''</tbody></table></div></section><section class="doc-section"><h2>方式ごとに保持する条件</h2><p>GuizangとDashiの対象コードはAGPL-3.0。配布する派生版には対応する変更後ソースと条件を同梱しています。Mckとminorun MarpはApache-2.0で、原文LICENSE・NOTICEと変更記録を保持しています。BentoはMITに加えて原典のNOTICEと固定shell契約を保持しています。</p><p>Dashi内のhtml-deck-to-pptx engineには専有の個別条件があり、Dashi内での利用に限定されています。このHTML制作例の日本語派生版とキットには、そのengineを分離収録・改変していません。再現時には完全な固定原典を取得し、同じDashi skill内でHTMLを生成します。PPTX engineの実行確認とは扱いません。</p><p>Anthropicの独自条件を持つPPTX実装は、この派生配布に含めていません。未制作リポの素材を一括で取り込む処理もありません。</p></section><section class="doc-section"><h2>書体・依存ライブラリー・公開画像</h2><p>Webに同梱した日本語・英字書体は公式配布元のOFLを保持し、サブセットの改変名とSHAを記録しています。PCのインストール済み書体を抜き出したものではありません。新しい原稿に使う場合は収録字形を確認し、PPTXの受け手には使用書体を用意します。</p><p><a href="data/fonts.json">日本語書体の配布元・改変名・SHA</a> · <a href="data/preset-fonts.json">英字書体とOFL</a> · <a href="data/case-downloads.json">配布ファイルとSHA</a></p><p>Reveal.js・Motion等のMIT、LucideのISCなど、取り込んだ依存物の原文表示をソースキットへ保持しています。原作者の公開紹介画像は一覧で明示しており、こちらの制作例として数えたり、派生ソースの素材として再配布したりしていません。</p></section><section class="doc-section"><h2>未制作リポの個別条件</h2><p>コードの条件と、テンプレート・画像・サービスの条件が異なる場合があります。各リポの案内と固定原典をご覧ください。たとえばGorden系のテンプレートには非商用制限、NanoBananaやGabberには原文条件の不足・不一致があり、利用可能な派生版として配布していません。</p><p><a href="data/repository-readiness.json">個別の実行条件と原文確認記録</a> · <a href="data/repository-audit.json">209件の取得記録</a></p></section>'''
-(ROOT / 'licenses.html').write_text(head + '<main class="shell doc-shell"><section class="doc-hero"><h1>原典と、個別の利用条件。</h1></section>' + terms + '</main>' + foot + dialog + '</body></html>', encoding='utf-8', newline='\n')
-print('Repository-first site built; ' + str(n) + ' real repositories represented')
+import runpy
+ROOT=Path(__file__).resolve().parents[1]
+runpy.run_path(str(ROOT/'tools/build_curated_collection.py'),run_name='__main__')
+runpy.run_path(str(ROOT/'tools/build_atelier_site.py'),run_name='__main__')
