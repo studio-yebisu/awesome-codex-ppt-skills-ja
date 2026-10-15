@@ -1,5 +1,4 @@
 @import url("./font-atelier-files.css");
-.font-atelier .fa-tabs button:last-child:nth-child(odd){grid-column:1/-1}
 .font-atelier .fa-family>.fa-individual-preview{display:block}
 .font-atelier .fa-family>.fa-individual-preview[hidden]{display:none}
 .font-atelier{--fa-ink:#151b1d;--fa-paper:#f4f1e9;--fa-lime:#d6fa53;color:var(--fa-ink);font-family:"Atelier Zen Kaku Gothic New",sans-serif;margin:0 auto;max-width:1280px}
@@ -31,3 +30,6 @@
 .font-atelier .fa-mobile-preset{display:none}.font-atelier .fa-mobile-preset select{width:100%;padding:13px 12px;margin-top:9px;font:inherit;font-size:15px;background:var(--fa-paper);color:var(--fa-ink);border:1px solid var(--fa-ink)}@media(max-width:760px){.font-atelier .fa-tabs{display:none}.font-atelier .fa-mobile-preset{display:block;font-size:13px;padding:18px 0;border-top:1px solid var(--fa-ink);border-bottom:1px solid var(--fa-ink)}}
 
 @media(max-width:760px){.font-atelier .fa-intro{padding:14px 0 18px}.font-atelier .fa-intro h3{font-size:26px;line-height:1.4;letter-spacing:0;margin:12px 0}.font-atelier .fa-intro>p:last-child{font-size:14px}}
+
+@media(min-width:761px){.font-atelier .fa-tabs{grid-template-columns:repeat(3,minmax(0,1fr))}.font-atelier .fa-tabs button:nth-child(n){border-right:1px solid #151b1d42;border-bottom:1px solid #151b1d42}.font-atelier .fa-tabs button:nth-child(3n){border-right:0}.font-atelier .fa-tabs button:nth-last-child(-n+3){border-bottom:0}}
+@media(min-width:1000px){.font-atelier .fa-tabs{grid-template-columns:repeat(5,minmax(0,1fr))}.font-atelier .fa-tabs button:nth-child(n){border-right:1px solid #151b1d42;border-bottom:1px solid #151b1d42}.font-atelier .fa-tabs button:nth-child(5n){border-right:0}.font-atelier .fa-tabs button:nth-last-child(-n+5){border-bottom:0}}
