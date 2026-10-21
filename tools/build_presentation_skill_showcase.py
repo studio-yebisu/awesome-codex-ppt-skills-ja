@@ -57,7 +57,7 @@ def outline(brief):
 TITLE_TOP_OLD='''  const titleTop = v2 && headerMode !== 'bar'
     && compositionGrammar(preset, slideData) === 'editorial-spread' ? 0.26 : 0;
 '''
-TITLE_TOP_NEW='''  // Studio Yebisu local adaptation (operations-grid only): the Operating Grid
+TITLE_TOP_NEW='''  // 八百万図AIツールボックス local adaptation (operations-grid only): the Operating Grid
   // frame paints its top bars from y=0.08in to y=0.19in. Start the measured
   // header at the grammar's 0.34in top inset; headerMetrics then moves the body.
   const headerGrammar = compositionGrammar(preset, slideData);
@@ -74,7 +74,7 @@ STAGE_INK_OLD='''  const muted = dark
   const accent = cleanHex(preset.accent_primary, '1493A4');
   const secondary = cleanHex(preset.accent_secondary, accent);
 '''
-STAGE_INK_NEW='''  // Studio Yebisu local adaptation: stage text must reach 4.5:1 on the actual
+STAGE_INK_NEW='''  // 八百万図AIツールボックス local adaptation: stage text must reach 4.5:1 on the actual
   // stage background. Original accent/secondary remain decorative strokes;
   // text uses the first readable tint (dark) or shade (light) of the same hue.
   const muted = dark

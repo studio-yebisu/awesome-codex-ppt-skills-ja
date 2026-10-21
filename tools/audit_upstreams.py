@@ -26,7 +26,7 @@ def api(path):
 
 def raw(repo, commit, filename):
     url = f"https://raw.githubusercontent.com/{repo}/{commit}/{filename}"
-    request = urllib.request.Request(url, headers={"User-Agent": "StudioYebisu-license-audit"})
+    request = urllib.request.Request(url, headers={"User-Agent": "八百万図AIツールボックス-license-audit"})
     with urllib.request.urlopen(request, timeout=40) as response:
         return response.read()
 

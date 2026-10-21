@@ -12,7 +12,7 @@ FONTS=[('notosansjp','NotoSansJP[wght].ttf','noto-sans-jp','Yebisu Noto Sans JP'
        ('bizudpgothic','BIZUDPGothic-Regular.ttf','biz-udpgothic-regular','Yebisu BIZ UDPGothic'),
        ('bizudpgothic','BIZUDPGothic-Bold.ttf','biz-udpgothic-bold','Yebisu BIZ UDPGothic')]
 def get(url):
-    with urlopen(Request(url,headers={'User-Agent':'StudioYebisu-font-build'}),timeout=60) as r:return r.read()
+    with urlopen(Request(url,headers={'User-Agent':'八百万図AIツールボックス-font-build'}),timeout=60) as r:return r.read()
 if __name__=='__main__':
     cache=ROOT/'.build/fonts';cache.mkdir(parents=True,exist_ok=True)
     marker=cache/'commit.txt'

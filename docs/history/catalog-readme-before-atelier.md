@@ -1,10 +1,10 @@
 # AIスライド制作スキル集｜リポジトリごとの日本語実例と使い方
 
-掲載GitHubリポジトリを実際に使い、**そのリポで作った日本語資料 → 全ページ再生 → 日本語の使い方 → 派生スキル・再現用ソースキット**へ進めるガイドです。Studio Yebisuが原典の調査、日本語制作、派生スキルとサイトの開発を担当します。原典カタログは [zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)です。
+掲載GitHubリポジトリを実際に使い、**そのリポで作った日本語資料 → 全ページ再生 → 日本語の使い方 → 派生スキル・再現用ソースキット**へ進めるガイドです。八百万図AIツールボックスが原典の調査、日本語制作、派生スキルとサイトの開発を担当します。原典カタログは [zhuyansen/awesome-codex-ppt-skills](https://github.com/zhuyansen/awesome-codex-ppt-skills)です。
 
 **33リポジトリで制作した36冊・219ページを掲載しています。** 元209件・6分類の作者、分類、一覧は保持しています。209件の原典入口を取得・棚卸し済みで、残る176件は未制作です。原典の取得と、実行・生成の成功は別に記録します。
 
-今回の改修はローカル実装・未公開です。[ローカルサイト](http://127.0.0.1:8847/)で再生できます。[既存の公開サイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)は更新前の版です。
+今回の改修はローカル実装・未公開です。[ローカルサイト](http://127.0.0.1:8847/)で再生できます。[既存の公開サイト](https://studio-yebisu.github.io/yaoyorozu-ai-toolbox-slides/)は更新前の版です。
 
 [全209件](#catalog) · [6カテゴリ](#choose) · [製品仕様](docs/PRODUCT_SPEC.md) · [制作台帳](data/production-ledger.json) · [確認記録](docs/QA.md) · [出典と利用条件](docs/出典とライセンス.md)
 
@@ -434,7 +434,7 @@ PPTXなどのPowerPoint形式を扱う制作・変換ツール。
 3. 評価対象となるREADMEが存在すること。
 4. スター数が50以上の場合は対象領域に該当していること。50未満の場合はスター数5以上に加え、作例、一つのコマンドで始められる手順、具体的な成果物、十分なドキュメントが揃っていること。
 
-選定判定はREADMEを解析するモデルが行っています。基準境界にあるツールの分類には揺らぎが生じる場合があり、掲載基準や評価に関する指摘は原版リポジトリへ直接フィードバックできます。本リポジトリの日本語表記に関する修正は、[修正提案](https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja/issues/new/choose)までお寄せください。
+選定判定はREADMEを解析するモデルが行っています。基準境界にあるツールの分類には揺らぎが生じる場合があり、掲載基準や評価に関する指摘は原版リポジトリへ直接フィードバックできます。本リポジトリの日本語表記に関する修正は、[修正提案](https://github.com/studio-yebisu/yaoyorozu-ai-toolbox-slides/issues/new/choose)までお寄せください。
 
 ## 関連する一覧
 
@@ -442,7 +442,7 @@ PPTXなどのPowerPoint形式を扱う制作・変換ツール。
 
 ## 修正・更新について
 
-[参加方法](CONTRIBUTING.md) · [翻訳・説明文の修正を提案](https://github.com/studio-yebisu/awesome-codex-ppt-skills-ja/issues/new/choose)
+[参加方法](CONTRIBUTING.md) · [翻訳・説明文の修正を提案](https://github.com/studio-yebisu/yaoyorozu-ai-toolbox-slides/issues/new/choose)
 
 機械処理向けの日本語データは[data/skills.json](data/skills.json)にあります。
 

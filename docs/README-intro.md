@@ -1,8 +1,8 @@
 # YEBISU SLIDE STUDIO
 
-**日本語でつくる、伝わるスライド。** Studio Yebisuが企画・編集・制作する、日本語のAIスライド制作プロジェクトです。
+**日本語でつくる、伝わるスライド。** 八百万図AIツールボックスが企画・編集・制作する、日本語のAIスライド制作プロジェクトです。
 
-**[ウェブサイト](https://studio-yebisu.github.io/awesome-codex-ppt-skills-ja/)** · [使い方](../guide.html) · [出典と利用条件](../licenses.html) · [制作記録](制作記録.md)
+**[ウェブサイト](https://studio-yebisu.github.io/yaoyorozu-ai-toolbox-slides/)** · [使い方](../guide.html) · [出典と利用条件](../licenses.html) · [制作記録](制作記録.md)
 
 カタログの翻訳を出発点に、日本語の作例、実行できる派生スキル、フォントの案内を独立して開発しています。原作者による公式日本語版・推奨ではありません。URLとリポジトリ名は既存のものを維持しています。
 

@@ -107,7 +107,7 @@ class Production:
                       'references': source_files, 'commands_executed': self.commands,
                       'artifact': rel(artifact_path), 'artifact_sha256': hfile(artifact_path),
                       'input_sha256': hfile(self.out / 'input/data.json'),
-                      'authored_by': 'Studio Yebisu / Codex',
+                      'authored_by': '八百万図AIツールボックス / Codex',
                       'scope': '実際に原典の固有方法を使った日本語作例。エージェントが書いた本文を使用。',
                       'checked_at': datetime.now(timezone.utc).isoformat()}
         dump(self.out / 'PROVENANCE.json', provenance)

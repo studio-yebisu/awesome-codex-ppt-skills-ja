@@ -68,7 +68,7 @@ def ops():
     text('PLAN / NOT AN ACTUAL EVENT',10.44,6.92,2.55,.3,8,NAVY,font=EN)
     note='架空の一日ワークショップ企画。原典の1枚企画書として生成。午前10時・正午・午後3時は仮の行程案で開催実績や確定予定ではない。開催日時、人数、会場、材料、安全管理、参加条件は未定。右の関係図は、人・道具・街が場に関わる概念で、時系列や相互契約を意味しない。'
     o.append(dict(op='add_notes',slide_index=0,text=note))
-    o.append(dict(op='set_core_properties',title='土曜日を、街の作業場に。',subject='架空の一日ワークショップ企画',author='Studio Yebisu',keywords='fictional concept; original agent-slides native operations'))
+    o.append(dict(op='set_core_properties',title='土曜日を、街の作業場に。',subject='架空の一日ワークショップ企画',author='八百万図AIツールボックス',keywords='fictional concept; original agent-slides native operations'))
     return o,note
 
 PROMPT='''架空の一日ワークショップ企画「土曜日を、街の作業場に。」を、企画の意図がすぐ伝わる完成1枚のネイティブ編集可能なPowerPointにしてください。紺、鮮やかな橙、白。巨大な日本語見出し、短い企画の約束、仮の一日の流れ、人・道具・街と場の関係図を組みます。原典mpuig/agent-slidesのtemplate extract→preflight→plan+ops→dry-run→render CLIを実際に使い、別の汎用rendererへ名前を貼らないでください。自作の紺/橙templateに書式付きtitle/body placeholderと複数layoutを用意し、元extractで契約化。Workshop Splitの背景・位置・字体をset_semantic_textで継承し、残りの要素は元native operationで生成。1枚指定を優先して表紙・免責・終頁を追加しない。日時・人数・会場・参加条件は未定、行程は仮案と表示し、実績を捏造しない。原典slides qaを実行しok:true、全1頁の実描画を確認する。独立評価は別記録とし、未確認を合格扱いしない。入力、依頼文、原典source/license、短い日本語SKILL、PPTX、PNG/PDF、2ZIPを完成させてください。'''

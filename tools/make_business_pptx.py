@@ -21,7 +21,7 @@ def lines(x, y, values, size=26, gap=49, color="#202C29", weight=400):
 
 def page(title, body, n, total, label, accent="#21654C", role="content"):
     header=group("heading","64 48 1150 112",text(64,71,16,label,accent,700)+text(64,135,42,title,weight=700))
-    footer=group("footer","64 659 1150 28",text(64,679,14,"架空の組織・数値による制作サンプル / STUDIO YEBISU","#53675E")+text(1115,679,16,f"{n:02d} / {total:02d}","#53675E"))
+    footer=group("footer","64 659 1150 28",text(64,679,14,"架空の組織・数値による制作サンプル / 八百万図AIツールボックス","#53675E")+text(1115,679,16,f"{n:02d} / {total:02d}","#53675E"))
     return f'<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720" lang="ja" font-family="Noto Sans JP" data-pptx-page-role="{role}"><rect id="background" data-pptx-role="background" width="1280" height="720" fill="#F7F5EE"/>{header}{body}{footer}</svg>'
 
 def body(content):

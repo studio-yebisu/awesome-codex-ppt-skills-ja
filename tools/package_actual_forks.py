@@ -91,7 +91,7 @@ for repo,name,description,paths,body in CONFIG:
     for f in sorted(dest.rglob('*')):
         if f.is_file() and f.name not in ['SOURCE.json'] and '__pycache__' not in f.parts and f.suffix!='.pyc':
             source_files.append(dict(path=f.relative_to(dest).as_posix(),sha256=hashlib.sha256(f.read_bytes()).hexdigest()))
-    record=dict(repository=repo,commit=pin['commit'],license=pin['github_license'],modified_on='2026-10-13',maintainer='Studio Yebisu',scope='source-based Japanese entrypoint; original implementation retained',files=source_files)
+    record=dict(repository=repo,commit=pin['commit'],license=pin['github_license'],modified_on='2026-10-13',maintainer='八百万図AIツールボックス',scope='source-based Japanese entrypoint; original implementation retained',files=source_files)
     (dest/'SOURCE.json').write_text(json.dumps(record,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
     zip_folder(dest,DOWNLOADS/(name+'.zip'))
     pin['derived_skill']=name;pin['status']='upstream_implementation_packaged_japanese_entrypoint'

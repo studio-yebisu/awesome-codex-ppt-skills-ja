@@ -54,7 +54,7 @@ def guizang():
     template=template.replace('Noto Serif SC','Noto Serif JP').replace('Noto Sans SC','Noto Sans JP')
     template=template.replace('<style>','<style>\n'+embed_fonts(['Noto Sans JP','Noto Serif JP','Playfair Display','Source Serif 4','IBM Plex Mono'])+'\n',1)
     def chrome(left,page):return f'<div class="chrome"><div>{left}</div><div>JAPANESE EDITION · {page:02d} / 04</div></div>'
-    def foot(left):return f'<div class="foot"><div>{left}</div><div>STUDIO YEBISU · 2026</div></div>'
+    def foot(left):return f'<div class="foot"><div>{left}</div><div>八百万図AIツールボックス · 2026</div></div>'
     sections=[]
     sections.append(f'''<section class="slide hero dark" data-slide-id="cover" data-animate="hero">
       {chrome('GUIZANG · MAGAZINE',1)}
@@ -147,7 +147,7 @@ def frontend():
     # The entire upstream viewport-base.css is present without modification.
     doc=doc.replace('/* --- PASTE viewport-base.css CONTENTS HERE --- */',base+'\n'+embed_fonts(['Noto Sans JP','Archivo Black','Space Grotesk'])+'\n'+styles)
     def top(n):return f'<div class="slide-top"><span class="number">{n:02d}</span><div class="breadcrumbs"><span>FRONTEND SLIDES</span><span class="selected">BOLD SIGNAL</span></div></div>'
-    def footer(n):return f'<div class="slide-footer"><span>JAPANESE EDITION / STUDIO YEBISU</span><span>{n:02d} / 04</span></div>'
+    def footer(n):return f'<div class="slide-footer"><span>JAPANESE EDITION / 八百万図AIツールボックス</span><span>{n:02d} / 04</span></div>'
     sections=[f'''<section class="slide title-slide active"><div>{top(1)}</div><div class="signal-card reveal"><div class="eyebrow" data-edit>日本語で、伝えるためのスライド。</div><div class="outline" aria-hidden="true"></div><h1 data-edit>伝えたいことを、<br>まっすぐに。</h1></div>{footer(1)}</section>''',
       f'''<section class="slide">{top(2)}<h2 class="headline reveal" data-edit>一枚に、ひとつの主張。</h2><div class="three-up"><div class="principle reveal"><span class="n">01</span><h3 data-edit>結論から。</h3><p data-edit>このページで伝えたいことを、<br>最初の一文にする。</p></div><div class="principle reveal"><span class="n">02</span><h3 data-edit>理由を添える。</h3><p data-edit>数字、比較、具体例。<br>主張を支える材料を選ぶ。</p></div><div class="principle reveal"><span class="n">03</span><h3 data-edit>余白を残す。</h3><p data-edit>読ませる場所を絞り、<br>視線の行き先を決める。</p></div></div>{footer(2)}</section>''',
       f'''<section class="slide">{top(3)}<h2 class="headline reveal" data-edit>日本語にも、デザインを。</h2><div class="type-split"><div class="type-sample reveal"><strong style="font-weight:700" data-edit>見出しは、<br>短く力強く。</strong><p data-edit>Noto Sans JP / 700<br>意味のまとまりで、改行する。</p></div><div class="type-sample reveal"><strong style="font-size:60px;font-weight:400" data-edit>本文は、<br>落ち着いて読める。</strong><p data-edit>Noto Sans JP / 400<br>見出しとの大きさに、差をつける。</p></div></div>{footer(3)}</section>''',

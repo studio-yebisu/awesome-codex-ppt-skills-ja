@@ -156,7 +156,7 @@ def prepare():
     t['accent']['negative']='A65A00'
     theme_js='const T = '+json.dumps({'bg':t['background'],'tx':{'pri':t['text']['primary'],'sec':t['text']['secondary'],'mut':t['text']['muted'],'wh':'FFFFFF'},'ac':{'pos':t['accent']['positive'],'neg':t['accent']['negative'],'emp':t['accent']['emphasis']},'chart':t['chart'],'cardFill':t['card_fill'],'divider':t['divider']},indent=2)+';'
     adapted=re.sub(r'const T = \{.*?\n\};',theme_js,original,count=1,flags=re.S)
-    adapted=adapted.replace('"Georgia"','"Shippori Mincho"').replace('"Calibri"','"BIZ UDPGothic"').replace('pres.author = "Presenter Name";','pres.author = "Studio Yebisu";').replace('pres.title = "Presentation Title";','pres.title = "平均の、その先。";')
+    adapted=adapted.replace('"Georgia"','"Shippori Mincho"').replace('"Calibri"','"BIZ UDPGothic"').replace('pres.author = "Presenter Name";','pres.author = "八百万図AIツールボックス";').replace('pres.title = "Presentation Title";','pres.title = "平均の、その先。";')
     adapted=adapted.replace('margin: 0\n  });','margin: 0, shrinkText: true\n  });')
     write(source/'original-helpers.cjs',original)
     write(source/'generate_slides.cjs',adapted+SLIDES)

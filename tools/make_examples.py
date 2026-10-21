@@ -17,10 +17,10 @@ def page(title,nodes,notes,background=None,duration=7):
     if background:p['background']=background
     return p
 def head(label,title,accent,ink):return [text(72,72,label,18,accent,700,spacing=2),text(72,157,title,48,ink,700),line(72,195,1208,195,accent,1)]
-def footer(num,ink,note='Studio Yebisu · オリジナル作例'):
+def footer(num,ink,note='八百万図AIツールボックス · オリジナル作例'):
     return [text(72,678,note,16,ink),text(1208,678,f'{num:02d} / 04',16,ink,anchor='end')]
 def deck(id,title,category,style,font,bg,ink,accent,skill,description):
-    return dict(id=id,title=title,category=category,style=style,font=font,background=bg,ink=ink,accent=accent,skill=skill,description=description,credit='Studio Yebisu',license='CC0-1.0',slides=[])
+    return dict(id=id,title=title,category=category,style=style,font=font,background=bg,ink=ink,accent=accent,skill=skill,description=description,credit='八百万図AIツールボックス',license='CC0-1.0',slides=[])
 
 blue='#243CDA';navy='#162139';cream='#F4F1E8';red='#BC4933';green='#285A4A';dark='#151C32';cyan='#8CD9EE';yellow='#DDF569'
 decks=[]
@@ -40,7 +40,7 @@ decks.append(d)
 d=deck('local-coffee','街のコーヒースタンド企画','pitch','エディトリアル','Noto Serif JP',cream,'#332F28',red,'yebisu-editorial-slides','余白と明朝体で、企画の世界観を伝える。')
 d['slides']=[
 page('朝のコーヒーを、街の習慣に。',[
-text(72,92,'CONCEPT / 架空の店舗企画',18,red,700,spacing=2),circle(982,343,216,red),circle(982,343,169,cream),circle(982,343,119,red),text(72,260,'朝のコーヒーを、\n街の習慣に。',64,'#332F28',600,leading=98),text(72,534,'通勤路に、小さな寄り道を。',28,'#332F28'),line(72,605,1208,605,'#332F28',1),text(72,669,'Studio Yebisu · オリジナル作例',16,'#332F28')],'架空のコーヒースタンド企画。特定の実店舗や市場調査を扱っていません。'),
+text(72,92,'CONCEPT / 架空の店舗企画',18,red,700,spacing=2),circle(982,343,216,red),circle(982,343,169,cream),circle(982,343,119,red),text(72,260,'朝のコーヒーを、\n街の習慣に。',64,'#332F28',600,leading=98),text(72,534,'通勤路に、小さな寄り道を。',28,'#332F28'),line(72,605,1208,605,'#332F28',1),text(72,669,'八百万図AIツールボックス · オリジナル作例',16,'#332F28')],'架空のコーヒースタンド企画。特定の実店舗や市場調査を扱っていません。'),
 page('朝の5分に合う体験',head('EXPERIENCE','朝の5分に合う体験',red,'#332F28')+[
 text(72,297,'見つける',40,red,600),text(72,373,'通りからメニューが見える',25,'#332F28'),text(514,297,'選ぶ',40,red,600),text(514,373,'3つの定番から注文する',25,'#332F28'),text(963,297,'受け取る',40,red,600),text(963,373,'持ち歩きやすいカップで',25,'#332F28'),line(72,432,1208,432,red,2),text(72,553,'迷う時間を減らし、味を覚えてもらう。',40,'#332F28',600)]+footer(2,'#332F28'),'「5分」は企画上の体験目標です。3つの定番メニューも想定で、実測ではありません。'),
 page('売上モデルを比較する',head('ILLUSTRATIVE DATA','売上モデルを比較する',red,'#332F28')+[
@@ -99,6 +99,6 @@ decks.append(d)
 
 for d in decks:
     d['prompt']=f"日本語で『{d['title']}』の4枚のスライドを作ってください。{d['style']}の見た目で、{d['font']}を使い、16:9のSVGと再生HTMLを出力してください。文字と図形を編集できる形にし、1枚につき伝える内容を絞ってください。各ページに発表者ノートを付け、架空の数値・企画はその旨を明示してください。"
-    d['production']=dict(author='Studio Yebisu',renderer='Studio Yebisu SVG renderer',pptx='OpenAI Artifact Tool',upstream_execution=False,description='派生スキルの制作方針を反映した独自作例。上流プログラムを実行した結果ではありません。')
+    d['production']=dict(author='八百万図AIツールボックス',renderer='八百万図AIツールボックス SVG renderer',pptx='OpenAI Artifact Tool',upstream_execution=False,description='派生スキルの制作方針を反映した独自作例。上流プログラムを実行した結果ではありません。')
 (ROOT/'data/decks.json').write_text(json.dumps(decks,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 print(f'{len(decks)} decks / {sum(len(d["slides"]) for d in decks)} slides authored')

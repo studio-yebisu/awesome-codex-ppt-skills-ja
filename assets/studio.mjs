@@ -10,7 +10,7 @@ function gallery(filter='all'){
   $('#filter-status').textContent=`${filter==='all'?'すべて':labels[filter]}：${visible.length}件の作例`;
 }
 function showSkills(){
-  $('#skill-grid').innerHTML=skills.filter(s=>s.upstream).map(s=>`<article class="skill-card"><div class="skill-card-head"><span class="skill-symbol" aria-hidden="true">${xml(s.symbol)}</span><span class="license-chip">${xml(s.license)}</span></div><h3>${xml(s.title)}</h3><p>${xml(s.description)}</p><p class="skill-origin">派生元：<a href="${xml(s.upstream.url)}" target="_blank" rel="noopener noreferrer">${xml(s.upstream.repository)}</a><br>日本語改修：Studio Yebisu / ${xml(s.id)}</p><div class="skill-bottom"><a href="downloads/${xml(s.id)}.zip" download>スキルを入手 ↓</a><a href="skills/${xml(s.id)}/CHANGES.md">改修内容 ↗</a></div></article>`).join('');
+  $('#skill-grid').innerHTML=skills.filter(s=>s.upstream).map(s=>`<article class="skill-card"><div class="skill-card-head"><span class="skill-symbol" aria-hidden="true">${xml(s.symbol)}</span><span class="license-chip">${xml(s.license)}</span></div><h3>${xml(s.title)}</h3><p>${xml(s.description)}</p><p class="skill-origin">派生元：<a href="${xml(s.upstream.url)}" target="_blank" rel="noopener noreferrer">${xml(s.upstream.repository)}</a><br>日本語改修：八百万図AIツールボックス / ${xml(s.id)}</p><div class="skill-bottom"><a href="downloads/${xml(s.id)}.zip" download>スキルを入手 ↓</a><a href="skills/${xml(s.id)}/CHANGES.md">改修内容 ↗</a></div></article>`).join('');
 }
 function showEngines(upstreams){
   const choices=[['slidevjs/slidev','Slidev','コードと図解に強い、Web発表','MarkdownとVueで組み立てる、開発者向けのプレゼンテーション環境。テーマや発表者モードを使いたいときに。','https://sli.dev/guide/'],['marp-team/marp','Marp','Markdownから、配れる資料へ','文章中心の原稿を、PDFやスライドへ。形式を揃えた技術資料や定期的な報告を、テキストで管理できます。','https://marp.app/'],['hakimel/reveal.js','reveal.js','ブラウザで、発表を組み立てる','HTMLのスライドに、ページ移動や発表者ノートを追加。Webの表現を活かした発表の制作基盤です。','https://revealjs.com/'],['gitbrent/PptxGenJS','PptxGenJS','文字と図形を、PowerPointへ','JavaScriptからPPTXを作るライブラリ。配布スキルの簡易exporterでも、ネイティブな文字と図形の出力に使っています。','https://gitbrent.github.io/PptxGenJS/']];
@@ -47,7 +47,7 @@ function openDeck(id,button){
   const deck=decks.find(d=>d.id===id);if(!deck)return;
   stop();current=deck;index=0;elapsed=0;trigger=button;
   $('#player-title').textContent=deck.title;$('#player-category').textContent=`${labels[deck.category]} / ${deck.style}`;
-  $('#player-description').textContent=`${deck.description} 制作：Studio Yebisu。SVG・HTMLの動きと、編集用PPTXの静止スライドを収録。`;
+  $('#player-description').textContent=`${deck.description} 制作：八百万図AIツールボックス。SVG・HTMLの動きと、編集用PPTXの静止スライドを収録。`;
   $('#player-pptx').href=`downloads/${deck.id}.pptx`;$('#player-html').href=`examples/${deck.id}/index.html`;$('#player-source').href=`downloads/${deck.id}-source.zip`;$('#player-skill').href=`downloads/${deck.skill}.zip`;
   $('#slide-selector').innerHTML=deck.slides.map((s,i)=>`<button type="button" data-slide="${i}" aria-label="${i+1}枚目：${xml(s.title)}" aria-current="${i===0}">${renderSlide(deck,i,{label:false})}</button>`).join('');
   $('#player-notes').hidden=true;$('#notes-toggle').setAttribute('aria-expanded','false');dialog.querySelector('.copy-fallback')?.remove();

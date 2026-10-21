@@ -12,7 +12,7 @@ def build(args):
   shutil.copytree(up,work,ignore=shutil.ignore_patterns('examples','.git','node_modules','dist'))
   receipt={'unchanged_original':str(up),'verified_private_target':str(work),'within_workspace':True,'third_party_examples_not_copied':True}
   (logs/'init-path.json').write_text(json.dumps(receipt,indent=2)+'\n',encoding='utf-8')
-  init=subprocess.run([npm,'run','init','--','--title','パンが、店先に届くまで。','--author','Studio Yebisu / 架空企画','--lang','ja','--theme','light','--name','bread-stage'],cwd=work,capture_output=True,text=True,encoding='utf-8')
+  init=subprocess.run([npm,'run','init','--','--title','パンが、店先に届くまで。','--author','八百万図AIツールボックス / 架空企画','--lang','ja','--theme','light','--name','bread-stage'],cwd=work,capture_output=True,text=True,encoding='utf-8')
   (logs/'init-log.txt').write_text(init.stdout+init.stderr,encoding='utf-8');init.check_returncode()
  # Content audit precedes authored code. The source and audit are copied as inputs.
  for d in ['docs','reference']:shutil.copytree(case/d,work/d,dirs_exist_ok=True)

@@ -158,7 +158,7 @@ if __name__=='__main__':
         download='downloads/skills/'+case['fork_id']+'.md'
         (ROOT/download).write_text(skill_text(entry,profiles[case['repository']],case),encoding='utf-8')
         case_recipes[case['id']]={'skill_download':download,'skill_source':source,'skill_source_sha256':hashlib.sha256((ROOT/source).read_bytes()).hexdigest(),'fork_download':case.get('fork_download'),'source_download':case.get('source_download'),'upstream_commit':case.get('upstream_commit') or profiles[case['repository']]['upstream_commit']}
-    dump('data/product-collection.json',{'updated_at':'2026-10-15','title':'Studio Yebisu AIスライドスキル','policy':'原典スキルの効果・入力・出力と、その機能を使った実作例から選ぶ','archive':'data/skills.json','entries':entries,'active_case_ids':active_case_ids,'case_recipes':case_recipes,'excluded':exclusions})
+    dump('data/product-collection.json',{'updated_at':'2026-10-15','title':'八百万図AIツールボックス AIスライドスキル','policy':'原典スキルの効果・入力・出力と、その機能を使った実作例から選ぶ','archive':'data/skills.json','entries':entries,'active_case_ids':active_case_ids,'case_recipes':case_recipes,'excluded':exclusions})
     with ZipFile(ROOT/'downloads/yebisu-japanese-skill-entries.zip','w',ZIP_DEFLATED) as z:
         for download in sorted({r['skill_download'] for r in case_recipes.values()}):z.write(ROOT/download,Path(download).name)
         z.writestr('README.md','日本語の指示本文集です。各本文の固定原典と個別ライセンスを参照してください。実装・原文LICENSEはサイトの一式ZIPから別途取得できます。\n')

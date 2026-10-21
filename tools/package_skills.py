@@ -71,13 +71,13 @@ if __name__=='__main__':
     for pack in PACKS:
         folder=ROOT/'skills'/pack['id'];folder.mkdir(parents=True,exist_ok=True)
         upstream=next((s for s in sources if s['repository']==pack['repository']),None)
-        origin=f"\n派生元：[{upstream['repository']}]({upstream['url']}) / `{upstream['commit']}`。原作者の公式日本語版ではありません。原文・許諾・変更履歴は [CHANGES.md](CHANGES.md) と [LICENSE](LICENSE) を参照。\n" if upstream else '\nStudio Yebisuによる独自制作。CC0-1.0。\n'
+        origin=f"\n派生元：[{upstream['repository']}]({upstream['url']}) / `{upstream['commit']}`。原作者の公式日本語版ではありません。原文・許諾・変更履歴は [CHANGES.md](CHANGES.md) と [LICENSE](LICENSE) を参照。\n" if upstream else '\n八百万図AIツールボックスによる独自制作。CC0-1.0。\n'
         write(folder/'SKILL.md',f'''---
 name: {pack['id']}
 description: {pack['description']} 単なる既存文章の校正には使わない。
 metadata:
   license: {pack['license']}
-  author: Studio Yebisu
+  author: 八百万図AIツールボックス
 ---
 
 # {pack['title']}
@@ -111,7 +111,7 @@ JSON制作と同梱CLIの対応範囲は [入出力](references/schema.md) に�
             write(folder/'UPSTREAM.json',json.dumps(upstream,ensure_ascii=False,indent=2)+'\n')
             write(folder/'CHANGES.md',f'''# 日本語派生版の変更
 
-派生元：{upstream['url']}\n固定コミット：`{upstream['commit']}`\nライセンス：{pack['license']}\n改修者：Studio Yebisu\n改修日：2026-10-13
+派生元：{upstream['url']}\n固定コミット：`{upstream['commit']}`\nライセンス：{pack['license']}\n改修者：八百万図AIツールボックス\n改修日：2026-10-13
 
 上流の入口文書を土台に、実行フローを独立した日本語版へ再設計しました。上流のリポジトリ全体のミラーではありません。
 
@@ -127,8 +127,8 @@ AGPL由来パッケージはAGPL-3.0-onlyとして配布し、改変して再配
             upstream['status']='forked_with_license_and_source'
         else:
             shutil.copy2(ROOT/'LICENSE',folder/'LICENSE')
-            write(folder/'CHANGES.md','# 制作記録\n\nStudio Yebisuによる独自の日本語スライド制作スキル。2026-10-13。\n')
-        write(folder/'NOTICE.md',f"# 帰属\n\n{origin}\n独自改修・制作CLI：Studio Yebisu。パッケージの利用条件は {pack['license']}。\nPPTX生成に使用するPptxGenJS（Greg Brent）はMIT、Node.jsは各配布元の条件に従います。依存本体はこのZIPに含みません。\n")
+            write(folder/'CHANGES.md','# 制作記録\n\n八百万図AIツールボックスによる独自の日本語スライド制作スキル。2026-10-13。\n')
+        write(folder/'NOTICE.md',f"# 帰属\n\n{origin}\n独自改修・制作CLI：八百万図AIツールボックス。パッケージの利用条件は {pack['license']}。\nPPTX生成に使用するPptxGenJS（Greg Brent）はMIT、Node.jsは各配布元の条件に従います。依存本体はこのZIPに含みません。\n")
         data.append({k:v for k,v in pack.items() if k not in ['route','repository']}|{'upstream': {'repository':upstream['repository'],'url':upstream['url'],'commit':upstream['commit']} if upstream else None})
     for s in sources:
         if not s['derived_skill']:s['status']='excluded_restricted_derivatives' if s['repository']=='anthropics/skills' else 'license_reviewed_reference_only'

@@ -1,4 +1,4 @@
-// Original portable native-object exporter by Studio Yebisu. CC0-1.0.
+// Original portable native-object exporter by 八百万図AIツールボックス. CC0-1.0.
 // PptxGenJS is an external MIT-licensed dependency; not bundled in the skill.
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -9,7 +9,7 @@ try{await fs.stat(output);throw new Error('出力ファイルが存在します�
 const {default:PptxGenJS}=await import('pptxgenjs');
 const deck=validateDeck(JSON.parse(await fs.readFile(input,'utf8')));
 const pptx=new PptxGenJS();pptx.defineLayout({name:'YEBISU',width:13.333333,height:7.5});pptx.layout='YEBISU';
-pptx.author='Studio Yebisu';pptx.subject='日本語の編集可能スライド';pptx.title=deck.title;pptx.lang='ja-JP';
+pptx.author='八百万図AIツールボックス';pptx.subject='日本語の編集可能スライド';pptx.title=deck.title;pptx.lang='ja-JP';
 const color=(s,fallback='171B27')=>/^#[0-9a-f]{6}$/i.test(s||'')?s.slice(1):fallback;
 for(const page of deck.slides){
   const slide=pptx.addSlide();slide.background={color:color(page.background||deck.background)};

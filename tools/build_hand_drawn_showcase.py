@@ -23,7 +23,7 @@ const here=__dirname;
 function load(name){try{return require(name)}catch{return require(path.resolve(here,'../../../.build/node_modules',name))}}
 const pptxgen=load('pptxgenjs'),sharp=load('sharp');
 async function svgToBase64Png(svgString,width,height){const pngBuffer=await sharp(Buffer.from(svgString)).resize(width,height,{fit:'contain',background:{r:0,g:0,b:0,alpha:0}}).png().toBuffer();return 'image/png;base64,'+pngBuffer.toString('base64')}
-async function main(){const data=JSON.parse(fs.readFileSync(path.join(here,'input/data.json'),'utf8'));const pres=new pptxgen();pres.defineLayout({name:'CUSTOM_16x9',width:13.333,height:7.5});pres.layout='CUSTOM_16x9';pres.author='Studio Yebisu';pres.subject='日本語の手描き章扉サンプル';pres.title=data.title;pres.company='Studio Yebisu';pres.lang='ja-JP';
+async function main(){const data=JSON.parse(fs.readFileSync(path.join(here,'input/data.json'),'utf8'));const pres=new pptxgen();pres.defineLayout({name:'CUSTOM_16x9',width:13.333,height:7.5});pres.layout='CUSTOM_16x9';pres.author='八百万図AIツールボックス';pres.subject='日本語の手描き章扉サンプル';pres.title=data.title;pres.company='八百万図AIツールボックス';pres.lang='ja-JP';
 for(let i=0;i<data.slides.length;i++){const item=data.slides[i],slide=pres.addSlide();slide.background={color:item.background};
  const frame=`<svg xmlns="http://www.w3.org/2000/svg" width="1800" height="950" viewBox="0 0 1800 950"><path d="M55 60 Q 885 48 1740 65 Q1753 450 1740 885 Q 900 896 55 881 Q43 430 55 60" fill="none" stroke="#DE4634" stroke-width="3" stroke-linejoin="round"/></svg>`;
  /* Decorative frame only: h 7.2 puts its bottom stroke (y~881..896 of 950) at ~6.88..6.99in, below captions (6.26+.5) and above footers (7.03). */

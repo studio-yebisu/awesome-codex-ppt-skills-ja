@@ -1,4 +1,4 @@
-// Studio Yebisu catalog UI. The original 209 repositories remain the identity keys.
+// 八百万図AIツールボックス catalog UI. The original 209 repositories remain the identity keys.
 const $=s=>document.querySelector(s);
 const categories={pptx:'パワーポイント',image:'画像スライド',html:'ウェブスライド',business:'ビジネス資料',convert:'発表資料',general:'資料制作総合'};
 const escape=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

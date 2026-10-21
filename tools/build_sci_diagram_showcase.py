@@ -52,7 +52,7 @@ let NODES = [], EDGES = [], INSETS = [];
 
 '''+code[end:]
     code=code.replace('  validatePortableMap();','')
-    code=code.replace('pptx.author = "SciDiagram PPTX";','pptx.author = "Studio Yebisu / SciDiagram portable adaptation";')
+    code=code.replace('pptx.author = "SciDiagram PPTX";','pptx.author = "八百万図AIツールボックス / SciDiagram portable adaptation";')
     code=code.replace('pptx.title = "SciDiagram portable reconstruction";','pptx.title = "雨が、地下水になるまで。";')
     code=code.replace('"en-US"','"ja-JP"').replace('headFontFace: "Arial"','headFontFace: "Zen Kaku Gothic New"').replace('bodyFontFace: "Arial"','bodyFontFace: "Zen Kaku Gothic New"')
     start=code.index('  const slide = pptx.addSlide();')

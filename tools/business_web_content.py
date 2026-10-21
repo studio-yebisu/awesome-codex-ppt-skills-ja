@@ -45,7 +45,7 @@ def magazine_port(d):
     route_copy={"港の案内所":"地図と回遊カード<br>を受け取る","朝市通り":"旬の食材と<br>店主の話","路地の食堂":"地元の<br>昼ごはん","ガラス工房":"制作見学と<br>小物選び","旧灯台":"海を見る休憩と<br>記念写真"}
     def experience(p):return "感想を記入して<br>帰着" if p["time"]=="15:00" else route_copy[p["stop"]]
     def header(n): return f'<div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>{n:02d} / 07</div></div>'
-    def footer(): return '<div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div>'
+    def footer(): return '<div class="foot"><div>架空の港町・企画によるサンプル</div><div>八百万図AIツールボックス</div></div>'
     raw=[
       ("週末の汐見港町", "hero dark", "hero", '<div class="kicker" data-anim>地域回遊 / 企画提案</div><h1 class="h-hero" data-anim>港町の、<br>半日をつなぐ。</h1><p class="lead" data-anim>市場・食・工房・灯台。<br>一本の徒歩行程で、町との出会いを増やす。</p>',
        "架空の汐見港町で行う週末回遊の企画です。商店会の合意を得て、2週末の試行へ進むことを提案します。"),

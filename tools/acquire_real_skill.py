@@ -10,7 +10,7 @@ for repo in ['hugohe3/ppt-master','zarazhangrui/frontend-slides','op7418/guizang
     dest=ROOT/'.build/actual-upstreams'/repo.replace('/','__')
     if (dest/'ACQUISITION.json').exists():print(f'Pinned checkout already available: {repo}',flush=True);continue
     url=f'https://codeload.github.com/{repo}/zip/{source["commit"]}'
-    with urlopen(Request(url,headers={'User-Agent':'StudioYebisu-skill-catalog'}),timeout=90) as response:content=response.read()
+    with urlopen(Request(url,headers={'User-Agent':'八百万図AIツールボックス-skill-catalog'}),timeout=90) as response:content=response.read()
     dest.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(io.BytesIO(content)) as z:
         prefix=z.namelist()[0].split('/')[0]+'/'

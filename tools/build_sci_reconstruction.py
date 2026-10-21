@@ -80,8 +80,8 @@ def prepare():
     shutil.copy2(source / 'source.png', passed / 'source.png')
     dump(source / 'SOURCE-PROVENANCE.json', {
         'kind': 'original_authored_reconstruction_test_input',
-        'author': 'Studio Yebisu',
-        'description_ja': '科学模式図の復元を試すため、Studio Yebisuが先に作成したPNG入力。既存資料の改善前例や、スキル未使用AI出力ではない。',
+        'author': '八百万図AIツールボックス',
+        'description_ja': '科学模式図の復元を試すため、八百万図AIツールボックスが先に作成したPNG入力。既存資料の改善前例や、スキル未使用AI出力ではない。',
         'source_dimensions_px': {'width': 1600, 'height': 900},
         'source_file': 'source.png',
         'source_sha256': sha(source / 'source.png'),
@@ -149,7 +149,7 @@ description: 提供された科学模式図の画像1枚を、元の文言・領
 
 ## 作例で試す
 
-同梱作例はStudio Yebisuが先に作った1600×900の模式図PNG。USGS画像の複写ではない。これを実入力として、4個の箱、4本の矢印、元の日本語ラベルをnative PPTXへ復元した。入力作成と復元を分けて記録し、見た目の優劣を比較した例とは扱わない。
+同梱作例は八百万図AIツールボックスが先に作った1600×900の模式図PNG。USGS画像の複写ではない。これを実入力として、4個の箱、4本の矢印、元の日本語ラベルをnative PPTXへ復元した。入力作成と復元を分けて記録し、見た目の優劣を比較した例とは扱わない。
 '''
 
 
@@ -157,7 +157,7 @@ GUIDE = '''# 科学図の画像を編集可能なPPTXへ復元する
 
 **sci-diagram-pptx**は、提供された科学模式図の文言と関係を保ち、PowerPointで編集できる図へ復元するスキルです。ラベルだけを直したい、発表用に矢印の位置を調整したい、元の編集ファイルがない場合に使います。
 
-この作例では、Studio Yebisuが先に作ったPNGを入力にしました。Opus 5.5が原典SKILLとその画像を読み、公式portable templateから実行用build.mjsと対応表を作成しました。既存の科学図を改善した事例や、スキルなしのAIと比較した結果ではありません。
+この作例では、八百万図AIツールボックスが先に作ったPNGを入力にしました。Opus 5.5が原典SKILLとその画像を読み、公式portable templateから実行用build.mjsと対応表を作成しました。既存の科学図を改善した事例や、スキルなしのAIと比較した結果ではありません。
 
 入力PNGは画像全体で1個です。出力PPTXは同じラベルと配置を持つ4個の箱、4本の方向付き矢印、タイトル、注記を個別に編集できます。元PNGはPPTX内に埋め込みません。
 
@@ -206,7 +206,7 @@ https://github.com/HututuWorks/sci-diagram-pptx/tree/cc8f0030edf80eeab6e52849b8c
 固定コミット: cc8f0030edf80eeab6e52849b8c39fe638466776
 原典ライセンス: Apache-2.0。原文LICENSEをupstream/LICENSEに保持。取得した原典にNOTICEはない。
 
-Studio Yebisuは原典の再構成用途を日本語で案内し、自作入力PNGを実入力にしたnative PPTX復元例を追加した。原典SKILL本文とportable templateの原本をupstream/に未改変で保持する。日本語SKILLと作例実装は非公式派生。PptxGenJS 4.0.1はMIT。Windowsのフォントファイルは同梱しない。
+八百万図AIツールボックスは原典の再構成用途を日本語で案内し、自作入力PNGを実入力にしたnative PPTX復元例を追加した。原典SKILL本文とportable templateの原本をupstream/に未改変で保持する。日本語SKILLと作例実装は非公式派生。PptxGenJS 4.0.1はMIT。Windowsのフォントファイルは同梱しない。
 ''', 'utf-8')
 
 
@@ -233,7 +233,7 @@ def finalize(model, model_record):
         if not item.is_file():
             raise RuntimeError(f'Required real artifact missing: {item.name}')
     (CASE / 'GUIDE.md').write_text(GUIDE, 'utf-8')
-    prompt = 'この科学模式図の画像1枚を、元の日本語ラベル、4個の箱、4本の矢印の方向、配置を保った編集可能なPowerPoint1枚に復元してください。原典sci-diagram-pptxのReconstructionを使い、ラベル・図形・矢印をnativeオブジェクトにしてください。元画像の全面貼り付けや隠れたトレース画像は使いません。SOURCE、NODES、EDGES、INSETSのpixel対応表、実際に実行するbuild.mjs、元画像、PPTXを残してください。画像はStudio Yebisuが作例用に先に作成した入力です。科学内容の追加やデザイン変更はしません。'
+    prompt = 'この科学模式図の画像1枚を、元の日本語ラベル、4個の箱、4本の矢印の方向、配置を保った編集可能なPowerPoint1枚に復元してください。原典sci-diagram-pptxのReconstructionを使い、ラベル・図形・矢印をnativeオブジェクトにしてください。元画像の全面貼り付けや隠れたトレース画像は使いません。SOURCE、NODES、EDGES、INSETSのpixel対応表、実際に実行するbuild.mjs、元画像、PPTXを残してください。画像は八百万図AIツールボックスが作例用に先に作成した入力です。科学内容の追加やデザイン変更はしません。'
     (CASE / 'PROMPT.txt').write_text(prompt + '\n', 'utf-8')
     source_info = json.loads((CASE / 'input/SOURCE-PROVENANCE.json').read_text('utf-8'))
     if sha(CASE / 'pass-01/source.png') != source_info['source_sha256']:
@@ -294,7 +294,7 @@ def finalize(model, model_record):
     # The case HTML is deliberately about the skill operation, then its evidence.
     (CASE / 'index.html').write_text('''<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>科学図の画像を編集可能なPPTXへ復元する</title><style>
 *{box-sizing:border-box}body{margin:0;background:#f8fafb;color:#163444;font-family:system-ui,"Yu Gothic",sans-serif;line-height:1.75}main{max-width:1260px;margin:auto;padding:48px 24px 70px}a{color:#145b78;text-underline-offset:4px}h1{font-size:clamp(28px,4vw,44px);line-height:1.35;margin:14px 0 20px}h2{font-size:23px;margin:0 0 6px}p{max-width:920px}strong{font-weight:750}.name{font-size:16px;margin:28px 0 0}.flow{font-size:20px;font-weight:700;margin:24px 0 8px}.compare{display:grid;grid-template-columns:1fr 1fr;gap:28px;margin-top:35px}figure{margin:0}figcaption{margin:0 0 12px}figure img{width:100%;display:block;background:white;border:1px solid #b7cbd6}.caption{font-size:15px;color:#3e5a68;max-width:none;margin:10px 0 0}.actions{display:flex;flex-wrap:wrap;gap:16px 26px;margin:28px 0 36px;padding-bottom:28px;border-bottom:1px solid #c6d5dd}.actions a{font-weight:700}.note{font-size:15px;color:#45606d}.details{border-top:1px solid #c6d5dd;margin-top:35px;padding-top:22px}li{margin:6px 0}code{background:#e9f0f3;padding:2px 5px} @media(max-width:780px){main{padding:28px 18px 50px}.compare{grid-template-columns:1fr;gap:32px}}
-</style><main><a href="../../../index.html">スキル一覧へ戻る</a><p class="name">sci-diagram-pptx / HututuWorks</p><h1>科学図の画像を、編集可能なPPTXにする</h1><p>元の編集ファイルがなくても、図の文字や矢印をPowerPointで修正したいときに使います。<strong>元の文言と関係を読み取り、文字・図形・線を個別に編集できる1枚へ復元</strong>します。</p><p class="flow">入力は模式図PNG。出力は同じ図のnative PPTX。</p><p>この例は、4個の箱と4本の矢印を持つ自作PNGを入力にしました。Opus 5.5が原典SKILLとPNGを読み、公式portable templateから復元用コードと対応表を作成しています。</p><div class="actions"><a href="pass-01/editable.pptx" download>編集できるPPTXを開く</a><a href="../../../skill-forks/sci-diagram-reconstruction-ja/SKILL.md" download>日本語スキルを読む</a><a href="../../../downloads/sci-diagram-reconstruction-example-ja.zip" download>入力と実行コードのZIP</a><a href="../../../downloads/sci-diagram-reconstruction-ja.zip" download>日本語スキル一式</a></div><div class="compare"><figure><figcaption><h2>入力 PNG</h2>図全体が1枚の画像</figcaption><img src="input/source.png" alt="復元前の入力PNG。水循環の代表的経路を示す四つの箱と四本の矢印。"><p class="caption">この入力はStudio Yebisuが作例用に先に作成しました。USGS画像の複写や、スキルなしAIの出力ではありません。</p></figure><figure><figcaption><h2>出力 PPTXの描画</h2>同じ文言と矢印を個別のオブジェクトに復元</figcaption><img src="render/slide-01.png" alt="編集可能なPPTXをPowerPointで描画した復元結果。元PNGのラベルと矢印の向きを保持。"><p class="caption">PPTXを開くと、「海・湖の水」だけを選んで文字を直せます。元PNGはPPTX内に貼り付けていません。</p></figure></div><div class="details"><h2>この作例で確認する効果</h2><ul><li>画像内の元の日本語を、編集できる文字として保持する。</li><li>4本の矢印の出発点・到着点・方向を保持する。</li><li>図の意味を変えずに、PowerPointで修正できる状態にする。</li></ul><p class="note">見た目の美化や作業時間の短縮を比較した例ではありません。写真や実験結果を含む複雑な図は、内容に応じて画像のまま残す領域があります。</p><p><a href="input/reconstruction-inventory.json">入力要素とnativeオブジェクトの対応表</a> ・ <a href="GUIDE.md">使い方と制約</a> ・ <a href="PROVENANCE.json">原典と制作範囲</a> ・ <a href="QA.json">実施した確認</a> ・ <a href="https://github.com/HututuWorks/sci-diagram-pptx/blob/cc8f0030edf80eeab6e52849b8c39fe638466776/skills/sci-diagram-pptx/SKILL.md">原典SKILL</a></p><p class="note">図は水循環の一部を示す模式図です。量・時間・縮尺は示しません。科学説明の参照: <a href="https://www.usgs.gov/water-science-school/science/condensation-and-water-cycle">USGS 凝結</a>、<a href="https://www.usgs.gov/water-science-school/science/follow-a-drip-through-water-cycle">USGS 水の経路</a>。</p></div></main></html>''', 'utf-8')
+</style><main><a href="../../../index.html">スキル一覧へ戻る</a><p class="name">sci-diagram-pptx / HututuWorks</p><h1>科学図の画像を、編集可能なPPTXにする</h1><p>元の編集ファイルがなくても、図の文字や矢印をPowerPointで修正したいときに使います。<strong>元の文言と関係を読み取り、文字・図形・線を個別に編集できる1枚へ復元</strong>します。</p><p class="flow">入力は模式図PNG。出力は同じ図のnative PPTX。</p><p>この例は、4個の箱と4本の矢印を持つ自作PNGを入力にしました。Opus 5.5が原典SKILLとPNGを読み、公式portable templateから復元用コードと対応表を作成しています。</p><div class="actions"><a href="pass-01/editable.pptx" download>編集できるPPTXを開く</a><a href="../../../skill-forks/sci-diagram-reconstruction-ja/SKILL.md" download>日本語スキルを読む</a><a href="../../../downloads/sci-diagram-reconstruction-example-ja.zip" download>入力と実行コードのZIP</a><a href="../../../downloads/sci-diagram-reconstruction-ja.zip" download>日本語スキル一式</a></div><div class="compare"><figure><figcaption><h2>入力 PNG</h2>図全体が1枚の画像</figcaption><img src="input/source.png" alt="復元前の入力PNG。水循環の代表的経路を示す四つの箱と四本の矢印。"><p class="caption">この入力は八百万図AIツールボックスが作例用に先に作成しました。USGS画像の複写や、スキルなしAIの出力ではありません。</p></figure><figure><figcaption><h2>出力 PPTXの描画</h2>同じ文言と矢印を個別のオブジェクトに復元</figcaption><img src="render/slide-01.png" alt="編集可能なPPTXをPowerPointで描画した復元結果。元PNGのラベルと矢印の向きを保持。"><p class="caption">PPTXを開くと、「海・湖の水」だけを選んで文字を直せます。元PNGはPPTX内に貼り付けていません。</p></figure></div><div class="details"><h2>この作例で確認する効果</h2><ul><li>画像内の元の日本語を、編集できる文字として保持する。</li><li>4本の矢印の出発点・到着点・方向を保持する。</li><li>図の意味を変えずに、PowerPointで修正できる状態にする。</li></ul><p class="note">見た目の美化や作業時間の短縮を比較した例ではありません。写真や実験結果を含む複雑な図は、内容に応じて画像のまま残す領域があります。</p><p><a href="input/reconstruction-inventory.json">入力要素とnativeオブジェクトの対応表</a> ・ <a href="GUIDE.md">使い方と制約</a> ・ <a href="PROVENANCE.json">原典と制作範囲</a> ・ <a href="QA.json">実施した確認</a> ・ <a href="https://github.com/HututuWorks/sci-diagram-pptx/blob/cc8f0030edf80eeab6e52849b8c39fe638466776/skills/sci-diagram-pptx/SKILL.md">原典SKILL</a></p><p class="note">図は水循環の一部を示す模式図です。量・時間・縮尺は示しません。科学説明の参照: <a href="https://www.usgs.gov/water-science-school/science/condensation-and-water-cycle">USGS 凝結</a>、<a href="https://www.usgs.gov/water-science-school/science/follow-a-drip-through-water-cycle">USGS 水の経路</a>。</p></div></main></html>''', 'utf-8')
     dump(FORK / 'SOURCE.json', {'repository': 'HututuWorks/sci-diagram-pptx', 'commit': 'cc8f0030edf80eeab6e52849b8c39fe638466776', 'license': 'Apache-2.0', 'modified': True, 'case_studies': ['sci-diagram-reconstruction'], 'changes_ja': '原典の再構成用途を日本語で案内。元PNGとnative復元を比較する独自例を追加。', 'upstream_notice_present': False})
     packages = [package(CASE, ROOT / 'downloads/sci-diagram-reconstruction-example-ja.zip'), package(FORK, ROOT / 'downloads/sci-diagram-reconstruction-ja.zip')]
     dump(CASE / 'PACKAGES.json', packages)
