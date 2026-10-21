@@ -1,0 +1,33 @@
+{
+  "author": "Codex",
+  "original_skill": "source/upstream/skills/marp/SKILL.md",
+  "original_skill_sha256": "b388faad7c8bc5e7307644c1d4e8e85745bab81ddca762c74bcf6c14134fe990",
+  "required_installation_check": "Original CLI --version returned1.7.0",
+  "cli_execution": "source/round5-cli-proof.json",
+  "full_sample_mcp_commands": "source/logs/mcp-operations.json",
+  "full_sample_exports": [
+    "html",
+    "pdf",
+    "pptx image mode"
+  ],
+  "mcp_helper_command": [
+    "python-with-PyMuPDF",
+    "source/run_mcp.py",
+    "--case",
+    ".",
+    "--runtime",
+    "<existing-pinned-runtime>",
+    "--marp-cli",
+    "<existing-marp-cli4.4.0>"
+  ],
+  "mcp_helper_exit_code": 0,
+  "log": "source/round5-mcp-build.log",
+  "format_inspection": "source/round5-format-inspection.json",
+  "original_dedicated_visual_gate": "No dedicated visual QA CLI is specified in this pinned SKILL. Added author QA rendered all6 HTML/PDF pages and inspected actual images.",
+  "not_performed": [
+    "generate-agenda",
+    "add-image-transition",
+    "native editable PPTX",
+    "PowerPoint application playback"
+  ]
+}

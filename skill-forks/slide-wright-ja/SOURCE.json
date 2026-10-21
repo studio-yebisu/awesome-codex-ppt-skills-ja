@@ -8,7 +8,7 @@
   "original_files": 13,
   "original_skill": "source/upstream/SKILL.md",
   "template": "source/upstream/slide-wright/references/deck-template.md",
-  "method": "原典HTML skeleton + 専用テーマ → 同じnight-observatory.htmlの実2枚を初回ブラウザ表示 → その2sectionを保持して4枚append",
+  "method": "既存6頁の修復→実2頁の表示・設計判断記録→同じHTMLの2sectionを保持して4頁appendする組立部分の再実行。新規制作の人間承認ゲートは未実証。",
   "engine": {
     "name": "reveal.js",
     "version": "5.1.0",
@@ -48,7 +48,7 @@
     "公式字体をFontshare/Google CSS linkに代えてdata URLへinline化",
     "一斉entranceと最初の2枚だけのauto-animate、reduce motion設定",
     "元controllerへ同一origin 0-based yebisu-slide/yebisu-page bridge",
-    "現在のユーザー指定と親の進行承認により原典のpreview確認待ちを追加しない（ユーザー美術承認とは称さない）"
+    "既存資料の修復として2頁の現在画像と設計判断を保存。人間の美術承認は未取得。"
   ],
   "local_diff": "source/template-local.diff (only font payload normalized for readability)",
   "stage_log": "再生成時に source/stages.json へ作成",
@@ -66,13 +66,44 @@
   },
   "fictional": true,
   "notice": "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。",
-  "qa_scope": "実2枚の初回ブラウザ表示と代表2PNG、エンジン5.1.0稼働・0→1移動、同じfileへ6枚append後の主要表示。全頁詳細目視・独立review・構造監査・ZIP再実行なし。",
   "id": "slide-wright-ja",
   "example_source_zip": "downloads/slide-wright-example-ja.zip",
   "case_studies": [
     "slide-wright-showcase"
   ],
   "files": [
+    {
+      "path": "LICENSE",
+      "sha256": "492ad09e9947126b11dcbc253ac70472f88b0ca2aa66d61e5b6eaeb1e3398582"
+    },
+    {
+      "path": "night-observatory.html",
+      "sha256": "10fc1fb01cb1be819fcc2fa8f5ea6972894a93f4afce2417cc519b5406178b60"
+    },
+    {
+      "path": "PROMPT.md",
+      "sha256": "a1f200e875e1b6f4c38a5ab4c6d3f7e07d1bff768fd0e207f31c77debcef60a4"
+    },
+    {
+      "path": "PROVENANCE.json",
+      "sha256": "e2026cc45409549144b9dce7a75b3653aecbcda7a0fc91fa4b41f2a54e6bf4b3"
+    },
+    {
+      "path": "QA.json",
+      "sha256": "d8278cacae8a5b139530f50306540aaedb85afb3255e0a1ef3c01bc0a65718fb"
+    },
+    {
+      "path": "README.md",
+      "sha256": "1694e401c00d3caeb35173c4cb9792d2b9115d3fd7affe8f7d1ed400b20446a1"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "64f948d414ba3cf893f62a4c00e4e6c11e2b710d11985dfcf843f3b73e37f69b"
+    },
+    {
+      "path": "fonts/SOURCE.json",
+      "sha256": "c72cdf432cf9bbb2db7ade4f77d61975cd6acf73d929bb2699147aa8934ac672"
+    },
     {
       "path": "fonts/delagothicone/DelaGothicOne-Regular.ttf",
       "sha256": "4ff87a0965f1b0505e5a2c58424bc6ad3cff27e56a82f21c2fc9d6b0e3857ee2"
@@ -110,20 +141,36 @@
       "sha256": "c10d8473e1969279ed478917ad7ab0fe1e06343ac484eeb766a630fdb348bc0f"
     },
     {
-      "path": "LICENSE",
-      "sha256": "492ad09e9947126b11dcbc253ac70472f88b0ca2aa66d61e5b6eaeb1e3398582"
+      "path": "render/all-pages-contact.jpg",
+      "sha256": "f2751f9340acce3c8b61d46dac729af96a89ef64d8a7f2d1b25246cb8350a4d3"
     },
     {
-      "path": "PROMPT.md",
-      "sha256": "ab351390ae2688177b1fc2708e9a5964a99deb1aa3eb089be48af5fe20964005"
+      "path": "render/slide-01.png",
+      "sha256": "ddc82b5c02bca8d923a1d72284b9f64c758d38f12fe72711fa143ede19e5d521"
     },
     {
-      "path": "README.md",
-      "sha256": "f2e3055bd704bd4ccf22edf9b627352e8a10705d63c198851343250a0b65bcdf"
+      "path": "render/slide-02.png",
+      "sha256": "cde656845cce380cf4bee0acca6ab53d191f6dcfedfac3a00cb90e9e110ae83f"
     },
     {
-      "path": "SKILL.md",
-      "sha256": "3e40872ce3a4a9a4d8741c936a63e17d9dbe0f308cfb4ad63fbffa338f003c77"
+      "path": "render/slide-03.png",
+      "sha256": "66381b518d30ea1ab7c7214374892e236a682d23c1013aa80bfd5704f07951ba"
+    },
+    {
+      "path": "render/slide-04.png",
+      "sha256": "bdd21e46a6b316049831139dfcc857a987d4ce1068759f78042d1ebe5bebf7d1"
+    },
+    {
+      "path": "render/slide-05.png",
+      "sha256": "cb5624001cdda71efca923d2af37c802051e2f84910f4b5b7080e86d7e0f7e47"
+    },
+    {
+      "path": "render/slide-06.png",
+      "sha256": "12d4137cdc97dfd372e6919eec45f30bcacb7597e0410efdedc1b30e5e826709"
+    },
+    {
+      "path": "source/all-pages-check.json",
+      "sha256": "4e40e163306892f0a61185e5400ac654cbd09e92271a9e975e933bc51a285fc4"
     },
     {
       "path": "source/build.py",
@@ -134,16 +181,20 @@
       "sha256": "28898b75518ef046391f034a2ea2d114be7c28a090703267216a185b610230ae"
     },
     {
-      "path": "source/licenses/engine-5.1.0-LICENSE",
-      "sha256": "34014800f4126ac2525e224166f099f26628612e95c41f76d70841b63138c989"
+      "path": "source/night-theme.css",
+      "sha256": "ad91a839ab570a08e7f5d0b077e386c33ddf87a214d8baf1089ead371401a0ce"
     },
     {
-      "path": "source/night-theme.css",
-      "sha256": "abb5dbf6c9cb0085d44f0ee42398770ca27fe123b2610ffc0e67ebed56767e25"
+      "path": "source/preview-runtime.json",
+      "sha256": "25305c6f0e24c6a6238220e6b86e1c7437395af4de6a36a21cce36a3ae5b25cb"
     },
     {
       "path": "source/render_preview.cjs",
       "sha256": "d690e3c1b68daba6558f48ea58b8a1fc9bbff9605a0166a9c29074e84ef362c4"
+    },
+    {
+      "path": "source/repair-qa.json",
+      "sha256": "ca9d9ed79686cd3f46a484460c07a86b1c4ced5154ebf2d70c23ee08d3be5b8f"
     },
     {
       "path": "source/slides-append-four.html",
@@ -151,15 +202,27 @@
     },
     {
       "path": "source/slides-first-two.html",
-      "sha256": "d280255e4b7caae5f55b6b0d88dd2076fd5f1adf27ea392a5aed5706b2dc17ce"
+      "sha256": "1f400ee4bf88f2ce6271d891941c582c1e5cab25175b602e1d484769e52ec6c9"
+    },
+    {
+      "path": "source/stages.json",
+      "sha256": "674a8b1ae86b6f13e19a015c5c18960afd68eddcfee363b28ccad48b46af80e0"
     },
     {
       "path": "source/template-local.diff",
       "sha256": "d94fb9fc64efad704c41b9857fe1c896c9df62f209f236277c9470f713fb11bd"
     },
     {
-      "path": "source/upstream/.claude-plugin/marketplace.json",
-      "sha256": "fe4c51dcdd233f01c8ef2b39a9965932b2a528e3fe1d9a62220cc21e9a9d277b"
+      "path": "source/verify.cjs",
+      "sha256": "30a1c620aa0743aa4006cadf08e399f519005ca3cdb0201ae54d12664c21ea50"
+    },
+    {
+      "path": "source/zip-replay.json",
+      "sha256": "a27e3f653a5c89f37ac748d8236be2a268ca711464e22f38021a00467957e39f"
+    },
+    {
+      "path": "source/licenses/engine-5.1.0-LICENSE",
+      "sha256": "34014800f4126ac2525e224166f099f26628612e95c41f76d70841b63138c989"
     },
     {
       "path": "source/upstream/INSTALL.md",
@@ -176,6 +239,14 @@
     {
       "path": "source/upstream/SKILL.md",
       "sha256": "0fb15d38b056cb373298317615feacdf3d17efce601134984645306b091ba5d5"
+    },
+    {
+      "path": "source/upstream/.claude-plugin/marketplace.json",
+      "sha256": "fe4c51dcdd233f01c8ef2b39a9965932b2a528e3fe1d9a62220cc21e9a9d277b"
+    },
+    {
+      "path": "source/upstream/slide-wright/SKILL.md",
+      "sha256": "50faaf5f5c5f8637d861a78d67c4e8ee072920ca3773c17e73fdb9eec777ab2a"
     },
     {
       "path": "source/upstream/slide-wright/.claude-plugin/plugin.json",
@@ -204,10 +275,34 @@
     {
       "path": "source/upstream/slide-wright/references/theme-generation.md",
       "sha256": "169382e9bed166ea22863d8addf50d0cec1d84e00d114a96ee3f64968c6f5937"
-    },
-    {
-      "path": "source/upstream/slide-wright/SKILL.md",
-      "sha256": "50faaf5f5c5f8637d861a78d67c4e8ee072920ca3773c17e73fdb9eec777ab2a"
     }
-  ]
+  ],
+  "repair_author": "Codex",
+  "repair_receipt": "source/repair-qa.json",
+  "completed_sample_included": true,
+  "example_root": ".",
+  "documentation_update": {
+    "scope": "Japanese sentence correction only; runtime/input/build unchanged",
+    "file": "SKILL.md",
+    "sha256": "64f948d414ba3cf893f62a4c00e4e6c11e2b710d11985dfcf843f3b73e37f69b"
+  },
+  "superseded_history": [
+    {
+      "revision": "before round5-web06-pair",
+      "old_metadata": {
+        "qa_scope": "実2枚の初回ブラウザ表示と代表2PNG、エンジン5.1.0稼働・0→1移動、同じfileへ6枚append後の主要表示。全頁詳細目視・独立review・構造監査・ZIP再実行なし。",
+        "verification_scope": "修正した実2頁をブラウザーで開き、元ページ送りを確認後に4頁append。全6頁を1920×1080で描画・目視。矢印の戻りと一覧表示を実行。"
+      }
+    }
+  ],
+  "verification_scope": "修復後の実2頁をブラウザー表示して個別画像と設計判断を保存。その2sectionを保持して同じHTMLへ4頁appendし、全6頁を1920×1080で実描画・目視。矢印の戻りと一覧表示も確認。人間の美術承認は未取得。",
+  "current_verification": "source/repair-qa.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "not_demonstrated": [
+    "今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。",
+    "既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。",
+    "固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。"
+  ],
+  "two_page_gate_status": "not demonstrated as a human approval stop; existing deck maintenance only",
+  "zip_reexecution": "source/round5-zip-replay.json"
 }

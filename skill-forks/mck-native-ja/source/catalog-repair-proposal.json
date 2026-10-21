@@ -1,0 +1,183 @@
+{
+  "case_id": "mck-native-showcase",
+  "case_patch": {
+    "sample_notice": "実データ集計を原典4メソッドへ渡す例。S3/S4は今回実行、S4は98点・警告1・免除0。S5は固定fixtureで、残る原典配置の制約と独立再評価は別。",
+    "preview_notice": "現在PPTXをPowerPoint16で描画しPDF由来PNG全4頁を作者Codexが確認。円の余白・番号位置は原典制約として残り、独立再評価は未確定。",
+    "method": "原典MckEngine cover/donut/data_table/vertical_steps＋実S3/S4・S5固定経験再生・実PowerPoint編集/描画",
+    "titles": [
+      "フォント構成と制作手順",
+      "30字体を用途の近い書体群へまとめて比べる",
+      "言語別に見ると、装飾は日本語のみ、等幅は欧文のみ",
+      "制作は五段階で進め、原稿と描画を原典の検査で確かめる"
+    ],
+    "notes": [
+      "実30字体・45ファイル・15プリセット、言語内訳を元JSONから計算。",
+      "12/8/3/7と合算理由を元JSONから計算。原典の細い輪と左下余白は残る。",
+      "5分類×言語の実集計と代表書体を言語別2行で照合。",
+      "原典vertical_stepsで段階とファイルを対応。S5は修復判断の固定記録を再生。"
+    ],
+    "prompt_text": "固定原典MckEngineのcover/donut/data_table/vertical_stepsを上書きせず、同梱oss-font-kit.jsonのfamily/file/presetと言語・分類を計算して4頁を作る。円の4群と元5分類表の合計を検査し、補足文の数を固定値で書かない。表紙改行・列幅・セル文は公開引数で調整し、引数のないリングや工程番号配置の限界を残す。原典S3/S4実行、S5固定fixture、別コピーの文字編集・保存・再open描画を記録する。"
+  },
+  "effect_patch": "data/skill-effect-patches/zzzzzzzzzzzz-mck-round13.json",
+  "current_pptx_sha256": "c935be23cf3945316d2c4e2d0ca1b37873259553d77941248d78b75ffc5289f6",
+  "current_independent_recheck": "pending",
+  "guide_patch": {
+    "summary_ja": "根拠のある値や原稿を同じ書式の図・表・工程へまとめ、原稿と完成PPTXを段階ごとに検査する。",
+    "steps": [
+      "読者・目的・主張・時間・元資料をbriefへ書き、実データの単位・分母・集計時点を確認する。",
+      "原典ブランド・guard・experiencesを読み、API/容量表から入力に合う版式を選びoutline/contentへ整理する。原典固定ホームと同梱upstreamの違い、存在しないlayouts文書の扱いを確認する。",
+      "原典S3のJSONがpassed=trueになった同じcontentを高水準メソッドへ渡し、PPTXを生成する。図・表に使う集計値や補足は元データから計算する。",
+      "原典S4のJSONと全頁の実描画を確認する。公開引数の範囲で文量・列幅・セル改行を修正し、固定配置の制約と機械警告を残す。",
+      "成果物・制作ソース・検査結果を交付し、その資料で実際に判断した修正の型を経験へ残す。作例生成器のS5固定fixtureを新しい自己改善判断と扱わない。"
+    ],
+    "limitations": [
+      "原典は67高水準メソッドを案内する。この作例はcover/donut/data_table/vertical_stepsの4種類を実行し、残り63種類・外部表紙画像API/Hunyuanは未実証。全67種類の使用を完成条件にしない。",
+      "図表は個別編集可能な図形で、Officeのデータ連動チャートやネイティブ表ではない。",
+      "今回の原典S3/S4は合格。S4は98点・警告1件・user_code_errors=0・原典免除0。中心文字箱16%重複警告を保持し、実文字の接触とは区別する。",
+      "原典SKILLの固定場所は ~/.workbuddy/skills/mck-ppt-design 。この配布物は同じ固定commitの upstream/ を読む。元のホームへ自動導入せず、原典のgateが別QAを先に読まないよう既存ホームがある場合は生成器が停止する。",
+      "references/layouts/*.md は固定取得した原典全体にも同梱原典にも存在しない。想像で補わず、存在するengine-api.md・layout-matrix.yamlと実engineの公開引数を参照する。",
+      "表紙のtitle改行と表のcol_widths/セル改行は公開引数。donutのリング半径・太さ・縦位置、data_tableの行高、vertical_stepsの番号位置は公開引数で指定できず、余白や番号の位置を完全に解消したとは表示しない。",
+      "BIZ UDPGothicと凡例の小数1桁表記は局所adapter。原典本体・QA・免除一覧は未変更。RegularとOFLのみ同梱、Boldは太字スタイル指定でPPTXへ埋め込まない。",
+      "S5は修復時の固定経験fixtureを再生し、実行時の新規診断やPATTERN判断は自動化しない。TaskCreate/TaskUpdateとFast Trackは未実行。",
+      "同梱生成器はoss-font-kit.jsonの集計専用。family/file/presetのレコード数を検査し、任意原稿の自動変換や全フォントの描画品質・glyph範囲の検査は行わない。"
+    ],
+    "requirements": [
+      "Python、python-pptx、lxml、固定原典と制作ソースを含む一式ZIP。一般の制作では原稿・元データと目的を用意する。",
+      "描画に使う書体と個別の利用条件。例では公式BIZ UDPGothic RegularとOFLを同梱し、環境へ登録する。",
+      "この例の実描画はWindows版PowerPoint、PDF由来PNGはpypdfium2。PowerShellで自動化する場合は対象ファイルだけを開閉する。"
+    ],
+    "commands": [
+      "python source/build_mck_native_showcase.py --out rebuild --render",
+      "python source/render_pdf_previews.py rebuild/render"
+    ],
+    "execution_type": "原典MckEngineの入力に合う高水準API＋原典S3/S4。掲載例は4種類とS5固定経験の再生。",
+    "recipe_notes": [
+      "同梱専用生成器の再生と、自分の原稿から適切な高水準APIを選ぶ一般手順を区別する。",
+      "原典固定パス ~/.workbuddy/skills/mck-ppt-design を同梱upstreamへ切り替える。references/layoutsは固定原典にも存在しないため、API/容量表/公開引数を読む。"
+    ],
+    "production_status": "round13_actual_original_gates_render_and_native_edit_checked_independent_pending"
+  },
+  "profile_replacement": {
+    "repository": "likaku/Mck-ppt-design-skill",
+    "summary_ja": "根拠のある値や原稿を同じ書式の図・表・工程へまとめ、原稿と完成PPTXを段階ごとに検査する。",
+    "kind": "business",
+    "upstream_commit": "e190e083b715b63172e1c4fea01bc5f9bb21a021",
+    "checked_at": "2026-10-13T13:34:32.862430+00:00",
+    "inspection_status": "entrypoints_downloaded",
+    "license": "Apache-2.0",
+    "license_paths": [
+      "LICENSE",
+      "NOTICE"
+    ],
+    "skill_paths": [
+      "SKILL.md"
+    ],
+    "source_refs": [
+      {
+        "path": "SKILL.md",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/SKILL.md",
+        "sha256": "306084dd3b32d010be7546ed273cc67d4544dce5e729cc942001340ff8c5985d"
+      },
+      {
+        "path": "mck_ppt/engine.py",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/mck_ppt/engine.py",
+        "sha256": "9b59a9350dee96ed814615352534a89cf7c978b10e37ec184f928c7adbdf2c97"
+      },
+      {
+        "path": "mck_ppt/core.py",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/mck_ppt/core.py",
+        "sha256": "dd1c6526e39d37983680ae91c05ecef350e198da77774671f28862c7d7e98789"
+      },
+      {
+        "path": "mck_ppt/constants.py",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/mck_ppt/constants.py",
+        "sha256": "3f032eba51335a93b254ad074ea670196773261fc522aa2f9e5be3129bbd563c"
+      },
+      {
+        "path": "references/framework/engine-api.md",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/references/framework/engine-api.md",
+        "sha256": "49c73504e92918a88730499a763b13c92c8eb7479ea571bff47298396071337c"
+      },
+      {
+        "path": "references/layout-matrix.yaml",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/references/layout-matrix.yaml",
+        "sha256": "e154d13f93a91291e069836983eccacf360308893a14e862b52ce17bfad01b37"
+      },
+      {
+        "path": "references/scripts/gate_check_s3.py",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/references/scripts/gate_check_s3.py",
+        "sha256": "5da0e015d5365f1ac2c1cd461eaf465ea909bad2ac20dc97cb77f1329d1e5fe9"
+      },
+      {
+        "path": "references/scripts/gate_check.py",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/references/scripts/gate_check.py",
+        "sha256": "2896daeaea753ff4ed1aed450856fc0dad58f7e865b866bf1d7aa7d6f94f2174"
+      },
+      {
+        "path": "LICENSE",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/LICENSE",
+        "sha256": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30"
+      },
+      {
+        "path": "NOTICE",
+        "url": "https://github.com/likaku/Mck-ppt-design-skill/blob/e190e083b715b63172e1c4fea01bc5f9bb21a021/NOTICE",
+        "sha256": "eb9636ea5c057a04be7ba609803e04e7c91f70c454b128839eb1c01f720caa33"
+      }
+    ],
+    "archived": false,
+    "example_ids": [
+      "mck-design",
+      "sol-editorial-showcase",
+      "mck-native-showcase"
+    ],
+    "production_status": "round13_actual_original_gates_render_and_native_edit_checked_independent_pending",
+    "license_review_status": "reviewed_for_example",
+    "requirements": [
+      "Python、python-pptx、lxml、固定原典と制作ソースを含む一式ZIP。一般の制作では原稿・元データと目的を用意する。",
+      "描画に使う書体と個別の利用条件。例では公式BIZ UDPGothic RegularとOFLを同梱し、環境へ登録する。",
+      "この例の実描画はWindows版PowerPoint、PDF由来PNGはpypdfium2。PowerShellで自動化する場合は対象ファイルだけを開閉する。"
+    ],
+    "commands": [
+      "python source/build_mck_native_showcase.py --out rebuild --render",
+      "python source/render_pdf_previews.py rebuild/render"
+    ],
+    "steps": [
+      "読者・目的・主張・時間・元資料をbriefへ書き、実データの単位・分母・集計時点を確認する。",
+      "原典ブランド・guard・experiencesを読み、API/容量表から入力に合う版式を選びoutline/contentへ整理する。原典固定ホームと同梱upstreamの違い、存在しないlayouts文書の扱いを確認する。",
+      "原典S3のJSONがpassed=trueになった同じcontentを高水準メソッドへ渡し、PPTXを生成する。図・表に使う集計値や補足は元データから計算する。",
+      "原典S4のJSONと全頁の実描画を確認する。公開引数の範囲で文量・列幅・セル改行を修正し、固定配置の制約と機械警告を残す。",
+      "成果物・制作ソース・検査結果を交付し、その資料で実際に判断した修正の型を経験へ残す。作例生成器のS5固定fixtureを新しい自己改善判断と扱わない。"
+    ],
+    "limitations": [
+      "原典は67高水準メソッドを案内する。この作例はcover/donut/data_table/vertical_stepsの4種類を実行し、残り63種類・外部表紙画像API/Hunyuanは未実証。全67種類の使用を完成条件にしない。",
+      "図表は個別編集可能な図形で、Officeのデータ連動チャートやネイティブ表ではない。",
+      "今回の原典S3/S4は合格。S4は98点・警告1件・user_code_errors=0・原典免除0。中心文字箱16%重複警告を保持し、実文字の接触とは区別する。",
+      "原典SKILLの固定場所は ~/.workbuddy/skills/mck-ppt-design 。この配布物は同じ固定commitの upstream/ を読む。元のホームへ自動導入せず、原典のgateが別QAを先に読まないよう既存ホームがある場合は生成器が停止する。",
+      "references/layouts/*.md は固定取得した原典全体にも同梱原典にも存在しない。想像で補わず、存在するengine-api.md・layout-matrix.yamlと実engineの公開引数を参照する。",
+      "表紙のtitle改行と表のcol_widths/セル改行は公開引数。donutのリング半径・太さ・縦位置、data_tableの行高、vertical_stepsの番号位置は公開引数で指定できず、余白や番号の位置を完全に解消したとは表示しない。",
+      "BIZ UDPGothicと凡例の小数1桁表記は局所adapter。原典本体・QA・免除一覧は未変更。RegularとOFLのみ同梱、Boldは太字スタイル指定でPPTXへ埋め込まない。",
+      "S5は修復時の固定経験fixtureを再生し、実行時の新規診断やPATTERN判断は自動化しない。TaskCreate/TaskUpdateとFast Trackは未実行。",
+      "同梱生成器はoss-font-kit.jsonの集計専用。family/file/presetのレコード数を検査し、任意原稿の自動変換や全フォントの描画品質・glyph範囲の検査は行わない。"
+    ],
+    "forks": [
+      "mck-design-ja",
+      "mck-native-ja",
+      "sol-editorial-ja"
+    ],
+    "execution_type": "原典MckEngineの入力に合う高水準API＋原典S3/S4。掲載例は4種類とS5固定経験の再生。",
+    "license_notice_ja": "原典の利用条件: Apache-2.0。素材・書体・依存物はそれぞれの条件を保持する。",
+    "original_description_ja": "MckEngineの高水準部品APIと共通の文字・間隔ルールでPowerPointを生成する。",
+    "execution_status": "generated_light_check",
+    "author_qa_states": [
+      "qa_complete",
+      "light_check_complete",
+      "original_gates_all4_visual_checked_S5_fixture_replay_recheck_pending"
+    ],
+    "independent_current_version_review": "Current R13 pending; prior version scores not inherited.",
+    "recipe_notes": [
+      "同梱専用生成器の再生と、自分の原稿から適切な高水準APIを選ぶ一般手順を区別する。",
+      "原典固定パス ~/.workbuddy/skills/mck-ppt-design を同梱upstreamへ切り替える。references/layoutsは固定原典にも存在しないため、API/容量表/公開引数を読む。"
+    ]
+  },
+  "integration_note": "Root owns global case/guide/catalog build. Apply latest authored guide fields/full replacement rather than partial old-limit merge; input/output remain general."
+}

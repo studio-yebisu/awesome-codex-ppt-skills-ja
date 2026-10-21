@@ -1,46 +1,73 @@
 {
-  "render_engine": "Installed Google Chrome via Playwright",
-  "initial_page": 0,
-  "arrow_right_page": 1,
-  "arrow_left_page": 0,
+  "status": "codex_round4_repair_all_pages_read_independent_recheck_pending",
+  "author": "Codex",
   "page_count": 7,
-  "layout_overflow": [
+  "artifact_sha256": "3acbb5e767cee7ec645de009578681358fbd5f0ad61d2869b13fdb6a805e7f49",
+  "all_pages_visually_reviewed": true,
+  "visual_review": "Current full-size page images inspected for Japanese text, diagrams, hierarchy and accidental overlap. Author review, not independent approval.",
+  "independent_review": "pending new artifact",
+  "human_adoption": "pending",
+  "publication": false,
+  "images": [
     {
-      "page": 5,
-      "tag": "DIV",
-      "class": "tail",
-      "rect": {
-        "x": 140,
-        "y": 933.59375,
-        "width": 1640,
-        "height": 55.09375,
-        "top": 933.59375,
-        "right": 1780,
-        "bottom": 988.6875,
-        "left": 140
-      }
+      "file": "render/slide-01.png",
+      "sha256": "9c19d285e9e53dc3d75eac8512f8d33c75757bdb309301688d87273aa027489c"
+    },
+    {
+      "file": "render/slide-02.png",
+      "sha256": "c7b663cccbea5eacbbd50fe45c68a71418f8319e7bf839725987b553c9ea90d6"
+    },
+    {
+      "file": "render/slide-03.png",
+      "sha256": "ab6c17e482da1e945a57f48ecf62fa5fe6442e8120cfc88cf4256ac7558253e9"
+    },
+    {
+      "file": "render/slide-04.png",
+      "sha256": "7da63eccaca3fd74d3cca313406fcafe0f847ecb3c184736b8584aabcc22941e"
+    },
+    {
+      "file": "render/slide-05.png",
+      "sha256": "525f1b300333d06d77be2da4388b09b1ac7e795e3fde8416460212305597389a"
+    },
+    {
+      "file": "render/slide-06.png",
+      "sha256": "99c176677d7c0745eaa0d20cf557192a8e90c0513b9f7f8353b1570aa99355b7"
+    },
+    {
+      "file": "render/slide-07.png",
+      "sha256": "2f7fca4a2332826a16df38502f47e32b14971c72040ade58693b2f88b5c140a8"
     }
   ],
-  "page_errors": [],
-  "visual_review": "All 7 initial PNG reviewed; corrected pages 4 and 6 reviewed again. Dark paper-slide row headings readable; no obvious clipping/overlap. Page5 tail safety-boundary warning retained.",
-  "upstream_full_qa": false,
-  "audio_playback": false,
-  "pdf_compression": {
-    "status": "completed_cloud_existing_gs",
-    "preset": "ebook",
-    "command": "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/ebook -dNOPAUSE -dQUIET -dBATCH -sOutputFile=deck-lite.pdf deck.pdf",
-    "original_bytes": 467864,
-    "lite_bytes": 305079,
-    "lite_pages": 7
+  "render_checks": "source/repair-render.json",
+  "original_checklist_all_passed": false,
+  "notes": [
+    "All7 original safe-boundary checks zero overflows",
+    "One paper-light profile, one dominant table onpage4",
+    "Hero image/scrim/glow checklist item is not implemented",
+    "Separate compressed PDF via pypdf; original Ghostscript unavailable"
+  ],
+  "not_executed": [
+    "original Ghostscript compression",
+    "independent model re-review"
+  ],
+  "zip_replay": "source/zip-replay.json",
+  "zip_replay_note": "Source checks executed from the first synchronized archive; final packaging adds these receipts. Current source hashes remain checked.",
+  "round3_metadata_correction": "source/catalog-round3-proposal.json",
+  "round4": {
+    "source_proofs": [
+      "source/build.py",
+      "assets/adaptation.css",
+      "source/repair-render.json",
+      "source/pdf-compression-repair.json",
+      "source/original-checklist-repair.json",
+      "source/upstream/reference.md"
+    ],
+    "visual_review": "All46 current page PNGs read by Codex across seven cases. Relevant natural motion frames, W2–W4 and all7 presenter notes screenshots also read. Independent review of this exact artifact remains pending.",
+    "not_demonstrated": [
+      "原典の既定はdark editorial。今回実証したのは全頁paper-lightで、既定暗色の完成作例は未制作。",
+      "hero写真・scrim/glowを実装していないため、原典チェックリストの全条件合格ではない。",
+      "固定取得物にcompact-pdf.shがなく、Ghostscriptも未使用。軽量PDFはpypdfの局所代替で、同じ処理と称さない。音声再生も未実装。"
+    ]
   },
-  "change": "Only supplied adaptation.css .slide color rule; original HTML unchanged",
-  "pdf_page_count": 7,
-  "initial_display_verified": true,
-  "navigation_verified": true,
-  "pdf_exported": true,
-  "navigation_mock_test": "passed Node VM; additional check, not substitute for actual PC browser test",
-  "source_css_byte_identical": true,
-  "warning_explanation": "Page5 tail bottom 988.6875px exceeds author inner boundary980px by8.6875px; within1080px canvas, visible, no overlap. Warning intentionally retained.",
-  "final_pdf_review": "Page4 visually reviewed after print @page correction: no outer white margin, labels readable. All7 pages1440×810pt.",
-  "print_page_correction": "@page size1920px1080px margin0 in adaptation.css matches author canvas"
+  "distribution_reexecution": "source/round4-zip-replay.json"
 }

@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "run_id": "run-repair-r4",
+  "page_id": "page_001",
+  "jobs": [
+    {
+      "job_id": "icon-sheet",
+      "role": "asset_sheet",
+      "status": "processed",
+      "source_image": "M:\\Codex\\home\\generated_images\\01a13676-80b6-77c0-9cab-7642d16bb48d\\exec-a8b58b27-f2bf-47fa-be55-334185e401be.png",
+      "output": "assets/icon-sheet.png",
+      "output_sha256": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581",
+      "prompt_file": null,
+      "backend": "builtin-imagegen",
+      "fallback_reason": null,
+      "note": null,
+      "recorded_at": "2026-10-13T18:13:06Z",
+      "processed_at": "2026-10-13T18:13:36Z",
+      "alpha": "assets/icon-sheet.asset-sheet-alpha.png",
+      "assets_dir": "assets/icons",
+      "split_manifest": "assets/icon-sheet.split-report.json"
+    }
+  ],
+  "updated_at": "2026-10-13T18:13:36Z",
+  "reuse_evidence": {
+    "previous_run": "run",
+    "previous_source_sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618",
+    "current_source_sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618",
+    "previous_imagegen_jobs_sha256": "0e13d61e4f532eef0dc9e718e7a1987ee9f1a9fbfd184991c0fd3ae625cf6403",
+    "sheet_sha256": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581",
+    "icons": {
+      "document.png": "d2f8cf4f38da42ae6e6f069e4c46f700dc09035bd62de2b6b3b7be3ca544613a",
+      "history.png": "8a8f165ece112ae5287a2431fe54dce33410efeb9ffdcb3b3dbe146e2d8b31c7",
+      "upload.png": "a98c225cac106a5307ce1bbb477a70e50da60a1c07f4b720bda67af3a96efdaa"
+    },
+    "reason": "Same source image and same builtin-imagegen backend contract. Foreground icons were previously separated through builtin image edit and original process-sheet. No new asset generation needed for a text/font repair."
+  },
+  "reuse_evidence_round4": {
+    "previous_run": "run-repair",
+    "previous_source_sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618",
+    "current_source_sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618",
+    "previous_imagegen_jobs_sha256": "5c9ce26e50a51f5703c34e5f1b9db0c52091ba1ea788ad30c5e1d2836b9f6844",
+    "same_backend_contract": true,
+    "same_inventory_and_canvas": true,
+    "same_font_and_license": {
+      "font_sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90",
+      "ofl_sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    "historical_tool_output_path": "jobs[].source_image is the original selected output, preserved as provenance; active output/alpha/assets/split paths are page-relative."
+  }
+}

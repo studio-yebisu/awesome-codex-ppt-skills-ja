@@ -1,0 +1,42 @@
+{
+  "fictional": true,
+  "content_provenance": "Assistant-authored fictional cultural project; no factual survey, third-party quote, real event, or achieved metric claimed.",
+  "upstream_repository": "MURMURE11118586/codex-xkppt-skill",
+  "commit": "978b46d116fd8fd971f9cd963f745da62f7f1f26",
+  "license": "MIT",
+  "upstream_skill_url": "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/codex-ppt-skill/SKILL.md",
+  "planned_adaptations": [
+    "日本語コピーと意味区切り改行",
+    "OSS日本語・英数字フォント指定",
+    "中国語固定ラベルの日本語化",
+    "言語メタデータja-JP",
+    "原典生成器とnative design-systemを使用"
+  ],
+  "execution": "completed in cloud workspace",
+  "publication": "not_requested",
+  "image_assets": [
+    {
+      "path": "/workspace/shared/slide-207-prep/assets/book-town-cover.png",
+      "slide_id": "slide_01",
+      "method": "built-in imagegen by parent",
+      "visual_check": "paper book and town, no visible text",
+      "pixels": [
+        1145,
+        1374
+      ]
+    }
+  ],
+  "method": "upstream build_native_pptx.mjs + native design-system/editorial-ink",
+  "render_method": "artifact-tool importPptx, per-slide PNG export",
+  "pdf_method": "raster PDF assembled from real PPTX-rendered PNGs",
+  "upstream_aesthetic_gate": "FAIL 80.7, not claimed qualified",
+  "font_distribution": "No OS fonts included",
+  "adaptations": [
+    "Japanese fixed labels and ja-JP metadata",
+    "Japanese headings and copy",
+    "CJK fonts selected from available environment",
+    "closing placeholder image panel removed",
+    "declarative typographic whitespace",
+    "native visual plan for editable process/closing rather than auto-required raster assets"
+  ]
+}

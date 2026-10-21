@@ -1,0 +1,113 @@
+[
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-m",
+      "editppt.cli",
+      "image",
+      "import",
+      "M:/Codex/Projects/studio-yebisu/workspace/slides/examples/repositories/image-to-editable/run-repair/pages/page_002",
+      "--job-id",
+      "icon-sheet",
+      "--source-image",
+      "M:/Codex/Projects/studio-yebisu/workspace/slides/examples/repositories/image-to-editable/run/pages/page_002/assets/icon-sheet.png",
+      "--dest",
+      "assets/icon-sheet.png",
+      "--role",
+      "asset_sheet",
+      "--backend",
+      "builtin-imagegen"
+    ],
+    "exit_code": 0,
+    "log": "import.log",
+    "log_sha256": "55f377e4cfac2c9e6974e944018f87324e0956e712ac0684b9e4b39b557db6c1"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-m",
+      "editppt.cli",
+      "image",
+      "process-sheet",
+      "M:/Codex/Projects/studio-yebisu/workspace/slides/examples/repositories/image-to-editable/run-repair/pages/page_002",
+      "--job-id",
+      "icon-sheet",
+      "--asset-sheet-source",
+      "assets/icon-sheet.png",
+      "--regions",
+      "assets/asset-regions.json",
+      "--assets-dir",
+      "assets/icons"
+    ],
+    "exit_code": 0,
+    "log": "process-sheet.log",
+    "log_sha256": "c005915a1aa684ea74469d19e22c2eb20d902df0c08636d2e5f66fcbde5240be"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-m",
+      "editppt.cli",
+      "page",
+      "build",
+      "M:/Codex/Projects/studio-yebisu/workspace/slides/examples/repositories/image-to-editable/run-repair/pages/page_002"
+    ],
+    "exit_code": 0,
+    "log": "build.log",
+    "log_sha256": "6852ab506eb890d07900cd4a773b07f66420024f7feaffb151e726b1fcba1fec"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-m",
+      "editppt.cli",
+      "page",
+      "contact-sheet",
+      "M:/Codex/Projects/studio-yebisu/workspace/slides/examples/repositories/image-to-editable/run-repair/pages/page_002"
+    ],
+    "exit_code": 0,
+    "log": "contact-sheet.log",
+    "log_sha256": "d3092621704adce444f83b4285eb0673cbfc89665ee6c5355448c7b9ac2b13d8"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-m",
+      "editppt.cli",
+      "page",
+      "build",
+      "."
+    ],
+    "exit_code": 0,
+    "log": "build-calibrated.log",
+    "log_sha256": "6852ab506eb890d07900cd4a773b07f66420024f7feaffb151e726b1fcba1fec"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-m",
+      "editppt.cli",
+      "page",
+      "contact-sheet",
+      "."
+    ],
+    "exit_code": 0,
+    "log": "contact-sheet-calibrated.log",
+    "log_sha256": "d3092621704adce444f83b4285eb0673cbfc89665ee6c5355448c7b9ac2b13d8"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "-m",
+      "editppt.cli",
+      "page",
+      "validate",
+      ".",
+      "--report",
+      "validation.json"
+    ],
+    "exit_code": 0,
+    "log": "validate.log",
+    "log_sha256": "f3a4ef1feb7a81fbd7a52af10071985b208f691d1afc4a2b3a683796584acb84"
+  }
+]

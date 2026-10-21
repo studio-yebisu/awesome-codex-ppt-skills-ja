@@ -1,18 +1,27 @@
 ---
 name: slidepoise-ja
-description: SlidePoiseの生成画像→OpenCV→contract→constructor→固有rendererを保ち、日本語のnative編集可能PPTXを作る。
+description: 原稿の意図を画像で設計し、計測と意味の割当を経て編集可能なPowerPointへ再構築する。
 ---
 
-# SlidePoise 日本語版（非公式）
+# 画像で設計し、文字・図形を編集できるPowerPointへ
 
-1. 題材・主張・関係・出所・仮定をintentへ書く。数字が目標なら目標と明記。Native diagramが説明する関係を決め、反復card gridへ押し込まない。
-2. 同梱upstream/slidepoise/SKILL.mdと必要referencesを読む。画像工程を省かない。元prepare_generation.pyでconfig/intent/resourcesからrequestをcompileし、exact promptとreferenceをbuiltin画像toolへ渡す。能力がなければ依存工程だけ止めて具体条件を知らせる。
-3. 得た画像を見て採用し、元normalizerでcanvasを整える。Agentがsemantic-mapに文字・論理的allocation・図形・connector owner・target字体を記す。座標を汎用builderへ写す代替は禁止。
-4. 元reconstruct-slideでOpenCV計測→contract→constructorをcompile。overlayでownershipを読む。元render-deckで順序通りnative PPTX化し、画像を全頁背景へ貼って編集可能と称さない。
-5. 必要な原典buildと代表完成物の初回表示を確認。本作例はユーザーの軽い確認指定で全詳細目視/独立review/構造監査/ZIP再実行を省略。明白な句点欠けをsemantic targetへ戻して修正した。
+原典 henryhyw/slidepoise / 481a028486b528e65706c4e14aa9b74a5e340f12 / MIT。非公式の日本語案内。upstream/slidepoise/SKILL.mdと必要referencesを読む。
 
-日本語の見出し/本文/英数字を別familyへ。実TTF/OFLだけ添付する。local Windows fitterは同梱OSS familyを明示解決する差分のみ。PowerPoint COMはApplication.Quitを使わず自分のdeckをClose。
+1. 原典CLIのdoctor・profile showで環境と選択Profile/Library Setsを確認し、resolve_config.pyで今回の上書きを解決する。目的・読み手・根拠・必要内容を確定し、work/deck-outline.jsonに安定した頁IDと順序・役割を書く。
+2. 各頁の意図に合う参照候補を検索し、実物を見て選ぶ。Profileと共通frameを決める。画像の生成領域はframeを除く本文領域で、常に16:9とは限らない。
+3. intentと資源からprepare_generationでrequestをcompileし、その正確なpromptと参照を画像ツールへ渡す。手動生成を選んだ場合は同じrequestを書き出して画像を取り込む。採用画像と原稿を実際に見比べる。
+4. semantic mapと独立したcontent obligationsを記す。文字領域、図形、接続元/先、画像の役割はAgentが判断する。原典reconstruct-slideでOpenCV計測→overlay確認→contract→constructor sceneへ進む。コードは美しさや意味を判定しない。
+5. 原典render-deckで頁順に組み立てる。全頁の実描画を開き、内容の欠落、文字のかたまり、光学的位置、接続方向、頁間の統一を生成画像と同じ縮尺で比べる。複数頁では独立した最終レビューを行う。問題を元の意図・mapへ戻して直し、再描画する。
+6. 編集可能PPTX、プレビュー、使用素材・字体・差分と未解決事項を渡す。汎用PptxGenJS/python-pptx/HTML/SVGの独自builderを代替にしない。画像背景だけを編集可能と称さない。
 
-example/rebuild.pyが保全画像からの原典再構成入口、example/PROMPT.mdは別題材への依頼文。例では3枚の生成画像・semantic map・OpenCV計測・contract・constructor・PPTXが揃う。Original global Console/profile install、外部library retrieval、SAMは未実行。
+## この作例で試したこと
 
-原典 https://github.com/henryhyw/slidepoise 、MIT原文とpinはLICENSE/SOURCE.json。非公式改変。Fontは各OFL、PPTXフォント未埋込時は他端末へ導入する。任意reviewを省いたことと原典build成功を区別する。
+仮想予約サイトの3頁。原典compile済みrequestで生成した画像→normalizer→host semantic map→OpenCV→contract→constructor→原典rendererを全頁で実行。native要素は34/28/21個。数値は目標で実測ではない。現在の全3頁をPowerPointで描画して見比べ、1頁の切り欠きと文字の接触、3頁の数字と単位の離れを修復した。数字と単位は同じnative文字領域にまとめ、元のcontent obligationsを保持した。
+
+原画像と比べやすい平面の構成を保持しているが、書体のinkや紙の陰影の完全一致は保証しない。字体解決と文字領域の補正はsource/text-layout-repair.jsonに記録。原画像の再生成はしていない。独立した最終再評価、外部Library検索・Console/global Profile導入、SAM、実在ロゴ/写真の保持は未実施。
+
+## 再現
+
+Python3.10+、OpenCV/numpy/Pillow/python-pptx、Nodeとpptxgenjs4.0.1/jszip3.10.1。作り直す場合は画像生成ツールまたは手動取り込み。Windows PowerPoint描画にはMicrosoft PowerPointと同梱Dela Gothic One・BIZ UDPGothic・Manropeの導入が必要。各OFLを保持する。
+
+作例ZIPでは `python rebuild.py` が保存画像から原典再構築を再実行する。例の内容とsemantic mapを再現する処理で、任意の題材を自動企画するアプリではない。`export_case.ps1`は自分が開いたdeckだけ閉じる。全頁の実表示と比較を行う。

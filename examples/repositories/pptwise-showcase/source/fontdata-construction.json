@@ -1,0 +1,245 @@
+{
+  "source": "input/oss-font-kit.json",
+  "source_sha256": "aab65d0e2ac99c70b0f97a3da6e7d69f047a361b5bc501314eb7b3833e8d8530",
+  "derived_counts": {
+    "families": 30,
+    "font_files": 45,
+    "presets": 15,
+    "ja": 17,
+    "latin": 13
+  },
+  "ordered_outline_before_pages": true,
+  "theme": "font-catalog (Rally-derived)",
+  "original_recipe": "allotment",
+  "facts_or_pictures_invented_for_recipe": false,
+  "receipts": [
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "schema",
+        "--spec"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/schema-spec.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "narratives",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/narratives.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "themes",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/themes.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "spec",
+        "validate",
+        "input/deck.spec.json"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/spec-validate.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "open"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-open.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "promise"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-promise.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "promise",
+        "--component",
+        "paragraph"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-promise-paragraph.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "journey"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-journey.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "journey",
+        "--component",
+        "steps"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-journey-steps.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "network"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-network.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "network",
+        "--component",
+        "hub_spoke"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-network-hub_spoke.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "space"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-space.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "space",
+        "--component",
+        "chart"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-space-chart.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "space",
+        "--component",
+        "icon_cards"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-space-icon_cards.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "inspect",
+        "input",
+        "--page",
+        "close"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/inspect-close.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "build",
+        "input",
+        "--json",
+        "--no-git-ignore",
+        "--no-alternatives"
+      ],
+      "exit_code": 1,
+      "stdout": "source/pipeline/fontdata-build-first4.txt"
+    },
+    {
+      "argv": [
+        "node",
+        "source/pptwise_ja_font_adapter.mjs",
+        "<fixed-source-built-cli>",
+        "build",
+        "input",
+        "--json",
+        "--no-git-ignore",
+        "--no-alternatives"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/fontdata-build-complete.txt"
+    }
+  ],
+  "original_self_check": "CLI JSON report only",
+  "catalog_visual_check": "Separately requested PowerPoint rendering and human-eye inspection, not original self-check."
+}

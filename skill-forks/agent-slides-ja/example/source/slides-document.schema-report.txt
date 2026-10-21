@@ -1,0 +1,3656 @@
+{
+  "id": "slides-document",
+  "schema": {
+    "$defs": {
+      "AddAreaChartOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_area_chart",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "style": {
+            "default": "area",
+            "enum": [
+              "area",
+              "stacked",
+              "percent_stacked"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "categories",
+          "series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddAreaChartOp",
+        "type": "object"
+      },
+      "AddBarChartOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_bar_chart",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "style": {
+            "default": "clustered",
+            "enum": [
+              "clustered",
+              "stacked",
+              "percent_stacked"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "orientation": {
+            "default": "column",
+            "enum": [
+              "column",
+              "bar"
+            ],
+            "title": "Orientation",
+            "type": "string"
+          },
+          "chart_space_xml": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Chart Space Xml"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "categories",
+          "series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddBarChartOp",
+        "type": "object"
+      },
+      "AddBubbleChartOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_bubble_chart",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "maxItems": 3,
+                    "minItems": 3,
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "array"
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "style": {
+            "default": "bubble",
+            "enum": [
+              "bubble",
+              "bubble_3d"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddBubbleChartOp",
+        "type": "object"
+      },
+      "AddComboChartOverlayOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_combo_chart_overlay",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "bar_series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Bar Series",
+            "type": "array"
+          },
+          "line_series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Line Series",
+            "type": "array"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "categories",
+          "bar_series",
+          "line_series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddComboChartOverlayOp",
+        "type": "object"
+      },
+      "AddDoughnutChartOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_doughnut_chart",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "style": {
+            "default": "doughnut",
+            "enum": [
+              "doughnut",
+              "exploded"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "categories",
+          "series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddDoughnutChartOp",
+        "type": "object"
+      },
+      "AddIconOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_icon",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "icon_name": {
+            "title": "Icon Name",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "size": {
+            "default": 0.75,
+            "title": "Size",
+            "type": "number"
+          },
+          "color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Color"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "icon_name",
+          "left",
+          "top"
+        ],
+        "title": "AddIconOp",
+        "type": "object"
+      },
+      "AddImageOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_image",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Width"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Height"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "path",
+          "left",
+          "top"
+        ],
+        "title": "AddImageOp",
+        "type": "object"
+      },
+      "AddLineChartOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_line_chart",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "style": {
+            "default": "line",
+            "enum": [
+              "line",
+              "line_markers",
+              "stacked",
+              "stacked_markers",
+              "percent_stacked",
+              "percent_stacked_markers"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "categories",
+          "series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddLineChartOp",
+        "type": "object"
+      },
+      "AddLineShapeOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_line_shape",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "x1": {
+            "title": "X1",
+            "type": "number"
+          },
+          "y1": {
+            "title": "Y1",
+            "type": "number"
+          },
+          "x2": {
+            "title": "X2",
+            "type": "number"
+          },
+          "y2": {
+            "title": "Y2",
+            "type": "number"
+          },
+          "color": {
+            "default": "000000",
+            "title": "Color",
+            "type": "string"
+          },
+          "line_width": {
+            "default": 1.0,
+            "title": "Line Width",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "x1",
+          "y1",
+          "x2",
+          "y2"
+        ],
+        "title": "AddLineShapeOp",
+        "type": "object"
+      },
+      "AddMediaOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_media",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          },
+          "mime_type": {
+            "default": "video/unknown",
+            "title": "Mime Type",
+            "type": "string"
+          },
+          "poster_path": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Poster Path"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "path",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddMediaOp",
+        "type": "object"
+      },
+      "AddNotesOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_notes",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "text"
+        ],
+        "title": "AddNotesOp",
+        "type": "object"
+      },
+      "AddOvalOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_oval",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          },
+          "fill_color": {
+            "title": "Fill Color",
+            "type": "string"
+          },
+          "border_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Border Color"
+          },
+          "border_width": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Border Width"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "left",
+          "top",
+          "width",
+          "height",
+          "fill_color"
+        ],
+        "title": "AddOvalOp",
+        "type": "object"
+      },
+      "AddPieChartOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_pie_chart",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "style": {
+            "default": "pie",
+            "enum": [
+              "pie",
+              "exploded",
+              "pie_of_pie",
+              "bar_of_pie"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "categories",
+          "series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddPieChartOp",
+        "type": "object"
+      },
+      "AddRadarChartOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_radar_chart",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "style": {
+            "default": "radar",
+            "enum": [
+              "radar",
+              "filled",
+              "markers"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "categories",
+          "series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddRadarChartOp",
+        "type": "object"
+      },
+      "AddRawShapeXmlOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_raw_shape_xml",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "shape_xml": {
+            "title": "Shape Xml",
+            "type": "string"
+          },
+          "rel_images": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Rel Images",
+            "type": "array"
+          },
+          "rel_parts": {
+            "items": {
+              "maxItems": 5,
+              "minItems": 5,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Rel Parts",
+            "type": "array"
+          },
+          "rel_external": {
+            "items": {
+              "maxItems": 3,
+              "minItems": 3,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "string"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Rel External",
+            "type": "array"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "shape_xml"
+        ],
+        "title": "AddRawShapeXmlOp",
+        "type": "object"
+      },
+      "AddRectangleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_rectangle",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          },
+          "fill_color": {
+            "title": "Fill Color",
+            "type": "string"
+          },
+          "border_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Border Color"
+          },
+          "border_width": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Border Width"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "left",
+          "top",
+          "width",
+          "height",
+          "fill_color"
+        ],
+        "title": "AddRectangleOp",
+        "type": "object"
+      },
+      "AddRoundedRectangleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_rounded_rectangle",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          },
+          "fill_color": {
+            "title": "Fill Color",
+            "type": "string"
+          },
+          "corner_radius": {
+            "default": 5000,
+            "title": "Corner Radius",
+            "type": "integer"
+          },
+          "border_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Border Color"
+          },
+          "border_width": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Border Width"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "left",
+          "top",
+          "width",
+          "height",
+          "fill_color"
+        ],
+        "title": "AddRoundedRectangleOp",
+        "type": "object"
+      },
+      "AddScatterChartOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_scatter_chart",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "maxItems": 2,
+                    "minItems": 2,
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ],
+                    "type": "array"
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          },
+          "style": {
+            "default": "markers",
+            "enum": [
+              "markers",
+              "line",
+              "line_no_markers",
+              "smooth",
+              "smooth_no_markers"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "series",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddScatterChartOp",
+        "type": "object"
+      },
+      "AddSlideOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_slide",
+            "title": "Op",
+            "type": "string"
+          },
+          "layout_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Layout Index"
+          },
+          "layout_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Layout Name"
+          },
+          "hidden": {
+            "default": false,
+            "title": "Hidden",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op"
+        ],
+        "title": "AddSlideOp",
+        "type": "object"
+      },
+      "AddTableOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_table",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "rows": {
+            "items": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "title": "Rows",
+            "type": "array"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          },
+          "table_xml": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Table Xml"
+          },
+          "font_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Font Size"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "rows",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddTableOp",
+        "type": "object"
+      },
+      "AddTextOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "add_text",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "left": {
+            "title": "Left",
+            "type": "number"
+          },
+          "top": {
+            "title": "Top",
+            "type": "number"
+          },
+          "width": {
+            "title": "Width",
+            "type": "number"
+          },
+          "height": {
+            "title": "Height",
+            "type": "number"
+          },
+          "font_size": {
+            "default": 20,
+            "title": "Font Size",
+            "type": "integer"
+          },
+          "bold": {
+            "default": false,
+            "title": "Bold",
+            "type": "boolean"
+          },
+          "font_name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Font Name"
+          },
+          "font_color": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Font Color"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "text",
+          "left",
+          "top",
+          "width",
+          "height"
+        ],
+        "title": "AddTextOp",
+        "type": "object"
+      },
+      "DeckPlan": {
+        "additionalProperties": false,
+        "properties": {
+          "deck_title": {
+            "title": "Deck Title",
+            "type": "string"
+          },
+          "brief": {
+            "title": "Brief",
+            "type": "string"
+          },
+          "audience": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Audience"
+          },
+          "objective": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Objective"
+          },
+          "slides": {
+            "items": {
+              "$ref": "#/$defs/SlidePlan"
+            },
+            "title": "Slides",
+            "type": "array"
+          },
+          "assumptions": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Assumptions",
+            "type": "array"
+          }
+        },
+        "required": [
+          "deck_title",
+          "brief",
+          "slides"
+        ],
+        "title": "DeckPlan",
+        "type": "object"
+      },
+      "DeleteSlideOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "delete_slide",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index"
+        ],
+        "title": "DeleteSlideOp",
+        "type": "object"
+      },
+      "MoveSlideOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "move_slide",
+            "title": "Op",
+            "type": "string"
+          },
+          "from_index": {
+            "title": "From Index",
+            "type": "integer"
+          },
+          "to_index": {
+            "title": "To Index",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "op",
+          "from_index",
+          "to_index"
+        ],
+        "title": "MoveSlideOp",
+        "type": "object"
+      },
+      "OperationBatch": {
+        "additionalProperties": false,
+        "properties": {
+          "operations": {
+            "items": {
+              "discriminator": {
+                "mapping": {
+                  "add_area_chart": "#/$defs/AddAreaChartOp",
+                  "add_bar_chart": "#/$defs/AddBarChartOp",
+                  "add_bubble_chart": "#/$defs/AddBubbleChartOp",
+                  "add_combo_chart_overlay": "#/$defs/AddComboChartOverlayOp",
+                  "add_doughnut_chart": "#/$defs/AddDoughnutChartOp",
+                  "add_icon": "#/$defs/AddIconOp",
+                  "add_image": "#/$defs/AddImageOp",
+                  "add_line_chart": "#/$defs/AddLineChartOp",
+                  "add_line_shape": "#/$defs/AddLineShapeOp",
+                  "add_media": "#/$defs/AddMediaOp",
+                  "add_notes": "#/$defs/AddNotesOp",
+                  "add_oval": "#/$defs/AddOvalOp",
+                  "add_pie_chart": "#/$defs/AddPieChartOp",
+                  "add_radar_chart": "#/$defs/AddRadarChartOp",
+                  "add_raw_shape_xml": "#/$defs/AddRawShapeXmlOp",
+                  "add_rectangle": "#/$defs/AddRectangleOp",
+                  "add_rounded_rectangle": "#/$defs/AddRoundedRectangleOp",
+                  "add_scatter_chart": "#/$defs/AddScatterChartOp",
+                  "add_slide": "#/$defs/AddSlideOp",
+                  "add_table": "#/$defs/AddTableOp",
+                  "add_text": "#/$defs/AddTextOp",
+                  "delete_slide": "#/$defs/DeleteSlideOp",
+                  "move_slide": "#/$defs/MoveSlideOp",
+                  "replace_text": "#/$defs/ReplaceTextOp",
+                  "set_chart_axis_options": "#/$defs/SetChartAxisOptionsOp",
+                  "set_chart_axis_scale": "#/$defs/SetChartAxisScaleOp",
+                  "set_chart_axis_titles": "#/$defs/SetChartAxisTitlesOp",
+                  "set_chart_combo_secondary_mapping": "#/$defs/SetChartComboSecondaryMappingOp",
+                  "set_chart_data_labels": "#/$defs/SetChartDataLabelsOp",
+                  "set_chart_data_labels_style": "#/$defs/SetChartDataLabelsStyleOp",
+                  "set_chart_legend": "#/$defs/SetChartLegendOp",
+                  "set_chart_plot_style": "#/$defs/SetChartPlotStyleOp",
+                  "set_chart_secondary_axis": "#/$defs/SetChartSecondaryAxisOp",
+                  "set_chart_series_error_bars": "#/$defs/SetChartSeriesErrorBarsOp",
+                  "set_chart_series_line_style": "#/$defs/SetChartSeriesLineStyleOp",
+                  "set_chart_series_style": "#/$defs/SetChartSeriesStyleOp",
+                  "set_chart_series_trendline": "#/$defs/SetChartSeriesTrendlineOp",
+                  "set_chart_style": "#/$defs/SetChartStyleOp",
+                  "set_chart_title": "#/$defs/SetChartTitleOp",
+                  "set_core_properties": "#/$defs/SetCorePropertiesOp",
+                  "set_image_crop": "#/$defs/SetImageCropOp",
+                  "set_line_series_marker": "#/$defs/SetLineSeriesMarkerOp",
+                  "set_line_series_smooth": "#/$defs/SetLineSeriesSmoothOp",
+                  "set_placeholder_image": "#/$defs/SetPlaceholderImageOp",
+                  "set_placeholder_text": "#/$defs/SetPlaceholderTextOp",
+                  "set_semantic_text": "#/$defs/SetSemanticTextOp",
+                  "set_slide_background": "#/$defs/SetSlideBackgroundOp",
+                  "set_title_subtitle": "#/$defs/SetTitleSubtitleOp",
+                  "update_chart_data": "#/$defs/UpdateChartDataOp",
+                  "update_table_cell": "#/$defs/UpdateTableCellOp"
+                },
+                "propertyName": "op"
+              },
+              "oneOf": [
+                {
+                  "$ref": "#/$defs/AddSlideOp"
+                },
+                {
+                  "$ref": "#/$defs/AddTextOp"
+                },
+                {
+                  "$ref": "#/$defs/AddBarChartOp"
+                },
+                {
+                  "$ref": "#/$defs/AddLineChartOp"
+                },
+                {
+                  "$ref": "#/$defs/AddPieChartOp"
+                },
+                {
+                  "$ref": "#/$defs/AddAreaChartOp"
+                },
+                {
+                  "$ref": "#/$defs/AddDoughnutChartOp"
+                },
+                {
+                  "$ref": "#/$defs/AddScatterChartOp"
+                },
+                {
+                  "$ref": "#/$defs/AddRadarChartOp"
+                },
+                {
+                  "$ref": "#/$defs/AddBubbleChartOp"
+                },
+                {
+                  "$ref": "#/$defs/AddComboChartOverlayOp"
+                },
+                {
+                  "$ref": "#/$defs/AddImageOp"
+                },
+                {
+                  "$ref": "#/$defs/AddTableOp"
+                },
+                {
+                  "$ref": "#/$defs/AddRectangleOp"
+                },
+                {
+                  "$ref": "#/$defs/AddRoundedRectangleOp"
+                },
+                {
+                  "$ref": "#/$defs/AddOvalOp"
+                },
+                {
+                  "$ref": "#/$defs/AddLineShapeOp"
+                },
+                {
+                  "$ref": "#/$defs/AddRawShapeXmlOp"
+                },
+                {
+                  "$ref": "#/$defs/AddIconOp"
+                },
+                {
+                  "$ref": "#/$defs/ReplaceTextOp"
+                },
+                {
+                  "$ref": "#/$defs/DeleteSlideOp"
+                },
+                {
+                  "$ref": "#/$defs/MoveSlideOp"
+                },
+                {
+                  "$ref": "#/$defs/AddNotesOp"
+                },
+                {
+                  "$ref": "#/$defs/AddMediaOp"
+                },
+                {
+                  "$ref": "#/$defs/SetCorePropertiesOp"
+                },
+                {
+                  "$ref": "#/$defs/UpdateTableCellOp"
+                },
+                {
+                  "$ref": "#/$defs/UpdateChartDataOp"
+                },
+                {
+                  "$ref": "#/$defs/SetSlideBackgroundOp"
+                },
+                {
+                  "$ref": "#/$defs/SetPlaceholderTextOp"
+                },
+                {
+                  "$ref": "#/$defs/SetPlaceholderImageOp"
+                },
+                {
+                  "$ref": "#/$defs/SetTitleSubtitleOp"
+                },
+                {
+                  "$ref": "#/$defs/SetSemanticTextOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartLegendOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartStyleOp"
+                },
+                {
+                  "$ref": "#/$defs/SetImageCropOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartTitleOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartAxisTitlesOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartAxisOptionsOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartDataLabelsOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartDataLabelsStyleOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartAxisScaleOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartPlotStyleOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartSeriesStyleOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartSeriesLineStyleOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartSecondaryAxisOp"
+                },
+                {
+                  "$ref": "#/$defs/SetLineSeriesMarkerOp"
+                },
+                {
+                  "$ref": "#/$defs/SetLineSeriesSmoothOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartSeriesTrendlineOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartSeriesErrorBarsOp"
+                },
+                {
+                  "$ref": "#/$defs/SetChartComboSecondaryMappingOp"
+                }
+              ]
+            },
+            "title": "Operations",
+            "type": "array"
+          }
+        },
+        "title": "OperationBatch",
+        "type": "object"
+      },
+      "ReplaceTextOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "replace_text",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "old": {
+            "title": "Old",
+            "type": "string"
+          },
+          "new": {
+            "title": "New",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "old",
+          "new"
+        ],
+        "title": "ReplaceTextOp",
+        "type": "object"
+      },
+      "SetChartAxisOptionsOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_axis_options",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "axis": {
+            "default": "value",
+            "enum": [
+              "category",
+              "value"
+            ],
+            "title": "Axis",
+            "type": "string"
+          },
+          "reverse_order": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reverse Order"
+          },
+          "major_tick_mark": {
+            "anyOf": [
+              {
+                "enum": [
+                  "none",
+                  "inside",
+                  "outside",
+                  "cross"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Major Tick Mark"
+          },
+          "minor_tick_mark": {
+            "anyOf": [
+              {
+                "enum": [
+                  "none",
+                  "inside",
+                  "outside",
+                  "cross"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Minor Tick Mark"
+          },
+          "tick_label_position": {
+            "anyOf": [
+              {
+                "enum": [
+                  "none",
+                  "low",
+                  "high",
+                  "next_to_axis"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Tick Label Position"
+          },
+          "visible": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Visible"
+          },
+          "crosses": {
+            "anyOf": [
+              {
+                "enum": [
+                  "automatic",
+                  "minimum",
+                  "maximum"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crosses"
+          },
+          "crosses_at": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crosses At"
+          },
+          "font_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Font Size"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index"
+        ],
+        "title": "SetChartAxisOptionsOp",
+        "type": "object"
+      },
+      "SetChartAxisScaleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_axis_scale",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "minimum": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Minimum"
+          },
+          "maximum": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Maximum"
+          },
+          "major_unit": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Major Unit"
+          },
+          "minor_unit": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Minor Unit"
+          },
+          "show_major_gridlines": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Show Major Gridlines"
+          },
+          "show_minor_gridlines": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Show Minor Gridlines"
+          },
+          "number_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Number Format"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index"
+        ],
+        "title": "SetChartAxisScaleOp",
+        "type": "object"
+      },
+      "SetChartAxisTitlesOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_axis_titles",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "category_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Category Title"
+          },
+          "value_title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Value Title"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index"
+        ],
+        "title": "SetChartAxisTitlesOp",
+        "type": "object"
+      },
+      "SetChartComboSecondaryMappingOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_combo_secondary_mapping",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "series_indices": {
+            "items": {
+              "type": "integer"
+            },
+            "title": "Series Indices",
+            "type": "array"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "series_indices"
+        ],
+        "title": "SetChartComboSecondaryMappingOp",
+        "type": "object"
+      },
+      "SetChartDataLabelsOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_data_labels",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "enabled": {
+            "default": true,
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "show_value": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Show Value"
+          },
+          "show_category_name": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Show Category Name"
+          },
+          "show_series_name": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Show Series Name"
+          },
+          "number_format": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Number Format"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index"
+        ],
+        "title": "SetChartDataLabelsOp",
+        "type": "object"
+      },
+      "SetChartDataLabelsStyleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_data_labels_style",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "position": {
+            "anyOf": [
+              {
+                "enum": [
+                  "best_fit",
+                  "center",
+                  "inside_base",
+                  "inside_end",
+                  "outside_end",
+                  "left",
+                  "right",
+                  "above",
+                  "below"
+                ],
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Position"
+          },
+          "show_legend_key": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Show Legend Key"
+          },
+          "number_format_is_linked": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Number Format Is Linked"
+          },
+          "font_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Font Size"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index"
+        ],
+        "title": "SetChartDataLabelsStyleOp",
+        "type": "object"
+      },
+      "SetChartLegendOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_legend",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "visible": {
+            "default": true,
+            "title": "Visible",
+            "type": "boolean"
+          },
+          "position": {
+            "default": "right",
+            "enum": [
+              "right",
+              "left",
+              "top",
+              "bottom",
+              "corner"
+            ],
+            "title": "Position",
+            "type": "string"
+          },
+          "include_in_layout": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Include In Layout"
+          },
+          "font_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Font Size"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index"
+        ],
+        "title": "SetChartLegendOp",
+        "type": "object"
+      },
+      "SetChartPlotStyleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_plot_style",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "vary_by_categories": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Vary By Categories"
+          },
+          "gap_width": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Gap Width"
+          },
+          "overlap": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Overlap"
+          },
+          "plot_area_x": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Plot Area X"
+          },
+          "plot_area_y": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Plot Area Y"
+          },
+          "plot_area_w": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Plot Area W"
+          },
+          "plot_area_h": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Plot Area H"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index"
+        ],
+        "title": "SetChartPlotStyleOp",
+        "type": "object"
+      },
+      "SetChartSecondaryAxisOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_secondary_axis",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "enable": {
+            "default": true,
+            "title": "Enable",
+            "type": "boolean"
+          },
+          "series_indices": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "integer"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Series Indices"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index"
+        ],
+        "title": "SetChartSecondaryAxisOp",
+        "type": "object"
+      },
+      "SetChartSeriesErrorBarsOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_series_error_bars",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "series_index": {
+            "title": "Series Index",
+            "type": "integer"
+          },
+          "value": {
+            "title": "Value",
+            "type": "number"
+          },
+          "direction": {
+            "default": "y",
+            "enum": [
+              "x",
+              "y"
+            ],
+            "title": "Direction",
+            "type": "string"
+          },
+          "bar_type": {
+            "default": "both",
+            "enum": [
+              "both",
+              "plus",
+              "minus"
+            ],
+            "title": "Bar Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "series_index",
+          "value"
+        ],
+        "title": "SetChartSeriesErrorBarsOp",
+        "type": "object"
+      },
+      "SetChartSeriesLineStyleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_series_line_style",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "series_index": {
+            "title": "Series Index",
+            "type": "integer"
+          },
+          "line_color_hex": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Line Color Hex"
+          },
+          "line_width_pt": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Line Width Pt"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "series_index"
+        ],
+        "title": "SetChartSeriesLineStyleOp",
+        "type": "object"
+      },
+      "SetChartSeriesStyleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_series_style",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "series_index": {
+            "title": "Series Index",
+            "type": "integer"
+          },
+          "fill_color_hex": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Fill Color Hex"
+          },
+          "invert_if_negative": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Invert If Negative"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "series_index"
+        ],
+        "title": "SetChartSeriesStyleOp",
+        "type": "object"
+      },
+      "SetChartSeriesTrendlineOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_series_trendline",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "series_index": {
+            "title": "Series Index",
+            "type": "integer"
+          },
+          "trend_type": {
+            "default": "linear",
+            "enum": [
+              "linear",
+              "exp",
+              "log",
+              "movingAvg",
+              "poly",
+              "power"
+            ],
+            "title": "Trend Type",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "series_index"
+        ],
+        "title": "SetChartSeriesTrendlineOp",
+        "type": "object"
+      },
+      "SetChartStyleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_style",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "style_id": {
+            "title": "Style Id",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "style_id"
+        ],
+        "title": "SetChartStyleOp",
+        "type": "object"
+      },
+      "SetChartTitleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_chart_title",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "text"
+        ],
+        "title": "SetChartTitleOp",
+        "type": "object"
+      },
+      "SetCorePropertiesOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_core_properties",
+            "title": "Op",
+            "type": "string"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Title"
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subject"
+          },
+          "author": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Author"
+          },
+          "keywords": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Keywords"
+          }
+        },
+        "required": [
+          "op"
+        ],
+        "title": "SetCorePropertiesOp",
+        "type": "object"
+      },
+      "SetImageCropOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_image_crop",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "image_index": {
+            "title": "Image Index",
+            "type": "integer"
+          },
+          "crop_left": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crop Left"
+          },
+          "crop_right": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crop Right"
+          },
+          "crop_top": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crop Top"
+          },
+          "crop_bottom": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crop Bottom"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "image_index"
+        ],
+        "title": "SetImageCropOp",
+        "type": "object"
+      },
+      "SetLineSeriesMarkerOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_line_series_marker",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "series_index": {
+            "title": "Series Index",
+            "type": "integer"
+          },
+          "style": {
+            "default": "circle",
+            "enum": [
+              "auto",
+              "none",
+              "circle",
+              "dash",
+              "diamond",
+              "dot",
+              "plus",
+              "square",
+              "star",
+              "triangle",
+              "x"
+            ],
+            "title": "Style",
+            "type": "string"
+          },
+          "size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Size"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "series_index"
+        ],
+        "title": "SetLineSeriesMarkerOp",
+        "type": "object"
+      },
+      "SetLineSeriesSmoothOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_line_series_smooth",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "series_index": {
+            "title": "Series Index",
+            "type": "integer"
+          },
+          "smooth": {
+            "default": true,
+            "title": "Smooth",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "series_index"
+        ],
+        "title": "SetLineSeriesSmoothOp",
+        "type": "object"
+      },
+      "SetPlaceholderImageOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_placeholder_image",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "placeholder_idx": {
+            "title": "Placeholder Idx",
+            "type": "integer"
+          },
+          "path": {
+            "title": "Path",
+            "type": "string"
+          },
+          "crop_left": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crop Left"
+          },
+          "crop_right": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crop Right"
+          },
+          "crop_top": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crop Top"
+          },
+          "crop_bottom": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Crop Bottom"
+          },
+          "left": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Left"
+          },
+          "top": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Top"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Width"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Height"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "placeholder_idx",
+          "path"
+        ],
+        "title": "SetPlaceholderImageOp",
+        "type": "object"
+      },
+      "SetPlaceholderTextOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_placeholder_text",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "placeholder_idx": {
+            "title": "Placeholder Idx",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "text_xml": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Text Xml"
+          },
+          "left": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Left"
+          },
+          "top": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Top"
+          },
+          "width": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Width"
+          },
+          "height": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Height"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "placeholder_idx",
+          "text"
+        ],
+        "title": "SetPlaceholderTextOp",
+        "type": "object"
+      },
+      "SetSemanticTextOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_semantic_text",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "role": {
+            "enum": [
+              "title",
+              "subtitle",
+              "body",
+              "footer",
+              "date",
+              "slide_number"
+            ],
+            "title": "Role",
+            "type": "string"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "role",
+          "text"
+        ],
+        "title": "SetSemanticTextOp",
+        "type": "object"
+      },
+      "SetSlideBackgroundOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_slide_background",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "color_hex": {
+            "title": "Color Hex",
+            "type": "string"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "color_hex"
+        ],
+        "title": "SetSlideBackgroundOp",
+        "type": "object"
+      },
+      "SetTitleSubtitleOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "set_title_subtitle",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "title": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Title"
+          },
+          "subtitle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Subtitle"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index"
+        ],
+        "title": "SetTitleSubtitleOp",
+        "type": "object"
+      },
+      "SlidePlan": {
+        "additionalProperties": false,
+        "properties": {
+          "slide_number": {
+            "title": "Slide Number",
+            "type": "integer"
+          },
+          "story_role": {
+            "title": "Story Role",
+            "type": "string"
+          },
+          "archetype_id": {
+            "title": "Archetype Id",
+            "type": "string"
+          },
+          "action_title": {
+            "title": "Action Title",
+            "type": "string"
+          },
+          "key_points": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Key Points",
+            "type": "array"
+          },
+          "visual_hint": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Visual Hint"
+          },
+          "source_note": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Source Note"
+          }
+        },
+        "required": [
+          "slide_number",
+          "story_role",
+          "archetype_id",
+          "action_title"
+        ],
+        "title": "SlidePlan",
+        "type": "object"
+      },
+      "UpdateChartDataOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "update_chart_data",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "chart_index": {
+            "title": "Chart Index",
+            "type": "integer"
+          },
+          "categories": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Categories",
+            "type": "array"
+          },
+          "series": {
+            "items": {
+              "maxItems": 2,
+              "minItems": 2,
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "items": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "type": "array"
+                }
+              ],
+              "type": "array"
+            },
+            "title": "Series",
+            "type": "array"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "chart_index",
+          "categories",
+          "series"
+        ],
+        "title": "UpdateChartDataOp",
+        "type": "object"
+      },
+      "UpdateTableCellOp": {
+        "additionalProperties": false,
+        "properties": {
+          "op": {
+            "const": "update_table_cell",
+            "title": "Op",
+            "type": "string"
+          },
+          "slide_index": {
+            "title": "Slide Index",
+            "type": "integer"
+          },
+          "table_index": {
+            "title": "Table Index",
+            "type": "integer"
+          },
+          "row": {
+            "title": "Row",
+            "type": "integer"
+          },
+          "col": {
+            "title": "Col",
+            "type": "integer"
+          },
+          "text": {
+            "title": "Text",
+            "type": "string"
+          },
+          "font_size": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Font Size"
+          }
+        },
+        "required": [
+          "op",
+          "slide_index",
+          "table_index",
+          "row",
+          "col",
+          "text"
+        ],
+        "title": "UpdateTableCellOp",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "plan": {
+        "$ref": "#/$defs/DeckPlan"
+      },
+      "ops": {
+        "anyOf": [
+          {
+            "$ref": "#/$defs/OperationBatch"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null
+      }
+    },
+    "required": [
+      "plan"
+    ],
+    "title": "SlidesDocument",
+    "type": "object"
+  }
+}

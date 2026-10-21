@@ -1,0 +1,65 @@
+[
+  {
+    "name": "worked-comparison",
+    "shape": "worked-example",
+    "roles": [
+      "hook",
+      "worked-example",
+      "worked-example",
+      "evidence",
+      "recap"
+    ],
+    "audience_question": "同じ配列から13をどう探すか",
+    "serves_goal": "既知の順番探しを足場に、中央で範囲を捨てる一手を追体験して学ぶ",
+    "objection": "中央を調べた後どちらへ進むか分からない",
+    "closing_ask": "13の4回の照合を説明し、秒数の測定と区別できる",
+    "evidence": [
+      "trace13-linear",
+      "trace13-binary",
+      "all15",
+      "limits"
+    ]
+  },
+  {
+    "name": "misconception-first",
+    "shape": "misconception-first",
+    "roles": [
+      "misconception",
+      "counterexample",
+      "prerequisite",
+      "worked-example",
+      "check"
+    ],
+    "audience_question": "二分探索はいつでも速いのか",
+    "serves_goal": "目的値1なら線形1回対二分4回の反例から、条件と比較単位を問う",
+    "objection": "二分探索なら全ての目的値で少ない回数になる",
+    "closing_ask": "最大比較回数の改善と個別ターゲットの有利不利を分けられる",
+    "evidence": [
+      "all15",
+      "limits",
+      "trace13-linear",
+      "trace13-binary"
+    ]
+  },
+  {
+    "name": "condition-first",
+    "shape": "prerequisite-chain",
+    "roles": [
+      "prerequisite",
+      "concept",
+      "method",
+      "comparison",
+      "practice"
+    ],
+    "audience_question": "なぜ半分を捨てても目的値を失わないか",
+    "serves_goal": "昇順という不変条件から捨てる側の正当性を先に導き、例へ適用する",
+    "objection": "途中の値を飛ばすと13を見落とすのではないか",
+    "closing_ask": "目的値と中央の大小から次の探索範囲を自分で選べる",
+    "evidence": [
+      "limits",
+      "trace13-binary",
+      "all15",
+      "trace13-linear"
+    ]
+  }
+]

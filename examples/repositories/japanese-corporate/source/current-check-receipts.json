@@ -1,0 +1,52 @@
+{
+  "scope": "Current repair technical checks; no model run logs or aesthetic score",
+  "artifact_sha256": "92173daab8ef598c3fbba8606594a1471bfda191dee35c979fe8394e4b2e758a",
+  "receipts": [
+    {
+      "command": "python source/rebuild.py",
+      "exit": 0
+    },
+    {
+      "command": "powershell -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render",
+      "exit": 0,
+      "pages": 6
+    },
+    {
+      "command": "python source/render_pdf_previews.py render",
+      "exit": 0,
+      "pages": 6
+    },
+    {
+      "command": "python source/check_native.py",
+      "exit": 0,
+      "objects": 237,
+      "native_charts": 1,
+      "native_tables": 2,
+      "connectors": 13
+    },
+    {
+      "command": "powershell -File source/check_overflow.ps1",
+      "exit": 0,
+      "checked_text_objects": 184,
+      "issues": 0
+    },
+    {
+      "command": "python source/check_pdf_fonts.py",
+      "exit": 0,
+      "note": "Existing PyMuPDF runtime used; no install"
+    },
+    {
+      "command": "powershell -File source/check_edit_reopen.ps1",
+      "exit": 0,
+      "main_unchanged": true
+    }
+  ],
+  "visual_read": {
+    "all_output_pages": 6,
+    "all_template_pages": 15,
+    "contact": true,
+    "edit_copy_page2": true,
+    "reviewer": "Codex, no score"
+  },
+  "independent_current_review": "pending"
+}

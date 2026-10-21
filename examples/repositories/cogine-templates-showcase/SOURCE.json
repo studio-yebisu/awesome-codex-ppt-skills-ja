@@ -49,11 +49,6 @@
     "html_inline": true
   },
   "format": "single-file-html",
-  "preview_canvas": {
-    "width": 1600,
-    "height": 900,
-    "note": "原典はfullscreen-responsive。これは代表PNGとプレビューの実viewport。"
-  },
   "navigation": "native-runtime-bridge",
   "editability": {
     "kind": "html_svg",
@@ -73,5 +68,31 @@
   ],
   "fictional": true,
   "sample_notice": "架空の茶の贈りもの企画。商品仕様・価格・効能・売上実績は示していません。図形は説明用。",
-  "verification_scope": "生成成功、主要初回表示と代表表紙PNG、原典navigation1→2、短いSKILL quick_validateだけ。optional visual-validator/全頁詳細検査/全kit再実行/採点なし。"
+  "superseded_history": [
+    {
+      "revision": "initial source-copy metadata",
+      "old_metadata": {
+        "preview_canvas": {
+          "width": 1600,
+          "height": 900,
+          "note": "原典はfullscreen-responsive。これは代表PNGとプレビューの実viewport。"
+        },
+        "verification_scope": "生成成功、主要初回表示と代表表紙PNG、原典navigation1→2、短いSKILL quick_validateだけ。optional visual-validator/全頁詳細検査/全kit再実行/採点なし。"
+      },
+      "authority": "Current state is the bound QA receipt, not these superseded statements."
+    }
+  ],
+  "verification_scope": "3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。",
+  "current_verification": "source/repair-qa.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "not_demonstrated": [
+    "原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。",
+    "layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。",
+    "原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。"
+  ],
+  "current_preview_canvas": [
+    1920,
+    1080
+  ],
+  "zip_reexecution": "source/round4-zip-replay.json"
 }

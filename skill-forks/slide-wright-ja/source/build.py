@@ -41,11 +41,13 @@ def build(args):
 '''+BRIDGE
   html=html.replace('  </script>\n</body>',insert+'  </script>\n</body>')
   file.write_text(html,encoding='utf-8')
-  receipt.write_text(json.dumps({'preview':{'file':'night-observatory.html','pages':2,'first_two_sha256':digest(slides),'html_sha256':digest(html)},'design_gate':'親から指定されたテーマで進行を承認済み。ユーザーの美術承認済みとは称さない。原典の停止質問を追加しない。','preview_opened':False},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+  receipt.write_text(json.dumps({'preview':{'file':'night-observatory.html','pages':2,'first_two_sha256':digest(slides),'html_sha256':digest(html)},'design_gate':{'original_new_deck_rule':'Show two real pages and stop for human approval before continuing.','human_art_approval_received':False,'case_mode':'Existing six-page deck maintenance and reproducible assembly; not a demonstration of the new-deck approval stop.'},'preview_opened':False},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
   print('Two real slides written to',file)
  else:
   state=json.loads(receipt.read_text(encoding='utf-8'))
   if not state['preview_opened']:raise RuntimeError('Open the real two-slide file before appending.')
+  if not args.existing_deck_repair:raise RuntimeError('This sample has no human design approval. Use --existing-deck-repair only to reproduce the authorized existing deck, not to bypass a new-deck approval gate.')
+  state['continuation_basis']='Explicit existing-deck repair/reproduction; no human design approval is claimed.'
   html=file.read_text(encoding='utf-8');first=(c/'source/slides-first-two.html').read_text(encoding='utf-8')
   if first not in html or digest(first)!=state['preview']['first_two_sha256']:raise RuntimeError('Two-slide source changed before append')
   remaining=(c/'source/slides-append-four.html').read_text(encoding='utf-8')
@@ -59,4 +61,5 @@ if __name__=='__main__':
  p=argparse.ArgumentParser();p.add_argument('--stage',choices=['preview','append'],required=True)
  p.add_argument('--case',type=Path,default=ROOT/'examples/repositories/slide-wright-showcase')
  p.add_argument('--upstream',type=Path,default=ROOT/'.build/slide-wright-upstream')
+ p.add_argument('--existing-deck-repair',action='store_true',help='Authorized existing-case maintenance only; this does not attest human design approval.')
  build(p.parse_args())

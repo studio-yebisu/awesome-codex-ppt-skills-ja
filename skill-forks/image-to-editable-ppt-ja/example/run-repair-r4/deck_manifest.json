@@ -1,0 +1,94 @@
+{
+  "input_type": "images",
+  "job_dir": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4",
+  "page_count": 2,
+  "inputs": [
+    "input/source.png",
+    "input/source-2.png"
+  ],
+  "pages": [
+    {
+      "page_index": 1,
+      "source_page": 1,
+      "source_image": "pages/page_001/source.png",
+      "page_dir": "pages/page_001",
+      "manifest": "pages/page_001/manifest.json",
+      "validation": "pages/page_001/validation.json",
+      "input": "source.png",
+      "agent_status": "pending",
+      "page_id": "page_001",
+      "status": "pending",
+      "page_request": "pages/page_001/page_request.json",
+      "dispatch": null,
+      "result": null,
+      "accepted": false
+    },
+    {
+      "page_index": 2,
+      "source_page": 2,
+      "source_image": "pages/page_002/source.png",
+      "page_dir": "pages/page_002",
+      "manifest": "pages/page_002/manifest.json",
+      "validation": "pages/page_002/validation.json",
+      "input": "source-2.png",
+      "agent_status": "pending",
+      "page_id": "page_002",
+      "status": "pending",
+      "page_request": "pages/page_002/page_request.json",
+      "dispatch": null,
+      "result": null,
+      "accepted": false
+    }
+  ],
+  "notes_manifest": "notes_manifest.json",
+  "output": "final/source_edited.pptx",
+  "validation": "validation.json",
+  "schema_version": 1,
+  "run_id": "run-repair-r4",
+  "prepared_at": "2026-10-15T16:03:33Z",
+  "page_jobs": "page_jobs.json",
+  "run_state": "run_state.json",
+  "max_concurrent_pages": 2,
+  "slide": {
+    "width": 13.333,
+    "height": 7.5,
+    "size_mode": "wide"
+  },
+  "image_backend": {
+    "backend_id": "builtin-imagegen",
+    "tool_name": "image_gen.imagegen",
+    "tool_call": "image_gen.imagegen",
+    "fallback_command": "editppt image generate/edit",
+    "runtime_home": "~/.editppt",
+    "model": null,
+    "requires_openai_api_key": false,
+    "mode_policy": "generate-or-edit-per-asset",
+    "chroma_key_helper": "editppt image process-sheet",
+    "input_context_policy": "generation needs prompt; for editing inspect every local input with view_image first, then pass prompt plus absolute local paths in referenced_image_paths",
+    "save_path_policy": "accept only an explicit output_hint or local path returned by image_gen.imagegen, verify it exists, import the selected output, and never scan for the newest file",
+    "handoff_rule": "call image_gen.imagegen serially, then import the selected local output; use editppt image generate/edit only when the built-in tool fallback policy applies",
+    "fallback_order": [
+      "codex-oauth",
+      "openai-compatible-api"
+    ],
+    "required_parameters": {
+      "generate": [
+        "prompt"
+      ],
+      "edit": [
+        "prompt",
+        "referenced_image_paths"
+      ]
+    },
+    "fallback_policy": {
+      "on": [
+        "tool-unavailable",
+        "tool-error",
+        "input-unreadable",
+        "no-valid-local-output"
+      ],
+      "missing_optional_parameters": false
+    }
+  },
+  "completed_at": "2026-10-15T16:11:45Z"
+}

@@ -1,0 +1,15 @@
+{
+  "reason": "QA IIFE calls msAuthFetch but upstream defined it inside the edit/save IIFE. Export the existing authenticated closure before the scheduled QA load.",
+  "original_sha256": "31cc92d791334a5028150e55107b406134290eaa17428da60a49438e7bcdeeb4",
+  "derived_sha256": "df187a86fb08b61d2993a15ca70e96876bea1f8a1795857e033b66612ea6add2",
+  "server_sha256": "3455ada5e4ef34c8d66e70028956f0806291ff3c1090fe7bcc09a1614767d7b2",
+  "server_unchanged": true,
+  "changed_behavior": "Authenticated QA note reading can access the existing helper.",
+  "unchanged_security": [
+    "Token discovery/cache/headers unchanged",
+    "Original serve.py authentication and path restrictions unchanged",
+    "No plain-fetch replacement or auth bypass",
+    "All injected UI/motion retained"
+  ],
+  "authorization": "User requested fork/refinement; parent explicitly authorized this local repair."
+}

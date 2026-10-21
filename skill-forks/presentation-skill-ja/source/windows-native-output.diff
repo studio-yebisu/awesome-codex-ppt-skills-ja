@@ -1,0 +1,38 @@
+--- upstream/scripts/render_slides.py
++++ runtime/scripts/render_slides.py
+@@ -47,7 +47,7 @@
+         command,
+         stdout=subprocess.PIPE,
+         stderr=subprocess.PIPE,
+-        text=True,
++        text=True, encoding="utf-8", errors="replace",
+         env=_soffice_env(),
+     )
+     if result.returncode != 0:
+@@ -84,7 +84,7 @@
+             ],
+             stdout=subprocess.PIPE,
+             stderr=subprocess.PIPE,
+-            text=True,
++            text=True, encoding="utf-8", errors="replace",
+             env=_soffice_env(),
+         )
+         elapsed = time.perf_counter() - t0
+@@ -221,7 +221,7 @@
+     path = Path(resolved).resolve()
+     digest = file_hash(path)
+     result = subprocess.run(
+-        [str(path), version_flag], capture_output=True, text=True,
++        [str(path), version_flag], capture_output=True, text=True, encoding="utf-8", errors="replace",
+         env=_soffice_env(), timeout=15,
+     )
+     version = (result.stdout + result.stderr).strip()
+@@ -283,7 +283,7 @@
+     from PIL import Image
+ 
+     result = subprocess.run(
+-        ["pdfinfo", str(pdf)], capture_output=True, text=True,
++        ["pdfinfo", str(pdf)], capture_output=True, text=True, encoding="utf-8", errors="replace",
+         env={**_soffice_env(), "LC_ALL": "C"},
+     )
+     match = re.search(r"^Pages:\s+(\d+)\s*$", result.stdout, re.MULTILINE)

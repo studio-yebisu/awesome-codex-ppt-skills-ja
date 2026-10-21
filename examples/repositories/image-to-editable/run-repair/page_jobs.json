@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "run_id": "run-repair",
+  "run_status": "complete",
+  "max_concurrent_pages": 2,
+  "created_at": "2026-10-15T13:23:18Z",
+  "updated_at": "2026-10-15T14:04:56Z",
+  "pages": [
+    {
+      "page_id": "page_001",
+      "page_index": 1,
+      "status": "accepted",
+      "page_dir": "pages/page_001",
+      "source": "pages/page_001/source.png",
+      "page_request": "pages/page_001/page_request.json",
+      "manifest": "pages/page_001/manifest.json",
+      "validation": "pages/page_001/validation.json",
+      "dispatch": {
+        "agent_id": "/root",
+        "agent_nickname": null,
+        "prompt": "pages/page_001/worker-prompt.md",
+        "prompt_sha256": "4b1a5bbc579e39aefc4cc73098d17d33823753baa0ff46c3155b917dd32051af",
+        "page_request_sha256": "99fb7feb01dec0f653390f59cd8973f40ba539af2907b9e9aae791b367917b15",
+        "dispatched_at": "2026-10-15T13:25:20Z",
+        "execution_mode": "worker"
+      },
+      "result": {
+        "agent_id": "/root",
+        "record_mode": "dispatched-worker",
+        "recorded_at": "2026-10-15T13:29:45Z",
+        "outputs": {
+          "page_manifest": "pages/page_001/manifest.json",
+          "imagegen_jobs": "pages/page_001/imagegen-jobs.json",
+          "page_pptx": "pages/page_001/page.pptx",
+          "preview": "pages/page_001/preview.png",
+          "contact_sheet": "pages/page_001/split_assets_contact.png",
+          "validation": "pages/page_001/validation.json",
+          "page_result": "pages/page_001/page_result.json"
+        },
+        "hashes": {
+          "page_manifest": "7327ddb07056c2b243244d148978e3e5099a167741294a80c496a45ad7f76161",
+          "imagegen_jobs": "5c9ce26e50a51f5703c34e5f1b9db0c52091ba1ea788ad30c5e1d2836b9f6844",
+          "page_pptx": "c7ce8b1997057ae31c81cff3968a14fa35268cd5af942c077e068944e09962e0",
+          "preview": "0438329881d29e204857664598281f0f2d5ddfa1e104155462e1a17ef083473a",
+          "contact_sheet": "eab94eaa445dec829b91faad50470cf680b0506448740c00dece54a5d1311628",
+          "validation": "b21e98b1bc7bacdc39aac1b5f07a5733e5560500020818ed6245749495e513f6",
+          "page_result": "601b96583f0f3a4bed18b8ed81ad87be8db477d57cff8195503d888d8aed2176"
+        },
+        "asset_hashes": {
+          "pages/page_001/assets/icons/document.png": "d2f8cf4f38da42ae6e6f069e4c46f700dc09035bd62de2b6b3b7be3ca544613a",
+          "pages/page_001/assets/icons/history.png": "8a8f165ece112ae5287a2431fe54dce33410efeb9ffdcb3b3dbe146e2d8b31c7",
+          "pages/page_001/assets/icons/upload.png": "a98c225cac106a5307ce1bbb477a70e50da60a1c07f4b720bda67af3a96efdaa"
+        },
+        "validation_passed": true
+      },
+      "accepted": true,
+      "accepted_at": "2026-10-15T14:04:56Z"
+    },
+    {
+      "page_id": "page_002",
+      "page_index": 2,
+      "status": "accepted",
+      "page_dir": "pages/page_002",
+      "source": "pages/page_002/source.png",
+      "page_request": "pages/page_002/page_request.json",
+      "manifest": "pages/page_002/manifest.json",
+      "validation": "pages/page_002/validation.json",
+      "dispatch": {
+        "agent_id": "/root/repair_core_examples",
+        "agent_nickname": null,
+        "prompt": "pages/page_002/worker-prompt.md",
+        "prompt_sha256": "e6e01f27e3d9f4ebd81f5056d709a3b545a3ede1793d7ee4c1fb40f28cb42a10",
+        "page_request_sha256": "f3a46f0749b137301c9f3552ab925637f15862127b42d875de034a1ce357f4a7",
+        "dispatched_at": "2026-10-15T14:00:52Z",
+        "execution_mode": "worker"
+      },
+      "result": {
+        "agent_id": "/root/repair_core_examples",
+        "record_mode": "dispatched-worker",
+        "recorded_at": "2026-10-15T14:04:55Z",
+        "outputs": {
+          "page_manifest": "pages/page_002/manifest.json",
+          "imagegen_jobs": "pages/page_002/imagegen-jobs.json",
+          "page_pptx": "pages/page_002/page.pptx",
+          "preview": "pages/page_002/preview.png",
+          "contact_sheet": "pages/page_002/split_assets_contact.png",
+          "validation": "pages/page_002/validation.json",
+          "page_result": "pages/page_002/page_result.json"
+        },
+        "hashes": {
+          "page_manifest": "f5114d523f31496d3ecea19b190f9db4b70e2e175c3c0487eee37eeaa7787bc4",
+          "imagegen_jobs": "ac4e150355a18de233cdc957ca03f8c931bb71fc6091e09c01e3f000dd59ef0f",
+          "page_pptx": "43bbc4bfd8d5f4923f10d8ea32d31c372d1797b052bb8349a217dd24505ae2cf",
+          "preview": "68dc84b6218f01e37f0d62116dc652cdfba92c82abe4fc57457778cc7a24b4ec",
+          "contact_sheet": "b7f33f2d95069d1ecd9f9e310de6ea07c7b1a6bbc9b610cf22e20d761efed324",
+          "validation": "f3a4ef1feb7a81fbd7a52af10071985b208f691d1afc4a2b3a683796584acb84",
+          "page_result": "26743d6b179805ccb5357e60cbf68ab3df9983a235d884c4001817b022488e7a"
+        },
+        "asset_hashes": {
+          "pages/page_002/assets/icons/laptop.png": "27fed14a2e33cb5e349fe64526f6a74ef23f4735b083fc737d5554b27f95a6fd",
+          "pages/page_002/assets/icons/document.png": "915884aad15c89748b6668ec6681e44e969bcdfa3a5bd66323b484746e629c0e",
+          "pages/page_002/assets/icons/staging.png": "6a675142a0d28fd7c8109dbb77e3dcd2db5f6962bc6b62c8c478b1798dcb5afd",
+          "pages/page_002/assets/icons/database.png": "51e73ac070d07563c7b830c83281f8c13a3aea6f96117223dd444c551f00ef7a"
+        },
+        "validation_passed": true
+      },
+      "accepted": true,
+      "accepted_at": "2026-10-15T14:04:56Z"
+    }
+  ]
+}

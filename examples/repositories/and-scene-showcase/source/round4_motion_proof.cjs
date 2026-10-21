@@ -1,0 +1,11 @@
+const {chromium}=require('playwright'),fs=require('fs'),path=require('path');
+(async()=>{const root=path.resolve(__dirname,'..'),b=await chromium.launch({executablePath:process.env.YEBISU_CHROMIUM||'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'}),p=await b.newPage({viewport:{width:1440,height:900},reducedMotion:'no-preference'}),errors=[];p.on('pageerror',e=>errors.push(String(e)));try{
+await p.goto('http://127.0.0.1:8847/examples/repositories/and-scene-showcase/dist/index.html');await p.evaluate(()=>document.fonts.ready);await p.waitForTimeout(1200);
+for(let i=0;i<3;i++){await p.keyboard.press('ArrowRight');await p.waitForTimeout(1100)}
+await p.evaluate(()=>window.__productionBook=document.querySelector('.book'));
+const states=[];async function shot(name){const rect=await p.locator('.book').boundingBox();const file=`render/morph-${name}.png`;await p.screenshot({path:path.join(root,file)});states.push({phase:name,book:rect,file});}
+await shot('before');await p.keyboard.press('ArrowRight');await p.waitForTimeout(100);await shot('mid');await p.waitForTimeout(1100);await shot('after');
+const sameNode=await p.evaluate(()=>window.__productionBook===document.querySelector('.book'));await p.getByRole('button',{name:'置く',exact:true}).click();await p.waitForTimeout(1100);const tocMarker=await p.locator('[data-presentation-marker]').innerText();
+const browseBox=await p.locator('[data-presentation-stage]').boundingBox();await p.locator('[data-presentation-title]').click();await p.keyboard.press('p');await p.waitForTimeout(800);const presentBox=await p.locator('[data-presentation-stage]').boundingBox();await p.screenshot({path:path.join(root,'render/present-mode.png')});
+fs.writeFileSync(path.join(root,'source/round4-motion-proof.json'),JSON.stringify({author:'Codex browser QA',natural_transition:'Original ArrowRight step4→5;100ms intermediate sample; no timeline modification',samePersistentBookDOMNode:sameNode,states,tocClick:{label:'置く',marker:tocMarker},Pkey:{browseBox,presentBox},errors,notChecked:['Swipe gesture','quantitative frame rate','automatic re-centering path','sync-kit','existing-deck modification'],independentScore:false},null,2));
+}finally{await b.close()}})();

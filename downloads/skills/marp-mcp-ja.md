@@ -1,34 +1,57 @@
 ---
 name: marp-mcp-ja
-description: 原典Marp MCPサーバーの構造化レイアウト操作で日本語スライドを作り、HTML・PDF・画像主体PPTXへ出力する。
+description: 箇条書きや表を資料へ整え、ページIDで指定した内容だけを更新する。
 ---
-# Marp MCP・日本語制作
 
-原典は[masaki39/marp-mcp](https://github.com/masaki39/marp-mcp/tree/2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f)、固定commit `2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f`、[MIT](LICENSE)。[SOURCE](SOURCE.json)と[原典SKILL](source/upstream/skills/marp/SKILL.md)を必要に応じて読む。
+## このスキルでできること
 
-## 実MCPで制作する
+識別IDで指定した箇所だけを更新し、Marp原稿と書き出す資料の対応を保てる。
 
-原典はCLIでも同じ操作が可能。この派生作例は実MCPのstdio JSON-RPC `tools/call`を使う。[再生成ガイド](README.md)の環境を用意し、[run_mcp.py](source/run_mcp.py)から原典サーバーを起動する。
+- 困っている状況: Markdownを直接編集するだけでは、ページ追加や書式変更の操作をエージェントに任せにくい。
+- 必要な入力: MarpのMarkdown原稿、作成・更新したい内容、対象を指定する識別ID。
+- 受け取るもの: 更新したMarkdownと、原典の書き出し機能で作るHTML・PDF・画像主体のPPTX。編集は元原稿で行う。
+- 必要環境: Node.js18以上、固定原典runtimeと互換依存、Marp CLI4.4.0、Chrome/Edge。再生成helperのPDF描画にはPython3とPyMuPDFが必要。
+- 作例で試した範囲: 衣服の修理会を題材にMCPで6頁を制作し、HTML・PDF・画像型PPTXを出力。原典CLIは別の2頁で操作した。
 
-1. `list_themes_and_styles`でテーマ・スタイルを調べ、`list_layouts`を必ず先に呼んで有効なレイアウトとparamsを取得する。
-2. `create_presentation`でfrontmatter・表紙・IDsを作る。既存資料を使う場合は先に`set_frontmatter`を呼ぶ。
-3. `manage_slide`へ構造化paramsを渡して追加する。replace/deleteでは`read_slide`で取得したslide IDを使う。
-4. `generate_slide_ids`で安定したIDを保存し、`read_slide`で編集対象を取得する。
-5. 日本語字体と色の局所CSSを原典レイアウトへ重ね、`export_slide`からHTML/PDFを出す。画像主体PPTXも同じ原典MCPで出力できる。
+# Marpのページ作成とID指定更新
 
-作例は原典`default`＋`minimal`のtitle / two-column / content / table / big-statementを実使用。[入力](input/content.json)と[局所CSS](source/workshop.css)を編集する。表・行程・持ち帰るものの構図を変え、全頁を同じカード列にしない。架空企画や仮の時間を実績として書かない。必要な原典layout実装は`source/upstream/src/styles/minimal/`。
+原典の固定commit・利用条件は[SOURCE.json](SOURCE.json)。[未変更の元SKILL](source/upstream/skills/marp/SKILL.md)と必要な参照を保持しています。
 
-## 出力の編集範囲
+## 手順
 
-HTMLは字体・CSSを埋め込んだ主出力。編集正本はMarkdownと構造化入力・CSS。PDFは固定レイアウト。PPTXは各頁の画像を収めた版で、文字・表・図形のnative編集はできない。原典の実験的`pptxEditable`はこの作例では使用していない。PowerPoint実機表示も未確認。
+1. marp-mcp --versionでCLIを確認する。list-layoutsで版式と必須項目を調べ、-tで基本テーマ、-sで追加スタイルを選ぶ。-s指定時は原則-t defaultになる。
+2. createで資料を作り、set-frontmatterで見出しや頁番号を設定する。manageのlayoutとparamsへ原稿を渡して頁を追加する。
+3. generate-idsでIDを付け、readで対象IDを調べる。manage --mode replace/deleteと--slide-idで変更箇所を指定する。既存IDは再発行しても変わらない。
+4. export -f htmlまたは-f pdfで書き出す。generate-agendaとadd-image-transitionはHTML用の機能として必要な時に使う。MCP経由も選べるが、原典SKILLの主な入口はCLI。
+5. 出力した全頁を開き、文字・表・改行・ID指定の変更箇所を確認する。PPTXの出力方式と編集できる範囲を分けて伝える。
 
-[原典との差分](source/windows-export-adapter.diff)はWindowsの`spawn('marp')`を、環境変数`MARP_CLI_JS`指定時だけ同じMarp CLI JSのNode実行へ対応する。生成経路を別builderへ置き換えない。HTMLには原典hash controllerへ接続する0-based同一originの`yebisu-slide` / `yebisu-page` bridgeだけを追加する（[run_mcp.py](source/run_mcp.py)）。
+## CLIの基本形
 
-## 字体・確認範囲
+```text
+marp-mcp --version
+marp-mcp -t default -s minimal list-layouts
+marp-mcp -s minimal create <file.md> --title <title>
+marp-mcp -s minimal set-frontmatter <file.md> --paginate
+marp-mcp -s minimal manage <file.md> -l <layout> -p <JSON>
+marp-mcp generate-ids <file.md>
+marp-mcp read <file.md>
+marp-mcp -s minimal manage <file.md> --mode replace --slide-id <id> -l <layout> -p <JSON>
+marp-mcp manage <file.md> --mode delete --slide-id <id>
+marp-mcp export <file.md> -f html
+marp-mcp export <file.md> -f pdf
+```
 
-公式の未改変Shippori Mincho（見出し）、BIZ UDPGothic（本文）、Manrope（番号・時間）の実TTF/OFLを`fonts/`へ収録。[字体出所](fonts/SOURCE.json)を保持し、OS付属字体を抽出しない。MCP操作の入力と応答は再生成時に`source/logs/`へ保存する。
+generate-agendaは章見出しから議題頁、add-image-transitionは対象頁の前に画像の遷移頁を追加するHTML用機能です。今回の完成作例では未実施です。MCP経由は同じリポジトリの別の入口で、元SKILLのCLI案内を置き換えません。
 
-作例は原典build・生成/export成功、PDF6枚、主要出力の初回表示だけを確認した。ユーザーの範囲指定を優先し、全頁詳細目視・独立レビュー・構造監査・ZIP再実行を追加していない。原典のテーマ選択や編集用IDの工程は維持する。
+## 同梱作例の実施範囲
+
+元MCPで全6頁を再生成しHTML/PDF/PPTXを書出し。元CLIでも作成・ID更新・ID保持・HTML/PDF出力を実行。HTML6頁・PDF6頁を実描画し目視。3頁の4動作、4頁の表幅、6頁の文字コントラストを修復。
+
+- 6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。
+- 原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。
+- 工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。
+
+今回の修復はCodex。自動検査と作者の目視は独立評価・人間の承認と分けて記録します。[現行QA](source/repair-qa.json)と[原典工程の記録](source/round5-original-gates.json)を参照。元LICENSE、NOTICE、字体のOFLを残します。
 
 ## 単体の本文から使う
 
@@ -36,7 +59,7 @@ HTMLは字体・CSSを埋め込んだ主出力。編集正本はMarkdownと構�
 
 原典: https://github.com/masaki39/marp-mcp/tree/2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `marp-mcp-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `marp-mcp-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: masaki39 / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 

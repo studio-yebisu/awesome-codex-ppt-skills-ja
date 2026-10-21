@@ -1,5 +1,5 @@
 {
-  "title": "仕事の引き継ぎを、迷わない一枚に。",
+  "title": "引き継ぎメモを一枚にまとめる",
   "subtitle": "架空の社内運用を図と表で説明する6枚",
   "document_metadata": {
     "author": "Presentation Team",
@@ -9,7 +9,7 @@
     "style_preset": "lavender-ops",
     "composition_grammar": "operations-grid",
     "style_seed": "ja-handoff-six-pages",
-    "font_pair": "handoff_ja_v1",
+    "font_pair": "editorial_serif_v1",
     "visual_density": "medium",
     "emoji_mode": "none",
     "footer_mode": "source-line",
@@ -32,8 +32,16 @@
     "synthetic": true,
     "external_assets": false,
     "authoring_model": "gpt-6.1-sol",
+    "repair_authoring_model": "claude-opus-5-5",
+    "repair_scope": [
+      "slide 1 title: two 7-glyph lines, no punctuation-only wrapped line",
+      "operations-grid content header: titleTop >= 0.34in below the 0.08-0.19in top bars (addDarkTitleBar)",
+      "slide 6 section: Japanese kicker, stage values and stage_labels instead of CYCLE/CONTROL placeholders (renderContractStage)",
+      "renderContractStage text ink and section footer >= 4.5:1 on the actual stage background"
+    ],
     "chosen_original_route": "operations-grid",
-    "review": "user_requested_minimal",
+    "original_review_mode": "user_requested_minimal (superseded)",
+    "review": "independent_review_correction_loop",
     "python_data_pipeline": "not used; original default Node renderer selected"
   },
   "compliance": {
@@ -45,7 +53,7 @@
       "type": "title",
       "role": "title",
       "theme": "dark",
-      "title": "仕事の引き継ぎを、\n迷わない一枚に。",
+      "title": "引き継ぎメモを\n一枚にまとめる",
       "subtitle": "必要情報・担当・確認を、一枚にそろえる。",
       "notes": "架空の社内運用を説明する6枚。実際の引継ぎメモを一枚に整える例。実在の会社・社員・実測値ではない。",
       "slide_id": "handoff-01",
@@ -206,8 +214,15 @@
       "role": "section",
       "theme": "dark",
       "section_number": "06",
+      "kicker": "最終確認",
       "title": "次の担当が、\n動ける状態まで。",
       "subtitle": "資料・期限・着手条件を、短い一枚に。",
+      "cycle": "担当変更前",
+      "control": "記録を確認",
+      "stage_labels": {
+        "cycle": "確認時点",
+        "control": "着手条件"
+      },
       "notes": "企画上の目標。運用効果を測定した結果ではない。",
       "slide_id": "handoff-06",
       "footer": "仮想の社内運用 / 人名・会社・実績値は使用していません"

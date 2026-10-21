@@ -1,0 +1,39 @@
+{
+  "phase": "4/8 話の順序（Ghost Deck）",
+  "upstream_file": "upstream/references/phase-04.md",
+  "wording_rules": "upstream/references/wording-rules.md（§2 Action Title）",
+  "soul_sentence": "朝の20分を四つの手順に分け、四週間試して続け方を確かめる",
+  "pyramid": {
+    "argument_mode": "帰納グループ・時間順（当日の手順 → 前日と終了時 → 四週間）",
+    "supports": [
+      {"id": "A1", "text": "朝の20分は四つの手順で使う", "evidence": ["D1", "D2", "D3", "D4", "D5"]},
+      {"id": "A2", "text": "前日に作業の入口を決め、終了時に続きを残す", "evidence": ["F2"]},
+      {"id": "A3", "text": "四週間で取り組み・記録・相談を並行させる", "evidence": ["F3", "D6"]}
+    ]
+  },
+  "pages": [
+    {"page": 1, "role": "表紙（案件名。Action Title ではない）", "title": "朝20分の作業ワークショップ案", "narrative_purpose": "structure"},
+    {"page": 2, "subject": "サンプル行程", "title": "サンプル行程は朝の作業を四つの手順に分ける", "narrative_purpose": "explain", "support": "A1"},
+    {"page": 3, "subject": "本案", "title": "本案は前日に作業の入口を一つ決めておく", "narrative_purpose": "explain", "support": "A2"},
+    {"page": 4, "subject": "試行計画", "title": "試行計画は取り組み・記録・相談を週ごとに並べる", "narrative_purpose": "explain", "support": "A3"}
+  ],
+  "title_read_through": [
+    "サンプル行程は朝の作業を四つの手順に分ける",
+    "本案は前日に作業の入口を一つ決めておく",
+    "試行計画は取り組み・記録・相談を週ごとに並べる"
+  ],
+  "tests": {
+    "1_titles_only": {"result": "黄", "note": "何を・どう進めるかは読める。なぜ必要か（C）と結果（効果）は入力にないので読めない。補わない。"},
+    "2_mece": {"result": "黄", "note": "P3 の『終了時に続きを残す』と P2 の手順4『次にやることを書く』は同じ行為を別の時間幅で示している。P3 の主題は前日に決める点なので統合しない。"},
+    "3_soul_trace": {"result": "緑", "note": "3ページとも灵魂句の要素（四つの手順・前日の入口・四週間）に対応する。"},
+    "4_action_title": {"result": "緑", "note": "3本とも主語＋述語の結論文。数字なし（『四つ』は分組の数量語）、24字以内、読点なし。"},
+    "5_evidence": {"result": "緑", "note": "A1=D1〜D5、A2=F2、A3=F3/D6。効果の論点は立てていないので赤はない。"}
+  },
+  "structure_deviation": "原典の標準順（表紙・要約・目次・章扉・内容・結尾行動）ではなく、BRIEF の4枚指定に従い表紙＋内容3枚。要約ページと行動ページはない。",
+  "gate": {
+    "upstream_requirement": "灵魂句を再確認し、標題列をユーザーが読んで確認してから Phase 5 へ。",
+    "this_run": "停止待ちを統合担当判断に置き換える。",
+    "user_confirmed": false,
+    "integrator_decision": null
+  }
+}

@@ -328,7 +328,6 @@
   "artifact_sha256": "c68be597afc7daa13aec2b1be4e3234ba339d5f0696045186a6a7c2c94424007",
   "PPTX_or_PDF": false,
   "content_status": "fictional UI design proposal; no outcomes/times/percentages invented",
-  "check_scope": "original build and first representative display/navigation only; no original full-sheet checker",
   "not_exercised": [
     "theme import from PPTX/image",
     "presenter display",
@@ -338,5 +337,37 @@
     "independent grading",
     "full-kit replay"
   ],
-  "local_packaging_fix": "Append bridge/notices at final actual body close only; do not replace engine string contents."
+  "local_packaging_fix": "Append bridge/notices at final actual body close only; do not replace engine string contents.",
+  "verification_scope": "未変更の原典check_deck --slides allで6頁・問題0。全6実PNGを目視。Pキーで現在4頁・次5頁・4頁の新しい話す説明と進行合図が一致することを確認。",
+  "repair_author": "Codex",
+  "repair_receipt": "source/repair-qa.json",
+  "not_demonstrated": [
+    "未変更の原典engine/builderを使用。日本語の字体・改行と末尾の同一origin bridgeは局所差分。",
+    "今回Pキーの発表者画面と講稿の一致をheadlessで実確認。実機プロジェクター、手動通し稽古、保存編集は未確認。",
+    "HTML出力。native PPTXは生成しない。"
+  ],
+  "method": "original scripts/new_deck.py -> original template scaffold -> authored one-HTML-per-slide -> unchanged template/build.py -> inline fonts/styles/icons/scripts -> appended origin-checked bridge and license notices",
+  "current_repair": {
+    "author": "Codex",
+    "verification": "source/repair-qa.json",
+    "original_gates": "source/round4-original-gates.json",
+    "independent_rereview": "pending for repaired version"
+  },
+  "superseded_history": [
+    {
+      "revision": "before round4-web07-repair",
+      "old_metadata": {
+        "check_scope": "original build and first representative display/navigation only; no original full-sheet checker"
+      },
+      "current_authority": "QA.json and source/repair-qa.json in the included case; historical limited checks do not describe the current revision."
+    }
+  ],
+  "current_verification": "source/repair-qa.json",
+  "zip_reexecution": "source/round4-zip-replay.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "current_preview_canvas": {
+    "width": 1920,
+    "height": 1080,
+    "scope": "All current public deck pages; original Cogine validator separately at1280×720."
+  }
 }

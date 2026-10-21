@@ -33,7 +33,7 @@
       "result": {
         "agent_id": "/root/astra_spec",
         "backend_used": "built-in image_gen.imagegen",
-        "selected_source": "M:\\Codex\\home\\generated_images\\01a134f5-12c1-7b21-9ae5-2f1db1252d00\\exec-085e0e65-d574-49da-9123-d7d334ecefef.png",
+        "selected_source": "origin_image/slide_01.png",
         "selected_source_sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
         "final_image": "origin_image/slide_01.png",
         "final_image_sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
@@ -44,7 +44,8 @@
         ],
         "sample_generation_method_matched": true,
         "qa_note": "全ての日本語、保存・記録・共有の区別、下端の結論を画像で確認。文字切れなし。制作担当が作風sampleとして採用。",
-        "recorded_at": "2026-10-13T15:07:23Z"
+        "recorded_at": "2026-10-13T15:07:23Z",
+        "selected_source_path_note": "Portable relative alias to byte-identical final image; historical absolute location retained privately, not republished."
       },
       "blocker": null
     },
@@ -67,7 +68,7 @@
       "result": {
         "agent_id": "/root/astra_spec",
         "backend_used": "built-in image_gen.imagegen",
-        "selected_source": "M:\\Codex\\home\\generated_images\\01a134f5-12c1-7b21-9ae5-2f1db1252d00\\exec-686d2700-68e9-4f4e-b078-8478f92068a0.png",
+        "selected_source": "origin_image/slide_02.png",
         "selected_source_sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
         "final_image": "origin_image/slide_02.png",
         "final_image_sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
@@ -78,7 +79,8 @@
         ],
         "sample_generation_method_matched": true,
         "qa_note": "全3段がローカル枠内。git add/commit矢印、作業ツリー/ステージ/ローカル履歴、日本語結論を視認し意味と可読性を確認。",
-        "recorded_at": "2026-10-13T15:08:14Z"
+        "recorded_at": "2026-10-13T15:08:14Z",
+        "selected_source_path_note": "Portable relative alias to byte-identical final image; historical absolute location retained privately, not republished."
       },
       "blocker": null
     },
@@ -92,30 +94,146 @@
       "requires_context_images": false,
       "status": "recorded",
       "dispatch": {
-        "agent_id": "/root/astra_spec",
-        "agent_nickname": "Astra production agent",
-        "prompt": "prompts/slide_03.json",
-        "prompt_sha256": "70969005f4e6a1e6524aa497463ff253e9a9e6cf1b506bc272a39d27e9873efd",
-        "dispatched_at": "2026-10-13T15:08:14Z"
+        "agent_id": "/root/skill_effect_catalog",
+        "agent_nickname": "Codex native5 repair worker",
+        "prompt": "source/imagegen-repair/slide-03-repair-job.json",
+        "prompt_sha256": "c784da68481e85f09f645657b96c3724f09720d35a4c9b80745e835fa67d16c1",
+        "dispatched_at": "2026-10-15T13:36:06Z"
       },
       "result": {
-        "agent_id": "/root/astra_spec",
+        "agent_id": "/root/skill_effect_catalog",
         "backend_used": "built-in image_gen.imagegen",
-        "selected_source": "M:\\Codex\\home\\generated_images\\01a134f5-12c1-7b21-9ae5-2f1db1252d00\\exec-2c133d54-5dfb-4bf0-a935-0592f60ae9e8.png",
-        "selected_source_sha256": "29165a22ae72402cc5ee4221304c27b2e40a7d21c06ee6ebe9a23c2b1ea6e620",
+        "selected_source": "origin_image/slide_03.png",
+        "selected_source_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
         "final_image": "origin_image/slide_03.png",
-        "final_image_sha256": "29165a22ae72402cc5ee4221304c27b2e40a7d21c06ee6ebe9a23c2b1ea6e620",
+        "final_image_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
         "expected_backend": "built-in image_gen.imagegen",
         "expected_backend_labels": [
           "built-in image_gen.imagegen",
           "image_gen.imagegen"
         ],
         "sample_generation_method_matched": true,
-        "qa_note": "手順1〜4、git diff --stagedの2ハイフン、README.md、git commit/push、共有先と作業ブランチの注記を視認。文字切れなし。",
-        "recorded_at": "2026-10-13T15:09:20Z"
+        "qa_note": "Final warning-legibility image reconciled after generation through original result recorder. Existing dispatch was for the earlier spacing edit; current warning edit had no fresh dispatch. This administrative reopening does not claim dispatch-before-generation or human approval. Image/PPTX/render bytes unchanged.",
+        "recorded_at": "2026-10-15T17:35:30Z",
+        "selected_source_path_note": "Portable relative alias to byte-identical final image; historical absolute location retained privately, not republished.",
+        "generation_source_record": "source/imagegen-warning-repair.json",
+        "recording_role": "administrative_reconciliation_of_existing_generated_output"
       },
-      "blocker": null
+      "blocker": null,
+      "repair_history": [
+        {
+          "event": "final_output_reconciled",
+          "at": "2026-10-15T17:35:30Z",
+          "previous_result_image_sha256": "77dc8f10f723b57b949b787f9c7d65e159d7bda4945b3ad664728aa6efd19876",
+          "previous_result_recorded_at": "2026-10-15T13:36:06Z",
+          "retained_dispatch_at": "2026-10-15T13:36:06Z",
+          "recording_method": "unchanged bundled record_slide_result.py",
+          "generation_repeated": false,
+          "new_worker_dispatched": false,
+          "historical_deviations": [
+            {
+              "id": "spacing_generated_before_repair_dispatch",
+              "phase": "spacing_edit",
+              "generation_at": null,
+              "generation_time_known": false,
+              "generation_before_dispatch": true,
+              "dispatch_at": "2026-10-15T13:36:06Z",
+              "generation_source_record": "source/imagegen-repair.json",
+              "image_sha256": "77dc8f10f723b57b949b787f9c7d65e159d7bda4945b3ad664728aa6efd19876",
+              "evidence": "Previous result qa_note explicitly recorded candidate-before-refreshed-dispatch.",
+              "full_chronological_workflow_claimed": false
+            },
+            {
+              "id": "warning_edit_without_new_dispatch",
+              "phase": "warning_legibility_edit",
+              "generation_at": null,
+              "generation_time_known": false,
+              "generation_tool": "image_gen.imagegen",
+              "tool_call_id": "exec-2e568a74-6513-44be-9981-f92c7d5767a8",
+              "image_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
+              "new_generation_dispatch_executed": false,
+              "evidence": "source/imagegen-warning-repair.json",
+              "full_chronological_workflow_claimed": false
+            }
+          ]
+        }
+      ]
     }
   ],
-  "updated_at": "2026-10-13T15:09:20Z"
+  "updated_at": "2026-10-15T17:35:30Z",
+  "artifact_binding": {
+    "artifact": "codex-image-ppt.pptx",
+    "artifact_sha256": "661602d6d753221d3e15bd6b6fb71f8eeba3dccabe8d41c1495840e5a263d59f",
+    "slides": [
+      {
+        "slide_id": "slide_01",
+        "final_image": "origin_image/slide_01.png",
+        "source_sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
+        "embedded_image_sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
+        "match": true
+      },
+      {
+        "slide_id": "slide_02",
+        "final_image": "origin_image/slide_02.png",
+        "source_sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
+        "embedded_image_sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
+        "match": true
+      },
+      {
+        "slide_id": "slide_03",
+        "final_image": "origin_image/slide_03.png",
+        "source_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
+        "embedded_image_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
+        "match": true
+      }
+    ],
+    "scope": "Image bytes physically read from delivered PPTX; not inferred from state."
+  },
+  "workflow_compliance": {
+    "scope": "partial_original_workflow",
+    "expected_generation_order": [
+      "dispatch",
+      "image_generation",
+      "result_recording"
+    ],
+    "observed_repair_order": [
+      "spacing_generation",
+      "spacing_dispatch_record",
+      "spacing_result_record",
+      "warning_generation_without_new_dispatch",
+      "final_image_artifact_assembly",
+      "administrative_final_result_reconciliation"
+    ],
+    "deviations": [
+      {
+        "id": "spacing_generated_before_repair_dispatch",
+        "phase": "spacing_edit",
+        "generation_at": null,
+        "generation_time_known": false,
+        "generation_before_dispatch": true,
+        "dispatch_at": "2026-10-15T13:36:06Z",
+        "generation_source_record": "source/imagegen-repair.json",
+        "image_sha256": "77dc8f10f723b57b949b787f9c7d65e159d7bda4945b3ad664728aa6efd19876",
+        "evidence": "Previous result qa_note explicitly recorded candidate-before-refreshed-dispatch.",
+        "full_chronological_workflow_claimed": false
+      },
+      {
+        "id": "warning_edit_without_new_dispatch",
+        "phase": "warning_legibility_edit",
+        "generation_at": null,
+        "generation_time_known": false,
+        "generation_tool": "image_gen.imagegen",
+        "tool_call_id": "exec-2e568a74-6513-44be-9981-f92c7d5767a8",
+        "image_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
+        "new_generation_dispatch_executed": false,
+        "evidence": "source/imagegen-warning-repair.json",
+        "full_chronological_workflow_claimed": false
+      }
+    ],
+    "human_approval_obtained": false,
+    "multiple_page_workers_used": false,
+    "current_user_delegation": "Autonomous improvement requested; does not retroactively establish missing historical human approvals or worker dispatches.",
+    "full_original_workflow_complete": false
+  },
+  "metadata_adapter": "Structured deviation/history/artifact binding and portable selected-source aliases added after unchanged original result recorder."
 }

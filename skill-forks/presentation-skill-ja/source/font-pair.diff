@@ -1,14 +1,19 @@
 --- upstream/scripts/build_deck_pptxgenjs.js
 +++ runtime/scripts/build_deck_pptxgenjs.js
-@@ -645,6 +645,7 @@
- ]);
- 
- const FONT_PAIRS = {
-+  handoff_ja_v1: { font_heading: 'Shippori Mincho', font_body: 'BIZ UDPGothic', font_number: 'Manrope', font_table_header: 'BIZ UDPGothic' },
-   system_clean_v1: {
-     font_heading: 'Trebuchet MS',
+@@ -650,8 +650,10 @@
      font_body: 'Calibri',
-@@ -1330,6 +1331,8 @@
+   },
+   editorial_serif_v1: {
+-    font_heading: 'Georgia',
+-    font_body: 'Calibri',
++    font_heading: 'Shippori Mincho',
++    font_body: 'BIZ UDPGothic',
++    font_number: 'Manrope',
++    font_table_header: 'BIZ UDPGothic',
+   },
+   clean_modern_v1: {
+     font_heading: 'Helvetica Neue',
+@@ -1330,6 +1332,8 @@
      preset.font_body = fontPair.font_body;
      preset.font_title = fontPair.font_heading;
      preset.font_caption = fontPair.font_body;

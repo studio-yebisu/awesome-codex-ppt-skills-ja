@@ -1,0 +1,124 @@
+component icon_cards on page journey (3 of 6): content, kind "process"
+name: Icon Grid
+what it is: Two to six cards, each with a symbol, a title, and a line of text. The feature row a product page has run at the top since product pages existed.
+choose it: Choose it for a handful of parallel items that each earn a symbol and one line. Use row_cards when items carry more text than that, and bullets when a plain line each is enough.
+not for: Items with several levels of text, which belong in row_cards.
+full-body: no
+schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "component": "icon_cards",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "icon_cards"
+    },
+    "title": {
+      "description": "A short name printed over the cards, such as \"按什么做\".",
+      "type": "string"
+    },
+    "items": {
+      "minItems": 2,
+      "maxItems": 6,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "$ref": "#/$defs/IconName"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "tag": {
+            "description": "A few words that place the card, printed as a small tag on it, such as where or when the item comes from: Azure 2026-02. Set quiet on a tag that should step back.",
+            "$ref": "#/$defs/Tag"
+          },
+          "tone": {
+            "$ref": "#/$defs/Tone"
+          }
+        },
+        "required": [
+          "icon",
+          "title",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "type",
+    "items"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Tag": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A few words for the tag, such as \"改为区间\", \"新增\" or \"Unchanged\". Keep it short: it is printed whole on one line."
+        },
+        "quiet": {
+          "description": "Marks a tag that says nothing changed, such as 不变 or Unchanged: it steps back in a grey outline.",
+          "type": "boolean"
+        },
+        "evidence": {
+          "type": "string",
+          "enum": [
+            "trial",
+            "label",
+            "company",
+            "press",
+            "draft",
+            "official",
+            "registry",
+            "preprint"
+          ],
+          "description": "What kind of source the tag names, outlined in the ink the theme keeps for it: \"trial\" for a trial or a study published in a peer-reviewed journal, \"label\" for a product's approved label, \"company\" for a company's own figures, \"press\" for a press report, \"draft\" for a draft out for comment, \"official\" for a government or regulator's document, \"registry\" for a trial registry, \"preprint\" for a working paper or a preprint no journal has reviewed yet."
+        },
+        "settled": {
+          "description": "Marks a tag whose verdict is final, such as 纳入, 不纳入 or Approved, against one still open or conditional, such as 暂缓 or Case by case: it is filled instead of outlined, in the emphasis colour, or in grey on a quiet tag.",
+          "type": "boolean"
+        },
+        "tone": {
+          "description": "What kind of news the tag says, outlined in the theme's own colour for it: \"danger\" for a breach or a risk, such as 超说明书 or Off-label, \"warning\" for something to watch, \"success\" for something that went right.",
+          "$ref": "#/$defs/Tone"
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "law",
+            "estimate",
+            "pending",
+            "proposal"
+          ],
+          "description": "What it rests on, so a reader knows how firm it is: \"law\" for a provision in force, which the tag cites; \"estimate\" for a figure worked out under a stated assumption, not published and not a forecast; \"pending\" for a figure or item still to be confirmed or filled in; \"proposal\" for a rule proposed or still negotiated, not yet law."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "Tone": {
+      "type": "string",
+      "enum": [
+        "danger",
+        "warning",
+        "success"
+      ],
+      "description": "What kind of news the item is, painted in the theme's own colour for it: \"danger\" for something that broke, \"warning\" for something to watch or still being handled, \"success\" for something that recovered or went right."
+    },
+    "IconName": {
+      "type": "string",
+      "description": "One icon name from the bundled catalog. Run `pptwise icons` for the full list."
+    }
+  }
+}

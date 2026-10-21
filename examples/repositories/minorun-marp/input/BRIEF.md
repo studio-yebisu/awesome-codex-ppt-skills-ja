@@ -1,35 +1,3 @@
-# Gitの変更、どこに保存された？
+# Gitの変更が置かれる場所を、5分で説明する
 
-{
-  "title": "新入社員向け Git・レビュー入門",
-  "audience": "Gitを触り始めた新入社員。15分の説明と、20分のローカル演習。",
-  "goal": "作業ブランチで変更し、差分を確認して、小さな変更としてレビューを依頼できる。",
-  "commands": [
-    "git status",
-    "git diff",
-    "git switch -c feature/greeting",
-    "git add README.md",
-    "git diff --staged",
-    "git commit -m \"Add greeting\"",
-    "git restore --staged README.md"
-  ],
-  "review_items": [
-    "変更の目的と対象が説明されている",
-    "意図しないファイルや秘密情報が混ざっていない",
-    "手元で実行・確認した内容が書かれている"
-  ],
-  "conflict_steps": [
-    "git statusで競合ファイルを確認",
-    "両方の変更の意図を読む",
-    "競合マーカーを解消し、結果を実行確認",
-    "解消したファイルだけをaddし、mergeを完了"
-  ],
-  "exercise": "input/trainingのREADME.mdに挨拶を追記。作業用フォルダーへコピーし、git init後に変更前の状態をcommitする。feature/greetingで変更・差分確認・commitを実施。GitHubへの送信は演習の必須条件にしない。",
-  "sources": [
-    "https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository",
-    "https://git-scm.com/book/en/v2/Git-Basics-Undoing-Things",
-    "https://docs.github.com/en/pull-requests/how-tos/create-pull-requests",
-    "https://docs.github.com/en/pull-requests/how-tos/review-pull-requests",
-    "https://docs.github.com/en/pull-requests/how-tos/merge-and-close-pull-requests/resolving-a-merge-conflict-on-github"
-  ]
-}
+Gitを初めて使う人へ、statusで現在地を読み、保存・add・commit・任意のpushの違いを、同じ図に一段ずつ足して説明する9頁。目安は5分前後の説明で、実測した登壇時間ではない。実習・ブランチ・レビュー・競合解消を含む35分講座の完成例ではない。元の広い制作条件はORIGINAL-BRIEF.mdへ保管し、今回は変更の現在地の説明へ範囲を限定した。GitHubへの実送信を実習の必須条件にしない。アジェンダやまとめを足さず、問いから始めて小さな行動で終える。

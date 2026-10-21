@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Technical Implementation Plan Archetype</title>
+  <link rel="stylesheet" href="../../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../../assets/css/base.css">
+  <link rel="stylesheet" href="../../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../../assets/css/components.css">
+  <link rel="stylesheet" href="../../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../../assets/themes/blue.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Technical Implementation Plan Archetype">
+    <section class="slide dark cover simple-title-cover dark-cover" data-title="Cover">
+      <div class="cover-art">
+        <img src="../../../assets/media/covers/strategy-architecture-cover.jpg" alt="">
+      </div>
+      <div class="default-opening-main">
+        <div class="slide-kicker">Full-deck archetype</div>
+        <h1 class="slide-title">Technical implementation plan</h1>
+        <p class="slide-subtitle">A reusable storyline for translating a strategy or architecture decision into releases, dependencies, controls, and build decisions.</p>
+        <div class="cover-meta">Blue theme | Implementation / architecture rollout logic</div>
+      </div>
+      <footer class="footer"><span>Technical implementation archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Build answer">
+      <header><div class="slide-kicker">Build answer</div><h2 class="slide-title">The implementation answer should name what to build first and what must be standardized</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="numbered-list-grid">
+          <article><span>1</span><strong>Anchor to outcomes</strong><p>Start from the workflow, decision, or platform outcome the build must enable.</p></article>
+          <article><span>2</span><strong>Define shared layers</strong><p>Separate reusable architecture from use-case-specific logic.</p></article>
+          <article><span>3</span><strong>Control dependencies</strong><p>Make system, data, security, and team dependencies explicit.</p></article>
+          <article><span>4</span><strong>Release in gates</strong><p>Use acceptance criteria and rollback paths before scaling.</p></article>
+          <article><span>5</span><strong>Measure quality</strong><p>Track performance, adoption, risk, cost, and supportability.</p></article>
+          <article><span>6</span><strong>Close decisions</strong><p>End with architecture choices, resource asks, and risks to resolve.</p></article>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical implementation archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Target architecture">
+      <header><div class="slide-kicker">Target architecture</div><h2 class="slide-title">Architecture pages should separate reusable platform layers from delivery workstreams</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-sidebar">
+          <main class="region">
+            <div class="region-body">
+              <div class="visual-canvas visual-architecture-stack" aria-label="Abstract architecture stack visual">
+                <span class="visual-layer"></span>
+                <span class="visual-layer"></span>
+                <span class="visual-layer"></span>
+                <span class="visual-layer"></span>
+                <span class="visual-pill"></span>
+                <span class="visual-dot"></span>
+                <span class="visual-dot"></span>
+                <span class="visual-dot"></span>
+              </div>
+            </div>
+          </main>
+          <aside class="region is-muted">
+            <div class="region-body is-centered">
+              <div class="callout">Use the stack to show reusable platform layers first, then map delivery workstreams to each layer.</div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical implementation archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Integration plan">
+      <header><div class="slide-kicker">Integration plan</div><h2 class="slide-title">Integration choices should be evaluated by control, speed, reuse, and operating burden</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <table class="comparison-table">
+          <thead><tr><th class="row-head">Choice</th><th>Use when</th><th>Control benefit</th><th>Watch-out</th><th>Decision</th></tr></thead>
+          <tbody>
+            <tr><td class="row-head">API integration</td><td>Stable systems and repeatable flow</td><td class="is-best">High auditability</td><td>Requires schema ownership</td><td class="is-best">Standardize</td></tr>
+            <tr><td class="row-head">Event stream</td><td>Near-real-time updates matter</td><td>Strong decoupling</td><td>Observability must mature</td><td>Use selectively</td></tr>
+            <tr><td class="row-head">Batch sync</td><td>Latency tolerance exists</td><td>Lower build complexity</td><td>Can hide data defects</td><td>Use for noncritical flow</td></tr>
+            <tr><td class="row-head">Manual bridge</td><td>Temporary proof needed</td><td>Fastest pilot path</td><td>Does not scale</td><td>Sunset quickly</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="footer"><span>Technical implementation archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Release model">
+      <header><div class="slide-kicker">Release model</div><h2 class="slide-title">A release model should show gates, evidence, and ownership before scale</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <div class="process-flow">
+          <article class="process-step"><span>1</span><strong>Scope</strong><p>Lock workflow, users, systems, and success measures.</p></article>
+          <article class="process-step"><span>2</span><strong>Build</strong><p>Implement core path, integration contracts, and controls.</p></article>
+          <article class="process-step"><span>3</span><strong>Validate</strong><p>Test quality, risk, performance, security, and adoption signals.</p></article>
+          <article class="process-step"><span>4</span><strong>Release</strong><p>Launch with observability, support path, and rollback criteria.</p></article>
+          <article class="process-step"><span>5</span><strong>Scale</strong><p>Promote reusable assets and expand to adjacent workflows.</p></article>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical implementation archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Risks and controls">
+      <header><div class="slide-kicker">Risks and controls</div><h2 class="slide-title">Implementation risks should be paired with concrete release controls</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="risk-register">
+          <div class="risk-matrix-wrap">
+            <div><h3 class="viz-title">Risk matrix</h3><p class="viz-subtitle">Impact by likelihood for build plan</p></div>
+            <div class="risk-matrix" aria-label="Risk matrix">
+              <div class="risk-cell is-medium">Medium</div><div class="risk-cell is-high">High</div><div class="risk-cell is-high">High</div>
+              <div class="risk-cell is-low">Low</div><div class="risk-cell is-medium">Medium</div><div class="risk-cell is-high">High</div>
+              <div class="risk-cell is-low">Low</div><div class="risk-cell is-low">Low</div><div class="risk-cell is-medium">Medium</div>
+              <span class="risk-point is-open" style="--x: 74%; --y: 72%">1</span><span class="risk-point" style="--x: 58%; --y: 52%">2</span><span class="risk-point" style="--x: 42%; --y: 38%">3</span>
+            </div>
+            <div class="risk-axis-caption"><span>Lower likelihood</span><span>Higher impact</span></div>
+          </div>
+          <div class="risk-matrix-wrap">
+            <div><h3 class="viz-title">Control register</h3><p class="viz-subtitle">Tie risks to gate evidence.</p></div>
+            <table class="risk-register-table">
+              <thead><tr><th class="id">ID</th><th>Risk</th><th>Control</th><th class="score">Priority</th></tr></thead>
+              <tbody>
+                <tr><td class="id">1</td><td>Integration dependency misses gate</td><td>Contract test and owner escalation</td><td class="score">High</td></tr>
+                <tr><td class="id">2</td><td>Data quality blocks adoption</td><td>Profiling and exception workflow</td><td class="score">High</td></tr>
+                <tr><td class="id">3</td><td>Support load exceeds capacity</td><td>Runbook and staged rollout</td><td class="score">Med</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical implementation archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Roadmap">
+      <header><div class="slide-kicker">Roadmap</div><h2 class="slide-title">The roadmap should balance near-term proof with reusable implementation assets</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <div class="phase-roadmap">
+          <article class="phase-card"><span class="concept-label">0-6 weeks</span><strong>Foundation</strong><p>Finalize scope, owners, architecture decisions, and acceptance gates.</p></article>
+          <article class="phase-card"><span class="concept-label">6-12 weeks</span><strong>Pilot release</strong><p>Build core workflow and validate integration, data, and risk controls.</p></article>
+          <article class="phase-card"><span class="concept-label">3-6 months</span><strong>Scale wave</strong><p>Expand users and convert pilot assets into reusable platform patterns.</p></article>
+          <article class="phase-card"><span class="concept-label">6+ months</span><strong>Operate</strong><p>Embed runbooks, monitoring, release cadence, and continuous improvement.</p></article>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical implementation archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Decisions">
+      <header><div class="slide-kicker">Decisions</div><h2 class="slide-title">Close with the architecture and delivery decisions that unblock the next release</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <table class="decision-log">
+          <thead><tr><th>Decision</th><th>Recommended default</th><th>Evidence needed</th><th>Status</th></tr></thead>
+          <tbody>
+            <tr><td>Integration pattern</td><td class="is-open">Standardize the reusable path</td><td>Dependency owner and contract test</td><td>Decide now</td></tr>
+            <tr><td>Release gate</td><td>Quality, security, adoption, and rollback criteria</td><td>Gate checklist and telemetry</td><td>Draft</td></tr>
+            <tr><td>Scale trigger</td><td>Expand only after pilot evidence clears threshold</td><td>Usage and defect trend</td><td>Align</td></tr>
+            <tr><td>Support model</td><td>Assign run owner before launch</td><td>Runbook and escalation path</td><td>Open</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="footer"><span>Technical implementation archetype</span><span class="page-number"></span></footer>
+    </section>
+  </main>
+  <script src="../../../assets/js/runtime.js"></script>
+</body>
+</html>

@@ -1,17 +1,33 @@
-# 紙と、インクの休日。
+# ブランド規則を資料に反映する
 
-架空の活版印刷ワークショップ企画を説明する日本語6枚。[index.html](index.html)は字体・CSS・JSとMIT/OFL原文を内包し、ネット接続なしで取得・表示できます。編集対象はHTML/SVG/CSS/JS、PPTXは生成していません。
+ブランド指示書にある色値・書体・余白を資料全体へ反映します。この作例では色値を明示した文章から値を取り出し、全6頁で一貫して使います。
 
-原典は shawnzam/keynot、commit `d1f9e449ddb89da707b489cb69c520a64975b47c`。MIT ©2026 Shawn Zamechek。[未変更原本](source/upstream/)と[LICENSE](LICENSE)を保持しました。[独自BRAND](input/BRAND.md)から、原典Step1の色・書体・使用比率・版式・wordmarkを[brand-record](input/brand-record.json)へ先に抽出し、[architecture](input/ARCHITECTURE.md)で6頁の役割を決めています。
+入力: ブランド指示書と原稿。今回は色のhex値まで明示した架空ブランドの文章。
 
-原典exampleのCSS全文、deck/slide/nav/rotate-overlay/print構造と完全inline controllerを実使用。元JSは一字も置換せず、算術・hash/session・dots・auto-hide・swipe・fullscreenを維持して末尾に同一origin bridgeを追加しました。[controller.patch](source/controller.patch)にその小差分だけを記録。日本語ラベルは[chrome.patch](source/chrome.patch)、ブランド・和文サイズ・図と版式の調整は[local CSS差分](source/brand-and-layout.patch)に分けています。
+出力: 指示書の値をCSSへ転記した、元のページ送りを持つ単独HTML6枚。
 
-使い方は→/↓/Spaceで次、←/↑で前、Fまたは全画面ボタンでfullscreen。dotsで移動、50pxを超えるswipeで送り、navは1.8秒で隠れて操作時に戻ります。`#slide-1`等のhashは1-based、内部のcurと親bridgeは0-basedです。選択頁は元のkeynot-slide session keyへ保存します。狭い縦画面では原典の横向き案内を日本語で表示します。
+## この作例で確かめること
 
-再生成は `python source/rebuild.py`。Python3標準ライブラリのみで、原典部品と[slides.html](source/slides.html)、[adaptation.css](source/adaptation.css)、抽出brand-recordを単一HTMLへ梱包します。原典にnpmや外部APIの必須buildはありません。汎用renderer・評価SDKを使っていません。単独MDや一式ZIPから使う導線は日本語SKILLに記載しています。
+- 日本語BRAND.mdの正確な色7項目を実抽出
+- 元HTML/CSSとcontrollerを保持したブランド値の適用
+- 締めの指定明朝、図形と文字の離隔、実際のnav消灯後表示
 
-公式Google Fonts固定pin `66928797f271fed5ee428544e7229685e2d90127`のShippori Mincho Regular、BIZ UDPGothic Regular/Bold、Space Grotesk variableを未改変で同梱し、元CDN字体をinline @font-faceへ置換。[TTF/OFL](source/fonts/)と[URL/hash](source/FONT-SOURCE.json)を保持、OS字体は抽出していません。色の70/28/2比率は設計目標で、測定ではありません。
+指定色7項目を実抽出し全6頁を実描画・目視。3頁のローラーと「日」を離し、6頁の締めを指示書の明朝へ統一。1頁は原典navが自動で消えるまで待ち実撮影。
 
-図は自作SVGの説明記号で、実物・製品仕様・印刷結果の写真ではありません。日時・会場・費用・参加人数は未定。実施実績・安全性能を実証したとする主張はありません。
+## 使い方
 
-確認はHTML梱包成功、Chrome1600×1000で表紙とsplit-panelの初回表示、元navigation1/6→2/6、page errorなし。表紙の「休日」が折れていたため表紙だけclamp/nowrapを調整し、そのPNGを表示し直しました。全頁詳細検査・独立採点・ZIP再実行は未実施。fullscreen/swipe/printの元コードは保持していますが各操作の別検査はしていません。親サイトbridge統合も未確認です。[QA](QA.json)はこの範囲です。
+1. PDF・画像・URL・文章など実際のブランド資料を読み、正確な色値、表示・本文の字体、使用範囲、ロゴ規則を記録する。今回は色指定済みの文章を使う。
+2. 原稿を表紙・分割面・手順・引用・締めの構成へ分ける。
+3. CSS変数へ記録値を渡し、原典の完成JSを一体として保持する。
+4. 一頁ごとに編集し、ページ数の計算、URLからの直接移動、前回ページの記憶、端末を横向きにする案内を維持する。
+5. 全頁をブラウザーで確認する。印刷・別端末・編集保存は実行した場合だけ検証済みと記す。
+
+## 実施範囲
+
+- 色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。
+- 紙70/黒28/赤2は設計目標であり面積の測定値ではない。
+- 元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。
+
+今回の修復はCodex。独立再評価は変更後の版に対して別に取得します。[実行・全頁確認](source/repair-qa.json)、[原典検査](source/round4-original-gates.json)に実記録を保存しています。固定原典・利用条件はPROVENANCE.jsonとsource/upstream、元のLICENSE/NOTICE、字体のOFLを保持します。
+
+[展開ZIPからの再生成検査](source/round4-zip-replay.json)も実行済み。既存の互換実行環境を使い、公開HTMLと同一バイトの出力を確認しました。Beatdeckの依存は既存lock済みnode_modulesを再利用し、新規npm ciの実証とはしていません。

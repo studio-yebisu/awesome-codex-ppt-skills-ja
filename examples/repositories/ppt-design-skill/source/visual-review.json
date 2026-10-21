@@ -1,6 +1,7 @@
 {
-  "artifact_sha256": "efbcf9d9f8df268ff29f6716ac1e0b60b7d80724ec3a6177fd36a1976975ed69",
-  "renderer": "Microsoft PowerPoint 16.0",
+  "artifact_sha256": "8deab35046f912b4d270f41fd9a8e7c7b15f9f6beba7975680152221e9225602",
+  "reviewer": "Codex implementation review; not independent scoring",
+  "renderer": "Microsoft PowerPoint16 PDF→PDFium RGB",
   "pages_reviewed": [
     1,
     2,
@@ -8,20 +9,168 @@
     4,
     5
   ],
-  "method": "All five final 1600x900 PNGs individually viewed",
-  "findings": [
-    "All titles and body text readable and within slide bounds.",
-    "Native editable coffee-cup shapes and terracotta colors visible.",
-    "Sales: 15*650=9750, 25*650=16250, 35*650=22750; clearly hypothetical revenue, not profit.",
-    "All record-table values labeled uncollected.",
-    "Five Japanese speaker notes match page intent."
+  "gate_order": [
+    "visual_effect",
+    "critical_defects_and_acceptance"
   ],
-  "corrected_attempts": [
+  "gate1": {
+    "status": "PASS",
+    "basis": "全5頁を個別に開き、カップと営業時間、役割の流れ、数量別試算、10日記録欄、未合意の基準欄を各頁の視線の起点として確認。頁の空白を欄の可読性と区切りに使用。",
+    "image_hashes": [
+      {
+        "index": 0,
+        "sha256": "ac29781adc0635571f069b49c8a0a3f5b0bc7006c58a275f0f53e21fbb67495b"
+      },
+      {
+        "index": 1,
+        "sha256": "a42fd8b7100f44c9c7f7efe980ad95d51754bcf07e5f7c310c7164be15afd309"
+      },
+      {
+        "index": 2,
+        "sha256": "1f6d069b87d5242185ab61983e1ee1869fad940452db0f57c826ef0b748edf80"
+      },
+      {
+        "index": 3,
+        "sha256": "4eef01151b9963dae520d55f4da80c6c17ffde0cfb4a16e5ebc65e2267a5c304"
+      },
+      {
+        "index": 4,
+        "sha256": "c2d2dde5d146b3309c55ecd7f38f0bac54b2ff27ff578c7953303ec775547b62"
+      }
+    ]
+  },
+  "gate2": {
+    "status": "BLOCKED_FOR_DELIVERY_GRADE",
+    "technical_visual_conditions": "R1–R6 checked",
+    "blocked_requirement": "R7"
+  },
+  "requirements": [
     {
-      "evidence": "source/attempt1/slide-01.png",
-      "issue": "Unrecognized hyphenated semantic-role aliases fell back to black; engine body CJK font overrode heading face.",
-      "fix": "Pass resolved theme hex values into original public helpers; assign chosen Japanese heading font to output eastAsian runs. Upstream unchanged."
+      "id": "R1",
+      "priority": "MUST",
+      "status": "PASS",
+      "condition": "日本語5頁・16:9・頁別ノート・編集可能な文字と図形",
+      "evidence": {
+        "pages": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "paths": [
+          "source/native-elements.json",
+          "source/logs/inspect.log"
+        ],
+        "visible": "全頁は日本語、native文字/図形、5頁ノートがある。"
+      }
+    },
+    {
+      "id": "R2",
+      "priority": "MUST",
+      "status": "PASS",
+      "condition": "650円×15/25/35、仮定/未収集/利益ではない旨",
+      "evidence": {
+        "pages": [
+          2
+        ],
+        "path": "render/slide-03.png",
+        "visible": "9,750/16,250/22,750円と費用を含まない旨。全頁下端に仮定・未収集。"
+      }
+    },
+    {
+      "id": "R3",
+      "priority": "MUST",
+      "status": "PASS",
+      "condition": "視覚効果の後に全頁の重大欠陥を検査",
+      "evidence": {
+        "pages": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "paths": [
+          "render/slide-01.png",
+          "render/slide-02.png",
+          "render/slide-03.png",
+          "render/slide-04.png",
+          "render/slide-05.png"
+        ],
+        "visible": "見出し→図/記録欄→要点の順、表示欠け・接触なし。1頁店舗名をカップ内へ、5頁右の空白を未合意基準の欄へ修復。"
+      }
+    },
+    {
+      "id": "R4",
+      "priority": "SHOULD",
+      "status": "PASS",
+      "condition": "役割と受け渡し、10日間の記録欄",
+      "evidence": {
+        "pages": [
+          1,
+          3
+        ],
+        "visible": "2頁の会計→調理→提供、4頁の第1〜10日と来店/販売/待ち時間/廃棄の空欄。"
+      }
+    },
+    {
+      "id": "R5",
+      "priority": "SHOULD",
+      "status": "PASS",
+      "condition": "通常営業への切替時刻",
+      "evidence": {
+        "pages": [
+          1
+        ],
+        "visible": "9:45 追加仕込みを判断 → 10:00 通常営業へ切替。"
+      }
+    },
+    {
+      "id": "R6",
+      "priority": "NICE_TO_HAVE",
+      "status": "PASS",
+      "condition": "暖色と和文明朝、写真不要",
+      "evidence": {
+        "pages": [
+          0,
+          1,
+          2,
+          3,
+          4
+        ],
+        "paths": [
+          "source/resolved-theme.json",
+          "source/pdf-fonts.json"
+        ],
+        "visible": "terracotta色、Shippori Mincho見出し/BIZ本文が実PDFに残る。写真なし。"
+      }
+    },
+    {
+      "id": "R7",
+      "priority": "MUST (delivery-grade only)",
+      "status": "BLOCKED",
+      "condition": "人間が最終の方向または結果を個別確認",
+      "evidence": {
+        "pages": [],
+        "visible": "個別の人間承認は未取得。自律改善・作例制作の委任を人間の最終承認と読み替えない。",
+        "action": "現物と条件表を提示し、納品版として扱う場合は人間の方向/結果確認が必要。"
+      }
     }
   ],
-  "human_adoption": "not_requested"
+  "theme_evidence": {
+    "lock": "source/task/cafe-pilot/theme-lock.yaml",
+    "version": 1,
+    "confirmation_state": "LOCKED_FOR_AUTONOMOUS_SAMPLE; individual human confirmation not obtained",
+    "resolved_theme": "source/resolved-theme.json",
+    "resolved_theme_sha256": "d29d6a2e9ae450a974f76514336569cef19540d382f01370ce8620220d5521d0",
+    "seed": 42,
+    "package": "pptx-designer==1.0.0b11",
+    "module_path": "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Lib/site-packages/pptx_designer",
+    "freestyle_theme_application": "not applicable; Build Mode public API",
+    "vi_merge_conflicts": "not applicable; VI Build not used"
+  },
+  "human_adoption": false,
+  "delivery_grade_complete": false,
+  "independent_current_version_review": "pending"
 }

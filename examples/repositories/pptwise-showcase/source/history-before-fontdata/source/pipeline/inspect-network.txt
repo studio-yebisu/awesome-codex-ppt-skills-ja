@@ -1,0 +1,30 @@
+page network (4 of 6): content, kind "hierarchy", theme "machi-kobo"
+heading: 拠点と参加者の役割を分ける
+file: pages/network.json (not written yet)
+
+page file keys (the top-level keys of pages/network.json): components, background, image_side, footnote (the source line), ballot (the boxes ticked beside each item), notes (speaker notes, never drawn)
+components (63): bullets, paragraph, blockquote, callout, code, kpi_cards, chart, flowchart, architecture, timeline, comparison, icon_cards, row_cards, steps, rings, numbered_cards, roadmap, matrix, insight_panel, verdict_banner, image, image_grid, image_compare, logo_wall, product_cards, quote_wall, swot, bmc, waterfall, gantt, pest, five_forces, heatmap, sankey, data_table, device_mockup, cycle, people_cards, hub_spoke, progress_donuts, staircase, chevron_process, swimlane, journey_map, decision_tree, from_to, org_tree, issue_tree, pyramid, iceberg, pillar_model, value_chain, harvey_balls, scorecard, pictogram, word_cloud, venn, fishbone, positioning_map, concept_equation, segmented_wheel, pros_cons, sketch
+  full-body, each must be the page's only component: swot, bmc, waterfall, gantt, pest, five_forces, heatmap, sankey, harvey_balls, scorecard, pictogram, word_cloud
+  expand one with --component <type>
+
+signature layouts (the theme's own drawings on face marquee-sheet, the ones its samples are made of):
+  origins: Where a crowd comes from
+    write: chart (2 to 5 categories, chart_type percent_stacked) + image + kpi_cards (1 item)
+  allotment: A whole cut into shares
+    write: chart (1 category, chart_type stacked, direction horizontal, emphasis_label, emphasis on a series) + icon_cards (2 to 3 items, optional)
+  also on this face, made for other kinds: crest (fact), branch (comparison), season (process), makeup (data), route (process), spots (photo), wall (comparison), loop (process), stubs (list), fallbacks (comparison), timetable (process), scoreboard (list), asks (points)
+
+limits (validate refuses the page past these):
+  at most 29 width units in each bullets item (render-safety limit, where a CJK character is 1 width unit and a Latin letter less)
+  at most 8 layers in each architecture (the most layers a page holds under its heading)
+advice (validate warns past these):
+  at most 4 components on the page (balanced pacing allows 4, the face's body holds 4)
+  at most 5 items in each bullets (balanced pacing)
+  at most 25 width units in each bullets item (balanced pacing, where a CJK character is 1 width unit and a Latin letter less)
+  at most 5 rows in each comparison (rows the narrowest face holds)
+  at most 3 layers in each architecture (layers the narrowest face holds)
+  at most 8 series in each chart (line and area charts, past which the lines stop reading apart)
+
+errors: none
+warnings: none
+fit: not checked here. Run --fit to draw this page and see what it would lose

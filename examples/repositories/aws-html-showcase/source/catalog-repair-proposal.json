@@ -1,0 +1,30 @@
+{
+  "id": "aws-html-showcase",
+  "prompt_text": "既存の自作PPTX「小さな展示を、ひとつの体験に。」5枚を、lanceli93/aws-html-slides原典のPPT conversion経路で日本語の動くWebスライドへ変換してください。元extract-pptx.pyを実行し、抽出した全テキスト/画像/notes、元native OOXMLの円・四角・三角・辺のgeometryと色を保全する。原典Neon Cyberの100vh viewport CSS、controller/IntersectionObserver/nav dots/keyboard/wheel/touchとreveal animation、native SVG edge choreographyをStudio Yebisuの仮想展示案へ適用。Akxan/ppt-agent-skillの制作元作例を入力として用いた出所/commit/MITも保持。3枚目の番号・見出し・説明12個は出力SVGだけで対応する図形の中心へ揃え、元座標と変更内容を記録する。入力PPTXは原本保全。AWSロゴや公式性/提携表示は使わず、派生footerへ置換し明記。日本語大見出し/短い明朝説明/英数字のOSS字体を役割別に、実TTF/OFLを同梱。HTML/SVG編集可能であり、新規PPTX生成と表示しない。原典の機能と作例で実行した範囲を区別し、実画面で位置と読みやすさを確認する。Kimi K3とOpus5.5の独立評価は別記録に残し、未評価を合格扱いしない。",
+  "canonical_data_edited": false,
+  "reason_ja": "旧依頼文の軽い確認のみ・独立評価なしという記述を最新依頼に合わせて更新。制作元作例の版と変換入力の保存版を区別。",
+  "model_usage": {
+    "model": "claude-opus-5-5",
+    "scope": "page3 label placement repair authoring only",
+    "original_production_history": "preserved; this does not relabel the complete original deck as Opus-produced"
+  },
+  "layout_repair": {
+    "scope": "Output-only page3 SVG label x/text-anchor; original input preserved",
+    "adapter_authoring_model": "claude-opus-5-5",
+    "authoring_run_date": "2026-10-15",
+    "mapping": "source/svg-label-alignment.json",
+    "diff": "source/label-alignment.diff",
+    "verification": "source/label-alignment-qa.json",
+    "input_snapshot_note_ja": "制作元Akxan作例の修正前版を保存。現在のAkxan作例とは版が異なる。",
+    "independent_review": "pending",
+    "runtime_versions": {
+      "python": "3.12.14",
+      "python-pptx": "1.0.2",
+      "lxml": "6.1.1",
+      "Pillow": "12.3.0"
+    }
+  },
+  "method": "Original PPT conversion route: unmodified extract-pptx.py extracts all 5 slide texts/media/notes; source-specific native OOXML supplement maps actual input shape coordinates/colors/paths to editable SVG; original Neon preview controller/FX, whole viewport-base.css, reveal stagger and SVG edge choreography drive HTML playback. Page3 output SVG has a declared center-alignment adapter for12 labels; input remains the pre-repair Akxan snapshot.",
+  "preview_notice": "原典PPT変換で動くHTML化。3枚目の12ラベルは出力SVGで中央揃え。保存入力は制作元Akxan作例の修正前版。入力PPTXは原本保全。",
+  "comparison_copy_ja": "制作元の作例。AWS変換で保存した入力は修正前版です。"
+}

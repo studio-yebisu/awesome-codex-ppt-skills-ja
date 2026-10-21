@@ -1,23 +1,11 @@
-# 夏の余白｜SlideMuse 日本語作例
-日陰をつなぐ小広場の架空・未実施デザイン研究、8頁。測量図・施工図・実測温度・環境効果・健康効果を示す資料ではありません。
+# 内容と見た目を決めて画像スライドを作る
 
-## 見る
-- deck.pptx：画像主体のPowerPoint。各頁の文字と図はPNG、話者ノートは編集可能です。
-- pages/index.html：8頁の生成PNGプレビュー。完成PPTXに埋めた画像とのバイト一致を確認しました。PPTXレンダラーによる出力ではありません。
-- input/BRIEF.md、data.json：日本語入力と頁別ノート
-- input/deck-spec.md、page-spec.json：内容、選択、正確な文字、安定ID
-- source/styles：同内容の4style overview。03を委任に基づき親が選択
-- PROVENANCE.json、QA.json：由来、実行差分、最小QAの範囲と限界
+SlideMuseは、内容稿から同じ内容の4スタイルを比較し、選んだ見た目で頁別画像を作るスキルです。明示依頼があれば、その画像版から編集可能なPPTXへ再構築します。
 
-## 再包装
-Python 3、python-pptx、Pillowが利用可能な環境で、作例ディレクトリから次を実行します。
+この8頁は、架空・未実施の日陰と動線の研究計画。source/styles/の4独立総覧から案3を委任選択し、Page Specと頁別生成で作りました。文字・図は画像、話者ノートのみ編集可能です。S6のnative再構築はしていません。
 
-python source/build_images.py reproduced.pptx
+現在PPTXは原典strict validatorとbuild_image_ppt.pyで承認済みPNGを無加工で再包装し、原典render_deck.pyのPowerPoint backendで全8頁を実描画して見比べました。render/slide-NN.pngはPowerPoint実PDFのRGB描画、pages/は元の生成PNGです。reviews/original-renderに原典の比較記録があります。
 
-生成モデルの再実行には宿主imagegenが必要です。source/prompts/に4styleと8単頁の実際のプロンプトを保存。入力を変えた場合は内容稿から作り直し、旧PNGを新内容の結果と扱わないでください。
+再現はPython＋python-pptx/Pillow/jsonschemaで `python source/build_images.py reproduced.pptx`。新画像の生成には宿主imagegenが必要です。原稿を変える場合は内容稿とスタイルから作り直してください。このコマンドは既存画像の再包装です。自分の原稿から始める5段の手順と総覧依頼例はsource/REUSE.mdへ。
 
-## 原典と変更
-helloo1568/slidemuse の commit 7034412b4c19915c17f8d7206e3723e9e53cf8d2、MIT LICENSEを同梱。原典の内容稿→同内容4独立overview→選択→Page Spec→逐頁生成の順序を実行。原典のvalidator/packer/render codeは実行せず、自作最小チェックと包装へ変更しました。原典テキストはsource/upstreamに保持しています。
-
-## 限界
-原典全QAは未実行。overview内部縮略頁の16:9要件は未達、方針比較のみに使用。最終単頁は1672×941、16:9の1px丸め内。初回目視で主要本文、ラベル、境界、切れを確認しましたが完全OCR照合ではありません。AI図内の補助説明が加わる頁があります。模型や矢印は概念表現です。PowerPoint実機確認・実レンダリングは未実施。モデル名は宿主非露出、指定したと主張しません。
+総覧の外枠と候補数・hashは原典検査を通りましたが、内部縮略頁の16:9は未適合です。完全なevaluate_delivery、S6、厳密OCR照合、独立再評価は未実施。初回の独自包装・未実描画からの変更はPROVENANCEに保持しています。原典MITとモデル名非露出を明記し、特定の生図モデルを使ったとは説明しません。

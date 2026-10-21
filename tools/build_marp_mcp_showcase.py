@@ -83,7 +83,20 @@ def build(args):
         for s in spec['slides']:
             client.call('manage_slide',{'filePath':str(deck),'layoutType':s['layout'],'params':s['params'],'note':s['note']})
         client.call('generate_slide_ids',{'filePath':str(deck)})
-        client.call('read_slide',{'filePath':str(deck)})
+        discovered=client.call('read_slide',{'filePath':str(deck)})
+        listing=json.loads(discovered['content'][0]['text'])
+        target=listing['slides'][1]['slideId']
+        (log_dir/'id-edit-before.md').write_bytes(deck.read_bytes())
+        replacement=spec['id_edit']
+        client.call('manage_slide',{'filePath':str(deck),'mode':'replace','slideId':target,'layoutType':replacement['layout'],'params':replacement['params'],'note':replacement['note']})
+        replaced=json.loads(client.call('read_slide',{'filePath':str(deck),'slideId':target})['content'][0]['text'])
+        assert replaced['slideId']==target and replaced['position']==2
+        inserted=json.loads(client.call('manage_slide',{'filePath':str(deck),'layoutType':'content','params':{'heading':'編集確認用の一時ページ','body':'削除後は完成資料に残らない。'}})['content'][0]['text'])
+        client.call('manage_slide',{'filePath':str(deck),'mode':'delete','slideId':inserted['slideId']})
+        final=json.loads(client.call('read_slide',{'filePath':str(deck)})['content'][0]['text'])
+        assert final['totalSlides']==6 and final['slides'][1]['slideId']==target
+        (log_dir/'id-edit-after.md').write_bytes(deck.read_bytes())
+        (log_dir/'id-edit-receipt.json').write_text(json.dumps({'author':'Codex','target_page':2,'target_slide_id':target,'replace_same_id':True,'visible_text_changed':listing['slides'][1]['content']!=replaced['content'],'before':listing['slides'][1]['content'],'after':replaced['content'],'insert_temporary_id':inserted['slideId'],'delete_temporary':True,'final_count':6,'final_ids':[x['slideId'] for x in final['slides']],'scope':'Original MCP replaced actual two-column page with structured input, inserted one temporary slide, then deleted it by returned ID before export.'},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
         # Japanese typography and case artwork are a local CSS extension of the original layouts.
         css=(case/'source/workshop.css').read_text(encoding='utf-8')
         for family,file,weight in [('WorkshopBody','bizudpgothic/BIZUDPGothic-Regular.ttf','400'),('WorkshopBody','bizudpgothic/BIZUDPGothic-Bold.ttf','700'),('WorkshopHeading','shipporimincho/ShipporiMincho-Bold.ttf','700'),('WorkshopNumber','manrope/Manrope[wght].ttf','100 900')]:

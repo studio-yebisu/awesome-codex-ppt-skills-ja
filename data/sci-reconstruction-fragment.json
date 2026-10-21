@@ -1,0 +1,75 @@
+[
+  {
+    "id": "sci-diagram-reconstruction",
+    "title": "科学図の画像を編集可能なPPTXへ復元",
+    "use_case": "科学模式図の復元",
+    "repository": "HututuWorks/sci-diagram-pptx",
+    "skill_repository": "HututuWorks/sci-diagram-pptx",
+    "upstream_commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
+    "fork_id": "sci-diagram-reconstruction-ja",
+    "page_count": 1,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "style": "元PNGの文言・配置・矢印を保持",
+    "cover": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+    "interior": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+    "preview": "examples/repositories/sci-diagram-reconstruction/index.html",
+    "artifact_download": "examples/repositories/sci-diagram-reconstruction/pass-01/editable.pptx",
+    "pdf_download": "examples/repositories/sci-diagram-reconstruction/render/deck.pdf",
+    "source_download": "downloads/sci-diagram-reconstruction-example-ja.zip",
+    "fork_download": "downloads/sci-diagram-reconstruction-ja.zip",
+    "input": "examples/repositories/sci-diagram-reconstruction/input/source.png",
+    "input_data": "examples/repositories/sci-diagram-reconstruction/input/reconstruction-inventory.json",
+    "prompt": "examples/repositories/sci-diagram-reconstruction/PROMPT.txt",
+    "prompt_text": "この科学模式図の画像1枚を、元の日本語ラベル、4個の箱、4本の矢印の方向、配置を保った編集可能なPowerPoint1枚に復元してください。原典sci-diagram-pptxのReconstructionを使い、ラベル・図形・矢印をnativeオブジェクトにしてください。元画像の全面貼り付けや隠れたトレース画像は使いません。SOURCE、NODES、EDGES、INSETSのpixel対応表、実際に実行するbuild.mjs、元画像、PPTXを残してください。画像はStudio Yebisuが作例用に先に作成した入力です。科学内容の追加やデザイン変更はしません。",
+    "provenance": "examples/repositories/sci-diagram-reconstruction/PROVENANCE.json",
+    "qa": "examples/repositories/sci-diagram-reconstruction/QA.json",
+    "guide": "repository.html?repo=HututuWorks%2Fsci-diagram-pptx",
+    "case_guide": "examples/repositories/sci-diagram-reconstruction/GUIDE.md",
+    "titles": [
+      "水循環の代表的な経路"
+    ],
+    "notes": [
+      "自作の入力PNGを実入力として、元の日本語・4箱・4方向関係をnative PPTXへ復元。図は水循環の一部のみ。量・時間・縮尺は示さない。"
+    ],
+    "method": "Reconstruction：主証拠は入れ子・双方向・破線・合成画像insetの複合例。単純4箱は最小方向保持の補足。現在の複合buildは3ファイル引き渡しで自己完結。",
+    "sample_notice": "2例とも自作の模式図PNG。複合例を所有分離・関係保持の主証拠とし、単純例は最小方向保持の補足。数式・実験写真・Repair/Inspection・自動接続・時短は未実証。",
+    "pages": [
+      "examples/repositories/sci-diagram-reconstruction/render/slide-01.png"
+    ],
+    "runtime": "PptxGenJS 4.0.1 (MIT)",
+    "editability": "native_pptx_text_shapes_lines",
+    "preview_notice": "単純例のplayerは補足。効果の主証拠は複合例の入力比較と実PowerPoint表示。文字・箱・線の別コピー編集を確認。過去点数を現在の保存プログラムへ引き継がない。",
+    "producer_model": "claude-opus-5-5",
+    "production_scope": "両例の初稿コード・対応表は実Opus5.5。標準pass02のFONT修正、継続改善pass04の角丸・矢じり、R13の自己完結した保存プログラムと実行・検査はCodex。",
+    "skill_effect": {
+      "input": "ラベルと矢印が読める科学模式図PNG1枚",
+      "operation": "原文と方向関係を対応表にし、標準図形・文字・線として復元",
+      "output": "元の意味と配置を保つ編集可能なPPTX1枚",
+      "benefit": "元編集ファイルがなくても文字や矢印を個別修正できる",
+      "limit": "数式・実験写真・既存PPTXの修復や検査・自動接続は未実証。画像小図の内部はraster。"
+    },
+    "editability_proof": {
+      "before_path": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+      "after_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.png",
+      "before_label": "復元したPPTX：「海・湖の水」",
+      "after_label": "文字を変更したPPTX：「湖の水」",
+      "artifact_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.pptx",
+      "report_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-editability.json",
+      "description": "図全体を画像として貼り直さず、「海・湖の水」の文字だけを「湖の水」へ変更。別のPPTXとして保存し、PowerPointで開き直して確認しました。"
+    },
+    "supplementary_examples": [
+      {
+        "id": "complex-reconstruction",
+        "title": "入れ子・双方向・破線・画像小図の復元",
+        "readme": "examples/repositories/sci-diagram-reconstruction/complex-example/README.md",
+        "input": "examples/repositories/sci-diagram-reconstruction/complex-example/input/source.png",
+        "artifact_download": "examples/repositories/sci-diagram-reconstruction/complex-example/pass-04/editable.pptx",
+        "preview": "examples/repositories/sci-diagram-reconstruction/complex-example/render-pass04/powerpoint.png",
+        "provenance": "examples/repositories/sci-diagram-reconstruction/complex-example/PROVENANCE.json",
+        "editability": "23 native shapes including 12 text shapes; 1 cropped raster inset; separate lines, not automatic connectors",
+        "production": "Actual Opus5.5 initial authoring; historical standard Codex font-only pass02; continued-refinement pass04 and current self-contained handoff by Codex; current QA does not inherit an old score."
+      }
+    ]
+  }
+]

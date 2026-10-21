@@ -3,6 +3,7 @@ param(
     [Parameter(Mandatory=$true)][string]$OutputDirectory
 )
 $ErrorActionPreference = 'Stop'
+if ($PSVersionTable.PSVersion.Major -lt 6) { Import-Module (Join-Path $PSHOME 'Modules/Microsoft.PowerShell.Utility/Microsoft.PowerShell.Utility.psd1') -Force -ErrorAction Stop }
 $pptPath = (Resolve-Path -LiteralPath $PresentationPath).Path
 $renderDir = [System.IO.Path]::GetFullPath($OutputDirectory)
 New-Item -ItemType Directory -Path $renderDir -Force | Out-Null
@@ -60,7 +61,7 @@ finally {
         [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($openedDeck)
     }
     if ($null -ne $powerPoint) {
-        if ($existingPowerPoint.Count -eq 0 -and $powerPoint.Presentations.Count -eq 0) { $powerPoint.Quit() }
+        # Shared PowerPoint: only the presentation opened here is closed.
         [void][System.Runtime.InteropServices.Marshal]::FinalReleaseComObject($powerPoint)
     }
 }

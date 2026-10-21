@@ -1,0 +1,140 @@
+{
+  "purpose": "teaching / instructional",
+  "rubric_overlay": "teaching / instructional",
+  "coverage": {
+    "slides_opened": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "passes": [
+      "content lens (full deck)",
+      "design lens (full deck)"
+    ],
+    "stats_block_seen": true,
+    "contract_card_seen": true
+  },
+  "plan_audit": {
+    "lens_b": {
+      "concept_landed": "carried: 宣言『配列の同じ場所を保ち、残る範囲だけを可視化する教材』どおり、15列の固定座標が1〜3頁で不変に保たれ、3頁ではその座標系の上で範囲が4段で消えていく。概念は表紙の飾りではなく図の構造そのものを支配している",
+      "skeleton_rhythm": "kept — hook(対比+配列) → worked(訪問順+配列) → worked(4段絞り込み) → evidence(native chart) → recap(2カード対比) と骨格が回転し、lintの distinct_skeletons=5 と一致",
+      "wow": [
+        {
+          "slide": 3,
+          "landed": true,
+          "why": "同一15列座標で範囲が消えていく4段図は『大きいだけ』ではなく内容の構造そのものが記憶点。隣接頁(2の1段・4のグラフ)との対比も明確"
+        }
+      ],
+      "signature_move": {
+        "verdict": "landed",
+        "why": "宣言『deliberately restrained: repeated native number cells retain their coordinate while the candidate range narrows』がピクセルにそのまま現れ、boldness: conservative のdialと一致。sandingなし",
+        "carried": [
+          {
+            "slide": 1,
+            "structural": true,
+            "note": "13の茶ハイライトが固定座標の中で目的値を示し、回数対比の土台になる"
+          },
+          {
+            "slide": 2,
+            "structural": true,
+            "note": "照合済(青)/発見(茶)/未訪問(灰)が同一座標の色だけで表現される"
+          },
+          {
+            "slide": 3,
+            "structural": true,
+            "note": "範囲の絞り込みが座標不変のまま4段で可視化される、概念の中核頁"
+          }
+        ],
+        "proof": "matches — render/slide-03.png が signature/complex アンカーとして記録どおり概念を担い、render/slide-04.png が data anchor として実測系列を表示"
+      },
+      "memorable_one_thing": "『13回 vs 4回』と、配列の位置を保ったまま範囲が消えていく3頁の図。'a clean competent deck' ではなく固有の記憶点がある",
+      "composition": {
+        "cover_archetype": "degraded — direction gate は post-build 補完(record: 'POST-BUILD supplemental comparison')で、選定 'A array' の cover token 'low-left' の構図的特徴は built 1頁に明確には残っていない(通常の上部タイトル構成)",
+        "home_skeleton_plurality": "kept — band系を軸にしつつ5頁で5種の骨格が回転"
+      },
+      "register_interiors": "kept — 白キャンバス・同一条件脚注・頁番号・色の意味(青=線形/紫=二分/茶=目的値・発見)が全頁で一貫する quiet register"
+    },
+    "lens_a": {
+      "memory_sentence": "昇順の配列1〜15から13を探すと、線形探索は13回かかるが二分探索は中央から絞って最大4回で見つかる。ただし実際の速さ（秒数）は未計測で、何倍速いかは言えない。(計画・contract cardを読む前のblind probesに記録した一文と同一)",
+      "matches_deck_message": true,
+      "curve_visible": "none-declared — 感情曲線の宣言なし。ピクセルからは hook→手順→手順→証拠→留保 の短い独習教材として妥当な緊張の推移が読み取れる",
+      "takeaway_titles": "全5頁のタイトルは takeaway 表と意味的に一致する断言文。s1『昇順なら、中央から範囲を絞れる』は deck message の意図的な言い換えで食い違いなし。s3『二分探索は、大小で残す側を決める』も takeaway『真ん中で分けると、4回で届く』と整合",
+      "motion_manifest": "kept — delivery=selfread / builds=static の記録どおりの静的デッキ。self-read に appear-build が無いのは正しい"
+    }
+  },
+  "probes": {
+    "per_slide": [
+      {
+        "slide": 1,
+        "first_read": "昇順の15個から13を探す題材で、線形探索13回と二分探索4回を対比する導入ページ。",
+        "takeaway_guess": "昇順なら中央から絞れるので二分探索は最悪でも4回。"
+      },
+      {
+        "slide": 2,
+        "first_read": "線形探索が先頭から順に照合し、13回目で発見する様子を色付きタイルで示す。",
+        "takeaway_guess": "線形探索は先頭から13個と比べて13回かかる。"
+      },
+      {
+        "slide": 3,
+        "first_read": "二分探索が中央比較で範囲を15→7→3→1と半分ずつ絞り、4回で発見する手順図。",
+        "takeaway_guess": "昇順なら中央より小さい値は左、大きい値は右へ絞れる。"
+      },
+      {
+        "slide": 4,
+        "first_read": "目的値を全15通り変えたときの比較回数を折れ線で比較し、二分探索は常に4回以内。",
+        "takeaway_guess": "最悪ケース（最大回数）で比べると二分探索が優れる。"
+      },
+      {
+        "slide": 5,
+        "first_read": "回数は数えたが実際の秒数は未計測であり、速度の倍率は主張しないという留保のページ。",
+        "takeaway_guess": "回数の比から「何倍速い」とは言えない。"
+      }
+    ],
+    "memory_sentence": "昇順の配列1〜15から13を探すと、線形探索は13回かかるが二分探索は中央から絞って最大4回で見つかる。ただし実際の速さ（秒数）は未計測で、何倍速いかは言えない。 — 計画の deck message(s1 takeaway『昇順の1〜15で13を探すと、線形探索は13回、二分探索は4回』+ s5 の留保)と一致。blind段階(計画未読)で記録した文であり、アンカリングではない"
+  },
+  "verdict": "consent",
+  "ceiling": "2頁の訪問順と3頁1段目の配列が同一座標・同一セルサイズで描かれていることを一目で示す接続（例: 両頁で同一の配列基準線を共有する旨の小さな導線）を足すと、『同じ配列のまま見え方だけが変わる』教材としての一体感がさらに上がる",
+  "summary": "全数値が input/data.json の実行トレースと完全一致し、色の意味・凡例・1〜3の反例・未計測の留保まで教材として誠実。blocker/major は見つからない。残る lever は現行版の独立レビュー記録を原典CLIで完了させて handoff gate を通すことであり、本レビューはその第一手として consent を返す。",
+  "strengths": [
+    "全5頁が断言文タイトルで、topic label がない(Assertion-Evidence)",
+    "線形=青・二分=紫・目的値/発見=茶の semantic colour が全頁で一貫し、2・3頁に16pt凡例がある",
+    "3頁の四段は同一15列座標のまま範囲が消え、大小比較(13>8等)と残す側が24ptで各段に明記される",
+    "4頁のnative chartは y=0 起点・軸名つきで実測15通りを描き、『目的値1〜3は線形の方が少ない』の反例を本文24ptで隠さない",
+    "5頁が計測した回数と未計測の秒数を分け、『何倍速いとは言えない』で締める fidelity 上の留保",
+    "self-read/静的の宣言と実物が一致し、フォント埋め込み(Yu Gothic)で豆腐なし"
+  ],
+  "findings": [
+    {
+      "id": "deck-fidelity-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "fidelity / definitions",
+      "issue": "教材の基礎単位『比較回数＝訪問した要素数』の定義が全頁13ptの条件脚注にのみあり、本文に一度も出ない",
+      "why": "独習・話者なしの教材で、初学者が『13回』『4回』の単位を読み誤ると5頁の留保ごと主張が歪む",
+      "fix": "1頁または2頁の本文16pt以上で単位を一度定義する(例: 『1回＝要素を1つ選んで目的値と比べること』)",
+      "fix_risk": "low"
+    },
+    {
+      "id": "s1-framing-1",
+      "slide": 1,
+      "severity": "minor",
+      "dimension": "narrative / framing",
+      "issue": "目標行『次に調べる中央の値を、自分で選べる。』が二分探索の手順説明(3頁)より先に用語『中央』を使う",
+      "why": "初学者は2〜3頁を読むまで『中央から』の操作意味を持たず、hookの目標文が一手前の知識を仮定する",
+      "fix": "『次に調べる値を、自分で選べる。』に緩めるか、3頁の定義へ向く一言(例: 『中央とは何かは3頁で』)を添える",
+      "fix_risk": "low"
+    },
+    {
+      "id": "deck-plan-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "plan_audit / direction gate",
+      "issue": "contract card の direction gate は 'POST-BUILD supplemental comparison' と記録された事後補完で、選定 'A array' の cover token 'low-left' が built 1頁に明確には表れていない(通常の上部タイトル構成)",
+      "why": "事後補完であることは正直に記録されているが、選んだ構図が成果物に反映されないままでは direction gate が形だけの手続きになる",
+      "fix": "次回は build 前に direction gate を実行する。現版は1頁が 'A array' の何を採用したか(配列を主役にする点等)を一行で記録する",
+      "fix_risk": "low"
+    }
+  ]
+}

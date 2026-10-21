@@ -1,0 +1,357 @@
+{
+  "schema_version": "repair_packet_v1",
+  "outline_path": "<case>\\input\\outline.json",
+  "qa_dir": "<case>\\.private\\finalize-qa",
+  "mapping_note": "Group pointers identify slides. Issue field pointers are used only when reported and verified in that slide's source. Shape IDs are diagnostic references, not source fields. Null pointers require locating the source. This packet is not a QA verdict.",
+  "counts": {
+    "findings": 9,
+    "affected_slides": 6,
+    "unmapped_findings": 0,
+    "by_source": {
+      "visual_review": 9
+    },
+    "by_severity": {
+      "info": 9
+    }
+  },
+  "reported_counts": {
+    "qa_report": {
+      "overflow_count": 0,
+      "overlap_count": 0,
+      "issue_slide_count": 0,
+      "issue_shape_count": 0,
+      "geometry_error_count": 0,
+      "geometry_warning_count": 0,
+      "whitespace_warning_count": 0,
+      "visual_warning_count": 0,
+      "visual_info_count": 0,
+      "rendered_slide_count": 6,
+      "expected_slide_count": 6,
+      "visual_review_warning_count": 0,
+      "visual_review_info_count": 9,
+      "design_error_count": 0,
+      "design_warning_count": 0,
+      "source_fidelity_error_count": 0,
+      "source_fidelity_warning_count": 0,
+      "source_fidelity_checked_count": 47,
+      "accessibility_error_count": 0,
+      "accessibility_warning_count": 0
+    },
+    "layout": {
+      "slide_count": 6,
+      "violation_count": 0,
+      "error_count": 0,
+      "warning_count": 0
+    },
+    "design": {
+      "issue_count": 0,
+      "error_count": 0,
+      "warning_count": 0,
+      "source_fidelity_error_count": 0,
+      "source_fidelity_warning_count": 0,
+      "source_fidelity_checked_count": 47
+    },
+    "accessibility": {
+      "error_count": 0,
+      "finding_count": 0,
+      "slide_count": 6,
+      "warning_count": 0
+    },
+    "inventory": {},
+    "visual": {},
+    "visual_review": {
+      "rendered_slide_count": 6,
+      "warning_count": 0,
+      "info_count": 9,
+      "issue_count": 9
+    }
+  },
+  "detail_paths": {
+    "qa_report": "<case>\\.private\\finalize-qa\\qa_report.json",
+    "layout": "<case>\\.private\\finalize-qa\\layout_lint.json",
+    "design": "<case>\\.private\\finalize-qa\\design_rules.json",
+    "accessibility": "<case>\\.private\\finalize-qa\\accessibility.json",
+    "inventory": "<case>\\.private\\finalize-qa\\issues.json",
+    "visual": "<case>\\.private\\finalize-qa\\visual_qa.json",
+    "visual_review": "<case>\\.private\\finalize-qa\\visual_review\\visual_review.json"
+  },
+  "source_status": {
+    "qa_report": "present",
+    "layout": "present",
+    "design": "present",
+    "accessibility": "present",
+    "inventory": "present",
+    "visual": "present",
+    "visual_review": "present"
+  },
+  "affected_slides": [
+    {
+      "slide_index": 0,
+      "slide_id": "handoff-01",
+      "source_pointer": "/slides/0",
+      "finding_count": 1
+    },
+    {
+      "slide_index": 1,
+      "slide_id": "handoff-02",
+      "source_pointer": "/slides/1",
+      "finding_count": 1
+    },
+    {
+      "slide_index": 2,
+      "slide_id": "handoff-03",
+      "source_pointer": "/slides/2",
+      "finding_count": 1
+    },
+    {
+      "slide_index": 3,
+      "slide_id": "handoff-04",
+      "source_pointer": "/slides/3",
+      "finding_count": 3
+    },
+    {
+      "slide_index": 4,
+      "slide_id": "handoff-05",
+      "source_pointer": "/slides/4",
+      "finding_count": 2
+    },
+    {
+      "slide_index": 5,
+      "slide_id": "handoff-06",
+      "source_pointer": "/slides/5",
+      "finding_count": 1
+    }
+  ],
+  "repairs": [
+    {
+      "slide_index": 0,
+      "slide_id": "handoff-01",
+      "source_pointer": "/slides/0",
+      "finding_count": 1,
+      "image_path": "<case>\\.private\\finalize-qa\\renders\\slide-01.jpg",
+      "source_excerpt": "{\"footer\":\"\\u4eee\\u60f3\\u306e\\u793e\\u5185\\u904b\\u7528 / \\u4eba\\u540d\\u30fb\\u4f1a\\u793e\\u30fb\\u5b9f\\u7e3e\\u5024\\u306f\\u4f7f\\u7528\\u3057\\u3066\\u3044\\u307e\\u305b\\u3093\",\"notes\":\"\\u67b6\\u7a7a\\u306e\\u793e\\u5185\\u904b\\u7528\\u3092\\u8aac\\u660e\\u3059\\u308b6\\u679a\\u3002\\u5b9f\\u969b\\u306e\\u5f15\\u7d99\\u304e\\u30e1\\u30e2\\u3092\\u4e00\\u679a\\u306b\\u6574\\u3048\\u308b\\u4f8b\\u3002\\u5b9f\\u5728\\u306e\\u4f1a\\u793e\\u30fb\\u793e\\u54e1\\u30fb\\u5b9f\\u6e2c\\u5024\\u3067\\u306f\\u306a\\u3044\\u3002\",\"role\":\"title\",\"slide_id\":\"handoff-01\",\"subtitle\":\"\\u5fc5\\u8981\\u60c5\\u5831\\u30fb\\u62c5\\u5f53\\u30fb\\u78ba\\u8a8d\\u3092\\u3001\\u4e00\\u679",
+      "excerpt_truncated": true,
+      "issues": [
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/0",
+          "diagnostic": {
+            "box_height_in": 1.74,
+            "estimated_height_in": 1.6,
+            "message": "Estimated text height uses 92% of its box.",
+            "severity": "info",
+            "shape_id": "shape-9",
+            "slide": 1,
+            "suggestion": "Check the rendered slide for clipping or awkward wrap.",
+            "type": "text_box_tight"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check the rendered slide for clipping or awkward wrap.",
+          "details_truncated": false
+        }
+      ]
+    },
+    {
+      "slide_index": 1,
+      "slide_id": "handoff-02",
+      "source_pointer": "/slides/1",
+      "finding_count": 1,
+      "image_path": "<case>\\.private\\finalize-qa\\renders\\slide-02.jpg",
+      "source_excerpt": "{\"caption\":\"\\u95a2\\u4fc2\\u3092\\u6574\\u7406\\u3057\\u305f\\u4eee\\u60f3\\u4f8b\\u3002\\u5b9f\\u969b\\u306e\\u62c5\\u5f53\\u5206\\u62c5\\u3067\\u306f\\u3042\\u308a\\u307e\\u305b\\u3093\\u3002\",\"flow_layout\":\"bands\",\"flow_steps\":[{\"detail\":\"\\u76ee\\u7684\\u30fb\\u8cc7\\u6599\\u306e\\u5834\\u6240\\u30fb\\u5b8c\\u4e86\\u6761\\u4ef6\",\"title\":\"\\u5fc5\\u8981\\u60c5\\u5831\"},{\"detail\":\"\\u9001\\u308a\\u624b\\u30fb\\u6b21\\u306e\\u62c5\\u5f53\\u30fb\\u78ba\\u8a8d\\u5f79\",\"title\":\"\\u62c5\\u5f53\"},{\"detail\":\"\\u53d7\\u3051\\u53d6\\u3063\\u305f\\u5185\\u5bb9\\u3068\\u671f\\u9650\\u3092\\u5408\\u308f\\u305b\\u308b\",\"title\":\"\\u78ba\\u8a8d\"}],\"footer\":\"\\u4eee\\u60f3\\u306e\\u",
+      "excerpt_truncated": true,
+      "issues": [
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/1",
+          "diagnostic": {
+            "font_pt": 9.0,
+            "message": "Body-like text is 9.0pt.",
+            "severity": "info",
+            "shape_id": "shape-20",
+            "slide": 2,
+            "suggestion": "Check readability; use larger text or split dense content if this is not a table/caption.",
+            "type": "body_font_small"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check readability; use larger text or split dense content if this is not a table/caption.",
+          "details_truncated": false
+        }
+      ]
+    },
+    {
+      "slide_index": 2,
+      "slide_id": "handoff-03",
+      "source_pointer": "/slides/2",
+      "finding_count": 1,
+      "image_path": "<case>\\.private\\finalize-qa\\renders\\slide-03.jpg",
+      "source_excerpt": "",
+      "excerpt_truncated": true,
+      "issues": [
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/2",
+          "diagnostic": {
+            "font_pt": 9.0,
+            "message": "Body-like text is 9.0pt.",
+            "severity": "info",
+            "shape_id": "shape-29",
+            "slide": 3,
+            "suggestion": "Check readability; use larger text or split dense content if this is not a table/caption.",
+            "type": "body_font_small"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check readability; use larger text or split dense content if this is not a table/caption.",
+          "details_truncated": false
+        }
+      ]
+    },
+    {
+      "slide_index": 3,
+      "slide_id": "handoff-04",
+      "source_pointer": "/slides/3",
+      "finding_count": 3,
+      "image_path": "<case>\\.private\\finalize-qa\\renders\\slide-04.jpg",
+      "source_excerpt": "",
+      "excerpt_truncated": true,
+      "issues": [
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/3",
+          "diagnostic": {
+            "font_pt": 9.0,
+            "message": "Body-like text is 9.0pt.",
+            "severity": "info",
+            "shape_id": "shape-9",
+            "slide": 4,
+            "suggestion": "Check readability; use larger text or split dense content if this is not a table/caption.",
+            "type": "body_font_small"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check readability; use larger text or split dense content if this is not a table/caption.",
+          "details_truncated": false
+        },
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/4",
+          "diagnostic": {
+            "font_pt": 9.0,
+            "message": "Body-like text is 9.0pt.",
+            "severity": "info",
+            "shape_id": "shape-10",
+            "slide": 4,
+            "suggestion": "Check readability; use larger text or split dense content if this is not a table/caption.",
+            "type": "body_font_small"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check readability; use larger text or split dense content if this is not a table/caption.",
+          "details_truncated": false
+        },
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/5",
+          "diagnostic": {
+            "font_pt": 9.0,
+            "message": "Body-like text is 9.0pt.",
+            "severity": "info",
+            "shape_id": "shape-12",
+            "slide": 4,
+            "suggestion": "Check readability; use larger text or split dense content if this is not a table/caption.",
+            "type": "body_font_small"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check readability; use larger text or split dense content if this is not a table/caption.",
+          "details_truncated": false
+        }
+      ]
+    },
+    {
+      "slide_index": 4,
+      "slide_id": "handoff-05",
+      "source_pointer": "/slides/4",
+      "finding_count": 2,
+      "image_path": "<case>\\.private\\finalize-qa\\renders\\slide-05.jpg",
+      "source_excerpt": "",
+      "excerpt_truncated": true,
+      "issues": [
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/6",
+          "diagnostic": {
+            "box_height_in": 1.29,
+            "estimated_height_in": 1.14,
+            "message": "Estimated text height uses 88% of its box.",
+            "severity": "info",
+            "shape_id": "shape-11",
+            "slide": 5,
+            "suggestion": "Check the rendered slide for clipping or awkward wrap.",
+            "type": "text_box_tight"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check the rendered slide for clipping or awkward wrap.",
+          "details_truncated": false
+        },
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/7",
+          "diagnostic": {
+            "box_height_in": 1.29,
+            "estimated_height_in": 1.14,
+            "message": "Estimated text height uses 88% of its box.",
+            "severity": "info",
+            "shape_id": "shape-14",
+            "slide": 5,
+            "suggestion": "Check the rendered slide for clipping or awkward wrap.",
+            "type": "text_box_tight"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check the rendered slide for clipping or awkward wrap.",
+          "details_truncated": false
+        }
+      ]
+    },
+    {
+      "slide_index": 5,
+      "slide_id": "handoff-06",
+      "source_pointer": "/slides/5",
+      "finding_count": 1,
+      "image_path": "<case>\\.private\\finalize-qa\\renders\\slide-06.jpg",
+      "source_excerpt": "",
+      "excerpt_truncated": true,
+      "issues": [
+        {
+          "source": "visual_review",
+          "detail_pointer": "/issues/8",
+          "diagnostic": {
+            "font_pt": 9.0,
+            "message": "Body-like text is 9.0pt.",
+            "severity": "info",
+            "shape_id": "shape-17",
+            "slide": 6,
+            "suggestion": "Check readability; use larger text or split dense content if this is not a table/caption.",
+            "type": "body_font_small"
+          },
+          "source_pointer": null,
+          "source_field_excerpt": "",
+          "instruction": "Check readability; use larger text or split dense content if this is not a table/caption.",
+          "details_truncated": false
+        }
+      ]
+    }
+  ],
+  "truncation": {
+    "max_bytes": 12000,
+    "budget_exceeded": false,
+    "omitted_findings": 0,
+    "omitted_repairs": 0,
+    "truncated_excerpts": 6,
+    "truncated_diagnostics": 0
+  }
+}

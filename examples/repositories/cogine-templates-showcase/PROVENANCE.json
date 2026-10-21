@@ -11,7 +11,7 @@
   "original_metadata": "source/upstream/templates/editorial-luxury/template.json",
   "selection_and_slots": "input/template-selection-and-slots.json",
   "layout_slots_defined_by_upstream": false,
-  "metadata_scan": "全templates/*/template.jsonを読み、原文をsource/upstream/metadataへ保持",
+  "metadata_scan": "input/template-metadata-inventory.json (60 actual pinned metadata files)",
   "method": "原典metadata選択 → editorial-luxury folder clone → content_limits/実DOM slot mapping → demo差替え → 原典template.htmlとinline controllerで完成HTML",
   "source_slide_selection": [
     1,
@@ -49,11 +49,6 @@
     "html_inline": true
   },
   "format": "single-file-html",
-  "preview_canvas": {
-    "width": 1600,
-    "height": 900,
-    "note": "原典はfullscreen-responsive。これは代表PNGとプレビューの実viewport。"
-  },
   "navigation": "native-runtime-bridge",
   "editability": {
     "kind": "html_svg",
@@ -73,7 +68,7 @@
   ],
   "fictional": true,
   "sample_notice": "架空の茶の贈りもの企画。商品仕様・価格・効能・売上実績は示していません。図形は説明用。",
-  "verification_scope": "生成成功、主要初回表示と代表表紙PNG、原典navigation1→2、短いSKILL quick_validateだけ。optional visual-validator/全頁詳細検査/全kit再実行/採点なし。",
+  "verification_scope": "3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。",
   "acquisition": {
     "repository": "cogine-ai/ai-slide-templates",
     "commit": "8a7a59d39f059a7e58da9c3471014ba7fe3b98eb",
@@ -96,5 +91,40 @@
     "page": "2",
     "title": "香りを、贈る。",
     "activeHeading": "相手のひと息を、思い浮かべる。"
+  },
+  "repair_author": "Codex",
+  "repair_receipt": "source/repair-qa.json",
+  "not_demonstrated": [
+    "原典の字体保持規定に対し、依頼で承認された日本語字体への変更を明示。配色・主要グリッド・装飾・元の操作は保持。",
+    "layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。",
+    "テンプレートの保守やvalidator自体は変更していない。ライブラリー全体のvalidateは今回の完成資料検査と別。"
+  ],
+  "chapter_labels": "第1章/第2章/第3章 are chapters; bottom1/6–6/6 is page count.",
+  "current_repair": {
+    "author": "Codex",
+    "verification": "source/repair-qa.json",
+    "original_gates": "source/round4-original-gates.json",
+    "independent_rereview": "pending for repaired version"
+  },
+  "superseded_history": [
+    {
+      "revision": "before round4-web07-repair",
+      "old_metadata": {
+        "preview_canvas": {
+          "width": 1600,
+          "height": 900,
+          "note": "原典はfullscreen-responsive。これは代表PNGとプレビューの実viewport。"
+        }
+      },
+      "current_authority": "QA.json and source/repair-qa.json in the included case; historical limited checks do not describe the current revision."
+    }
+  ],
+  "current_verification": "source/repair-qa.json",
+  "zip_reexecution": "source/round4-zip-replay.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "current_preview_canvas": {
+    "width": 1920,
+    "height": 1080,
+    "scope": "All current public deck pages; original Cogine validator separately at1280×720."
   }
 }

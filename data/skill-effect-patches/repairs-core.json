@@ -1,0 +1,654 @@
+[
+  {
+    "case_id": "hand-drawn-showcase",
+    "name": "手描き図で章の入口を作る",
+    "job": "",
+    "change": "章名から象徴的な手描き図を選び、短い見出しと余白を持つ章扉にそろえる。",
+    "input": "章名・短い説明・頁順と原典のSVG図集",
+    "output": "編集できる章名・説明を持つPPTX。手描き図と追加枠は個別PNG画像。",
+    "how_to_use": [
+      "章ごとに伝える主題を一つ決め、原典illustrations.mdから対応するSVGを選ぶ。",
+      "原典の背景・大きな図・左下の章名・右下の番号の骨格へ日本語を入れる。",
+      "原典のPptxGenJS＋sharp雛形でPPTXを作り、SVG元と書体の条件を残す。",
+      "原典Step6に沿って全頁を画像化し、説明文と線の接触・文字切れ・番号を確認する。"
+    ],
+    "constraints": [
+      "作例は表紙と4章の章扉。本文付きの業務資料ではない。",
+      "和文書体・朱赤枠・表紙の大きな苗木は派生。原典の標準書体と小さい装飾だけの表紙を再現した例ではない。",
+      "図は原典SVGから個別PNGへ変換。花びら等の内部をPowerPoint図形として編集するものではない。"
+    ],
+    "demonstration": {
+      "summary": "5つの章主題を原典のSVGへ対応付けた。元SVGは変更せず、追加した赤枠が説明文を横切る不具合だけを生成コードで直し、PowerPointとLibreOfficeの全5頁を確認した。",
+      "applied_features": [
+        "主題に対応する原SVGの選択",
+        "大きな図・左下章題・右下番号の配置",
+        "原典Step6の全頁描画・目視"
+      ],
+      "not_demonstrated": [
+        "作例は表紙と4章の章扉。本文付きの業務資料ではない。",
+        "和文書体・朱赤枠・表紙の大きな苗木は派生。原典の標準書体と小さい装飾だけの表紙を再現した例ではない。",
+        "図は原典SVGから個別PNGへ変換。花びら等の内部をPowerPoint図形として編集するものではない。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "見つける。",
+          "what_to_inspect": "上部の虫眼鏡と左下の「見つける」を見る。説明文の下を赤枠が通り、文字を横切らない。",
+          "skill_rule": "原典の図集から観察に対応する図を選び、余白・左下章題・右下番号で章扉を組む。",
+          "proof_path": "examples/repositories/hand-drawn-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "話してみる。",
+          "what_to_inspect": "同じ骨格で図だけを吹き出しへ替え、章名「話してみる」と対応させている。",
+          "skill_rule": "原典の話題別SVGを主題に合わせて使い、章間でレイアウトを統一する。",
+          "proof_path": "examples/repositories/hand-drawn-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 4,
+          "label": "5ページ目",
+          "title": "振り返る。",
+          "what_to_inspect": "循環矢印、振り返るという章名、右下05が対応する。線と説明文が離れている。",
+          "skill_rule": "原典Step6/Quality Checklistで全頁の図・余白・文字・番号を確認する。",
+          "proof_path": "examples/repositories/hand-drawn-showcase/render/slide-05.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/hand-drawn-showcase/build.cjs",
+        "examples/repositories/hand-drawn-showcase/input/data.json",
+        "examples/repositories/hand-drawn-showcase/source/frame-repair-check.json",
+        "examples/repositories/hand-drawn-showcase/reviews/page-audit.json",
+        "examples/repositories/hand-drawn-showcase/PROVENANCE.json",
+        "examples/repositories/hand-drawn-showcase/reviews/libreoffice/slide-1.jpg",
+        "examples/repositories/hand-drawn-showcase/reviews/libreoffice/slide-2.jpg",
+        "examples/repositories/hand-drawn-showcase/reviews/libreoffice/slide-3.jpg",
+        "examples/repositories/hand-drawn-showcase/reviews/libreoffice/slide-4.jpg",
+        "examples/repositories/hand-drawn-showcase/reviews/libreoffice/slide-5.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "章名から象徴的な手描き図を選び、短い見出しと余白を持つ章扉にそろえる。",
+      "requirements": [
+        "Node.js・PptxGenJS4.0.1・sharp0.35.5",
+        "同梱の実TTF/OFL。別端末では字体を導入",
+        "実描画用PowerPointまたはLibreOffice"
+      ],
+      "steps": [
+        "input/data.jsonで章主題・短い説明・SVG番号を決める",
+        "node build.cjsで原典雛形からPPTXを生成する",
+        "原典Step6として全頁を描画し、図と文字・枠の位置を目視する"
+      ],
+      "limitations": [
+        "作例は表紙と4章の章扉。本文付きの業務資料ではない。",
+        "和文書体・朱赤枠・表紙の大きな苗木は派生。原典の標準書体と小さい装飾だけの表紙を再現した例ではない。",
+        "図は原典SVGから個別PNGへ変換。花びら等の内部をPowerPoint図形として編集するものではない。"
+      ]
+    }
+  },
+  {
+    "case_id": "beamer-showcase",
+    "name": "数式と図をそろえたPDF資料",
+    "job": "",
+    "change": "数式・説明・図を同じTeXテーマで組み、全頁と細部の描画を見て重なりを直す。",
+    "input": "説明する内容・数式・仮定・比較データ",
+    "output": "編集用TeX/TikZとPDF、ページ画像。PPTXではない。",
+    "how_to_use": [
+      "原稿から前提・式・例・比較を分け、原典Warm Editorialの雛形とテーマを使う。",
+      "図はTikZで作り、数式と説明の対応、矢印の接続をTeXに保持する。",
+      "2回コンパイルし、原典page-auditの条件で全頁180〜220dpi・重要箇所400〜600dpiを描画する。",
+      "数式と罫線、語中改行、接続点を目視し、TeXを直して再コンパイルする。"
+    ],
+    "constraints": [
+      "この作例は一定処理時間・一定到着間隔の学習用設定。実測値や性能実績ではない。",
+      "既存Tectonicで2回コンパイル。元XeLaTeX用CLIは未実行で、置換範囲と差分を記録。",
+      "TeXは編集できるが、PowerPoint内のnative図形として配布するものではない。"
+    ],
+    "demonstration": {
+      "summary": "待ち時間の5頁教材を元Beamer/TikZテーマで制作。式と罫線の重なり、順番待ちの途中改行、矢印の浮きを修正し、216dpi全頁と500dpiの6箇所を目視した。",
+      "applied_features": [
+        "原典Warm Editorialテーマ",
+        "数式とTikZの同一ソース",
+        "2回コンパイルと全頁・細部のpage-audit"
+      ],
+      "not_demonstrated": [
+        "PowerPoint形式の出力",
+        "元のXeLaTeX専用render_and_check.sh実行（既存Tectonicで代替）",
+        "独立再評価・ZIP再実行"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "一つの窓口に、仕事が届く",
+          "what_to_inspect": "到着→順番待ち→処理の矢印と、p=5秒・到着間隔dの説明が対応する。",
+          "skill_rule": "原典の図設計規則に沿って関係を矢印で表し、本文を図と同じテーマへそろえる。",
+          "proof_path": "examples/repositories/beamer-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "待ち時間を式にする",
+          "what_to_inspect": "3つの式を1行ずつ分け、その下の罫線・例・タイムラインと接触しないことを見る。",
+          "skill_rule": "原典page-auditは数式、本文、図、罫線の衝突を全頁と高解像度cropで確かめる。",
+          "proof_path": "examples/repositories/beamer-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "間隔が1秒違うと、待ちは積み上がる",
+          "what_to_inspect": "到着間隔3/4/6秒の折れ線と右側の仮定を比べる。「順番待ち」は語中で割れない。",
+          "skill_rule": "原典review-loopで数式・グラフ・文章の整合と改行を確認し、TeXへ戻して直す。",
+          "proof_path": "examples/repositories/beamer-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/beamer-showcase/deck.tex",
+        "examples/repositories/beamer-showcase/theme-portable.tex",
+        "examples/repositories/beamer-showcase/source/theme-portable.diff",
+        "examples/repositories/beamer-showcase/source/layout-repair.diff",
+        "examples/repositories/beamer-showcase/source/COMPILE.json",
+        "examples/repositories/beamer-showcase/reviews/page-audit.json",
+        "examples/repositories/beamer-showcase/reviews/crop-index.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "数式・説明・図を同じTeXテーマで組み、全頁と細部の描画を見て重なりを直す。",
+      "requirements": [
+        "Beamer・TikZ対応のTeX環境。本例は既存Tectonic0.17",
+        "同梱JP/数式字体と利用条件",
+        "PDFを180〜220dpi/400〜600dpiで描画する環境"
+      ],
+      "steps": [
+        "原典template-169.tex/theme.texから内容を編集",
+        "2回コンパイルし全5頁を216dpiで描画",
+        "重要箇所を500dpi cropして原典page-auditを記録",
+        "独立評価を作者のdraft-ready確認と分ける"
+      ],
+      "limitations": [
+        "この作例は一定処理時間・一定到着間隔の学習用設定。実測値や性能実績ではない。",
+        "既存Tectonicで2回コンパイル。元XeLaTeX用CLIは未実行で、置換範囲と差分を記録。",
+        "TeXは編集できるが、PowerPoint内のnative図形として配布するものではない。"
+      ]
+    }
+  },
+  {
+    "case_id": "agent-slides-showcase",
+    "name": "PPTXの書式と配置を引き継ぐ",
+    "job": "",
+    "change": "既存PPTXから文字の位置・字体・色を取り出し、その書式を保って本文と編集できる図を入れる。",
+    "input": "書式付きPPTXテンプレートと企画文・作図指示",
+    "output": "テンプレートの背景・文字書式を継承した編集可能PPTXと抽出した契約データ。",
+    "how_to_use": [
+      "書式付きPPTXをextractし、使うlayout・見出し/本文の位置・色・字体を取り出す。",
+      "抽出した契約とdesign profileでpreflightを実行する。",
+      "planとnative編集操作を書き、見出しと導入は意味役割を指定してtemplate書式を継承する。",
+      "dry-run→render→元slides qaを実行し、入力templateと完成PPTXを実描画して比べる。"
+    ],
+    "constraints": [
+      "入力はこの作例用に作ったtemplate。実在企業の資料を試した結果ではない。",
+      "1枚指定と大見出しを優先。元の自動構造頁・24pt標準・汎用split-panel移動規則とは異なる範囲を記録。",
+      "背景・橙帯・固定ラベルはlayoutに属し、PowerPointのスライドマスターで編集する。"
+    ],
+    "demonstration": {
+      "summary": "紺/橙の自作templateを元CLIで抽出。見出し52pt・本文23pt・白・位置を継承し、仮の行程と関係図をnative部品で追加した。元qaはok:true、入力2頁と完成1頁を目視した。",
+      "applied_features": [
+        "PPTXからの書式・layout抽出",
+        "見出し/本文placeholderの書式継承",
+        "native編集操作と元CLIのqa"
+      ],
+      "not_demonstrated": [
+        "実在企業templateの検証",
+        "自動構造頁・24pt標準の適用（1枚・大見出し指定で変更）",
+        "汎用split-panel見出し移動heuristic（自作layout継承を優先）",
+        "独立再評価・ZIP再実行"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "完成1枚：書式の継承",
+          "title": "土曜日を、街の作業場に。",
+          "what_to_inspect": "左の紺背景、右の橙帯、白い見出しの位置は入力Workshop Split layoutから引き継いでいる。",
+          "skill_rule": "原典extractでテンプレートのlayoutと書式を契約化し、生成時も保つ。",
+          "proof_path": "examples/repositories/agent-slides-showcase/render/slide-01.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 0,
+          "label": "完成1枚：編集できる図",
+          "title": "土曜日を、街の作業場に。",
+          "what_to_inspect": "10/12/15時の仮行程は線と点、右の人・道具・街は場との関係図。参加方法は載せていない。",
+          "skill_rule": "原典は元PPTXの書式契約内でnative操作を使い、文字・図形・線を個別編集可能にする。",
+          "proof_path": "examples/repositories/agent-slides-showcase/render/slide-01.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 0,
+          "label": "入力template：完成と比較",
+          "title": "土曜日を、街の作業場に。",
+          "what_to_inspect": "入力の52pt見出しと23pt本文、紺背景と橙帯を完成図と比べる。会社の既存資料ではなく自作template。",
+          "skill_rule": "原典preflightとqaで抽出契約への適合を確認し、実描画も目視する。",
+          "proof_path": "examples/repositories/agent-slides-showcase/reviews/template-render/slide-02.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/agent-slides-showcase/input/self-authored-workshop-template.pptx",
+        "examples/repositories/agent-slides-showcase/input/slides.json",
+        "examples/repositories/agent-slides-showcase/source/build_styled_template.py",
+        "examples/repositories/agent-slides-showcase/source/template-inventory.json",
+        "examples/repositories/agent-slides-showcase/source/template-inheritance-check.json",
+        "examples/repositories/agent-slides-showcase/source/command-evidence.json",
+        "examples/repositories/agent-slides-showcase/reviews/original-qa.json",
+        "examples/repositories/agent-slides-showcase/reviews/original-lint.json",
+        "examples/repositories/agent-slides-showcase/reviews/template-and-visual-audit.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "既存PPTXから文字の位置・字体・色を取り出し、その書式を保って本文と編集できる図を入れる。",
+      "requirements": [
+        "Python3.12+・同梱の元agent-slides runtimeとその依存",
+        "PowerPoint等のPPTX描画環境",
+        "同梱Zen Kaku Gothic New・Manrope/OFL"
+      ],
+      "steps": [
+        "書式付きPPTXを元extractで取り出す",
+        "preflight後にplan+opsを編集しdry-run",
+        "元render→slides qaを実行",
+        "入力と出力を描画し、継承位置・字体・色と図を比べる"
+      ],
+      "limitations": [
+        "入力はこの作例用に作ったtemplate。実在企業の資料を試した結果ではない。",
+        "1枚指定と大見出しを優先。元の自動構造頁・24pt標準・汎用split-panel移動規則とは異なる範囲を記録。",
+        "背景・橙帯・固定ラベルはlayoutに属し、PowerPointのスライドマスターで編集する。"
+      ]
+    }
+  },
+  {
+    "case_id": "thesis-defense-showcase",
+    "name": "研究メモを既存の発表様式へ入れる",
+    "job": "",
+    "change": "研究メモを発表用の順へ整理し、元テンプレートの枠を保った図・表・比較を編集できるPPTXへ入れる。",
+    "input": "研究Markdown・比較用JSON・使う図の許可一覧とPPTXテンプレート",
+    "output": "テンプレートを複製・置換した編集可能PPTX、図表の計算データ、全頁確認記録。",
+    "how_to_use": [
+      "研究の問題・方法・結果・限界を原稿から取り、使用する図をallowlistへ記録する。",
+      "元template生成器を実行し、COM helperで必要な型の頁を複製する。",
+      "元native helperで文字・経路図・棒・表を置換し、同じ入力データを使う。",
+      "原典Quality gateの全頁描画・contact sheet・overflow・stale text scanを実行して直す。"
+    ],
+    "constraints": [
+      "この作例は自作Markdownと学習用仮想データ。大学の実研究や観測値ではない。",
+      "元の無地templateを使用。実在大学templateやロゴは含まない。",
+      "6枚指定を優先。共有PowerPoint保全のためCOMのQuitだけを抑止し、検査内容・閾値は変更しない。"
+    ],
+    "demonstration": {
+      "summary": "通学経路の仮想研究6頁。元templateの濃赤navとcontent frameを保ち、JSONから経路図・露出比較・試算表を追加した。全6頁目視、overflow0、古い文言0。",
+      "applied_features": [
+        "元templateの複製と書式保持",
+        "研究入力に基づくnative図・表",
+        "原典の全頁visual/overflow/stale gate"
+      ],
+      "not_demonstrated": [
+        "実論文PDF/LaTeXからの抽出",
+        "実在大学templateの保持",
+        "実測データや経路安全性の検証",
+        "独立再評価・ZIP再実行"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "研究課題",
+          "what_to_inspect": "左右とも「雨にさらされる時間」を14分/3分で比較し、総移動時間14分/18分を別記する。濃赤navと枠を保持。",
+          "skill_rule": "原典templateの構造を保ちながら研究内容を置換し、異なる指標を同じ数値比較に混ぜない。",
+          "proof_path": "examples/repositories/thesis-defense-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "経路モデル",
+          "what_to_inspect": "H/A/B/C/Gの経路と辺の時間をroutes.jsonに対応させる。上端の6分/8分は線から離す。",
+          "skill_rule": "原典の図allowlistにある入力だけから図を作り、Quality gateで線・ラベルの接触を確認する。",
+          "proof_path": "examples/repositories/thesis-defense-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "候補の比較",
+          "what_to_inspect": "同じJSONの露出14/3/16分を表と棒で表示する。棒や表はnative要素。",
+          "skill_rule": "原典native helperで内容枠へ図表を追加し、全頁の表示と古い文言を検査する。",
+          "proof_path": "examples/repositories/thesis-defense-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/thesis-defense-showcase/input/research.md",
+        "examples/repositories/thesis-defense-showcase/input/routes.json",
+        "examples/repositories/thesis-defense-showcase/input/calculation-results.json",
+        "examples/repositories/thesis-defense-showcase/input/figure-allowlist.json",
+        "examples/repositories/thesis-defense-showcase/rebuild.py",
+        "examples/repositories/thesis-defense-showcase/reviews/quality-gate.json",
+        "examples/repositories/thesis-defense-showcase/reviews/overflow.json",
+        "examples/repositories/thesis-defense-showcase/reviews/stale-text-scan.json",
+        "examples/repositories/thesis-defense-showcase/reviews/contact-sheet.png"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "研究メモを発表用の順へ整理し、元テンプレートの枠を保った図・表・比較を編集できるPPTXへ入れる。",
+      "requirements": [
+        "Python3.10+・python-pptx・Pillow",
+        "Windows PowerPoint COM",
+        "同梱BIZ UDPGothic・Shippori Mincho/OFL"
+      ],
+      "steps": [
+        "研究入力と図allowlistを整理",
+        "元build_template→COM clone→native helper置換",
+        "元export/contact sheet/overflow/stale scanを実行",
+        "全頁を目視し数値・指標・線との接触を修正"
+      ],
+      "limitations": [
+        "この作例は自作Markdownと学習用仮想データ。大学の実研究や観測値ではない。",
+        "元の無地templateを使用。実在大学templateやロゴは含まない。",
+        "6枚指定を優先。共有PowerPoint保全のためCOMのQuitだけを抑止し、検査内容・閾値は変更しない。"
+      ]
+    }
+  },
+  {
+    "case_id": "scene-graph-showcase",
+    "name": "大綱から作り、テーマを替える",
+    "job": "",
+    "change": "大綱からPPTXを作り、本文を変えずにテーマの色と文字書式を替え、同じ頁の前後を比べる。",
+    "input": "cover/section/content/endingを指定した日本語の大綱JSON",
+    "output": "テーマ適用済みの編集可能PPTXと変更前draft、同頁比較。scene graph抽出はこのpinで未実装。",
+    "how_to_use": [
+      "outline.jsonで頁の種類と短い本文を指定し、元OutlineSpec/SlideSpecへ渡す。",
+      "元create_from_outlineで暖色draftを保存する。",
+      "元beautifyへprojectionの表示名を渡す。旧装飾色は本forkの明示adapterで移行する。",
+      "draftと完成の同じ頁を描画して比べ、章番号の接触や残った旧色を確認する。"
+    ],
+    "constraints": [
+      "元beautifyは非文字図形の色を残す。本forkは旧帯・線の色移行と重複帯除去を追加した派生。",
+      "章番号/章題・表紙副題の座標補正も局所変更。元工場とFONT_SIZESは保持。",
+      "元vendorのparts8ファイルだけ同版公式python-pptx1.0.2から補完。外部lxml等が必要。",
+      "元evaluateは実行済みだが粗い診断で、独立した視覚採点や満点判定ではない。"
+    ],
+    "demonstration": {
+      "summary": "同一原稿の暖色draftとprojection版を保存。元API後の旧色移行を明示し、完成6頁・draft3頁・比較3枚を確認した。本文は前後で一致。",
+      "applied_features": [
+        "大綱からのcover/section/content/ending生成",
+        "元beautifyによる背景・文字のテーマ適用",
+        "同頁比較と局所装飾移行の明示"
+      ],
+      "not_demonstrated": [
+        "このpinに未実装のparse_slideによるscene graph抽出",
+        "元createによるspeaker notes書込み",
+        "会場可読性・理解度の改善率",
+        "存在しないtest_skill_simple.pyの実行",
+        "独立再評価・ZIP再実行"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1ページ目",
+          "title": "遠くの席へ、伝わる資料。",
+          "what_to_inspect": "左右の本文は同じ。暖色の赤背景/白文字から、淡色背景/紺見出しへ変わる。黄色の線→茶色は局所adapter。",
+          "skill_rule": "原典createで作った既存PPTXを元beautifyへ渡し、選択テーマの背景・字体・文字色を適用する。",
+          "proof_path": "examples/repositories/scene-graph-showcase/render/theme-compare-page-01.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "一頁に、一つの問い。",
+          "what_to_inspect": "章番号と章題が両版とも離れている。左の赤帯→右の紺帯は原典が残す既存色を本forkで補正。",
+          "skill_rule": "原典section factoryを使い、和文での番号接触と未移行の装飾色は明示した局所修正として分ける。",
+          "proof_path": "examples/repositories/scene-graph-showcase/render/theme-compare-page-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "見出しは、ひと息で。",
+          "what_to_inspect": "同じ3行の本文と位置を保ち、見出し・帯・線が紺にそろう。本文の改善例をテーマ効果と混同しない。",
+          "skill_rule": "原典beautifyの内容保持を、変換前後の本文照合と同じ頁の実描画で確かめる。",
+          "proof_path": "examples/repositories/scene-graph-showcase/render/theme-compare-page-03.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/scene-graph-showcase/input/outline.json",
+        "examples/repositories/scene-graph-showcase/draft.pptx",
+        "examples/repositories/scene-graph-showcase/input/theme-source-map.json",
+        "examples/repositories/scene-graph-showcase/source/rebuild.py",
+        "examples/repositories/scene-graph-showcase/source/theme_layout_adapter.py",
+        "examples/repositories/scene-graph-showcase/source/theme-layout-repair.json",
+        "examples/repositories/scene-graph-showcase/source/output-audit.json",
+        "examples/repositories/scene-graph-showcase/source/original-evaluate-receipt.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "大綱からPPTXを作り、本文を変えずにテーマの色と文字書式を替え、同じ頁の前後を比べる。",
+      "requirements": [
+        "Python・lxml/Pillow/typing_extensions/XlsxWriter",
+        "同梱の修復済みvendor runtimeと同版MIT条件",
+        "BIZ UDPGothic/OFLとPowerPoint等の実描画環境"
+      ],
+      "steps": [
+        "大綱JSONを編集",
+        "元create→draft→元beautifyへprojection表示名を指定",
+        "明示adapterで旧装飾色と和文余白を補正",
+        "同頁前後を描画し全完成頁を目視、元evaluateは診断として別記"
+      ],
+      "limitations": [
+        "元beautifyは非文字図形の色を残す。本forkは旧帯・線の色移行と重複帯除去を追加した派生。",
+        "章番号/章題・表紙副題の座標補正も局所変更。元工場とFONT_SIZESは保持。",
+        "元vendorのparts8ファイルだけ同版公式python-pptx1.0.2から補完。外部lxml等が必要。",
+        "元evaluateは実行済みだが粗い診断で、独立した視覚採点や満点判定ではない。"
+      ]
+    }
+  },
+  {
+    "case_id": "learndeck-showcase",
+    "name": "HTMLの配置を編集できるPPTXへ",
+    "job": "",
+    "change": "HTMLの文字と単純図形をPowerPointで直せる部品へ変え、SVGは個別画像として残す。",
+    "input": "既存のsource.html、使用するSVGと実フォント",
+    "output": "native文字・背景・基本図形と個別PNG画像を持つPPTX、元SVG、HTMLとの比較画像。",
+    "how_to_use": [
+      "元HTMLに.slide領域と使用字体を用意し、文字とSVGの配置を決める。",
+      "元html_to_ppt.jsからDOM converterを実行し、ブラウザーの実座標でPPTXを作る。",
+      "修正は元HTMLへ戻し、同じ名前と出力先で再変換する。",
+      "HTMLとPPTXを全頁描画し、文字・余白・SVG表示を比べ、native要素と画像の範囲を記録する。"
+    ],
+    "constraints": [
+      "本例はHTML-to-PPT経路。学習原稿から5styleで生成する別経路は未実施。",
+      "局所変更は字体役割・日本語metadataと、SVGの実表示幅高さの保存。元との差分を同梱。",
+      "花はSVG由来の個別PNG。花びらや茎がnative図形になったとは称さない。",
+      "元SKILLに専用の必須QA CLIはない。今回の明示修正依頼で全頁の実描画確認を行った。"
+    ],
+    "demonstration": {
+      "summary": "花の提供案5頁を同じHTMLから元DOM変換で再生成。HTML5頁とPowerPoint5頁を目視し、全DOM文字を照合。字間、見出し下余白、SVGの縦伸びを修正した。",
+      "applied_features": [
+        "ブラウザーのDOM実測配置",
+        "native文字・基本図形と個別SVG由来画像の分離",
+        "同じHTMLを編集する原典Revision Loop"
+      ],
+      "not_demonstrated": [
+        "Generate PPT経路（学習原稿→slides.json→5styleプリセット）",
+        "花の内部をnative PowerPoint図形に変換",
+        "複雑CSSの再現（radial/影は近似、filter無視）",
+        "ChromeとPowerPointの画素完全一致",
+        "独立再評価・ZIP再実行"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1ページ目",
+          "title": "花を、一本から。",
+          "what_to_inspect": "左HTMLと右PPTXの同じ題名を比べる。正の字間で字形を離し、花はSVGの表示比率を保つ。",
+          "skill_rule": "原典はdocument.fonts.ready後のDOM位置とcomputed stylesを読んでnative文字を再構築する。",
+          "proof_path": "examples/repositories/learndeck-showcase/render/html-pptx-compare-01.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "一本なら、置く場所を選べる。",
+          "what_to_inspect": "「選べる。」と本文の間に余白を置き、左の花と花器を別部品にしている。",
+          "skill_rule": "原典Revision Loopは生成済みHTMLを直し、同じconverterでPPTXを再生成する。",
+          "proof_path": "examples/repositories/learndeck-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "選ぶ。届く。飾る。",
+          "what_to_inspect": "PPTX実体では文字13・図形3・花画像3。左右の本文と位置を比べ、花をnative図形と取り違えない。",
+          "skill_rule": "原典はtext/shapeを分離し、inline SVGは元SVGを保存してPNG互換画像として置く。",
+          "proof_path": "examples/repositories/learndeck-showcase/render/html-pptx-compare-03.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/learndeck-showcase/source.html",
+        "examples/repositories/learndeck-showcase/conversion.json",
+        "examples/repositories/learndeck-showcase/runtime/scripts/html_to_ppt.js",
+        "examples/repositories/learndeck-showcase/runtime/scripts/html_to_editable_pptx.js",
+        "examples/repositories/learndeck-showcase/source/html_to_editable_pptx.js.diff",
+        "examples/repositories/learndeck-showcase/source/html-dom-metrics.json",
+        "examples/repositories/learndeck-showcase/source/native-object-inventory.json",
+        "examples/repositories/learndeck-showcase/source/layout-conversion-audit.json",
+        "examples/repositories/learndeck-showcase/source/capture_source.cjs",
+        "examples/repositories/learndeck-showcase/source/footer-repair.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "HTMLの実位置と字体を測ってPPTXの文字・基本図形を編集可能にし、変換前後を比べられる。",
+      "requirements": [
+        "Node18+・playwright/pptxgenjs/sharp/jszip",
+        "Chromium/Chrome/Edgeと同梱の実TTF/OFL",
+        "PPTXの実描画用PowerPoint等"
+      ],
+      "steps": [
+        "source.htmlを編集",
+        "元HTML-to-PPT alias/DOM converterを実行",
+        "同じHTMLへ修正を戻して再変換",
+        "HTMLとPPTXを全頁描画して文字/画像範囲を照合"
+      ],
+      "limitations": [
+        "本例はHTML-to-PPT経路。学習原稿から5styleで生成する別経路は未実施。",
+        "局所変更は字体役割・日本語metadataと、SVGの実表示幅高さの保存。元との差分を同梱。",
+        "花はSVG由来の個別PNG。花びらや茎がnative図形になったとは称さない。",
+        "元SKILLに専用の必須QA CLIはない。今回の明示修正依頼で全頁の実描画確認を行った。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "原典DOM変換後のPowerPoint全5頁と入力HTML全5頁を再描画し、文字・配置・コントラストを確認済み。独立再評価は別記録。"
+  },
+  {
+    "case_id": "presentation-skill-showcase",
+    "name": "原稿をnative図解・表へ整理",
+    "job": "",
+    "change": "原稿の関係・順序・比較を別の図解や表で表し、元の生成器と検査で編集できるPPTXを作る。",
+    "input": "制作brief、頁ごとの主張と内容を持つoutline.json、使うデータ",
+    "output": "native文字・図解・タイムライン・表を編集できるPPTXと生成ソース・検査結果。",
+    "how_to_use": [
+      "原典briefで候補を出し、選んだ作風・構成grammar・可読性条件をoutlineへ引き継ぐ。",
+      "各頁の目的に応じて関係・順序・表・比較のsupported roleを選ぶ。",
+      "元PptxGenJS builderで生成し、元present.py finalizeを実行する。",
+      "repair packetと実描画を見てoutline/template adapterを直し、同じ生成器と検査を繰り返す。"
+    ],
+    "constraints": [
+      "架空の引継ぎ教材。担当・期限・状態は説明用の設定。",
+      "原典Node routeとnative要素のfinalizeを実行。Python科学データ依存一式の準備完了ではない。",
+      "日本語字体・数値字体・見出し位置・dark文字色・表metadataは局所adapter。元との差分と担当範囲を記録。",
+      "元の自動検査通過と人の視覚確認・独立再評価を区別する。"
+    ],
+    "demonstration": {
+      "summary": "6頁で必要情報の関係、作業順、記入用表、着手条件を別のnative構造にした。元finalize再実行は全検査0件、全6頁を目視。表の列名再掲と斜体もsourceで修正し、制作ZIPの実再生成が一致した。",
+      "applied_features": [
+        "briefから作風・grammar・可読性条件を継承",
+        "頁の役割でnative図解・表・比較を選択",
+        "元finalize→source修正→再生成と実描画確認"
+      ],
+      "not_demonstrated": [
+        "原典Python科学データ依存一式の整備",
+        "独立Kimi K3/Opus5.5再評価",
+        "実在の社内運用・実績の検証"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "情報・担当・確認をそろえる",
+          "what_to_inspect": "情報・担当・確認を横帯の対応として配置し、下の結論へつなぐ。6枚すべてを同じカードにしていない。",
+          "skill_rule": "原典は内容の関係にsupported roleとgrammarを当て、固定テンプレート順を使わない。",
+          "proof_path": "examples/repositories/presentation-skill-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "引き継ぎは、順番を決める",
+          "what_to_inspect": "書く→合わせる→確認する→渡すを線と点で順序化。各段階の見出しと説明が対応する。",
+          "skill_rule": "原典のnative flow/timeline構造で手順を表し、図・文の編集可能性を保つ。",
+          "proof_path": "examples/repositories/presentation-skill-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "期限と状態を、一枚に並べる",
+          "what_to_inspect": "5列のnative表に担当・期限・状態・次の条件が並ぶ。上は件数だけ、脚注は斜体なし。",
+          "skill_rule": "原典はsourceから生成してfinalize/視覚確認の指摘をsourceへ戻し、表や文字の欠陥を再生成で直す。",
+          "proof_path": "examples/repositories/presentation-skill-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/presentation-skill-showcase/input/agent-brief.json",
+        "examples/repositories/presentation-skill-showcase/input/outline.json",
+        "examples/repositories/presentation-skill-showcase/input/design-decisions.json",
+        "examples/repositories/presentation-skill-showcase/source/build.py",
+        "examples/repositories/presentation-skill-showcase/source/legibility.diff",
+        "examples/repositories/presentation-skill-showcase/source/table-legibility.diff",
+        "examples/repositories/presentation-skill-showcase/qa/finalize/finalize_receipt.json",
+        "examples/repositories/presentation-skill-showcase/qa/f05-native-check.json",
+        "examples/repositories/presentation-skill-showcase/qa/table-followup.json",
+        "examples/repositories/presentation-skill-showcase/qa/pdf-fonts.json",
+        "examples/repositories/presentation-skill-showcase/qa/zip-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原稿の関係・順序・比較を別の図解や表で表し、元の生成器と検査で編集できるPPTXを作る。",
+      "requirements": [
+        "Node.js・原典pinned PptxGenJS4.0.1/jszip3.10.1",
+        "Pythonと原典finalizer、描画用LibreOffice/Poppler",
+        "PowerPoint16と同梱Shippori/BIZ/Manrope/OFL",
+        "科学データ解析を足す場合は原典pinned Python科学依存一式を別途整備"
+      ],
+      "steps": [
+        "元briefからgrammar/可読性条件を引継ぎoutlineを編集",
+        "元builderでnative PPTXを生成",
+        "present.py finalizeを実行しrepair packetを確認",
+        "全頁実描画を目視してsource修正→再実行、独立評価は別管理"
+      ],
+      "limitations": [
+        "架空の引継ぎ教材。担当・期限・状態は説明用の設定。",
+        "原典Node routeとnative要素のfinalizeを実行。Python科学データ依存一式の準備完了ではない。",
+        "日本語字体・数値字体・見出し位置・dark文字色・表metadataは局所adapter。元との差分と担当範囲を記録。",
+        "元の自動検査通過と人の視覚確認・独立再評価を区別する。"
+      ]
+    }
+  }
+]

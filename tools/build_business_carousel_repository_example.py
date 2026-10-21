@@ -68,6 +68,7 @@ h1{font-weight:700;font-size:75px;line-height:1.28;letter-spacing:-.04em;margin:
 .slide.is-active h1,.slide.is-active .visual{animation:enter .35s ease both}@keyframes enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
 '''
+CSS += "\n/* Codex: reserve a full footer and prevent row overflow into navigation. */\n.slide{padding:54px 76px 168px}.brand{font-size:22px}.eyebrow{margin:36px 0 18px}h1{font-size:68px;line-height:1.25}.body-copy{font-size:32px;line-height:1.5;margin-top:22px}.visual{min-height:0;padding-top:26px;gap:16px}.row{font-size:28px;padding:14px 0}.note-svg{width:380px;height:230px}.next-idea{font-size:22px;margin-top:14px}.brand,.eyebrow,h1,.body-copy{flex-shrink:0}#deck.dark #progress{background:#f6f3eb55}#deck.dark #progress>span{background:#f6f3eb}\n"
 JS = '''
 let index=0;const slides=[...document.querySelectorAll('.slide')],deck=document.querySelector('#deck'),prev=document.querySelector('#previous'),next=document.querySelector('#next');
 function fit(){const scale=Math.min(innerWidth/1080,innerHeight/1080);deck.style.transform=`translate(-50%,-50%) scale(${scale})`}
@@ -88,6 +89,8 @@ def make_fonts(out,content):
     result=[]
     for weight,file_hash in [('Regular','258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01'),('Bold','30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90')]:
         source=ROOT/'.build/fonts'/f'BIZUDPGothic-{weight}.ttf'
+        portable=Path(__file__).resolve().parent/'fonts'/f'BIZUDPGothic-{weight}.ttf'
+        if portable.exists():source=portable
         url=f'https://raw.githubusercontent.com/google/fonts/{FONT_PIN}/ofl/bizudpgothic/BIZUDPGothic-{weight}.ttf'
         if not source.exists():
             source.parent.mkdir(parents=True,exist_ok=True);source.write_bytes(urllib.request.urlopen(url).read())
@@ -102,6 +105,8 @@ def make_fonts(out,content):
         font.flavor='woff2';target=out/'fonts'/f'carousel-{weight.lower()}.woff2';target.parent.mkdir(parents=True,exist_ok=True);font.save(target)
         result.append(dict(source_url=url,source_sha256=file_hash,subset_sha256=sha(target),file=target.relative_to(out).as_posix(),font_family='Yebisu Carousel JP',glyphs=len(font.getGlyphOrder())))
     license_path=ROOT/'assets/fonts/bizudpgothic-OFL.txt'
+    portable_license=Path(__file__).resolve().parents[1]/'fonts/OFL.txt'
+    if portable_license.exists():license_path=portable_license
     if not license_path.exists():
         write(license_path,urllib.request.urlopen(f'https://raw.githubusercontent.com/google/fonts/{FONT_PIN}/ofl/bizudpgothic/OFL.txt').read().decode())
     shutil.copyfile(license_path,out/'fonts/OFL.txt')
@@ -134,6 +139,7 @@ def build(out,up,input_path):
     write(out/'input/product-marketing-context-global.md','# 架空ブランドの制作条件\n\nブランド: '+data['brand']+'\n\n読み手: 初めて引き継ぎメモを書く人。目的: 書き始めるための記入型を示す。教育段階: '+data['funnel']+'。実在企業・商品・効果の実績は扱わない。\n')
     write(out/'input/brand-guideline.md','# しおりの作例用ブランド\n\n架空ブランド。背景と文字は濃緑 #142525、生成り #F6F3EB、銅色 #A83B25。HookとCTAは濃緑、本文は生成り。日本語はBIZ UDPGothicを同じ役割で使い、サブセットをYebisu Carousel JPへ改名。文字色はこの3色以内。しおり形の自作ベクトルマークを各ページへ置く。\n')
     brief='# Carousel Brief — '+data['title']+'\n\n## 概要\n\n| 項目 | 内容 |\n|---|---|\n| 目的 | '+data['purpose']+' |\n| 用途 | SNSカルーセルの構成確認 |\n| 枚数・寸法 | 6枚 / 1080×1080 |\n| 読み手の段階 | '+data['funnel']+' |\n| 語り口 | 短く、親しみのある実務向け |\n| 納期 | 今回のローカル試作 |\n| 修正回数・承認者 | 公開用制作へ進む際に依頼者が決定。現在は人による承認待ち |\n\nブランドはinput/brand-guideline.md、読み手はinput/product-marketing-context-global.mdを参照。\n\n## 流れ\n\nHook → Problem → Insight → Solution → Example → CTA。実績の証拠がないためProofを捏造せず、架空の記入例へ変更。\n'
+    brief+='\n## Brand direction\n\n色・字体・自作しおりマークはinput/brand-guideline.mdを参照。CTAボタンは「記入型をコピー」。Logoは各頁のしおり図形、contactは未設定で架空の連絡先は作らない。公開用デザイン・連絡先・人の承認は別工程。\n'
     for i,s in enumerate(data['slides'],1):
         brief+=f'\n## Slide {i} — {s["role"]}\n\n| 要素 | 内容 |\n|---|---|\n| 見出し | {s["headline"].replace(chr(10)," / ")} |\n| 本文 | {s["body"].replace(chr(10)," / ")} |\n| 図案 | {s["visual"]} |\n| 背景 | '+('濃緑 / 白系の文字' if i in (1,6) else '生成り / 濃緑の文字、銅色のアクセント')+' |\n'
     brief+='\n## 引き渡すもの\n\n- このブリーフと編集できるHTML、入力JSON。\n- HTMLとPNG6枚は構成確認用。SNS公開用の制作データではない。\n- コピー確認 → HTML構成確認 → Canva/Figma/Adobe Express等で仕上げ → 人による確認 → 公開、という原典の段階を区別する。今回の例はHTML構成確認まで。\n- LinkedIn用の公開PDF、縦長版、人の承認、投稿は今回の対象外。\n'

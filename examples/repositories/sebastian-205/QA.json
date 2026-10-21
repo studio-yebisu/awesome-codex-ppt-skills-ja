@@ -1,20 +1,62 @@
 {
-  "status": "light_check_complete",
+  "status": "pass",
+  "meaning": "Original technical/content/render QA for this fixed notes-only example; independent grading pending.",
   "source_sufficiency": "notes-only",
-  "content": "8頁を入力の§1–8へ対応。仮説・提案・評価計画・限界を区別。結果や引用を追加していない。",
-  "structural": {
-    "reopened": true,
-    "slide_count": 8,
-    "notes_count": 8,
-    "native_editable": true,
-    "bounds_failures": [],
-    "zip_crc": true
-  },
+  "fictional_unperformed": true,
+  "content": "8 distinct claims map to BRIEF §1–8 before rebuilding. All8 notes contain the claim, source and specific caveat. No measured results or citations fabricated.",
+  "preflight": "source/preflight-repair.json",
+  "structural": "source/structural-inspector.json",
+  "native_editable": true,
+  "slides": 8,
+  "notes": 8,
+  "media": 0,
   "visual": {
-    "renderer": "existing LibreOffice headless PPTX→PDF + PyMuPDF PDF→PNG",
-    "pages_rendered": 8,
-    "inspection": "初回montageと主表示を確認。操作連作のハイライトを一度修正。",
-    "limit": "全頁詳細監査・自動採点・PowerPoint実機確認は行っていない"
+    "renderer": "Microsoft PowerPoint16 PDF → PyMuPDF RGB PNG",
+    "all_pages_viewed": 8,
+    "scope": "All eight actual pages read and checked for source footers, hierarchy, proposal/plan/limitations distinctions and clipping.",
+    "receipt": "source/powerpoint-render.json",
+    "images": [
+      {
+        "path": "render/slide-01.png",
+        "sha256": "0d4e4b8517e547fe6e124c5c42d05d97d479662a1e1d243c71dbc44cd4617a63"
+      },
+      {
+        "path": "render/slide-02.png",
+        "sha256": "4745a4a0a6da62fb2c7b35d1e66cdfc807d7ff7c8feb7e174080343268c57d65"
+      },
+      {
+        "path": "render/slide-03.png",
+        "sha256": "4c83fcad7b5d12850f8c3d93c53243b81f6c5a6b674edb2501c3499bb3cdcda3"
+      },
+      {
+        "path": "render/slide-04.png",
+        "sha256": "ec992b0b000cdc1da4ef4bf2f17fc4865842307d4b62f3f1c8baf7ad1f01a397"
+      },
+      {
+        "path": "render/slide-05.png",
+        "sha256": "ac3ab23731518dda87e190462bd868fab4a88aacf43f69d3327b94859770ba09"
+      },
+      {
+        "path": "render/slide-06.png",
+        "sha256": "b3d0eaa9b88feedaf521438c88b565ddd8b0937e8b65c71c70f6164ae2d24a78"
+      },
+      {
+        "path": "render/slide-07.png",
+        "sha256": "f0c3fdafa15efafaffac52899776833db03bdfde834988354a4d9c0d6c33eb1b"
+      },
+      {
+        "path": "render/slide-08.png",
+        "sha256": "215c5002759cf9ec8a93f24359c1c0fce22bc3f98e5c9c0f7a5e57cdf456423d"
+      }
+    ]
   },
-  "upstream_full_gate_status": "not claimed; substituted minimal checks disclosed"
+  "independent_review": "pending_after_repair",
+  "limits": [
+    "架空の研究ノートだけを使った未実施計画。効果・食品安全性の実証はない。",
+    "固定8頁用の生成コードで、任意論文を自動抽出するアプリではない。",
+    "原典の対象は研究発表。一般営業資料、画像スライド復元、論文検索だけの用途は対象外。",
+    "原典の既定は簡体中国語12〜16頁・15〜20分。今回は指定に合わせた日本語8頁。",
+    "他の描画環境と修復後の独立再評価は未確認。"
+  ],
+  "distribution_replay": "source/zip-replay.json"
 }

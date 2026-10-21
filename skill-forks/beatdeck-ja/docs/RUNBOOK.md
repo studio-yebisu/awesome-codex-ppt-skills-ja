@@ -14,4 +14,4 @@ python -m http.server 8000 --bind 127.0.0.1 --directory dist
 
 未提示のQR URLは作らず、QRなしで閉じる。原料・温度・工程時間・安全・売上・科学値は含まない。演出のミリ秒はmotionの設定で、工程の実測ではない。
 
-初回主要表示と一段移動、typecheck/bundle/offline checkは確認済み。全beatをforward/back/directで比較する原典verifyは、ユーザーの今回の範囲指定により実施していない。端末を変える際の通し稽古や包括QA済みとは称さない。
+原典 `npm run verify -- --source=reference/SCRIPT.md` を実施する。全15段階の前進・後退・URL直接表示を比較し、contact sheetを確認する。実施済みの結果はQA.jsonとrender/verify/report.jsonに記録し、全キーの手動稽古・物理Wi-Fi断・別端末での通し確認は別の未実施項目として残す。

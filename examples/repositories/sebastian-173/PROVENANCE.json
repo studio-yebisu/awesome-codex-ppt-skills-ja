@@ -10,16 +10,16 @@
     "assets/styles.css"
   ],
   "styles_css": "unmodified upstream file, linked by index.html",
-  "route": "brief → upstream CSS → 13-slot author HTML → Chromium PNG/PDF → gs lite PDF",
+  "route": "Original paper-light HTML/CSS -> Chromium7page PNG and print PDF -> pypdf-compressed lite PDF. Original Ghostscript/compact-pdf route not executed: gs absent and compact-pdf.sh absent at pinned commit.",
   "adaptations": [
     "Japanese typography with existing Noto Sans CJK JP / no font redistribution",
     "7 original fictional-content slides",
     "Editable inline SVG explanatory map and abstract waveform symbols",
     "Responsive whole-slide scaling and print rules",
     "Keyboard/button navigation and same-origin yebisu-slide/yebisu-page bridge",
-    "Direct Ghostscript command instead of unknown compact-pdf.sh",
     "Theme-local ink rule .slide { color: var(--ink) } fixes inherited white text on paper slides",
-    "Print @page1920px1080px margin0 overrides original16in9in to match export canvas and eliminate outer white margin"
+    "Print @page1920px1080px margin0 overrides original16in9in to match export canvas and eliminate outer white margin",
+    "Original Ghostscript unavailable; pypdf compression is an explicit local substitute, not original compact-pdf execution."
   ],
   "not_used": [
     "work/premium/slides examples (absent from fixed repository)",
@@ -30,14 +30,66 @@
     "Fictional map/records, no real personal location data",
     "No native PPTX",
     "Font substitution may change layout",
-    "Full upstream QA not performed",
-    "Page5 tail author safe-boundary warning retained, visible within slide canvas"
+    "Original hero-image/scrim/glow checklist not implemented",
+    "Original gs unavailable and compact-pdf.sh absent in pin; pypdf compressed PDF local substitute"
   ],
-  "render_status": "complete: existing Google Chrome on Windows via Playwright, 7 PNG and7-page PDF; lite PDF via existing cloud Ghostscript",
+  "render_status": "Current original HTML/CSS→Chromium all7PNG/PDF, all7 author reviewed, zero inner-boundary overflows",
   "render_environment": {
-    "local_cloud_chromium": "failed: socket() Operation not permitted",
-    "cloud_cua": "file protocol blocked; stopped",
-    "verified_pc_browser": "existing Google Chrome / no install",
-    "compression": "cloud Ghostscript /ebook direct command"
+    "browser": "Existing Google Chrome with Playwright",
+    "compression": "pypdf local substitute; original Ghostscript not run"
+  },
+  "codex_web8_repair": {
+    "author": "Codex",
+    "scope": "Current source repair, actual original-path gates and page review; earlier production attribution retained only for earlier scope",
+    "qa": "QA.json"
+  },
+  "current_profile": "paper-light all7",
+  "current_limitations": [
+    "Original hero-image/scrim/glow checklist not implemented",
+    "Original gs unavailable and compact-pdf.sh absent in pin; pypdf compressed PDF local substitute"
+  ],
+  "current_route_correction": "source/catalog-round3-proposal.json",
+  "superseded_history": {
+    "adaptations": [
+      "Japanese typography with existing Noto Sans CJK JP / no font redistribution",
+      "7 original fictional-content slides",
+      "Editable inline SVG explanatory map and abstract waveform symbols",
+      "Responsive whole-slide scaling and print rules",
+      "Keyboard/button navigation and same-origin yebisu-slide/yebisu-page bridge",
+      "Direct Ghostscript command instead of unknown compact-pdf.sh",
+      "Theme-local ink rule .slide { color: var(--ink) } fixes inherited white text on paper slides",
+      "Print @page1920px1080px margin0 overrides original16in9in to match export canvas and eliminate outer white margin"
+    ],
+    "render_environment": {
+      "local_cloud_chromium": "failed: socket() Operation not permitted",
+      "cloud_cua": "file protocol blocked; stopped",
+      "verified_pc_browser": "existing Google Chrome / no install",
+      "compression": "cloud Ghostscript /ebook direct command"
+    },
+    "limitations": [
+      "No audio files or playback",
+      "Fictional map/records, no real personal location data",
+      "No native PPTX",
+      "Font substitution may change layout",
+      "Full upstream QA not performed",
+      "Page5 tail author safe-boundary warning retained, visible within slide canvas"
+    ]
+  },
+  "current_round4_repair": {
+    "author": "Codex",
+    "artifact": "index.html",
+    "artifact_sha256": "3acbb5e767cee7ec645de009578681358fbd5f0ad61d2869b13fdb6a805e7f49",
+    "qa": "QA.json",
+    "changes": [
+      "原典styles.cssを変更せず、日本語と余白の差分をadaptation.cssへ分離。",
+      "4頁は三欄の記録表を唯一の主オブジェクトにする。5頁の地図ラベルと注記を拡大し、7頁は受付5分・散歩30分・共有15分の意味を添える。",
+      "Chromium全7頁と元の980px内側境界を確認。pypdfで現在のPDFを圧縮し、原典Ghostscript未実行と分けた。"
+    ],
+    "not_demonstrated": [
+      "原典の既定はdark editorial。今回実証したのは全頁paper-lightで、既定暗色の完成作例は未制作。",
+      "hero写真・scrim/glowを実装していないため、原典チェックリストの全条件合格ではない。",
+      "固定取得物にcompact-pdf.shがなく、Ghostscriptも未使用。軽量PDFはpypdfの局所代替で、同じ処理と称さない。音声再生も未実装。"
+    ],
+    "independent_review": "pending"
   }
 }

@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Vendor Scorecard Decision Page</title>
+  <link rel="stylesheet" href="../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../assets/themes/blue.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Vendor scorecard decision page">
+    <section class="slide" data-title="Vendor scorecard decision page">
+      <header>
+        <div class="slide-kicker">Vendor selection</div>
+        <h2 class="slide-title">A weighted scorecard should make the recommendation and the fallback visible</h2>
+        <div class="slide-rule"></div>
+      </header>
+      <div class="content">
+        <div class="region-layout right-sidebar">
+          <div class="region">
+            <div class="region-body is-centered">
+              <table class="weighted-scorecard">
+                <thead><tr><th>Criterion</th><th class="weight">Weight</th><th>Vendor A</th><th>Vendor B</th><th>Vendor C</th><th>Readout</th></tr></thead>
+                <tbody>
+                  <tr><td class="row-head">Functional fit</td><td class="weight">30%</td><td class="score is-best">5</td><td class="score">4</td><td class="score">3</td><td>Vendor A covers priority workflows.</td></tr>
+                  <tr><td class="row-head">Integration fit</td><td class="weight">25%</td><td class="score">4</td><td class="score is-best">5</td><td class="score">3</td><td>Vendor B has the cleanest integration path.</td></tr>
+                  <tr><td class="row-head">Commercial case</td><td class="weight">25%</td><td class="score is-best">5</td><td class="score">3</td><td class="score">4</td><td>Vendor A has best value-for-cost.</td></tr>
+                  <tr><td class="row-head">Risk control</td><td class="weight">20%</td><td class="score">4</td><td class="score">4</td><td class="score is-risk">2</td><td>Vendor C needs mitigation.</td></tr>
+                  <tr class="total-row"><td class="row-head">Weighted score</td><td class="weight">100%</td><td class="score is-best">4.6</td><td class="score">4.1</td><td class="score">3.1</td><td class="recommendation">Recommend A; keep B as fallback.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <aside class="region is-muted">
+            <div class="region-body is-centered">
+              <h3 class="region-title">Use when</h3>
+              <div class="dense-list">
+                <article><strong>Minimum data</strong><span>2+ vendors, 3+ criteria, scoring rule, and recommendation.</span></article>
+                <article><strong>Fallback</strong><span>Use `comparison-table` if weights are not justified.</span></article>
+                <article><strong>Decision</strong><span>Make select, negotiate, pilot, or defer explicit.</span></article>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <footer class="footer">
+        <span>Pattern: vendor-scorecard-decision-page</span>
+        <span class="page-number"></span>
+      </footer>
+    </section>
+  </main>
+  <script src="../../assets/js/runtime.js"></script>
+</body>
+</html>

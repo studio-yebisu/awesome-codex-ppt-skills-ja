@@ -1,15 +1,11 @@
-# 商店街のイベント案内を、一つにまとめるの日本語派生・再現キット
+# 固定作例の再生成
 
-Windows、Microsoft PowerPoint、Python 3.13、Node.js、游ゴシック・游明朝・Times New Romanが必要です。フォント本体は配布しません。
+このフォルダーで `python source/reproduce.py --input input/outline.json --render` を実行する。変更した原稿は保存済み原図と一致しないため停止する。
 
-1. ZIPを展開して、このフォルダーでPowerShellを開きます。
-2. ` .\reproduce\Reproduce.ps1 ` を実行します。新しいPython仮想環境と固定Node依存を用意し、PowerPointの全ページ描画まで常に実行します。
-3. 出力は `reproduce/workspace/examples/repositories/cyberppt/deck.pptx`。再生成したQAは確認前となるため、全5枚を改めて表示確認します。
+Windows PowerPoint、Node/PptxGenJS4.0.1、Python/pywin32/Pillow/numpy、Yu Gothic/Yu Mincho/Times New Romanが必要。PDFiumが別の既存Pythonにある場合は`--preview-python C:/path/to/python.exe`を付ける。Node依存はsource/package.jsonの固定版。既存依存を使うか、新しい導入先ではnpm install --prefix source --ignore-scripts --no-audit --no-fundを使う。
 
-保存済み5見本からの再構築で、ImageGenの新規生成は含みません。異なる入力は旧見本と一致しないため停止します。自分の題材へ変える際は、日本語派生SKILLと原典から新しい内容lock・見本・測定・再構築を作成します。
+処理は1頁ずつ内容→測定→今回の再構築計画→PptxGenJS→PowerPoint→比較を実行する。最後に統合、全描画、局所比較、文字枠測定、全指定strictを記録する。原典の未達は正常終了扱いの合格ではなく、各receiptのexit1として保持する。pipelineの終了0と原典合格を区別する。
 
-原典の内容lock、ImageGen設計見本、要素の測定・対応登録、PptxGenJS単頁再構築、PowerPoint描画、比較、統合を使う。日本語派生は読みやすさと編集性を確認し、原典の厳密な画像一致ゲート全頁不合格を成功へ読み替えない。画像の字形差と内容の数字の欠落は別に確認する。派生mergeの背景保持と差分を残す。再現は固定した5見本からのreplayで、新規画像生成や異なる原稿への自動再構築ではない。
+保存済みの原図・閾値・原典validatorを変更しない。新しい題材では一般SKILLの元資料分析、実画像生成、新しい要素測定と確認工程が必要。作例ZIPのupstreamは再実行用抜粋、新規の全工程は日本語Skill ZIPのupstream一式を使う。
 
-元のsource/reproduce.pyを直接使う方法、元ゲート未達、派生方針と実行記録はREADME.md、source/JAPANESE-FORK-POLICY.md、PROVENANCE.jsonを確認してください。原典のMIT、SVGアイコンの個別MIT条件を保持します。人による採用と公開は未実施です。
-
-生成用lockはPptxGenJS4.0.1を保持し、間接依存image-sizeを修正版2.0.3に固定しています。検出前後のnpm auditはreview/dependency/に保存しています。このキット以外の依存監査へ読み替えません。
+PowerPointは自分が開いた資料だけを閉じ、アプリQuitは呼ばない。再生成直後はQAを要レビューへ戻す。過去の目視・独立評価を引き継がず、全頁を実サイズで確認する。

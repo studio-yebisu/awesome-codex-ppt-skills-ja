@@ -1,129 +1,12 @@
 {
-  "status": "qa_complete",
+  "status": "author_qa_complete_independent_review_pending",
   "page_count": 6,
+  "artifact_sha256": "f8846ee4d986af67903e0ed938388dc4842ed072855716cf60c7e2299e7174ab",
   "all_pages_visually_reviewed": true,
-  "artifact_sha256": "12b3ce50eb8bcc8278a005fd7b3f8dddc87e8ef50a8783e46dd5bf7c19dbd529",
-  "input_sha256": "963e633ba2bd7bfc92292fdbbad3c6a80bc9fa130b87639035d388825482214d",
-  "human_adoption": "pending",
-  "production_adoption": false,
-  "publication": false,
-  "original_template_proof": {
-    "original_navigation_js_preserved": true,
-    "template_sha256": "23b8b2bad570219981c523ab21ec019f5a1d4acbb01ae8586955f1de376cb1db",
-    "artifact_sha256": "12b3ce50eb8bcc8278a005fd7b3f8dddc87e8ef50a8783e46dd5bf7c19dbd529",
-    "theme": "Forest Ink",
-    "page_count": 6
-  },
-  "browser_checks": {
-    "passed": true,
-    "viewport": {
-      "width": 1920,
-      "height": 1080
-    },
-    "http_only": true,
-    "pages": [
-      {
-        "index": 0,
-        "title": "雨の日も迷わない、図書館イベント案内",
-        "visible": true,
-        "clipped": [],
-        "minFont": 17.28
-      },
-      {
-        "index": 1,
-        "title": "まず、今日の予定を確認",
-        "visible": true,
-        "clipped": [],
-        "minFont": 17.28
-      },
-      {
-        "index": 2,
-        "title": "出発前に、案内をもう一度",
-        "visible": true,
-        "clipped": [],
-        "minFont": 17.28
-      },
-      {
-        "index": 3,
-        "title": "着いたら、どこへ？",
-        "visible": true,
-        "clipped": [],
-        "minFont": 17.28
-      },
-      {
-        "index": 4,
-        "title": "お知らせに合わせて、次の行動を",
-        "visible": true,
-        "clipped": [],
-        "minFont": 17.28
-      },
-      {
-        "index": 5,
-        "title": "確認するのは、この三つ。",
-        "visible": true,
-        "clipped": [],
-        "minFont": 17.28
-      }
-    ],
-    "checks": [
-      {
-        "action": "native ArrowLeft",
-        "passed": true
-      },
-      {
-        "action": "native dot click",
-        "passed": true
-      },
-      {
-        "action": "bridge 0",
-        "index": 0,
-        "notified": true,
-        "passed": true
-      },
-      {
-        "action": "bridge 1",
-        "index": 1,
-        "notified": true,
-        "passed": true
-      },
-      {
-        "action": "bridge 2",
-        "index": 2,
-        "notified": true,
-        "passed": true
-      },
-      {
-        "action": "bridge 3",
-        "index": 3,
-        "notified": true,
-        "passed": true
-      },
-      {
-        "action": "bridge 4",
-        "index": 4,
-        "notified": true,
-        "passed": true
-      },
-      {
-        "action": "bridge 5",
-        "index": 5,
-        "notified": true,
-        "passed": true
-      },
-      {
-        "action": "reject invalid indices",
-        "passed": true
-      },
-      {
-        "action": "Escape close notification",
-        "passed": true
-      }
-    ],
-    "errors": []
-  },
-  "browser_review": "passed",
   "visual_review": {
-    "pages_reviewed": [
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
       1,
       2,
       3,
@@ -131,13 +14,54 @@
       5,
       6
     ],
-    "findings": "All six full-size browser captures viewed. No visible clipping or overlap; readable titles, metadata and body; coherent dark/light rhythm.",
-    "scope": "Agent visual review at 1920x1080; human adoption pending",
-    "method": "Astra reviewed every actual 1920x1080 HTTP browser capture after original-template generation.",
-    "result": "passed"
+    "finding": "原典presetとJavaScriptの一致を再検査。数値の単位の透過を弱めて読みやすくし、全6頁を再描画。",
+    "images": [
+      {
+        "page": 1,
+        "path": "render/slide-01.png",
+        "sha256": "24761fcc0258f992f3c03b3ea53f5da3de6e643037c13408c19581fa8ee10721"
+      },
+      {
+        "page": 2,
+        "path": "render/slide-02.png",
+        "sha256": "093b0f18cbba455c7af2ca8f08eeb70f16170756dda825da7277742997b27522"
+      },
+      {
+        "page": 3,
+        "path": "render/slide-03.png",
+        "sha256": "8a7ce7c34a243591c61032159bc136d0597ae19c35599f55f33aa60caa83b773"
+      },
+      {
+        "page": 4,
+        "path": "render/slide-04.png",
+        "sha256": "2cde7cd5e2a8ff1645686cddf8e647ef551a612b04faede2d97452e41f5777b9"
+      },
+      {
+        "page": 5,
+        "path": "render/slide-05.png",
+        "sha256": "78935843b3e3c2d9559268f785ba8bc07e64f82a7d4b9435d72da09a6f1fb368"
+      },
+      {
+        "page": 6,
+        "path": "render/slide-06.png",
+        "sha256": "6025bff3831402afbe6eb48d91edcb166c3d7364de176b901d4628867e9a5765"
+      }
+    ]
   },
-  "portable_reproduction": {
-    "report": "review/portable-proof.json",
-    "passed": true
-  }
+  "original_gates": {
+    "reproduce": 0,
+    "original_navigation_js_preserved": true,
+    "P0_P1_visual_check": "6 pages checked; data/units, hierarchy, no clipped or one-character lines; contrast retained within preset"
+  },
+  "constraints": [
+    "作例はHTMLのみでPPTX laneは未実施",
+    "原典テンプレートのJavaScriptを無改変で保持",
+    "游明朝・游ゴシック等の端末書体に依存。OS書体は配布しない",
+    "10種の全レイアウトや他4配色を実演した例ではない"
+  ],
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json"
 }

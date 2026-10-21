@@ -1,0 +1,180 @@
+{
+  "author": "Codex",
+  "source_skill": "source/upstream/skills/marp/SKILL.md",
+  "runtime_index_byte_identical_to_distributed": true,
+  "commands": [
+    {
+      "arguments": [
+        "--version"
+      ],
+      "exit_code": 0,
+      "stdout": "1.7.0\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "-t",
+        "default",
+        "-s",
+        "minimal",
+        "list-layouts"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"theme\": \"default\",\n  \"style\": \"minimal\",\n  \"layouts\": [\n    {\n      \"name\": \"title\",\n      \"description\": \"Clean black title slide with white text\",\n      \"className\": \"min-title\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Main heading text\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"content\",\n          \"type\": \"string\",\n          \"description\": \"Content like author info (markdown supported, keep concise)\",\n          \"required\": false,\n          \"maxLength\": 500\n        },\n        {\n          \"name\": \"backgroundImage\",\n          \"type\": \"string\",\n          \"description\": \"Optional background image path or URL\",\n          \"required\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"section\",\n      \"description\": \"Simple black section divider slide\",\n      \"className\": \"min-section\",\n      \"params\": [\n        {\n          \"name\": \"title\",\n          \"type\": \"string\",\n          \"description\": \"Section title\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"subtitle\",\n          \"type\": \"string\",\n          \"description\": \"Subtitle or description\",\n          \"required\": false,\n          \"maxLength\": 200\n        }\n      ]\n    },\n    {\n      \"name\": \"list\",\n      \"description\": \"Simple bullet list slide\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 54\n        },\n        {\n          \"name\": \"list\",\n          \"type\": \"array\",\n          \"description\": \"List items (max 10 items)\",\n          \"required\": true,\n          \"maxItems\": 10,\n          \"maxLength\": 70\n        },\n        {\n          \"name\": \"citations\",\n          \"type\": \"string\",\n          \"description\": \"Citation (no line break)\",\n          \"required\": false,\n          \"maxLength\": 130\n        }\n      ]\n    },\n    {\n      \"name\": \"table\",\n      \"description\": \"Minimal table with black header and clean borders\",\n      \"className\": \"min-table\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 54\n        },\n        {\n          \"name\": \"tableMarkdown\",\n          \"type\": \"string\",\n          \"description\": \"Table in markdown format (max 5 rows)\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"string\",\n          \"description\": \"Table description below table (no line break)\",\n          \"required\": false,\n          \"maxLength\": 75\n        },\n        {\n          \"name\": \"citations\",\n          \"type\": \"string\",\n          \"description\": \"Citation (no line break)\",\n          \"required\": false,\n          \"maxLength\": 130\n        }\n      ]\n    },\n    {\n      \"name\": \"image-right\",\n      \"description\": \"Text on left, image on right (60:40 split), clean design\",\n      \"className\": \"min-img-right\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"list\",\n          \"type\": \"array\",\n          \"description\": \"List items for the content side\",\n          \"required\": true,\n          \"maxItems\": 10\n        },\n        {\n          \"name\": \"imagePath\",\n          \"type\": \"string\",\n          \"description\": \"Image file path or URL\",\n          \"required\": true\n        },\n        {\n          \"name\": \"citations\",\n          \"type\": \"string\",\n          \"description\": \"Citation (no line break)\",\n          \"required\": false,\n          \"maxLength\": 130\n        }\n      ]\n    },\n    {\n      \"name\": \"image-center\",\n      \"description\": \"Centered image slide, clean and minimal\",\n      \"className\": \"min-img-center\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 54\n        },\n        {\n          \"name\": \"imagePath\",\n          \"type\": \"string\",\n          \"description\": \"Image file path or URL\",\n          \"required\": true\n        },\n        {\n          \"name\": \"description\",\n          \"type\": \"string\",\n          \"description\": \"Image description below image\",\n          \"required\": false,\n          \"maxLength\": 75\n        },\n        {\n          \"name\": \"caption\",\n          \"type\": \"string\",\n          \"description\": \"Image caption displayed below\",\n          \"required\": false,\n          \"maxLength\": 120\n        },\n        {\n          \"name\": \"citations\",\n          \"type\": \"string\",\n          \"description\": \"Citation (no line break)\",\n          \"required\": false,\n          \"maxLength\": 130\n        }\n      ]\n    },\n    {\n      \"name\": \"content\",\n      \"description\": \"Pure markdown content slide\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 54\n        },\n        {\n          \"name\": \"body\",\n          \"type\": \"string\",\n          \"description\": \"Free-form markdown body\",\n          \"required\": true\n        }\n      ]\n    },\n    {\n      \"name\": \"quote\",\n      \"description\": \"Quote slide with left border accent, no extra decoration\",\n      \"className\": \"min-quote\",\n      \"params\": [\n        {\n          \"name\": \"quote\",\n          \"type\": \"string\",\n          \"description\": \"The quote text\",\n          \"required\": true\n        },\n        {\n          \"name\": \"attribution\",\n          \"type\": \"string\",\n          \"description\": \"Quote attribution (e.g. author name)\",\n          \"required\": false,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"content\",\n          \"type\": \"string\",\n          \"description\": \"Additional content below the quote\",\n          \"required\": false\n        }\n      ]\n    },\n    {\n      \"name\": \"two-column\",\n      \"description\": \"Two-column layout with a thin divider line\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"leftTitle\",\n          \"type\": \"string\",\n          \"description\": \"Left column title\",\n          \"required\": false,\n          \"maxLength\": 60\n        },\n        {\n          \"name\": \"leftList\",\n          \"type\": \"array\",\n          \"description\": \"Left column list items\",\n          \"required\": false,\n          \"maxItems\": 8\n        },\n        {\n          \"name\": \"rightTitle\",\n          \"type\": \"string\",\n          \"description\": \"Right column title\",\n          \"required\": false,\n          \"maxLength\": 60\n        },\n        {\n          \"name\": \"rightList\",\n          \"type\": \"array\",\n          \"description\": \"Right column list items\",\n          \"required\": false,\n          \"maxItems\": 8\n        }\n      ]\n    },\n    {\n      \"name\": \"big-statement\",\n      \"description\": \"Large impactful statement slide with bold centered text\",\n      \"className\": \"min-statement\",\n      \"params\": [\n        {\n          \"name\": \"statement\",\n          \"type\": \"string\",\n          \"description\": \"The main statement or headline\",\n          \"required\": true,\n          \"maxLength\": 120\n        },\n        {\n          \"name\": \"subtitle\",\n          \"type\": \"string\",\n          \"description\": \"Optional supporting text below the statement\",\n          \"required\": false,\n          \"maxLength\": 200\n        }\n      ]\n    },\n    {\n      \"name\": \"statistics\",\n      \"description\": \"Minimal statistics display with black numbers and thin underline (use 'Number|Label' format)\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"stats\",\n          \"type\": \"array\",\n          \"description\": \"Statistics in 'Number|Label' format\",\n          \"required\": true,\n          \"maxItems\": 5\n        },\n        {\n          \"name\": \"caption\",\n          \"type\": \"string\",\n          \"description\": \"Optional caption below statistics\",\n          \"required\": false,\n          \"maxLength\": 200\n        }\n      ]\n    },\n    {\n      \"name\": \"highlight-box\",\n      \"description\": \"Minimal message box for key takeaways\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Box heading\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"content\",\n          \"type\": \"string\",\n          \"description\": \"Box content text\",\n          \"required\": false,\n          \"maxLength\": 500\n        }\n      ]\n    },\n    {\n      \"name\": \"pull-quote\",\n      \"description\": \"Minimal decorative impact quote with large quotation marks\",\n      \"className\": \"min-pull-quote\",\n      \"params\": [\n        {\n          \"name\": \"quote\",\n          \"type\": \"string\",\n          \"description\": \"The quote text (short, impactful)\",\n          \"required\": true,\n          \"maxLength\": 200\n        },\n        {\n          \"name\": \"attribution\",\n          \"type\": \"string\",\n          \"description\": \"Quote attribution\",\n          \"required\": false,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"context\",\n          \"type\": \"string\",\n          \"description\": \"Additional context or source\",\n          \"required\": false,\n          \"maxLength\": 120\n        }\n      ]\n    },\n    {\n      \"name\": \"agenda\",\n      \"description\": \"Clean agenda slide with numbered items and optional time durations (use 'Item name|Duration' format)\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading (max 80 chars, ~48 chars for Japanese)\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"items\",\n          \"type\": \"array\",\n          \"description\": \"Agenda items in 'Item name|Duration' format (duration is optional). Max 8 items.\",\n          \"required\": true,\n          \"maxItems\": 8\n        },\n        {\n          \"name\": \"subtitle\",\n          \"type\": \"string\",\n          \"description\": \"Optional subtitle displayed below the heading\",\n          \"required\": false,\n          \"maxLength\": 120\n        }\n      ]\n    },\n    {\n      \"name\": \"comparison\",\n      \"description\": \"Side-by-side comparison with explicit left/right titles and list items, separated by a thin divider\",\n      \"params\": [\n        {\n          \"name\": \"heading\",\n          \"type\": \"string\",\n          \"description\": \"Slide heading (max 80 chars, ~48 chars for Japanese)\",\n          \"required\": true,\n          \"maxLength\": 80\n        },\n        {\n          \"name\": \"leftTitle\",\n          \"type\": \"string\",\n          \"description\": \"Left panel title (e.g., 'Before', 'Option A', 'Pros')\",\n          \"required\": true,\n          \"maxLength\": 50\n        },\n        {\n          \"name\": \"leftList\",\n          \"type\": \"array\",\n          \"description\": \"Left panel list items. Max 6 items.\",\n          \"required\": true,\n          \"maxItems\": 6\n        },\n        {\n          \"name\": \"rightTitle\",\n          \"type\": \"string\",\n          \"description\": \"Right panel title (e.g., 'After', 'Option B', 'Cons')\",\n          \"required\": true,\n          \"maxLength\": 50\n        },\n        {\n          \"name\": \"rightList\",\n          \"type\": \"array\",\n          \"description\": \"Right panel list items. Max 6 items.\",\n          \"required\": true,\n          \"maxItems\": 6\n        }\n      ]\n    }\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "-s",
+        "minimal",
+        "create",
+        "<test-work>\\cli-deck.md",
+        "--title",
+        "ページをIDで更新する",
+        "--subtitle",
+        "元CLIの独立操作確認"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"message\": \"Created presentation with 1 slide\",\n  \"filePath\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\",\n  \"title\": \"ページをIDで更新する\",\n  \"totalSlides\": 1,\n  \"workflow\": [\n    \"Use list_layouts to see available layouts\",\n    \"Use manage_slide to add or edit slides\",\n    \"Use read_slide to list all slides and their IDs\",\n    \"Use export_slide to export to HTML or PDF\"\n  ]\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "-s",
+        "minimal",
+        "set-frontmatter",
+        "<test-work>\\cli-deck.md",
+        "--header",
+        "操作確認",
+        "--paginate"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"message\": \"Updated frontmatter successfully\",\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\",\n  \"style\": \"minimal\",\n  \"frontmatter\": {\n    \"marp\": true,\n    \"theme\": \"default\",\n    \"header\": \"操作確認\",\n    \"paginate\": true\n  }\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "-s",
+        "minimal",
+        "manage",
+        "<test-work>\\cli-deck.md",
+        "-l",
+        "content",
+        "-p",
+        "{\"heading\": \"更新前\", \"body\": \"最初の本文\"}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"operation\": \"Inserted slide at position 2 (end)\",\n  \"slideId\": \"b6a28d29-c433-4602-8b11-c1be33240384\",\n  \"layoutType\": \"content\",\n  \"totalSlides\": 2,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "generate-ids",
+        "<test-work>\\cli-deck.md"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"message\": \"All slides already have IDs\",\n  \"totalSlides\": 2,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "read",
+        "<test-work>\\cli-deck.md"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"totalSlides\": 2,\n  \"slides\": [\n    {\n      \"slideId\": \"3402d51a-d87d-4961-bb97-d370e91a0f01\",\n      \"position\": 1,\n      \"content\": \"<!-- slide-id: 3402d51a-d87d-4961-bb97-d370e91a0f01 -->\\n\\n<!-- _class: min-title -->\\n\\n# ページをIDで更新する\\n\\n元CLIの独立操作確認\\n\"\n    },\n    {\n      \"slideId\": \"b6a28d29-c433-4602-8b11-c1be33240384\",\n      \"position\": 2,\n      \"content\": \"\\n<!-- slide-id: b6a28d29-c433-4602-8b11-c1be33240384 -->\\n\\n## 更新前\\n\\n最初の本文\"\n    }\n  ],\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "-s",
+        "minimal",
+        "manage",
+        "<test-work>\\cli-deck.md",
+        "--mode",
+        "replace",
+        "--slide-id",
+        "b6a28d29-c433-4602-8b11-c1be33240384",
+        "-l",
+        "content",
+        "-p",
+        "{\"heading\": \"更新後\", \"body\": \"IDで指定した本文だけを変更\"}"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"operation\": \"Replaced slide with ID b6a28d29-c433-4602-8b11-c1be33240384\",\n  \"slideId\": \"b6a28d29-c433-4602-8b11-c1be33240384\",\n  \"layoutType\": \"content\",\n  \"totalSlides\": 2,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "read",
+        "<test-work>\\cli-deck.md",
+        "--slide-id",
+        "b6a28d29-c433-4602-8b11-c1be33240384"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"slideId\": \"b6a28d29-c433-4602-8b11-c1be33240384\",\n  \"position\": 2,\n  \"totalSlides\": 2,\n  \"content\": \"\\n<!-- slide-id: b6a28d29-c433-4602-8b11-c1be33240384 -->\\n\\n## 更新後\\n\\nIDで指定した本文だけを変更\",\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "read",
+        "<test-work>\\cli-deck.md"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"totalSlides\": 2,\n  \"slides\": [\n    {\n      \"slideId\": \"3402d51a-d87d-4961-bb97-d370e91a0f01\",\n      \"position\": 1,\n      \"content\": \"<!-- slide-id: 3402d51a-d87d-4961-bb97-d370e91a0f01 -->\\n\\n<!-- _class: min-title -->\\n\\n# ページをIDで更新する\\n\\n元CLIの独立操作確認\\n\"\n    },\n    {\n      \"slideId\": \"b6a28d29-c433-4602-8b11-c1be33240384\",\n      \"position\": 2,\n      \"content\": \"\\n<!-- slide-id: b6a28d29-c433-4602-8b11-c1be33240384 -->\\n\\n## 更新後\\n\\nIDで指定した本文だけを変更\"\n    }\n  ],\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "generate-ids",
+        "<test-work>\\cli-deck.md"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"message\": \"All slides already have IDs\",\n  \"totalSlides\": 2,\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "read",
+        "<test-work>\\cli-deck.md"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"totalSlides\": 2,\n  \"slides\": [\n    {\n      \"slideId\": \"3402d51a-d87d-4961-bb97-d370e91a0f01\",\n      \"position\": 1,\n      \"content\": \"<!-- slide-id: 3402d51a-d87d-4961-bb97-d370e91a0f01 -->\\n\\n<!-- _class: min-title -->\\n\\n# ページをIDで更新する\\n\\n元CLIの独立操作確認\\n\"\n    },\n    {\n      \"slideId\": \"b6a28d29-c433-4602-8b11-c1be33240384\",\n      \"position\": 2,\n      \"content\": \"\\n<!-- slide-id: b6a28d29-c433-4602-8b11-c1be33240384 -->\\n\\n## 更新後\\n\\nIDで指定した本文だけを変更\"\n    }\n  ],\n  \"file\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "export",
+        "<test-work>\\cli-deck.md",
+        "-f",
+        "html",
+        "-o",
+        "<test-work>\\cli-deck.html"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"message\": \"Exported successfully to HTML\",\n  \"outputPath\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.html\",\n  \"format\": \"html\",\n  \"sourceFile\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "arguments": [
+        "export",
+        "<test-work>\\cli-deck.md",
+        "-f",
+        "pdf",
+        "-o",
+        "<test-work>\\cli-deck.pdf"
+      ],
+      "exit_code": 0,
+      "stdout": "{\n  \"success\": true,\n  \"message\": \"Exported successfully to PDF\",\n  \"outputPath\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.pdf\",\n  \"format\": \"pdf\",\n  \"sourceFile\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\marp-mcp-showcase\\\\.private\\\\cli-round5\\\\cli-deck.md\"\n}\n",
+      "stderr": ""
+    }
+  ],
+  "id_retained_after_replace": true,
+  "generate_ids_idempotent": true,
+  "target_slide_id": "b6a28d29-c433-4602-8b11-c1be33240384",
+  "before_heading": "更新前",
+  "after_heading": "更新後",
+  "html_bytes": 148172,
+  "pdf_bytes": 57405,
+  "scope": "This is an independent two-page CLI exercise. The full six-page sample is produced through the same repository MCP implementation. Agenda/image transition are not exercised."
+}

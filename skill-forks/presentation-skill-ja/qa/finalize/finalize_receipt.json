@@ -1,0 +1,124 @@
+{
+  "contact_sheet": "<case>\\.private\\finalize-qa\\visual_review\\contact_sheet.jpg",
+  "failed_stage": "",
+  "failure_category": "passed",
+  "generated_at": "2026-10-15T12:07:36.825409+00:00",
+  "next_action": "Inspect the rendered slides, repair any visual defects in source, and record the visual judgment before delivery.",
+  "outline": "<case>\\input\\outline.json",
+  "outline_sha256": "f55c18396baa8c078fda4efa627977c033ac1092f5b50da17938c750c98df063",
+  "output": "<case>\\deck.pptx",
+  "output_exists": true,
+  "output_sha256": "3e2a71995161009e7dc93bb46eea6efa647d60676afb8d0fa2d80b28552b01a3",
+  "passed": true,
+  "qa_counts": {
+    "accessibility_error_count": 0,
+    "accessibility_warning_count": 0,
+    "design_error_count": 0,
+    "design_warning_count": 0,
+    "geometry_error_count": 0,
+    "geometry_warning_count": 0,
+    "overflow_count": 0,
+    "overlap_count": 0,
+    "source_fidelity_error_count": 0,
+    "source_fidelity_warning_count": 0,
+    "visual_review_warning_count": 0,
+    "visual_warning_count": 0,
+    "whitespace_warning_count": 0
+  },
+  "qa_dir": "<case>\\.private\\finalize-qa",
+  "qa_report": "<case>\\.private\\finalize-qa\\qa_report.json",
+  "readability": {
+    "min_body_pt": 16.0,
+    "min_metadata_pt": 9.0,
+    "min_support_pt": 13.0
+  },
+  "render_cache": {
+    "directory": null,
+    "key": null,
+    "reason": "not_requested",
+    "status": "disabled"
+  },
+  "render_status": "passed",
+  "repair_packet": "<case>\\.private\\finalize-qa\\repair_packet.json",
+  "schema_version": "quick-deck-finalization/v1",
+  "stages": [
+    {
+      "accepted": true,
+      "accepted_returncodes": [
+        0,
+        1
+      ],
+      "command": [
+        "<host-python>\\python.exe",
+        "<pinned-runtime>\\scripts\\preflight.py",
+        "--outline",
+        "<case>\\input\\outline.json"
+      ],
+      "duration_seconds": 0.097,
+      "returncode": 0,
+      "stage": "preflight"
+    },
+    {
+      "accepted": true,
+      "accepted_returncodes": [
+        0
+      ],
+      "command": [
+        "<host-node>\\node.EXE",
+        "<pinned-runtime>\\scripts\\build_deck_pptxgenjs.js",
+        "--outline",
+        "<case>\\input\\outline.json",
+        "--output",
+        "<case>\\deck.pptx",
+        "--style-preset",
+        "lavender-ops"
+      ],
+      "duration_seconds": 0.277,
+      "returncode": 0,
+      "stage": "build"
+    },
+    {
+      "accepted": true,
+      "accepted_returncodes": [
+        0
+      ],
+      "command": [
+        "<host-python>\\python.exe",
+        "<pinned-runtime>\\scripts\\qa_gate.py",
+        "--input",
+        "<case>\\deck.pptx",
+        "--outline",
+        "<case>\\input\\outline.json",
+        "--outdir",
+        "<case>\\.private\\finalize-qa",
+        "--style-preset",
+        "lavender-ops",
+        "--strict-geometry",
+        "--fail-on-geometry-warnings",
+        "--fail-on-whitespace-warnings",
+        "--run-visual-review",
+        "--fail-on-visual-review-warnings",
+        "--fail-on-design-warnings",
+        "--accessibility",
+        "--strict-accessibility",
+        "--accessibility-min-body-pt",
+        "16.0",
+        "--accessibility-min-support-pt",
+        "13.0",
+        "--accessibility-min-metadata-pt",
+        "9.0",
+        "--skip-manual-review"
+      ],
+      "duration_seconds": 5.648,
+      "returncode": 0,
+      "stage": "qa"
+    }
+  ],
+  "style_preset": "lavender-ops",
+  "style_resolution_basis": "outline_design_choice",
+  "timing_scope": "Pipeline only; excludes model authoring and visual judgment.",
+  "total_duration_seconds": 6.022,
+  "visual_inspection_status": "not_recorded",
+  "path_sanitization": "Host absolute paths replaced; original receipt retained privately with the recorded SHA256.",
+  "original_receipt_sha256": "cb746ae56f8dc49a9d8788c7dc24dd5a990a970f3d03a2c76ae6e10aa2022035"
+}

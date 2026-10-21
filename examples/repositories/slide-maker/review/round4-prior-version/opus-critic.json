@@ -1,0 +1,233 @@
+{
+  "purpose": "teaching / instructional — 探索を初めて学ぶ人, selfread, static (contract card / .deck-gates.json)",
+  "rubric_overlay": "teaching / instructional",
+  "coverage": {
+    "slides_opened": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "passes": [
+      "design lens (full deck)",
+      "content lens (full deck)"
+    ],
+    "stats_block_seen": true,
+    "contract_card_seen": true
+  },
+  "plan_audit": {
+    "lens_b": {
+      "concept_landed": "carried: '配列の同じ場所を保ち、残る範囲だけを可視化する教材' is visible on the cover strip, the p2 visited strip, the p3 four-row grid and the colour logic; but the coordinate is preserved only within p3 — p1/p2 cells (.805in pitch from x=.55) and p3 cells (.58in pitch from x=3.65) are different coordinates.",
+      "skeleton_rhythm": "n/a — no rhythm map in the card; observed 4 distinct skeletons (lint), adequate for 5 pages",
+      "wow": [],
+      "wow_note": "No WOW slide declared in the card; strongest page observed is slide 3.",
+      "signature_move": {
+        "verdict": "landed",
+        "why": "At boldness=conservative the 'deliberately restrained' repeated-cell move is executed cleanly; it does real work on p3.",
+        "carried": [
+          {
+            "slide": 1,
+            "structural": false,
+            "note": "Strip only locates 13; neither search path is drawn — stamped."
+          },
+          {
+            "slide": 2,
+            "structural": true,
+            "note": "Fill state encodes visited / found / unvisited."
+          },
+          {
+            "slide": 3,
+            "structural": true,
+            "note": "Four rows on one coordinate system show the range narrowing."
+          }
+        ],
+        "proof": "matches — signature/complex proof is render/slide-03.png, same SHA as the shipped page; recorded post_build:true, so it proves the shipped page, not a pre-build approved frame"
+      },
+      "memorable_one_thing": "The four-row narrowing grid on slide 3 (8→12→14→13).",
+      "composition": {
+        "cover_archetype": "n/a — no cover token in the card",
+        "home_skeleton_plurality": "n/a — no home skeleton token in the card"
+      },
+      "register_interiors": "kept — the quiet chrome (kicker + short title rule + condition footer) reaches all 5 pages; no interior register cue declared",
+      "money_slide": "Not declared; visual peak lands on slide 3 (with slide 4 as the data anchor).",
+      "semantic_colour": "Kept in pixels: blue=linear, purple=binary, brown=13 on every page, no reversal. Card line 'palette: … #116B8A and #A8471C accents …' omits the purple #7044A0 and lavender #E6DDF0 actually used (and listed in .deck-gates.json and palette_audit) — the card is stale.",
+      "type_tokens": "Native text uses 13/24/32/34pt (lint size_clusters), chart 16pt. Card 'type_scale … diagram: 16' disagrees with .deck-gates.json 'diagram: 24'; body median measured 13pt because condition/legend lines are 13pt.",
+      "eye_path_misses": [
+        "slide 2: the right-side '13回' is a late, floating read rather than the hero",
+        "slide 5: no hero; title and closing line compete"
+      ]
+    },
+    "lens_a": {
+      "memory_sentence": "整列した1〜15なら二分探索は真ん中から絞って最大4回で見つかり、先頭から順に見る線形探索（最大15回）より比較が少ないが、昇順が前提で、実時間や並べ替えの手間は測っていない。",
+      "matches_deck_message": true,
+      "matches_note": "The card has no deck memory sentence; compared against the per-slide takeaways and closing_ask '13の4回の照合を説明し、秒数の測定と区別できる' — close.",
+      "curve_visible": "No emotional-curve line declared; pacing is even (hook → two worked examples → evidence → recap) at one temperature, acceptable for a 5-page selfread lesson.",
+      "takeaway_titles": "Slides 2-4 titles equal their takeaways. Divergent: slide 1 ('並べておくと、探し方が変わる' vs takeaway '…線形探索は13回、二分探索は4回' — numbers only in body); slide 5 ('使える条件も、いっしょに覚える' vs '二分探索には昇順が必要で、比較回数の減少から実時間の速さは判断できない').",
+      "motion_manifest": "kept — selfread + builds:static; 0 builds, 0 transitions; a static deck is correct for selfread"
+    }
+  },
+  "probes": {
+    "per_slide": [
+      {
+        "slide": 1,
+        "first_read": "大きなタイトル『並べておくと、探し方が変わる』→ 茶色の13タイル → 13回と4回の対比",
+        "takeaway_guess": "整列していれば二分探索で13回が4回に減る"
+      },
+      {
+        "slide": 2,
+        "first_read": "青く塗られたタイル列と『13まで13回』",
+        "takeaway_guess": "線形探索は先頭から一つずつ見るので13回かかる"
+      },
+      {
+        "slide": 3,
+        "first_read": "4段で範囲が狭まっていく格子と紫の中央タイル",
+        "takeaway_guess": "二分探索は真ん中で半分ずつ捨てて4回で届く"
+      },
+      {
+        "slide": 4,
+        "first_read": "右肩上がりの青線と低く横ばいの紫ジグザグ線、右の『4回』",
+        "takeaway_guess": "どの値を探しても二分探索は4回以内、線形は最大15回"
+      },
+      {
+        "slide": 5,
+        "first_read": "タイトルと紫の『昇順が保たれていること』",
+        "takeaway_guess": "二分探索は並んでいることが前提で、比較回数の少なさ＝実際の速さではない（並べ替えコストと秒数は未測定）"
+      }
+    ],
+    "memory_sentence": "Remembered (written before reading the card): 整列した1〜15なら二分探索は真ん中から絞って最大4回で見つかり、先頭から順に見る線形探索（最大15回）より比較が少ないが、昇順が前提で、実時間や並べ替えの手間は測っていない。 Deck message as understood after the card: the same — the card's takeaway table and closing_ask agree. Note: slides 2-4 use assertion titles, so guesses that resemble titles come from reading the pixels, not from the plan."
+  },
+  "verdict": "revise",
+  "summary": "The numbers are right and traceable (all 30 chart values and the 8→12→14→13 trace match data.json and an independent recomputation), and slide 3's fixed-coordinate grid is a good teaching form. The biggest lever: on a self-read deck for beginners, slide 3 never shows why the search goes right or left — the comparison with the middle is computed in the build script but left to the notes — so the worked example shows what happens, not how to do it. One major and several minors mean revise; the original gate also still lacks a recorded critic and blind_read for this SHA.",
+  "strengths": [
+    "Every number on the slides traces to executed traces (data.json, object-proof.json); no invented results.",
+    "Slide 3: four rows on one 15-column coordinate system make the shrinking range visible without animation.",
+    "Semantic colours stay fixed deck-wide (blue=linear, purple=binary, brown=13).",
+    "Slide 4 is an editable native chart of all 15 targets and does not hide the targets where linear wins.",
+    "Slide 5 separates what was measured from what was not (seconds, sort cost) and warns against reading fewer comparisons as 'N times faster'.",
+    "Clean Japanese typesetting: no clipping, overlap or tofu; text ≥13pt with ≥4.5:1 contrast."
+  ],
+  "findings": [
+    {
+      "id": "s3-pedagogy-1",
+      "slide": 3,
+      "severity": "major",
+      "dimension": "teaching / worked example — self-sufficiency (Lens A)",
+      "issue": "Promise 'objection: 中央を調べた後どちらへ進むか分からない' and audience_brief 'needs: 現在の範囲、中央の値、13との大小' — the page shows ranges and middles but no comparison 13>8 / 13>12 / 13<14 / 13=13 and no reason the other half can be discarded.",
+      "why": "Beginners reading alone cannot reproduce the step; the slide shows the result of binary search, not the method, which is the deck's learning goal.",
+      "fix": "Next to each row add its decision at 24pt, e.g. '13 > 8 → 右半分', '13 > 12 → 右半分', '13 < 14 → 左', '13 = 13 → 発見', and one line under the grid: '昇順なので、13より小さい側には13がない'.",
+      "fix_risk": "medium"
+    },
+    {
+      "id": "s4-content-1",
+      "slide": 4,
+      "severity": "minor",
+      "dimension": "fidelity / emphasis",
+      "issue": "The chart shows linear beating binary for targets 1-3, but the page only says 最大4回; the counterexample lives only in the notes.",
+      "why": "A self-reader may conclude binary is always fewer comparisons — the misconception the rejected arc was built around.",
+      "fix": "Add one 24pt line beside the chart: '目的値1〜3は線形の方が少ない。比べているのは最大回数。'",
+      "fix_risk": "low"
+    },
+    {
+      "id": "deck-objectives-1",
+      "slide": 1,
+      "severity": "minor",
+      "dimension": "teaching overlay — stated learning objectives",
+      "issue": "Promise 'purpose_section_terms objectives: 15個の数字から' — slide 1 states a task ('15個の数字から「13」を見つける。'), not what the learner will be able to do.",
+      "why": "The teaching overlay weights stated objectives; the reader is not told what to watch for.",
+      "fix": "Add under the task: 'この5枚で：二分探索が次に調べる値を自分で選べるようになる'.",
+      "fix_risk": "low"
+    },
+    {
+      "id": "deck-notation-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "teaching overlay — consistent notation",
+      "issue": "Sortedness is called 並べておく (s1 title), 整列した (s1 body), 昇順 (s3 footer/s5), 並べ替え (s5) without saying they refer to the same thing.",
+      "why": "Beginners may read them as different concepts.",
+      "fix": "Define once on slide 1 ('昇順＝小さい順に並んでいること') and use 昇順 in body text.",
+      "fix_risk": "low"
+    },
+    {
+      "id": "s2-content-1",
+      "slide": 2,
+      "severity": "minor",
+      "dimension": "one idea per slide",
+      "issue": "'並んでいないデータにも使える。' is a second claim the page does not show.",
+      "why": "Splits the page's message; the contrast belongs with slide 5's precondition.",
+      "fix": "Move the line to slide 5 as the contrast to 昇順が前提, or show a small unsorted row.",
+      "fix_risk": "low"
+    },
+    {
+      "id": "deck-chrome-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "visual quality / template tell",
+      "issue": "Same kicker, same short title rule under only the first ~2 glyphs, and same condition footer on all 5 pages; the rule reads as an underline of 並べ/先頭/真ん中/15個/使え.",
+      "why": "Reads as stamped template chrome and adds an emphasis the copy does not intend (original Step 5 'Titles' self-check).",
+      "fix": "Drop the short rule (or use a full-width hairline/left bar), vary the kicker per page (線形探索 / 二分探索 / 全15通り / まとめ), keep the condition footer on slide 1 and slide 4 only.",
+      "fix_risk": "low"
+    },
+    {
+      "id": "s1-signal-1",
+      "slide": 1,
+      "severity": "minor",
+      "dimension": "signaling / figures",
+      "issue": "13回 vs 4回 are bare numbers; the strip only marks 13.",
+      "why": "The hook asserts a difference it does not show.",
+      "fix": "Under the strip draw two marker rows: blue dots under 1-13, purple dots under 8, 12, 14, 13.",
+      "fix_risk": "medium"
+    },
+    {
+      "id": "s3-legend-1",
+      "slide": 3,
+      "severity": "minor",
+      "dimension": "figures labeled",
+      "issue": "Legend '紫：中央　茶枠：目的値13' omits filled brown (発見) and white empty cells (対象外); digits are light weight while slides 1-2 use bold.",
+      "why": "Unkeyed encodings for a self-reader.",
+      "fix": "Legend: '紫：中央　淡紫：残る範囲　白：除外　茶：目的値13'; use bold digits for consistency.",
+      "fix_risk": "low"
+    },
+    {
+      "id": "s2-layout-1",
+      "slide": 2,
+      "severity": "minor",
+      "dimension": "layout / proximity",
+      "issue": "'13回／比較した回数' floats right, aligned to neither the arrow row nor the body; the 13pt legend sits ~400px below the strip it keys.",
+      "why": "Weakens the count-to-trace link; key read far from its subject.",
+      "fix": "Put the legend directly under the strip; align '13回' to the arrow-sequence baseline.",
+      "fix_risk": "low"
+    },
+    {
+      "id": "s4-chart-1",
+      "slide": 4,
+      "severity": "minor",
+      "dimension": "figures labeled",
+      "issue": "y-axis title '比較回数（回）' floats above the plot beside the legend; '探す値 →' is detached at lower right.",
+      "why": "Axis labels not anchored to their axes.",
+      "fix": "Attach the axis titles to their axes (rotated y title left of ticks; x title centred under ticks).",
+      "fix_risk": "low"
+    },
+    {
+      "id": "s5-layout-1",
+      "slide": 5,
+      "severity": "minor",
+      "dimension": "title-vs-takeaway / whitespace",
+      "issue": "Promise 'takeaway: 二分探索には昇順が必要で、比較回数の減少から実時間の速さは判断できない' — title is an instruction ('使える条件も、いっしょに覚える'); text-only page with a dead band between body and closing line.",
+      "why": "The recap's assertion sits at the bottom instead of the title.",
+      "fix": "Title: '比較が少ない≠速い。二分探索は昇順が前提'; close the gap or add a small sorted-vs-unsorted contrast.",
+      "fix_risk": "low"
+    },
+    {
+      "id": "deck-process-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "process / contract card",
+      "issue": "Card lacks deck memory sentence, emotional curve, WOW/money slide, rhythm map and cover/home tokens; content/design checkpoints are 'POST-BUILD supplemental'; card palette/type lines are stale vs .deck-gates.json.",
+      "why": "Several declared contracts cannot be audited; plan audit relies on per-slide takeaways only.",
+      "fix": "Regenerate the card from the current .deck-gates.json and add the missing deck-level lines.",
+      "fix_risk": "low"
+    }
+  ],
+  "ceiling_note": "ceiling omitted: verdict is revise (critic-agent.md: ceiling only on full-deck consent)."
+}

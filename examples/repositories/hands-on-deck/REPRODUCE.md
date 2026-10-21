@@ -1,13 +1,18 @@
-# イベント案内の公開前チェックの日本語派生・再現キット
+# 保存済み入力からの再実行
 
-Python3.13。PowerPoint実描画にはWindows、Microsoft PowerPoint、游ゴシック・游明朝等の元書体が必要。Node.js不要。原典の追加renderにはLibreOffice/Popplerが必要ですが、標準再現では使用しません。
+ZIPを新しい場所へ展開し、このファイルのあるフォルダーをCWDにします。出力を作り直した場合、過去の目視・独立評価は引き継ぎません。
 
-1. ZIPを展開してPowerShellを開く。
-2. `.\reproduce\Reproduce.ps1` を実行。新しい環境から原典の固有経路で再生成します。
-3. 出力は `reproduce/workspace/examples/repositories/hands-on-deck/`。新出力のQAは確認前です。全ページを改めて確認してください。
+input/data.json と input/patch.json から203操作を組みます。初回の94操作と現在の203操作は異なる版です。保持監査は byte 同一と XML 内容一致を分けます。
 
-原典deck.pyのinspect・atomic JSON patch・apply・fix・diffで既存PPTXを編集する。自作日本語ドナーの図形構造を保って本文・文字サイズ・ノートを更新。元shape ID、入力と差分を残し、全ページを独立レビューする。fix advisoryと実際の見切れを区別し、新しい出力へ元QAを移さない。
+- Python3.10+ / python-pptxほか原典requirements
+- PowerPoint、元資料と同じOS字体。元資料をinput/donor.pptxへ固定。
 
-`-Render`を追加すると実描画も行います。Scrollineの描画はlocalhost HTTPで行い、file://起動は行いません。
+Python依存は source/requirements.txt と原典の指定を確認してください。PDF→PNGには pypdfium2、検査記録には pypdf が必要です。生成側の専用PythonとPDF/検査側のPythonが別の場合、後者を明示して実行します。今回の配布検査は既存の固定依存を利用し、新規installはしていません。
 
-自分の内容にはinput/data.jsonと日本語SKILLを使い、本文・配置・停止点を原典方式で調整します。再現の詳細、原典固定commit、個別条件と確認範囲はREADME.md、PROVENANCE.json、QA.jsonを参照してください。
+```powershell
+python source/reproduce.py --render
+python source/render_pdf_previews.py render
+python source/audit_preservation.py
+```
+
+現在版の実再実行範囲は QA.json と source/distribution-replay.json を確認してください。再生成後の全頁確認と必要な原典条件の受入が残ります。OS字体を抽出・同梱しません。

@@ -1,58 +1,88 @@
 {
-  "status": "qa_complete",
+  "status": "codex_round4_repair_all_pages_read_independent_recheck_pending",
+  "author": "Codex",
   "page_count": 6,
-  "artifact_sha256": "ee9ec7c007fb84840aef5e2d2d63e921b859756f791091b634709b0216af296b",
-  "browser_review": "verified",
-  "browser": "Codex in-app browser / actual native page controls",
-  "viewport": {
-    "width": 1280,
-    "height": 720
-  },
-  "visual_review": {
-    "method": "全ページを原典の操作で表示し、見出し/現在位置をDOM照合。実キャプチャ全頁のcontact sheetをCodexが視認。",
-    "pages_reviewed": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ],
-    "result": "日本語の欠落・はみ出し・意図しない重なりなし。架空条件/目標表示、図表と入力を照合。"
-  },
-  "font_review": "実woff2の署名・MIMEとOFLを検査。ブラウザーでdocument.fonts.status=loadedと日本語字形を確認。",
-  "capture_conditions": "ページ収まりの撮影ではprefers-reduced-motion。通常の動きはサイトのプレイヤーで別途確認。",
+  "artifact_sha256": "1a6e3c3b0b3dce9a85fe9816d5d41cb429057f40f074a7dfc1a1632f6fb4f451",
+  "all_pages_visually_reviewed": true,
+  "visual_review": "Current full-size page images inspected for Japanese text, diagrams, hierarchy and accidental overlap. Author review, not independent approval.",
+  "independent_review": "pending new artifact",
+  "human_adoption": "pending",
+  "publication": false,
   "images": [
     {
       "file": "render/slide-01.png",
-      "sha256": "04fa13fa94f2a535414813aa80a2ba0165d39ec5dad7a404466b8b0dc0ce8a6b"
+      "sha256": "ae20f83258155bb3e38a2e12ea9823e56bd98520626c8f790030403c0b3b5469"
     },
     {
       "file": "render/slide-02.png",
-      "sha256": "2df12ed60c010a4d4c0e793f2bd1591ff272e361a20bb2a633e659fae2fb1f00"
+      "sha256": "6fba52918c2b528c8242d388b1e49812f187dd2a567e92bc73d9b74e476c56af"
     },
     {
       "file": "render/slide-03.png",
-      "sha256": "31d891590f6f8a025e6d851d2831df0e8c65077b3da5460461ad7ab98a4b2686"
+      "sha256": "34d7094741e6dc2d9231ff78132c8da04624edd8ae8ecbcd10e514c0bc6a33db"
     },
     {
       "file": "render/slide-04.png",
-      "sha256": "ce59b48075894869c7bac13d0144c40e60845c50df1d276efde12c41817de7fc"
+      "sha256": "eb95c8a1e0f9541f00b03e7c0f1d2b97c8cd1c7884c92b1f269a8b1aab48a94e"
     },
     {
       "file": "render/slide-05.png",
-      "sha256": "7662b33065fa9724d9248739be5aae629bff8c95c239af49daf11047b469165d"
+      "sha256": "f05da806312da7aa76744af7502c8efe98498ddd1eac84744fdb463971c4587f"
     },
     {
       "file": "render/slide-06.png",
-      "sha256": "c01fa2079ff668987c75a3419600f149cb26bc3d747928c1ab4aac70d5e9c34a"
+      "sha256": "3e49a57498029ef52d82010955f329f0dbd2401f56f7aca29565b85fed56fbe0"
     }
   ],
-  "checked_at": "2026-10-13T16:31:36.782358+00:00",
-  "not_claimed": [
-    "上流の全テーマ・全機能",
-    "人による採用",
-    "外部公開",
-    "全209件の実行"
-  ]
+  "current_build": "source/round4-rebuild-receipt.json",
+  "current_browser": "source/repair-browser-render.json",
+  "edit_reopen": "source/browser-edit-reopen-receipt.json",
+  "notes": [
+    "Original standalone CLI locate/schema/internal-shell/identity checks passed; project validator absent",
+    "Input source HTML preserved, CLI writes separate outputs without --overwrite",
+    "Token/highlight moves from permission to sourced answer with stable IDs; font subset refreshed for new text",
+    "Browser edit→JSON copy→new-document CLI→reopen verified; capabilities excluded from distribution"
+  ],
+  "not_executed": [
+    "project checkout validator",
+    "direct browser Save Copy picker completion",
+    "actual search/access-control system",
+    "independent model re-review"
+  ],
+  "normal_motion": [
+    "source/morph-runtime-repair.json",
+    "source/round4-countup-proof.json"
+  ],
+  "zip_replay": "source/zip-replay.json",
+  "zip_replay_note": "Source checks executed from the first synchronized archive; final packaging adds these receipts. Current source hashes remain checked.",
+  "round4": {
+    "source_proofs": [
+      "source/round4-deck-validation.json",
+      "source/round4-player-validation.json",
+      "source/round4-rebuild-receipt.json",
+      "source/round4-countup-proof.json",
+      "source/morph-runtime-repair.json",
+      "source/browser-edit-reopen-receipt.json",
+      "source/browser-edit-copy-boundary.json",
+      "deck-plan.md",
+      "source/upstream/references/workflow.md",
+      "source/upstream/references/upstream/bento-format.md",
+      "render/morph-before.png",
+      "render/morph-mid.png",
+      "render/morph-after.png",
+      "render/countup-before.png",
+      "render/countup-mid.png",
+      "render/countup-after.png",
+      "render/browser-edit-reopen.jpg"
+    ],
+    "visual_review": "All46 current page PNGs read by Codex across seven cases. Relevant natural motion frames, W2–W4 and all7 presenter notes screenshots also read. Independent review of this exact artifact remains pending.",
+    "not_demonstrated": [
+      "元リポのcheckoutは前提ではなく、同梱standaloneが通常経路。project側の追加validatorはcheckoutが無いため未実行。",
+      "画像+scrim/ken-burns、state slide、外部媒体、共同編集、実検索と権限制御は未実証。",
+      "ブラウザーの直接「コピー保存」は完了未確認。同docIdコピーは既存状態の影響を受けたため、独立コピーは --new-document を使用した。",
+      "countUpの初期化前に静的値が一瞬描画される原典挙動がある。途中値が増加する区間を撮影し、連続動画全フレームの品質保証とはしない。PPTX/PDF出力は対象外。"
+    ]
+  },
+  "edit_reopen_scope": "Prior artifact browser edit/JSON copy/new-document/reopen. New chart/cover repair re-generated with same identity; editing proof not re-executed for those content changes.",
+  "distribution_reexecution": "source/round4-zip-replay.json"
 }

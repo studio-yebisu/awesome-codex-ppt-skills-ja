@@ -1,23 +1,29 @@
 ---
-name: mbb-page-maker-ja
-description: 日本語コンサルティング型HTMLデッキの派生制作ガイド
+name: sebastian-178-ja
+description: NomiciAI mbb-page-makerのstarterとCSSを使い、主張・根拠・図解を日本語のHTMLスライドへ組む。原典runtimeとGolden Pathで検査・出力する。
 license: Apache-2.0
 ---
-# 日本語派生ガイド
+# mbb-page-maker 日本語ガイド
 
-原典: NomiciAI/mbb-page-maker、commit 36074669b8041783d9637a87dfed2a8733d47357。
-原典root LICENSEはApache-2.0、SKILL frontmatterと末尾はMITという不一致がある。配布はroot Apache条件を維持し、source/SKILL.mdに原文を保存。MITとして塗り替えない。
+原典は NomiciAI/mbb-page-maker、固定commit `36074669b8041783d9637a87dfed2a8733d47357`。**rootの[LICENSE](LICENSE)はApache-2.0、[原文SKILL](example/source/SKILL.md)はMITと記載しており、不一致は未解決です。** 両原文とSaitop at NomiciAIの帰属を保持します。全体をMITとして再許諾しません。
 
-1. 読者と判断、答え、根拠、行動を定義する。
-2. 原典authoring-guide、consulting-thinking、content-to-exhibit-router、componentsと適切なshowcaseを読む。
-3. 主張を入力資料・明示した仮定へ対応。数字がなければ定性exhibitを使う。
-4. starter-deckを出発点に、fonts/base/layouts/components/illustrations/themeの順でCSSを使う。1600×900、section.slide、header/content/footer契約を保持。
-5. 工程はprocess-flow、比較はcomparison-table、判断構造はissue-tree、変換はinput-process-output-layers、公開ゲートはdecision-logへルーティング。
-6. 原典webfontは配布license確認ができないため使わない。公式固定OTF由来のNoto Sans CJK JP subset（SIL OFL、source/fonts/OFL.txt）を使う。
-7. 原典runtime/QA/exportコードは実行せず自作navigation-ja.jsを使う。arrow/swipe/overview/printとPC同一origin連携を実装。原典runtime使用済みと表現しない。
-8. 実ブラウザで初回表示とページ送りを確認し、PNG/PDFを書き出す。未実施検査はQAに残す。
+[完成HTML](example/index.html)は「動画一本を、教材へ。」という架空の教材化企画7頁。[入力](example/input/)と[依頼文](example/PROMPT.txt)を自分の題材へ置き換えて使えます。編集対象はHTML/CSS/JavaScriptで、PPTXは生成していません。
 
-この例は架空・未実施。実績・収益・学習効果を主張しない。
+1. 読者が行う判断を定め、答え・根拠・次の行動を[入力](example/input/)へ書く。数字や効果は根拠を添え、仮定を実測にしない。
+2. [authoring-guide](example/source/references/authoring-guide.md)、[content-to-exhibit-router](example/source/references/content-to-exhibit-router.md)、[components](example/source/references/components.md)から内容に合うexhibitを選ぶ。工程・比較・判断構造を同じカード列へ押し込まない。
+3. [未変更starter](example/source/UPSTREAM_STARTER.html.txt)の1600×900、`section.slide`→header/content/footerを維持し、fonts/base/layouts/components/illustrations/themeの6層を使う。作例の日本語調整は[deck-ja.css](example/source/assets/css/deck-ja.css)、原稿は[source/index.html](example/source/index.html)にある。
+4. [build.py](example/source/build.py)で日本語本文と公式固定OTFの必要字形を作る。字体ファイルとOFLを保持し、デッキの全フォント役割を同じ同梱Noto Sans CJK JPへ結ぶ。更新後は必ず実描画し、字体メトリクス一致だけで古い画像を再利用しない。
+5. 未変更の原典runtime.jsを読み込み、元のキー・一覧・縮尺・監査・書出しを使う。親プレイヤー接続だけは原典キー操作へ変換する局所bridgeを使う。自作navigation-ja.jsは過去の実装で現在の入口ではない。
+6. 原典Golden Pathのquality、contrast、fit、renderを実行し、全頁を目視する。Windowsではfile URL/PDF出力パスだけを変換するsource/windows-paths.diffが必要だった。検査条件・閾値は変更しない。実行ログはsource/golden-path-original-receipt.jsonとgolden-path-windows-receipt.jsonに分ける。
 
+現作例は原典runtimeのまま全4工程が成功し、同梱字体で全7頁PNG/PDF/単体packageを再生成した。工程矢印を本文外へ移し、実演の語中改行と二重ページ番号を修正。HTML/CSSは原稿と元6層を保持する。作者の実行検査と独立評価・人による採用を区別する。
 
-2026-10-14 字体置換: Noto Sans CJK JPは公式 notofonts/noto-cjk固定commit f8d157532fbfaeda587e826d4cd5b21a49186f7c のOTFをsource/fonts/へ未変更保存し、そこからsubset・HTML埋込みを作り直しました。OFLはsource/fonts/OFL.txt、出所はsource/FONT-SOURCE.json。旧クラウド制作記録はPROVENANCE-CLOUD.jsonに保存しています。使用326字のglyph輪郭・横幅・縦メトリクスが一致するため、既存PNG/PDFを保持しています。現在の配布物にOS抽出字体は含みません。
+## 現在の作例の実施範囲（Round4）
+
+数値の根拠がない箇所は、工程図・比較表・判断の分岐を選んだ。判断図には接続線を入れ、小テストは3欄の幅をそろえ、日本語を句のまとまりで読めるようにした。
+
+- 架空の企画。学習効果・制作時間・収益の実績は含まない。原典のroot LICENSEとSKILLの記載不一致は解消していない。
+- 原典runtimeを置き換えた初期実装は旧履歴。現在は元runtimeと局所catalog bridgeを使用。
+- 日本語用CSSは原典CSSの後に追加。新しい原稿では同じ4検査と全頁の実描画をやり直す。
+
+全7頁の実描画と個別の動作証拠は制作側の確認。独立Kimi K3/Opus5.5の新しい版の評価は別に行う。過去の採点を新しい画像へ引き継がない。

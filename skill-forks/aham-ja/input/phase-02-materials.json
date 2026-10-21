@@ -1,0 +1,40 @@
+{
+  "phase": "2/8 材料解析",
+  "upstream_file": "upstream/references/phase-02.md",
+  "material_assessment": "ユーザー材料は input/BRIEF.md と input/data.json の2点のみ。ネット検索 0回、モデル知識による補完なし。",
+  "items": [
+    {"id": "F1", "type": "事実", "text": "架空の働き方ワークショップ案である。", "source": "BRIEF.md / data.json sample_notice"},
+    {"id": "F2", "type": "事実", "text": "前日に入口を用意し、朝は一つの作業に取り組み、最後に続きを残す構成。", "source": "data.json notes[2]"},
+    {"id": "F3", "type": "事実", "text": "一週目に観察、二・三週目に一つ試し、四週目に続け方を話す。記録と相談を並行させ、負担があれば変更する。", "source": "data.json notes[3]"},
+    {"id": "D1", "type": "データ", "text": "手順1 作業を一つ選ぶ：3分", "unit": "分", "time": "例示値（測定日なし）", "source": "data.json durations_minutes[0] / notes[1]", "chart_form": "gantt（分期排期）"},
+    {"id": "D2", "type": "データ", "text": "手順2 選んだ作業に取り組む：10分", "unit": "分", "time": "例示値", "source": "data.json durations_minutes[1] / notes[1]", "chart_form": "gantt"},
+    {"id": "D3", "type": "データ", "text": "手順3 進み具合をメモする：5分", "unit": "分", "time": "例示値", "source": "data.json durations_minutes[2] / notes[1]", "chart_form": "gantt"},
+    {"id": "D4", "type": "データ", "text": "手順4 次にやることを書く：2分", "unit": "分", "time": "例示値", "source": "data.json durations_minutes[3] / notes[1]", "chart_form": "gantt"},
+    {"id": "D5", "type": "データ", "text": "合計20分（D1〜D4の和。3+10+5+2=20）", "unit": "分", "time": "例示値", "source": "data.json durations_minutes の合計", "chart_form": "gantt の全長"},
+    {"id": "D6", "type": "データ", "text": "試行期間4週間", "unit": "週", "time": "計画（未実施）", "source": "BRIEF.md / data.json notes[3]", "chart_form": "A-90 泳道路線図の時間軸"},
+    {"id": "P1", "type": "問題", "text": "未記録。入力に解決すべき問題の記載がない。", "source": null},
+    {"id": "C1", "type": "結論", "text": "材料にある判断は『効果の実績や健康主張ではない』という否定のみ。推奨・効果の結論はない。", "source": "data.json sample_notice / BRIEF.md"}
+  ],
+  "counts": {"facts": 3, "data": 6, "problems": 0, "conclusions": 1},
+  "gaps": {
+    "critical": ["受け手と期待行動（Phase 1 で作業仮定として扱う）"],
+    "general": ["朝の20分が誰のどんな仕事を想定しているか"],
+    "accepted_missing": ["効果・改善・満足度のデータ。測定していないので、ページに効果を書かない"]
+  },
+  "conflicts": [
+    {
+      "item": "配色方針",
+      "a": "BRIEF.md：コバルト・黄色・墨",
+      "b": "2026-10-15 の修復指示：原典A档の白地・中性グレー・青の点在",
+      "adopted": "b（新しい明示指示を採用）",
+      "note": "事実ではなく体裁の矛盾。Phase 3 へ進む前の裁定は統合担当の確認対象。"
+    }
+  ],
+  "noise_removed": ["BRIEF.md の制作手法の記述（39 layoutID 等）はページ内容に入れない"],
+  "gate": {
+    "upstream_requirement": "材料の網羅をユーザーに確認し、完成カード確認後に Phase 3 へ。",
+    "this_run": "停止待ちを統合担当判断に置き換える。",
+    "user_confirmed": false,
+    "integrator_decision": null
+  }
+}

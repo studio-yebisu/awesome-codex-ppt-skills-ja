@@ -1,0 +1,52 @@
+/* Deck-specific art direction belongs here. Keep presenter.css runtime-neutral.
+   The composition primitives below give authored topology metadata a real macro
+   silhouette. Replace their surfaces and proportions to fit the deck; do not
+   collapse every topology back into the split default. */
+
+.prada-composition {
+  position:relative;
+  display:grid;
+  min-height:470px;
+  gap:48px;
+}
+.prada-region { min-width:0; min-height:0; }
+.prada-region-copy { display:grid; align-content:center; gap:18px; }
+.prada-region-visual { position:relative; overflow:hidden; border:1px solid var(--page-line); background:var(--page-surface); }
+
+.topology-split .prada-composition { grid-template-columns:minmax(0,.82fr) minmax(0,1.18fr); align-items:stretch; }
+.topology-split .prada-region-copy { padding:34px 0 34px 34px; border-left:6px solid var(--accent); }
+
+.topology-stage .prada-composition,
+.topology-field .prada-composition,
+.topology-network .prada-composition { display:block; min-height:500px; }
+.topology-stage .prada-region-visual,
+.topology-field .prada-region-visual,
+.topology-network .prada-region-visual { position:absolute; inset:0; }
+.topology-stage .prada-region-copy,
+.topology-field .prada-region-copy,
+.topology-network .prada-region-copy { position:absolute; z-index:2; left:28px; bottom:28px; width:min(44%,560px); padding:26px; border:1px solid var(--page-line); background:color-mix(in srgb,var(--page-bg) 92%,transparent); }
+.topology-stage .prada-region-visual { clip-path:polygon(0 0,100% 0,100% 100%,12% 100%,0 78%); }
+.topology-field .prada-region-copy { left:auto; right:28px; top:28px; bottom:auto; }
+.topology-field .prada-region-visual { border-radius:220px 0 0 0; }
+.topology-network .prada-region-copy { width:min(36%,500px); }
+
+.topology-spine .prada-composition { grid-template-columns:1fr; grid-template-rows:auto 1fr; gap:20px; }
+.topology-spine .prada-region-copy { grid-template-columns:minmax(180px,.7fr) minmax(0,1.3fr); align-items:end; padding-bottom:20px; border-bottom:4px solid var(--accent); }
+
+.topology-axis .prada-composition { grid-template-columns:1fr 1fr; gap:88px; }
+.topology-axis .prada-composition::before { content:""; position:absolute; left:50%; top:0; bottom:0; width:2px; background:var(--accent); transform:translateX(-50%); }
+
+.topology-matrix .prada-composition { grid-template-columns:1fr 1fr; gap:18px; padding:18px; border:1px solid var(--page-line); }
+.topology-matrix .prada-region { padding:28px; border:1px solid var(--page-line); background:var(--page-surface); }
+
+.topology-stack .prada-composition { grid-template-columns:minmax(300px,.66fr) minmax(0,1.34fr); gap:0; padding:22px; border:1px solid var(--page-line); box-shadow:22px 22px 0 color-mix(in srgb,var(--accent) 22%,transparent); }
+.topology-stack .prada-region-copy { z-index:2; padding:30px; background:var(--page-bg); }
+.topology-stack .prada-region-visual { transform:translate(-16px,-16px); }
+
+.topology-mosaic .prada-composition { grid-template-columns:minmax(0,1.3fr) minmax(300px,.7fr); gap:18px; }
+.topology-mosaic .prada-region-visual { order:-1; }
+.topology-mosaic .prada-region-copy { padding:30px; border:1px solid var(--page-line); background:var(--page-surface); }
+
+.topology-frame .prada-composition { grid-template-columns:minmax(0,1.35fr) minmax(300px,.65fr); gap:24px; }
+.topology-frame .prada-region-visual { order:-1; padding:22px; }
+.topology-frame .prada-region-copy { padding:28px; border-top:8px solid var(--accent); }

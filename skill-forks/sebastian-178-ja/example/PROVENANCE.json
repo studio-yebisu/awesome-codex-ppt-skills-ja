@@ -7,14 +7,17 @@
   "license_conflict": "原典不一致を原文保持。配布はroot Apache条件を維持",
   "attribution": "Saitop at NomiciAI <saitop@nomici.ai>",
   "changes": [
-    "日本語7頁の架空教材化企画",
-    "starter DOM契約＋既存CSS/blue themeを使用",
-    "日本語向け文字サイズとexhibitレイアウト調整",
-    "原典runtime.jsを自作最小navigationへ差替え",
-    "原典webfontを公式固定OTF由来のNoto Sans CJK JPサブセットへ差替え",
-    "単一HTMLは自作packagingでCSS/font/JS内包"
+    "Japanese fictional7page content and original six CSS layers",
+    "Official fixed Noto Sans CJK JP OTF-derived subset with OFL",
+    "Original runtime.js byte-identical; catalog bridge sends original keys only",
+    "Original Golden Path4 scripts, Windows path-only adapters; all7 actual pages rerendered",
+    "Canonical HTML comes from original render.sh package"
   ],
-  "upstream_executables_run": false,
+  "upstream_executables_run": {
+    "original": "source/golden-path-original-receipt.json",
+    "windows_path_adapter": "source/golden-path-windows-receipt.json",
+    "all4_current_exit0": true
+  },
   "content": "架空・未実施の企画例。効果実績と見込み利益なし",
   "font": {
     "repository": "notofonts/noto-cjk",
@@ -37,31 +40,46 @@
       "vertical_metrics_equal": true,
       "font_version": "2.004"
     },
-    "render_reuse": "Existing 7 PNG/PDF retained because used glyph outlines and metrics match; not re-rendered"
+    "render_reuse": "Superseded. Current all7 pages rerendered via original Golden Path; see font_replacement/current and QA.json."
   },
-  "html_route": [
-    "starter-deck.html",
-    "fonts.css（差替）",
-    "base.css",
-    "layouts.css",
-    "components.css",
-    "illustrations.css",
-    "blue.css"
-  ],
-  "render": {
-    "environment": "user PC",
-    "browser": "installed Google Chrome via Playwright",
-    "author_renderer": "self-authored source/render.py; only installed browser executable path changed in render-pc.py",
-    "png_count": 7,
-    "pdf_page_count": 7,
-    "upstream_runtime_qa_export_executed": false,
-    "targeted_initial_display_fix": "page05 display:block line-height:1.4 padding:20px 24px",
-    "limitations": "原典全QA未実行。PDF別個全頁精査未実施。PC外側フロートは親の統合確認へ"
-  },
+  "html_route": "Original six CSS layers + unmodified runtime.js; original render.sh package is canonical index.html",
+  "render": "Current original Golden Path renders all7 PNG/PDF; Windows path-only adapter documented",
   "font_replacement": {
-    "date": "2026-10-14",
-    "historical_record": "PROVENANCE-CLOUD.json",
-    "method": "Official pinned OTF subset and embedded replacement; all layout/controller/CSS unchanged",
-    "rerendered": false
+    "current": "Actual included Noto Sans CJK JP roles, current subset regenerated and all7 images rerendered",
+    "source": "source/FONT-SOURCE.json",
+    "historical_metric_only_reuse": "superseded; preserved in private before-web8 backup"
+  },
+  "codex_web8_repair": {
+    "author": "Codex",
+    "scope": "Current source repair, actual original-path gates and page review; earlier production attribution retained only for earlier scope",
+    "qa": "QA.json"
+  },
+  "superseded_history": {
+    "changes": [
+      "日本語7頁の架空教材化企画",
+      "starter DOM契約＋既存CSS/blue themeを使用",
+      "日本語向け文字サイズとexhibitレイアウト調整",
+      "原典runtime.jsを自作最小navigationへ差替え",
+      "原典webfontを公式固定OTF由来のNoto Sans CJK JPサブセットへ差替え",
+      "単一HTMLは自作packagingでCSS/font/JS内包"
+    ],
+    "font_render_reuse": "Existing 7 PNG/PDF retained because used glyph outlines and metrics match; not re-rendered"
+  },
+  "current_round4_repair": {
+    "author": "Codex",
+    "artifact": "index.html",
+    "artifact_sha256": "7954fdbb2d7b0ba2b0241e0708671abc3e0e719f8f4e3ba828ebdcc2972f1018",
+    "qa": "QA.json",
+    "changes": [
+      "原典starter、6層CSS、原典runtime.jsをそのまま使用し、親との接続だけ局所bridgeへ分離。",
+      "日本語入力と公式字体subsetから7頁を生成し、quality/contrast/fit/renderの原典4工程をWindowsのパス差分だけで再実行。",
+      "実際のpackage出力から全7 PNG/PDFを更新。判断図の分岐、3欄の本文、24pxの表見出しを確認。"
+    ],
+    "not_demonstrated": [
+      "架空の企画。学習効果・制作時間・収益の実績は含まない。原典のroot LICENSEとSKILLの記載不一致は解消していない。",
+      "原典runtimeを置き換えた初期実装は旧履歴。現在は元runtimeと局所catalog bridgeを使用。",
+      "日本語用CSSは原典CSSの後に追加。新しい原稿では同じ4検査と全頁の実描画をやり直す。"
+    ],
+    "independent_review": "pending"
   }
 }

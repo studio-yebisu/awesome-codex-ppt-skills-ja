@@ -16,8 +16,10 @@ description: 原典SciDiagramの公式portable templateで科学の関係を日�
 
 ## この方式で気をつけること
 
-- 原典のportable PptxGenJS 4.0.1方式を使用。内部評価専用のホストSDKは必要ない。
-- 科学内容はUSGS一次解説に基づく概念モデル。定量的な実験結果ではない。
+- 掲載効果の主証拠は複合例。単純例の4箱・4方向は最小復元と文字・箱・線の編集を確かめる補足。
+- 初稿のコードと対応表は実Claude Opus5.5。標準制作pass02のFONT修正、継続改善pass04の角丸・矢じりと現在の自己完結化、実行・検査はCodex。
+- 複合例の標準2pass終了と追加改善pass04、R13の保存プログラムの引き渡し修正は異なる工程。--pass-index Noneを追加改善の承認証拠にしない。
+- 現在のpass04/build.mjsに矢じり補正を内包し、準備済みruntimeでbuild.mjs/source.png/editable.pptxの3ファイルだけを再生。旧Python補正と旧profileのpass02終端・角丸近似は履歴で、現在の仕様ではない。
 
 ## 単体の本文から使う
 
@@ -25,7 +27,7 @@ description: 原典SciDiagramの公式portable templateで科学の関係を日�
 
 原典: https://github.com/HututuWorks/sci-diagram-pptx/tree/cc8f0030edf80eeab6e52849b8c39fe638466776
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `sci-diagram-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `sci-diagram-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: HututuWorks / 原典条件: Apache-2.0。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 

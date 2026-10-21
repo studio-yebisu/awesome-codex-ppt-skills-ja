@@ -1,21 +1,46 @@
 {
-  "status": "light_check_complete",
-  "generation_success": true,
-  "primary_html_opened": true,
-  "cover_png_displayed_once": true,
-  "original_navigation_observed": "current 1→2, total6, active heading 相手のひと息を、思い浮かべる。",
-  "representative_pngs": [
-    1,
-    2
+  "status": "author_visual_qa_complete_independent_rereview_pending",
+  "author": "Codex",
+  "current_revision": "round4-web07-repair",
+  "scope": "3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。",
+  "main_artifact": "template.html",
+  "main_artifact_sha256": "0ead00d14907c806226e97309003083b5255c2ffad3955bb0c091c00c821cf99",
+  "actual_rendered_states": 6,
+  "all_current_images_read_individually": true,
+  "visual_findings": "Repaired requested overlap, typography, sequence/choice semantics and page-specific notes; no obvious remaining collision or missing content in the viewed 1920×1080 images. This is author QA, not an independent score.",
+  "image_hashes": [
+    {
+      "path": "render/slide-01.png",
+      "sha256": "b4d408f06a424f3eef2f0c8cc2b9e54a7d70f19911ce2728ad4241c62a3e0802"
+    },
+    {
+      "path": "render/slide-02.png",
+      "sha256": "d30ba3ac983beb6e0f1d57f9807cafeab27a4a38d821f4cda702f14d99cf710e"
+    },
+    {
+      "path": "render/slide-03.png",
+      "sha256": "9151697f8f3a95696a7c2861ff7348631aa3a17591f547418cbc4b0dacb5f16f"
+    },
+    {
+      "path": "render/slide-04.png",
+      "sha256": "f448cbc9bdfb8e4e095690ac4347676b5d3fad5a3b85dda0427de5c0790767ad"
+    },
+    {
+      "path": "render/slide-05.png",
+      "sha256": "9a819e59176048150e6a1b6b679c2f63e63923fe55b9d3bcac1c8c0d8f8aacc2"
+    },
+    {
+      "path": "render/slide-06.png",
+      "sha256": "adf3127e48a9af1f843667e708667de5a56a87a88cee33fd800290ec257ae36b"
+    }
   ],
-  "representative_canvas": [
-    1600,
-    900
+  "original_gate_receipt": "source/round4-original-gates.json",
+  "independent_review": "pending for this repaired revision",
+  "not_run": [
+    "原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。",
+    "layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。",
+    "原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。"
   ],
-  "short_skill_quick_validate": "Skill is valid! / exit0",
-  "full_page_visual_review": false,
-  "optional_visual_validator": false,
-  "kit_reexecution": false,
-  "scoring": false,
-  "scope": "生成成功、主要初回表示と代表表紙PNG、原典navigation1→2、短いSKILL quick_validateだけ。optional visual-validator/全頁詳細検査/全kit再実行/採点なし。"
+  "distribution_replay": "passed: source/round4-zip-replay.json",
+  "zip_reexecution": true
 }

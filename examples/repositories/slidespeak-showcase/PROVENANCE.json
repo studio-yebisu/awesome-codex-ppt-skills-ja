@@ -49,8 +49,17 @@
     "No original preset reused; all six templates and tokens derive from this bookstore brief.",
     "Original engine core unchanged. Player frame adapter is outside original slide output.",
     "Local fonts added to chrome as full embedded TTF; original TTF/OFL packaged.",
-    "No paid AI or image service; LLMClient replays the current author-created JSON, not an external model call.",
-    "Page2 headline slot carries an intentional semantic newline; .book-statement h2 uses white-space:pre-line. Japanese line-break extension, original renderer unchanged."
+    "No paid AI or image service; LLMClient replays the current author-created JSON, not an external model call."
   ],
-  "localized_fix": "Only page2 headline line break changed; deck/index/tree/style/PDF updated through original generateDeck/renderer."
+  "repair_20261015": {
+    "author": "Codex",
+    "changes": [
+      "Match upper/lower rule widths.",
+      "Use semantic line breaks for quotation, process explanations and closing.",
+      "Keep only the external player page count."
+    ],
+    "original_engine_unchanged": true,
+    "original_dom_gate_rerun": "source/original-dom-gates.json",
+    "independent_recheck": "pending"
+  }
 }

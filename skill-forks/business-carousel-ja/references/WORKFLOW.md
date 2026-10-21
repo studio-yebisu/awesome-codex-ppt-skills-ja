@@ -1,35 +1,27 @@
-# minhnv0807/ai-business-skillsの日本語制作
+# 投稿案を「困りごと→記入例→行動」の順に整理し、制作ブリーフと確認画面にできる。
 
-原典: https://github.com/minhnv0807/ai-business-skills/tree/0360adced422a08f70c3eff8905b81962872105d
+入力：架空ブランドの色・書体と引き継ぎメモの原稿。
+出力：6枚の制作ブリーフと1080角のHTML構成確認プレビュー。
 
-原典43番 / 構成ブリーフ→1080×1080のHTMLプレビュー
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全6頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-原典43-carousel-brief-globalの指示型工程で、読み手とブランド条件、HookからCTAまでの構成、1枚1論点の原稿、図案と背景をブリーフにし、1080×1080のHTML構成確認プレビューを作る。原典に自動生成CLIやPowerPoint出力はない。SNS公開用の制作データ、人の承認、公開とは区別する。実績の証拠がない箇所は、架空の記入例を明示する。
+## 使い方
 
-## 作例
+1. 読む人・目的・掲載先とブランド条件をinput/data.jsonへ書く
+2. 先に原稿を六つの役割へ分ける
+3. carousel-brief.mdに各頁の文章・図案とBrand directionを書く
+4. 専用builderで1080角の構成確認HTMLを生成する
+5. 移動・進捗・最後の記入型を確認し、公開用仕上げは別に判断する
 
-- 引き継ぎ、何を書けばいい？ / 6枚 / html
-- カタログ内の案内: repository.html?repo=minhnv0807/ai-business-skills
-- 当面のローカル入口: http://127.0.0.1:8847/repository.html?repo=minhnv0807/ai-business-skills
-- 入力、発表者ノート、依頼文、PROVENANCE.json、QA.jsonを完成例に同梱。
+## 生成・検査
 
-## 環境
+`python source/build_business_carousel_repository_example.py --input input/data.json --upstream-dir source/upstream --output-dir <new-directory>`
 
-- Python 3.13 / fontTools / Brotli（この作例の再現）
-- HTTPで表示できるブラウザー
-- 公式BIZ UDPGothicのOFL書体（固定版を取得・サブセット化）
+下端へ操作欄の余白を確保。図案と本文の寸法を調整し、最後まで移動・進捗が見えるよう修正。Brand directionと未設定の連絡先を明記。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
 
-## 元の制作コマンド
+## 範囲
 
-    python tools/build_business_carousel_repository_example.py --input examples/repositories/business-carousel/input/data.json
-
-## 確認範囲
-
-- 原典43番のHTMLは構成確認用。Canva/Figma等のSNS公開用仕上げ、縦長版、LinkedIn投稿PDFは未制作。
-- 実績の証拠がないため、架空の記入例を明示。SNSの反応や改善効果は測定していない。
-- 人による原稿・コンセプトの承認と投稿は未実施。今回の確認は制作エージェントの判断。
-- 日本語の短さは字数と実表示で調整。英語の8語・25語を日本語へ機械換算しない。
-
-## 権利
-
-原典条件はupstream内のLICENSE/NOTICE等を読む。日本語の独自案内はカタログの条件、上流由来のコードは各原典の条件を引き継ぐ。公開画像や依存書体の条件を一括で保証するものではない。
+- 原典は指示型の制作スキルで、原典製レンダラーは存在しない
+- 本例の専用HTMLは原典の構成指示を実装したもの
+- Canva/Figma仕上げ・LinkedIn PDF・公開・人の承認は未実施
+- 連絡先は未設定。実績の代わりに架空の記入例を使う

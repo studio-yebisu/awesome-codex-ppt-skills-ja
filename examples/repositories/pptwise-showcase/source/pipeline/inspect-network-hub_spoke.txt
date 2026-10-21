@@ -1,0 +1,53 @@
+component hub_spoke on page network (4 of 6): content, kind "hierarchy"
+name: Hub
+what it is: One concept in the middle, three to six peers attached around it on labelled spokes. The mind map's centre, drawn with a steady hand.
+choose it: Choose it when the elements relate to the centre and not to each other, with no order between them. Use steps when they run in sequence, cycle when the last leads back to the first, and rings when they nest.
+not for: Elements that follow one another, which belong in steps.
+full-body: no
+schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "component": "hub_spoke",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "hub_spoke"
+    },
+    "center": {
+      "type": "string",
+      "minLength": 1,
+      "description": "The one concept every element relates to. Drawn inside the central node."
+    },
+    "items": {
+      "minItems": 3,
+      "maxItems": 6,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string",
+            "description": "Short name of one related element."
+          },
+          "description": {
+            "description": "Optional one-line explanation shown beside the label.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "label"
+        ],
+        "additionalProperties": false
+      },
+      "description": "3-6 peer elements arranged around the center. Order carries no meaning here — author them in whatever order reads best."
+    }
+  },
+  "required": [
+    "type",
+    "center",
+    "items"
+  ],
+  "additionalProperties": false,
+  "description": "One central concept with 3-6 peer elements attached to it, drawn as a hub with labelled spokes. Use hub_spoke when the elements are unordered and do not close a loop: they all relate to the center, not to each other. Use `steps` when the elements run in sequence, `cycle` when the last one leads back to the first, and `rings` when they nest inside one another."
+}

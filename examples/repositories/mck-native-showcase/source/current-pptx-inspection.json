@@ -1,0 +1,123 @@
+{
+  "checked_at": "2026-10-16T03:20:34.481097+00:00",
+  "author": "Codex R13",
+  "pptx_sha256": "c935be23cf3945316d2c4e2d0ca1b37873259553d77941248d78b75ffc5289f6",
+  "slide_count": 4,
+  "original_high_level_methods": [
+    "cover",
+    "donut",
+    "data_table",
+    "vertical_steps"
+  ],
+  "shape_counts": [
+    6,
+    21,
+    49,
+    27
+  ],
+  "pictures": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "block_arcs": [
+    0,
+    5,
+    0,
+    0
+  ],
+  "office_charts": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "office_tables": [
+    0,
+    0,
+    0,
+    0
+  ],
+  "native_edit": {
+    "application": "Microsoft PowerPoint",
+    "version": "16.0",
+    "edit": "Native center label 収録字体 to 収録書体 in memory, SaveCopyAs new private PPTX",
+    "original_sha256": "c935be23cf3945316d2c4e2d0ca1b37873259553d77941248d78b75ffc5289f6",
+    "original_after_sha256": "c935be23cf3945316d2c4e2d0ca1b37873259553d77941248d78b75ffc5289f6",
+    "shape_name": "TextBox 9",
+    "value_after": "収録書体",
+    "source_saved": false,
+    "checked_at": "2026-10-16T03:16:13.3121864Z",
+    "source": "deck.pptx",
+    "artifact": "qa/native-edit/edited-copy.pptx",
+    "artifact_sha256": "951d100a173942f7561008add7575cf7be5a5c6d5c926d47711fd6cad190cd8e",
+    "before_image": "render/slide-02.png",
+    "before_image_sha256": "a4a3bc9e0de4ea263fc84bf76d49de0c3593816538a992fb232bc4dc8878d90f",
+    "after_image": "qa/native-edit/edited-copy.png",
+    "after_image_sha256": "a5d48607497bf79e4c1f2e51bbe25a038cb91c58322ec9aa3d5b04a00bc3c9a9",
+    "reopened_after_save": true,
+    "reopen_application": "Microsoft PowerPoint16",
+    "scope": "Actual native label edit, SaveCopyAs, then a new Presentations.Open on the saved copy and PDF rendering. Preview is PDF-derived. Canonical source unchanged.",
+    "native_object_text_differences": [
+      {
+        "page": 2,
+        "text_index": 2,
+        "before": "収録字体",
+        "after": "収録書体"
+      }
+    ],
+    "all_shape_counts_and_preset_geometries_unchanged": true,
+    "source_sha256_still_equal": true
+  },
+  "original_S3": {
+    "passed": true,
+    "total_slides": 4,
+    "verdict": "PASS — 可进入 S4 渲染",
+    "fail_items": [],
+    "pass_items": [
+      {
+        "slide_idx": 1,
+        "layout": "cover",
+        "status": "ok"
+      },
+      {
+        "slide_idx": 2,
+        "layout": "donut",
+        "status": "ok"
+      },
+      {
+        "slide_idx": 3,
+        "layout": "data_table",
+        "status": "ok"
+      },
+      {
+        "slide_idx": 4,
+        "layout": "vertical_steps",
+        "status": "ok"
+      }
+    ]
+  },
+  "original_S4": {
+    "passed": true,
+    "overall_score": 98,
+    "pptx_path": "../deck.pptx",
+    "checklist": {
+      "user_code_errors": 0,
+      "engine_bug_errors": 0,
+      "warnings": 1
+    },
+    "verdict": "PASS — 可进入 S5 交付",
+    "user_code_error_detail": [],
+    "engine_bug_detail": [],
+    "warnings_detail": [
+      {
+        "slide": 2,
+        "category": "shape_overlap",
+        "message": "Two text shapes overlap by 16%"
+      }
+    ]
+  },
+  "count_checks": "font-count-checks.json",
+  "scope": "Native source/geometry and actual original gate results, not a beauty score or independent model acceptance."
+}

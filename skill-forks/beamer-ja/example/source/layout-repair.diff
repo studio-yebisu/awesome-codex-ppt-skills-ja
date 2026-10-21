@@ -1,0 +1,43 @@
+--- pre-repair/deck.tex
++++ deck.tex
+@@ -24,9 +24,9 @@
+ \draw[BMEStone,line width=.55pt] ([xshift=1.25cm,yshift=-6.45cm]current page.north west) -- ++(7.3cm,0);
+ \node[anchor=south west,inner sep=0pt,jpsmall] at ([xshift=1.25cm,yshift=.72cm]current page.south west) {仮定に基づく5枚の教材 / 2026.10};
+ \begin{scope}[shift={([xshift=11.2cm,yshift=-3.1cm]current page.north west)}]
+-\foreach \y in {0,-.9,-1.8} {\node[warm/node,minimum width=2.5cm,minimum height=.65cm] (q\y) at (0,\y) {待っている仕事};}
++\foreach \y/\qname in {0/qone,-.9/qtwo,-1.8/qthree} {\node[warm/node,minimum width=2.5cm,minimum height=.65cm] (\qname) at (0,\y) {待っている仕事};}
+ \node[warm/node,draw=BMETerracotta,fill=BMESand,minimum width=2.5cm] (service) at (0,-3.25) {窓口で処理};
+-\draw[warm/highlight] (0,-2.22) -- (service.north);
++\draw[warm/highlight] (qthree.south) -- (service.north);
+ \node[jpsmall] at (0,.75) {順番が来るまで待つ};
+ \end{scope}
+ \end{tikzpicture}
+@@ -49,11 +49,15 @@
+ 
+ \begin{frame}[plain]\begin{tikzpicture}[remember picture,overlay]
+ \Base{待ち時間を式にする}{RECURRENCE / 計算}{03}
+-\node[jptext,text width=6cm] at ([xshift=.98cm,yshift=-1.8cm]current page.north west) {\bfseries 前の仕事が終わったら、始める\par\vspace{.4cm}\WarmDisplayMath $s_i=\max(a_i,f_{i-1})$\par\vspace{.3cm}$f_i=s_i+p$\par\vspace{.3cm}$w_i=s_i-a_i$};
++% Heading and each formula are separate nodes; \strut gives every formula the same WarmDisplayMath line box.
++\node[jptext,text width=6cm] at ([xshift=.98cm,yshift=-1.8cm]current page.north west) {\bfseries 前の仕事が終わったら、始める};
++\node[jptext] at ([xshift=.98cm,yshift=-2.45cm]current page.north west) {\WarmDisplayMath\strut$s_i=\max(a_i,f_{i-1})$};
++\node[jptext] at ([xshift=.98cm,yshift=-3.20cm]current page.north west) {\WarmDisplayMath\strut$f_i=s_i+p$};
++\node[jptext] at ([xshift=.98cm,yshift=-3.95cm]current page.north west) {\WarmDisplayMath\strut$w_i=s_i-a_i$};
+ \node[jptext,text width=6.2cm] at ([xshift=8cm,yshift=-1.85cm]current page.north west) {\WarmBodyText $a_i$：到着時刻　$s_i$：開始時刻\\$f_i$：完了時刻　$w_i$：待ち時間\par\vspace{.45cm}最初の仕事は時刻0に到着。\\初期値は $f_0=0$ とする。};
+-\draw[BMEStone,line width=.45pt] ([xshift=.98cm,yshift=-4.4cm]current page.north west) -- ++(13.8cm,0);
+-\node[jptext,text width=13cm] at ([xshift=1cm,yshift=-4.75cm]current page.north west) {例：3件目は8秒に到着。前の仕事は10秒に完了。};
+-\begin{scope}[shift={([xshift=2cm,yshift=-6.45cm]current page.north west)}]
++\draw[BMEStone,line width=.45pt] ([xshift=.98cm,yshift=-4.95cm]current page.north west) -- ++(13.8cm,0);
++\node[jptext,text width=13cm] at ([xshift=1cm,yshift=-5.25cm]current page.north west) {例：3件目は8秒に到着。前の仕事は10秒に完了。};
++\begin{scope}[shift={([xshift=2cm,yshift=-6.85cm]current page.north west)}]
+ \draw[warm/flow] (0,0) -- (10.8,0);
+ \foreach \x/\t in {0/8,3/10,10.5/15} {\draw[BMEInk] (\x,-.1) -- (\x,.1);\node[jpsmall,below] at (\x,-.2) {\t 秒};}
+ \draw[BMESage,line width=3pt] (0,.3) -- (3,.3);\draw[BMETerracotta,line width=3pt] (3,.3) -- (10.5,.3);
+@@ -74,7 +78,7 @@
+ \node[jpsmall,anchor=west,text=BMETerracotta] at (7.2,14) {$d=3$ 秒};\node[jpsmall,anchor=west,text=BMEInk] at (7.2,7) {$d=4$ 秒};\node[jpsmall,anchor=west,text=BMESage] at (7.2,1) {$d=6$ 秒};
+ \node[jpsmall,anchor=west] at (0,18) {待ち時間（秒）};\node[jpsmall,anchor=west] at (6,-2.5) {仕事の番号};
+ \end{scope}
+-\node[jptext,text width=4cm] at ([xshift=11cm,yshift=-2.15cm]current page.north west) {\bfseries 処理は毎回5秒\par\vspace{.45cm}\WarmBodyText 3秒間隔なら、1件進むごとに2秒ずつ待ちが増える。\par\vspace{.35cm}6秒間隔なら、この仮定では順番待ちは生じない。\par\vspace{.5cm}\WarmDisplayMath\raggedright $w_i=(i-1)$\par\vspace{.08cm}$\phantom{w_i=}\cdot\max(0,p-d)$};
++\node[jptext,text width=4cm] at ([xshift=11cm,yshift=-2.15cm]current page.north west) {\bfseries 処理は毎回5秒\par\vspace{.45cm}\WarmBodyText 3秒間隔なら、\\1件進むごとに2秒ずつ\\待ちが増える。\par\vspace{.35cm}6秒間隔なら、この仮定では\\順番待ちは生じない。\par\vspace{.5cm}\WarmDisplayMath\raggedright $w_i=(i-1)$\par\vspace{.08cm}$\phantom{w_i=}\cdot\max(0,p-d)$};
+ \Foot\end{tikzpicture}\end{frame}
+ 
+ \begin{frame}[plain]\begin{tikzpicture}[remember picture,overlay]

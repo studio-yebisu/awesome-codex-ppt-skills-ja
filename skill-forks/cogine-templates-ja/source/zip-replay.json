@@ -1,0 +1,26 @@
+{
+  "author": "Codex",
+  "status": "passed",
+  "input_archive_sha256": "61e91e33f43cd5a93dfe6ef4b9dd69704b079c1c5e03ba7a12bc66392981bd8e",
+  "current_artifact_sha256": "558ac4d5b38b160f4391218d07668035aef5b5526cfd24bd20dd47c13ef345dd",
+  "scope": "Actual example ZIP extracted into a fresh private folder and rebuilt with existing installed runtimes. No alternate environment or service installed.",
+  "shared_dependencies": "Existing matching node_modules reused through a private junction where required; dependencies are not in the ZIP.",
+  "results": {
+    "metadata_files_read": 60,
+    "html_byte_identical": true
+  },
+  "commands": [
+    {
+      "program": "python.exe",
+      "arguments": [
+        "source/build.py",
+        "--case",
+        ".",
+        "--upstream",
+        "source/upstream"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "fork_equivalence": "The fork ZIP includes these same source inputs; its manifest and CRC are checked separately."
+}

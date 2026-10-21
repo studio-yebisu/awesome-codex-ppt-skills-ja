@@ -1,0 +1,24 @@
++ M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\ppt-master-venv\Scripts\python.exe M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\ningzimu__image-to-editable-ppt-skill\skills\image-to-editable-ppt\cli\editppt\runtime\remove_chroma_key.py --input M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\run\pages\page_001\assets\icon-sheet.asset-sheet-chroma.png --out M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\run\pages\page_001\assets\icon-sheet.asset-sheet-alpha.png --auto-key border --soft-matte --transparent-threshold 12 --opaque-threshold 220
+Wrote M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\run\pages\page_001\assets\icon-sheet.asset-sheet-alpha.png
+Key color: #03f902
+Transparent pixels: 1365185/1571328
+Partially transparent pixels: 7910/1571328
++ M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\ppt-master-venv\Scripts\python.exe M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\ningzimu__image-to-editable-ppt-skill\skills\image-to-editable-ppt\cli\editppt\runtime\split_alpha_components.py --input M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\run\pages\page_001\assets\icon-sheet.asset-sheet-alpha.png --out-dir M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\run\pages\page_001\assets\icons --sort x --min-area 1000 --merge-gap 18 --merge-union-growth 2.4 --manifest M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\run\pages\page_001\assets\icon-sheet.split-report.json --regions M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\run\pages\page_001\assets\asset-regions.json
+Region upload is outside the image or has nonpositive size
+Traceback (most recent call last):
+  File "M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\ningzimu__image-to-editable-ppt-skill\skills\image-to-editable-ppt\cli\editppt\runtime\process_asset_sheet.py", line 104, in <module>
+    main()
+    ~~~~^^
+  File "M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\ningzimu__image-to-editable-ppt-skill\skills\image-to-editable-ppt\cli\editppt\runtime\process_asset_sheet.py", line 99, in main
+    process_sheet(args, page_dir)
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\ningzimu__image-to-editable-ppt-skill\skills\image-to-editable-ppt\cli\editppt\runtime\_page_artifacts.py", line 105, in process_asset_sheet
+    run(command)
+    ~~~^^^^^^^^^
+  File "M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\ningzimu__image-to-editable-ppt-skill\skills\image-to-editable-ppt\cli\editppt\runtime\_page_artifacts.py", line 13, in run
+    subprocess.run([str(part) for part in command], check=True)
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\owner\AppData\Local\Programs\Python\Python313\Lib\subprocess.py", line 577, in run
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)
+subprocess.CalledProcessError: Command '['M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe', 'M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__image-to-editable-ppt-skill\\skills\\image-to-editable-ppt\\cli\\editppt\\runtime\\split_alpha_components.py', '--input', 'M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001\\assets\\icon-sheet.asset-sheet-alpha.png', '--out-dir', 'M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001\\assets\\icons', '--sort', 'x', '--min-area', '1000', '--merge-gap', '18', '--merge-union-growth', '2.4', '--manifest', 'M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001\\assets\\icon-sheet.split-report.json', '--regions', 'M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001\\assets\\asset-regions.json']' returned non-zero exit status 1.

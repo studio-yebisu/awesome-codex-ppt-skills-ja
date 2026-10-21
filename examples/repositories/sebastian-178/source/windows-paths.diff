@@ -1,0 +1,60 @@
+--- upstream/check-deck-contrast.sh
++++ windows-scripts/check-deck-contrast.sh
+@@ -28,7 +28,7 @@
+ else
+   dir="$(cd "$(dirname "$target")" && pwd)"
+   file="$(basename "$target")"
+-  url="file://${dir}/${file}"
++  url="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve().as_uri())' "$(cygpath -w "${dir}/${file}")")"
+ fi
+ 
+ separator="?"
+--- upstream/check-deck-fit.sh
++++ windows-scripts/check-deck-fit.sh
+@@ -32,7 +32,7 @@
+     echo "Deck not found: $target" >&2
+     exit 2
+   fi
+-  url="file://${input_path}"
++  url="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve().as_uri())' "$(cygpath -w "$input_path")")"
+   slide_count="$(python3 - "$input_path" <<'PY'
+ from html.parser import HTMLParser
+ from pathlib import Path
+--- upstream/render.sh
++++ windows-scripts/render.sh
+@@ -103,7 +103,7 @@
+   fi
+   input_dir="$(dirname "$input_path")"
+   input_name="$(basename "$input_path" .html)"
+-  input_url="file://${input_path}"
++  input_url="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve().as_uri())' "$(cygpath -w "$input_path")")"
+   default_out="${input_dir}/dist"
+   if [[ "$input_path" == "${skill_root}/templates/full-decks/"* ]]; then
+     default_out="${skill_root}/tmp/render/$(basename "$input_dir")"
+@@ -546,7 +546,7 @@
+ 
+ if [[ "$render_package" -eq 1 ]]; then
+   package_deck
+-  input_url="file://${package_index}"
++  input_url="$(python3 -c 'import pathlib,sys; print(pathlib.Path(sys.argv[1]).resolve().as_uri())' "$(cygpath -w "$package_index")")"
+ fi
+ 
+ if [[ "$render_pdf" -eq 1 ]]; then
+@@ -556,7 +556,7 @@
+     "${chrome_common[@]}" \
+     --run-all-compositor-stages-before-draw \
+     --disable-dev-shm-usage \
+-    --print-to-pdf="$pdf_file" \
++    --print-to-pdf="$(cygpath -w "$pdf_file")" \
+     --print-to-pdf-no-header \
+     "$pdf_url" >/dev/null 2>&1
+   echo "PDF: $pdf_file"
+@@ -574,7 +574,7 @@
+   for ((i = 1; i <= slide_count; i += 1)); do
+     png_file="${png_dir}/slide-$(printf '%02d' "$i").png"
+     png_url="$(append_query "$input_url" "slide=${i}&export=1")"
+-    "$chrome" "${chrome_common[@]}" --window-size=1600,900 --screenshot="$png_file" "$png_url" >/dev/null 2>&1
++    "$chrome" "${chrome_common[@]}" --window-size=1600,900 --screenshot="$(cygpath -w "$png_file")" "$png_url" >/dev/null 2>&1
+     echo "PNG: $png_file"
+   done
+ fi

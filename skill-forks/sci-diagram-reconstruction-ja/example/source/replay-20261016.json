@@ -1,0 +1,85 @@
+{
+  "status": "execution_pass",
+  "checked_at": "2026-10-16T00:49:23.538572+00:00",
+  "scope": "Two archives independently extracted under the existing prepared host runtime; simple and complex saved builds, original probe/checker/isolated LibreOffice renderer, PowerPoint PDF export and PNG render executed. No fresh installation or new figure authoring.",
+  "source_payload": [
+    {
+      "path": "pass-01/build.mjs",
+      "sha256": "52d5ad5c4e617caeb8a560b0691a52054dd51bdc2f5527e2a393fb13e5b200ea"
+    },
+    {
+      "path": "pass-01/source.png",
+      "sha256": "5d886f134754d7dd86b315f9ee963f27a5a70de0944939544c5ee70d2d2ec690"
+    },
+    {
+      "path": "complex-example/pass-02/build.mjs",
+      "sha256": "2824b2fa7d89ec903bf150028339800d67eb12557a9f68be720907e571581210"
+    },
+    {
+      "path": "complex-example/pass-02/source.png",
+      "sha256": "24565b908b599e3a3caaf0839a0dd38aa276a957240d822273271609f7efae29"
+    },
+    {
+      "path": "source/reproduce.py",
+      "sha256": "93ff6598792b93f1372ae87f80630ff83611f1d6e61b66674dc2751c10ba816a"
+    },
+    {
+      "path": "source/reproduce_complex.py",
+      "sha256": "05818a0745e1b98863c862867cf0a7a5b7c09a48b437681cdb974a8f66a5ff4d"
+    },
+    {
+      "path": "source/check_complex_native.py",
+      "sha256": "f6f32994cfc0a92b7a9c9fc0bfe7858bbb8a4a608d3c9a88fc19d2d7969e5f58"
+    },
+    {
+      "path": "upstream/scripts/probe_runtime.mjs",
+      "sha256": "cf261cd3a5466f50281c98d8616778e0fe338d0a398d56219bf74caa136b210a"
+    },
+    {
+      "path": "upstream/scripts/check_pptx.py",
+      "sha256": "ac96a123d4017ef6bfb7edf85238b96dd24274f1cad4c379c5040e82a446fe32"
+    },
+    {
+      "path": "upstream/scripts/render_pptx.py",
+      "sha256": "597ffd8439244ccaf5391681be63ba0bc00838fc8f4ab5b002e6d491ffb2468f"
+    }
+  ],
+  "accepted_pptx_unchanged": {
+    "simple": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0",
+    "complex": "5144b3815f87ebccf7425cd31d2041e57f9cf3238307d50f70610b7fe4960b68"
+  },
+  "executed_archives_before_attaching_this_summary": [
+    {
+      "archive": "downloads/sci-diagram-reconstruction-example-ja.zip",
+      "sha256_at_execution": "0c1bf5988032851ce42ffdf3d33b88369ff8bdbad53e8e034b21a08deb24ee81",
+      "simple_exit": 0,
+      "complex_exit": 0,
+      "ppt_parts_equal": true
+    },
+    {
+      "archive": "downloads/sci-diagram-reconstruction-ja.zip",
+      "sha256_at_execution": "bb91d646bef57f09832339f0e3f48f53ac22d16229f4c5b089cada7f99bfd560",
+      "simple_exit": 0,
+      "complex_exit": 0,
+      "ppt_parts_equal": true
+    }
+  ],
+  "replay_comparison": {
+    "simple_PowerPoint_max_rgb_difference": 0,
+    "simple_LibreOffice_max_rgb_difference": 0,
+    "complex_LibreOffice_max_rgb_difference": 0,
+    "complex_PowerPoint_PDF_max_rgb_difference": 51,
+    "complex_PowerPoint_differing_pixels": 1740,
+    "complex_PowerPoint_total_pixels": 1440000,
+    "complex_PowerPoint_full_rgb_identity": false,
+    "visible_content_check": "New complex PowerPoint PNG inspected: labels, containment, both-headed line, dashed path and inset retained; no missing labels or clipping observed. Native PPT parts byte equal to accepted version; small raster differences remain."
+  },
+  "remaining_warning": "Complex checker H0/W1: 12 text boxes wrap=none; renderer reflow remains possible.",
+  "LO_wrapper_change": "Original renderer kept unchanged. Replay helpers now render in an OS-owned temporary folder, then retain PDF/PNG in replay case qa. Earlier long output-profile paths timed out; failed attempts are not successful evidence.",
+  "terminal_complex_pass": 2,
+  "new_third_authored_pass": false,
+  "independent_review_on_current_version": false,
+  "human_review": false,
+  "no_time_saving_or_visual_improvement_measurement": true,
+  "receipt_scope": "This is sanitized payload-level evidence. Exact final ZIP execution hashes are maintained outside the delivered archive, avoiding a self-referential archive hash."
+}

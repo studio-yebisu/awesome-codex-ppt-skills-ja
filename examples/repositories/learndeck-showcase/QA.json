@@ -1,30 +1,86 @@
 {
-  "status": "light_check_complete",
-  "generation": "Original LearnDeck HTML-to-PPT alias/converter executed --no-preview, generated five slides; converter reported 36 text candidates, 8 visual elements, 6 extracted SVGs.",
-  "checks": [
-    {
-      "kind": "generation_success",
-      "result": "passed",
-      "details": "PptxGenJS reconstruction from measured browser DOM completed."
-    },
-    {
-      "kind": "first_powerpoint_display_export",
-      "result": "passed",
-      "details": "Microsoft PowerPoint 16.0 opened delivered PPTX read-only and exported all 5 PNGs + PDF once. Existing PowerPoint documents were preserved by the renderer."
-    },
-    {
-      "kind": "first_main_display",
-      "result": "observed",
-      "details": "Cover and bouquet representative first displays viewed. Dela cover, Shippori heading and BIZ body rendered."
-    }
+  "status": "author_revision_and_full_visual_QA_complete_independent_rereview_pending",
+  "page_count": 5,
+  "original_html_to_ppt_alias_executed": true,
+  "original_default_validation": "SKILL skips extra validation by default; current explicit revision/QA request authorizes full checks. No original dedicated required QA CLI exists.",
+  "source_html": "source.html",
+  "original_runtime_diffs": [
+    "source/html_to_editable_pptx.js.diff"
   ],
-  "all_pages_detailed_visual_review": false,
+  "conversion_receipt": "source/footer-conversion-receipt.json",
+  "all_html_pages_visually_checked": true,
+  "all_powerpoint_pages_visually_checked": true,
+  "comparison_images": [
+    "render/html-pptx-compare-01.png",
+    "render/html-pptx-compare-03.png"
+  ],
+  "audit": "source/layout-conversion-audit.json",
+  "native_object_inventory": "source/native-object-inventory.json",
+  "fonts_from_actual_pdf": "source/pdf-fonts.json",
+  "findings": [
+    "Positive10px cover tracking separates Dela glyphs.",
+    "Page2 heading/body gap33.21875px in source DOM.",
+    "SVG viewport preservation removes unintended vertical stretch.",
+    "Page3 labels/footer/pager are cream on darkened red; computed contrast4.561:1."
+  ],
   "independent_review": false,
-  "structural_audit": false,
-  "zip_reexecution": false,
-  "limits": [
-    "No all-page detailed visual review, independent review, structural audit or ZIP re-execution.",
-    "Flower visuals are individual PNG images in PPTX; source SVG preserved.",
-    "Fonts not embedded in PPTX. Full original TTF/OFL supplied."
-  ]
+  "zip_replay": {
+    "archive_sha256_tested": "4bee563bef50ce3daf75feaa19b9e640545a56280b967a9d5068d68ec07b9cb9",
+    "argv": [
+      "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\learndeck-showcase\\.private\\round3-replay-e86994\\learndeck-example-ja\\runtime\\scripts\\html_to_ppt.js",
+      "--input",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\learndeck-showcase\\.private\\round3-replay-e86994\\learndeck-example-ja\\source.html",
+      "--out-dir",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\learndeck-showcase\\.private\\round3-replay-e86994\\learndeck-example-ja",
+      "--name",
+      "deck",
+      "--no-preview",
+      "--font-face",
+      "BIZ UDPGothic",
+      "--viewport-width",
+      "1280",
+      "--viewport-height",
+      "720"
+    ],
+    "exit_code": 0,
+    "log": "source/round3-zip-replay.txt",
+    "source_sha256": {
+      "source.html": "736066e5033e5478653775c4e81dbd96e0f77160fbf76e7f9f8ef3f3ce858ef2",
+      "input/data.json": "6c9c49afab9d733527a7be78c7cff491930bd28c373b22512d2a0868740bf92e"
+    },
+    "all5_slide_comparison": [
+      {
+        "page": 1,
+        "slide_xml_identical": true
+      },
+      {
+        "page": 2,
+        "slide_xml_identical": true
+      },
+      {
+        "page": 3,
+        "slide_xml_identical": true
+      },
+      {
+        "page": 4,
+        "slide_xml_identical": true
+      },
+      {
+        "page": 5,
+        "slide_xml_identical": true
+      }
+    ],
+    "dependencies": "Existing original Node24 dependencies reused; not bundled",
+    "independent_review": false
+  },
+  "not_demonstrated": [
+    "Generate PPT slides.json/style-preset route",
+    "Complex CSS effects not exercised; radial/box-shadow approximate/filter ignored",
+    "Flower internals as native shapes",
+    "Screenshot-perfect cross-renderer fidelity"
+  ],
+  "latest_repair": "source/footer-repair.json",
+  "artifact_sha256": "50301c9ce7b2d019ac74ace08af3e0385069d06901986cc3c3e93c9d8f960f6c",
+  "current_zip_replay": "source/round3-zip-replay.json"
 }

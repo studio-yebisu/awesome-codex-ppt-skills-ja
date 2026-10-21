@@ -1,0 +1,155 @@
+{
+  "reviewer": {
+    "origin": "isolated",
+    "identity": "Kimi K3 CLI",
+    "fresh_context": true
+  },
+  "purpose": "teaching / instructional — 探索を初めて学ぶ人向けの5枚の静的独習教材（selfread、提示者なし）",
+  "rubric_overlay": "teaching / instructional",
+  "coverage": {
+    "slides_opened": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "passes": [
+      "content lens (full deck)",
+      "design lens (full deck)"
+    ],
+    "stats_block_seen": true,
+    "contract_card_seen": true
+  },
+  "plan_audit": {
+    "lens_b": {
+      "concept_landed": "carried: 「配列の同じ場所を保ち、残る範囲だけを可視化する」は表紙相当の1頁の固定配列+目的値13の茶ハイライト、2頁の同一座標での照合済み塗り、3頁の4段とも同じ15列座標で除外枠だけを残す図、4頁のチャートへとモチーフ・色論理・図の全てに達しており、表紙だけの装飾ではない",
+      "skeleton_rhythm": "kept — 5頁で配列+回数対比 / 配列+訪問順 / 4段絞り込み / チャート / 2欄対比とprotagonistが毎頁変わり、current-lintのdistinct_skeletons=5と一致",
+      "wow": [
+        {
+          "slide": 3,
+          "landed": true,
+          "why": "同一15列座標を保ったまま範囲が4段で狭まる構造がdeck内で最も密度と情報量を持ち、隣接頁の単純な配列と対比して記憶に残る"
+        },
+        {
+          "slide": 4,
+          "landed": true,
+          "why": "全15条件の2系列チャート+『4回』の大数字が証拠頁として機能。単に大きいだけでなく反例注記を伴う"
+        }
+      ],
+      "signature_move": {
+        "verdict": "landed",
+        "why": "宣言は『deliberately restrained: repeated native number cells retain their coordinate while the candidate range narrows』でboldness=conservative。実画像で1〜3頁の数字セルが頁内・段間で同一座標を保ち、3頁では除外位置が空枠として残る — 宣言どおりの抑制された一手が画素に着陸している",
+        "carried": [
+          {
+            "slide": 1,
+            "structural": true,
+            "note": "15個の数字セルが本頁の主図で、目的値13だけ茶塗り — 座標保持が構造として機能"
+          },
+          {
+            "slide": 2,
+            "structural": true,
+            "note": "同一配列上で照合済み=青・発見=茶・未調査=灰の塗り分けが進行を担う"
+          },
+          {
+            "slide": 3,
+            "structural": true,
+            "note": "4段とも同じ15列で、残る範囲だけが値を持つ — この頁の幾何そのものがsignature move"
+          }
+        ],
+        "proof": "matches — signature_proofのslide-03.png sha256(a335f95f…)は現行レンダーとbyte同一"
+      },
+      "memorable_one_thing": "二分探索は中央と比べて半分を捨てるから、15個でも最悪4回 — 3頁の4段の絞り込み図",
+      "composition": {
+        "cover_archetype": "kept — direction_adopted_scopeの宣言どおり、1頁は探査probeのlow-leftではなく上部見出し構成で建てられている",
+        "home_skeleton_plurality": "kept — band系の上部見出し+主図+脚注の骨格が5頁中3頁で最多(distinct_skeletons=5のうち)"
+      },
+      "register_interiors": "kept — 白キャンバス+番号付き数字セル+13pt条件フッターの静かなregisterが全5頁に繰り返され、表紙で止まっていない",
+      "money_slide": "slide 3（deckの存在理由=13の4回の照合を説明するclosing_askの担い手）。4段の大小比較と残す側が24ptで本文だけ追え、実データtraces[12].binaryと一致することを確認。証拠の一般化はslide 4が担う",
+      "semantic_colour": "kept — 青=線形探索、紫=二分探索、茶=目的値13/発見が全頁で反転しない（1頁の方式別回数、2頁の塗り分け、3頁の中央=紫は二分のprobe点として意味が連続し凡例で明示、4頁の系列色、5頁の二分=紫塗り）。一色が二意味を持つ破綻なし",
+      "type_tokens": "kept — 宣言の5トークン（13/16/24/32/34pt）とcurrent-lintのsize_clustersが全頁で一致。34pt見出し>24pt本文の階層が守られ、32ptは回数のheroに限定"
+    },
+    "lens_a": {
+      "memory_sentence": "（計画を読む前に記録）昇順の15個の数字から13を探す例で、線形探索は13回、二分探索は大小比較で範囲を半分に絞って最悪でも4回で見つかるが、比較回数から実際の秒数は決められない、という5頁の教育スライド",
+      "matches_deck_message": true,
+      "curve_visible": "kept — boldness=conservativeの宣言どおり温度は平坦だが、hook(1)→worked-example(2,3)→evidence(4)→recap(5)の歩調はarc候補の宣言と一致。selfread教材としては適切",
+      "takeaway_titles": "全5頁のタイトルはtakeaway表の断言型への言い換えで一致（1『昇順なら、中央から範囲を絞れる』↔線形13回/二分4回、2↔13まで13回、3↔真ん中で分けると4回、4↔最大4回、5↔秒数は判断できない）。乖離する頁なし",
+      "motion_manifest": "kept — モーション宣言なし・builds=0・staticのselfread配布で、静的が正しい選択（原典のopt-out規則に適合）"
+    }
+  },
+  "probes": {
+    "per_slide": [
+      {
+        "slide": 1,
+        "first_read": "昇順なら中央から範囲を絞れる（二分探索の優位）",
+        "takeaway_guess": "二分探索なら最悪でも4回で見つかる"
+      },
+      {
+        "slide": 2,
+        "first_read": "線形探索は13回比較する",
+        "takeaway_guess": "線形探索は13回かかって遅い"
+      },
+      {
+        "slide": 3,
+        "first_read": "二分探索は大小で残す側を決める",
+        "takeaway_guess": "中央と比べて範囲を半分に絞る手順"
+      },
+      {
+        "slide": 4,
+        "first_read": "二分探索は15通りとも4回以内",
+        "takeaway_guess": "どの目的値でも二分探索は最大4回"
+      },
+      {
+        "slide": 5,
+        "first_read": "比較回数から秒数は決められない",
+        "takeaway_guess": "回数比から速さの倍率は主張できない"
+      }
+    ],
+    "memory_sentence": "昇順の15個の数字から13を探す例で、線形探索は13回、二分探索は大小比較で範囲を半分に絞って最悪でも4回で見つかるが、比較回数から実際の秒数（何倍速いか）は決められない、という内容の5頁の教育スライド。",
+    "probes_note": "per_slideとmemory_sentenceは契約カード・計画を読む前のblind段階に記録し凍結（本JSONのblind_read節と同一）。計画のtakeaway文言のエコーではない。ただしslide 2の『遅い』は回数についての第一印象で、deck自身が警告する秒数への読み替えではない",
+    "hotspot_checks": [
+      {
+        "id": "linear-count-group",
+        "result": "pass",
+        "observed": "cropを実見。slide 2右側の『13回』（青・大）とその直下の『比較した回数』（小）の間に明確な縦方向の隙間があり、重なり・接触なし。文字は完全に判読可能"
+      },
+      {
+        "id": "range-caption",
+        "result": "pass",
+        "observed": "cropを実見。slide 3の4段目（範囲13〜13、茶塗り13）と『13 = 13 → 発見』行の下に、断言文『昇順なら、中央より小さい値は左、大きい値は右。』が明確な間隔を置いて配置され、図の矩形領域と接触していない"
+      },
+      {
+        "id": "chart-context",
+        "result": "pass",
+        "observed": "cropを実見。slide 4のチャート本体（左、両軸名つき）と右側の『二分探索の最大 4回／線形探索は最大15回』のテキスト群の間に水平方向の余白があり、チャートの矩形領域と接触していない"
+      }
+    ],
+    "icon_contract": {
+      "icons": [],
+      "note": "visual-contract-final.jsonのicons配列は空。契約上のアイコン項目は存在せず、空として記録する。デッキの数字配列はカテゴリではなく値/位置の同一性を持つため、制作者のicon_family:none waiverは描画済み頁の実見と整合する"
+    }
+  },
+  "verdict": "consent",
+  "ceiling": "このまま独習教材として出せる状態。さらに一歩上げるなら、巻末か5頁の直後に『目的値が6なら二分探索は何回？』のような読者が自分で数える確認問いを1問添えると、追体験が定着へ変わる",
+  "summary": "5頁全ての数値（13→13回/4回、全15通りの最大15/4、目的値1〜3の反例）をinput/data.jsonの実行トレースで再計算して一致を確認し、描画画像にも tofu・重なり・クリップはない。教材として学習目標の提示・worked example・全条件の証拠・未計測の明示という構成が teaching overlay の期待に応えている。残る指摘は演算子の全角/半角の頁間不統一（minor）だけで、出荷を妨げる blocker/major は見つからなかった。",
+  "strengths": [
+    "1頁で『1回』の単位を配列直下16ptで定義し、秒数を数えないことを先に固定している — 初学者が単位を取り違えない",
+    "3頁は4段とも同一の15列座標を保ち、各段に24ptの大小比較と残す側（右半分/左半分）を併記 — 判断理由が本文だけで追える",
+    "4頁は実データ15条件のnative chartに『目的値1〜3は線形の方が少ない』の反例を24ptで併記し、最大回数の比較だと断じている — 過大主張の防止",
+    "5頁は計測した比較回数（紫塗り・最大4回）と未計測の秒数（枠のみ・未計測）を別欄で対比し、『何倍速い』と言えないを結論にしている",
+    "青=線形/紫=二分/茶=目的値のsemantic colourが全頁で一貫し、凡例が図の直下にある",
+    "全頁のタイトルが断言文で、脚注に条件（昇順1〜15／比較回数=訪問した要素数）を固定表示"
+  ],
+  "findings": [
+    {
+      "id": "s1-typography-1",
+      "slide": 1,
+      "severity": "minor",
+      "dimension": "typography / consistency",
+      "issue": "比較・等号の演算子表記が頁間で不統一: 1頁『1回＝値を一つ選び…』は全角＝、3頁の『13 > 8』『13 = 13 → 発見』は半角の>・<・=",
+      "why": "独習教材では表記の一貫性がそのまま記法の学習になる。初学者が同じ『等しい』を二つの字形で読む必要はない",
+      "fix": "deck全体で半角演算子（比較文脈）か全角（本文の助詞的用法）かの規則を一つ決めて統一する。例: 数式・比較は半角+両側スペース、本文の読みは全角のまま、を明文化",
+      "fix_risk": "low"
+    }
+  ]
+}

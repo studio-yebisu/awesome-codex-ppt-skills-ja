@@ -68,9 +68,41 @@
     }
   ],
   "artifact": "examples/repositories/minorun-marp/index.html",
-  "artifact_sha256": "883f5488acb3e247edff5d343032911a9c1fe07a056e2ba661a103d1eb7b6693",
-  "input_sha256": "a70fb3b5bde0ac50d0f7d68225acc100f774dd53d25207fef0ff86e1723cbe93",
+  "artifact_sha256": "ee81c2c08a8997e2eb98f307af143048f61d182f4acc05cc965cc6069a715b6c",
+  "input_sha256": "2a6c48e8ebaaa14c3b738cf2a14cbe180fc4ee9cb565eebb31c7dedbdac4bbf2",
   "authored_by": "Studio Yebisu / Codex",
   "scope": "実際に原典の固有方法を使った日本語作例。エージェントが書いた本文を使用。",
-  "checked_at": "2026-10-13T15:04:30.341768+00:00"
+  "checked_at": "2026-10-13T15:04:30.341768+00:00",
+  "latest_repair": {
+    "author": "Codex",
+    "description": "2頁の孤立文字を一行の問いへ修正。図のラベル・矢印を拡大して埋込書体を適用。表紙の白文字を黒地内へ移動。",
+    "gates": {
+      "original_check_ai_smell_all": 0,
+      "original_marp_html": 0,
+      "original_marp_pdf": 0,
+      "original_marp_png": 0,
+      "pdf_pages_visually_reviewed": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9
+      ]
+    },
+    "source_proof_paths": [
+      "deck.md",
+      "images",
+      "minorun-dark.css",
+      "source/repair-command-2.txt",
+      "source/marp-pdf-repair.txt",
+      "source/marp-png-repair.txt",
+      "source/brief-scope-repair.json",
+      "source/compiler-export-receipts.json"
+    ],
+    "independent_rescore": "pending"
+  }
 }

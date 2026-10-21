@@ -42,10 +42,12 @@ export function numberedPoints(slide, ShapeType, items, rect, style, opts = {}) 
   const gap = opts.gap ?? 0.2;
   const rowH = (rect.h - gap * Math.max(0, data.length - 1)) / Math.max(1, data.length);
   data.forEach((item, i) => {
+    const numberIndex = i + (opts.startIndex ?? 0);
+    const marked = numberIndex === (opts.highlightIndex ?? 0);
     const y = rect.y + i * (rowH + gap);
-    slide.addShape(ShapeType.ellipse, { x: rect.x, y: y + 0.05, w: 0.38, h: 0.38, fill: { color: i === 0 ? style.accent : style.surface2 }, line: { color: i === 0 ? style.accent : style.line, width: 0.7 } });
-    addText(slide, String(i + 1), { x: rect.x, y: y + 0.13, w: 0.38, h: 0.15 }, style, "label", { align: "center", bold: true, color: i === 0 ? "FFFFFF" : style.accent, fontSize: 9 });
-    addParagraph(slide, item, { x: rect.x + 0.55, y, w: rect.w - 0.55, h: rowH }, style, { fontSize: opts.fontSize || 16.3 });
+    slide.addShape(ShapeType.ellipse, { x: rect.x, y: y + (rowH - 0.38) / 2, w: 0.38, h: 0.38, fill: { color: marked ? style.accent : style.surface2 }, line: { color: marked ? style.accent : style.line, width: 0.7 } });
+    addText(slide, String(numberIndex + 1), { x: rect.x, y: y + (rowH - 0.38) / 2, w: 0.38, h: 0.38 }, style, "label", { align: "center", bold: true, color: marked ? "FFFFFF" : style.accent, fontSize: 10, valign: "mid", margin: 0 });
+    addParagraph(slide, item, { x: rect.x + 0.55, y, w: rect.w - 0.55, h: rowH }, style, { fontSize: opts.fontSize || 16.3, valign: "mid", paraSpaceAfterPt: 0 });
   });
 }
 

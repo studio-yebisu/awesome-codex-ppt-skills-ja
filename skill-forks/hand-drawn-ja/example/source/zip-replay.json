@@ -1,0 +1,135 @@
+{
+  "status": "both_archives_reexecuted_existing_runtime",
+  "archives": [
+    {
+      "archive": "downloads/hand-drawn-example-ja.zip",
+      "archive_sha256_at_execution": "83c854f2b576cb7069088361c11979326594d7703c9ada339c864f6d3137273c",
+      "command": "python source/reproduce.py --render --node <existing-node> --soffice <existing-LibreOffice> --pdftoppm <existing-pdftoppm>",
+      "exit_code": 0,
+      "artifact_checks": [
+        {
+          "artifact": "deck.pptx",
+          "logical_native_geometry_text_image_and_notes_match": true
+        },
+        {
+          "artifact": "qa/editability/native-title-edited.pptx",
+          "logical_native_geometry_text_image_and_notes_match": true
+        }
+      ],
+      "images": [
+        {
+          "path": "render/slide-01.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "render/slide-02.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "render/slide-03.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "render/slide-04.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "render/slide-05.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-1.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-2.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-3.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-4.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-5.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "qa/editability/native-title-edited.png",
+          "max_rgb_difference": 0
+        }
+      ],
+      "fresh_install_executed": false
+    },
+    {
+      "archive": "downloads/hand-drawn-ja.zip",
+      "archive_sha256_at_execution": "e723ec5c770273e571a6871c7e46d6b0f622a5214f159bc366c727daa49174a1",
+      "command": "python source/reproduce.py --render --node <existing-node> --soffice <existing-LibreOffice> --pdftoppm <existing-pdftoppm>",
+      "exit_code": 0,
+      "artifact_checks": [
+        {
+          "artifact": "deck.pptx",
+          "logical_native_geometry_text_image_and_notes_match": true
+        },
+        {
+          "artifact": "qa/editability/native-title-edited.pptx",
+          "logical_native_geometry_text_image_and_notes_match": true
+        }
+      ],
+      "images": [
+        {
+          "path": "render/slide-01.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "render/slide-02.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "render/slide-03.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "render/slide-04.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "render/slide-05.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-1.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-2.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-3.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-4.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "reviews/libreoffice/slide-5.jpg",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "qa/editability/native-title-edited.png",
+          "max_rgb_difference": 0
+        }
+      ],
+      "fresh_install_executed": false
+    }
+  ],
+  "source_entry": "source/reproduce.py",
+  "fresh_install_executed": false,
+  "independent_review": false,
+  "metadata_repack_note": "Final archive adds only current QA/provenance/replay receipt/SOURCE metadata. Main generator, inputs, source SVGs, delivered PPTX/PDF/images/native edit outputs are unchanged from the executed payload."
+}

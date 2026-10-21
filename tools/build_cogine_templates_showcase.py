@@ -12,6 +12,13 @@ def replace_once(text,before,after):
 
 def build(case,upstream):
  case=case.resolve();upstream=upstream.resolve()
+ # Read all pinned per-template metadata before selecting; preserve actual fields and hashes.
+ import hashlib
+ inventory=[]
+ for p in sorted((upstream/'templates').glob('*/template.json')):
+  item=json.loads(p.read_text(encoding='utf-8'))
+  inventory.append({'slug':p.parent.name,'source_path':'source/upstream/templates/'+p.parent.name+'/template.json','sha256':hashlib.sha256(p.read_bytes()).hexdigest(),'metadata':item})
+ (case/'input/template-metadata-inventory.json').write_text(json.dumps({'pinned_commit':PIN,'templates_read':len(inventory),'selected':SLUG,'selection_scope':'Metadata comparison from actual pinned template.json files, not generated candidate descriptions.','templates':inventory},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  # Original workflow: folder clone first, then edit this exact template.html.
  shutil.copytree(upstream/'templates'/SLUG,case,dirs_exist_ok=True)
  original=(case/'template.html').read_text(encoding='utf-8')
@@ -54,7 +61,7 @@ def build(case,upstream):
  diff='Font payloads normalized for this human-readable diff only; full data is in template.html and actual TTF files.\n'+''.join(difflib.unified_diff(original.splitlines(keepends=True),normalized.splitlines(keepends=True),fromfile='upstream/templates/editorial-luxury/template.html',tofile='template.html (font payload normalized)'))
  (case/'source/template-local.diff').write_text(diff,encoding='utf-8')
  limits=json.loads((upstream/'templates'/SLUG/'template.json').read_text(encoding='utf-8'))['content_limits']
- mapping={'chosen_template':SLUG,'upstream_commit':PIN,'selection':'medium-low density, composed/editorial/premium, restrained gift narrative, recommended6–10 pages. Warm stone/gold frame composition avoids repeated card rows.','other_candidates':{'earthy-handmade':'warm/handmade but card-led medium density; no original content_limits/layout_slots','matisse-collage':'artful/handmade but recommended9–15 pages; stronger art-school emphasis','elegant-product-launch':'refined but recommended8–16 pages and launch-oriented'},'content_limits':limits,'layout_slots_in_original':None,'layout_slots_note':'原典JSONにlayout_slots未定義。以下は実template.htmlのDOMから作った局所mappingであり、原典schemaが提供したslotsとは称さない。','slides':[{'number':i+1,'source_slide':s['source_slide'],'layout':s['layout'],'slots':s['slots'],'title_chars':len(s['title']),'body_chars':len(s['body_text']),'cards':s['cards'],'within_original_title_body_limits':len(s['title'])<=limits['max_title_chars'] and len(s['body_text'])<=limits['max_body_chars_per_slide']} for i,s in enumerate(inp['slides'])],'font_preserve_exception':'ユーザーは日本語派生と字体変更を承認済み。Playfair Display→Shippori、Inter→Zen Kaku、英数字→Manrope。日本語line-heightだけ調整、palette/major grid/decoration/navigationは保持。'}
+ mapping={'chosen_template':SLUG,'upstream_commit':PIN,'selection':'medium-low density, composed/editorial/premium, restrained gift narrative, recommended6–10 pages. Warm stone/gold frame composition avoids repeated card rows.','other_candidates':{'earthy-handmade':'warm/handmade but card-led medium density; no original content_limits/layout_slots','matisse-collage':'artful/handmade but recommended9–15 pages; stronger art-school emphasis','elegant-product-launch':'refined but recommended8–16 pages and launch-oriented'},'content_limits':limits,'layout_slots_in_original':None,'layout_slots_note':'原典JSONにlayout_slots未定義。以下は実template.htmlのDOMから作った局所mappingであり、原典schemaが提供したslotsとは称さない。','slides':[{'number':i+1,'source_slide':s['source_slide'],'layout':s['layout'],'slots':s['slots'],'title_chars':len(s['title']),'body_chars':len(s['body_text']),'cards':s['cards'],'within_original_title_body_limits':len(s['title'])<=limits['max_title_chars'] and len(s['body_text'])<=limits['max_body_chars_per_slide']} for i,s in enumerate(inp['slides'])],'font_preserve_exception':'ユーザーは日本語派生と字体変更を承認済み。Playfair Display→Shippori、Inter→Zen Kaku、英数字→Manrope。日本語line-height、2・3・5頁の文字寸法と縦余白を明示的に調整。palette/major grid/decoration/navigationは保持。'}
  (case/'input/template-selection-and-slots.json').write_text(json.dumps(mapping,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
  print('Cloned editorial-luxury folder; mapped and replaced six real slide layouts.')
 

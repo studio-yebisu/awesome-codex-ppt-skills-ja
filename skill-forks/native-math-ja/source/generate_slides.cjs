@@ -19,8 +19,8 @@ const T = {
     "wh": "FFFFFF"
   },
   "ac": {
-    "pos": "0173B2",
-    "neg": "DE8F05",
+    "pos": "006B98",
+    "neg": "A65A00",
     "emp": "029E73"
   },
   "chart": [
@@ -414,7 +414,7 @@ function dots(sl,vals,y,color,dark=false){
 {
  const s=pres.addSlide({masterName:'TITLE_SLIDE'});
  text(s,'DATA / 5分の学習ノート',.55,.55,8.9,.35,14,'F3B156','Manrope',true);
- text(s,'平均の、\nその先。',.55,1.12,5.1,1.7,48,'FFFFFF','Shippori Mincho',true);
+ text(s,'平均の、\nその先。',.55,1.12,4.6,1.7,48,'FFFFFF','Shippori Mincho',true);
  text(s,'同じ「5」に、\n違う散らばり。',.58,3.35,4.6,1,24,'FFFFFF');
  text(s,'A',5.5,1.65,.5,.4,18,'60B5E2','Manrope',true); text(s,'4   5   6',6.05,1.65,3.1,.4,22,'FFFFFF','Manrope');
  text(s,'B',5.5,2.9,.5,.4,18,'F5B451','Manrope',true); text(s,'0   5   10',6.05,2.9,3.1,.4,22,'FFFFFF','Manrope');
@@ -428,19 +428,19 @@ function dots(sl,vals,y,color,dark=false){
  F.tblCell.size=22;F.tblHead.size=16;
  const c=t=>({text:String(t),options:{fontFace:'Manrope',align:'center'}});
  addTable(s,['データ','1件目','2件目','3件目'],[[c('A'),c(4),c(5),c(6)],[c('B'),c(0),c(5),c(10)]],.6,1.92,4.4,[1.2,1.07,1.07,1.06],.6);
- addMathText(s,'mean',5.4,1.68,4,1.05,{fontSize:27});
- addMathText(s,'mean-a',.65,3.77,4.4,1,{fontSize:25,color:T.ac.pos});
- addMathText(s,'mean-b',5.25,3.77,4.1,1,{fontSize:25,color:T.ac.neg});
- text(s,'足して、件数で割る。平均だけでは、散らばりは見えない。',.65,4.83,8.7,.25,14,T.tx.sec);foot(s,2);
+ addMathText(s,'mean',5.4,1.78,4,1.05,{fontSize:27});
+ addMathText(s,'mean-a',.65,3.69,4.4,1,{fontSize:25,color:T.ac.pos});
+ text(s,'Bも合計15点。\n3件で割ると平均は5点。',5.4,3.61,4,1,20,T.ac.neg);
+ text(s,'足して、件数で割る。平均だけでは、散らばりは見えない。',.65,4.75,8.7,.25,14,T.tx.sec);foot(s,2);
 }
 // 03: formula and native bar chart, not an image renderer.
 {
  const s=pres.addSlide({masterName:'CONTENT_SLIDE'});sTitle(s,'分散は、ずれを二乗して平均する');
  text(s,'平均からのずれ。二乗すると、正負が打ち消し合わない。',.6,.95,8.9,.45,17);
- addMathText(s,'variance',.6,1.55,8.8,1.1,{fontSize:29});
+ text(s,'平均との差を二乗 → 足す → 件数で割る',.6,1.55,8.8,.65,25,T.tx.pri,F.body.face,true);
  F.tblCell.size=12;F.caption.size=11;
- addChart(s,pres.ChartType.bar,[{name:'A',labels:['1件目','2件目','3件目'],values:[1,0,1]},{name:'B',labels:['1件目','2件目','3件目'],values:[25,0,25]}],.6,2.75,4.5,1.77,{showLegend:true,chartColors:[T.ac.pos,T.ac.neg],catAxisLabelFontSize:10,valAxisLabelFontSize:10,valAxisMinVal:0,valAxisMaxVal:25,valAxisMajorUnit:5,showValue:false,showTitle:false,showBorder:false,showCatName:false});
- text(s,'二乗したずれの大きさ',.8,4.54,4.1,.25,11,T.tx.sec);
+ addChart(s,pres.ChartType.bar,[{name:'A',labels:['1件目','2件目','3件目'],values:[1,0,1]},{name:'B',labels:['1件目','2件目','3件目'],values:[25,0,25]}],.6,2.75,4.5,1.77,{showLegend:true,chartColors:[T.ac.pos,T.ac.neg],catAxisLabelFontSize:10,valAxisLabelFontSize:10,valAxisMinVal:0,valAxisMaxVal:30,valAxisMajorUnit:10,showValue:true,dataLabelPosition:'outEnd',dataLabelFormatCode:'0',dataLabelColor:T.tx.pri,dataLabelBkgrdColor:T.bg.content,dataLabelFormatCodeSourceLinked:false,showTitle:false,showBorder:false,showCatName:false});
+ text(s,'二乗したずれ：A=1,0,1 ／ B=25,0,25',.8,2.56,4.5,.2,11,T.tx.sec);
  addMathText(s,'var-a',5.3,2.83,4.05,.78,{fontSize:24,color:T.ac.pos});
  addMathText(s,'var-b',5.3,3.92,4.05,.78,{fontSize:24,color:T.ac.neg});
  text(s,'全3件を「全体」として計算。分母はn（ここでは3）。',.6,4.84,8.9,.22,12,T.tx.sec);foot(s,3);
@@ -449,8 +449,8 @@ function dots(sl,vals,y,color,dark=false){
 {
  const s=pres.addSlide({masterName:'CONTENT_SLIDE'});sTitle(s,'標準偏差で、元の単位に戻す');
  text(s,'分散の単位は「点の二乗」。平方根で「点」に戻す。',.6,.97,8.9,.45,18);
- addMathText(s,'sd',.6,1.62,3.1,1,{fontSize:37});
- text(s,'平均からの広がりを\n同じ単位で比べる目安。',4.7,1.7,4.6,.82,21);
+ text(s,'分散の平方根をとる',.65,1.7,4,.65,27,T.tx.pri,F.body.face,true);
+ text(s,'平均からの広がりを\n同じ単位で比べる目安。',5.2,1.7,4.15,.82,21);
  addMathText(s,'sd-a',.65,2.9,4.15,1.05,{fontSize:26,color:T.ac.pos});
  addMathText(s,'sd-b',5.2,2.9,4.15,1.05,{fontSize:26,color:T.ac.neg});
  addChart(s,pres.ChartType.bar,[{name:'標準偏差',labels:['A','B'],values:[.8164965809,4.082482905]}],.7,4.07,8.6,.85,{barDir:'bar',showLegend:false,varyColors:true,chartColors:[T.ac.pos,T.ac.neg],catAxisLabelFontFace:'Manrope',catAxisLabelFontSize:12,catAxisLabelFrequency:'1',valAxisMinVal:0,valAxisMaxVal:5,valAxisMajorUnit:1,valAxisLabelFontSize:10,valGridLine:{color:'D0D0D0',width:.4},showValue:false});
@@ -462,7 +462,7 @@ function dots(sl,vals,y,color,dark=false){
  text(s,'平均と散らばりを、\n一緒に読む',.6,.58,8.8,1.2,35,'FFFFFF','Shippori Mincho',true);
  text(s,'平均',.6,2.3,2.4,.4,18,'C5CDD0');text(s,'中心の位置',3.3,2.3,5.6,.4,25,'FFFFFF');
  text(s,'標準偏差',.6,3.03,2.4,.4,18,'C5CDD0');text(s,'中心からの広がり',3.3,3.03,5.6,.4,25,'FFFFFF');
- s.addTable([[{text:'',options:{fill:{color:T.bg.title}}},{text:'A',options:{color:'60B5E2'}},{text:'B',options:{color:'F5B451'}}],[['平均（点）','5','5']].flat(),[['標準偏差（点）','0.82','4.08']].flat()],{x:.65,y:3.84,w:8.6,colW:[4,2.3,2.3],rowH:.34,fontFace:F.body.face,fontSize:16,color:'FFFFFF',fill:{color:T.bg.title},border:{type:'solid',color:'677276',pt:.4},margin:5,align:'center'});
- text(s,'※ 全体の分散を使用。標本から推定する不偏分散とは区別。',.65,4.94,8.7,.2,11,'C5CDD0');foot(s,5,true);
+ s.addTable([[{text:'',options:{fill:{color:T.bg.title}}},{text:'A',options:{color:'60B5E2'}},{text:'B',options:{color:'F5B451'}}],[['平均（点）','5','5']].flat(),[['標準偏差（点）','0.82','4.08']].flat()],{x:.65,y:3.72,w:8.6,colW:[4,2.3,2.3],rowH:.34,fontFace:F.body.face,fontSize:15,color:'FFFFFF',fill:{color:T.bg.title},border:{type:'solid',color:'677276',pt:.4},margin:3,align:'center'});
+ text(s,'※ 全体の分散を使用。標本から推定する不偏分散とは区別。',.65,4.86,8.7,.2,11,'C5CDD0');foot(s,5,true);
 }
 pres.writeFile({fileName:'source/deck-placeholders.pptx'}).then(()=>console.log('Original theme/helpers: 5 Japanese slides generated.'));

@@ -8,7 +8,7 @@
   "original_files": 13,
   "original_skill": "source/upstream/SKILL.md",
   "template": "source/upstream/slide-wright/references/deck-template.md",
-  "method": "原典HTML skeleton + 専用テーマ → 同じnight-observatory.htmlの実2枚を初回ブラウザ表示 → その2sectionを保持して4枚append",
+  "method": "既存6頁の修復→実2頁の表示・設計判断記録→同じHTMLの2sectionを保持して4頁appendする組立部分の再実行。新規制作の人間承認ゲートは未実証。",
   "engine": {
     "name": "reveal.js",
     "version": "5.1.0",
@@ -48,7 +48,7 @@
     "公式字体をFontshare/Google CSS linkに代えてdata URLへinline化",
     "一斉entranceと最初の2枚だけのauto-animate、reduce motion設定",
     "元controllerへ同一origin 0-based yebisu-slide/yebisu-page bridge",
-    "現在のユーザー指定と親の進行承認により原典のpreview確認待ちを追加しない（ユーザー美術承認とは称さない）"
+    "既存資料の修復として2頁の現在画像と設計判断を保存。人間の美術承認は未取得。"
   ],
   "local_diff": "source/template-local.diff (only font payload normalized for readability)",
   "stage_log": "source/stages.json",
@@ -74,5 +74,25 @@
   },
   "fictional": true,
   "notice": "架空の観察イベント案。日時・会場・確定運用条件未定。観測実測・性能・科学データや開催実績なし。円/軌道は説明用図形。",
-  "qa_scope": "実2枚の初回ブラウザ表示と代表2PNG、エンジン5.1.0稼働・0→1移動、同じfileへ6枚append後の主要表示。全頁詳細目視・独立review・構造監査・ZIP再実行なし。"
+  "repair_author": "Codex",
+  "repair_receipt": "source/repair-qa.json",
+  "not_demonstrated": [
+    "今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。",
+    "既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。",
+    "固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。"
+  ],
+  "superseded_history": [
+    {
+      "revision": "before round5-web06-pair",
+      "old_metadata": {
+        "qa_scope": "実2枚の初回ブラウザ表示と代表2PNG、エンジン5.1.0稼働・0→1移動、同じfileへ6枚append後の主要表示。全頁詳細目視・独立review・構造監査・ZIP再実行なし。",
+        "verification_scope": "修正した実2頁をブラウザーで開き、元ページ送りを確認後に4頁append。全6頁を1920×1080で描画・目視。矢印の戻りと一覧表示を実行。"
+      }
+    }
+  ],
+  "verification_scope": "修復後の実2頁をブラウザー表示して個別画像と設計判断を保存。その2sectionを保持して同じHTMLへ4頁appendし、全6頁を1920×1080で実描画・目視。矢印の戻りと一覧表示も確認。人間の美術承認は未取得。",
+  "current_verification": "source/repair-qa.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "two_page_gate_status": "not demonstrated as a human approval stop; existing deck maintenance only",
+  "zip_reexecution": "source/round5-zip-replay.json"
 }

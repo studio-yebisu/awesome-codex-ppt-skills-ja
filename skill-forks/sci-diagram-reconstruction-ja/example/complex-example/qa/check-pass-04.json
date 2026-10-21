@@ -1,0 +1,432 @@
+{
+  "kind": "sci-diagram-pptx-check",
+  "status": "PASS",
+  "pptx": "complex-example/pass-04/editable.pptx",
+  "source": "complex-example/pass-04/source.png",
+  "build_source": "complex-example/pass-04/build.mjs",
+  "inspect_slide": 1,
+  "decision": {
+    "pass_index": null,
+    "next_action": "complete",
+    "hard_failure_count": 0,
+    "warning_count": 1,
+    "warnings_block_delivery": false,
+    "another_authored_pass_allowed": false
+  },
+  "hard_failures": [],
+  "warnings": [
+    {
+      "id": "slide1.text_layout_inventory",
+      "status": "WARN",
+      "message": "Slide 1 uses wrap=none or an AutoFit mode that may reflow across presentation renderers",
+      "evidence": {
+        "text_body_count": 12,
+        "wrap_none_count": 12,
+        "no_autofit_count": 0,
+        "normal_autofit_count": 0,
+        "shape_autofit_count": 0,
+        "objects": [
+          {
+            "shape_id": "3",
+            "name": "Node-label:region-omega",
+            "text": "反応領域 Ω",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "5",
+            "name": "Node-label:condition-u",
+            "text": "条件 u",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "7",
+            "name": "Node-label:compartment-a",
+            "text": "区画 A",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "9",
+            "name": "Node-label:compartment-b",
+            "text": "区画 B",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "11",
+            "name": "Node-label:species-x",
+            "text": "X",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "13",
+            "name": "Node-label:species-xr",
+            "text": "X·R",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "15",
+            "name": "Edge-label:exchange-x-xr",
+            "text": "可逆交換",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "19",
+            "name": "Edge-label:regulation-u-b",
+            "text": "調整",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "22",
+            "name": "Text:title",
+            "text": "2区画の可逆交換（概念モデル）",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "23",
+            "name": "Text:inset-heading",
+            "text": "局所像（合成入力）",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "24",
+            "name": "Text:note-purpose",
+            "text": "実験結果ではない構造確認用の入力。矢印と破線の関係をそのまま保持する。",
+            "wrap": "none",
+            "autofit": []
+          },
+          {
+            "shape_id": "25",
+            "name": "Text:note-legend",
+            "text": "双方向：可逆交換 ／ 破線：条件 u による区画 B の調整。強さや速度の値は示さない。",
+            "wrap": "none",
+            "autofit": []
+          }
+        ],
+        "truncated": 0
+      }
+    }
+  ],
+  "checks": [
+    {
+      "id": "build_source.portable",
+      "status": "PASS",
+      "message": "Build source is non-empty UTF-8 and contains no machine-local path, high-confidence secret, or unshipped helper import",
+      "evidence": {
+        "path": "complex-example/pass-04\\build.mjs",
+        "bytes": 26144,
+        "imports": [
+          "node:fs",
+          "node:path",
+          "node:url",
+          "pptxgenjs"
+        ]
+      }
+    },
+    {
+      "id": "package.unique_members",
+      "status": "PASS",
+      "message": "ZIP package member names are unique",
+      "evidence": {
+        "member_count": 40
+      }
+    },
+    {
+      "id": "package.zip_budget",
+      "status": "PASS",
+      "message": "ZIP package is within bounded member, size, XML, and compression budgets",
+      "evidence": {
+        "member_count": 40,
+        "total_uncompressed_bytes": 162591,
+        "largest_member_bytes": 106661,
+        "largest_xml_member_bytes": 16808,
+        "highest_checked_compression_ratio": 0.0,
+        "limits": {
+          "members": 10000,
+          "single_member_bytes": 268435456,
+          "total_uncompressed_bytes": 1073741824,
+          "xml_member_bytes": 33554432,
+          "compression_ratio": 200.0,
+          "ratio_minimum_uncompressed_bytes": 1048576
+        }
+      }
+    },
+    {
+      "id": "package.readable",
+      "status": "PASS",
+      "message": "PPTX content types, internal relationships, and slide order are readable",
+      "evidence": {
+        "slide_count": 1,
+        "slide_size_emu": [
+          12191695,
+          6858000
+        ]
+      }
+    },
+    {
+      "id": "inspection.slide_selection",
+      "status": "PASS",
+      "message": "Slide 1 was selected for deep structural checks",
+      "evidence": {
+        "requested_slide": 1,
+        "selected_part": "ppt/slides/slide1.xml",
+        "slide_count": 1
+      }
+    },
+    {
+      "id": "delivery.single_slide",
+      "status": "PASS",
+      "message": "The delivery contains exactly one editable slide",
+      "evidence": {
+        "slide_count": 1
+      }
+    },
+    {
+      "id": "package.no_unsafe_embeds",
+      "status": "PASS",
+      "message": "No macro, OLE/package object, ActiveX/control marker, or external media was found"
+    },
+    {
+      "id": "slide1.native_objects",
+      "status": "PASS",
+      "message": "Slide 1 contains visible editable native objects with readable on-slide geometry",
+      "evidence": {
+        "native_shapes": 19,
+        "connectors": 0,
+        "candidate_native_shapes": 23,
+        "candidate_connectors": 0,
+        "excluded_objects": {
+          "hidden": 0,
+          "unreadable_geometry": 0,
+          "zero_dimensions": 4,
+          "outside_slide": 0
+        },
+        "text_runs": 12
+      }
+    },
+    {
+      "id": "slide1.not_flattened",
+      "status": "PASS",
+      "message": "No whole-page image or large image mosaic was detected on Slide 1 or its visible inherited layers",
+      "evidence": {
+        "raster_objects": 1,
+        "grouped_raster_objects": 0,
+        "largest_coverage": 0.0423,
+        "union_coverage": 0.0423,
+        "hidden_raster_objects": 0,
+        "layers": [
+          {
+            "kind": "slide",
+            "part": "ppt/slides/slide1.xml",
+            "shapes_visible": true,
+            "image_background_visible": false,
+            "raster_objects": 1,
+            "grouped_raster_objects": 0,
+            "unresolved_grouped_raster_objects": 0,
+            "hidden_raster_objects": 0
+          },
+          {
+            "kind": "layout",
+            "part": "ppt/slideLayouts/slideLayout1.xml",
+            "shapes_visible": true,
+            "image_background_visible": false,
+            "raster_objects": 0,
+            "grouped_raster_objects": 0,
+            "unresolved_grouped_raster_objects": 0,
+            "hidden_raster_objects": 0
+          },
+          {
+            "kind": "master",
+            "part": "ppt/slideMasters/slideMaster1.xml",
+            "shapes_visible": true,
+            "image_background_visible": false,
+            "raster_objects": 0,
+            "grouped_raster_objects": 0,
+            "unresolved_grouped_raster_objects": 0,
+            "hidden_raster_objects": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "slide1.custom_geometry_inventory",
+      "status": "PASS",
+      "message": "Slide 1 contains no custom geometry",
+      "evidence": {
+        "custom_geometry_count": 0
+      }
+    },
+    {
+      "id": "slide1.custom_geometry_text_rect",
+      "status": "PASS",
+      "message": "Every text-bearing custom geometry has an explicit text rectangle",
+      "evidence": {
+        "text_bearing_custom_geometry": 0
+      }
+    },
+    {
+      "id": "slide1.font_inventory",
+      "status": "PASS",
+      "message": "Slide 1 text has explicit font declarations; no platform font whitelist was applied",
+      "evidence": {
+        "text_run_count": 12,
+        "typefaces": {
+          "latin": [
+            {
+              "typeface": "Yu Gothic",
+              "count": 12
+            }
+          ],
+          "ea": [
+            {
+              "typeface": "Yu Gothic",
+              "count": 12
+            }
+          ],
+          "cs": [
+            {
+              "typeface": "Yu Gothic",
+              "count": 12
+            }
+          ]
+        },
+        "theme_references": [],
+        "empty_typefaces": [],
+        "runs_without_explicit_typeface": 0,
+        "runs_with_partial_script_declarations": 0,
+        "missing_examples": [],
+        "truncated": 0
+      }
+    },
+    {
+      "id": "slide1.text_autofit_exclusive",
+      "status": "PASS",
+      "message": "No text body contains multiple AutoFit children",
+      "evidence": {
+        "text_body_count": 12,
+        "wrap_none_count": 12,
+        "no_autofit_count": 0,
+        "normal_autofit_count": 0,
+        "shape_autofit_count": 0
+      }
+    },
+    {
+      "id": "slide1.office_math",
+      "status": "PASS",
+      "message": "Slide 1 contains no Office Math objects",
+      "evidence": {
+        "math_object_count": 0,
+        "math_paragraph_count": 0,
+        "objects": [],
+        "truncated": 0
+      }
+    },
+    {
+      "id": "slide1.script_notation",
+      "status": "PASS",
+      "message": "No Unicode superscript or subscript characters were found",
+      "evidence": {
+        "unicode_script_run_count": 0,
+        "native_baseline_property_count": 0,
+        "objects": [],
+        "truncated": 0
+      }
+    },
+    {
+      "id": "source.raster_inset_inventory",
+      "status": "PASS",
+      "message": "Every embedded copy of the source is a nonzero-cropped, visible raster inset",
+      "evidence": {
+        "source_sha256": "24565b908b599e3a3caaf0839a0dd38aa276a957240d822273271609f7efae29",
+        "matching_media_parts": [
+          "ppt/media/image-1-1.png"
+        ],
+        "matching_image_parts": [
+          "ppt/media/image-1-1.png"
+        ],
+        "unused_media_parts": [],
+        "source_image_relationships": [
+          {
+            "image_part": "ppt/media/image-1-1.png",
+            "owner": "ppt/slides/slide1.xml",
+            "relationship_part": "ppt/slides/_rels/slide1.xml.rels",
+            "relationship_id": "rId1",
+            "relationship_type": "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image",
+            "content_type": "image/png"
+          }
+        ],
+        "non_selected_source_relationships": [],
+        "source_media_part_count": 1,
+        "source_usage_count": 1,
+        "source_object_count": 1,
+        "qualifying_object_count": 1,
+        "largest_visible_coverage": 0.0423,
+        "union_visible_coverage": 0.0423,
+        "policy": {
+          "requires_nonzero_src_rect": true,
+          "requires_visible_positive_dimensions": true,
+          "whole_page_or_mosaic_check_id": "slide1.not_flattened"
+        },
+        "objects": [
+          {
+            "usage_index": 1,
+            "object_index": 19,
+            "object_type": "pic",
+            "object_id": "20",
+            "name": "replaceable-image-local-composite",
+            "relationship_id": "rId1",
+            "media_part": "ppt/media/image-1-1.png",
+            "src_rects": [
+              {
+                "l": 73875,
+                "t": 38556,
+                "r": 7625,
+                "b": 38556
+              }
+            ],
+            "src_rect_valid": true,
+            "src_rect_nonzero": true,
+            "hidden": false,
+            "box_emu": [
+              9006615,
+              2644140,
+              2255464,
+              1569720
+            ],
+            "visible_box_emu": [
+              9006615,
+              2644140,
+              2255464,
+              1569720
+            ],
+            "visible_area_emu2": 3540446950080,
+            "visible_coverage": 0.0423,
+            "qualifies_individually": true,
+            "violations": []
+          }
+        ],
+        "truncated": 0,
+        "violations": []
+      }
+    },
+    {
+      "id": "source.external_companion",
+      "status": "PASS",
+      "message": "The supplied source remains an external companion; embedded copies are limited to qualifying cropped insets",
+      "evidence": {
+        "path": "complex-example/pass-04\\source.png",
+        "bytes": 106661,
+        "sha256": "24565b908b599e3a3caaf0839a0dd38aa276a957240d822273271609f7efae29",
+        "qualifying_source_insets": 1
+      }
+    }
+  ]
+}

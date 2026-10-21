@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Technical Architecture Decision Archetype</title>
+  <link rel="stylesheet" href="../../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../../assets/css/base.css">
+  <link rel="stylesheet" href="../../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../../assets/css/components.css">
+  <link rel="stylesheet" href="../../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../../assets/themes/blue.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Technical Architecture Decision Archetype">
+    <section class="slide dark cover simple-title-cover dark-cover" data-title="Cover">
+      <div class="cover-art"><img src="../../../assets/media/covers/strategy-architecture-cover.jpg" alt=""></div>
+      <div class="default-opening-main">
+        <div class="slide-kicker">Full-deck archetype</div>
+        <h1 class="slide-title">Technical architecture decision</h1>
+        <p class="slide-subtitle">A reusable storyline for selecting an architecture path before translating it into a delivery plan.</p>
+        <div class="cover-meta">Blue theme | Architecture option / tradeoff logic</div>
+      </div>
+      <footer class="footer"><span>Technical architecture decision archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Architecture recommendation">
+      <header><div class="slide-kicker">Architecture recommendation</div><h2 class="slide-title">Recommend the governed platform path when reuse and control matter more than one-off speed</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-sidebar">
+          <main class="region"><div class="region-body is-centered">
+            <div class="input-process-output-layers">
+              <article class="ipo-layer"><span class="concept-label">Input</span><strong>Systems and events</strong><span>Source data, identity, workflows, and exceptions.</span></article>
+              <span class="ipo-arrow" aria-hidden="true"></span>
+              <article class="ipo-layer is-process"><span class="concept-label">Control layer</span><strong>Policy and orchestration</strong><span>Routing, permissions, evaluation, and audit trail.</span></article>
+              <span class="ipo-arrow" aria-hidden="true"></span>
+              <article class="ipo-layer"><span class="concept-label">Output</span><strong>Governed actions</strong><span>Approved actions, telemetry, and reusable assets.</span></article>
+            </div>
+          </div></main>
+          <aside class="region is-muted"><div class="region-body is-centered"><div class="callout">Use this archetype when the decision is the architecture path itself, not the detailed release plan.</div></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical architecture decision archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide is-dense" data-title="Option tradeoff">
+      <header><div class="slide-kicker">Option tradeoff</div><h2 class="slide-title">Architecture options should be compared on control, reuse, speed, and operating burden</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="matrix-table">
+          <div class="table-head">Option</div><div class="table-head">Control</div><div class="table-head">Reuse</div><div class="table-head">Speed</div><div class="table-head">Burden</div>
+          <div><strong>Platform-first</strong></div><div class="is-highlight">Strong</div><div class="is-highlight">Strong</div><div>Medium</div><div>Medium</div>
+          <div><strong>Use-case build</strong></div><div>Medium</div><div>Low</div><div class="is-highlight">Strong</div><div>High</div>
+          <div><strong>Vendor-led</strong></div><div>Medium</div><div>Medium</div><div>Strong</div><div>Medium</div>
+          <div><strong>Wait</strong></div><div>Low</div><div>Low</div><div>Low</div><div class="is-highlight">Low</div>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical architecture decision archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Coverage gaps">
+      <header><div class="slide-kicker">Coverage gaps</div><h2 class="slide-title">The recommended path should make capability coverage and unresolved gaps explicit</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-rail">
+          <main class="region"><div class="region-body">
+            <div class="capability-coverage-map">
+              <div class="coverage-grid">
+                <article class="coverage-cell is-strong"><strong>Identity</strong><span>Covered</span></article>
+                <article class="coverage-cell is-strong"><strong>Policy</strong><span>Covered</span></article>
+                <article class="coverage-cell is-partial"><strong>Telemetry</strong><span>Partial</span></article>
+                <article class="coverage-cell is-gap"><strong>Evaluation</strong><span>Gap</span></article>
+                <article class="coverage-cell is-partial"><strong>Run model</strong><span>Partial</span></article>
+                <article class="coverage-cell is-strong"><strong>Audit</strong><span>Covered</span></article>
+              </div>
+            </div>
+          </div></main>
+          <aside class="region is-muted"><div class="region-body"><div class="dense-list"><article><strong>Design implication</strong><span>Do not scale until evaluation and run ownership are defined.</span></article><article><strong>Decision implication</strong><span>Approve architecture with two explicit gap closures.</span></article></div></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical architecture decision archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide is-dense" data-title="Proof path">
+      <header><div class="slide-kicker">Proof path</div><h2 class="slide-title">Architecture decisions should include a proof path across product, platform, security, and operations</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="swimlane-process-map">
+          <div class="swimlane-cell is-head"></div><div class="swimlane-cell is-head">Frame</div><div class="swimlane-cell is-head">Build proof</div><div class="swimlane-cell is-head">Validate</div><div class="swimlane-cell is-head">Decide scale</div><div class="swimlane-cell is-head">Operate</div>
+          <div class="swimlane-cell is-lane">Product</div><div class="swimlane-cell"><span class="swimlane-task">Workflow scope</span></div><div class="swimlane-cell"><span class="swimlane-task">Pilot path</span></div><div class="swimlane-cell"><span class="swimlane-task">Adoption evidence</span></div><div class="swimlane-cell"><span class="swimlane-task">Roadmap fit</span></div><div class="swimlane-cell"><span class="swimlane-task">Backlog</span></div>
+          <div class="swimlane-cell is-lane">Platform</div><div class="swimlane-cell"><span class="swimlane-task">Shared contracts</span></div><div class="swimlane-cell"><span class="swimlane-task">Control layer</span></div><div class="swimlane-cell"><span class="swimlane-task">Reuse test</span></div><div class="swimlane-cell"><span class="swimlane-task">Pattern library</span></div><div class="swimlane-cell"><span class="swimlane-task">Standards</span></div>
+          <div class="swimlane-cell is-lane">Risk</div><div class="swimlane-cell"><span class="swimlane-task">Policy needs</span></div><div class="swimlane-cell"><span class="swimlane-task">Permissions</span></div><div class="swimlane-cell"><span class="swimlane-task">Audit evidence</span></div><div class="swimlane-cell"><span class="swimlane-task">Gate approval</span></div><div class="swimlane-cell"><span class="swimlane-task">Monitoring</span></div>
+          <div class="swimlane-cell is-lane">Ops</div><div class="swimlane-cell"><span class="swimlane-task">Run owner</span></div><div class="swimlane-cell"><span class="swimlane-task">Support path</span></div><div class="swimlane-cell"><span class="swimlane-task">Load check</span></div><div class="swimlane-cell"><span class="swimlane-task">Operating model</span></div><div class="swimlane-cell"><span class="swimlane-task">Runbook</span></div>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical architecture decision archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Decision close">
+      <header><div class="slide-kicker">Decision close</div><h2 class="slide-title">Close architecture reviews with the choices and proof checkpoints needed before implementation</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-sidebar">
+          <main class="region"><div class="region-body">
+            <table class="decision-log">
+              <thead><tr><th>Decision</th><th>Recommended default</th><th>Evidence needed</th><th>Status</th></tr></thead>
+              <tbody>
+                <tr><td>Architecture path</td><td class="is-open">Platform-first control layer</td><td>Option matrix and gap map</td><td>Decide now</td></tr>
+                <tr><td>Proof scope</td><td>One workflow, shared contracts, explicit run owner</td><td>Use-case boundary and system map</td><td>Align</td></tr>
+                <tr><td>Scale trigger</td><td>Evaluation, audit, adoption, and support evidence</td><td>Proof path checkpoint</td><td>Open</td></tr>
+              </tbody>
+            </table>
+          </div></main>
+          <aside class="region is-muted"><div class="region-body"><div class="phase-meeting-plan" style="grid-template-columns: repeat(2, minmax(0, 1fr));"><section class="meeting-phase"><h3>Decision review</h3><ul><li>Choose path</li><li>Set proof scope</li></ul></section><section class="meeting-phase"><h3>Proof review</h3><ul><li>Validate evidence</li><li>Authorize rollout</li></ul></section></div></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Technical architecture decision archetype</span><span class="page-number"></span></footer>
+    </section>
+  </main>
+  <script src="../../../assets/js/runtime.js"></script>
+</body>
+</html>

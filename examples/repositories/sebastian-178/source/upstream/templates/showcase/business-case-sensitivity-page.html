@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Business Case Sensitivity Page</title>
+  <link rel="stylesheet" href="../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../assets/themes/mono.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Business case sensitivity page">
+    <section class="slide" data-title="Business case sensitivity page">
+      <header>
+        <div class="slide-kicker">Business case</div>
+        <h2 class="slide-title">Sensitivity should show which assumptions can change the recommendation</h2>
+        <div class="slide-rule"></div>
+      </header>
+      <div class="content">
+        <div class="region-layout right-sidebar">
+          <div class="region">
+            <div class="region-body is-centered">
+              <table class="sensitivity-grid">
+                <thead><tr><th>Scenario</th><th>Assumption</th><th>Downside</th><th>Base</th><th>Upside</th><th>Implication</th></tr></thead>
+                <tbody>
+                  <tr><td class="row-head">Adoption</td><td>Usage or uptake</td><td class="is-risk">Slow</td><td>On plan</td><td class="is-upside">Fast</td><td>Controls benefit timing.</td></tr>
+                  <tr><td class="row-head">Economics</td><td>Margin or cost-to-serve</td><td class="is-risk">Pressure</td><td>Stable</td><td class="is-upside">Improves</td><td>Defines return profile.</td></tr>
+                  <tr><td class="row-head">Execution</td><td>Capacity and dependency load</td><td class="is-upside">Contained</td><td>Manageable</td><td class="is-risk">High</td><td>Sets governance gates.</td></tr>
+                  <tr class="total-row"><td class="row-head">Decision</td><td>Combined case</td><td>Pause</td><td>Proceed with gates</td><td>Accelerate</td><td>Use gates where downside flips the answer.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <aside class="region is-muted">
+            <div class="region-body is-centered">
+              <h3 class="region-title">Use when</h3>
+              <div class="dense-list">
+                <article><strong>Minimum data</strong><span>2+ assumptions and 2+ cases.</span></article>
+                <article><strong>Fallback</strong><span>Use a table if cases are descriptive, not decision-changing.</span></article>
+                <article><strong>Decision</strong><span>Call out the assumption that flips the answer.</span></article>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Pattern: business-case-sensitivity-page</span><span class="page-number"></span></footer>
+    </section>
+  </main>
+  <script src="../../assets/js/runtime.js"></script>
+</body>
+</html>

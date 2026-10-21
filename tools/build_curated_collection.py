@@ -2,12 +2,25 @@
 from pathlib import Path
 from zipfile import ZipFile, ZIP_DEFLATED
 import hashlib, json
+from build_skill_effects import ROWS as EFFECT_ROWS
 
 ROOT = Path(__file__).resolve().parents[1]
+EFFECTS = {row['case_id']: row for row in EFFECT_ROWS}
+
+def current_effects():
+    """Use the same maintained descriptions as the website and its detail pages."""
+    path = ROOT / 'data/skill-effects.json'
+    if not path.is_file():
+        return EFFECTS
+    return {item['case_id']: {
+        **item,
+        'summary': item['demonstration']['summary'],
+        'limits': item['constraints'],
+    } for item in json.loads(path.read_text(encoding='utf-8'))['skills']}
 SELECTION = [
     ('zarazhangrui/frontend-slides','動きで魅せるWebスライド','motion','sol-motion-showcase','固定ステージとSVGで、大きな日本語タイポを動かす。'),
-    ('likaku/Mck-ppt-design-skill','編集誌のようなPowerPoint','editorial','sol-editorial-showcase','公式エンジンを活かし、文字と図形を編集できる誌面へ。'),
-    ('HututuWorks/sci-diagram-pptx','編集できる科学の概念図','diagram','sci-diagram-showcase','原典のnative図解ルールで、矢印と注釈まで編集できる教材へ。'),
+    ('likaku/Mck-ppt-design-skill','図・表・工程を部品で作る','diagram','mck-native-showcase','原典APIに実データを渡し、編集可能なPPTXへ。'),
+    ('HututuWorks/sci-diagram-pptx','科学図を編集可能にする','diagram','sci-diagram-reconstruction','原典のReconstructionで、元画像の意味と接続を保つPPTXへ。'),
     ('Hasasasa/html-to-editable-pptx','HTMLから文字と図形のPPTXへ','editorial','html-editable-showcase','原典CLIで日本語HTMLを変換し、編集できるブランド資料へ。'),
     ('ABYR1206/claude-skill-hand-drawn-slides','手描きイラストの章扉','editorial','hand-drawn-showcase','原典SVGと組版レシピで、章のはじまりを親しみのある一枚に。'),
     ('SlideSpeak/slide-design-skill','自分のブランドをWeb資料へ','editorial','slidespeak-showcase','原典エンジンへ独自の書体・色・版式を渡して、緑の誌面を組む。'),
@@ -77,11 +90,25 @@ def skill_text(entry,profile,case):
     text=source.read_text(encoding='utf-8-sig').strip()
     if not text.startswith('---\n'):
         raise ValueError('Maintained skill has no frontmatter: '+str(source))
-    # These sentences were our superseded review policy, not upstream build gates.
-    text=text.replace('PowerPointは受け手の書体環境と全ページの実描画を確認する。',
-                      'PowerPointは受け手の書体環境を案内し、主要な完成ファイルが開くことを確認する。')
-    text=text.replace('原典の方式で実ファイルを生成し、全ページの本文、グラフ、図、ノート、移動を確認する。',
-                      '原典の方式で実ファイルを生成し、主要な出力の初回表示を確認する。原典の必須ビルド確認は維持し、明白な欠けだけ直す。')
+    effect = EFFECTS.get(case['id'])
+    if effect:
+        end = text.find('\n---', 4) + 4
+        requirements = profile.get('requirements', [])
+        if isinstance(requirements, str): requirements = [requirements]
+        brief = '\n\n## このスキルでできること\n\n' + effect['change'] + '\n\n'
+        brief += '- 困っている状況: ' + effect['problem'] + '\n'
+        brief += '- 必要な入力: ' + effect['input'] + '\n'
+        brief += '- 受け取るもの: ' + effect['output'] + '\n'
+        brief += '- 必要環境: ' + (' / '.join(requirements) if requirements else '原典と作例の実行環境を確認してください。') + '\n'
+        brief += '- 作例で試した範囲: ' + effect['summary'] + '\n'
+        limits = effect['limits']
+        if isinstance(limits, str): limits = [limits]
+        # The maintained body already carries some complete caveats. Keep those
+        # once instead of repeating the same list in the loose-file introduction.
+        extra_limits = [limit for limit in limits if limit not in text]
+        if extra_limits:
+            brief += '- 制約: ' + ' / '.join(extra_limits) + '\n'
+        text = text[:end] + brief + text[end:]
     repo=entry['repository'];commit=case.get('upstream_commit') or profile['upstream_commit']
     notes=profile.get('recipe_notes',[])
     specific=('\n\n## この方式で気をつけること\n\n'+
@@ -96,7 +123,7 @@ def skill_text(entry,profile,case):
 
 原典: https://github.com/{repo}/tree/{commit}
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `{Path(case['fork_download']).name}` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `{Path(case['fork_download']).name}` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: {repo.split('/')[0]} / 原典条件: {profile.get('license') or '個別条件'}。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 
@@ -104,6 +131,7 @@ def skill_text(entry,profile,case):
 '''
 
 if __name__=='__main__':
+    EFFECTS = current_effects()
     cases=load('data/case-studies.json'); by_case={c['id']:c for c in cases}
     profiles={p['repository']:p for p in load('data/repository-guides.json')}
     exclusions=load('data/product-exclusions.json')['excluded'] if (ROOT/'data/product-exclusions.json').exists() else []
@@ -114,6 +142,8 @@ if __name__=='__main__':
         if repo in excluded_repos:continue
         if case_id not in by_case:continue
         case=by_case[case_id];profile=profiles[repo]
+        effect=EFFECTS.get(case_id)
+        if effect:title,description=effect['name'],effect['change']
         skill_source='skill-forks/'+case['fork_id']+'/SKILL.md'
         entry={'repository':repo,'title_ja':title,'description_ja':description,'style':style,'featured_case_id':case_id,'skill_download':'downloads/skills/'+case['fork_id']+'.md','skill_source':skill_source,'skill_source_sha256':hashlib.sha256((ROOT/skill_source).read_bytes()).hexdigest(),'fork_download':case.get('fork_download'),'license':profile.get('license'),'license_notice_ja':profile.get('license_notice_ja','')}
         (ROOT/entry['skill_download']).write_text(skill_text(entry,profile,case),encoding='utf-8')
@@ -128,7 +158,7 @@ if __name__=='__main__':
         download='downloads/skills/'+case['fork_id']+'.md'
         (ROOT/download).write_text(skill_text(entry,profiles[case['repository']],case),encoding='utf-8')
         case_recipes[case['id']]={'skill_download':download,'skill_source':source,'skill_source_sha256':hashlib.sha256((ROOT/source).read_bytes()).hexdigest(),'fork_download':case.get('fork_download'),'source_download':case.get('source_download'),'upstream_commit':case.get('upstream_commit') or profiles[case['repository']]['upstream_commit']}
-    dump('data/product-collection.json',{'updated_at':'2026-10-14','title':'Studio Yebisu AIスライドアトリエ','policy':'原典方式で制作した実例から選ぶ日本語の厳選スキル集','archive':'data/skills.json','entries':entries,'active_case_ids':active_case_ids,'case_recipes':case_recipes,'excluded':exclusions})
+    dump('data/product-collection.json',{'updated_at':'2026-10-15','title':'Studio Yebisu AIスライドスキル','policy':'原典スキルの効果・入力・出力と、その機能を使った実作例から選ぶ','archive':'data/skills.json','entries':entries,'active_case_ids':active_case_ids,'case_recipes':case_recipes,'excluded':exclusions})
     with ZipFile(ROOT/'downloads/yebisu-japanese-skill-entries.zip','w',ZIP_DEFLATED) as z:
         for download in sorted({r['skill_download'] for r in case_recipes.values()}):z.write(ROOT/download,Path(download).name)
         z.writestr('README.md','日本語の指示本文集です。各本文の固定原典と個別ライセンスを参照してください。実装・原文LICENSEはサイトの一式ZIPから別途取得できます。\n')

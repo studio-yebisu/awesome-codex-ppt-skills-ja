@@ -1,0 +1,121 @@
+{
+  "scope": "Actual separate extraction/rebuild/native-content comparison/PowerPoint rendering for both example and skill ZIPs. No fresh install, image generation or independent score.",
+  "artifact": "deck.pptx",
+  "current_artifact_sha256": "7a6b9696cf5525d0f14b32fe494649df82b9fba29487c3728cb4a56f56a4ecf2",
+  "tested_archives": [
+    {
+      "path": "downloads/image-to-editable-example-ja.zip",
+      "tested_archive_sha256": "d1c0b3d4cdccac8686757a450a555df494bcb245c50039f2ee5a07501b8b316c",
+      "source_manifests": [
+        {
+          "root": "image-to-editable-example-ja",
+          "file_hashes_checked": 342,
+          "mismatches": []
+        }
+      ],
+      "replayed_artifact_sha256": "c5a14a8cb6eca66be2d36d6053a190fa532e910bca2354dec7638e2f5544ca89",
+      "native_geometry_text_chart_table_picture_bytes_notes_equal": true,
+      "all_page_render_differences": [
+        {
+          "index": 0,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "d7bcb0b78a51de12e9563ec2906abdf1c25b1561a8d3faa53b70a24a262b97be",
+          "replayed_png_sha256": "d7bcb0b78a51de12e9563ec2906abdf1c25b1561a8d3faa53b70a24a262b97be"
+        },
+        {
+          "index": 1,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "f1405cd201a870a5944e558ae8681168accc076ce37907843c2303fcede34f20",
+          "replayed_png_sha256": "f1405cd201a870a5944e558ae8681168accc076ce37907843c2303fcede34f20"
+        }
+      ],
+      "commands": [
+        {
+          "entry": "source/reproduce.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "pwsh",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/render_pdf_previews.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/inspect_current.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/verify_editability.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/render_pdf_previews.py",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "path": "downloads/image-to-editable-ppt-ja.zip",
+      "tested_archive_sha256": "24eca20827994123812ebe7ac47e734185bffc835b1dc4e180850f0dbe5361e4",
+      "source_manifests": [
+        {
+          "root": "image-to-editable-ppt-ja",
+          "file_hashes_checked": 391,
+          "mismatches": []
+        },
+        {
+          "root": "image-to-editable-ppt-ja/example",
+          "file_hashes_checked": 342,
+          "mismatches": []
+        }
+      ],
+      "replayed_artifact_sha256": "8a6eee26ebab2a30632daccc6b87adb8bd67f8e006b7aa80b4a285a680c4c488",
+      "native_geometry_text_chart_table_picture_bytes_notes_equal": true,
+      "all_page_render_differences": [
+        {
+          "index": 0,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "d7bcb0b78a51de12e9563ec2906abdf1c25b1561a8d3faa53b70a24a262b97be",
+          "replayed_png_sha256": "d7bcb0b78a51de12e9563ec2906abdf1c25b1561a8d3faa53b70a24a262b97be"
+        },
+        {
+          "index": 1,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "f1405cd201a870a5944e558ae8681168accc076ce37907843c2303fcede34f20",
+          "replayed_png_sha256": "f1405cd201a870a5944e558ae8681168accc076ce37907843c2303fcede34f20"
+        }
+      ],
+      "commands": [
+        {
+          "entry": "source/reproduce.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "pwsh",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/render_pdf_previews.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/inspect_current.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/verify_editability.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/render_pdf_previews.py",
+          "exit_code": 0
+        }
+      ]
+    }
+  ],
+  "final_repack": "After replay, only QA/provenance/guide/source-index/replay-receipt metadata is added. Final archive substantive payload is compared to the retained tested archive separately.",
+  "dependency_scope": "Existing pinned Python/Node/PowerPoint; no new installation.",
+  "independent_visual_review": "Pending for current version; reproduction is not artistic acceptance."
+}

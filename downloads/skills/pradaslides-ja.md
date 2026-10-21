@@ -1,49 +1,63 @@
 ---
 name: pradaslides-ja
-description: PradaSlidesの計画契約・native PPTX・実描画presenterを使って、日本語の説明資料や手順書を制作・更新するときに使う。
+description: 読者にしてほしい行動を先に決め、必要な根拠と手順を図・記入欄・確認項目へ変える。
 ---
 
-# PradaSlides 日本語版
+## このスキルでできること
 
-Studio Yebisuの独自派生。原作者の公式翻訳ではない。原典は固定commit `b9219b238d812d0dd7b4ed9fb514effbad0d0928`。MITの許諾文と著作権表示を `upstream/LICENSE` に保持する。
+読者にしてほしい行動を先に決め、必要な根拠と手順を図・記入欄・確認項目へ変える。
 
-## 先に見る実例
+- 困っている状況: 資料の枚数や見た目だけを先に決めると、読んだ人に何をしてほしいか抜ける。
+- 必要な入力: 読み手、伝える原稿と根拠、資料を読んだ後に取ってほしい行動。
+- 受け取るもの: 読み手の疑問と行動に合わせた資料、頁計画、実描画で確認した記録。出力方式は用途に合わせる。
+- 必要環境: Python3.10+ / python-pptx / PowerPoint16とYu Gothic（今回の描画） / HTMLの検査にはNode22+とChromeまたはEdge。HTTPで表示。
+- 作例で試した範囲: 備品を借りる人の問いを6頁へ分け、申込み・受取りの記録・異常時の連絡・返却照合を異なる図と欄で示した。原典の計画検査とPPTX由来HTML presenterを実行。
 
-「町内会の備品貸出を、迷わない手順に」日本語6枚。申込書の記入例、受取りの三手順、不具合の連絡、返却照合をnative文字・図形で制作した。
 
-完成例ZIPの `input/data.json`、`project/deck-plan.json`、`source/author.py`、`output/deck.pptx` を対応させて読む。実描画の全6枚を作者と別エージェントが確認した。架空の案内で、町内会の正式規則ではない。
+# 読者の次の行動から資料を設計する
 
-## 原典から制作する
+読者に起こしたい変化と根拠を先に整理し、資料の構成・視覚表現・納品形式を選ぶ。
 
-1. `upstream/SKILL.md` と、今回の資料に合う `upstream/references/intent-playbooks.md` を読む。機能の列挙でなく、読み手が資料を見た後にすることを決める。
-2. 原典bootstrapと計画契約を使う。読み手・目的・出典・主張・レイアウト・必要素材を `brief`、`source-ledger`、`design-system`、`layout-manifest`、`asset-manifest` へ記録する。
-3. 原典validatorと `lint_deck_plan.py --strict-visual` を実行し、errorは修正する。日本語を空白単語数で数える短文warningは、内容を実読して判断し、隠さず記録する。
-4. 指定されたauthoring engineでPPTXを作る。原典はengineを固定しない。この作例の `author.py` は専用python-pptxソースで、共通rendererや原作者の完成デッキを代用していない。
-5. PowerPoint本体で全ページを描画する。本文・表・日時・単位・ノートを入力と照合する。OS字体が置き換わる端末では、同じ字体を用意するか配置を再確認する。
-6. 無改変の原典 `build_pptx_preview.py` で、実描画からrender-parity presenterを作る。ここでのHTML本文は画像。編集正本はPPTXである。
-7. 原典のHTML QAをHTTP入口の派生で実行し、ブラウザーでページ・ノート・キー操作を確認する。差分を保存し、file URLの実行と混同しない。
+## 入力と出力
 
-## 日本語の実用性
+渡すもの：資料の読者・用途・読後にしてほしい行動、原稿や根拠資料、希望する出力形式。
 
-- 「品名・数量」「日時・場所」「担当窓口」など、読み手が確かめる内容を同じ順番で示す。
-- 実在ルールがない部分は案・記入例と明示する。利用条件や責任を資料側で勝手に決めない。
-- 単位と値、見出しと本文、完了と未確認を分ける。説明をすべて同じ大きさに詰めない。
-- 見出しは意味の区切りで改行し、本文はPC閲覧や画面共有でも判読できる量にする。
-- 入力を変えたら `plan.py` と専用authoringソースも合わせる。すべての構成変更をJSONだけで自動処理する製品ではない。
+得られるもの：読者の問いと主張・根拠を対応させた資料と、選択した形式の成果物・描画確認記録。
 
-## 再現
+原典 [prodigeproject/pradaslides](https://github.com/prodigeproject/pradaslides/tree/b9219b238d812d0dd7b4ed9fb514effbad0d0928)、固定commit `b9219b238d812d0dd7b4ed9fb514effbad0d0928`。原文と利用条件を保存した日本語派生で、公式翻訳ではありません。
 
-完成例ZIPで、Windows / Microsoft PowerPoint / PowerShell7 / Python3 / 游ゴシックを使う。
+## 使う手順
 
-```powershell
-python -m pip install -r requirements.txt
-python source/reproduce.py
-python source/qa.py --node "node.exeの絶対パス"
-```
+1. project/brief.jsonで読者の現状・読後の行動・作る形式を決め、source-ledgerへ根拠を書く。
+2. deck-planの各頁へ主張・必要な根拠・読者の次の行動を対応させ、構成とasset/layout manifestを検査する。
+3. source/reproduce.pyで計画検査→native制作→PowerPoint描画→原典presenter生成まで実行する。
+4. 全頁の文字・図・手順を確認し、HTMLのpresentモードとサムネイル操作も検査する。
 
-HTML QAにはNode.js22以上とChrome/Edgeが必要。`source/reproduce.py` は計画失敗で止まり、新出力をレビュー待ちにする。前回の全ページ確認や採用を引き継がない。
+## この作例で試した範囲
 
-環境・実行ログ・実際の編集範囲は `references/WORKFLOW.md` と作例の `PROVENANCE.json`、`QA.json` を読む。フォント本体・原作者の広告素材・node_modulesは収録しない。
+備品を借りる人の問いを6頁へ分け、申込み・受取りの記録・異常時の連絡・返却照合を異なる図と欄で示した。原典の計画検査とPPTX由来HTML presenterを実行。
+
+**1頁：町内会の備品貸出を、迷わない手順に**：右の記録票の空欄と返却確認の□を見る。単なる項目一覧から、貸出番号・受取/返却数・日時を残す用紙へ変えた。 読者が最終的に取る行動をcommunication contractへ定め、見える記録欄へ落とす。
+
+**3頁：受取りは、記録と現物を照合する**：3列の品名と数／貸出前の状態／受取記録を保存を見る。持ち帰る前の記録を、返却時の照合へ引き継ぐ。 各頁が答える読者の問いを先に置き、受取りと返却の役割を分ける。
+
+**5頁：返却は、置くだけで終わらせない**：数量・付属品・状態・確認の4行を見る。受取記録との照合から、担当者の確認を残すところまで扱う。 主張・必要な証拠・次の行動に合うtopologyを選び、説明を確認項目に変える。
+
+## 用意するもの
+
+- Python3.10+ / python-pptx / PowerPoint16とYu Gothic（今回の描画）
+- HTMLの検査にはNode22+とChromeまたはEdge。HTTPで表示。
+
+## 制約と未実施
+
+- この作例は架空の備品貸出手順。貸出の正式規則や運用効果を示さない。
+- PPTX+実描画HTMLの経路を使用。redesign/critique/plan-onlyや他形式、AI画像・動画生成は未実施。
+- 原典brief validatorの空白区切り単語数により、十分な日本語のjob文にもBRIEF_JOB_THIN助言が出る。抑制せず保存。
+- Yu Gothicを使い字体ファイルは再配布しない。新しい出力の目視・独立評価は毎回必要。
+
+現在版は制作側が全頁の実画像を確認しています。独立モデルの現在版再評価・人間の採用とは別です。自己採点はしていません。現在hashと検査は [example/QA.json](example/QA.json)、実行範囲は [example/PROVENANCE.json](example/PROVENANCE.json)、再実行は [example/REPRODUCE.md](example/REPRODUCE.md) を参照してください。
+
+原文は upstream/、現在作例は example/。再実行CWDは example/ です。
 
 ## 単体の本文から使う
 
@@ -51,7 +65,7 @@ HTML QAにはNode.js22以上とChrome/Edgeが必要。`source/reproduce.py` は�
 
 原典: https://github.com/prodigeproject/pradaslides/tree/b9219b238d812d0dd7b4ed9fb514effbad0d0928
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `pradaslides-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `pradaslides-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: prodigeproject / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 

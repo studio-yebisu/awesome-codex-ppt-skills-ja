@@ -1,12 +1,19 @@
-# 引き継ぎは、次の一手まで。の日本語再現キット
+# 再実行
 
-Python3、Node.js22以上とnpm、公式Chromium取得の接続が必要。PowerPoint描画を行う-RenderにはWindows、Microsoft PowerPoint、PowerShell7とインストール済みBIZ UDPGothicも必要。
+ZIPを空の作業フォルダーへ展開し、このファイルのあるフォルダーで実行する。新しい生成物には以前の目視確認・独立評価を引き継がない。
 
-1. ZIPを展開しPowerShellを開く。
-2. `.\reproduce\Reproduce.ps1 -Render` を実行。必要なら `-NodePath "node.exeの絶対パス"` を添える。
-3. 出力は `reproduce/workspace/examples/repositories/presentation-delivery/`。新しい出力は確認前の状態で記録する。全6ページを改めて確認してください。
-4. 出力フォルダーで `python -m http.server 8000 --bind 127.0.0.1` を起動し、localhostのHTML入口を開く。
+- Python、Node22以上、固定Node依存とChromium。
+- PPTX確認にはWindows / PowerPoint / PowerShellと公式BIZ UDPGothic。PDF由来RGBプレビューにはpypdfium2。
 
-原典Visual Deck StudioのHTML-first Path A、960×540ptの4条件、無改変の変換・寸法・overflow検査とDOM要素変換を使う。原典deck_index.htmlの概覧・キー操作とPDF結合を保持する。明示HTTP入口、字体待ち、日本語ノート、Windows環境継承だけをadapterで補う。本文文字と図形はnative PPTX。HTML/PPTXの字間・太さ・br行間には差があり、pixel一致・動画・TTS・人の早期承認は主張しない。BIZ UDPGothicのOFL原本を同梱する。
+Node 22以上とnpmが必要。通常コマンドは `source/runtime/package-lock.json` から依存とChromiumを設定する。既に同じ固定依存とChromiumがある環境では `--reuse-existing-dependencies` を付けると設定処理を省く。Node実体が標準PATHにない場合は `--node C:/path/to/node.exe` を付ける。表示入口は `python -m http.server 8000` の後 `http://127.0.0.1:8000/index.html`。HTMLが正本でPPTXはbest-effort派生。
 
-制作原稿と構成はinput/data.json、日本語ノートと制作手順はREADME.mdとPROVENANCE.jsonを参照。構成の変更時は原典の計画・寸法・配置検査と全ページの表示確認を行う。原典MITと素材・依存の各条件を保持し、人の正式採用や公開は別とする。
+```powershell
+python source/reproduce.py --powerpoint
+python source/render_pdf_previews.py render
+```
+
+PowerPointの処理は指定した資料だけを読み取り専用で開く。PDFをPowerPointから出力し、そのPDFから表示用RGB PNGを作る。OSのフォントファイルは抽出・再配布しない。同梱フォントは各OFLを確認して導入する。
+
+現在の検査・限界は `QA.json` と `PROVENANCE.json`。厳密な画像一致、学術内容の査読、利用者の承認を自動検査の成功だけから主張しない。
+
+比較画像は現行HTMLを再captureした後、`python source/build_comparisons.py`で再生成する。review/comparison-sources/に左右の元PNGを保存し、比較PNGと全元画像のSHAをreview/html-pptx-comparisons.jsonへ記録する。

@@ -1,14 +1,33 @@
-# Cogine AIテンプレート・日本語キット
+# 原稿に合うテンプレートを選ぶ
 
-[SKILL.md](SKILL.md)から始める。原典の選択folderとmetadata、対応入力、再生成コード、局所CSS、茶葉/包み/結びのSVG、未改変実TTF/OFLを収録する。[SOURCE](SOURCE.json)と[MIT原文](LICENSE)を保持する。
+用途と原稿量をテンプレートのメタデータと比べ、合う枠へ内容を配置します。選定した理由と、字体・余白の変更箇所も確認できます。
 
-```powershell
-python source/build.py --case . --upstream source/upstream
-python -m http.server 8000 --bind 127.0.0.1
-```
+入力: 読み手・用途・本文の量。各テンプレートのscheme/density/avoid_for/content_limits。
 
-ブラウザで`http://127.0.0.1:8000/template.html`を開く。Nodeやnpmは主制作に不要。`input/content.json`を編集すると、選択templateをコピーしてdemoを差し替える。完成HTMLでは文字・SVG・CSSを編集できる。PPTX/PDFは生成していない。
+出力: 選んだeditorial-luxuryの配色・枠・ページ操作を保った日本語HTML6枚。
 
-原典の字体保持規則への変更は、今回の日本語派生・字体変更に対するユーザー承認に基づく。原典版式・palette・装飾・元navigationを保持し、字体をShippori/Zen Kaku/Manropeへ役割別に変える。原典JSONにlayout_slotsはなく、実DOMに基づく局所mappingを保存している。
+## この作例で確かめること
 
-完成HTMLと代表2PNGはこのキットにも同梱する。実行記録を含む[制作一式ZIP](../../downloads/cogine-templates-example-ja.zip)も別配布する。この相対リンクはサイト配置用。キットの未変更原典は`source/upstream/`、字体出所は[fonts/SOURCE.json](fonts/SOURCE.json)。
+- 実60件のtemplate.jsonを読取・3候補の用途と密度を比較
+- 原典editorial-luxuryの全フォルダー複製・見本文字を置換
+- 明示した日本語字体・文字寸法・縦余白の派生と原典visual validator
+
+3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。
+
+## 使い方
+
+1. 原典AGENTSを読み、全templates/*/template.jsonのscheme・density・用途・避ける場面を比較する。
+2. content_limitsと必要版式を確認し、合うテンプレートのフォルダー全体を複製する。
+3. 実HTMLの埋める場所を対応付ける。今回の原典JSONにはlayout_slotsがないため局所のDOM対応表を使う。
+4. 見本の文字・数字・画像をすべて置換し、本文やカードの上限を越える場合は頁を分ける。
+5. 全頁をブラウザーで確認し、カウンターと章番号を区別する。利用可能な原典validate-visualも実行する。
+
+## 実施範囲
+
+- 原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。
+- layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。
+- 原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。
+
+今回の修復はCodex。独立再評価は変更後の版に対して別に取得します。[実行・全頁確認](source/repair-qa.json)、[原典検査](source/round4-original-gates.json)に実記録を保存しています。固定原典・利用条件はPROVENANCE.jsonとsource/upstream、元のLICENSE/NOTICE、字体のOFLを保持します。
+
+[展開ZIPからの再生成検査](source/round4-zip-replay.json)も実行済み。既存の互換実行環境を使い、公開HTMLと同一バイトの出力を確認しました。Beatdeckの依存は既存lock済みnode_modulesを再利用し、新規npm ciの実証とはしていません。

@@ -52,7 +52,7 @@
   ],
   "input_sha256": "963e633ba2bd7bfc92292fdbbad3c6a80bc9fa130b87639035d388825482214d",
   "prompt_sha256": "dedf0b46acc26b840c6b8d6d5112d3713bcf14c703a00d50d452b8f75574eb44",
-  "artifact_sha256": "12b3ce50eb8bcc8278a005fd7b3f8dddc87e8ef50a8783e46dd5bf7c19dbd529",
+  "artifact_sha256": "f8846ee4d986af67903e0ed938388dc4842ed072855716cf60c7e2299e7174ab",
   "artifact": "deck.html",
   "commands_executed": [
     {
@@ -96,5 +96,23 @@
     "Font appearance depends on system Japanese fonts"
   ],
   "external_api_used": false,
-  "paid_resources_used": false
+  "paid_resources_used": false,
+  "latest_repair": {
+    "author": "Codex",
+    "description": "原典presetとJavaScriptの一致を再検査。数値の単位の透過を弱めて読みやすくし、全6頁を再描画。",
+    "gates": {
+      "reproduce": 0,
+      "original_navigation_js_preserved": true,
+      "P0_P1_visual_check": "6 pages checked; data/units, hierarchy, no clipped or one-character lines; contrast retained within preset"
+    },
+    "source_proof_paths": [
+      "input/data.json",
+      "source/reproduce.py",
+      "source/upstream/assets/template.html",
+      "source/upstream/references/layouts.md",
+      "review/template-proof.json",
+      "source/browser-repair.json"
+    ],
+    "independent_rescore": "pending"
+  }
 }

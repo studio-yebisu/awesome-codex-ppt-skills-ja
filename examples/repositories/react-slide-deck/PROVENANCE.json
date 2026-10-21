@@ -220,9 +220,33 @@
     }
   ],
   "input_sha256": "114b9abf49fac90dc7647fb4028d2a6d51ca905e243ee6cf232f1edf4d68c019",
-  "artifact_sha256": "3e6f3614db680b2b1387b49c2f808e4910884f1b4da303c4e5a8c4fb72f0be03",
+  "artifact_sha256": "60783835ff0ad5f1b1c8a9d83bd987a765453abcd5f45eaa39000ca075366d74",
   "output": "index.html",
   "built_assets": [
+    {
+      "path": "assets/index-BW0yRdNp.js",
+      "sha256": "06ca6c9217376fdeab4a63cb4ea2f3cd19ff8c5ce7dd6aefe9913084709fdf7d"
+    },
+    {
+      "path": "assets/index-BwMS2sQ0.css",
+      "sha256": "b5154889249cccd1418f0a5fc8afeb91ed069eedf10033ea0a8f0aad1046c3cb"
+    },
+    {
+      "path": "assets/index-C8-Urbw1.js",
+      "sha256": "a37772f720fda94cc6bd5d56d7bf57da4b8cec8b4782cd3837a2eaa9ae080150"
+    },
+    {
+      "path": "assets/index-CD1VHath.js",
+      "sha256": "d5a5c88cbf423e275c0c9c4798e984bd38b40c51603246dbb7ef9f8d33fe41e1"
+    },
+    {
+      "path": "assets/index-CjG8HxKq.js",
+      "sha256": "71ef81d39451e4085f2c68446d3726b6514314744a12ad16331211fcdab53e8e"
+    },
+    {
+      "path": "assets/index-DnEks7H3.js",
+      "sha256": "d5a5c88cbf423e275c0c9c4798e984bd38b40c51603246dbb7ef9f8d33fe41e1"
+    },
     {
       "path": "assets/index-DvHAfQ_q.js",
       "sha256": "a437119409ea410eb4007e5cf4aa809a244dee30837053efbaf2394b7ea8433b"
@@ -232,24 +256,12 @@
       "sha256": "e79edafac07321a1a7cc92c4ab27bea0e17748ce142c25a46fe331ec43f48844"
     },
     {
-      "path": "favicon.svg",
-      "sha256": "61bc9a161de58248288e6905425d7180f0624c2865007b97d763fdac12043a66"
-    },
-    {
       "path": "fonts/faq-japanese.woff2",
       "sha256": "48e2eae9f49b3f74e4fa7f353374cd84754c9d3471d9186f9c531f51322a50cf"
     },
     {
       "path": "fonts/OFL.txt",
       "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9"
-    },
-    {
-      "path": "icons.svg",
-      "sha256": "b45fa506195cfcdef406ba9f0c77b36ddc1a7c224040926ec70abc2fdea7b93a"
-    },
-    {
-      "path": "index.html",
-      "sha256": "3e6f3614db680b2b1387b49c2f808e4910884f1b4da303c4e5a8c4fb72f0be03"
     }
   ],
   "commands_executed": [
@@ -310,5 +322,31 @@
   "font_source_sha256": "c2f3b4d463500a2ddcd3849cded1fceeb9fd6d1c32e6cbecd568453ba50fc68f",
   "font_pin": "66928797f271fed5ee428544e7229685e2d90127",
   "third_party_ai_api": false,
-  "dev_startup": "source/dev-startup.json"
+  "dev_startup": "source/dev-startup.json",
+  "codex_web8_repair": {
+    "author": "Codex",
+    "scope": "Current source repair, actual original-path gates and page review; earlier production attribution retained only for earlier scope",
+    "qa": "QA.json"
+  },
+  "current_build": "source/logs/repair-build.txt",
+  "current_browser": "source/repair-browser-review.json",
+  "week_tabs": "Example-specific React extension, not original built-in component",
+  "current_round4_repair": {
+    "author": "Codex",
+    "artifact": "index.html",
+    "artifact_sha256": "4025b16470ee5d7c8abe08c477014affa2ed2a94eda2e743e73e5aaf3d4c2bc9",
+    "qa": "QA.json",
+    "changes": [
+      "原典App/SlideLayout/useSlideScale/animation variantsを保持し、TypeScriptとVite buildを実行。",
+      "問題→問い→概念→例→持ち帰りを5頁へ対応させ、表紙にBold Signalの色付きカードを使う。",
+      "全5頁とW1〜W4を実操作し、4状態の画像を保存。週別タブは作例固有のReact state拡張で、原典内蔵部品ではない。",
+      "reduced-motionで全頁を確認し、通常Motionでは入場の前・途中・完了を別に保存。"
+    ],
+    "not_demonstrated": [
+      "原典のInteractive slideを参考にした週別タブは局所拡張。Recharts、他preset、外部API、量的効果測定は未実施。",
+      "4週間・10問は架空の目標。FAQ改善や問い合わせ削減の実績はない。",
+      "元Vite8/Tailwind4.2.1のpeer不一致はTailwind4.2.2の固定lockへ局所修正。60fpsの定量計測・全端末の検査は未実施。"
+    ],
+    "independent_review": "pending"
+  }
 }

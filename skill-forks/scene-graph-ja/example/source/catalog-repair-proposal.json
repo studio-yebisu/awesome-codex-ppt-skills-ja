@@ -1,0 +1,31 @@
+{
+  "id": "scene-graph-showcase",
+  "method": "原典の大綱生成→既存PPTXテーマ変更を実行。章題余白と旧装飾の色移行は明示した局所adapterで補正。native文字・長方形は保持。",
+  "prompt_text": "大綱input/outline.jsonの本文を使い、原典create_from_outlineで暖色draftを作り、元beautifyでprojectionへ変更してください。章番号と章題の余白を確保し、元APIが残す旧装飾色は明示した局所adapterで移行する。同じ頁の前後をPowerPointで描画し、全6頁を目視。原典・diff・MIT/OFL・欠落vendor補完記録を保持。parse_slideはこのpinに実装がなく、抽出や読みやすさの実測を称しません。元evaluateは診断として実行し、独立Kimi K3/Opus5.5評価とは区別してください。\n",
+  "input": "input/outline.json",
+  "preview_image_notice": "完成6頁を全頁目視。同一本文の暖色draftとprojectionの1〜3頁比較を保存。旧装飾移行は局所補正。",
+  "not_demonstrated": [
+    "parse_slide unavailable in pinned package",
+    "Original notes field not written",
+    "Original type heuristic classifies decorated first5 as content",
+    "Actual auditorium readability or comprehension",
+    "Independent re-review and ZIP replay pending"
+  ],
+  "freeze_files": [
+    "draft.pptx",
+    "source/rebuild.py",
+    "source/theme_layout_adapter.py",
+    "source/theme-layout-repair.json",
+    "input/theme-source-map.json",
+    "source/output-audit.json",
+    "source/original-evaluate-receipt.json",
+    "source/pdf-fonts.json",
+    "render/draft/",
+    "render/theme-compare-page-01.png",
+    "render/theme-compare-page-02.png",
+    "render/theme-compare-page-03.png"
+  ],
+  "canonical_data_edited": false,
+  "repair_author": "Codex",
+  "independent_review": "pending"
+}

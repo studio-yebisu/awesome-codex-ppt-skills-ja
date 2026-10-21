@@ -1,0 +1,152 @@
+{
+  "title": "フォント構成と制作手順",
+  "units": {
+    "col_widths": "inch"
+  },
+  "colors": "mck_ppt.constants の名前",
+  "slides": [
+    {
+      "idx": 1,
+      "layout": "cover",
+      "title": "フォント構成と制作手順",
+      "key_point": "",
+      "subtitle": "OSSフォントキット30字体の内訳と、資料を作る順序",
+      "author": "Studio Yebisu",
+      "date": "2026-10-15更新のフォントデータ"
+    },
+    {
+      "idx": 2,
+      "layout": "donut",
+      "title": "30字体を用途の近い書体群へまとめて比べる",
+      "key_point": "収録30字体を分類で数え、構成比を一つの円で示す",
+      "segments": [
+        [
+          0.4,
+          "NAVY",
+          "ゴシック系 12字体"
+        ],
+        [
+          0.26666666666666666,
+          "ACCENT_BLUE",
+          "明朝・セリフ系 8字体"
+        ],
+        [
+          0.1,
+          "ACCENT_GREEN",
+          "丸ゴシック系 3字体"
+        ],
+        [
+          0.23333333333333334,
+          "ACCENT_ORANGE",
+          "装飾＋等幅 7字体"
+        ]
+      ],
+      "center_label": "30",
+      "center_sub": "収録字体",
+      "summary": "ゴシック系12字体が最多。\n全体の40.0%を占める。",
+      "source": "出典：input/oss-font-kit.json のcategoryを集計。装飾と等幅は合算、細目は次頁"
+    },
+    {
+      "idx": 3,
+      "layout": "data_table",
+      "title": "言語別に見ると、装飾は日本語のみ、等幅は欧文のみ",
+      "key_point": "分類ごとに日本語と欧文の字体数を分け、代表書体を添える",
+      "headers": [
+        "分類",
+        "日本語",
+        "欧文",
+        "計",
+        "代表書体（収録順の先頭）"
+      ],
+      "rows": [
+        [
+          "ゴシック系",
+          "6",
+          "6",
+          "12",
+          "Zen Kaku Gothic New / Manrope"
+        ],
+        [
+          "明朝・セリフ系",
+          "5",
+          "3",
+          "8",
+          "Shippori Mincho / Source Serif 4"
+        ],
+        [
+          "装飾",
+          "4",
+          "0",
+          "4",
+          "Dela Gothic One"
+        ],
+        [
+          "丸ゴシック系",
+          "2",
+          "1",
+          "3",
+          "Zen Maru Gothic / Nunito"
+        ],
+        [
+          "等幅",
+          "0",
+          "3",
+          "3",
+          "JetBrains Mono"
+        ],
+        [
+          "合計",
+          "17",
+          "13",
+          "30",
+          "—"
+        ]
+      ],
+      "col_widths": [
+        2.4,
+        1.4,
+        1.4,
+        1.4,
+        5.133
+      ],
+      "bottom_bar": [
+        "プリセット",
+        "収録プリセット15件は、いずれも見出し・本文を日本語書体、英数字を欧文書体で指定"
+      ],
+      "source": "出典：input/oss-font-kit.json（2026-10-15更新）の language・category・family を集計"
+    },
+    {
+      "idx": 4,
+      "layout": "timeline",
+      "title": "制作は五段階で進め、原稿と描画を原典の検査で確かめる",
+      "key_point": "原典SKILLのS1〜S4を順に通し、S3とS4は原典の検査スクリプトで判定する",
+      "milestones": [
+        [
+          "要件",
+          "読者・目的・元資料\nbrief.md\n入力をそろえる"
+        ],
+        [
+          "構成",
+          "頁の主張と版式\noutline.json\n項目数を確認"
+        ],
+        [
+          "原稿",
+          "文言・集計値・出典\ncontent.json\nS3のJSONで合否"
+        ],
+        [
+          "描画",
+          "PPTXを生成\nS4のJSONで合否\ngate_result.json"
+        ],
+        [
+          "交付",
+          "PPTXと検査を渡す\n修正の型を判断\nexperiencesへ記録"
+        ]
+      ],
+      "bottom_bar": [
+        "判定",
+        "S3はgate_check_s3.py、S4はgate_check.pyが書くJSONのpassedで判定する"
+      ],
+      "source": "出典：source/build_mck_native_showcase.py のS1〜S5。所要時間は計測していない"
+    }
+  ]
+}

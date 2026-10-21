@@ -1,32 +1,29 @@
-# ryanbbrown/revealjs-skillの日本語制作
+# 説明原稿をブラウザーで順に見せる資料にし、同じ内容をPDFでも配れる。
 
-原典: https://github.com/ryanbbrown/revealjs-skill/tree/d0ccd344c4aaf9f045e5a15be6a2ab67b595796f
+入力：社内文書30件を4週間で試す架空の検索企画と講稿。
+出力：reveal.jsのHTML・原典Decktapeの6頁PDFと画像。
 
-原典create-presentation.jsで6ページの骨格とbase-styles.cssを生成。原典のpt単位・2カラム・section構造に日本語本文を組み、reveal.jsの公式ナビゲーションで再生。
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全6頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-原典create-presentation.jsで骨格を作る。元スキルのpt単位とsection構造を守り、reveal.jsの実ナビゲーションを使う。
+## 使い方
 
-## 作例
+1. 話す順番と枚数を決め、create-presentation.jsで骨格を作る
+2. 本文はp要素、2列はinline gridで書く
+3. 項目の関係は矢印、表の見出しと行は色と罫線で分ける
+4. 原典check-overflow.jsを実行する
+5. Decktapeで全頁画像とPDFを出し、実表示を確認する
 
-- 社内検索を4週間で試す / 6枚 / html
-- カタログ内の案内: repository.html?repo=ryanbbrown/revealjs-skill
-- 当面のローカル入口: http://127.0.0.1:8847/repository.html?repo=ryanbbrown/revealjs-skill
-- 入力、発表者ノート、依頼文、PROVENANCE.json、QA.jsonを完成例に同梱。
+## 生成・検査
 
-## 環境
+`node source/upstream/skills/revealjs/scripts/check-overflow.js index.html`
+`npm ci --prefix source/qa --ignore-scripts`
+`node source/qa/node_modules/decktape/decktape.js reveal --chrome-path <browser> --screenshots --screenshots-directory render/decktape <HTML-URL> deck.pdf`
 
-- Node.js 24.18（今回使用）
-- reveal.js 5.2.1（公式MIT版を同梱）
-- スキルを読んでHTML/CSSを書けるエージェント
+二列の見出し間隔、関係図の線と矢印、表の見出し色と行罫線を修正。原典overflowとDecktapeを実行し6頁を確認。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
 
-## 元の制作コマンド
+## 範囲
 
-    node skills/revealjs/scripts/create-presentation.js --structure 1,1,1,1,1,1 --title "社内検索を4週間で試す" --output my-deck.html
-
-## 確認範囲
-
-- 今回確認したのは横6ページの再生・表・日本語書体・ノート。チャートプラグインは使っていません。
-
-## 権利
-
-原典条件はupstream内のLICENSE/NOTICE等を読む。日本語の独自案内はカタログの条件、上流由来のコードは各原典の条件を引き継ぐ。公開画像や依存書体の条件を一括で保証するものではない。
+- 原典scaffold後の日本語組版は専用の手作業実装
+- fragment・縦方向の入れ子・PDFからの逆変換は未実演
+- 企画の数値は架空の条件と目標で、効果実績ではない
+- Decktape3.16.1を同caseのQA依存へ固定。ブラウザーは既存Edgeを指定

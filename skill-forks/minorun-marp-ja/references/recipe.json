@@ -1,63 +1,20 @@
 {
-  "execution_type": "instruction_skill_and_marp_cli",
-  "summary_ja": "みのるんの日本語スキルで、問いと段階的な図解を使う黒地の登壇資料を制作。原稿はMarpのMarkdownとして編集できる。",
-  "requirements": [
-    "Node.js 24.18",
-    "Marp CLI 4.4.0",
-    "元スキルを読めるエージェント",
-    "PDF書出しにはChrome系ブラウザと原典の検査ツール"
+  "case_id": "minorun-marp",
+  "entrypoints": [
+    "python source/rebuild.py --marp <marp-cli.js> --node node --browser <Chrome-or-Edge>"
   ],
-  "commands": [
-    "npx @marp-team/marp-cli@4.4.0 --no-stdin deck.md --html --theme minorun-dark.css --allow-local-files -o index.html",
-    "python tools/check-ai-smell.py deck.md"
+  "features": [
+    "問いを次の頁で答えるstory構成",
+    "同じ位置に要素を足す4段階のSVG",
+    "原典黒地テーマとcheck-ai-smell --all"
   ],
-  "steps": [
-    "原著のslide-story・slide-figures・slide-design-darkを読む",
-    "話の骨子を先に作る。今回はGitの保存先を一段ずつ開示",
-    "原典のminorun-dark.cssを保持してMarkdownとSVGを制作",
-    "Marpで書き出し、図・文字・ページ移動を実表示で確認"
+  "scope": [
+    "元35分教材のうち5分の導入抜粋。元依頼は入力内へ保存",
+    "20分演習・ブランチ・レビュー・競合解消は扱わない",
+    "Gitコマンドは説明例で、リモート送信はしていない",
+    "本文を変えたときは埋込サブセット書体の収録文字も更新する"
   ],
-  "limitations": [
-    "原著自体が日本語。今回の派生は再制作用の入力・図と公式OFL由来のNoto Sans JPを添付。Marp原稿からのHTML再生を検証。"
-  ],
-  "fork": "minorun-marp-ja",
-  "repository": "minorun365/minorun-marp-skill",
-  "example_ids": [
-    "minorun-marp"
-  ],
-  "method_ja": "原典のslide-story・slide-figures・slide-design-darkを適用。黒地テーマ本体を保持し、作業・ステージ・記録・共有の図を段階的に開示するMarp原稿を制作。Marp CLIで実HTMLを生成。",
-  "license": "Apache-2.0",
-  "license_review_status": "reviewed_for_example",
-  "source_refs": [
-    {
-      "path": "skills/slide-story/SKILL.md",
-      "sha256": "cd46b756efacc9ea0c6bf438366fe2e1a7722890c876883dd5aa9c768ba6b047",
-      "url": "https://github.com/minorun365/minorun-marp-skill/blob/736fd5e9fafb80148a1e6eaa5ae5f9d859431257/skills/slide-story/SKILL.md"
-    },
-    {
-      "path": "skills/slide-figures/SKILL.md",
-      "sha256": "7f1ab5af0c469408943234af32541fa3e4d8327a01d735c0adc81f1fd9947a21",
-      "url": "https://github.com/minorun365/minorun-marp-skill/blob/736fd5e9fafb80148a1e6eaa5ae5f9d859431257/skills/slide-figures/SKILL.md"
-    },
-    {
-      "path": "skills/slide-design-dark/SKILL.md",
-      "sha256": "efef73c3af233b4c58aa8eebe5a507e67f0f28d65f0a17e1989b3c39a3fbb25e",
-      "url": "https://github.com/minorun365/minorun-marp-skill/blob/736fd5e9fafb80148a1e6eaa5ae5f9d859431257/skills/slide-design-dark/SKILL.md"
-    },
-    {
-      "path": "theme/minorun-dark.css",
-      "sha256": "c9b5c03670b532ce11262ef9c4170709ad2164aa9ce6dfb660ba48865b14b4e6",
-      "url": "https://github.com/minorun365/minorun-marp-skill/blob/736fd5e9fafb80148a1e6eaa5ae5f9d859431257/theme/minorun-dark.css"
-    },
-    {
-      "path": "tools/check-ai-smell.py",
-      "sha256": "7d2095a5bb24aabb598b69115dae93a8611a153bcf72263529a3094ff27afd44",
-      "url": "https://github.com/minorun365/minorun-marp-skill/blob/736fd5e9fafb80148a1e6eaa5ae5f9d859431257/tools/check-ai-smell.py"
-    },
-    {
-      "path": "LICENSE",
-      "sha256": "c71d239df91726fc519c6eb72d318ec65820627232b2f796219e87dcf35d0ab4",
-      "url": "https://github.com/minorun365/minorun-marp-skill/blob/736fd5e9fafb80148a1e6eaa5ae5f9d859431257/LICENSE"
-    }
-  ]
+  "qa": "example/QA.json",
+  "input": "example/input/BRIEF.md",
+  "repair_author": "Codex"
 }

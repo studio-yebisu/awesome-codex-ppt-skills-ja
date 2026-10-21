@@ -1,20 +1,27 @@
-# slide-wright・日本語キット
+# 専用テーマでページを追加・修正する
 
-[SKILL.md](SKILL.md)から始める。架空の6枚企画「星を待つ、夜の天文台。」用に、原典13ファイル、専用CSS、2枚と追加4枚のHTML原稿、実字体/OFL、再生成helperを収録する。原典は[MIT](LICENSE)、出所は[SOURCE](SOURCE.json)。
+同じ配色・書体・図形を保ちながら、既存資料のページを追加・修正する。入力は題材と原稿、または原典の方式で作られた既存HTML。出力は本文・テーマ・字体を収めたHTML。ページ操作に必要なスクリプトは固定CDNから読み込む。
 
-```powershell
-python source/build.py --stage preview --case . --upstream source/upstream
-python -m http.server 8000 --bind 127.0.0.1
-```
+## この作例で確認すること
 
-ブラウザで`http://127.0.0.1:8000/night-observatory.html`を開く。方向を確認し、`source/stages.json`の`preview_opened`をtrueへ更新してから、別のターミナルで続ける。
+- 現在の実2頁を別画像として保存し、Night Orbitの配色・字体・円の設計判断を記録
+- 同じHTMLで最初の2sectionを保持して4頁を追加する組立部分を再実行
+- 小さい和文見出しを読みやすい字体へ修正し、4頁の円を本文のない右下へ移動
 
-```powershell
-python source/build.py --stage append --case . --upstream source/upstream
-```
+修復後の実2頁をブラウザー表示して個別画像と設計判断を保存。その2sectionを保持して同じHTMLへ4頁appendし、全6頁を1920×1080で実描画・目視。矢印の戻りと一覧表示も確認。人間の美術承認は未取得。
 
-2枚と完成版は同じHTMLで、最初の2sectionを保持して4枚追加する。主出力はHTML。HTML/SVG/CSSをソース編集する。PPTXは生成していない。PDFが必要なら完成HTMLのURLへ`?print-pdf`を付け、印刷の横向き・余白なし・背景ONで保存する。今回PDF出力は未実施。
+## 別の原稿で使う手順
 
-字体・CSSはinline、エンジン5.1.0とnotes機能は固定CDNを使うためネット接続が必要。Nodeやnpmは主制作に不要。`source/render_preview.cjs`は代表PNGを出すための任意補助で、Node・Playwright・Chromeが必要。ユーザープロファイルへ接続せず新しいheadlessブラウザで同じ実HTMLの最初の2枚だけを出力する。
+1. 新規資料では目的・読み手・発表用か単独で読む資料かを判断し、原典theme-generationとdesign-aestheticsから1方向の専用テーマを作る。
+2. 同じ完成ファイルに実表紙と本文の2頁だけを作り、ブラウザーで表示する。テーマ名は説明に記し、スライド内へ制作過程のラベルを入れない。
+3. 新規資料では2頁を提示して止まり、人間の承認・調整・方向変更を待つ。承認前に残りを作らず、方向変更時は配色・字体・図形・動きを改める。
+4. 承認後は最初の2sectionを保持し、同じHTMLへ追加する。既存の対応HTMLを編集する場合は見た目を保ってその場で修正し、別形式のHTMLへ無理に移植しない。
+5. 全頁を実ブラウザーで開き、16:9、字体、重なり、講稿、矢印と一覧表示を確認する。公開やPDF保存は実行した場合だけ完了と記す。
 
-完成HTML・代表2PNG・初回操作記録はサイト側の[制作ZIP](../../downloads/slide-wright-example-ja.zip)で別配布。この相対リンクはサイト配置用。原典停止工程の派生変更とデザイン判断は[source/DESIGN.md](source/DESIGN.md)へ記録する。
+## 実施範囲
+
+- 今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。
+- 既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。
+- 固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。
+
+[全頁と実行の記録](source/repair-qa.json)、[元の工程](source/round5-original-gates.json)、[再生成](source/ROUND5-REPRODUCE.md)。今回の修復はCodex。変更後の独立評価は別に取得します。

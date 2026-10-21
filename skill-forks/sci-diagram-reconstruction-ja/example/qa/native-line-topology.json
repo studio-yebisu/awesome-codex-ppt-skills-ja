@@ -1,0 +1,135 @@
+{
+  "status": "pass",
+  "pptx": "pass-01/editable.pptx",
+  "pptx_sha256": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0",
+  "source": "pass-01/source.png",
+  "source_sha256": "5d886f134754d7dd86b315f9ee963f27a5a70de0944939544c5ee70d2d2ec690",
+  "input_and_pass_source_bytes_equal": true,
+  "native_standard_lines_verified": 4,
+  "p_cxnSp_automatic_connectors": 0,
+  "pictures": 0,
+  "checker_interpretation": "Original checker counts p:cxnSp as connectors and excludes four p:sp lines because their axis-aligned bounds have zero width or height. This does not flatten those standard native line shapes. This supplemental check verifies their preset, endpoint geometry, flips and target tailEnd triangle directly.",
+  "attachment_limit": "Lines are separately editable but have no shape-attachment links. Moving a box does not automatically reroute the line.",
+  "edges": [
+    {
+      "edge_id": "vapor-to-cloud-condensation",
+      "native_object_name": "Edge:vapor-to-cloud-condensation:segment-1",
+      "ooxml_container": "p:sp",
+      "preset_geometry": "line",
+      "from_node": "atmospheric-vapor",
+      "to_node": "cloud-droplets",
+      "source_start_px": {
+        "x": 600,
+        "y": 290
+      },
+      "source_target_px": {
+        "x": 1000,
+        "y": 290
+      },
+      "actual_start_emu": [
+        4572000,
+        2209800
+      ],
+      "actual_target_emu": [
+        7620000,
+        2209800
+      ],
+      "maximum_coordinate_error_emu": 0,
+      "headEnd_at_source": "none",
+      "tailEnd_at_target": "triangle",
+      "one_zero_extent_expected_for_axis_aligned_line": true,
+      "shape_attachment_links_present": 0,
+      "editable_native_line": true
+    },
+    {
+      "edge_id": "cloud-to-river-precipitation",
+      "native_object_name": "Edge:cloud-to-river-precipitation:segment-1",
+      "ooxml_container": "p:sp",
+      "preset_geometry": "line",
+      "from_node": "cloud-droplets",
+      "to_node": "river-water",
+      "source_start_px": {
+        "x": 1250,
+        "y": 360
+      },
+      "source_target_px": {
+        "x": 1250,
+        "y": 560
+      },
+      "actual_start_emu": [
+        9525000,
+        2743200
+      ],
+      "actual_target_emu": [
+        9525000,
+        4267200
+      ],
+      "maximum_coordinate_error_emu": 0,
+      "headEnd_at_source": "none",
+      "tailEnd_at_target": "triangle",
+      "one_zero_extent_expected_for_axis_aligned_line": true,
+      "shape_attachment_links_present": 0,
+      "editable_native_line": true
+    },
+    {
+      "edge_id": "river-to-sea-flow",
+      "native_object_name": "Edge:river-to-sea-flow:segment-1",
+      "ooxml_container": "p:sp",
+      "preset_geometry": "line",
+      "from_node": "river-water",
+      "to_node": "sea-lake-water",
+      "source_start_px": {
+        "x": 1000,
+        "y": 630
+      },
+      "source_target_px": {
+        "x": 600,
+        "y": 630
+      },
+      "actual_start_emu": [
+        7620000,
+        4800600
+      ],
+      "actual_target_emu": [
+        4572000,
+        4800600
+      ],
+      "maximum_coordinate_error_emu": 0,
+      "headEnd_at_source": "none",
+      "tailEnd_at_target": "triangle",
+      "one_zero_extent_expected_for_axis_aligned_line": true,
+      "shape_attachment_links_present": 0,
+      "editable_native_line": true
+    },
+    {
+      "edge_id": "sea-to-vapor-evaporation",
+      "native_object_name": "Edge:sea-to-vapor-evaporation:segment-1",
+      "ooxml_container": "p:sp",
+      "preset_geometry": "line",
+      "from_node": "sea-lake-water",
+      "to_node": "atmospheric-vapor",
+      "source_start_px": {
+        "x": 350,
+        "y": 560
+      },
+      "source_target_px": {
+        "x": 350,
+        "y": 360
+      },
+      "actual_start_emu": [
+        2667000,
+        4267200
+      ],
+      "actual_target_emu": [
+        2667000,
+        2743200
+      ],
+      "maximum_coordinate_error_emu": 0,
+      "headEnd_at_source": "none",
+      "tailEnd_at_target": "triangle",
+      "one_zero_extent_expected_for_axis_aligned_line": true,
+      "shape_attachment_links_present": 0,
+      "editable_native_line": true
+    }
+  ]
+}

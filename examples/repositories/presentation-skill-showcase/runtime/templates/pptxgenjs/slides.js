@@ -1070,8 +1070,15 @@ function addDarkTitleBar(slide, preset, title, subtitle, slideData = {}) {
   const isLabHeader = headerMode === 'lab-clean' || headerMode === 'lab-card';
   const modernReadability = preset.renderer_role_contract_version !== 'renderer_role_systems_v1';
   const v2 = resolvedRenderPlan(preset, slideData).contractSource === 'v2';
+  // Studio Yebisu local adaptation (operations-grid only): the Operating Grid
+  // frame paints its top bars from y=0.08in to y=0.19in. Start the measured
+  // header at the grammar's 0.34in top inset; headerMetrics then moves the body.
+  const headerGrammar = compositionGrammar(preset, slideData);
+  const operationsGridTitleTop = headerGrammar === 'operations-grid' && headerMode !== 'bar'
+    ? Math.max(0.34, grammarFrameContract(preset, slideData).top)
+    : 0;
   const titleTop = v2 && headerMode !== 'bar'
-    && compositionGrammar(preset, slideData) === 'editorial-spread' ? 0.26 : 0;
+    && headerGrammar === 'editorial-spread' ? 0.26 : operationsGridTitleTop;
   const headerVariant = headerMode === 'lab-card'
     ? 'left-accent'
     : pickLabHeaderVariant(slideData, preset);
@@ -2489,11 +2496,32 @@ function renderContractStage(slide, slideData, preset, contract, kind) {
   const dark = contractStageUsesDarkBackground(contract);
   const background = dark ? cleanHex(preset.bg_dark, '0B1220') : cleanHex(preset.bg, 'FFFFFF');
   const text = dark ? 'FFFFFF' : cleanHex(preset.text || preset.text_primary, '0F172A');
+  // Studio Yebisu local adaptation: stage text must reach 4.5:1 on the actual
+  // stage background. Original accent/secondary remain decorative strokes;
+  // text uses the first readable tint (dark) or shade (light) of the same hue.
   const muted = dark
-    ? firstReadableColor(background, [preset.text_muted, 'CBD5E1', 'FFFFFF'], 3.0)
-    : cleanHex(preset.text_muted, '64748B');
+    ? firstReadableColor(background, [preset.text_muted, 'CBD5E1', 'FFFFFF'], 4.5)
+    : firstReadableColor(background, [preset.text_muted, '64748B', text], 4.5);
   const accent = cleanHex(preset.accent_primary, '1493A4');
   const secondary = cleanHex(preset.accent_secondary, accent);
+  const stageInkMix = (color, amount) => {
+    const target = dark ? 255 : 0;
+    return [0, 2, 4].map((start) => {
+      const channel = parseInt(color.slice(start, start + 2), 16);
+      return Math.round(channel + (target - channel) * amount).toString(16).padStart(2, '0');
+    }).join('').toUpperCase();
+  };
+  const readableStageInk = (color) => firstReadableColor(
+    background,
+    [color, stageInkMix(color, 0.45), stageInkMix(color, 0.65), text],
+    4.5,
+  );
+  const accentInk = readableStageInk(accent);
+  const secondaryInk = readableStageInk(secondary);
+  // Optional visible labels per canonical slot ID; the slot name stays the fallback.
+  const stageLabels = slideData.stage_labels && typeof slideData.stage_labels === 'object'
+    ? slideData.stage_labels
+    : {};
   const line = dark
     ? firstReadableColor(background, [preset.line, '475569', 'CBD5E1'], 2.0)
     : cleanHex(preset.line, 'CBD5E1');
@@ -2535,7 +2563,7 @@ function renderContractStage(slide, slideData, preset, contract, kind) {
     fontFace: preset.font_body,
     fontSize: roleMetadataFont(preset, dense ? 8.0 : 8.2),
     bold: true,
-    color: accent,
+    color: accentInk,
     charSpacing: 1.1,
     fit: 'shrink',
     objectName: `metadata:${kind}-kicker`,
@@ -2644,7 +2672,7 @@ function renderContractStage(slide, slideData, preset, contract, kind) {
       line: { color: index % 2 ? secondary : accent, width: 0 },
       objectName: `decorative:role-contract-accent:${kind}:${name}`,
     }));
-    const label = name.replace(/_/g, ' ').toUpperCase();
+    const label = safeText(stageLabels[name]) || name.replace(/_/g, ' ').toUpperCase();
     const value = contractStageValue(slideData, name, index, kind);
     const pad = compact ? 0.08 : 0.14;
     if (horizontal && box.h < 0.80) {
@@ -2697,7 +2725,7 @@ function renderContractStage(slide, slideData, preset, contract, kind) {
       fontFace: preset.font_heading,
       fontSize: valueFont,
       bold: true,
-      color: index % 2 ? secondary : accent,
+      color: index % 2 ? secondaryInk : accentInk,
       fit: 'shrink',
       align: horizontal ? 'left' : 'center',
       valign: 'middle',
@@ -2706,7 +2734,7 @@ function renderContractStage(slide, slideData, preset, contract, kind) {
   });
 
   if (hasFooterChrome(slideData, preset)) {
-    addFooter(slide, preset, slideData);
+    addFooter(slide, preset, slideData, { dark, background });
   } else {
     addTitleFooter(slide, preset, slideData, muted);
   }
@@ -6695,7 +6723,7 @@ function renderOrdinaryTableContract(slide, slideData, preset, header, table, co
   if (indexBox) {
     const horizontal = indexBox.h < body.h * 0.4;
     const label = '引き継ぎメモ';
-    const detail = `${table.rows.length}項目${horizontal ? ' | ' : '\n'}${table.headers.map((text) => safeText(text)).join(horizontal ? ' | ' : '\n')}`;
+    const detail = `${table.rows.length}件の記入例`;
     const detailW = horizontal ? indexBox.w - 1.42 : indexBox.w - 0.24;
     const height = horizontal
       ? Math.max(measure(label, 1.06, metadataFont, preset.font_heading, true),
@@ -6811,7 +6839,7 @@ function renderOrdinaryTableContract(slide, slideData, preset, header, table, co
       fontSize: options.bodyFontSize, rowH, objectName: `Editable table: ${safeText(slideData.title)}` });
     if (caption) slide.addText(caption, textOpts({ x: tableBox.x, y: tableBox.y + tableH + captionGap,
       w: tableBox.w, h: captionH, fontFace: preset.font_caption || preset.font_body, fontSize: captionFont,
-      italic: true, color: firstReadableColor(preset.bg, [preset.text_muted, preset.text]), wrap: true,
+      italic: false, color: firstReadableColor(preset.bg, [preset.text_muted, preset.text]), wrap: true,
       objectName: 'metadata:table-caption' }));
   };
   const slots = { index: addIndex, table: addTable, readout: addReadout };

@@ -1,0 +1,173 @@
+/* ===========================================================
+   MORPH-SLIDES FRAMES: compositions that break the "title top-left,
+   body block below" grid. One attribute on an inner slide:
+     <section class="slide" data-layout="content" data-frame="split-left">
+   Frames: split-left split-right poster band rail bottom stack corner
+           diagonal zigzag numbered frame, media-left media-right magazine
+           spotlight stairs
+   - the body (bullets, cols, stats, timeline, agenda, bento, process,
+     before-after, compare-table, countdown, icon grid, diagrams) moves
+     into the frame's box (--fl/--fr/--ft/--fb);
+   - colour panels are a real element (.frame-panel, added by
+     morph-frames.js) so the audit sees them; text on them uses
+     --on-accent, which the engine picks per slide for contrast;
+   - frame slides take a clear stage: the panel is the decoration.
+   =========================================================== */
+
+/* body box: every content container follows it. Selectors are weighted (.deck-stage + doubled
+   [data-frame]) so a style's own .bullets/.highlight placement never wins over the frame. */
+.deck-stage .slide[data-frame][data-frame] { --fl: 120px; --fr: 120px; --ft: 270px; --fb: 90px; --hl-w: 680px; --body-top: var(--ft); --body-bottom: var(--fb); }
+.deck-stage .slide[data-frame]:is([data-frame^="split"], [data-frame="rail"], [data-frame="diagonal"], [data-frame="stack"]) { --hl-w: 0px; }   /* highlight lives elsewhere */
+.deck-stage .slide[data-frame][data-frame] :is(.bullets, .cols, .stats, .timeline, .agenda-list, .body-zone, .bignum, .bento, .ba, .process, .countdown, .ico-grid) {
+  left: var(--fl); right: var(--fr); width: auto;
+}
+.deck-stage .slide[data-frame][data-frame] .ctable { left: var(--fl); width: calc(1920px - var(--fl) - var(--fr)); }
+.deck-stage .slide[data-frame][data-frame]:has(.highlight) .bullets { right: calc(var(--fr) + var(--hl-w, 0px)); }
+.deck-stage .slide[data-frame][data-frame] > .title:first-child { z-index: 2; }
+.deck-stage .slide[data-frame][data-frame] .frame-panel { position: absolute; z-index: 0; background: var(--frame-fill, var(--accent)); }
+.deck-stage .slide[data-frame][data-frame] > :not(.frame-panel, .title) { z-index: 1; }
+
+/* text that sits on an accent panel */
+.deck-stage .slide[data-frame][data-frame] .on-panel, .deck-stage .slide[data-frame][data-frame] .on-panel .hl-text { color: var(--on-accent, var(--bg)); }
+.deck-stage .slide[data-frame][data-frame] .highlight.on-panel { --accent: var(--on-accent, var(--bg)); }
+
+/* ---------- split-left / split-right: a colour block holds title + highlight ---------- */
+.deck-stage .slide[data-frame][data-frame^="split"] { --fl: 860px; --ft: 140px; --fb: 110px; }
+.deck-stage .slide[data-frame][data-frame="split-right"] { --fl: 120px; --fr: 860px; }
+.deck-stage .slide[data-frame][data-frame="split-left"] .frame-panel { left: 0; top: 0; width: 760px; height: 1080px; }
+.deck-stage .slide[data-frame][data-frame="split-right"] .frame-panel { right: 0; top: 0; width: 760px; height: 1080px; }
+.deck-stage .slide[data-frame][data-frame^="split"] > .title:first-child { top: 130px; width: 580px; font-size: 70px; color: var(--on-accent, var(--bg)); }
+.deck-stage .slide[data-frame][data-frame="split-left"] > .title:first-child { left: 90px; }
+.deck-stage .slide[data-frame][data-frame="split-right"] > .title:first-child { left: 1250px; }
+.deck-stage .slide[data-frame][data-frame^="split"] .highlight { top: 520px; bottom: 110px; width: 580px; align-items: flex-start; text-align: left; }
+.deck-stage .slide[data-frame][data-frame="split-left"] .highlight { left: 90px; right: auto; }
+.deck-stage .slide[data-frame][data-frame="split-right"] .highlight { left: 1250px; right: auto; }
+
+/* ---------- poster: a huge title, the body as a low band ---------- */
+.deck-stage .slide[data-frame][data-frame="poster"] { --ft: 460px; --hl-w: 520px; }
+.deck-stage .slide[data-frame][data-frame="poster"] > .title:first-child { top: 100px; width: 1680px; font-size: 150px; line-height: .95; letter-spacing: -.03em; }
+.deck-stage .slide[data-frame][data-frame="poster"] .highlight { top: 460px; bottom: 90px; left: auto; right: 120px; width: 480px; }
+
+/* ---------- band: the body runs on a tinted band, the title sits under it ---------- */
+.deck-stage .slide[data-frame][data-frame="band"] { --ft: 300px; --fb: 300px; --frame-fill: color-mix(in srgb, var(--accent) 14%, var(--bg)); --hl-w: 520px; }
+.deck-stage .slide[data-frame][data-frame="band"] .frame-panel { left: 0; right: 0; top: 260px; height: 560px; }
+.deck-stage .slide[data-frame][data-frame="band"] > .title:first-child { top: auto; bottom: 80px; width: 1680px; font-size: 72px; }
+.deck-stage .slide[data-frame][data-frame="band"] .highlight { top: 300px; bottom: 300px; left: auto; right: 120px; width: 480px; }
+
+/* ---------- rail: the title stands in a left column behind a rule ---------- */
+.deck-stage .slide[data-frame][data-frame="rail"] { --fl: 820px; --ft: 140px; --fb: 110px; }
+.deck-stage .slide[data-frame][data-frame="rail"] .frame-panel { left: 740px; top: 140px; width: 6px; height: 830px; border-radius: 3px; }
+.deck-stage .slide[data-frame][data-frame="rail"] > .title:first-child { top: 130px; width: 560px; font-size: 76px; }
+.deck-stage .slide[data-frame][data-frame="rail"] .highlight { top: 560px; bottom: 110px; left: 120px; right: auto; width: 560px; align-items: flex-start; text-align: left; }
+
+/* ---------- bottom: the title closes the slide under a rule ---------- */
+.deck-stage .slide[data-frame][data-frame="bottom"] { --ft: 110px; --fb: 280px; }
+.deck-stage .slide[data-frame][data-frame="bottom"] .frame-panel { left: 120px; right: 120px; bottom: 236px; height: 4px; }
+.deck-stage .slide[data-frame][data-frame="bottom"] > .title:first-child { top: auto; bottom: 90px; width: 1680px; font-size: 80px; }
+.deck-stage .slide[data-frame][data-frame="bottom"] .highlight { top: 110px; bottom: 280px; }
+
+/* ---------- stack: centred title, a narrow reading column ---------- */
+.deck-stage .slide[data-frame][data-frame="stack"] { --fl: 240px; --fr: 240px; --ft: 260px; }
+.deck-stage .slide[data-frame][data-frame="stack"] > .title:first-child { left: 300px; width: 1320px; text-align: center; }
+.deck-stage .slide[data-frame][data-frame="stack"] .frame-panel { left: 900px; top: 222px; width: 120px; height: 5px; border-radius: 3px; }
+.deck-stage .slide[data-frame][data-frame="stack"]:has(.highlight) { --fr: 760px; }
+.deck-stage .slide[data-frame][data-frame="stack"] .highlight { left: auto; right: 300px; width: 400px; }
+
+/* ---------- corner: an accent square holds the title ---------- */
+.deck-stage .slide[data-frame][data-frame="corner"] { --ft: 470px; --hl-w: 520px; }
+.deck-stage .slide[data-frame][data-frame="corner"] .frame-panel { left: 0; top: 0; width: 900px; height: 410px; }
+.deck-stage .slide[data-frame][data-frame="corner"] > .title:first-child { top: 110px; left: 120px; width: 700px; font-size: 64px; color: var(--on-accent, var(--bg)); }
+.deck-stage .slide[data-frame][data-frame="corner"] .highlight { top: 90px; bottom: auto; height: 340px; left: auto; right: 120px; width: 800px; }
+
+/* ---------- diagonal: a slanted colour field carries the highlight ---------- */
+.deck-stage .slide[data-frame][data-frame="diagonal"] { --fr: 820px; }
+.deck-stage .slide[data-frame][data-frame="diagonal"] .frame-panel { left: 1000px; right: 0; top: 0; bottom: 0; clip-path: polygon(30% 0, 100% 0, 100% 100%, 0 100%); }
+.deck-stage .slide[data-frame][data-frame="diagonal"] .highlight { left: 1300px; right: 90px; }
+
+/* ---------- frame: a heavy outline, the title on its top edge ---------- */
+.deck-stage .slide[data-frame][data-frame="frame"] { --fl: 170px; --fr: 170px; --ft: 250px; --fb: 120px; --hl-w: 520px; --frame-fill: transparent; }
+.deck-stage .slide[data-frame][data-frame="frame"] .frame-panel { left: 90px; right: 90px; top: 150px; bottom: 70px; border: 6px solid var(--accent); }
+.deck-stage .slide[data-frame][data-frame="frame"] > .title:first-child { top: 110px; left: 140px; width: auto; max-width: 1500px; padding: 0 26px; background: var(--viz-paper, var(--bg)); font-size: 60px; }
+.deck-stage .slide[data-frame][data-frame="frame"] .highlight { top: 250px; bottom: 120px; left: auto; right: 170px; width: 480px; }
+
+/* ---------- zigzag: points become staggered cards ---------- */
+.deck-stage .slide[data-frame][data-frame="zigzag"] .bullets { gap: 26px; }
+.deck-stage .slide[data-frame][data-frame="zigzag"] .bullets li { padding: 22px 30px 22px 30px; width: 74%; border-radius: var(--card-radius, 16px);
+  background: color-mix(in srgb, var(--accent) 12%, var(--viz-paper, var(--bg))); color: var(--fg); }
+.deck-stage .slide[data-frame][data-frame="zigzag"] .bullets li:nth-child(even) { margin-left: 26%; }
+.deck-stage .slide[data-frame][data-frame="zigzag"] .bullets li::before { display: none; }
+
+/* ---------- numbered: big numbers instead of bullet dots ---------- */
+.deck-stage .slide[data-frame][data-frame="numbered"] .bullets { counter-reset: fn; }
+.deck-stage .slide[data-frame][data-frame="numbered"] .bullets li { counter-increment: fn; padding-left: 2.6em; }
+.deck-stage .slide[data-frame][data-frame="numbered"] .bullets li::before { content: counter(fn, decimal-leading-zero); top: -0.1em; width: auto; height: auto;
+  background: none; border-radius: 0; color: var(--accent); font: var(--title-weight, 800) 1.6em/1 var(--font-display); }
+.deck-stage .slide[data-frame][data-frame="poster"] .frame-panel { left: 120px; top: 420px; width: 140px; height: 8px; }   /* a short rule under the giant title */
+/* two-col with a takeaway: the conclusion follows the frame box, the columns stop above it */
+.deck-stage .slide[data-frame][data-frame] .takeaway { left: var(--fl); right: var(--fr); bottom: var(--fb); }
+.deck-stage .slide[data-frame][data-frame]:has(.takeaway) .cols { bottom: calc(var(--fb) + 150px); }
+/* cards and numbers spread over the body height instead of bunching in the middle */
+.deck-stage .slide[data-frame]:is([data-frame="zigzag"], [data-frame="numbered"]) .bullets { justify-content: space-evenly; }
+/* narrow or short frames: figures and steps take a smaller type scale */
+.deck-stage .slide[data-frame]:is([data-frame^="split"], [data-frame="rail"], [data-frame="diagonal"], [data-frame="corner"]) .stats { --s-num: 120px; --s-fs: 25px; }
+.deck-stage .slide[data-frame]:is([data-frame^="split"], [data-frame="rail"], [data-frame="diagonal"], [data-frame="corner"]) .timeline { --t-when: 46px; --t-h: 30px; --t-fs: 23px; }
+/* off its card the highlight drops the colours a style gave it for that card (dark ink on an orange slab...) */
+.deck-stage .slide[data-frame][data-frame]:has(> .frame-panel) .highlight:not(.on-panel) { color: var(--fg); --accent: inherit; }   /* zigzag, numbered keep the card */
+
+/* ===========================================================
+   4 bolder compositions: they change the type scale and the reading path,
+   not only where a colour block sits.
+   media-left / media-right  a full-height visual well (mock, svg, diagram, big figure) + a text column
+   magazine                  big headline, a rule, points in two columns, a pull quote in the margin
+   spotlight                 one key sentence set huge in the middle, 2 to 4 points as a row of cards
+   stairs                    points step down from top-left to bottom-right like a staircase
+   =========================================================== */
+
+/* ---------- media-left / media-right: the visual gets half the slide, edge to edge ---------- */
+.deck-stage .slide[data-frame][data-frame^="media"] { --ft: 330px; --fb: 110px; --hl-w: 0px; --frame-fill: color-mix(in srgb, var(--accent) 14%, var(--bg)); }
+.deck-stage .slide[data-frame][data-frame="media-left"] { --fl: 1000px; --fr: 120px; }
+.deck-stage .slide[data-frame][data-frame="media-right"] { --fl: 120px; --fr: 1000px; }
+.deck-stage .slide[data-frame][data-frame="media-left"] .frame-panel { left: 0; top: 0; width: 900px; height: 1080px; }
+.deck-stage .slide[data-frame][data-frame="media-right"] .frame-panel { left: 1020px; top: 0; width: 900px; height: 1080px; }
+.deck-stage .slide[data-frame][data-frame^="media"] > .title:first-child { top: 130px; width: 800px; font-size: 72px; }
+.deck-stage .slide[data-frame][data-frame="media-left"] > .title:first-child { left: 1000px; }
+/* the visual: also write its box inline (left/top/width/height px) so the PowerPoint export finds it */
+.deck-stage .slide[data-frame][data-frame="media-left"] > :is(.media, .mock, .viz) { position: absolute; left: 60px; top: 140px; width: 780px; height: 800px; }
+.deck-stage .slide[data-frame][data-frame="media-right"] > :is(.media, .mock, .viz) { position: absolute; left: 1080px; top: 140px; width: 780px; height: 800px; }
+/* a window in the well is read from the back of the room: larger words, content centred so a short prompt leaves no empty floor */
+.deck-stage .slide[data-frame][data-frame^="media"] > .mock { font-size: 32px; justify-content: center; }
+/* no visual at hand: the highlight (a big figure, an icon, a short claim) fills the well */
+.deck-stage .slide[data-frame][data-frame="media-left"] .highlight { left: 60px; right: auto; width: 780px; top: 140px; bottom: 140px; }
+.deck-stage .slide[data-frame][data-frame="media-right"] .highlight { left: auto; right: 60px; width: 780px; top: 140px; bottom: 140px; }
+.deck-stage .slide[data-frame][data-frame^="media"] .highlight .hl-big { font-size: 280px; line-height: .9; }
+.deck-stage .slide[data-frame][data-frame^="media"] .highlight .hl-text { font-size: 40px; }
+
+/* ---------- magazine: headline, rule, two text columns, pull quote ---------- */
+.deck-stage .slide[data-frame][data-frame="magazine"] { --ft: 380px; --fb: 100px; --fr: 620px; --hl-w: 0px; --frame-fill: var(--accent); }
+.deck-stage .slide[data-frame][data-frame="magazine"] > .title:first-child { top: 100px; width: 1400px; font-size: 96px; line-height: 1.02; letter-spacing: -.02em; }
+.deck-stage .slide[data-frame][data-frame="magazine"] .frame-panel { left: 120px; right: 120px; top: 336px; height: 4px; }
+.deck-stage .slide[data-frame][data-frame="magazine"] .bullets { display: grid; grid-template-columns: 1fr 1fr; column-gap: 72px; row-gap: var(--b-gap); align-content: center; }
+.deck-stage .slide[data-frame][data-frame="magazine"] .highlight { left: auto; right: 120px; width: 420px; top: 380px; bottom: 100px;
+  justify-content: center; align-items: flex-start; text-align: left; }
+.deck-stage .slide[data-frame][data-frame="magazine"] .highlight::before { content: ""; width: 120px; height: 8px; margin-bottom: 28px; background: var(--accent); }
+.deck-stage .slide[data-frame][data-frame="magazine"] .highlight .hl-text { font: italic var(--title-weight, 700) 40px/1.25 var(--font-display); color: var(--fg); }
+
+/* ---------- spotlight: one sentence carries the slide, points as a row of cards ---------- */
+.deck-stage .slide[data-frame][data-frame="spotlight"] { --ft: 650px; --fb: 110px; --hl-w: 0px; --frame-fill: var(--accent); }
+.deck-stage .slide[data-frame][data-frame="spotlight"] > .title:first-child { top: 150px; left: 160px; width: 1600px; font-size: 104px; line-height: 1.05; text-align: center; letter-spacing: -.02em; }
+.deck-stage .slide[data-frame][data-frame="spotlight"] .frame-panel { left: 900px; top: 586px; width: 120px; height: 8px; border-radius: 4px; }
+.deck-stage .slide[data-frame][data-frame="spotlight"] .bullets { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 40px; align-content: stretch; --b-fs: 36px; }
+.deck-stage .slide[data-frame][data-frame="spotlight"] .bullets li { display: flex; align-items: center; justify-content: center; text-align: center; padding: 28px 36px;
+  border-radius: var(--card-radius, 18px); background: color-mix(in srgb, var(--accent) 12%, var(--viz-paper, var(--bg))); }
+.deck-stage .slide[data-frame][data-frame="spotlight"] .bullets li::before { display: none; }
+
+/* ---------- stairs: points step down and right, each one a card with its number ---------- */
+.deck-stage .slide[data-frame][data-frame="stairs"] .bullets { counter-reset: st; justify-content: space-evenly; gap: 18px; }
+.deck-stage .slide[data-frame][data-frame="stairs"] .bullets li { counter-increment: st; width: 60%; padding: 26px 32px 26px 3.4em; font-size: var(--b-fs);
+  border-left: 8px solid var(--accent); border-radius: 0 var(--card-radius, 14px) var(--card-radius, 14px) 0; background: color-mix(in srgb, var(--accent) 10%, var(--viz-paper, var(--bg))); }
+.deck-stage .slide[data-frame][data-frame="stairs"] .bullets li::before { content: counter(st); left: .7em; top: 50%; transform: translateY(-50%); width: auto; height: auto;
+  background: none; border-radius: 0; color: var(--accent); font: var(--title-weight, 800) 1.5em/1 var(--font-display); }
+.deck-stage .slide[data-frame][data-frame="stairs"] .bullets li:nth-child(2) { margin-left: 10.5%; }
+.deck-stage .slide[data-frame][data-frame="stairs"] .bullets li:nth-child(3) { margin-left: 21%; }
+.deck-stage .slide[data-frame][data-frame="stairs"] .bullets li:nth-child(4) { margin-left: 31.5%; }
+.deck-stage .slide[data-frame][data-frame="stairs"] .bullets li:nth-child(n+5) { margin-left: 42%; }

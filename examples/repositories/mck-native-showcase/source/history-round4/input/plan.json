@@ -1,0 +1,96 @@
+{
+  "id": "mck-native-showcase",
+  "title": "フォント構成と制作手順",
+  "upstream": "likaku/Mck-ppt-design-skill",
+  "brief": {
+    "audience": "Studio Yebisuのフォントキットを使って資料を作る人",
+    "goal": "収録フォントの言語・分類の内訳と、この資料を作った順序を4ページで示す",
+    "duration_minutes": 4,
+    "data_source": "data/oss-font-kit.json の families[].family / language / category と presets[]",
+    "exclusions": "効果・所要時間・成果の数値は扱わない。データにない値を作らない。"
+  },
+  "fonts": {
+    "FONT_HEADER": "BIZ UDPGothic",
+    "FONT_BODY": "BIZ UDPGothic",
+    "FONT_EA": "BIZ UDPGothic"
+  },
+  "languages": {
+    "ja": "日本語",
+    "latin": "欧文"
+  },
+  "categories": {
+    "sans": "ゴシック系",
+    "serif": "明朝・セリフ系",
+    "rounded": "丸ゴシック系",
+    "display": "見出し・手書き調",
+    "mono": "等幅"
+  },
+  "cover": {
+    "subtitle": "OSSフォントキット{total}字体の内訳と、資料を作る順序",
+    "author": "Studio Yebisu",
+    "date": "{updated_on}更新のフォントデータ"
+  },
+  "donut": {
+    "show_summary": true,
+    "title": "{total}字体のうち{top_label}が{top_count}字体で最も多い",
+    "title_tie": "{total}字体を分類別に数えた内訳",
+    "center_sub": "収録字体",
+    "colors": [
+      "NAVY",
+      "ACCENT_BLUE",
+      "ACCENT_GREEN",
+      "ACCENT_ORANGE",
+      "ACCENT_RED",
+      "MED_GRAY"
+    ],
+    "source": "出典：data/oss-font-kit.json（{updated_on}更新）の category と presets を集計",
+    "group_by": "category",
+    "summary": "和文は見出し・本文に、\n欧文は英数字に使う。"
+  },
+  "table": {
+    "title_prefix": "言語別に見ると、",
+    "title_fallback": "言語と分類ごとの字体数と代表書体",
+    "headers": {
+      "category": "分類",
+      "total": "計",
+      "sample": "代表書体（収録順の先頭）"
+    },
+    "total_label": "合計",
+    "col_widths_in": [
+      2.4,
+      1.4,
+      1.4,
+      1.4,
+      5.133
+    ],
+    "bottom_bar_label": "プリセット",
+    "presets_split": "収録プリセット{n}件は、いずれも見出し・本文を日本語書体、英数字を欧文書体で指定",
+    "source": "出典：data/oss-font-kit.json（{updated_on}更新）の language・category・family を集計"
+  },
+  "process": {
+    "title": "制作は4段階で進め、原稿と描画は検査結果で次へ進む",
+    "milestones": [
+      [
+        "要件",
+        "読み手と目的\n元データを\nbriefに記入"
+      ],
+      [
+        "構成",
+        "版式と主張を\noutlineに\nまとめる"
+      ],
+      [
+        "原稿",
+        "文言と出典\ncontentに記入\nS3で検査"
+      ],
+      [
+        "出力",
+        "PPTX生成\nS4で検査\n合否を確認"
+      ]
+    ],
+    "bottom_bar": [
+      "判定",
+      "S3はgate_check_s3.py、S4はgate_check.pyが書くJSONのpassedで判定する"
+    ],
+    "source": "出典：tools/build_mck_native_showcase.py の工程。各段階の所要時間は計測していない"
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "status": "pass",
+  "scope": "Two archives independently extracted; supplied integrator decisions reused for native sample/final conversion and original before/after lint. Sample2+final4 PowerPoint16 pages per archive rerendered. No fresh human approval and no new dependency install.",
+  "tested_archives": [
+    {
+      "archive": "downloads/aham-example-ja.zip",
+      "sha256_at_execution": "b525503d055403fa1be1cd16c11b9246ff2b68487f3465526d2e76f9e876aacf",
+      "commands": [
+        [
+          "python.exe",
+          "generate.py",
+          "--sample"
+        ],
+        [
+          "pwsh",
+          "-NoProfile",
+          "-File",
+          "source/render_powerpoint.ps1",
+          "-PresentationPath",
+          "source/sample/sample.pptx",
+          "-OutputDirectory",
+          "source/sample/render"
+        ],
+        [
+          "python.exe",
+          "source/render_pdf_previews.py",
+          "source/sample/render"
+        ],
+        [
+          "python.exe",
+          "generate.py",
+          "--final"
+        ],
+        [
+          "pwsh",
+          "-NoProfile",
+          "-File",
+          "source/render_powerpoint.ps1",
+          "-PresentationPath",
+          "source/final/deck.pptx",
+          "-OutputDirectory",
+          "render"
+        ],
+        [
+          "python.exe",
+          "source/render_pdf_previews.py",
+          "render"
+        ]
+      ],
+      "all_exit_codes": 0,
+      "sample_native_images_notes_match": true,
+      "final_native_images_notes_match": true,
+      "sample_lint_native_status": "pass",
+      "final_lint_native_status": "pass",
+      "pages_rendered": 6,
+      "max_rgb_difference": 0
+    },
+    {
+      "archive": "downloads/aham-ja.zip",
+      "sha256_at_execution": "b5cd50293718550049737b2cfa719067f80f56a8309545ae473b314a9b92ee5d",
+      "commands": [
+        [
+          "python.exe",
+          "generate.py",
+          "--sample"
+        ],
+        [
+          "pwsh",
+          "-NoProfile",
+          "-File",
+          "source/render_powerpoint.ps1",
+          "-PresentationPath",
+          "source/sample/sample.pptx",
+          "-OutputDirectory",
+          "source/sample/render"
+        ],
+        [
+          "python.exe",
+          "source/render_pdf_previews.py",
+          "source/sample/render"
+        ],
+        [
+          "python.exe",
+          "generate.py",
+          "--final"
+        ],
+        [
+          "pwsh",
+          "-NoProfile",
+          "-File",
+          "source/render_powerpoint.ps1",
+          "-PresentationPath",
+          "source/final/deck.pptx",
+          "-OutputDirectory",
+          "render"
+        ],
+        [
+          "python.exe",
+          "source/render_pdf_previews.py",
+          "render"
+        ]
+      ],
+      "all_exit_codes": 0,
+      "sample_native_images_notes_match": true,
+      "final_native_images_notes_match": true,
+      "sample_lint_native_status": "pass",
+      "final_lint_native_status": "pass",
+      "pages_rendered": 6,
+      "max_rgb_difference": 0
+    }
+  ],
+  "pptx_sha256": "a6170f6dd2f8d93212020c4b2fd6bd01f44720988466e9aaa8aff84777e8c781",
+  "later_repack": "Only this receipt, QA and SOURCE metadata changed after replay; unchanged payload verified separately."
+}

@@ -1,29 +1,33 @@
-# Magic Slide：朝の支度を10分短くする企画
+# 同じ数字や持ち物を次頁へ引き継ぎ、前夜と朝の役割の変化を追える。
 
-原典Magic SlideのHTMLとFLIPを実行した、日本語5枚の架空の実験案です。40分→30分、服4分・鍵3分・バッグ3分は仮定で、実績ではありません。前夜の準備時間も含めて効果を確かめる構成です。
+入力：朝の支度40分→30分を仮定する実験案、5頁のoutlineとBrief Lite。
+出力：元のMagic Move・Overview・講稿を持つHTML。
 
-`sources/outline.md` と `brief.md` → 各slide-XX.html/style.css → 原典merge-slides.py → 認証scopeを1行修正した派生inject-runtime.py → 原典と同一のserve.pyで制作。10分、服・鍵・バッグ、30分・5日間を隣接ページに引き継ぎます。講稿はdata-speaker-notesに保持。原典のcursor・stagger・Magic Move・dock・Overview・編集UIを保持しています。
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全5頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-## 表示と編集
+## 使い方
 
-静的サイトのiframeはプレゼン用です。矢印、dock、一覧などの表示操作を使います。編集・Save・画像差し替えは原典preview serverが必要です。静的サイトでは保存できません。日本語本文に対し、原典UIのja未登録文字列は原典のEnglish fallbackになります。
+1. sources/outline.mdで結論・読み手・終わり方を決める
+2. sources/brief.mdで題材・書体・配色と採らない表現を決める
+3. 数字と持ち物に同じmagic-idを付け、各頁の意味に沿って置く
+4. 原典mergeと認証scopeのみ派生したinjectorで生成する
+5. 原典serveでOverview→通常再生→全境界の動きを確認する
 
-このフォルダで `python source/ja-runtime/scripts/serve.py index.html --no-open` を実行し、表示された /deck/ のURLを開いてください。Python標準ライブラリのみ。生成時にはNodeの構文検査を利用しています。画像生成APIや認証情報は不要です。
+## 生成・検査
 
-## 再生成
+`python source/build_magic_slide_repository_example.py --generate-only --source-dir sources --upstream source/upstream --font-dir assets/fonts --output-dir <new-directory>`
+`python source/ja-runtime/scripts/serve.py index.html --no-open`
 
-リポジトリから: `python tools/build_magic_slide_repository_example.py --output-dir morning-regenerated --input examples/repositories/magic-slide/input/data.json`。
+脚注を15→20px、本文色へ変更。全5頁と4境界の実Magic Moveを再確認。静止画のcursor/trailだけ撮影時に除外。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
 
-このフォルダ単体から: `python source/build_magic_slide_repository_example.py --upstream source/upstream --input input/data.json --font-dir assets/fonts --output-dir ../morning-regenerated`。
+## 範囲
 
-既存HTMLを編集した場合は `--source-dir sources` を指定すると、そのモジュールを原典で再merge/injectします。生成先は別フォルダを推奨。再生成は常にawaiting_visual_reviewとなり、今回の合格を引き継ぎません。raw原典はsource/upstreamへ無改変保持。派生runtimeはsource/ja-runtimeへ分離します。
+- 40・30・4・3・3分は仮定、短縮効果は未検証
+- 認証付きQA関数のscope修正のみ。server認証と保存先制限は原典のまま
+- 静的カタログiframeでは編集・保存が使えない
+- agentの検証と人のrevision/adoptionは別。後者はpending
+- 静止画だけcursorとtrailを非表示にして撮影。通常runtimeは保持
 
-## 原典不具合と局所修正
+## 遷移の実撮影
 
-原典のQAノート読出しが別IIFE内のmsAuthFetchを参照し、ReferenceErrorになりました。source/upstream-failureに実行時の記録を保存。派生injectorは既存の認証付きclosureをwindowへ公開する1行だけを追加します。トークン取得・header付与・server認証・保存パス制限は原典のままです。source/ja-runtime/changes.diffとchanges.jsonが正確な差分です。保存後の再注入にも同じ修正が使われるよう、編集はja-runtime側のserve.pyから起動してください。
-
-## QAと採用状態
-
-原典serve.pyのQA Overview captureを先に視認。その後、依頼されたカタログ実例の検査として全頁とnative motion/navigationを検証しました。記録はQA.jsonとsource/browser-review.json。Agent QAと人によるRevision/正式採用は別です。原典が求める人のレビューはpendingです。
-
-原典MITとNoto Sans JP OFLを同梱。外部写真なし。固定コミット、原典hash、入力/成果物hash、実行ログはPROVENANCE.jsonとsource/に保存しています。
+原典serveで4つの境界を再生し、各境界の前・途中・後の12枚を保存しました。[実画像の一覧](render/motion-before-mid-after.jpg)と[状態・hash](source/motion-check.json)で、10分と準備品、30分・5日間の移動を確認できます。元の時間設定を変更せず、途中フレームを合成していません。人のRevision・端末ごとの滑らかさは未確認です。

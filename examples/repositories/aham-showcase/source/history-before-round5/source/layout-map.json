@@ -1,0 +1,39 @@
+{
+  "purpose": "版式IDと原典関数の対応表。版式IDはページ本文に出さず、ここだけに置く（本文の section_label は内容名）。",
+  "plan_source": "input/phase-05-layout-plan.json",
+  "theme": "A（upstream/references/theme-tiers.md：白地・中性グレー・青は点在のみ）",
+  "pages": [
+    {"page": 1, "layout_id": "SPC-01", "function": "themes.cover('A', ...)", "section_label_in_body": null, "previous_layout_id": "SPC cover"},
+    {"page": 2, "layout_id": "V-02", "function": "charts.gantt(40,150,1180,420, tasks, 20, unit_label='分') + components.T(56,656,補足注)", "section_label_in_body": "時間配分", "previous_layout_id": "E-03"},
+    {"page": 3, "layout_id": "E-03", "function": "layouts.stage_flow(3段, dark_last=False)", "section_label_in_body": "作業の入口", "previous_layout_id": "E-04"},
+    {"page": 4, "layout_id": "A-90", "function": "structures.swimlane_roadmap(40,140,1190,440, lanes, 4, unit_label='週', legend=False)", "section_label_in_body": "四週間の試行計画", "previous_layout_id": "A-90"}
+  ],
+  "chrome": "themes.chrome('A', section_label, action_title, footer_source, page, 4, body, brand='朝作業')（tsize は原典既定の32）",
+  "adapters": [
+    {
+      "id": "font-family",
+      "kind": "書体（局所）",
+      "rule": "SVG 文字列中の font-family=\"<components.SANS>\" と font-family=\"<components.MONO>\" を完全一致で font-family=\"Manrope, 'Zen Kaku Gothic New', sans-serif\" に置き換える。",
+      "not_changed": ["色", "座標", "字号", "角丸", "線"]
+    },
+    {
+      "id": "ea-font-registration",
+      "kind": "変換器の実行時設定",
+      "rule": "変換前に svg_to_pptx.drawingml_utils.EA_FONTS へ 'Zen Kaku Gothic New' を加える。未登録だと変換器が和文字体を西文側とみなし、ea を Microsoft YaHei にする。upstream のファイルは変更しない。"
+    },
+    {
+      "id": "fixed-labels",
+      "kind": "固定文字の和訳",
+      "rule": "原典関数に埋め込まれた中国語の固定文字だけを置き換える：『目录　CONTENTS』→『目次』（cover A）、『来源：』→『出典：』（chrome 页脚）。"
+    }
+  ],
+  "coordinate_adapters": "なし。旧版は P4 右端の目盛りを text-anchor=end に後から書き換えていたが、今回は原典引数（unit_label='週'、w=1190）だけで x≤1240 に収める。generate.py は右端が 1240 を超える文字があれば検査失敗で止まり、座標を自動補正しない。",
+  "removed_from_previous": [
+    "コバルト・黄色への色置換（page別 mapping）",
+    "角丸 rx の一律削除",
+    "font-size を16px未満から16pxへ一律拡大（chrome の品牌文字が蓝点に接触した原因）",
+    "『月』→『週』の全文置換",
+    "section_label への版式ID（SPC cover / E-03 / E-04 / A-90）の露出",
+    "tsize=38（原典既定32へ戻す）"
+  ]
+}

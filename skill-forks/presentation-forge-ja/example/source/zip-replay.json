@@ -1,0 +1,30 @@
+{
+  "author": "Codex",
+  "status": "passed",
+  "input_archive_sha256": "ba3a12a5bcab5b6a78d0b3a235da91fe6ec8375620b18c82fc21eb31ded978a5",
+  "current_artifact_sha256": "c68be597afc7daa13aec2b1be4e3234ba339d5f0696045186a6a7c2c94424007",
+  "scope": "Actual example ZIP extracted into a fresh private folder and rebuilt with existing installed runtimes. No alternate environment or service installed.",
+  "shared_dependencies": "Existing matching node_modules reused through a private junction where required; dependencies are not in the ZIP.",
+  "results": {
+    "html_byte_identical": true
+  },
+  "commands": [
+    {
+      "program": "python.exe",
+      "arguments": [
+        "source/rebuild.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "program": "python.exe",
+      "arguments": [
+        "source/upstream/scripts/check_deck.py",
+        "index.html",
+        "--no-shots"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "fork_equivalence": "The fork ZIP includes these same source inputs; its manifest and CRC are checked separately."
+}

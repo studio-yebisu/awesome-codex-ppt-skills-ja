@@ -1,10 +1,27 @@
-# Gitの変更、どこに保存された？
+# 操作の説明を問いと段階図に変え、保存・選択・記録・共有の違いを追える。
 
-原典: https://github.com/minorun365/minorun-marp-skill/tree/736fd5e9fafb80148a1e6eaa5ae5f9d859431257
+入力：Gitを初めて使う人への5分の導入原稿と4段階の図。
+出力：minorun-darkのMarp原稿・HTML・9頁PDFとPNG。
 
-原典のslide-story・slide-figures・slide-design-darkを適用。黒地テーマ本体を保持し、作業・ステージ・記録・共有の図を段階的に開示するMarp原稿を制作。Marp CLIで実HTMLを生成。
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全9頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-    node M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\repository-runtime\node_modules\@marp-team\marp-cli\marp-cli.js --no-stdin M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\minorun-marp\deck.md --html --theme M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\minorun-marp\minorun-dark.css --allow-local-files -o M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\minorun-marp\index.html
-    python M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\minorun365__minorun-marp-skill\tools\check-ai-smell.py M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\minorun-marp\deck.md
+## 使い方
 
-入力: input/data.json。出典・実行の記録: PROVENANCE.json。確認範囲: QA.json。原典の条件: LICENSE.upstream。日本語書体: fonts/OFL.txt。
+1. 5分の導入範囲と読み手をinput/BRIEF.mdで確定する
+2. deck.mdで問いと回答を続け、見出しを一行にする
+3. 段階SVGで既存の箱の位置を保って一要素ずつ足す
+4. source/rebuild.pyへMarp CLIとブラウザーの場所を渡す
+5. check-ai-smell --allとPDF全頁を確認する
+
+## 生成・検査
+
+`python source/rebuild.py --marp <marp-cli.js> --node node --browser <Chrome-or-Edge>`
+
+2頁の孤立文字を一行の問いへ修正。図のラベル・矢印を拡大して埋込書体を適用。表紙の白文字を黒地内へ移動。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
+
+## 範囲
+
+- 元35分教材のうち5分の導入抜粋。元依頼は入力内へ保存
+- 20分演習・ブランチ・レビュー・競合解消は扱わない
+- Gitコマンドは説明例で、リモート送信はしていない
+- 本文を変えたときは埋込サブセット書体の収録文字も更新する

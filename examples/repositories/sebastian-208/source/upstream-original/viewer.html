@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Slide Gallery | Academic Image PPT</title>
+  <meta name="description" content="Browse Academic Image PPT example decks slide by slide.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 48 32'%3E%3Crect width='48' height='32' rx='6' fill='%23115ccf'/%3E%3Cpath d='M10 10h28M10 16h20M10 22h14' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E">
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #102033;
+      --muted: #607086;
+      --line: #dbe6f3;
+      --paper: #ffffff;
+      --soft: #f5f9fd;
+      --blue: #115ccf;
+      --teal: #0a9b9a;
+      --gold: #d89a21;
+      --red: #a7354b;
+      --shadow: 0 18px 44px rgba(16, 32, 51, 0.16);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Inter, "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+      color: var(--ink);
+      background: var(--soft);
+      min-height: 100vh;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .app {
+      display: grid;
+      grid-template-columns: minmax(240px, 320px) minmax(0, 1fr);
+      min-height: 100vh;
+    }
+
+    aside {
+      border-right: 1px solid var(--line);
+      background: #fff;
+      padding: 22px;
+      overflow: auto;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 22px;
+      font-weight: 850;
+    }
+
+    .mark {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      color: #fff;
+      background: var(--blue);
+      font-size: 15px;
+      font-weight: 900;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    select {
+      width: 100%;
+      min-height: 42px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      padding: 0 12px;
+      font: inherit;
+    }
+
+    .deck-info {
+      margin: 18px 0 20px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .deck-info h1 {
+      margin: 0 0 8px;
+      font-size: 22px;
+      line-height: 1.3;
+      letter-spacing: 0;
+    }
+
+    .deck-info p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .side-actions {
+      display: grid;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 42px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--paper);
+      color: var(--ink);
+      font-weight: 760;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 14px;
+    }
+
+    .btn.primary {
+      border-color: var(--blue);
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .thumbs {
+      display: grid;
+      gap: 10px;
+    }
+
+    .thumb {
+      display: grid;
+      grid-template-columns: 78px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 8px;
+      background: #fff;
+      color: var(--muted);
+      cursor: pointer;
+      text-align: left;
+      font: inherit;
+    }
+
+    .thumb.active {
+      border-color: var(--blue);
+      color: var(--ink);
+      box-shadow: 0 8px 18px rgba(17, 92, 207, 0.12);
+    }
+
+    .thumb img {
+      width: 78px;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      background: #fff;
+    }
+
+    main {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      min-width: 0;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+    }
+
+    .counter {
+      color: var(--muted);
+      font-weight: 760;
+    }
+
+    .stage {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      overflow: auto;
+    }
+
+    .slide-frame {
+      width: min(100%, 1180px);
+      aspect-ratio: 16 / 9;
+      border-radius: 8px;
+      border: 1px solid var(--line);
+      background: #fff;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .slide-frame img {
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: contain;
+      background: #fff;
+    }
+
+    .controls {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 16px 24px 24px;
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    body.theater aside,
+    body.theater .topbar {
+      display: none;
+    }
+
+    body.theater .app {
+      display: block;
+    }
+
+    body.theater .stage {
+      min-height: calc(100vh - 76px);
+      background: #101722;
+    }
+
+    body.theater .slide-frame {
+      width: min(96vw, 1440px);
+    }
+
+    @media (max-width: 880px) {
+      .app { grid-template-columns: 1fr; }
+      aside {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+        max-height: 44vh;
+      }
+      .topbar { flex-direction: column; align-items: flex-start; }
+      .stage { padding: 14px; }
+      .controls { flex-wrap: wrap; padding: 12px 14px 18px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <a class="brand" href="index.html">
+        <span class="mark">AI</span>
+        <span>Academic Image PPT</span>
+      </a>
+      <label for="deckSelect">选择案例</label>
+      <select id="deckSelect"></select>
+      <div class="deck-info">
+        <h1 id="deckTitle">Slide Gallery</h1>
+        <p id="deckDescription">正在载入案例。</p>
+      </div>
+      <div class="side-actions">
+        <a class="btn primary" id="downloadLink" href="#">下载 PPTX</a>
+        <a class="btn" href="index.html">返回首页</a>
+      </div>
+      <div class="thumbs" id="thumbs" aria-label="幻灯片缩略图"></div>
+    </aside>
+
+    <main>
+      <div class="topbar">
+        <div>
+          <div class="counter" id="counter">0 / 0</div>
+          <div class="hint">快捷键：左/右翻页，T 剧场模式，F 全屏，Esc 退出剧场模式</div>
+        </div>
+        <div class="actions">
+          <button class="btn" type="button" id="theaterButton">剧场模式</button>
+          <button class="btn" type="button" id="fullscreenButton">全屏</button>
+        </div>
+      </div>
+
+      <div class="stage">
+        <div class="slide-frame">
+          <img id="slideImage" src="" alt="当前幻灯片">
+        </div>
+      </div>
+
+      <div>
+        <div class="controls">
+          <button class="btn" type="button" id="prevButton">上一页</button>
+          <button class="btn primary" type="button" id="nextButton">下一页</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    let decks = [];
+    let currentDeck = null;
+    let currentIndex = 0;
+
+    const GALLERY_VERSION = '20260619-restore-ppt-covers';
+
+    async function loadGallery() {
+      const res = await fetch(`site/gallery.json?v=${GALLERY_VERSION}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error('gallery.json not found');
+      return res.json();
+    }
+
+    function setQuery(deckId, slideNumber) {
+      const next = new URLSearchParams();
+      next.set('deck', deckId);
+      next.set('slide', String(slideNumber));
+      window.history.replaceState(null, '', `${window.location.pathname}?${next.toString()}`);
+    }
+
+    function renderDeckOptions() {
+      const select = document.getElementById('deckSelect');
+      select.innerHTML = decks.map(deck => `<option value="${deck.id}">${deck.title}</option>`).join('');
+      select.value = currentDeck.id;
+      select.addEventListener('change', () => {
+        const selected = decks.find(deck => deck.id === select.value) || decks[0];
+        chooseDeck(selected.id, 1);
+      });
+    }
+
+    function renderThumbs() {
+      const thumbs = document.getElementById('thumbs');
+      thumbs.innerHTML = currentDeck.slides.map((slide, index) => `
+        <button class="thumb ${index === currentIndex ? 'active' : ''}" type="button" data-index="${index}">
+          <img src="${slide.image}" alt="${slide.title}">
+          <span>${slide.title}</span>
+        </button>
+      `).join('');
+      thumbs.querySelectorAll('.thumb').forEach(button => {
+        button.addEventListener('click', () => showSlide(Number(button.dataset.index)));
+      });
+    }
+
+    function showSlide(index) {
+      currentIndex = Math.max(0, Math.min(index, currentDeck.slides.length - 1));
+      const slide = currentDeck.slides[currentIndex];
+      document.getElementById('slideImage').src = slide.image;
+      document.getElementById('slideImage').alt = `${currentDeck.title} ${slide.title}`;
+      document.getElementById('counter').textContent = `${currentIndex + 1} / ${currentDeck.slides.length}`;
+      document.getElementById('prevButton').disabled = currentIndex === 0;
+      document.getElementById('nextButton').disabled = currentIndex === currentDeck.slides.length - 1;
+      renderThumbs();
+      setQuery(currentDeck.id, currentIndex + 1);
+    }
+
+    function chooseDeck(deckId, slideNumber) {
+      currentDeck = decks.find(deck => deck.id === deckId) || decks[0];
+      currentIndex = Math.max(0, Math.min((slideNumber || 1) - 1, currentDeck.slides.length - 1));
+      document.getElementById('deckTitle').textContent = currentDeck.title;
+      document.getElementById('deckDescription').textContent = `${currentDeck.description} 共 ${currentDeck.slideCount} 页。`;
+      document.getElementById('downloadLink').href = currentDeck.pptx;
+      renderDeckOptions();
+      showSlide(currentIndex);
+    }
+
+    function nextSlide() { showSlide(currentIndex + 1); }
+    function prevSlide() { showSlide(currentIndex - 1); }
+
+    document.getElementById('nextButton').addEventListener('click', nextSlide);
+    document.getElementById('prevButton').addEventListener('click', prevSlide);
+    document.getElementById('theaterButton').addEventListener('click', () => document.body.classList.toggle('theater'));
+    document.getElementById('fullscreenButton').addEventListener('click', () => {
+      if (!document.fullscreenElement) document.documentElement.requestFullscreen().catch(() => {});
+      else document.exitFullscreen();
+    });
+
+    document.addEventListener('keydown', event => {
+      if (event.key === 'ArrowRight') nextSlide();
+      if (event.key === 'ArrowLeft') prevSlide();
+      if (event.key.toLowerCase() === 't') document.body.classList.toggle('theater');
+      if (event.key.toLowerCase() === 'f') document.getElementById('fullscreenButton').click();
+      if (event.key === 'Escape') document.body.classList.remove('theater');
+    });
+
+    loadGallery().then(data => {
+      decks = data.decks || [];
+      if (!decks.length) throw new Error('No decks found');
+      chooseDeck(params.get('deck'), Number(params.get('slide') || 1));
+    }).catch(error => {
+      document.getElementById('deckTitle').textContent = '无法加载图库';
+      document.getElementById('deckDescription').textContent = error.message;
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{
+  "artifact_sha256": "b8f099a3879bc94e3a006c14d4110315aba02c04703c31f5e18da633edeb76ff",
+  "record": "review/round4-prior-version/binding.json",
+  "commands": [
+    {
+      "command": [
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\validate_review.py",
+        "critic",
+        "review\\round4-prior-version\\opus-critic.json",
+        "--record",
+        "."
+      ],
+      "exit_code": 0,
+      "log": "review/round4-prior-version/critic.txt",
+      "log_sha256": "0ba2c5c78754fe374ad9c7cb5458c71171498eb95b1728701f8f6d406158429c"
+    },
+    {
+      "command": [
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source\\prepare_blind_packet.py"
+      ],
+      "exit_code": 0,
+      "log": "review/round4-prior-version/blind-packet.txt",
+      "log_sha256": "d06af6668179e02827f4922b6e9d9d07e5d66e6b8f8f1c61b3981ee3cfa31022"
+    },
+    {
+      "command": [
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\blind_read.py",
+        "compare",
+        ".",
+        "--render-dir",
+        "qa/original-blind-render",
+        "--answers",
+        "review\\round4-prior-version\\opus-blind.json",
+        "--write"
+      ],
+      "exit_code": 1,
+      "log": "review/round4-prior-version/blind-compare.txt",
+      "log_sha256": "82fb1e8fabccdf9099d42a326e0a0d2cdf627552a8636b8dd5acbc7d921cbb82"
+    },
+    {
+      "command": [
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\render_deck.py",
+        "deck.pptx",
+        "--gate-check"
+      ],
+      "exit_code": 1,
+      "log": "review/round4-prior-version/handoff.txt",
+      "log_sha256": "e894fbb82671368699f6e3170dbd3564f8e36d95826551922075b856d907bf8a"
+    }
+  ],
+  "result": "Independent revise and actual blind answers recorded through unmodified original CLIs before subsequent repairs."
+}

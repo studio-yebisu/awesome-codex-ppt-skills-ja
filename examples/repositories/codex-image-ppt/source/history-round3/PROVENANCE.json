@@ -1,0 +1,314 @@
+{
+  "repository": "ningzimu/codex-ppt-skill",
+  "upstream_commit": "941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c",
+  "acquisition": {
+    "repository": "ningzimu/codex-ppt-skill",
+    "commit": "941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c",
+    "archive_url": "https://codeload.github.com/ningzimu/codex-ppt-skill/zip/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c",
+    "archive_sha256": "eb1a17f9b25cc23712e0046e359072fae70c89e929b26d2d9b25029ecc5b0727",
+    "bytes": 44154728,
+    "checked_at": "2026-10-13T14:47:01.436274+00:00",
+    "root": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill"
+  },
+  "references": [
+    {
+      "path": "LICENSE",
+      "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/LICENSE"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/assemble_ppt.py",
+      "sha256": "c4ac18e2aa28d92ecc50299e6267e127c226e041c601bd3c7224ec7278061fe5",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/assemble_ppt.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/prepare_slide_prompts.py",
+      "sha256": "92cc338a85afa463b1faa09035ab5b73b993813ea54ff95c9e47b4788e45ef81",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/prepare_slide_prompts.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/record_slide_dispatch.py",
+      "sha256": "f5ce8806a0aecf24ea3b7c657c8d20507d83b6fd21a81da86d8f6f9da623ed54",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/record_slide_dispatch.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/record_slide_result.py",
+      "sha256": "ae14297acf87991ef0cb4af41bd0a591665f288d25ff5d6f0b9b264e5a59bac1",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/record_slide_result.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/slide_job_status.py",
+      "sha256": "15c90c28b5733275990b162e36c32dd7940465ec7c6522f49aaa8a42c5dbd293",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/slide_job_status.py"
+    },
+    {
+      "path": "skills/codex-ppt/scripts/slide_run_state.py",
+      "sha256": "b7534c3aec858a5ec4210e5af80693c899dbbe670083093ec1c055d471ba5e42",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/scripts/slide_run_state.py"
+    },
+    {
+      "path": "skills/codex-ppt/SKILL.md",
+      "sha256": "dce8b7ef2c3610fba7bf74115904f460ae1f64b54b50c0f4504f66fd65e5d2bb",
+      "url": "https://github.com/ningzimu/codex-ppt-skill/blob/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c/skills/codex-ppt/SKILL.md"
+    }
+  ],
+  "method": "原典prepare_slide_prompts/dispatch/result/state CLIを使用し、Codex native image_gen.imagegenで全3ページを生成。原典assemble_ppt.pyが画像とspeech.mdからPPTXを構築。",
+  "execution_type": "native_image_generation_and_original_packager",
+  "commands_executed": [
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\prepare_slide_prompts.py",
+        "--spec",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt\\deck_spec.json",
+        "--out-dir",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt"
+      ],
+      "exit_code": 1,
+      "log": "examples/repositories/codex-image-ppt/source/logs/01-prepare_slide_prompts.py.txt",
+      "log_sha256": "7e05cd26cb9a9efaaf890a62208dec33331dc7c255e4fcdeadca587fe547173b",
+      "at": "2026-10-13T15:06:13.091626+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\record_slide_dispatch.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt",
+        "--slide",
+        "slide_01",
+        "--agent-id",
+        "/root/astra_spec",
+        "--agent-nickname",
+        "Astra production agent",
+        "--prompt-file",
+        "prompts/slide_01.json"
+      ],
+      "exit_code": 1,
+      "log": "examples/repositories/codex-image-ppt/source/logs/02-record_slide_dispatch.py.txt",
+      "log_sha256": "169e42d4135d03aa37ece188954faa547dd4fe9292858a21ec58bf32cb3fff1f",
+      "at": "2026-10-13T15:06:13.258255+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\prepare_slide_prompts.py",
+        "--spec",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt\\deck_spec.json",
+        "--out-dir",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/03-prepare_slide_prompts.py.txt",
+      "log_sha256": "dc8c60948858b5bac6582882a8c1ffe71dd356dcfe40f89f8e21c89d51759c58",
+      "at": "2026-10-13T15:06:24.310157+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\record_slide_dispatch.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt",
+        "--slide",
+        "slide_01",
+        "--agent-id",
+        "/root/astra_spec",
+        "--agent-nickname",
+        "Astra production agent",
+        "--prompt-file",
+        "prompts/slide_01.json"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/04-record_slide_dispatch.py.txt",
+      "log_sha256": "e2c6b96581d3ad81cc5d39043ffb571ba831636a944ac9f73916cc7d88327f83",
+      "at": "2026-10-13T15:06:24.554023+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\record_slide_result.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt",
+        "--slide",
+        "slide_01",
+        "--agent-id",
+        "/root/astra_spec",
+        "--backend-used",
+        "built-in image_gen.imagegen",
+        "--selected-source",
+        "M:\\Codex\\home\\generated_images\\01a134f5-12c1-7b21-9ae5-2f1db1252d00\\exec-085e0e65-d574-49da-9123-d7d334ecefef.png",
+        "--qa-note",
+        "全ての日本語、保存・記録・共有の区別、下端の結論を画像で確認。文字切れなし。制作担当が作風sampleとして採用。"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/05-record_slide_result.py.txt",
+      "log_sha256": "c0b7c545aa5ce740c27435a33e17c4d951645448839b2db61a9568b02d702693",
+      "at": "2026-10-13T15:07:23.559157+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\record_slide_dispatch.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt",
+        "--slide",
+        "slide_02",
+        "--agent-id",
+        "/root/astra_spec",
+        "--agent-nickname",
+        "Astra production agent",
+        "--prompt-file",
+        "prompts/slide_02.json"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/06-record_slide_dispatch.py.txt",
+      "log_sha256": "900e8fe4093f871ab96bb46d9b946ef8bc38ed530c2cdf7fa44e350ea63d7c80",
+      "at": "2026-10-13T15:07:23.817668+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\record_slide_result.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt",
+        "--slide",
+        "slide_02",
+        "--agent-id",
+        "/root/astra_spec",
+        "--backend-used",
+        "built-in image_gen.imagegen",
+        "--selected-source",
+        "M:\\Codex\\home\\generated_images\\01a134f5-12c1-7b21-9ae5-2f1db1252d00\\exec-686d2700-68e9-4f4e-b078-8478f92068a0.png",
+        "--qa-note",
+        "全3段がローカル枠内。git add/commit矢印、作業ツリー/ステージ/ローカル履歴、日本語結論を視認し意味と可読性を確認。"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/07-record_slide_result.py.txt",
+      "log_sha256": "7574100af19a76a4d37c73dd3b4a34adf4ff69b9f0fe917d347e657926d2690d",
+      "at": "2026-10-13T15:08:14.678744+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\record_slide_dispatch.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt",
+        "--slide",
+        "slide_03",
+        "--agent-id",
+        "/root/astra_spec",
+        "--agent-nickname",
+        "Astra production agent",
+        "--prompt-file",
+        "prompts/slide_03.json"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/08-record_slide_dispatch.py.txt",
+      "log_sha256": "dd95eb05eb09ac4a7adb6c3235c16e246e0d81f3a7d8317c0a4556b0468b6b9b",
+      "at": "2026-10-13T15:08:14.965540+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\record_slide_result.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt",
+        "--slide",
+        "slide_03",
+        "--agent-id",
+        "/root/astra_spec",
+        "--backend-used",
+        "built-in image_gen.imagegen",
+        "--selected-source",
+        "M:\\Codex\\home\\generated_images\\01a134f5-12c1-7b21-9ae5-2f1db1252d00\\exec-2c133d54-5dfb-4bf0-a935-0592f60ae9e8.png",
+        "--qa-note",
+        "手順1〜4、git diff --stagedの2ハイフン、README.md、git commit/push、共有先と作業ブランチの注記を視認。文字切れなし。"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/09-record_slide_result.py.txt",
+      "log_sha256": "74c21c5b2faffd750c0990a0018cffad2b3b91a833d7470af0c02f7048b1658b",
+      "at": "2026-10-13T15:09:20.025192+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\slide_job_status.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/10-slide_job_status.py.txt",
+      "log_sha256": "2c1de81047fc4fb64200d91aa490add9ff3655b9d302e126cbfd2cfdcbb61cde",
+      "at": "2026-10-13T15:09:20.265179+00:00"
+    },
+    {
+      "argv": [
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__codex-ppt-skill\\skills\\codex-ppt\\scripts\\assemble_ppt.py",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories",
+        "codex-image-ppt.pptx",
+        "--aspect-ratio",
+        "16:9"
+      ],
+      "exit_code": 0,
+      "log": "examples/repositories/codex-image-ppt/source/logs/11-assemble_ppt.py.txt",
+      "log_sha256": "655f547c42acd814342a1e786383a3b375e41383cb37a873329896eeb2977e58",
+      "at": "2026-10-13T15:09:20.647494+00:00"
+    }
+  ],
+  "artifact": "examples/repositories/codex-image-ppt/codex-image-ppt.pptx",
+  "artifact_sha256": "6870ac8fb82d13ad8dbc4641ceca012fdd988cf40ee4f494531a9244fce1e38f",
+  "input_sha256": "6751cd23f391b623103c805cf93bfc43b94e5f24a3d719b41edabdd2cb71a752",
+  "image_backend": "built-in image_gen.imagegen",
+  "model": null,
+  "model_note": "実ツールはモデル名を公開しない。GPT Image2利用とは断定しない。",
+  "editability": "raster_slides",
+  "native_requests": "source/native-imagegen-requests.json",
+  "image_records": [
+    {
+      "page": 1,
+      "source": "examples/repositories/codex-image-ppt/origin_image/slide_01.png",
+      "source_sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "render": "examples/repositories/codex-image-ppt/render/slide-01.png",
+      "render_sha256": "051ece80ef857597491ec963279bb228529397e8506c3bda5b54a035c0dc2541",
+      "visually_reviewed": true
+    },
+    {
+      "page": 2,
+      "source": "examples/repositories/codex-image-ppt/origin_image/slide_02.png",
+      "source_sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "render": "examples/repositories/codex-image-ppt/render/slide-02.png",
+      "render_sha256": "9d108301d0c8eed72de1566d8e39a7332531c811f32bbdc7ad9a4cea74608ece",
+      "visually_reviewed": true
+    },
+    {
+      "page": 3,
+      "source": "examples/repositories/codex-image-ppt/origin_image/slide_03.png",
+      "source_sha256": "29165a22ae72402cc5ee4221304c27b2e40a7d21c06ee6ebe9a23c2b1ea6e620",
+      "dimensions": [
+        1672,
+        941
+      ],
+      "render": "examples/repositories/codex-image-ppt/render/slide-03.png",
+      "render_sha256": "3da2288f42fbc1ae8b44c40ea8eabb249611564e955bfbd75bcde4620cd9bd2a",
+      "visually_reviewed": true
+    }
+  ],
+  "workflow_decisions": "workflow-decisions.json",
+  "upstream_source_modified": false,
+  "raster_content_postprocessing": false,
+  "generator": "tools/build_codex_image_repository_example.py",
+  "checked_at": "2026-10-13T15:12:31.406826+00:00",
+  "native5_repair": {
+    "implemented_by": "Codex integration; not a new Opus production",
+    "current_artifact": "codex-image-ppt.pptx",
+    "current_pptx_sha256": "260d22a2084278f156970e703bd5dd9703d3e1dc0b0e24a6559696b4bb4b47dc",
+    "current_qa": "QA.json",
+    "actual_native_inventory": "source/native-elements.json",
+    "actual_pdf_fonts": "source/pdf-fonts.json",
+    "all_current_pages_visually_inspected": true,
+    "independent_current_version_review": "pending",
+    "historical_records": "Previous execution/model/consent records describe their original version; current repair evidence is explicitly separate."
+  },
+  "current_distribution_replay": "source/distribution-replay.json"
+}

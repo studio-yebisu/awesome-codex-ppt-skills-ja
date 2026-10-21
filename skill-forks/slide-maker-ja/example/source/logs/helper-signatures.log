@@ -1,0 +1,228 @@
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.blank_deck(w_in=10.0, h_in=5.625)
+
+A fresh 16:9 deck when the user has NO template to match. Use add_slide() +
+title_bar()/footer() to give it simple, consistent branding you define from
+their brand colors (set the palette constants above) or a clean default.
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.add_slide(prs)
+
+Add a truly blank slide (layout 6) to draw on from scratch.
+
+Paints the deck's ``GROUND`` (see ``set_ground`` / ``presets.apply``) when one is set, so a
+dark register is dark from the first slide rather than from wherever the author remembered.
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.text(slide, x, y, w, h, runs, align=<PP_PARAGRAPH_ALIGNMENT.LEFT: 1>, anchor=<MSO_VERTICAL_ANCHOR.TOP: 1>, space_after=6, line_spacing=None, wrap=True)
+
+runs = list of paragraphs; each paragraph = list of run tuples
+(txt, size, color, bold, italic[, font]).
+
+line_spacing=None (default) resolves PER PARAGRAPH: Latin-only → 1.0, CJK-bearing →
+``CJK_LS`` (renders ≈1.34× font size) — the script-aware leading a bilingual deck needs
+(CJK glyphs fill the em-box, so single spacing reads denser than the same setting in
+Latin). Pass a number to force one value for every paragraph, exactly as before.
+
+wrap=True (default) word-wraps to the box width. Pass **wrap=False for a single HERO
+NUMERAL / integral number / one-word display** that must stay on ONE line — a big "2026"
+or "€15亿" must never break into "202"/"6". With wrap off the run overflows the box
+instead of wrapping (size the box wide enough, or let a ghost bleed off-canvas); the
+build-time lint still flags a real off-canvas overflow.
+
+Vertical centring: to centre text inside a filled box/card, pass anchor=MSO_ANCHOR.MIDDLE
+AND give this textbox the SAME (x, y, w, h) as the box. A y-offset (e.g. y+0.07) combined
+with the box's full height pushes the centre below the box's true middle — text then reads
+"a bit low". Want top padding? Use margin_top, not a y-offset with unchanged height.
+
+RAISES ValueError when w or h is <= 0. A derived box that collapses is always a bug (the
+text overflows a box with no interior and no geometry check can see it, because there is
+nothing to overlap), so it fails at the call site where the arithmetic lives rather than in
+the render. Reserve the fixed elements first and derive the rest from what is left.
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.box(slide, x, y, w, h, fill=None, line=None, line_w=1.0, round=False, corners='all', r=None, grad=None, grad_angle=90.0, grad_radial=False)
+
+A rectangle. `round=True` rounds all four corners (radius = 8% of the shorter side,
+or `r` inches if given). For a colored HEADER BAND sitting on top of a rounded card,
+use `corners='top'` and pass `r=<the card's corner radius in inches>` so the band's
+curve MATCHES the card — a square band over a rounded card (corners poking out) is the
+tell to avoid. `corners='bottom'` rounds the bottom two. (A thin accent strip can
+instead be inset by the radius so its square ends fall on the card's straight edge.)
+
+`grad` gives a GRADIENT fill with per-stop alpha instead of a solid `fill`: a list of
+(pos 0..1, colour, alpha 0..1); `grad_angle` sets linear direction (deg), `grad_radial=True`
+a centre-out radial. Powers glass/glow/scrim — usually via the `glass_card`/`glow`/
+`scrim_overlay` helpers rather than called directly.
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.native_chart(slide, x, y, w, h, categories, series, *, kind='line_markers', palette=None, dark=False, font=None, highlight=None, legend=True, value_fmt=None, smooth=True, zero_base=True, emphasize=None)
+
+An **EDITABLE native PowerPoint chart** (a real chart object: click to edit data/labels in
+PowerPoint, and **any non-Latin labels — CJK · Cyrillic · Greek · …** — render via PowerPoint's own
+fonts, **no tofu**, unlike the rasterised designed_charts recipes). Prefer this whenever editability
+or non-Latin labels matter. Pass ``font=`` your deck's text font for the script (e.g. your EAFONT
+for CJK; a Cyrillic/Greek deck's FONT already covers those).
+
+`series` = [(name, [v, v, ...]), ...]; `categories` = the x labels. Themed to the deck (palette,
+dark). `kind`: 'line' | 'line_markers' | 'column' | 'bar' — plus the **composition** kinds for a
+total AND its component mix (e.g. revenue mix across quarters): 'column_stacked' |
+'column_stacked_100' (share of 100%) | 'bar_stacked' | 'bar_stacked_100' | 'area' | 'area_stacked' |
+'area_stacked_100'. On a stacked kind each series gets its OWN palette colour — omit `highlight`
+(which greys the rest) so the mix reads; use '…_100' when the SHARE matters more than the total
+(but keep the total visible elsewhere — a 100%-stack can hide a collapsing total). Stacked/area
+kinds assume **NON-NEGATIVE, same-sign parts of ONE whole** (a negative segment crosses zero and
+the height stops meaning the total — a printed notice fires) and read cleanly to **~4–5 series**
+(more reuse palette colours and blur — group the tail into 'Other'). `highlight` = index of the
+one series to keep in the accent (others dropped to grey) — for CLUSTERED charts, not stacked. For
+a two-scale 'A↑ vs B↓' chart use `native_dual_axis` instead.
+
+**`zero_base=True` (default) forces a ZERO value-axis baseline for column/bar charts** so bar
+LENGTH encodes the value itself, not ``value − auto_min``. Without it PowerPoint auto-crops the
+axis on clustered-high data (scores 85/88/92, revenue 210/220/230) and a bar reading ~3× taller
+is only 1.09× larger — the classic 'cropped-axis drama' that MISREPRESENTS magnitude. It fires
+only for column/bar with all-non-negative data; line/line_markers keep auto-scale (a trend line
+legitimately wants a cropped axis). Pass ``zero_base=False`` only for a *deliberate* zoomed
+magnitude axis, and say why.
+
+**`emphasize=<category index>`** foregrounds ONE bar in a SINGLE-series column/bar chart (that
+bar keeps the accent, the rest drop to grey) — the per-category form of the single-highlight
+rule, since `highlight` selects a whole SERIES and so can't pick one bar on a one-series chart.
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.title_bar(slide, title, kicker='', accent=(0, 124, 194), title_c=(0, 60, 102), w_in=None)
+
+Lightweight slide chrome for the no-template branch: optional kicker, title,
+and a short accent rule. Pair with footer(). Returns the content-top y (just below the
+accent rule) so a caller can flow the body beneath a title that wrapped to 2 lines.
+
+By default this reads the actual deck width from ``slide`` so it works on
+widescreen templates, custom ``blank_deck(w_in, h_in)`` sizes, and posters.
+Pass ``w_in`` only when deliberately overriding that geometry. The kicker and the accent
+rule share the ONE ``accent`` hue (default BLUE, the primary accent) — pass ``accent=MAGENTA``
+for a deliberate callout. A long (assertion-style) title is auto-fit to a ≤2-line budget and
+the rule is MEASURED to sit below the LAST line, so it never strikes a wrapped title through.
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.footer(slide, tag='', page=None, w_in=None, h_in=None)
+
+Footer tag (left) + optional page number (right) for the no-template branch.
+
+Defaults to the actual deck size, so custom-sized decks don't end up with a
+page number stranded at the old 10x5.625 coordinate.
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.takeaway_rail(slide, x, y, w, label, hero, body, *, accent=(227, 0, 79), ink=(0, 60, 102), body_c=(58, 74, 85))
+
+The narrative 'so-what' rail beside a chart (the ~35% right column): small caps accent
+label → one restated hero stat → a 2-3 line interpretation. Pair with a chart in the left
+~65% (content_band). Every designed chart should carry one of these.
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.a11y_title(slide, text, *, ea=None)
+
+Give `slide` a title for screen readers and the outline — a TITLE placeholder FIRST in reading order, placed
+wholly ABOVE the canvas so nothing is drawn. For a statement page, or a page whose visible title is set below a
+kicker or low on the page (lint_deck's NO SLIDE TITLE / READING ORDER read only a TITLE placeholder, or the first
+large text in the top 28%). Returns the shape. Refuses empty text, and a slide that already has a title placeholder
+(put the text in that one). `ea`: the East-Asian face for CJK text (a visual language passes its own); default
+EAFONT as set_font applies it, else the script's face for this platform.
+
+The docs called an off-canvas title "the sanctioned trick for statement slides" and nothing made one: a docs-only
+agent's plain text box above the canvas tripped OFF_CANVAS and DUPLICATE_TEXT and blocked the build (2026-10-04).
+Both checks skip this shape by its tag.
+
+    dk.a11y_title(s, "How an evening runs")
+
+──────────────────────────────────────────────────────────────────────────────
+deckkit.declare_delivery(where, mode, builds=None, notes=None)
+
+Record HOW this deck will be consumed, in `<deck dir>/.deck-gates.json`, from the build
+script — so the lint's budgets do not depend on an operator remembering a CLI flag.
+
+`render_deck.py --gate-check` has always read this key; `lint_deck.py` reads it too now. What
+the flag-only world cost, measured on a delivered 14-page self-read deck: 20 `[stats]` lines
+with no flags, 10 with `--selfread`. The extra ten were the wrong budget applied to the wrong
+deck — seven TEXT WALLs against the ~40-word *presented* budget instead of ~90, a SMALL TYPE
+against the read-from-the-back floor, and "14 of 14 slides have empty speaker notes" on a deck
+nobody speaks. Advisory noise is not harmless: it is what teaches people to skim the gates.
+
+🔴 Call it AFTER ``prs.save(OUT)``, never before — it hashes the file on disk::
+
+    dk.lint_layout(prs, strict=True)
+    prs.save(str(OUT))
+    dk.declare_delivery(OUT, "selfread")     # OUT is the .pptx path, or its directory
+
+Called before the save it records no hash at all (or, on a rebuild, the PREVIOUS build's), and
+every later ``--gate-check`` reports ``EDITED SINCE BUILD`` on a file nobody touched.
+
+`where` may be the .pptx path or the deck directory. Merges into any existing gates file —
+the critic block `validate_review.py --record` writes is preserved. Returns the file path.
+
+──────────────────────────────────────────────────────────────────────────────
+CALL-SHAPE CONTRACTS (the ones that have actually gone wrong):
+  · a text RUN is (text, size, color, bold, italic[, font])  — font is the SIXTH item. Runs live in
+    paragraphs: text(slide, x, y, w, h, [[run, run], [run]]) is TWO paragraphs.
+  · MEASURING takes a DIFFERENT run shape than PLACING. measure_text(runs, w, size) wants a FLAT
+    list of (text, bold) 2-tuples — not the paragraphs text() takes. SKILL.md tells you to use the
+    pair together ("measure or anchor, never hand-pick a y"), so the mismatch is hit on the first
+    honest attempt: passing text()'s paragraphs raises `not enough values to unpack (expected 2)`.
+        h = dk.measure_text([(body, False)], w, 14)      # measure
+        dk.text(s, x, y, w, h, [[(body, 14, dk.DEEP, False, False, dk.FONT)]])   # place
+    🔴 …and the SAME LINE SPACING. `text()` takes `line_spacing=`; `measure_text` assumed its own
+    default and nothing tied them together, so measuring at the default and placing at 1.16
+    reserves ~4% too little. Measured: a divider derived from that return was drawn through the
+    last line of the block above it, and BOTH linters passed the page — the geometry they check
+    is computed from the same short number. Pass the value to both:
+        h = dk.measure_text(runs, w, 12, line_spacing=1.16)                     # measure AT it
+        dk.text(s, x, y, w, h, paras, line_spacing=1.16)                        # place AT it
+    🔴 The measure and the place must name the SAME face. measure_text takes `font=` — pass it
+    whenever you place in anything but the deck default, above all MONO. Measured: the same
+    command string is 4.04in in Helvetica and 5.44in in Courier, so measuring mono text in the
+    default face under-reports it by 26% and the box is then built to the wrong size, which every
+    later check happily agrees with.
+        h = dk.measure_text([(cmd, False)], w, 12, font=dk.MONO)                 # measure IN MONO
+        dk.text(s, x, y, w, h, [[(cmd, 12, dk.DEEP, False, False, dk.MONO)]])    # place
+  · colours passed to set_font / box(line=) / anything typed RGBColor must BE RGBColor, not "RRGGBB".
+    box(fill=) and box(grad=) do accept a hex string. When unsure, wrap: RGBColor.from_string(h).
+  · picture(slide, PATH, x, y, w, h, fit=…) takes the path SECOND — before the geometry, unlike
+    every other placing helper. Passing it after w/h raises a `stat: path should be string … not
+    float`, which reads as a broken file rather than a swapped argument.
+  · value_fmt IS TWO DIALECTS, split by who renders the number. native_chart / native_dual_axis /
+    native_donut / native_pareto hand it to POWERPOINT, so it is an EXCEL number-format code
+    ('0.0%', '#,##0', '0.0"x"') — and native_chart raises a lecture if you pass '{...}'. sankey,
+    iso_bars and the designed_charts recipes format in PYTHON, so there it is a format STRING
+    ('{:.0f}', '{:.0%}'). Crossing them is silent on the sankey/iso side: the literal text
+    '0%' is printed onto every node. Excel dialect for native_*, Python dialect for everything else.
+  · ONE TYPE SIZE PER PARAGRAPH. lint_layout measures a paragraph's INK at its LARGEST run size, so
+    a 38pt number inline with 10.5pt CJK is scored as multi-line 38pt text and "collides" with
+    whatever sits below — while the frames themselves are provably fine. The fix is never a bigger
+    gap; it is two blocks:
+        y = place(x, y, [[("257万1,037", 38, …, FONT)]])          # the number
+        place(x, y + 0.08, [[("人 · 在日外国劳动者", 10.5, …, EAFONT)]])   # its unit, separately
+    Measured on one deck: 7 of the first 20 build-time criticals were this single mistake.
+  · A COMPONENT OWNS ITS AXIS — never hand-derive one to overlay on it. dot_strip / dumbbell_board /
+    timeline(spacing='value') reserve their own label gutter, so an axis_scale() you build from the
+    same (x, w) does NOT land where theirs did. Measured: a 1.00 parity line computed that way was
+    drawn to the RIGHT of the 1.18 dot — the chart contradicting its own numbers, and no lint can
+    see it. Either set the component's `lo` to the threshold so the axis origin IS the reference
+    (best — geometry becomes true by construction), or drop the overlay and say it in the caption.
+  · highlight= SELECTS A SERIES; emphasize= selects a BAR. On a SINGLE-series column/bar chart
+    highlight is a no-op that greys everything — which silently deletes a semantic-colour binding
+    the whole page rests on. One series → emphasize=<category index>.
+  · native_chart(kind="bar") plots the FIRST category at the BOTTOM. Feed the list ASCENDING for it
+    to read as a descending ranking top-to-bottom. A ranking rendered upside down still lints clean.
+  · source_note() anchors to the canvas floor and then LIFTS clear of whatever it finds — on a full
+    page that walks it up INTO the content (measured: landed at y=3.88 on a 5.6in canvas, straight
+    through a data row). On any dense page pass an explicit `y`, and reserve that strip when you
+    compute the page's content bottom. Call it LAST either way.
+  · A COLOUR TOKEN IS SCOPED TO ITS GROUND. A muted grey chosen for a light canvas measures ~3:1 on
+    the dark bookend; a text-safe accent for the light ground measures ~2.9:1 on it. Keep a token
+    per ground and resolve by ground (`mute_for(bg)`, `on(fill)`), never by name — the failure is
+    invisible in the build and legible only in the render.
+  · A HAND-MADE SHAPE KEEPS THE THEME SHADOW. add_shape() stamps <p:style> with the theme's soft
+    drop shadow; `shadow.inherit = False` writes an empty effectLst that PowerPoint honours and
+    LibreOffice IGNORES — so the render and the visual critic still see it. Pass every hand-made
+    shape through deckkit._flat().
+

@@ -1,29 +1,43 @@
 ---
 name: slide-wright-ja
-description: 独自テーマの日本語Webスライドを原典テンプレートで2枚試作し、同じHTMLへ残りを追加する。既存HTMLの編集にも使う。
+description: 同じ配色・書体・図形を保ちながら、既存資料のページを追加・修正する。
 ---
-# slide-wright・日本語制作
 
-原典は[arifszn/slide-wright](https://github.com/arifszn/slide-wright/tree/d95ba204c9e98488b86b76ced75765ab4ec5de96)、固定commit `d95ba204c9e98488b86b76ced75765ab4ec5de96`、[MIT](LICENSE)、©2026 Ariful Alam。[SOURCE](SOURCE.json)と[未変更SKILL](source/upstream/SKILL.md)を保持する。
+## このスキルでできること
 
-## 同じ実ファイルを育てる
+最初の2ページで作風を確かめてから、同じHTMLのまま必要なページを追加できる。
 
-1. 題材から読み手・密度を判断する。[theme-generation](source/upstream/slide-wright/references/theme-generation.md)と[design-aesthetics](source/upstream/slide-wright/references/design-aesthetics.md)に従い、専用の配色・字体・単一device・motionを決める。既製テーマは使わない。
-2. [deck-template](source/upstream/slide-wright/references/deck-template.md)を実使用し、完成資料の実表紙と実contentの2枚を一つのHTMLへ書く。1920×1080、背景section・内部frame、inline CSS、notes、原典CDN5.1.0を保持する。
-3. この実ファイルを最初にブラウザで開く。方向が決まったら、最初の2sectionをそのまま保持して残りを同じファイルへappendする。別のpreview HTMLから作り直さない。
-4. [motion-recipes](source/upstream/slide-wright/references/motion-recipes.md)に従い、一斉entrance・少数のauto-animate・元controllerで動かす。reduce motionを保持する。
+- 困っている状況: 全ページ完成後にスタイルを変えると、修正範囲が大きくなる。
+- 必要な入力: 題材、話す相手、伝えたい原稿、利用場面。
+- 受け取るもの: 方向を確認する最初の2ページと、その見た目を引き継いで増やすWeb資料。発表用の講稿も保持する。
+- 必要環境: Python 3、ブラウザー、固定CDNへの接続。追加のnpmビルドは不要。
+- 作例で試した範囲: 天文台の既存HTML6頁を対象に、本文・図・写真の配置を修復した。新規制作の人間による承認対話を実演したものではない。
 
-今回の作例では、ユーザーが内部判断で進めることを指定し、親がNight Orbitの方向と進行を指定したため、原典の「previewを出して確認待ちで停止」を追加しなかった。2枚を先に開く核心は実施し、[DESIGN](source/DESIGN.md)へこの変更を記録。ユーザーの美術承認済みとは称さない。別の依頼では、その依頼の確認範囲に従う。
+# 専用テーマでページを追加・修正する
 
-## 編集・再生成
+原典の固定commit・利用条件は[SOURCE.json](SOURCE.json)。[未変更の元SKILL](source/upstream/slide-wright/SKILL.md)と必要な参照を保持しています。
 
-[再生成ガイド](README.md)の`build.py --stage preview`→ブラウザで開く→`--stage append`を使う。実本文は[source/slides-first-two.html](source/slides-first-two.html)と[source/slides-append-four.html](source/slides-append-four.html)、テーマは[source/night-theme.css](source/night-theme.css)。既存資料の変更はそのテーマと元controllerを保持して編集する。
+## 手順
 
-主出力はHTML、編集対象はHTML本文・SVG・CSS・speaker notes。PPTXは生成していない。字体は公式の未改変Dela Gothic One、Zen Kaku Gothic New、Space Groteskをinline化し、[実TTF/OFLと出所](fonts/SOURCE.json)を同梱する。OS字体を抽出しない。エンジンとnotesは固定CDNを使用するためネット接続が必要。
+1. 新規資料では目的・読み手・発表用か単独で読む資料かを判断し、原典theme-generationとdesign-aestheticsから1方向の専用テーマを作る。
+2. 同じ完成ファイルに実表紙と本文の2頁だけを作り、ブラウザーで表示する。テーマ名は説明に記し、スライド内へ制作過程のラベルを入れない。
+3. 新規資料では2頁を提示して止まり、人間の承認・調整・方向変更を待つ。承認前に残りを作らず、方向変更時は配色・字体・図形・動きを改める。
+4. 承認後は最初の2sectionを保持し、同じHTMLへ追加する。既存の対応HTMLを編集する場合は見た目を保ってその場で修正し、別形式のHTMLへ無理に移植しない。
+5. 全頁を実ブラウザーで開き、16:9、字体、重なり、講稿、矢印と一覧表示を確認する。公開やPDF保存は実行した場合だけ完了と記す。
 
-元controllerへ0-based同一origin `yebisu-slide` / `yebisu-page` bridgeだけを加える（[build.py](source/build.py)と[局所差分](source/template-local.diff)）。別controllerへ名前だけ付ける置換はしない。架空イベント案と実測・実績を区別する。
+## 既存資料の修復と新規制作
 
-今回の確認は2枚の初回表示と元エンジン稼働、同じHTMLへ6枚までappendした表示のみ。全6枚の詳細検査・独立レビュー・構造監査・ZIP再実行は追加していない。[印刷PDFの原典案内](source/upstream/slide-wright/references/export-pdf.md)も保持するが、作例PDFは未生成。
+既存資料は見た目を保ってその場で編集します。新規制作では「2頁を表示して、人間が方向を承認するまで止まる」が原典の中核です。今回の6頁修復は既存資料の編集であり、その承認ゲートを実演した例には数えません。二つの段階の画像と設計判断はsource/round5-direction-review.jsonを参照します。
+
+## 同梱作例の実施範囲
+
+修復後の実2頁をブラウザー表示して個別画像と設計判断を保存。その2sectionを保持して同じHTMLへ4頁appendし、全6頁を1920×1080で実描画・目視。矢印の戻りと一覧表示も確認。人間の美術承認は未取得。
+
+- 今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。
+- 既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。
+- 固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。
+
+今回の修復はCodex。自動検査と作者の目視は独立評価・人間の承認と分けて記録します。[現行QA](source/repair-qa.json)と[原典工程の記録](source/round5-original-gates.json)を参照。元LICENSE、NOTICE、字体のOFLを残します。
 
 ## 単体の本文から使う
 
@@ -31,7 +45,7 @@ description: 独自テーマの日本語Webスライドを原典テンプレー�
 
 原典: https://github.com/arifszn/slide-wright/tree/d95ba204c9e98488b86b76ced75765ab4ec5de96
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `slide-wright-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `slide-wright-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: arifszn / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 

@@ -1,18 +1,46 @@
 {
-  "status": "light_check_complete",
-  "build": "success, compiled DNA tokens and numeric Page Specs",
-  "mandatory_upstream_guard": "PASS:6 slides27zones, original unmodified Node script",
-  "guard_report": "layout-guard-report.json",
-  "browser": "Existing Chrome + Playwright; explicitly requested representative first display only",
-  "first_counter": "01 / 06",
-  "after_arrow_right": "02 / 06",
-  "page_errors": [],
-  "scope": "Original mandatory source guard plus cover/interior initial display and keyboard advance",
-  "detailed_all_pages_review": false,
-  "independent_review": false,
-  "extra_scoring": false,
-  "ZIP_reexecution": false,
-  "parent_bridge_integration": "Not tested here",
-  "visual_review": "Cover and inventory representative PNGs displayed once; no obvious missing content in these two",
-  "license_payload_added_after_display": "Invisible Apache/OFL JSON added; source guard rerun PASS, visual CSS/content unchanged"
+  "status": "author_visual_qa_complete_independent_rereview_pending",
+  "author": "Codex",
+  "current_revision": "round4-web07-repair",
+  "scope": "原典guardは6頁27領域PASS。利用者の追加依頼により、修復後の全6頁を1920×1080で実描画・目視。2頁の机の図、3頁の役割説明、4頁の二つの矢印を修復。",
+  "main_artifact": "index.html",
+  "main_artifact_sha256": "5c8d50eeb9c3906552962b970e69d10eccbc529dc90299976b97139fe505aef3",
+  "actual_rendered_states": 6,
+  "all_current_images_read_individually": true,
+  "visual_findings": "Repaired requested overlap, typography, sequence/choice semantics and page-specific notes; no obvious remaining collision or missing content in the viewed 1920×1080 images. This is author QA, not an independent score.",
+  "image_hashes": [
+    {
+      "path": "render/slide-01.png",
+      "sha256": "c89a05183ab35abc1a31b526a83a9075d97faf9a75167fb77003ebac48473d3d"
+    },
+    {
+      "path": "render/slide-02.png",
+      "sha256": "f28b016d750fbb1d180ce32af544630f1e9a8c550ec56875010a78d2092b0fe5"
+    },
+    {
+      "path": "render/slide-03.png",
+      "sha256": "541d6c4d51da3664371351c9d8d64944f7b72a324e5bd27cc9bd875839b7638d"
+    },
+    {
+      "path": "render/slide-04.png",
+      "sha256": "6045e412de0888957674b34b9a5e65701e43693537a2b8331129e7b7c61010cc"
+    },
+    {
+      "path": "render/slide-05.png",
+      "sha256": "46b71f74d3ee4342e74a49e15e8c966d88c9c27df4de09a77dad3e8e1ab9911d"
+    },
+    {
+      "path": "render/slide-06.png",
+      "sha256": "9d19578ab00760f13fad5bf7995e098f6d823de51c243e061c6810abf80dd5b0"
+    }
+  ],
+  "original_gate_receipt": "source/round4-original-gates.json",
+  "independent_review": "pending for this repaired revision",
+  "not_run": [
+    "作例は明示画像からのスタイル抽出。画像なし探索、既存資料の修復、保存profileの再利用・差分、Design Adapterは実証していない。",
+    "原典は完成rendererを配布しておらず、HTML/SVGとページ送りは規則に基づく局所実装。原典の変換CLIとは称さない。",
+    "元画像を新資料へ埋め込んでいない。PPTXと保存profileは未生成。"
+  ],
+  "distribution_replay": "passed: source/round4-zip-replay.json",
+  "zip_reexecution": true
 }

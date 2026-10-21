@@ -1,0 +1,78 @@
+{
+  "case_id": "pptwise-showcase",
+  "status": "original_build_audit_all6_visual_checked_recheck_pending",
+  "case_patch": {
+    "id": "pptwise-showcase",
+    "title": "資料に使うフォントを選ぶ",
+    "titles": [
+      "資料に使うフォントを選ぶ",
+      "候補の範囲を、元データで確かめる",
+      "条件から選び、実際の文面で確かめる",
+      "書体と利用条件を一緒に確認する",
+      "30書体の内訳は和文17・欧文13",
+      "配布前に、書体と利用条件を確かめる"
+    ],
+    "artifact_download": "examples/repositories/pptwise-showcase/.pptwise/input/deck.pptx",
+    "input_data": "examples/repositories/pptwise-showcase/input/deck.spec.json",
+    "method": "原典pptwiseのspec→inspect→pages→build/fit。実集計をallotmentへ渡し、別途PowerPoint全頁を確認。",
+    "style": "原典Rally派生：橙・墨・紙 / steps・hub_spoke・allotment実集計",
+    "pages": [
+      "examples/repositories/pptwise-showcase/render/slide-01.png",
+      "examples/repositories/pptwise-showcase/render/slide-02.png",
+      "examples/repositories/pptwise-showcase/render/slide-03.png",
+      "examples/repositories/pptwise-showcase/render/slide-04.png",
+      "examples/repositories/pptwise-showcase/render/slide-05.png",
+      "examples/repositories/pptwise-showcase/render/slide-06.png"
+    ],
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、PDF由来RGB PNGを全6頁目視。独立再評価は未完了。",
+    "sample_notice": "実カタログの30書体を案内する例。5頁は実件数17・13のallotment。原典JSON検査と、別途のPowerPoint掲載確認を実施。",
+    "preview_image_notice": "現PPTXの実PowerPoint PDF由来画像。原典report-only self-checkとは別の掲載確認。",
+    "prompt_text": "原典pptwiseのschema/narratives/themesを読み、Rally派生の橙・墨・紙色で、実フォントカタログの使い方を6頁へまとめる。構成は目的→実カタログの範囲→選定手順と実プリセット→関連情報→和文17・欧文13の内訳→配布前の確認。元データはinput/oss-font-kit.json。3頁はsteps＋icon_cards、4頁はhub_spoke、5頁は実件数が適合するallotmentを使う。recipeを埋めるための数値や画像を作らない。原典build/fitのJSONを確認し、そのself-checkと別の掲載確認としてPowerPoint全頁を実見する。日本語書体allowlistの局所adapterを明示し、原典の配置・QA・出力PPTXを後加工・改名しない。",
+    "notes": [
+      "同梱input/oss-font-kit.jsonは2026-10-15の実カタログ。30書体、45個のフォントファイル、15組のプリセット、4種類の配布bundleを含む。カタログの分類は収録文字範囲や品質を測ったものではない。",
+      "familiesの件数30、各families.filesの合計45、presetsの件数15を実集計。すべてlicense=OFL-1.1。利用条件は各配布のOFLと元配布へ戻って確かめる。",
+      "元カタログにはcategory、language、use_jaと、presetsのheading/body/latin/instructionがある。この頁は制作担当がそれらを確認する手順を示す。\n下の2例は実presets editorial/friendlyのheading/body。品質順位や最適性の測定ではない。",
+      "family/category/use_ja、official_url/commit、license/license_url/license_file、presetsのheading/body/latinを対応させる。原典hub_spokeは順序のない中央関係に用いる。",
+      "30件のfamiliesをlanguageで集計：ja17、latin13。合計30。原典allotmentは1カテゴリの横積み上げ棒と任意の2〜3icon_cardsを受ける。元データを図に合わせて作った数値ではない。",
+      "候補決定後も、必要な文字・版面の読みやすさ・配布元OFL・フォント登録・他環境への持ち出しを確認する。15プリセットは候補の入口で、最適性や品質の測定結果ではない。"
+    ],
+    "font_families": [
+      "Zen Kaku Gothic New",
+      "Space Grotesk"
+    ],
+    "preview_kind": "powerpoint-render"
+  },
+  "guide_patch": {
+    "summary_ja": "話の順序と頁の役割を決め、内容に合う部品やテーマ固有の図で、編集可能な資料へ組む。",
+    "requirements": [
+      "固定runtimeを含む一式ZIP、Node22.19+、Python、runtimeの固定依存。新規インストールは今回未検証。",
+      "同梱の公式Zen Kaku Gothic NewとSpace GroteskをOFLに従い登録。PowerPoint実描画はWindows版PowerPoint、PDF画像化はpypdfium2。"
+    ],
+    "steps": [
+      "原典schema/narratives/themesを読み、読者と目的から話の順序・themeを選び、deck.spec.jsonへtype/kind/headingを書く。",
+      "構成とthemeを示した後、inspectで頁と部品の契約を読み、意味に合う部品へ原稿を渡す。",
+      "元の内容が契約を満たす場合だけsignatureを使う。型を満たすための数値・画像は作らない。",
+      "最大4頁ごとに原典buildを実行し、JSONのerrors/warningsと各頁fitを読み、入力を直す。",
+      "原典が返したPPTXをその場所で渡す。別途の掲載確認として全頁を実描画し、文字・根拠・単位を確かめる。"
+    ],
+    "limitations": [
+      "5頁は実カタログの和文17・欧文13を原典allotmentへ渡す。提示された他4件のsignatureは未実施で、内容にない情報を足して埋めない。",
+      "図表は編集可能な図形と文字。Officeのデータ連動チャートやネイティブ表ではない。",
+      "画像を使わない現版。原典images generateやasset-briefの画像経路は今回実証していない。旧版の架空配分とAI概念画像は現版の根拠に含めない。",
+      "Rallyのmenuを保持した橙・墨・紙色の派生theme。日本語書体allowlistをメモリー内で追加するadapterのみで、原典配置・QA・出力PPTXの後加工なし。",
+      "原典のself-checkはCLIのJSON report。全頁PowerPoint目視はユーザー依頼の掲載確認で、原典self-checkとは別。",
+      "日本語書体に原典の厳密な幅表はなく、保守的な推定へfallbackする通知を保持。実PDFは同梱のZen Kaku Gothic NewとSpace Groteskを確認。",
+      "既存固定依存で再実行。新規npm ci、代替themeへの再切替、過去の個別人間承認、利用者採用は未検証。"
+    ],
+    "execution_type": "原典pptwiseのspec→inspect→pages→build/fit。実集計をallotmentへ渡し、別途PowerPoint全頁を確認。",
+    "commands": [
+      "python source/rebuild_pptwise.py --node <Node実体>",
+      "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath .pptwise/input/deck.pptx -OutputDirectory render",
+      "python source/render_pdf_previews.py render"
+    ]
+  },
+  "production_attribution": "Current repair by integration agent; do not label Opus production",
+  "effect_patch": "data/skill-effect-patches/repairs-design.json",
+  "current_pptx_sha256": "18c15404d5a658092ce0df60bd2844dcf119466cb1c8edd8f9c5869540743be3",
+  "current_independent_recheck": "pending"
+}

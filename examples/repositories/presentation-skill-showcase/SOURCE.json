@@ -12,13 +12,22 @@
     "tables"
   ],
   "local_changes": [
-    "font_pair handoff_ja_v1",
+    "editorial_serif_v1 Japanese font adapter",
     "Manrope native numeric metadata mapping",
-    "BIZ UDPGothic native table headers",
-    "Japanese table label localization"
+    "operations-grid content header titleTop 0.34in (addDarkTitleBar)",
+    "renderContractStage stage_labels / 4.5:1 text ink / section footer on actual background"
   ],
   "source": "input/outline.json",
   "example": "examples/repositories/presentation-skill-showcase",
   "full_python_data_pipeline_ready": false,
-  "review": "User-requested generation plus representative first display only"
+  "authoring_model": "gpt-6.1-sol",
+  "repair_authoring_model": "claude-opus-5-5",
+  "review": "Independent review and correction loop required; results only from QA.json receipts",
+  "codex_followup_repair": {
+    "author": "Codex",
+    "scope": "表上の5列見出し再掲を4件の記入例へ、和文captionは正体へ。原典builder/finalizerを再実行。",
+    "diff": "source/table-legibility.diff",
+    "opus_called_for_followup": false
+  },
+  "pptx_sha256": "3e2a71995161009e7dc93bb46eea6efa647d60676afb8d0fa2d80b28552b01a3"
 }

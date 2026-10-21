@@ -2,7 +2,7 @@
   "repository": "Aham-AIAPP/aham-ppt",
   "commit": "c2b4ece69bbac777557934f981457c1f98c2b73f",
   "license": "MIT",
-  "scope": "Original 39-layout-ID system: SPC/E-03/E-04/A-90 functions and original SVG native converter",
+  "scope": "Partial execution: original page-layout choice, themefunctions, SVG-native converter/lint; currentP5/P6integrator decisions, not eight-stage human dialogue.",
   "case_studies": [
     "aham-showcase"
   ],
@@ -49,15 +49,65 @@
       "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/LICENSE"
     }
   ],
-  "method": "Original themes.cover and themes.chrome; frozen E-03 stage_flow, E-04 tri_layer, A-90 swimlane_roadmap; original svg_to_native_pptx wrapper → bundled ppt-master native DrawingML converter.",
+  "method": "Original A-theme functions and color tokens, original SVG→native DrawingML wrapper and lint, actual PowerPoint16 rendering.",
   "modifications": [
-    "Post-SVG font-family replaces Chinese/Inter stacks with Zen Kaku Gothic New and Manrope.",
-    "Color skin: cobalt/yellow/ink surfaces; square corners; default labels translated into Japanese.",
-    "No layout coordinate edits: component function coordinates and connectors preserved. Supplemental lines use original T/L atoms.",
-    "User-directed colors and typography differ from original restrained A/B/C style rules; no engine replacement.",
-    "Rightmost final week tick uses end alignment after font-size floor adjustment; original coordinates preserved."
+    {
+      "id": "font-family",
+      "what": "原典の SANS / MONO 字体列を完全一致で JA_FONT に置き換える",
+      "value": "Manrope, 'Zen Kaku Gothic New', sans-serif"
+    },
+    {
+      "id": "ea-font-registration",
+      "what": "変換器の和文字体集合 EA_FONTS に実行時だけ Zen Kaku Gothic New を加え、PPTX で latin=Manrope / ea=Zen Kaku Gothic New にする（ファイルは変更しない）"
+    },
+    {
+      "id": "fixed-labels",
+      "what": "原典の中国語固定文字と凡例を和訳する",
+      "value": {
+        ">目录　CONTENTS<": ">目次<",
+        ">来源：": ">出典：",
+        ">已承诺<": ">実施確定<",
+        ">计划中<": ">計画<",
+        ">拟议<": ">提案<"
+      }
+    },
+    {
+      "id": "chart-label-readability",
+      "what": "P2の目盛り・所要時間・作業名を16px/INK1にし、原典と同じ軸式で20分終端を追加。棒と比率は不変"
+    },
+    {
+      "id": "stage-centering-and-detail",
+      "what": "P3原典stage_flowを右67px平行移動し、ラベルを16/18pxへ。原典Tで入力済み補足を各段下へ加える。相対接続と箱サイズは不変"
+    },
+    {
+      "id": "roadmap-legend-readability",
+      "what": "P4原典凡例を表示。凡例14px、目盛り/泳道名16px、ブロック名14pxへ濃く補正。proposed状態は維持"
+    }
   ],
   "font_delivery": "Original TTF/OFL packaged; fonts not embedded or installed automatically.",
   "api_calls": 0,
-  "preview_export": "PowerPoint16, 4 PNG/PDF pages exported once after colleague export completion."
+  "preview_export": "Current PowerPoint16 PDF and RGBPNG, all4individually inspected.",
+  "repair_model": {
+    "requested": "claude-opus-5-5",
+    "reported": [
+      "claude-opus-5-5"
+    ],
+    "scope": "Initial phase artifacts/generator/layout-map/Japanese guide authored in actual claude-opus-5-5 run; current Round5 labels/centering/legend/plan decisions/QA/packaging implemented by Codex, no new Opus production.",
+    "complete_two_case_model_run": false,
+    "private_execution_log_included": false
+  },
+  "pptx_sha256": "a6170f6dd2f8d93212020c4b2fd6bd01f44720988466e9aaa8aff84777e8c781",
+  "repair_checked_at": "2026-10-15T16:52:08.329105+00:00",
+  "not_demonstrated": [
+    "8段階のユーザー確認対話、coach-engine、P7の3頁ごとの確認、P8の全五層QC、人間の最終承認・採用、効果測定。"
+  ],
+  "round3_followup": {
+    "change": "P2 original c.T annotation now explicitly states axis right endpoint20min; original chart geometry unchanged",
+    "color_history": "Initial cobalt/yellow/ink request was replaced during source-rule repair by original A white/grey/blue theme"
+  },
+  "round5_followup": {
+    "visual_corrections": "source/layout-map.json",
+    "execution": "source/round5-execution.json",
+    "P5_P6_human_confirmation": false
+  }
 }

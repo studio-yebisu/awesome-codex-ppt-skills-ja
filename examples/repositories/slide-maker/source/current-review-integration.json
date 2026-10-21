@@ -1,0 +1,48 @@
+{
+  "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+  "actual_review_binding": "review/round8-current-version/binding.json",
+  "critic_raw_output_changed": false,
+  "blind_answers_changed": false,
+  "blind_findings_retained": true,
+  "original_comparator_false_positive_answered_under_its_refuted_contract": true,
+  "original_gate_records": [
+    {
+      "command": [
+        "python",
+        "source/upstream/skills/slide-maker/scripts/render_deck.py",
+        "deck.pptx",
+        "--gate-check"
+      ],
+      "exit_code": 0,
+      "log": "source/current-handoff-gate.txt"
+    },
+    {
+      "command": [
+        "python",
+        "source/upstream/skills/slide-maker/scripts/codex_delivery_gate.py",
+        "--lint",
+        "source/current-lint.json",
+        "--components",
+        "source/current-components.json",
+        "--build-script",
+        "source/build_slide_maker_repository_example.py",
+        "--evidence",
+        ".codex-deck-evidence.json",
+        "--receipt",
+        "codex-delivery-receipt.json"
+      ],
+      "exit_code": 1,
+      "log": "source/current-codex-delivery-gate.txt"
+    }
+  ],
+  "copy_repair": "Removed repeated unit-definition sentence; contact sheet now uses all five current images.",
+  "notation_convention": "本文の1回＝は語句の定義、数値比較式は半角演算子と両側スペース。役割別の表記であり演算子の意味は変えない。",
+  "independent_catalog_score_before_copy_repair": {
+    "A": 33,
+    "B": 35,
+    "C_visual": 18,
+    "total": 86,
+    "max": 88
+  },
+  "independent_current_catalog_recheck": "pending"
+}

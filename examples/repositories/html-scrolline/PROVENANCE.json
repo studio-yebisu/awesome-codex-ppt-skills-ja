@@ -519,7 +519,7 @@
       "log_sha256": "376e5d7a6e215a9ca54f3a1c9543e5f8833b8472efa9d9c43c3ace34ca7569c8"
     }
   ],
-  "artifact_sha256": "12c264d15b8c7c26b02b08b29d21c044d0ab7b64862887d36cb7144d83c882e1",
+  "artifact_sha256": "47acfd444a28b469c9b3b1be9790e76fa08addc6319df32384e9b35a8ea6b4ac",
   "input_sha256": "6dc0490920cbaca0fa3587642b1adb80f6477bce854f7a10f904c84687639600",
   "engine_moves_concepts_modified": false,
   "original_core_hashes": "review/upstream-hashes.json",
@@ -565,7 +565,7 @@
   "sample": true,
   "api_keys_used": false,
   "paid_api_used": false,
-  "native_artifact_sha256": "12c264d15b8c7c26b02b08b29d21c044d0ab7b64862887d36cb7144d83c882e1",
+  "native_artifact_sha256": "efc5cdb1589a44c55692463e5d06a14b21775620524bb588f1b751cdf4346de0",
   "native_artifact": "deck.html",
   "built_assets": [
     {
@@ -573,5 +573,31 @@
       "sha256": "12c264d15b8c7c26b02b08b29d21c044d0ab7b64862887d36cb7144d83c882e1"
     }
   ],
-  "catalog_preview_normalization": "Catalog preview now points directly to native deck.html with a same-origin public-API IPC bridge."
+  "catalog_preview_normalization": "Catalog preview now points directly to native deck.html with a same-origin public-API IPC bridge.",
+  "codex_web8_repair": {
+    "author": "Codex",
+    "scope": "Current source repair, actual original-path gates and page review; earlier production attribution retained only for earlier scope",
+    "qa": "QA.json"
+  },
+  "current_execution_receipts": "review/replay/execution-receipts.json",
+  "current_controls": "review/repair-player-check.json",
+  "current_entry_adapter": "Original stop URL before boot survives original font rebuild",
+  "current_css_changes": "Now line below chapter heading; hide duplicate ghost year/event date while rolling month retained",
+  "current_round4_repair": {
+    "author": "Codex",
+    "artifact": "deck.html",
+    "artifact_sha256": "d547ee892b5195d2d1074835ca8e259776a2a8d472c8e072f7baaa70cbc76a2f",
+    "qa": "QA.json",
+    "changes": [
+      "原典CLI plan→Vite build→HTTP smokeを実行。6停止点のerrors/overlaps/clipped/tinyは0。",
+      "engine/moves/conceptsは変更せず、deckのCSSだけで月の実距離を360pxへ広げる。元moveが実座標を読んで同じレールを移動する。",
+      "rail-advanceとera-shiftを元のArrowRightで再生し、前・途中・完了後を保存。日時カウンター・項目ラベル・紙色の変化を示す。"
+    ],
+    "not_demonstrated": [
+      "原典はrail/data/launch/zoom/canvas/kineticの6conceptとMP4 exportを持つ。今回制作したのはrailだけで、残り5conceptとMP4は未実施。",
+      "内部localeはenのまま、日本語本文と端末字体を利用。日本語locale機能を実装した作例ではない。",
+      "原典全体CIのWindowsパス3件不合格は旧実行記録を保持。今回のbuild/smokeと操作検査を、全CI合格へ読み替えない。印刷・縦長mobile・60fpsの定量確認も未実施。"
+    ],
+    "independent_review": "pending"
+  }
 }

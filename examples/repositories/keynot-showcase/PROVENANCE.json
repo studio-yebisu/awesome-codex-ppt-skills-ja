@@ -3,7 +3,7 @@
   "commit": "d1f9e449ddb89da707b489cb69c520a64975b47c",
   "license": "MIT",
   "copyright": "2026 Shawn Zamechek",
-  "method": "Original Keynot brand extraction from independent BRAND.md → deck architecture → original example full CSS and deck/slide/nav/rotate/print shell → Japanese content/layout overrides → untouched complete inline controller (circular go/hash/session/dots/reveal/swipe/fullscreen/auto-hide) + appended same-origin bridge → self-contained inline-font HTML.",
+  "method": "色指定済みの日本語ブランド指示書→正確な色値の実抽出→brand record→元HTML/CSS/controller→局所の日本語本文・字体・版式",
   "runtime": "Original examples/keynot-for-zombies.html inline JS; 100vw×100vh viewport slides, circular0-based cur, 1-based #slide-N deep-link, session persistence, dots, auto-hide, swipe, fullscreen. Appended bridge only.",
   "source_refs": [
     {
@@ -113,9 +113,40 @@
   "editability": "HTML/SVG/CSS/JavaScript",
   "pptx_generated": false,
   "backend": "Original zero-framework HTML authoring with Python stdlib packaging only; no npm/API/artifact-tool",
-  "preview_canvas": {
-    "width": 1600,
-    "height": 1000
+  "verification_scope": "指定色7項目を実抽出し全6頁を実描画・目視。3頁のローラーと「日」を離し、6頁の締めを指示書の明朝へ統一。1頁は原典navが自動で消えるまで待ち実撮影。",
+  "repair_author": "Codex",
+  "repair_receipt": "source/repair-qa.json",
+  "not_demonstrated": [
+    "色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。",
+    "紙70/黒28/赤2は設計目標であり面積の測定値ではない。",
+    "元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。"
+  ],
+  "brand_input_kind": "structured_text_not_pdf_or_url",
+  "current_repair": {
+    "author": "Codex",
+    "verification": "source/repair-qa.json",
+    "original_gates": "source/round4-original-gates.json",
+    "independent_rereview": "pending for repaired version"
   },
-  "qa_scope": "Necessary build; representative first views; original1to2 navigation; cover targeted orphan correction. No all-page review/scoring/ZIP rerun."
+  "superseded_history": [
+    {
+      "revision": "before round4-web07-repair",
+      "old_metadata": {
+        "qa_scope": "Necessary build; representative first views; original1to2 navigation; cover targeted orphan correction. No all-page review/scoring/ZIP rerun.",
+        "preview_canvas": {
+          "width": 1600,
+          "height": 1000
+        }
+      },
+      "current_authority": "QA.json and source/repair-qa.json in the included case; historical limited checks do not describe the current revision."
+    }
+  ],
+  "current_verification": "source/repair-qa.json",
+  "zip_reexecution": "source/round4-zip-replay.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "current_preview_canvas": {
+    "width": 1920,
+    "height": 1080,
+    "scope": "All current public deck pages; original Cogine validator separately at1280×720."
+  }
 }

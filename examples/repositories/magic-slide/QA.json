@@ -1,95 +1,95 @@
 {
-  "status": "qa_complete",
-  "scope": "Agent catalog sample QA; original human revision and adoption gates not completed",
-  "human_review": "pending",
-  "human_adoption": "pending",
+  "status": "author_qa_complete_independent_review_pending",
   "page_count": 5,
-  "artifact_sha256": "f7ad90944cdcfc65757a0f2bf68e268ae8c8f85bf734e41a99d0beff3e163a42",
-  "images": [
-    {
-      "page": 1,
-      "file": "render/slide-01.png",
-      "sha256": "b84e90e4afdd9d0424db0533c840b70be4a9b4606693dea7f46ba0ecfaea23a3"
-    },
-    {
-      "page": 2,
-      "file": "render/slide-02.png",
-      "sha256": "8776da543b948ac2c248851ebc87b2206f481e0a04e57200af6e74af40b7458f"
-    },
-    {
-      "page": 3,
-      "file": "render/slide-03.png",
-      "sha256": "62787f683b3043505d8e5aac0947d5c149c8933b2397bb3e2b8b9eb09e16806d"
-    },
-    {
-      "page": 4,
-      "file": "render/slide-04.png",
-      "sha256": "7230dc2718be89a7766be4ec8078f34a13f98814b94a4f64d3e51fb8dad48244"
-    },
-    {
-      "page": 5,
-      "file": "render/slide-05.png",
-      "sha256": "b5c93b5d69c3044027b93f5e9861bbfcff50507cd728df09e43155f5583ea869"
-    }
-  ],
+  "artifact_sha256": "398234e85de0a15197aa35a4a81ef346ba01c9872fbe857ba2bb2a7b2d61d8b0",
+  "all_pages_visually_reviewed": true,
   "visual_review": {
-    "pages_reviewed": [
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
       1,
       2,
       3,
       4,
       5
     ],
-    "method": "原典serveのQA Overviewを最初にcaptureし、全5頁の日本語実表示と4隣接境界のFLIP・移動を確認",
-    "overview_first": false,
-    "result": "All final pages viewed, original native FLIP and navigation verified"
-  },
-  "browser_review": {
-    "artifact_sha256": "f7ad90944cdcfc65757a0f2bf68e268ae8c8f85bf734e41a99d0beff3e163a42",
-    "pages_reviewed": [
-      1,
-      2,
-      3,
-      4,
-      5
-    ],
-    "overview_first": false,
-    "historical_original_overview_reference": "source/browser-review-before-catalog-bridge.json",
-    "historical_overview_first": true,
-    "visual_result": "親が最新HTMLの全5頁をフロートで実表示・視認。CJK・計算・提案値と未検証の区別・本文・図形・余白・ページ順を確認。変更はcatalog bridgeのみで、原典FLIP/認証scope修正/本文とCSSを保持。",
-    "native_motion": "Original FLIP clone transitions completed at adjacent page changes; unchanged injector compared to historical reviewed runtime.",
-    "native_navigation": {
-      "all_pages": "passed",
-      "native_prev_to_counter": "3 / 5",
-      "rapid_last_request": "4 / 5",
-      "presenter_autopen": "disabled using original ms_no_presenter=1 option"
-    },
-    "runtime_errors": [],
-    "external_requests": "original source review recorded none; latest localhost iframe console errors0",
-    "human_revision": "pending",
-    "human_adoption": "pending",
-    "evidence": [
+    "finding": "脚注を15→20px、本文色へ変更。全5頁と4境界の実Magic Moveを再確認。静止画のcursor/trailだけ撮影時に除外。",
+    "images": [
       {
-        "file": "docs/assets/magic-slide-current-01.jpg",
-        "sha256": "b0115530159623a02daaf3c8d4e3fafa508b10921d76e49d29213e1081582573"
+        "page": 1,
+        "path": "render/slide-01.png",
+        "sha256": "674ee435220e3b9d7d36b37166cdd10dd1818a74a378c09f8b27a180bc5a34c4"
       },
       {
-        "file": "docs/assets/magic-slide-current-02.jpg",
-        "sha256": "a54bbf89be4ca78e72ba01f1fe0444217df439fcd348dce2431badecd8b0f530"
+        "page": 2,
+        "path": "render/slide-02.png",
+        "sha256": "f09c99f58356e05958dff2ad65ebbac5d73f45cafaba67ed6993039a6221088e"
       },
       {
-        "file": "docs/assets/magic-slide-current-03.jpg",
-        "sha256": "62855ed22bba8683f9a29573cd8db479fa57ae70b63ccad763870163f9311770"
+        "page": 3,
+        "path": "render/slide-03.png",
+        "sha256": "baaa7c99a9a73c6a378a7831bd303622bcec9c08b3c7f17afec30bf0e509e2f4"
       },
       {
-        "file": "docs/assets/magic-slide-current-04.jpg",
-        "sha256": "f012bfc976dc6a0c7626ee406d620b12bed45f2d9823f1d581ba9074470e404a"
+        "page": 4,
+        "path": "render/slide-04.png",
+        "sha256": "cac98d02ed55c15b5a977699f3fba8e09982b2e67999aae1a65611f4c2954b0d"
       },
       {
-        "file": "docs/assets/magic-slide-current-05.jpg",
-        "sha256": "0ab1e0eae8f5a44e37f3e92f51472031c1dde0f9bbf60136a21aafdad8e7ed97"
+        "page": 5,
+        "path": "render/slide-05.png",
+        "sha256": "d9d874e73ca946dcb14a531aff46eb7c57d7b022e3d05e942592394d4db07475"
       }
+    ]
+  },
+  "original_gates": {
+    "original_merge": 0,
+    "derived_injector": 0,
+    "overview_first": {
+      "ready": true,
+      "pending": "0",
+      "timeouts": "0",
+      "errors": "0",
+      "iframeCount": 5
+    },
+    "normal_playback": {
+      "pages": 5,
+      "motion_boundaries": 4,
+      "errors": [],
+      "unauthorized_status": 401
+    },
+    "human_revision_adoption": "pending"
+  },
+  "constraints": [
+    "40・30・4・3・3分は仮定、短縮効果は未検証",
+    "認証付きQA関数のscope修正のみ。server認証と保存先制限は原典のまま",
+    "静的カタログiframeでは編集・保存が使えない",
+    "agentの検証と人のrevision/adoptionは別。後者はpending",
+    "静止画だけcursorとtrailを非表示にして撮影。通常runtimeは保持"
+  ],
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json",
+  "round3_motion": {
+    "receipt": "source/motion-check.json",
+    "boundaries": 4,
+    "actual_frames": 12,
+    "native_clone_counts": [
+      1,
+      3,
+      3,
+      2
     ],
-    "checked_at": "2026-10-13T18:25:36.515895+00:00"
+    "errors": 0,
+    "outside_requests": 0,
+    "overview_ready": true,
+    "human_revision": "pending"
+  },
+  "round3_zip_replay": {
+    "receipt": "source/zip-replay.json",
+    "all_commands_passed": true,
+    "html_byte_identical": true
   }
 }

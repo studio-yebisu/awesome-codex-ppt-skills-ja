@@ -1,0 +1,204 @@
+{
+  "schema_version": 1,
+  "kind": "supplementary_synthetic_reconstruction_example",
+  "upstream": "HututuWorks/sci-diagram-pptx",
+  "commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
+  "input_license": "CC0-1.0 Studio Yebisu original concept schematic, not empirical research",
+  "upstream_license": "Apache-2.0",
+  "runtime": "PptxGenJS4.0.1 on Node24.18",
+  "initial_authoring": {
+    "model_requested": "claude-opus-5-5",
+    "model_returned": "claude-opus-5-5",
+    "assistant_messages": 16,
+    "read_texts": [
+      "upstream/SKILL.md",
+      "upstream/references/reconstruction.md",
+      "upstream/references/runtime-pptxgenjs.md",
+      "upstream/assets/pptxgenjs-build-template.mjs"
+    ],
+    "read_image": "input/source.png",
+    "execution": "Codex, not model tool execution",
+    "math_reference_read_by_initial_author": false
+  },
+  "checks": {
+    "original_checker": "PASS hard0 warning1: all12 text boxes use wrap=none; PowerPoint16 and LibreOffice inspected without missing/overlapping labels",
+    "renderers": [
+      "Microsoft PowerPoint16",
+      "LibreOffice24.2.5.2 original isolated-profile renderer"
+    ],
+    "native_text_edit": "X to X* in private copy, actual PowerPoint SaveCopyAs; accepted original unchanged",
+    "geometry_topology_inset_unchanged_after_font_repair": true,
+    "independent_review_on_this_version": false,
+    "current_native_structure": "qa/native-structure-pass04.json",
+    "current_geometry_and_edit": "qa/geometry-and-edit-pass04.json",
+    "current_native_edit": "qa/current-nativeedit/edit-proof.json"
+  },
+  "files": [
+    {
+      "path": "authored-source.svg",
+      "sha256": "763af3902d37aa39eb50cbd6376ec0691264cb5eca2f233e758ce0b288d2a44a"
+    },
+    {
+      "path": "input/source.png",
+      "sha256": "24565b908b599e3a3caaf0839a0dd38aa276a957240d822273271609f7efae29"
+    },
+    {
+      "path": "ownership.json",
+      "sha256": "f17030fa3b73e48b06b64d7033bd92bc9ffbe73b6a5cd74d6360baee695ad6a2"
+    },
+    {
+      "path": "pass-01/build.mjs",
+      "sha256": "777b5c2873e4f826a9d186918914b777f3062a52f2b0b722a6457dc450eed681"
+    },
+    {
+      "path": "pass-02/build.mjs",
+      "sha256": "2824b2fa7d89ec903bf150028339800d67eb12557a9f68be720907e571581210"
+    },
+    {
+      "path": "pass-02/editable.pptx",
+      "sha256": "5144b3815f87ebccf7425cd31d2041e57f9cf3238307d50f70610b7fe4960b68"
+    },
+    {
+      "path": "pass-02/ownership.json",
+      "sha256": "9318a7d83bb00876f17a06698b61d7636258edfc6b4e5eb99051e4873355af2d"
+    },
+    {
+      "path": "pass-02/source.png",
+      "sha256": "24565b908b599e3a3caaf0839a0dd38aa276a957240d822273271609f7efae29"
+    },
+    {
+      "path": "pass-04/build.mjs",
+      "sha256": "95ea015f45a36a712bae9aeccd682f836842f7ee2a5035308b403fd17288d654"
+    },
+    {
+      "path": "pass-04/editable.pptx",
+      "sha256": "a7c5f813be910614000554c2b98e29cbc349c94724d2b3a34d30d9b17f81d968"
+    },
+    {
+      "path": "pass-04/source.png",
+      "sha256": "24565b908b599e3a3caaf0839a0dd38aa276a957240d822273271609f7efae29"
+    },
+    {
+      "path": "qa/check-pass-01.json",
+      "sha256": "891585fa4409fceb7a7388e3e4c8b7684b4710e20db6275102c03bbacb13f0f2"
+    },
+    {
+      "path": "qa/check-pass-02.json",
+      "sha256": "2acf62cf3ff55ddf12b480fa95bac6743a81f8f513e87769b15a8463ed7eaf77"
+    },
+    {
+      "path": "qa/check-pass-04.json",
+      "sha256": "7e1bf89e569dc8ceaeabc25a09be6f08229e6ca24f08028860eeb09f49cf2a6c"
+    },
+    {
+      "path": "qa/current-nativeedit/edit-proof.json",
+      "sha256": "306662ce4fa0cfdcde604cdce7bc402b91ba97bf47c6f81ebac96a6dfcf0894f"
+    },
+    {
+      "path": "qa/current-nativeedit/edited-copy.png",
+      "sha256": "7aca8d0c9bff0aa13cac1570db62377fe049c8cd397170cf98a1d386a9103c87"
+    },
+    {
+      "path": "qa/current-nativeedit/edited-copy.pptx",
+      "sha256": "80a0589096eb65d1834b834a47c0739167337d5bdfc3ed2b24511d5e395d9772"
+    },
+    {
+      "path": "qa/geometry-and-edit-pass04.json",
+      "sha256": "370526736c02e1aa55da5113c417fbe09cf9042df7751310ec36641f7e1cd260"
+    },
+    {
+      "path": "qa/native-edit.json",
+      "sha256": "f1554d93f61ba5f72494ce3b42b62a485db6504b88052e3f21bce7a8d8033a51"
+    },
+    {
+      "path": "qa/native-edit.png",
+      "sha256": "db9a560239e1e8bf4bcfdea2130bcd9a1de8af6d309bb079dacd20b0155939e8"
+    },
+    {
+      "path": "qa/native-edit.pptx",
+      "sha256": "f773254ffa3ea836eb52ef0c06fd1d52bf34c701f4f8188679937aced3efa1a1"
+    },
+    {
+      "path": "qa/native-structure-pass04.json",
+      "sha256": "65d22ee6db0b40f056d45299162b742f326c45c5c749f21a23f9574c1ab97036"
+    },
+    {
+      "path": "qa/native-structure.json",
+      "sha256": "637c2813b3a5016d3a4e33607c149ad08e851ab553dbba07e9acc7158b0079ac"
+    },
+    {
+      "path": "qa/pass-01-evidence.json",
+      "sha256": "68fb95d049d44aa5f529c175b3dc0aef9c69412140a2114c72bd5cd1debf3303"
+    },
+    {
+      "path": "qa/pass-01-render/libreoffice.png",
+      "sha256": "cd52c2e3d1a864250b89ac2bfb620fe2da7dfae4b55029f1875ace39f80c3447"
+    },
+    {
+      "path": "qa/pass-01-render/powerpoint.png",
+      "sha256": "f64bde50d562b63a44389d753a9a7de4a24eec23b81b06867cbc2a53a616f954"
+    },
+    {
+      "path": "README.md",
+      "sha256": "d7e6a94f62ef94df2a782a622d58ce2989c012667191376f0deded833b027744"
+    },
+    {
+      "path": "render/libreoffice.png",
+      "sha256": "6743679a69cb1e2e49d7da0cc4660207e35f0da3a3105b810be944bfbd3cf9c8"
+    },
+    {
+      "path": "render/powerpoint.pdf",
+      "sha256": "4262b05a704328ce0206e4a1ef5e5e8e6f3e135aa9ff49d2538e9391929a6a6d"
+    },
+    {
+      "path": "render/powerpoint.png",
+      "sha256": "d957b9968e8bd5cef491fb8f7ef31de3870eca81ff0f93c6230fc5d231f86830"
+    },
+    {
+      "path": "render-pass04/libreoffice.pdf",
+      "sha256": "6e5435c462171f738034a3aa54d4ba8e04b6e2697e8e6c230026f2776a799cad"
+    },
+    {
+      "path": "render-pass04/libreoffice.png",
+      "sha256": "6b9c81a5fd9b94907d55576175a8021c9e2b98096f0b0dcf389cc47b6ff5ff18"
+    },
+    {
+      "path": "render-pass04/powerpoint.pdf",
+      "sha256": "15fa592b80f8d265ec3a4cc63a1b2d83ebc3beb2d1723f96390daa54a406eec6"
+    },
+    {
+      "path": "render-pass04/powerpoint.png",
+      "sha256": "e67aad3c61de1ee9c685eba5b267f1f0bb4b0b604638e62a71813858d0f27306"
+    }
+  ],
+  "file_manifest_scope": "Original authored source and accepted evidence below; README is integration documentation, not model-authored output.",
+  "historical_standard_pass02": {
+    "index": 2,
+    "repair_author": "Codex",
+    "change": "Only font constant Noto Sans JP to installed Yu Gothic",
+    "reason": "Actual PowerPoint pass01 lost intended bold hierarchy and label legibility",
+    "math_reference_read_by_Codex": true,
+    "was_terminal_at_that_time": true,
+    "new_generation_budget_exhausted_at_that_time": true
+  },
+  "accepted_pass": {
+    "index": 4,
+    "author": "Codex",
+    "reason": "Explicit continued-refinement request after the standard two-pass run",
+    "change": [
+      "Source SVG corner radius to native roundRect rectRadius",
+      "Python stdlib local OOXML adapter sets only three triangle head w/len to lg/lg"
+    ],
+    "original_standard_pass_budget": 2,
+    "original_checker_pass_index_argument": null,
+    "PptxGenJS_version": "4.0.1",
+    "PptxGenJS_headsize_API_used": false,
+    "new_dependency_added": false,
+    "original_checker_unchanged": true,
+    "pptx_sha256": "a7c5f813be910614000554c2b98e29cbc349c94724d2b3a34d30d9b17f81d968"
+  },
+  "rejected_pass03": {
+    "accepted": false,
+    "reason": "Direct JSZip import failed original build-source portability check; not bundled"
+  }
+}

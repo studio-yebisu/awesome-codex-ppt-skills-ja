@@ -1,14 +1,35 @@
 {
-  "status": "light_check_complete",
-  "build": "Original instruction-driven PptxGenJS + sharp recipe generated 5 chapter-divider slides.",
-  "open_export": "Microsoft PowerPoint16.0 opened and exported 5 PNGs and PDF once.",
-  "representative_visual": "Cover preview viewed once; no obvious missing Japanese glyphs.",
-  "scope": "Chapter-divider example: cover plus four chapters; not a full business presentation.",
+  "status": "implementation_QA_complete_independent_rereview_pending",
+  "artifact_sha256": "148303c7c2453fe9a56341518911a6c0feb5afa018275dd699e2411a803aebbd",
+  "original_step6_qa": {
+    "performed": true,
+    "receipt": "reviews/page-audit.json",
+    "all_pages_actually_viewed": true,
+    "adapter": "Existing LibreOffice CLI in place of external unbundled soffice.py wrapper; original pdftoppm -jpeg -r150 used."
+  },
+  "recipe_check": "source/recipe-check.json",
+  "font_adapter": "source/japanese-font-adapter.json",
+  "actual_PDF_fonts": "source/pdf-fonts.json",
+  "native_editability": "qa/editability/native-editability.json",
+  "scope": "Chapter dividers only: cover plus4chapters. Four original SVGs rasterized to PNG.",
+  "current_zip_replay": "source/zip-replay.json",
+  "zip_reexecution": {
+    "status": "both_archives_actual_success",
+    "receipt": "source/zip-replay.json",
+    "all2_artifacts_each_logical_native_match": true,
+    "all22_decoded_images_max_RGB_difference": 0,
+    "fresh_install_executed": false
+  },
+  "independent_review": false,
+  "human_approval": false,
   "not_performed": [
-    "all-page detailed visual review",
-    "structural audit",
-    "independent review",
-    "ZIP replay",
-    "formal adoption"
+    "Current revision independent model rereview",
+    "Human approval/formal adoption",
+    "Fresh npm install/npm ci",
+    "Editable illustration line reconstruction"
+  ],
+  "original_style_difference": [
+    "Japanese glyph font Yu Mincho replaces missing Georgia glyphs. Latin Georgia remains declared; actual Japanese PDF font is YuMincho-Regular.",
+    "New small cover sparkle follows original Bezier rules, not an unchanged library SVG."
   ]
 }

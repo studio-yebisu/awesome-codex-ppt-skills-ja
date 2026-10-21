@@ -1,16 +1,12 @@
 {
-  "status": "qa_complete",
+  "status": "author_qa_complete_independent_review_pending",
   "page_count": 9,
-  "artifact_sha256": "883f5488acb3e247edff5d343032911a9c1fe07a056e2ba661a103d1eb7b6693",
-  "browser_review": "verified",
-  "browser": "Codex in-app browser / actual native page controls",
-  "viewport": {
-    "width": 1280,
-    "height": 720
-  },
+  "artifact_sha256": "ee81c2c08a8997e2eb98f307af143048f61d182f4acc05cc965cc6069a715b6c",
+  "all_pages_visually_reviewed": true,
   "visual_review": {
-    "method": "全ページを原典の操作で表示し、見出し/現在位置をDOM照合。実キャプチャ全頁のcontact sheetをCodexが視認。",
-    "pages_reviewed": [
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
       1,
       2,
       3,
@@ -21,53 +17,81 @@
       8,
       9
     ],
-    "result": "日本語の欠落・はみ出し・意図しない重なりなし。架空条件/目標表示、図表と入力を照合。"
+    "finding": "2頁の孤立文字を一行の問いへ修正。図のラベル・矢印を拡大して埋込書体を適用。表紙の白文字を黒地内へ移動。",
+    "images": [
+      {
+        "page": 1,
+        "path": "render/slide-01.png",
+        "sha256": "9e25fbff2554cac4f8535f4cf1f7bc9597b5404f271ed94d19df8b7f771ab807"
+      },
+      {
+        "page": 2,
+        "path": "render/slide-02.png",
+        "sha256": "94f2ad9078d0aebf9eddad28ebc9691f1f0d70f7f298a860dce8b6eb4dea0f50"
+      },
+      {
+        "page": 3,
+        "path": "render/slide-03.png",
+        "sha256": "360ee5eef6e5666c89288a0e7c4f96ff3de0997b9c25e61e5ff0c3a00c158a9f"
+      },
+      {
+        "page": 4,
+        "path": "render/slide-04.png",
+        "sha256": "9d3eaeebd343e124df3463cc5a6ef6aa06893e92ec064c18f580bd9a8e4fe4d6"
+      },
+      {
+        "page": 5,
+        "path": "render/slide-05.png",
+        "sha256": "a9b2d947a04eb593c93ea19bb990324f47299dde1483a0bb512d3df3cfa6829d"
+      },
+      {
+        "page": 6,
+        "path": "render/slide-06.png",
+        "sha256": "b263325037ed25f869a84c2b39b5f891c98401de4bc234b9e47920301578ba5d"
+      },
+      {
+        "page": 7,
+        "path": "render/slide-07.png",
+        "sha256": "39dc11fbb20e95299b8d2dc96a7354e7bfcc79b12be3ffad3dfdfc4d0e1fd804"
+      },
+      {
+        "page": 8,
+        "path": "render/slide-08.png",
+        "sha256": "7a34020aef6f05b342b49d2dbeec63abacdd1552fcdf2802bf139c08522a2ead"
+      },
+      {
+        "page": 9,
+        "path": "render/slide-09.png",
+        "sha256": "e3a2d553525fbdc75e7a5f2d88b0dbad028b1b81988a3911bf43a204097c5ee8"
+      }
+    ]
   },
-  "font_review": "実woff2の署名・MIMEとOFLを検査。ブラウザーでdocument.fonts.status=loadedと日本語字形を確認。",
-  "capture_conditions": "ページ収まりの撮影ではprefers-reduced-motion。通常の動きはサイトのプレイヤーで別途確認。",
-  "images": [
-    {
-      "file": "render/slide-01.png",
-      "sha256": "c17a1214a206500ec1797895588317fe24203d15402238273fca6bdb19202185"
-    },
-    {
-      "file": "render/slide-02.png",
-      "sha256": "21a46fc09bec49aceb54ad546cfc661632c959c66058069b3e7e2c9f3db50267"
-    },
-    {
-      "file": "render/slide-03.png",
-      "sha256": "b4feb4036c6c2770c05e0abe7e129bf90110fadc3ca6e012934c37d824835505"
-    },
-    {
-      "file": "render/slide-04.png",
-      "sha256": "03603c9dd6b6aa8be12e279c111e5cda2bc3c4e5723d46ff9e3d6263365d6cdb"
-    },
-    {
-      "file": "render/slide-05.png",
-      "sha256": "4275c6a35ce7261ffadf20d0cfe2c03e385697eb47ec50acf055fe2931c2e512"
-    },
-    {
-      "file": "render/slide-06.png",
-      "sha256": "19943fa22291f2cf01ef8f4ff733617fb139a20011de38f11491a6c4e7933487"
-    },
-    {
-      "file": "render/slide-07.png",
-      "sha256": "cb7cc60b69ed1890b7621491ff99a260a61b3408699724e066703c53915a4e59"
-    },
-    {
-      "file": "render/slide-08.png",
-      "sha256": "abdc7c844f61181e47020d5bb67aa8e3d3fc95d4d895feb1e608db4b7fa40c5f"
-    },
-    {
-      "file": "render/slide-09.png",
-      "sha256": "6a7a8d06c5a73511c1c9ae05275859ca4f4813df02d658b2eb3d416c5d70475f"
-    }
+  "original_gates": {
+    "original_check_ai_smell_all": 0,
+    "original_marp_html": 0,
+    "original_marp_pdf": 0,
+    "original_marp_png": 0,
+    "pdf_pages_visually_reviewed": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9
+    ]
+  },
+  "constraints": [
+    "元35分教材のうち5分の導入抜粋。元依頼は入力内へ保存",
+    "20分演習・ブランチ・レビュー・競合解消は扱わない",
+    "Gitコマンドは説明例で、リモート送信はしていない",
+    "本文を変えたときは埋込サブセット書体の収録文字も更新する"
   ],
-  "checked_at": "2026-10-13T15:40:20.865015+00:00",
-  "not_claimed": [
-    "上流の全テーマ・全機能",
-    "人による採用",
-    "外部公開",
-    "全209件の実行"
-  ]
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json"
 }

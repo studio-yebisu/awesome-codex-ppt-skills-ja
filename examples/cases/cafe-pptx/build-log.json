@@ -1,8 +1,8 @@
 [
   {
     "command": [
-      ".build/ppt-master-venv/Scripts/python.exe",
-      "skill-forks/ppt-master-ja/scripts/attribution_guard.py"
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\upstream\\scripts\\attribution_guard.py"
     ],
     "returncode": 0,
     "stdout": "",
@@ -10,20 +10,80 @@
   },
   {
     "command": [
-      ".build/ppt-master-venv/Scripts/python.exe",
-      "skill-forks/ppt-master-ja/scripts/compact_svg_styles.py",
-      "examples/cases/cafe-pptx/source/svg_output",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\upstream\\scripts\\compact_svg_styles.py",
+      ".\\source\\svg_output",
       "--inplace"
     ],
     "returncode": 0,
-    "stdout": "{\"input\": \"M:\\\\Codex\\\\Projects\\\\awesome-codex-ppt-skills-ja\\\\examples\\\\cases\\\\cafe-pptx\\\\source\\\\svg_output\", \"inplace\": true, \"file_count\": 8, \"changed_files\": 8, \"styles\": {\"root_font_defaults\": 0, \"root_style_declarations_normalized\": 0, \"container_style_declarations_normalized\": 0, \"group_defaults_promoted\": 25, \"shadowed_attributes_removed\": 0, \"redundant_attributes_removed\": 52, \"redundant_style_declarations_removed\": 0, \"changed_declarations\": 77}}\n",
+    "stdout": "{\"input\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\cases\\\\cafe-pptx\\\\source\\\\svg_output\", \"inplace\": true, \"file_count\": 5, \"changed_files\": 5, \"styles\": {\"root_font_defaults\": 0, \"root_style_declarations_normalized\": 0, \"container_style_declarations_normalized\": 0, \"group_defaults_promoted\": 15, \"shadowed_attributes_removed\": 0, \"redundant_attributes_removed\": 30, \"redundant_style_declarations_removed\": 0, \"changed_declarations\": 45}}\n",
     "stderr": ""
   },
   {
     "command": [
-      ".build/ppt-master-venv/Scripts/python.exe",
-      "skill-forks/ppt-master-ja/scripts/svg_quality_checker.py",
-      "examples/cases/cafe-pptx/source",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\upstream\\scripts\\svg_quality_checker.py",
+      ".\\source",
+      "--quick-generate",
+      "--canonical-authoring",
+      "--stage",
+      "early",
+      "--json"
+    ],
+    "returncode": 0,
+    "stdout": "\n[SCAN] Checking 5 authored SVG page(s) for the early gate...\n\n[WARN] 01.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 02.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 03.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 04.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 05.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n   [WARN] Detected 2 paragraph-like line run(s) split across sibling <text> elements (<g id=\"content\"> x=88.0, y=338.0..381.0, 2 lines; <g id=\"content\"> x=808.0, y=338.0..381.0, 2 lines). If each run is one prose paragraph, combine it into one <text>: keep its first line as direct text and use direct <tspan> children with the parent x and positive relative dy values for later lines. An all-<tspan> form may start with dy=\"0\". Keep semantically independent text frames separate.\n\n================================================================================\n[SUMMARY] Check Summary\n================================================================================\n\nTotal files: 5\n  [OK] Fully passed: 0 (0%)\n  [WARN] With warnings: 5 (100%)\n  [ERROR] With errors: 0 (0%)\n\nProvenance categories:\n  blocking: 0          hard findings; gate also requires exit 0\n  introduced: 6        advisory; new or changed\n  inherited: 0         informational; prototype-identical\n  source-import: 0     informational; source-conversion loss\n\n[CARRIERS] Actual-use receipt (informational; not a quota)\n  Pages: 5 | text: 79 | images: 0 | icons: 0\n  Geometry: SVG elements 25 | native presets 0 | page-frame elements 5 | marker uses 0\n  Effects: inline emphasis 0 (pages 0) | gradients 0 (pages 0) | filters 0 (pages 0) | text effects 0 (pages 0)\n  Native objects: charts 0 | tables 0 | formulas 0\n  Presets: (none)\n  Pages carrying a preset or connector: 0\n\n[TIP] Common fixes:\n  1. XML well-formedness: write typography as raw Unicode (—, ©, →, NBSP); escape XML reserved chars as &amp; &lt; &gt; &quot; &apos; — never use HTML named entities like &nbsp; &mdash; &copy;\n  2. viewBox issues: root viewBox is the canvas authority (see references/canvas-formats.md)\n  3. Paint recommendation: generated SVG prefers uppercase #RRGGBB plus channel-specific opacity; compatible alternatives remain non-blocking\n  4. foreignObject: Use <text> + <tspan> for manual line breaks\n  5. Font issues: use PPT-safe exported typefaces (e.g. Arial / Consolas, with the CJK face of the deck language)\n\n[REPORT] JSON quality report exported: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\cases\\cafe-pptx\\source\\validation\\svg_quality_early_report.json\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\upstream\\scripts\\svg_position_calculator.py",
+      "calc",
+      "line",
+      "--data",
+      "0:0,2:0,4:0",
+      "--area",
+      "310,250,1195,510",
+      "--x-range=0,5",
+      "--y-range=0,1"
+    ],
+    "returncode": 0,
+    "stdout": "\n=== Line / Scatter Chart Coordinate Calculation ===\nCanvas: 1280×720\nChart area: (310.0, 250.0) - (1195.0, 510.0)\n\nIndex X_Value    Y_Value    SVG_X     SVG_Y\n----  ---------  ---------  --------  --------\n   1       0.00       0.00     310.0     510.0\n   2       2.00       0.00     664.0     510.0\n   3       4.00       0.00    1018.0     510.0\n\n=== SVG Path ===\nM 310.0,510.0 L 664.0,510.0 L 1018.0,510.0\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\upstream\\scripts\\svg_position_calculator.py",
+      "calc",
+      "line",
+      "--data",
+      "2:0,4:0,5:0",
+      "--area",
+      "310,250,1195,510",
+      "--x-range=0,5",
+      "--y-range=0,1"
+    ],
+    "returncode": 0,
+    "stdout": "\n=== Line / Scatter Chart Coordinate Calculation ===\nCanvas: 1280×720\nChart area: (310.0, 250.0) - (1195.0, 510.0)\n\nIndex X_Value    Y_Value    SVG_X     SVG_Y\n----  ---------  ---------  --------  --------\n   1       2.00       0.00     664.0     510.0\n   2       4.00       0.00    1018.0     510.0\n   3       5.00       0.00    1195.0     510.0\n\n=== SVG Path ===\nM 664.0,510.0 L 1018.0,510.0 L 1195.0,510.0\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\upstream\\scripts\\compact_svg_styles.py",
+      ".\\source\\svg_output",
+      "--inplace"
+    ],
+    "returncode": 0,
+    "stdout": "{\"input\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\cases\\\\cafe-pptx\\\\source\\\\svg_output\", \"inplace\": true, \"file_count\": 8, \"changed_files\": 3, \"styles\": {\"root_font_defaults\": 0, \"root_style_declarations_normalized\": 0, \"container_style_declarations_normalized\": 0, \"group_defaults_promoted\": 9, \"shadowed_attributes_removed\": 0, \"redundant_attributes_removed\": 18, \"redundant_style_declarations_removed\": 0, \"changed_declarations\": 27}}\n",
+    "stderr": ""
+  },
+  {
+    "command": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\upstream\\scripts\\svg_quality_checker.py",
+      ".\\source",
       "--quick-generate",
       "--canonical-authoring",
       "--stage",
@@ -31,14 +91,14 @@
       "--json"
     ],
     "returncode": 0,
-    "stdout": "\n[SCAN] Checking 8 SVG file(s)...\n\n[WARN] 01.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP\n\n[WARN] 02.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP\n\n[WARN] 03.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP\n   [WARN] Detected 1 paragraph-like line run(s) split across sibling <text> elements (<g id=\"content\"> x=64.0, y=292.0..517.0, 6 lines). If each run is one prose paragraph, combine it into one <text>: keep its first line as direct text and use direct <tspan> children with the parent x and positive relative dy values for later lines. An all-<tspan> form may start with dy=\"0\". Keep semantically independent text frames separate.\n\n[WARN] 04.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP\n\n[WARN] 05.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP\n\n[WARN] 06.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP\n\n[WARN] 07.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP\n\n[WARN] 08.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=Noto Sans JP, ea=Noto Sans JP): Noto Sans JP\n   [WARN] Detected 1 paragraph-like line run(s) split across sibling <text> elements (<g id=\"content\"> x=64.0, y=271.0..349.0, 2 lines). If each run is one prose paragraph, combine it into one <text>: keep its first line as direct text and use direct <tspan> children with the parent x and positive relative dy values for later lines. An all-<tspan> form may start with dy=\"0\". Keep semantically independent text frames separate.\n\n================================================================================\n[SUMMARY] Check Summary\n================================================================================\n\nTotal files: 8\n  [OK] Fully passed: 0 (0%)\n  [WARN] With warnings: 8 (100%)\n  [ERROR] With errors: 0 (0%)\n\nProvenance categories:\n  blocking: 0          hard findings; gate also requires exit 0\n  introduced: 10       advisory; new or changed\n  inherited: 0         informational; prototype-identical\n  source-import: 0     informational; source-conversion loss\n\n[CARRIERS] Actual-use receipt (informational; not a quota)\n  Pages: 8 | text: 107 | images: 0 | icons: 0\n  Geometry: SVG elements 18 | native presets 0 | page-frame elements 8 | marker uses 0\n  Effects: inline emphasis 0 (pages 0) | gradients 0 (pages 0) | filters 0 (pages 0) | text effects 0 (pages 0)\n  Native objects: charts 0 | tables 0 | formulas 0\n  Presets: (none)\n  Pages carrying a preset or connector: 0\n\n[TIP] Common fixes:\n  1. XML well-formedness: write typography as raw Unicode (—, ©, →, NBSP); escape XML reserved chars as &amp; &lt; &gt; &quot; &apos; — never use HTML named entities like &nbsp; &mdash; &copy;\n  2. viewBox issues: root viewBox is the canvas authority (see references/canvas-formats.md)\n  3. Paint recommendation: generated SVG prefers uppercase #RRGGBB plus channel-specific opacity; compatible alternatives remain non-blocking\n  4. foreignObject: Use <text> + <tspan> for manual line breaks\n  5. Font issues: use PPT-safe exported typefaces (e.g. Arial / Consolas, with the CJK face of the deck language)\n\n[REPORT] JSON quality report exported: M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\cases\\cafe-pptx\\source\\validation\\svg_quality_report.json\n",
+    "stdout": "\n[SCAN] Checking 8 SVG file(s)...\n\n[WARN] 01.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 02.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 03.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 04.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 05.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n   [WARN] Detected 2 paragraph-like line run(s) split across sibling <text> elements (<g id=\"content\"> x=88.0, y=338.0..381.0, 2 lines; <g id=\"content\"> x=808.0, y=338.0..381.0, 2 lines). If each run is one prose paragraph, combine it into one <text>: keep its first line as direct text and use direct <tspan> children with the parent x and positive relative dy values for later lines. An all-<tspan> form may start with dy=\"0\". Keep semantically independent text frames separate.\n\n[WARN] 06.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n[WARN] 07.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n   [WARN] <text> (x=1173.0, y=240; text='5週末') exceeds <g id=\"content\"> data-pptx-bounds on the horizontal axis: content (1173.0, 225.6)-(1219.1, 245.9), container (64.0, 190.0)-(1214.0, 640.0), overflow horizontal 0.4%, vertical 0.0% (error above 5%); expand the root module bounds into available non-overlapping space; otherwise reflow the text; ≈15.4 px per mixed char at 17px incl. headroom; ≈74 chars fit in 1150 px\n\n[WARN] 08.svg - Passed (with warnings)\n   viewBox: 0 0 1280 720\n   [WARN] Font stack exports non-PPT-safe typeface(s) to PPTX (latin=BIZ UDPGothic): BIZ UDPGothic\n\n================================================================================\n[SUMMARY] Check Summary\n================================================================================\n\nTotal files: 8\n  [OK] Fully passed: 0 (0%)\n  [WARN] With warnings: 8 (100%)\n  [ERROR] With errors: 0 (0%)\n\nProvenance categories:\n  blocking: 0          hard findings; gate also requires exit 0\n  introduced: 10       advisory; new or changed\n  inherited: 0         informational; prototype-identical\n  source-import: 0     informational; source-conversion loss\n\n[CARRIERS] Actual-use receipt (informational; not a quota)\n  Pages: 8 | text: 141 | images: 0 | icons: 0\n  Geometry: SVG elements 50 | native presets 0 | page-frame elements 8 | marker uses 0\n  Effects: inline emphasis 0 (pages 0) | gradients 0 (pages 0) | filters 0 (pages 0) | text effects 0 (pages 0)\n  Native objects: charts 0 | tables 0 | formulas 0\n  Presets: (none)\n  Pages carrying a preset or connector: 0\n\n[TIP] Common fixes:\n  1. XML well-formedness: write typography as raw Unicode (—, ©, →, NBSP); escape XML reserved chars as &amp; &lt; &gt; &quot; &apos; — never use HTML named entities like &nbsp; &mdash; &copy;\n  2. viewBox issues: root viewBox is the canvas authority (see references/canvas-formats.md)\n  3. Paint recommendation: generated SVG prefers uppercase #RRGGBB plus channel-specific opacity; compatible alternatives remain non-blocking\n  4. foreignObject: Use <text> + <tspan> for manual line breaks\n  5. Font issues: use PPT-safe exported typefaces (e.g. Arial / Consolas, with the CJK face of the deck language)\n\n[REPORT] JSON quality report exported: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\cases\\cafe-pptx\\source\\validation\\svg_quality_report.json\n",
     "stderr": ""
   },
   {
     "command": [
-      ".build/ppt-master-venv/Scripts/python.exe",
-      "skill-forks/ppt-master-ja/scripts/svg_to_pptx.py",
-      "examples/cases/cafe-pptx/source",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\export_with_biz.py",
+      ".\\source",
       "--quick-generate",
       "--primary-language",
       "ja-JP",
@@ -46,10 +106,10 @@
       "-t",
       "fade",
       "-o",
-      "examples/cases/cafe-pptx/deck.pptx"
+      ".\\deck.pptx"
     ],
     "returncode": 0,
-    "stdout": "  Quick PPTX structure: flat (inferred from 8 SVG page(s))\nPPT Master - SVG to native DrawingML PPTX Tool\n==================================================\n  Project path: M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\cases\\cafe-pptx\\source\n  SVG directory: svg_output\n  Output file: M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\cases\\cafe-pptx\\deck.pptx\n\n  Detected canvas format: PPT 16:9\n  Slide dimensions: 1280 x 720 px\n  SVG file count: 8\n  Mode: Native DrawingML shapes (directly editable)\n  Native table/chart objects: Chart/Table replacement disabled\n  PPTX structure: flat\n  Image optimization: Enabled (preferred cap 2560 px, unchanged bytes preserved, JPEG q85 when re-encoded)\n  Transition effect: Fade\n  Speaker notes: 8 page(s)\n\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 1/8] 01.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 2/8] 02.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 3/8] 03.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 4/8] 04.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 5/8] 05.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 6/8] 06.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 7/8] 07.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 8/8] 08.svg (Native) +notes\n  Flat structure: project-owned Master + Blank Layout (10 stock layout(s), 2 stock content shape(s) removed, 6 system footer hook(s) retained)\n  Flat theme: 2 theme part(s), stock text defaults retained (no theme contract)\n\n[Done] Saved: M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\cases\\cafe-pptx\\deck.pptx\n  Slides: 8; unselected Layout prototype carriers: 0\n  [POSTFLIGHT] status=passed-with-warnings quality_gate=passed slides=8 warning_categories=2\n  [POSTFLIGHT][WARNING] quality_introduced_warnings=10\n  [POSTFLIGHT][WARNING] unsafe_exported_font_faces=2\n  [PPTX] M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\cases\\cafe-pptx\\deck.pptx\n  [REPORT] M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\cases\\cafe-pptx\\source\\validation\\deck.report.json\n",
+    "stdout": "  Quick PPTX structure: flat (inferred from 8 SVG page(s))\nPPT Master - SVG to native DrawingML PPTX Tool\n==================================================\n  Project path: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\cases\\cafe-pptx\\source\n  SVG directory: svg_output\n  Output file: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\cases\\cafe-pptx\\deck.pptx\n\n  Detected canvas format: PPT 16:9\n  Slide dimensions: 1280 x 720 px\n  SVG file count: 8\n  Mode: Native DrawingML shapes (directly editable)\n  Native table/chart objects: Chart/Table replacement disabled\n  PPTX structure: flat\n  Image optimization: Enabled (preferred cap 2560 px, unchanged bytes preserved, JPEG q85 when re-encoded)\n  Transition effect: Fade\n  Speaker notes: 8 page(s)\n\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 1/8] 01.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 2/8] 02.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 3/8] 03.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 4/8] 04.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 5/8] 05.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 6/8] 06.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 7/8] 07.svg (Native) +notes\n  Converted 3 elements, skipped 0, promoted 1 background\n  [Slide 8/8] 08.svg (Native) +notes\n  Flat structure: project-owned Master + Blank Layout (10 stock layout(s), 2 stock content shape(s) removed, 6 system footer hook(s) retained)\n  Flat theme: 2 theme part(s), stock text defaults retained (no theme contract)\n\n[Done] Saved: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\cases\\cafe-pptx\\deck.pptx\n  Slides: 8; unselected Layout prototype carriers: 0\n  [POSTFLIGHT] status=passed-with-warnings quality_gate=passed slides=8 warning_categories=2\n  [POSTFLIGHT][WARNING] quality_introduced_warnings=10\n  [POSTFLIGHT][WARNING] unsafe_exported_font_faces=2\n  [PPTX] M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\cases\\cafe-pptx\\deck.pptx\n  [REPORT] M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\cases\\cafe-pptx\\source\\validation\\deck.report.json\n",
     "stderr": ""
   }
 ]

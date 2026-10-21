@@ -1,0 +1,73 @@
+{
+  "status": "author_visual_qa_complete_independent_rereview_pending",
+  "author": "Codex",
+  "current_revision": "round5-web06-pair",
+  "scope": "元MCPで全6頁を再生成しHTML/PDF/PPTXを書出し。元CLIでも作成・ID更新・ID保持・HTML/PDF出力を実行。HTML6頁・PDF6頁を実描画し目視。3頁の4動作、4頁の表幅、6頁の文字コントラストを修復。",
+  "artifact": "index.html",
+  "artifact_sha256": "815d3c7632efbef55007248d7bfc21b603c6fb81a78cb7854c71640f3f1d3f4e",
+  "all_page_visual_review": true,
+  "full_page_visual_review": true,
+  "browser_runtime_checked": true,
+  "independent_review": "pending for current repaired artifacts",
+  "human_art_approval_claimed": false,
+  "images": [
+    {
+      "path": "render/slide-01.png",
+      "sha256": "765225f9b1f5aacb0d93112c73b9a6457e8ca35417426fb38a903aa0cab026fb"
+    },
+    {
+      "path": "render/slide-02.png",
+      "sha256": "a8cff5b71f2e421e87e57f190e0e37f37ea03b222f3c5e9c81fa6e5ef884a05d"
+    },
+    {
+      "path": "render/slide-03.png",
+      "sha256": "0c3f4e1002cfc3c0a88864d436020ebf196515cf3e9899b9daa38b0740abf40e"
+    },
+    {
+      "path": "render/slide-04.png",
+      "sha256": "0e5def6c2960b66bb5d7d14ec58ebe2a0530433ba7d89093aaf8f0469d9f4ab9"
+    },
+    {
+      "path": "render/slide-05.png",
+      "sha256": "b2aeaf3244e53728261d017756ab9d3c7cb1f2ef3a1b45c33f52d8f4e1e3b4f3"
+    },
+    {
+      "path": "render/slide-06.png",
+      "sha256": "98d7e0d9ca0092e70314f0f4a2ebdb1406f04d11be5d3422b70dbc60a7135e21"
+    }
+  ],
+  "not_demonstrated": [
+    "6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。",
+    "原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。",
+    "工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。"
+  ],
+  "original_gate_receipt": "source/round5-original-gates.json",
+  "zip_reexecution": "passed: source/round5-zip-replay.json",
+  "ZIP_reexecution": true,
+  "pdf_images_read": [
+    {
+      "path": "render/pdf/slide-01.png",
+      "sha256": "70aadd67cb5a49d6b146175a0be2893c02bef18b059b68977fd3958548c8589a"
+    },
+    {
+      "path": "render/pdf/slide-02.png",
+      "sha256": "363cf194d9d65b5d4859bbb1b415dcc10f7fdd8d0cee3d343e80a560bd00b7a8"
+    },
+    {
+      "path": "render/pdf/slide-03.png",
+      "sha256": "0cbf2752fed9ef5a23291d786da19c2682a8fdae156b920c3e15b3bdaa34cbc0"
+    },
+    {
+      "path": "render/pdf/slide-04.png",
+      "sha256": "7d8f62a26b07a7c0ddf6da45d8aaadca0de89312049da26225ca93e28ef9e750"
+    },
+    {
+      "path": "render/pdf/slide-05.png",
+      "sha256": "ee5807ea30b1c70c340b06db4d2b6d35612be7046ab87dee50ba271af1a9c2fc"
+    },
+    {
+      "path": "render/pdf/slide-06.png",
+      "sha256": "373fe85b26ef4dc23e0bc1d087a163ed47526922219af957fc88dcd89e5af187"
+    }
+  ]
+}

@@ -1,0 +1,107 @@
+[
+  {
+    "argv": [
+      "M:/Codex/Projects/awesome-codex-ppt-skills-ja/.build/ppt-master-venv/Scripts/python.exe",
+      "-m",
+      "editppt.cli",
+      "image",
+      "import",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001",
+      "--job-id",
+      "icon-sheet",
+      "--source-image",
+      "M:/Codex/home/generated_images/01a13676-80b6-77c0-9cab-7642d16bb48d/exec-a8b58b27-f2bf-47fa-be55-334185e401be.png",
+      "--dest",
+      "assets/icon-sheet.png",
+      "--role",
+      "asset_sheet",
+      "--backend",
+      "builtin-imagegen"
+    ],
+    "exit_code": 0,
+    "log": "import.log",
+    "log_sha256": "9aa9f8c5f5bf7abf1d04c32030460c7792dbff84867c5e142d2b05779b8c38ae"
+  },
+  {
+    "argv": [
+      "M:/Codex/Projects/awesome-codex-ppt-skills-ja/.build/ppt-master-venv/Scripts/python.exe",
+      "-m",
+      "editppt.cli",
+      "image",
+      "process-sheet",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001",
+      "--job-id",
+      "icon-sheet",
+      "--asset-sheet-source",
+      "assets/icon-sheet.png",
+      "--regions",
+      "assets/asset-regions.json",
+      "--assets-dir",
+      "assets/icons"
+    ],
+    "exit_code": 1,
+    "log": "process-sheet.log",
+    "log_sha256": "e9efa148fcba0730da5e64cc0d26a466539af7cbf41abad4de6d1ca0832f1e06"
+  },
+  {
+    "argv": [
+      "M:/Codex/Projects/awesome-codex-ppt-skills-ja/.build/ppt-master-venv/Scripts/python.exe",
+      "-m",
+      "editppt.cli",
+      "image",
+      "process-sheet",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001",
+      "--job-id",
+      "icon-sheet",
+      "--skip-chroma",
+      "--regions",
+      "assets/asset-regions.json",
+      "--assets-dir",
+      "assets/icons"
+    ],
+    "exit_code": 0,
+    "log": "process-sheet-repair.log",
+    "log_sha256": "a303f04a78f9195d7053624d50c570708de3c8f1a5e3cb63c97de1626a73d1fe"
+  },
+  {
+    "argv": [
+      "M:/Codex/Projects/awesome-codex-ppt-skills-ja/.build/ppt-master-venv/Scripts/python.exe",
+      "-m",
+      "editppt.cli",
+      "page",
+      "build",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001"
+    ],
+    "exit_code": 0,
+    "log": "build.log",
+    "log_sha256": "25946f7a28dadc5ded5694128124208dc928d70acab5e9eb935c34acfd76d44c"
+  },
+  {
+    "argv": [
+      "M:/Codex/Projects/awesome-codex-ppt-skills-ja/.build/ppt-master-venv/Scripts/python.exe",
+      "-m",
+      "editppt.cli",
+      "page",
+      "contact-sheet",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001"
+    ],
+    "exit_code": 0,
+    "log": "contact-sheet.log",
+    "log_sha256": "1b198cbf3ce69cd3382ef9595119f5fa95b6d549f09402792b0cfc4d92767ca6"
+  },
+  {
+    "argv": [
+      "M:/Codex/Projects/awesome-codex-ppt-skills-ja/.build/ppt-master-venv/Scripts/python.exe",
+      "-m",
+      "editppt.cli",
+      "page",
+      "validate",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001",
+      "--report",
+      "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\pages\\page_001\\validation.json"
+    ],
+    "exit_code": 0,
+    "log": "validate.log",
+    "log_sha256": "23be0a2681400397bef32d051368c3256fd89fd39883fb8a37dafcf8f67b7911"
+  }
+]

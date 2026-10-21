@@ -14,6 +14,8 @@ license: MIT
 5. 原典demoのcontrollerを使う。←/→・↑/↓・Space・Home/End・swipeで送り、端で止まる元go()の契約を守る。[局所patch](example/source/controller.patch)はsame-originの0-based yebisu-slide/yebisu-pageだけを追加する。
 6. Python標準ライブラリで `python example/source/rebuild.py` を実行すると、CSS/JS/実字体を埋め込んだ[単一HTML](example/index.html)を作る。元方式にnpm・生成CLI・外部SDKはない。このPythonは梱包補助であり、汎用スライドrendererではない。
 
-計画確認は承認済みの内部判断として[PLAN](example/input/PLAN.md)に保存しました。今回の確認は生成成功・代表2頁の初回表示・元ページ送りのみ。[QA](example/QA.json)の未実施範囲を合格に読み替えず、全頁詳細目視・独立レビュー・構造監査・ZIP再実行を必須にしません。
+7. 完成HTMLの全ページを発表画面で表示する。日本語・改行・比較する字の大きさ・手描き線の指す先を確認し、線と本文の接触や空白を囲む注釈を直す。前後・先頭末尾の移動と、必要なら大小画面も確認する。実施範囲はQAへ記録し、独立評価の合格と分ける。
+
+この6頁の作例では、字体比較の丸を実際の「雨」に固定し、説明文を横切る矢印を除いた。全6頁を1280×720で、修復箇所を1600×900でも確認した。独立再評価は未了。
 
 編集対象はHTML/SVG/CSS/JS。PPTXを生成したとは表現しない。書体と声の関係はこの教材の選択案で、読了率や学習効果の実測を発明しません。

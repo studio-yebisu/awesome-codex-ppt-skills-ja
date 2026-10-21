@@ -1,0 +1,98 @@
+[
+  {
+    "argv": [
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\source\\upstream\\scripts\\deck.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\input\\donor.pptx",
+      "inspect",
+      "-o",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\review\\replay\\donor-inspect.json"
+    ],
+    "cwd": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck",
+    "script": "inspect-donor",
+    "exit_code": 0,
+    "log": "review/replay/inspect-donor.log",
+    "log_sha256": "5a4b003d818a13b654c8e18e0bdcfbe933924c3975de58590f1ae3f4feb32e1f"
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\source\\upstream\\scripts\\deck.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\input\\donor.pptx",
+      "apply",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\review\\replay\\patch.json",
+      "-o",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\review\\replay\\pre-fix.pptx"
+    ],
+    "cwd": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck",
+    "script": "apply",
+    "exit_code": 0,
+    "log": "review/replay/apply.log",
+    "log_sha256": "1d925cc2eeca0f1ddf9c5b1ac7752b08b21c3cf6baedd5dd1e7c90bf0af809ab"
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\source\\upstream\\scripts\\deck.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\review\\replay\\pre-fix.pptx",
+      "fix",
+      "--slides",
+      "0,1,2,3,4",
+      "-o",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\deck.pptx"
+    ],
+    "cwd": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck",
+    "script": "fix",
+    "exit_code": 0,
+    "log": "review/replay/fix.log",
+    "log_sha256": "e2e7c51d719973fc29c492b31d7f67302cb70023778658591e69bcf1d04ea037"
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\source\\upstream\\scripts\\deck.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\deck.pptx",
+      "inspect",
+      "-o",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\review\\replay\\result-inspect.json"
+    ],
+    "cwd": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck",
+    "script": "inspect-result",
+    "exit_code": 0,
+    "log": "review/replay/inspect-result.log",
+    "log_sha256": "93c5c916098b26fd17687052513659986573e59913cabfb65247cc5f6581bfa6"
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\source\\upstream\\scripts\\deck.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\input\\donor.pptx",
+      "diff",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\deck.pptx"
+    ],
+    "cwd": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck",
+    "script": "diff",
+    "exit_code": 0,
+    "log": "review/replay/diff.log",
+    "log_sha256": "ca7d91926139478a691a497e0838029f8eb65098fc957cfd13ccc37ae66f4db6"
+  },
+  {
+    "argv": [
+      "C:\\Program Files\\PowerShell\\7\\pwsh.EXE",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\source\\render_powerpoint.ps1",
+      "-PresentationPath",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\deck.pptx",
+      "-OutputDirectory",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck\\render"
+    ],
+    "cwd": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\hands-on-deck",
+    "script": "powerpoint-render",
+    "exit_code": 0,
+    "log": "review/replay/powerpoint-render.log",
+    "log_sha256": "4a75c9292b8a1894f21244df33c8392f8dbde6216e1cdc88d4310a6cfc24c0b7"
+  }
+]

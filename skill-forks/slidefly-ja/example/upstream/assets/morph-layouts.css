@@ -1,0 +1,166 @@
+/* ===========================================================
+   MORPH-SLIDES LAYOUTS: 9 slide types that FILL their zone.
+   - Inner slides: title row + body zone (--body-top..--body-bottom)
+   - Engine sets data-density="lg|md|sm" from item count,
+     so few items => bigger type, many items => smaller type.
+   Tokens: --fg --muted --accent --card-bg --card-fg --font-display
+           --font-body --title-weight --title-case --title-tracking
+   =========================================================== */
+
+.slide {
+  --body-top: 270px; --body-bottom: 90px; --pad-x: 120px;
+  color: var(--fg); font-family: var(--font-body); font-size: 32px; line-height: 1.45;
+}
+.slide h1, .slide h2, .slide h3, .slide p, .slide ul, .slide ol, .slide blockquote { margin: 0; }
+.slide ul, .slide ol { padding: 0; list-style: none; }
+
+.title, .num, .stat-num, .quote, .hl-big, .when {
+  font-family: var(--font-display); font-weight: var(--title-weight, 800);
+  letter-spacing: var(--title-tracking, -0.01em); font-style: var(--title-style, normal);
+}
+.title { text-transform: var(--title-case, none); line-height: 1.1; }
+.kicker { font-size: 22px; font-weight: 700; letter-spacing: 0.22em; text-transform: uppercase; color: var(--accent); }
+.subtitle { font-size: 34px; color: var(--muted); }
+.meta { font-size: 24px; color: var(--muted); }
+.accent { color: var(--accent); }
+b, strong { font-weight: 700; }
+
+/* body zone shared by inner layouts */
+.slide > .title:first-child { position: absolute; left: var(--pad-x); top: 90px; width: var(--title-w, 1500px); font-size: 64px; }
+.slide:is([data-layout="cover"], [data-layout="closing"], [data-layout="section"], [data-layout="quote"]) > .title:first-child { position: static; width: auto; }
+.body-zone, .bullets, .cols, .stats, .timeline, .agenda-list, .highlight {
+  position: absolute; top: var(--body-top); bottom: var(--body-bottom);
+}
+
+/* ---------- 1. cover / 9. closing ---------- */
+.slide:is([data-layout="cover"], [data-layout="closing"]) {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 28px; padding: 0 300px; text-align: center;
+}
+.slide:is([data-layout="cover"], [data-layout="closing"]) .title { font-size: 92px; }
+.slide[data-layout="closing"] .title { font-size: 120px; }
+
+/* ---------- 2. agenda: 2 columns of tiles filling the zone ---------- */
+.agenda-list {
+  left: var(--pad-x); right: var(--pad-x);
+  display: grid; grid-template-columns: 1fr 1fr; column-gap: var(--agenda-gap, 640px);
+  grid-template-rows: repeat(var(--rows, 4), 1fr); grid-auto-flow: column;
+}
+.agenda-list li { display: flex; align-items: center; gap: 28px; border-top: var(--tile-line, none); }
+.agenda-list li.is-right { flex-direction: row-reverse; text-align: right; }
+.agenda-list .num { line-height: 1; color: var(--accent); min-width: 1.3em; }
+.agenda-list li.is-right .num { text-align: right; }
+.agenda-list h3 { font-family: var(--font-display); line-height: 1.15; }
+.agenda-list p { color: var(--muted); margin-top: 6px; }
+[data-density="lg"] .agenda-list { --n-num: 120px; --n-h: 52px; --n-p: 30px; }
+[data-density="md"] .agenda-list { --n-num: 88px;  --n-h: 40px; --n-p: 26px; }
+[data-density="sm"] .agenda-list { --n-num: 64px;  --n-h: 32px; --n-p: 22px; }
+.agenda-list .num { font-size: var(--n-num); }
+.agenda-list h3 { font-size: var(--n-h); }
+.agenda-list p { font-size: var(--n-p); }
+
+/* ---------- 3. section ---------- */
+.slide[data-layout="section"] { display: flex; flex-direction: column; justify-content: center; gap: 24px; padding: 0 900px 0 160px; }
+.slide[data-layout="section"] .num { font-size: 220px; line-height: 0.9; color: var(--accent); }
+.slide[data-layout="section"] .title { font-size: 84px; }
+
+/* ---------- 4. content: bullets left + highlight right ---------- */
+.bullets { left: var(--pad-x); width: var(--bullets-w, 1040px); display: flex; flex-direction: column; justify-content: center; gap: var(--b-gap); }
+.bullets li { position: relative; padding-left: 1.4em; font-size: var(--b-fs); line-height: 1.35; }
+.bullets li::before {
+  content: ""; position: absolute; left: 0; top: 0.45em;
+  width: 0.45em; height: 0.45em; border-radius: var(--bullet-radius, 50%); background: var(--accent);
+}
+[data-density="lg"] .bullets { --b-fs: 44px; --b-gap: 52px; }
+[data-density="md"] .bullets { --b-fs: 36px; --b-gap: 40px; }
+[data-density="sm"] .bullets { --b-fs: 30px; --b-gap: 20px; }
+
+/* highlight = the real point of the slide shown big (number, icon, short claim) */
+.highlight {
+  left: var(--hl-left, 1260px); right: var(--hl-right, 120px);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; text-align: center;
+}
+.hl-big { font-size: 160px; line-height: 1; color: var(--accent); }
+.hl-icon { width: 200px; height: 200px; color: var(--accent); }
+.hl-icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.hl-text { font-family: var(--font-display); font-size: 34px; font-weight: 700; line-height: 1.25; }
+
+/* ---------- 5. two-col: cards stretch full height ---------- */
+.cols { left: var(--pad-x); right: var(--pad-x); display: grid; grid-template-columns: 1fr 1fr; gap: 64px; }
+.slide:has(.takeaway) .cols { bottom: 240px; }
+.col { display: flex; flex-direction: column; padding: 48px 56px; border-radius: var(--card-radius, 24px); background: var(--card-bg, transparent); color: var(--card-fg, var(--fg)); }
+.col h3 { font-family: var(--font-display); font-size: var(--c-h); line-height: 1.15; color: var(--accent); }
+.col ul { flex: 1; display: flex; flex-direction: column; justify-content: space-evenly; }
+.col p, .col li { font-size: var(--c-fs); line-height: 1.35; }
+.col li { position: relative; padding-left: 1.2em; }
+.col li::before { content: ""; position: absolute; left: 0; top: 0.5em; width: 0.4em; height: 0.4em; border-radius: var(--bullet-radius, 50%); background: var(--accent); }
+[data-density="lg"] .cols { --c-h: 52px; --c-fs: 36px; }
+[data-density="md"] .cols { --c-h: 46px; --c-fs: 32px; }
+[data-density="sm"] .cols { --c-h: 40px; --c-fs: 28px; }
+.takeaway {
+  position: absolute; left: var(--pad-x); right: var(--pad-x); bottom: var(--body-bottom); min-height: 110px;
+  display: flex; align-items: center; padding: 20px 36px; border-left: 10px solid var(--accent);
+  font-family: var(--font-display); font-size: 36px; font-weight: 700; line-height: 1.25;
+}
+
+/* ---------- 6. stats: numbers centred in the zone ---------- */
+.stats { left: var(--pad-x); right: var(--pad-x); display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 48px; align-content: center; }
+.stat { text-align: center; }
+.stat-num { display: block; line-height: 1; color: var(--accent); font-size: var(--s-num); }
+.stat-label { display: block; margin-top: 22px; color: var(--muted); font-size: var(--s-fs); line-height: 1.35; }
+[data-density="lg"] .stats { --s-num: 220px; --s-fs: 36px; }
+[data-density="md"] .stats { --s-num: 150px; --s-fs: 30px; }
+[data-density="sm"] .stats { --s-num: 110px; --s-fs: 26px; }
+/* four figures share the width: big type would break "4-5" over two lines */
+[data-density="lg"] .stats:has(> .stat:nth-child(4)) { --s-num: 160px; }
+
+/* ---------- 7. timeline: zig-zag around a centred axis ---------- */
+.timeline {
+  left: var(--pad-x); right: var(--pad-x);
+  display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; grid-template-rows: 1fr 1fr; column-gap: 32px;
+}
+.timeline::before { content: ""; position: absolute; left: 0; right: 0; top: calc(50% - 2px); height: 4px; background: var(--accent); opacity: 0.35; }
+.step { position: relative; }
+/* each step owns a column, odd above / even below the axis */
+.step:nth-child(1) { grid-column: 1; } .step:nth-child(2) { grid-column: 2; } .step:nth-child(3) { grid-column: 3; } .step:nth-child(4) { grid-column: 4; } .step:nth-child(5) { grid-column: 5; } .step:nth-child(6) { grid-column: 6; } .step:nth-child(7) { grid-column: 7; } .step:nth-child(8) { grid-column: 8; }
+.step:nth-child(odd)  { grid-row: 1; align-self: end; padding-bottom: 52px; }
+.step:nth-child(even) { grid-row: 2; align-self: start; padding-top: 52px; }
+.step::before { content: ""; position: absolute; left: 0; width: 32px; height: 32px; border-radius: 50%; background: var(--accent); }
+.step:nth-child(odd)::before  { bottom: -16px; }
+.step:nth-child(even)::before { top: -16px; }
+.step .when { font-size: var(--t-when); line-height: 1; color: var(--accent); }
+.step h3 { font-family: var(--font-display); font-size: var(--t-h); line-height: 1.2; margin: 10px 0 6px; }
+.step p { font-size: var(--t-fs); color: var(--muted); line-height: 1.35; }
+[data-density="lg"] .timeline { --t-when: 76px; --t-h: 50px; --t-fs: 32px; }
+[data-density="md"] .timeline { --t-when: 64px; --t-h: 42px; --t-fs: 29px; }
+[data-density="sm"] .timeline { --t-when: 50px; --t-h: 34px; --t-fs: 25px; }
+
+/* ---------- 8. quote ---------- */
+.slide[data-layout="quote"] { display: flex; flex-direction: column; justify-content: center; padding: 0 280px; gap: 36px; }
+.quote { font-size: 64px; line-height: 1.25; }
+.cite { font-size: 28px; color: var(--muted); }
+
+/* title variants for inner slides (break the "title top-left on every slide" habit)
+   data-title="center": the title centred above the body */
+.slide[data-title="center"] > .title:first-child { left: var(--pad-x); right: var(--pad-x); width: auto; text-align: center; }
+/* data-title="side": the title runs up the left edge, the body moves right and up. Only on content,
+   two-col and timeline (checked on 57 styles); stats and agenda keep the top title. The engine gives these slides the odd pose so the left edge is free. */
+.slide[data-title="side"]:is([data-layout="content"], [data-layout="two-col"], [data-layout="timeline"]) { --pad-l: 230px; }
+.slide[data-title="side"]:is([data-layout="content"], [data-layout="two-col"], [data-layout="timeline"]) { --body-top: 110px; }
+.slide[data-title="side"][data-layout="timeline"] { --body-top: 170px; }   /* keep the steps off mid-slide bands */
+.slide[data-title="side"]:is([data-layout="content"], [data-layout="two-col"], [data-layout="timeline"])[data-density="lg"] .bullets { --b-fs: 54px; --b-gap: 76px; }
+.slide[data-title="side"]:is([data-layout="content"], [data-layout="two-col"], [data-layout="timeline"])[data-density="md"] .bullets { --b-fs: 42px; --b-gap: 56px; }
+.slide[data-title="side"]:is([data-layout="content"], [data-layout="two-col"], [data-layout="timeline"])[data-density="sm"] .bullets { --b-fs: 34px; --b-gap: 30px; }
+.slide[data-title="side"]:is([data-layout="content"], [data-layout="two-col"], [data-layout="timeline"]) > .title:first-child {
+  left: 76px; top: auto; bottom: 90px; width: 880px; font-size: 54px; line-height: 1.05;
+  rotate: -90deg; transform-origin: 0 0; translate: 0 100%;
+  padding: 0 18px; background: var(--viz-paper, var(--bg)); color: var(--fg);
+}
+.slide[data-title="side"]:is([data-layout="content"], [data-layout="two-col"], [data-layout="timeline"]) .bullets { width: calc(var(--bullets-w, 1040px) - 110px); }
+.slide[data-title="side"]:is([data-layout="content"], [data-layout="two-col"], [data-layout="timeline"]) :is(.bullets, .cols, .timeline, .agenda-list, .body-zone, .takeaway) { left: var(--pad-l); }
+
+/* audit mode: measure final positions (no reveal offsets, actors jump straight to each pose) */
+.deck-stage.auditing, .deck-stage.auditing * { transition: none !important; }
+.deck-stage.auditing :is(.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-blur) {
+  transform: none !important; filter: none !important; transition: none !important;
+}

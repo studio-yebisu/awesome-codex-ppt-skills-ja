@@ -1,0 +1,175 @@
+{
+  "id": "mck-native-showcase",
+  "title": "フォント構成と制作手順",
+  "upstream": {
+    "repository": "likaku/Mck-ppt-design-skill",
+    "commit": "e190e083b715b63172e1c4fea01bc5f9bb21a021",
+    "location": ".build/actual-upstreams/likaku__Mck-ppt-design-skill",
+    "sha256": {
+      "mck_ppt/constants.py": "3f032eba51335a93b254ad074ea670196773261fc522aa2f9e5be3129bbd563c",
+      "mck_ppt/core.py": "dd1c6526e39d37983680ae91c05ecef350e198da77774671f28862c7d7e98789",
+      "mck_ppt/engine.py": "9b59a9350dee96ed814615352534a89cf7c978b10e37ec184f928c7adbdf2c97",
+      "mck_ppt/qa.py": "f802601fcf272ce500de56996fb527ae89280a76823f9d1aff5afc4a8297eb1d",
+      "references/scripts/gate_check_s3.py": "5da0e015d5365f1ac2c1cd461eaf465ea909bad2ac20dc97cb77f1329d1e5fe9",
+      "references/scripts/gate_check.py": "2896daeaea753ff4ed1aed450856fc0dad58f7e865b866bf1d7aa7d6f94f2174",
+      "references/layout-matrix.yaml": "e154d13f93a91291e069836983eccacf360308893a14e862b52ce17bfad01b37"
+    }
+  },
+  "engine_methods": [
+    "cover",
+    "grouped_bar",
+    "data_table",
+    "value_chain",
+    "save"
+  ],
+  "engine_overrides": [],
+  "custom_renderer": false,
+  "current_revision_author": "Codex",
+  "S5_scope": "Replay of fixed repair experience; actual gate and artifact hash are current execution, new self-refinement judgment is not automated",
+  "font_overrides": {
+    "module": "mck_ppt.constants",
+    "scope": "この生成プロセス内のみ",
+    "values": {
+      "FONT_HEADER": "BIZ UDPGothic",
+      "FONT_BODY": "BIZ UDPGothic",
+      "FONT_EA": "BIZ UDPGothic"
+    }
+  },
+  "label_format_adapter": {
+    "reason": "未使用。原典grouped_barの整数値を保持し、生成後の図形・文字を変更しない。",
+    "changes": []
+  },
+  "data": {
+    "file": "data/oss-font-kit.json",
+    "sha256": "aab65d0e2ac99c70b0f97a3da6e7d69f047a361b5bc501314eb7b3833e8d8530",
+    "family_count": 30,
+    "font_file_record_count": 45,
+    "updated_on": "2026-10-15",
+    "by_language": {
+      "ja": 17,
+      "latin": 13
+    },
+    "by_category": {
+      "sans": 12,
+      "serif": 8,
+      "display": 4,
+      "rounded": 3,
+      "mono": 3
+    },
+    "by_category_language": {
+      "sans": {
+        "ja": 6,
+        "latin": 6
+      },
+      "serif": {
+        "ja": 5,
+        "latin": 3
+      },
+      "display": {
+        "ja": 4,
+        "latin": 0
+      },
+      "rounded": {
+        "ja": 2,
+        "latin": 1
+      },
+      "mono": {
+        "ja": 0,
+        "latin": 3
+      }
+    },
+    "preset_count": 15,
+    "presets_all_ja_with_latin": true
+  },
+  "stages": {
+    "S1": {
+      "file": "ppt-project-font-kit/brief.md",
+      "check": "audience / goal / key_messages 非空（コード確認）"
+    },
+    "S2": {
+      "file": "ppt-project-font-kit/outline.json",
+      "check": "SKILL S2門禁の項目をコード確認（動詞判定は除く）"
+    },
+    "S3": {
+      "file": "ppt-project-font-kit/content.json",
+      "precheck": "layout-matrix.yaml char_budget / Max Items",
+      "gate": "原典 references/scripts/gate_check_s3.py（未改変・subprocess）",
+      "result": "ppt-project-font-kit/gate_s3.json",
+      "passed": true,
+      "checkers": {
+        "1": [
+          "check_source"
+        ],
+        "2": [
+          "check_grouped_bar",
+          "check_source",
+          "check_action_title"
+        ],
+        "3": [
+          "check_source",
+          "check_action_title"
+        ],
+        "4": [
+          "check_source",
+          "check_action_title"
+        ]
+      }
+    },
+    "S4": {
+      "file": "deck.pptx",
+      "gate": "原典 references/scripts/gate_check.py（未改変・subprocess・PYTHONPATH=固定原典）",
+      "result": "ppt-project-font-kit/gate_result.json",
+      "passed": true,
+      "overall_score": 92,
+      "checklist": {
+        "user_code_errors": 0,
+        "engine_bug_errors": 2,
+        "warnings": 0
+      }
+    },
+    "S5": {
+      "S4_gate_passed": true,
+      "gate_result": "ppt-project-font-kit/gate_result.json",
+      "artifact": "deck.pptx",
+      "artifact_sha256": "917edc40fcf45817583177d825d01c9c397f0653bc28ed725aa29a143f02a90a",
+      "delivery_state": "files_prepared; user adoption and independent review separate",
+      "refinement_decision": "PATTERN",
+      "refinement_decision_origin": "Fixed Codex repair judgment replayed by this dedicated example generator",
+      "runtime_new_diagnosis": false,
+      "record_mode": "fixed_repair_fixture_replay",
+      "experience": "experiences/chart-limits.md",
+      "experience_sha256": "e8d818d31d71521a8240fa05a4ddd9fbc03cc4d521be45dac36c3e8d9e8882a5",
+      "upstream_experiences_modified": false,
+      "preventive_rule": "Preserve source category/language counts; original API inputs only; retain and explain original gate exclusions separately from visual observations",
+      "original_gate_or_whitelist_changed": false
+    }
+  },
+  "pptx_sha256": "917edc40fcf45817583177d825d01c9c397f0653bc28ed725aa29a143f02a90a",
+  "render": {
+    "run": true,
+    "application": "Microsoft PowerPoint",
+    "version": "16.0",
+    "pages": [
+      "render/slide-01.png",
+      "render/slide-02.png",
+      "render/slide-03.png",
+      "render/slide-04.png"
+    ],
+    "pdf": "render/deck.pdf",
+    "reported_fonts": [
+      "Arial",
+      "BIZ UDPGothic"
+    ],
+    "source_path_relativized": true
+  },
+  "deviations": [
+    "原典SKILLのエンジン固定パス(~/.workbuddy)ではなく固定commitの原典を読み込む",
+    "原典brand-guideのKaiTi指定を日本語書体へ局所変更（色・位置・字号は原典のまま）",
+    "TaskCreate による進捗管理は行わず、各段階のファイルとJSONで記録する"
+  ],
+  "not_done_by_generator": [
+    "全ページの目視確認",
+    "独立レビュー",
+    "フォーク梱包とプロベナンス"
+  ]
+}

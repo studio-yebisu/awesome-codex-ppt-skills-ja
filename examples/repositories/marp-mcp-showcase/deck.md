@@ -364,7 +364,7 @@ style: |
   }
 ---
 
-<!-- slide-id: b43985c5-b8a2-409a-a8a5-d23a803fc778 -->
+<!-- slide-id: 6eab75b8-400d-463b-b8ff-bac1d363d691 -->
 
 <!-- _class: min-title -->
 
@@ -374,13 +374,13 @@ style: |
 
 ---
 
-<!-- slide-id: 137a2953-b510-42b1-a8d3-336041700c4f -->
+<!-- slide-id: bb37fa6e-4c5f-4251-992a-3abad125981f -->
 
 ## 一着と、ひとつの気がかり。
 
 <div class="min-2col">
 <div class="min-2col-left">
-<h3>持ってくるもの</h3><ul>
+<h3>持参するもの</h3><ul>
 <li>洗濯した、直したい服を一着</li>
 <li>気になる箇所のメモ</li>
 <li>持ち帰るための袋</li>
@@ -389,7 +389,7 @@ style: |
 <div class="min-2col-right">
 <h3>会場で用意するもの</h3><ul>
 <li>基本の道具と材料</li>
-<li>相談できる案内役</li>
+<li>作業範囲を相談する案内役</li>
 <li>作業と記録のスペース</li>
 </ul>
 </div>
@@ -401,9 +401,9 @@ style: |
 
 ---
 
-<!-- slide-id: 56786240-77d5-45e7-aaed-caf4862cad98 -->
+<!-- slide-id: 941a5484-4052-4c0e-b730-7713a5d5247d -->
 
-## 見つけて、試して、記録する。
+## 見つけて、相談し、試して、記録する。
 
 <div class="journey"><div><b>01</b><h3>見つける</h3><p>気になる箇所を共有</p><span>20 min</span></div><div><b>02</b><h3>相談する</h3><p>今日の範囲を決める</p><span>20 min</span></div><div><b>03</b><h3>試してみる</h3><p>案内役と手を動かす</p><span>60 min</span></div><div><b>04</b><h3>記録する</h3><p>次にすることを残す</p><span>20 min</span></div></div>
 
@@ -415,7 +415,7 @@ style: |
 
 ---
 
-<!-- slide-id: 897cb8e7-b4e8-4468-b557-ec22871dcf96 -->
+<!-- slide-id: 3c5194ee-6f93-43ce-806a-68c9fae40fb8 -->
 
 <!-- _class: min-table -->
 
@@ -435,7 +435,7 @@ style: |
 
 ---
 
-<!-- slide-id: d5b2ab3d-20a1-478c-bcea-676c19f77f8c -->
+<!-- slide-id: feeac38f-9c8c-4bf8-ab18-0874dd54fc44 -->
 
 ## 持ち帰るのは、この三つ。
 
@@ -449,7 +449,7 @@ style: |
 
 ---
 
-<!-- slide-id: 9d4ba204-3b15-457a-8e95-423e8592739d -->
+<!-- slide-id: c7ece041-3574-4c26-ba4a-6b3f261340d5 -->
 
 <!-- _class: min-statement -->
 
@@ -473,7 +473,7 @@ section h1,section h2 {font-family:WorkshopHeading,serif;font-weight:700;letter-
 section h2 {font-size:49px;margin:0 0 45px;}
 section p {margin:12px 0;}
 section small {font-family:WorkshopBody,sans-serif;font-size:19px;letter-spacing:.06em;}
-section:after {color:#62766a;font-family:WorkshopNumber,sans-serif;font-size:18px;right:42px;bottom:24px;}
+section:after {color:#516456;font-family:WorkshopNumber,sans-serif;font-size:18px;right:42px;bottom:24px;}
 section.min-title {background:#273e38;align-items:flex-start;text-align:left;padding:90px 100px;overflow:hidden;}
 section.min-title h1 {color:#f3efe5;font-size:76px;line-height:1.3;margin:0 0 40px;z-index:1;}
 section.min-title p {color:#e2d9c8;font-size:25px;z-index:1;}
@@ -491,21 +491,23 @@ section.min-title:after,section.min-statement:after {color:#d6cbb8;}
 .journey b {font-family:WorkshopNumber,sans-serif;font-size:52px;font-weight:500;color:#b7684e;}
 .journey h3 {font-size:29px;margin:35px 0 12px;}
 .journey p {font-size:20px;white-space:nowrap;}
-.journey span {font-family:WorkshopNumber,sans-serif;font-size:25px;color:#62766a;}
-.caption {font-size:20px;color:#62766a;border-top:1px solid #c8bdae;padding-top:20px;}
-section.min-table table {font-family:WorkshopBody,sans-serif;font-size:23px;margin:5px 0 22px;}
+.journey span {font-family:WorkshopNumber,sans-serif;font-size:25px;color:#516456;}
+.caption {font-size:20px;color:#516456;border-top:1px solid #c8bdae;padding-top:20px;}
+section.min-table table {display:table;width:100%;table-layout:fixed;font-family:WorkshopBody,sans-serif;font-size:23px;margin:5px 0 22px;}
 section.min-table thead th {background:#273e38;border-color:#273e38;color:#f3efe5;padding:20px;}
 section.min-table tbody td {color:#273e38;border-color:#c8bdae;background:#f3efe5;padding:24px 20px;}
 section.min-table tbody tr:nth-child(even) td {background:#e6e4d7;}
-section.min-table>p {font-size:20px;color:#62766a;}
+section.min-table>p {font-size:20px;color:#516456;}
 .takeaways {display:grid;grid-template-columns:repeat(3,1fr);gap:52px;margin:5px 0 58px;}
 .takeaways>div {border-left:3px solid #b7684e;padding:15px 0 15px 25px;}
 .takeaways span {font-family:WorkshopNumber,sans-serif;font-size:28px;color:#b7684e;}
 .takeaways h3 {font-family:WorkshopHeading,serif;font-size:51px;margin:20px 0;line-height:1.3;}
 .takeaways p {font-size:23px;}
-section.min-statement {background:#b7684e;color:#f3efe5;align-items:flex-start;text-align:left;padding:85px 100px;}
+section.min-statement {background:#994d37;color:#f3efe5;align-items:flex-start;text-align:left;padding:85px 100px;}
 section.min-statement h1 {color:#f3efe5;font-size:75px;line-height:1.4;max-width:100%;font-weight:700;}
 section.min-statement p {color:#f3efe5;font-size:28px;margin-top:28px;}
 section.min-statement:before {content:'';position:absolute;top:55px;bottom:55px;right:62px;border-right:2px dashed #e1bba0;}
+
+section.min-statement:after {color:#f3efe5}
 
 </style>

@@ -1,0 +1,30 @@
+{
+  "command": [
+    "python",
+    "source/upstream/scripts/validate_pptx.py",
+    "deck.pptx",
+    "--manifest",
+    "design/slide_manifest.json",
+    "--visual-qa",
+    "review/repair-visual-evidence.json",
+    "--strict",
+    "--json-out",
+    "review/repair-strict-validation.json"
+  ],
+  "exit_code": 1,
+  "artifact_sha256": "81b90ccf3d2ad42e52c550fcfd94f24154c8e8e6e63864b59c8ad7458704701f",
+  "errors": 207,
+  "error_codes": {
+    "MANIFEST_FINAL_MERGE_REGENERATED_PAGES": 1,
+    "MANIFEST_MERGE_REGRESSION_FAILED": 1,
+    "SPATIAL_PASS_WITHOUT_RENDER_MEASUREMENT": 90,
+    "P0_RENDER_DELTA_EXCEEDED": 15,
+    "P1_RENDER_DELTA_EXCEEDED": 75,
+    "MANIFEST_GENERATION_ENGINE_INCOMPLETE": 5,
+    "MANIFEST_PAGE_APPROVAL_MISSING": 5,
+    "MANIFEST_SPATIAL_REGISTRATION_FAILED": 5,
+    "VISUAL_QA_CHECK_FAILED": 5,
+    "VISUAL_QA_DELIVERY_BLOCKED": 5
+  },
+  "acceptance": "failed; no threshold or validator changes"
+}

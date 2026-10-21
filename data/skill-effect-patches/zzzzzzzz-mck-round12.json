@@ -1,0 +1,120 @@
+[
+  {
+    "case_id": "mck-native-showcase",
+    "name": "集計値を統一した図・表・工程へ組み立てる",
+    "job": "",
+    "change": "根拠のある値を同じ書式の図・表・工程へまとめ、原稿と完成PPTXを段階ごとに検査する。",
+    "demonstration": {
+      "summary": "実カタログ30字体を4群の円と元5分類の表にし、制作の保存ファイルを原典vertical_stepsで対応させた。S5は固定修復記録の再生。",
+      "applied_features": [
+        "原典cover・donut・data_table・vertical_stepsの4高水準メソッドを上書きせず使用",
+        "出典値の4群集計と元5分類表、凡例の小数1桁adapter",
+        "今回全文読んだexperiences4件と原典S3/S4の実行結果",
+        "PowerPointで中心ラベルを別コピー上だけ編集し、採用版hash保持を確認"
+      ],
+      "not_demonstrated": [
+        "残り63高水準メソッド、外部表紙画像API/Hunyuan",
+        "TaskCreate/TaskUpdateとFast Track",
+        "実行時の新たなSelf-Refinement判断。S5は固定経験fixtureの再生",
+        "Officeデータ連動チャート/ネイティブ表、時短・書体品質の実測"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "4群の構成比",
+          "title": "30字体を用途の近い書体群へまとめて比べる",
+          "what_to_inspect": "12・8・3・7の凡例と右下の合算理由。装飾4＋等幅3を1群にし、元5分類は次頁へ残す。",
+          "skill_rule": "donutは6区分まで。根拠のある元データから構成比を作り、文量を原典容量表以内にする。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-02.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 2,
+          "label": "元分類と言語の表",
+          "title": "言語別に見ると、装飾は日本語のみ、等幅は欧文のみ",
+          "what_to_inspect": "5分類を日本語/欧文へ分けたセルと合計17・13・30。代表書体は収録順の先頭。",
+          "skill_rule": "同じ分類・単位で比較し、表の項目数と文字量を制限する。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-03.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 3,
+          "label": "段階と保存ファイル",
+          "title": "制作は五段階で進め、原稿と描画を原典の検査で確かめる",
+          "what_to_inspect": "5行のファイルと確認行為。下部では今回のS3/S4実行とS5固定経験の再生を分ける。",
+          "skill_rule": "S1〜S4の段階を飛ばさず、JSONの合否を確認する。S5は修正の型を判断し経験へ残す。今回の生成器はその判断を新規自動化していない。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-04.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/mck-native-showcase/source/build_mck_native_showcase.py",
+        "examples/repositories/mck-native-showcase/source/reading-record.json",
+        "examples/repositories/mck-native-showcase/source/current-pptx-inspection.json",
+        "examples/repositories/mck-native-showcase/native-elements.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/gate_s3.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/gate_result.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/delivery-and-refinement.json",
+        "examples/repositories/mck-native-showcase/experiences/chart-limits.md",
+        "examples/repositories/mck-native-showcase/qa/native-edit/report.json",
+        "examples/repositories/mck-native-showcase/qa/native-edit/edited-copy.pptx",
+        "examples/repositories/mck-native-showcase/source/distribution-replay.json"
+      ],
+      "editability": {
+        "before_path": "examples/repositories/mck-native-showcase/render/slide-02.png",
+        "after_path": "examples/repositories/mck-native-showcase/qa/native-edit/edited-copy.png",
+        "before_label": "採用PPTX：「収録字体」",
+        "after_label": "編集コピー：「収録書体」",
+        "artifact_path": "examples/repositories/mck-native-showcase/qa/native-edit/edited-copy.pptx",
+        "report_path": "examples/repositories/mck-native-showcase/qa/native-edit/report.json",
+        "description": "2頁中央の文字だけをPowerPointで変更し、別PPTXへ保存。図全体の画像を貼り直さず、採用版のhashも保持した。"
+      }
+    },
+    "sample_notice": "実カタログの集計と原典4高水準メソッドの例。S3/S4は今回実行、S5は固定修復経験の再生。S4は98点、警告1件、原典免除0。",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、PDF由来PNG全4頁を目視。独立再評価は別。",
+    "method": "原典MckEngine cover/donut/data_table/vertical_steps＋実S3/S4・S5固定経験再生・実PowerPoint編集/描画",
+    "titles": [
+      "フォント構成と制作手順",
+      "30字体を用途の近い書体群へまとめて比べる",
+      "言語別に見ると、装飾は日本語のみ、等幅は欧文のみ",
+      "制作は五段階で進め、原稿と描画を原典の検査で確かめる"
+    ],
+    "notes": [
+      "実30字体のカタログ内訳。書体品質や文字範囲の測定ではない。",
+      "12/8/3/7字体。装飾4＋等幅3の合算理由を右下へ示す。",
+      "元5分類と言語のクロス集計、日本語17・欧文13。",
+      "原典vertical_stepsで段階とファイルを対応。S5は修復判断の固定記録を再生。"
+    ],
+    "prompt_text": "固定原典MckEngineのcover/donut/data_table/vertical_stepsを上書きせず、同梱の実30字体から4頁を作る。装飾4＋等幅3の4群集計と元5分類表を対応させ、原典S3/S4を実行。S5は修復時の固定経験fixtureを再生し、新規自動判断と扱わない。日本語書体と凡例小数表記のadapter、原典experiencesの今回読取、実PowerPoint描画/別コピー編集を記録する。",
+    "guide_patch": {
+      "summary_ja": "根拠のある値を同じ書式の図・表・工程へまとめ、原稿と完成PPTXを段階ごとに検査する。",
+      "steps": [
+        "読者・目的・主張・元資料をbriefへ記し、値の単位・分母・集計時点を確認する。",
+        "原典ブランド/guardとexperiencesを読み、APIと容量表で版式・文量を選びoutline/contentへまとめる。",
+        "原典S3を通した同じcontentを高水準メソッドへ渡し、PPTXを作る。",
+        "原典S4と全頁の実描画を確認し、文量・入力を修正。実文字と機械警告を区別する。",
+        "成果物と合格結果を保存し、その資料で実際に判断した修正の型を経験へ残す。作例再生器のS5固定fixtureを汎用の新規判断と扱わない。"
+      ],
+      "limitations": [
+        "原典67メソッド中、表紙/円/表/縦工程の4種を使用。ほかの版式・外部表紙画像APIは未実証。",
+        "図表は編集可能な図形で、Officeのデータ連動チャートやネイティブ表ではない。",
+        "原典S3/S4は合格、S4は98点・警告1・原典免除0。中心文字箱の16%重複警告を保持、実文字は接触しない。",
+        "BIZ UDPGothicと凡例の小数1桁表記は局所adapter。原典本体/QA/免除一覧は未変更。",
+        "S5は修復時の固定経験fixtureを再生。生成器は実行時に新規診断やPATTERN判断を行わない。",
+        "TaskCreate/TaskUpdate未使用。固定ホームパスを同梱の固定原典へ置換、存在しないlayouts文書はAPI/容量表で補う。",
+        "同梱はBIZ UDPGothic RegularとOFL、Boldファイルは同梱せず太字スタイルを指定。PPTXへ埋め込まない。",
+        "専用生成器はこのフォント集計の再現用で、任意原稿の変換器ではない。"
+      ],
+      "requirements": [
+        "Python、python-pptx、lxml。固定原典と専用生成器を含む一式ZIP。",
+        "同梱の公式BIZ UDPGothic RegularとOFL。PPTXへ埋め込まないため環境へ登録する。",
+        "実描画確認にはWindows版PowerPoint、PDF描画にはpypdfium2。"
+      ],
+      "execution_type": "原典MckEngine cover/donut/data_table/vertical_steps＋実S3/S4・S5固定経験再生・実PowerPoint編集/描画",
+      "commands": [
+        "python source/build_mck_native_showcase.py --out rebuild --render",
+        "python source/render_pdf_previews.py rebuild/render"
+      ]
+    }
+  }
+]

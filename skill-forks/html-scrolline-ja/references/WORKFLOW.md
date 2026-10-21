@@ -1,38 +1,30 @@
-# gongnyang/awesome-html-scrolline-deckの日本語制作
+# 内容の停止点と動きを分け、同じ時間軸を切らずに進めて変化を追えるようにする。
 
-原典: https://github.com/gongnyang/awesome-html-scrolline-deck/tree/d17200400a6b9cd7e1e42929e4edef5b0f69c1cc
+railだけを使い、5月企画→6月会場→7月案内→8月当日を連続して示す。月の間隔を広げて項目名を添え、停止画と自然な移動途中の両方で変化を確かめた。
 
-原典deck CLI・Scrolline engine・rail-advance・era-shift・Vite build・smoke
+## 入力と出力
 
-原典deck.yaml・plan・Vite build・Scrolline engineとrail-advance/era-shiftで6停止点を連続的につなぐ。engine/moves/conceptsは原典と一致。内部localeはen、HTMLの表示は日本語。Windows Chrome探索だけを明示adapterで補正する。原典全体CIのWindowsパス3件不合格を保持し、HTTP上のcore・smoke・操作確認と分ける。GSAP独自条件と各MITの原文通知を分けて保持。
+入力：主張ごとの停止点、時刻や項目、使うconceptとmove。作例は写真展の4段階。
 
-## 作例
+出力：原典railの6停止点を持つHTMLと、月・項目付きのレール、自然な遷移の3時点。
 
-- 小さな展示を、ひらくまで / 6枚 / html
-- カタログ内の案内: repository.html?repo=gongnyang/awesome-html-scrolline-deck
-- 当面のローカル入口: http://127.0.0.1:8847/repository.html?repo=gongnyang/awesome-html-scrolline-deck
-- 入力、発表者ノート、依頼文、PROVENANCE.json、QA.jsonを完成例に同梱。
+## 自分の資料へ使う
 
-## 環境
+1. 原典の6conceptから説明に合うものを選ぶ。railなら日付と項目、停止点ごとの一つの主張を用意する。
+2. deck.yamlにbeatの内容、steps、handoffとmoveを書く。動きを本文に埋め込まず、engine/moves/conceptsを変更しない。
+3. 原典plan→Vite build→HTTP smokeを実行し、停止点ごとの図・字形・位置を確認する。
+4. キー/ホイールと移動途中を確認する。MP4が必要な場合は原典npm run exportを別途実行し、その動画も確認する。
 
-- Node.js 22+ / npm
-- Python 3（再実行CLI）
-- ChromeまたはEdge / ffmpeg（smoke描画）
-- 日本語フォント（WindowsではYu Mincho / Yu Gothic）
+## 実際に使った機能
 
-## 元の制作コマンド
+- 原典CLI plan→Vite build→HTTP smokeを実行。6停止点のerrors/overlaps/clipped/tinyは0。
+- engine/moves/conceptsは変更せず、deckのCSSだけで月の実距離を360pxへ広げる。元moveが実座標を読んで同じレールを移動する。
+- rail-advanceとera-shiftを元のArrowRightで再生し、前・途中・完了後を保存。日時カウンター・項目ラベル・紙色の変化を示す。
 
-    python source/reproduce.py --input input/data.json --render
+## 未実施と条件
 
-## 確認範囲
+- 原典はrail/data/launch/zoom/canvas/kineticの6conceptとMP4 exportを持つ。今回制作したのはrailだけで、残り5conceptとMP4は未実施。
+- 内部localeはenのまま、日本語本文と端末字体を利用。日本語locale機能を実装した作例ではない。
+- 原典全体CIのWindowsパス3件不合格は旧実行記録を保持。今回のbuild/smokeと操作検査を、全CI合格へ読み替えない。印刷・縦長mobile・60fpsの定量確認も未実施。
 
-- 原典全体CIはWindowsのパス検査3件で不合格。原典の全ゲート完了ではない。
-- 日本語フォントの見た目は閲覧端末に依存。フォントファイルは同梱しない。
-- 現在の確認範囲はlocalhost HTTP表示。IABのfile://表示確認ではない。
-- MP4書き出し・印刷・スマートフォン縦画面は未検証。
-- 原典内部localeはenのまま。日本語locale機能を追加したものではない。
-- エージェント確認済み。人による採用は未承認。
-
-## 権利
-
-原典条件はupstream内のLICENSE/NOTICE等を読む。日本語の独自案内はカタログの条件、上流由来のコードは各原典の条件を引き継ぐ。公開画像や依存書体の条件を一括で保証するものではない。
+現在の再現コマンドはREPRODUCE.md、原典の条件と日本語での一般手順はSKILL.md、現在の実行・画像hashはQA.json。初回PROMPTの限定検査指示は過去の依頼で、後続修復の範囲はこの記録とsourceのRound4ログを使う。

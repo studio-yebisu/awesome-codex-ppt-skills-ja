@@ -1,0 +1,32 @@
+{
+  "author": "Codex",
+  "html_sha256": "ec9a2052c060ba032069906c293b2ff84c29c8288fb0f27dabebebe956ad1c2a",
+  "commands": [
+    {
+      "command": [
+        "node",
+        "source/upstream/skills/zhongguose-ppt-skill/scripts/extract-deck-outline.mjs",
+        "index.html"
+      ],
+      "exit_code": 0,
+      "log": "source/round4-outline.txt"
+    },
+    {
+      "command": [
+        "node",
+        "source/upstream/skills/zhongguose-ppt-skill/scripts/validate-deck.mjs",
+        "index.html"
+      ],
+      "exit_code": 0,
+      "log": "source/round4-validator.txt"
+    }
+  ],
+  "slides": 7,
+  "original_s09_chapter_divider_added": true,
+  "content_pages_preserved": 6,
+  "not_demonstrated": [
+    "PPTX export",
+    "physical touch and projector rehearsal",
+    "ASCII animation quality across every frame"
+  ]
+}

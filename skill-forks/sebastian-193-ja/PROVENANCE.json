@@ -4,16 +4,56 @@
   "license": "MIT",
   "route": "Route B / PptxGenJS 4.0.1 author generation",
   "native_template": "default template master1/theme1/layouts1-4 preserved as XML native parts",
-  "adaptation": "Japanese author-generated layouts; Noto fonts; minimal QA replaces upstream QA scripts",
+  "adaptation": "Explicit Japanese/static-font adaptation; original Route B authoring, Template DNA/master retention and original final QA",
   "fonts": [
-    "Noto Sans CJK JP"
+    "BIZ UDPGothic"
   ],
-  "font_files_distributed": false,
-  "renderer": "artifact-tool completed PPTX import rendering",
-  "powerpoint_verified": false,
+  "font_files_distributed": true,
+  "renderer": "PowerPoint16 exported PDF rasterized to RGB PNG; direct PowerPoint PNGs retained in render/direct-png",
+  "powerpoint_verified": true,
   "research_status": "fictional unperformed proposal",
-  "upstream_scripts_executed": false,
-  "upstream_full_qa_pass_claim": false,
+  "upstream_scripts_executed": true,
   "original_template_sha256": "fa41d8a903ec7f9910928842899f4f6e538a6776bc80ca0f1155a47a4fbfa59d",
-  "template_distribution": "native-template-parts.zip contains only directly preserved generic master1/theme1/layouts1-4/tag native parts, no unused sample images"
+  "template_distribution": "native-template-parts.zip contains only directly preserved generic master1/theme1/layouts1-4/tag native parts, no unused sample images",
+  "artifact_sha256": "c3b8605520205dabb8a0b3e2e9ff7c8dacba54d1821bb7e03717cd45e50f711b",
+  "repair": {
+    "author": "Codex",
+    "artifact_sha256": "c3b8605520205dabb8a0b3e2e9ff7c8dacba54d1821bb7e03717cd45e50f711b",
+    "changed_pages": [
+      1,
+      3,
+      5,
+      7,
+      8
+    ],
+    "changed_pages_fullsize_visually_checked": true,
+    "unchanged_pages_pixel_identical": [
+      2,
+      4,
+      6
+    ],
+    "protected_master_layout_theme_notes_parts_byte_identical": 34,
+    "original_structure_tool": "source/upstream/scripts/structure_pptx.py",
+    "native_groups": 4,
+    "bound_connectors": 4,
+    "actual_PowerPoint_group_move": "qa/editability/group-move.json",
+    "independent_recheck": "pending"
+  },
+  "render_method": "PowerPoint16 exported PDF rasterized to RGB PNG; direct PowerPoint PNGs retained in render/direct-png",
+  "not_demonstrated": [
+    "Route A mockup generation",
+    "Route C image reconstruction",
+    "Actual paper/data extraction",
+    "User path/visual-pilot approval",
+    "Independent current-version review"
+  ],
+  "original_qa_executed": [
+    "qa_pptx.py --profile group-meeting",
+    "verify_final_qa.py --require-profile group-meeting"
+  ],
+  "current_distribution_replay": "source/distribution-replay.json",
+  "historical_execution_records": "Any older command records describe prior builds; current repair checks are QA.json, source/current-check-receipts.json and source/distribution-replay.json.",
+  "full_upstream_feature_coverage": false,
+  "original_final_qa_verified": true,
+  "current_callout_repair": "source/callout-repair.json"
 }

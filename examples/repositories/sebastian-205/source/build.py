@@ -5,6 +5,9 @@ from pptx.util import Inches, Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE
 P=Path(__file__).resolve().parents[1]
+CLAIMS=json.loads((P/'notes/claim-to-source.json').read_text(encoding='utf-8'))
+assert len(CLAIMS)==8 and [c['slide'] for c in CLAIMS]==list(range(1,9))
+assert all(c['source']==f"input/BRIEF.md §{c['slide']}" and c['claim'] and c['caveat'] for c in CLAIMS)
 prs=Presentation(); prs.slide_width=Inches(13.333); prs.slide_height=Inches(7.5)
 INK='163C36'; GREEN='09644D'; LIME='D3EF64'; PALE='E8F0E9'; WHITE='FAFCF7'; GREY='526D63'; ORANGE='CF5A34'
 def box(s,x,y,w,h,color,shape=MSO_SHAPE.RECTANGLE):
@@ -20,9 +23,10 @@ def page(title,n,note,dark=False):
  c=WHITE if dark else INK
  text(s,.6,.27,11,.3,'PAPER2PPT  /  RESEARCH PLAN',11,LIME if dark else GREEN,True)
  if n!=1: text(s,.6,.84,12,1.25,title,32,c,True)
- text(s,.6,7.05,11.8,.24,'出典：架空の研究ノート  |  未実施・実測結果なし  |  入力 BRIEF / data.json',10,PALE if dark else GREY)
+ text(s,.6,7.05,11.8,.24,f'出典：BRIEF §{n}  |  架空・未実施の研究計画  |  実測結果なし',11,PALE if dark else GREY)
  text(s,12.1,7.02,.6,.3,f'{n:02}',12,c,True)
- s.notes_slide.notes_text_frame.text=note
+ c=CLAIMS[n-1]
+ s.notes_slide.notes_text_frame.text=note+'\n主張: '+c['claim']+'\n出典: '+c['source']+'\n資料の限界: '+c['caveat']
  slides.append({'title':title,'note':note}); return s
 # content populated below
 s=page('捨てる前の一目',1,'入力§1。架空・未実施のデザイン研究計画。廃棄原因全体ではなく、何があるか分からない情報の問題に絞る。図は入力記述に基づく説明図。',True)
@@ -30,7 +34,7 @@ text(s,.7,1.4,7,1.8,'捨てる前の\n一目。',58,WHITE,True); text(s,.75,4.05
 box(s,8.2,1.4,3.9,4.9,GREEN); box(s,8.45,1.68,3.4,4.34,INK)
 for y in [2.9,4.3,5.7]: box(s,8.5,y,3.3,.04,PALE)
 for x,y,w in [(8.8,2.2,.7),(9.8,2.1,1.3),(9,3.55,1.15),(10.7,4.8,.6)]: box(s,x,y,w,.57,LIME)
-text(s,8.7,6.3,3.5,.4,'何があるか、を見渡す。',18,WHITE)
+text(s,8.7,6.5,3.5,.3,'何があるか、を見渡す。',17,WHITE)
 s=page('買う前と、使う前に思い出せるか',2,'入力§2。研究の問いと三つの利用場面。毎回アプリを開く前提は未検証。見る価値が生じる場面を確かめる。')
 text(s,.65,2.2,11.8,.8,'在庫の所在と状態を、どう判断につなぐ？',28,GREEN,True)
 box(s,.8,4.35,11.6,.05,GREEN)
@@ -80,5 +84,8 @@ text(s,.75,2.15,11.7,.8,'「見える」を、判断に「使える」へ。',32
 for i,(a,b) in enumerate([('棚を決める','範囲を小さく'),('試作する','優先順位を形に'),('課題を試す','迷いを観察'),('表示を直す','必要なら減らす')]):
  x=.85+i*3.07; y=4.5-i*.33; box(s,x,y,2.75,.13,GREEN); text(s,x,y+.3,2.8,.5,a,24,INK,True); text(s,x,y+1,2.8,.5,b,17,GREY)
 text(s,.85,6.5,11.7,.35,'未実施の研究計画  /  最初の試作で確かめる',16,ORANGE,True)
-prs.save(P/'deck.pptx')
+prs.save(P/'presentation_ja.pptx')
+(P/'deck.pptx').write_bytes((P/'presentation_ja.pptx').read_bytes())
 (P/'input'/'data.json').write_text(json.dumps({'title':'捨てる前の一目','source_sufficiency':'notes-only','status':'fictional-unperformed-research-plan','slides':slides},ensure_ascii=False,indent=2))
+
+(P/'source'/'build-evidence.json').write_text(json.dumps({'source_sufficiency':'notes-only','claim_ledger_read_before_authoring':True,'claim_ledger_sha256':__import__('hashlib').sha256((P/'notes/claim-to-source.json').read_bytes()).hexdigest(),'primary_output':'presentation_ja.pptx','compatibility_alias':'deck.pptx','slides':8},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')

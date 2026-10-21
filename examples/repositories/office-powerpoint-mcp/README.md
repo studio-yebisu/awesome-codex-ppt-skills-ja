@@ -1,26 +1,42 @@
-# GongRzhe/Office-PowerPoint-MCP-Server の日本語実行例
+# MCPの操作で作成・比較・修正する
 
-公式MCP stdioのcreate_presentation_from_template/add_slide/manage_text/add_table/add_chart/save_presentationを実行。表とネイティブチャートを含む日本語PPTX。
+python-pptxを使うMCPサーバーのツールを通して、PPTXの作成・管理・文字・表・図表・テンプレートを操作する。
 
-組織・数値は架空。入力はinput/data.json、依頼文はPROMPT.txt、講稿はNOTES.md。deck.pptxは編集可能、render/deck.pdfは閲覧用。
+## 入力と出力
 
-## 環境と導入
+渡すもの：作成・編集したい資料の内容、表やチャートの元データ、必要に応じて元PPTXやテンプレート。
 
-- Python 3.13（実測）
-- PowerShell 7 / pwsh（描画スクリプト）
-- Noto Sans JP
-- Microsoft PowerPoint 16.0（PNG/PDF描画用）
+得られるもの：MCPツールで作成・編集したPPTXと、実行した操作・保存・描画確認の記録。
 
-MCP 2.3ではFastMCP importが削除されるため1.30.0で実行。リポはarchived。原典format_chartはlegend_positionを反映しないため、has_legend=Falseと公式manage_textによる系列表示で重なりを回避。
+原典 [GongRzhe/Office-PowerPoint-MCP-Server](https://github.com/GongRzhe/Office-PowerPoint-MCP-Server/tree/3631ba2ec0c24504476f78bf74d329c9be11caaa)、固定commit `3631ba2ec0c24504476f78bf74d329c9be11caaa`。原文と利用条件を保存した日本語派生で、公式翻訳ではありません。
 
-## 再現
+## 使う手順
 
-カタログ全体のrootで、対応原典を .build/actual-upstreams/GongRzhe__Office-PowerPoint-MCP-Server に置き、上記commitへ固定します。次のコマンドのPythonは依存を導入した環境を使います。
+1. source/upstream/ppt_mcp_server.pyをstdioで起動し、list_toolsで実際の操作と引数を調べる。
+2. source/build_mcp.pyで元MCPの作成・文字・表・チャート操作とbefore_after_comparisonテンプレートを呼ぶ。input/data.jsonを数値の正本にする。
+3. source/runtime-adapters.mdの局所互換処理を確認し、PowerPoint描画で表・凡例・単位・前後値を照合する。
+4. source/check_native_edit.pyで別コピーの本文とチャート1点を変更・保存し、元ファイルのSHAが変わらないことを確認する。
 
-    .venv\Scripts\python tools/build_native_repository_examples.py --only mcp --render
+## この作例で試した範囲
 
-一般の利用者は上流README/SKILLを使用してください。MCPは python upstream/ppt_mcp_server.py --transport stdio をクライアントから起動し、source/mcp-calls.jsonの操作・引数を参考に実行。MckはupstreamをPython import pathへ追加しsource/build_native_repository_examples.py内のbuild_mck()と同じstoryをDeckBuilder.buildへ渡します。source/storyline.jsonは保存用で、再読込する場合はseries内のRGB配列をpptx.dml.color.RGBColorへ戻します。当地スクリプトはこの2作例専用で、汎用生成サービスではありません。
+原典MCPへ95操作を実行し、比較表・2系列チャート・比較テンプレートを制作。日本語と比較型の局所調整はadapterへ分け、別コピーへ本文変更と220→221のchart更新を保存した。
 
-## 出典・確認
+**2頁：売上増と粗利率低下を同時に見る**：表の売上1000→1200、粗利率38→36、返品率4→6を照合する。セルはデータを持つOffice表。 原典のadd_table/format_table_cellで構造化した行列を作り、数値と書式を分けて操作する。
 
-PROVENANCE.jsonに固定commit、実ファイルhash、適用ファイル、environment.jsonに依存。QA.jsonとrender/powerpoint-render.jsonに検証範囲。LICENSEを保持。原作者の公式日本語版ではありません。
+**3頁：売上増200万円の中心は自然検索**：斜線/塗りの2系列と8値、下に一度だけ置いた凡例を見る。上の45%は自然検索の増加90÷全増加200の計算で、構成比ではない。 原典のadd_chartは系列・カテゴリ・値からnativeチャートを作る。斜線/凡例位置と和文字体は明示adapter。
+
+**4頁：粗利額は増え、率は2ポイント低下**：左右の前年/当年と下の差額棒を読む。原典比較型へ実データを渡し、無関係な黄色の楕円・矢印はadapterで外して他頁の見出し位置へ合わせた。 高水準before_after_comparisonで比較構造を作る。未対応の日本語・配置調整は元の生成機能と分けて記録する。
+
+## 用意するもの
+
+- Python3.10+ / mcp1.30.0 / python-pptx1.0.2 / Pillow
+- PowerPointとBIZ UDPGothic（非埋込）。PDF→PNGにはpypdfium2。
+
+## 制約と未実施
+
+- 原典はSKILL文書ではなくMCPサーバー。固定コミットを同梱し、現在の公開保守状態はこの実行では判定しない。
+- 実作成95操作と別コピー編集5操作を実行。25テンプレートのうち1種を使用。画像効果・professional design・自動text修正は未実施。
+- 日本語書式/ノート・凡例/斜線・セル縦中央・空段落・テンプレート横幅変換と装飾除去/見出し配置は明示adapter。原典API単独の出力とは区別。
+- BIZ UDPGothicの公式TTF/OFLを同梱し非埋込。数値は架空の例。チャート1点の書換保存は原典MCPで行い、GUI編集は未検査。
+
+現在版は制作側が全頁の実画像を確認しています。独立モデルの現在版再評価・人間の採用とは別です。自己採点はしていません。現在hashと検査は [QA.json](QA.json)、実行範囲は [PROVENANCE.json](PROVENANCE.json)、再実行は [REPRODUCE.md](REPRODUCE.md) を参照してください。

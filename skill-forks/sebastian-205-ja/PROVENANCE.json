@@ -1,25 +1,43 @@
 {
+  "initial_record": {
+    "repository": "wp-a/paper2ppt",
+    "upstream_commit": "bb98ce95ca5942fc6551dddc723cbdfe2d637d59",
+    "license": "MIT",
+    "source_sufficiency": "notes-only",
+    "route": "original evidence-first workflow → methods/tools research-notes → python-pptx 1.0.2 authorized fallback",
+    "upstream_scripts_executed": false,
+    "adaptations": [
+      "日本語8頁",
+      "架空・未実施の研究計画に限定",
+      "独自の棚・UI・比較・評価図解",
+      "原典preflightと構造inspectorは未実行、許可範囲内の自作最小チェック",
+      "ユーザー指定一式のため原典既定最小出力契約を拡張"
+    ],
+    "renderer": "existing LibreOffice headless PPTX→PDF + PyMuPDF PDF→PNG",
+    "font": "Noto Sans CJK JP (installed; not redistributed)",
+    "native_elements": "all text and diagrams editable; no raster evidence",
+    "limits": [
+      "PowerPoint実機で未確認",
+      "架空の研究ノートのみ。実測・査読論文・定量効果なし",
+      "原典自動preflight/inspector未実行。最小QAは原典全検査と同等を保証しない",
+      "完成PPTXはLibreOfficeで実レンダリング。PowerPoint環境の差は未検証"
+    ],
+    "upstream_url": "https://github.com/wp-a/paper2ppt/tree/bb98ce95ca5942fc6551dddc723cbdfe2d637d59"
+  },
   "repository": "wp-a/paper2ppt",
   "upstream_commit": "bb98ce95ca5942fc6551dddc723cbdfe2d637d59",
   "license": "MIT",
   "source_sufficiency": "notes-only",
-  "route": "original evidence-first workflow → methods/tools research-notes → python-pptx 1.0.2 authorized fallback",
-  "upstream_scripts_executed": false,
-  "adaptations": [
-    "日本語8頁",
-    "架空・未実施の研究計画に限定",
-    "独自の棚・UI・比較・評価図解",
-    "原典preflightと構造inspectorは未実行、許可範囲内の自作最小チェック",
-    "ユーザー指定一式のため原典既定最小出力契約を拡張"
-  ],
-  "renderer": "existing LibreOffice headless PPTX→PDF + PyMuPDF PDF→PNG",
-  "font": "Noto Sans CJK JP (installed; not redistributed)",
-  "native_elements": "all text and diagrams editable; no raster evidence",
-  "limits": [
-    "PowerPoint実機で未確認",
-    "架空の研究ノートのみ。実測・査読論文・定量効果なし",
-    "原典自動preflight/inspector未実行。最小QAは原典全検査と同等を保証しない",
-    "完成PPTXはLibreOfficeで実レンダリング。PowerPoint環境の差は未検証"
-  ],
-  "upstream_url": "https://github.com/wp-a/paper2ppt/tree/bb98ce95ca5942fc6551dddc723cbdfe2d637d59"
+  "repair_author": "Codex",
+  "repair_scope": "Original preflight → source-specific claim ledger → builder consumes ledger → original structural inspector → all8 actual PowerPoint pages.",
+  "upstream_scripts_executed": true,
+  "renderer": "PowerPoint16; PDF is a private rendering intermediate",
+  "font": "Noto Sans CJK JP installed; no OS font files redistributed",
+  "current_limits": [
+    "架空の研究ノートだけを使った未実施計画。効果・食品安全性の実証はない。",
+    "固定8頁用の生成コードで、任意論文を自動抽出するアプリではない。",
+    "原典の対象は研究発表。一般営業資料、画像スライド復元、論文検索だけの用途は対象外。",
+    "原典の既定は簡体中国語12〜16頁・15〜20分。今回は指定に合わせた日本語8頁。",
+    "他の描画環境と修復後の独立再評価は未確認。"
+  ]
 }

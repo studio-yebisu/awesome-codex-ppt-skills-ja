@@ -13,7 +13,7 @@ Catalog Theme ID: editorial-magazine / Palette: forest-ink
 1 cover / hero dark / frame / h-hero / 中央群: 月に一度、本の話を。
 2 content / light / frame grid-3 / pillar: 日程・長さ・参加条件。
 3 content / light / frame / rowline: 10/35/15分で合計60分。
-4 content / light / frame grid-3 / pillar: 案内・会場・進行の役割比較。
+4 content / light / frame roles-stack / pillar: 案内・会場・進行を横一列ずつ比較。
 5 ending / hero dark / frame / reading-quote: 次回日程・担当・記録。
 ## VI. Image Resource List
 画像なし。デモ写真・原典サンプル文・Lucide・数式・コード依存は不使用。WebGL背景とMotion11.11.17の原典アニメーションを維持。

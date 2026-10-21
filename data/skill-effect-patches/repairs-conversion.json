@@ -1,0 +1,252 @@
+[
+  {
+    "case_id": "sci-diagram-reconstruction",
+    "job": "",
+    "change": "画像内の文字・箱・矢印を、同じ意味と配置のまま個別に編集できるPowerPointの部品へ復元する。",
+    "input": "復元したい科学模式図PNG1枚と、正しく読めるラベル",
+    "output": "文字・図形・矢印を編集できるPPTX1枚と対応表・生成ソース",
+    "how_to_use": [
+      "元の模式図PNGと正確なラベルを渡し、元の意味と矢印の方向を保つよう指定する。",
+      "画像内の文字・図形・矢印・画像のまま残す領域を、要素対応表へ分ける。",
+      "原典PptxGenJS雛形で生成し、原典checkerを実行して元画像と描画を比較する。",
+      "PPTXを開き、ラベルだけを別コピーで変更・保存して、編集できることを確かめる。"
+    ],
+    "constraints": [
+      "この作例は画像からのReconstruction専用。既存PPTXのRepairにはartifact runtimeが必要で、未実施。",
+      "入力は作例用に先に作った自作PNG。科学図の新規考案・見た目の美化・時短の測定は示さない。",
+      "実験写真・統計グラフ・複雑な図の復元は未実施。WindowsのYu Gothicを参照し、字体ファイルは再配布しない。",
+      "箱の塗り色は入力よりわずかに灰色寄りの近似です。原典の優先順位に従い、意味・ラベル・矢印の方向・編集性を保っています。画素単位の一致や見た目の改善を示す例ではありません。"
+    ],
+    "demonstration": {
+      "summary": "実PNGを読み、4箱・4矢印・日本語ラベルをnative部品へ復元。原典checkerは警告0。別PPTXで文字変更・保存・再表示も確認した。",
+      "applied_features": [
+        "画像からの復元",
+        "意味・矢印の方向を保持",
+        "個別編集できる文字と図形",
+        "原典checker"
+      ],
+      "not_demonstrated": [
+        "既存PPTXのRepair",
+        "写真や統計グラフを含む複雑図の復元",
+        "入力より見た目が良くなったという比較",
+        "修正後の独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1ページ目",
+          "title": "水循環の代表的な経路",
+          "what_to_inspect": "4個の箱と4本の矢印を元PNGと比べる。下の実編集例では「海・湖の水」だけを「湖の水」へ変更している。",
+          "skill_rule": "元の文言と接続関係を保ち、意味を持つ文字・図形・線にそれぞれ一つの所有者を与える。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sci-diagram-reconstruction/pass-01/build.mjs",
+        "examples/repositories/sci-diagram-reconstruction/input/reconstruction-inventory.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/check-pass-01.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-editability.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.pptx"
+      ]
+    }
+  },
+  {
+    "case_id": "html-editable-showcase",
+    "job": "",
+    "change": "ブラウザー用のHTML資料を、文字や単純な図形を受け取った人が直せるPowerPointへ変換する。",
+    "input": "既存のHTML資料・使用画像・使用フォント",
+    "output": "文字と単純図形を編集できるPPTX。SVGや複雑な装飾は画像部品になる場合がある。",
+    "how_to_use": [
+      "元HTML・画像・字体をそろえ、Python依存とPlaywright Chromium、PPTX描画用ソフトを用意する。",
+      "原典convert.pyで変換する。元HTMLは保持し、修正は自動で作られる.audited.htmlへ行う。",
+      "Stage5aの構造警告とStage5bのHTML/PPTX比較画像を、設定した方式で確認する。",
+      "欠落が文字・図形・装飾画像のどの経路にあるかを調べ、修正用HTMLか明示したadapterを直して再変換する。",
+      "PPTX内の文字を実際に変更し、字体と編集できる範囲を確認して渡す。"
+    ],
+    "constraints": [
+      "この作例は字体埋込みを無効にしている。指定字体で開くには利用端末に同梱TTFを導入する。",
+      "旗の三角形は修正用HTMLで同形のSVGへ置換したため、PPTXでは画像部品。",
+      "平面デザインにOffice既定の影が付くため、原典assemble直後・Stage5検査前に暗黙の図形・罫線のeffectRefだけを0にするcase専用adapterを追加。原典ファイルは未改変。",
+      "ブラウザーとPowerPointの字幅・字重には小さな差がある。全CSSの完全一致を保証しない。",
+      "比較UIの中国語ラベルは字形欠落を防ぐ英語ラベルへ局所変更。スライド内容と原典converterは未改変。"
+    ],
+    "demonstration": {
+      "summary": "原典preflight→DOM実測→組立とStage5a/5bを実行し、5頁すべての比較画像を確認。旗の欠落を修正し、店名だけを編集したPPTXを保存・再表示した。",
+      "applied_features": [
+        "DOM位置の実測",
+        "文字と単純図形のnative化",
+        "元HTMLと修正コピーの分離",
+        "原典構造検査と全頁比較"
+      ],
+      "not_demonstrated": [
+        "この環境での字体埋込み成功",
+        "全CSSの完全再現",
+        "SVG部品をPowerPointの図形へ分解すること",
+        "修正後の独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1ページ目",
+          "title": "小さな店の、ひとつの旗。",
+          "what_to_inspect": "右の旗の形と左の見出しをHTML/PPTX比較で確認。下の実編集例では右上の店名だけを変更した。",
+          "skill_rule": "文字は編集可能な部品として残し、単純図形とSVGの変換を分ける。",
+          "proof_path": "examples/repositories/html-editable-showcase/render/slide-01.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "深い茶色に、ひと筋のレモン。",
+          "what_to_inspect": "三つの配色見本と文字の配置を、同頁のHTML/PPTX比較で確認する。",
+          "skill_rule": "背景・罫線・文字を別の部品として組み、全頁の比較画像で欠落とずれを調べる。",
+          "proof_path": "examples/repositories/html-editable-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "店先から、手元まで。",
+          "what_to_inspect": "看板・袋・棚札の日本語が保持され、単純な背景と文字をPPTX内で分けて扱える。",
+          "skill_rule": "媒体を全面画像へ平坦化せず、編集できる文字・形と画像部品の範囲を区別する。",
+          "proof_path": "examples/repositories/html-editable-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/html-editable-showcase/index.html",
+        "examples/repositories/html-editable-showcase/index.audited.html",
+        "examples/repositories/html-editable-showcase/convert_local_fonts.py",
+        "examples/repositories/html-editable-showcase/clear_implicit_effects.py",
+        "examples/repositories/html-editable-showcase/qa/quality-loop-receipt.json",
+        "examples/repositories/html-editable-showcase/qa/comparison/audit-index.json",
+        "examples/repositories/html-editable-showcase/qa/comparison/slide_01_compare.png",
+        "examples/repositories/html-editable-showcase/qa/comparison/slide_03_compare.png",
+        "examples/repositories/html-editable-showcase/qa/editability/native-editability.json",
+        "examples/repositories/html-editable-showcase/qa/zip-replay.json",
+        "examples/repositories/html-editable-showcase/qa/comparator-label-adapter.diff"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "ブラウザー用のHTML資料を、文字や単純な図形を受け取った人が直せるPowerPointへ変換する。",
+      "requirements": [
+        "Pythonと原典requirements依存",
+        "Playwright Chromium",
+        "PPTX描画用のPowerPointまたはLibreOffice",
+        "使用字体。作例はZen Kaku Gothic New・Shippori Mincho・Manrope、埋込みなし。"
+      ],
+      "steps": [
+        "元HTML・画像・字体をそろえ、Python依存とPlaywright Chromium、PPTX描画用ソフトを用意する。",
+        "原典convert.pyで変換する。元HTMLは保持し、修正は自動で作られる.audited.htmlへ行う。",
+        "Stage5aの構造警告とStage5bのHTML/PPTX比較画像を、設定した方式で確認する。",
+        "欠落が文字・図形・装飾画像のどの経路にあるかを調べ、修正用HTMLか明示したadapterを直して再変換する。",
+        "PPTX内の文字を実際に変更し、字体と編集できる範囲を確認して渡す。"
+      ],
+      "limitations": [
+        "この作例は字体埋込みを無効にしている。指定字体で開くには利用端末に同梱TTFを導入する。",
+        "旗の三角形は修正用HTMLで同形のSVGへ置換したため、PPTXでは画像部品。",
+        "平面デザインにOffice既定の影が付くため、原典assemble直後・Stage5検査前に暗黙の図形・罫線のeffectRefだけを0にするcase専用adapterを追加。原典ファイルは未改変。",
+        "ブラウザーとPowerPointの字幅・字重には小さな差がある。全CSSの完全一致を保証しない。",
+        "比較UIの中国語ラベルは字形欠落を防ぐ英語ラベルへ局所変更。スライド内容と原典converterは未改変。"
+      ],
+      "commands": [
+        "python convert_local_fonts.py index.audited.html --out deck.pptx --keep-screenshots --no-embed-fonts"
+      ]
+    }
+  },
+  {
+    "case_id": "native-math-showcase",
+    "job": "",
+    "change": "原稿の数式を画像にせず、図表と一緒にPowerPoint内で編集できる教材へ組み立てる。",
+    "input": "説明したい原稿・数式・具体例のデータ・発表時間と聞き手",
+    "output": "文字・図表・数式を編集できるPPTXと数式・生成ソース",
+    "how_to_use": [
+      "原稿の動機・前提・具体例を読み、発表時間と聞き手に合わせて頁構成を決める。",
+      "原典テーマと図表の部品を使い、定義から2頁以内に計算例を置く。",
+      "数式をformulas.jsonへ集め、原典render_latex.pyでmanifestを作って原稿へ配置する。",
+      "原典inject_omml.pyで数式をPowerPointのnative数式へ注入し、残ったplaceholderを0にする。",
+      "PowerPointで全頁を描画し、原典overlap検査と数式・図表・対比の確認で修正する。"
+    ],
+    "constraints": [
+      "仮想得点3件を全体とした分散を説明する教材。論文からの抽出や、実際の調査結果を示す例ではない。",
+      "本編5枚へ絞った作例で、原典のReferences/Thank You/Backup追加は省略した。",
+      "OMMLの確認にはPowerPointを使用。LibreOfficeでは数式が欠ける場合がある。",
+      "原典の5並列excellenceと包括的構造監査、ZIP再実行は未実施。修正後のKimi K3・Opus5.5再評価は未了。"
+    ],
+    "demonstration": {
+      "summary": "原典Sandwichの青・橙を濃く調整し、図表の部品とOMML注入を実行。各頁の式を2ブロック以内にし、全5頁の目視と原典overlap検査0件を確認した。",
+      "applied_features": [
+        "動機から定義と具体例へ進む構成",
+        "native OMML数式",
+        "native表・グラフ",
+        "原典重なり検査"
+      ],
+      "not_demonstrated": [
+        "論文PDFの読解と図の抽出",
+        "画像数式へのfallback",
+        "5並列excellence",
+        "修正後の独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1ページ目",
+          "title": "平均の、その先。",
+          "what_to_inspect": "AとBの得点の点図を見る。平均が同じでも散らばりが違うという問いを、数式より先に示している。",
+          "skill_rule": "定義の前に動機を示し、各頁に図・表・数式など内容のある要素を置く。",
+          "proof_path": "examples/repositories/native-math-showcase/render/slide-01.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "平均は、中心を表す",
+          "what_to_inspect": "左の得点表、右の平均の式、下の計算例を対応させる。数式も文字や表と別のnative部品。",
+          "skill_rule": "定義から2頁以内に具体例を置き、数式はOMMLとして注入して編集性を残す。",
+          "proof_path": "examples/repositories/native-math-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "分散は、ずれを二乗して平均する",
+          "what_to_inspect": "左の棒グラフは1/0/1と25/0/25を数値付きで示し、右の二つの式で分散を計算する。",
+          "skill_rule": "図表と計算例を結び、色だけでなく系列名と数値でも差を読み取れるようにする。",
+          "proof_path": "examples/repositories/native-math-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/native-math-showcase/source/generate_slides.cjs",
+        "examples/repositories/native-math-showcase/source/BUILD.json",
+        "examples/repositories/native-math-showcase/formulas.json",
+        "examples/repositories/native-math-showcase/input/data.json",
+        "examples/repositories/native-math-showcase/qa/original-overlaps.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原稿の数式を画像にせず、図表と一緒にPowerPoint内で編集できる教材へ組み立てる。",
+      "requirements": [
+        "Node.jsとPptxGenJS",
+        "Pythonとlxml",
+        "Pandoc（外部実行依存）",
+        "Microsoft PowerPoint（native数式の実表示・編集確認）",
+        "作例はShippori Mincho・BIZ UDPGothic・Manrope（公式TTF/OFL同梱）"
+      ],
+      "steps": [
+        "原稿の動機・前提・具体例を読み、発表時間と聞き手に合わせて頁構成を決める。",
+        "原典テーマと図表の部品を使い、定義から2頁以内に計算例を置く。",
+        "数式をformulas.jsonへ集め、原典render_latex.pyでmanifestを作って原稿へ配置する。",
+        "原典inject_omml.pyで数式をPowerPointのnative数式へ注入し、残ったplaceholderを0にする。",
+        "PowerPointで全頁を描画し、原典overlap検査と数式・図表・対比の確認で修正する。"
+      ],
+      "limitations": [
+        "仮想得点3件を全体とした分散を説明する教材。論文からの抽出や、実際の調査結果を示す例ではない。",
+        "本編5枚へ絞った作例で、原典のReferences/Thank You/Backup追加は省略した。",
+        "OMMLの確認にはPowerPointを使用。LibreOfficeでは数式が欠ける場合がある。",
+        "原典の5並列excellenceと包括的構造監査、ZIP再実行は未実施。修正後のKimi K3・Opus5.5再評価は未了。"
+      ]
+    }
+  }
+]

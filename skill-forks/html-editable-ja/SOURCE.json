@@ -1,28 +1,744 @@
 {
   "repository": "Hasasasa/html-to-editable-pptx",
   "commit": "17c1dbb76e958543dc2741a7d50ca374354f33b7",
-  "license": "MIT",
-  "scope": "Original converter plus local full-TTF Japanese font registry adapter",
-  "upstream_preserved": true,
-  "case_studies": [
-    "html-editable-showcase"
-  ],
+  "license": "MIT upstream; official fonts/OFL retained",
+  "scope": "Original source and declared case adapters; font embedding not demonstrated. Runtime/cache/private/raw logs excluded.",
   "files": [
+    {
+      "path": "example/.gitignore",
+      "sha256": "00b86d92a83b4069896f26eabe43d1238d8093f77e872df4f03ac6ab909c382a"
+    },
+    {
+      "path": "example/clear_implicit_effects.py",
+      "sha256": "dce9ef93caa0b7a37038a04a18625d9e25e8f42d386269c8c9a8e2f6b1fac81d"
+    },
+    {
+      "path": "example/convert_local_fonts.py",
+      "sha256": "244d1c1ad534adee8fecb0021fc96a8e10713c78b2ca5aa82ed4da855654f993"
+    },
+    {
+      "path": "example/deck.pptx",
+      "sha256": "e516d41f8380551214c3770b4a82a1d6320e2333d080f3e5461d2cd62a92ff39"
+    },
+    {
+      "path": "example/deck_audit/_ppt_renders/slide_01.png",
+      "sha256": "bd9fb291be1263cb4ad1af3a5f2f8269a531b700107c5b27878525a97325925c"
+    },
+    {
+      "path": "example/deck_audit/_ppt_renders/slide_02.png",
+      "sha256": "95409b36de40f4dd21413bf8dd701f80aeec8d1f057c34b54380e120a5361a01"
+    },
+    {
+      "path": "example/deck_audit/_ppt_renders/slide_03.png",
+      "sha256": "7f1eebd8b5a00d15ac5df0f8f67b68917f60106eaf753fceff7f38bdcbcb695f"
+    },
+    {
+      "path": "example/deck_audit/_ppt_renders/slide_04.png",
+      "sha256": "7e9a6e503ca24d6f24da4f1be9f137eb15612123874c2655b5983a579ae1541f"
+    },
+    {
+      "path": "example/deck_audit/_ppt_renders/slide_05.png",
+      "sha256": "c1e503531a2ffa2a74ed7b7cf0da7868dac8b112519519e3b2de319831c7a0e2"
+    },
+    {
+      "path": "example/deck_audit/audit_contact_01_05.png",
+      "sha256": "35d6972f909211ae55aa995ccdf9346cf01e8fb01513194e7ccc00af89699145"
+    },
+    {
+      "path": "example/deck_audit/audit_findings.md",
+      "sha256": "bce29644e19807a1bc050be39c5411d6a265e624f9b52ca22be62e243311564d"
+    },
+    {
+      "path": "example/deck_audit/audit_index.json",
+      "sha256": "51c1bd964a512861dafe12e197613d75980e8e4e3c791afb5ea0e1bcdb434898"
+    },
+    {
+      "path": "example/deck_audit/audit_prompt.md",
+      "sha256": "2c9dc07a2afcac1e8db6f4b3a81e1bd6c8e12b03807648d976f0020c60809b54"
+    },
+    {
+      "path": "example/deck_audit/slide_01_compare.png",
+      "sha256": "7bccc937a56125a02c9e8487483de9ff55649295af01d386e51f4373e7bd8cba"
+    },
+    {
+      "path": "example/deck_audit/slide_02_compare.png",
+      "sha256": "fbec99716be1fc74081a9dfbf6c1487c882fbdbbd41c1f212db012d76431e83c"
+    },
+    {
+      "path": "example/deck_audit/slide_03_compare.png",
+      "sha256": "721ce91675fb67e368af54f3a0e57ce75ec606f691d6ac43dfcd8312aa3b8632"
+    },
+    {
+      "path": "example/deck_audit/slide_04_compare.png",
+      "sha256": "227c5f49745a9031f1654617b60245f6ae8f17e70017bfe8a981e6db22a5c238"
+    },
+    {
+      "path": "example/deck_audit/slide_05_compare.png",
+      "sha256": "ea385b711c0e5f9fd525b25dfcd2d3ad417cf59e9ab879045b66a246cd8d28f7"
+    },
+    {
+      "path": "example/deck_measurements.json",
+      "sha256": "adf83ebbf9df6ad1d9354df5d946dd54fb8a4782fe4beba8f1c82a6419468e8e"
+    },
+    {
+      "path": "example/deck_measurements_screenshots/slide_01.png",
+      "sha256": "6925d2ec2f164f27b6578e6581fae132620e406e49d537179c0ff9ab04e78663"
+    },
+    {
+      "path": "example/deck_measurements_screenshots/slide_02.png",
+      "sha256": "f084fce707f7c9132cc7104682ff3fed43b1a2b5609318ffdee9015b6bd5e4ed"
+    },
+    {
+      "path": "example/deck_measurements_screenshots/slide_03.png",
+      "sha256": "bd6209dcc084d515611c7a4ea109041e6db5ffb75d6050373b286bc9ddb99abc"
+    },
+    {
+      "path": "example/deck_measurements_screenshots/slide_04.png",
+      "sha256": "e912e464fafc5ab8e815c550a6872622598479408f08acd6b0f372ba67030596"
+    },
+    {
+      "path": "example/deck_measurements_screenshots/slide_05.png",
+      "sha256": "5c8da83c59934db1bbce0122b61e7dc95d5f9cbc63521fa7b9e81e6b4b71a17b"
+    },
+    {
+      "path": "example/deck_preflight.json",
+      "sha256": "725a0076918a2bc33a130e6cdf5447fd15bfd24dcff8b75e18c38b57cc9db538"
+    },
+    {
+      "path": "example/DEPENDENCIES.md",
+      "sha256": "cc9cb5bafcbb77fd36bbfde5a82da7c6e3b440c9c51b36ca2cdde48988fefd87"
+    },
+    {
+      "path": "example/dependency-licenses/fonttools-4.66.1.dist-info/licenses/LICENSE",
+      "sha256": "22bef80697ecfaa17f97e62b9a26dfa12820be05583e8dd12ad169b241274c99"
+    },
+    {
+      "path": "example/dependency-licenses/fonttools-4.66.1.dist-info/licenses/LICENSE.external",
+      "sha256": "b082a5f86775b2641f01bccb8b9c82908481de5f502bb254b1e13bfc2a9f303d"
+    },
+    {
+      "path": "example/dependency-licenses/greenlet-3.5.6.dist-info/licenses/LICENSE",
+      "sha256": "ab977b654605670319509481ece49198f405a129372ac38c96f51cd96c2f452e"
+    },
+    {
+      "path": "example/dependency-licenses/greenlet-3.5.6.dist-info/licenses/LICENSE.PSF",
+      "sha256": "69efa689cc7aec7736236d3039c1d665e4b0c734a5bfea5abf633023abb2fff4"
+    },
+    {
+      "path": "example/dependency-licenses/lxml-6.1.3.dist-info/licenses/LICENSE.txt",
+      "sha256": "e7c3ce8d76331b0101cc46790ab43958ea90a364bcf962ed8763d5a818340e69"
+    },
+    {
+      "path": "example/dependency-licenses/lxml-6.1.3.dist-info/licenses/LICENSES.txt",
+      "sha256": "df682c668de65321677b5e4861dca4128a8bad8067f230956e9da3f985b3d398"
+    },
+    {
+      "path": "example/dependency-licenses/pdf2image-1.17.0.dist-info/LICENSE",
+      "sha256": "6451a49275ddf393b9e113e70cdc358db35e4356c97fd9688183e49bc8e24409"
+    },
+    {
+      "path": "example/dependency-licenses/pillow-12.3.0.dist-info/licenses/LICENSE",
+      "sha256": "4f7866a74802c6326f81faff59a56546b6aec2b10b91973e0e9308de95e79857"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/LICENSE.txt",
+      "sha256": "634300a669d49aeae65b12c6c48c924c51a4cdf3d1ff086dc3456dc8bcaa2104"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/cachecontrol/LICENSE.txt",
+      "sha256": "86eeee87be2a43f3ff1f56496f451f69243926f025fedbb033666c304c4c161b"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/certifi/LICENSE",
+      "sha256": "e93716da6b9c0d5a4a1df60fe695b370f0695603d21f6f83f053e42cfc10caf7"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/dependency_groups/LICENSE.txt",
+      "sha256": "1ab36e3e2a4ba8631625384f87e9e091db1faed034c5b23325b3239abf2cc525"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/distlib/LICENSE.txt",
+      "sha256": "808e10c8a6ab8deb149ff9b3fb19f447a808094606d712a9ca57fead3552599d"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/distro/LICENSE",
+      "sha256": "cb5e8e7e5f4a3988e1063c142c60dc2df75605f4c46515e776e3aca6df976e14"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/idna/LICENSE.md",
+      "sha256": "a59f0b0ef3635874109a4461ca44ff7a70d50696e814767bfaf721d4c9b0db0f"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/msgpack/COPYING",
+      "sha256": "492dedba85da5872f78e6091bcd1fea474d660d35acb4dee964b8aab3f007427"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/packaging/LICENSE",
+      "sha256": "cad1ef5bd340d73e074ba614d26f7deaca5c7940c3d8c34852e65c4909686c48"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/packaging/LICENSE.APACHE",
+      "sha256": "0d542e0c8804e39aa7f37eb00da5a762149dc682d7829451287e11b938e94594"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/packaging/LICENSE.BSD",
+      "sha256": "b70e7e9b742f1cc6f948b34c16aa39ffece94196364bc88ff0d2180f0028fac5"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/pkg_resources/LICENSE",
+      "sha256": "86da0f01aeae46348a3c3d465195dc1ceccde79f79e87769a64b8da04b2a4741"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/platformdirs/LICENSE",
+      "sha256": "29e0fd62e929850e86eb28c3fdccf0cefdf4fa94879011cffb3d0d4bed6d4db6"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/pygments/LICENSE",
+      "sha256": "a9d66f1d526df02e29dce73436d34e56e8632f46c275bbdffc70569e882f9f17"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/pyproject_hooks/LICENSE",
+      "sha256": "1b22b049b5267d6dfc23a67bf4a84d8ec04b9fdfb1a51d360e42b4342c8b4154"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/requests/LICENSE",
+      "sha256": "09e8a9bcec8067104652c168685ab0931e7868f9c8284b66f5ae6edae5f1130b"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/resolvelib/LICENSE",
+      "sha256": "f388fd38cad13112c1dc0f669bbe80e7f84541edbafb72f3030d2ca7642c3c9d"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/rich/LICENSE",
+      "sha256": "deed7c17a4318158190a3ea239cc879a5a50271cebb98ae7025f48fbe58dca15"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/tomli/LICENSE",
+      "sha256": "b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/tomli/LICENSE-HEADER",
+      "sha256": "97ce9330905a172dde870ee0361d89beb95ba3bd0f4545796aa91a8c01a43531"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/tomli_w/LICENSE",
+      "sha256": "b80816b0d530b8accb4c2211783790984a6e3b61922c2b5ee92f3372ab2742fe"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/truststore/LICENSE",
+      "sha256": "33be7b7e8fa4fd19b1760e1a8ed8a668bdab852c91b692dd41424bcb725a9fca"
+    },
+    {
+      "path": "example/dependency-licenses/pip-25.2.dist-info/licenses/src/pip/_vendor/urllib3/LICENSE.txt",
+      "sha256": "c37bf186e27cf9dbe9619e55edfe3cea7b30091ceb3da63c7dacbe0e6d77907b"
+    },
+    {
+      "path": "example/dependency-licenses/playwright-1.64.0.dist-info/licenses/LICENSE",
+      "sha256": "7fab1461b41970ff376f1c9303a637076bfaaeb71cd12dd3a1c44aaf59a1a2b9"
+    },
+    {
+      "path": "example/dependency-licenses/pyee-14.0.0.dist-info/licenses/LICENSE",
+      "sha256": "1ff556ca206b107f10e1c562ae454d3292e0296c3510eb90eb7f114caee32a66"
+    },
+    {
+      "path": "example/dependency-licenses/python_pptx-1.0.2.dist-info/LICENSE",
+      "sha256": "7652f271e46d0d533e9dc463f3b5fcbdcacf4d6a9c8d6b554d15efd0f37f6132"
+    },
+    {
+      "path": "example/dependency-licenses/pywin32-312.dist-info/licenses/adodbapi/license.txt",
+      "sha256": "5ea2f23c7f00c3006bacf267183e816d8d4b6dc95ea57a4ddb0ff81de6d8719e"
+    },
+    {
+      "path": "example/dependency-licenses/pywin32-312.dist-info/licenses/com/License.txt",
+      "sha256": "fad39c18fc3825fa278db1c86fd52cf88d7c525b3c2fbf7817fa383cbae4d423"
+    },
+    {
+      "path": "example/dependency-licenses/pywin32-312.dist-info/licenses/com/win32comext/mapi/src/MAPIStubLibrary/LICENSE",
+      "sha256": "1c4cf44d2fb8bf2d10214d6da80cc9e05502824cc4460f35be4c7bcb4cde53da"
+    },
+    {
+      "path": "example/dependency-licenses/pywin32-312.dist-info/licenses/pythonwin/License.txt",
+      "sha256": "a74d826efb242db087b850348e20abbfd591b51e2081f2048735290913872924"
+    },
+    {
+      "path": "example/dependency-licenses/pywin32-312.dist-info/licenses/pythonwin/pywin/idle/LICENSE.txt",
+      "sha256": "a0fa1e7b8a4230055685e796548ac084a6c0eea395294574093bba72efd9191b"
+    },
+    {
+      "path": "example/dependency-licenses/pywin32-312.dist-info/licenses/pythonwin/Scintilla/License.txt",
+      "sha256": "57ec79bbeab4fd1cf7460a7ad450d2ab01471810459aeae9e75e4c66b472095f"
+    },
+    {
+      "path": "example/dependency-licenses/pywin32-312.dist-info/licenses/win32/License.txt",
+      "sha256": "a74d826efb242db087b850348e20abbfd591b51e2081f2048735290913872924"
+    },
+    {
+      "path": "example/dependency-licenses/typing_extensions-4.16.0.dist-info/licenses/LICENSE",
+      "sha256": "3b2f81fe21d181c499c59a256c8e1968455d6689d269aa85373bfb6af41da3bf"
+    },
+    {
+      "path": "example/dependency-licenses/xlsxwriter-3.2.9.dist-info/LICENSE.txt",
+      "sha256": "cf08b60a4ded986b58a617cb8304373bda5c4eff42fb4e30d7597b616e116e87"
+    },
+    {
+      "path": "example/fonts/manrope-OFL.txt",
+      "sha256": "58172e0c0fac2cda8a37b348164bb55e44b0e69051e557e92b1d3f6910141f7b"
+    },
+    {
+      "path": "example/fonts/Manrope[wght].ttf",
+      "sha256": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6"
+    },
+    {
+      "path": "example/fonts/ShipporiMincho-Bold.ttf",
+      "sha256": "63bc4eddc74793f671c3ab827c5175e773ffbe569d0bf50ee65375ea9e3bc286"
+    },
+    {
+      "path": "example/fonts/shipporimincho-OFL.txt",
+      "sha256": "41fba056279be5f45ff9a99e44b7b53897b42732f5806d8e666e0ab49ac6bd38"
+    },
+    {
+      "path": "example/fonts/ZenKakuGothicNew-Black.ttf",
+      "sha256": "795819a979184981842994d8f4eb9e14ce443d687bd5e731d6ca67ded8f92261"
+    },
+    {
+      "path": "example/fonts/zenkakugothicnew-OFL.txt",
+      "sha256": "0fac78a235c98d640cb06332eb5362c211d86fa03c011df438c35005d22ad2c7"
+    },
+    {
+      "path": "example/fonts/ZenKakuGothicNew-Regular.ttf",
+      "sha256": "b840cd07a67d89cacca44249ae49aa99ee7640eb5ce623be8d8983d6aabac801"
+    },
+    {
+      "path": "example/index.audited.html",
+      "sha256": "64997341ff9ce2b08238f04268e34539d893fcf44c93201cad09230d69ce8f7d"
+    },
+    {
+      "path": "example/index.html",
+      "sha256": "a0033881523aba941718bff8df7c575a09f8ad784d6edda777caaf9b9d1c60fb"
+    },
+    {
+      "path": "example/input/BRIEF.md",
+      "sha256": "4bb8ad07c525304f711fbafe49dbf78c5b74595c4d87eca0388cd768925020c2"
+    },
+    {
+      "path": "example/input/data.json",
+      "sha256": "37e7e01be2b5338f54b54858494fb75933ea6f57aa74bd800bce72827b3d8995"
+    },
+    {
+      "path": "example/LICENSE",
+      "sha256": "2c660995fdf9061243c0e83cf52a26d5b05a77eb15aa16a9d838992ba8cd56a1"
+    },
+    {
+      "path": "example/native_flag.py",
+      "sha256": "0dd04dda319dacea9c178b3ff7c591c7888cea9938a85976c656f0138905e3d8"
+    },
+    {
+      "path": "example/no_quit_render.py",
+      "sha256": "8ef4c187d433a0b06ec85ea3218cb75e58bd5492229688d5df413dfd1908f278"
+    },
+    {
+      "path": "example/pptx-preview.html",
+      "sha256": "11efb910109b8c6e93accfb79c5455aeb59204952ce6ada6a6e7f2ce6cd775d4"
+    },
+    {
+      "path": "example/PROMPT.txt",
+      "sha256": "030f4af946f8d14838689c97cabb9427b87674560090d5099993317c2dcb7bf5"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "9975d73fd0062f2a7dda4f27cb836b85c9b331dfc7f67ce70981edd565530ba8"
+    },
+    {
+      "path": "example/qa/comparator-label-adapter.diff",
+      "sha256": "a6fdf94fb489578914f48be83ed0a705761e2c1e89191dbb5089afeb719c7ce8"
+    },
+    {
+      "path": "example/qa/comparison/audit-index.json",
+      "sha256": "1a10f9a780374f4ad772509e4374b9ea62b60248589cf70ec0c90eeacf863350"
+    },
+    {
+      "path": "example/qa/comparison/audit_contact_01_05.png",
+      "sha256": "8ee40f3b9ac6106b720d65ffd7224b412f9b12e8c3b53634f8a2995c0689249f"
+    },
+    {
+      "path": "example/qa/comparison/index.html",
+      "sha256": "0caeaf7bc5a923b4ae064e5c9e4ea2168125d2335a7cbf4ee071c51ba9a8028a"
+    },
+    {
+      "path": "example/qa/comparison/README.md",
+      "sha256": "1c65799bd845c88d86e327225dec8ee50ff7be3df7ced5c4f15f153fed6b1db9"
+    },
+    {
+      "path": "example/qa/comparison/slide_01_compare.png",
+      "sha256": "7bccc937a56125a02c9e8487483de9ff55649295af01d386e51f4373e7bd8cba"
+    },
+    {
+      "path": "example/qa/comparison/slide_02_compare.png",
+      "sha256": "fbec99716be1fc74081a9dfbf6c1487c882fbdbbd41c1f212db012d76431e83c"
+    },
+    {
+      "path": "example/qa/comparison/slide_03_compare.png",
+      "sha256": "721ce91675fb67e368af54f3a0e57ce75ec606f691d6ac43dfcd8312aa3b8632"
+    },
+    {
+      "path": "example/qa/comparison/slide_04_compare.png",
+      "sha256": "227c5f49745a9031f1654617b60245f6ae8f17e70017bfe8a981e6db22a5c238"
+    },
+    {
+      "path": "example/qa/comparison/slide_05_compare.png",
+      "sha256": "ea385b711c0e5f9fd525b25dfcd2d3ad417cf59e9ab879045b66a246cd8d28f7"
+    },
+    {
+      "path": "example/qa/editability/native-editability.json",
+      "sha256": "9e76a65dcf60335a6f0d1a31710022f795f9cef4d11c9e38951a2eb956e986c4"
+    },
+    {
+      "path": "example/qa/editability/native-flag-editability.json",
+      "sha256": "1321de9dc63e72e7bcfe8aaf165e1dd788802238c3de1fe6929acd00c0ea2cf8"
+    },
+    {
+      "path": "example/qa/editability/native-flag-edited-render.json",
+      "sha256": "0ecf941e22a991f05f0490342c345ae2bf67a7f7e6a313b47ba04cb869764387"
+    },
+    {
+      "path": "example/qa/editability/native-flag-edited.pdf",
+      "sha256": "5ea32421174efe8da3cc18e5a44235cb500343f1af09e79f04762853d13052c3"
+    },
+    {
+      "path": "example/qa/editability/native-flag-edited.png",
+      "sha256": "07168e54a4a6afe95245a354ff6993903724e881def8ab28bde3eadbaee0dbe1"
+    },
+    {
+      "path": "example/qa/editability/native-flag-edited.pptx",
+      "sha256": "f627789892692520529d6182b1c96e0eebef4ce6d799f53b6e870c0974d9ccfa"
+    },
+    {
+      "path": "example/qa/editability/native-text-edited-render.json",
+      "sha256": "f7472ecad101cab0ef69c4e6f1d21b12adb6a0023d78ed5afcb07f4cee70716b"
+    },
+    {
+      "path": "example/qa/editability/native-text-edited.pdf",
+      "sha256": "e7fd83dd686183c5d0a10420308354e43616b8a89f357f2a53b4590a6191605b"
+    },
+    {
+      "path": "example/qa/editability/native-text-edited.png",
+      "sha256": "089516d507484cadda374debb6ee67a761958dde551d952e3b51bdbf7204e078"
+    },
+    {
+      "path": "example/qa/editability/native-text-edited.pptx",
+      "sha256": "0f821735344b85cafc9a600e9d121e42d08625c393397fc70ec31cd5beb88aa2"
+    },
+    {
+      "path": "example/qa/finding-resolution.json",
+      "sha256": "2ee811a65ae04025897a62a384a9211296891b9e8f5e04e956ee927d9109b109"
+    },
+    {
+      "path": "example/qa/html-audit-fixes.diff",
+      "sha256": "b70eb5d5232eb5bbe65ae5c8dfa4f08de864912894d255c30ed37380ecd03ab2"
+    },
+    {
+      "path": "example/qa/implicit-effects.json",
+      "sha256": "5aa0e1c0a5a1d8c7af3cb61b3ad07a1297ec0cb58ecabe031b24e255bafd2bf0"
+    },
+    {
+      "path": "example/qa/native-flag.json",
+      "sha256": "43bd7e5951d165d0277bc51ece44684e447e589b8e356f0cb4d0bd46d1162da3"
+    },
+    {
+      "path": "example/qa/native-objects-current.json",
+      "sha256": "067ba6a2ef2700a9aeb1bfaad7c4cb096b8c0602792b23ac6e11bb79bbf7214e"
+    },
+    {
+      "path": "example/qa/quality-loop-receipt.json",
+      "sha256": "0a830fba70eb52751c1a9cc3495bd4ed863970cfdb8367385daf0cfb63cd77a8"
+    },
+    {
+      "path": "example/qa/round8-html-minimal.diff",
+      "sha256": "5d8d5e7da2bd1357df1a7cf5f06db52735e3146f7373e2a5c33f173b1481a26b"
+    },
+    {
+      "path": "example/qa/round8-p5-newline.diff",
+      "sha256": "3dbc161652cee871d44d5bf67068bfc829a973deec08a62798694d8d0529a8dc"
+    },
+    {
+      "path": "example/qa/zip-replay.json",
+      "sha256": "b0289f69c0bf886dae1fe42b0dd475376b568a0309a0911a3eb7235ef1859749"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "765b1b4fa5082390046d74c1277743297a3f3782e1b08a92f9020470d1fb0112"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "a411797e129d7e5d3fc85213257d540e63928a7122012ff6fa148d5661f063a4"
+    },
+    {
+      "path": "example/references/lessons-learned.local.md",
+      "sha256": "00198c95a6999aafb6ec5b3f322d9f92fe6ea1e1adef008e83ee03b6b47cb6d2"
+    },
+    {
+      "path": "example/render/deck.pdf",
+      "sha256": "3ddad7c3b002fc77a876d0e16ef2f2aa6321183097408a8d434ca8a373eeef1e"
+    },
+    {
+      "path": "example/render/pdf-preview.json",
+      "sha256": "1c1f37b37b2900dbf9611f334dd1966e45a5242de29bdc0509eeab5ebacf21e1"
+    },
+    {
+      "path": "example/render/powerpoint-render.json",
+      "sha256": "4ec685c8d19c88b70764c52bce9f43a00b593202a89cb1a694dc26280d957ebb"
+    },
+    {
+      "path": "example/render/slide-01.png",
+      "sha256": "12ff996ea29f633a5916c35a2770715ac16bf8a1390ea98a340627aa034501de"
+    },
+    {
+      "path": "example/render/slide-02.png",
+      "sha256": "6e4a4c94b0377c60b12c8bf941e82d472f4d200f15d0dc12e5a869c8ce7f335d"
+    },
+    {
+      "path": "example/render/slide-03.png",
+      "sha256": "eceb0efeb56f7a0947191c63eb83f2bd19b4b88669db7fd8b9545d67b44cf2c3"
+    },
+    {
+      "path": "example/render/slide-04.png",
+      "sha256": "262913d2e06e936ca2a592ec06186544181e30c8aced14e81e6f421c00ed0191"
+    },
+    {
+      "path": "example/render/slide-05.png",
+      "sha256": "c4cd92d5b4e6c7be009563d75fb5458b5b8c09fb5c18fb7a91dbd73bd1845ac3"
+    },
+    {
+      "path": "example/render_current.ps1",
+      "sha256": "97636ba763cce206308e05076cc53932bbba3351b327859fbffe18fa14354bcc"
+    },
+    {
+      "path": "example/render_pdf_previews.py",
+      "sha256": "bc8cbc0f110342fb7c0e7de035c03dcf808708d4e30adbc8ab22f34ce7966fa3"
+    },
+    {
+      "path": "example/REPRODUCE.md",
+      "sha256": "de28fcbb29b88f94a11e04b2500f25cb4e7d283068a1420a85f6470062600493"
+    },
+    {
+      "path": "example/SKILL.md",
+      "sha256": "7ed9f4e13fe6650791e7f18b0d92b2abcd7895c61cbb3bf972f38f1f22ae4e71"
+    },
+    {
+      "path": "example/source/catalog-repair-proposal.json",
+      "sha256": "4ca22f8481a26de48dcb236998cabcb400ef9c2bfccd11d6967ead41287abbc0"
+    },
+    {
+      "path": "example/source/distribution-replay.json",
+      "sha256": "316366bc8fd5abecd45e33579bb5f3fddbb534babbe0e34686df9791306a314c"
+    },
+    {
+      "path": "example/SOURCE.json",
+      "sha256": "4c4939fa71e759da0f8a9348863d846543abbb29f5dd72f50810bea305d54391"
+    },
+    {
+      "path": "example/test_native_edit.ps1",
+      "sha256": "f314277445ebb648eb292e3746dba69fabf3d02bd20ab67bb1d8cf9904b52cd4"
+    },
+    {
+      "path": "example/upstream/.config.local.toml",
+      "sha256": "36d4b2b0a54ca6b3ae5ac84a497a70a1dbe509b4610b3dacdd0c1db23c5ce511"
+    },
+    {
+      "path": "example/upstream/.config.local.toml.example",
+      "sha256": "eb18ccf320d2c969d28a7705a761fae472711b4541074024cdae107b451e8f57"
+    },
+    {
+      "path": "example/upstream/.gitignore",
+      "sha256": "cbdcb8b61c060cea172bcf91a6350acc67c4ca76646e6582ccdf668f26d93a92"
+    },
+    {
+      "path": "example/upstream/ACQUISITION.json",
+      "sha256": "f0f1f9fc0902085186e3a077ba1a0708629dfb39e2d457e95993a25e3e8dd721"
+    },
+    {
+      "path": "example/upstream/assets/compare/8bit_html_grid.png",
+      "sha256": "564c51beebc61226bc5709295f5c667f9944af6706c64eac6974f5049a9a9044"
+    },
+    {
+      "path": "example/upstream/assets/compare/8bit_ours_grid.png",
+      "sha256": "a76a3ceb283350840d084f68cc7f5d748e4376a38203bb6aa5681c1f32f369e9"
+    },
+    {
+      "path": "example/upstream/assets/compare/blue_html_grid.png",
+      "sha256": "3c3f89db2e607f2f1537c78be5a59d1f78395ae5561f45d2df9830e7bbbae5ad"
+    },
+    {
+      "path": "example/upstream/assets/compare/blue_ours_grid.png",
+      "sha256": "9236c1aba7c4fdfc9bce89b5ebf2f4c69aa852fe626c33d3c23375c4310c250b"
+    },
+    {
+      "path": "example/upstream/assets/compare/bold_html_grid.png",
+      "sha256": "206e45c72b7f0595a166474c280a523b17286e093a668604ef5c02b4d54ad031"
+    },
+    {
+      "path": "example/upstream/assets/compare/bold_ours_grid.png",
+      "sha256": "7b4f6a3f33a6abe301e549bb3a378ea83381b31f73129db99fb9d9829e311ff1"
+    },
+    {
+      "path": "example/upstream/assets/compare/broadside_html_grid.png",
+      "sha256": "2c782f772e0cb66918cd4d74fe380c86a7532ef0d5004f20339cd62bb919534c"
+    },
+    {
+      "path": "example/upstream/assets/compare/broadside_ours_grid.png",
+      "sha256": "b13cea459ad954e5bab4f9b259c3ce184e629da2f2a07dd89a6bc051c34e9c4f"
+    },
+    {
+      "path": "example/upstream/assets/compare/openclaw_html_grid.png",
+      "sha256": "8fa17794d33a47e032a326753c31ad6d021462b3d02d8a03f07d396b68d0879e"
+    },
+    {
+      "path": "example/upstream/assets/compare/openclaw_ours_grid.png",
+      "sha256": "2d35d0c32fc623d38c2d69dfaadebdc369c25ea3d97b4936f384cbec905afeab"
+    },
+    {
+      "path": "example/upstream/assets/compare/yanshi1_html_grid.png",
+      "sha256": "91eb837a3d8501c6c9d0e27dce95d5bd66cc9dd89ee89b46711145b957e0a84f"
+    },
+    {
+      "path": "example/upstream/assets/compare/yanshi1_ours_grid.png",
+      "sha256": "23b8b25767019d52630b59adc8cc5a4764660e00f23864c69c34ae9c23626812"
+    },
+    {
+      "path": "example/upstream/assets/compare/yanshi2_html_grid.png",
+      "sha256": "8196bf1148abfe3836b78294df8d4ab9d3350ce7258701583f7445cc2b3e48f1"
+    },
+    {
+      "path": "example/upstream/assets/compare/yanshi2_ours_grid.png",
+      "sha256": "aa3c4986e4b9de1561b8a2a1b5c546656b48c5517e96d1a4fc8f01a54093401b"
+    },
+    {
+      "path": "example/upstream/convert.py",
+      "sha256": "fb0a1d0c421dd1e3ab15db559d3f052dfc294d384955a05edd4d018463417180"
+    },
+    {
+      "path": "example/upstream/LICENSE",
+      "sha256": "2c660995fdf9061243c0e83cf52a26d5b05a77eb15aa16a9d838992ba8cd56a1"
+    },
+    {
+      "path": "example/upstream/README.md",
+      "sha256": "7caa66a52082ca2d121085a9f7ddaf7dc798b61e4493e4893c2dbec3771d5ba3"
+    },
+    {
+      "path": "example/upstream/README.zh-CN.md",
+      "sha256": "9ab9f738d7c71eda8bba69ef607a76c45445853be000c4c196375c1d5a983012"
+    },
+    {
+      "path": "example/upstream/references/lessons-learned.md",
+      "sha256": "b767d43dad5c9c772cf7a6938f0ba41745fae93da92dbfb53fce0fd1adf922fd"
+    },
+    {
+      "path": "example/upstream/references/lessons-learned.md.example",
+      "sha256": "dfeba46289fa1cfe994871f1eff872ce963e42953e9da5d8b94b1738d6bd68bf"
+    },
+    {
+      "path": "example/upstream/references/methodology.md",
+      "sha256": "22660432c47ffd453b5c6d96b0b54e6eefe1ea541cd43487e9c3401a8a5a210d"
+    },
+    {
+      "path": "example/upstream/references/supported-css.md",
+      "sha256": "cf42057229a236b424cce63dcc5b270b11917c257fa771b943a6d5ff656909ad"
+    },
+    {
+      "path": "example/upstream/requirements.txt",
+      "sha256": "ea8a2e0a26cd45373cce3d306b85aada12dcfdbbb059b33c953046c372688576"
+    },
+    {
+      "path": "example/upstream/scripts/_js_snippets.py",
+      "sha256": "feefd949bd1d259ab6e1a7959bf2615244870cf59aeb54489781e63c6b3cb400"
+    },
+    {
+      "path": "example/upstream/scripts/adapters.py",
+      "sha256": "21177a85afb8329c9bb4323e73970f63984927653d1b60bb89ec62ca28038f12"
+    },
+    {
+      "path": "example/upstream/scripts/assemble.py",
+      "sha256": "db4e6a9c305336bab882534cf31931caa7e4f431c7ef2ebcca2c481b838713da"
+    },
+    {
+      "path": "example/upstream/scripts/dump_records.py",
+      "sha256": "deb9462e52ab62d4c55e5922f9cab2fb0a6df30616df0e2bbf34356ece0ba811"
+    },
+    {
+      "path": "example/upstream/scripts/embed_fonts.py",
+      "sha256": "e53e1d986183cd2a855f5b55d2697a8c2ad8bc90377d109d907fa187b5a939a3"
+    },
+    {
+      "path": "example/upstream/scripts/font_paths.py",
+      "sha256": "45e84ffd0608e01254953a8542c1d179209f5affb5877d169c45f43917480d45"
+    },
+    {
+      "path": "example/upstream/scripts/font_resolver.py",
+      "sha256": "41a26a30d49b05b4d30d94ce755e31ee1bfaf13b3f953a24bf81248f7acc8891"
+    },
+    {
+      "path": "example/upstream/scripts/font_user_install.py",
+      "sha256": "85c655826ee7e539642fd6d59e51400881cf4d93207b3bebe6dc9516ae55f61d"
+    },
+    {
+      "path": "example/upstream/scripts/local_config.py",
+      "sha256": "16ff323d5f7fb08109b648cb726bae109acbfbc45fd27296df7c7ae4cddc1555"
+    },
+    {
+      "path": "example/upstream/scripts/measure.py",
+      "sha256": "6a220586a670f02dd7eeda1ed8fdac83313de2e9fc8fa4c9eb9bebc25ee4d78d"
+    },
+    {
+      "path": "example/upstream/scripts/preflight.py",
+      "sha256": "ee5e91a44bb788a2528650c26b9f322a298e329b049e42b83960be812c4ac234"
+    },
+    {
+      "path": "example/upstream/scripts/self_check.py",
+      "sha256": "bb248de03d3c306245963c42b73276f84c41fcc09bf8081c4f448b1dcfed83d5"
+    },
+    {
+      "path": "example/upstream/scripts/text_utils.py",
+      "sha256": "c1cabbc529fffbad6f7fb14c01c39f788ad6257415bbb3a4b0c6a44ace666f8a"
+    },
+    {
+      "path": "example/upstream/scripts/visual_audit.py",
+      "sha256": "d2814f07c27b04de94752103c506df1e9bf5d12db5adc9e04629f618df17a326"
+    },
+    {
+      "path": "example/upstream/SKILL.md",
+      "sha256": "1d3859ef9e38687ff0ea127796e05295b625159f43dc197aeceabaea769e2b5b"
+    },
+    {
+      "path": "example/visual_audit_labels.py",
+      "sha256": "787adce669ae311c07802d9fcd22364cc935abb1f97c882b7b93ec5c37d92062"
+    },
     {
       "path": "LICENSE",
       "sha256": "2c660995fdf9061243c0e83cf52a26d5b05a77eb15aa16a9d838992ba8cd56a1"
+    },
+    {
+      "path": "README.md",
+      "sha256": "6c994863275d15ea04f4988e39923d94306d81ac75461cc6fa524b1589a5a819"
     },
     {
       "path": "references/ADAPTER.md",
       "sha256": "6c97e47cf3f6474fbc0ed17ff51f25eb8ea5792afc6f4939db16368933542629"
     },
     {
+      "path": "references/clear_implicit_effects.py",
+      "sha256": "dce9ef93caa0b7a37038a04a18625d9e25e8f42d386269c8c9a8e2f6b1fac81d"
+    },
+    {
       "path": "references/convert_local_fonts.py",
-      "sha256": "995821aa0f9733c1dd88a02531c3ac97765041b83bfa691735cad07f2f4d663c"
+      "sha256": "a47f30c783f9015f843e4afec2b33fd642e746fa5760e303dcecb6a6e698695f"
+    },
+    {
+      "path": "references/visual_audit_labels.py",
+      "sha256": "787adce669ae311c07802d9fcd22364cc935abb1f97c882b7b93ec5c37d92062"
     },
     {
       "path": "SKILL.md",
-      "sha256": "1313072f5cd78792a90e4e85e9a11e5eb7a14ad917e80da499397bd06115c91a"
+      "sha256": "61fe28c6190210937c2d6615c9a5750e55a05a6bd6685816a08aaa233cf3a186"
     },
     {
       "path": "upstream/.config.local.toml.example",

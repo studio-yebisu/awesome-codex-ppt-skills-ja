@@ -1,29 +1,37 @@
-# 引き継ぎは、次の一手まで。
+# HTMLを正本にして資料を作る
 
-原典 Visual Deck Studio のHTML-first Path Aで制作した日本語6枚。社内資料の引き継ぎを説明する、架空の記入例です。
+原典はHTMLで高精細なプロトタイプ・スライド・アニメーション・可視化を制作する。スライドはHTML deckを正本にPDFを出し、依頼がある場合だけPPTXをbest-effort派生として出す。
 
-編集可能な正本はdeck.pptx。HTMLはindex.htmlとslides/、元HTMLのPDFはdeck.pdf、PowerPoint実描画PDFはrender/deck.pdfです。本文と単純な線・背景はnative要素。画像スライド化していません。HTML/PPTXには字間・太さ・br行間差があります。pixel一致は主張しません。
+原典のHTML-first Path Aで6頁を作り、4条件に合う要素を元DOM変換器でPPTXへ派生。HTMLとPPTXを並べて内容と表示差を確認する。
 
-## 同じ作例を生成
+原典は [ConnorRX56/presentation-delivery-skills](https://github.com/ConnorRX56/presentation-delivery-skills/tree/06ddac077030c62f0118b225860cac46fbf658ea)、固定 commit `06ddac077030c62f0118b225860cac46fbf658ea`。日本語派生であり公式翻訳ではない。
 
-Python3の標準ライブラリ、Node.js22以上とnpmが必要です。初回は固定npm依存と公式Chromiumを取得します。
+## 用意するもの
 
-    python source/reproduce.py --powerpoint
+- Python、Node22以上、固定Node依存とChromium。
+- PPTX確認にはWindows / PowerPoint / PowerShellと公式BIZ UDPGothic。PDF由来RGBプレビューにはpypdfium2。
 
-NodeがPATHにない場合は --node に実行ファイルの絶対パスを指定します。PowerPoint描画にはWindows / Microsoft PowerPoint / PowerShell7とインストール済みBIZ UDPGothicが必要です。この環境では登録済みのBIZ UDPGothicを確認しました。配布フォントはGoogle FontsのOFL原本で、OSのフォントを抽出していません。
+## 使い方
 
-生成後はこのフォルダーで `python -m http.server 8000 --bind 127.0.0.1` を実行し、http://127.0.0.1:8000/index.html を開きます。原典の概覧・gallery・矢印キー・Home/End・ページ記憶を使えます。新しい再現出力は全ページレビュー待ちになり、前回のQAを引き継ぎません。
+1. 読者・題材・資料の役割と出力形式を確認する。
+2. HTML正本の見本と書式を確認してから残りを作る。
+3. 必要な場合だけ4条件に合わせてPPTXを派生する。
+4. HTMLとPPTXの実表示と内容を比較し、変換損失を明記する。
 
-## 原典を実行した範囲
+## この作例で確認する箇所
 
-固定commit 06ddac077030c62f0118b225860cac46fbf658ea のSKILL、Path A、deck_index.html、html2pptx.jsの寸法/overflow/文字条件検査と要素変換、export_deck_pptx.mjs、PDF結合、縮略図を使用。変換コードのローカルHTTP入口、字体待ち、Windows環境継承、日本語ノートだけを明示adapterで補いました。source/runtime-adapter.diffと原文を保持します。
+- **2頁・HTMLからの派生**：左のHTMLと右のPowerPointを比べ、3項目の本文が一段落の通常行間で読めるか確認。 4条件内のp/h要素を変換し、複数行の段落は外側DIVのdata-pptx-mergeで同じ編集枠へまとめる。
+- **3頁・内容に合う図示**：上の例を用途・版・状態の3行へ分けたHTMLとPPTXを比較する。元の3列骨格を繰り返さない。 HTMLの視覚構成を正本にし、頁の役割へ図示を合わせる。対応する図形と本文を派生PPTXにも残す。
+- **4頁・正本と派生を照合**：暗色の背景と2欄、本文の意味が両方で残るか確認。字幅や太さのpixel一致は主張しない。 HTMLを先に完成し、変換で保持できる内容と表現を確認する。PPTXはbest-effortとして損失を記録する。
 
-既存の紙色・深緑の設計文脈を使い、2ページを先に制作・表示確認してから全6枚を制作。人の早期承認、3方向Fallback、file URL、動画、音声、全機能の検証は行っていません。外部APIや課金は使いません。
+## 適用範囲と未実施
 
-archive全体取得は読み取りtimeoutで終了。必要22ファイルを固定commitのGit blobと照合して取得し、紹介画像・BGMは収録していません。source/upstream/ACQUISITION.jsonに記録しています。
+- 原典visual-deck-studioはHTMLを正本とし、PPTXは依頼時のbest-effort派生。PPTXの制約のためにHTML設計を下げない。
+- 今回の自律制作では早期の利用者承認と3方向Fallbackを実施していない。2頁showcaseは保持するが利用者の選択済みとは扱わない。
+- HTTP入口・字体待ち・日本語ノート・Windows環境継承を局所adapterで補う。原典の寸法・overflow検査は維持。
+- file URL、動画、音声/TTS、生産用Webアプリ・バックエンドはこの例の対象外。
+- HTML全6頁の寸法・overflow・字体と、PPTX本文・全頁の実画像を確認。pixel一致・利用者採用・独立再評価は未完了。
 
-## 依存と権利
+全頁を制作側が実画像で確認した。修復版の独立再評価・利用者の採用は未完了。検査の内容・現在のPPTX hashは `QA.json`、原典の保持範囲と変更は `PROVENANCE.json` を参照する。
 
-原典MITの著作権表示、BIZ UDPGothicのOFL、使用依存の原文通知をlicenses/に保存。未使用のアニメーション素材の権利を保証する記録ではありません。
-
-PptxGenJS4.0.1とPlaywright1.60.0を保持し、検出されたimage-sizeとsharpを2.0.3/0.35.5へ固定。初期lock・監査、修正後の0件監査、全12画像と本文/ノートの変化がない記録はreview/dependency/。この再現キット以外の依存監査へ読み替えません。
+入力と現在の生成器を含む。再実行は [REPRODUCE.md](REPRODUCE.md) を参照する。

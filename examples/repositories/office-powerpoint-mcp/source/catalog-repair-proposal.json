@@ -1,0 +1,59 @@
+{
+  "case_id": "office-powerpoint-mcp",
+  "implemented_by": "Codex current repair; not new Opus production",
+  "current_pptx_sha256": "4bd75ad5c5a3fd6c987af52055ffea5a2a559f8425ec84b47b6b26dba57fa6f0",
+  "case_patch": {
+    "method": "原典MCPへ95操作を実行し、比較表・2系列チャート・比較テンプレートを制作。日本語と比較型の局所調整はadapterへ分け、別コピーへ本文変更と220→221のchart更新を保存した。",
+    "prompt_text": "原典MCPの操作で架空のEC月次報告を制作。日本語はBIZ UDPGothic。前年と当月の表・データ連動チャート・比較型を使い、互換調整を明記する。",
+    "sample_notice": "制作側が現行全頁を実PowerPointで確認。現在版の独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全6頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/office-powerpoint-mcp/render/slide-01.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-02.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-03.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-04.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-05.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-06.png"
+    ],
+    "notes": [
+      "架空のEC事業の月次報告です。2026年9月と前年同月を比較し、商品説明の修正と粗利分析を先行する判断を求めます。",
+      "売上は1,200万円、前年比20%増。粗利率は38%から36%へ2ポイント低下し、返品率は4%から6%へ2ポイント上昇しました。",
+      "広告20万円、自然検索90万円、メール50万円、リピート直訪40万円の増加で、合計200万円です。構成比と増加額を混同しません。",
+      "前年粗利は1,000万円×38%=380万円、当月は1,200万円×36%=432万円。52万円の増加です。値引きと商品構成は原因の仮説で、商品別に確認します。",
+      "10月9日までにCSが返品理由を分類。16日までに商品担当が説明を改稿し、販売担当が粗利差分を分析します。担当名は架空です。",
+      "広告増額は分析結果を見てから決めます。次回会議には施策の完了、返品内訳、商品別粗利の差分を持ち寄ります。"
+    ]
+  },
+  "guide_patch": {
+    "summary_ja": "python-pptxを使うMCPサーバーのツールを通して、PPTXの作成・管理・文字・表・図表・テンプレートを操作する。",
+    "requirements": [
+      "Python3.10+ / mcp1.30.0 / python-pptx1.0.2 / Pillow",
+      "PowerPointとBIZ UDPGothic（非埋込）。PDF→PNGにはpypdfium2。"
+    ],
+    "steps": [
+      "source/upstream/ppt_mcp_server.pyをstdioで起動し、list_toolsで実際の操作と引数を調べる。",
+      "source/build_mcp.pyで元MCPの作成・文字・表・チャート操作とbefore_after_comparisonテンプレートを呼ぶ。input/data.jsonを数値の正本にする。",
+      "source/runtime-adapters.mdの局所互換処理を確認し、PowerPoint描画で表・凡例・単位・前後値を照合する。",
+      "source/check_native_edit.pyで別コピーの本文とチャート1点を変更・保存し、元ファイルのSHAが変わらないことを確認する。"
+    ],
+    "limitations": [
+      "原典はSKILL文書ではなくMCPサーバー。固定コミットを同梱し、現在の公開保守状態はこの実行では判定しない。",
+      "実作成95操作と別コピー編集5操作を実行。25テンプレートのうち1種を使用。画像効果・professional design・自動text修正は未実施。",
+      "日本語書式/ノート・凡例/斜線・セル縦中央・空段落・テンプレート横幅変換と装飾除去/見出し配置は明示adapter。原典API単独の出力とは区別。",
+      "BIZ UDPGothicの公式TTF/OFLを同梱し非埋込。数値は架空の例。チャート1点の書換保存は原典MCPで行い、GUI編集は未検査。"
+    ],
+    "execution_type": "固定版MCPの95操作で制作し、明示した日本語・配置adapterを適用。別コピーへ原典MCP5操作で編集保存。",
+    "commands": [
+      "python source/build_mcp.py",
+      "python source/check_native_edit.py",
+      "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render",
+      "python source/render_pdf_previews.py render",
+      "python source/inspect_current.py"
+    ]
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native5.json",
+  "independent_current_version_review": "pending",
+  "distribution_replay": "source/distribution-replay.json"
+}

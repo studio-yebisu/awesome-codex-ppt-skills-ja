@@ -1,0 +1,135 @@
+{
+  "id": "mck-native-showcase",
+  "title": "フォント構成と制作手順",
+  "upstream": "likaku/Mck-ppt-design-skill",
+  "brief": {
+    "audience": "Studio Yebisuのフォントキットを使って資料を作る人",
+    "goal": "収録フォントの言語・分類の内訳と、この資料を作った順序を4ページで示す",
+    "duration_minutes": 4,
+    "data_source": "input/oss-font-kit.json の families[].family / language / category と presets[]",
+    "exclusions": "効果・所要時間・成果の数値は扱わない。データにない値を作らない。"
+  },
+  "fonts": {
+    "FONT_HEADER": "BIZ UDPGothic",
+    "FONT_BODY": "BIZ UDPGothic",
+    "FONT_EA": "BIZ UDPGothic"
+  },
+  "languages": {
+    "ja": "日本語",
+    "latin": "欧文"
+  },
+  "categories": {
+    "sans": "ゴシック系",
+    "serif": "明朝・セリフ系",
+    "rounded": "丸ゴシック系",
+    "display": "装飾",
+    "mono": "等幅"
+  },
+  "cover": {
+    "subtitle": "{total}字体・{file_count}ファイル・{preset_count}プリセットを収録",
+    "author": "日本語{ja_count}字体 ／ 欧文{latin_count}字体",
+    "date": "{updated_on}更新の実カタログ / Studio Yebisu",
+    "title": "フォント構成と\n制作手順"
+  },
+  "donut": {
+    "show_summary": true,
+    "title": "{total}字体を用途の近い書体群へまとめて比べる",
+    "title_tie": "{total}字体を用途の近い書体群へまとめて比べる",
+    "center_sub": "収録字体",
+    "colors": [
+      "NAVY",
+      "ACCENT_BLUE",
+      "ACCENT_GREEN",
+      "ACCENT_ORANGE",
+      "ACCENT_RED",
+      "MED_GRAY"
+    ],
+    "source": "出典：input/oss-font-kit.json のcategoryを集計。装飾と等幅は合算、細目は次頁",
+    "group_by": "category_groups",
+    "groups": [
+      {
+        "label": "ゴシック系",
+        "categories": [
+          "sans"
+        ]
+      },
+      {
+        "label": "明朝・セリフ系",
+        "categories": [
+          "serif"
+        ]
+      },
+      {
+        "label": "丸ゴシック系",
+        "categories": [
+          "rounded"
+        ]
+      },
+      {
+        "label": "装飾＋等幅",
+        "categories": [
+          "display",
+          "mono"
+        ]
+      }
+    ],
+    "summary_mode": "source_category_groups",
+    "legend_x_in": 7.2
+  },
+  "table": {
+    "title_prefix": "言語別に見ると、",
+    "title_fallback": "言語と分類ごとの字体数と代表書体",
+    "headers": {
+      "category": "分類",
+      "total": "計",
+      "sample": "代表書体（言語別・先頭）"
+    },
+    "total_label": "合計",
+    "col_widths_in": [
+      2.0,
+      1.1,
+      1.1,
+      1.1,
+      6.433
+    ],
+    "bottom_bar_label": "プリセット",
+    "presets_split": "収録プリセット{n}件は、いずれも見出し・本文を日本語書体、英数字を欧文書体で指定",
+    "source": "出典：input/oss-font-kit.json（{updated_on}更新）の language・category・family を集計"
+  },
+  "process": {
+    "layout": "vertical_steps",
+    "title": "制作は五段階で進め、原稿と描画を原典の検査で確かめる",
+    "steps": [
+      [
+        "1",
+        "要件をそろえる",
+        "brief.md｜読者・目的・元資料をまとめる"
+      ],
+      [
+        "2",
+        "構成を決める",
+        "outline.json｜頁の主張と版式・項目数を決める"
+      ],
+      [
+        "3",
+        "原稿を検査する",
+        "content.json｜文言・集計値・出典を記し、原典S3で検査"
+      ],
+      [
+        "4",
+        "描画を検査する",
+        "deck.pptxと検査JSON｜原典S4の合否と実描画を確認"
+      ],
+      [
+        "5",
+        "交付を準備する",
+        "成果物と固定経験｜今回の修復判断を記録として再生する"
+      ]
+    ],
+    "bottom_bar": [
+      "再生範囲",
+      "S3/S4は今回の実行結果。S5は固定した修復記録の再生で、新規の自動判定ではない。"
+    ],
+    "source": "出典：同梱の専用生成器。S1〜S5の保存ファイルを示す。所要時間は未計測"
+  }
+}

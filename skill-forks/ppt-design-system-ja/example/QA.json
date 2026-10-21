@@ -1,0 +1,67 @@
+{
+  "status": "author_qa_complete_independent_review_pending",
+  "page_count": 6,
+  "artifact_sha256": "f8846ee4d986af67903e0ed938388dc4842ed072855716cf60c7e2299e7174ab",
+  "all_pages_visually_reviewed": true,
+  "visual_review": {
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "finding": "原典presetとJavaScriptの一致を再検査。数値の単位の透過を弱めて読みやすくし、全6頁を再描画。",
+    "images": [
+      {
+        "page": 1,
+        "path": "render/slide-01.png",
+        "sha256": "24761fcc0258f992f3c03b3ea53f5da3de6e643037c13408c19581fa8ee10721"
+      },
+      {
+        "page": 2,
+        "path": "render/slide-02.png",
+        "sha256": "093b0f18cbba455c7af2ca8f08eeb70f16170756dda825da7277742997b27522"
+      },
+      {
+        "page": 3,
+        "path": "render/slide-03.png",
+        "sha256": "8a7ce7c34a243591c61032159bc136d0597ae19c35599f55f33aa60caa83b773"
+      },
+      {
+        "page": 4,
+        "path": "render/slide-04.png",
+        "sha256": "2cde7cd5e2a8ff1645686cddf8e647ef551a612b04faede2d97452e41f5777b9"
+      },
+      {
+        "page": 5,
+        "path": "render/slide-05.png",
+        "sha256": "78935843b3e3c2d9559268f785ba8bc07e64f82a7d4b9435d72da09a6f1fb368"
+      },
+      {
+        "page": 6,
+        "path": "render/slide-06.png",
+        "sha256": "6025bff3831402afbe6eb48d91edcb166c3d7364de176b901d4628867e9a5765"
+      }
+    ]
+  },
+  "original_gates": {
+    "reproduce": 0,
+    "original_navigation_js_preserved": true,
+    "P0_P1_visual_check": "6 pages checked; data/units, hierarchy, no clipped or one-character lines; contrast retained within preset"
+  },
+  "constraints": [
+    "作例はHTMLのみでPPTX laneは未実施",
+    "原典テンプレートのJavaScriptを無改変で保持",
+    "游明朝・游ゴシック等の端末書体に依存。OS書体は配布しない",
+    "10種の全レイアウトや他4配色を実演した例ではない"
+  ],
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json"
+}

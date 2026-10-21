@@ -1,29 +1,13 @@
-# FAQを育てる4週間の再現キット
+# 現在版の再生成と検証
 
-完成資料はこのフォルダー直下。生成経路・使用した原典・当時の確認範囲はPROVENANCE.jsonとQA.jsonに記録しています。
+Node/npm、既存Chrome/Edge。編集の正本はsource/appのApp.tsxとCSS。distをHTTPで表示する。原典SlideLayout/useSlideScale/variantsを使い、週切替は作例の独自操作。
 
-## Windowsで同じ作例を生成
+作例ZIPを展開したルートから実行する。既存依存を利用した配布再実行の実績はsource/round4-zip-replay.json。新しい環境の依存導入成功とは区別する。
 
-1. ZIPを展開。PowerShellでこのフォルダーへ移動。
-2. Python 3.13、Node.js、必要に応じてGit Bashを用意。
-3. 次を実行（project内venv・固定npm依存・公式固定commitの書体を取得します）。
+```text
+cd source/app
+npm ci
+npm run build
+```
 
-    .\reproduce\Reproduce.ps1
-
-生成先: reproduce/workspace/examples/repositories/react-slide-deck/
-
-React版はHTTPで表示します。生成先へ移動して `python -m http.server 8000 --bind 127.0.0.1` を実行し、表示されたlocalhostのURLを開いてください。PPTX・PowerPoint描画の-Renderには対応しません。再生成した出力は確認前として記録し、元のQAを成功扱いで引き継ぎません。
-
-## 自分の題材へ
-
-完成例のinputとPROMPT.txtを参考に、読み手・目的・数値・結論を用意。日本語派生版SKILL.mdから当該原典の手順へ進みます。この再現スクリプトは比較用の固定原稿を作るもので、input/data.jsonだけを変えれば全ページの文章が自動で変わる汎用アプリではありません。
-
-原典en-context-engineeringのReact App、SlideLayout、useSlideScale、Motion variantsで制作する。training-cycleとBold Signalを保持し、CJK字体、reduced-motion、週別タブ、ページ同期を補う。原典依存のVite8/Tailwind4.2.1衝突はTailwind4.2.2への最小補正で解消し、元lockと差分と固定再現lockを保存。HTTPで表示する。
-
-## 原典と権利
-
-https://github.com/code-on-sunday/slide-deck-generator/tree/a6369f31b0cc4dd5830796455326777a8fe4c7c6
-
-原典のコード、個別のライセンス、書体のOFLを保持。原典の広告用画像・動画・不要な既存デッキや実行環境はキットへ収録しません。
-
-Windowsではフォント用のnative DLLが深いパスで読み込めないことがあります。ZIPを短いパス（例 M:\slides\react-deck）へ展開してください。NodeがPATHにない場合は `-NodePath "node.exeの絶対パス"` を指定します。元Vite8を保持し、互換性のあるTailwind4.2.2と記録したlockでnpm ciを実行します。
+元のreproduce/一括ラッパーは初回制作時の固定原稿を再生成する旧経路。現在の修復版には上記の正本を使う。再生成後のQAは、全頁と個別動作を確認するまで未確認として扱う。ローカル検査は独立Kimi/Opus評価や人間の採用判断とは別。

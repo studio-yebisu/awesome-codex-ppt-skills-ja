@@ -1,0 +1,84 @@
+{
+  "repository": "ryanbbrown/revealjs-skill",
+  "upstream_commit": "d0ccd344c4aaf9f045e5a15be6a2ab67b595796f",
+  "acquisition": {
+    "repository": "ryanbbrown/revealjs-skill",
+    "commit": "d0ccd344c4aaf9f045e5a15be6a2ab67b595796f",
+    "archive_url": "https://codeload.github.com/ryanbbrown/revealjs-skill/zip/d0ccd344c4aaf9f045e5a15be6a2ab67b595796f",
+    "archive_sha256": "4708e7c8e6c5e814dcf74e2d9831f079cbaaa7d4a3814dd3c577f2c34f875995",
+    "bytes": 1124825,
+    "checked_at": "2026-10-13T13:36:04.827052+00:00",
+    "root": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ryanbbrown__revealjs-skill"
+  },
+  "method": "原典create-presentation.jsで6ページの骨格とbase-styles.cssを生成。原典のpt単位・2カラム・section構造に日本語本文を組み、reveal.jsの公式ナビゲーションで再生。",
+  "execution_type": "scaffold_cli_then_skill_authoring",
+  "references": [
+    {
+      "path": "skills/revealjs/SKILL.md",
+      "sha256": "da9cd7a5528b3ed4049c7a3779965d55c8bffd420fbdf299ec25a1f73f4acd1d"
+    },
+    {
+      "path": "skills/revealjs/scripts/create-presentation.js",
+      "sha256": "1232e956c32f7569e562c2e2b035efc7a34c9f3bf313a1078323208da863b805"
+    },
+    {
+      "path": "skills/revealjs/references/base-styles.css",
+      "sha256": "d6957216b9634e044d1114e652ca185ff5ae81eeb9d5d7b4e706f2d65a4610b5"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "8420e97c15e6735d6ce87be8eb1a3e90af53bdacd4b4423dd826e0f1479216e6"
+    }
+  ],
+  "commands_executed": [
+    {
+      "argv": [
+        "node",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ryanbbrown__revealjs-skill\\skills\\revealjs\\scripts\\create-presentation.js",
+        "--structure",
+        "1,1,1,1,1,1",
+        "--title",
+        "社内検索を4週間で試す",
+        "--output",
+        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\revealjs-skill\\index.html"
+      ],
+      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
+      "exit_code": 0,
+      "stdout_sha256": "3ea359ada9a3694d733430acaa62a11f46a634e939126d49189a3c67df1af8ef"
+    }
+  ],
+  "artifact": "examples/repositories/revealjs-skill/index.html",
+  "artifact_sha256": "1f273f1c4a6afa7d8f8b084d69b2ddc9196703e842b9ef81a57108ee4e72fca1",
+  "input_sha256": "7f0d15a7c6c608c0d595c7695fa1423d5ab5fbb3661dc8b674a493c8fd8bdbad",
+  "authored_by": "Studio Yebisu / Codex",
+  "scope": "実際に原典の固有方法を使った日本語作例。エージェントが書いた本文を使用。",
+  "checked_at": "2026-10-13T14:23:51.918017+00:00",
+  "latest_repair": {
+    "author": "Codex",
+    "description": "二列の見出し間隔、関係図の線と矢印、表の見出し色と行罫線を修正。原典overflowとDecktapeを実行し6頁を確認。",
+    "gates": {
+      "original_scaffold": 0,
+      "original_check_overflow": {
+        "exit_code": 0,
+        "slides": 6,
+        "overflow": 0
+      },
+      "decktape": {
+        "version": "3.16.1",
+        "exit_code": 0,
+        "pdf_pages": 6,
+        "screenshots": 6
+      }
+    },
+    "source_proof_paths": [
+      "source/scaffold-receipt.json",
+      "source/upstream/skills/revealjs/SKILL.md",
+      "source/overflow-original-windows.txt",
+      "source/decktape-repair.txt",
+      "source/qa/package-lock.json",
+      "source/browser-repair.json",
+      "render/decktape-contact.jpg"
+    ],
+    "independent_rescore": "pending"
+  }
+}

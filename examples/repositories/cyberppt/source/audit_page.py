@@ -7,6 +7,10 @@ P=Path(__file__).resolve().parents[1];n=int(sys.argv[1]);tag=f'{n:02d}'
 def write(p,v):p.write_text(json.dumps(v,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
 bp=Image.open(P/f'design/slide-{tag}-blueprint.png').convert('RGB');rp=Image.open(P/f'render/page-{tag}/slide-01.png').convert('RGB').resize(bp.size)
 reg=json.loads((P/f'design/slide-{tag}-registry.json').read_text(encoding='utf-8'))
+recipe=json.loads((P/f'design/slide-{tag}-elements.json').read_text(encoding='utf-8'))
+alignment=json.loads((P/'source/optical-alignment.json').read_text(encoding='utf-8'))
+offsets={e['element_id']:e for row in alignment['pages'] if row['slide']==n for e in row['elements']}
+draw={e['element_id']:e.get('draw_bbox_px',e['blueprint_bbox_px']) for e in recipe['elements']}
 def ink(img,b):
     x,y,w,h=[int(round(b[k])) for k in ['x','y','w','h']];w=max(2,w);h=max(2,h)
     arr=np.asarray(img.crop((x,y,x+w,y+h)));m=(arr.max(2)-arr.min(2)>45)|(arr.max(2)<195)
@@ -14,12 +18,18 @@ def ink(img,b):
     return None if not len(xs) else dict(x=int(x+xs.min()),y=int(y+ys.min()),w=int(xs.max()-xs.min()+1),h=int(ys.max()-ys.min()+1))
 results=[]
 for e in reg['elements']:
-    b=e['blueprint_bbox_px'];bb=ink(bp,b);rb=ink(rp,b)
+    b=e['blueprint_bbox_px'];bb=ink(bp,b)
+    target=dict(draw[e['element_id']]);offset=offsets.get(e['element_id'],{})
+    target['x']+=offset.get('dx',0);target['y']+=offset.get('dy',0)
+    if e['element_id']=='title' and n in [2,3]:target['y']=max(40,target['y'])
+    search={'x':max(0,target['x']-3),'y':max(0,target['y']-3),'w':max(6,target['w']+6),'h':max(6,target['h']+6)}
+    rb=ink(rp,search)
+    e['render_measurement_search_bbox_px']=search
     # The measured ink box is kept separate from the pre-generation layout box.
     e['blueprint_ink_bbox_px']=bb;e['render_ink_bbox_px']=rb
     e['render_bbox_px']=rb
     e['delta_px']={k:rb[k]-bb[k] for k in ['x','y','w','h']} if bb and rb else None
-    e['measurement_method']='thresholded visible ink inside pre-registered local region; excludes off-region content and is not a complete glyph-shape matcher'
+    e['measurement_method']='Source ink measured in original registered bbox; actual render ink measured in the declared native draw region plus 3px search margin. Positions remain actual pixel measurements, never assigned from generation coordinates. Local thresholding is not an object-segmentation or complete glyph-shape matcher.'
     e['numeric_fidelity_pass']=bool(bb and rb and max(abs(v) for v in e['delta_px'].values())<=e['tolerance_px'])
     results.append({'id':e['element_id'],'pass':e['numeric_fidelity_pass'],'delta_px':e['delta_px']})
 write(P/f'design/slide-{tag}-registry.json',reg)

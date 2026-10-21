@@ -1,0 +1,125 @@
+{
+  "status": "original_build_audit_all6_visual_checked_recheck_pending",
+  "page_count": 6,
+  "original_spec_validate_passed": true,
+  "original_build_status": "ok",
+  "original_audit_completed": true,
+  "original_errors": [],
+  "original_warnings": [],
+  "build_report": "source/pipeline/build-final.json",
+  "execution": "source/pipeline/execution.json",
+  "all6_images_viewed_after_repair": true,
+  "powerpoint_version": "16.0",
+  "actual_pdf_fonts": "source/pipeline/pdf-fonts.json",
+  "native_inventory": "source/pipeline/native-elements.json",
+  "current_pptx": ".pptwise/input/deck.pptx",
+  "pptx_sha256": "7045c978461dbd838c6fa73562a7c3d48b8befb0792b728a24e84f8ddbc045c7",
+  "font_adapter": {
+    "file": "source/pptwise_ja_font_adapter.mjs",
+    "scope": "In-memory SAFE_FONTS/CJK_SAFE_FACES additions only",
+    "added": [
+      "Zen Kaku Gothic New",
+      "Space Grotesk"
+    ],
+    "original_chunk_sha256": "36c3b6ef31a0e36b5814e357e8033b12ae61f9e90537b0ddb6e54c7b19df2d1e"
+  },
+  "signature_recipes": {
+    "pages": 6,
+    "offered": 5,
+    "drawn": 0,
+    "perPage": [
+      {
+        "page": 1,
+        "pageId": "open",
+        "file": "pages/open.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "photograph",
+          "look": "The cover drawn over a photograph, the face's own lettering kept",
+          "write": "background {\"kind\": \"asset\", \"asset_id\": \"<a picture>\"}",
+          "changes": [
+            "add a background photograph"
+          ]
+        }
+      },
+      {
+        "page": 3,
+        "pageId": "journey",
+        "file": "pages/journey.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "timetable",
+          "look": "A plan month by month",
+          "write": "gantt (2 to 6 items, axis_labels)",
+          "changes": [
+            "turn the steps into gantt (2 to 6 items, axis_labels)"
+          ]
+        }
+      },
+      {
+        "page": 4,
+        "pageId": "network",
+        "file": "pages/network.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "allotment",
+          "look": "A whole cut into shares",
+          "write": "chart (1 category, chart_type stacked, direction horizontal, emphasis_label, emphasis on a series) + icon_cards (2 to 3 items, optional)",
+          "changes": [
+            "add chart (1 category, chart_type stacked, direction horizontal, emphasis_label, emphasis on a series)",
+            "the recipe has no room for the hub_spoke"
+          ]
+        }
+      },
+      {
+        "page": 5,
+        "pageId": "space",
+        "file": "pages/space.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "scoreboard",
+          "look": "The measures a plan will be judged by, before anyone has a figure for them",
+          "write": "icon_cards (3 to 6 items, tag on every item) + callout (optional)",
+          "changes": [
+            "turn the row_cards into icon_cards (3 to 6 items, tag on every item)"
+          ]
+        }
+      },
+      {
+        "page": 6,
+        "pageId": "close",
+        "file": "pages/close.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "photograph",
+          "look": "The ending drawn over a photograph, the face's own lettering kept",
+          "write": "background {\"kind\": \"asset\", \"asset_id\": \"<a picture>\"}",
+          "changes": [
+            "add a background photograph"
+          ]
+        }
+      }
+    ]
+  },
+  "independent_recheck": "pending",
+  "not_performed": [
+    "Rally signature recipes requiring photographs or numerical datasets not supplied",
+    "Alternative theme rebinding",
+    "Data-linked Office chart/table objects",
+    "User adoption"
+  ],
+  "zip_replay": {
+    "bundle": "pptwise-ja.zip",
+    "executed_from_extracted_bundle": true,
+    "dependency_scope": "Bundled unmodified runtime with node_modules junction to already installed pinned upstream dependencies; fresh npm ci not tested",
+    "command": "python source/rebuild_pptwise.py --node <existing-Node>",
+    "status": "ok",
+    "audited": true,
+    "errors": [],
+    "warnings": [],
+    "pptx_byte_identical_to_current_example": true,
+    "pptx_sha256": "7045c978461dbd838c6fa73562a7c3d48b8befb0792b728a24e84f8ddbc045c7",
+    "render_replayed": false,
+    "current_example_all_pages_separately_rendered": true
+  }
+}

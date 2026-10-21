@@ -1,19 +1,47 @@
 {
-  "status": "light_check_complete",
-  "build": "Original stdlib build succeeded without warnings",
-  "scope": "First representative display and original navigation only",
+  "status": "author_visual_qa_complete_independent_rereview_pending",
+  "author": "Codex",
+  "current_revision": "round4-web07-repair",
+  "scope": "未変更の原典check_deck --slides allで6頁・問題0。全6実PNGを目視。Pキーで現在4頁・次5頁・4頁の新しい話す説明と進行合図が一致することを確認。",
+  "main_artifact": "index.html",
+  "main_artifact_sha256": "ee051565b3bf18348c3b6c7f2aceebdfd06d926dae8522d961a612d0a231ddce",
+  "actual_rendered_states": 6,
+  "all_current_images_read_individually": true,
+  "visual_findings": "Repaired requested overlap, typography, sequence/choice semantics and page-specific notes; no obvious remaining collision or missing content in the viewed 1920×1080 images. This is author QA, not an independent score.",
+  "image_hashes": [
+    {
+      "path": "render/slide-01.png",
+      "sha256": "15d78f6df09e3467bf0de01c3abf26ce052f3c69a6589234c72e19abd8a62618"
+    },
+    {
+      "path": "render/slide-02.png",
+      "sha256": "3cff30b57e37f920b99977f236d0be227f94b765f1a7d275ba6f84c0a390a4b2"
+    },
+    {
+      "path": "render/slide-03.png",
+      "sha256": "8d856f0ad4593fbdf9f445f8ef7adcb941accb3430161da7387ea7fad154fc2d"
+    },
+    {
+      "path": "render/slide-04.png",
+      "sha256": "3d92ac38138a7cbcdb02330c4ddd6e45add0114a85d82af1e5c379cb93e0e347"
+    },
+    {
+      "path": "render/slide-05.png",
+      "sha256": "37611c0ceb546d4a79ce8a7a23f5dfabf1d35e3fdb9e02dedc75a66806da6ac9"
+    },
+    {
+      "path": "render/slide-06.png",
+      "sha256": "f5fdd87fed7c381c4cf105599755954b7c6d2cf38a0d6ebc2f1f8dded0d2a0c4"
+    }
+  ],
+  "original_gate_receipt": "source/round4-original-gates.json",
+  "independent_review": "pending for this repaired revision",
   "not_run": [
-    "upstream full check_deck/contact sheet",
-    "all-page detailed visual inspection",
-    "independent review/grade",
-    "ZIP replay"
+    "未変更の原典engine/builderを使用。日本語の字体・改行と末尾の同一origin bridgeは局所差分。",
+    "今回Pキーの発表者画面と講稿の一致をheadlessで実確認。実機プロジェクター、手動通し稽古、保存編集は未確認。",
+    "HTML出力。native PPTXは生成しない。",
+    "今回は既存obsidianテーマとbalancedを使用。theme import、.pfstyle.jsonのpack/unpack、5段階motionの比較は未実証。"
   ],
-  "initial_display": "Actual in-app browser original cover opened after local final-body insertion fix",
-  "native_navigation": "Original Next slide:1/6→2/6",
-  "representative_previews": [
-    "render/slide-01.png",
-    "render/slide-02.png"
-  ],
-  "skill_quick_validate": "passed",
-  "local_initial_issue": "Global insertion into </body> also matched original audience-document string; local rebuild now inserts only at final actual document close. Original engine and builder unchanged."
+  "distribution_replay": "passed: source/round4-zip-replay.json",
+  "zip_reexecution": true
 }

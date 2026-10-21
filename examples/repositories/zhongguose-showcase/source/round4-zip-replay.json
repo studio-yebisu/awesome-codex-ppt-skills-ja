@@ -1,0 +1,48 @@
+{
+  "author": "Codex",
+  "archive_under_test": "zhongguose-example-ja.zip",
+  "archive_sha256_before_receipt_added": "f7b5b65f0a4ed4949cc77f669842a39c0d96b8f6f7c9018ae09749981bd34355",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/owner/AppData/Local/Programs/Python/Python313/python.exe",
+        "source/rebuild.py"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "Cover font ready: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\zhongguose-showcase\\.private\\round4-zip-replay\\zhongguose-showcase\\assets\\fonts\\zhongguose-cover.woff2\nMode: subset\nWOFF2 bytes: 36832\nVisible unique characters: 163\nSource Unicode code points: 15363\nManifest: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\zhongguose-showcase\\.private\\round4-zip-replay\\zhongguose-showcase\\assets\\fonts\\zhongguose-cover.manifest.json\nLicense files copied beside the font.\nBuilt seven-slide Japanese Zhongguose web deck, original template runtime and executed cover subset.\n"
+    },
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "source/upstream/skills/zhongguose-ppt-skill/scripts/extract-deck-outline.mjs",
+        "index.html"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "01 :: layout=SWISS-COVER-ASCII :: animate=hero :: title=町の手仕事を、 ひらく。 :: lead=見つける。めぐる。持ち帰る。\n02 :: layout=S09 :: animate=field-notes :: title=01 見つける 気になる手仕事を一つ選ぶ :: activeSection=01 見つける DISCOVER\n03 :: layout=PRINCIPLES :: animate=why-now :: title=つくる人に、会いに行く。 :: activeSection=01 見つける DISCOVER :: lead=まずは、気になる手仕事を一つ。\n04 :: layout=LEDGER :: animate=stacked-ledger :: title=一つの町を、三つの道で。 :: activeSection=02 めぐる WALK :: lead=染まる布を入口に、色の違いを見つける。\n05 :: layout=DUO :: animate=duo-mirror :: title=気になる手仕事で、 少し止まる。 :: activeSection=02 めぐる WALK :: lead=色、織り目、手触り。 気づいた違いを、言葉にしてみる。\n06 :: layout=SEQUENCE :: animate=timeline-walk :: title=持ち帰るのは、 次のきっかけ。 :: activeSection=03 持ち帰る TAKE HOME :: lead=見つけた手仕事を、あとで読み返す。\n07 :: layout=S10 :: animate=split-statement :: title=手仕事の 名前を、 一つ覚える。 :: activeSection=03 持ち帰る TAKE HOME :: lead=町とのつながりを、暮らしへ。\n"
+    },
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "source/upstream/skills/zhongguose-ppt-skill/scripts/validate-deck.mjs",
+        "index.html"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "Deck validation passed: 7 slide(s).\n"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "index.html",
+      "published_sha256": "ec9a2052c060ba032069906c293b2ff84c29c8288fb0f27dabebebe956ad1c2a",
+      "replayed_sha256": "ec9a2052c060ba032069906c293b2ff84c29c8288fb0f27dabebebe956ad1c2a",
+      "equal": true
+    }
+  ],
+  "all_commands_exit_zero": true,
+  "published_artifact_byte_identical": true,
+  "environment_scope": "Replayed from fresh extraction using existing compatible Python/Node/browser runtimes. Beatdeck reuses the locked existing node_modules through a junction; a fresh npm ci is not claimed.",
+  "independent_visual_review": "Not an evaluator score. The public current output was separately read in full."
+}

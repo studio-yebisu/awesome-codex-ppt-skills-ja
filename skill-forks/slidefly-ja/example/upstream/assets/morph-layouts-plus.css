@@ -1,0 +1,127 @@
+/* ===========================================================
+   MORPH-SLIDES LAYOUTS PLUS: 12 more slide shapes, so a deck is
+   not 20 slides of "title + bullets + highlight". Load after
+   morph-layouts.css. Each one borrows the actor pose of a classic
+   layout (CLASSIC_OF in morph-engine.js: the slide gets data-kind=
+   its own name, data-layout= the classic one), so every style poses
+   and colours it. Display variants (qa, portrait-quote, statement,
+   chapter, cta) leave the block's position to the style's classic
+   rules and only style their own parts. Markup: references/layouts.md.
+   =========================================================== */
+.slide { --card-line: color-mix(in srgb, var(--fg) 16%, transparent); --card-tint: color-mix(in srgb, var(--fg) 6%, transparent); }
+.slide :is(.bento, .process, .ba, .countdown, .ctable) :is(h3, p) { margin: 0; }
+
+/* ---------- 1. big-number: one figure owns half the slide ---------- */
+.bignum { position: absolute; top: var(--body-top); bottom: var(--body-bottom); left: var(--pad-x); right: var(--pad-x);
+  display: grid; grid-template-columns: 1.15fr 1fr; gap: 72px; align-items: center; }
+.deck-stage .slide[data-kind="big-number"]:not(:has(> .title)) .bignum { top: 120px; }
+.bignum .fig { margin: 0; font: var(--title-weight, 800) 300px/.85 var(--font-display); letter-spacing: -.045em; color: var(--accent); white-space: nowrap; }
+.bignum .fig small { font-size: .4em; letter-spacing: 0; }
+.bignum .lead { margin: 0; font: 600 46px/1.25 var(--font-display); }
+.bignum .src { margin: 22px 0 0; font-size: 22px; color: var(--muted); }
+
+/* ---------- 2. bento: cells of different sizes ---------- */
+.bento { position: absolute; top: var(--body-top); bottom: var(--body-bottom); left: var(--pad-x); right: var(--pad-x);
+  display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: 1fr; gap: 24px; }
+.bento .cell { display: flex; flex-direction: column; justify-content: flex-end; gap: 10px; padding: 30px 34px; overflow: hidden;
+  border: 1.5px solid var(--card-line); border-radius: var(--card-radius, 22px); background: var(--card-tint); }
+.bento .wide { grid-column: span 2; }
+.bento .tall { grid-row: span 2; }
+.bento .hot { background: var(--accent); border-color: var(--accent); color: var(--on-accent, var(--bg)); }
+.bento .hot p { color: inherit; opacity: .85; }
+.bento h3 { font: var(--title-weight, 800) 40px/1.15 var(--font-display); }
+.bento p { font-size: 27px; line-height: 1.35; color: var(--muted); }
+.bento .big { font: var(--title-weight, 800) 92px/1 var(--font-display); color: var(--accent); }
+.bento .hot .big { color: inherit; }
+.bento .ico { font-size: 56px; color: var(--accent); margin-bottom: auto; }
+.bento .hot .ico { color: inherit; }
+
+/* ---------- 3. split-photo: picture on one half, text on the other ---------- */
+.deck-stage .slide[data-kind="split-photo"] { --split: 50%; }
+.split-img { position: absolute; top: 0; bottom: 0; left: 0; width: var(--split); height: 100%; object-fit: cover; object-position: var(--focus, 50% 50%); }
+.deck-stage .slide.flip .split-img { left: auto; right: 0; }
+.split-text { position: absolute; top: 0; bottom: 0; left: calc(var(--split) + 100px); right: 120px; display: flex; flex-direction: column; justify-content: center; gap: 26px; }
+.deck-stage .slide.flip .split-text { left: 120px; right: calc(var(--split) + 100px); }
+.split-text .title { font-size: 72px; }
+.split-text .bullets { position: static; width: auto; --b-fs: 32px; --b-gap: 22px; }
+.deck-stage .slide[data-kind="split-photo"] .photo-credit { position: absolute; left: 48px; bottom: 44px; margin: 0; max-width: calc(var(--split) - 56px);
+  font-size: 16px; color: #fff; text-shadow: 0 1px 6px rgba(0, 0, 0, .7); }
+.deck-stage .slide.flip[data-kind="split-photo"] .photo-credit { left: auto; right: 48px; }
+
+/* ---------- 4. qa: a question, the answer on the next click ---------- */
+.qa-label { margin: 0; font: 700 22px/1 var(--font-body); letter-spacing: .2em; text-transform: uppercase; color: var(--fg); opacity: .8; }
+.qa-q { margin: 0; font: var(--title-weight, 800) 68px/1.14 var(--font-display); }
+.qa-a { margin-top: 18px; padding: 8px 0 8px 36px; border-left: 8px solid var(--accent); font-size: 38px; line-height: 1.4; }
+
+/* ---------- 5. before-after: two states, the second on click ---------- */
+.ba { position: absolute; top: var(--body-top); bottom: var(--body-bottom); left: var(--pad-x); right: var(--pad-x);
+  display: grid; grid-template-columns: 1fr 110px 1fr; align-items: stretch; }
+.ba-side { display: flex; flex-direction: column; justify-content: center; gap: 22px; padding: 44px 52px; border-radius: var(--card-radius, 22px); }
+.ba-side.before { border: 2px dashed var(--card-line); color: var(--muted); }
+.ba-side.after { border: 3px solid var(--accent); background: var(--card-tint); }
+.ba-tag { align-self: flex-start; padding: 8px 18px; border-radius: 999px; font: 700 20px/1 var(--font-body); letter-spacing: .14em; text-transform: uppercase;
+  border: 2px solid currentColor; }
+.ba-side.after .ba-tag { background: var(--accent); border-color: var(--accent); color: var(--on-accent, var(--bg)); }
+.ba-side h3 { font: var(--title-weight, 800) 54px/1.15 var(--font-display); color: var(--fg); }
+.ba-side li { position: relative; padding-left: 1.3em; font-size: 34px; line-height: 1.35; margin-top: 20px; }
+.ba-side.before li::before { content: "\2715"; position: absolute; left: 0; opacity: .6; }
+.ba-side.after li::before { content: "\2713"; position: absolute; left: 0; color: var(--accent); font-weight: 700; }
+.ba-arrow { align-self: center; justify-self: center; font: 400 76px/1 var(--font-display); color: var(--accent); }
+
+/* ---------- 6. process: arrow band on top, words below ---------- */
+.process { position: absolute; top: var(--body-top); bottom: var(--body-bottom); left: var(--pad-x); right: var(--pad-x);
+  display: flex; gap: 8px; align-items: center; }
+.process > li { flex: 1; display: flex; flex-direction: column; gap: 18px; }
+.process .n { display: flex; align-items: center; height: 130px; padding-left: 64px; background: var(--accent); color: var(--on-accent, var(--bg));
+  font: var(--title-weight, 800) 64px/1 var(--font-display); clip-path: polygon(0 0, calc(100% - 44px) 0, 100% 50%, calc(100% - 44px) 100%, 0 100%, 44px 50%); }
+.process > li:first-child .n { padding-left: 34px; clip-path: polygon(0 0, calc(100% - 44px) 0, 100% 50%, calc(100% - 44px) 100%, 0 100%); }
+.process > li:nth-child(even) .n { background: color-mix(in srgb, var(--accent) 72%, var(--bg)); }
+.process h3 { padding: 6px 20px 0; font: var(--title-weight, 800) 46px/1.15 var(--font-display); }
+.process p { padding: 0 20px; font-size: 31px; line-height: 1.4; color: var(--muted); }
+
+/* ---------- 7. compare-table: criteria x options, the chosen column lit ---------- */
+.ctable { position: absolute; top: var(--body-top); left: var(--pad-x); width: calc(1920px - 2 * var(--pad-x));
+  height: calc(1080px - var(--body-top) - var(--body-bottom)); border-collapse: collapse; }
+.ctable :is(th, td) { padding: 0 28px; text-align: left; font-size: 32px; line-height: 1.3; border-top: 1.5px solid var(--card-line); }
+.ctable thead th { border-top: 0; padding-bottom: 18px; font: var(--title-weight, 800) 36px/1.1 var(--font-display); vertical-align: bottom; }
+.ctable tbody th { font: 600 32px/1.3 var(--font-body); color: var(--muted); width: 26%; }
+.ctable .pick { background: var(--card-tint); }
+.ctable thead .pick { background: var(--accent); color: var(--on-accent, var(--bg)); border-radius: var(--card-radius, 16px) var(--card-radius, 16px) 0 0; padding-top: 18px; }
+.ctable .yes { color: var(--accent); font-weight: 800; }
+.ctable .no { opacity: .5; }
+
+/* ---------- 8. portrait-quote: a face next to the words ---------- */
+.pq { display: grid; grid-template-columns: 340px 1fr; gap: 70px; align-items: center; }
+.pq-face { width: 340px; height: 340px; border-radius: 50%; overflow: hidden; display: grid; place-items: center;
+  background: var(--card-tint); border: 3px solid var(--accent); color: var(--accent); }
+.pq-face img { width: 100%; height: 100%; object-fit: cover; }
+.pq-face .ico { font-size: 180px; --ico-stroke: 1.1; }
+.pq .quote { font-size: 52px; line-height: 1.25; }
+.pq-who { margin-top: 30px; font-size: 28px; color: var(--muted); }
+.pq-who b { display: block; font-size: 34px; color: var(--fg); }
+
+/* ---------- 9. chapter: a huge outlined number behind the title ---------- */
+.ch-num { position: absolute; right: 90px; bottom: -110px; margin: 0; font: var(--title-weight, 800) 680px/1 var(--font-display); letter-spacing: -.05em;
+  color: transparent; -webkit-text-stroke: 4px var(--accent); opacity: .55; pointer-events: none; }
+
+
+/* ---------- 10. countdown: a ranked list, number one last and biggest ---------- */
+.countdown { position: absolute; top: var(--body-top); bottom: var(--body-bottom); left: var(--pad-x); right: var(--pad-x); display: flex; flex-direction: column; }
+.countdown > li { flex: 1; display: grid; grid-template-columns: 150px 560px 1fr; align-items: center; gap: 30px; border-top: 1.5px solid var(--card-line); }
+.countdown .rk { font: var(--title-weight, 800) 76px/1 var(--font-display); color: var(--muted); }
+.countdown h3 { font: var(--title-weight, 800) 38px/1.15 var(--font-display); }
+.countdown p { font-size: 27px; line-height: 1.35; color: var(--muted); }
+.countdown > li:last-child { flex: 1.5; }
+.countdown > li:last-child .rk { font-size: 128px; color: var(--accent); }
+.countdown > li:last-child h3 { font-size: 50px; color: var(--accent); }
+
+/* ---------- 11. statement: one sentence, one highlighted phrase ---------- */
+.statement { margin: 0; font: var(--title-weight, 800) 78px/1.15 var(--font-display); letter-spacing: -.02em; }
+.deck-stage .slide[data-kind="statement"] .kicker { opacity: .85; }
+.statement mark { color: inherit; background: linear-gradient(transparent 58%, color-mix(in srgb, var(--accent) 55%, transparent) 58%); padding: 0 .06em; }
+
+/* ---------- 12. cta: an ending that says what to do next (a cover-shaped slide) ---------- */
+.cta-actions { display: flex; gap: 20px; flex-wrap: wrap; }   /* sits in the cover's .meta slot */
+.cta-btn { padding: 20px 36px; border-radius: 999px; border: 3px solid currentColor; background: transparent; color: var(--fg);
+  font: 700 28px/1 var(--font-body); letter-spacing: 0; text-transform: none; white-space: nowrap; }
+.cta-btn.primary { background: var(--accent); color: var(--on-accent, var(--bg)); }

@@ -1,0 +1,384 @@
+/* Component family: people. Generated from assets/css/components.css for package-time CSS splitting. */
+.profile-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.profile {
+  display: grid;
+  grid-template-columns: 92px 1fr;
+  gap: 18px;
+  align-items: center;
+  border-top: 1px solid var(--color-line);
+  padding-top: 20px;
+}
+
+.avatar {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 50% 35%, #d9e2ea 0 18%, transparent 19%),
+    radial-gradient(circle at 50% 78%, #c3ced8 0 34%, transparent 35%),
+    #eef2f5;
+  border: 1px solid var(--color-line);
+}
+
+.profile strong {
+  display: block;
+  font-size: 18px;
+}
+
+.profile span {
+  display: block;
+  margin-top: 5px;
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.contact-roster {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 52px;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.contact-legend + .contact-roster {
+  height: calc(100% - 44px);
+}
+
+.contact-main {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto repeat(2, minmax(0, 1fr));
+  gap: 34px 58px;
+  align-content: start;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.contact-section-title,
+.contact-main:not(:has(.contact-section-title))::before,
+.contact-sidebar h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 32px;
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.contact-section-title,
+.contact-main:not(:has(.contact-section-title))::before {
+  grid-column: 1 / -1;
+}
+
+.contact-main:not(:has(.contact-section-title))::before {
+  content: "Contacts";
+}
+
+.contact-sidebar {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: auto repeat(2, minmax(0, 1fr));
+  align-content: start;
+  gap: 34px;
+  border-left: 1px solid var(--color-line);
+  padding-left: 46px;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.contact-sidebar h3 {
+  margin: 0;
+}
+
+.contact-card {
+  position: relative;
+  align-self: start;
+  min-height: 210px;
+  min-width: 0;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.contact-card.is-principal {
+  padding: 18px;
+  background: color-mix(in srgb, var(--color-accent) 18%, var(--color-panel));
+}
+
+.contact-card.is-principal .contact-photo {
+  margin-top: -18px;
+  margin-left: -18px;
+}
+
+.contact-photo {
+  width: 140px;
+  height: 140px;
+  border-radius: 50%;
+  border: 1px solid var(--color-line);
+  background:
+    radial-gradient(circle at 50% 34%, #d9dde2 0 18%, transparent 19%),
+    radial-gradient(circle at 50% 78%, #c7ccd4 0 34%, transparent 35%),
+    #f1f3f5;
+  overflow: hidden;
+}
+
+.contact-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1);
+}
+
+.contact-name {
+  margin-top: 14px;
+  font-size: 24px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.contact-meta {
+  margin-top: 10px;
+  color: var(--color-text);
+  font-size: 19px;
+  line-height: 1.2;
+}
+
+.contact-legend {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 18px;
+  color: var(--color-text);
+  font-size: 16px;
+}
+
+.contact-legend::before {
+  content: "";
+  width: 20px;
+  height: 20px;
+  background: color-mix(in srgb, var(--color-accent) 18%, var(--color-panel));
+}
+
+.contact-roster.is-compact {
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: 42px;
+}
+
+.contact-roster.is-compact .contact-main {
+  gap: 28px 48px;
+}
+
+.contact-roster.is-compact .contact-sidebar {
+  gap: 28px;
+  padding-left: 38px;
+}
+
+.contact-roster.is-compact .contact-section-title,
+.contact-roster.is-compact .contact-main:not(:has(.contact-section-title))::before,
+.contact-roster.is-compact .contact-sidebar h3 {
+  font-size: 30px;
+}
+
+.contact-roster.is-compact .contact-card {
+  min-height: 178px;
+}
+
+.contact-roster.is-compact .contact-photo {
+  width: 118px;
+  height: 118px;
+}
+
+.contact-roster.is-compact .contact-name {
+  margin-top: 12px;
+  font-size: 22px;
+}
+
+.contact-roster.is-compact .contact-meta {
+  margin-top: 8px;
+  font-size: 17px;
+  line-height: 1.22;
+}
+
+.contact-network {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  align-content: start;
+  gap: 42px 52px;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.contact-group {
+  grid-column: span 6;
+  min-width: 0;
+}
+
+.contact-group.is-narrow {
+  grid-column: span 5;
+}
+
+.contact-group.is-wide {
+  grid-column: span 7;
+}
+
+.contact-group.is-full {
+  grid-column: 1 / -1;
+}
+
+.contact-group-title {
+  margin: 0 0 24px;
+  color: var(--color-text);
+  font-size: 32px;
+  font-weight: 850;
+  line-height: 1.05;
+}
+
+.contact-strip {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 34px 42px;
+}
+
+.contact-strip.is-four {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.contact-strip.is-five {
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.contact-strip.is-six {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+}
+
+.contact-mini-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.contact-mini-card .contact-photo {
+  width: 132px;
+  height: 132px;
+}
+
+.contact-mini-card .contact-name {
+  margin-top: 12px;
+  font-size: 20px;
+  font-weight: 750;
+  line-height: 1.1;
+}
+
+.contact-mini-card .contact-meta {
+  margin-top: 6px;
+  color: var(--color-text);
+  font-size: 16px;
+  line-height: 1.15;
+}
+
+.contact-network.is-compact {
+  gap: 32px 46px;
+}
+
+.contact-network.is-compact .contact-group-title {
+  margin-bottom: 20px;
+  font-size: 30px;
+}
+
+.contact-network.is-compact .contact-strip {
+  gap: 28px 36px;
+}
+
+.contact-network.is-compact .contact-mini-card .contact-photo {
+  width: 118px;
+  height: 118px;
+}
+
+.contact-network.is-compact .contact-mini-card .contact-name {
+  font-size: 18px;
+}
+
+.contact-network.is-compact .contact-mini-card .contact-meta {
+  font-size: 15px;
+}
+
+.team-wall {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 30px 36px;
+  align-content: start;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.team-wall-card {
+  min-width: 0;
+  overflow: hidden;
+}
+
+.team-wall-card .contact-photo {
+  width: 112px;
+  height: 112px;
+}
+
+.team-wall-card .contact-name {
+  margin-top: 12px;
+  font-size: 18px;
+}
+
+.team-wall-card .contact-meta {
+  margin-top: 5px;
+  font-size: 14px;
+}
+
+.bio-card-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 34px 42px;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.bio-card {
+  display: grid;
+  grid-template-columns: 112px minmax(0, 1fr);
+  gap: 22px;
+  min-width: 0;
+  border-top: 1px solid var(--color-line);
+  padding-top: 20px;
+  overflow: hidden;
+}
+
+.bio-card .contact-photo {
+  width: 112px;
+  height: 112px;
+}
+
+.bio-card h3 {
+  margin: 0;
+  color: var(--color-text);
+  font-size: 23px;
+  line-height: 1.1;
+}
+
+.bio-card p {
+  margin: 8px 0 0;
+  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.32;
+}

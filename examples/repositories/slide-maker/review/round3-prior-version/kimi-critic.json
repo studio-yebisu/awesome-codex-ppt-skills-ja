@@ -1,0 +1,184 @@
+{
+  "purpose": "teaching / instructional",
+  "rubric_overlay": "teaching / instructional",
+  "coverage": {
+    "slides_opened": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "passes": [
+      "content lens (full deck)",
+      "design lens (full deck)"
+    ],
+    "stats_block_seen": true,
+    "contract_card_seen": true
+  },
+  "plan_audit": {
+    "lens_a": {
+      "memory_sentence": "昇順に並べておくと二分探索が使え、15個からの探索は線形の最大15回に対して最大4回で済む――ただし秒数や並べ替えコストは別問題。",
+      "matches_deck_message": true,
+      "curve_visible": "contract cardにdeck memory sentence/emotional-curve lineの明示行はなく、checkpointはpost-build supplementalと記録。ピクセル上はhook(1)→手順(2,3)→証拠(4)→限定(5)の緩やかな緊張の山が読める。",
+      "takeaway_titles": "全5頁のタイトルがcard.content.slidesのtakeawayと一致(1:並べておくと探し方が変わる/2:13まで13回/3:4回で届く/4:最大4回/5:前提と未測定の区別)。divergent slideなし。",
+      "motion_manifest": "n/a — cardにmotion manifestはないが、.deck-gates.jsonはbuilds=static(自己読み/ opted static)で、静的デッキは正しい選択。fade万能やビルド欠落の指摘は該当しない。"
+    },
+    "lens_b": {
+      "concept_landed": "carried: 「配列の同じ場所を保ち、残る範囲だけを可視化する教材」は1〜3頁で同じ15セル座標系を保ち、2頁は訪問済みを青で埋め、3頁は4段すべて同じ座標で範囲だけを変えている。色の論理(青=照合中/茶=発見・中央/灰=範囲外)もmotifとして機能。",
+      "skeleton_rhythm": "kept — lintのdistinct_skeletons=4。配列図(1,2,3)/チャート(4)/2カラムまとめ(5)で5頁の短いデッキとして十分な変化。",
+      "wow": [
+        {
+          "slide": 3,
+          "landed": true,
+          "why": "4段の同じ配列で範囲が半分ずつ狭まる構造そのものがpeakとして機能。大きさではなく構成の対比で記憶に残る。"
+        }
+      ],
+      "signature_move": {
+        "verdict": "landed",
+        "why": "「座標を保ち範囲だけを絞る繰り返しの配列図」は宣言どおりslides 1-3で構造仕事をしており、safe版(箇条書きの8→12→14→13)に後退していない。boldness=conservativeなのでこの水準で合格。",
+        "carried": [
+          {
+            "slide": 1,
+            "structural": true,
+            "note": "15セルの配列行が対比(13回 vs 4回)の土台として使われている。"
+          },
+          {
+            "slide": 2,
+            "structural": true,
+            "note": "同じ座標のセルを青で埋めて訪問順を示す。矢印列と凡例が接続。"
+          },
+          {
+            "slide": 3,
+            "structural": true,
+            "note": "4段すべて同じ座標系で、範囲の縮小だけが変化する。signature/complexの証明png(render/slide-03.png)と同一。"
+          }
+        ],
+        "proof": "matches — signature_proofのslide 3(render/slide-03.png)と出荷画像が一致(manifest sha256 9b044b…)。data slide 4もrender/slide-04.pngとして出荷。"
+      },
+      "memorable_one_thing": "4段の同じ配列で範囲が1〜15→9〜15→13〜15→13と狭まる図。",
+      "composition": {
+        "cover_archetype": "kept — direction gateはpost-build supplementalでpicked=A array。出荷の1頁は配列行を載せた表紙で、配列志向と一致。",
+        "home_skeleton_plurality": "kept — 配列系のskeletonが5頁中3頁で最多。"
+      },
+      "register_interiors": "kept — kicker(探索のしくみ / 1〜15で実行)、タイトル下のaccent rule、条件フッタ、頁番号が全5頁で繰り返される。",
+      "money_slide": "未宣言。実質はslide 3(仕組みの証明)とslide 4(全15通りの証拠)が担う。",
+      "semantic_colour": "degraded — 1〜3頁では茶=見つかった値/照合中の中央、青=照合済み・範囲内だが、4頁では茶=線形探索・青=二分探索の系列色に転用され、頁を跨ぐと色相の意味がずれる。各頁の凡例はあるため誤読は限定的(minor相当)。",
+      "type_tokens": "degraded — 宣言は34/32/24/16/13の5トークンだが、lintは1・2・3・4頁で5〜6サイズ(11pt混入)のSIZE SPRAWLを報告。宣言外サイズが残る。",
+      "eye_path_misses": [
+        "slide 2 — サムネイルの初見は矢印列に着地し、右端の「13」「回の比較」が2行に分断されて「13回の比較」と一目で読めない"
+      ]
+    }
+  },
+  "probes": {
+    "per_slide": [
+      {
+        "slide": 1,
+        "first_read": "見出し→15個の数字ボックス(13が茶色)→左右対比の「13回」と「4回」",
+        "takeaway_guess": "並べ替えておくと探す手数が劇的に減る、という導入ページ。"
+      },
+      {
+        "slide": 2,
+        "first_read": "見出し→青/茶で塗られたボックス列→「1→2→…→13」の矢印列",
+        "takeaway_guess": "線形探索の手順とコスト(13回)を具体例で示すページ。"
+      },
+      {
+        "slide": 3,
+        "first_read": "見出し→4段の左ラベル(範囲と不等号)→各行の茶色ハイライト",
+        "takeaway_guess": "二分探索が中央照合で範囲を半分ずつ絞る過程を追うページ。"
+      },
+      {
+        "slide": 4,
+        "first_read": "見出し→折れ線2本の開き→右側の「4回」の強調",
+        "takeaway_guess": "全15通りの実測で二分探索が最大4回に収まることを示すページ。"
+      },
+      {
+        "slide": 5,
+        "first_read": "見出し→青い前提文→左右2カラム→茶色の結論文",
+        "takeaway_guess": "二分探索の前提条件と検証の範囲外を明確にするまとめページ。"
+      }
+    ],
+    "memory_sentence": "昇順に並べておくと二分探索が使え、15個からの探索は線形の最大15回に対して最大4回で済む――ただし秒数や並べ替えコストは別問題。(この文はblind読解でcontract cardの計画値を読む前に記録したものと同一)"
+  },
+  "verdict": "consent",
+  "ceiling": "slide 3を2頁に分けて範囲の絞り込みを1段ずつ追わせる(または現在の中央値だけを拡大インセットで示す)と、教材としての記憶のpeakがさらに強くなる。",
+  "summary": "5頁すべての数値がinput/data.jsonの実トレースと一致し、宣言どおりの配列座標の繰り返しが構造として機能している、fidelityの強い教材デッキ。最大の杠杆は3頁の密度(124語・16ptセル・低コントラストの範囲外)を下げることと、2頁の「13回の比較」の分断を直すこと。blocker/majorはなく、残るのはlintのstats助言に対応するminorだけ。",
+  "strengths": [
+    "全数値がinput/data.jsonの実トレースへ追える(13=線形13回/二分8→12→14→13の4回、全15通りで二分最大4回・線形最大15回)。",
+    "1〜3頁で同じ15セル座標系を保ち、範囲の縮小だけを見せる構成がsignature moveとして構造仕事をしている。",
+    "測っていないこと(秒数・整列コスト・存在しない値)を5頁で明示し、フッタの条件行が全頁で比較の範囲を固定している。",
+    "selfreadに合わせた静的デッキで、ノートが各頁の説明を補っている(lintのper-slide notes)。"
+  ],
+  "findings": [
+    {
+      "id": "s2-stat-1",
+      "slide": 2,
+      "severity": "minor",
+      "dimension": "typography",
+      "issue": "右側の大きな「13」と「回の比較」が2行に分断され、「13回の比較」が一瞥で読めない。",
+      "why": "初学者が「13回」という数量をつかむ肝心の箇所で、読み取りに一拍の摩擦が生まれる。",
+      "fix": "「13回」を1行のstatとして組み、説明(回の比較)をその下の小さい行へ移す。",
+      "fix_risk": "low"
+    },
+    {
+      "id": "s3-legibility-1",
+      "slide": 3,
+      "severity": "minor",
+      "dimension": "results legibility",
+      "issue": "4段×15セルの数字が小さく(16pt)、範囲外セルは薄い灰で低コントラスト。TEXT WALL助言(~124語、selfread budget ~90)も未対応。",
+      "why": "自己読みの教材では読者が数値を自分で確認する必要があり、範囲外の減色は意図的でも、今どの値を見ているかの確認コストが上がる。",
+      "fix": "範囲外セルの文字色を一段濃くするか空セル化し、各行の説明の一部をスピーカーノートへ移す。",
+      "fix_risk": "medium"
+    },
+    {
+      "id": "deck-type-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "typography",
+      "issue": "宣言type scale(34/32/24/16/13)に対し1・2・3・4頁で5〜6サイズ(11pt混入)のSIZE SPRAWL助言が残る。",
+      "why": "宣言した型の体系から外れたサイズが残ると、教材の階層の読みやすさが頁ごとに揺れる。",
+      "fix": "頁番号・脚注の11ptを13ptへ統一する。",
+      "fix_risk": "low"
+    },
+    {
+      "id": "deck-align-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "layout",
+      "issue": "RAGGED LEFT EDGE: 2頁(0.62in vs 0.68in)と4頁(0.55/0.65/0.70inの3件)で、揃っているとも段差とも読めない5〜10pxのずれ。",
+      "why": "グリッドへの忠実さが教材の秩序感を担うデッキで、小さなずれが精度の印象を削る。",
+      "fix": "各行の左端xを1つの基準へsnapする。",
+      "fix_risk": "low"
+    },
+    {
+      "id": "deck-spacing-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "typography",
+      "issue": "CJK-LATIN SPACING: 和欧間の空白あり(10か所)となし(45か所)が混在。",
+      "why": "表記の約束が2つあると、細部の品質への信頼が揺れる。",
+      "fix": "デッキ全体で1つの約束(推奨は空白あり)へ統一する。",
+      "fix_risk": "low"
+    },
+    {
+      "id": "s4-crowd-1",
+      "slide": 4,
+      "severity": "minor",
+      "dimension": "layout",
+      "issue": "CROWDED助言: occupancy 74%でtechnical帯(55-70%)を超える。",
+      "why": "チャート+右レール+注記+実行結果の行が1頁に集まり、読み比べの負荷が高い。",
+      "fix": "「実行結果:」の行をノートへ移すか、右レールの注記を1行へ絞る。",
+      "fix_risk": "low"
+    },
+    {
+      "id": "deck-color-1",
+      "slide": "deck",
+      "severity": "minor",
+      "dimension": "semantic colour",
+      "issue": "茶/青が1〜3頁ではセル状態(発見・照合中/照合済み・範囲内)、4頁では系列(線形/二分)を指し、頁間で色相の意味がずれる。",
+      "why": "色で状態を学ばせる教材では、頁を跨いだ色相の二重予約が読者の対応づけを弱める。各頁の凡例があるため誤読は限定的。",
+      "fix": "4頁の系列色を状態色と衝突しない組にするか、1〜3頁に「色=セルの状態」と一行明記する。",
+      "fix_risk": "medium"
+    }
+  ]
+}

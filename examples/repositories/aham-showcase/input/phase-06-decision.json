@@ -1,0 +1,46 @@
+{
+  "phase": "6/8 見本の確認",
+  "upstream_file": "upstream/references/phase-06.md",
+  "sample_pages": [
+    1,
+    2
+  ],
+  "sample_reason": "原典は表紙＋最も複雑な内容ページ＋図表ページの3枚。この案の図表ページは P2 だけで、P2 が最も複雑な内容ページでもあるため、表紙と P2 の2枚で3つの役割を兼ねる。",
+  "sample_command": "python generate.py --sample",
+  "sample_outputs": "source/sample/（svg/、sample.pptx、preview.html、checks.json、lint と変換ログ）",
+  "review_points": [
+    "配色が白地・中性グレー・青の点在になっているか",
+    "和文 Zen Kaku Gothic New・英数字 Manrope で表示されるか",
+    "表紙の短線が文字の下線に見えないか",
+    "右上の品牌と蓝点が離れているか",
+    "情報密度"
+  ],
+  "decision": "approve",
+  "decision_options": [
+    "approve",
+    "revise"
+  ],
+  "decided_by": "Codex統合担当（現自律改修の委任。人間承認ではない）",
+  "decided_after_viewing": true,
+  "notes": "現在の見本2頁を実PowerPoint16のPDF由来PNGで確認。表紙の主題から不要な20を外し、本文の時間図へ集約。2頁は16px・濃いラベルで、0〜20の軸、3/10/5/2分の配分、単一青ハイライトを確認。文字欠けや衝突は見られない。",
+  "gate": {
+    "upstream_requirement": "見本をユーザーに見せ、配色・密度・専門性の確認をもらってから全ページを作る。",
+    "this_run": "ユーザーの自律制作指示により、統合担当が source/sample/ の実物を見て decision を記録する。decision が approve でなければ generate.py --final は止まる。",
+    "user_confirmed": false
+  },
+  "decided_at": "2026-10-15T16:52:04.133177+00:00",
+  "evidence": {
+    "images": [
+      "source/sample/render/slide-01.png",
+      "source/sample/render/slide-02.png"
+    ],
+    "image_sha256": [
+      "a353b361c8f448c28ce81845a0de286497cbdfb0a582d3bfdaafa98b00789b21",
+      "97dfa5802d065d0e71c7fcce9a11a7978643db2432a1a5cc422b1882d619b88b"
+    ],
+    "checks": "source/sample/checks.json",
+    "generator_sha256": "9163bc768f20f6988ad539cea8616f8b451d5955adc42d9e1ed7e9c5399ac70e",
+    "layout_plan_sha256": "e8c6b5bfc2190de4bf611c09ce85eea35b5f6fe260eed3a2f0128c009d05bfc7",
+    "images_byte_identical_to_individually_viewed_sample": true
+  }
+}

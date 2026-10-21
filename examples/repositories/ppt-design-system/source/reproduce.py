@@ -18,7 +18,7 @@ def main():
  .lead{font-size:clamp(18px,1.4vw,27px);font-weight:400;max-width:80vw;opacity:.85}
  .chrome,.foot{font-size:clamp(12px,.9vw,18px);opacity:.7}.foot{padding-bottom:2vh}
  .kicker,.meta-row,.stat-label,.stat-note,.col-header{font-size:clamp(14px,1.1vw,22px);opacity:.75}
- .stat-nb{font-size:clamp(32px,3vw,56px)}.stat-note{margin-top:1vh}
+ .stat-unit{opacity:.85}.stat-nb{font-size:clamp(32px,3vw,56px)}.stat-note{margin-top:1vh}
  .callout{max-width:80vw;font-size:clamp(18px,1.5vw,28px);line-height:1.8}
  .compare{margin-top:5vh}.before-col{opacity:1}.col-list li,.after-col .col-list li{font-size:clamp(17px,1.3vw,25px);opacity:.85;line-height:1.8;padding:1.2vh 0}
  .closing{font-family:var(--serif-zh);font-size:clamp(25px,2.7vw,45px);font-weight:600}

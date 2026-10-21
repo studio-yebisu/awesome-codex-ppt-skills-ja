@@ -1,15 +1,33 @@
-# 町の手仕事を、ひらく。
+# 章扉と現在章をそろえる
 
-中国色Zhongguose原典テンプレートから作った、日本語6枚の架空回遊体験案です。左上の3章ナビゲーション、朱に近い中国色「绛缨」、大きな漢字、ledgerと二列の観察、原典ASCII背景を使います。日本の伝統色として紹介する例ではありません。
+章扉と各頁の章ナビを使い、話している章を示す資料を作ります。この作例は中国色の視覚体系を使う意図を明示し、6本文と章扉の7頁にしています。
 
-`index.html` と `assets/` を同じフォルダに保ち、Webサーバーで開きます。字体・Motion・Lucideはlocal配布、正常な一式ではCDNやAPI不要。HTMLは単体ファイルではありません。代表PNGは表紙と2頁目だけです。
+入力: 確定した原稿、章の対応表、選ぶテーマ色。
 
-元操作: 下/右/Space・クリック・wheelで次頁、上/左で前頁、Home/End、Escで索引、Bで動きを停止。0-based catalog adapterは元`__jumpToPage`を呼びます。
+出力: 独立した章扉・章ナビゲーション・紙色の本文・テーマ色の表紙を持つ全7頁のHTMLとローカル素材。
 
-再生成: Python3.10+、FontTools、Brotliを用意して `python source/rebuild.py`。入力は `input/MANUSCRIPT.md`、出力文面は `source/slides.html`、生成専用コードは `source/rebuild.py` にあります。原稿を変えるときは入力とslide生成部を合わせて編集します。CSSは `source/adaptation.css` の記録から生成コードのCSS文字列へ反映。生成のたびに元subset generatorの日本語patchを、最終確定HTMLへ実実行します。fonttools未導入環境は `python -m pip install "fonttools[woff]"`。Node18+は原典の任意outline/validation scripts用、閲覧に不要です。
+## この作例で確かめること
 
-原稿→source-logic→slide-architecture→原典templateコピー→和文/色の局所diff→字体subset。原本は `source/upstream/`、差分は `template-ja.patch` と `subset-japanese.patch`、固定URL/hashはPROVENANCE。日本語不足に対処するためqijiではなくShippori Minchoの完全配布TTFを入力。原典parser/subsetter/rename/manifestは保持し、cover欠落検査を漢字から全字（kanaを含む）へ、copyright/OFL/hashを実入力へ変更しました。原典のqiji seed WOFF2・noticeは保存原本内に残し、未使用の巨大source archiveは取得していません。
+- 原典S09章扉を追加し本文の章ナビへ接続
+- 見つける・めぐる・持ち帰るを同じ順で全本文に配置
+- 字体subset更新後の原典outline/validateと全7頁の静止表示確認
 
-原典MIT ©2026木渡川（root/nested両方原文同梱）。実表示の字体はOFL-1.1、MotionはMIT、LucideはISC/Feather MIT。完全な未改変TTF/OFLと由来はsource/fonts/、FONT-SOURCE.json。
+6本文を保持して原典S09章扉を追加した7頁。原典outline抽出・validateは7頁PASS・警告0。全7頁を原典静止モードで実描画・目視。締めの章ナビと表紙現在点も修復。
 
-必要build、初回表紙・2頁目、元ArrowRight1→2、短いSKILL検証を実施。全頁詳細QA・独立採点・ZIP再実行・親bridge統合・touch/Esc/Bの個別操作は未実施。QA.jsonを参照。
+## 使い方
+
+1. 中国語内容、中国的な視覚表現の意図、またはスキルを使う明示指定がある時に適用する。原稿の文言と章立てをsource-logic・architectureへ対応付ける。
+2. 原典templateフォルダーを複製し、見本の本文・リンク・画像を置換する。
+3. 章の入口をS09章扉で示し、各本文へ同じ順の章ラベルを置く。現在章を一つだけ強調する。
+4. 本文と配置の確定後、原典由来のcover-font処理を実行し、変更のたびにfontとmanifestを更新する。
+5. 原典extract-deck-outlineとvalidate-deckを実行し、原稿と大綱を比較する。字体の読み込みを待って全頁を目視する。
+
+## 実施範囲
+
+- 中国語向け原典を日本語へ派生。QijiではなくShippori Minchoを使う局所subset処理と字体・色の差分を保存。
+- この日本語作例では中国色の視覚体系を意図して指定し、章扉・本文・締めを実装。PPTXと実機タッチは未実証。
+- 全7枚のPNGは原典Bキー相当の静止モードで確認。ASCII動画の品質を静止画だけで保証しない。
+
+今回の修復はCodex。独立再評価は変更後の版に対して別に取得します。[実行・全頁確認](source/repair-qa.json)、[原典検査](source/round4-original-gates.json)に実記録を保存しています。固定原典・利用条件はPROVENANCE.jsonとsource/upstream、元のLICENSE/NOTICE、字体のOFLを保持します。
+
+[展開ZIPからの再生成検査](source/round4-zip-replay.json)も実行済み。既存の互換実行環境を使い、公開HTMLと同一バイトの出力を確認しました。Beatdeckの依存は既存lock済みnode_modulesを再利用し、新規npm ciの実証とはしていません。

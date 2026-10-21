@@ -1,15 +1,12 @@
 {
-  "status": "qa_complete",
-  "artifact_sha256": "e82206204987754d48d7382dfe2aa522adc40e2b5bb8659c5fdce054c7d53325",
-  "production_stage": "concept_preview",
-  "human_approval": "pending",
-  "browser_review": {
-    "status": "passed",
-    "record": "source/browser-review.json"
-  },
+  "status": "author_qa_complete_independent_review_pending",
+  "page_count": 6,
+  "artifact_sha256": "d093c310891c18736a163d745642eea9a8c46059c97da527c1e7694dc04b8d8e",
+  "all_pages_visually_reviewed": true,
   "visual_review": {
-    "method": "Actual IAB display and all six 1080x1080 PNGs; reduced-motion capture and normal keyboard/clipboard interactions.",
-    "pages_reviewed": [
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
       1,
       2,
       3,
@@ -17,63 +14,54 @@
       5,
       6
     ],
-    "result": "全6枚の日本語見出し・本文・記入例・ページ番号を実表示で確認。背景と文字の役割、図の線、文字の収まり、要素と移動ボタンの非重複を確認。構成確認用表示を保持。"
+    "finding": "下端へ操作欄の余白を確保。図案と本文の寸法を調整し、最後まで移動・進捗が見えるよう修正。Brand directionと未設定の連絡先を明記。",
+    "images": [
+      {
+        "page": 1,
+        "path": "render/slide-01.png",
+        "sha256": "86154f04685e568122559767de802765a68f6762c48ee91f50f6ddf11335d877"
+      },
+      {
+        "page": 2,
+        "path": "render/slide-02.png",
+        "sha256": "23307545c4a03435da03ac59b813cef521b6a03c7b51d979372a83448f6632b3"
+      },
+      {
+        "page": 3,
+        "path": "render/slide-03.png",
+        "sha256": "d06dcb157e57b83a87b7395dc45aa7948221378d923a7564c65c7901213ea323"
+      },
+      {
+        "page": 4,
+        "path": "render/slide-04.png",
+        "sha256": "58b8e90bc7479e94514071f7f65c977a8870e8fe7201f0668e0a8a0822321ea6"
+      },
+      {
+        "page": 5,
+        "path": "render/slide-05.png",
+        "sha256": "51f3616503e5c02f663d7b9c901ea47f1e6690716df598aed206232450f59d17"
+      },
+      {
+        "page": 6,
+        "path": "render/slide-06.png",
+        "sha256": "c689ce113c123d8f717caf9398687025a2fa6709d04566c87d670d86176deb51"
+      }
+    ]
   },
-  "images": [
-    {
-      "page": 1,
-      "file": "render/slide-01.png",
-      "sha256": "28deb8996c0c3b6f02629e74eab2493184b137bce339fbafe168360faa83dbef",
-      "dimensions": [
-        1080,
-        1080
-      ]
-    },
-    {
-      "page": 2,
-      "file": "render/slide-02.png",
-      "sha256": "f5e9d3379e6e52999aaacb3ca222b88a25c4c0bebbe2bacde01325a21ae24032",
-      "dimensions": [
-        1080,
-        1080
-      ]
-    },
-    {
-      "page": 3,
-      "file": "render/slide-03.png",
-      "sha256": "f2761dbb8528cd81f635aecf0ed395c624ddc1ede4c3dcf4d34fb84059b3fc86",
-      "dimensions": [
-        1080,
-        1080
-      ]
-    },
-    {
-      "page": 4,
-      "file": "render/slide-04.png",
-      "sha256": "ea10e54fd1063504ebb7884184439ee9a809ffc3a76ce3edcc3c6accea8993e9",
-      "dimensions": [
-        1080,
-        1080
-      ]
-    },
-    {
-      "page": 5,
-      "file": "render/slide-05.png",
-      "sha256": "9dd5bf37c60e8989c3b1776c10f4ac8486471371acfeccdc1eea75253d3d8957",
-      "dimensions": [
-        1080,
-        1080
-      ]
-    },
-    {
-      "page": 6,
-      "file": "render/slide-06.png",
-      "sha256": "e047a0eb60a22644c5ee4d24bc854133e0fa846cd1f9bb9150bc748a1a6916b8",
-      "dimensions": [
-        1080,
-        1080
-      ]
-    }
+  "original_gates": {
+    "dedicated_builder": 0,
+    "original_cli": "not applicable; original is an instruction workflow",
+    "all_six_square_pages": "visually reviewed; navigation and progress entirely visible"
+  },
+  "constraints": [
+    "原典は指示型の制作スキルで、原典製レンダラーは存在しない",
+    "本例の専用HTMLは原典の構成指示を実装したもの",
+    "Canva/Figma仕上げ・LinkedIn PDF・公開・人の承認は未実施",
+    "連絡先は未設定。実績の代わりに架空の記入例を使う"
   ],
-  "checked_at": "2026-10-13T20:30:46.431963+00:00"
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json"
 }

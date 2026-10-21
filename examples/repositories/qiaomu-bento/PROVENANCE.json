@@ -10,7 +10,7 @@
     "checked_at": "2026-10-13T13:36:10.610710+00:00",
     "root": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\joeseesun__qiaomu-bento-ppt"
   },
-  "method": "原典の固定Bento shell・文書スキーマを使用。bento_deck.pyでJSONを検証し、シェルを変えずに編集版と再生版の.bento.htmlを構築。検索の同一要素が権限確認から回答へ移るmorphを制作。",
+  "method": "Original fixed Bento standalone shell/schema with stable docId; stable token and highlight morph permission→sourced answer; distinct-output build without --overwrite",
   "execution_type": "json_document_and_pinned_bento_shell",
   "references": [
     {
@@ -50,7 +50,18 @@
       "sha256": "21f530b2b2629e0230ba78c4cd8bd836664d68fda1c3471af6b572e25fcb2650"
     }
   ],
-  "commands_executed": [
+  "artifact": "examples/repositories/qiaomu-bento/player.bento.html",
+  "artifact_sha256": "c85981a5e1e1b196b7aea06f3bc9bd2b8ac53e2ddd4499a08b71a8816353061a",
+  "input_sha256": "7f0d15a7c6c608c0d595c7695fa1423d5ab5fbb3661dc8b674a493c8fd8bdbad",
+  "authored_by": "Studio Yebisu / Codex",
+  "scope": "実際に原典の固有方法を使った日本語作例。エージェントが書いた本文を使用。",
+  "checked_at": "2026-10-13T16:29:25.464476+00:00",
+  "codex_web8_repair": {
+    "author": "Codex",
+    "scope": "Current source repair, actual original-path gates and page review; earlier production attribution retained only for earlier scope",
+    "qa": "QA.json"
+  },
+  "historical_commands_executed": [
     {
       "argv": [
         "python",
@@ -112,10 +123,26 @@
       "stdout_sha256": "a5eceb03b6fa7330e276416a820fd33758101d9393e9b3a7ff0653ea86e37f52"
     }
   ],
-  "artifact": "examples/repositories/qiaomu-bento/player.bento.html",
-  "artifact_sha256": "ee9ec7c007fb84840aef5e2d2d63e921b859756f791091b634709b0216af296b",
-  "input_sha256": "7f0d15a7c6c608c0d595c7695fa1423d5ab5fbb3661dc8b674a493c8fd8bdbad",
-  "authored_by": "Studio Yebisu / Codex",
-  "scope": "実際に原典の固有方法を使った日本語作例。エージェントが書いた本文を使用。",
-  "checked_at": "2026-10-13T16:29:25.464476+00:00"
+  "commands_executed": "source/rebuild/rebuild-receipt.json; source/rebuild_bento.py delegates unmodified original CLI into new output dir",
+  "current_browser_edit": "source/browser-edit-reopen-receipt.json",
+  "project_validator": "not available; standalone internal fallback gate only",
+  "current_round4_repair": {
+    "author": "Codex",
+    "artifact": "player.bento.html",
+    "artifact_sha256": "1a6e3c3b0b3dce9a85fe9816d5d41cb429057f40f074a7dfc1a1632f6fb4f451",
+    "qa": "QA.json",
+    "changes": [
+      "原典CLIがJSON schema、固定shell、原本と同じdocIdを検査し、別出力へ生成。原本を上書きしない。",
+      "権限確認から回答/出典へ同じIDのトークンと強調位置が移る。自然なmorphの前・途中・後を保存。",
+      "評価質問30件中24件以上という目標をnative chartとcountUpへ変換。漏えい0件・更新期限と、未達成の計画値である条件を分けて表示。",
+      "旧版で元UI編集→JSONコピー→元CLI --new-documentの独立コピー→再表示を実確認。直接保存UIの完了は未確認。生の共同編集情報は.privateに隔離。"
+    ],
+    "not_demonstrated": [
+      "元リポのcheckoutは前提ではなく、同梱standaloneが通常経路。project側の追加validatorはcheckoutが無いため未実行。",
+      "画像+scrim/ken-burns、state slide、外部媒体、共同編集、実検索と権限制御は未実証。",
+      "ブラウザーの直接「コピー保存」は完了未確認。同docIdコピーは既存状態の影響を受けたため、独立コピーは --new-document を使用した。",
+      "countUpの初期化前に静的値が一瞬描画される原典挙動がある。途中値が増加する区間を撮影し、連続動画全フレームの品質保証とはしない。PPTX/PDF出力は対象外。"
+    ],
+    "independent_review": "pending"
+  }
 }

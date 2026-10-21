@@ -28,3 +28,19 @@ Studio Yebisuの日本語派生版。原作者の公式翻訳ではありませ�
 ## 再現と利用条件
 
 完成例と再現キットはカタログの当該リポに掲載。環境と制約はreferences/WORKFLOW.mdに記載する。上流コードと書体の条件はupstream内の原文を保持し、カタログのCC0を上流へ適用しない。
+
+## 原典の検査を省かない
+
+- sources/outline.mdで結論・読み手・終わり方を決める
+- sources/brief.mdで題材・書体・配色と採らない表現を決める
+- 数字と持ち物に同じmagic-idを付け、各頁の意味に沿って置く
+- 原典mergeと認証scopeのみ派生したinjectorで生成する
+- 原典serveでOverview→通常再生→全境界の動きを確認する
+
+- 40・30・4・3・3分は仮定、短縮効果は未検証
+- 認証付きQA関数のscope修正のみ。server認証と保存先制限は原典のまま
+- 静的カタログiframeでは編集・保存が使えない
+- agentの検証と人のrevision/adoptionは別。後者はpending
+- 静止画だけcursorとtrailを非表示にして撮影。通常runtimeは保持
+
+原典の必須工程と、実施できなかった対人確認・実機条件を分けて記録する。再生成後に古いQA合格を引き継がない。作例の現在の検査記録はexample/QA.json。

@@ -1,0 +1,113 @@
+{
+  "worker": "/root/repair_core_examples",
+  "source_sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618",
+  "previous_successful_artifacts": {
+    "manifest.json": "7327ddb07056c2b243244d148978e3e5099a167741294a80c496a45ad7f76161",
+    "imagegen-jobs.json": "5c9ce26e50a51f5703c34e5f1b9db0c52091ba1ea788ad30c5e1d2836b9f6844",
+    "page.pptx": "c7ce8b1997057ae31c81cff3968a14fa35268cd5af942c077e068944e09962e0",
+    "preview.png": "0438329881d29e204857664598281f0f2d5ddfa1e104155462e1a17ef083473a",
+    "split_assets_contact.png": "eab94eaa445dec829b91faad50470cf680b0506448740c00dece54a5d1311628",
+    "validation.json": "b21e98b1bc7bacdc39aac1b5f07a5733e5560500020818ed6245749495e513f6",
+    "page_result.json": "601b96583f0f3a4bed18b8ed81ad87be8db477d57cff8195503d888d8aed2176"
+  },
+  "source_request_backend_inventory_match": true,
+  "reused_assets": {
+    "assets/asset-regions.json": "3649ebb6921fc738d49d90cf54b327b8b612e88afd25cea33f9c81175ad29ab9",
+    "assets/icon-sheet.asset-sheet-alpha.png": "290d904a134968aacc5ab1260b3acee89c4c407e5df87cd61eaacaf2ca803af9",
+    "assets/icon-sheet.asset-sheet-chroma.png": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581",
+    "assets/icon-sheet.png": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581",
+    "assets/icon-sheet.split-report.json": "e2a3ebccdc513471c61617da2c7d0db4f4f624c5d45087fa150e5556c18baa1f",
+    "assets/fonts/BIZUDPGothic-Bold.ttf": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90",
+    "assets/fonts/OFL.txt": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc",
+    "assets/icons/document.png": "d2f8cf4f38da42ae6e6f069e4c46f700dc09035bd62de2b6b3b7be3ca544613a",
+    "assets/icons/history.png": "8a8f165ece112ae5287a2431fe54dce33410efeb9ffdcb3b3dbe146e2d8b31c7",
+    "assets/icons/upload.png": "a98c225cac106a5307ce1bbb477a70e50da60a1c07f4b720bda67af3a96efdaa"
+  },
+  "commands": [
+    {
+      "argv": [
+        "python",
+        "-m",
+        "editppt.cli",
+        "page",
+        "build",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001"
+      ],
+      "exit_code": 0,
+      "log": "worker-build.log",
+      "log_sha256": "fd1b1380f5d9c03572a70d1485bf4e4f0d1cde2aecb0698420978dd7a9663736"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "editppt.cli",
+        "page",
+        "contact-sheet",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001"
+      ],
+      "exit_code": 0,
+      "log": "worker-contact-sheet.log",
+      "log_sha256": "a6500185be9f75f86b93eff6ee9893567dff451e600c5d3404a3725377a17023"
+    },
+    {
+      "argv": [
+        "python",
+        "-m",
+        "editppt.cli",
+        "page",
+        "validate",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001",
+        "--report",
+        "validation.json"
+      ],
+      "exit_code": 0,
+      "log": "worker-validate.log",
+      "log_sha256": "af770f751ec5a2c98aa35147bf9c028f42e5ff41741d2324e05110c4aed9ef11"
+    }
+  ],
+  "technical_validation_passed": true,
+  "visual_review": {
+    "completed": true,
+    "reviewer": "/root/repair_core_examples",
+    "application_render_verified": false,
+    "evidence": "Read current source, three separated icons, current deterministic preview and original-runtime contact sheet. Current preview is byte-identical to the successful same-source prior preview. Nine visible native text boxes preserve all nine inventory strings and three columns. Cards/pills/arrows retain source geometry and corners; no duplicate raster labels, missing glyphs, bad wrap, clipping or covered object. Reused foreground source provenance was checked before building.",
+    "warnings": [
+      "BIZ UDPGothic Bold substitutes the unidentifiable image-generated face; minor glyph/weight differences remain.",
+      "Separated icons retain complete identities; minor proportions, strokes and thin chroma fringes differ.",
+      "Flat native fills replace subtle source texture."
+    ],
+    "not_performed": "PowerPoint application render is not part of this page worker proof; parent owns deck-level QA."
+  },
+  "application_render_verified": false,
+  "outputs": {
+    "page_manifest": {
+      "path": "manifest.json",
+      "sha256": "ccc2d577ab1b6292bc22073d47633380c5b153c79109bfafbbb9d17bb89b9ba7"
+    },
+    "imagegen_jobs": {
+      "path": "imagegen-jobs.json",
+      "sha256": "5dc7ec54d7a8f86454ee3ad9a2d4d4ad80638449b925a8861891e14bf8d6e4e8"
+    },
+    "page_pptx": {
+      "path": "page.pptx",
+      "sha256": "225db3211d975584749972fc9d9cd3795b2b2147aca9715d1f9cbf4e238a6b75"
+    },
+    "preview": {
+      "path": "preview.png",
+      "sha256": "0438329881d29e204857664598281f0f2d5ddfa1e104155462e1a17ef083473a"
+    },
+    "contact_sheet": {
+      "path": "split_assets_contact.png",
+      "sha256": "eab94eaa445dec829b91faad50470cf680b0506448740c00dece54a5d1311628"
+    },
+    "validation": {
+      "path": "validation.json",
+      "sha256": "490dad56694aae9103ee7dcaf7c5a872d10838a72e208242b9c392bbff77ab37"
+    },
+    "page_result": {
+      "path": "page_result.json",
+      "sha256": "0744a535c678efd7286685904e0068bd38422961af6b21ecdaba9f3bf046c4f4"
+    }
+  }
+}

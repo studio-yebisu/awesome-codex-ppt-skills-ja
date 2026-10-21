@@ -1,34 +1,46 @@
-# ひらく、街の作業場。
+# 話の順序と頁の役割から配置を選ぶ
 
-架空のものづくり拠点を提案する日本語6ページ。利用者数、収支、面積、実績を作らず、入口・体験・関係・空間の概念構成を語ります。
+話の順序と頁の役割を決め、内容に合う部品やテーマ固有の図で、編集可能な資料へ組む。読者・目的・話の順序をspecで固定し、原稿に座標を書かず原典エンジンへ配置を任せる。
 
-## 原典方式
+## 使い方
 
-liustack/pptwise0.44.0を固定source commitからbuildし、IR v5を原典validate→render CLIへ渡しました。原典Rallyをtheme forkで橙・墨・紙色へ派生。元marquee menuを保ち、日本語OSS書体、角のないruled surfacesを設定しています。元のflowchart/hub_spoke/architectureのtyped componentsとtheme/layout/export engineがnative図形と文字を生成。共通rendererへ名前を貼る方式やPPTX後加工ではありません。
+1. 原典schema/narratives/themesを読み、読者と目的から話の順序・themeを選び、deck.spec.jsonへtype/kind/headingを書く。
+2. 構成とthemeを示した後、inspectで頁と部品の契約を読み、意味に合う部品へ原稿を渡す。
+3. 元の内容が契約を満たす場合だけsignatureを使う。型を満たすための数値・画像は作らない。
+4. 最大4頁ごとに原典buildを実行し、JSONのerrors/warningsと各頁fitを読み、入力を直す。
+5. 原典が返したPPTXをその場所で渡す。別途の掲載確認として全頁を実描画し、文字・根拠・単位を確かめる。
+
+## 実作例の対応
+
+実フォントカタログを題材に、6頁の順序と役割をspecへ固定。3頁は順序と実プリセット例、4頁は順序のない関連情報、5頁は実件数17・13をallotmentへ渡し、原典build/fitで検査する。
+
+- 3頁・順序と具体例：上の4本の矢印は条件→候補→組合せ→確認。下に実プリセット2例の見出し・本文書体を置き、「組合せを試す」操作に具体例を対応させた。
+- 4頁・関連情報：中央の候補と、書体情報・元配布・利用条件・組合せの4項目を見る。番号と線は順序や品質順位ではないことを脚注で確認する。
+- 5頁・実集計の構成比：橙17書体・墨13書体の横棒、欧文側の括弧、下の確認カードを照合。全30書体の内訳と出典が一致し、架空の比率や品質順位を加えていない。
+
+現PPTXは[.pptwise/input/deck.pptx](.pptwise/input/deck.pptx)。原典の出力を後加工・改名しない。原典のself-checkはJSON reportだけを読む。ユーザー依頼による全頁のPowerPoint目視は、それと別の掲載確認として行った。
+
+## 制約
+
+- 5頁は実カタログの和文17・欧文13を原典allotmentへ渡す。提示された他4件のsignatureは未実施で、内容にない情報を足して埋めない。
+- 図表は編集可能な図形と文字。Officeのデータ連動チャートやネイティブ表ではない。
+- 画像を使わない現版。原典images generateやasset-briefの画像経路は今回実証していない。旧版の架空配分とAI概念画像は現版の根拠に含めない。
+- Rallyのmenuを保持した橙・墨・紙色の派生theme。日本語書体allowlistをメモリー内で追加するadapterのみで、原典配置・QA・出力PPTXの後加工なし。
+- 原典のself-checkはCLIのJSON report。全頁PowerPoint目視はユーザー依頼の掲載確認で、原典self-checkとは別。
+- 日本語書体に原典の厳密な幅表はなく、保守的な推定へfallbackする通知を保持。実PDFは同梱のZen Kaku Gothic NewとSpace Groteskを確認。
+- 既存固定依存で再実行。新規npm ci、代替themeへの再切替、過去の個別人間承認、利用者採用は未検証。
 
 ## 再制作
 
-Node22.19+が必要。runtime/は元MITのbuilt CLIと必要source、元package.json/lockです。画像API・認証・有料pack・global skill installは不要です。
+- 固定runtimeを含む一式ZIP、Node22.19+、Python、runtimeの固定依存。新規インストールは今回未検証。
+- 同梱の公式Zen Kaku Gothic NewとSpace GroteskをOFLに従い登録。PowerPoint実描画はWindows版PowerPoint、PDF画像化はpypdfium2。
 
 ```powershell
-cd runtime
-npm ci --ignore-scripts --no-audit --no-fund
-cd ..
-node runtime/dist/cli.js validate input/deck.json
-node runtime/dist/cli.js render input/deck.json -o deck-rebuilt.pptx --no-git-ignore
-pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath deck-rebuilt.pptx -OutputDirectory render-rebuilt
+python source/rebuild_pptwise.py --node <Node実体>
+pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath .pptwise/input/deck.pptx -OutputDirectory render
+python source/render_pdf_previews.py render
 ```
 
-原典sourceからbuildし直す場合はruntime/で`npx --no-install tsup`。元tsup.configとsrcを同梱しています。通常の制作ではbuilt CLIをそのまま使います。
+元資料はinput/oss-font-kit.json、構成はinput/deck.spec.json、原稿はinput/pages/。5頁の棒は管理分類の件数で、実収録文字範囲や品質順位を保証しない。原典buildはstatus=ok・errors0・warnings0・allotment1件。書体の厳密な幅表がない通知は別途保持し、実PDFの字体も確認した。検査・描画・現在の独立再評価・利用者採用は別。配布再実行はsource/distribution-replay.json。
 
-input/deck.jsonを編集し、同じフォルダーのtheme.jsonがtheme bindingを解決します。PROMPT.txtはAI依頼文、NOTES.mdは講稿。完成deck.pptxは元CLIが指定パスへ直接書いたものです。
-
-## 書体と条件
-
-fonts/のZen Kaku Gothic NewとSpace GroteskをTTFから導入し、PowerPointを開き直してください。Zenは和文、Space Groteskは英数字。受け手にも導入します。公式Google Fonts未改変TTFとOFLを同梱し、WindowsFontsから抽出していません。書体そのものはPPTXへ埋め込んでいません。
-
-原典MITのLICENSEを保持。runtimeが外部importする依存の原文条件はdependencies/に保持。node_modules、cache、秘密情報は配布しません。原作者の公式日本語版ではありません。
-
-## 確認
-
-元sourceのESM+DTS build、doctorのself-test、元CLI validate/render、PowerPoint必要な1回描画、主出力1枚が開くことのみ。全テスト、全ページ詳細目視、独立レビュー、native監査、ZIP再実行は未実施。QA.jsonに実際の状態を記録。
+原典liustack/pptwise、固定commit65690bc705c1b5db41b5593015675945673da542、MITを保持。今回の修復はCodex。Opusによる新規制作と記載しない。

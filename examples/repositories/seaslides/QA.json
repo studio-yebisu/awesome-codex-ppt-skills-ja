@@ -1,122 +1,51 @@
 {
-  "status": "qa_complete",
+  "status": "author_qa_complete_independent_review_pending",
   "page_count": 5,
-  "artifact_sha256": "c66d9dbd349061ebaa05cdd779ada3d6cf2f5a90283472ac42d1389912fe4ecb",
-  "images": [
-    {
-      "page": 1,
-      "file": "output/browser_pngs/slide_01.png",
-      "sha256": "481f2709921326f7e71c16719f3f589ab37a097a8e11752f5f5659d87100f5c5",
-      "dimensions": [
-        2560,
-        1440
-      ]
-    },
-    {
-      "page": 2,
-      "file": "output/browser_pngs/slide_02.png",
-      "sha256": "f11b433dce8756399f2d69afbfd8970c903b8a6ecca6ca0029885fac9f5ec95f",
-      "dimensions": [
-        2560,
-        1440
-      ]
-    },
-    {
-      "page": 3,
-      "file": "output/browser_pngs/slide_03.png",
-      "sha256": "3507dfc5b49c0ef7e0027274101a08b9cedeecdec3a790a7b6294a353513b857",
-      "dimensions": [
-        2560,
-        1440
-      ]
-    },
-    {
-      "page": 4,
-      "file": "output/browser_pngs/slide_04.png",
-      "sha256": "d387d57e18eb9979fc157d5f5a357a65df52cbea5b4e56f6da6e4eb053350f11",
-      "dimensions": [
-        2560,
-        1440
-      ]
-    },
-    {
-      "page": 5,
-      "file": "output/browser_pngs/slide_05.png",
-      "sha256": "2cc96f7d011f6e64594465008e2c0e3f44c8e103f77f126839c3c0f3b33c7f27",
-      "dimensions": [
-        2560,
-        1440
-      ]
-    }
-  ],
+  "artifact_sha256": "3dede21dbf7f14f657b907bdc2bba6aaba3666e01ecf241bd6f51a948ef885dd",
+  "all_pages_visually_reviewed": true,
   "visual_review": {
-    "pages_reviewed": [
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
       1,
       2,
       3,
       4,
       5
     ],
-    "method": "Original compiler browser PNGs, individually viewed, plus native runtime pages via HTTP/Chromium",
-    "result": "日本語5ページの本文と講稿が一致。欠け・衝突なし。10+35+15=60分を確認。第2/4頁の余白は中央群へ修正済み。"
-  },
-  "browser_review": {
-    "status": "passed",
-    "url": "http://127.0.0.1:8847/examples/repositories/seaslides/index.html",
-    "page_count": 5,
-    "pages": [
+    "finding": "脚注を20px相当へ拡大し、透過を解除。4頁は担当ごとの横一行へ変更。原典の全形式compilerを再実行。",
+    "images": [
       {
         "page": 1,
-        "text": "ひだまり読書会\n01 / 05\nひだまり読書会 / 架空の企画案\n月に一度、\n本の話を。\n\nたくさん読むより、集まれる形から。\n\n読書会を月1回続けるには\n試行の提案",
-        "notes": "これは架空の地域サークル「ひだまり読書会」の企画案です。たくさん読むことより、本の話ができる時間を月に一度つくることを目指します。",
-        "heading_font": "\"Noto Serif JP\", serif"
+        "path": "render/slide-01.png",
+        "sha256": "8d49cd72f6209a4b8bbad40388afd5c7ee27c682eeb71cfcc83db179950df3b6"
       },
       {
         "page": 2,
-        "text": "ひだまり読書会\n02 / 05\n三つだけ、先に決める\n01\nいつ集まる？\n毎月第1土曜\n14時から\n02\nどのくらい？\nまずは60分\n短く試す\n03\n参加の条件は？\n読み終えて\nいなくてもOK\n\n日時と場所は、参加者の都合を確認する。\n\n読書会を月1回続けるには\n試行の提案",
-        "notes": "毎月第1土曜の14時から、60分だけ集まる案です。読み終えていなくても参加できることを最初に伝えます。日時や場所は参加者の都合を確認して決めます。",
-        "heading_font": "\"Noto Serif JP\", serif"
+        "path": "render/slide-02.png",
+        "sha256": "2a613c3bfb8aaa0e7ca5902316c37e9d59237c22f03b8fd1a88dc434439afccf"
       },
       {
         "page": 3,
-        "text": "ひだまり読書会\n03 / 05\n60分の流れを共有する\nはじめに\n近況と、持ってきた本を紹介\n10分\n本の話\n気になった一節や、感じたこと\n35分\nおわりに\n一言ずつ感想、次回を確認\n15分\n\n10 ＋ 35 ＋ 15 ＝ 60分の試行案\n\n読書会を月1回続けるには\n試行の提案",
-        "notes": "最初の10分で一人ずつ近況と本を紹介し、35分で気になった一節を話します。最後の15分で感想を一言ずつ聞き、次回を確認します。合計60分の試行案です。",
-        "heading_font": "\"Noto Serif JP\", serif"
+        "path": "render/slide-03.png",
+        "sha256": "04e92a58ff32c003eeb681658d54d8115a5af914aa9a12cd65904bffaddc578e"
       },
       {
         "page": 4,
-        "text": "ひだまり読書会\n04 / 05\n運営は、三人で分ける\n01\n案内係\n日時と場所を\n一通にまとめる\n02\n会場係\n席と会場の\n使い方を確認\n03\n進行係\n時間を見ながら\n話す順番を案内\n\n担当が足りない回は、準備を減らす。\n\n読書会を月1回続けるには\n試行の提案",
-        "notes": "案内係、会場係、進行係に小さく分けます。一人に固定せず、次回を引き受けられる人を終了前に確認します。担当が足りなければ、準備を減らします。",
-        "heading_font": "\"Noto Serif JP\", serif"
+        "path": "render/slide-04.png",
+        "sha256": "259e1e69ecd812228f20b57e1ef74af092f1e440aebda9abcd2f6bd3cc3dbe98"
       },
       {
         "page": 5,
-        "text": "ひだまり読書会\n05 / 05\nまずは3か月、試してみる\n次回の日程を決めて終える\n\n次は、いつ？\n誰が、何を引き受ける？\n\n来やすかった点と、負担だった点を残す。\n続けやすい形へ、少しずつ変えていく。\n\n読書会を月1回続けるには\n試行の提案",
-        "notes": "まず3か月を試行期間とします。各回の終わりに次の日程と担当を決め、来やすかった点と負担だった点を記録します。続けやすい形へ少しずつ変えていきます。",
-        "heading_font": "\"Noto Serif JP\", serif"
+        "path": "render/slide-05.png",
+        "sha256": "88cd8088f9b07a1a04211014bee18766cc2f81e70e0a0d5a282d5a7ee44ee841"
       }
-    ],
-    "native_navigation": "window.__go(index), #nav .dot[data-i]",
-    "all_pages_navigated": true,
-    "keyboard_home_end": true,
-    "overview_toggle_observed": "block",
-    "motion": {
-      "early_opacity": "0.439748",
-      "settled_opacity": "1",
-      "low_power": false
-    },
-    "page_errors": [],
-    "remote_requests": [],
-    "parent_bridge": {
-      "status": "passed",
-      "requested": 3,
-      "native_index": 3
-    },
-    "artifact_sha256": "c66d9dbd349061ebaa05cdd779ada3d6cf2f5a90283472ac42d1389912fe4ecb"
+    ]
   },
   "original_gates": {
-    "source": "passed",
-    "visual": "passed",
+    "original_source_gate": 0,
+    "original_compiler_all": 0,
+    "original_visual_gate": 0,
     "dom_audit": {
       "status": "pass",
       "slideCount": 5,
@@ -126,6 +55,40 @@
     },
     "render_fidelity": "pass"
   },
-  "scope": "HTML/SVG/PNG/PDF. PPTX and interactive visual editor are not produced or claimed.",
-  "human_adoption": "not_requested"
+  "constraints": [
+    "この作例はHTML lane。Typst・PPTX・画像生成は未実施",
+    "Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変",
+    "静止画像とプレーヤーの操作UIは別の証拠",
+    "架空の読書会の企画で、開催実績ではない"
+  ],
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json",
+  "round3_repair": {
+    "author": "Codex",
+    "change": "参加条件の改行を「読み終えていなくても／OK」へ変更。否定表現を途中で分断しない。",
+    "original_source_gate": {
+      "log": "source/logs/source-gate-round3.log",
+      "exit_code": 0
+    },
+    "original_compiler": {
+      "log": "source/logs/compiler-round3.log",
+      "exit_code": 0
+    },
+    "original_visual_gate": {
+      "log": "source/logs/visual-gate-round3.log",
+      "exit_code": 0,
+      "interpreter": "Existing bundled Python3.12 with pypdf; initial system Python3.13 lacked pypdf and that unsuccessful attempt is preserved."
+    },
+    "compiler_pages_viewed": 5,
+    "runtime_pages_viewed": 5,
+    "browser_receipt": "source/browser-repair.json"
+  },
+  "round3_zip_replay": {
+    "receipt": "source/zip-replay.json",
+    "all_commands_passed": true,
+    "html_byte_identical": true
+  }
 }

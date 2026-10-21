@@ -1,27 +1,11 @@
-# 社内検索を4週間で試すの再現キット
+# 現在版の再生成と検証
 
-完成資料はこのフォルダー直下。生成経路・使用した原典・当時の確認範囲はPROVENANCE.jsonとQA.jsonに記録しています。
+Python/fontTools/Brotli。現在のdeck.json、input/source.bento.htmlの同一ID、同梱standalone shellから別出力を作る。既存ファイルへ上書きしない。独立コピーは元CLIの--new-documentを使う。同じIDのコピーは既存ブラウザー状態の影響を受ける場合がある。
 
-## Windowsで同じ作例を生成
+作例ZIPを展開したルートから実行する。既存依存を利用した配布再実行の実績はsource/round4-zip-replay.json。新しい環境の依存導入成功とは区別する。
 
-1. ZIPを展開。PowerShellでこのフォルダーへ移動。
-2. Python 3.13、Node.js、必要に応じてGit Bashを用意。
-3. 次を実行（project内venv・固定npm依存・公式固定commitの書体を取得します）。
+```text
+python source/rebuild_bento.py --output-dir new-output
+```
 
-    .\reproduce\Reproduce.ps1
-
-生成先: reproduce/workspace/examples/repositories/qiaomu-bento/
-
-PowerPoint本体でPNG/PDFを描画する場合は、Noto Sans JPをインストール済みのWindows / PowerPoint / pwshを使用し、-Renderを指定します。HTMLは生成したファイルを開き、原典のページ操作を使います。再生成した出力は確認前として記録し、元のQAを成功扱いで引き継ぎません。
-
-## 自分の題材へ
-
-完成例のinputとPROMPT.txtを参考に、読み手・目的・数値・結論を用意。日本語派生版SKILL.mdから当該原典の手順へ進みます。この再現スクリプトは比較用の固定原稿を作るもので、input/data.jsonだけを変えれば全ページの文章が自動で変わる汎用アプリではありません。
-
-固定Bento shellを変えない。日本語本文・字体・要素IDを文書JSONへ入れ、原典bento_deck.pyで検証・buildする。編集版とreadonly再生版を作り、morphに同一IDを使う。
-
-## 原典と権利
-
-https://github.com/joeseesun/qiaomu-bento-ppt/tree/55c63c836f42bc9175757d077428c395cd93effe
-
-原典のコード、個別のライセンス、書体のOFLを保持。原典の広告用画像・動画・不要な既存デッキや実行環境はキットへ収録しません。
+元のreproduce/一括ラッパーは初回制作時の固定原稿を再生成する旧経路。現在の修復版には上記の正本を使う。再生成後のQAは、全頁と個別動作を確認するまで未確認として扱う。ローカル検査は独立Kimi/Opus評価や人間の採用判断とは別。

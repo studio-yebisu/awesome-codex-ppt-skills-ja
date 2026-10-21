@@ -1,0 +1,11 @@
+--- cloud-production/source/build.py
++++ source/build.py
+@@ -30,7 +30,7 @@
+ (S/'index.html').write_text(head+''.join(f'<link rel="stylesheet" href="{f}">' for f in order)+'</head><body>'+body+'<script src="navigation-ja.js"></script></body></html>')
+ # Embed verified OSS subset, replacing upstream webfont declarations.
+ chars=''.join(slides)+'一覧次のページ前0123456789 /←→'
+-f=TTFont('/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc',fontNumber=0); opts=subset.Options();sub=subset.Subsetter(options=opts);sub.populate(text=chars);sub.subset(f);f.save(S/'noto-ja-subset.otf')
++f=TTFont(S/'fonts/NotoSansCJKjp-Regular.otf'); opts=subset.Options();sub=subset.Subsetter(options=opts);sub.populate(text=chars);sub.subset(f);f.save(S/'noto-ja-subset.otf')
+ embedded='@font-face{font-family:"Noto Sans CJK JP";src:url(data:font/otf;base64,'+base64.b64encode((S/'noto-ja-subset.otf').read_bytes()).decode()+');font-weight:100 900;font-display:swap}'+fontcss
+ html=head+'<style>'+embedded+'\n'+''.join((S/f).read_text() for f in order[1:])+'</style></head><body>'+body+'<script>'+js+'</script></body></html>'
+ (P/'index.html').write_text(html)

@@ -1,0 +1,130 @@
+[
+  {
+    "argv": [
+      "$PYTHON",
+      "$CASE\\source\\upstream-original\\codex-ppt-skill\\scripts\\build_reference_board.py",
+      "--topic",
+      "bookstore editorial culture",
+      "--style",
+      "editorial-ink",
+      "--output-dir",
+      "qa/reference-selection"
+    ],
+    "path_display_normalized": true,
+    "exit_code": 0,
+    "log": "source/checks/original-reference-board.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "$PYTHON",
+      "$CASE\\source\\upstream-original\\codex-ppt-skill\\scripts\\validate_slides_plan.py",
+      "input/slides_plan.json",
+      "--output",
+      "qa/slides-plan-validation.json"
+    ],
+    "path_display_normalized": true,
+    "exit_code": 0,
+    "log": "source/checks/original-plan-validation.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "$NODE",
+      "$CASE\\source\\runtime\\codex-ppt-skill\\scripts\\build_native_pptx.mjs",
+      "--spec",
+      "input/spec_lock.json",
+      "--slides",
+      "input/slides_plan.json",
+      "--asset-plan",
+      "input/asset_plan.json",
+      "--notes",
+      "input/speaker_notes.json",
+      "--reference-board",
+      "input/reference_board.json",
+      "--output",
+      "deck.pptx"
+    ],
+    "path_display_normalized": true,
+    "exit_code": 0,
+    "log": "source/checks/original-native-build.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "pwsh",
+      "-NoProfile",
+      "-File",
+      "source/render_powerpoint.ps1",
+      "-PresentationPath",
+      "$CASE\\deck.pptx",
+      "-OutputDirectory",
+      "$CASE\\render"
+    ],
+    "path_display_normalized": true,
+    "exit_code": 0,
+    "log": "source/checks/powerpoint.log",
+    "log_sha256": "2bf28287de9d81f37f256ab3e3486bc8fb8b736ad572e07f8f2ce1ba3f5c20aa"
+  },
+  {
+    "argv": [
+      "$PYTHON",
+      "source/render_pdf_previews.py",
+      "$CASE\\render"
+    ],
+    "path_display_normalized": true,
+    "exit_code": 0,
+    "log": "source/checks/pdf-rgb.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "$PYTHON",
+      "$CASE\\source\\upstream-original\\codex-ppt-skill\\scripts\\validate_pptx.py",
+      "deck.pptx",
+      "--expected-slide-count",
+      "8",
+      "--asset-plan",
+      "input/asset_plan.json",
+      "--preview-dir",
+      "$CASE\\qa\\original-render",
+      "--require-notes",
+      "--expected-aspect-ratio",
+      "16:9",
+      "--output",
+      "qa/pptx-validation.json",
+      "--markdown",
+      "qa/qa_report.md"
+    ],
+    "path_display_normalized": true,
+    "exit_code": 0,
+    "log": "source/checks/original-pptx-validation.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "$PYTHON",
+      "$CASE\\source\\upstream-original\\codex-ppt-skill\\scripts\\aesthetic_qa.py",
+      "--pptx",
+      "deck.pptx",
+      "--preview-dir",
+      "$CASE\\qa\\original-render",
+      "--slides-plan",
+      "input/slides_plan.json",
+      "--spec",
+      "input/spec_lock.json",
+      "--reference-board",
+      "input/reference_board.json",
+      "--asset-plan",
+      "input/asset_plan.json",
+      "--output-dir",
+      "qa",
+      "--case-id",
+      "sebastian-207"
+    ],
+    "path_display_normalized": true,
+    "exit_code": 0,
+    "log": "source/checks/original-aesthetic.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+]

@@ -45,7 +45,8 @@ export function addBullets(slide, items, rect, style, opts = {}) {
     color: opts.color || style.fg,
     fit: "shrink",
     margin: opts.margin ?? 0.08,
-    paraSpaceAfterPt: 8,
+    paraSpaceAfterPt: opts.paraSpaceAfterPt ?? 8,
+    valign: opts.valign,
     breakLine: false,
   });
 }

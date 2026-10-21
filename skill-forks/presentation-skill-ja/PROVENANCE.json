@@ -1,0 +1,73 @@
+{
+  "repository": "siril9/presentation-skill",
+  "upstream_commit": "efd899c5ddf866af2ce0001c4c9340af775d4d55",
+  "license": "MIT",
+  "route": "present.py brief -> original outline schema -> build_deck_pptxgenjs.js -> original render-plan/role-layout/template modules -> native PowerPoint",
+  "originals": {
+    "upstream/LICENSE": "35ad5e04d561f55065144021e70024bf94f50ef43903f4c54fc62802ed9f50f5",
+    "upstream/SKILL.md": "61cde674a8823f3e20a6a48a1c18bf02d2bc7a716fb30e0a915b715e0499b617",
+    "upstream/package.json": "a202b8aafe4a3176bcfea631f93cca0ab9162b924d705f8e47dd6ffd919a83d8",
+    "upstream/references/outline_schema.md": "5f233a1567be3e75e02d2be27b26a6480a6b54a17cf8705f417295013c461f48",
+    "upstream/references/pptxgenjs.md": "c546b4ce1f99f947b37f781f149748df02ab2c133f82bf8a452d6eb96661b506",
+    "upstream/references/renderer_role_contracts_v2.json": "32a9edd78589c172920faa98470046cae68093f75456c241f551e2c55f6d7c72",
+    "upstream/schemas/deck_ir.schema.json": "fef65a954c965107ea105af9f7ebea2dc82a895e577325b132cf82674dd763b3",
+    "upstream/schemas/renderer_capabilities_v2.json": "9a197f22943a26714b584061580888828dcf0e4d89bc0d7c4ff4a01be3f01cb2",
+    "upstream/scripts/build_deck_pptxgenjs.js": "1c8900b770ebd9c6340429e044e38762576dfe99eb3601d484b3a83ff45f3a64",
+    "upstream/scripts/present.py": "d01ff869dd8497e594a9f4776a8565eee523ee79a203d71c2675b1767a69cfcd",
+    "upstream/scripts/render_cache.py": "a49a81d98502a0b4d9b2c854e4cf9a570e4f8fa23de861b5582f8f00a57aa9ba",
+    "upstream/scripts/render_slides.py": "0ede98916f9369aa5d8343ac480d858ca90ac7d4835cdfe2fcc8165ba26db2eb",
+    "upstream/scripts/requirements-runtime.txt": "b87ef021759e9042b4e1cc9e10773f5ccca429fffb579579ebe0c6f3e1e78df6",
+    "upstream/scripts/runtime_doctor.py": "21f7ceae19a5b4343ef99754404a6704346c728055eb534d2b7a0f15496a76ce",
+    "upstream/templates/pptxgenjs/README.md": "fe766f0cad78f6ac19febbad654e9a6cb4c6d3db7b7729ca8e074b4451dfc2a2",
+    "upstream/templates/pptxgenjs/presets.js": "443083aad36831a9ce3e1c5363afab7c9c15ac8f80f5e6e62ecc552f1c14449d",
+    "upstream/templates/pptxgenjs/readable_role_layouts.js": "1359752cd936a8cc7fe9750f1c49d329b3430f96cf994db7414661534279e010",
+    "upstream/templates/pptxgenjs/render_plan.js": "00d3ff793e2c112818a6b2333c9bd15001a53b637e39dcd7155d7088fceebead",
+    "upstream/templates/pptxgenjs/role_layout_contracts.js": "696ddec80f01048fefd559c6c542aa292f9634bad2d55a0667800c9a5e88a5f6",
+    "upstream/templates/pptxgenjs/slides.js": "0ba4d04d00ba70c6fca5ce11ba32e305a213f950f6d35fb5cb759f8fdc410d65",
+    "upstream/templates/pptxgenjs/space_allocation.js": "f373286f23a295c746755c08cc2ce6dad98fdd1241ea2b2a270d1eaea031cb84"
+  },
+  "source": "input/outline.json",
+  "style_decisions": "input/design-decisions.json",
+  "local_changes": "source/font-pair.diff, source/numeric-font.diff, source/legibility.diff, source/windows-hash-guard.diff, source/windows-native-output.diff, source/table-legibility.diff",
+  "authoring_model": "gpt-6.1-sol",
+  "repair_authoring_model": "claude-opus-5-5",
+  "repair_scope": [
+    "slide 1 title: two 7-glyph lines, no punctuation-only wrapped line",
+    "operations-grid content header: titleTop >= 0.34in below the 0.08-0.19in top bars (addDarkTitleBar)",
+    "slide 6 section: Japanese kicker, stage values and stage_labels instead of CYCLE/CONTROL placeholders (renderContractStage)",
+    "renderContractStage text ink and section footer >= 4.5:1 on the actual stage background"
+  ],
+  "repair_record": "source/OPUS-F05-REPAIR.md",
+  "node_dependencies": {
+    "pptxgenjs": "4.0.1",
+    "jszip": "3.10.1"
+  },
+  "fonts": "fonts/SOURCE.json",
+  "font_files": {
+    "fonts/bizudpgothic/BIZUDPGothic-Bold.ttf": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90",
+    "fonts/bizudpgothic/BIZUDPGothic-Regular.ttf": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01",
+    "fonts/manrope/Manrope[wght].ttf": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+    "fonts/shipporimincho/ShipporiMincho-Bold.ttf": "63bc4eddc74793f671c3ab827c5175e773ffbe569d0bf50ee65375ea9e3bc286",
+    "fonts/shipporimincho/ShipporiMincho-Regular.ttf": "769b5269f0f9bc6534b352c0e6bd856a566e03ff788f107191c2d835863570b2"
+  },
+  "build_receipt": "source/BUILD.json",
+  "render_receipt": "render/powerpoint-render.json",
+  "qa_receipt": "QA.json",
+  "content_status": "hypothetical handoff operations, relative deadlines and example states",
+  "artifact_tool_used": false,
+  "finalize_receipt": "qa/finalize/finalize_receipt.json",
+  "finalize_passed": true,
+  "finalize_qa_helper_adapters": [
+    "source/windows-hash-guard.diff",
+    "source/windows-native-output.diff"
+  ],
+  "finalize_thresholds_changed": false,
+  "repair_model_record_id": "20261015T103703Z",
+  "pptx_sha256": "3e2a71995161009e7dc93bb46eea6efa647d60676afb8d0fa2d80b28552b01a3",
+  "codex_followup_repair": {
+    "author": "Codex",
+    "scope": "表上の5列見出し再掲を4件の記入例へ、和文captionは正体へ。原典builder/finalizerを再実行。",
+    "diff": "source/table-legibility.diff",
+    "opus_called_for_followup": false
+  }
+}

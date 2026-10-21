@@ -11,3 +11,15 @@
 .world-art svg {width:100%;height:100%;display:block;}
 .capture .world-art,.reduced-motion .world-art {transition:none;}
 .brand-caption {font-size:24px;color:var(--ink-2);}
+
+/* Operator UI stays readable on its dark background when the talk uses light ink.
+   Scope is the overview only; engine files and stage content remain unchanged. */
+.overview .ov-scene .ov-title{color:#fff}
+.overview .ov-scene .ov-beat{color:#d2d2d2}
+.overview .ov-scene .ov-beat.here{color:#fff}
+.overview .ov-bn{color:#bbb}
+
+/* Keep future steps quieter through borders, while retaining readable labels. */
+.bd-node.dim .bd-node-kind,.bd-node.dim .bd-node-value{color:var(--ink-2)}
+.bd-node.hot .bd-node-kind,.chrome-sep{color:var(--accent-strong)}
+.chrome{color:var(--ink-2)}

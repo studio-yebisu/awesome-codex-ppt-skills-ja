@@ -1,0 +1,22 @@
+["M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe", "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\ningzimu__image-to-editable-ppt-skill\\skills\\image-to-editable-ppt\\cli\\editppt\\cli.py", "doctor"]
+config home: M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\source\offline-config
+cli python: M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\ppt-master-venv\Scripts\python.exe
+config file: M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\source\offline-config\config.yaml (missing)
+OPENAI_API_KEY=unset
+OPENAI_BASE_URL=https://api.openai.com/v1
+IMAGE_TO_EDITABLE_PPT_IMAGE_MODEL=gpt-image-2.5-sunburst
+Codex OAuth=missing (M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\image-to-editable\source\offline-config\no-auth.json)
+built-in image backend=not checked (image_gen.imagegen is an Agent tool unavailable to CLI doctor)
+CLI fallback image backend=missing
+text hints=builtin-ink (PADDLE_OCR_TOKEN unset)
+network approval: in restricted agents, request approval up front for OCR/image backend commands; conversion uploads are limited to task-local page images, prompts, masks, and references.
+paddle approval rejection: ask the user to authorize OCR and explain that it corrects text boxes, font sizes, and size groups so reconstructed PPT text sizing stays stable.
+text hints: ASK THE USER once — a free PaddleOCR token makes text hints content-aware (recognized text + cleaner blocks, noticeably better text fidelity). The free personal quota is currently more than enough for this skill, so applying is risk-free with no extra cost. They can apply at https://aistudio.baidu.com/account/accessToken and you run `editppt config --paddle-ocr-token <token>`; or they can choose to continue with the offline detector. Wait for their choice before reconstructing pages, then do not ask again.
+python import fitz: ok
+python import PIL: ok
+python import openai: ok
+python import yaml: ok
+python import numpy: ok
+python import requests: ok
+next: no action needed
+

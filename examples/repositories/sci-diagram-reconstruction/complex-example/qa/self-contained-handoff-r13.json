@@ -1,0 +1,210 @@
+{
+  "status": "technical_checks_and_agent_visual_inspection_complete",
+  "author": "Codex",
+  "original_upstream_unchanged": true,
+  "exact_handoff_files": [
+    "build.mjs",
+    "source.png",
+    "editable.pptx"
+  ],
+  "three_file_directory_listing": [
+    "build.mjs",
+    "editable.pptx",
+    "source.png"
+  ],
+  "input_files_sha256": {
+    "build.mjs": "37f214606d3364ae4138bc99ec8d263cbdbd81a9fdcda4df3316a277d5ace53a",
+    "source.png": "24565b908b599e3a3caaf0839a0dd38aa276a957240d822273271609f7efae29",
+    "editable.pptx": "0814a76ebd341ddce69d766cef4f27b1eaca94ce3f05f3486432d5b36796d57a"
+  },
+  "replay": {
+    "fresh_three_file_copy_build_exit": 0,
+    "original_checker_status": "PASS",
+    "hard_failures": 0,
+    "warnings": 1,
+    "original_checker_pass_index": null,
+    "author_pass_authorization_proved_by_checker": false
+  },
+  "runtime": {
+    "node": "24.19.0",
+    "pptxgenjs": "4.0.1",
+    "existing_dependencies_only": true,
+    "fresh_install_executed": false
+  },
+  "zip_scope": "PptxGenJS generated one-slide, STORE entries, non-ZIP64, <=32MiB; no arbitrary input ZIP converter",
+  "import_policy": {
+    "status": "pass",
+    "original_checker_sha256": "ac96a123d4017ef6bfb7edf85238b96dd24274f1cad4c379c5040e82a446fe32",
+    "SAFE_NODE_MODULES": [
+      "node:fs",
+      "node:fs/promises",
+      "node:path",
+      "node:url"
+    ],
+    "candidate_portable": {
+      "id": "build_source.portable",
+      "status": "PASS",
+      "message": "Build source is non-empty UTF-8 and contains no machine-local path, high-confidence secret, or unshipped helper import",
+      "evidence": {
+        "path": "pass-04/build.mjs",
+        "bytes": 26144,
+        "imports": [
+          "node:fs",
+          "node:path",
+          "node:url",
+          "pptxgenjs"
+        ]
+      }
+    },
+    "node_zlib_negative": {
+      "rejected": true,
+      "reason": "build source imports an unshipped or unsupported helper: node:zlib"
+    },
+    "checker_modified": false
+  },
+  "zip_negative_controls": {
+    "status": "pass",
+    "tests": [
+      {
+        "name": "baseline-derived STORE40 entry ZIP",
+        "passed": true
+      },
+      {
+        "name": "corrupt nonempty entry payload CRC",
+        "rejected": true,
+        "message": "Generated ZIP: entry CRC or boundary mismatch"
+      },
+      {
+        "name": "missing end record",
+        "rejected": true,
+        "message": "Generated ZIP: end record is absent"
+      },
+      {
+        "name": "directory outside archive",
+        "rejected": true,
+        "message": "Generated ZIP: ZIP64 or unexpected directory layout"
+      },
+      {
+        "name": "central signature",
+        "rejected": true,
+        "message": "Generated ZIP: invalid central entry"
+      },
+      {
+        "name": "local signature",
+        "rejected": true,
+        "message": "Generated ZIP: invalid local header"
+      },
+      {
+        "name": "descriptor bit",
+        "rejected": true,
+        "message": "Generated ZIP: only unencrypted STORE entries without descriptors are supported"
+      },
+      {
+        "name": "encrypted bit",
+        "rejected": true,
+        "message": "Generated ZIP: only unencrypted STORE entries without descriptors are supported"
+      },
+      {
+        "name": "DEFLATE method",
+        "rejected": true,
+        "message": "Generated ZIP: only unencrypted STORE entries without descriptors are supported"
+      },
+      {
+        "name": "split disk",
+        "rejected": true,
+        "message": "Generated ZIP: split archives are unsupported"
+      },
+      {
+        "name": "ZIP64 directory offset",
+        "rejected": true,
+        "message": "Generated ZIP: ZIP64 or unexpected directory layout"
+      },
+      {
+        "name": "local name mismatch",
+        "rejected": true,
+        "message": "Generated ZIP: local and central metadata disagree"
+      },
+      {
+        "name": "local central size mismatch",
+        "rejected": true,
+        "message": "Generated ZIP: local and central metadata disagree"
+      },
+      {
+        "name": "local central CRC mismatch",
+        "rejected": true,
+        "message": "Generated ZIP: local and central metadata disagree"
+      },
+      {
+        "name": "too many entries",
+        "rejected": true,
+        "message": "Generated ZIP: ZIP64 or unexpected directory layout"
+      },
+      {
+        "name": "zero entries",
+        "rejected": true,
+        "message": "Generated ZIP: ZIP64 or unexpected directory layout"
+      },
+      {
+        "name": "non-UTF8 filename",
+        "rejected": true,
+        "message": "Generated ZIP: invalid or duplicate entry name"
+      },
+      {
+        "name": "truncated archive",
+        "rejected": true,
+        "message": "Generated ZIP: end record is absent"
+      },
+      {
+        "name": "already sized artifact cannot be postprocessed again",
+        "rejected": true,
+        "message": "Generated ZIP: expected exactly three triangle heads on the one reconstruction slide"
+      },
+      {
+        "name": "32MiB bound",
+        "rejected": true,
+        "message": "Generated ZIP: archive exceeds this example's bound"
+      }
+    ],
+    "scope": "One-slide generated non-ZIP64 STORE PPTX only; not an arbitrary ZIP converter or general security proof."
+  },
+  "independent_zip_roundtrip": {
+    "status": "pass",
+    "entries": 40,
+    "all_payloads_exactly_equal_to_accepted_R12": true,
+    "independent_validator": "Python stdlib zipfile.testzip, member-name and all-part byte comparison",
+    "output_sha256": "a7c5f813be910614000554c2b98e29cbc349c94724d2b3a34d30d9b17f81d968",
+    "scope": "A baseline-derived STORE fixture with exactly the three head-size attributes removed was repaired by the same function; independent Python validation recovered the entire historical R12 PPTX byte-for-byte. This is a focused algorithm test, not the newly generated current PPTX."
+  },
+  "native_structure": "native-structure-pass04.json",
+  "accepted_vs_previous": {
+    "old_pptx_sha256": "a7c5f813be910614000554c2b98e29cbc349c94724d2b3a34d30d9b17f81d968",
+    "current_pptx_sha256": "0814a76ebd341ddce69d766cef4f27b1eaca94ce3f05f3486432d5b36796d57a",
+    "all_native_xml_media_parts_byte_equal": true,
+    "only_core_generation_dates_differ": true,
+    "powerpoint_rgb_difference": 0,
+    "libreoffice_rgb_difference": 0
+  },
+  "edit": {
+    "report": "current-nativeedit/edit-proof.json",
+    "artifact": "current-nativeedit/edited-copy.pptx",
+    "preview": "current-nativeedit/edited-copy.png",
+    "saved_copy_reopened": true,
+    "original_hash_unchanged": true
+  },
+  "agent_visual_inspection": {
+    "reviewer": "Codex",
+    "actual_files": [
+      "render-pass04/powerpoint.png",
+      "render-pass04/libreoffice.png",
+      "qa/current-nativeedit/edited-copy.png"
+    ],
+    "findings": [
+      "Original label/containment/direction retained",
+      "No missing or seriously overlapping labels",
+      "X to X* only visible content edit; old and new edit PNG pipelines differ and pixel identity is not claimed"
+    ],
+    "independent_model_review": false,
+    "human_review": false
+  },
+  "history_scope": "Standard authoring stopped at pass02. Explicit continued refinement made pass04; this revision packages its existing result. Original checker pass-index null is not pass04 authorization. No historical independent score transferred."
+}

@@ -21,18 +21,28 @@
   ],
   "applied_rules": {
     "WWWH": "Who=local operators/makers, Why=shared concept, What=open one day of making, How=one statement+journey+hub relation",
-    "native_ops": "Original add_slide/add_text/add_rectangle/add_oval/add_line_shape/add_notes/set_core_properties, through actual CLI",
+    "native_ops": "Original add_slide/set_semantic_text/add_text/add_rectangle/add_oval/add_line_shape/add_notes/set_core_properties through actualCLI; layout owns background/sidebar/fixedlabel.",
     "layout_patterns": "Original split-panel hierarchy and number-badge/time-line primitives adapted without repeated cards",
     "process": "Left directed schedule is separate from right unordered center relationships",
-    "template_contract": "Only blank16:9 container authored locally; original extraction/preflight provides native Blank layout contracts",
-    "user_overrides": "One finished slide, no automatic cover/disclaimer/ending. Giant Japanese headline and requested palette override standard 24pt business defaults. Extensive audit workflow omitted per current user scope."
+    "template_contract": "Self-authored styled16:9 template with Workshop Cover/Split layouts; original extract supplies actual palette, placeholder geometry and formatting; set_semantic_text inherits title/body format.",
+    "user_overrides": "One finished slide, no automatic cover/disclaimer/ending. Giant Japanese headline and requested palette override standard 24pt business defaults. Original required slides qa gate executed; independent review tracked separately."
   },
   "commands": [
-    "python -m slides_cli.cli extract input/blank-wide.pptx --output-dir input/project --base-template-out input/project/base_template.pptx --compact",
+    "python -m slides_cli.cli extract input/self-authored-workshop-template.pptx --output-dir input/project --base-template-out input/project/base_template.pptx --compact",
     "python -m slides_cli.cli preflight --project-dir input/project --profile input/project/design-profile.json --compact",
     "python -m slides_cli.cli render --slides-json @input/slides.json --profile input/project/design-profile.json --dry-run --compact",
-    "python -m slides_cli.cli render --slides-json @input/slides.json --profile input/project/design-profile.json --output deck-rebuilt.pptx --compact"
+    "python -m slides_cli.cli render --slides-json @input/slides.json --profile input/project/design-profile.json --output deck-rebuilt.pptx --compact",
+    "python -m slides_cli.cli qa deck.pptx --profile input/project/design-profile.json --slides-json @input/slides.json --out reviews/original-qa.json --compact"
   ],
-  "pptx_sha256": "45628edaecbec3b8218d097296da93c02e23de6a07b824f2d0f6311e4972e70b",
-  "font_embedding": false
+  "pptx_sha256": "6210e2635a9f8907e77a4ab0398b266ce1b2f809328ab797df2291055c36782b",
+  "font_embedding": false,
+  "repair_authoring": {
+    "model": "claude-opus-5-5",
+    "date": "2026-10-15",
+    "scope": "New self-authored styled template builder; original one-page nativeops history preserved",
+    "template_builder": "source/build_styled_template.py",
+    "qa": "reviews/template-and-visual-audit.json"
+  },
+  "template_inheritance_verification": "source/template-inheritance-check.json",
+  "declared_layout_adaptation": "Original extraction heuristically suggests moving split-panel title to opposite zone. This sample explicitly preserves its authored wide-left title layout and uses semantic placeholder inheritance; no contract JSON or original CLI is changed."
 }

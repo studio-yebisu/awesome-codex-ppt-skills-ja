@@ -1,9 +1,18 @@
-# 制作依頼
+# 再制作の指示
 
-日本語6枚「ひとつの服を、もう一度。」を制作する。架空の衣服お直しワークショップ企画。開催・効果・売上の実績はない。具体的修理技法の手順より、持ち物・当日の行程・役割・持ち帰るものを短い図解と表で示す。
+箇条書きや表を資料へ整え、ページIDで指定した内容だけを更新する。
 
-masaki39/marp-mcpの固定commit `2d3f635d5b7b8f03de4e44397c9a51c8b6f7c65f`、原典skills/marp/SKILL.mdと実MCP stdio tools/call、固有minimalレイアウトを使う。巨大で短い和文見出し、布を思わせる色面、明暗、余白を組み、同じカード列を反復しない。Shippori Minchoの見出し、BIZ UDPGothicの本文、Manropeの番号・時間を役割別に使う。公式の実TTFとOFLを同梱する。
+入力: ページごとの見出し・本文・箇条書き・表と、変更したい内容。
+出力: 編集元のMarkdownとHTML・PDF。MCP実装のPPTX出力は各頁の画像を収めた形式。
 
-原典MCP生成・必要build・主要完成物の初回表示のみ確認。全頁詳細目視、独立レビュー、構造監査、ZIP再実行は追加しない。artifact-toolを使わず、原典MCPのexport_slideからHTML・PDFを出力し、同じ原典経路で画像主体PPTXも追加する。0-basedで同一originのyebisu-slide/yebisu-page bridgeを小さなHTML差分として残す。
+1. marp-mcp --versionでCLIを確認する。list-layoutsで版式と必須項目を調べ、-tで基本テーマ、-sで追加スタイルを選ぶ。-s指定時は原則-t defaultになる。
+2. createで資料を作り、set-frontmatterで見出しや頁番号を設定する。manageのlayoutとparamsへ原稿を渡して頁を追加する。
+3. generate-idsでIDを付け、readで対象IDを調べる。manage --mode replace/deleteと--slide-idで変更箇所を指定する。既存IDは再発行しても変わらない。
+4. export -f htmlまたは-f pdfで書き出す。generate-agendaとadd-image-transitionはHTML用の機能として必要な時に使う。MCP経由も選べるが、原典SKILLの主な入口はCLI。
+5. 出力した全頁を開き、文字・表・改行・ID指定の変更箇所を確認する。PPTXの出力方式と編集できる範囲を分けて伝える。
 
-入力・原稿・MCP操作ログ・再生成コード・未変更原典と局所差分・許諾・短い日本語SKILLとSOURCE・制作ZIPとfork ZIPを完成させる。
+同梱作例の範囲: 元MCPで全6頁を再生成しHTML/PDF/PPTXを書出し。元CLIでも作成・ID更新・ID保持・HTML/PDF出力を実行。HTML6頁・PDF6頁を実描画し目視。3頁の4動作、4頁の表幅、6頁の文字コントラストを修復。
+
+制約: 6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。
+制約: 原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。
+制約: 工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。

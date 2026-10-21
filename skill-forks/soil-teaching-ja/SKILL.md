@@ -11,7 +11,7 @@ description: SOIL原典の認知的ページ役割とMode CオフラインHTML�
 2. assets/html-deck-templateを出力へコピー。1600×900 stage、semantic section、見出しとのaria-labelledby、unique data-slide-id、local styles.css/slides.jsを保つ。元テンプレートを直接変更しない。
 3. 日本語を大きく短く配置。HTML/SVGの区画・線・数値で関係を示す。原典.fragmentを使い、題名・学習者の作業は最初から、根拠・答えは教える順で段階表示する。
 4. 元controllerのadvance/retreatとfragment count、矢印/Space/Home/End/hash、全画面、reduce motion、印刷全段表示を保持する。CDN・remote font・analytics・新frameworkは不要。
-5. 完成物を一度開き、依頼された範囲で生成成功と主要画面を確認する。追加検査の量はユーザー指定を優先し、未確認の授業品質や印刷互換性を保証しない。
+5. 原典scripts/validate_html_deck.mjsを実行する。全頁を1280×720と1920×1080で確認し、文字・図・段階表示・キー操作・hash・全段表示の印刷を検査して直す。授業での理解度や紙での印刷品質は別に確認する。
 
 実例はexample/、依頼と計画はexample/input/。index.htmlを直接開いて使える。大きい日本語の書体を変えるときは、配布許諾のある実TTFと原文ライセンスを含める。
 

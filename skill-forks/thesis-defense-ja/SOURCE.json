@@ -11,7 +11,7 @@
     "Generated template typefaces changed Microsoft YaHei to BIZ UDPGothic / Shippori Mincho; geometry, sizes, red band, navigation and content frames retained.",
     "Local clone and local export helper never call Application.Quit: close only this case presentation for parallel COM work.",
     "Japanese source content and original native diagrams/tables added inside existing template areas.",
-    "User-requested six slides and initial-main-display checks replace upstream defaults of 12–16 slides and extensive QA."
+    "User-requested six-slide scope replaces12–16slide default; original visual/overflow/stale-text quality gate restored for the current revision."
   ],
   "editability": "native_elements",
   "editable_features": [
@@ -84,28 +84,37 @@
   "dependencies": "python-pptx, Pillow; original Markdown module imported; Windows PowerPoint COM used for native clone/export. Extraction/PDF dependencies in original requirements retained but not used for this Markdown case.",
   "third_party_images_or_logos": false,
   "artifact_tool_used": false,
-  "dependency_versions_and_conditions": [
+  "layout_repair": {
+    "authoring_model": "claude-opus-5-5",
+    "date": "2026-10-15",
+    "scope": "Page2 same-metric exposure comparison and page3 top-edge label clearance",
+    "qa": "reviews/quality-gate.json",
+    "original_quality_gate_restored": true,
+    "independent_review": "pending"
+  },
+  "quality_gate_source_refs": [
     {
-      "package": "python-pptx",
-      "version": "1.0.2",
-      "license": "MIT",
-      "bundled": false
+      "path": "skills/thesis-defense-pptx/scripts/export_pptx_png.ps1",
+      "sha256": "3eb5f5227d16a05372b77fe5b1aee3aaf9dafc6265d3ae058d874288e4ee36ab"
     },
     {
-      "package": "Pillow",
-      "version": "12.3.0",
-      "license": "MIT-CMU",
-      "bundled": false
+      "path": "skills/thesis-defense-pptx/scripts/inspect_pptx_overflow.ps1",
+      "sha256": "7717944e0b4c617e3c312ba04fdebd412ab9dc45ab89e5f91222c5937934114f"
     },
     {
-      "component": "Microsoft PowerPoint 16.0 COM",
-      "license": "Requires installed licensed Microsoft PowerPoint; not redistributed",
-      "bundled": false
+      "path": "skills/thesis-defense-pptx/scripts/make_contact_sheet.py",
+      "sha256": "fea85be505432e53ceb8ed6fddb35d69337e0c15dbb584dcb7219036c822d1a8"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/scripts/scan_pptx_text.py",
+      "sha256": "aaaa96a14709a8ddd7421b1b56da693d39d2ea3f362e4f16dbff03d57656b331"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/references/pptx_quality_gate.md",
+      "sha256": "c08d2c6c96c3410ebf78783657964c9362d4d7b26d7f6d520c753c53809ae49e"
     }
   ],
-  "case_studies": [
-    "thesis-defense-showcase"
-  ],
+  "current_artifact_sha256": "e451ba4b2ea22fc52404f24e6274d5ab9e82fddf3ffd58211126c8b017023378",
   "files": [
     {
       "path": "example/.gitignore",
@@ -113,7 +122,7 @@
     },
     {
       "path": "example/deck.pptx",
-      "sha256": "ebdeb3d406c305060d0aa003001a1d210281aeaf7ef2720dafc29aebe862cfbf"
+      "sha256": "e451ba4b2ea22fc52404f24e6274d5ab9e82fddf3ffd58211126c8b017023378"
     },
     {
       "path": "example/fonts/BIZUDPGothic-Bold.ttf",
@@ -141,7 +150,7 @@
     },
     {
       "path": "example/input/BRIEF.md",
-      "sha256": "782472d7a5f1160c84d386699af0b639c203d0de34fac351bb4e5fe228ea7e66"
+      "sha256": "594a42a04ba0304e9f60a123a08519756fb1ef9d874e6a7ed9df62d50ce031db"
     },
     {
       "path": "example/input/calculation-results.json",
@@ -169,31 +178,31 @@
     },
     {
       "path": "example/PROMPT.md",
-      "sha256": "71c20d9ce66e7d4216cc4d639ab013ee5f929f4748911906f8202c04c32158d7"
+      "sha256": "078b0379bcb8b63b22db9acc18dacffbef7c46cafe75380e1e8e76fb4d940a2d"
     },
     {
       "path": "example/PROVENANCE.json",
-      "sha256": "fac35b3a218b3fe3103a4e12f3cb57d6d7d646aa9f644dfbe5e46a65d446703b"
+      "sha256": "25054d442ac050e3ca162c09e6155faff9d27bd664637915661d2b211d5629a0"
     },
     {
       "path": "example/QA.json",
-      "sha256": "b051d17d35c39835e40d8ac1ad3ab9d7f6a959c0235fe166a8c4a34bebe1ecc4"
+      "sha256": "951aaec74bbf9214688ef1a584f6699b81a5f2b860dcf77aab8e93855fe6f747"
     },
     {
       "path": "example/README.md",
-      "sha256": "3378315d60d90d45dccf1383d66514485ec2f4d57d3870acdcd674a23d8a2943"
+      "sha256": "6493da0b494ed87f5aacc72c81a8ab612df3d25c6e047ff2ba3ef6e94f9fa2af"
     },
     {
       "path": "example/rebuild.py",
-      "sha256": "e808b65629e6a8658e89c3c7d81a1d800f392217cc54712a47f0afd61428fa27"
+      "sha256": "d77569a6580e18582a8a001de5042050a72093d364fd7ff875fabcac0a804584"
     },
     {
       "path": "example/render/deck.pdf",
-      "sha256": "845db73c01a1a6a8975369ebf6d5394071ae9f23ef029f0bb14d29e2120a581e"
+      "sha256": "89b701d13e55e7d736eeed364f5898f7020f18b250577f8b26b96444e5369479"
     },
     {
       "path": "example/render/powerpoint-render.json",
-      "sha256": "dc5c1ea7507e3fd0e60f8170df2c1c145860a66f4f0ea2e0e9c4ec0744091d07"
+      "sha256": "228647e640bdbb2b3a36f45fae27c4933e24cab0207749a1e5802eb8a8db0b21"
     },
     {
       "path": "example/render/slide-01.png",
@@ -201,11 +210,11 @@
     },
     {
       "path": "example/render/slide-02.png",
-      "sha256": "25a253778bf7bc153854b98e5c1f12412fd0efa68b024e84246466b9addb5d2f"
+      "sha256": "55cb36a90ff170f44251fe313165ec72432a02e30a61330048159631c6d959d6"
     },
     {
       "path": "example/render/slide-03.png",
-      "sha256": "31ca4b08b705ad08a71a1fc80d451a057fb5b15f5b58a3954725e8329c0cf930"
+      "sha256": "3888b04ea75248dee3bfd9423845550ed0db17b406b870d11819b7e1f1e11970"
     },
     {
       "path": "example/render/slide-04.png",
@@ -217,7 +226,71 @@
     },
     {
       "path": "example/render/slide-06.png",
-      "sha256": "01534e859cf674996350e63ead1ffb949ccdded6e01144dc18974b764d96a0dc"
+      "sha256": "c4909f3241c25df346d5454d82236807d2915855c58b5b75b4dcaf7516238eb7"
+    },
+    {
+      "path": "example/REPRODUCE.md",
+      "sha256": "58e03a902fbb60ecbf82b5c6564b0c20e914e496578fa7d07451ea08c8dcf640"
+    },
+    {
+      "path": "example/reviews/contact-sheet.png",
+      "sha256": "a2cfe70778ca21c166bcda37699a69cf8a84ee58c6e65f3d92b75f6f8eb9ab17"
+    },
+    {
+      "path": "example/reviews/current-contact-sheet.txt",
+      "sha256": "0db4f0484265f0f3e31ac65e78de8803fdb2db189e0ed4c7d249c863c8e648c2"
+    },
+    {
+      "path": "example/reviews/current-original-export.txt",
+      "sha256": "ff79c61899f310e83add58566389ae3992f2638ea1999da4fffe93507bb0fb3f"
+    },
+    {
+      "path": "example/reviews/current-overflow.txt",
+      "sha256": "cadd7b2a6373801ec009916ac67c18b7e884cb96e04e61793be49d8616ee9be5"
+    },
+    {
+      "path": "example/reviews/current-stale-text.txt",
+      "sha256": "15e18a9bb574f85427678afb2eadcf6e7fb1fd3a91fbb587cb9d0646eb2a442e"
+    },
+    {
+      "path": "example/reviews/current-technical-quality.json",
+      "sha256": "43b7d4ff63e8b3f7be091428ceeec9c53d2180408ab24a7c9660fc9525b54c7a"
+    },
+    {
+      "path": "example/reviews/original-export/スライド1.PNG",
+      "sha256": "d1670ebe2f84a84075f65fb234a4dc8e04838af4c960dcfdc03e28349c24b357"
+    },
+    {
+      "path": "example/reviews/original-export/スライド2.PNG",
+      "sha256": "55cb36a90ff170f44251fe313165ec72432a02e30a61330048159631c6d959d6"
+    },
+    {
+      "path": "example/reviews/original-export/スライド3.PNG",
+      "sha256": "3888b04ea75248dee3bfd9423845550ed0db17b406b870d11819b7e1f1e11970"
+    },
+    {
+      "path": "example/reviews/original-export/スライド4.PNG",
+      "sha256": "265a8e5804f77088ae1756fca78a825b248812e0ea77e395fd63cf42a7fe0405"
+    },
+    {
+      "path": "example/reviews/original-export/スライド5.PNG",
+      "sha256": "91e04019cf6fd34afad94f47a7b2ee452d91c6906e2fd599b9ddf8f46c2a674a"
+    },
+    {
+      "path": "example/reviews/original-export/スライド6.PNG",
+      "sha256": "c4909f3241c25df346d5454d82236807d2915855c58b5b75b4dcaf7516238eb7"
+    },
+    {
+      "path": "example/reviews/overflow.json",
+      "sha256": "15039501ae593c83a8f0997a8ec8079f2accfd2cf91d1df8be1d670aefa194ef"
+    },
+    {
+      "path": "example/reviews/quality-gate.json",
+      "sha256": "cab4435f5191889ed7613972e080bebcc7e0d22a10f1c81183d9491d47c0556f"
+    },
+    {
+      "path": "example/reviews/stale-text-scan.json",
+      "sha256": "2ec580bee874fa327dfc51212f7ac53394f73490dcffb2abc4f005ebf74689d8"
     },
     {
       "path": "example/runtime/DEPENDENCIES.json",
@@ -237,7 +310,7 @@
     },
     {
       "path": "example/runtime/scripts/export_pptx_png.ps1",
-      "sha256": "3eb5f5227d16a05372b77fe5b1aee3aaf9dafc6265d3ae058d874288e4ee36ab"
+      "sha256": "57c371dc43f6c953530817b7dbd8e68fb5d12505e4abb4fa24195add24d79abe"
     },
     {
       "path": "example/runtime/scripts/extract_thesis_context.py",
@@ -245,7 +318,7 @@
     },
     {
       "path": "example/runtime/scripts/inspect_pptx_overflow.ps1",
-      "sha256": "7717944e0b4c617e3c312ba04fdebd412ab9dc45ab89e5f91222c5937934114f"
+      "sha256": "233a94c93eb25399d763ef702e4065b12862f6c1b85a94a8aefe3483e4eca9f2"
     },
     {
       "path": "example/runtime/scripts/make_contact_sheet.py",
@@ -261,11 +334,55 @@
     },
     {
       "path": "example/skeleton.pptx",
-      "sha256": "475999170b5ce0613ff85c0598454e774882e241d021115ec59ab801abffee94"
+      "sha256": "612f7f50b4f4b2e2c6462d57b5cc588a944115cdeb88b01534ad7996eda07fbb"
+    },
+    {
+      "path": "example/SKILL.md",
+      "sha256": "29a12ef021376b134c583f31d489dcacf9b88b89e0a20d61ec13e57d5618ec1b"
+    },
+    {
+      "path": "example/source/catalog-repair-proposal.json",
+      "sha256": "f9babc66edd4afa96e039141fb4976d101ab9c33364746ee27f33252f458c894"
+    },
+    {
+      "path": "example/source/check_quality.py",
+      "sha256": "9d38d5f7510d78daa3c6174d097945335f569bd046566b4f532d2094f9334bfd"
+    },
+    {
+      "path": "example/source/distribution-replay.json",
+      "sha256": "c5394060a2768e630873f50774aff4d28d4732774f92d9a474daaf4d1a03b3ff"
+    },
+    {
+      "path": "example/source/export_pptx_png.ps1.diff",
+      "sha256": "dada3bdb2a330461ff81a1b35c468c634d68ff17217e991b06ac7515e6c52336"
+    },
+    {
+      "path": "example/source/inspect_pptx_overflow.ps1.diff",
+      "sha256": "5d5dc41530d65889e4e298aefe2c06ef5bd2a544553c3ba2ca0576b29d24273f"
+    },
+    {
+      "path": "example/source/model-label-repair.json",
+      "sha256": "28c5e1d6998b6e46bc04b08fb0f21786247c1a0b87fce395ffd4f29595ec4525"
+    },
+    {
+      "path": "example/source/native-elements.json",
+      "sha256": "003452bcf0745cf8a7f4f961a920709ef098e06dac9076bf4335ac47578b9d29"
+    },
+    {
+      "path": "example/source/refresh_existing_fonts.ps1",
+      "sha256": "1ca32e56d2c3d63bfbd441913aaadca7a758c0bcc09ae356746f316bc9b04d76"
+    },
+    {
+      "path": "example/source/repaired-artifact-manifest.json",
+      "sha256": "8da67a2a5083690bae87b4b85effedc09f68df4b798b2446c3a09b2876c6a801"
+    },
+    {
+      "path": "example/SOURCE.json",
+      "sha256": "ec59bea9315fe6851413df6faf354b11a6f635c4f7643dc3399d6e3cfeb60169"
     },
     {
       "path": "example/template-ja.pptx",
-      "sha256": "9a743379ed13ad046bfc1598655b67710384624fa1d68cfecc305db918d047e5"
+      "sha256": "1d58bd012cc590f43b5c99dcf997e493be491f41da837d3ee6d9be176bd33e92"
     },
     {
       "path": "example/upstream/examples/minimal_markdown/build_deck.py",
@@ -281,11 +398,15 @@
     },
     {
       "path": "example/upstream/examples/minimal_markdown/sample_template.pptx",
-      "sha256": "a14e1b35a4b81b39f4ae7558e85824260472803e95b8f17037577631c21344b8"
+      "sha256": "0b89bf20f065483ff546d8803029566f6d57397f10f68c8d15b2fcb8e86e3939"
     },
     {
       "path": "example/upstream/examples/minimal_markdown/thesis.md",
       "sha256": "eca30b6da2aec8e5a649727044a7f4ba6b1956cd62de9818507542a3e16e6ea0"
+    },
+    {
+      "path": "example/upstream/skills/thesis-defense-pptx/references/pptx_quality_gate.md",
+      "sha256": "c08d2c6c96c3410ebf78783657964c9362d4d7b26d7f6d520c753c53809ae49e"
     },
     {
       "path": "example/upstream/skills/thesis-defense-pptx/requirements.txt",
@@ -340,6 +461,10 @@
       "sha256": "765d943445af4907409826ae28ec24b0ad39fa761f03c1102fe854116167e46f"
     },
     {
+      "path": "REPRODUCE.md",
+      "sha256": "a5ee1c0baa84fc8de417c3189184c3b019af8c18e7312728806131ef185974fb"
+    },
+    {
       "path": "runtime/DEPENDENCIES.json",
       "sha256": "36c20cabaa4947ca0935ebee8cefc0ba4b6e355cb2b78a56fc0b4c7169572aba"
     },
@@ -357,7 +482,7 @@
     },
     {
       "path": "runtime/scripts/export_pptx_png.ps1",
-      "sha256": "3eb5f5227d16a05372b77fe5b1aee3aaf9dafc6265d3ae058d874288e4ee36ab"
+      "sha256": "57c371dc43f6c953530817b7dbd8e68fb5d12505e4abb4fa24195add24d79abe"
     },
     {
       "path": "runtime/scripts/extract_thesis_context.py",
@@ -365,7 +490,7 @@
     },
     {
       "path": "runtime/scripts/inspect_pptx_overflow.ps1",
-      "sha256": "7717944e0b4c617e3c312ba04fdebd412ab9dc45ab89e5f91222c5937934114f"
+      "sha256": "233a94c93eb25399d763ef702e4065b12862f6c1b85a94a8aefe3483e4eca9f2"
     },
     {
       "path": "runtime/scripts/make_contact_sheet.py",
@@ -381,7 +506,7 @@
     },
     {
       "path": "SKILL.md",
-      "sha256": "34ef048864325a3062599f7a1f6dcc43c9dc0683a83003e5f27df13caad27ec2"
+      "sha256": "ee1c510d2be62b0d5bbe92fe1ac656e8176a7cd26c11a29530a6b8ed7b2dc064"
     },
     {
       "path": "upstream/examples/minimal_markdown/build_deck.py",
@@ -397,11 +522,15 @@
     },
     {
       "path": "upstream/examples/minimal_markdown/sample_template.pptx",
-      "sha256": "a14e1b35a4b81b39f4ae7558e85824260472803e95b8f17037577631c21344b8"
+      "sha256": "b331e9a42e1c4a59428614226bd5203143e636be81439841aac6f7c0e2e54273"
     },
     {
       "path": "upstream/examples/minimal_markdown/thesis.md",
       "sha256": "eca30b6da2aec8e5a649727044a7f4ba6b1956cd62de9818507542a3e16e6ea0"
+    },
+    {
+      "path": "upstream/skills/thesis-defense-pptx/references/pptx_quality_gate.md",
+      "sha256": "c08d2c6c96c3410ebf78783657964c9362d4d7b26d7f6d520c753c53809ae49e"
     },
     {
       "path": "upstream/skills/thesis-defense-pptx/requirements.txt",

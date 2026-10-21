@@ -1,29 +1,24 @@
-# gonta223/japanese-corporate-pptx-skill の日本語実行例
+# 根拠・担当・判断条件を一頁にまとめる
 
-公式15型PPTXから1・2・11・9・8・14枚目を選択し、SKILLの規約に従ってネイティブ図形・チャート・表を編集。専用生成APIは同梱されていない。
+数値の報告に解釈を添え、担当間で渡す記録と判断条件を一頁で追えるようにする。原典15型のPPTXを編集し、文字・図形・チャート・表を残す。
 
-組織・数値・担当者は架空。input/data.json、PROMPT.txt、NOTES.mdに入力・依頼・講稿を保存。
+原典はgonta223/japanese-corporate-pptx-skill、commit `05480bfa2d8f097ab397861cbe390429e1dbb824`、MIT。専用生成APIではなく、制作指示とnativeテンプレートを使う方式。
 
-## 再現手順
+## この作例で見る変化
 
-カタログ全体を取得し、そのrootで次を実行します。
+- **3頁**：編集可能チャートの前年/当月の値と、自然検索の増収寄与、留意点・判断を照合する。
+- **5頁**：対象一覧→返品理由分類→責任者の判断→改稿→効果・粗利を、担当をまたぐ矢印で追う。不足時は分類へ戻る。分類率100%は「10/09の目標」。
+- **6頁**：同じ表で把握した状況・条件・担当・期限・状態を確認し、今回と次回の判断を分ける。
+- **2頁**：比較表で増加率とポイント差を分け、下段の計算で粗利額の変化も確かめる。
 
-```powershell
-git clone https://github.com/gonta223/japanese-corporate-pptx-skill .build/actual-upstreams/gonta223__japanese-corporate-pptx-skill
-git -C .build/actual-upstreams/gonta223__japanese-corporate-pptx-skill checkout 05480bfa2d8f097ab397861cbe390429e1dbb824
-python -m venv .venv
-.venv\Scripts\python -m pip install python-pptx lxml Pillow
-.venv\Scripts\python tools/build_japanese_repository_examples.py --only gonta --render
-```
+組織・数値・担当・業務案は架空。改善後の成果や承認実績ではない。入力は`input/data.json`、受け渡しは`input/flow-plan.json`、現在の生成器は`source/rebuild.py`。`source/build_japanese_repository_examples.py`は初回制作の保存資料で、現版の再生成には使わない。
 
-- Python 3.13 / python-pptx / lxml / Pillow
-- Microsoft PowerPoint 16.0 と PowerShell 7（PNG/PDF描画）
-- 同梱の japanese-corporate-ponchi-template.pptx
+## 確認した範囲
 
-元PPTXをpython-pptxで開き、source/template-map.jsonのページと図形を編集。source/build.logに実施操作。上流の15型テンプレートは保持したまま、選択6ページだけを書き出す。
+全6頁をPowerPointで描画し、全頁の実画像とcontactを確認した。184文字枠/表セルの測定ではoverflow0、nativeチャート1・表2・画像0。母版/layout/themeの内容は元テンプレートを保持している。代表の比較表セルをPowerPointで編集→保存→再表示し、変更の保持を確認した。確認用コピーは`render/editability/slide-02-edited.png`、元の正本は変更していない。
 
-## 根拠と制約
+修復前に画像検索3回を実行したが結果は0件。その後、公式リンク・通常検索から企業2件、政府/団体4件の実画像/PDFを確認した。外部資料からは構成の文法だけを採り、画像・文言・数値・ロゴは取り込んでいない。初回制作時の調査とは区別する。`source/reference-research.json`と`source/style-ledger.md`を参照。
 
-PROVENANCE.jsonにcommitと原典ファイルSHA、environment.jsonに依存、QA.jsonとrender/powerpoint-render.jsonに検査範囲を保存。LICENSEは原文を保持。
+独立再評価、原典JTC17/20の受理、利用者の採用は未完了。現在のPPTX hash・各検査は`QA.json`、保持範囲は`PROVENANCE.json`、再生成とZIP再実行は`REPRODUCE.md`に記録する。
 
-- 独立した生成プログラムではなく指示SkillとPPTXテンプレートを用いた制作。原典テンプレートの再配布はMIT LICENSEを保持。
+新規の題材での制作手順は`SKILL.md`。元6参照と全15型の確認、参照優先順、視覚調査、全頁の描画・overflow・package・再読込の工程を省かない。

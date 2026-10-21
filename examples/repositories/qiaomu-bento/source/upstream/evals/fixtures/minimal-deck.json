@@ -1,0 +1,150 @@
+{
+  "format": "bento/slides",
+  "version": 1,
+  "title": "qiaomu bento fixture",
+  "size": {
+    "width": 1280,
+    "height": 720
+  },
+  "theme": {
+    "background": "#F4F1EA",
+    "color": "#1E2A3A",
+    "accent": "#D95D39",
+    "fontFamily": "system-ui, sans-serif"
+  },
+  "slides": [
+    {
+      "id": "cover",
+      "name": "Cover",
+      "background": "#F4F1EA",
+      "transition": "none",
+      "notes": "Introduce the single-file presentation fixture.",
+      "elements": [
+        {
+          "id": "accent",
+          "type": "shape",
+          "shape": "rect",
+          "x": 96,
+          "y": 120,
+          "w": 18,
+          "h": 420,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#D95D39",
+          "stroke": "transparent",
+          "strokeWidth": 0,
+          "radius": 9,
+          "fx": {
+            "enter": "fade-up",
+            "order": 0
+          }
+        },
+        {
+          "id": "headline",
+          "type": "text",
+          "x": 150,
+          "y": 220,
+          "w": 900,
+          "h": 180,
+          "rotation": 0,
+          "opacity": 1,
+          "html": "One file.<br><b>A complete deck.</b>",
+          "fontSize": 72,
+          "fontFamily": "system-ui, sans-serif",
+          "fontWeight": 750,
+          "color": "#1E2A3A",
+          "align": "left",
+          "valign": "middle",
+          "lineHeight": 1.08,
+          "fx": {
+            "enter": "fade-up",
+            "order": 1
+          }
+        }
+      ]
+    },
+    {
+      "id": "proof",
+      "name": "Proof",
+      "background": "#FFFFFF",
+      "transition": "morph",
+      "notes": "Show that the fixture includes a valid chart and a morph transition.",
+      "elements": [
+        {
+          "id": "accent",
+          "type": "shape",
+          "shape": "rect",
+          "x": 96,
+          "y": 86,
+          "w": 220,
+          "h": 10,
+          "rotation": 0,
+          "opacity": 1,
+          "fill": "#D95D39",
+          "stroke": "transparent",
+          "strokeWidth": 0,
+          "radius": 5
+        },
+        {
+          "id": "headline",
+          "type": "text",
+          "x": 96,
+          "y": 112,
+          "w": 700,
+          "h": 80,
+          "rotation": 0,
+          "opacity": 1,
+          "html": "The output contract is testable.",
+          "fontSize": 42,
+          "fontFamily": "system-ui, sans-serif",
+          "fontWeight": 750,
+          "color": "#1E2A3A",
+          "align": "left",
+          "valign": "top",
+          "lineHeight": 1.1
+        },
+        {
+          "id": "chart",
+          "type": "chart",
+          "x": 96,
+          "y": 250,
+          "w": 1088,
+          "h": 360,
+          "rotation": 0,
+          "opacity": 1,
+          "preset": "bar",
+          "option": {
+            "xAxis": {
+              "type": "category",
+              "data": [
+                "plan",
+                "json",
+                "deck",
+                "gate"
+              ]
+            },
+            "yAxis": {
+              "type": "value"
+            },
+            "color": [
+              "#D95D39"
+            ],
+            "series": [
+              {
+                "type": "bar",
+                "data": [
+                  1,
+                  1,
+                  1,
+                  1
+                ],
+                "barWidth": 72
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "modified": "2026-07-26T00:00:00Z"
+}

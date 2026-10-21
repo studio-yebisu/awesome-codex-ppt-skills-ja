@@ -40,4 +40,6 @@ Expand-Archive -LiteralPath pandoc.zip -DestinationPath .build/pandoc
 
 ## 確認範囲
 
-原典JS生成と数式注入の成功、数式placeholder残存なし、PowerPoint16のPNG/PDF出力、代表完成物の初回表示まで。ユーザー指定により全ページ詳細目視、独立レビュー、全PPTX構造監査、ZIP再実行は未実施。分散は全3件を全体としたn分母。不偏分散（n−1）はこの教材の計算に使っていません。
+原典JS生成・OMML注入、placeholder残存0、原典overlap検査0件、PowerPointで全5枚を描画して文字・数式・図表を目視。各頁の数式を2ブロック以下へ整理し、棒グラフの値を表示。青と橙の文字色は白地で対比を取れる濃さに調整。独立再評価は修正後に実施する。全構造監査・5並列excellenceとZIP再実行は未実施。
+
+この5分教材では本編5枚へ絞り、原典のReferences/Thank You/Backup追加を省略した。研究論文からの引用・抽出を実証した例ではない。

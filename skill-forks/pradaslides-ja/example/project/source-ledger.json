@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "架空の貸出手順案",
+      "uri_or_path": "../input/data.json",
+      "status": "scenario",
+      "supports": [
+        "C01",
+        "C02",
+        "C03",
+        "C04",
+        "C05",
+        "C06"
+      ]
+    }
+  ],
+  "claims": [
+    {
+      "id": "C01",
+      "text": "借りる前に、返すところまで決める。",
+      "class": "scenario",
+      "status": "scenario",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "C02",
+      "text": "申込時に必要な情報を一つの記録へそろえる。",
+      "class": "scenario",
+      "status": "scenario",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "C03",
+      "text": "申込書と現物を照合し、貸出前の数量・状態・受取担当者を記録して返却時まで残す。",
+      "class": "scenario",
+      "status": "scenario",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "C04",
+      "text": "異常に気づいた時点で使用を止め、担当者に扱いを確認する。",
+      "class": "scenario",
+      "status": "scenario",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "C05",
+      "text": "借りた品と返す品を照合し、担当者の確認を記録する。",
+      "class": "scenario",
+      "status": "scenario",
+      "source_ids": [
+        "S01"
+      ]
+    },
+    {
+      "id": "C06",
+      "text": "窓口・日時と場所・変更時の連絡先を確認してから申し込む。",
+      "class": "scenario",
+      "status": "scenario",
+      "source_ids": [
+        "S01"
+      ]
+    }
+  ]
+}

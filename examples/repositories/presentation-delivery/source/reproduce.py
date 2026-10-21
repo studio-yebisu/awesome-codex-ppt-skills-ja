@@ -32,7 +32,7 @@ CSS="""@font-face{font-family:'BIZ UDPGothic';src:url('fonts/BIZUDPGothic-Regula
 body.dark{background:#203e31;color:#f7f5ee}.masthead{position:absolute;left:52pt;top:25pt;width:856pt;border-bottom:1pt solid #708571;padding-bottom:10pt;display:flex;justify-content:space-between}.masthead p{font-size:10pt;letter-spacing:.06em}
 .content{position:absolute;left:52pt;top:89pt;width:856pt;height:382pt}h1{font-size:32pt;line-height:1.35;font-weight:700;letter-spacing:-.025em}h2{font-size:26pt;line-height:1.4;font-weight:700}p{font-size:18pt;line-height:1.5}.hero{font-size:54pt;line-height:1.28}.lead{font-size:22pt;line-height:1.55;margin-top:22pt}.handoff{display:flex;gap:26pt;align-items:center;margin-top:40pt}.handoff p{font-size:24pt}.handoff .arrow{font-size:32pt;color:#b4c7af}
 .three{display:grid;grid-template-columns:repeat(3,1fr);gap:24pt;margin-top:48pt}.three>div{border-top:2pt solid #708571;padding-top:20pt}.tag{font-size:14pt;color:#577258}.dark .tag{color:#b4c7af}.three h2{margin-top:12pt}.three>div>p:last-child{margin-top:17pt}.bottom-line{position:absolute;left:0;top:344pt;font-size:16pt;line-height:1.5}.filename{margin-top:24pt;padding:19pt 24pt;background:#dde6d5}.filename p{font-size:28pt;font-weight:700;line-height:1.4}.compact{margin-top:24pt}.compact>div{padding-top:12pt}.compact h2{font-size:24pt;margin-top:5pt}.compact>div>p:last-child{font-size:16pt;margin-top:8pt}
-.status{display:grid;grid-template-columns:1fr 1fr;gap:34pt;margin-top:34pt}.status>div{border-top:2pt solid #b4c7af;padding-top:20pt}.status h2{margin-top:12pt}.status>div>p:last-child{margin-top:17pt}.checks{margin-top:38pt;display:grid;grid-template-columns:repeat(3,1fr);gap:28pt}.step{font-size:32pt;line-height:1.25;color:#577258}.checks h2{font-size:24pt;margin-top:15pt}.checks>div>p:last-child{font-size:17pt;margin-top:17pt}.kicker{font-size:14pt;letter-spacing:.08em}.closing{font-size:46pt;margin-top:12pt}.message{margin-top:26pt;padding:14pt 20pt;background:#dde6d5}.message p{font-size:17pt;line-height:1.7}.footer{position:absolute;left:52pt;top:507pt;width:856pt;display:flex;justify-content:space-between}.footer p{font-size:9pt;line-height:1.4;color:#577258}.dark .footer p{color:#b4c7af}
+.status{display:grid;grid-template-columns:1fr 1fr;gap:34pt;margin-top:34pt}.status>div{border-top:2pt solid #b4c7af;padding-top:20pt}.status h2{margin-top:12pt}.status>div>p:last-child{margin-top:17pt}.checks{margin-top:38pt;display:grid;grid-template-columns:repeat(3,1fr);gap:28pt}.step{font-size:32pt;line-height:1.25;color:#577258}.checks h2{font-size:24pt;margin-top:15pt}.checks>div>p:last-child{font-size:17pt;margin-top:17pt}.kicker{font-size:14pt;letter-spacing:.08em}.closing{font-size:46pt;margin-top:12pt}.message{margin-top:26pt;padding:14pt 20pt;background:#dde6d5}.message p{font-size:17pt;line-height:1.7}.lead p{font-size:22pt;line-height:1.55;margin:0}.body-copy{margin-top:17pt}.body-copy p{margin:0}.filename-parts{margin-top:16pt}.filename-parts>div{display:flex;gap:18pt;align-items:center;height:52pt;border-bottom:1pt solid #708571}.filename-parts h2{font-size:23pt;width:180pt}.filename-parts p{font-size:16pt}.filename-parts .part-label{width:50pt;color:#577258}.filename-parts .part-arrow{font-size:24pt;color:#577258}.footer{position:absolute;left:52pt;top:507pt;width:856pt;display:flex;justify-content:space-between}.footer p{font-size:9pt;line-height:1.4;color:#577258}.dark .footer p{color:#b4c7af}
 """
 
 def index(data, root):
@@ -90,7 +90,7 @@ class QuietHandler(SimpleHTTPRequestHandler):
 
 def main():
     global BUILD_STARTED
-    parser=argparse.ArgumentParser();parser.add_argument('--input',default=str(CASE/'input/data.json'));parser.add_argument('--node',default=shutil.which('node'));parser.add_argument('--powerpoint',action='store_true');parser.add_argument('--showcase',action='store_true');parser.add_argument('--html-only',action='store_true')
+    parser=argparse.ArgumentParser();parser.add_argument('--input',default=str(CASE/'input/data.json'));parser.add_argument('--node',default=shutil.which('node'));parser.add_argument('--powerpoint',action='store_true');parser.add_argument('--showcase',action='store_true');parser.add_argument('--html-only',action='store_true');parser.add_argument('--reuse-existing-dependencies',action='store_true',help='Use existing pinned Node dependencies and browser; no install')
     args=parser.parse_args();data=json.loads(Path(args.input).read_text(encoding='utf-8'));assert len(data['pages'])==6
     BUILD_STARTED=not args.showcase
     if BUILD_STARTED:dump(CASE/'QA.json',{'status':'generation_in_progress','human_review':False,'full_page_visual_review':False})
@@ -105,14 +105,19 @@ def main():
     if not args.showcase:index(data,CASE)
     if args.html_only:print(root);return
     assert args.node,'Node.js is required; pass --node with the full executable path'
-    node=Path(args.node).resolve();npm=node.parent/'node_modules/npm/bin/npm-cli.js';assert npm.is_file(),npm
+    node=Path(args.node).resolve();npm=node.parent/'node_modules/npm/bin/npm-cli.js'
+    if not args.reuse_existing_dependencies:assert npm.is_file(),npm
     prepare_runtime()
     env=os.environ.copy()
     if env.get('LOCALAPPDATA') and not env.get('PLAYWRIGHT_BROWSERS_PATH'):env['PLAYWRIGHT_BROWSERS_PATH']=str(Path(env['LOCALAPPDATA'])/'ms-playwright')
     env['YEBISU_DECK_INPUT']=str(Path(args.input).resolve())
     install='ci' if (RUNTIME/'package-lock.json').exists() else 'install'
-    command([node,npm,install,'--prefix',RUNTIME,'--no-fund','--no-audit'],'npm-'+install,env)
-    command([node,RUNTIME/'node_modules/playwright/cli.js','install','chromium','--only-shell'],'official-chromium-setup',env)
+    if args.reuse_existing_dependencies:
+        for name in ['playwright','pdf-lib','pptxgenjs','sharp']:
+            assert (RUNTIME/'node_modules'/name/'package.json').is_file(),name+' is not installed'
+    else:
+        command([node,npm,install,'--prefix',RUNTIME,'--no-fund','--no-audit'],'npm-'+install,env)
+        command([node,RUNTIME/'node_modules/playwright/cli.js','install','chromium','--only-shell'],'official-chromium-setup',env)
     server=ThreadingHTTPServer(('127.0.0.1',0),partial(QuietHandler,directory=str(root)))
     thread=threading.Thread(target=server.serve_forever,daemon=True);thread.start()
     env['YEBISU_DECK_BASE_URL']=f'http://127.0.0.1:{server.server_port}/'

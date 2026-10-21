@@ -14,7 +14,7 @@
   "content_audit": "docs/CONTENT-AUDIT.md",
   "brand": "input/BRAND.json",
   "beat_map": "input/scene-plan.json",
-  "local_diff": "source/talk-local.diff",
+  "local_diff": "source/talk-local.diff, source/overview-contrast.diff",
   "engine_modified": false,
   "controller_replaced": false,
   "bridge": "source/authored/deck/CatalogBridge.tsx; original deck public API, same-origin flattened 0-based index",
@@ -81,24 +81,23 @@
   "offline_build_check_passed": true,
   "fictional": true,
   "sample_notice": "架空のパン店を説明する概念資料。原料仕様・食品安全・時間・売上・科学値は示さず、パン/生地/棚は説明用SVG。QR target未指定でQRなし。",
-  "verification_scope": "Original build/typecheck/bundle/offline check, first major browser display, one native click from #1.2 to #2.1, two representative PNGs only. Original full verify walk/back/direct/frame comparisons not executed per user scope.",
+  "verification_scope": "原典buildと未変更verifyを実行。15状態すべての前進・逆戻り・直接表示が既定0.1%で一致、layout/error/remote/warningは0。全15枚を個別に開いて目視。",
   "acquisition": {
     "repository": "borjaperfra/beatdeck",
     "commit": "329a971303bedd3eeaae7c5216317fafdf2ef6a3",
     "archive_url": "https://codeload.github.com/borjaperfra/beatdeck/zip/329a971303bedd3eeaae7c5216317fafdf2ef6a3",
     "archive_sha256": "0fd7f21ca0c657a1c2687255a510bab4a95e084bc25b13665cd12274fbcbd601",
     "bytes": 1874195,
-    "checked_at": "2026-10-14T06:19:17.730053+00:00",
-    "root": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\borjaperfra__beatdeck"
+    "checked_at": "2026-10-14T06:19:17.730053+00:00"
   },
-  "private_init_target": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\beatdeck-talk",
   "build_receipt": {
     "command": "npm run build",
     "exit_code": 0,
     "typecheck_bundle_offline_check": true,
     "scene_count": 6,
     "flattened_beats": 15,
-    "verify_executed": false
+    "verify_executed": true,
+    "verify_exit_code": 0
   },
   "first_display": {
     "canvas": [
@@ -113,5 +112,34 @@
     "scene_count": 6,
     "flattened_beats": 15,
     "qr": null
-  }
+  },
+  "verification_receipt": "source/VERIFY.json",
+  "verification_report": "render/verify/report.json",
+  "contact_sheet": "render/verify/contact.png",
+  "overview_adapter": "source/overview-contrast.diff",
+  "verify_script_modified": false,
+  "verify_default_tolerance_changed": false,
+  "repair_author": "Codex",
+  "repair_receipt": "source/repair-qa.json",
+  "not_demonstrated": [
+    "原典verifyは15段階、既定0.1%の閾値で一致。QR URL未指定でQRなし、Terminal/data-exact照合は0要素。",
+    "3.1〜3.3は同じ「混ぜる・形」の工程内で見出しが切り替わる。次の工程への強調移動は4.1で起きる。",
+    "全キーの手動稽古、実機Wi-Fi切断、別端末・プロジェクターでの通し確認は未実施。"
+  ],
+  "current_repair": {
+    "author": "Codex",
+    "verification": "source/repair-qa.json",
+    "original_gates": "source/round4-original-gates.json",
+    "independent_rereview": "pending for repaired version"
+  },
+  "current_verification": "source/repair-qa.json",
+  "zip_reexecution": "source/round4-zip-replay.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "current_preview_canvas": {
+    "width": 1920,
+    "height": 1080,
+    "scope": "All current public deck pages; original Cogine validator separately at1280×720."
+  },
+  "current_runtime_snapshot": "runtime/",
+  "current_beat_visuals": "source/authored/deck/ProcessVisual.tsx"
 }

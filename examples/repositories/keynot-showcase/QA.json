@@ -1,21 +1,46 @@
 {
-  "status": "light_check_complete",
-  "build": "success: original Keynot example CSS/shell/controller + extracted brand and Japanese slides",
-  "browser": "Existing Chrome via Playwright",
-  "canvas": {
-    "width": 1600,
-    "height": 1000
-  },
-  "first_counter": "1 / 6",
-  "after_original_arrow_right": "2 / 6",
-  "page_errors": [],
-  "scope": "Necessary HTML build and two representative first displays plus original navigation1to2",
-  "visual_review": "Cover and split-panel representatives displayed; cover orphan break corrected locally and revised cover displayed",
-  "detailed_all_pages_review": false,
-  "independent_review": false,
-  "scoring": false,
-  "ZIP_reexecution": false,
-  "fullscreen_swipe_print": "Original code retained; these actions not separately tested",
-  "parent_bridge_integration": "Not tested here",
-  "targeted_fix": "s1-title clamp54px/6vw/96px + nowrap, keeping manual semantic break"
+  "status": "author_visual_qa_complete_independent_rereview_pending",
+  "author": "Codex",
+  "current_revision": "round4-web07-repair",
+  "scope": "指定色7項目を実抽出し全6頁を実描画・目視。3頁のローラーと「日」を離し、6頁の締めを指示書の明朝へ統一。1頁は原典navが自動で消えるまで待ち実撮影。",
+  "main_artifact": "index.html",
+  "main_artifact_sha256": "078e982e32dc2f4460e79413579de9e5611b4e7e1d90a38a3232afc676581de6",
+  "actual_rendered_states": 6,
+  "all_current_images_read_individually": true,
+  "visual_findings": "Repaired requested overlap, typography, sequence/choice semantics and page-specific notes; no obvious remaining collision or missing content in the viewed 1920×1080 images. This is author QA, not an independent score.",
+  "image_hashes": [
+    {
+      "path": "render/slide-01.png",
+      "sha256": "703cadfddee328f8101c399f933f31996c8b7e41164f57fcba60a84fdffc1b26"
+    },
+    {
+      "path": "render/slide-02.png",
+      "sha256": "d1f0725349c1560d978df14c9d314166506b0f37b8cb04296bbf1bfc83999b7d"
+    },
+    {
+      "path": "render/slide-03.png",
+      "sha256": "4c67303a2909df50a8f58f828ab41914545fb7c8175ea5294ca59680c5d4e20a"
+    },
+    {
+      "path": "render/slide-04.png",
+      "sha256": "99fc57d92675573f3eed5e2e7680ecfa8e1b1aa5135646c2a14b7b6050eb37f7"
+    },
+    {
+      "path": "render/slide-05.png",
+      "sha256": "4fe69018f38f3f05a0ad51f85b5e5207d5cdaa2434e1b578b2b093ccfa8b8d2c"
+    },
+    {
+      "path": "render/slide-06.png",
+      "sha256": "7012ad39b69b4d5d67426e77705c5dd4256cfef9d0dbc8d1dfc02d0056a80d7a"
+    }
+  ],
+  "original_gate_receipt": "source/round4-original-gates.json",
+  "independent_review": "pending for this repaired revision",
+  "not_run": [
+    "色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。",
+    "紙70/黒28/赤2は設計目標であり面積の測定値ではない。",
+    "元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。"
+  ],
+  "distribution_replay": "passed: source/round4-zip-replay.json",
+  "zip_reexecution": true
 }

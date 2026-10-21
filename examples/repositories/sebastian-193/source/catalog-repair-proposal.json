@@ -1,0 +1,91 @@
+{
+  "case_id": "sebastian-193",
+  "implemented_by": "Codex; no new Opus call",
+  "current_pptx_sha256": "c3b8605520205dabb8a0b3e2e9ff7c8dacba54d1821bb7e03717cd45e50f711b",
+  "case_patch": {
+    "pages": [
+      "examples/repositories/sebastian-193/render/slide-01.png",
+      "examples/repositories/sebastian-193/render/slide-02.png",
+      "examples/repositories/sebastian-193/render/slide-03.png",
+      "examples/repositories/sebastian-193/render/slide-04.png",
+      "examples/repositories/sebastian-193/render/slide-05.png",
+      "examples/repositories/sebastian-193/render/slide-06.png",
+      "examples/repositories/sebastian-193/render/slide-07.png",
+      "examples/repositories/sebastian-193/render/slide-08.png"
+    ],
+    "titles": [
+      "小さな道案内",
+      "サインの評価を三つの判断に分ける",
+      "分岐に情報を集めすぎない",
+      "サインを一枚ではなく、連続として設計する",
+      "小さな仕様が、読み方をそろえる",
+      "評価は、迷った場所を記録する",
+      "万能な案内にはならない",
+      "次の一歩：一つの分岐で確かめる"
+    ],
+    "preview_notice": "現在版をPowerPoint16でPDFへ出力し、PDFからRGB PNGを作成して全頁を制作側が目視確認した。SDK由来の過去プレビューとは区別する。独立モデルの現在版評価は別記録。",
+    "preview_image_notice": "掲載PNGは現在版のPowerPoint16出力PDFから生成。全頁の文字欠け・重なりを制作側が確認。",
+    "notes_append": [
+      "掲出PROMPT.txtは初回制作の履歴。初回は置換検査だったが、修復時に原典qa_pptx.py --profile group-meetingとverify_final_qa.pyを後から実行し、現在の成果物はerror0・warning0・hash一致を確認した。"
+    ]
+  },
+  "preview_method": "PowerPoint16 PDF to PDFium RGB; direct PNG retained",
+  "page_proofs": [
+    {
+      "index": 0,
+      "image": "render/slide-01.png"
+    },
+    {
+      "index": 1,
+      "image": "render/slide-02.png"
+    },
+    {
+      "index": 2,
+      "image": "render/slide-03.png"
+    },
+    {
+      "index": 3,
+      "image": "render/slide-04.png"
+    },
+    {
+      "index": 4,
+      "image": "render/slide-05.png"
+    },
+    {
+      "index": 5,
+      "image": "render/slide-06.png"
+    },
+    {
+      "index": 6,
+      "image": "render/slide-07.png"
+    },
+    {
+      "index": 7,
+      "image": "render/slide-08.png"
+    }
+  ],
+  "effect_patch": "data/skill-effect-patches/repairs-native4.json",
+  "independent_current_version_recheck": "pending",
+  "current_repair": "source/callout-repair.json",
+  "current_independent_review": "pending",
+  "guide_patch": {
+    "summary_ja": "研究資料を、参考テンプレートの書式と内容に合う図解を持つ、編集可能なPowerPointへまとめる。",
+    "requirements": [
+      "研究の元資料と、参考にするPPTXや画像。",
+      "Node.jsとPptxGenJS 4.0.1、Python 3.10以上とlxml・pypdfium2。",
+      "同梱例の確認はWindowsのPowerPointとPowerShell 7。BIZ UDPGothicは公式OFL付きファイルを同梱。"
+    ],
+    "steps": [
+      "研究の元資料・聴衆・発表時間・出力形式を決め、使うテンプレートや参考画像を渡す。",
+      "話の組み立てを選び、参考資料の書式と元の図・根拠を整理する。各頁の計画表を作ってから、具体的な構図と別案を決める。",
+      "新規作成・既存PPTXの修正・画像からの復元のうち、入力に合う原典の方式で制作する。制作範囲の判断が必要なら先に確認する。",
+      "全頁を描画して確認し、原典の検査を完成ファイルへ実行する。グループや接続線は保存したコピーを動かして確かめる。"
+    ],
+    "limitations": [
+      "原典は中国語学術向け。本派生では日本語とBIZ UDPGothicのstatic字体へ明示変更。",
+      "Route Bの作者方式を使用。Route Aの画像案制作とRoute Cの画像再構築は未実施。",
+      "master/theme/layoutのXMLを保全し、slide側の要素はPptxGenJSで新規作成。見本の科学データや組織を引き継がない。",
+      "原典の静的検査と完成ファイルの照合を実施。8頁では箱とラベルを一緒に移動し、保存・再表示後も4本の接続を保持することを確認。独立再評価は未了。"
+    ]
+  }
+}

@@ -1,0 +1,1 @@
+同梱の日本語SKILLと固定原典に従い、input/BRIEF.mdを7頁の日本語SVG資料へ。構成とデザインを先に保存し、SwissプリセットとSVG互換規範で著述する。原典export_pdf.jsへ明示したChrome adapterでPDFを出力し、全7頁を実表示で確認する。SVGソースは編集可。PowerPointへの挿入・図形変換・原典PPTX exportは未検証と明示する。

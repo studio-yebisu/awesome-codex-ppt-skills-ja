@@ -1,0 +1,44 @@
+{
+  "worker": "/root",
+  "scope": "page_002 only",
+  "source_sha256": "718a1e281ec10356527ed6c830232d1c1926ee81c714363fd26bebd4ff3966a5",
+  "reuse": "r4-reuse-receipt.json",
+  "commands": [
+    {
+      "command": "editppt page build <page_002>",
+      "exit_code": 0
+    },
+    {
+      "command": "editppt page contact-sheet <page_002>",
+      "exit_code": 0
+    },
+    {
+      "command": "editppt page validate <page_002> --report validation.json",
+      "exit_code": 0
+    }
+  ],
+  "visual_review": [
+    "Original source and previous preview read at full size; source ink bounds measured for both commands.",
+    "Current preview and original comparison inspected: git commit has single ordinary space, narrower glyphs and source-centred position; right-p ill clearance remains visible.",
+    "All3states and2arrows retain their meaning;4separated icons,12native texts,11structural shapes retained.",
+    "Small source-vs-native glyph/flat fill differences retained as a disclosed reconstruction limit."
+  ],
+  "validation_passed": true,
+  "artifacts": {
+    "page_manifest": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_002\\manifest.json",
+    "imagegen_jobs": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_002\\imagegen-jobs.json",
+    "page_pptx": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_002\\page.pptx",
+    "preview": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_002\\preview.png",
+    "contact_sheet": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_002\\split_assets_contact.png",
+    "validation": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_002\\validation.json",
+    "page_result": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_002\\page_result.json"
+  },
+  "hashes": {
+    "page_manifest": "ac1607497604800093ab277e01fb4094a1e52da6617af6e8dd47522acf0a3b21",
+    "imagegen_jobs": "8bf60f587158ada8e645591202b81f64000fcc3b8b24c43318c8a590c47d6508",
+    "page_pptx": "bedb31210718bacad25aa1ca1b339cedd6a184e163c16607b5d0e00143c3f91c",
+    "preview": "c13a4c26e4fb2d4ba88396e3af2bd6e1003c99abdd7727b6cf7ea6dc2fa30464",
+    "contact_sheet": "04bc01a6856d315071e6d475d3ad249604509aa946a1ae22a0cdb2b7caeaf9cf",
+    "validation": "92bc826d01567f558690d5d95bfbc828c49fcf01e1f4ce18c60637ad9326b0d7"
+  }
+}

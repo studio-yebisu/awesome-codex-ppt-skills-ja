@@ -1,0 +1,710 @@
+[
+  {
+    "case_id": "and-scene-showcase",
+    "job": "",
+    "change": "同じ対象を残したまま状態を動かし、前後の関係を段階ごとに追えるようにする。",
+    "input": "説明する対象・対象同士の関係・各段階の状態・短い説明文。作例は交換本棚の8段階。",
+    "output": "同じ図が変化するReact/MotionのWeb資料8段階。編集用TSXと実表示・遷移証拠。",
+    "how_to_use": [
+      "対象と関係を一覧にし、段階ごとの変化をtyped Stepのpayloadと説明文へ書く。",
+      "空の作業appへ原典bootstrapをコピーし、Sceneとregistryを登録する。同じ対象には同じlayoutId、共通図には同じgroupKeyを使う。",
+      "図の中身に合わせて配置を自然に中央へ寄せる。固定座標が必要な構成ではその経路を選んだことを記録し、図が文字を覆わない余白を取る。",
+      "元kitの移動・目次・P表示を使い、build→verify→全段階inspectを行う。最後・密度が高い段階・狭い画面と自然な移動途中も見る。"
+    ],
+    "constraints": [
+      "段階ごとに固定座標を与える経路を使用。原典の自動レイアウト再中央揃え、sync-kit、既存資料の編集、スワイプ操作は未実証。",
+      "狭い画面は原典canvas全体が縮小する。文字を読む用途には広い画面を推奨。PPTX/PDF出力は対象外。",
+      "自然な遷移の3時点を確認した範囲。連続動画全フレームやフレームレートの品質を保証しない。"
+    ],
+    "demonstration": {
+      "summary": "共通Sceneと対象IDを保って、一冊の位置と役割を変えた。本棚や役割名に本が重ならない配置、方向付きの循環図、実際の移動途中を確認できる。",
+      "applied_features": [
+        "原典bootstrap、typed Step、共通groupKey/Scene、stable layoutIdを実使用。",
+        "4→5段階で同じ本のDOMノードが移動する途中を撮影。目次クリックとPキーの表示切替も操作した。",
+        "起動方法だけのWindows差分で原典verifyと全8段階desktop/narrow inspectを再実行し、代表画像も同じ落ち着いた状態へ統一。"
+      ],
+      "not_demonstrated": [
+        "段階ごとに固定座標を与える経路を使用。原典の自動レイアウト再中央揃え、sync-kit、既存資料の編集、スワイプ操作は未実証。",
+        "狭い画面は原典canvas全体が縮小する。文字を読む用途には広い画面を推奨。PPTX/PDF出力は対象外。",
+        "自然な遷移の3時点を確認した範囲。連続動画全フレームやフレームレートの品質を保証しない。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "同じ本を置く",
+          "title": "持ち主から本棚へ",
+          "what_to_inspect": "持ち主から本棚へ移る同じ一冊と、離れた位置の役割名を見る。代表画像と2段階のPNGは同じ画面寸法・落ち着いた状態。",
+          "skill_rule": "同じ対象はstable layoutIdを保つ",
+          "proof_path": "examples/repositories/and-scene-showcase/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 4,
+          "label": "読み手へ移す",
+          "title": "本が読み手の側へ",
+          "what_to_inspect": "本が右へ移り、矢印は本の表紙線と重ならない。比較画像の前・途中・後では同じ本のDOMが保たれている。",
+          "skill_rule": "同じSceneとpayloadで状態を変える",
+          "proof_path": "examples/repositories/and-scene-showcase/render/slide-05.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 7,
+          "label": "8段階：同じ本棚を介して循環させる",
+          "title": "一冊を、次の人へ。",
+          "what_to_inspect": "本棚と文字を覆わない一冊、上の「次の読み手へ」と下の「読んだら本棚へ」の矢印を見る。",
+          "skill_rule": "同じScene/groupKeyのままStep payloadを替え、対象と関係の変化だけを示す。",
+          "proof_path": "examples/repositories/and-scene-showcase/render/slide-08.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/and-scene-showcase/source/round4-original-gates.json",
+        "examples/repositories/and-scene-showcase/source/round4-motion-proof.json",
+        "examples/repositories/and-scene-showcase/input/steps.json",
+        "examples/repositories/and-scene-showcase/render/major-02.png",
+        "examples/repositories/and-scene-showcase/render/morph-before.png",
+        "examples/repositories/and-scene-showcase/render/morph-mid.png",
+        "examples/repositories/and-scene-showcase/render/morph-after.png",
+        "examples/repositories/and-scene-showcase/render/present-mode.png",
+        "examples/repositories/and-scene-showcase/render/slide-01.png",
+        "examples/repositories/and-scene-showcase/render/slide-02.png",
+        "examples/repositories/and-scene-showcase/render/slide-03.png",
+        "examples/repositories/and-scene-showcase/render/slide-04.png",
+        "examples/repositories/and-scene-showcase/render/slide-05.png",
+        "examples/repositories/and-scene-showcase/render/slide-06.png",
+        "examples/repositories/and-scene-showcase/render/slide-07.png",
+        "examples/repositories/and-scene-showcase/render/slide-08.png",
+        "examples/repositories/and-scene-showcase/render/narrow/slide-01.png",
+        "examples/repositories/and-scene-showcase/render/narrow/slide-02.png",
+        "examples/repositories/and-scene-showcase/render/narrow/slide-03.png",
+        "examples/repositories/and-scene-showcase/render/narrow/slide-04.png",
+        "examples/repositories/and-scene-showcase/render/narrow/slide-05.png",
+        "examples/repositories/and-scene-showcase/render/narrow/slide-06.png",
+        "examples/repositories/and-scene-showcase/render/narrow/slide-07.png",
+        "examples/repositories/and-scene-showcase/render/narrow/slide-08.png",
+        "examples/repositories/and-scene-showcase/render/contact-round4.jpg",
+        "examples/repositories/and-scene-showcase/render/morph-comparison.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "共通Sceneと対象IDを保って、一冊の位置と役割を変えた。本棚や役割名に本が重ならない配置、方向付きの循環図、実際の移動途中を確認できる。",
+      "steps": [
+        "対象と関係を一覧にし、段階ごとの変化をtyped Stepのpayloadと説明文へ書く。",
+        "空の作業appへ原典bootstrapをコピーし、Sceneとregistryを登録する。同じ対象には同じlayoutId、共通図には同じgroupKeyを使う。",
+        "図の中身に合わせて配置を自然に中央へ寄せる。固定座標が必要な構成ではその経路を選んだことを記録し、図が文字を覆わない余白を取る。",
+        "元kitの移動・目次・P表示を使い、build→verify→全段階inspectを行う。最後・密度が高い段階・狭い画面と自然な移動途中も見る。"
+      ],
+      "limitations": [
+        "段階ごとに固定座標を与える経路を使用。原典の自動レイアウト再中央揃え、sync-kit、既存資料の編集、スワイプ操作は未実証。",
+        "狭い画面は原典canvas全体が縮小する。文字を読む用途には広い画面を推奨。PPTX/PDF出力は対象外。",
+        "自然な遷移の3時点を確認した範囲。連続動画全フレームやフレームレートの品質を保証しない。"
+      ]
+    },
+    "prompt_text": "後続のCodex修復依頼：原典方式を保ち、Opusの個別指摘に沿って本文・図・改行・手順を直す。現在版を再生成し、原典の実行可能な検査、全頁と動き/操作の証拠、配布ZIPをそろえる。独立再評価と未実施は別記する。初回の限定確認指示を現行QA範囲へ流用しない。"
+  },
+  {
+    "case_id": "sebastian-178",
+    "job": "",
+    "change": "読み手が決めることから逆算し、主張と根拠を工程・比較表・判断図へ整理する。",
+    "input": "読者の判断、答え、根拠となる原稿・データ。作例は動画を教材へ組み替える架空の7頁。",
+    "output": "原典runtime付きHTML7頁、単体package、PNG/PDF、Golden Path検査記録。",
+    "how_to_use": [
+      "読者が何を決めるかを先に定め、答えと根拠を分けて書く。分からない数値を作らない。",
+      "原典content-to-exhibit-routerから、比較には表、順序には工程図、理由には関係図を選ぶ。",
+      "1600×900の原典starterと6層CSS、元runtimeを保ち、source/build.pyで本文と日本語字体を生成する。",
+      "Golden Pathのquality→contrast→fit→renderを実行し、単体packageと全頁PNG/PDFを確認する。Windows差分はパス変換だけに限定する。"
+    ],
+    "constraints": [
+      "架空の企画。学習効果・制作時間・収益の実績は含まない。原典のroot LICENSEとSKILLの記載不一致は解消していない。",
+      "原典runtimeを置き換えた初期実装は旧履歴。現在は元runtimeと局所catalog bridgeを使用。",
+      "日本語用CSSは原典CSSの後に追加。新しい原稿では同じ4検査と全頁の実描画をやり直す。"
+    ],
+    "demonstration": {
+      "summary": "数値の根拠がない箇所は、工程図・比較表・判断の分岐を選んだ。判断図には接続線を入れ、小テストは3欄の幅をそろえ、日本語を句のまとまりで読めるようにした。",
+      "applied_features": [
+        "原典starter、6層CSS、原典runtime.jsをそのまま使用し、親との接続だけ局所bridgeへ分離。",
+        "日本語入力と公式字体subsetから7頁を生成し、quality/contrast/fit/renderの原典4工程をWindowsのパス差分だけで再実行。",
+        "実際のpackage出力から全7 PNG/PDFを更新。判断図の分岐、3欄の本文、24pxの表見出しを確認。"
+      ],
+      "not_demonstrated": [
+        "架空の企画。学習効果・制作時間・収益の実績は含まない。原典のroot LICENSEとSKILLの記載不一致は解消していない。",
+        "原典runtimeを置き換えた初期実装は旧履歴。現在は元runtimeと局所catalog bridgeを使用。",
+        "日本語用CSSは原典CSSの後に追加。新しい原稿では同じ4検査と全頁の実描画をやり直す。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "字体と階層",
+          "title": "動画一本を教材へ",
+          "what_to_inspect": "同梱Notoの見出し・副題・本文と、右下の一重の頁番号を見る。",
+          "skill_rule": "字体更新後に実描画し、原典runtimeの頁番号を使う",
+          "proof_path": "examples/repositories/sebastian-178/render/slide-01.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 2,
+          "label": "比較の関係",
+          "title": "学習の章を比較表にする",
+          "what_to_inspect": "章・素材・行動・編集判断の四列と、「実演」が一語で残る箇所を見る。",
+          "skill_rule": "比較をcomparison-tableで同じ観点に並べる",
+          "proof_path": "examples/repositories/sebastian-178/render/slide-03.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 4,
+          "label": "5頁：説明する関係から図の型を選ぶ",
+          "title": "図解の型は、説明する関係で選ぶ",
+          "what_to_inspect": "何を理解してほしいか→順序/比較/理由→工程図/比較表/関係図の接続線を見る。右欄を数値グラフで埋めず、定性的な関係を選ぶ。",
+          "skill_rule": "原典content-to-exhibit-routerは数値の根拠がなければ定性的componentを使い、説明する関係からexhibitを選ぶ。",
+          "proof_path": "examples/repositories/sebastian-178/render/slide-05.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-178/source/round4-golden-path.json",
+        "examples/repositories/sebastian-178/source/runtime-identity.json",
+        "examples/repositories/sebastian-178/source/assets/css/deck-ja.css",
+        "examples/repositories/sebastian-178/source/references/content-to-exhibit-router.md",
+        "examples/repositories/sebastian-178/source/build.py",
+        "examples/repositories/sebastian-178/render/slide-01.png",
+        "examples/repositories/sebastian-178/render/slide-02.png",
+        "examples/repositories/sebastian-178/render/slide-03.png",
+        "examples/repositories/sebastian-178/render/slide-04.png",
+        "examples/repositories/sebastian-178/render/slide-05.png",
+        "examples/repositories/sebastian-178/render/slide-06.png",
+        "examples/repositories/sebastian-178/render/slide-07.png",
+        "examples/repositories/sebastian-178/render/contact-round4.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "数値の根拠がない箇所は、工程図・比較表・判断の分岐を選んだ。判断図には接続線を入れ、小テストは3欄の幅をそろえ、日本語を句のまとまりで読めるようにした。",
+      "steps": [
+        "読者が何を決めるかを先に定め、答えと根拠を分けて書く。分からない数値を作らない。",
+        "原典content-to-exhibit-routerから、比較には表、順序には工程図、理由には関係図を選ぶ。",
+        "1600×900の原典starterと6層CSS、元runtimeを保ち、source/build.pyで本文と日本語字体を生成する。",
+        "Golden Pathのquality→contrast→fit→renderを実行し、単体packageと全頁PNG/PDFを確認する。Windows差分はパス変換だけに限定する。"
+      ],
+      "limitations": [
+        "架空の企画。学習効果・制作時間・収益の実績は含まない。原典のroot LICENSEとSKILLの記載不一致は解消していない。",
+        "原典runtimeを置き換えた初期実装は旧履歴。現在は元runtimeと局所catalog bridgeを使用。",
+        "日本語用CSSは原典CSSの後に追加。新しい原稿では同じ4検査と全頁の実描画をやり直す。"
+      ]
+    },
+    "method": "原典Golden Pathのpackage/render/quality検査を使用。原典runtime.jsはbyte同一で保持し、catalog-bridge.jsは原典キーイベントだけを送る。WindowsのfileURLと実行pathのみadapter化。",
+    "sample_notice": "架空の研修企画。原典runtimeを保持し、サイト用bridgeで同じキー操作を呼ぶ。",
+    "preview_notice": "原典runtimeでページを操作します。カタログ連携だけ局所bridgeを使います。",
+    "profile_patch": {
+      "execution_type": "original_golden_path_with_byte_identical_runtime_and_catalog_bridge"
+    },
+    "prompt_text": "後続のCodex修復依頼：原典方式を保ち、Opusの個別指摘に沿って本文・図・改行・手順を直す。現在版を再生成し、原典の実行可能な検査、全頁と動き/操作の証拠、配布ZIPをそろえる。独立再評価と未実施は別記する。初回の限定確認指示を現行QA範囲へ流用しない。",
+    "notes": [
+      "架空の教材化企画の入口。読み手が決めることを「学べる順序へ組み直す」と置く。",
+      "到達点・素材・主張を対応させる。outcome-supportで答えを先に置き、その根拠を下段へ分ける。",
+      "章を動画の順ではなく学習者の行動で並べる。comparison-tableで章・素材・行動・編集判断を同じ行へそろえる。",
+      "素材から再利用までの出力を引き継ぐ。順序を説明するためprocess-flowを選び、工程間の矢印を本文の外へ置く。",
+      "順序/違い/理由という関係で図を選ぶ。根拠のない量的chartを作らず、接続したissue-treeを使う。",
+      "到達点と同じ行動を小テストにする。設問・理由・再学習の3欄へ十分な幅を配る。",
+      "再利用前の判断と記録を対応させる。decision-logで通過条件と未確認時の対応を明記する。"
+    ]
+  },
+  {
+    "case_id": "sebastian-173",
+    "job": "",
+    "change": "一頁の主題を絞り、数値の意味と補足を大きさ・罫線・余白で読み分ける。",
+    "input": "読者に伝える一文、根拠や図の原稿。作例は音の散歩と展示の架空企画。",
+    "output": "紙色プロフィールのHTML7頁とPNG/PDF。軽量PDFはpypdfによる局所代替。",
+    "how_to_use": [
+      "原稿から各頁の主題と一つの主オブジェクトを決め、原典13スロットを選ぶ。",
+      "暗色既定か紙色プロフィールを一つ選ぶ。四隅の情報、action title、主オブジェクト、tailを保ち、数値はラベル→値→補足の三層で組む。",
+      "source/build.pyでHTML/SVGを生成し、日本語調整をassets/adaptation.cssへ分離する。",
+      "HTML→Chromium PNG/PDFと原典全チェックリストを確認する。軽量化が代替方式なら名称と未実行の元工程を分けて記録する。"
+    ],
+    "constraints": [
+      "原典の既定はdark editorial。今回実証したのは全頁paper-lightで、既定暗色の完成作例は未制作。",
+      "hero写真・scrim/glowを実装していないため、原典チェックリストの全条件合格ではない。",
+      "固定取得物にcompact-pdf.shがなく、Ghostscriptも未使用。軽量PDFはpypdfの局所代替で、同じ処理と称さない。音声再生も未実装。"
+    ],
+    "demonstration": {
+      "summary": "原典の13スロットから一頁の主オブジェクトを選び、全頁を紙色に統一。表の末尾罫線を外して脚注と離し、締めの3数値は見出し→値→意味の順へ直した。",
+      "applied_features": [
+        "原典styles.cssを変更せず、日本語と余白の差分をadaptation.cssへ分離。",
+        "4頁は三欄の記録表を唯一の主オブジェクトにする。5頁の地図ラベルと注記を拡大し、7頁は受付5分・散歩30分・共有15分の意味を添える。",
+        "Chromium全7頁と元の980px内側境界を確認。pypdfで現在のPDFを圧縮し、原典Ghostscript未実行と分けた。"
+      ],
+      "not_demonstrated": [
+        "原典の既定はdark editorial。今回実証したのは全頁paper-lightで、既定暗色の完成作例は未制作。",
+        "hero写真・scrim/glowを実装していないため、原典チェックリストの全条件合格ではない。",
+        "固定取得物にcompact-pdf.shがなく、Ghostscriptも未使用。軽量PDFはpypdfの局所代替で、同じ処理と称さない。音声再生も未実装。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "数値の階層",
+          "title": "散歩30分の案",
+          "what_to_inspect": "大きな30、単位、企画上の目安という説明を順に読む。",
+          "skill_rule": "value・label・contextの三段階を作る",
+          "proof_path": "examples/repositories/sebastian-173/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 3,
+          "label": "主役を一つに",
+          "title": "記録を三欄の表へ",
+          "what_to_inspect": "無意味な01や波形を外し、場所・音・印象の対応だけを見せる。",
+          "skill_rule": "一頁に支配的なオブジェクトを一つ置く",
+          "proof_path": "examples/repositories/sebastian-173/render/slide-04.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 6,
+          "label": "7頁：各数値をラベル→値→補足で読む",
+          "title": "次の角で、ひとつ聞いてみる。",
+          "what_to_inspect": "受付→5→分/参加方法、散歩→30→分/安全な道、共有→15→分/地図を読む、の三層を見る。05表記をやめ、企画上の目安と明記。",
+          "skill_rule": "原典の巨大数値はラベル→値→文脈の三階層で、何の数値かを先に示す。",
+          "proof_path": "examples/repositories/sebastian-173/render/slide-07.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-173/source/build.py",
+        "examples/repositories/sebastian-173/assets/adaptation.css",
+        "examples/repositories/sebastian-173/source/repair-render.json",
+        "examples/repositories/sebastian-173/source/pdf-compression-repair.json",
+        "examples/repositories/sebastian-173/source/original-checklist-repair.json",
+        "examples/repositories/sebastian-173/source/upstream/reference.md",
+        "examples/repositories/sebastian-173/render/slide-01.png",
+        "examples/repositories/sebastian-173/render/slide-02.png",
+        "examples/repositories/sebastian-173/render/slide-03.png",
+        "examples/repositories/sebastian-173/render/slide-04.png",
+        "examples/repositories/sebastian-173/render/slide-05.png",
+        "examples/repositories/sebastian-173/render/slide-06.png",
+        "examples/repositories/sebastian-173/render/slide-07.png",
+        "examples/repositories/sebastian-173/render/contact-round4.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典の13スロットから一頁の主オブジェクトを選び、全頁を紙色に統一。表の末尾罫線を外して脚注と離し、締めの3数値は見出し→値→意味の順へ直した。",
+      "steps": [
+        "原稿から各頁の主題と一つの主オブジェクトを決め、原典13スロットを選ぶ。",
+        "暗色既定か紙色プロフィールを一つ選ぶ。四隅の情報、action title、主オブジェクト、tailを保ち、数値はラベル→値→補足の三層で組む。",
+        "source/build.pyでHTML/SVGを生成し、日本語調整をassets/adaptation.cssへ分離する。",
+        "HTML→Chromium PNG/PDFと原典全チェックリストを確認する。軽量化が代替方式なら名称と未実行の元工程を分けて記録する。"
+      ],
+      "limitations": [
+        "原典の既定はdark editorial。今回実証したのは全頁paper-lightで、既定暗色の完成作例は未制作。",
+        "hero写真・scrim/glowを実装していないため、原典チェックリストの全条件合格ではない。",
+        "固定取得物にcompact-pdf.shがなく、Ghostscriptも未使用。軽量PDFはpypdfの局所代替で、同じ処理と称さない。音声再生も未実装。"
+      ]
+    },
+    "method": "原典paper-lightのHTML/CSS→ブラウザー描画→印刷PDF。原典compact-pdf.shが固定commitに無くgsも未導入のため、lite PDFのみpypdfによる局所代替。",
+    "profile_patch": {
+      "execution_type": "original_html_design_with_browser_pdf_and_pypdf_lite_substitute"
+    },
+    "prompt_text": "後続のCodex修復依頼：原典方式を保ち、Opusの個別指摘に沿って本文・図・改行・手順を直す。現在版を再生成し、原典の実行可能な検査、全頁と動き/操作の証拠、配布ZIPをそろえる。独立再評価と未実施は別記する。初回の限定確認指示を現行QA範囲へ流用しない。"
+  },
+  {
+    "case_id": "port-town",
+    "job": "",
+    "change": "見せる頁と話すメモを分け、現在と次の頁を見ながら発表できる資料にする。",
+    "input": "伝える主張、受け手、原稿と図の素材、頁ごとの目的・話す要点・次へのつなぎ。",
+    "output": "Magazine風のHTML7頁と、現在/次頁・講稿を持つ原典発表者画面。",
+    "how_to_use": [
+      "Magazine/Swissと読者・素材を決め、該当する原典テンプレートを実際にコピーする。更新確認を行い、固定取得物を使う場合はその判断を残す。",
+      "各頁のlight/dark/heroを先に並べ、3頁以上同じテーマを続けない。原典の登録版式から主張に合うものを選ぶ。",
+      "頁IDごとにタイトル・目的・話す要点・次へのつなぎを書き、SPEAKER_NOTESと対応させる。",
+      "原典validatorを実行し、P表示の現在/次頁・講稿・戻る/進むを全頁で操作する。観客画面の同期は別の画面を見て確認する。"
+    ],
+    "constraints": [
+      "Swiss、画像グリッド、スクリーンショット整形、WebGL背景の動き、Step0の上流更新確認は今回未実証。",
+      "独立した観客画面を人が見て同期確認した範囲は未達。同期済みUI表示、現在/次iframeの確認とは区別する。レーザー/囲む・黒白幕・freeze・リハーサル・自動送りも未実証。",
+      "発表者画面の画像は制作側の実ブラウザー操作。直接file表示とHTTP表示の双方を同一条件で比較していない。サイト内作例とQAは同一originのHTTPで配信。",
+      "原典一般ルールの全段階達成を宣言しない。大きな表や長文研修、複数人編集には別方式が適する。"
+    ],
+    "demonstration": {
+      "summary": "暗色と明色を交互に置き、行程と計画値を原典の版式へ配置。発表者画面は次頁の枠を拡大し、全7頁の目的・講稿・次へのつなぎまで確認できるようにした。",
+      "applied_features": [
+        "原典Style A templateを使用し、頁IDと7件の固有講稿を一対一に結ぶ。",
+        "原典Pボタン→次へ6回を操作し、現在/次頁と全7講稿を1920×1440で保存。全メモがスクロールなしで収まる。",
+        "3頁はPipelineの順序を6停留所へ横展開した派生。5頁は原典Layout3の計画値表示。暗→明のテーマ間隔を保つ。",
+        "原文validatorの中国語ラベル不一致3件を保持し、日本語期待値だけの差分では0件。固定1280×720 iframeを等比縮小し、次頁にも十分な高さを配る局所CSS差分。"
+      ],
+      "not_demonstrated": [
+        "Swiss、画像グリッド、スクリーンショット整形、WebGL背景の動き、Step0の上流更新確認は今回未実証。",
+        "独立した観客画面を人が見て同期確認した範囲は未達。同期済みUI表示、現在/次iframeの確認とは区別する。レーザー/囲む・黒白幕・freeze・リハーサル・自動送りも未実証。",
+        "発表者画面の画像は制作側の実ブラウザー操作。直接file表示とHTTP表示の双方を同一条件で比較していない。サイト内作例とQAは同一originのHTTPで配信。",
+        "原典一般ルールの全段階達成を宣言しない。大きな表や長文研修、複数人編集には別方式が適する。"
+      ],
+      "pages": [
+        {
+          "index": 2,
+          "label": "本文の行程",
+          "title": "港から灯台へ戻る",
+          "what_to_inspect": "6停留所と時刻の関係を読み、4時間を実績と取り違えない。",
+          "skill_rule": "原典Style AのLayout6 Pipelineは順序を示す。作例はその順序を6停留所へ横展開した局所派生で、暗/明のテーマを続けすぎない。",
+          "proof_path": "examples/cases/port-town/render/slide-03.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 4,
+          "label": "運営の判断",
+          "title": "4日間の運営案",
+          "what_to_inspect": "現在2/7、次3/7の大きな全体プレビューと、来訪者の目的・話す要点・次へのつなぎを一画面で確認する。",
+          "skill_rule": "先に主張と判断を整理して頁へ配置する",
+          "proof_path": "examples/cases/port-town/render/presenter-page-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 1,
+          "label": "話す側の表示",
+          "title": "現在2・次3と講稿",
+          "what_to_inspect": "左の現在/次preview、右の対象者固有の目的と講稿が一致する。",
+          "skill_rule": "原典Style A Layout3のdata posterで、重要な計画値を大きな数字・単位・短い文脈に分ける。",
+          "proof_path": "examples/cases/port-town/render/presenter-cua.jpg",
+          "proof_kind": "browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/cases/port-town/source/round4-pages-proof.json",
+        "examples/cases/port-town/source/round4-presenter-proof.json",
+        "examples/cases/port-town/source/port_locale_notes.py",
+        "examples/cases/port-town/source/original-validator-receipt.json",
+        "examples/cases/port-town/source/round4-validator-ja-result.txt",
+        "examples/cases/port-town/source/validator-ja.diff",
+        "examples/cases/port-town/source/presenter-cua.json",
+        "examples/cases/port-town/render/presenter-page-01.png",
+        "examples/cases/port-town/render/presenter-page-02.png",
+        "examples/cases/port-town/render/presenter-page-03.png",
+        "examples/cases/port-town/render/presenter-page-04.png",
+        "examples/cases/port-town/render/presenter-page-05.png",
+        "examples/cases/port-town/render/presenter-page-06.png",
+        "examples/cases/port-town/render/presenter-page-07.png",
+        "examples/cases/port-town/render/slide-01.png",
+        "examples/cases/port-town/render/slide-02.png",
+        "examples/cases/port-town/render/slide-03.png",
+        "examples/cases/port-town/render/slide-04.png",
+        "examples/cases/port-town/render/slide-05.png",
+        "examples/cases/port-town/render/slide-06.png",
+        "examples/cases/port-town/render/slide-07.png",
+        "examples/cases/port-town/render/contact-round4.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "暗色と明色を交互に置き、行程と計画値を原典の版式へ配置。発表者画面は次頁の枠を拡大し、全7頁の目的・講稿・次へのつなぎまで確認できるようにした。",
+      "steps": [
+        "Magazine/Swissと読者・素材を決め、該当する原典テンプレートを実際にコピーする。更新確認を行い、固定取得物を使う場合はその判断を残す。",
+        "各頁のlight/dark/heroを先に並べ、3頁以上同じテーマを続けない。原典の登録版式から主張に合うものを選ぶ。",
+        "頁IDごとにタイトル・目的・話す要点・次へのつなぎを書き、SPEAKER_NOTESと対応させる。",
+        "原典validatorを実行し、P表示の現在/次頁・講稿・戻る/進むを全頁で操作する。観客画面の同期は別の画面を見て確認する。"
+      ],
+      "limitations": [
+        "Swiss、画像グリッド、スクリーンショット整形、WebGL背景の動き、Step0の上流更新確認は今回未実証。",
+        "独立した観客画面を人が見て同期確認した範囲は未達。同期済みUI表示、現在/次iframeの確認とは区別する。レーザー/囲む・黒白幕・freeze・リハーサル・自動送りも未実証。",
+        "発表者画面の画像は制作側の実ブラウザー操作。直接file表示とHTTP表示の双方を同一条件で比較していない。サイト内作例とQAは同一originのHTTPで配信。",
+        "原典一般ルールの全段階達成を宣言しない。大きな表や長文研修、複数人編集には別方式が適する。"
+      ]
+    },
+    "prompt_text": "後続のCodex修復依頼：原典方式を保ち、Opusの個別指摘に沿って本文・図・改行・手順を直す。現在版を再生成し、原典の実行可能な検査、全頁と動き/操作の証拠、配布ZIPをそろえる。独立再評価と未実施は別記する。初回の限定確認指示を現行QA範囲へ流用しない。"
+  },
+  {
+    "case_id": "html-scrolline",
+    "job": "",
+    "change": "内容の停止点と動きを分け、同じ時間軸を切らずに進めて変化を追えるようにする。",
+    "input": "主張ごとの停止点、時刻や項目、使うconceptとmove。作例は写真展の4段階。",
+    "output": "原典railの6停止点を持つHTMLと、月・項目付きのレール、自然な遷移の3時点。",
+    "how_to_use": [
+      "原典の6conceptから説明に合うものを選ぶ。railなら日付と項目、停止点ごとの一つの主張を用意する。",
+      "deck.yamlにbeatの内容、steps、handoffとmoveを書く。動きを本文に埋め込まず、engine/moves/conceptsを変更しない。",
+      "原典plan→Vite build→HTTP smokeを実行し、停止点ごとの図・字形・位置を確認する。",
+      "キー/ホイールと移動途中を確認する。MP4が必要な場合は原典npm run exportを別途実行し、その動画も確認する。"
+    ],
+    "constraints": [
+      "原典はrail/data/launch/zoom/canvas/kineticの6conceptとMP4 exportを持つ。今回制作したのはrailだけで、残り5conceptとMP4は未実施。",
+      "内部localeはenのまま、日本語本文と端末字体を利用。日本語locale機能を実装した作例ではない。",
+      "原典全体CIのWindowsパス3件不合格は旧実行記録を保持。今回のbuild/smokeと操作検査を、全CI合格へ読み替えない。印刷・縦長mobile・60fpsの定量確認も未実施。"
+    ],
+    "demonstration": {
+      "summary": "railだけを使い、5月企画→6月会場→7月案内→8月当日を連続して示す。月の間隔を広げて項目名を添え、停止画と自然な移動途中の両方で変化を確かめた。",
+      "applied_features": [
+        "原典CLI plan→Vite build→HTTP smokeを実行。6停止点のerrors/overlaps/clipped/tinyは0。",
+        "engine/moves/conceptsは変更せず、deckのCSSだけで月の実距離を360pxへ広げる。元moveが実座標を読んで同じレールを移動する。",
+        "rail-advanceとera-shiftを元のArrowRightで再生し、前・途中・完了後を保存。日時カウンター・項目ラベル・紙色の変化を示す。"
+      ],
+      "not_demonstrated": [
+        "原典はrail/data/launch/zoom/canvas/kineticの6conceptとMP4 exportを持つ。今回制作したのはrailだけで、残り5conceptとMP4は未実施。",
+        "内部localeはenのまま、日本語本文と端末字体を利用。日本語locale機能を実装した作例ではない。",
+        "原典全体CIのWindowsパス3件不合格は旧実行記録を保持。今回のbuild/smokeと操作検査を、全CI合格へ読み替えない。印刷・縦長mobile・60fpsの定量確認も未実施。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "最初の注目項目",
+          "title": "企画を決める",
+          "what_to_inspect": "月表示と大きな企画見出しを見る。現在線は上の章名を横切らない。 月/項目ラベルと全体行程を見て、別添の前・途中・後で元のレールが連続して動くことを比べる。",
+          "skill_rule": "一停止点を一つの主張に絞る",
+          "proof_path": "examples/repositories/html-scrolline/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 2,
+          "label": "次の月へ進む",
+          "title": "会場を確かめる",
+          "what_to_inspect": "同じレール上で注目先が会場へ変わる。月は一か所で表示する。 月/項目ラベルと全体行程を見て、別添の前・途中・後で元のレールが連続して動くことを比べる。",
+          "skill_rule": "rail-advanceで同じ対象を連続的に進める",
+          "proof_path": "examples/repositories/html-scrolline/render/slide-03.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 3,
+          "label": "段階を引き継ぐ",
+          "title": "案内を届ける",
+          "what_to_inspect": "紙色と月・注目項目が次段階へ移った状態を見る。 月/項目ラベルと全体行程を見て、別添の前・途中・後で元のレールが連続して動くことを比べる。",
+          "skill_rule": "つながるbeatをera-shiftのlinkで受け渡す",
+          "proof_path": "examples/repositories/html-scrolline/render/slide-04.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/html-scrolline/source/upstream/decks/exhibit-ja/deck.yaml",
+        "examples/repositories/html-scrolline/source/upstream/decks/exhibit-ja/japanese.css",
+        "examples/repositories/html-scrolline/render/report.json",
+        "examples/repositories/html-scrolline/review/repair-player-check.json",
+        "examples/repositories/html-scrolline/source/round4-motion-proof.json",
+        "examples/repositories/html-scrolline/render/rail-advance-before.png",
+        "examples/repositories/html-scrolline/render/rail-advance-mid.png",
+        "examples/repositories/html-scrolline/render/rail-advance-after.png",
+        "examples/repositories/html-scrolline/render/era-shift-before.png",
+        "examples/repositories/html-scrolline/render/era-shift-mid.png",
+        "examples/repositories/html-scrolline/render/era-shift-after.png",
+        "examples/repositories/html-scrolline/render/slide-01.png",
+        "examples/repositories/html-scrolline/render/slide-02.png",
+        "examples/repositories/html-scrolline/render/slide-03.png",
+        "examples/repositories/html-scrolline/render/slide-04.png",
+        "examples/repositories/html-scrolline/render/slide-05.png",
+        "examples/repositories/html-scrolline/render/slide-06.png",
+        "examples/repositories/html-scrolline/render/contact-round4.jpg",
+        "examples/repositories/html-scrolline/render/motion-comparison.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "railだけを使い、5月企画→6月会場→7月案内→8月当日を連続して示す。月の間隔を広げて項目名を添え、停止画と自然な移動途中の両方で変化を確かめた。",
+      "steps": [
+        "原典の6conceptから説明に合うものを選ぶ。railなら日付と項目、停止点ごとの一つの主張を用意する。",
+        "deck.yamlにbeatの内容、steps、handoffとmoveを書く。動きを本文に埋め込まず、engine/moves/conceptsを変更しない。",
+        "原典plan→Vite build→HTTP smokeを実行し、停止点ごとの図・字形・位置を確認する。",
+        "キー/ホイールと移動途中を確認する。MP4が必要な場合は原典npm run exportを別途実行し、その動画も確認する。"
+      ],
+      "limitations": [
+        "原典はrail/data/launch/zoom/canvas/kineticの6conceptとMP4 exportを持つ。今回制作したのはrailだけで、残り5conceptとMP4は未実施。",
+        "内部localeはenのまま、日本語本文と端末字体を利用。日本語locale機能を実装した作例ではない。",
+        "原典全体CIのWindowsパス3件不合格は旧実行記録を保持。今回のbuild/smokeと操作検査を、全CI合格へ読み替えない。印刷・縦長mobile・60fpsの定量確認も未実施。"
+      ]
+    },
+    "prompt_text": "後続のCodex修復依頼：原典方式を保ち、Opusの個別指摘に沿って本文・図・改行・手順を直す。現在版を再生成し、原典の実行可能な検査、全頁と動き/操作の証拠、配布ZIPをそろえる。独立再評価と未実施は別記する。初回の限定確認指示を現行QA範囲へ流用しない。"
+  },
+  {
+    "case_id": "react-slide-deck",
+    "job": "",
+    "change": "問題・問い・概念・例・持ち帰りの順で、図と操作を含む研修用Web資料を組む。",
+    "input": "読者の困りごと、学ぶ概念、根拠や事例、持ち帰って行うこと。作例はFAQ整備の架空企画。",
+    "output": "固定1280×720で縮尺するReact/Motion資料5頁、週別タブ4状態と段階表示の画像。",
+    "how_to_use": [
+      "読者の困りごとから、問い・概念・具体例・持ち帰りを順に書く。研修の流れをクリック操作だけに置き換えない。",
+      "presetを一つ選び、表紙にその特徴となる要素を使う。SlideLayout/useSlideScaleで1280×720を縮尺する。",
+      "図や文字を原典のMotion variantsで段階表示する。操作が必要な箇所だけ独立stateとdata-interactiveを持たせる。",
+      "TypeScript/Vite build後に全頁・操作の各状態・通常motion・reduced-motionをブラウザーで確認する。index/assets/fontsを一緒にHTTP配信する。"
+    ],
+    "constraints": [
+      "原典のInteractive slideを参考にした週別タブは局所拡張。Recharts、他preset、外部API、量的効果測定は未実施。",
+      "4週間・10問は架空の目標。FAQ改善や問い合わせ削減の実績はない。",
+      "元Vite8/Tailwind4.2.1のpeer不一致はTailwind4.2.2の固定lockへ局所修正。60fpsの定量計測・全端末の検査は未実施。"
+    ],
+    "demonstration": {
+      "summary": "原典の研修の流れとBold Signalを使用。表紙は色付きカードを中心にし、本文は図の段階表示、作例の週別タブで操作して読める。",
+      "applied_features": [
+        "原典App/SlideLayout/useSlideScale/animation variantsを保持し、TypeScriptとVite buildを実行。",
+        "問題→問い→概念→例→持ち帰りを5頁へ対応させ、表紙にBold Signalの色付きカードを使う。",
+        "全5頁とW1〜W4を実操作し、4状態の画像を保存。週別タブは作例固有のReact state拡張で、原典内蔵部品ではない。",
+        "reduced-motionで全頁を確認し、通常Motionでは入場の前・途中・完了を別に保存。"
+      ],
+      "not_demonstrated": [
+        "原典のInteractive slideを参考にした週別タブは局所拡張。Recharts、他preset、外部API、量的効果測定は未実施。",
+        "4週間・10問は架空の目標。FAQ改善や問い合わせ削減の実績はない。",
+        "元Vite8/Tailwind4.2.1のpeer不一致はTailwind4.2.2の固定lockへ局所修正。60fpsの定量計測・全端末の検査は未実施。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "先に考える",
+          "title": "同じ質問が戻る問題",
+          "what_to_inspect": "質問の例の後に、読み手のチームへの問いが置かれている。",
+          "skill_rule": "説明の前にProblem/Discussionで考えさせる",
+          "proof_path": "examples/repositories/react-slide-deck/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 2,
+          "label": "概念をつかむ",
+          "title": "出典と更新先を付ける",
+          "what_to_inspect": "三つの概念と二本の矢印、同じ強調色を見る。 段階表示の前・途中・完了画像も比べる。4頁のW1〜W4は作例の独自操作として別画像へ保存。",
+          "skill_rule": "一つのpresetと過密でない図解を使う",
+          "proof_path": "examples/repositories/react-slide-deck/render/slide-03.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 4,
+          "label": "持ち帰る行動",
+          "title": "まず1問を書く",
+          "what_to_inspect": "三つの行動と、分からない答えの扱いを読み取る。",
+          "skill_rule": "研修を具体的なTakeawayで閉じる",
+          "proof_path": "examples/repositories/react-slide-deck/render/slide-05.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/react-slide-deck/source/repair-browser-review.json",
+        "examples/repositories/react-slide-deck/source/round4-reveal-proof.json",
+        "examples/repositories/react-slide-deck/source/app/src/slides/deck.tsx",
+        "examples/repositories/react-slide-deck/source/app/src/App.tsx",
+        "examples/repositories/react-slide-deck/source/upstream/skills/slide-deck/slide-guidelines.md",
+        "examples/repositories/react-slide-deck/render/week-1.png",
+        "examples/repositories/react-slide-deck/render/week-2.png",
+        "examples/repositories/react-slide-deck/render/week-3.png",
+        "examples/repositories/react-slide-deck/render/week-4.png",
+        "examples/repositories/react-slide-deck/render/reveal-before.png",
+        "examples/repositories/react-slide-deck/render/reveal-mid.png",
+        "examples/repositories/react-slide-deck/render/reveal-after.png",
+        "examples/repositories/react-slide-deck/render/slide-01.png",
+        "examples/repositories/react-slide-deck/render/slide-02.png",
+        "examples/repositories/react-slide-deck/render/slide-03.png",
+        "examples/repositories/react-slide-deck/render/slide-04.png",
+        "examples/repositories/react-slide-deck/render/slide-05.png",
+        "examples/repositories/react-slide-deck/render/contact-round4.jpg",
+        "examples/repositories/react-slide-deck/render/weeks-comparison.jpg",
+        "examples/repositories/react-slide-deck/render/reveal-comparison.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典の研修の流れとBold Signalを使用。表紙は色付きカードを中心にし、本文は図の段階表示、作例の週別タブで操作して読める。",
+      "steps": [
+        "読者の困りごとから、問い・概念・具体例・持ち帰りを順に書く。研修の流れをクリック操作だけに置き換えない。",
+        "presetを一つ選び、表紙にその特徴となる要素を使う。SlideLayout/useSlideScaleで1280×720を縮尺する。",
+        "図や文字を原典のMotion variantsで段階表示する。操作が必要な箇所だけ独立stateとdata-interactiveを持たせる。",
+        "TypeScript/Vite build後に全頁・操作の各状態・通常motion・reduced-motionをブラウザーで確認する。index/assets/fontsを一緒にHTTP配信する。"
+      ],
+      "limitations": [
+        "原典のInteractive slideを参考にした週別タブは局所拡張。Recharts、他preset、外部API、量的効果測定は未実施。",
+        "4週間・10問は架空の目標。FAQ改善や問い合わせ削減の実績はない。",
+        "元Vite8/Tailwind4.2.1のpeer不一致はTailwind4.2.2の固定lockへ局所修正。60fpsの定量計測・全端末の検査は未実施。"
+      ]
+    },
+    "prompt_text": "後続のCodex修復依頼：原典方式を保ち、Opusの個別指摘に沿って本文・図・改行・手順を直す。現在版を再生成し、原典の実行可能な検査、全頁と動き/操作の証拠、配布ZIPをそろえる。独立再評価と未実施は別記する。初回の限定確認指示を現行QA範囲へ流用しない。",
+    "problem": "研修の問題・概念・具体例・次の行動がつながらず、図や操作を含む説明を一続きに組みにくい。"
+  },
+  {
+    "case_id": "qiaomu-bento",
+    "job": "",
+    "change": "原稿やデータを編集できる単体HTMLへまとめ、同じ要素を動かしながら説明できるようにする。",
+    "input": "新規作成：brief・ノート・報告・データ・参照URL。更新：原本HTML・文書JSON・安定要素ID。",
+    "output": "編集可能/閲覧用の単体Bento HTML6頁。元の文書IDを保つ再生成と各状態の実画像。",
+    "how_to_use": [
+      "新規/更新、読者、比率、オフライン範囲を決め、資料に基づくdeck-planを書く。原典同梱standalone shellと公式formatを読み、locateで確認する。",
+      "新規は公式最小JSONから作り --new-document で一度だけIDを発行。更新は原本をextractし、docId・未知フィールド・要素IDを保つ。",
+      "数字はchart、比較はtable、連続変化はmorph、重要数値はcountUpへ対応させる。作例で使わない画像・state slide等を実施済みとしない。",
+      "元CLIで原本とは別ファイルへbuildし、更新は --identity-source 原本HTML で照合する。schema・shell・identity検査と実ブラウザーの編集/演示/保存/再表示を区別して確認する。"
+    ],
+    "constraints": [
+      "元リポのcheckoutは前提ではなく、同梱standaloneが通常経路。project側の追加validatorはcheckoutが無いため未実行。",
+      "画像+scrim/ken-burns、state slide、外部媒体、共同編集、実検索と権限制御は未実証。",
+      "ブラウザーの直接「コピー保存」は完了未確認。同docIdコピーは既存状態の影響を受けたため、独立コピーは --new-document を使用した。",
+      "countUpの初期化前に静的値が一瞬描画される原典挙動がある。途中値が増加する区間を撮影し、連続動画全フレームの品質保証とはしない。PPTX/PDF出力は対象外。"
+    ],
+    "demonstration": {
+      "summary": "同梱standalone shellを通常の制作経路として使用。3→4頁は同じトークンのmorph、5頁は目標24/30の原典chartとcountUp、表紙と締めには本文に基づく図を配置した。",
+      "applied_features": [
+        "原典CLIがJSON schema、固定shell、原本と同じdocIdを検査し、別出力へ生成。原本を上書きしない。",
+        "権限確認から回答/出典へ同じIDのトークンと強調位置が移る。自然なmorphの前・途中・後を保存。",
+        "評価質問30件中24件以上という目標をnative chartとcountUpへ変換。漏えい0件・更新期限と、未達成の計画値である条件を分けて表示。",
+        "旧版で元UI編集→JSONコピー→元CLI --new-documentの独立コピー→再表示を実確認。直接保存UIの完了は未確認。生の共同編集情報は.privateに隔離。"
+      ],
+      "not_demonstrated": [
+        "元リポのcheckoutは前提ではなく、同梱standaloneが通常経路。project側の追加validatorはcheckoutが無いため未実行。",
+        "画像+scrim/ken-burns、state slide、外部媒体、共同編集、実検索と権限制御は未実証。",
+        "ブラウザーの直接「コピー保存」は完了未確認。同docIdコピーは既存状態の影響を受けたため、独立コピーは --new-document を使用した。",
+        "countUpの初期化前に静的値が一瞬描画される原典挙動がある。途中値が増加する区間を撮影し、連続動画全フレームの品質保証とはしない。PPTX/PDF出力は対象外。"
+      ],
+      "pages": [
+        {
+          "index": 2,
+          "label": "同じ対象を確認",
+          "title": "権限で文書を絞る",
+          "what_to_inspect": "三つの役割と、権限側の緑のトークンを見る。",
+          "skill_rule": "意味のある対象に安定要素IDを付ける",
+          "proof_path": "examples/repositories/qiaomu-bento/render/slide-03.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 3,
+          "label": "次の状態へ",
+          "title": "回答と出典へ進む",
+          "what_to_inspect": "同じ三役を保ち、トークンと強調だけが回答側へ移る。",
+          "skill_rule": "morphで同じ対象の状態変化を伝える",
+          "proof_path": "examples/repositories/qiaomu-bento/render/slide-04.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 4,
+          "label": "5頁：目標数値をグラフとcountUpへ",
+          "title": "答えと権限を、別々に確かめる",
+          "what_to_inspect": "0〜30の棒グラフと、全30件中24件以上という目標を見る。数値アニメーションの途中と最終24を別画像で比べ、下の計画値の注記を読む。",
+          "skill_rule": "原典の内容対応は数値→chart、重要数値→countUp。純JSONのoptionと数値配列を渡し、実績でない目標を捏造しない。",
+          "proof_path": "examples/repositories/qiaomu-bento/render/slide-05.png",
+          "proof_kind": "browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/qiaomu-bento/source/round4-deck-validation.json",
+        "examples/repositories/qiaomu-bento/source/round4-player-validation.json",
+        "examples/repositories/qiaomu-bento/source/round4-rebuild-receipt.json",
+        "examples/repositories/qiaomu-bento/source/round4-countup-proof.json",
+        "examples/repositories/qiaomu-bento/source/morph-runtime-repair.json",
+        "examples/repositories/qiaomu-bento/source/browser-edit-reopen-receipt.json",
+        "examples/repositories/qiaomu-bento/source/browser-edit-copy-boundary.json",
+        "examples/repositories/qiaomu-bento/deck-plan.md",
+        "examples/repositories/qiaomu-bento/source/upstream/references/workflow.md",
+        "examples/repositories/qiaomu-bento/source/upstream/references/upstream/bento-format.md",
+        "examples/repositories/qiaomu-bento/render/morph-before.png",
+        "examples/repositories/qiaomu-bento/render/morph-mid.png",
+        "examples/repositories/qiaomu-bento/render/morph-after.png",
+        "examples/repositories/qiaomu-bento/render/countup-before.png",
+        "examples/repositories/qiaomu-bento/render/countup-mid.png",
+        "examples/repositories/qiaomu-bento/render/countup-after.png",
+        "examples/repositories/qiaomu-bento/render/browser-edit-reopen.jpg",
+        "examples/repositories/qiaomu-bento/render/slide-01.png",
+        "examples/repositories/qiaomu-bento/render/slide-02.png",
+        "examples/repositories/qiaomu-bento/render/slide-03.png",
+        "examples/repositories/qiaomu-bento/render/slide-04.png",
+        "examples/repositories/qiaomu-bento/render/slide-05.png",
+        "examples/repositories/qiaomu-bento/render/slide-06.png",
+        "examples/repositories/qiaomu-bento/render/contact-round4.jpg",
+        "examples/repositories/qiaomu-bento/render/morph-comparison.jpg",
+        "examples/repositories/qiaomu-bento/render/countup-comparison.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "同梱standalone shellを通常の制作経路として使用。3→4頁は同じトークンのmorph、5頁は目標24/30の原典chartとcountUp、表紙と締めには本文に基づく図を配置した。",
+      "steps": [
+        "新規/更新、読者、比率、オフライン範囲を決め、資料に基づくdeck-planを書く。原典同梱standalone shellと公式formatを読み、locateで確認する。",
+        "新規は公式最小JSONから作り --new-document で一度だけIDを発行。更新は原本をextractし、docId・未知フィールド・要素IDを保つ。",
+        "数字はchart、比較はtable、連続変化はmorph、重要数値はcountUpへ対応させる。作例で使わない画像・state slide等を実施済みとしない。",
+        "元CLIで原本とは別ファイルへbuildし、更新は --identity-source 原本HTML で照合する。schema・shell・identity検査と実ブラウザーの編集/演示/保存/再表示を区別して確認する。"
+      ],
+      "limitations": [
+        "元リポのcheckoutは前提ではなく、同梱standaloneが通常経路。project側の追加validatorはcheckoutが無いため未実行。",
+        "画像+scrim/ken-burns、state slide、外部媒体、共同編集、実検索と権限制御は未実証。",
+        "ブラウザーの直接「コピー保存」は完了未確認。同docIdコピーは既存状態の影響を受けたため、独立コピーは --new-document を使用した。",
+        "countUpの初期化前に静的値が一瞬描画される原典挙動がある。途中値が増加する区間を撮影し、連続動画全フレームの品質保証とはしない。PPTX/PDF出力は対象外。"
+      ]
+    },
+    "prompt_text": "後続のCodex修復依頼：原典方式を保ち、Opusの個別指摘に沿って本文・図・改行・手順を直す。現在版を再生成し、原典の実行可能な検査、全頁と動き/操作の証拠、配布ZIPをそろえる。独立再評価と未実施は別記する。初回の限定確認指示を現行QA範囲へ流用しない。"
+  }
+]

@@ -1,0 +1,78 @@
+[
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\upstream\\skills\\codex-ppt\\scripts\\record_slide_dispatch.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt",
+      "--slide",
+      "slide_03",
+      "--agent-id",
+      "/root/skill_effect_catalog",
+      "--agent-nickname",
+      "Codex native5 repair worker",
+      "--prompt-file",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\imagegen-repair\\slide-03-repair-job.json"
+    ],
+    "exit_code": 0,
+    "stdout": "slide_03 -> dispatched\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\upstream\\skills\\codex-ppt\\scripts\\record_slide_result.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt",
+      "--slide",
+      "slide_03",
+      "--agent-id",
+      "/root/skill_effect_catalog",
+      "--backend-used",
+      "built-in image_gen.imagegen",
+      "--selected-source",
+      "workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\imagegen-repair\\slide-03-after.png",
+      "--qa-note",
+      "One local spacing edit made with the built-in image tool. Exact text/commands retained and source/output visually inspected. The candidate was generated before the repair dispatch receipt was refreshed; full chronological generation/approval-gate compliance is not claimed."
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\upstream\\skills\\codex-ppt\\scripts\\record_slide_result.py\", line 185, in <module>\n    raise SystemExit(main())\n                     ~~~~^^\n  File \"M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\upstream\\skills\\codex-ppt\\scripts\\record_slide_result.py\", line 149, in main\n    source = ensure_file(Path(args.selected_source).expanduser().resolve(), \"selected source image\")\n  File \"M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\upstream\\skills\\codex-ppt\\scripts\\slide_run_state.py\", line 161, in ensure_file\n    raise FileNotFoundError(f\"Missing {label}: {path}\")\nFileNotFoundError: Missing selected source image: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\imagegen-repair\\slide-03-after.png\n"
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\upstream\\skills\\codex-ppt\\scripts\\record_slide_dispatch.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt",
+      "--slide",
+      "slide_03",
+      "--agent-id",
+      "/root/skill_effect_catalog",
+      "--agent-nickname",
+      "Codex native5 repair worker",
+      "--prompt-file",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\imagegen-repair\\slide-03-repair-job.json"
+    ],
+    "exit_code": 0,
+    "stdout": "slide_03 -> dispatched\n",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\upstream\\skills\\codex-ppt\\scripts\\record_slide_result.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt",
+      "--slide",
+      "slide_03",
+      "--agent-id",
+      "/root/skill_effect_catalog",
+      "--backend-used",
+      "built-in image_gen.imagegen",
+      "--selected-source",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\codex-image-ppt\\source\\imagegen-repair\\slide-03-after.png",
+      "--qa-note",
+      "One local spacing edit made with the built-in image tool. Exact text/commands retained and source/output visually inspected. The candidate was generated before the repair dispatch receipt was refreshed; full chronological generation/approval-gate compliance is not claimed."
+    ],
+    "exit_code": 0,
+    "stdout": "{\"slide_id\": \"slide_03\", \"status\": \"recorded\"}\n",
+    "stderr": ""
+  }
+]

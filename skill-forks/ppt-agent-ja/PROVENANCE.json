@@ -1,0 +1,62 @@
+{
+  "repository": "Akxan/ppt-agent-skill",
+  "upstream_commit": "01825dee2ad40a8c719824252605396b9a570d57",
+  "license": "MIT",
+  "method": "original html_packager -> html2svg dom-to-svg -> svg2pptx native OOXML shapes",
+  "style": "Original Bauhaus Block HTML mock CSS + Japanese localized fonts/content",
+  "originals": {
+    "upstream/LICENSE": "aed1737775ce6ece93d34f100418eb1f34a10f0ba8a28fa2dab9af2efe28642d",
+    "upstream/SKILL.md": "c6bcb420349a1ed3cd1c4d6ae8d79516ceb29d35ef3416fd6e5200074040c64a",
+    "upstream/references/pipeline-compat.md": "cfc0b2bbfab5ff5b9e4c85f0d254236d7810fb664c4d8d64ec393104549ff921",
+    "upstream/references/typography.md": "1380137a146b2cd31e9fdba9be5dfb4d374d9ca4a0b33210a55655a2b74d09a2",
+    "upstream/scripts/html2svg.py": "9ed78093baf16bbc4b6d94a4a2e8565190ae94d3576ce1a05d31bb0acf985218",
+    "upstream/scripts/html_packager.py": "442a0d3bf6c299601e873c3597db26eb7fb7f7b62beab8c4f5bf350acb3e3195",
+    "upstream/scripts/svg2pptx.py": "4700f64868022bad439216f01eb94680ba9de9b25740a9db10e27717ec0caeb9",
+    "upstream/ppt-output/style-gallery/bauhaus_block.html": "b547fe2fd5572cbc289474a9455bbd41c8fc5c8fb686ba0a5e91dac0104c78f5",
+    "upstream/references/layouts/asymmetric.md": "2b9d34164191e022cc43d48a5c13526f83d75859c72608c7968018d6fb3d74de",
+    "upstream/references/page-templates/cover.md": "e23c154b90fbd5dbbd34ea9ba188cb18ec323377addfb7f4410cd659265857f5",
+    "upstream/references/styles/index.md": "16878a3bcc54f2180674caced400e8239a9c73278b76b45235081e744e82abcc",
+    "upstream/references/styles/vibrant.md": "00b6f704cc646745989a34c403e1ae44d2daf3656ba6038bce75cab72a16b59d"
+  },
+  "changes": "source/*.diff",
+  "font_sources": "fonts/SOURCE.json",
+  "font_files": {
+    "fonts/bizudpmincho/BIZUDPMincho-Regular.ttf": "dbcea04578ac1e9d3484525e870ce491bd04361768f4d2ba4b827d96e20f891d",
+    "fonts/manrope/Manrope[wght].ttf": "3ae11c49db0455a3cc33e37d380f20fdb8c7f8b41dc07625c177e3d87a9d6ae6",
+    "fonts/zenkakugothicnew/ZenKakuGothicNew-Black.ttf": "795819a979184981842994d8f4eb9e14ce443d687bd5e731d6ca67ded8f92261"
+  },
+  "dependency_notices": "dependencies/",
+  "package_versions": {
+    "puppeteer": "25.13.0",
+    "dom-to-svg": "0.12.2",
+    "esbuild": "0.28.2",
+    "python-pptx": "1.0.2",
+    "lxml": "6.1.3",
+    "Pillow": "12.3.0"
+  },
+  "build": "source/BUILD.json",
+  "render": "render/powerpoint-render.json",
+  "content_status": "hypothetical exhibition concept; dates, venue, entry conditions undecided",
+  "layout_repair": {
+    "scope": "12 label x positions on page3; geometry/colors/arrows/fonts/text unchanged",
+    "production_model": "claude-opus-5-5",
+    "production_run_date": "2026-10-15",
+    "verification": "source/label-alignment-qa.json",
+    "output_pptx_sha256": "0667658e36e8a725b1a247235e084826ba3a379d13b159f2a49a9c690b7ce415",
+    "previous_pptx_sha256": "a57652396782363b3d0b186063e9f80e066030cf8a04f5d67140551de241427a",
+    "original_preserved_privately": true,
+    "independent_review": "pending",
+    "runtime_versions": {
+      "python": "3.12.14",
+      "python-pptx": "1.0.2",
+      "lxml": "6.1.1",
+      "Pillow": "12.3.0"
+    }
+  },
+  "current_replay": {
+    "author": "Codex",
+    "route": "Original3converters, same authored HTML/native geometry, actual Windows font repair and all5PowerPoint views.",
+    "proof": "source/current-native-font-proof.json",
+    "independent_review": "pending"
+  }
+}

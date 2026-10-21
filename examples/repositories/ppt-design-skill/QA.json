@@ -1,44 +1,49 @@
 {
-  "status": "qa_complete",
+  "status": "original_execution_complete_current_powerpoint_pages_inspected_independent_review_pending",
   "page_count": 5,
-  "artifact_sha256": "efbcf9d9f8df268ff29f6716ac1e0b60b7d80724ec3a6177fd36a1976975ed69",
+  "artifact_sha256": "8deab35046f912b4d270f41fd9a8e7c7b15f9f6beba7975680152221e9225602",
   "images": [
     {
-      "page": 1,
-      "file": "render/slide-01.png",
-      "sha256": "8bfe84f4195be9570edea9fe80be87515e5e901af8c0aaca2ec430ce2c5e6a93"
+      "index": 0,
+      "path": "render/slide-01.png",
+      "sha256": "ac29781adc0635571f069b49c8a0a3f5b0bc7006c58a275f0f53e21fbb67495b"
     },
     {
-      "page": 2,
-      "file": "render/slide-02.png",
-      "sha256": "1a8dbd3efd4027bdc63b54f872a639789c11e8ea3bc0967d80cfba97e8d781d7"
+      "index": 1,
+      "path": "render/slide-02.png",
+      "sha256": "a42fd8b7100f44c9c7f7efe980ad95d51754bcf07e5f7c310c7164be15afd309"
     },
     {
-      "page": 3,
-      "file": "render/slide-03.png",
-      "sha256": "9ab2b0940f8bd16f79e2b6e48c5ea728045d90287851726f9829d268b2b92c9c"
+      "index": 2,
+      "path": "render/slide-03.png",
+      "sha256": "1f6d069b87d5242185ab61983e1ee1869fad940452db0f57c826ef0b748edf80"
     },
     {
-      "page": 4,
-      "file": "render/slide-04.png",
-      "sha256": "042593bef5c5b133fd87ffebab8f4bce3940593313768867c00cba5bf82d1336"
+      "index": 3,
+      "path": "render/slide-04.png",
+      "sha256": "4eef01151b9963dae520d55f4da80c6c17ffde0cfb4a16e5ebc65e2267a5c304"
     },
     {
-      "page": 5,
-      "file": "render/slide-05.png",
-      "sha256": "2c1b3c4ada4426f6db72032292c5830c916ca407810584075c2737c741ea312b"
+      "index": 4,
+      "path": "render/slide-05.png",
+      "sha256": "c2d2dde5d146b3309c55ecd7f38f0bac54b2ff27ff578c7953303ec775547b62"
     }
   ],
   "visual_review": {
-    "pages_reviewed": [
+    "reviewer": "Codex implementation review; not independent scoring",
+    "all_current_pngs_opened": true,
+    "pages": [
+      0,
       1,
       2,
       3,
-      4,
-      5
+      4
     ],
-    "method": "実PowerPointの全5頁PNGを個別視認し、日本語・計算・欄外・図表・講稿を確認",
-    "result": "全5頁の実PowerPoint PNGを個別視認。日本語・計算・欄外・図表・講稿を確認。"
+    "findings": [
+      "暖色の用紙、和文明朝、右のカップと店舗名、左下の営業時間/期間/仮価格を見る。店舗名は価格ラベルから離してカップ内へ寄せた。",
+      "左の15/25/35セットと右の9,750/16,250/22,750円を照合。棒も数値も編集可能で、下に利益ではない旨を示す。",
+      "需要・負担・廃棄と、右の「開始前に記入（未合意）」の空欄を見る。未収集や未合意を達成済みと誤認させない。"
+    ]
   },
   "data_checks": {
     "price": 650,
@@ -49,5 +54,38 @@
     ],
     "actual_data": "not_collected"
   },
-  "human_adoption": "not_requested"
+  "human_adoption": false,
+  "all_pages_visually_reviewed_by_author": true,
+  "independent_current_version_review": "pending_after_round3_repairs",
+  "production_adoption": false,
+  "current_native_inventory": "source/native-elements.json",
+  "current_pdf_fonts": "source/pdf-fonts.json",
+  "distribution_replay": {
+    "status": "passed_both_archives",
+    "evidence": "source/distribution-replay.json",
+    "native_content_equal": true,
+    "all_page_render_rgb_equal": true,
+    "archive_count": 2,
+    "replayed_page_count": 10,
+    "fresh_install_tested": false
+  },
+  "acceptance_review": "source/visual-review.json",
+  "condition_status": {
+    "R1": "PASS",
+    "R2": "PASS",
+    "R3": "PASS",
+    "R4": "PASS",
+    "R5": "PASS",
+    "R6": "PASS",
+    "R7": "BLOCKED"
+  },
+  "delivery_grade_complete": false,
+  "theme_runtime_trace": "source/runtime-trace.json",
+  "original_runtime_trace_validator": {
+    "command": "python source/upstream/skill/scripts/validate_runtime_trace.py source/runtime-trace.json",
+    "exit_code": 0,
+    "meaning": "Schema/gate consistency only, not human approval or independent scoring."
+  },
+  "original_pptx_inspect": "source/logs/inspect.log",
+  "current_distribution_replay": "source/distribution-replay.json"
 }

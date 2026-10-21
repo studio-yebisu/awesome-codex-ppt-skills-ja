@@ -1,0 +1,69 @@
+{
+  "case_id": "hand-drawn-showcase",
+  "case_patch": {
+    "title": "話し合いの進め方",
+    "page_count": 5,
+    "style": "原典の低彩度背景・手描き墨線・固定章扉配置。日本語だけYu Minchoへ補う派生。",
+    "sample_notice": "架空のワークショップの章扉。本文資料や実績・効果を示すものではない。",
+    "preview_notice": "現在PPTXをPowerPoint PDFから画像化。全5頁をLO JPEGとともに実見した実装側QAで、独立評価の合格ではない。",
+    "preview_image_notice": "実PPTXのPowerPoint描画。挿絵は原SVGのPNG、文字はnative。",
+    "method": "原典PptxGenJS＋sharp雛形と未改変の原SVG4点を使用。小mark表紙、低彩度5色、原座標・字号を適用し、和文だけYu Minchoへ補う。原典Step6全頁QA、PowerPoint描画・文字編集・2ZIP再実行。",
+    "prompt_text": "原典の章扉機能を示す日本語作例を修復する。話題は架空のワークショップ「話し合いの進め方」。表紙＋4章（気づきを集める／意見を共有する／小さく試す／結果を記録する）。原典の低彩度の寒暖色、13.333×7.5、左下Georgia40pt regular、章ラベルと右下番号Calibri14pt、原座標を使う。日本語グリフだけYu Minchoとする明示adapterを加え、原典と完全同一字体とは説明しない。原典SVG#1/#2/#20/#23は未改変。表紙は54ptと小sparkleのみ。赤枠・巨大な苗木・詩的captionは使わない。原典Step6を全5頁実行し、PowerPoint全頁・native文字編集の追加証拠・2 ZIPの再実行まで確認。現在の修復はCodex実装。過去の人間承認やモデルによる制作・独立100点を捏造しない。",
+    "titles": [
+      "話し合いの進め方",
+      "気づきを集める",
+      "意見を共有する",
+      "小さく試す",
+      "結果を記録する"
+    ],
+    "pages": [
+      "examples/repositories/hand-drawn-showcase/render/slide-01.png",
+      "examples/repositories/hand-drawn-showcase/render/slide-02.png",
+      "examples/repositories/hand-drawn-showcase/render/slide-03.png",
+      "examples/repositories/hand-drawn-showcase/render/slide-04.png",
+      "examples/repositories/hand-drawn-showcase/render/slide-05.png"
+    ],
+    "notes": [
+      "表紙。原典Step5に沿い、章ラベルや大きな図を置かず、小さな装飾マークだけを添える。",
+      "観察した場面を集める章。原典#1の虫眼鏡を対応させた。章扉なので本文の手順や集計は含まない。",
+      "集めた気づきについて意見を共有する章。原典#2の吹き出しを対応させた。",
+      "一度に大きく変えず、試行を進める章。原典#20の階段を対応させた。",
+      "試した結果を記録する章。原典#23のチェックリストを対応させた。旧版の循環矢印は使用しない。"
+    ],
+    "font_families": [
+      "Georgia",
+      "Calibri",
+      "Yu Mincho"
+    ],
+    "font_download": null,
+    "license_notice_ja": "原典・SVGはMIT。Windows書体は参照のみで再配布しない。依存の原文条件を同梱。"
+  },
+  "guide_patch": {
+    "summary_ja": "章題の意味に合う手描きSVGと低彩度背景で、資料の章扉を揃える。",
+    "requirements": [
+      "Node.js、PptxGenJS、sharp。日本語派生作例はPython3とCalibri/Yu Minchoが必要。",
+      "原典Step6はLibreOfficeとpdftoppm。追加の実アプリ編集・描画はWindows PowerPointとpypdfium2。"
+    ],
+    "steps": [
+      "章数・各章題・表紙の有無・章とページの開始番号を決め、原典SKILLのStep1を確認する。",
+      "隣り合う章で似た色を避け、原典の低彩度の寒暖色から背景を選ぶ。各章の意味に合うSVGを40点のライブラリーから選ぶ。",
+      "原典のPptxGenJS＋sharp雛形で13.333×7.5の章扉を作る。章題Georgia40pt regular、章ラベルとページCalibri14pt、指定座標を保つ。日本語書体を補う場合は差分として記録する。",
+      "表紙を含める場合は左上54pt以上の見出しと小さな装飾だけを置き、章ラベルや章扉と同じ大きな図を置かない。",
+      "Step6通りにPPTXをLibreOfficeでPDF化し、pdftoppm150dpiで全ページを画像化する。切れ・重なり・図の位置・配色・番号を目視し、修復後も該当頁を再描画する。"
+    ],
+    "limitations": [
+      "章扉・区切り頁を作るスキル。本文の論理構成、業務データのグラフ、図表を備えたフル資料の作成をこの例では示さない。",
+      "原典はGeorgia/Calibriを厳密指定する。本例は欧文指定を保持し、日本語グリフだけYu Minchoへ明示する派生。和文まで原典と同一書体とは説明しない。",
+      "CalibriとYu MinchoはWindows既存書体を参照し、字体ファイルはZIPへ同梱・PPTXへ埋込みしない。別環境は対応する書体が必要。",
+      "手描きの挿絵は原SVGからPNG化するため線や塗りの個別編集はできない。変更する場合はSVGを編集して再生成する。",
+      "同梱の表紙sparkleは原典の新規図形ルールに沿う小さな派生SVG。章の4点は原典SVGを未改変使用。チェックリストの線は象徴的な記号で実際の記録内容ではない。",
+      "原典に対話で要件を集める段階があるが、本例は委任された改修で要件を確定した。過去の人間承認や現行版の独立評価合格は主張しない。"
+    ],
+    "execution_type": "instruction_template_and_original_svg_library",
+    "caveats": "日本語グリフだけYu Minchoへ置換する派生。PNG挿絵の線は個別編集できない。"
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native1-r8.json",
+  "canonical_data_edited": false,
+  "latest_author": "Codex",
+  "independent_review": "pending_current_revision"
+}

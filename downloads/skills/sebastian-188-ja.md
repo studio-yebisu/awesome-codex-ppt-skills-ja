@@ -1,38 +1,44 @@
 ---
-name: sebastian-188-ja
-description: 日本語文稿をSwiss StyleのSVG資料へ組み、Inkscapeで固定レイアウトPDFを出力する。SVGソースを編集する日本語制作キット。
+name: ppt-svg-generator-ja
+description: Markdownをページ構成とデザインに分け、文字・図形をソースで編集できるSVGへ組み立てる。
 ---
-# Swiss SVG・日本語制作
 
-原典は [vigorX777/ppt-svg-generator（固定commit）](https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb)。MIT、Copyright (c) 2025 vigorX777。[原文LICENSE](LICENSE)と[出所・実装差分](SOURCE.json)を保持する。本キットは受領した7枚の作例「AIに任せる前の設計図」を、日本語で使える配置へ整理したもの。
+## このスキルでできること
 
-## 制作の進め方
+原稿をページ構成とデザインに分け、文字・図形をソースで調整できるSVG資料へ組める。
 
-1. [依頼文](input/BRIEF.md)と[入力データ](input/data.json)から、目的・読み手・入力・制約・完成条件を抽出する。架空例を実績として扱わない。
-2. [原典SKILL](source/upstream/SKILL.md)と[quick手順](source/upstream/commands/quick.md)を参照し、[structure.json](.ppt-session/structure.json)へ頁タイプ・見出し・密度を保存する。
-3. 原典の[Swiss style](source/upstream/styles/04-swiss-style.md)と[design-system](source/upstream/specs/design-system.md)に従い、[design.json](.ppt-session/design.json)へ赤・黒・白、1920×1080、書体・余白を固定する。
-4. [page-templates](source/upstream/specs/page-templates.md)と[generate手順](source/upstream/commands/generate.md)を使い、表紙・対比・入力・制約・確認・終頁で組版を変える。カード列を反復しない。
-5. [SVG互換仕様](source/upstream/specs/svg-compatibility.md)を参照し、左寄せtext、6桁色、filterと角丸を使わないUTF-8のSVGを著述する。日本語見出しは意味単位で改行する。
-6. `svg/`を編集用正本として残す。受領作例の[build.py](source/build.py)は、SVGの著述、Inkscape CLIによるPDF化、PyMuPDFによる結合とPNG化を行う。依頼に応じて生成し、主要完成物を初回表示する。
+- 困っている状況: 原稿を図版にしても、画像に焼き込むと文字や配置を直しにくい。
+- 必要な入力: Markdown原稿と作風（5プリセット・自定義・AI推薦のいずれか）
+- 受け取るもの: 頁別SVG。任意で/ppt-exportによるPDF・PPTX
+- 必要環境: Python＋PyMuPDF / Node.js＋playwright1.62.1/pdf-lib1.17.1 / Chrome/ChromiumとNoto Sans CJK JP
+- 作例で試した範囲: 原稿から7頁の構成・目的とSwissデザインを先に保存し、生成器がそれを読んでSVGへ著述。日本語書体を優先し、原典PDF exporterと全7頁の実表示を確認した。
+- 制約: 今回の出力はSVGとPDF。PowerPointへの挿入・図形変換と原典PPTX exportは未確認。 / 固定7頁の著述コード。任意Markdownの自動解析器ではない。 / 原典PDF exporterへChrome実行ファイルを選ぶadapterを追加。原本と差分を同梱。 / 原典の中国語字体順を、日本語字形を優先するNoto Sans CJK JPへ変更。書体は別途導入。 / 修復後の独立再評価と新環境へのnpm ciは未実施。
 
-## 実行・字体
 
-Python 3、Inkscape CLI（`inkscape`がPATH上で実行可能）、PyMuPDF、Noto Sans CJK JPを用意する。キットのルートで以下を実行する。現在の7枚を作り直す処理なので、変更したSVGを直接PDF化する場合はInkscapeを使う。
+# MarkdownからSVGの資料を作る
 
-```powershell
-python -m pip install PyMuPDF
-python source/build.py
-```
+原典 vigorX777/ppt-svg-generator / c873b61673ab0ada5c09f863bff89c8f1b3248fb / MIT。非公式の日本語案内。source/upstreamのSKILLとcommands/specs/stylesを読む。
 
-実装のfont stackは `Microsoft YaHei,Noto Sans CJK JP,SimHei,PingFang SC,sans-serif`。日本語fallbackにNotoを指定しており、先行書体の有無で表示が変わり得る。[字体の取得案内](fonts/README.md)に従い、公式の未改変Notoを外部取得する。OSの字体を抽出・再配布しない。字体バイナリはこのforkには同梱せず、[SIL OFL原文](fonts/OFL.txt)を保持する。サイトでは[既存Noto字体ZIP](../../downloads/fonts/notosanscjkjp.zip)を利用できる。この相対リンクはサイト内の配布位置向けであり、単独展開時は公式取得先を使う。
+1. /ppt-analyze @原稿.mdで、見出し・要点・頁型・密度をページ構成にする。目的と読み手に合わせて直す。
+2. /ppt-designで、ミニマル・コンサルティング・暗色技術・Swiss・ブランド青の5プリセット、自作、AI推薦から選ぶ。配色・書体・余白・寸法を生成前に固定する。
+3. /ppt-generateで、その構成と設計から頁別SVGを作る。原典のSVG互換規範に従い、UTF-8、style属性の書式、6桁色、左寄せ座標、filterなし、1920×1080を確認する。角丸が必要ならrxの代わりにpathを使う。
+4. 全頁を描画して、元原稿との対応、日本語、文字・図の欠け、重なり、余白を確認し直す。PPT向けの互換規範を守ることと、実際にPowerPointへ取り込めることを区別する。
+5. 必要なら/ppt-exportでPDF/PPTXを作る。PowerPointでSVGを挿入して「図形に変換」する場合は、文字位置・書体・図の編集性を実機で確認する。プリセットでまとめて進める場合は/ppt-quick @原稿.md --style=…を使う。
 
-## 出力と編集範囲
+## この7枚の再現
 
-PDFは固定レイアウト。SVGのtext・図形・配色・配置をソースで編集できる。PPTXは納品しておらず、PowerPointへの挿入・図形変換は未確認。
+架空のAI依頼例集をSwissの赤・黒・白でSVGへ組んだ。今回の修復では、原稿とinput/data.jsonから構成・目的を先に保存し、design.jsonの日本語書体・配色を生成器が読んでからSVGを作る。固定原稿用の著述コードで、Markdownを任意に自動解析するアプリではない。
 
-原典の[export手順](source/upstream/commands/export.md)にはNodeによるPDF/PPTX経路もあるが、受領作例では `scripts/export_pdf.js`・`scripts/export_pptx.js`を実行していない。本キットの実行経路は独自補助のInkscape→PDF→PyMuPDFである。未同梱の原典スクリプトは上記固定commitから取得する。ブラウザ起動は受領時に失敗しており、HTMLプレイヤーの実行確認を意味しない。
+原典の中国語font stackは、日本語字形を優先するNoto Sans CJK JPへ明示変更。原典PDF exporterを使用し、WindowsではSVG_CHROME_EXECUTABLEで既存Chromeを選べる1か所だけを追加。原本とdiffを同梱する。全7頁のPDF実画像とHTMLプレイヤーの7頁送り・戻りを確認した。PowerPointへの挿入・図形変換、原典PPTX export、独立再評価は未実施。
 
-今回の取り込みでは再生成や追加QAを行っていない。受領時の確認範囲は[IMPORT_QA.json](IMPORT_QA.json)、受領時の出所は[IMPORT_PROVENANCE.json](IMPORT_PROVENANCE.json)に保持する。[完成PDF](../../examples/repositories/sebastian-188/deck.pdf)と[制作原本ZIP](../../downloads/sebastian-188-example-ja.zip)はサイト側の別配布物。
+## 環境
+
+Python＋PyMuPDF、Node.js＋playwright1.62.1/pdf-lib1.17.1、利用可能なChromeまたはPlaywright Chromium、Noto Sans CJK JP。書体は公式Noto CJKのOFL配布物を別途導入し、OSフォントを抽出しない。
+
+キットのルートで `npm ci --prefix source`。既存Chromeなら環境変数SVG_CHROME_EXECUTABLEに実行ファイルを指定し、`python source/build.py`。構成・デザイン・SVGとPDFを作る。新出力の全頁を再確認する。修復の再現検査は既存依存を使用し、新しい環境へのnpm ciは未実施。
+
+原典: https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb
+書体: https://github.com/notofonts/noto-cjk
 
 ## 単体の本文から使う
 
@@ -40,7 +46,7 @@ PDFは固定レイアウト。SVGのtext・図形・配色・配置をソース�
 
 原典: https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `sebastian-188-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `sebastian-188-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: vigorX777 / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 

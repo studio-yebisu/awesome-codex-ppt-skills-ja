@@ -1,19 +1,9 @@
-# Swiss SVG・日本語制作キット
+# MarkdownをSVGのページへ組む
 
-受領作例「AIに任せる前の設計図」（架空例・7枚）のSVGソースと、日本語で使うための手順を配布する。[SKILL.md](SKILL.md)から始める。
+原稿を「ページ構成→デザイン→SVG」に分けるスキルです。本作例はSwissの赤・黒・白を使った架空例集7頁。文字・図形はsvg/で編集でき、PDFは固定レイアウトです。
 
-- `input/`：依頼と入力データ。`PROMPT.txt`：制作依頼。
-- `.ppt-session/`：構成とSwiss styleの設計情報。
-- `svg/`：編集できる7枚のSVG正本。
-- `source/build.py`：受領したSVG著述・Inkscape PDF化・PyMuPDF PNG化の補助コード。
-- `source/upstream/`：使用した原典SKILL・commands・specs・Swiss styleの未変更原本とMIT LICENSE。
-- `source/japanese-original-*`：受領した日本語案内の原本。`source/japanese-fork.diff`：配置整理の差分。
-- `SOURCE.json`：固定commit、実装差分、字体と取り込み範囲。
+今回の修復では構成と設計を先に保存し、生成器が日本語font stackと配色を読みます。全7頁の実PDFを見て、HTMLでも全7頁の送り戻りを確認。原典PDF exporterを実行し、既存Chromeを選ぶ1行のadapterを加えました。原本・diff・実行記録はsource/にあります。PowerPointへの挿入・図形変換と原典PPTX exportは未確認です。
 
-PDFは固定レイアウトで、編集はSVGソースで行う。PPTXのネイティブ図形変換は未確認。完成PDF・PNGはこのソースキットとは別にサイトで配布する。
+再現: Python＋PyMuPDF、Node.jsとsource/package-lock.jsonの依存、Chrome/Chromium、Noto Sans CJK JPを用意。`npm ci --prefix source` → 必要ならSVG_CHROME_EXECUTABLEを設定 → `python source/build.py`。新しい環境へのnpm ciは未実施。現在の固定7頁を作り直すコードであり、題材変更時は構成・デザイン・著述内容を変更します。再生成後は全頁を確認してください。
 
-再生成する場合はPython 3、Inkscape CLI、PyMuPDF、および[外部取得するNoto Sans CJK JP](fonts/README.md)を準備し、キットのルートで `python source/build.py` を実行する。`build.py`は7枚のSVGを書き直す。SVGを手編集した場合はそのファイルをInkscapeで直接PDF出力する。`render/`はPNG出力先として用意してある。
-
-原典の任意Node exporterは受領作例では使っていない。原典の完全一式が必要な場合は[固定commit](https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb)から取得する。
-
-この取り込みでは資料の再生成・追加QAを実施せず、受領した生成方法と確認記録を保存した。原典は[MIT](LICENSE)、字体は[SIL OFL](fonts/OFL.txt)。字体ファイルは含めていない。
+初回は構成と設計を生成後に書き出し、InkscapeでPDF化していました。その履歴はPROVENANCE.jsonに保持。今回の検査と混同しません。独立再評価・正式採用は別です。原典MITと帰属を保持し、OSの書体ファイルは同梱しません。

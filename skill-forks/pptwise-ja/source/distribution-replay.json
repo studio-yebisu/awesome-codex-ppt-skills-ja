@@ -1,0 +1,86 @@
+{
+  "status": "pass",
+  "scope": "Two shipped archives independently extracted; original spec/inspect/build/fit and PowerPoint16 render rerun using existing dependencies, no new install.",
+  "tested_archives": [
+    {
+      "archive": "downloads/pptwise-example-ja.zip",
+      "sha256_at_execution": "aaa6f93597c58be55c6146921b91fe51550e12a4345797217c04e0fa53f5d1d6",
+      "commands": [
+        {
+          "argv": [
+            "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+            "source/rebuild_pptwise.py",
+            "--node",
+            "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe"
+          ],
+          "exit_code": 0
+        },
+        {
+          "argv": [
+            "pwsh",
+            "-NoProfile",
+            "-File",
+            "source/render_powerpoint.ps1",
+            "-PresentationPath",
+            ".pptwise/input/deck.pptx",
+            "-OutputDirectory",
+            "render"
+          ],
+          "exit_code": 0
+        },
+        {
+          "argv": [
+            "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+            "source/render_pdf_previews.py",
+            "render"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "pages": 6,
+      "logical_native_images_notes_match": true,
+      "max_rgb_difference": 0
+    },
+    {
+      "archive": "downloads/pptwise-ja.zip",
+      "sha256_at_execution": "41b1e1aaf73b1d7b47d5dbc87f271acf3679547d7e23cad8154a55960fb60f1b",
+      "commands": [
+        {
+          "argv": [
+            "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+            "source/rebuild_pptwise.py",
+            "--node",
+            "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe"
+          ],
+          "exit_code": 0
+        },
+        {
+          "argv": [
+            "pwsh",
+            "-NoProfile",
+            "-File",
+            "source/render_powerpoint.ps1",
+            "-PresentationPath",
+            ".pptwise/input/deck.pptx",
+            "-OutputDirectory",
+            "render"
+          ],
+          "exit_code": 0
+        },
+        {
+          "argv": [
+            "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+            "source/render_pdf_previews.py",
+            "render"
+          ],
+          "exit_code": 0
+        }
+      ],
+      "pages": 6,
+      "logical_native_images_notes_match": true,
+      "max_rgb_difference": 0
+    }
+  ],
+  "current_pptx_sha256": "18c15404d5a658092ce0df60bd2844dcf119466cb1c8edd8f9c5869540743be3",
+  "later_repack": "Only current replay receipt, QA and SOURCE metadata added after execution. Tested payload equality is separately checked; no generation/render/input/experience changes."
+}

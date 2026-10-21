@@ -28,3 +28,17 @@ Studio Yebisuの日本語派生版。原作者の公式翻訳ではありませ�
 ## 再現と利用条件
 
 完成例と再現キットはカタログの当該リポに掲載。環境と制約はreferences/WORKFLOW.mdに記載する。上流コードと書体の条件はupstream内の原文を保持し、カタログのCC0を上流へ適用しない。
+
+## 原典の検査を省かない
+
+- content_design_spec.mdで5頁の役割を決める
+- content.htmlの本文と講稿、template.cssの再利用部品を編集する
+- source/rebuild.pyで原典source gate・--all・visual gateを実行する
+- overviewから全browser PNGを確認し、HTMLプレーヤーの移動も試す
+
+- この作例はHTML lane。Typst・PPTX・画像生成は未実施
+- Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変
+- 静止画像とプレーヤーの操作UIは別の証拠
+- 架空の読書会の企画で、開催実績ではない
+
+原典の必須工程と、実施できなかった対人確認・実機条件を分けて記録する。再生成後に古いQA合格を引き継がない。作例の現在の検査記録はexample/QA.json。

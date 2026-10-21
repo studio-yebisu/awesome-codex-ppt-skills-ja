@@ -1,16 +1,12 @@
 {
-  "status": "qa_complete",
+  "status": "author_qa_complete_independent_review_pending",
   "page_count": 6,
-  "artifact_sha256": "a0a3df71f0997cf82aef2a2cbd54f3ccd0d50afd5281de0efe985908f3ecac39",
-  "browser_review": "verified",
-  "browser": "Codex in-app browser / actual native page controls",
-  "viewport": {
-    "width": 1280,
-    "height": 720
-  },
+  "artifact_sha256": "1f273f1c4a6afa7d8f8b084d69b2ddc9196703e842b9ef81a57108ee4e72fca1",
+  "all_pages_visually_reviewed": true,
   "visual_review": {
-    "method": "全ページを原典の操作で表示し、見出し/現在位置をDOM照合。実キャプチャ全頁のcontact sheetをCodexが視認。",
-    "pages_reviewed": [
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
       1,
       2,
       3,
@@ -18,41 +14,63 @@
       5,
       6
     ],
-    "result": "日本語の欠落・はみ出し・意図しない重なりなし。架空条件/目標表示、図表と入力を照合。"
+    "finding": "二列の見出し間隔、関係図の線と矢印、表の見出し色と行罫線を修正。原典overflowとDecktapeを実行し6頁を確認。",
+    "images": [
+      {
+        "page": 1,
+        "path": "render/slide-01.png",
+        "sha256": "3015911f24a45ce1fdf9d2859896ad02adcaac2ba2f693988129cb1f66ee38d3"
+      },
+      {
+        "page": 2,
+        "path": "render/slide-02.png",
+        "sha256": "ea37c5faacc266b1a4eeefbb2fb65765b1848088e9841f5f88e215b2ecbea90a"
+      },
+      {
+        "page": 3,
+        "path": "render/slide-03.png",
+        "sha256": "868ec26a9c5cc5bfc793fad68da906c613f3e008f71285de35f4c6df180e13c5"
+      },
+      {
+        "page": 4,
+        "path": "render/slide-04.png",
+        "sha256": "c5ad3ceb40bc5dd8e876c69821dcf25de43efbde3de972b0a921458f3e282ee7"
+      },
+      {
+        "page": 5,
+        "path": "render/slide-05.png",
+        "sha256": "10c26de2a99ba3780b6cf5810be8590be0cda94ac5f2ed5c9b3e70348fe81887"
+      },
+      {
+        "page": 6,
+        "path": "render/slide-06.png",
+        "sha256": "7d5968b57a74907246000c3c5e8104350bd6a1d8ce1bc0baae2e2dfca9f1d6aa"
+      }
+    ]
   },
-  "font_review": "実woff2の署名・MIMEとOFLを検査。ブラウザーでdocument.fonts.status=loadedと日本語字形を確認。",
-  "capture_conditions": "ページ収まりの撮影ではprefers-reduced-motion。通常の動きはサイトのプレイヤーで別途確認。",
-  "images": [
-    {
-      "file": "render/slide-01.png",
-      "sha256": "68729a604605549013f7005e4f297b8d98a8892834ec0d88c98a44389ae04f42"
+  "original_gates": {
+    "original_scaffold": 0,
+    "original_check_overflow": {
+      "exit_code": 0,
+      "slides": 6,
+      "overflow": 0
     },
-    {
-      "file": "render/slide-02.png",
-      "sha256": "a20ceea51c8922d70d925ed6dc214f0c931de5f973c0b64e9af6d4231a354f84"
-    },
-    {
-      "file": "render/slide-03.png",
-      "sha256": "4e44239ece9260ea278b99746c42129f0472868e72bb0564f796ffbc2a95dd9d"
-    },
-    {
-      "file": "render/slide-04.png",
-      "sha256": "4f62a44466f8bf76b3257cb40af8a0e8c90239d0d4c5e4c39c655dc1b797a8f2"
-    },
-    {
-      "file": "render/slide-05.png",
-      "sha256": "87f881e331d42f710f5051e044997fb19327983f75f2850c037bcf228776f7b5"
-    },
-    {
-      "file": "render/slide-06.png",
-      "sha256": "39c2751fca9f398071c53e6fc15685e097d71a57b63f7a2fefa0f9cb005de95b"
+    "decktape": {
+      "version": "3.16.1",
+      "exit_code": 0,
+      "pdf_pages": 6,
+      "screenshots": 6
     }
+  },
+  "constraints": [
+    "原典scaffold後の日本語組版は専用の手作業実装",
+    "fragment・縦方向の入れ子・PDFからの逆変換は未実演",
+    "企画の数値は架空の条件と目標で、効果実績ではない",
+    "Decktape3.16.1を同caseのQA依存へ固定。ブラウザーは既存Edgeを指定"
   ],
-  "checked_at": "2026-10-13T15:40:20.859584+00:00",
-  "not_claimed": [
-    "上流の全テーマ・全機能",
-    "人による採用",
-    "外部公開",
-    "全209件の実行"
-  ]
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json"
 }

@@ -1,0 +1,157 @@
+{
+ "file": "deck.pptx",
+ "mode": "selfread",
+ "findings": [],
+ "warnings": [],
+ "stats_warnings": [
+  "NO ICONS ON CATEGORY CONTENT: slides 1, 2, 3 carry parallel label sets (3+ short peers on one baseline across half the canvas — the shape of a category row) and the deck contains no icon-sized picture at all. On category-rich content an icon family is a design must, not a taste call (slide-design self-verify (g)). Build one (scripts/icons.py, one family, recolored to the palette), or record `icon_family: \"none — <why THESE slides read better without one>\"` in .deck-gates.json — the detector over-counts on tables and timelines, so this is a re-decision, not a verdict"
+ ],
+ "deck": {
+  "body_median_pt": 13.0,
+  "type_drama": 2.62,
+  "size_tokens": 5,
+  "distinct_skeletons": 5,
+  "builds": 0,
+  "transitions": 0,
+  "avg_occupancy": 0.618,
+  "body_n": 3,
+  "sameness_codes": [],
+  "timidity_codes": []
+ },
+ "per_slide": [
+  {
+   "slide": 1,
+   "load": 85,
+   "text_cov": 0.636,
+   "ink_cov": 0.636,
+   "max_pt": 34.0,
+   "n_shapes": 41,
+   "n_pic": 0,
+   "n_chart": 0,
+   "build": false,
+   "transition": false,
+   "size_clusters": [
+    13.0,
+    16.0,
+    24.0,
+    34.0
+   ],
+   "notes_words": 44,
+   "notes": "初めて探索を学ぶ人への短い教材です。同じ昇順の配列から、実際にPythonで13を探しました。ここで数える1回は、調べる要素を1つ選んで目的値と比べることです。CPU命令数や秒数ではありません。",
+   "n_pic_fg": 0,
+   "content_bottom": 0.867,
+   "lum": 0.964,
+   "sat": 0.015,
+   "col_void": 0.021
+  },
+  {
+   "slide": 2,
+   "load": 71,
+   "text_cov": 0.548,
+   "ink_cov": 0.548,
+   "max_pt": 34.0,
+   "n_shapes": 39,
+   "n_pic": 0,
+   "n_chart": 0,
+   "build": false,
+   "transition": false,
+   "size_clusters": [
+    13.0,
+    16.0,
+    24.0,
+    34.0
+   ],
+   "notes_words": 41,
+   "notes": "線形探索では先頭から順に値を確認します。目的値が13なら1から13まで調べます。この方法は、データが未整列でも使えます。今回は両方式で同じ配列を使って条件をそろえました。",
+   "n_pic_fg": 0,
+   "content_bottom": 0.787,
+   "lum": 0.936,
+   "sat": 0.053,
+   "col_void": 0.021
+  },
+  {
+   "slide": 3,
+   "load": 99,
+   "text_cov": 0.473,
+   "ink_cov": 0.597,
+   "max_pt": 34.0,
+   "n_shapes": 103,
+   "n_pic": 0,
+   "n_chart": 0,
+   "build": false,
+   "transition": false,
+   "size_clusters": [
+    13.0,
+    16.0,
+    24.0,
+    34.0
+   ],
+   "notes_words": 46,
+   "notes": "二分探索は昇順という前提を利用します。8より大きいので9〜15、12より大きいので13〜15、14より小さいので13だけを残し、次に13を調べて終了します。中央は添字の小さい側へ切り捨てています。",
+   "n_pic_fg": 0,
+   "content_bottom": 0.915,
+   "lum": 0.955,
+   "sat": 0.019,
+   "col_void": 0.042
+  },
+  {
+   "slide": 4,
+   "load": 54,
+   "text_cov": 0.368,
+   "ink_cov": 0.691,
+   "max_pt": 34.0,
+   "n_shapes": 9,
+   "n_pic": 0,
+   "n_chart": 1,
+   "build": false,
+   "transition": false,
+   "size_clusters": [
+    13.0,
+    24.0,
+    32.0,
+    34.0
+   ],
+   "notes_words": 89,
+   "notes": "1から15の全てを目的値にして実行しました。線形探索は先頭の1なら1回、末尾の15なら15回。二分探索は8なら1回で、最多でも4回でした。存在する値だけを探す15通りの比較であり、未発見時や大規模データの計測は含めていません。\n実行結果：input/data.json。配列内に存在する値だけの比較。目的値1では線形1回に対し二分4回であり、個々の値で常に二分が少ないとは限らない。",
+   "n_pic_fg": 0,
+   "content_bottom": 0.893,
+   "lum": 0.966,
+   "sat": 0.012,
+   "col_void": 0.073
+  },
+  {
+   "slide": 5,
+   "load": 65,
+   "text_cov": 0.617,
+   "ink_cov": 0.617,
+   "max_pt": 34.0,
+   "n_shapes": 13,
+   "n_pic": 0,
+   "n_chart": 0,
+   "build": false,
+   "transition": false,
+   "size_clusters": [
+    13.0,
+    24.0,
+    32.0,
+    34.0
+   ],
+   "notes_words": 60,
+   "notes": "二分探索の前に整列が必要です。今回の実行では初めから昇順の配列を与えたため、並べ替えの手間は計測していません。途中で並びを変えれば前提が崩れます。配列の中央を直接参照できる条件での教材であり、検索回数の減少をそのまま何倍速いと読み替えないでください。",
+   "n_pic_fg": 0,
+   "content_bottom": 0.887,
+   "lum": 0.935,
+   "sat": 0.038,
+   "col_void": 0.01
+  }
+ ],
+ "counts": {
+  "findings": 0,
+  "warnings": 0
+ },
+ "pixel_checks": {
+  "ran": true,
+  "reason": null,
+  "not_checked": []
+ }
+}

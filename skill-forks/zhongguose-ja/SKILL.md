@@ -1,21 +1,31 @@
 ---
 name: zhongguose-ja
-description: 中国色Zhongguoseの原稿構造・左上章ナビ・元HTML templateを使い、日本語の対話式スライドを作る。HTMLとassets一式を生成し、PPTXは生成しない。
-license: MIT
+description: 原稿の章立てと言葉を保ち、現在の章が分かる資料へ整える。
 ---
-# 中国色Zhongguose 日本語ガイド
+# 章扉と現在章をそろえる
 
-原典: tanglele110-hash/zhongguose-ppt-skill、固定commit `f4c2af8ff832133822afdce87ed2d6d760631ef4`。MIT ©2026 木渡川。字体とlibrariesの条件は別添原文を保持。中国色・framework navigation・manuscript workflow・templateは木渡川、製品と対話概念は帰蔵のguizang-ppt-skillに着想。日本語案内と字体adapterを追加しました。
+固定原典・commit・利用条件は[SOURCE.json](SOURCE.json)と同梱LICENSE。字体等の別条件を保持する。原典の全契約は[未変更SKILL](example/source/upstream/skills/zhongguose-ppt-skill/SKILL.md)を読む。以下は日本語の入口で、原典QAを省略する許可ではない。
 
-MDだけをAIへ渡す場合も、[原典全文SKILL](https://github.com/tanglele110-hash/zhongguose-ppt-skill/blob/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/SKILL.md)と[template](https://github.com/tanglele110-hash/zhongguose-ppt-skill/tree/f4c2af8ff832133822afdce87ed2d6d760631ef4/skills/zhongguose-ppt-skill/assets/template-zhongguose)を読み、実物を取得してください。自分の原稿から原典content-architecture/layout-patterns/visual-systemの順に必要な契約を参照します。
+## 手順
 
-日本語再現のファイルと全字体は同配布の `zhongguose-ja.zip` 内の[example](example/index.html)にあります。MD単独でassets添付済みとは仮定しません。[SOURCE](SOURCE.json)にURL/hash、[一式ZIP](../../downloads/zhongguose-ja.zip)を用意しています。
+1. 中国語内容、中国的な視覚表現の意図、またはスキルを使う明示指定がある時に適用する。原稿の文言と章立てをsource-logic・architectureへ対応付ける。
+2. 原典templateフォルダーを複製し、見本の本文・リンク・画像を置換する。
+3. 章の入口をS09章扉で示し、各本文へ同じ順の章ラベルを置く。現在章を一つだけ強調する。
+4. 本文と配置の確定後、原典由来のcover-font処理を実行し、変更のたびにfontとmanifestを更新する。
+5. 原典extract-deck-outlineとvalidate-deckを実行し、原稿と大綱を比較する。字体の読み込みを待って全頁を目視する。
 
-1. 原稿の固定文言・根拠・章を[原稿](example/input/MANUSCRIPT.md)とsource-logicへ記録してlock。章は原稿から決め、版式を先に当てはめない。承認済み自律制作では追加confirmationを挟まず、その判断をinput/theme.jsonへ記録する。
-2. 1頁1役割のslide-architectureを先に決め、日本語主題、短い英語label、階層、元patternを選ぶ。各頁はtop-level section.slide、section-tabsはflat span.tabにする。
-3. 原典 `assets/template-zhongguose/` を丸ごと複製。元indexのCSS・縦pager・Esc/B・ASCII・Motion helpersを保持し、原稿と日本語font/color/layoutだけ局所diff。accent/accent-rgb/accent-onは原典表の一行から対で選び、中国色を日本の伝統色と表示しない。
-4. 全文面確定後に原典 `subset-cover-font.py` を実行する。日本語例では完全配布Shippori Mincho TTFを渡し、kanaを含むcover欠落検査、copyright・OFL・hashだけ[局所patch](example/source/subset-japanese.patch)。qiji seedは保存原本に残す。日本語の通常本文はBIZ UDPGothic、英字はManrope、全TTF/OFLと固定取得URL/hashを同梱。
-5. `python example/source/rebuild.py`。Python3.10+とFontTools/Brotliが必要（`python -m pip install "fonttools[woff]"`）。原典Node scriptsはNode18+、閲覧はブラウザだけ。index.htmlとassets/を一式でWeb配信し、単体HTMLと称さない。
-6. 必要buildと代表出力の初回表示、元navigation1→2、SKILL quick_validateを確認。全頁詳細目視、独立review、採点は依頼された場合だけ。実施/未実施を[QA](example/QA.json)へ正確に残す。
+## 検証と引き渡し
 
-題材変更ではMANUSCRIPT/source-logic/architecture、source/rebuild.py内のslide文面と色を同時に更新し、最終HTMLでsubsetを再生成します。作例は6枚・3章の架空回遊案。実在人物・会場・日程・費用・実績を発明していません。
+6本文を保持して原典S09章扉を追加した7頁。原典outline抽出・validateは7頁PASS・警告0。全7頁を原典静止モードで実描画・目視。締めの章ナビと表紙現在点も修復。
+
+上記は同梱作例の確認結果です。新しい題材では原典に指定された検査を実行します。検査失敗を閾値緩和や未実施の成功表記で解消しない。独立評価と実機発表の確認は別に記録する。
+
+## 作例と制約
+
+[再生成・実施範囲](example/README.md)と[QA](example/source/repair-qa.json)。
+
+- 中国語向け原典を日本語へ派生。QijiではなくShippori Minchoを使う局所subset処理と字体・色の差分を保存。
+- この日本語作例では中国色の視覚体系を意図して指定し、章扉・本文・締めを実装。PPTXと実機タッチは未実証。
+- 全7枚のPNGは原典Bキー相当の静止モードで確認。ASCII動画の品質を静止画だけで保証しない。
+
+元SKILL・LICENSE・NOTICE・実素材と出所を配布に残す。秘密情報・モデル実行履歴・依存キャッシュを追加しない。

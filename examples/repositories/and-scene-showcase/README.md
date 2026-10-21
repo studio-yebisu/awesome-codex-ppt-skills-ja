@@ -1,31 +1,30 @@
-# 一冊の本が、次の人へ。
+# 同じ対象を残したまま状態を動かし、前後の関係を段階ごとに追えるようにする。
 
-架空の交換本棚を提案する8段階。資料の「8枚」ではなく、ひとつの共通canvasを進める8 Step。人名・住所・料金・営業実績は設定していない。
+共通Sceneと対象IDを保って、一冊の位置と役割を変えた。本棚や役割名に本が重ならない配置、方向付きの循環図、実際の移動途中を確認できる。
 
-主出力はdist/index.html＋assets＋fontsのWebフォルダー一式。単独HTMLではないため、主downloadはand-scene-example-ja.zip。本文・caption・Step payloadはapp/src/presentations/book-exchange/、図はScene.tsxの自作SVG、色・字体はstyle.cssから編集する。PPTX/PDFは原典の対象外で生成しない。
+## 入力と出力
 
-## 開く / 再生成
+入力：説明する対象・対象同士の関係・各段階の状態・短い説明文。作例は交換本棚の8段階。
 
-制作ZIPを展開して、そのルートで `python -m http.server 8000 --bind 127.0.0.1 --directory dist`、ブラウザで `http://127.0.0.1:8000/index.html` を開く。HTTPでdistを一緒に配信する。次へは元nextボタン、→/Space/PageDown、前へは←/PageUp。Pで元browse/present切替。
+出力：同じ図が変化するReact/MotionのWeb資料8段階。編集用TSXと実表示・遷移証拠。
 
-Node.js/npmを公式配布から用意する。今回Node24.18.0、npm11.16.0。app/で:
+## 自分の資料へ使う
 
-```powershell
-npm ci
-npm run build
-npm run preview -- --host 127.0.0.1
-```
+1. 対象と関係を一覧にし、段階ごとの変化をtyped Stepのpayloadと説明文へ書く。
+2. 空の作業appへ原典bootstrapをコピーし、Sceneとregistryを登録する。同じ対象には同じlayoutId、共通図には同じgroupKeyを使う。
+3. 図の中身に合わせて配置を自然に中央へ寄せる。固定座標が必要な構成ではその経路を選んだことを記録し、図が文字を覆わない余白を取る。
+4. 元kitの移動・目次・P表示を使い、build→verify→全段階inspectを行う。最後・密度が高い段階・狭い画面と自然な移動途中も見る。
 
-原典package.jsonのbuildは `tsc -b && vite build`。全runtime/dev依存をinstallし、実build成功。実解決versionはpackage-lock.json、logはoutput/npm-install.log / npm-build.log。compiler/node_modulesは配布しない。
+## 実際に使った機能
 
-repository内の準備入口は `python tools/build_and_scene_showcase.py --prepare`。source/build.pyは同じ準備入口の保存原本で、repo構造とacquired原典・fonts receiptを使用する。独立制作ZIPではapp/から上のnpm ci/buildを使う。原典runtimeのコピーを共通rendererに取り換えない。
+- 原典bootstrap、typed Step、共通groupKey/Scene、stable layoutIdを実使用。
+- 4→5段階で同じ本のDOMノードが移動する途中を撮影。目次クリックとPキーの表示切替も操作した。
+- 起動方法だけのWindows差分で原典verifyと全8段階desktop/narrow inspectを再実行し、代表画像も同じ落ち着いた状態へ統一。
 
-## 原典・差分・確認範囲
+## 未実施と条件
 
-原典固定commitの未変更bootstrap/Step/skillとkit原本はsource/upstream、kit SHA256はsource/UPSTREAM-KIT-SHA256.json。unused demo画像は同梱しない。core Presentation/Stage/typesを保持し、usePresentationNavの元setStepへsame-origin0-based adapterだけを加えた。source/local.diffに差分を保存。新しい8 Stepは同じScene/groupKeyとstable namespaceを共有する。1→2では同じbook DOMを保持した移動を確認。
+- 段階ごとに固定座標を与える経路を使用。原典の自動レイアウト再中央揃え、sync-kit、既存資料の編集、スワイプ操作は未実証。
+- 狭い画面は原典canvas全体が縮小する。文字を読む用途には広い画面を推奨。PPTX/PDF出力は対象外。
+- 自然な遷移の3時点を確認した範囲。連続動画全フレームやフレームレートの品質を保証しない。
 
-Rootの入口は静的配布のindex.htmlから元PresentationRouterをregistered book-exchangeへ接続する局所host差分。navigation/controllerは元kit。diagram canvas880×380、代表viewport1600×900。元TOC/progress/attributionは保持し、見た目はpresentation-local CSS。
-
-実npm install/build、主要初回表示、元nextによる1→2、代表2PNG、短SKILL quick_validateだけ。全段階詳細・last/dense/mobile・fullverify/inspect・独立レビュー・ZIP再実行は最新指示で実施していない。最初のexportでfavicon404が出たため、自作SVGfaviconを追加して解消した。
-
-条件はLICENSE、source/DEPENDENCIES.md / licenses / DEPENDENCY-LICENSES.json、fonts各OFLを保持。未改変font source URL/hashはdist/fonts/SOURCE.json。
+現在の再現コマンドはREPRODUCE.md、原典の条件と日本語での一般手順はSKILL.md、現在の実行・画像hashはQA.json。初回PROMPTの限定検査指示は過去の依頼で、後続修復の範囲はこの記録とsourceのRound4ログを使う。

@@ -1,29 +1,35 @@
-# 社内検索を4週間で試すの再現キット
+# 説明原稿をブラウザーで順に見せる資料にし、同じ内容をPDFでも配れる。
 
-完成資料はこのフォルダー直下。生成経路・使用した原典・当時の確認範囲はPROVENANCE.jsonとQA.jsonに記録しています。
+入力：社内文書30件を4週間で試す架空の検索企画と講稿。
+出力：reveal.jsのHTML・原典Decktapeの6頁PDFと画像。
 
-## Windowsで同じ作例を生成
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全6頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-1. ZIPを展開。PowerShellでこのフォルダーへ移動。
-2. Python 3.13、Node.js、必要に応じてGit Bashを用意。
-3. 次を実行（project内venv・固定npm依存・公式固定commitの書体を取得します）。
+## 使い方
 
-    .\reproduce\Reproduce.ps1
+1. 話す順番と枚数を決め、create-presentation.jsで骨格を作る
+2. 本文はp要素、2列はinline gridで書く
+3. 項目の関係は矢印、表の見出しと行は色と罫線で分ける
+4. 原典check-overflow.jsを実行する
+5. Decktapeで全頁画像とPDFを出し、実表示を確認する
 
-生成先: reproduce/workspace/examples/repositories/revealjs-skill/
+## 生成・検査
 
-PowerPoint本体でPNG/PDFを描画する場合は、Noto Sans JPをインストール済みのWindows / PowerPoint / pwshを使用し、-Renderを指定します。HTMLは生成したファイルを開き、原典のページ操作を使います。再生成した出力は確認前として記録し、元のQAを成功扱いで引き継ぎません。
+`node source/upstream/skills/revealjs/scripts/check-overflow.js index.html`
+`npm ci --prefix source/qa --ignore-scripts`
+`node source/qa/node_modules/decktape/decktape.js reveal --chrome-path <browser> --screenshots --screenshots-directory render/decktape <HTML-URL> deck.pdf`
 
-## 自分の題材へ
+二列の見出し間隔、関係図の線と矢印、表の見出し色と行罫線を修正。原典overflowとDecktapeを実行し6頁を確認。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
 
-完成例のinputとPROMPT.txtを参考に、読み手・目的・数値・結論を用意。日本語派生版SKILL.mdから当該原典の手順へ進みます。この再現スクリプトは比較用の固定原稿を作るもので、input/data.jsonだけを変えれば全ページの文章が自動で変わる汎用アプリではありません。
+## 範囲
 
-原典create-presentation.jsで骨格を作る。元スキルのpt単位とsection構造を守り、reveal.jsの実ナビゲーションを使う。
+- 原典scaffold後の日本語組版は専用の手作業実装
+- fragment・縦方向の入れ子・PDFからの逆変換は未実演
+- 企画の数値は架空の条件と目標で、効果実績ではない
+- Decktape3.16.1を同caseのQA依存へ固定。ブラウザーは既存Edgeを指定
 
-## 原典と権利
+## 実行環境
 
-https://github.com/ryanbbrown/revealjs-skill/tree/d0ccd344c4aaf9f045e5a15be6a2ab67b595796f
+Node 24、既存Chrome/Edge。PUPPETEER_SKIP_DOWNLOAD=trueとしてnpm ci --prefix source/qa --ignore-scriptsを実行する。python source/verify.py --browser <Chrome/Edge実行ファイル>で無改変の原典overflowとDecktapeを実行できる。puppeteer25.13.0とDecktape3.16.1をlockへ固定。QA用依存でありHTML配信時は不要。
 
-原典のコード、個別のライセンス、書体のOFLを保持。原典の広告用画像・動画・不要な既存デッキや実行環境はキットへ収録しません。
-
-固定npm依存の監査記録はsource/dependency-qa.jsonです。Marp CLI側の依存に未修正の検出項目があります。今回の再現は同梱した原稿のHTML生成を対象とし、サイトのHTTPサーバーではこのCLIを実行していません。
+配布ZIPの展開後再実行はsource/zip-replay.jsonに記録。依存の導入・ブラウザーの実行パスは受け手の環境へ合わせる。

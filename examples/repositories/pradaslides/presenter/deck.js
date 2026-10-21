@@ -27,7 +27,7 @@ window.PRADA_DECK = {
         "rendered-preview"
       ],
       "html": "<img class=\"prada-rendered-slide\" src=\"slides/slide-001.png\" alt=\"町内会の備品貸出を、迷わない手順に\">",
-      "notes": "架空の町内会を想定した手順案です。実際の貸出規則ではありません。申込みから返却までの確認事項を、借りる人と担当者が同じ順序で使うことを目指します。",
+      "notes": "架空の町内会を想定した手順案です。実際の貸出規則ではありません。右側は返却まで引き継ぐ記録票の空欄例で、貸出番号・受取数と返却数・返却日時・担当者の確認を残す構成です。",
       "source": "",
       "furniture": {
         "kicker": false,
@@ -83,13 +83,13 @@ window.PRADA_DECK = {
       "tone": "dark",
       "density": "standard",
       "transition": "none",
-      "title": "数と状態を、その場で一緒に確認する",
+      "title": "受取りは、記録と現物を照合する",
       "kicker": "",
       "classes": [
         "rendered-preview"
       ],
-      "html": "<img class=\"prada-rendered-slide\" src=\"slides/slide-003.png\" alt=\"数と状態を、その場で一緒に確認する\">",
-      "notes": "借りる人だけで判断せず、担当者と一緒に数、傷や欠品、返却日時と場所を確かめる手順案です。気づいた点は受取り時の記録に残します。",
+      "html": "<img class=\"prada-rendered-slide\" src=\"slides/slide-003.png\" alt=\"受取りは、記録と現物を照合する\">",
+      "notes": "受取りの場面です。申込書と現物の品名・数量・付属品を比べ、貸出前の傷や汚れ、欠品を担当者と記録します。この受取記録を返却の照合に使います。返却時の確認は5頁で分けて説明します。",
       "source": "",
       "furniture": {
         "kicker": false,
@@ -120,7 +120,7 @@ window.PRADA_DECK = {
         "rendered-preview"
       ],
       "html": "<img class=\"prada-rendered-slide\" src=\"slides/slide-004.png\" alt=\"不具合に気づいたら、使う前に窓口へ\">",
-      "notes": "受取り時でも使用中でも、異常に気づいたら使い続けず担当者に知らせる案です。破損の原因や弁償をこの資料で決めるものではなく、実際のルールと担当者の指示を確認します。",
+      "notes": "異常時は使用を止めて担当者に知らせ、扱いの指示を確認する架空の案です。下の空欄は、品名・数量、気づいた時刻、状態と窓口の指示を残すための記録例です。実際の規則と窓口の指示を優先します。",
       "source": "",
       "furniture": {
         "kicker": false,

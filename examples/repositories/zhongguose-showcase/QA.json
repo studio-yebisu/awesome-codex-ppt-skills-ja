@@ -1,25 +1,50 @@
 {
-  "status": "light_check_complete",
-  "build": "success: dedicated original template copy + original adapted cover subset generator executed on final HTML",
-  "browser": "Bundled Playwright Chromium headless",
-  "canvas": {
-    "width": 1920,
-    "height": 1080
-  },
-  "first_index": 0,
-  "after_original_arrow_right": 1,
-  "page_errors": [],
-  "pages": null,
-  "representative_previews": [
-    "render/slide-01.png",
-    "render/slide-02.png"
+  "status": "author_visual_qa_complete_independent_rereview_pending",
+  "author": "Codex",
+  "current_revision": "round4-web07-repair",
+  "scope": "6本文を保持して原典S09章扉を追加した7頁。原典outline抽出・validateは7頁PASS・警告0。全7頁を原典静止モードで実描画・目視。締めの章ナビと表紙現在点も修復。",
+  "main_artifact": "index.html",
+  "main_artifact_sha256": "ec9a2052c060ba032069906c293b2ff84c29c8288fb0f27dabebebe956ad1c2a",
+  "actual_rendered_states": 7,
+  "all_current_images_read_individually": true,
+  "visual_findings": "Repaired requested overlap, typography, sequence/choice semantics and page-specific notes; no obvious remaining collision or missing content in the viewed 1920×1080 images. This is author QA, not an independent score.",
+  "image_hashes": [
+    {
+      "path": "render/slide-01.png",
+      "sha256": "ca79668f404ad028f7bb8350104db5a4a9232f3b4ab6c4df4a2576ffd3c055a3"
+    },
+    {
+      "path": "render/slide-02.png",
+      "sha256": "48d7870fd124ecb2cae0f359fc04f83e1eb4722300293bd73cfa3aacf28e85db"
+    },
+    {
+      "path": "render/slide-03.png",
+      "sha256": "10a4694e5f93f291774f6426c9c7dedcaa9095e61f6c4ca9bdb8b2608cd19155"
+    },
+    {
+      "path": "render/slide-04.png",
+      "sha256": "814fd8318a5f4df481b26a9966a2475c14be6fcaa0b5e8c5671071b55acdfa8b"
+    },
+    {
+      "path": "render/slide-05.png",
+      "sha256": "126abda2e28821c0107b922f48b71a76bb2671b59f954bba1150678bd5820cc9"
+    },
+    {
+      "path": "render/slide-06.png",
+      "sha256": "de54a214175142278765d5756437d1eb51e1336a26f4c2f9017ff05c4190c624"
+    },
+    {
+      "path": "render/slide-07.png",
+      "sha256": "5eddd23f38a8dada0eadb4bdd547db89259005db18106bb39008aaec1471296e"
+    }
   ],
-  "visual_review": "Cover and principles representatives displayed; heading-family local override then regenerated and refreshed screenshots",
-  "detailed_all_pages_review": false,
-  "independent_review": false,
-  "scoring": false,
-  "ZIP_reexecution": false,
-  "parent_bridge_integration": "not tested",
-  "touch_overview_static_mode": "original code retained; individual actions not separately tested",
-  "skill_quick_validate": "passed: Skill is valid!"
+  "original_gate_receipt": "source/round4-original-gates.json",
+  "independent_review": "pending for this repaired revision",
+  "not_run": [
+    "中国語向け原典を日本語へ派生。QijiではなくShippori Minchoを使う局所subset処理と字体・色の差分を保存。",
+    "この日本語作例では中国色の視覚体系を意図して指定し、章扉・本文・締めを実装。PPTXと実機タッチは未実証。",
+    "全7枚のPNGは原典Bキー相当の静止モードで確認。ASCII動画の品質を静止画だけで保証しない。"
+  ],
+  "distribution_replay": "passed: source/round4-zip-replay.json",
+  "zip_reexecution": true
 }

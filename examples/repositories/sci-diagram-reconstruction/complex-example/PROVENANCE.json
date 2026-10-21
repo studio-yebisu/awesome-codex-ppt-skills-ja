@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "kind": "primary_complex_synthetic_reconstruction_evidence",
+  "upstream": "HututuWorks/sci-diagram-pptx",
+  "commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
+  "input_license": "CC0-1.0 Studio Yebisu original concept schematic, not empirical research",
+  "upstream_license": "Apache-2.0",
+  "runtime": "Current R13 replay: PptxGenJS4.0.1 / Node24.19.0; original Node24.18 record retained in history/pre-r13.",
+  "initial_authoring": {
+    "model_requested": "claude-opus-5-5",
+    "model_returned": "claude-opus-5-5",
+    "assistant_messages": 16,
+    "read_texts": [
+      "upstream/SKILL.md",
+      "upstream/references/reconstruction.md",
+      "upstream/references/runtime-pptxgenjs.md",
+      "upstream/assets/pptxgenjs-build-template.mjs"
+    ],
+    "read_image": "input/source.png",
+    "execution": "Codex, not model tool execution",
+    "math_reference_read_by_initial_author": false
+  },
+  "checks": {
+    "original_checker": "PASS hard0 warning1: all12 text boxes use wrap=none; PowerPoint16 and LibreOffice inspected without missing/overlapping labels",
+    "renderers": [
+      "Microsoft PowerPoint16",
+      "LibreOffice24.2.5.2 original isolated-profile renderer"
+    ],
+    "native_text_edit": "X to X* in private copy, actual PowerPoint SaveCopyAs; accepted original unchanged",
+    "geometry_topology_inset_unchanged_after_font_repair": true,
+    "independent_review_on_this_version": false,
+    "current_native_structure": "qa/native-structure-pass04.json",
+    "current_geometry_and_edit": "qa/self-contained-handoff-r13.json",
+    "current_native_edit": "qa/current-nativeedit/edit-proof.json"
+  },
+  "file_manifest_scope": "Original authored source and accepted evidence below; README is integration documentation, not model-authored output.",
+  "historical_standard_pass02": {
+    "index": 2,
+    "repair_author": "Codex",
+    "change": "Only font constant Noto Sans JP to installed Yu Gothic",
+    "reason": "Actual PowerPoint pass01 lost intended bold hierarchy and label legibility",
+    "math_reference_read_by_Codex": true,
+    "was_terminal_at_that_time": true,
+    "new_generation_budget_exhausted_at_that_time": true
+  },
+  "accepted_pass": {
+    "index": 4,
+    "author": "Codex",
+    "reason": "Explicit continued-refinement request after the standard two-pass run",
+    "change": [
+      "Source SVG corner radius retained in native roundRect rectRadius",
+      "Self-contained STORE ZIP correction inside build.mjs sets three native triangle head w/len to lg/lg"
+    ],
+    "original_standard_pass_budget": 2,
+    "original_checker_pass_index_argument": null,
+    "PptxGenJS_version": "4.0.1",
+    "PptxGenJS_headsize_API_used": false,
+    "new_dependency_added": false,
+    "original_checker_unchanged": true,
+    "pptx_sha256": "0814a76ebd341ddce69d766cef4f27b1eaca94ce3f05f3486432d5b36796d57a",
+    "phase_scope": "Standard pass02 was terminal at that time; explicit continued refinement produced pass04. R13 changes only its saved build handoff, not the standard pass budget.",
+    "original_checker_pass_index_scope": "null means structural check without authoring-pass gate, not evidence of human approval or author-pass4 authorization"
+  },
+  "rejected_pass03": {
+    "accepted": false,
+    "reason": "Direct JSZip import failed original build-source portability check; not bundled"
+  },
+  "current_handoff_revision": {
+    "author": "Codex",
+    "new_reconstruction_authored": false,
+    "three_files": [
+      "pass-04/build.mjs",
+      "pass-04/source.png",
+      "pass-04/editable.pptx"
+    ],
+    "python_arrow_helper_required": false,
+    "historical_records": "history/pre-r13/README.md",
+    "independent_score_transferred": false
+  },
+  "historical_kind": "supplementary_synthetic_reconstruction_example"
+}

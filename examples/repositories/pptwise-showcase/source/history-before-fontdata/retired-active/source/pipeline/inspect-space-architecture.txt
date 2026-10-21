@@ -1,0 +1,55 @@
+component architecture on page space (5 of 6): content, kind "hierarchy"
+name: Stack
+what it is: Named layers drawn as bands, each holding its own parts, one sitting on the next. It borrows the system diagram an engineer draws on a whiteboard, foundation to top layer.
+choose it: Choose it when the meaning is what sits on top of what, and the layers read in one direction. Use hub_spoke when the parts only attach to a centre, and rings when they nest inside one another.
+not for: A sequence of actions, which belongs in steps.
+full-body: no
+limits on this page:
+  at most 3 layers in each architecture (layers the narrowest face holds), validate warns past it
+  at most 8 layers in each architecture (the most layers a page holds under its heading), validate refuses past it
+schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "component": "architecture",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "architecture"
+    },
+    "layers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "items": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "title",
+          "items"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "top_down",
+        "bottom_up"
+      ]
+    }
+  },
+  "required": [
+    "type",
+    "layers"
+  ],
+  "additionalProperties": false
+}

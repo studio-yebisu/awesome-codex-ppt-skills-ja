@@ -1,0 +1,30 @@
+{
+  "author": "Codex",
+  "archive_before_receipt_sha256": "9b5d72eb8af2f69b76e6ac88149fc94994727d43bcbdfd517d1e2263b6f2f244",
+  "fresh_directory": true,
+  "fresh_dependency_install": false,
+  "checks": [
+    {
+      "argv": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "source/build.py"
+      ],
+      "exit_code": 0,
+      "output_tail": ""
+    },
+    {
+      "argv": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "source/compress_current_pdf.py"
+      ],
+      "exit_code": 0,
+      "output_tail": "{\n  \"author\": \"Codex\",\n  \"method\": \"pypdf compress_content_streams; local PDF adapter\",\n  \"input\": \"deck.pdf\",\n  \"output\": \"deck-lite.pdf\",\n  \"source_sha256\": \"2d139489248f988585216748088c6ce038f7f27f52066205bf05608e03a59aad\",\n  \"output_sha256\": \"97e600fba99cf1d0ea8305ee138b7f12850016b2b2b4595fd42c6768ee5aa0ee\",\n  \"original_bytes\": 464243,\n  \"compressed_bytes\": 468170,\n  \"pages\": 7,\n  \"smaller\": false,\n  \"original_ghostscript_gate\": \"not executed; Ghostscript unavailable\",\n  \"claim\": \"A separate stream-compressed PDF was written. Size reduction is not assumed.\"\n}\n"
+    }
+  ],
+  "source_hashes": {
+    "source/build.py": "66d200aabe6c1540053e218dfe945ee8b7dbf03d25ce7f586ce65d6dc1a0bc7c",
+    "source/compress_current_pdf.py": "4f31cc94db00f8269df15c785f483b88b279399c49e53cf45911d8032b6ee53f"
+  },
+  "result": "Archive source regenerates byte-identical HTML and local pypdf output; Ghostscript gate not executed",
+  "passed": true
+}

@@ -54,7 +54,7 @@
 .night-activities {margin-left:700px;margin-top:80px;display:flex;flex-direction:column;gap:42px;}
 .night-activities h3 {font-size:46px;}
 .night-activities p {font-size:31px;margin-top:10px;color:var(--text-muted);}
-.orbit-word {position:absolute;left:190px;top:575px;width:420px;text-align:center;font-family:var(--font-display);font-size:51px;line-height:1.6;}
+.orbit-word {position:absolute;left:195px;top:535px;width:420px;text-align:center;font-family:var(--font-display);font-size:51px;line-height:1.6;}
 .route {position:relative;display:flex;justify-content:space-between;margin-top:125px;gap:80px;}
 .route:before {content:'';position:absolute;left:100px;right:100px;top:67px;border-top:2px solid var(--accent);opacity:.6;}
 .route>div {width:420px;position:relative;}
@@ -83,6 +83,12 @@
 @keyframes night-entrance {from {opacity:0;transform:translateY(24px);}to {opacity:1;transform:translateY(0);}}
 @media (prefers-reduced-motion:reduce) {*,*::before,*::after {animation-duration:.01ms!important;transition-duration:.2s!important;}}
 
+/* Small Japanese headings use the quiet body face; the display face stays on titles. */
+.reveal h3,.orbit-word,.decision-center{font-family:var(--font-body);font-weight:700}
+.decision-branches h3{font-size:45px}
+/* Keep the recurring circle in an area without text on the comparison page. */
+.paper .closing-orbit{width:210px;height:210px;right:50px;top:800px;opacity:.35}
+
   </style>
 </head>
 <body>
@@ -101,7 +107,8 @@
 <section data-auto-animate>
   <div class="frame content-frame">
     <div class="orbit small-orbit" data-id="observation-orbit"><svg viewBox="0 0 1000 1000" aria-hidden="true"><circle cx="500" cy="500" r="430" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="500" cy="500" r="360" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/><circle cx="805" cy="197" r="13" fill="#f3b95e"/></svg></div>
-    <div class="entrance"><p class="eyebrow">AT THE VENUE</p><h2>みんなで、夜を見上げる。</h2><div class="orbit-word">急がず、<br>過ごす。</div><div class="night-activities"><div><h3>案内を聞く</h3><p>会場での過ごし方を、最初に共有。</p></div><div><h3>静かに待つ</h3><p>眺めたい場所で、ゆっくり過ごす。</p></div><div><h3>見えたものを話す</h3><p>気になったことを、言葉にしてみる。</p></div></div></div>
+    <div class="orbit-word">急がず、<br>過ごす。</div>
+    <div class="entrance"><p class="eyebrow">AT THE VENUE</p><h2>みんなで、夜を見上げる。</h2><div class="night-activities"><div><h3>案内を聞く</h3><p>会場での過ごし方を、最初に共有。</p></div><div><h3>静かに待つ</h3><p>眺めたい場所で、ゆっくり過ごす。</p></div><div><h3>見えたものを話す</h3><p>気になったことを、言葉にしてみる。</p></div></div></div>
   </div>
   <aside class="notes">過ごし方の提案です。特定の天体が見えることや観測成果を約束しません。会場の導線・安全条件は未定です。</aside>
 </section>

@@ -29,17 +29,41 @@
       "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/LICENSE"
     }
   ],
-  "method": "Instruction-driven original SKILL PptxGenJS+sharp authoring pattern applied directly; original SVGs 37/1/2/20/27 extracted unchanged; original 13.333×7.5 lower-left chapter title and bottom-right page recipe retained.",
+  "method": "Pinned original PptxGenJS+sharp recipe with unchanged SVGs1/2/20/23, original chapter positions and muted background examples. Japanese glyph font fallback only is a derived adapter.",
   "applied": [
-    "Original svgToBase64Png sharp rasterization and addImage path.",
-    "Original fill #FAF8F2, thick irregular stroke #141413.",
-    "Original left-bottom chapter hierarchy and right-side illustration.",
-    "Original demo provided and viewed as composition reference, not a replaced runtime."
+    "Original 13.333×7.5 canvas, muted warm/cool variation, lower-left40pt regular chapter title, Calibri14pt label and right page number.",
+    "Original svgToBase64Png sharp900×750 and SVG blocks1/2/20/23 unchanged.",
+    "Original optional cover: large upper-left title with small decorative mark only.",
+    "Original Step6 LO PDF→all-page JPEG150dpi, all5 actually viewed."
   ],
   "modifications": [
-    "User-directed Japanese type roles: Dela Gothic One / Zen Maru Gothic / Manrope replace Georgia/Calibri.",
-    "User-directed warm paper with vermilion irregular frame replaces fully muted palette.",
-    "Cover seedling and short supporting line added."
+    "Japanese a:ea Yu Mincho explicitly declared; Latin Georgia retained. Not identical original Japanese typography.",
+    "Small new cover sparkle follows original allowed Bezier stroke/fill rules.",
+    "PowerPoint PDF/PNG, native title edit, structure/hash and ZIP replay are additional implementation checks."
   ],
-  "fonts": "Original full TTF/OFL packaged. No embedded font or OS installation; recipient can install original fonts manually."
+  "fonts": "Windows Georgia/Calibri/Yu Mincho referenced; font files not embedded or redistributed. Actual PDF has YuMincho-Regular and Calibri. No Georgia Latin glyph is present in these Japanese-only titles.",
+  "runtime_versions": {
+    "Node.js": "24.19.0",
+    "pptxgenjs": "4.0.1",
+    "sharp": "0.35.5",
+    "PowerPoint": "16.0",
+    "LibreOffice": "24.2.5.2"
+  },
+  "historical_layout_repair_20261015": {
+    "authoring_model": "claude-opus-5-5",
+    "scope": "decorative frame height only",
+    "authoring_date": "2026-10-15",
+    "qa": "reviews/page-audit.json",
+    "native_xml_check": "source/frame-repair-check.json",
+    "independent_review": "pending"
+  },
+  "latest_repair": {
+    "author": "Codex",
+    "authoring_model": null,
+    "artifact_sha256": "148303c7c2453fe9a56341518911a6c0feb5afa018275dd699e2411a803aebbd",
+    "scope": "Replace red-frame/large-cover variant with original style chapter recipe; plain titles; checklist for record chapter.",
+    "source": "build.cjs",
+    "QA": "QA.json",
+    "independent_review": false
+  }
 }

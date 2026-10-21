@@ -1,3 +1,5 @@
-# Route decision
+# 制作経路の判断
 
-native_pptx。原典scripts/build_native_pptx.mjs と design-system/native/ を利用予定。editorial-inkを選択。全頁画像化は行わない。原典方式と日本語差分を記録する。スクリプト未実行、生成未開始。
+原典はtemplate / native / html / image-firstを選ぶ。今回は見出し・比較・工程・ロードマップの後編集が必要なためnativeを選択。テンプレート照合、HTML変換、全面画像版はこの作例では実行しない。
+
+固定原典をsource/upstream-originalへ未改変で保存し、source/runtimeの日本語互換差分だけを実行する。表紙は既存の実image_gen挿絵を用い、native本文と区別する。

@@ -37,7 +37,7 @@
   "modifications": [
     "Local converter only: collect computed fontFamily for elements/text runs and use its first family instead of forcing every run to one font.",
     "Local converter language metadata changed zh-CN to ja-JP.",
-    "Original DOM measurement, PptxGenJS native reconstruction, SVG/PNG extraction and gradient patch pipeline unchanged."
+    "SVG export local repair: persist actual DOM viewport width/height before sharp rasterization so preserveAspectRatio letterboxing survives PPTX placement. Original DOM measurement, native reconstruction and gradient patch pipeline retained."
   ],
   "editability": {
     "text": "Native editable text boxes with Dela/Shippori/BIZ roles.",
@@ -108,5 +108,34 @@
       "bundled_in_kit": false
     }
   ],
-  "artifact_tool_used": false
+  "artifact_tool_used": false,
+  "repair_authoring": {
+    "author": "Codex",
+    "scope": "Source HTML letter spacing/heading gap, source SVG viewport repair, actual comparison/audit; no fresh Opus call."
+  },
+  "conversion": "conversion.json",
+  "runtime_diff": "source/html_to_editable_pptx.js.diff",
+  "html_and_pptx_comparison": [
+    "render/html-pptx-compare-01.png",
+    "render/html-pptx-compare-03.png"
+  ],
+  "verification": "Explicit requested revision loop: edit original HTML, rerun original HTML-to-PPT alias with local font/language and SVG viewport adapters; all5HTML and all5PowerPoint pages viewed; DOM text/native object inventory and6SVG viewport checks.",
+  "latest_repair": {
+    "author": "Codex",
+    "original_dom_conversion_receipt": "source/footer-conversion-receipt.json",
+    "source_html_sha256": "736066e5033e5478653775c4e81dbd96e0f77160fbf76e7f9f8ef3f3ce858ef2",
+    "pptx_sha256": "50301c9ce7b2d019ac74ace08af3e0385069d06901986cc3c3e93c9d8f960f6c",
+    "page3_background": "#C03A24",
+    "page3_small_text": "#F2EBD9",
+    "contrast_ratio": 4.5611502270547675,
+    "reason": "Darken red modestly so cream footer/label/page-number meet4.5:1, with large dark step numbers retaining3:1.",
+    "html_and_powerpoint_pages_visually_reviewed": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "all_dom_texts_preserved": true
+  }
 }

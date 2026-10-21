@@ -734,46 +734,46 @@
     }
   ],
   "input_sha256": "da348ca56decbfda6b762303d477a6629ea7200de0590eb56751bfe3ccadba2a",
-  "artifact_sha256": "c66d9dbd349061ebaa05cdd779ada3d6cf2f5a90283472ac42d1389912fe4ecb",
+  "artifact_sha256": "3dede21dbf7f14f657b907bdc2bba6aaba3666e01ecf241bd6f51a948ef885dd",
   "output": "index.html",
   "execution_type": "original_html_compiler_with_documented_windows_portability_patch",
   "commands_executed": [
     {
       "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\seaslides-ja-runtime\\scripts\\validate_project.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\seaslides",
+        "C:\\Users\\owner\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\seaslides-ja-runtime\\scripts\\validate_project.py",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\seaslides",
         "--source-only",
         "--profile",
         "standard-project"
       ],
       "exit_code": 0,
-      "log": "source/logs/source-gate.log",
-      "log_sha256": "f88d76737bb231cdccab260de80f22a782a8e4455c5e89bbe078b8518277d129"
+      "log": "source/logs/source-gate-round3.log",
+      "log_sha256": "0435680e091340fba77ca5c04d888c4a857cab4e7f19fbe1f4b3807a2f63d719"
     },
     {
       "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\seaslides-ja-runtime\\scripts\\html_compiler.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\seaslides",
+        "C:\\Users\\owner\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\seaslides-ja-runtime\\scripts\\html_compiler.py",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\seaslides",
         "--all"
       ],
       "exit_code": 0,
-      "log": "source/logs/compiler.log",
-      "log_sha256": "85496fd501df24c47627b77f40a62703d31bb4bfd152e6e1eb174c42052a5a1f"
+      "log": "source/logs/compiler-round3.log",
+      "log_sha256": "3a8cfbf22f6d13f52d1c5ba796d1bb8358a8cebc5f10482e97dc5463f61f2808"
     },
     {
       "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\seaslides-ja-runtime\\scripts\\validate_project.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\seaslides",
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\seaslides-ja-runtime\\scripts\\validate_project.py",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\seaslides",
         "--require-build",
         "--artifact-profile",
         "visual"
       ],
       "exit_code": 0,
-      "log": "source/logs/visual-gate.log",
-      "log_sha256": "32c01b13b3c47253a36369f9d7b302801979b0e1b0855eaa5ef66f3c27395e97"
+      "log": "source/logs/visual-gate-round3.log",
+      "log_sha256": "93a6f006652870138347057cbcb403f9c6363b22cf7ec4a739ac4f7bfd6f363e"
     }
   ],
   "generator": "tools/build_seaslides_repository_example.py",
@@ -791,5 +791,36 @@
   "license": "MIT root; html_to_svg package.json retains its ISC metadata; included font OFLs and Motion dependency MIT notices",
   "api_calls": 0,
   "native_navigation": "window.__go(index), #nav .dot[data-i], window.__currentSlideIndex",
-  "reproduction": "Original source/compiler files and exact derived changes packaged; npm dependencies installed from original package-lock; no common renderer."
+  "reproduction": "Original source/compiler files and exact derived changes packaged; npm dependencies installed from original package-lock; no common renderer.",
+  "latest_repair": {
+    "author": "Codex",
+    "description": "脚注を20px相当へ拡大し、透過を解除。4頁は担当ごとの横一行へ変更。原典の全形式compilerを再実行。",
+    "gates": {
+      "original_source_gate": 0,
+      "original_compiler_all": 0,
+      "original_visual_gate": 0,
+      "dom_audit": {
+        "status": "pass",
+        "slideCount": 5,
+        "issueCount": 0,
+        "blockerCount": 0,
+        "reviewCount": 0
+      },
+      "render_fidelity": "pass"
+    },
+    "source_proof_paths": [
+      "content.html",
+      "template.css",
+      "content_design_spec.md",
+      "source/logs/source-gate-web9.log",
+      "source/logs/compiler-web9.log",
+      "source/logs/visual-gate-web9.log",
+      "output/compile-manifest.json",
+      "output/dom-audit.json",
+      "output/render-fidelity.json",
+      "source/browser-repair.json"
+    ],
+    "independent_rescore": "pending"
+  },
+  "round3_repair": "QA.json#round3_repair"
 }

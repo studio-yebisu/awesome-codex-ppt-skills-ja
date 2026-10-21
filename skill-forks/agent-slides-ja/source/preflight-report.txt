@@ -1,0 +1,78 @@
+{
+  "ok": true,
+  "project_dir": "case\\input\\project",
+  "profile": {
+    "loaded": true,
+    "source": "case\\input\\project\\design-profile.json",
+    "template_path": {
+      "ok": true,
+      "path": "case\\input\\project\\base_template.pptx",
+      "exists": true
+    },
+    "content_layout_catalog_path": {
+      "ok": true,
+      "path": "case\\input\\project\\content_layout_catalog.json",
+      "exists": true
+    },
+    "archetypes_catalog_path": {
+      "ok": true,
+      "path": "case\\input\\project\\archetypes.json",
+      "exists": true
+    }
+  },
+  "checks": {
+    "project_dir": {
+      "ok": true,
+      "path": "case\\input\\project"
+    },
+    "artifacts": {
+      "resolved_manifest": {
+        "ok": true,
+        "path": "case\\input\\project\\resolved_manifest.json",
+        "exists": true
+      },
+      "template_catalog": {
+        "ok": true,
+        "path": "case\\input\\project\\template_catalog.json",
+        "exists": true
+      },
+      "content_layout_catalog": {
+        "ok": true,
+        "path": "case\\input\\project\\content_layout_catalog.json",
+        "exists": true
+      },
+      "archetypes_catalog": {
+        "ok": true,
+        "path": "case\\input\\project\\archetypes.json",
+        "exists": true
+      }
+    },
+    "optional_dependencies": {
+      "soffice": {
+        "available": false,
+        "description": "Required for PDF conversion during layout preview and screenshot extraction"
+      },
+      "pdftoppm": {
+        "available": true,
+        "description": "Required for PNG rendering during layout preview and screenshot extraction"
+      }
+    }
+  },
+  "issue_count": 1,
+  "summary": {
+    "by_severity": {
+      "warning": 1
+    },
+    "by_code": {
+      "OPTIONAL_DEPENDENCY_MISSING": 1
+    }
+  },
+  "issues": [
+    {
+      "code": "OPTIONAL_DEPENDENCY_MISSING",
+      "severity": "warning",
+      "message": "soffice is unavailable. Required for PDF conversion during layout preview and screenshot extraction",
+      "path": "dependencies.soffice"
+    }
+  ]
+}

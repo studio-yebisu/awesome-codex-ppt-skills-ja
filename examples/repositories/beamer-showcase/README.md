@@ -41,4 +41,6 @@ python build.py --tectonic .build/tectonic/tectonic.exe
 
 到着・処理とも一定の学習用モデル。5秒処理・3/4/6秒到着を仮定した算術で、実測値や性能実績ではありません。到着と処理の変動、優先度、複数窓口を含む実系の予測には別のモデルが必要です。
 
-生成成功、PDFの5ページ、各ページPNG出力、代表ページの初回表示を確認。ユーザー指定により独立レビュー、全ページ詳細監査、ZIP再実行は実施していません。検査結果は `QA.json` を参照。
+原典review-loopとpage-audit-checklistに沿って2回compile、全5ページ216dpiと重要箇所500dpi cropを描画し、文字・式・罫線・図と接続を目視します。3枚目の3式を独立した位置へ置き、罫線・例文から離しました。4枚目の「順番待ち」は意味の区切りで改行します。実施結果は `reviews/page-audit.json` と `QA.json`。Kimi K3・Opus5.5の独立再評価は技術検査と区別します。
+
+本PCにはxelatexがないため、原典scripts/render_and_check.shそのものは未実行です。同じTeXを既存Tectonicで2回compileし、同じ解像度条件で描画する実行adapterを使います。専用CLIの実行と原典チェックリストの目視実施を混同しません。

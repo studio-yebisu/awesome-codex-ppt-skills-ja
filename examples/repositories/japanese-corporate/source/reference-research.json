@@ -1,0 +1,126 @@
+{
+  "recorded_at": "2026-10-15T17:01:56.284540+00:00",
+  "author": "Codex",
+  "phase": "Independent repair of an existing deck; performed before this repair, not claimed for initial production.",
+  "image_searches": [
+    {
+      "query": "経済産業省 電子商取引 市場調査 図表 資料",
+      "domains": [
+        "meti.go.jp"
+      ],
+      "result": "No results returned by image search."
+    },
+    {
+      "query": "消費者庁 通信販売 最終確認画面 返品 ガイドライン 図",
+      "domains": [
+        "caa.go.jp"
+      ],
+      "result": "No results returned by image search."
+    },
+    {
+      "query": "アスクル 決算説明資料 ZOZO 決算説明資料 業務改善 図解",
+      "domains": [
+        "askul.co.jp",
+        "corp.zozo.com"
+      ],
+      "result": "No results returned by image search."
+    }
+  ],
+  "retrieval": "After the three empty image searches, found official pages/PDFs by web search and original source reference links. Opened actual two image figures in the browser and rendered four official PDF pages with Poppler; inspected all six pixels, not snippets.",
+  "blocked_sources_excluded": [
+    "METI 250826_kohyoshiryo.pdf (web retrieval403)",
+    "METI 016_04_00.pdf (web retrieval failure)"
+  ],
+  "reference_count": 6,
+  "corporate_count": 2,
+  "government_or_association_count": 4,
+  "topic_close_count": 2,
+  "references": [
+    {
+      "id": "nec-data-flow",
+      "type": "corporate",
+      "title": "NEC データドリブン型ものづくりを支える仕組み",
+      "url": "https://jpn.nec.com/manufacture/monozukuri/iot_mono/2022-10/02.html",
+      "visual_url": "https://jpn.nec.com/manufacture/monozukuri/iot_mono/2022-10/images/23-07.png",
+      "page_or_figure": "図：データドリブン型ものづくりを支える仕組み",
+      "observation": "左右の現状・将来像に同じ業務層を置き、データの流れと担当の役割を対応させる。青は将来側の構造、灰は比較対象。",
+      "apply": "4頁の現状と対応、5頁の担当別の入出力を対応させる。",
+      "not_copied": "工場の人物・図版・文言・実証内容は使わない。",
+      "actually_inspected_fullsize": true
+    },
+    {
+      "id": "daiko-roles-map",
+      "type": "corporate",
+      "title": "DAIKO XTECH 生産管理ソリューションマップ",
+      "url": "https://www.daiko-xtech.co.jp/solution/rbom/",
+      "visual_url": "https://www.daiko-xtech.co.jp/_pack/img/solutionmap_rbom_map_01.jpg",
+      "page_or_figure": "生産管理ソリューションマップ",
+      "observation": "一つの工場の全体像へ7つの業務領域を重ね、各領域を役割名と短い目的で説明する。線は青系、領域名は赤で階層を分ける。",
+      "apply": "5頁で部署名だけで終えず、各担当の具体的な作業と引き継ぐ記録を示す。",
+      "not_copied": "工場の配置・建物・人物・ロゴ・7領域の名称は使わない。",
+      "actually_inspected_fullsize": true
+    },
+    {
+      "id": "caa-confirmation",
+      "type": "government_topic",
+      "title": "消費者庁 通信販売における最終確認画面について",
+      "url": "https://www.caa.go.jp/notice/assets/consumer_transaction_cms203_230628_03.pdf",
+      "page_or_figure": "PDF1頁",
+      "observation": "主題と説明の後に、番号・項目名・補足を6区画でまとめ、下部へ条件と参照先を分ける。文字の大小と背景色の役割が一定。",
+      "apply": "6頁の論点・担当・期限・状態と、下部の判断／継続確認を分離する。",
+      "not_copied": "法的な表示要件・文言・図版・ロゴをECの架空業績や施策根拠として転用しない。",
+      "actually_inspected_fullsize": true
+    },
+    {
+      "id": "caa-annotated-form",
+      "type": "government_topic",
+      "title": "消費者庁 通信販売の申込み段階における表示についてのガイドライン",
+      "url": "https://www.caa.go.jp/policies/policy/consumer_transaction/specified_commercial_transactions/assets/consumer_transaction_cms101_2401119_03.pdf",
+      "page_or_figure": "PDF12頁（書面例2、図中ページ30）",
+      "observation": "大きな実例の該当欄へ注釈の矢印を結び、説明・対象・補足を同じ視野へ置く。上位の見出しと図内ラベルを分ける。",
+      "apply": "5頁の矢印が引き継ぐ記録または判断条件を指すようにし、意味のない矢印を置かない。",
+      "not_copied": "申込用紙・商品例・連絡先・個別の適法性判断は資料へ使わない。",
+      "actually_inspected_fullsize": true
+    },
+    {
+      "id": "ipa-committee",
+      "type": "government_association",
+      "title": "レガシーシステムモダン化委員会総括レポート",
+      "url": "https://www.ipa.go.jp/disc/committee/begoj90000002xuk-att/legacy-system-modernization-committee-20250528-report.pdf",
+      "page_or_figure": "PDF28頁：IT人材の需給ギャップ",
+      "observation": "上部の主張、左の参照グラフ、右の比較表を同時に読ませ、赤い枠を実際の着目列と総計へ限る。下部へ出所を置く。",
+      "apply": "3頁の元データを持つグラフと解釈を対応させ、強調色を判断に必要な差へ絞る。",
+      "not_copied": "人材需給の値・表・グラフや分析結果は使わない。",
+      "actually_inspected_fullsize": true
+    },
+    {
+      "id": "jeita-publication",
+      "type": "association",
+      "title": "JEITA 2026年度版実装技術ロードマップ 発刊および報告会の案内",
+      "url": "https://home.jeita.or.jp/press_file/20260519111446_1XMVduP7IC.pdf",
+      "page_or_figure": "PDF1頁",
+      "observation": "上部の発行主体、見出し、説明本文、下部の項目付き仕様・参照先を役割ごとに分ける。小さな文字にも本文・定義・連絡の役割がある。",
+      "apply": "冒頭と各頁で対象期間・作成主体・案の状態をそろえ、補足を主張から分ける。",
+      "not_copied": "JEITA名称・ロゴ・書影・価格・団体の実績を作例の所属や根拠にしない。",
+      "actually_inspected_fullsize": true
+    }
+  ],
+  "derivation": {
+    "reference_grammar": [
+      "paired before/after and layered responsibility",
+      "one overall model with role labels",
+      "evidence plus interpretation and caveat",
+      "annotations attached to actual target",
+      "status and source separated from the main claim"
+    ],
+    "retained_template": "Official editable 15-layout template is the native base, used under its original license.",
+    "new_choices": [
+      "EC-specific source data and actions stay the declared fictional input, not official-company evidence.",
+      "Keep the supplied six-slide blue-rail deck and native chart/table, rather than any single public reference composition.",
+      "Use three role lanes and four stages with labelled handoffs and an explicit decision, not the factory landscape or layered IT model.",
+      "Keep the monthly-report period and proposal/goal state visible; do not import publication logos or affiliation."
+    ],
+    "not_redistributed": "Research screenshots/PDFs are private analysis evidence only. No external source artwork, quotations, data or logos added to the deck or distributable ZIPs."
+  },
+  "JTC_authenticity_score": "Not self-scored. Exact independent reviewer evaluation pending."
+}

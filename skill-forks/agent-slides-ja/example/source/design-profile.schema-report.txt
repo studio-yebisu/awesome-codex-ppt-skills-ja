@@ -1,0 +1,321 @@
+{
+  "id": "design-profile",
+  "schema": {
+    "$defs": {
+      "StorySpineEntry": {
+        "additionalProperties": false,
+        "properties": {
+          "role": {
+            "title": "Role",
+            "type": "string"
+          },
+          "archetype_id": {
+            "title": "Archetype Id",
+            "type": "string"
+          }
+        },
+        "required": [
+          "role",
+          "archetype_id"
+        ],
+        "title": "StorySpineEntry",
+        "type": "object"
+      }
+    },
+    "additionalProperties": false,
+    "properties": {
+      "name": {
+        "default": "default",
+        "title": "Name",
+        "type": "string"
+      },
+      "template_path": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Template Path"
+      },
+      "icon_pack_dir": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Icon Pack Dir"
+      },
+      "content_layout_catalog_path": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Content Layout Catalog Path"
+      },
+      "archetypes_catalog_path": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Archetypes Catalog Path"
+      },
+      "primary_color_hex": {
+        "anyOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Primary Color Hex"
+      },
+      "max_bullets_per_slide": {
+        "default": 6,
+        "title": "Max Bullets Per Slide",
+        "type": "integer"
+      },
+      "max_text_chars_per_shape": {
+        "default": 800,
+        "title": "Max Text Chars Per Shape",
+        "type": "integer"
+      },
+      "required_sections": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Required Sections",
+        "type": "array"
+      },
+      "allow_external_images": {
+        "default": true,
+        "title": "Allow External Images",
+        "type": "boolean"
+      },
+      "allowed_fonts": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Allowed Fonts",
+        "type": "array"
+      },
+      "min_font_size_pt": {
+        "default": 10,
+        "title": "Min Font Size Pt",
+        "type": "integer"
+      },
+      "max_font_size_pt": {
+        "default": 44,
+        "title": "Max Font Size Pt",
+        "type": "integer"
+      },
+      "allowed_colors_hex": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Allowed Colors Hex",
+        "type": "array"
+      },
+      "asset_roots": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Asset Roots",
+        "type": "array"
+      },
+      "min_margin_in": {
+        "default": 0.15,
+        "title": "Min Margin In",
+        "type": "number"
+      },
+      "max_overlap_ratio": {
+        "default": 0.2,
+        "title": "Max Overlap Ratio",
+        "type": "number"
+      },
+      "enforce_template_layouts": {
+        "default": true,
+        "title": "Enforce Template Layouts",
+        "type": "boolean"
+      },
+      "enforce_template_layout_sequence": {
+        "default": false,
+        "title": "Enforce Template Layout Sequence",
+        "type": "boolean"
+      },
+      "enforce_template_placeholders": {
+        "default": false,
+        "title": "Enforce Template Placeholders",
+        "type": "boolean"
+      },
+      "enforce_template_placeholder_text": {
+        "default": false,
+        "title": "Enforce Template Placeholder Text",
+        "type": "boolean"
+      },
+      "template_tolerance_in": {
+        "default": 0.02,
+        "title": "Template Tolerance In",
+        "type": "number"
+      },
+      "enforce_template_geometry": {
+        "default": true,
+        "title": "Enforce Template Geometry",
+        "type": "boolean"
+      },
+      "geometry_tolerance_in": {
+        "default": 0.35,
+        "title": "Geometry Tolerance In",
+        "type": "number"
+      },
+      "template_shape_kind_tolerance": {
+        "default": 1,
+        "title": "Template Shape Kind Tolerance",
+        "type": "integer"
+      },
+      "placeholder_tolerance_in": {
+        "default": 0.35,
+        "title": "Placeholder Tolerance In",
+        "type": "number"
+      },
+      "enforce_theme_font_inheritance": {
+        "default": false,
+        "title": "Enforce Theme Font Inheritance",
+        "type": "boolean"
+      },
+      "require_visual_on_content_slides": {
+        "default": true,
+        "title": "Require Visual On Content Slides",
+        "type": "boolean"
+      },
+      "require_source_for_data_slides": {
+        "default": true,
+        "title": "Require Source For Data Slides",
+        "type": "boolean"
+      },
+      "enforce_chart_style_contract": {
+        "default": false,
+        "title": "Enforce Chart Style Contract",
+        "type": "boolean"
+      },
+      "require_chart_axis_titles": {
+        "default": false,
+        "title": "Require Chart Axis Titles",
+        "type": "boolean"
+      },
+      "enforce_no_effects": {
+        "default": false,
+        "title": "Enforce No Effects",
+        "type": "boolean"
+      },
+      "enforce_no_transitions": {
+        "default": false,
+        "title": "Enforce No Transitions",
+        "type": "boolean"
+      },
+      "enforce_no_animations": {
+        "default": false,
+        "title": "Enforce No Animations",
+        "type": "boolean"
+      },
+      "allowed_image_extensions": {
+        "items": {
+          "type": "string"
+        },
+        "title": "Allowed Image Extensions",
+        "type": "array"
+      },
+      "chart_max_axis_font_size_pt": {
+        "default": 12,
+        "title": "Chart Max Axis Font Size Pt",
+        "type": "integer"
+      },
+      "chart_max_legend_font_size_pt": {
+        "default": 11,
+        "title": "Chart Max Legend Font Size Pt",
+        "type": "integer"
+      },
+      "table_max_cell_font_size_pt": {
+        "default": 16,
+        "title": "Table Max Cell Font Size Pt",
+        "type": "integer"
+      },
+      "default_font_size_pt": {
+        "default": 20,
+        "title": "Default Font Size Pt",
+        "type": "integer"
+      },
+      "slide_margin_left_in": {
+        "default": 0.69,
+        "title": "Slide Margin Left In",
+        "type": "number"
+      },
+      "slide_margin_top_in": {
+        "default": 1.35,
+        "title": "Slide Margin Top In",
+        "type": "number"
+      },
+      "slide_margin_right_in": {
+        "default": 0.69,
+        "title": "Slide Margin Right In",
+        "type": "number"
+      },
+      "slide_margin_bottom_in": {
+        "default": 0.55,
+        "title": "Slide Margin Bottom In",
+        "type": "number"
+      },
+      "text_color_light": {
+        "default": "FFFFFF",
+        "title": "Text Color Light",
+        "type": "string"
+      },
+      "text_color_dark": {
+        "default": "333333",
+        "title": "Text Color Dark",
+        "type": "string"
+      },
+      "story_spine": {
+        "anyOf": [
+          {
+            "items": {
+              "$ref": "#/$defs/StorySpineEntry"
+            },
+            "type": "array"
+          },
+          {
+            "type": "null"
+          }
+        ],
+        "default": null,
+        "title": "Story Spine"
+      },
+      "default_layout_index": {
+        "default": 6,
+        "title": "Default Layout Index",
+        "type": "integer"
+      }
+    },
+    "title": "DesignProfile",
+    "type": "object"
+  }
+}

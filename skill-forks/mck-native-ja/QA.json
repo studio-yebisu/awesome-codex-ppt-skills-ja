@@ -1,0 +1,105 @@
+{
+  "status": "round13_original_gates_author_visual_observations_independent_pending",
+  "s3_passed": true,
+  "s4_passed": true,
+  "original_gate_checklist": {
+    "user_code_errors": 0,
+    "engine_bug_errors": 0,
+    "warnings": 1
+  },
+  "original_whitelist_unmodified": true,
+  "powerpoint_rendered": true,
+  "page_count": 4,
+  "all4_rendered_images_inspected": true,
+  "visual_observations": [
+    "All4 current PP16 PDF-derived images individually inspected by Codex; no missing text or unintended glyph contact seen.",
+    "Cover shows computed30family/45file/15preset and ja17/latin13 values; two-line title uses original cover sizing.",
+    "Table shows real representative families per language on two lines; original row heights remain.",
+    "Donut lower-left whitespace/thin ring and vertical_steps number offset remain original high-level layout constraints; this is not a final visual-quality pass."
+  ],
+  "independent_model_review": "Current R13 pending independent recheck; no earlier score inherited",
+  "score_assigned_by_integrator": null,
+  "user_adoption": "not_requested",
+  "zip_replay": {
+    "status": "pass_payload_bound",
+    "evidence": "source/distribution-replay.json",
+    "both_archives_executed": true,
+    "native_content_equal": true,
+    "all4_pages_RGB_difference": 0,
+    "post_execution_metadata_only_repack": true
+  },
+  "font_registry_evidence": {
+    "hklm_registered": "BIZ UDGothic & BIZ UDPGothic (TrueType)",
+    "file": "BIZ-UDGothicR.ttc",
+    "render_reported_font": "BIZ UDPGothic"
+  },
+  "original_gate_score": 98,
+  "repair": {
+    "trigger": "Actual R12 MCK findings",
+    "author": "Codex",
+    "changes": [
+      "Source-derived cover file/preset/language counts and two-line title",
+      "Donut summary computed from actual category records; original7.2in legend position retained after6.5in experiment added whitespace warning",
+      "Table public column widths and language-labeled two-line real family names"
+    ],
+    "upstream_engine_modified": false
+  },
+  "known_issues": [
+    {
+      "page": 2,
+      "original_gate_category": "shape_overlap",
+      "meaning": "Original center count/subtitle textboxes overlap16%; actual glyphs remain separate."
+    }
+  ],
+  "round2_review_followup": {
+    "issue": "Previous effect text incorrectly described gate exception as empty textbox and claimed content-width containment",
+    "gate_fact": "Current slide4 交付 label exceeds content-right0.47in; original whitelist unchanged",
+    "visible_scope": "Text appears on slide; content-area containment is not claimed",
+    "original_gate_warnings_retained": true,
+    "scope": "Historical correction for the former timeline version only; current vertical_steps does not have that exception."
+  },
+  "deck_sha256": "c935be23cf3945316d2c4e2d0ca1b37873259553d77941248d78b75ffc5289f6",
+  "S5": {
+    "S4_gate_passed": true,
+    "gate_result": "ppt-project-font-kit/gate_result.json",
+    "artifact": "deck.pptx",
+    "artifact_sha256": "c935be23cf3945316d2c4e2d0ca1b37873259553d77941248d78b75ffc5289f6",
+    "delivery_state": "files_prepared; user adoption and independent review separate",
+    "refinement_decision": "PATTERN",
+    "refinement_decision_origin": "Fixed Codex repair judgment replayed by this dedicated example generator",
+    "runtime_new_diagnosis": false,
+    "record_mode": "fixed_repair_fixture_replay",
+    "experience": "experiences/chart-limits.md",
+    "experience_sha256": "41e9de175dc17f2f736187e843a59e8c8816aa8102f576334ad84fef4ea65375",
+    "upstream_experiences_modified": false,
+    "preventive_rule": "summary donut <=4 meaningful source-derived segments before original S3",
+    "original_gate_or_whitelist_changed": false
+  },
+  "round11": {
+    "visual": "All4 actual PowerPoint PDF-derived images inspected by Codex. Summary matches donut12/30=40.0%; 装飾 label matches table4+mono3=7.",
+    "original_gates": "S3passed=true/S4passed=true/score94/user0/engine exemption1/warning1",
+    "independent_current_review": "pending",
+    "scope": "Historical former timeline version; current round12 supersedes these values."
+  },
+  "native_edit": {
+    "application": "Microsoft PowerPoint16",
+    "action": "Native label edit -> SaveCopyAs -> reopen saved copy -> PDF render. Original source unchanged.",
+    "report": "qa/native-edit/report.json",
+    "image": "qa/native-edit/edited-copy.png",
+    "artifact": "qa/native-edit/edited-copy.pptx"
+  },
+  "round12": {
+    "original_gates": "S3 passed; S4 passed,score98,user0,engine0,warning1",
+    "visual": "All4 actual PP PDF-derived PNGs read; vertical file map labels legible; original donut whitespace retained with source-derived grouping explanation",
+    "original_experiences_read": "Four full files in current repair, recorded with hashes; no retroactive initial-author read claim",
+    "S5": "Fixed repair fixture replay, not new runtime classification",
+    "native_edit": "Current adopted PPTX center label edited via PowerPoint SaveCopyAs; source hash unchanged",
+    "independent_review": "pending"
+  },
+  "count_checks": "font-count-checks.json",
+  "round13": {
+    "original_gates": "S3 passed; S4 passed,98,user0,engine0,warning1",
+    "layout_scope": "Public inputs only; fixed ring/row-height/number placement limits retained",
+    "independent_review": "pending"
+  }
+}

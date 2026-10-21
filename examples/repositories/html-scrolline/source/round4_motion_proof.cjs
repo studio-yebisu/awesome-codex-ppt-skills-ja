@@ -1,0 +1,9 @@
+const {chromium}=require('playwright'),fs=require('fs'),path=require('path');
+(async()=>{const root=path.resolve(__dirname,'..'),b=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'}),p=await b.newPage({viewport:{width:1920,height:1080},reducedMotion:'no-preference'}),errors=[];p.on('pageerror',e=>errors.push(String(e)));try{
+await p.goto('http://127.0.0.1:8847/examples/repositories/html-scrolline/deck.html');await p.waitForFunction(()=>window.__deck);await p.evaluate(()=>document.fonts.ready);await p.waitForTimeout(700);const stops=await p.evaluate(()=>window.__deck.stops());const rows=[];
+for(const [label,from,to,midDelay,endDelay] of [['rail-advance','prepare','prepare/venue',160,1200],['era-shift','prepare/venue','deliver',700,2300]]){
+await p.evaluate(n=>window.__deck.goto(n),from);const ft=stops.find(x=>x.name===from).t;await p.waitForFunction(t=>Math.abs(window.__deck.time()-t)<.06,ft);await p.waitForTimeout(200);
+async function snap(phase){const state=await p.evaluate(()=>({time:window.__deck.time(),tracks:[...document.querySelectorAll('[data-part="track"]')].map(e=>({transform:getComputedStyle(e).transform,bounds:e.getBoundingClientRect().toJSON()}))}));const file=`render/${label}-${phase}.png`;await p.screenshot({path:path.join(root,file)});rows.push({move:label,phase,file,...state})}
+await snap('before');await p.keyboard.press('ArrowRight');await p.waitForTimeout(midDelay);await snap('mid');await p.waitForTimeout(endDelay);await snap('after');}
+fs.writeFileSync(path.join(root,'source/round4-motion-proof.json'),JSON.stringify({author:'Codex browser QA',actualOriginalRuntime:true,naturalArrowRight:true,retimingOrEngineMutation:false,rows,errors,notChecked:['MP4 export','other five concepts','portrait mobile','60fps quality'],independentScore:false},null,2));
+}finally{await b.close()}})();

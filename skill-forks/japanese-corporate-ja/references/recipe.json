@@ -1,25 +1,25 @@
 {
   "repository": "gonta223/japanese-corporate-pptx-skill",
   "execution_type": "instruction_skill_native_template",
-  "summary_ja": "公式15型PPTXから1・2・11・9・8・14枚目を選択し、SKILLの規約に従ってネイティブ図形・チャート・表を編集。専用生成APIは同梱されていない。",
+  "summary_ja": "数値に解釈を添え、担当間の受け渡しと判断条件をnative PPTXへ組み立てる。原典は制作指示と15型テンプレート。",
   "requirements": [
-    "Python 3.13 / python-pptx / lxml / Pillow",
-    "Microsoft PowerPoint 16.0 と PowerShell 7（PNG/PDF描画）",
-    "同梱の japanese-corporate-ponchi-template.pptx"
+    "読者・判断と、数値・単位・期間・出所、主体・条件の記録。",
+    "native PPTXを調査・編集・描画・再読込できるホスト。作例再生成はPython/python-pptx/lxml/Pillow、Windows PowerPoint、PDFium。"
   ],
   "steps": [
-    "原典を固定commitで取得",
-    "入力と依頼文を用意",
-    "固有パーツまたはテンプレートを選択",
-    "本文と図表を作成",
-    "PowerPoint本体で全ページ描画"
+    "原典6参照と15型を確認し、参照優先順に実画像を調べstyle ledgerを作る。",
+    "頁ごとの主張、主体、入出力、判断条件、出所をそろえる。",
+    "関係に合う型を選び、native図形・線・チャート・表へ編集する。",
+    "全頁の互換描画・overflow・元データ・package・再読込を検査し、原典JTCの独立受理を得る。"
   ],
   "commands": [
-    "git clone https://github.com/gonta223/japanese-corporate-pptx-skill .build/actual-upstreams/gonta223__japanese-corporate-pptx-skill",
-    "git -C .build/actual-upstreams/gonta223__japanese-corporate-pptx-skill checkout 05480bfa2d8f097ab397861cbe390429e1dbb824",
-    "python -m venv .venv",
-    ".venv\\Scripts\\python -m pip install python-pptx lxml Pillow",
-    ".venv\\Scripts\\python tools/build_japanese_repository_examples.py --only gonta --render"
+    "cd example",
+    "python source/rebuild.py",
+    "powershell -NoProfile -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render",
+    "python source/render_pdf_previews.py render",
+    "python source/check_native.py",
+    "powershell -NoProfile -File source/check_overflow.ps1",
+    "powershell -NoProfile -File source/check_edit_reopen.ps1"
   ],
   "source_refs": [
     {
@@ -73,8 +73,11 @@
     "japanese-corporate"
   ],
   "limitations": [
-    "独立した生成プログラムではなく指示SkillとPPTXテンプレートを用いた制作。原典テンプレートの再配布はMIT LICENSEを保持。"
+    "現在の生成器はexample/source/rebuild.py。元のbuild_japanese_repository_examples.pyは初回制作の保存資料。",
+    "実データではなく架空の会議資料。分類率100%は目標。",
+    "修復前に3画像検索（0件）と公式6資料の実視認を実行した。初回制作時の調査とは扱わない。",
+    "全6頁の実表示、native部品、代表の編集保存再表示を確認した。独立JTC17/20受理・再評価・利用者採用は未完了。"
   ],
-  "reproduction": "examples/repositories/japanese-corporate/README.md",
+  "reproduction": "example/REPRODUCE.md",
   "fork": "japanese-corporate-ja"
 }

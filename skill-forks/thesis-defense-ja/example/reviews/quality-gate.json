@@ -1,0 +1,140 @@
+{
+  "status": "author_original_quality_gate_complete_independent_rereview_pending",
+  "requirements": "upstream/skills/thesis-defense-pptx/references/pptx_quality_gate.md",
+  "PowerPoint_open_and_export": {
+    "passed": true,
+    "page_count": 6,
+    "original_export_png_count": 6,
+    "shared_application_kept_open": true
+  },
+  "contact_sheet": {
+    "file": "reviews/contact-sheet.png",
+    "manually_inspected": true
+  },
+  "pages": [
+    {
+      "page": 1,
+      "image": "render/slide-01.png",
+      "sha256": "d1670ebe2f84a84075f65fb234a4dc8e04838af4c960dcfdc03e28349c24b357",
+      "visually_inspected_full_size": true,
+      "native_shape_count": 11,
+      "native_text_shape_count": 11,
+      "image_shape_count": 0,
+      "detail": "Cover/title/band, fictitious status and source-derived native cue inspected."
+    },
+    {
+      "page": 2,
+      "image": "render/slide-02.png",
+      "sha256": "55cb36a90ff170f44251fe313165ec72432a02e30a61330048159631c6d959d6",
+      "visually_inspected_full_size": true,
+      "native_shape_count": 21,
+      "native_text_shape_count": 21,
+      "image_shape_count": 0,
+      "detail": "Same exposure-time metric: near route14minutes and roof route3minutes; each route and travel time qualified."
+    },
+    {
+      "page": 3,
+      "image": "render/slide-03.png",
+      "sha256": "3888b04ea75248dee3bfd9423845550ed0db17b406b870d11819b7e1f1e11970",
+      "visually_inspected_full_size": true,
+      "native_shape_count": 45,
+      "native_text_shape_count": 39,
+      "image_shape_count": 0,
+      "detail": "Six edge labels show t/e from routes.json; node B is アーケード. Text sits on native white-filled textboxes without lines crossing glyphs."
+    },
+    {
+      "page": 4,
+      "image": "render/slide-04.png",
+      "sha256": "265a8e5804f77088ae1756fca78a825b248812e0ea77e395fd63cf42a7fe0405",
+      "visually_inspected_full_size": true,
+      "native_shape_count": 26,
+      "native_text_shape_count": 25,
+      "image_shape_count": 0,
+      "detail": "Native table14/18/16 time and14/3/16 exposure matches authored input; horizontal bars and conclusion agree."
+    },
+    {
+      "page": 5,
+      "image": "render/slide-05.png",
+      "sha256": "91e04019cf6fd34afad94f47a7b2ee452d91c6906e2fd599b9ddf8f46c2a674a",
+      "visually_inspected_full_size": true,
+      "native_shape_count": 20,
+      "native_text_shape_count": 19,
+      "image_shape_count": 0,
+      "detail": "J=t+lambda*e scores21/19.5/24 atlambda0.5 checked against input; minimum19.5roof route."
+    },
+    {
+      "page": 6,
+      "image": "render/slide-06.png",
+      "sha256": "c4909f3241c25df346d5454d82236807d2915855c58b5b75b4dcaf7516238eb7",
+      "visually_inspected_full_size": true,
+      "native_shape_count": 27,
+      "native_text_shape_count": 27,
+      "image_shape_count": 0,
+      "detail": "Assumptions moved up; unmeasured-status line enlarged and separated from the curved border."
+    }
+  ],
+  "overflow": {
+    "command": "runtime/scripts/inspect_pptx_overflow.ps1 -Pptx deck.pptx -Tolerance40 -OutputJson reviews/overflow.json",
+    "run_count_for_this_revision": 1,
+    "tolerance": 40,
+    "overflow_count": 0,
+    "receipt": "reviews/overflow.json"
+  },
+  "stale_template_text": {
+    "script_unmodified": true,
+    "bad_hits": [],
+    "receipt": "reviews/stale-text-scan.json"
+  },
+  "shared_PowerPoint_adapters": "Only Application.Quit suppressed in export/overflow PS1; source/*.diff records changes; measurement and tolerance untouched.",
+  "fonts_in_actual_pdf": [
+    "/BCDEEE+BIZ-UDPGothic-Bold",
+    "/BCDFEE+BIZ-UDPGothic-Bold",
+    "/BCDGEE+ShipporiMincho-Bold",
+    "/BCDHEE+BIZ-UDPGothic",
+    "/BCDIEE+BIZ-UDPGothic",
+    "/BCDJEE+ShipporiMincho-Bold",
+    "/BCDKEE+Cambria-Bold"
+  ],
+  "original_source_identities": [
+    {
+      "path": "skills/thesis-defense-pptx/scripts/export_pptx_png.ps1",
+      "sha256": "3eb5f5227d16a05372b77fe5b1aee3aaf9dafc6265d3ae058d874288e4ee36ab"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/scripts/inspect_pptx_overflow.ps1",
+      "sha256": "7717944e0b4c617e3c312ba04fdebd412ab9dc45ab89e5f91222c5937934114f"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/scripts/make_contact_sheet.py",
+      "sha256": "fea85be505432e53ceb8ed6fddb35d69337e0c15dbb584dcb7219036c822d1a8"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/scripts/scan_pptx_text.py",
+      "sha256": "aaaa96a14709a8ddd7421b1b56da693d39d2ea3f362e4f16dbff03d57656b331"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/references/pptx_quality_gate.md",
+      "sha256": "c08d2c6c96c3410ebf78783657964c9362d4d7b26d7f6d520c753c53809ae49e"
+    }
+  ],
+  "input_scope": "Authored Markdown + JSON educational example. Real thesisPDF extraction and real university-template fidelity are not demonstrated.",
+  "independent_review": false,
+  "zip_reexecution": false,
+  "formal_adoption": false,
+  "artifact_sha256": "e451ba4b2ea22fc52404f24e6274d5ab9e82fddf3ffd58211126c8b017023378",
+  "current_technical_quality": "reviews/current-technical-quality.json",
+  "current_author_visual_review": {
+    "changed_pages_full_size": [
+      3,
+      6
+    ],
+    "unchanged_page_PNGs_from_previous_full_review": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "current_contact_sheet_opened": true,
+    "independent_review": "pending"
+  }
+}

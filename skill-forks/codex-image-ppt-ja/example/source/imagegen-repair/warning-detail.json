@@ -1,0 +1,49 @@
+{
+  "purpose": "Readable detail for QA comparison; before crop and current actual PowerPoint after crop.",
+  "method": "Whole-page mechanical size normalization where needed, then crop each actual warning panel at recorded coordinates. Keep different panel heights; no text/shape repainting.",
+  "slide_artifact_changed": false,
+  "rows": [
+    {
+      "label": "before",
+      "source": "source/imagegen-repair/slide-03-before.png",
+      "source_sha256": "29165a22ae72402cc5ee4221304c27b2e40a7d21c06ee6ebe9a23c2b1ea6e620",
+      "source_size": [
+        1672,
+        941
+      ],
+      "normalized_size": [
+        1600,
+        900
+      ],
+      "crop_box": [
+        1000,
+        635,
+        1580,
+        755
+      ],
+      "out": "source/imagegen-repair/warning-detail-before.png",
+      "out_sha256": "78cfceb5860261c866ede7eb33fd9e15fe4fc91ae2c24eeeb8fb4740196e115e"
+    },
+    {
+      "label": "after",
+      "source": "render/slide-03.png",
+      "source_sha256": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13",
+      "source_size": [
+        1600,
+        900
+      ],
+      "normalized_size": [
+        1600,
+        900
+      ],
+      "crop_box": [
+        1000,
+        585,
+        1580,
+        755
+      ],
+      "out": "source/imagegen-repair/warning-detail-after.png",
+      "out_sha256": "d820995b40202cbf9e080f923bd08f34c3fbbce8a8ccaf4ff70aa1fa860fd470"
+    }
+  ]
+}

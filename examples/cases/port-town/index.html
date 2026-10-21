@@ -49,16 +49,16 @@
   .slide::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;transition:background .7s ease}
   .slide.light::before{background:rgba(var(--paper-rgb),.78);backdrop-filter:blur(3px)}
   .slide.dark::before{background:rgba(var(--ink-rgb),.78);backdrop-filter:blur(3px)}
-  /* Hero 页：遮罩大幅降低，让 WebGL 背景明显透出 */
+  /* Hero ページ：遮罩大幅降低，让 WebGL 背景明显透出 */
   .slide.hero.light::before{background:rgba(var(--paper-rgb),.16);backdrop-filter:none}
   .slide.hero.dark::before{background:rgba(var(--ink-rgb),.12);backdrop-filter:none}
-  /* Hero 页顶底微弱渐隐，保证 chrome/foot 区域可读 */
+  /* Hero ページ顶底微弱渐隐，保证 chrome/foot 区域可读 */
   .slide.hero::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none}
   .slide.hero.light::after{background:linear-gradient(180deg,rgba(var(--paper-rgb),.28) 0%,rgba(var(--paper-rgb),0) 14%,rgba(var(--paper-rgb),0) 86%,rgba(var(--paper-rgb),.28) 100%)}
   .slide.hero.dark::after{background:linear-gradient(180deg,rgba(var(--ink-rgb),.32) 0%,rgba(var(--ink-rgb),0) 14%,rgba(var(--ink-rgb),0) 86%,rgba(var(--ink-rgb),.32) 100%)}
 
   /* ============ Magazine chrome：顶部 meta + 底部 foot ============
-     （v1 布局 + v2 字号在此合并为唯一定义，不要在别处二次定义） */
+     （v1 布局 + v2 文字サイズ在此合并为唯一定义，不要在别处二次定义） */
   .chrome{display:flex;justify-content:space-between;align-items:flex-start;font-family:var(--mono);font-size:max(11px,.78vw);letter-spacing:.2em;text-transform:uppercase;opacity:.62}
   .chrome .left,.chrome .right{display:flex;gap:2.4em;align-items:center}
   .chrome .sep{width:40px;height:1px;background:currentColor;opacity:.4}
@@ -70,7 +70,7 @@
   .rule.v{width:1px;height:100%;margin:0}
 
   /* ============ 字体规则 ============
-     · 衬线（Noto Serif JP / Playfair）：大标题、重点金句、数字
+     · 衬线（Noto Serif JP / Playfair）：大タイトル、重点金句、数字
      · 非衬线（Noto Sans JP）：正文描述、body、补充说明
      · 等宽（IBM Plex Mono）：kicker、meta 小标签、foot 右侧
   */
@@ -221,13 +221,13 @@
   .ppt-ui-btn{appearance:none;border:1px solid #3a3e48;background:#20242a;color:#f6f7f8;border-radius:8px;padding:9px 13px;font:600 14px/1 Inter,"Noto Sans JP",sans-serif;cursor:pointer}
   .ppt-ui-btn:hover{background:#2a2f37;border-color:#525864}.ppt-ui-btn:focus-visible{outline:2px solid #84a8ff;outline-offset:2px}.ppt-ui-btn:disabled{opacity:.28;cursor:not-allowed}
   .ppt-presenter-main{display:grid;grid-template-columns:minmax(0,1.75fr) minmax(300px,.75fr);gap:18px;min-height:0;padding:18px 24px}
-  .ppt-preview-stack{position:relative;display:grid;grid-template-rows:minmax(0,1fr) clamp(132px,22vh,210px);gap:16px;min-width:0;min-height:0}
+  .ppt-preview-stack{position:relative;display:grid;grid-template-rows:minmax(0,1fr) minmax(0,.85fr);gap:16px;min-width:0;min-height:0}
   .ppt-stage-card,.ppt-notes-card,.ppt-presenter-overview{background:#171a20;border:1px solid #2b2f37;border-radius:12px;overflow:hidden}
   .ppt-stage-card{display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}
   .ppt-stage-label{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:11px 14px;color:#aeb4be;font-size:13px;border-bottom:1px solid #292d34}
   .ppt-annotation-tools{display:flex;align-items:center;gap:5px;margin-left:auto}.ppt-annotation-tools .ppt-ui-btn{padding:6px 9px;font-size:12px}.ppt-annotation-tools .ppt-ui-btn.is-active{color:#111318;background:#ff5b63;border-color:#ff5b63}.ppt-annotation-tools .ppt-grid-btn.is-active{color:#111318;background:#edf1f5;border-color:#edf1f5}.ppt-annotation-tools .ppt-clear-btn{min-width:0}.ppt-grid-btn{display:inline-flex;align-items:center;gap:6px}.ppt-grid-icon{display:grid;grid-template-columns:repeat(2,4px);gap:2px}.ppt-grid-icon i{width:4px;height:4px;background:currentColor}
   .ppt-frame-viewport{position:relative;display:grid;place-items:center;min-width:0;min-height:0;overflow:hidden;background:#08090b}
-  .ppt-frame{display:block;width:0;height:0;max-width:100%;max-height:100%;aspect-ratio:16/9;border:0;background:#08090b}.ppt-next-frame{opacity:.86}#ppt-next-card.is-end .ppt-frame{visibility:hidden}#ppt-next-card.is-end .ppt-frame-viewport::after{content:"演示終了";position:absolute;color:#727a86;font:650 14px/1 Inter,"Noto Sans JP",sans-serif;letter-spacing:.08em}
+  .ppt-frame{display:block;width:0;height:0;max-width:100%;max-height:100%;aspect-ratio:16/9;border:0;background:#08090b}.ppt-next-frame{opacity:1}#ppt-next-card.is-end .ppt-frame{visibility:hidden}#ppt-next-card.is-end .ppt-frame-viewport::after{content:"発表終了";position:absolute;color:#727a86;font:650 14px/1 Inter,"Noto Sans JP",sans-serif;letter-spacing:.08em}
   .ppt-annotation-layer{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);z-index:4;width:0;height:0;pointer-events:none;touch-action:none}.ppt-annotation-layer.is-active{pointer-events:auto;cursor:crosshair}
   #ppt-audience-ink{position:fixed;inset:0;z-index:70;width:100vw;height:100vh;pointer-events:none}#ppt-audience-cover{position:fixed;inset:0;z-index:80;display:none;pointer-events:none}#ppt-audience-cover.is-ended{display:grid!important;place-items:center;background:#101216!important;color:#f5f6f7;font:650 clamp(24px,3vw,46px)/1.2 Inter,"Noto Sans JP",sans-serif;letter-spacing:.08em}
   .ppt-preview-stack.is-overview>.ppt-stage-card{display:none}.ppt-presenter-overview{grid-row:1/-1;display:grid;grid-template-rows:auto minmax(0,1fr);min-width:0;min-height:0}.ppt-presenter-overview[hidden]{display:none}.ppt-overview-head{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;border-bottom:1px solid #292d34}.ppt-overview-head strong{font-size:15px}.ppt-overview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px;align-content:start;overflow:auto;padding:14px}.ppt-overview-page{appearance:none;min-height:112px;display:grid;grid-template-rows:auto 1fr auto;gap:12px;padding:13px;border:1px solid #343943;border-radius:10px;background:#111318;color:#eef1f4;text-align:left;cursor:pointer}.ppt-overview-page:hover{background:#1d2128;border-color:#636b78}.ppt-overview-page.is-current{border-color:#84a8ff;box-shadow:inset 0 0 0 1px #84a8ff}.ppt-overview-page-no{color:#8f97a3;font:600 12px/1 var(--mono,monospace)}.ppt-overview-page-title{font-size:14px;font-weight:650;line-height:1.35}.ppt-overview-page-meta{display:flex;justify-content:space-between;gap:8px;color:#7f8793;font-size:11px}
@@ -261,7 +261,7 @@
   .frame.grid-3-3,
   .frame.grid-6{display:grid}
 
-  /* ---------- 标题层级（API 名称，衬线为主） ---------- */
+  /* ---------- タイトル层级（API 名称，衬线为主） ---------- */
   .h-hero{
     font-family:var(--serif-zh);
     font-weight:900;
@@ -290,7 +290,7 @@
     font-size:2.3vw;
     line-height:1.3;
   }
-  /* 英文标题专用（Playfair 衬线） */
+  /* 英文タイトル专用（Playfair 衬线） */
   .h-hero-en,.h-xl-en{font-family:var(--serif-en);letter-spacing:-.025em}
 
   /* ---------- lead 引语：定义见上方“字体规则”区块（已合并，勿重复定义） ---------- */
@@ -350,7 +350,7 @@
     opacity:.72;
     margin-top:.6vh;
   }
-  /* 当 stat-card 用于 grid-4（2x2），数字适度放大；若页面有标题+引文在上方，可内联 style 覆盖为更小值 */
+  /* 当 stat-card 用于 grid-4（2x2），数字适度大きくする；若ページ有タイトル+引文在上方，可内联 style 覆盖为更小值 */
   .grid-4 .stat-card .stat-nb{font-size:5vw}
   /* 当只有 3 个，字也可以稍大 */
   .grid-3 .stat-card .stat-nb{font-size:6.8vw}
@@ -426,7 +426,7 @@
   /* grid-6 已在旧样式里定义为 3x2，这里仅补 align */
 
   /* ---------- 图片 frame-img（layouts.md 主命名） ---------- */
-  /* 在旧样式里已定义，这里补 img-cap 命名别名与增强 */
+  /* 在旧样式里已定义，这里补 img-cap 命名别名との增强 */
   figure.frame-img{margin:0;display:flex;flex-direction:column;min-width:0}
   /* 有图注时:图片弹性收缩,图注收进固定高度/比例框内部,
      否则 img 的 height:100% 会把 figcaption 挤出 overflow:hidden 裁掉 */
@@ -455,13 +455,13 @@
   /* ---------- chrome & foot：定义见上方“Magazine chrome”区块（已合并，勿重复定义） ---------- */
 
   /* ============ 动效系统(Motion One 驱动) ============
-     所有 [data-anim] 元素默认隐藏,进入页面时由 JS 逐个揭示。
+     所有 [data-anim] 元素默认隐藏,进入ページ时由 JS 逐个揭示。
      - cascade(默认):按 DOM 顺序 stagger 120ms 淡入 + y:16→0
-     - hero(hero 页自动):慢一点的 stagger 180ms
+     - hero(hero ページ自动):慢一点的 stagger 180ms
      - quote(含 [data-anim="line"]):逐行 600ms 淡入
      - directional(含 [data-anim="left|right"]):左→分隔线→右
      - pipeline(data-animate="pipeline"):Space/→ 手动推进
-     Motion One 没加载成功时(CDN 断 + 本地丢),所有 [data-anim] 会兜底显示。
+     Motion One 没加载成功时(CDN 断 + ローカル丢),所有 [data-anim] 会兜底显示。
   */
   [data-anim]{opacity:1}
   body.motion-ready [data-anim]{opacity:0}
@@ -578,15 +578,15 @@ html{font-synthesis:none}body{line-break:strict;word-break:normal;overflow-wrap:
 <div id="deck"><section class="slide hero dark" data-slide-id="page-1" data-animate="hero"><div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>01 / 07</div></div><div class="frame case-mag-frame"><div class="kicker" data-anim>地域回遊 / 企画提案</div><h1 class="h-hero" data-anim>港町の、<br>半日をつなぐ。</h1><p class="lead" data-anim>市場・食・工房・灯台。<br>一本の徒歩行程で、町との出会いを増やす。</p></div><div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div></section>
 <section class="slide light" data-slide-id="page-2" data-animate="quote"><div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>02 / 07</div></div><div class="frame case-mag-frame"><div class="kicker" data-anim>THE VISITOR</div><h2 class="h-xl" data-anim>日帰りの来訪者へ。</h2><div class="case-mag-split"><p class="case-quote" data-anim>車を置いたら、<br>町を歩く。</p><p class="lead" data-anim>徒歩で半日を楽しめる人が対象。<br><br>店の場所だけでなく、<br>「次にどこへ行くか」を案内する。</p></div></div><div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div></section>
 <section class="slide dark" data-slide-id="page-3" data-animate="grid-reveal"><div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>03 / 07</div></div><div class="frame case-mag-frame"><div class="kicker" data-anim>THE WALK / ABOUT 4 KM</div><h2 class="h-xl" data-anim>港から灯台へ、戻る。</h2><div class="case-route"><div data-anim><strong>11:00</strong><h3>港の案内所</h3><p>地図と回遊カード<br>を受け取る</p></div><div data-anim><strong>11:20</strong><h3>朝市通り</h3><p>旬の食材と<br>店主の話</p></div><div data-anim><strong>12:15</strong><h3>路地の食堂</h3><p>地元の<br>昼ごはん</p></div><div data-anim><strong>13:30</strong><h3>ガラス工房</h3><p>制作見学と<br>小物選び</p></div><div data-anim><strong>14:30</strong><h3>旧灯台</h3><p>海を見る休憩と<br>記念写真</p></div><div data-anim><strong>15:00</strong><h3>港の案内所</h3><p>感想を記入して<br>帰着</p></div></div><p class="lead" data-anim>11:00〜15:00 / 約4km / 架空の計画。現地で歩行時間を確認。</p></div><div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div></section>
-<section class="slide light" data-slide-id="page-4" data-animate="grid-reveal"><div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>04 / 07</div></div><div class="frame case-mag-frame"><div class="kicker" data-anim>BEFORE / DURING / AFTER</div><h2 class="h-xl" data-anim>一度の案内で、終わらせない。</h2><div class="case-mag-three"><div data-anim><h3>来る前</h3><p>商店会の案内に半日行程を掲載。<br>駐車場からの入口を示す。</p></div><div data-anim><h3>歩く途中</h3><p>回遊カードと各店の小さな案内。<br>次の行先と所要時間を伝える。</p></div><div data-anim><h3>帰るとき</h3><p>感想カードを回収。<br>別の季節の行程も知らせる。</p></div></div></div><div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div></section>
+<section class="slide light" data-slide-id="page-4" data-animate="grid-reveal"><div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>04 / 07</div></div><div class="frame case-mag-frame"><div class="kicker" data-anim>BEFORE / DURING / AFTER</div><h2 class="h-xl" data-anim>一度の案内で、終わらせない。</h2><div class="case-mag-three"><div data-anim><h3>来る前</h3><p>商店会の案内に<br>半日行程を載せる。<br>駐車場からの入口を示す。</p></div><div data-anim><h3>歩く途中</h3><p>各店で回遊カードを渡す。<br>次の行先と<br>所要時間を伝える。</p></div><div data-anim><h3>帰るとき</h3><p>感想カードを回収。<br>別の季節の行程も知らせる。</p></div></div></div><div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div></section>
 <section class="slide dark" data-slide-id="page-5" data-animate="stats"><div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>05 / 07</div></div><div class="frame case-mag-frame"><div class="kicker" data-anim>PILOT OPERATION</div><h2 class="h-xl" data-anim>2週末、4日間で試す。</h2><div class="grid-3"><div class="stat-card" data-anim><div class="stat-nb">2<span class="stat-unit"> 人</span></div><div class="stat-note">案内スタッフ / 日</div></div><div class="stat-card" data-anim><div class="stat-nb">28<span class="stat-unit"> 万円</span></div><div class="stat-note">仮予算：案内6・人員16・調整6</div></div><div class="stat-card" data-anim><div class="stat-nb">4<span class="stat-unit"> 日</span></div><div class="stat-note">参加店舗の合意後に日程を確定</div></div></div><p class="lead" data-anim>雨天は短縮。混雑は時間指定で分散。営業時間を前日に確認。</p></div><div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div></section>
 <section class="slide light" data-slide-id="page-6" data-animate="stats"><div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>06 / 07</div></div><div class="frame case-mag-frame"><div class="kicker" data-anim>MEASURE THE PILOT</div><h2 class="h-xl" data-anim>売上効果を、急いで断定しない。</h2><div class="case-mag-three"><div data-anim><h3>60人以上</h3><p>参加者の目標。<br>案内所で匿名カードを渡す。</p></div><div data-anim><h3>40%以上</h3><p>全行程を回る人の目標。<br>各店で印を付ける。</p></div><div data-anim><h3>70%以上</h3><p>カード回収率の目標。<br>帰着時の感想も記録。</p></div></div><p class="lead" data-anim>数字は目標。来街者全体の売上効果は、この試行だけでは判断しない。</p></div><div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div></section>
 <section class="slide hero dark" data-slide-id="page-7" data-animate="hero"><div class="chrome"><div>SHIOMI / WEEKEND WALK</div><div>07 / 07</div></div><div class="frame case-mag-frame"><div class="kicker" data-anim>THE NEXT WEEKEND</div><h1 class="h-hero" data-anim>小さく歩いて、<br>次の行程へ。</h1><p class="lead" data-anim>商店会の合意 → 現地で時間確認 → 4日の試行。<br>回収したカードを見て、続け方を決める。</p></div><div class="foot"><div>架空の港町・企画によるサンプル</div><div>STUDIO YEBISU</div></div></section></div>
 <div id="nav"></div>
 
-<!-- 演讲メモ：每页一条，id 必须与 section[data-slide-id] 一致。见 references/presenter-mode.md -->
+<!-- 演讲メモ：每页一条，id 必须との section[data-slide-id] 一致。见 references/presenter-mode.md -->
 <script>
-const SPEAKER_NOTES = [{"id": "page-1", "title": "週末の汐見港町", "purpose": "週末の汐見港町", "talk": ["架空の汐見港町で行う週末回遊の企画です。", "商店会の合意を得て、2週末の試行へ進むことを提案します。", "このページの内容を次の判断につなげます。"], "transition": "次のページへ進みます。"}, {"id": "page-2", "title": "対象者と体験", "purpose": "対象者と体験", "talk": ["来訪者全員を対象にするのではなく、徒歩で半日過ごせる人へ絞ります。", "店を点で紹介するだけでは回り方が分かりにくいため、次の行先まで案内します。", "このページの内容を次の判断につなげます。"], "transition": "次のページへ進みます。"}, {"id": "page-3", "title": "4時間の徒歩行程", "purpose": "4時間の徒歩行程", "talk": ["市場での買い物、食堂の昼食、工房見学、灯台の休憩を一本の行程にまとめます。", "時間と距離は仮の計画で、実施前に実測します。", "このページの内容を次の判断につなげます。"], "transition": "次のページへ進みます。"}, {"id": "page-4", "title": "集客と、次の店への案内", "purpose": "集客と、次の店への案内", "talk": ["回遊カードと各店の案内を揃えます。", "全店舗で同じ地図と時間案内を使い、営業日を前日に確かめます。", "このページの内容を次の判断につなげます。"], "transition": "次のページへ進みます。"}, {"id": "page-5", "title": "4日間の試行と運営", "purpose": "4日間の試行と運営", "talk": ["予算は架空の計画値です。", "案内物6万円、スタッフ16万円、記録と調整6万円の合計28万円。", "雨天時の短縮と混雑時の分散をあらかじめ決めます。"], "transition": "次のページへ進みます。"}, {"id": "page-6", "title": "試行の測り方", "purpose": "試行の測り方", "talk": ["表示した数値は実績ではなく目標です。", "参加者の回遊をカードで記録し、来街者全体の売上効果とは分けて評価します。", "このページの内容を次の判断につなげます。"], "transition": "次のページへ進みます。"}, {"id": "page-7", "title": "次の判断", "purpose": "次の判断", "talk": ["参加店舗の合意、現地の時間確認、試行日程の決定へ進みます。", "試行の記録を確認して継続や変更を判断します。", "このページの内容を次の判断につなげます。"], "transition": "判断事項を確認します。"}];
+const SPEAKER_NOTES = [{"id": "page-1", "title": "週末の汐見港町", "purpose": "商店会に2週末・4日の試行への合意を求める", "talk": ["市場・食・工房・灯台を、一つの徒歩行程として提案します。", "汐見港町も予算も架空の設定で、営業案内や実施実績ではありません。", "参加店舗の合意後に、試行日と現地条件を確かめます。"], "transition": "まず、誰に何を体験してもらうかを絞ります。"}, {"id": "page-2", "title": "徒歩で半日を楽しむ来訪者へ。", "purpose": "対象者と半日の体験をそろえる", "talk": ["車を置いたあと徒歩で半日を過ごせる来訪者を想定します。", "個々の店を並べるだけでなく、次の店までの行き方を案内します。", "すべての来訪者を一度に対象にする計画ではありません。"], "transition": "体験を、時刻付きの一つの行程へ置きます。"}, {"id": "page-3", "title": "港から灯台へ、戻る。", "purpose": "出発から帰着までの6停留所を確認する", "talk": ["11時の案内所から15時の帰着までを仮に置いています。", "市場、食堂、工房、灯台を巡る順序を確認してください。", "4時間と約4kmは計画値で、実施前に歩いて時間と利用条件を確認します。"], "transition": "この行程を、来訪前と各店でどう案内するかを考えます。"}, {"id": "page-4", "title": "来る前と、店を出た後をつなぐ。", "purpose": "共通の地図と次の行先をそろえる", "talk": ["来訪前の案内と、各店を出るときの案内を一続きにします。", "全店舗で同じ地図と時刻案内を使う計画です。", "休日の営業時間を前日に確認し、案内と現地の不一致を避けます。"], "transition": "続いて、試行を支える人数と費用を確認します。"}, {"id": "page-5", "title": "4日間で、運営を試す。", "purpose": "人数・予算・例外時の対応を合意する", "talk": ["2週末・4日、スタッフ2人という仮の運営条件です。", "案内物6万円、スタッフ16万円、記録・調整6万円で合計28万円です。", "雨天時は短縮し、混雑時は時間指定で分散する案を用意します。"], "transition": "費用を使った後に何を見て判断するかを決めます。"}, {"id": "page-6", "title": "回った距離より、次につながったか。", "purpose": "試行目標と測定範囲を分ける", "talk": ["60人、全行程40%以上、カード回収70%以上は目標値です。", "匿名カードを各店で記録し、帰着時に回収する計画です。", "この試行だけで、町全体の売上増加を断定しません。"], "transition": "最後に、試行前に決めることを確認します。"}, {"id": "page-7", "title": "まず、歩いて確かめる。", "purpose": "合意・現地確認・日程決定へ進む", "talk": ["参加店舗の合意を取り、時間と距離、休憩と雨天時の動線を現地確認します。", "確認後に試行日を決め、記録方法をスタッフでそろえます。", "試行の記録を見て、継続・変更・中止の条件を判断します。"], "transition": "以上の準備と2週末の試行を、合意事項として確認します。"}];
 window.__SPEAKER_NOTES__ = SPEAKER_NOTES;
 </script>
 
@@ -815,7 +815,7 @@ window.__pptPresenter=(()=>{
 
   function noteAt(i){
     const id=slideId(i);
-    return notes().find(n=>n.id===id)||{id,title:slides[i]?.dataset.title||`第 ${i+1} 页`,purpose:'—',talk:[],transition:''};
+    return notes().find(n=>n.id===id)||{id,title:slides[i]?.dataset.title||`${i+1} ページ`,purpose:'—',talk:[],transition:''};
   }
   function slideLabel(i){return `${i+1} / ${total} · ${noteAt(i).title||slideId(i)}`;}
   function escapeHTML(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));}
@@ -825,8 +825,8 @@ window.__pptPresenter=(()=>{
   }
   function generatedNote(n){
     const parts=[];
-    if(Array.isArray(n.talk)&&n.talk.length)parts.push(`【讲述要点】\n${valueLines(n.talk)}`);
-    if(n.transition)parts.push(`【转场】\n${n.transition}`);
+    if(Array.isArray(n.talk)&&n.talk.length)parts.push(`【話す要点】\n${valueLines(n.talk)}`);
+    if(n.transition)parts.push(`【次の頁へ】\n${n.transition}`);
     const optional=[['舞台提示',n.cue],['互动',n.interaction],['表达提示',n.delivery],['ページ送り时机',n.advance],['备用方案',n.fallback],['读音提醒',n.pronunciation]];
     optional.forEach(([label,value])=>{const text=valueLines(value);if(text)parts.push(`【${label}】\n${text}`);});
     return parts.join('\n\n')||'—';
@@ -888,7 +888,7 @@ window.__pptPresenter=(()=>{
     const availableWidth=viewport.clientWidth,availableHeight=viewport.clientHeight;
     if(!availableWidth||!availableHeight)return;
     const width=Math.min(availableWidth,availableHeight*(16/9)),height=width*(9/16);
-    frame.style.width=`${width}px`;frame.style.height=`${height}px`;
+    frame.style.width="1280px";frame.style.height="720px";frame.style.maxWidth="none";frame.style.maxHeight="none";frame.style.position="absolute";frame.style.left="50%";frame.style.top="50%";frame.style.transform=`translate(-50%,-50%) scale(${width/1280})`;frame.style.transformOrigin="center";
     if(frame.id==='ppt-current-frame')sizeInk(document.getElementById('ppt-presenter-ink'),width,height);
   }
   function fitPresenterFrames(){
@@ -974,11 +974,11 @@ window.__pptPresenter=(()=>{
   function mountShell(){
     if(document.getElementById('ppt-presenter'))return;
     document.body.insertAdjacentHTML('beforeend',`<div id="ppt-presenter" data-layout="${layoutMode}" aria-label="発表者ビュー">
-      <div class="ppt-presenter-top"><div><div class="ppt-presenter-brand">発表者ビュー</div><div class="ppt-presenter-meta"><span id="ppt-plan"></span><span id="ppt-section" hidden></span></div></div><div class="ppt-presenter-meta"><span id="ppt-sync" class="ppt-sync" data-state="disconnected" title="表示观众页面的软件同步状态，不代表 HDMI 等物理线缆状态">観客画面 · 未连接</span><button id="ppt-auto-toggle" class="ppt-ui-btn ppt-auto-state" type="button">自動ページ送り · 关闭</button><button id="ppt-preflight" class="ppt-ui-btn" type="button">检查</button><button id="ppt-settings" class="ppt-ui-btn" type="button">设置</button><button id="ppt-reopen" class="ppt-ui-btn" type="button">重新打开観客画面</button><button id="ppt-exit" class="ppt-ui-btn" type="button">退出</button></div></div>
-      <div class="ppt-presenter-main"><div class="ppt-preview-stack"><div class="ppt-stage-card"><div class="ppt-stage-label"><span>現在のページ</span><span class="ppt-annotation-tools"><button id="ppt-grid" class="ppt-ui-btn ppt-grid-btn" type="button" aria-pressed="false" title="宫格选页（Esc）"><span class="ppt-grid-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>宫格</button><button class="ppt-ui-btn" data-ppt-tool="laser" type="button" title="激光笔（L）">激光</button><button class="ppt-ui-btn" data-ppt-tool="circle" type="button" title="圈选（C）">圈选</button><button id="ppt-ink-clear" class="ppt-ui-btn ppt-clear-btn" type="button" title="清除标记（X）">清除</button></span><span id="ppt-current-label"></span></div><div class="ppt-frame-viewport"><iframe id="ppt-current-frame" class="ppt-frame" title="現在のページ预览"></iframe><canvas id="ppt-presenter-ink" class="ppt-annotation-layer" aria-label="演讲标注层"></canvas></div></div><div class="ppt-stage-card" id="ppt-next-card"><div class="ppt-stage-label"><span>次のページ</span><span id="ppt-next-label"></span></div><div class="ppt-frame-viewport"><iframe id="ppt-next-frame" class="ppt-frame ppt-next-frame" title="次のページ预览"></iframe></div></div><div id="ppt-presenter-overview" class="ppt-presenter-overview" hidden><div class="ppt-overview-head"><strong>选择页面</strong><button id="ppt-overview-close" class="ppt-ui-btn" type="button">戻る预览</button></div><div id="ppt-presenter-overview-grid" class="ppt-overview-grid"></div></div></div>
-      <div class="ppt-notes-card"><div class="ppt-notes-head"><div class="ppt-notes-label">标题</div><div id="ppt-notes-title" class="ppt-notes-title"></div><div class="ppt-purpose-block"><div class="ppt-notes-label">本页目的</div><div id="ppt-notes-purpose" class="ppt-purpose-copy"></div></div><div class="ppt-notes-draft-head"><div><div class="ppt-notes-label">草稿（メモ）</div><div id="ppt-note-meta" class="ppt-note-meta"></div></div><span class="ppt-notes-tools"><span id="ppt-saved" class="ppt-saved">已保存</span><button id="ppt-note-smaller" class="ppt-ui-btn" type="button" title="缩小メモ字号">A−</button><button id="ppt-note-larger" class="ppt-ui-btn" type="button" title="放大メモ字号">A+</button></span></div></div><textarea id="ppt-note-editor" class="ppt-note-editor" spellcheck="false" aria-label="本页演讲メモ"></textarea></div></div>
-      <div class="ppt-presenter-bottom"><div class="ppt-time-dashboard"><div class="ppt-time-stat"><span class="ppt-time-label">已进行</span><strong id="ppt-clock" class="ppt-time-value">00:00</strong><span class="ppt-time-hint">总时长</span></div><div class="ppt-time-stat"><span class="ppt-time-label">本页</span><strong id="ppt-slide-clock" class="ppt-time-value">00:00</strong><span id="ppt-slide-plan" class="ppt-time-hint">计划 —</span></div><div id="ppt-slide-status-box" class="ppt-time-stat"><span id="ppt-slide-status-label" class="ppt-time-label">计划</span><strong id="ppt-slide-status" class="ppt-time-value">—</strong><span id="ppt-slide-status-hint" class="ppt-time-hint">未设置</span></div></div><div class="ppt-control-stack"><div class="ppt-controls"><button id="ppt-first" class="ppt-ui-btn" type="button">首页</button><button id="ppt-prev" class="ppt-ui-btn" type="button">前のページ</button><button id="ppt-next" class="ppt-ui-btn" type="button">次のページ</button><button id="ppt-last" class="ppt-ui-btn" type="button">尾页</button></div><div class="ppt-session-actions"><button id="ppt-timer-toggle" class="ppt-ui-btn" type="button">計時を開始</button><button id="ppt-timer-reset" class="ppt-ui-btn" type="button">計時をリセット</button><button id="ppt-rehearsal" class="ppt-ui-btn" type="button">排练</button></div></div><div class="ppt-page-state"><strong id="ppt-page-count"></strong><span id="ppt-page-percent"></span></div></div>
-      <div id="ppt-dialog" class="ppt-dialog" hidden><div class="ppt-dialog-panel" role="dialog" aria-modal="true"><div class="ppt-dialog-head"><div id="ppt-dialog-title" class="ppt-dialog-title"></div><button id="ppt-dialog-close" class="ppt-ui-btn" type="button">关闭</button></div><div id="ppt-dialog-body" class="ppt-dialog-body"></div></div></div>
+      <div class="ppt-presenter-top"><div><div class="ppt-presenter-brand">発表者ビュー</div><div class="ppt-presenter-meta"><span id="ppt-plan"></span><span id="ppt-section" hidden></span></div></div><div class="ppt-presenter-meta"><span id="ppt-sync" class="ppt-sync" data-state="disconnected" title="表示観客ページ的软件同期状態，不代表 HDMI 等物理线缆状态">観客画面 · 未接続</span><button id="ppt-auto-toggle" class="ppt-ui-btn ppt-auto-state" type="button">自動ページ送り · OFF</button><button id="ppt-preflight" class="ppt-ui-btn" type="button">確認</button><button id="ppt-settings" class="ppt-ui-btn" type="button">設定</button><button id="ppt-reopen" class="ppt-ui-btn" type="button">観客画面を再度開く</button><button id="ppt-exit" class="ppt-ui-btn" type="button">終了</button></div></div>
+      <div class="ppt-presenter-main"><div class="ppt-preview-stack"><div class="ppt-stage-card"><div class="ppt-stage-label"><span>現在のページ</span><span class="ppt-annotation-tools"><button id="ppt-grid" class="ppt-ui-btn ppt-grid-btn" type="button" aria-pressed="false" title="ページ一覧选页（Esc）"><span class="ppt-grid-icon" aria-hidden="true"><i></i><i></i><i></i><i></i></span>ページ一覧</button><button class="ppt-ui-btn" data-ppt-tool="laser" type="button" title="レーザー笔（L）">レーザー</button><button class="ppt-ui-btn" data-ppt-tool="circle" type="button" title="囲む（C）">囲む</button><button id="ppt-ink-clear" class="ppt-ui-btn ppt-clear-btn" type="button" title="消去标记（X）">消去</button></span><span id="ppt-current-label"></span></div><div class="ppt-frame-viewport"><iframe id="ppt-current-frame" class="ppt-frame" title="現在のページプレビュー"></iframe><canvas id="ppt-presenter-ink" class="ppt-annotation-layer" aria-label="発表用注釈"></canvas></div></div><div class="ppt-stage-card" id="ppt-next-card"><div class="ppt-stage-label"><span>次のページ</span><span id="ppt-next-label"></span></div><div class="ppt-frame-viewport"><iframe id="ppt-next-frame" class="ppt-frame ppt-next-frame" title="次のページプレビュー"></iframe></div></div><div id="ppt-presenter-overview" class="ppt-presenter-overview" hidden><div class="ppt-overview-head"><strong>ページを選ぶ</strong><button id="ppt-overview-close" class="ppt-ui-btn" type="button">プレビューへ戻る</button></div><div id="ppt-presenter-overview-grid" class="ppt-overview-grid"></div></div></div>
+      <div class="ppt-notes-card"><div class="ppt-notes-head"><div class="ppt-notes-label">タイトル</div><div id="ppt-notes-title" class="ppt-notes-title"></div><div class="ppt-purpose-block"><div class="ppt-notes-label">この頁の目的</div><div id="ppt-notes-purpose" class="ppt-purpose-copy"></div></div><div class="ppt-notes-draft-head"><div><div class="ppt-notes-label">草稿（メモ）</div><div id="ppt-note-meta" class="ppt-note-meta"></div></div><span class="ppt-notes-tools"><span id="ppt-saved" class="ppt-saved">保存済み</span><button id="ppt-note-smaller" class="ppt-ui-btn" type="button" title="小さくするメモ文字サイズ">A−</button><button id="ppt-note-larger" class="ppt-ui-btn" type="button" title="大きくするメモ文字サイズ">A+</button></span></div></div><textarea id="ppt-note-editor" class="ppt-note-editor" spellcheck="false" aria-label="この頁の発表メモ"></textarea></div></div>
+      <div class="ppt-presenter-bottom"><div class="ppt-time-dashboard"><div class="ppt-time-stat"><span class="ppt-time-label">経過</span><strong id="ppt-clock" class="ppt-time-value">00:00</strong><span class="ppt-time-hint">全体時間</span></div><div class="ppt-time-stat"><span class="ppt-time-label">この頁</span><strong id="ppt-slide-clock" class="ppt-time-value">00:00</strong><span id="ppt-slide-plan" class="ppt-time-hint">予定 —</span></div><div id="ppt-slide-status-box" class="ppt-time-stat"><span id="ppt-slide-status-label" class="ppt-time-label">予定</span><strong id="ppt-slide-status" class="ppt-time-value">—</strong><span id="ppt-slide-status-hint" class="ppt-time-hint">未設定</span></div></div><div class="ppt-control-stack"><div class="ppt-controls"><button id="ppt-first" class="ppt-ui-btn" type="button">最初の頁</button><button id="ppt-prev" class="ppt-ui-btn" type="button">前のページ</button><button id="ppt-next" class="ppt-ui-btn" type="button">次のページ</button><button id="ppt-last" class="ppt-ui-btn" type="button">最後の頁</button></div><div class="ppt-session-actions"><button id="ppt-timer-toggle" class="ppt-ui-btn" type="button">計時を開始</button><button id="ppt-timer-reset" class="ppt-ui-btn" type="button">計時をリセット</button><button id="ppt-rehearsal" class="ppt-ui-btn" type="button">リハーサル</button></div></div><div class="ppt-page-state"><strong id="ppt-page-count"></strong><span id="ppt-page-percent"></span></div></div>
+      <div id="ppt-dialog" class="ppt-dialog" hidden><div class="ppt-dialog-panel" role="dialog" aria-modal="true"><div class="ppt-dialog-head"><div id="ppt-dialog-title" class="ppt-dialog-title"></div><button id="ppt-dialog-close" class="ppt-ui-btn" type="button">閉じる</button></div><div id="ppt-dialog-body" class="ppt-dialog-body"></div></div></div>
     </div>`);
     document.getElementById('ppt-reopen').onclick=reopenAudience;
     document.getElementById('ppt-exit').onclick=exitPresenter;
@@ -1015,20 +1015,20 @@ window.__pptPresenter=(()=>{
     if(nextFrame.dataset.slide!==String(next))updatePreviewFrame(nextFrame,next);
     document.getElementById('ppt-next-card').classList.toggle('is-end',idx===total-1);
     document.getElementById('ppt-current-label').textContent=`${idx+1} / ${total}`;
-    document.getElementById('ppt-next-label').textContent=idx===total-1?'已到尾页':`${next+1} / ${total}`;
-    document.getElementById('ppt-notes-title').textContent=n.title||`第 ${idx+1} 页`;
+    document.getElementById('ppt-next-label').textContent=idx===total-1?'最後のページです':`${next+1} / ${total}`;
+    document.getElementById('ppt-notes-title').textContent=n.title||`${idx+1} ページ`;
     document.getElementById('ppt-notes-purpose').textContent=n.purpose||'—';
-    const target=plannedMsAt(idx);document.getElementById('ppt-note-meta').textContent=`建议 ${target?(target/60000).toFixed(1):'—'} 分钟 · ${id}`;
-    document.getElementById('ppt-page-count').textContent=`第 ${idx+1} / ${total} 页`;
+    const target=plannedMsAt(idx);document.getElementById('ppt-note-meta').textContent=`目安 ${target?(target/60000).toFixed(1):'—'} 分 · ${id}`;
+    document.getElementById('ppt-page-count').textContent=`${idx+1} / ${total} ページ`;
     document.getElementById('ppt-page-percent').textContent=`${Math.round(((idx+1)/total)*100)}%`;
     document.getElementById('ppt-first').disabled=idx===0;document.getElementById('ppt-prev').disabled=idx===0;document.getElementById('ppt-next').disabled=idx===total-1;
-    document.getElementById('ppt-last').textContent=idx===total-1?'重新開始':'尾页';
-    if(renderedNoteId!==id){renderedNoteId=id;editor.value=loadNoteValue(id,idx,n);editor.scrollTop=0;document.getElementById('ppt-saved').textContent='已保存';}
+    document.getElementById('ppt-last').textContent=idx===total-1?'最初から再開':'最後の頁';
+    if(renderedNoteId!==id){renderedNoteId=id;editor.value=loadNoteValue(id,idx,n);editor.scrollTop=0;document.getElementById('ppt-saved').textContent='保存済み';}
     if(presenterOverviewOn)buildPresenterOverview();requestAnimationFrame(fitPresenterFrames);renderTimer();updateSyncStatus();
   }
   function saveNote(){
     const saved=document.getElementById('ppt-saved');saved.textContent='保存中…';saved.classList.remove('ppt-saved');clearTimeout(saveTimer);
-    saveTimer=setTimeout(()=>{localStorage.setItem(noteStorageKey(renderedNoteId),document.getElementById('ppt-note-editor').value);saved.textContent='已保存';saved.classList.add('ppt-saved');},300);
+    saveTimer=setTimeout(()=>{localStorage.setItem(noteStorageKey(renderedNoteId),document.getElementById('ppt-note-editor').value);saved.textContent='保存済み';saved.classList.add('ppt-saved');},300);
   }
   function setNoteSize(value,persist=true){noteSize=Math.max(14,Math.min(26,value));document.documentElement.style.setProperty('--ppt-note-size',`${noteSize}px`);if(persist)localStorage.setItem('guizang-ppt-note-size',String(noteSize));}
   function currentElapsed(){return elapsed+(timerRunning?Date.now()-timerStartedAt:0);}
@@ -1041,17 +1041,17 @@ window.__pptPresenter=(()=>{
     const totalUsed=currentElapsed(),pageUsed=currentSlideElapsed(),target=plannedMsAt(idx),clock=document.getElementById('ppt-clock');
     if(clock)clock.textContent=durationText(totalUsed);
     const slideClock=document.getElementById('ppt-slide-clock'),slidePlan=document.getElementById('ppt-slide-plan'),statusBox=document.getElementById('ppt-slide-status-box'),statusLabel=document.getElementById('ppt-slide-status-label'),statusValue=document.getElementById('ppt-slide-status'),statusHint=document.getElementById('ppt-slide-status-hint');
-    if(slideClock)slideClock.textContent=durationText(pageUsed);if(slidePlan)slidePlan.textContent=target?`计划 ${durationText(target)}`:'计划 —';
+    if(slideClock)slideClock.textContent=durationText(pageUsed);if(slidePlan)slidePlan.textContent=target?`予定 ${durationText(target)}`:'予定 —';
     if(statusBox&&statusLabel&&statusValue&&statusHint){
       const over=Boolean(target&&pageUsed>target),remaining=Boolean(target&&!over);statusBox.classList.toggle('is-over',over);statusBox.classList.toggle('is-remaining',remaining);
-      statusLabel.textContent=over?'超时':(remaining?'剩余':'计划');statusValue.textContent=target?durationText(Math.abs(target-pageUsed)):'—';statusHint.textContent=over?'已超出本页计划':(remaining?'距本页计划':'未设置');
+      statusLabel.textContent=over?'時間超過':(remaining?'残り':'予定');statusValue.textContent=target?durationText(Math.abs(target-pageUsed)):'—';statusHint.textContent=over?'超過この頁予定':(remaining?'までこの頁予定':'未設定');
     }
     const totalPlan=totalPlannedMs(),plan=document.getElementById('ppt-plan');
-    if(plan)plan.textContent=totalPlan?`计划 ${Number(totalPlan/60000).toFixed(1)} 分钟 · 预计 ${clockTime(Date.now()+Math.max(0,totalPlan-totalUsed))}`:'计划 —';
+    if(plan)plan.textContent=totalPlan?`予定 ${Number(totalPlan/60000).toFixed(1)} 分 · 予定終了 ${clockTime(Date.now()+Math.max(0,totalPlan-totalUsed))}`:'予定 —';
     const section=sectionInfo(idx),sectionEl=document.getElementById('ppt-section');
-    if(sectionEl){sectionEl.hidden=!section;sectionEl.textContent=section?`${section.name} · ${section.position}/${section.count}${section.planned?` · 剩余 ${durationText(Math.max(0,section.planned-section.used))}`:''}`:'';}
+    if(sectionEl){sectionEl.hidden=!section;sectionEl.textContent=section?`${section.name} · ${section.position}/${section.count}${section.planned?` · 残り ${durationText(Math.max(0,section.planned-section.used))}`:''}`:'';}
     const timerButton=document.getElementById('ppt-timer-toggle');if(timerButton)timerButton.textContent=timerRunning?'一時停止':(totalUsed?'計時を再開':'計時を開始');
-    const rehearsalButton=document.getElementById('ppt-rehearsal');if(rehearsalButton){rehearsalButton.textContent=rehearsalActive?'終了排练':'排练';rehearsalButton.classList.toggle('ppt-rehearsal-on',rehearsalActive);}
+    const rehearsalButton=document.getElementById('ppt-rehearsal');if(rehearsalButton){rehearsalButton.textContent=rehearsalActive?'終了リハーサル':'リハーサル';rehearsalButton.classList.toggle('ppt-rehearsal-on',rehearsalActive);}
     renderAutoState();
   }
   function toggleTimer(){const now=Date.now();if(timerRunning){commitRunningTime(now);timerRunning=false;}else{timerStartedAt=now;slideTimerStartedAt=now;timedSlideIndex=idx;timerRunning=true;}renderTimer();}
@@ -1074,14 +1074,14 @@ window.__pptPresenter=(()=>{
   function openRehearsalSummary(result,history){
     const rows=result.slides.filter(item=>item.ms>0).map(item=>`<tr><td>${item.index+1}</td><td>${escapeHTML(item.title)}</td><td>${durationText(item.ms)}</td><td>${item.targetMs?signedDuration(item.ms-item.targetMs):'—'}</td></tr>`).join('');
     const recent=history.map(item=>`<div class="ppt-dialog-row"><span>${new Date(item.endedAt).toLocaleString()}</span><strong>${durationText(item.totalMs)}</strong></div>`).join('');
-    openDialog('排练记录',`<div class="ppt-dialog-section"><div class="ppt-dialog-row"><span>本次总时长</span><strong>${durationText(result.totalMs)}</strong></div><table class="ppt-summary"><thead><tr><th>#</th><th>页面</th><th>实际</th><th>与计划相比</th></tr></thead><tbody>${rows||'<tr><td colspan="4">没有记录到页面时间</td></tr>'}</tbody></table></div><div class="ppt-dialog-section"><h3>最近排练</h3>${recent}</div>`);
+    openDialog('リハーサル記録',`<div class="ppt-dialog-section"><div class="ppt-dialog-row"><span>今回全体時間</span><strong>${durationText(result.totalMs)}</strong></div><table class="ppt-summary"><thead><tr><th>#</th><th>ページ</th><th>実際</th><th>との予定比較</th></tr></thead><tbody>${rows||'<tr><td colspan="4">ページ時間の記録はありません</td></tr>'}</tbody></table></div><div class="ppt-dialog-section"><h3>最近のリハーサル</h3>${recent}</div>`);
   }
 
   function autoDurationMs(i=idx){const explicit=Number(noteAt(i).autoAdvanceSeconds);const seconds=Number.isFinite(explicit)&&explicit>0?explicit:autoGlobalSeconds;return seconds>0?seconds*1000:null;}
   function armAutoAdvance(){autoDeadline=0;autoRemainingMs=autoDurationMs()||0;}
   function autoBlockedReason(){
-    if(presenterOverviewOn||overviewOn)return'宫格选页中';if(annotationTool!=='none')return'标注中';if(screenMode!=='normal')return'観客画面已一時停止';if(document.hidden)return'窗口不可见';
-    const dialog=document.getElementById('ppt-dialog');if(dialog&&!dialog.hidden)return'设置中';
+    if(presenterOverviewOn||overviewOn)return'ページ一覧选页中';if(annotationTool!=='none')return'标注中';if(screenMode!=='normal')return'観客画面已一時停止';if(document.hidden)return'窗口不可见';
+    const dialog=document.getElementById('ppt-dialog');if(dialog&&!dialog.hidden)return'設定中';
     if(audienceOpenedAt&&syncState()!=='synced')return'等待観客画面同步';return'';
   }
   function updateAutoAdvance(){
@@ -1097,11 +1097,11 @@ window.__pptPresenter=(()=>{
     const button=document.getElementById('ppt-auto-toggle');if(!button)return;
     const duration=autoDurationMs(),blocked=autoEnabled?autoBlockedReason():'';
     button.classList.toggle('is-on',autoEnabled&&!blocked);button.classList.toggle('is-paused',autoEnabled&&Boolean(blocked));
-    if(!autoEnabled)button.textContent='自動ページ送り · 关闭';
-    else if(!duration)button.textContent='自動ページ送り · 等待时长';
-    else if(idx===total-1)button.textContent='自動ページ送り · 已終了';
-    else if(blocked)button.textContent=`自動ページ送り · ${blocked}`;
-    else button.textContent=`自動ページ送り · ${durationText(autoRemainingMs||duration)}`;
+    if(!autoEnabled)button.textContent='自動ページ送り · OFF';
+    else if(!duration)button.textContent='自動ページ送り · ON／間隔未設定';
+    else if(idx===total-1)button.textContent='自動ページ送り · ON／終了';
+    else if(blocked)button.textContent=`自動ページ送り · ON／${blocked}`;
+    else button.textContent=`自動ページ送り · ON／${durationText(autoRemainingMs||duration)}`;
   }
   function toggleAutoAdvance(){
     if(!autoEnabled&&!autoDurationMs()){openSettings();return;}
@@ -1124,7 +1124,7 @@ window.__pptPresenter=(()=>{
     if(value==='black'||value==='white'){cover.style.display='block';cover.style.background=value;}else cover.style.display='none';
   }
   function showAudienceEnded(){
-    const cover=document.getElementById('ppt-audience-cover');if(cover){cover.style.display='';cover.style.background='';cover.textContent='演示已終了';cover.classList.add('is-ended');}
+    const cover=document.getElementById('ppt-audience-cover');if(cover){cover.style.display='';cover.style.background='';cover.textContent='発表終了';cover.classList.add('is-ended');}
     setTimeout(()=>{try{window.close();}catch(e){}},120);
   }
   function setScreenMode(value){
@@ -1133,7 +1133,7 @@ window.__pptPresenter=(()=>{
     if(wasFrozen&&!audienceFrozen)sendGoto(true);updateSyncStatus();armAutoAdvance();renderAutoState();
   }
   function openSettings(){
-    openDialog('発表設定',`<div class="ppt-settings-card"><label class="ppt-switch-row" for="ppt-auto-enabled-setting"><span><strong>自動ページ送り</strong><br><span class="ppt-muted">必要に応じて手動でオン。初期状態はオフ。</span></span><input id="ppt-auto-enabled-setting" type="checkbox" ${autoEnabled?'checked':''}><span class="ppt-switch" aria-hidden="true"></span></label><div class="ppt-field"><label for="ppt-auto-seconds-setting">共通の間隔</label><div class="ppt-stepper"><button id="ppt-auto-minus" type="button" aria-label="减少一秒">−</button><input id="ppt-auto-seconds-setting" type="number" min="1" step="1" value="${autoGlobalSeconds||''}" placeholder="—"><span class="ppt-stepper-unit">秒</span><button id="ppt-auto-plus" type="button" aria-label="增加一秒">+</button></div></div><button id="ppt-settings-save" class="ppt-ui-btn ppt-settings-save" type="button">保存自動ページ送り</button><p class="ppt-settings-copy">单页 autoAdvanceSeconds 优先于共通の間隔；minutes 只是讲述计划。</p></div><div class="ppt-settings-card"><h3>発表者の配置</h3><p class="ppt-settings-copy">根据屏幕宽度调整页面与メモ的比例</p><div class="ppt-segmented"><button class="ppt-ui-btn" data-layout-choice="balanced" type="button">均等</button><button class="ppt-ui-btn" data-layout-choice="slides" type="button">ページ優先</button><button class="ppt-ui-btn" data-layout-choice="notes" type="button">メモ優先</button></div></div><div class="ppt-settings-card"><h3>観客画面</h3><p class="ppt-settings-copy">临时遮挡或固定観客画面</p><div class="ppt-segmented screen"><button class="ppt-ui-btn" data-screen-choice="normal" type="button">通常</button><button class="ppt-ui-btn" data-screen-choice="black" type="button">黒画面 B</button><button class="ppt-ui-btn" data-screen-choice="white" type="button">白画面 W</button><button class="ppt-ui-btn" data-screen-choice="frozen" type="button">固定 F</button></div></div><div class="ppt-dialog-section"><button id="ppt-open-shortcuts" class="ppt-ui-btn" type="button">查看ショートカット</button></div>`);
+    openDialog('発表設定',`<div class="ppt-settings-card"><label class="ppt-switch-row" for="ppt-auto-enabled-setting"><span><strong>自動ページ送り</strong><br><span class="ppt-muted">必要に応じて手動でオン。初期状態はオフ。</span></span><input id="ppt-auto-enabled-setting" type="checkbox" ${autoEnabled?'checked':''}><span class="ppt-switch" aria-hidden="true"></span></label><div class="ppt-field"><label for="ppt-auto-seconds-setting">共通の間隔</label><div class="ppt-stepper"><button id="ppt-auto-minus" type="button" aria-label="减少一秒">−</button><input id="ppt-auto-seconds-setting" type="number" min="1" step="1" value="${autoGlobalSeconds||''}" placeholder="—"><span class="ppt-stepper-unit">秒</span><button id="ppt-auto-plus" type="button" aria-label="增加一秒">+</button></div></div><button id="ppt-settings-save" class="ppt-ui-btn ppt-settings-save" type="button">保存自動ページ送り</button><p class="ppt-settings-copy">单页 autoAdvanceSeconds 优先于共通の間隔；minutes 只是讲述予定。</p></div><div class="ppt-settings-card"><h3>発表者の配置</h3><p class="ppt-settings-copy">根据屏幕宽度调整ページとのメモ的比例</p><div class="ppt-segmented"><button class="ppt-ui-btn" data-layout-choice="balanced" type="button">均等</button><button class="ppt-ui-btn" data-layout-choice="slides" type="button">ページ優先</button><button class="ppt-ui-btn" data-layout-choice="notes" type="button">メモ優先</button></div></div><div class="ppt-settings-card"><h3>観客画面</h3><p class="ppt-settings-copy">临时遮挡或固定観客画面</p><div class="ppt-segmented screen"><button class="ppt-ui-btn" data-screen-choice="normal" type="button">通常</button><button class="ppt-ui-btn" data-screen-choice="black" type="button">黒画面 B</button><button class="ppt-ui-btn" data-screen-choice="white" type="button">白画面 W</button><button class="ppt-ui-btn" data-screen-choice="frozen" type="button">固定 F</button></div></div><div class="ppt-dialog-section"><button id="ppt-open-shortcuts" class="ppt-ui-btn" type="button">查看ショートカット</button></div>`);
     document.querySelectorAll('[data-layout-choice]').forEach(button=>{button.classList.toggle('ppt-primary',button.dataset.layoutChoice===layoutMode);button.onclick=()=>{applyLayout(button.dataset.layoutChoice);openSettings();};});
     document.querySelectorAll('[data-screen-choice]').forEach(button=>{button.classList.toggle('ppt-primary',button.dataset.screenChoice===screenMode);button.onclick=()=>{setScreenMode(button.dataset.screenChoice);openSettings();};});
     const secondsInput=document.getElementById('ppt-auto-seconds-setting'),stepSeconds=delta=>{const current=Math.max(0,Number(secondsInput.value||0));secondsInput.value=String(Math.max(1,current+delta));};
@@ -1142,14 +1142,14 @@ window.__pptPresenter=(()=>{
     document.getElementById('ppt-open-shortcuts').onclick=openShortcuts;
   }
   function openShortcuts(){
-    const items=[['← / →','前のページ / 次のページ'],['Home / End','首页 / 尾页'],['Esc','宫格选页；标注工具激活时先退出工具'],['L','激光笔'],['C','圈选'],['X','清除标记'],['B / W','観客画面黒画面 / 白画面'],['F','固定 / 恢复観客画面'],['A','开启 / 关闭自動ページ送り'],['R','開始 / 終了排练'],['?','ショートカット说明']];
+    const items=[['← / →','前のページ / 次のページ'],['Home / End','最初の頁 / 最後の頁'],['Esc','ページ一覧选页；标注工具激活时先終了工具'],['L','レーザー笔'],['C','囲む'],['X','消去标记'],['B / W','観客画面黒画面 / 白画面'],['F','固定 / 恢复観客画面'],['A','自動ページ送り ON / OFF'],['R','開始 / 終了リハーサル'],['?','ショートカット说明']];
     openDialog('ショートカット',`<div class="ppt-shortcuts">${items.map(([key,label])=>`<kbd>${key}</kbd><span>${label}</span>`).join('')}</div>`);
   }
   function preflightChecks(){
     const images=[...document.images],videos=[...document.querySelectorAll('video')],frame=document.getElementById('ppt-current-frame'),rect=frame?.getBoundingClientRect();
     return[
-      {label:'観客画面连接',ok:['synced','frozen'].includes(syncState()),detail:`当前状态：${document.getElementById('ppt-sync')?.textContent||'未连接'}`},
-      {label:'弹窗权限',ok:!popupBlocked,detail:popupBlocked?'浏览器阻止了观众窗口':'未检测到弹窗拦截'},
+      {label:'観客画面连接',ok:['synced','frozen'].includes(syncState()),detail:`当前状态：${document.getElementById('ppt-sync')?.textContent||'未接続'}`},
+      {label:'弹窗权限',ok:!popupBlocked,detail:popupBlocked?'浏览器阻止了観客ウィンドウ':'未检测到弹窗拦截'},
       {label:'全画面状态',ok:Boolean(document.fullscreenElement),warn:true,detail:document.fullscreenElement?'已进入全画面':'尚未全画面，可在演讲前进入'},
       {label:'字体加载',ok:!document.fonts||document.fonts.status==='loaded',detail:document.fonts?`状态：${document.fonts.status}`:'浏览器不提供字体状态'},
       {label:'图片资源',ok:images.every(image=>image.complete&&image.naturalWidth>0),detail:`${images.filter(image=>image.complete&&image.naturalWidth>0).length} / ${images.length} 已加载`},
@@ -1158,8 +1158,8 @@ window.__pptPresenter=(()=>{
     ];
   }
   function openPreflight(){
-    const checks=preflightChecks(),html=checks.map(item=>`<div class="ppt-dialog-row"><div class="ppt-check ${item.ok?'is-ok':(item.warn?'is-warn':'')}"><span class="ppt-check-dot"></span><span><strong>${item.label}</strong><br><span class="ppt-muted">${item.detail}</span></span></div><strong>${item.ok?'通常':(item.warn?'建议':'异常')}</strong></div>`).join('');
-    openDialog('演前检查',`<div class="ppt-dialog-section">${html}</div><div class="ppt-dialog-section"><button id="ppt-preflight-refresh" class="ppt-ui-btn" type="button">重新检查</button> <button id="ppt-enter-fullscreen" class="ppt-ui-btn" type="button">进入全画面</button></div><p class="ppt-muted">这里只能检查浏览器和观众页面的软件状态，不能确认 HDMI、转接器或投影仪线缆是否物理连接。</p>`);
+    const checks=preflightChecks(),html=checks.map(item=>`<div class="ppt-dialog-row"><div class="ppt-check ${item.ok?'is-ok':(item.warn?'is-warn':'')}"><span class="ppt-check-dot"></span><span><strong>${item.label}</strong><br><span class="ppt-muted">${item.detail}</span></span></div><strong>${item.ok?'通常':(item.warn?'目安':'异常')}</strong></div>`).join('');
+    openDialog('演前確認',`<div class="ppt-dialog-section">${html}</div><div class="ppt-dialog-section"><button id="ppt-preflight-refresh" class="ppt-ui-btn" type="button">再確認</button> <button id="ppt-enter-fullscreen" class="ppt-ui-btn" type="button">进入全画面</button></div><p class="ppt-muted">这里只能確認浏览器和観客ページ的软件状态，不能确认 HDMI、转接器或投影仪线缆是否物理连接。</p>`);
     document.getElementById('ppt-preflight-refresh').onclick=openPreflight;
     document.getElementById('ppt-enter-fullscreen').onclick=async()=>{try{await document.documentElement.requestFullscreen();}catch(e){}openPreflight();};
   }
@@ -1211,7 +1211,7 @@ window.__pptPresenter=(()=>{
   }
   function updateSyncStatus(){
     const el=document.getElementById('ppt-sync');if(!el)return;const state=syncState();
-    const labels={blocked:'弹窗被拦截',disconnected:'未连接',connecting:'连接中',unsynced:'未同步',frozen:'已固定',synced:`已同步 · 第 ${idx+1} 页`};
+    const labels={blocked:'弹窗被拦截',disconnected:'未接続',connecting:'连接中',unsynced:'未同步',frozen:'已固定',synced:`同期済み · ${idx+1} ページ`};
     el.dataset.state=state;el.textContent=`観客画面 · ${labels[state]}`;
   }
   function reopenAudience(){
@@ -1321,7 +1321,7 @@ addEventListener('touchend',e=>{
   }
 },{passive:true});
 
-/* ?slide=N 直达（1-based），与 Swiss 模板行为一致 */
+/* ?slide=N 直达（1-based），との Swiss 模板行为一致 */
 const initialSlideParam = new URLSearchParams(location.search).get('slide');
 const initialSlide = initialSlideParam ? Number(initialSlideParam) - 1 : 0;
 go(Number.isFinite(initialSlide) ? initialSlide : 0);
@@ -1330,8 +1330,8 @@ window.__pptPresenter?.initMode();
 <script src="./assets/lucide.min.js"></script>
 <script>lucide.createIcons();</script>
 
-<!-- ============ Motion One 动效引擎（本地优先,CDN 兜底） ============
-     加载策略:先 ./assets/motion.min.js(本地,离线可用),失败 fallback 到 jsDelivr CDN
+<!-- ============ Motion One 动效引擎（ローカル优先,CDN 兜底） ============
+     加载策略:先 ./assets/motion.min.js(ローカル,离线可用),失败 fallback 到 jsDelivr CDN
      加载完成后挂 window.__playSlide / window.__pipeAdvance,
      导航脚本会在ページ送り中段调用 __playSlide(idx),键盘/滚轮/触屏会在ページ送り前调用 __pipeAdvance()
      双双失败时会兜底把所有 [data-anim] 设为可见,不让动效破坏阅读

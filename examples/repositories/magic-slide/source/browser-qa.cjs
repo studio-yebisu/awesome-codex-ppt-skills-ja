@@ -4,9 +4,10 @@ const fs=require('fs'),path=require('path'),crypto=require('crypto');
 const root=path.resolve(__dirname,'..');
 const mode=process.argv[2]||'overview';
 const base=process.env.MAGIC_QA_URL||'http://127.0.0.1:8765/deck/magic-slide/index.html';
+const entryUrl=q=>{const u=new URL(base);u.search=q;return u.href;};
 const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 (async()=>{
- const browser=await chromium.launch({headless:true});
+ const browser=await chromium.launch({headless:true,executablePath:process.env.EDGE_PATH});
  const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});
  const errors=[],outside=[],qaReads=[];
  page.on('response',r=>{if(r.url().endsWith('/qa-issues'))qaReads.push({method:r.request().method(),status:r.status(),authenticated:!!r.request().headers()['x-magic-slide-token']});});
@@ -14,18 +15,20 @@ const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
  page.on('request',r=>{if(!r.url().startsWith('http://127.0.0.1:')&&!r.url().startsWith('data:'))outside.push(r.url());});
  fs.mkdirSync(path.join(root,'render'),{recursive:true});
  if(mode==='overview'){
-  await page.goto(base+'?ms_qa=overview&ms_qa_capture=1',{waitUntil:'networkidle'});
+  await page.goto(entryUrl('ms_qa=overview&ms_qa_capture=1'),{waitUntil:'networkidle'});
   await page.waitForSelector('body.ms-qa-ready[data-ms-qa-pending="0"][data-ms-qa-timeouts="0"][data-ms-qa-errors="0"]',{timeout:60000});
+  await page.addStyleTag({content:'[id^="ms-cursor"]{display:none!important}'});
   await pause(1500);
   await page.screenshot({path:path.join(root,'render/overview.png'),fullPage:true});
   const status=await page.evaluate(()=>({ready:document.body.classList.contains('ms-qa-ready'),pending:document.body.dataset.msQaPending,timeouts:document.body.dataset.msQaTimeouts,errors:document.body.dataset.msQaErrors,iframeCount:document.querySelectorAll('iframe').length}));
   fs.writeFileSync(path.join(root,'source/overview-capture.json'),JSON.stringify({status,errors,outside,qaReads,method:'Original QA capture URL; Playwright fullPage after readiness and settle'},null,2));
   console.log(JSON.stringify(status));
  } else {
-  await page.goto(base+'?ms_no_presenter=1',{waitUntil:'networkidle'});
+  await page.goto(entryUrl('ms_no_presenter=1'),{waitUntil:'networkidle'});
   await page.waitForFunction(()=>typeof go==='function'&&typeof cur==='number');
   await page.evaluate(()=>document.fonts.ready);
   await pause(1800);
+  await page.addStyleTag({content:'[id^="ms-cursor"]{display:none!important}'});
   const pages=[],motion=[];
   for(let i=0;i<5;i++){
    if(i){
@@ -49,7 +52,7 @@ const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const overviewOpen=await page.evaluate(()=>document.getElementById('slide-overview').classList.contains('show'));
   await page.keyboard.press('Escape');await pause(500);
   const overviewClosed=await page.evaluate(()=>!document.getElementById('slide-overview').classList.contains('show'));
-  const unauth=await page.request.get(base.replace(/index\.html$/,'qa-issues'));
+  const unauth=await page.request.get(new URL('qa-issues',base).href);
   const unauthorizedStatus=unauth.status();
   const http=require('http');
   const staticServer=http.createServer((req,res)=>{

@@ -1,0 +1,1401 @@
+[
+  {
+    "case_id": "sebastian-188",
+    "guide_patch": {
+      "caveats": []
+    },
+    "method": "Markdown → structure/design → authored SVG → original export_pdf.js with explicit Chrome executable adapter → PDF and all7 browser pages checked.",
+    "prompt_text": "同梱の日本語SKILLと固定原典に従い、input/BRIEF.mdを7頁の日本語SVG資料へ。構成とデザインを先に保存し、SwissプリセットとSVG互換規範で著述する。原典export_pdf.jsへ明示したChrome adapterでPDFを出力し、全7頁を実表示で確認する。SVGソースは編集可。PowerPointへの挿入・図形変換・原典PPTX exportは未検証と明示する。",
+    "preview_image_notice": "原典PDF exportと全7頁のブラウザー表示を確認。SVGソースは編集可。PowerPointの図形変換は未検証。",
+    "sample_notice": "架空例。SVGとPDFを制作。PowerPointへの図形変換は未検証。"
+  },
+  {
+    "case_id": "sebastian-192",
+    "guide_patch": {
+      "caveats": [],
+      "requirements": [
+        "原典スキルを読めるエージェントと宿主の画像生成機能",
+        "Python、python-pptx、Pillow、jsonschema（原典validator/packer）",
+        "原典render_deck.py：Windows＋PowerPoint、または対応するLibreOffice環境"
+      ],
+      "steps": [
+        "5要件（源材料・参考作風・場面と聴衆・頁数・納品範囲）を揃え、足りない項目だけを確認する。",
+        "頁別内容稿をdeck-spec.mdに書いて内容自検を通し、利用者の確認を受ける（代行の明示授権がなければS2で待つ）。",
+        "同じ代表頁・同じ内容で4つの作風一覧を1案1回ずつ生成し、validate_style_options.pyで確かめてから選んでもらう。",
+        "page-spec.jsonに確定文字・安定ID・style.tokensを書き、validate_page_spec.py --strictを通してから1頁ずつ生成し、生成直後に点検する。",
+        "build_image_ppt.pyで合併し、render_deck.pyで完成PPTXを描画して頁順・画幅・文字を確認する。編集可能版が必要ならS6でscene.jsonを作る。"
+      ],
+      "execution_type": "original_strict_validator_image_packer_and_powerpoint_render_deck",
+      "limitations": [
+        "総覧内部の縮略頁は指定16:9に未適合。外枠の構造検査と全視覚条件の適合を分ける。",
+        "S6のnative再構築は未実施。文字・図は画像、話者ノートのみ編集可能。",
+        "完全なevaluate_delivery、厳密なOCR文字照合、独立再評価は未実施。",
+        "原典は宿主imagegenが必要。修復コマンドは既存8画像の再包装で、新画像を生成しない。"
+      ],
+      "local_changes": [
+        "日本語8頁の画像版。初回独自包装から原典validator/packer/rendererへ修復。S6 native化は未実施。"
+      ]
+    },
+    "prompt_text": "固定原典SlideMuseと同梱SKILLを使い、input/BRIEF.mdから日本語8頁の画像主体PPTXへ。5要件→頁別内容稿と自己点検→同内容4作風一覧→委任された選択→strict Page Spec→各頁の画像生成と確認→原典build_image_ppt.py→render_deck.pyで全頁確認の順。架空の研究計画として根拠のない環境効果・数値を作らない。S6のnative再構築と総覧内部16:9未適合は明示し、未実施の独立評価を合格扱いしない。",
+    "demonstration": {
+      "source_proof_paths": [
+        "examples/repositories/sebastian-192/input/BRIEF.md",
+        "examples/repositories/sebastian-192/input/deck-spec.md",
+        "examples/repositories/sebastian-192/input/page-spec.json",
+        "examples/repositories/sebastian-192/source/style-options.json",
+        "examples/repositories/sebastian-192/source/styles/01-sorter.png",
+        "examples/repositories/sebastian-192/source/styles/02-sorter.png",
+        "examples/repositories/sebastian-192/source/styles/03-sorter.png",
+        "examples/repositories/sebastian-192/source/styles/04-sorter.png",
+        "examples/repositories/sebastian-192/source/prompts/style-03.txt",
+        "examples/repositories/sebastian-192/source/prompts/page-05.txt",
+        "examples/repositories/sebastian-192/QA.json",
+        "examples/repositories/sebastian-192/PROVENANCE.json",
+        "examples/repositories/sebastian-192/deck.pptx",
+        "skill-forks/sebastian-192-ja/source/upstream/SKILL.md",
+        "examples/repositories/sebastian-192/page-spec.json",
+        "examples/repositories/sebastian-192/source/original-gates.json",
+        "examples/repositories/sebastian-192/source/original-image-receipts.json",
+        "examples/repositories/sebastian-192/reviews/original-render/render-report.json",
+        "examples/repositories/sebastian-192/source/REUSE.md"
+      ]
+    }
+  },
+  {
+    "case_id": "sebastian-205",
+    "guide_patch": {
+      "caveats": []
+    },
+    "preview_notice": "原典preflight/inspectorとPowerPoint16の全8頁描画を確認。文字・図形・出典・話者ノートを編集可能。独立した最終再評価は未了。"
+  },
+  {
+    "case_id": "slidepoise-showcase",
+    "guide_patch": {
+      "caveats": [],
+      "summary_ja": "画像生成で見た目を決め、意味の割当とOpenCV計測から編集可能な文字・図形・接続線へ再構築する。",
+      "limitations": [
+        "native文字の字形とフラット塗りは元の生成画像と異なる。完全一致は保証しない。",
+        "全3頁を原画像とPowerPoint描画で比較済み。外部Library検索・Console/global Profile導入、SAM、画像編集は未実施。",
+        "独立した現行版の最終再評価は未了。",
+        "数値は設計目標、会場名と120分は架空設定。実績ではない。"
+      ]
+    },
+    "constraints": [
+      "native文字の字形とフラット塗りは元の生成画像と異なる。完全一致は保証しない。",
+      "全3頁を原画像とPowerPoint描画で比較済み。外部Library検索・Console/global Profile導入、SAM、画像編集は未実施。",
+      "独立した現行版の最終再評価は未了。",
+      "数値は設計目標、会場名と120分は架空設定。実績ではない。"
+    ],
+    "demonstration": {
+      "pages": [
+        {
+          "index": 0,
+          "label": "1ページ目",
+          "title": "迷う操作を、半分に。",
+          "what_to_inspect": "8操作と4操作の各段階は編集可能なfreeform。内側の文字領域を補正し、会員登録が切り欠き線に接しない。",
+          "skill_rule": "再構築は生成画像のデザインを編集可能な要素へ写す工程で、デザインを作り直さない（原典Per-slide reconstruction）。",
+          "proof_path": "examples/repositories/slidepoise-showcase/qa/comparison-01.png",
+          "proof_kind": "comparison-image"
+        },
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "分岐は、空席で決まる。",
+          "what_to_inspect": "空席の有無に対応する接続元・先をAgentが割り当て、OpenCVの位置証拠からnative接続を作る。",
+          "skill_rule": "OpenCVは位置と色の証拠を測るだけで、どれが何の接続かはAgentがsemantic mapで決める（原典Absolute authority rule）。",
+          "proof_path": "examples/repositories/slidepoise-showcase/qa/comparison-02.png",
+          "proof_kind": "comparison-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "目標を決めて、順に直す。",
+          "what_to_inspect": "4操作・90%・60秒を、それぞれ一つのnative文字領域で保持。原画像と現在の実描画を比較できる。",
+          "skill_rule": "各頁の生成画像とnative実描画を同じ縮尺で比較し、字形・基線・間隔と情報の保持を確認して補正する。現在は全3頁を確認済み。",
+          "proof_path": "examples/repositories/slidepoise-showcase/qa/comparison-03.png",
+          "proof_kind": "comparison-image"
+        }
+      ]
+    }
+  },
+  {
+    "case_id": "quarto-talks-showcase",
+    "titles": [
+      "合成5点から直線を求める",
+      "同じ5点を散布図で示す",
+      "直線の傾きと切片を求める",
+      "NumPyで係数を計算する",
+      "当てはめた直線と残差を確認する",
+      "次の演習：1点を変えて直線を比較する"
+    ],
+    "demonstration": {
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "同じ5点を散布図で示す",
+          "skill_rule": "元データから図を作り、軸と対象を保つ図の配置を使う。",
+          "what_to_inspect": "5点の散布図とx/y軸を見る。表の(0,1)〜(4,4)を変えずに図へ移している。",
+          "proof_path": "examples/repositories/quarto-talks-showcase/render/effect-page-02-after.jpg",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "直線の傾きと切片を求める",
+          "skill_rule": "math配置の中心に一つの式を置き、使う記号を定義する。",
+          "what_to_inspect": "中央のy=ax+bと、その下のa=傾き・b=切片を見る。長い導出を詰め込んでいない。",
+          "proof_path": "examples/repositories/quarto-talks-showcase/render/effect-page-03-after.jpg",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "NumPyで係数を計算する",
+          "skill_rule": "code配置では学習に必要な短い処理と実行結果を分ける。",
+          "what_to_inspect": "6行のコード、結果a=0.8・b=1.4、実行済みPythonと公式出典を見る。枠の右端まで背景が揃っている。",
+          "proof_path": "examples/repositories/quarto-talks-showcase/render/effect-page-04-after.jpg",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/quarto-talks-showcase/talk.qmd",
+        "examples/repositories/quarto-talks-showcase/source/compute_fit.py",
+        "examples/repositories/quarto-talks-showcase/output/results.json",
+        "examples/repositories/quarto-talks-showcase/source/japanese.scss",
+        "examples/repositories/quarto-talks-showcase/QA.json",
+        "examples/repositories/quarto-talks-showcase/source/zip-replay.json",
+        "examples/repositories/quarto-talks-showcase/references.bib",
+        "examples/repositories/quarto-talks-showcase/DEPENDENCIES.md"
+      ]
+    },
+    "guide_patch": {
+      "execution_type": "original_quarto_talks_extension_with_local_japanese_styles",
+      "caveats": []
+    }
+  },
+  {
+    "case_id": "sebastian-203",
+    "name": "研究計画を仮説・図・評価へ整理する",
+    "job": "",
+    "change": "研究概要を問い・仮説・比較・評価の順へ分け、図の読み方と未検証の範囲を添えられる。",
+    "input": "論文・研究概要・文献レビューなどの元資料と、優先して使うPowerPointテンプレート。",
+    "output": "学術テンプレートを引き継ぎ、出典・図の読み方・話者ノートを持つ編集可能なPPTXと確認記録。",
+    "how_to_use": [
+      "研究概要・論文・レビューのうち実際に渡せる元資料と、優先するテンプレートを用意する。",
+      "主張を問い・仮説・比較条件・調査方法・評価へ分け、出典と未確認事項を対応表にする。",
+      "主要図に読み方、仮説に検証前の注記を付け、同梱テンプレートのmaster・下部帯を保って生成する。",
+      "原典テンプレートで資料を生成し、禁止語スキャンと全頁の実描画で図・書体・注記を確認する。"
+    ],
+    "constraints": [
+      "原典が受け付ける研究概要モードを使用。論文PDFからの図表・数式抽出、外部引用の照合は未実施。",
+      "配置図と関係図は設計仮説。研究の結果、実測音分布、縮尺のある建築図を示さない。",
+      "日本語書体をBIZ UDPGothicへ明示変更。原典テンプレートのmaster・layout・themeを保存し、本文の見本情報は置換。",
+      "原典の禁止語スキャンとPowerPoint全8頁の実画像を確認。学術内容の第三者監査と修復版の独立再評価は未完了。"
+    ],
+    "demonstration": {
+      "summary": "研究概要を背景・空間モデル・仮説・比較条件・調査・評価・制約へ組み替え、主要図に読図注記を付けた。結果を補作せず、仮説と計画を表示する。",
+      "applied_features": [
+        "学術テンプレートのmaster・layout・themeと下部帯を引き継ぐ。",
+        "仮説の方向と交絡候補をnative図形・矢印・文字で表し、因果の実証と区別する。",
+        "比較表と評価項目へ読表注記を付け、原典の禁止語スキャンと描画後確認を実施。"
+      ],
+      "not_demonstrated": [
+        "論文図表・数式の抽出、外部引用の検証、測定済み研究結果、第三者の学術監査、独立再評価。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・図の読み方",
+          "title": "活動と音の希望を対応させる",
+          "what_to_inspect": "一続きの3区分へ活動を並べ、下に音の希望を対応させる。下段で設計仮説と実測尺度の違いを示す。",
+          "skill_rule": "技術的な対象の対応を図で示し、主要図へ読み方と仮説の範囲を添える。",
+          "proof_path": "examples/repositories/sebastian-203/render/slide-02.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・仮説の関係",
+          "title": "検証する関係",
+          "what_to_inspect": "左右の矢印と「検証候補」、下段の交絡候補・読図注記を確認する。",
+          "skill_rule": "仮説を実証済みの因果関係として描かず、関係の向きと読図上の制約を示す。",
+          "proof_path": "examples/repositories/sebastian-203/render/slide-04.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 4,
+          "label": "5頁・同じ基準で比較",
+          "title": "配置案の比較",
+          "what_to_inspect": "ゾーン境界・案内表示・検証したい点の3行で案A/Bを比べ、下部の設定条件を読む。",
+          "skill_rule": "比較対象を同じ評価軸へそろえ、条件未確定の数値や結果を作らない。",
+          "proof_path": "examples/repositories/sebastian-203/render/slide-05.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "ゾーンの境界と音の伝わり方",
+          "what_to_inspect": "白い「本を探す」と下の「集中席へ」を分ける。集中席への経路は会話の活動域を横切らない。縮尺のない概念図。",
+          "skill_rule": "原稿の経路と接続関係を図に残し、計画と実証済みの結果を区別する。",
+          "proof_path": "examples/repositories/sebastian-203/render/slide-03.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-203/source/build_deck.py",
+        "examples/repositories/sebastian-203/source/academic-template.pptx",
+        "examples/repositories/sebastian-203/source/template-retention.json",
+        "examples/repositories/sebastian-203/source/claim-map.json",
+        "examples/repositories/sebastian-203/source/current-check-receipts.json",
+        "examples/repositories/sebastian-203/source/original-text-scan.txt",
+        "examples/repositories/sebastian-203/source/pdf-fonts.json",
+        "examples/repositories/sebastian-203/input/BRIEF.md",
+        "examples/repositories/sebastian-203/input/data.json",
+        "examples/repositories/sebastian-203/QA.json",
+        "examples/repositories/sebastian-203/source/distribution-replay.json",
+        "examples/repositories/sebastian-203/source/route-repair.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "研究概要やレビューの章を並べるだけで終えず、問い・仮説・比較・評価の関係へ組み替える。出典と仮説を区別し、主要図の読み方を付けて学術テンプレートへ配置する。",
+      "requirements": [
+        "Python / python-pptx、原典テンプレートを含む一式ZIP。",
+        "公式BIZ UDPGothicとPowerPoint等の実描画環境。PDF由来RGBプレビューにはpypdfium2。"
+      ],
+      "steps": [
+        "研究概要・論文・レビューのうち実際に渡せる元資料と、優先するテンプレートを用意する。",
+        "主張を問い・仮説・比較条件・調査方法・評価へ分け、出典と未確認事項を対応表にする。",
+        "主要図に読み方、仮説に検証前の注記を付け、同梱テンプレートのmaster・下部帯を保って生成する。",
+        "原典テンプレートで資料を生成し、禁止語スキャンと全頁の実描画で図・書体・注記を確認する。"
+      ],
+      "limitations": [
+        "原典が受け付ける研究概要モードを使用。論文PDFからの図表・数式抽出、外部引用の照合は未実施。",
+        "配置図と関係図は設計仮説。研究の結果、実測音分布、縮尺のある建築図を示さない。",
+        "日本語書体をBIZ UDPGothicへ明示変更。原典テンプレートのmaster・layout・themeを保存し、本文の見本情報は置換。",
+        "原典の禁止語スキャンとPowerPoint全8頁の実画像を確認。学術内容の第三者監査と修復版の独立再評価は未完了。"
+      ]
+    },
+    "font_download": "downloads/fonts/bizudpgothic.zip",
+    "font_families": [
+      "BIZ UDPGothic"
+    ],
+    "preview_kind": "powerpoint-render",
+    "titles": [
+      "静けさを選べる図書館",
+      "活動と音の希望を対応させる",
+      "ゾーンの境界と音の伝わり方",
+      "検証する関係",
+      "配置案の比較",
+      "試行と観察の順序",
+      "評価項目と判断の条件",
+      "実施前に確認すること"
+    ],
+    "notes": [
+      "表紙。架空の未実施研究提案。",
+      "利用目的と期待する音環境の対応。分類は設計仮説。",
+      "縮尺のないゾーニング概念図。建築図や実測音分布ではない。",
+      "配置・表示と席選択・評価の仮説モデル。実証済み因果関係ではない。",
+      "二つの未実施配置案の比較。席数・面積の実績を含まない。",
+      "現状把握・仮設試行・再観察・比較修正の研究手順。未実施。",
+      "評価項目と予定取得方法。調査結果・基準値を捏造しない。",
+      "施設合意、任意参加、個人識別情報を集めない方針。効果未確認。"
+    ],
+    "pages": [
+      "examples/repositories/sebastian-203/render/slide-01.png",
+      "examples/repositories/sebastian-203/render/slide-02.png",
+      "examples/repositories/sebastian-203/render/slide-03.png",
+      "examples/repositories/sebastian-203/render/slide-04.png",
+      "examples/repositories/sebastian-203/render/slide-05.png",
+      "examples/repositories/sebastian-203/render/slide-06.png",
+      "examples/repositories/sebastian-203/render/slide-07.png",
+      "examples/repositories/sebastian-203/render/slide-08.png"
+    ]
+  },
+  {
+    "case_id": "sci-diagram-reconstruction",
+    "font_families": [
+      "Yu Gothic"
+    ],
+    "font_notice_ja": "Windows同梱のYu Gothicを参照。OFL書体ではなく、字体ファイルは再配布しない。",
+    "constraints": [
+      "適用しない用途は、定量データの可視化・統計グラフ、一般的な業務図、組織図、通常のスライドデザイン、OCRだけの文字抽出、単純な画像配置。混在図は科学模式図の対象パネルだけを分けて復元する。",
+      "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+      "複合例で入れ子の配置・双方向線・破線の折れ線・合成画像insetの所有分離を確認。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+      "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+      "複合例の小図内部はrasterで、内側の「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示する方式で、不可視領域の削除や情報秘匿は保証しない。",
+      "角丸・矢じりの大きさ・破線パターン・色・線幅は近似を含む。複合例のX/X·Rは元のカプセル形から標準角丸矩形になる。画素一致・見た目の改善・時短を主張しない。",
+      "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存と字体の新規installは検査していない。",
+      "単純例pass-01と複合例pass-02の採用PPTXは保持。編集証拠は別コピーで、採用版と区別する。現在版の独立Kimi K3/Opus5.5評価は制作担当の確認と分ける。"
+    ],
+    "how_to_use": [
+      "科学模式図の画像から復元、既存PPTXの修復、変更しない検査のうち一つを選び、該当する原典参照文書を読む。",
+      "復元では元の解像度で文言・包含・方向・線の意味を読み、NODES/EDGES/INSETSへ一度だけ所有を割り当てる。数式・混在書体がある場合はmath-and-fonts.mdも読む。",
+      "利用可能なruntimeを一つ選ぶ。PptxGenJS経路は準備済みホスト配下でprobeし、pass-01/source.pngとbuild.mjsからPPTXを作る。欠けた依存は制作中に導入しない。",
+      "原典checkerへ--source pass-01/source.pngを渡し、原典rendererで表示し、元画像と文言・方向・欠落を照合する。原典既定は2passまでで、全blockerをまとめて一度直す。",
+      "保存例を再生する場合は作例rootをCWDとし、単純例はsource/reproduce.py、複合例はsource/reproduce_complex.pyへ--overwrite --renderを渡す。任意画像の自動変換器ではない。"
+    ],
+    "name": "科学模式図の文字と関係を編集可能な図へ復元する",
+    "job": "",
+    "upstream_principle": "提供された科学模式図の文言・記号・方向関係を優先し、意味を担う文字・図形・線を個別編集できるPowerPointへ復元する。既存PPTXの修復、変更しない検査も別経路として持つ。",
+    "change": "画像内の文言・包含・方向関係を保ち、修正したい文字・図形・線を個別編集可能なPPTXへ復元する。画像小図を残す場合はnativeとの所有を分ける。",
+    "input": "復元する科学模式図の画像、または修復・検査するPPTXと対象箇所。文字と方向を判読できる資料。",
+    "output": "選んだ経路に応じた編集可能なPPTXと実行用ソース、または変更しない検査結果。復元は図1点をスライド1枚へまとめる。",
+    "demonstration": {
+      "summary": "単純例では自作PNGの4箱と4関係を18個のnative部品へ復元。複合例では入れ子領域、双方向線、破線の折れ線を編集可能にし、画像小図だけをrasterへ分担した。ラベル・箱・線の変更、複合例のX→X*を別PPTXへ保存して確認している。",
+      "applied_features": [
+        "単純例：NODES/EDGES/INSETSと一つの座標変換で原文と4方向を保持。全体画像や隠れたトレース画像は埋め込まない。",
+        "単純例：原典checkerと原典rendererに加え、XMLから標準線の向き・反転・target側tailEndを4本分照合。原典集計が除外する線の範囲を明記した。",
+        "単純例：PowerPointでラベル、箱、線を別々に編集・保存・再表示。採用pass-01は変更せず、別QAコピーを証拠にした。",
+        "複合例で外側領域・2区画・記号の包含を座標で保持。双方向線1本と破線3segment/終端矢じりをnativeで復元し、合成画像小図1個はcropしてraster所有を保持。",
+        "複合例のX→X*をPowerPoint16でSaveCopyAsし、元PPTX不変を確認。初稿は実Opus5.5、FONTだけのpass-02修正と実行・検査はCodex。",
+        "現在の2ZIPを別展開し、単純例・複合例の計4保存build、原典probe/checker/LibreOffice renderer、PowerPoint PDF/PNGを再実行。PPT部品は採用版と一致。複合例PowerPoint描画の画素差は残るため、全画像一致とはしない。"
+      ],
+      "not_demonstrated": [
+        "数式、実験写真の復元、線同士の交差、箱移動への自動追従、PowerPointグループ化、既存PPTXのRepair/Inspection、統計グラフの復元、見た目の改善・時短、現在版の独立100点。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "復元結果：4箱と4関係",
+          "title": "水循環の代表的な経路",
+          "what_to_inspect": "左上→右上の凝結、右上→右下の降水、右下→左下の水の流れ、左下→左上の蒸発を入力PNGと比べる。原文・配置・方向を保持する。",
+          "skill_rule": "関係を見た目の円形配置から推測せず、元図のfrom/toと経路をEDGESへ記録する。線は一つのnative部品として持つ。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：文字だけの変更",
+          "title": "「海・湖の水」を「湖の水」へ",
+          "what_to_inspect": "左下のラベルだけが変わり、箱・線・ほかの文言が残る。画像全体を置き換えていない。",
+          "skill_rule": "各文字にnativeの所有者を一つ与える。画像内文字との二重描画や全面bitmapを使わない。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：箱と線の変更",
+          "title": "箱の塗りと矢印の色・太さを変更",
+          "what_to_inspect": "左下の箱だけが淡い緑、上の凝結の矢印だけが緑の太線へ変わる。文言と矢印の方向は保持し、保存後に開き直した。",
+          "skill_rule": "意味を持つ箱と関係を示す線を編集可能なnative部品へ分ける。自動接続とは区別し、PPTX XMLでも個別性を確かめる。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit"
+        },
+        {
+          "index": 0,
+          "label": "複合例：入れ子・双方向・破線・画像小図",
+          "title": "2区画の可逆交換（概念モデル）",
+          "what_to_inspect": "外側領域内の2区画と記号、両端矢じり、条件u→区画Bの破線終端、raster小図とnative見出しの分担を入力と比べる。",
+          "skill_rule": "NODES/EDGES/INSETSの所有を一つずつ割り当て、親領域で関係線を隠さないよう描画順を調整する。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/complex-example/render/powerpoint.png",
+          "proof_kind": "actual_powerpoint_render"
+        },
+        {
+          "index": 0,
+          "label": "複合例の別コピー：Xだけを変更",
+          "title": "XをX*へ変更して保存",
+          "what_to_inspect": "区画AのXだけがX*に変わり、双方向線・破線・小図が保持される。",
+          "skill_rule": "native文字の編集コピーを採用PPTXとは別に保存し、元hashを保持する。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/complex-example/qa/native-edit.png",
+          "proof_kind": "actual_saved_powerpoint_edit"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sci-diagram-reconstruction/pass-01/build.mjs",
+        "examples/repositories/sci-diagram-reconstruction/pass-01/source.png",
+        "examples/repositories/sci-diagram-reconstruction/input/reconstruction-inventory.json",
+        "examples/repositories/sci-diagram-reconstruction/upstream/SKILL.md",
+        "examples/repositories/sci-diagram-reconstruction/upstream/references/reconstruction.md",
+        "examples/repositories/sci-diagram-reconstruction/upstream/references/runtime-pptxgenjs.md",
+        "examples/repositories/sci-diagram-reconstruction/upstream/scripts/check_pptx.py",
+        "examples/repositories/sci-diagram-reconstruction/upstream/scripts/render_pptx.py",
+        "examples/repositories/sci-diagram-reconstruction/qa/check-pass-01.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/native-line-topology.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-editability.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.pptx",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-editability.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.pptx",
+        "examples/repositories/sci-diagram-reconstruction/source/check_native_lines.py",
+        "examples/repositories/sci-diagram-reconstruction/source/test_shape_edit.ps1",
+        "examples/repositories/sci-diagram-reconstruction/source/reproduce.py",
+        "examples/repositories/sci-diagram-reconstruction/QA.json",
+        "examples/repositories/sci-diagram-reconstruction/source/distribution-replay.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/README.md",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/PROVENANCE.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/ownership.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/input/source.png",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/pass-02/build.mjs",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/pass-02/editable.pptx",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/check-pass-02.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/native-structure.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/native-edit.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/native-edit.pptx",
+        "examples/repositories/sci-diagram-reconstruction/source/check_complex_native.py",
+        "examples/repositories/sci-diagram-reconstruction/source/reproduce_complex.py",
+        "examples/repositories/sci-diagram-reconstruction/source/replay-20261016.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "提供された科学模式図の文言・記号・方向関係を優先し、意味を担う文字・図形・線を個別編集できるPowerPointへ復元する。既存PPTXの修復、変更しない検査も別経路として持つ。",
+      "requirements": [
+        "復元用画像、読めるラベル。修復・検査の場合はPPTXと対象の欠陥を指定。",
+        "本配布のPptxGenJS経路はNode.js20+、既存PptxGenJS4.0.1、Python3.10+、LibreOffice、pdftoppm。作業passは準備済みホストruntime配下へ置く。",
+        "PowerPointの編集・実表示検査にはWindows PowerPoint16。Yu GothicはWindows同梱を参照し、字体ファイルは配布しない。新規installは検査していない。"
+      ],
+      "steps": [
+        "科学模式図の画像から復元、既存PPTXの修復、変更しない検査のうち一つを選び、該当する原典参照文書を読む。",
+        "復元では元の解像度で文言・包含・方向・線の意味を読み、NODES/EDGES/INSETSへ一度だけ所有を割り当てる。数式・混在書体がある場合はmath-and-fonts.mdも読む。",
+        "元の文言・配色・科学的な関係や矢印方向を黙って変えない。科学的意味・式・トポロジーを変える案や、広い意味領域を画像化するfallbackは、利用者から承認されていなければ先に確認する。",
+        "利用可能なruntimeを一つ選ぶ。PptxGenJS経路は準備済みホスト配下でprobeし、pass-01/source.pngとbuild.mjsからPPTXを作る。欠けた依存は制作中に導入しない。",
+        "原典checkerへ--source pass-01/source.pngを渡し、原典rendererで表示し、元画像と文言・方向・欠落を照合する。原典既定は2passまでで、全blockerをまとめて一度直す。",
+        "保存例を再生する場合は作例rootをCWDとし、単純例はsource/reproduce.py、複合例はsource/reproduce_complex.pyへ--overwrite --renderを渡す。任意画像の自動変換器ではない。",
+        "引き渡しでは使用runtime、採用pass、実施した検査、近似と未確認事項を短く記す。"
+      ],
+      "commands": [
+        "python source/reproduce.py --overwrite --render --node <Node.js実体> --soffice <既存soffice> --pdftoppm <既存pdftoppm>",
+        "python source/check_native_lines.py",
+        "pwsh -NoProfile -File source/test_shape_edit.ps1 -PresentationPath pass-01/editable.pptx -OutputDirectory qa/editability",
+        "python source/reproduce_complex.py --overwrite --render --node <Node.js実体> --soffice <既存soffice> --pdftoppm <既存pdftoppm>"
+      ],
+      "limitations": [
+        "適用しない用途は、定量データの可視化・統計グラフ、一般的な業務図、組織図、通常のスライドデザイン、OCRだけの文字抽出、単純な画像配置。混在図は科学模式図の対象パネルだけを分けて復元する。",
+        "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+        "複合例で入れ子の配置・双方向線・破線の折れ線・合成画像insetの所有分離を確認。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+        "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+        "複合例の小図内部はrasterで、内側の「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示する方式で、不可視領域の削除や情報秘匿は保証しない。",
+        "角丸・矢じりの大きさ・破線パターン・色・線幅は近似を含む。複合例のX/X·Rは元のカプセル形から標準角丸矩形になる。画素一致・見た目の改善・時短を主張しない。",
+        "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存と字体の新規installは検査していない。",
+        "単純例pass-01と複合例pass-02の採用PPTXは保持。編集証拠は別コピーで、採用版と区別する。現在版の独立Kimi K3/Opus5.5評価は制作担当の確認と分ける。"
+      ],
+      "execution_type": "Reconstruction：単純4箱の復元と、入れ子・双方向・破線・合成画像insetを持つ複合例。原典checker/renderer、例固有の構造照合、別コピーのPowerPoint編集保存。",
+      "recipe_notes": [
+        "原典のportable PptxGenJS 4.0.1方式を使用。原典が別経路として示すdesktop OpenAI Presentations runtimeは、この作例では使用していない。",
+        "科学内容はUSGS一次解説に基づく概念モデル。定量的な実験結果ではない。",
+        "追加の複合例はcomplex-example/README.md。実Opus5.5が固定原典4文書と入力PNGから初稿を執筆し、CodexがFONT定数だけをYu Gothicへ修正してpass-02を終端とした。",
+        "複合例は23個のnative図形（うち文字12）とcrop画像1個。包含は座標対応でPowerPointグループではない。合成画像小図の内部「参考パネル」はrasterのまま、外側見出しはnative。",
+        "複合例の原典checkerはH0/W1、文字枠wrap=noneの警告が残る。PowerPoint16とLibreOfficeを制作担当が実表示確認。数式・実験写真・Repair/Inspection・自動接続は未実証。",
+        "再生helperは原典LibreOffice rendererをOS一時フォルダーで実行し、完了PDF/PNGをcaseのqaへコピーして保存する。準備済み依存だけを使い、原典コードと採用PPTXは変更しない。"
+      ]
+    },
+    "method": "Reconstruction：単純4箱の復元と、入れ子・双方向・破線・合成画像insetを持つ複合例。原典checker/renderer、例固有の構造照合、別コピーのPowerPoint編集保存。",
+    "sample_notice": "自作PNG2種の復元例。複合例の小図は合成画像で、数式・実験写真・自動接続は未実証。画素一致・美化・時短の比較ではない。"
+  },
+  {
+    "case_id": "mck-native-showcase",
+    "pages": [
+      "examples/repositories/mck-native-showcase/render/slide-01.png",
+      "examples/repositories/mck-native-showcase/render/slide-02.png",
+      "examples/repositories/mck-native-showcase/render/slide-03.png",
+      "examples/repositories/mck-native-showcase/render/slide-04.png"
+    ],
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、PDF由来RGB PNGを全頁目視した。独立再評価は別。",
+    "sample_notice": "実カタログの集計と原典4メソッドの例。五段階の記録を保存するがTaskCreateは未使用。S4は94点、警告1件・原典免除1件を保持。",
+    "preview_image_notice": "現在PPTXの実PowerPoint PDF由来画像。機械合格と独立採点は別。",
+    "method": "原典MckEngineの4高水準メソッド＋S1〜S5記録・原典S3/S4・実PowerPoint描画",
+    "prompt_text": "固定原典MckEngineのcover/donut/data_table/timelineを上書きせず、同梱input/oss-font-kit.jsonの実30字体を日本語4頁へまとめる。円は用途の近い4書体群へ集計し、見出し調と等幅の合算を明示、次頁の表に元の5分類を残す。制作の五段階には保存ファイルを対応させる。架空の時間・実績・品質値を加えない。日本語書体と凡例小数表記の差分を明示し、S3/S4の原典JSON、S5の修正パターン、再生成コード、全頁描画、原典条件を保存する。",
+    "notes": [
+      "実カタログの集計。文字範囲・書体品質の測定ではない。",
+      "見出し調4と等幅3を合算した4書体群。元の5分類は次頁に保存。",
+      "元の5分類と言語のクロス集計。日本語17・欧文13。",
+      "五段階の実保存ファイルを示す。所要時間は計測していない。"
+    ],
+    "font_families": [
+      "BIZ UDPGothic"
+    ],
+    "preview_kind": "powerpoint-render",
+    "titles": [
+      "フォント構成と制作手順",
+      "30字体を用途の近い書体群へまとめて比べる",
+      "言語別に見ると、見出し・手書き調は日本語のみ、等幅は欧文のみ",
+      "制作は五段階で進め、原稿と描画を原典の検査で確かめる"
+    ]
+  },
+  {
+    "case_id": "pptwise-showcase",
+    "title": "資料に使うフォントを選ぶ",
+    "titles": [
+      "資料に使うフォントを選ぶ",
+      "候補の範囲を、元データで確かめる",
+      "条件から選び、実際の文面で確かめる",
+      "書体と利用条件を一緒に確認する",
+      "30書体の内訳は和文17・欧文13",
+      "配布前に、書体と利用条件を確かめる"
+    ],
+    "artifact_download": "examples/repositories/pptwise-showcase/.pptwise/input/deck.pptx",
+    "input_data": "examples/repositories/pptwise-showcase/input/deck.spec.json",
+    "method": "原典pptwiseのspec→inspect→pages→build/fit。実集計をallotmentへ渡し、別途PowerPoint全頁を確認。",
+    "style": "原典Rally派生：橙・墨・紙 / steps・hub_spoke・allotment実集計",
+    "pages": [
+      "examples/repositories/pptwise-showcase/render/slide-01.png",
+      "examples/repositories/pptwise-showcase/render/slide-02.png",
+      "examples/repositories/pptwise-showcase/render/slide-03.png",
+      "examples/repositories/pptwise-showcase/render/slide-04.png",
+      "examples/repositories/pptwise-showcase/render/slide-05.png",
+      "examples/repositories/pptwise-showcase/render/slide-06.png"
+    ],
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、PDF由来RGB PNGを全6頁目視。独立再評価は未完了。",
+    "sample_notice": "実カタログの30書体を案内する例。5頁は実件数17・13のallotment。原典JSON検査と、別途のPowerPoint掲載確認を実施。",
+    "preview_image_notice": "現PPTXの実PowerPoint PDF由来画像。原典report-only self-checkとは別の掲載確認。",
+    "prompt_text": "原典pptwiseのschema/narratives/themesを読み、Rally派生の橙・墨・紙色で、実フォントカタログの使い方を6頁へまとめる。構成は目的→実カタログの範囲→選定手順と実プリセット→関連情報→和文17・欧文13の内訳→配布前の確認。元データはinput/oss-font-kit.json。3頁はsteps＋icon_cards、4頁はhub_spoke、5頁は実件数が適合するallotmentを使う。recipeを埋めるための数値や画像を作らない。原典build/fitのJSONを確認し、そのself-checkと別の掲載確認としてPowerPoint全頁を実見する。日本語書体allowlistの局所adapterを明示し、原典の配置・QA・出力PPTXを後加工・改名しない。",
+    "notes": [
+      "同梱input/oss-font-kit.jsonは2026-10-15の実カタログ。30書体、45個のフォントファイル、15組のプリセット、4種類の配布bundleを含む。カタログの分類は収録文字範囲や品質を測ったものではない。",
+      "familiesの件数30、各families.filesの合計45、presetsの件数15を実集計。すべてlicense=OFL-1.1。利用条件は各配布のOFLと元配布へ戻って確かめる。",
+      "元カタログにはcategory、language、use_jaと、presetsのheading/body/latin/instructionがある。この頁は制作担当がそれらを確認する手順を示す。\n下の2例は実presets editorial/friendlyのheading/body。品質順位や最適性の測定ではない。",
+      "family/category/use_ja、official_url/commit、license/license_url/license_file、presetsのheading/body/latinを対応させる。原典hub_spokeは順序のない中央関係に用いる。",
+      "30件のfamiliesをlanguageで集計：ja17、latin13。合計30。原典allotmentは1カテゴリの横積み上げ棒と任意の2〜3icon_cardsを受ける。元データを図に合わせて作った数値ではない。",
+      "候補決定後も、必要な文字・版面の読みやすさ・配布元OFL・フォント登録・他環境への持ち出しを確認する。15プリセットは候補の入口で、最適性や品質の測定結果ではない。"
+    ],
+    "font_families": [
+      "Zen Kaku Gothic New",
+      "Space Grotesk"
+    ],
+    "preview_kind": "powerpoint-render"
+  },
+  {
+    "case_id": "sebastian-193",
+    "name": "テンプレートを保って研究内容の図を組む",
+    "job": "",
+    "change": "既存テンプレートの青・master・themeを保ち、研究の関係に合う図を編集可能な要素で作れる。",
+    "input": "架空の公共空間サイン研究計画、原典テンプレートの書式情報とnative部品。",
+    "output": "フロー・比較案・平面図・注釈図など8頁のPPTXと、最終ファイルのhashに結び付く原典QA。",
+    "how_to_use": [
+      "研究の元資料・聴衆・発表時間・出力形式を決め、使うテンプレートや参考画像を渡す。",
+      "話の組み立てを選び、参考資料の書式と元の図・根拠を整理する。各頁の計画表を作ってから、具体的な構図と別案を決める。",
+      "新規作成・既存PPTXの修正・画像からの復元のうち、入力に合う原典の方式で制作する。制作範囲の判断が必要なら先に確認する。",
+      "全頁を描画して確認し、原典の検査を完成ファイルへ実行する。グループや接続線は保存したコピーを動かして確かめる。"
+    ],
+    "constraints": [
+      "原典は中国語学術向け。本派生では日本語とBIZ UDPGothicのstatic字体へ明示変更。",
+      "Route Bの作者方式を使用。Route Aの画像案制作とRoute Cの画像再構築は未実施。",
+      "master/theme/layoutのXMLを保全し、slide側の要素はPptxGenJSで新規作成。見本の科学データや組織を引き継がない。",
+      "原典の静的検査と完成ファイルの照合を実施。8頁では箱とラベルを一緒に移動し、保存・再表示後も4本の接続を保持することを確認。独立再評価は未了。"
+    ],
+    "demonstration": {
+      "summary": "テンプレートの青・見出し・マスターを保ち、順序・比較・経路・注釈を8頁へ組む。最後の工程図には箱と文字のグループ、動かした箱に追従する接続線を使った。",
+      "applied_features": [
+        "Template DNAと頁別計画を先に作り、本文は研究の伝達課題に合わせて新規配置。",
+        "比較・経路・仕様注釈をnativeの文字・図形・線で構成。",
+        "原典qa_pptxとverify_final_qaを実行し、最終PPTXのhashにQAを結び付ける。"
+      ],
+      "not_demonstrated": [
+        "画像案の生成、画像からの復元、実論文の抽出、実施設での評価、修復後の独立再評価。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・関係を図にする",
+          "title": "サインの評価を三つの判断に分ける",
+          "what_to_inspect": "見つける→読む→方向を決めるの矢印と、各段階の問いを読む。",
+          "skill_rule": "情報の意味が順序なら順序図を選び、同じカード骨格を全頁へ流用しない。",
+          "proof_path": "examples/repositories/sebastian-193/render/slide-02.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・nativeの概念図",
+          "title": "サインを一枚ではなく、連続として設計する",
+          "what_to_inspect": "左のA入口・B分岐・C受付と、右の全体・方向・到着を照合する。入口・トイレはパネル内へ配置。",
+          "skill_rule": "経路とラベルを編集可能な要素で作り、概念図と実施設の実測図を区別する。",
+          "proof_path": "examples/repositories/sebastian-193/render/slide-04.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 4,
+          "label": "5頁・注釈図",
+          "title": "小さな仕様が、読み方をそろえる",
+          "what_to_inspect": "主行き先と補助情報を指す線の先端を見る。「内側の余白」は左下の寸法線で示す。",
+          "skill_rule": "図の構造と文字の階層を優先し、形・文字・目印の併用と確認条件を示す。",
+          "proof_path": "examples/repositories/sebastian-193/render/slide-05.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 7,
+          "label": "8頁・修正の循環",
+          "title": "次の一歩：一つの分岐で確かめる",
+          "what_to_inspect": "修正から試作へ戻る矢印をたどる。下の実編集例では、手順確認の箱を動かしても文字と接続線が追従する。",
+          "skill_rule": "一緒に動く箱と文字はグループ化し、接続線を箱へ結び付ける。保存後に実際のPowerPointで確認する。",
+          "proof_path": "examples/repositories/sebastian-193/render/slide-08.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-193/source/build.cjs",
+        "examples/repositories/sebastian-193/source/preserve_master.py",
+        "examples/repositories/sebastian-193/source/native-template-parts.zip",
+        "examples/repositories/sebastian-193/source/template-dna.json",
+        "examples/repositories/sebastian-193/source/template-retention.json",
+        "examples/repositories/sebastian-193/source/layout-plan.json",
+        "examples/repositories/sebastian-193/source/qa-report.json",
+        "examples/repositories/sebastian-193/source/original-verify-final-qa.txt",
+        "examples/repositories/sebastian-193/source/current-check-receipts.json",
+        "examples/repositories/sebastian-193/source/package.json",
+        "examples/repositories/sebastian-193/source/pdf-fonts.json",
+        "examples/repositories/sebastian-193/input/data.json",
+        "examples/repositories/sebastian-193/QA.json",
+        "examples/repositories/sebastian-193/source/distribution-replay.json",
+        "examples/repositories/sebastian-193/source/structure-plan.json",
+        "examples/repositories/sebastian-193/source/structure-report.json",
+        "examples/repositories/sebastian-193/source/callout-repair.json",
+        "examples/repositories/sebastian-193/qa/editability/group-move.json",
+        "examples/repositories/sebastian-193/qa/editability/slide-08.png"
+      ],
+      "editability": {
+        "before_path": "examples/repositories/sebastian-193/render/slide-08.png",
+        "after_path": "examples/repositories/sebastian-193/qa/editability/slide-08.png",
+        "before_label": "元の工程図",
+        "after_label": "手順確認の箱を動かしたPPTX",
+        "artifact_path": "examples/repositories/sebastian-193/qa/editability/group-moved.pptx",
+        "artifact_label": "動かしたPPTXを取得 ↓",
+        "report_path": "examples/repositories/sebastian-193/qa/editability/group-move.json",
+        "description": "手順確認の箱を右へ24pt・下へ18pt動かして保存し、開き直した。ラベルは箱と一緒に動き、4本の線は接続を保っている。"
+      }
+    },
+    "guide_patch": {
+      "summary_ja": "研究資料を、参考テンプレートの書式と内容に合う図解を持つ、編集可能なPowerPointへまとめる。",
+      "requirements": [
+        "研究の元資料と、参考にするPPTXや画像。",
+        "Node.jsとPptxGenJS 4.0.1、Python 3.10以上とlxml・pypdfium2。",
+        "同梱例の確認はWindowsのPowerPointとPowerShell 7。BIZ UDPGothicは公式OFL付きファイルを同梱。"
+      ],
+      "steps": [
+        "研究の元資料・聴衆・発表時間・出力形式を決め、使うテンプレートや参考画像を渡す。",
+        "話の組み立てを選び、参考資料の書式と元の図・根拠を整理する。各頁の計画表を作ってから、具体的な構図と別案を決める。",
+        "新規作成・既存PPTXの修正・画像からの復元のうち、入力に合う原典の方式で制作する。制作範囲の判断が必要なら先に確認する。",
+        "全頁を描画して確認し、原典の検査を完成ファイルへ実行する。グループや接続線は保存したコピーを動かして確かめる。"
+      ],
+      "limitations": [
+        "原典は中国語学術向け。本派生では日本語とBIZ UDPGothicのstatic字体へ明示変更。",
+        "Route Bの作者方式を使用。Route Aの画像案制作とRoute Cの画像再構築は未実施。",
+        "master/theme/layoutのXMLを保全し、slide側の要素はPptxGenJSで新規作成。見本の科学データや組織を引き継がない。",
+        "原典の静的検査と完成ファイルの照合を実施。8頁では箱とラベルを一緒に移動し、保存・再表示後も4本の接続を保持することを確認。独立再評価は未了。"
+      ]
+    }
+  },
+  {
+    "case_id": "slide-maker",
+    "name": "原稿から構成・図表を作り、読み手の検査で直す",
+    "job": "研究・業務報告・講演の作り手が、読者・目的・原稿やデータを渡し、構成と図表を持つ編集可能PPTXを作成・再設計・批評する。",
+    "change": "原稿とデータを構成・図表へ変え、独立した読み手の指摘で説明を直す。",
+    "input": "読者、目的、覚えてほしい主張、原稿・データ・既存資料。",
+    "output": "編集可能PPTX、全頁render、根拠データ、実施した検査と独立読解・批評の記録。",
+    "how_to_use": [
+      "読者の知識と読む目的を決め、各頁の主張と根拠を対応させる。",
+      "複数の構成・図案を比較し、比較条件、文字の役割、色や印の意味を定める。",
+      "原典deckkitの編集可能な文字・図形・グラフを使い、判断理由を読み手に必要な位置へ置く。",
+      "全頁を描画しlint・component・visual contractを確認する。独立読解と内容/設計の批評を原典CLIへ記録し、指摘を修正する。",
+      "修正した版を新しい独立評価へ渡し、原典の承認とdelivery/handoffの条件を満たすまで合格扱いしない。"
+    ],
+    "constraints": [
+      "原典はLibreOfficeで描画する。今回のWindows作例はPowerPoint16→PDF→PDFiumを局所adapterとして使った。",
+      "独立読解者がいない環境は原典のno-reader carve/unverified。Codex専用adapterをClaude Code/Kimiで動かす用途や、PPTX以外の納品はこの実証の対象外。",
+      "実Opus Round4の指摘とblind回答は旧SHAb8f099a3…へ束縛して原典CLIに記録済み。現在版の新しい独立評価・consentは待機中で、旧承認を流用しない。",
+      "初回の構成・図案比較は制作後の補完。テンプレート、発表時間、質疑用頁、画像シリーズは未実施。",
+      "component auditは固定15値の配列をカード群と検出しexit2。意図を記録し、元の結果を成功へ書き換えない。",
+      "作例は既に昇順の1〜15から存在する値を探す計測。回数は訪問要素数で、秒数・整列費用・未発見条件は測っていない。"
+    ],
+    "demonstration": {
+      "summary": "実行した探索ログを、同じ位置の配列と全15条件のnative chartへした。実Opusの「判断理由が本文にない」という指摘を受け、各段に大小比較と残す側を追加した。",
+      "applied_features": [
+        "原典deckkitで文字・図形・データ連動native chartを生成し、探索の全30結果と一致を検査。",
+        "実Opus Round4 criticのreviseと先行blindを同版SHAへ束縛し、原典validate_review/compareへ記録。指摘を本文修復へ反映。",
+        "各段の24pt比較判断、直下16pt凡例、native軸名、1〜3の反例、計測/未計測の図を追加して全5頁をPowerPointで再描画。",
+        "元lint/palette/component/visual contractとdelivery/handoffを再実行。新しい版の独立承認は未取得として失敗状態を保持。",
+        "一式ZIPを別フォルダーへ展開し、同梱ソースで再生成・PowerPoint全5頁を再描画。図形・文字・グラフ・ノート一致、全頁RGB差0（既存固定依存、新規導入は未検証）。"
+      ],
+      "not_demonstrated": [
+        "Codex専用adapterをClaude Code/Kimiで動かす経路、PPTX以外の納品。",
+        "現在版を対象とする原典gateのgeneral passとconsent。",
+        "初回対話の厳密な順序、テンプレート、発表時間、質疑用頁、画像シリーズ。",
+        "検索の秒数、整列費用、未発見条件。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1頁・単位と学習目標",
+          "title": "昇順なら、中央から範囲を絞れる",
+          "what_to_inspect": "配列の下にある「1回」の定義と、同じ目的値13を探す二方式の回数を見る。",
+          "skill_rule": "読み手が知らない単位を本文で定義し、何を比べる資料かを最初に示す。",
+          "proof_path": "examples/repositories/slide-maker/render/slide-01.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 1,
+          "label": "2頁：訪問順と比較回数",
+          "title": "線形探索は、先頭から13回比較する",
+          "what_to_inspect": "配列直下の青/茶/灰の16pt凡例、左からの訪問順と上端がそろった13回を見る。",
+          "skill_rule": "同じ意味の色と位置を保ち、主張を証拠の近くへ置く。",
+          "proof_path": "examples/repositories/slide-maker/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 2,
+          "label": "3頁：読み手の指摘で判断理由を補う",
+          "title": "二分探索は、大小で残す側を決める",
+          "what_to_inspect": "四段の13>8/13>12/13<14/13=13と、右半分/左半分/発見を24ptで読む。昇順と左右の関係が本文だけで追えるかを見る。",
+          "skill_rule": "独立criticが指摘した自力理解の不足を修復し、修正した版の再読解を求める。",
+          "proof_path": "examples/repositories/slide-maker/render/slide-03.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 3,
+          "label": "4頁：全条件と反例を示す",
+          "title": "二分探索は、15通りとも4回以内",
+          "what_to_inspect": "青=線形、紫=二分の全15条件、軸名16pt、目的値1〜3では線形が少ないという24ptの注記を見る。",
+          "skill_rule": "数値は実データで描き、最大回数と個々の値の違いを隠さない。",
+          "proof_path": "examples/repositories/slide-maker/render/slide-04.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 4,
+          "label": "5頁・分かったことと未計測",
+          "title": "比較回数から、秒数は決められない",
+          "what_to_inspect": "数えた最大4回と、測っていない秒数を別の欄で見る。速度倍率を結論にしていない。",
+          "skill_rule": "根拠が示す範囲で結論を述べ、未計測のことを明示する。",
+          "proof_path": "examples/repositories/slide-maker/render/slide-05.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/slide-maker/source/round4-opus-review-record.json",
+        "examples/repositories/slide-maker/review/round4-prior-version/opus-critic.json",
+        "examples/repositories/slide-maker/review/round4-prior-version/opus-blind.json",
+        "examples/repositories/slide-maker/review/round4-prior-version/binding.json",
+        "examples/repositories/slide-maker/source/round5-original-gates.json",
+        "examples/repositories/slide-maker/source/current-lint.json",
+        "examples/repositories/slide-maker/source/current-components.json",
+        "examples/repositories/slide-maker/source/object-proof.json",
+        "examples/repositories/slide-maker/source/native-elements.json",
+        "examples/repositories/slide-maker/source/pdf-fonts.json",
+        "examples/repositories/slide-maker/source/upstream/skills/slide-maker/references/codex-runtime.md",
+        "examples/repositories/slide-maker/design/directions.json",
+        "examples/repositories/slide-maker/design/direction-probes.pptx",
+        "examples/repositories/slide-maker/visual-contract-final.json",
+        "examples/repositories/slide-maker/render/slide-01.png",
+        "examples/repositories/slide-maker/render/slide-02.png",
+        "examples/repositories/slide-maker/render/slide-03.png",
+        "examples/repositories/slide-maker/render/slide-04.png",
+        "examples/repositories/slide-maker/render/slide-05.png",
+        "examples/repositories/slide-maker/render/contact-round5.jpg",
+        "examples/repositories/slide-maker/visual-contract.json",
+        "examples/repositories/slide-maker/.codex-deck-evidence.json",
+        "examples/repositories/slide-maker/source/unit-definition-repair.json",
+        "examples/repositories/slide-maker/source/component-intent-verification.json",
+        "examples/repositories/slide-maker/source/round6-original-gates.json"
+      ],
+      "scope_notes": [
+        "原典はLibreOfficeで描画する。今回のWindows作例はPowerPoint16→PDF→PDFiumを局所adapterとして使った。",
+        "独立読解者がいない環境は原典のno-reader carve/unverified。Codex専用adapterをClaude Code/Kimiで動かす用途や、PPTX以外の納品はこの実証の対象外。",
+        "実Opus Round4の指摘とblind回答は旧SHAb8f099a3…へ束縛して原典CLIに記録済み。現在版の新しい独立評価・consentは待機中で、旧承認を流用しない。",
+        "初回の構成・図案比較は制作後の補完。テンプレート、発表時間、質疑用頁、画像シリーズは未実施。",
+        "component auditは固定15値の配列をカード群と検出しexit2。意図を記録し、元の結果を成功へ書き換えない。",
+        "作例は既に昇順の1〜15から存在する値を探す計測。回数は訪問要素数で、秒数・整列費用・未発見条件は測っていない。"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "実行した探索ログを、同じ位置の配列と全15条件のnative chartへした。実Opusの「判断理由が本文にない」という指摘を受け、各段に大小比較と残す側を追加した。",
+      "requirements": [
+        "Python/python-pptxと原典deckkit。原典描画はLibreOffice。今回のみWindows PowerPointとPDFiumを代替使用。",
+        "内容・設計の独立criticと、原稿を見ない独立blind reader。"
+      ],
+      "steps": [
+        "読者の知識と読む目的を決め、各頁の主張と根拠を対応させる。",
+        "複数の構成・図案を比較し、比較条件、文字の役割、色や印の意味を定める。",
+        "原典deckkitの編集可能な文字・図形・グラフを使い、判断理由を読み手に必要な位置へ置く。",
+        "全頁を描画しlint・component・visual contractを確認する。独立読解と内容/設計の批評を原典CLIへ記録し、指摘を修正する。",
+        "修正した版を新しい独立評価へ渡し、原典の承認とdelivery/handoffの条件を満たすまで合格扱いしない。"
+      ],
+      "limitations": [
+        "原典はLibreOfficeで描画する。今回のWindows作例はPowerPoint16→PDF→PDFiumを局所adapterとして使った。",
+        "独立読解者がいない環境は原典のno-reader carve/unverified。Codex専用adapterをClaude Code/Kimiで動かす用途や、PPTX以外の納品はこの実証の対象外。",
+        "実Opus Round4の指摘とblind回答は旧SHAb8f099a3…へ束縛して原典CLIに記録済み。現在版の新しい独立評価・consentは待機中で、旧承認を流用しない。",
+        "初回の構成・図案比較は制作後の補完。テンプレート、発表時間、質疑用頁、画像シリーズは未実施。",
+        "component auditは固定15値の配列をカード群と検出しexit2。意図を記録し、元の結果を成功へ書き換えない。",
+        "作例は既に昇順の1〜15から存在する値を探す計測。回数は訪問要素数で、秒数・整列費用・未発見条件は測っていない。"
+      ]
+    },
+    "upstream_principle": "原稿・データ・既存資料を、読者と目的に合う構成・図表へ変え、制作側の実描画確認と独立した読み手の検査で直す。",
+    "problem": "伝えたい主張と根拠がばらばらな原稿を、読者が追える頁順と図表へ整理したい。"
+  },
+  {
+    "case_id": "aham-showcase",
+    "title": "朝の作業ワークショップ案",
+    "titles": [
+      "朝の作業ワークショップ案",
+      "サンプル行程は選択から記録までを分ける",
+      "本案は前日に作業の入口を一つ決めておく",
+      "試行計画は取り組み・記録・相談を週ごとに並べる"
+    ],
+    "pages": [
+      "examples/repositories/aham-showcase/render/slide-01.png",
+      "examples/repositories/aham-showcase/render/slide-02.png",
+      "examples/repositories/aham-showcase/render/slide-03.png",
+      "examples/repositories/aham-showcase/render/slide-04.png"
+    ],
+    "notes": [
+      "架空の働き方ワークショップ案です。朝の20分は例示の配置で、効果を実証した方法ではありません。",
+      "3分で一つ選び、10分取り組み、5分でメモし、2分で次を残す案です。合計20分。仕事の条件に合わせて調整します。",
+      "前日に作業の入口を一つ決め、朝はその作業を進め、終了時に続きを一言残す流れの案です。",
+      "一週目に観察、二・三週目に一つ試し、四週目に続け方を話す例示計画。記録と相談を並行させ、負担があれば変更します。"
+    ],
+    "sample_notice": "架空ワークショップの版式選択・変換の例。8段階の人間対話は未実施。P5/P6は自律委任による担当判断。時間は例示で効果は未測定。",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、全4頁のPDF由来PNGを目視。原典QA・独立再評価・人間承認は別。",
+    "preview_image_notice": "現PPTXの実PowerPoint PDF由来画像。画像貼り込みではなく原典native変換。",
+    "method": "原典P5決定表・Aテーマ関数・SVG→native変換・変換前後lint。対話8段階は部分実行。",
+    "prompt_text": "Aham原典の版式決定表・Aテーマ（白地・中性グレー・点在する青）を使い、架空の朝作業ワークショップを4頁へする。P1〜P5の中間原稿と計画を保存。表紙は朝の作業ワークショップ案、2頁は3/10/5/2分のGantt、3頁は前日→朝→終了時の流れ、4頁は3泳道×4週。原典関数を維持し、必要なラベル可読性・流れ図中央配置・終端20・日本語凡例を局所差分として明示する。P5担当判断→見本2頁→実PowerPoint確認→P6担当判断→全頁生成を実行。過去の人間承認や8段階対話を実施したとは書かない。原典lintを変換の前後に実行し、PPTX・ノート・全頁描画・出典を保存する。",
+    "font_families": [
+      "Zen Kaku Gothic New",
+      "Manrope"
+    ],
+    "preview_kind": "powerpoint-render",
+    "style": "原典A：白・グレー・点在する青 / V-02・E-03・A-90、局所可読性補正を明記",
+    "artifact_download": "examples/repositories/aham-showcase/deck.pptx",
+    "input_data": "examples/repositories/aham-showcase/input/data.json"
+  },
+  {
+    "case_id": "sebastian-208",
+    "title": "雨の図書室",
+    "style": "画像版の研究提案・紙白と深紺",
+    "page_count": 11,
+    "titles": [
+      "雨の図書室",
+      "提案と検証の4部構成",
+      "視点",
+      "雨の日に、立ち止まる理由。",
+      "空間",
+      "庇・席・棚の役割",
+      "体験",
+      "見る。聞く。書き留める。",
+      "検証",
+      "何を見るかを、先に決める。",
+      "質疑・対話"
+    ],
+    "pages": [
+      "examples/repositories/sebastian-208/render/slide-01.png",
+      "examples/repositories/sebastian-208/render/slide-02.png",
+      "examples/repositories/sebastian-208/render/slide-03.png",
+      "examples/repositories/sebastian-208/render/slide-04.png",
+      "examples/repositories/sebastian-208/render/slide-05.png",
+      "examples/repositories/sebastian-208/render/slide-06.png",
+      "examples/repositories/sebastian-208/render/slide-07.png",
+      "examples/repositories/sebastian-208/render/slide-08.png",
+      "examples/repositories/sebastian-208/render/slide-09.png",
+      "examples/repositories/sebastian-208/render/slide-10.png",
+      "examples/repositories/sebastian-208/render/slide-11.png"
+    ],
+    "notes": [
+      "雨宿りの場所に、雨の観察と記録を組み合わせる架空の研究構想です。効果を確かめた計画ではありません。",
+      "視点は問いと仮説、空間は庇・席・棚の関係、体験は見る・聞く・記録する行為、検証は試作・観察・見直しの計画です。架空の構想で、効果はまだ検証していません。",
+      "雨を避ける機能は残しながら、雨を観察する余地をつくれないか、という問いから始めます。",
+      "雨宿り、観察、記録を重ねることで滞在のあり方が変わるかもしれません。これは検証前の仮説です。",
+      "庇、席、棚を別々に足すのでなく、一つの小さな空間として考えます。",
+      "庇は雨を受け、席は雨音を聴く場所、棚は観察メモを置く場所を想定します。引出線は庇、席の座面、棚を指しています。寸法や施工条件は未設定で、これは検証前の概念図です。",
+      "想定する行為は、雨粒を見る、庇に触れる音を聞く、気づきを記録することです。実際の利用者の反応はまだ観察していません。",
+      "想定する行為は、動きを見る、音を聞く、気づきを書くことです。実際の利用者の反応はまだ観察していません。",
+      "効果を前提に建設するのでなく、模型や小さな試作で成立条件を確かめる段階を置きます。",
+      "庇、席、棚の関係を試作し、立ち止まり方と使われ方を観察します。安全性、読みやすさ、居心地は見直す項目です。具体的な評価方法と実施条件は今後決めます。",
+      "設置場所と利用条件について、質問や懸念を含めて対話します。実在の設置場所や実施条件はまだ決まっていません。"
+    ],
+    "sample_notice": "架空の未実施研究構想の稿を使用。採用Aの契約で全11頁を新規image_gen生成し、原典で画像＋ノートを包装。本文・図は個別編集不可。",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し全11頁を制作担当が目視。独立モデル再評価は別。",
+    "preview_image_notice": "現在の実PowerPoint PDF由来PNG。各頁は画像1枚で本文・図は個別編集不可。",
+    "method": "稿と全頁計画→3案・採用契約→実サンプル→全11頁image_gen新規生成→原典画像包装→PowerPoint描画",
+    "prompt_text": "原典academic-image-pptを使い、渡された論文・報告・稿の主張と根拠を画像版の発表資料へ整理してください。内容と発表条件から頁数を決め、全頁Blueprintに正確な文・図の役割・出典・ノートを固定してください。3案から選んだ書式を9項目で記録し、実サンプルを確認してから全頁へ適用します。数値や成果は足さず、本文・図が画像で個別編集できないことを明示してください。作例の稿と正確なコピーはinput/、採用条件と全頁計画はqa/、実生成の証拠はsource/current-generation-map.jsonを参照してください。",
+    "artifact_download": "examples/repositories/sebastian-208/deck.pptx",
+    "input_data": "examples/repositories/sebastian-208/input/data.json",
+    "font_families": [],
+    "preview_kind": "powerpoint-render",
+    "execution_status": "original_image_packaging_and_all11_pages_visual_checked"
+  },
+  {
+    "case_id": "thesis-defense-showcase",
+    "name": "研究メモを既存の発表様式へ入れる",
+    "job": "",
+    "change": "研究メモを発表用の順へ整理し、元テンプレートの枠を保った図・表・比較を編集できるPPTXへ入れる。",
+    "input": "研究Markdown・比較用JSON・使う図の許可一覧とPPTXテンプレート",
+    "output": "テンプレートを複製・置換した編集可能PPTX、図表の計算データ、全頁確認記録。",
+    "how_to_use": [
+      "研究の問題・方法・結果・限界を原稿から取り、使用する図をallowlistへ記録する。",
+      "元template生成器を実行し、COM helperで必要な型の頁を複製する。",
+      "元native helperで文字・経路図・棒・表を置換し、同じ入力データを使う。",
+      "原典Quality gateの全頁描画・contact sheet・overflow・stale text scanを実行して直す。"
+    ],
+    "constraints": [
+      "この作例は自作Markdownと学習用仮想データ。大学の実研究や観測値ではない。",
+      "元の無地templateを使用。実在大学templateやロゴは含まない。",
+      "6枚指定を優先。共有PowerPoint保全のためCOMのQuitだけを抑止し、検査内容・閾値は変更しない。"
+    ],
+    "demonstration": {
+      "summary": "通学経路の仮想研究6頁。元templateの濃赤navとcontent frameを保ち、JSONから経路図・露出比較・試算表を追加した。全6頁目視、overflow0、古い文言0。",
+      "applied_features": [
+        "元templateの複製と書式保持",
+        "研究入力に基づくnative図・表",
+        "原典の全頁visual/overflow/stale gate"
+      ],
+      "not_demonstrated": [
+        "実論文PDF/LaTeXからの抽出",
+        "実在大学templateの保持",
+        "実測データや経路安全性の検証",
+        "独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "研究課題",
+          "what_to_inspect": "左右とも「雨にさらされる時間」を14分/3分で比較し、総移動時間14分/18分を別記する。濃赤navと枠を保持。",
+          "skill_rule": "原典templateの構造を保ちながら研究内容を置換し、異なる指標を同じ数値比較に混ぜない。",
+          "proof_path": "examples/repositories/thesis-defense-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "経路モデル",
+          "what_to_inspect": "H/A/B/C/Gの経路と辺の時間をroutes.jsonに対応させる。上端の6分/8分は線から離す。",
+          "skill_rule": "原典の図allowlistにある入力だけから図を作り、Quality gateで線・ラベルの接触を確認する。",
+          "proof_path": "examples/repositories/thesis-defense-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "候補の比較",
+          "what_to_inspect": "同じJSONの露出14/3/16分を表と棒で表示する。棒や表はnative要素。",
+          "skill_rule": "原典native helperで内容枠へ図表を追加し、全頁の表示と古い文言を検査する。",
+          "proof_path": "examples/repositories/thesis-defense-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3頁・二つの指標を持つ辺",
+          "title": "経路モデル",
+          "what_to_inspect": "辺の6/6・8/8・8/2・10/1・7/7・9/9を元JSONと比べる。各値は移動t/露出e（分）で、4頁の合計へつながる。Bはアーケード。",
+          "skill_rule": "研究の元データ、図の名称、次頁の比較値を一致させ、図表を編集可能な文字と接続線で組む。",
+          "proof_path": "examples/repositories/thesis-defense-showcase/render/slide-03.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/thesis-defense-showcase/input/research.md",
+        "examples/repositories/thesis-defense-showcase/input/routes.json",
+        "examples/repositories/thesis-defense-showcase/input/calculation-results.json",
+        "examples/repositories/thesis-defense-showcase/input/figure-allowlist.json",
+        "examples/repositories/thesis-defense-showcase/rebuild.py",
+        "examples/repositories/thesis-defense-showcase/reviews/quality-gate.json",
+        "examples/repositories/thesis-defense-showcase/reviews/overflow.json",
+        "examples/repositories/thesis-defense-showcase/reviews/stale-text-scan.json",
+        "examples/repositories/thesis-defense-showcase/reviews/contact-sheet.png",
+        "examples/repositories/thesis-defense-showcase/source/model-label-repair.json",
+        "examples/repositories/thesis-defense-showcase/source/native-elements.json",
+        "examples/repositories/thesis-defense-showcase/reviews/current-technical-quality.json",
+        "examples/repositories/thesis-defense-showcase/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "論文とテンプレートから、書式を保持した編集可能な研究発表を作り、全頁の描画・はみ出し・古い文言を検査する。",
+      "requirements": [
+        "Python3.10以上と原典requirements。",
+        "WindowsとPowerPointではCOM複製・描画・はみ出し検査。macOS/Linuxはpython-pptx部分のみでCOM検査を省略。",
+        "同梱例の全再実行はWindows PowerPointとPowerShell。字体は同梱TTF/OFLで別途導入。"
+      ],
+      "steps": [
+        "研究入力と図allowlistを整理",
+        "元build_template→COM clone→native helper置換",
+        "元export/contact sheet/overflow/stale scanを実行",
+        "全頁を目視し数値・指標・線との接触を修正"
+      ],
+      "limitations": [
+        "この作例は自作Markdownと学習用仮想データ。大学の実研究や観測値ではない。",
+        "元の無地templateを使用。実在大学templateやロゴは含まない。",
+        "6枚指定を優先。共有PowerPoint保全のためCOMのQuitだけを抑止し、検査内容・閾値は変更しない。"
+      ]
+    },
+    "status": "author_quality_complete_independent_review_pending",
+    "execution_status": "original_quality_gate_complete",
+    "preview_image_notice": "現行PPTXの全6頁をPowerPointで描画。3/6頁を実視認、他4頁は前回の全頁確認版と画像byte一致。独立再評価は別。"
+  },
+  {
+    "case_id": "aws-html-showcase",
+    "demonstration": {
+      "summary": "展示案内の自作PPTX5頁を変換。元の文字抽出に、ネイティブ図形のSVG化と15ラベルの中央揃えを補助実装し、Neonのページ送りで表示した。",
+      "scope_notes": [
+        "ネイティブ図形のSVG化と中央揃えは作例の補助実装で、原典extractor単体の機能ではない",
+        "入力PPTXは無改変。変換後2・3頁の15ラベルだけx/anchorを変更",
+        "この入力に画像と講稿はなく、それらの抽出を実証した例ではない",
+        "HTML/SVG編集用。新しい編集可能PPTXは出力しない",
+        "AWS/原作者との公認・提携ではない",
+        "ページ送り・日本語の操作案内・再表示時の動きはsource/controller.diffの局所差分。"
+      ],
+      "not_demonstrated": [
+        "画像・講稿を含むPPTXからの抽出（この入力には両方がない）。",
+        "新しい編集可能PPTXの出力。"
+      ]
+    },
+    "guide_patch": {
+      "requirements": [
+        "作例の再生成はPython 3.10+とpython-pptx。保存した入力PPTX、原典extractor、補助SVG化コードを使う。",
+        "出力は字体を埋め込んだ単独HTML。表示・ページ送りは対応ブラウザーで確認する。"
+      ]
+    }
+  },
+  {
+    "case_id": "marp-mcp-showcase",
+    "demonstration": {
+      "summary": "衣服の修理会を題材にMCPで6頁を制作し、HTML・PDF・画像型PPTXを出力。原典CLIは別の2頁で操作した。",
+      "scope_notes": [
+        "6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。",
+        "原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。",
+        "工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。"
+      ],
+      "not_demonstrated": [
+        "generate-agenda、add-image-transitionの実行。",
+        "文字・図形を個別編集できるPPTX、PowerPoint実機での表示。"
+      ]
+    }
+  },
+  {
+    "case_id": "slide-wright-showcase",
+    "demonstration": {
+      "summary": "天文台の既存HTML6頁を対象に、本文・図・写真の配置を修復した。新規制作の人間による承認対話を実演したものではない。",
+      "scope_notes": [
+        "今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。",
+        "既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。",
+        "固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。"
+      ],
+      "not_demonstrated": [
+        "新規制作で人間の承認を得て次段階へ進む対話。",
+        "PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表。"
+      ]
+    }
+  },
+  {
+    "case_id": "design-dna-showcase",
+    "demonstration": {
+      "summary": "明示した参考画像から配色・書体・余白のルールを記録し、町の道具の貸し借りを説明するHTML6頁へ適用した。",
+      "scope_notes": [
+        "作例は明示画像からのスタイル抽出。画像なし探索、既存資料の修復、保存profileの再利用・差分、Design Adapterは実証していない。",
+        "原典は完成rendererを配布しておらず、HTML/SVGとページ送りは規則に基づく局所実装。原典の変換CLIとは称さない。",
+        "元画像を新資料へ埋め込んでいない。PPTXと保存profileは未生成。"
+      ],
+      "not_demonstrated": [
+        "画像なしの探索、既存資料の修復、保存profileの再利用・差分、Design Adapter。",
+        "PPTXと保存profileの生成。"
+      ]
+    }
+  },
+  {
+    "case_id": "cogine-templates-showcase",
+    "demonstration": {
+      "summary": "香りを贈る6頁の内容を原典テンプレートへ反映。日本語のために字体・文字寸法・縦余白を意図的に変更し、原典validatorで検査した。",
+      "scope_notes": [
+        "原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。",
+        "layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。",
+        "原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。"
+      ],
+      "not_demonstrated": [
+        "原典指定の字体をそのまま用いた日本語資料。",
+        "60テンプレート全体の検査・保守。"
+      ]
+    }
+  },
+  {
+    "case_id": "keynot-showcase",
+    "demonstration": {
+      "summary": "紙とインクの体験企画を6頁で説明。色指定済みの文章を入力し、原典の配色変数とページ操作JSを用いた。",
+      "scope_notes": [
+        "色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。",
+        "紙70/黒28/赤2は設計目標であり面積の測定値ではない。",
+        "元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。"
+      ],
+      "not_demonstrated": [
+        "PDFやURLから未知のブランド規則を読み取る精度。",
+        "全画面・タッチ・印刷・実機での通し確認、PPTX生成。"
+      ]
+    }
+  },
+  {
+    "case_id": "beatdeck-showcase",
+    "demonstration": {
+      "summary": "パンが店先へ届く工程を15段階で表示。混ぜる・形づくる・焼くで図の強調を移し、原典verifyで前進・逆戻り・直接移動を比較した。",
+      "scope_notes": [
+        "原典verifyは15段階、既定0.1%の閾値で一致。QR URL未指定でQRなし、Terminal/data-exact照合は0要素。",
+        "3.1〜3.3は同じ工程内で、ボウル→生地→天板と矢印へ図も変わる。材料量・温度・時間・実際の製パン方法は表現していない。",
+        "全キーの手動稽古、実機Wi-Fi切断、別端末・プロジェクターでの通し確認は未実施。"
+      ],
+      "not_demonstrated": [
+        "QR URLを指定したQR表示、Terminal、data-exactの要素照合。",
+        "材料量・温度・時間を含む実際の製パン方法の説明。",
+        "全キーの手動稽古、実機Wi-Fi切断、別端末・プロジェクターでの通し確認。"
+      ]
+    }
+  },
+  {
+    "case_id": "zhongguose-showcase",
+    "demonstration": {
+      "summary": "町の手仕事を紹介する原稿を7頁へ分け、章扉と各頁の章ナビを配置。日本語のShippori Minchoへの派生差分を保存した。",
+      "scope_notes": [
+        "中国語向け原典を日本語へ派生。QijiではなくShippori Minchoを使う局所subset処理と字体・色の差分を保存。",
+        "この日本語作例では中国色の視覚体系を意図して指定し、章扉・本文・締めを実装。PPTXと実機タッチは未実証。",
+        "全7枚のPNGは原典Bキー相当の静止モードで確認。ASCII動画の品質を静止画だけで保証しない。"
+      ],
+      "not_demonstrated": [
+        "PPTX出力、実機タッチ。",
+        "ASCII動画の連続した全フレームの品質。"
+      ]
+    }
+  },
+  {
+    "case_id": "presentation-forge-showcase",
+    "demonstration": {
+      "summary": "待ち時間のUI説明を6頁のHTMLにし、各頁の講稿を添付。Pキーで開く発表者画面と講稿の対応をheadlessで確認した。",
+      "scope_notes": [
+        "未変更の原典engine/builderを使用。日本語の字体・改行と末尾の同一origin bridgeは局所差分。",
+        "今回Pキーの発表者画面と講稿の一致をheadlessで実確認。実機プロジェクター、手動通し稽古、保存編集は未確認。",
+        "HTML出力。native PPTXは生成しない。",
+        "今回は既存obsidianテーマとbalancedを使用。theme import、.pfstyle.jsonのpack/unpack、5段階motionの比較は未実証。"
+      ],
+      "not_demonstrated": [
+        "実機プロジェクター、手動通し稽古、保存編集。",
+        "theme import、.pfstyle.jsonのpack/unpack、5段階motionの比較。",
+        "native PPTXの制作。"
+      ]
+    }
+  },
+  {
+    "case_id": "seaslides",
+    "demonstration": {
+      "summary": "架空の読書会の原稿・講稿をTCSにまとめ、HTML laneの同一buildから5頁のHTML・SVG・PNG・PDFを生成した。",
+      "scope_notes": [
+        "この作例はHTML lane。Typst・PPTX・画像生成は未実施",
+        "Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変",
+        "静止画像とプレーヤーの操作UIは別の証拠",
+        "架空の読書会の企画で、開催実績ではない"
+      ],
+      "not_demonstrated": [
+        "Typst lane、PPTX、画像生成。",
+        "読書会の実開催と効果。"
+      ]
+    },
+    "guide_patch": {
+      "requirements": [
+        "作例のcompilerはPython 3.13、最終visual gateはpypdfを持つPython 3.12で実行。Pillow・pypdf・python-pptx、Node.js 24を使う再現条件で、最小対応版の保証ではない。",
+        "原典scripts/html_to_svg/package-lock.jsonのnpm依存、Playwright 1.60とChromium headless shell 1223。Motion 11.11.17の同梱bundleを使用。",
+        "source/rebuild.pyはPythonからsource gate・HTML compiler --all・visual gateを呼ぶ。HTMLの閲覧はローカルHTTP。"
+      ]
+    }
+  },
+  {
+    "case_id": "minorun-marp",
+    "demonstration": {
+      "summary": "Git初学者向けの5分の導入を9頁に整理。問いと4段階の図をminorun-darkで組み、Marp CLIでHTML・PDF・PNGを出力した。",
+      "scope_notes": [
+        "元35分教材のうち5分の導入抜粋。元依頼は入力内へ保存",
+        "20分演習・ブランチ・レビュー・競合解消は扱わない",
+        "Gitコマンドは説明例で、リモート送信はしていない",
+        "本文を変えたときは埋込サブセット書体の収録文字も更新する"
+      ],
+      "not_demonstrated": [
+        "20分演習、ブランチ、レビュー、競合解消の教材。",
+        "Gitのリモート送信、実機のオフライン通し確認。"
+      ]
+    },
+    "guide_patch": {
+      "requirements": [
+        "作例で使用した版はNode.js 24.18とMarp CLI 4.4.0。最小対応版の記録ではない。source/rebuild.pyとcheck-ai-smell.pyにはPython 3を使用。",
+        "PDF/PNG出力にChromeまたはEdge。原典の全検査はPoppler・MuPDF tools・Pillow、SVG箱検査はMarp同梱puppeteer-coreを参照する。",
+        "字体の収録文字を変える場合はサブセットを更新する。別のmarp-mcpのAPIではなくminorunのMarp原稿・テーマ・検査ツールを使う。"
+      ]
+    }
+  },
+  {
+    "case_id": "ppt-design-system",
+    "demonstration": {
+      "summary": "架空の図書館イベント案内6頁にForest Inkと原典レイアウトを適用し、原典ナビゲーションを持つHTMLを作った。",
+      "scope_notes": [
+        "作例はHTMLのみでPPTX laneは未実施",
+        "原典テンプレートのJavaScriptを無改変で保持",
+        "游明朝・游ゴシック等の端末書体に依存。OS書体は配布しない",
+        "10種の全レイアウトや他4配色を実演した例ではない"
+      ],
+      "not_demonstrated": [
+        "PPTX lane、全10レイアウトと残る4配色。",
+        "印刷、縦画面での実表示。"
+      ]
+    },
+    "guide_patch": {
+      "requirements": [
+        "source/reproduce.pyによるHTML生成はPython 3標準ライブラリー。",
+        "任意の実描画検査はNode.js 22+と既存Chrome/Edge、ローカルHTTP。閲覧端末に日本語字体が必要。"
+      ]
+    }
+  },
+  {
+    "case_id": "business-carousel",
+    "demonstration": {
+      "summary": "架空ブランドの引き継ぎメモを6枚の制作ブリーフと1080角HTMLへ構成。公開用の仕上げと人の承認は行っていない。",
+      "scope_notes": [
+        "原典は指示型の制作スキルで、原典製レンダラーは存在しない",
+        "本例の専用HTMLは原典の構成指示を実装したもの",
+        "Canva/Figma仕上げ・LinkedIn PDF・公開・人の承認は未実施",
+        "連絡先は未設定。実績の代わりに架空の記入例を使う"
+      ],
+      "not_demonstrated": [
+        "Canva/Figmaでの公開用仕上げ、LinkedIn PDF、人の承認、公開。"
+      ]
+    },
+    "guide_patch": {
+      "requirements": [
+        "この作例のHTML再生成はPython 3.13、fontTools・Brotli、固定版のBIZ UDPGothicとOFL。最小Python版は未確認。",
+        "HTMLプレビューをHTTPで表示できるブラウザー。原典は制作ブリーフの指示で、自動レンダラーはこの作例の専用実装。",
+        "公開用制作データへ仕上げる場合はCanva/Figma/Adobe Express等が別途必要で、この例では未実施。"
+      ]
+    }
+  },
+  {
+    "case_id": "magic-slide",
+    "demonstration": {
+      "summary": "朝の支度を40分から30分へ移す仮説を5頁で説明。同じ数字・準備品を4つの頁境界で引き継ぎ、Magic Moveの前・途中・後を記録した。",
+      "scope_notes": [
+        "40・30・4・3・3分は仮定、短縮効果は未検証",
+        "認証付きQA関数のscope修正のみ。server認証と保存先制限は原典のまま",
+        "静的カタログiframeでは編集・保存が使えない",
+        "agentの検証と人のrevision/adoptionは別。後者はpending",
+        "静止画だけcursorとtrailを非表示にして撮影。通常runtimeは保持"
+      ],
+      "not_demonstrated": [
+        "時間短縮の実効果、人によるRevision/Adoption。",
+        "端末ごとの滑らかさ、静的カタログiframe内での編集・保存。"
+      ]
+    },
+    "guide_patch": {
+      "requirements": [
+        "生成と原典serve.pyはPython 3。injectorのJavaScript構文確認はNode.js。",
+        "表示QAにはPlaywrightと対応ブラウザー。原典serve経由の編集・保存と静的カタログiframeの表示を区別する。"
+      ]
+    }
+  },
+  {
+    "case_id": "revealjs-skill",
+    "demonstration": {
+      "summary": "架空の社内検索企画を原典scaffoldから6頁のHTMLへ制作。原典overflow検査とDecktapeによるPDF・画像出力を行った。",
+      "scope_notes": [
+        "原典scaffold後の日本語組版は専用の手作業実装",
+        "fragment・縦方向の入れ子・PDFからの逆変換は未実演",
+        "企画の数値は架空の条件と目標で、効果実績ではない",
+        "Decktape3.16.1を同caseのQA依存へ固定。ブラウザーは既存Edgeを指定"
+      ],
+      "not_demonstrated": [
+        "fragment、縦方向の入れ子、PDFからの逆変換。",
+        "実際の社内検索の効果。"
+      ]
+    },
+    "guide_patch": {
+      "requirements": [
+        "作例はNode.js 24.18、同梱reveal.js 5.2.1。原典create-presentation.jsで骨格を作る。",
+        "PDF/画像の作例QAはDecktape 3.16.1（依存Puppeteer 24.40.0）。overflow検査には別系統のPuppeteer 25.13.0を使う。source/qa/package-lock.jsonの両系統を保ち、既存Edgeを指定する。",
+        "原典check-overflow.jsとHTTPでのブラウザー表示を確認する。新規の日本語組版は作例固有で、自動変換器の機能ではない。",
+        "同梱の再検証入口 python source/verify.py はPython 3標準ライブラリーを使う。reveal.js本体一般の必須依存とは区別する。"
+      ]
+    }
+  },
+  {
+    "case_id": "and-scene-showcase",
+    "demonstration": {
+      "scope_notes": [
+        "段階ごとに固定座標を与える経路を使用。原典の自動レイアウト再中央揃え、sync-kit、既存資料の編集、スワイプ操作は未実証。",
+        "狭い画面は原典canvas全体が縮小する。文字を読む用途には広い画面を推奨。PPTX/PDF出力は対象外。",
+        "自然な遷移の3時点を確認した範囲。連続動画全フレームやフレームレートの品質を保証しない。"
+      ],
+      "not_demonstrated": [
+        "自動レイアウト再中央揃え、sync-kit、既存資料の編集、スワイプ操作。",
+        "連続動画全フレームとフレームレートの品質。"
+      ]
+    }
+  },
+  {
+    "case_id": "sebastian-178",
+    "demonstration": {
+      "scope_notes": [
+        "架空の企画。学習効果・制作時間・収益の実績は含まない。原典のroot LICENSEとSKILLの記載不一致は解消していない。",
+        "原典runtimeを置き換えた初期実装は旧履歴。現在は元runtimeと局所catalog bridgeを使用。",
+        "日本語用CSSは原典CSSの後に追加。新しい原稿では同じ4検査と全頁の実描画をやり直す。"
+      ],
+      "not_demonstrated": [
+        "学習効果・制作時間・収益の実績測定。",
+        "root LICENSEとSKILLの利用条件の整合。"
+      ]
+    }
+  },
+  {
+    "case_id": "sebastian-173",
+    "demonstration": {
+      "scope_notes": [
+        "原典の既定はdark editorial。今回実証したのは全頁paper-lightで、既定暗色の完成作例は未制作。",
+        "hero写真・scrim/glowを実装していないため、原典チェックリストの全条件合格ではない。",
+        "固定取得物にcompact-pdf.shがなく、Ghostscriptも未使用。軽量PDFはpypdfの局所代替で、同じ処理と称さない。音声再生も未実装。"
+      ],
+      "not_demonstrated": [
+        "既定dark editorialでの完成作例、hero写真・scrim/glow。",
+        "原典compact-pdf.sh、Ghostscript、音声再生。"
+      ]
+    }
+  },
+  {
+    "case_id": "html-scrolline",
+    "demonstration": {
+      "scope_notes": [
+        "原典はrail/data/launch/zoom/canvas/kineticの6conceptとMP4 exportを持つ。今回制作したのはrailだけで、残り5conceptとMP4は未実施。",
+        "内部localeはenのまま、日本語本文と端末字体を利用。日本語locale機能を実装した作例ではない。",
+        "原典全体CIのWindowsパス3件不合格は旧実行記録を保持。今回のbuild/smokeと操作検査を、全CI合格へ読み替えない。印刷・縦長mobile・60fpsの定量確認も未実施。"
+      ],
+      "not_demonstrated": [
+        "data/launch/zoom/canvas/kineticの5concept、MP4出力。",
+        "日本語locale機能、原典全体CIの全件成功。",
+        "印刷、縦長mobile、60fpsの定量確認。"
+      ]
+    }
+  },
+  {
+    "case_id": "react-slide-deck",
+    "demonstration": {
+      "scope_notes": [
+        "原典のInteractive slideを参考にした週別タブは局所拡張。Recharts、他preset、外部API、量的効果測定は未実施。",
+        "4週間・10問は架空の目標。FAQ改善や問い合わせ削減の実績はない。",
+        "元Vite8/Tailwind4.2.1のpeer不一致はTailwind4.2.2の固定lockへ局所修正。60fpsの定量計測・全端末の検査は未実施。"
+      ],
+      "not_demonstrated": [
+        "Recharts、他preset、外部API、量的効果測定。",
+        "60fpsの定量計測と全端末での検査。"
+      ]
+    }
+  },
+  {
+    "case_id": "japanese-corporate",
+    "demonstration": {
+      "scope_notes": [
+        "組織・数値・担当・業務案は架空。分類率100%は目標で実績ではなく、施策の効果・承認・利用者の採用は未実証。",
+        "独立再評価と原典JTC17/20の受理、初回制作時の外部視覚調査、別PC/依存新規導入。"
+      ],
+      "not_demonstrated": [
+        "施策の実効果、利用者の正式採用。",
+        "現在版の独立再評価と原典JTC受理、初回制作時の外部視覚調査、別PCと依存新規導入。"
+      ]
+    }
+  },
+  {
+    "case_id": "qiaomu-bento",
+    "demonstration": {
+      "scope_notes": [
+        "元リポのcheckoutは前提ではなく、同梱standaloneが通常経路。project側の追加validatorはcheckoutが無いため未実行。",
+        "画像+scrim/ken-burns、state slide、外部媒体、共同編集、実検索と権限制御は未実証。",
+        "ブラウザーの直接「コピー保存」は完了未確認。同docIdコピーは既存状態の影響を受けたため、独立コピーは --new-document を使用した。",
+        "countUpの初期化前に静的値が一瞬描画される原典挙動がある。途中値が増加する区間を撮影し、連続動画全フレームの品質保証とはしない。PPTX/PDF出力は対象外。"
+      ],
+      "not_demonstrated": [
+        "checkoutを前提にするproject追加validatorの実行。",
+        "画像+scrim/ken-burns、state slide、外部媒体、共同編集、実検索と権限制御。",
+        "ブラウザーの直接コピー保存の完了、連続動画全フレームの品質。"
+      ]
+    }
+  }
+]

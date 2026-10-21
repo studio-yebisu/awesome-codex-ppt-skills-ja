@@ -1,0 +1,497 @@
+{
+  "task": "sci-complex-20261016",
+  "pass": "pass-04",
+  "route": "Reconstruction",
+  "runtime": "pptxgenjs (SCI_DIAGRAM_RUNTIME=pptxgenjs, host-probed 4.0.1)",
+  "author_model": "claude-opus-5-5",
+  "source": {
+    "file": "source.png",
+    "format": "PNG",
+    "pixel_size": {
+      "width": 1600,
+      "height": 900
+    },
+    "nature": "Studio Yebisu structure-check concept figure; not an experimental result",
+    "sha256_expected_host_provided": "24565b908b599e3a3caaf0839a0dd38aa276a957240d822273271609f7efae29",
+    "sha256_computed_by_author": false,
+    "orientation": "upright as viewed; EXIF/eXIf chunk not byte-inspected by author"
+  },
+  "transform": {
+    "slide_inches": {
+      "width": 13.333,
+      "height": 7.5
+    },
+    "x_in_per_px": "13.333 / 1600",
+    "y_in_per_px": "7.5 / 900",
+    "note": "one source-to-slide transform for every object (template toSlidePoint/toSlideBox)"
+  },
+  "coordinate_accuracy": "all boxes and points were read visually from the 1600x900 PNG; estimated within about ±3 px, not measured by a pixel tool",
+  "NODES": [
+    {
+      "id": "region-omega",
+      "text": "反応領域 Ω",
+      "type": "roundRect",
+      "role": "container",
+      "parent": null,
+      "box": {
+        "x": 70,
+        "y": 185,
+        "w": 1000,
+        "h": 530
+      },
+      "labelBox": {
+        "x": 105,
+        "y": 212,
+        "w": 240,
+        "h": 34
+      },
+      "style": {
+        "fill": "F5F9FC",
+        "line": "1F5272",
+        "lineWidthPt": 1.5,
+        "label": "bold 19pt, top-left"
+      },
+      "owner": "native"
+    },
+    {
+      "id": "compartment-a",
+      "text": "区画 A",
+      "type": "roundRect",
+      "role": "container",
+      "parent": "region-omega",
+      "box": {
+        "x": 130,
+        "y": 290,
+        "w": 350,
+        "h": 330
+      },
+      "labelBox": {
+        "x": 165,
+        "y": 318,
+        "w": 200,
+        "h": 32
+      },
+      "style": {
+        "fill": "E9F1F8",
+        "line": "6E8798",
+        "lineWidthPt": 1,
+        "label": "bold 18pt, top-left"
+      },
+      "owner": "native"
+    },
+    {
+      "id": "compartment-b",
+      "text": "区画 B",
+      "type": "roundRect",
+      "role": "container",
+      "parent": "region-omega",
+      "box": {
+        "x": 650,
+        "y": 290,
+        "w": 350,
+        "h": 330
+      },
+      "labelBox": {
+        "x": 685,
+        "y": 318,
+        "w": 200,
+        "h": 32
+      },
+      "style": {
+        "fill": "EDF2EC",
+        "line": "6E8798",
+        "lineWidthPt": 1,
+        "label": "bold 18pt, top-left"
+      },
+      "owner": "native"
+    },
+    {
+      "id": "species-x",
+      "text": "X",
+      "type": "roundRect (source: pill)",
+      "role": "state",
+      "parent": "compartment-a",
+      "box": {
+        "x": 220,
+        "y": 440,
+        "w": 170,
+        "h": 92
+      },
+      "style": {
+        "fill": "FFFFFF",
+        "line": "1F5272",
+        "lineWidthPt": 1.75,
+        "label": "bold 22pt, centred"
+      },
+      "owner": "native"
+    },
+    {
+      "id": "species-xr",
+      "text": "X·R",
+      "text_codepoint_note": "middle dot written as U+00B7; source pixels cannot distinguish U+00B7 / U+22C5 / U+30FB",
+      "type": "roundRect (source: pill)",
+      "role": "state",
+      "parent": "compartment-b",
+      "box": {
+        "x": 740,
+        "y": 440,
+        "w": 170,
+        "h": 92
+      },
+      "style": {
+        "fill": "FFFFFF",
+        "line": "1F5272",
+        "lineWidthPt": 1.75,
+        "label": "bold 22pt, centred"
+      },
+      "owner": "native"
+    },
+    {
+      "id": "condition-u",
+      "text": "条件 u",
+      "type": "roundRect",
+      "role": "condition",
+      "parent": null,
+      "box": {
+        "x": 1180,
+        "y": 160,
+        "w": 300,
+        "h": 80
+      },
+      "style": {
+        "fill": "E9F2FA",
+        "line": "1F5272",
+        "lineWidthPt": 1.75,
+        "label": "bold 18pt, centred"
+      },
+      "owner": "native"
+    }
+  ],
+  "containment": {
+    "region-omega": [
+      "compartment-a",
+      "compartment-b"
+    ],
+    "compartment-a": [
+      "species-x"
+    ],
+    "compartment-b": [
+      "species-xr"
+    ],
+    "top_level": [
+      "region-omega",
+      "condition-u",
+      "replaceable-image-local-composite"
+    ],
+    "outside_omega": [
+      "condition-u",
+      "replaceable-image-local-composite",
+      "inset-heading"
+    ],
+    "validated_in_build": "parent box must contain child box; labelBox must stay in its plate"
+  },
+  "EDGES": [
+    {
+      "id": "exchange-x-xr",
+      "from": "species-x",
+      "to": "species-xr",
+      "direction": "both",
+      "semantics": "reversible exchange (可逆交換); solid; arrowheads at both ends",
+      "points": [
+        {
+          "x": 390,
+          "y": 486
+        },
+        {
+          "x": 740,
+          "y": 486
+        }
+      ],
+      "crosses": [
+        "compartment-a right border x=480",
+        "compartment-b left border x=650"
+      ],
+      "label": {
+        "text": "可逆交換",
+        "box": {
+          "x": 500,
+          "y": 414,
+          "w": 132,
+          "h": 32
+        },
+        "is_node": false
+      },
+      "implementation": "one PptxGenJS line; beginArrowType at x=390 (a:headEnd), endArrowType at x=740 (a:tailEnd)",
+      "owner": "native"
+    },
+    {
+      "id": "regulation-u-b",
+      "from": "condition-u",
+      "to": "compartment-b",
+      "direction": "forward",
+      "semantics": "regulation (調整) of compartment B by condition u; dashed; single arrowhead at compartment B right border",
+      "points": [
+        {
+          "x": 1180,
+          "y": 200
+        },
+        {
+          "x": 1100,
+          "y": 200
+        },
+        {
+          "x": 1100,
+          "y": 400
+        },
+        {
+          "x": 1000,
+          "y": 400
+        }
+      ],
+      "crosses": [
+        "region-omega right border x=1070"
+      ],
+      "label": {
+        "text": "調整",
+        "box": {
+          "x": 1112,
+          "y": 284,
+          "w": 60,
+          "h": 30
+        },
+        "is_node": false
+      },
+      "implementation": "three dashed line segments; endArrowType on the last segment only",
+      "owner": "native"
+    }
+  ],
+  "relations_not_present": [
+    "no edge connects to or from the local image inset",
+    "no edge between condition-u and compartment-a, species-x, or species-xr",
+    "no cycle; the exchange pair is one explicit bidirectional edge"
+  ],
+  "INSETS": [
+    {
+      "id": "replaceable-image-local-composite",
+      "semantic_role": "contextual synthetic composite input (局所像（合成入力）); not experimental evidence",
+      "source": "source.png",
+      "sourceBox": {
+        "x": 1182,
+        "y": 347,
+        "w": 296,
+        "h": 206
+      },
+      "frameBox": {
+        "x": 1182,
+        "y": 347,
+        "w": 296,
+        "h": 206
+      },
+      "native_borderBox": {
+        "x": 1181,
+        "y": 346,
+        "w": 298,
+        "h": 208
+      },
+      "source_border_band_px": "about x 1180-1181 / y 345-346 and matching right/bottom edges; excluded from the crop",
+      "crop_method": "single embedded source.png with srcRect crop (template addInset path); no separate crop file",
+      "raster_owns": [
+        "dark-navy-to-light horizontal gradient field",
+        "four light circular blobs",
+        "internal text 参考パネル"
+      ],
+      "native_outside": [
+        "frame border (Inset-frame)",
+        "heading 局所像（合成入力） (TEXTS.inset-heading)"
+      ],
+      "owner": "raster (content) / native (border)"
+    }
+  ],
+  "TEXTS": [
+    {
+      "id": "title",
+      "text": "2区画の可逆交換（概念モデル）",
+      "box": {
+        "x": 70,
+        "y": 57,
+        "w": 780,
+        "h": 52
+      },
+      "style": "bold 26pt",
+      "owner": "native"
+    },
+    {
+      "id": "inset-heading",
+      "text": "局所像（合成入力）",
+      "describes": "replaceable-image-local-composite",
+      "box": {
+        "x": 1180,
+        "y": 297,
+        "w": 280,
+        "h": 32
+      },
+      "style": "bold 15pt",
+      "owner": "native"
+    },
+    {
+      "id": "note-purpose",
+      "text": "実験結果ではない構造確認用の入力。矢印と破線の関係をそのまま保持する。",
+      "box": {
+        "x": 70,
+        "y": 771,
+        "w": 1060,
+        "h": 34
+      },
+      "style": "regular 16pt",
+      "owner": "native"
+    },
+    {
+      "id": "note-legend",
+      "text": "双方向：可逆交換 ／ 破線：条件 u による区画 B の調整。強さや速度の値は示さない。",
+      "box": {
+        "x": 70,
+        "y": 816,
+        "w": 1060,
+        "h": 30
+      },
+      "style": "regular 15pt",
+      "owner": "native"
+    }
+  ],
+  "visible_element_owners": [
+    {
+      "element": "title text",
+      "owner": "native",
+      "ref": "TEXTS.title"
+    },
+    {
+      "element": "region Ω plate + border",
+      "owner": "native",
+      "ref": "NODES.region-omega"
+    },
+    {
+      "element": "label 反応領域 Ω",
+      "owner": "native",
+      "ref": "NODES.region-omega label",
+      "note": "Ω written as U+03A9"
+    },
+    {
+      "element": "compartment A plate + border",
+      "owner": "native",
+      "ref": "NODES.compartment-a"
+    },
+    {
+      "element": "label 区画 A",
+      "owner": "native",
+      "ref": "NODES.compartment-a label"
+    },
+    {
+      "element": "compartment B plate + border",
+      "owner": "native",
+      "ref": "NODES.compartment-b"
+    },
+    {
+      "element": "label 区画 B",
+      "owner": "native",
+      "ref": "NODES.compartment-b label"
+    },
+    {
+      "element": "pill X + text",
+      "owner": "native",
+      "ref": "NODES.species-x"
+    },
+    {
+      "element": "pill X·R + text",
+      "owner": "native",
+      "ref": "NODES.species-xr"
+    },
+    {
+      "element": "bidirectional exchange arrow",
+      "owner": "native",
+      "ref": "EDGES.exchange-x-xr"
+    },
+    {
+      "element": "label 可逆交換",
+      "owner": "native",
+      "ref": "EDGES.exchange-x-xr label"
+    },
+    {
+      "element": "box 条件 u + text",
+      "owner": "native",
+      "ref": "NODES.condition-u"
+    },
+    {
+      "element": "dashed regulation polyline + arrowhead",
+      "owner": "native",
+      "ref": "EDGES.regulation-u-b"
+    },
+    {
+      "element": "label 調整",
+      "owner": "native",
+      "ref": "EDGES.regulation-u-b label"
+    },
+    {
+      "element": "heading 局所像（合成入力）",
+      "owner": "native",
+      "ref": "TEXTS.inset-heading"
+    },
+    {
+      "element": "inset border",
+      "owner": "native",
+      "ref": "INSETS.replaceable-image-local-composite borderBox"
+    },
+    {
+      "element": "inset gradient, circles, internal text 参考パネル",
+      "owner": "raster",
+      "ref": "INSETS.replaceable-image-local-composite"
+    },
+    {
+      "element": "note line 1",
+      "owner": "native",
+      "ref": "TEXTS.note-purpose"
+    },
+    {
+      "element": "note line 2",
+      "owner": "native",
+      "ref": "TEXTS.note-legend"
+    },
+    {
+      "element": "white background",
+      "owner": "native",
+      "ref": "slide.background FFFFFF"
+    }
+  ],
+  "double_ownership_guard": "build.mjs fails if any NODE box, labelBox, edge segment, edge labelBox, or TEXT box intersects the inset sourceBox/frameBox",
+  "draw_order": [
+    "1. NODES plates+labels by nesting depth: region-omega, condition-u, compartment-a, compartment-b, species-x, species-xr",
+    "2. EDGES (segments, then each edge label): exchange-x-xr, regulation-u-b",
+    "3. INSETS: cropped image, then native border above it",
+    "4. TEXTS: title, inset-heading, note-purpose, note-legend"
+  ],
+  "draw_order_reason": "template order edges -> insets -> nodes would place filled plates of Ω, A, and B above the exchange line (x 390-480, 650-740) and the dashed regulation segment inside Ω (x 1000-1070), hiding them; edges therefore follow all plates. Arrowhead tips end on node borders and stay above them.",
+  "approximations": [
+    "Current pass04: source rx16/12/46 mapped to roundRect rectRadius; native adjustments are recorded in qa/native-structure-pass04.json. X and X·R retain capsule-like ends.",
+    "dash pattern: preset 'dash'; pattern restarts per segment. Cosmetic.",
+    "polyline: three separate line segments, not one freeform or an attached connector.",
+    "colours, stroke widths, and font sizes estimated visually.",
+    "font: Yu Gothic (Windows), no font binary redistributed.",
+    "All 12 text shapes retain wrap=none. Original checker warns that another renderer may reflow; current PowerPoint16 and LibreOffice displays were inspected."
+  ],
+  "not_claimed": [
+    "no OOXML group or deep group is created or proven",
+    "no automatic/attached connector is created or proven; edges do not follow nodes when moved",
+    "no pixel identity with the source"
+  ],
+  "initial_author_model": "claude-opus-5-5",
+  "current_integration_note": "Current saved pass04 preserves the supplied corner radii and three native lg/lg triangle heads. The R13 build performs its bounded STORE ZIP correction internally; no external Python arrow step is needed. See qa/self-contained-handoff-r13.json.",
+  "draw_order_scope": "Example-author adaptation for these overlapping filled regions, not the original template default. Original runtime-pptxgenjs.md uses edges -> insets -> plates/labels.",
+  "historical_initial_author_not_executed": [
+    "node build.mjs (editable.pptx not generated by author)",
+    "render_pptx.py",
+    "check_pptx.py",
+    "sha256 of source.png",
+    "runtime probe (host already reported ready)"
+  ],
+  "historical_terminal_font_repair": "Only font constant changed to installed Yu Gothic after actual PowerPoint lost bold hierarchy. Geometry/topology/inset unchanged.",
+  "current_repair_author": "Codex"
+}

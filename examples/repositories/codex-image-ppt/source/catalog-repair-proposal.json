@@ -1,0 +1,65 @@
+{
+  "case_id": "codex-image-ppt",
+  "implemented_by": "Codex current repair; not new Opus production",
+  "current_pptx_sha256": "661602d6d753221d3e15bd6b6fb71f8eeba3dccabe8d41c1495840e5a263d59f",
+  "case_patch": {
+    "method": "原典手順の部分実行。白・紺・青緑の共通仕様からGit入門3頁を画像生成し、原典assembleで画像と講稿をPPTX化した。3頁の右下注意文を二行へ拡大し、原典の結果記録を現行埋込画像へ合わせた。頁分担・個別の人間承認・厳密な修復順序は未実施。",
+    "sample_notice": "原典手順の部分実行。各頁は画像1枚で本文要素の個別編集不可。現行画像・状態・PPTXのhashを照合済み。複数頁分担と個別人間承認、厳密な修復順序は未実施。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全3頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/codex-image-ppt/render/slide-01.png",
+      "examples/repositories/codex-image-ppt/render/slide-02.png",
+      "examples/repositories/codex-image-ppt/render/slide-03.png"
+    ],
+    "notes": [
+      "エディターでファイルを保存すること、Gitで履歴に記録すること、リモートへ共有することを分けて覚えます。保存しただけではコミットされません。コミットしても、まだ他の人へ送ったことにはなりません。まず手元で変更を確かめ、小さな単位で記録してから共有しましょう。",
+      "作業ツリーは編集中のファイルです。git addは次のコミットに含める内容をステージへ選びます。git commitはそのステージの内容をローカルの履歴に記録します。addした後にさらに編集した内容は自動でステージへ入りません。必要ならもう一度addし、git diff --stagedで内容を確かめます。",
+      "最初にgit statusとgit diffで変更の範囲を確認します。対象ファイルだけをaddし、git diff --stagedで記録される差分を読みます。秘密情報や不要なファイルがないことを確かめてcommitします。共有先と作業ブランチを確認し、チームのルールに従ってpushとレビュー依頼を行います。ここでは共有の手順を説明しているだけで、実際のpushは実行しません。"
+    ],
+    "status": "partial_original_workflow_current_images_and_state_checked",
+    "execution_status": "partial_builtin_image_workflow_with_final_state_binding_checked"
+  },
+  "guide_patch": {
+    "summary_ja": "各頁を1枚の生成画像として作り、話者ノート付きPPTXへまとめる。本文の文字・図形は個別編集できない。原稿から構成・共通書式・画像生成環境・見本を確認し、見本と同じ生成方法で頁を分担して作り、原典スクリプトで状態を記録し統合する。",
+    "requirements": [
+      "Python3.10+、python-pptx。原典の状態記録にはfilelock。",
+      "新規制作は内蔵の画像生成・編集ツールと、頁を担当する別エージェントを使える環境。保存済み画像の再出力には新規生成不要。",
+      "原典docsとMIT利用条件を同梱。PowerPointの実描画はWindows PowerPoint16、PDF→PNGにはpypdfium2。新規installは未検査。"
+    ],
+    "steps": [
+      "最初に原典docs/outline-style-and-sample.mdとworkflow-gates-and-progress.mdを読む。読者・目的・自分の原稿から、各頁の見出し・要点・役割・必須画像を構成案へまとめる。",
+      "構成・書式・画像生成環境を確認して、代表する内容頁を1枚だけ見本として作る。確認省略の明示指示がある場合はその委任を記録し、人間承認と区別する。",
+      "見本の採用後にdeck_specへ共通書式と実際の生成方法を固定し、prepare_slide_prompts.pyで各頁の仕事を作る。残りは1頁だけを担当する別エージェントへ割り当てる。",
+      "record_slide_dispatch.pyで割当を記録し、生成後は画像を読んでrecord_slide_result.pyで採用画像を記録する。文字・図・原稿の対応を確認し、修復したら最終画像の記録も更新する。",
+      "slide_job_status.pyで未完了がないことを調べ、speech.mdのノートをそろえ、assemble_ppt.pyでPPTXへ収める。自分の原稿の最初の例はSTART-HERE.ja.mdを使う。"
+    ],
+    "limitations": [
+      "各頁は画像1枚で、本文の文字・図の線は個別編集できない。話者ノートと頁画像の差し替えに対応する。",
+      "この作例の初回3頁は同一担当が生成。複数頁worker分担と構成・書式・生成環境・見本の個別の人間承認は未実施のため、原典手順の部分実行。",
+      "3頁の修復候補は割当記録の更新前に生成され、注意文の最終修復にも新しい割当はなかった。この逸脱をslide_jobsとslide_run_stateの構造化した履歴へ残し、後から順序や承認を作らない。",
+      "現在の最終画像は原典record_slide_result.pyで再記録し、実PPTXの埋込画像hashと照合した。今回の記録整合は、新たな画像生成や原典手順全体の完走を意味しない。",
+      "内蔵画像ツールの正確なmodel IDは不明。特定の画像モデルやOpus制作とは記載しない。Gitコマンドは学習用説明でpushは実行していない。",
+      "配布再実行は保存済み画像の再統合を検査。新規install・新しい原稿からの全工程は未検査。"
+    ],
+    "execution_type": "部分実行：同一担当の内蔵画像生成と原典assemble。現在の結果記録は修復済み。複数頁分担・個別人間承認・厳密な修復時系列は未実施。",
+    "commands": [
+      "python source/reproduce.py",
+      "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath codex-image-ppt.pptx -OutputDirectory render",
+      "python source/render_pdf_previews.py render",
+      "python source/inspect_current.py"
+    ]
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native5.json",
+  "independent_current_version_review": "pending",
+  "distribution_replay": "source/distribution-replay.json",
+  "current_state_reconciliation": "source/state-artifact-reconciliation.json",
+  "general_usage_proposal_for_root_final_override": {
+    "name": "原稿と共通仕様から画像スライドを作る",
+    "change": "原稿を頁ごとの主張と図へ整理し、共通の書式で作った頁画像と話者ノートをPowerPointへまとめる。",
+    "input": "記事・報告・論文・メモ・構成案、読者と目的、残す文字や図、書式の希望、使用できる画像生成環境。",
+    "output": "各頁1枚の生成画像を収めたPPTX、編集可能な話者ノート、頁画像と状態記録。本文の文字・図形は個別編集できない。",
+    "upstream_principle": "各頁を1枚の生成画像として作り、話者ノート付きPPTXへまとめる。本文の文字・図形は個別編集できない。原稿から構成・共通書式・画像生成環境・見本を確認し、見本と同じ生成方法で頁を分担して作り、原典スクリプトで状態を記録し統合する。"
+  }
+}

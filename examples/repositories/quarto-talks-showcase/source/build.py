@@ -92,7 +92,7 @@ print(f'Actual calculation: a={a:.1f}, b={b:.1f}, SSE={np.sum(errors**2):.1f}; N
 '''
 
 QMD = r'''---
-pagetitle: "五つの点から、一本の線を。"
+pagetitle: "合成5点から最小二乗直線を求める"
 lang: ja
 bibliography: references.bib
 suppress-bibliography: true
@@ -104,18 +104,18 @@ format:
     include-in-header: source/fonts.html
 ---
 
-## 五つの点から、<br>一本の線を。 {.opening}
+## 合成5点から<br>直線を求める {.opening}
 
 ::: {.columns}
-::: {.column width="54%"}
-ばらつく点を、<br>一本の直線でどう表す？
+::: {.column width="56%"}
+5点のばらつきを<br>最小二乗直線で表す
 
 ::: {.context}
 5分の小教材 ／ 単位のない合成データ<br>
 現実の観測値や研究成果ではありません。
 :::
 :::
-::: {.column width="36%"}
+::: {.column width="40%"}
 | 点 | x | y |
 |:--|--:|--:|
 | 1 | 0 | 1 |
@@ -134,7 +134,7 @@ format:
 問いを立ててから、5点の表を見せる。xとyは単位を持たない学習用の数。実測や因果関係は示していない。
 :::
 
-## 表を、点にする。 {.visual}
+## 同じ5点を散布図で示す {.visual}
 
 ![横にx、縦にy。同じ5点を図へ移した。](output/scatter.svg){fig-alt="合成5点 (0,1), (1,3), (2,2), (3,5), (4,4) の散布図"}
 
@@ -142,7 +142,7 @@ format:
 表と図は同じ入力を使う。点の上下にばらつきがあるので、すべての点を通る一本の直線にはならない。
 :::
 
-## 直線を、二つの数で表す。 {.math}
+## 直線の傾きと切片を求める {.math}
 
 $$
 y=ax+b
@@ -162,7 +162,7 @@ $$
 NumPy公式linalg.lstsq文書の最小二乗の定義を踏まえる。ここでは二変数の係数aとbで直線を表す。数式は原典のmathクラスとQuarto KaTeXで描画。
 :::
 
-## コードで、線を求める。 {.code}
+## NumPyで係数を計算する {.code}
 
 ```python
 import numpy as np
@@ -186,7 +186,7 @@ print(f"a={a:.1f}, b={b:.1f}")
 コード表示は原典templateの普通のPython fenced block。実際の計算は同梱compute_fit.pyをPythonで実行した。Quartoがこの表示ブロックを実行したとは称さない。aとbを一桁へ丸めた表示と詳細結果JSONを分ける。
 :::
 
-## 線が言えること、言えないこと。 {.visual}
+## 当てはめた直線と残差を確認する {.visual}
 
 ![y = 0.8x + 1.4。点線は、点から線への縦のずれ。](output/fitted.svg){fig-alt="合成5点に最小二乗直線y=0.8x+1.4を重ね、縦の残差を点線で示した図"}
 
@@ -198,12 +198,12 @@ print(f"a={a:.1f}, b={b:.1f}")
 縦のずれを二乗した合計は実計算で3.6。これはこの設定の残差の量であり、科学的成果や未来の精度の証明ではない。
 :::
 
-## 点が一つ変わると、<br>線はどう動く？ {.question}
+## 次の演習：1点を変えて<br>直線を比較する {.question}
 
 ::: {.next-step}
-一点を変える。<br>
-同じコードを動かす。<br>
-二本の線を、比べてみる。
+1. input/data.csvのyを1点変更する<br>
+2. compute_fit.pyを再実行する<br>
+3. 係数と残差を変更前と比較する
 :::
 
 ::: {.context}
@@ -228,15 +228,17 @@ $codeFont: "JetBrains Mono", "BIZ UDPGothic", monospace;
 .reveal h1,.reveal h2,.reveal h3 {font-family:"Shippori Mincho",serif;font-weight:700;line-height:1.24;}
 .reveal code,.reveal pre {font-family:"JetBrains Mono","BIZ UDPGothic",monospace;font-variant-ligatures:none;font-feature-settings:"liga" 0,"calt" 0;}
 .reveal .slides section.opening h2 {font-size:2.05em;margin-bottom:.7em;}
-.reveal .slides .columns {align-items:center;gap:5%;}
-.reveal .slides .opening table {width:100%;font-size:.77em;}
-.reveal .slides .context {color:#62717a;font-size:.53em;line-height:1.65;margin-top:1.1em;}
+.reveal .slides .columns {align-items:center;gap:3%;}
+.reveal .slides .opening table {width:100%;font-size:.83em;}
+.reveal .slides .context {color:#62717a;font-size:.67em;line-height:1.65;margin-top:1.1em;}
 .reveal .slides section.math>p {max-width:1100px;font-size:.75em;}
 .reveal .definition {font-size:.68em;margin:1em 0 1.8em;}
-.reveal .slides section.code pre {width:100%;max-width:1300px;}
+.reveal .slides section.code div.sourceCode {width:100%;background:#f4f6f7;}
+.reveal .slides section.code div.sourceCode pre,.reveal .slides section.code div.sourceCode code {width:100%;max-width:none;box-sizing:border-box;}
 .reveal .actual-output {color:#315f7d;font-size:.8em;margin-top:1em;}
-.reveal .slides section.visual .limit {margin:.3em auto 0;text-align:center;}
-.reveal .slides section.question::before {content:"問い";}
+.reveal .slides section.visual .limit {margin:.7em auto 0;text-align:center;font-size:.64em;max-width:1350px;}
+.reveal .slides section.visual:has(.limit) figure img {max-height:430px;}
+.reveal .slides section.question::before {content:"演習";}
 .reveal .next-step {margin-top:1.2em;font-size:.88em;line-height:1.8;}
 '''
 

@@ -37,7 +37,7 @@
   "modifications": [
     "Local converter only: collect computed fontFamily for elements/text runs and use its first family instead of forcing every run to one font.",
     "Local converter language metadata changed zh-CN to ja-JP.",
-    "Original DOM measurement, PptxGenJS native reconstruction, SVG/PNG extraction and gradient patch pipeline unchanged."
+    "SVG export local repair: persist actual DOM viewport width/height before sharp rasterization so preserveAspectRatio letterboxing survives PPTX placement. Original DOM measurement, native reconstruction and gradient patch pipeline retained."
   ],
   "editability": {
     "text": "Native editable text boxes with Dela/Shippori/BIZ roles.",
@@ -108,5 +108,16 @@
       "bundled_in_kit": false
     }
   ],
-  "artifact_tool_used": false
+  "artifact_tool_used": false,
+  "repair_authoring": {
+    "author": "Codex",
+    "scope": "Source HTML letter spacing/heading gap, source SVG viewport repair, actual comparison/audit; no fresh Opus call."
+  },
+  "conversion": "conversion.json",
+  "runtime_diff": "source/html_to_editable_pptx.js.diff",
+  "html_and_pptx_comparison": [
+    "render/html-pptx-compare-01.png",
+    "render/html-pptx-compare-03.png"
+  ],
+  "verification": "Explicit requested revision loop: edit original HTML, rerun original HTML-to-PPT alias with local font/language and SVG viewport adapters; all5HTML and all5PowerPoint pages viewed; DOM text/native object inventory and6SVG viewport checks."
 }

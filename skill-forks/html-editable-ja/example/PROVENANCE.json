@@ -1,0 +1,82 @@
+{
+  "repository": "Hasasasa/html-to-editable-pptx",
+  "commit": "17c1dbb76e958543dc2741a7d50ca374354f33b7",
+  "license": "MIT",
+  "scope": "Original converter plus declared font/nativeflag/effects/auditlabel/shared-PowerPoint adapters",
+  "upstream_preserved": true,
+  "case_studies": [
+    "html-editable-showcase"
+  ],
+  "method": "原典変換・Stage5a/5b＋明示したcase adapter、Codex別担当による全5頁比較、文字/旗の実PowerPoint編集検査。字体埋込成功は未実証。",
+  "command": "python convert_local_fonts.py index.audited.html --out deck.pptx --keep-screenshots --no-embed-fonts",
+  "modifications": [
+    "Local official TTF registry; no font embedding in delivered output.",
+    "Original CSS flag workaround remains SVG in audited HTML; known5vertices converted to1native freeform after original assemble, before Stage5.",
+    "Implicit shape effects cleared before Stage5; no original source changes.",
+    "Audit labels ASCII only; shared PowerPoint renderer closes only opened presentation, never application.",
+    "Local audited HTML changes for rule length and numbered rows; original index.html unchanged."
+  ],
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "1d3859ef9e38687ff0ea127796e05295b625159f43dc197aeceabaea769e2b5b",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/SKILL.md"
+    },
+    {
+      "path": "convert.py",
+      "sha256": "fb0a1d0c421dd1e3ab15db559d3f052dfc294d384955a05edd4d018463417180",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/convert.py"
+    },
+    {
+      "path": "scripts/measure.py",
+      "sha256": "6a220586a670f02dd7eeda1ed8fdac83313de2e9fc8fa4c9eb9bebc25ee4d78d",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/measure.py"
+    },
+    {
+      "path": "scripts/assemble.py",
+      "sha256": "db4e6a9c305336bab882534cf31931caa7e4f431c7ef2ebcca2c481b838713da",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/assemble.py"
+    },
+    {
+      "path": "scripts/embed_fonts.py",
+      "sha256": "e53e1d986183cd2a855f5b55d2697a8c2ad8bc90377d109d907fa187b5a939a3",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/scripts/embed_fonts.py"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "2c660995fdf9061243c0e83cf52a26d5b05a77eb15aa16a9d838992ba8cd56a1",
+      "url": "https://github.com/Hasasasa/html-to-editable-pptx/blob/17c1dbb76e958543dc2741a7d50ca374354f33b7/LICENSE"
+    }
+  ],
+  "preview_export": {
+    "method": "render_current.ps1 actual PowerPoint PDF → render_pdf_previews.py RGB PNG",
+    "pages": 5,
+    "detail_review": true,
+    "all5_source_compares_read_by_separate_parent": true
+  },
+  "current_pptx_sha256": "e516d41f8380551214c3770b4a82a1d6320e2333d080f3e5461d2cd62a92ff39",
+  "current_finding_resolution": "qa/finding-resolution.json",
+  "new_opus_production": false,
+  "historical_repair_20261015": {
+    "checked_at": "2026-10-15T15:06:47.264425+00:00",
+    "command": "python convert_local_fonts.py index.audited.html --out deck.pptx --keep-screenshots --no-embed-fonts",
+    "audit_mode": "page",
+    "original_stage5a_structural_warnings": 0,
+    "original_stage5b_compare_pages": 5,
+    "agent_read_all5_compare_images": true,
+    "native_edit_saved_and_reopened": true,
+    "pptx_sha256": "ddb5c11d1ca379b61d7c3dffb53f752f559e4aa45fe52dc60e2be95fd4e9b2bf",
+    "input_original_sha256": "a0033881523aba941718bff8df7c575a09f8ad784d6edda777caaf9b9d1c60fb",
+    "audited_copy_sha256": "ca6196303a69704a431f44af5d77c0a07d056341eff7b79c7fd55d5f470b21b5",
+    "fixed": [
+      "CSS border triangle flag replaced with equivalent SVG in audited copy",
+      "Implicit Office theme effects removed by a declared adapter before original Stage5 checks"
+    ],
+    "remaining": [
+      "Browser and PowerPoint line metrics and font weights differ slightly",
+      "SVG flag remains an image object; fonts are not embedded",
+      "Repair not independently regraded yet"
+    ]
+  },
+  "current_distribution_replay": "source/distribution-replay.json"
+}

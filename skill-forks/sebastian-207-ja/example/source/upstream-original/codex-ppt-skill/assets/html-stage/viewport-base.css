@@ -1,0 +1,78 @@
+:root {
+  --stage-width: 1920px;
+  --stage-height: 1080px;
+  --bg: #f7f8fa;
+  --fg: #111827;
+  --muted: #64748b;
+  --accent: #2563eb;
+  --surface: #ffffff;
+  --font-heading: "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --font-body: "Inter", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  background: #20242b;
+  color: var(--fg);
+  font-family: var(--font-body);
+}
+
+.deck {
+  width: var(--stage-width);
+  height: var(--stage-height);
+  overflow: hidden;
+  background: var(--bg);
+  transform-origin: top left;
+}
+
+.slide {
+  position: relative;
+  width: var(--stage-width);
+  height: var(--stage-height);
+  overflow: hidden;
+  background: var(--bg);
+}
+
+.slide-content {
+  position: absolute;
+  inset: 96px;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  max-width: 1180px;
+  font-family: var(--font-heading);
+  font-size: 112px;
+  line-height: 1.04;
+  font-weight: 760;
+  letter-spacing: 0;
+}
+
+.subtitle {
+  margin-top: 32px;
+  max-width: 920px;
+  color: var(--muted);
+  font-size: 38px;
+  line-height: 1.35;
+}
+
+.eyebrow {
+  margin-bottom: 28px;
+  color: var(--accent);
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}

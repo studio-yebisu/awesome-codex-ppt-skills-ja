@@ -1,21 +1,16 @@
-# 遠くの席へ、伝わる資料。
+# 大綱から作り、同じ内容のテーマを変更する
 
-会場で読む資料の構成を提案する、自作の日本語教材6枚。[編集用PPTX](deck.pptx)、[PDF](deck.pdf)、[変換前draft](draft.pptx)、[PNGプレビュー](index.html)を保存しました。文字と長方形の枠はネイティブ要素です。可読性改善・理解度・最適pt値の実測はありません。
+日本語の大綱から6枚の編集可能PPTXを作り、暖色版からprojection版へ変更する作例です。本文を変えず、見出し・本文・帯・線の色がどう変わるかを同じ頁で比較できます。実会場での可読性や理解度の改善率は測っていません。
 
-原典: eluckydog/ppt-scene-graph、commit `646e3dc4b72a444278d320c8984d5986d7fbf4bb`、MIT ©2026 PPT Scene Graph Contributors。[未変更原本](source/upstream/)と[LICENSE](LICENSE)を保持。元OutlineSpec/SlideSpec→create_from_outline(designhub_warm)→draft→元beautify(projection)→deckを実行し、[theme/sourceマップ](input/theme-source-map.json)と[BUILD](source/BUILD.json)を記録しました。汎用builderや別engineへ置き換えていません。
+1. `input/outline.json`のcover/section/content/endingと本文を編集する。
+2. `python source/rebuild.py`で元create_from_outline→draft.pptx→元beautify→deck.pptxを実行する。表示名検証の制約に合わせ`load_theme('projection').name`を渡す。
+3. `source/render_powerpoint.ps1`でdraftと完成PPTXを描画する。`render/theme-compare-page-01.png`〜03.pngは、その実描画を同頁で並べた証拠です。
+4. `source/theme-layout-repair.json`で局所補正を確認する。元beautifyは既存の非文字色を変えないため、旧帯・旧線の色移行を追加。章番号と章題・表紙副題の余白も補正しています。未改変の原典だけの効果とは区別します。
 
-再生成は `python source/rebuild.py`。同梱のsource/runtimeをimportし、そのvendorのpython-pptx1.0.2を使用します。外部実行依存はlxml/Pillow/typing_extensions/XlsxWriterで、[versions・個別条件](source/dependencies/REQUIREMENTS.json)と[requirements.txt](source/dependencies/requirements.txt)を保存。依存バイナリは再配布していません。
+原典eluckydog/ppt-scene-graph、commit646e3dc4b72a444278d320c8984d5986d7fbf4bb、MIT。未変更原本はsource/upstream/、同版vendor補完8ファイルのURL/hash/条件はsource/vendor-parts-repair.jsonと各MITに保存。元vendorのparts欠落だけを公式python-pptx1.0.2から補完し、別engineへ切り替えていません。Pythonとlxml/Pillow/typing_extensions/XlsxWriterが必要です。source/dependencies/requirements.txtを参照。
 
-原典vendorにはparts/が丸ごと欠けていたため、最初のimportは停止しました。[初回失敗記録](source/INITIAL-FAILURE.json)は履歴です。その後、同版公式[PyPI wheel](https://files.pythonhosted.org/packages/d9/4f/00be2196329ebbff56ce564aa94efb0fbc828d00de250b1980de1a34ab49/python_pptx-1.0.2-py3-none-any.whl)から必要なparts8ファイルだけをruntimeへ補完し、生成に成功。配布SHA256は`160838e0b8565a8b1f67947675886e9fea18aa5e795db7ae531606d68e785cba`。補った一覧・ファイルhash・URLは[vendor-parts-repair](source/vendor-parts-repair.json)、追加記録は[patch](source/vendor-parts-repair.patch)。元原本は変更していません。python-pptxのMIT ©2013 Steve Cannyも[原文](source/dependencies/python-pptx-wheel-LICENSE.txt)を補っています。
+BIZ UDPGothicの実TTF/OFLはsource/fonts/に同梱。PPTX字体未埋込のため編集端末にも導入します。日本語字体対応のdiff、nativeレイアウト補正コード、実行記録をsource/に保存しています。Application.Quitを呼ばず自分のdeckだけをCloseします。
 
-原典の制約も保持しています。
+このpinにparse_slideの実装/exportはありません。scene graph抽出は示していません。notesフィールドも元createはspeaker notesへ書きません。元evaluateは実行済みですが、文字有無・背景数・英中keywordなどによる粗い診断で、人の視覚評価や独立採点ではありません。source/original-evaluate-receipt.jsonへ警告を保存しています。SKILLが言及するtest_skill_simple.pyはpinに存在せず、実行したとは記録しません。
 
-- parse_slideはSKILL/READMEに宣言されていますが、このcommitのpackage export/実装にはありません。使っていません。
-- beautifyはlist_themesの表示名だけを検証するため、`theme='projection'`を直接渡すと拒否されます。`load_theme('projection').name`を元APIへ渡しました。
-- createはcover/section/content/endingを作りますが、beautifyは装飾追加後のheuristicにより最初の5頁をcontent、最後をendingと判定しました。工場由来の構造は残ります。
-- 既存の非文字図形の塗りは置換しないため、draftの暖色accentも完成版に残ります。既存font sizeも原典の条件に従い保持します。
-- SlideSpec.notesは受理しても元createはPPTXのspeaker notesへ書きません。原稿の補足はinputに保存しています。
-
-日本語の局所変更は[DesignSystem字体diff](source/design-ja.patch)と[a:ea/a:cs/lang diff](source/pipeline-ja.patch)。元palette、座標、FONT_SIZES、factories、beautify検出は維持。BIZ UDPGothic Regular/Boldは公式Google Fonts固定pin `66928797f271fed5ee428544e7229685e2d90127`の実TTF/OFLを[source/fonts](source/fonts/)へ同梱しています。PPTXへの字体埋込みはしていないため、編集時は公式字体を登録して使います。OS字体は抽出していません。
-
-PowerPoint16.0で6PNG/PDFを通常exportし、表紙だけ初回表示しました。Application.Quitは呼ばず、自分のdeckだけClose。再開後に生成/export/表示をやり直していません。全頁詳細検査・独立review・evaluate採点・構造監査・ZIP再実行は未実施。[QA](QA.json)はこの範囲です。PNG viewerはプレビュー用で、制作方式は元PPTX APIです。
+完成6頁・変換前3頁・比較3枚を作者が目視しました。検査記録はQA.jsonとsource/output-audit.json。独立Kimi K3/Opus5.5再評価とZIP再実行は未了です。文字と帯・線はnative、プレビューPNGは編集正本ではありません。

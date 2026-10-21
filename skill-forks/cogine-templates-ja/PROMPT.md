@@ -1,9 +1,18 @@
-# 制作依頼
+# 再制作の指示
 
-日本語6枚「香りを、贈る。」を制作する。架空の茶の贈りもの企画として、相手の好みを手がかりに茶葉を選ぶ、包みを整える、短い言葉を添える、選ぶ/包む/渡すという体験を提案する。商品仕様や価格、売上実績、効能は発明しない。
+原稿量と用途からテンプレートを比較し、選んだ枠へ内容を配置する。
 
-原典cogine-ai/ai-slide-templatesの固定commit `8a7a59d39f059a7e58da9c3471014ba7fe3b98eb`、原典AGENTS.md・INPUT_GUIDE.md、全template.jsonと選んだtemplate.htmlを実際に用いる。metadataから一つを選び、folderをclone、content_limitsとlayout_slots（未定義なら実DOM由来であることを明記）へ対応付け、demoを差し替える。汎用rendererへ置換しない。
+入力: 読み手・用途・本文の量。各テンプレートのscheme/density/avoid_for/content_limits。
+出力: 選んだeditorial-luxuryの配色・枠・ページ操作を保った日本語HTML6枚。
 
-版式・palette・装飾・navigationを保持し、同じカード列を反復しない。日本語派生への変更と字体変更は承認済み。Shippori Minchoの見出し、Zen Kaku Gothic Newの本文、Manropeの英数字を公式固定TTF/OFLから役割別に組み、単独HTMLへinline化する。自作SVGは茶葉・包み・結びの説明に必要なものだけ。外部写真/商標は不要。
+1. 原典AGENTSを読み、全templates/*/template.jsonのscheme・density・用途・避ける場面を比較する。
+2. content_limitsと必要版式を確認し、合うテンプレートのフォルダー全体を複製する。
+3. 実HTMLの埋める場所を対応付ける。今回の原典JSONにはlayout_slotsがないため局所のDOM対応表を使う。
+4. 見本の文字・数字・画像をすべて置換し、本文やカードの上限を越える場合は頁を分ける。
+5. 全頁をブラウザーで確認し、カウンターと章番号を区別する。利用可能な原典validate-visualも実行する。
 
-完成HTML、代表PNG、原稿/入力/依頼、選択とslot mapping、再生成コード、未変更原典と局所差分、PROVENANCE、短い日本語SKILLとSOURCE、公式fonts/OFL、制作とスキルの2ZIPを揃える。主要初回表示、原典navigation1→2、必要生成、短いSKILL quick_validateのみ確認。全頁詳細検査・optional validator・採点・全kit再実行なし。
+同梱作例の実施範囲: 3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。
+
+制約: 原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。
+制約: layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。
+制約: 原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。

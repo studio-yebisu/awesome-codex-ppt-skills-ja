@@ -1,0 +1,49 @@
+/* ===========================================================
+   MORPH-SLIDES ICONS: Tabler Icons sized and coloured by the style.
+   An icon is a square box of 1em; size it with font-size or a size
+   class. Colour = currentColor (the text colour), .accent = style accent.
+   Restraint (checked by deck.audit): at most 6 icons on a slide, one
+   hero icon, never an icon on every bullet.
+   =========================================================== */
+.ico { display: inline-block; width: 1em; height: 1em; flex: none; vertical-align: -0.14em; line-height: 0; }
+.ico svg { display: block; width: 100%; height: 100%; stroke-width: var(--ico-stroke, 1.75); }
+.ico.accent { color: var(--accent); }
+.ico.muted { color: var(--muted); }
+/* sizes: thin strokes on big icons so they keep the type's weight */
+.ico-sm  { font-size: 32px; }
+.ico-md  { font-size: 56px; }
+.ico-lg  { font-size: 96px;  --ico-stroke: 1.5; }
+.ico-xl  { font-size: 200px; --ico-stroke: 1.15; }
+/* framed badge: icon inside a circle or square drawn with the style's ink */
+.ico-badge { display: inline-grid; place-items: center; width: 1.9em; height: 1.9em; border: 2px solid currentColor; border-radius: 50%; }
+.ico-badge.square { border-radius: var(--card-radius, 0); }
+.ico-badge > .ico { font-size: 1em; }
+/* a row of labelled icons (tools, steps): same size, evenly spaced */
+.ico-row { display: flex; gap: 40px; align-items: flex-start; }
+.ico-row > * { display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; font-size: 24px; line-height: 1.25; }
+.ico-row .ico { font-size: 64px; }
+/* inside the highlight column of a content slide */
+.hl-icon .ico { font-size: 200px; --ico-stroke: 1.15; color: var(--accent); }
+.deck-stage.auditing .ico[data-missing] { outline: 3px dashed #E5484D; }
+
+/* ---------- icon grid: 3 to 6 short points, one icon each, one colour ----------
+   <ul class="ico-grid"><li><i class="ico" data-icon="..."></i><h3>Ý ngắn</h3><p>Một dòng giải thích</p></li>...</ul>
+   Fills the body zone; 4 items = 2 columns, 3/5/6 items = 3 columns.
+   Put it on a data-layout="agenda" slide: styles keep that zone clear of shapes. */
+.ico-grid {
+  position: absolute; top: var(--body-top); bottom: var(--body-bottom); left: var(--pad-x); right: var(--pad-x);
+  display: grid; grid-template-columns: repeat(var(--cols, 3), 1fr); grid-auto-rows: 1fr; gap: 36px 56px;
+  margin: 0; padding: 0; list-style: none;
+}
+.ico-grid:has(> li:nth-child(4):last-child) { --cols: 2; }
+.ico-grid > li { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; text-align: center; }
+/* the icon sits in a soft disc of the accent colour */
+.ico-grid .ico {
+  box-sizing: content-box; padding: calc(var(--g-ico, 80px) * .32); border-radius: 50%;
+  font-size: var(--g-ico, 80px); color: var(--ico-grid-color, var(--accent)); --ico-stroke: 1.5;
+  background: color-mix(in srgb, var(--ico-grid-color, var(--accent)) 14%, transparent);
+}
+.ico-grid h3 { margin: 0; font: var(--title-weight, 800) var(--g-h, 46px)/1.15 var(--font-display); }
+.ico-grid p { margin: 0; max-width: 16em; font-size: var(--g-p, 30px); line-height: 1.35; color: var(--muted); }
+.ico-grid:has(> li:nth-child(5)) { --g-ico: 68px; --g-h: 40px; --g-p: 27px; row-gap: 24px; }
+.ico-grid:has(> li:nth-child(5)) > li { gap: 12px; }

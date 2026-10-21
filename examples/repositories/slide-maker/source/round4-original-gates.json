@@ -1,0 +1,118 @@
+{
+  "pptx_sha256": "b8f099a3879bc94e3a006c14d4110315aba02c04703c31f5e18da633edeb76ff",
+  "records": [
+    {
+      "command": [
+        "python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\palette_audit.py",
+        "--inks",
+        "132C3B,116B8A,7044A0,A8471C,4E626C",
+        "--grounds",
+        "FFFFFF,E8EEF0,E6DDF0"
+      ],
+      "exit_code": 0,
+      "log": "source/current-palette-audit.log"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\palette_audit.py",
+        "--inks",
+        "FFFFFF",
+        "--grounds",
+        "116B8A,7044A0,A8471C"
+      ],
+      "exit_code": 0,
+      "log": "source/current-palette-inverse-audit.log"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\component_audit.py",
+        "source\\build_slide_maker_repository_example.py",
+        "deck.pptx",
+        "--json",
+        "--out",
+        "source\\current-components.json"
+      ],
+      "exit_code": 2,
+      "log": "source/current-component-audit.log"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source\\prepare_blind_packet.py"
+      ],
+      "exit_code": 0,
+      "log": "source/current-blind-packet.log"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\codex_visual_contract.py",
+        "deck.pptx",
+        "--manifest",
+        "visual-contract.json",
+        "--build-script",
+        "source\\build_slide_maker_repository_example.py",
+        "--renders",
+        "qa\\original-blind-render",
+        "--crops",
+        "qa\\visual-contract-crops",
+        "--out",
+        "visual-contract-final.json"
+      ],
+      "exit_code": 0,
+      "log": "source/current-visual-contract.log"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\render_deck.py",
+        "deck.pptx",
+        "--gate-check"
+      ],
+      "exit_code": 1,
+      "log": "source/current-handoff-gate.log"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\codex_delivery_gate.py",
+        "--lint",
+        "source\\current-lint.json",
+        "--components",
+        "source\\current-components.json",
+        "--build-script",
+        "source\\build_slide_maker_repository_example.py",
+        "--evidence",
+        ".codex-deck-evidence.json",
+        "--receipt",
+        "codex-delivery-receipt.json"
+      ],
+      "exit_code": 1,
+      "log": "source/current-codex-delivery-gate.log"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\codex_handoff_guard.py",
+        "--receipt",
+        "codex-delivery-receipt.json",
+        "--deck",
+        "deck.pptx"
+      ],
+      "exit_code": 1,
+      "log": "source/current-codex-handoff-guard.log"
+    }
+  ],
+  "independent_new_revision_review": "pending",
+  "pass_receipt_created": false,
+  "production_only_visual_check": true,
+  "in_memory_lint_layout": {
+    "strict": true,
+    "critical": 0,
+    "warnings": 13,
+    "explanation": "Five intended condition texts occupy the footer region; five title underline pairs and three literal numeric rows are heuristic warnings. The serialized PPTX lint and actual images are checked separately, never equated to this in-memory result."
+  }
+}

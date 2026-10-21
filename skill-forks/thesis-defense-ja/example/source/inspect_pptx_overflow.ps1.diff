@@ -1,0 +1,11 @@
+--- upstream/inspect_pptx_overflow.ps1
++++ runtime/inspect_pptx_overflow.ps1
+@@ -107,7 +107,7 @@
+         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($pres) | Out-Null
+     }
+     if ($pp -ne $null) {
+-        try { $pp.Quit() } catch {}
++        # Shared PowerPoint: close this presentation only; keep Application running.
+         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($pp) | Out-Null
+     }
+ }

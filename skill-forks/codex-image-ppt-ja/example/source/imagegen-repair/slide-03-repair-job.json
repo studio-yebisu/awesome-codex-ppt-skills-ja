@@ -1,0 +1,40 @@
+{
+  "slide": 3,
+  "title": "確認してから、チームへ共有する",
+  "prompt": "Edit target: the attached Japanese Git teaching slide. Make one local layout repair: give every instruction label in the four numbered rows on the left a clear whitespace gap before its white command box. Preserve the entire existing white/navy/teal/pale-blue visual style, bold Japanese typography, right-hand local-history→remote/team diagram, warning, title, four steps, exact command text, and bottom takeaway. Preserve all semantic content and a wide 16:9 canvas. Do not add text, change commands, add artifacts, or replace icons. Labels 2 and 4 may wrap into two balanced lines to create at least 40px breathing room before the command boxes. Wrap label 2 as 「記録する内容を」 then 「選ぶ」 and label 4 as 「共有先を確認して」 then 「送る」 if needed. Label 3 may wrap as 「差分を確認して」 then 「記録」. Keep label font weight strong and its size consistent with row1; keep code boxes aligned, with safe padding. Exact title: 確認してから、チームへ共有する. Row1 label: 変更を確認; code: git status / git diff. Row2 label: 記録する内容を選ぶ; code: git add README.md. Row3 label: 差分を確認して記録; commands on two lines: git diff --staged and git commit. Row4 label: 共有先を確認して送る; code: git push. Right diagram labels: ローカル履歴, リモート, チーム. Warning exact: pushの前に、共有先と作業ブランチを確認. Bottom exact: 小さく記録して、レビューを依頼する. Retain original full-slide infographic quality and make the instruction/code separation visibly more comfortable.",
+  "out": "slide_03.png",
+  "input_images": [
+    {
+      "path": "source/imagegen-repair/slide-03-before.png",
+      "role": "edit-target"
+    }
+  ],
+  "requires_context_images": false,
+  "expected_backend": "built-in image_gen.imagegen",
+  "sample_generation_method": {
+    "backend_used": "built-in image_gen.imagegen",
+    "tool_name": "image_gen.imagegen",
+    "mode": "generate",
+    "model": null,
+    "model_evidence": "Tool does not expose an exact model identifier.",
+    "size": "16:9 requested in prompt; inspect actual raster dimensions",
+    "input_context_preparation": "View generated sample before referencing it as style only",
+    "approval_authority": "production agent under user-authorized autonomous generation; no human visual approval claimed"
+  },
+  "generation_contract": {
+    "must_use_selected_image_backend": true,
+    "must_match_sample_generation_method": true,
+    "forbidden_final_image_methods": [
+      "local drawing/rendering scripts",
+      "Pillow-generated slides",
+      "SVG/HTML/CSS/canvas screenshots",
+      "python-pptx/PptxGenJS/native PPT layout screenshots",
+      "manually composited text/image overlays"
+    ],
+    "must_return": [
+      "backend_used",
+      "selected_source",
+      "qa_note"
+    ]
+  }
+}

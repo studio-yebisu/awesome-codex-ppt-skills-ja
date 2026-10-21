@@ -76,14 +76,14 @@ function contextualVisualPanel(slide, ShapeType, rect, s, style, asset = {}) {
   addText(slide, visualLabelFor(asset), { x: rect.x + 0.28, y: rect.y + 0.26, w: rect.w - 0.56, h: 0.22 }, style, "label", { color: style.accent, bold: true, fontSize: 10 });
   const message = binding.core || binding.title;
   addParagraph(slide, message, { x: rect.x + 0.3, y: rect.y + 0.72, w: rect.w - 0.6, h: 0.72 }, style, { fontSize: 17.2, bold: true, color: style.fg });
-  const items = (s.visual_examples || firstText(s)).slice(0, 3);
+  const items = lines(s.visual_examples || s.body).slice(0, 3);
   if (!items.length && binding.brief) items.push(binding.brief);
-  const baseY = rect.y + 1.78;
+  const baseY = rect.y + (s.native_vertical_spread ? 2.02 : 1.78);
   items.forEach((item, i) => {
-    const y = baseY + i * 0.82;
-    slide.addShape(ShapeType.ellipse, { x: rect.x + 0.34, y: y + 0.05, w: 0.34, h: 0.34, fill: { color: i === 0 ? style.accent : style.bg }, line: { color: style.accent, width: 0.8 } });
-    addText(slide, String(i + 1), { x: rect.x + 0.34, y: y + 0.13, w: 0.34, h: 0.13 }, style, "label", { align: "center", color: i === 0 ? "FFFFFF" : style.accent, bold: true, fontSize: 8.5 });
-    addParagraph(slide, item, { x: rect.x + 0.86, y, w: rect.w - 1.18, h: 0.46 }, style, { fontSize: 12.8, color: style.muted });
+    const y = baseY + i * (s.native_vertical_spread ? 0.96 : 0.82);
+    slide.addShape(ShapeType.ellipse, { x: rect.x + 0.34, y: y + 0.14, w: 0.34, h: 0.34, fill: { color: i === 0 ? style.accent : style.bg }, line: { color: style.accent, width: 0.8 } });
+    addText(slide, String(i + 1), { x: rect.x + 0.34, y: y + 0.14, w: 0.34, h: 0.34 }, style, "label", { align: "center", color: i === 0 ? "FFFFFF" : style.accent, bold: true, fontSize: 10, valign: "mid", paraSpaceAfterPt: 0 });
+    addParagraph(slide, item, { x: rect.x + 0.86, y, w: rect.w - 1.18, h: 0.62 }, style, { fontSize: 16, color: style.fg });
   });
 
 }
@@ -114,7 +114,8 @@ function addDeckBackground(slide, ShapeType, spec, style) {
 function drawBackground(slide, ShapeType, style, layout, idx, spec = {}) {
   const hasImageBackground = addDeckBackground(slide, ShapeType, spec, style);
   slide.background = { color: style.bg };
-  if (layout === "cover-hero" || layout === "closing-echo") {
+  if (layout === "closing-echo") return;
+  if (layout === "cover-hero") {
     if (!hasImageBackground) {
       slide.addShape(ShapeType.rect, { x: 0, y: 0, w: 13.333, h: 7.5, fill: { color: style.bg }, line: { color: style.bg } });
     }
@@ -125,12 +126,19 @@ function drawBackground(slide, ShapeType, style, layout, idx, spec = {}) {
 }
 
 function cover(slide, ShapeType, s, spec, style, asset, variant = "hero") {
-  drawBackground(slide, ShapeType, style, "cover-hero", 0, spec);
+  if (variant !== "minimal") drawBackground(slide, ShapeType, style, "cover-hero", 0, spec);
   addKicker(slide, spec.kicker || spec.use_case || "PRESENTATION", { x: 0.78, y: 0.86, w: 5.1, h: 0.25 }, style);
-  addText(slide, titleText(s, spec), { x: 0.78, y: 1.42, w: 6.5, h: 1.48 }, style, "coverTitle", { fontSize: variant === "minimal" ? 50 : 45, fit: "shrink" });
+  addText(slide, titleText(s, spec), { x: 0.78, y: 1.42, w: 6.5, h: 1.48 }, style, "coverTitle", { fontSize: variant === "minimal" ? 40 : 45, fit: "shrink" });
   addParagraph(slide, subText(s, spec), { x: 0.82, y: 3.18, w: 5.75, h: 0.78 }, style, { fontSize: 18, color: style.muted });
   hairline(slide, ShapeType, 0.82, 4.37, 1.28, style, style.accent);
-  if (variant === "minimal") return;
+  if (variant === "minimal") {
+    if (s.closing_checks) {
+      addText(slide, "試行前の確認事項", {x:7.6,y:1.58,w:4.7,h:0.35}, style, "label", {fontSize:15,bold:true,color:style.accent});
+      numberedPoints(slide, ShapeType, s.closing_checks, {x:7.6,y:2.2,w:4.7,h:3.2}, style, {max:3,fontSize:18,highlightIndex:-1});
+      addParagraph(slide,"すべて未確定の相談項目",{x:7.6,y:5.9,w:4.7,h:0.45},style,{fontSize:15,color:style.muted});
+    }
+    return;
+  }
   const rect = { x: 7.32, y: 0.68, w: 4.95, h: 5.98 };
   if (hasImageAsset(asset)) {
     addIntegratedImage(slide, ShapeType, asset?.output_path, rect, style, asset?.integration_treatment || "masked editorial crop");
@@ -148,7 +156,15 @@ function defaultHeader(slide, ShapeType, s, spec, style, idx, total) {
 function agenda(slide, ShapeType, s, spec, style, idx, total) {
   defaultHeader(slide, ShapeType, s, spec, style, idx, total);
   const items = firstText(s).slice(0, 6);
-  numberedPoints(slide, ShapeType, items, { x: 1.1, y: 1.65, w: 8.8, h: 4.6 }, style, { max: 6, fontSize: 18 });
+  if (s.native_two_column_fields) {
+    items.slice(0,4).forEach((item,i)=> {
+      const x=1.05+(i%2)*6.0, y=1.8+Math.floor(i/2)*(s.native_vertical_spread?2.6:2.2);
+      const [label,...detail]=item.split("｜");
+      hairline(slide,ShapeType,x,y,5.2,style);
+      addText(slide,label,{x,y:y+0.24,w:5.2,h:0.35},style,"label",{fontSize:16,bold:true,color:style.accent});
+      addParagraph(slide,detail.join("｜"),{x,y:y+0.88,w:5.2,h:0.92},style,{fontSize:23});
+    });
+  } else numberedPoints(slide, ShapeType, items, { x: 1.1, y: 1.65, w: 8.8, h: 4.6 }, style, { max: 6, fontSize: 18 });
 }
 
 function section(slide, ShapeType, s, spec, style, idx, total) {
@@ -162,17 +178,17 @@ function section(slide, ShapeType, s, spec, style, idx, total) {
 
 function statement(slide, ShapeType, s, spec, style, idx, total) {
   defaultHeader(slide, ShapeType, { ...s, title: spec.kicker || "企画の視点" }, spec, style, idx, total);
-  addText(slide, titleText(s, spec), { x: 1.02, y: 1.62, w: 11.2, h: 1.65 }, style, "statement", { fontSize: 46, color: style.fg });
+  addText(slide, titleText(s, spec), { x: 1.02, y: 1.62, w: 9.9, h: 1.22 }, style, "statement", { fontSize: 36, color: style.fg });
   insightBlock(slide, ShapeType, { x: 1.05, y: 3.38, w: 8.2, h: 1.15 }, "企画の意図", subText(s, spec) || firstText(s)[0] || "用一句明确判断建立本页焦点。", style);
-
+  visualMotif(slide, ShapeType, { x: 10.1, y: 1.58, w: 2.25, h: 3.48 }, style, "grid");
 }
 
 function textVisual(slide, ShapeType, s, spec, style, asset, idx, total, flip = false) {
   defaultHeader(slide, ShapeType, s, spec, style, idx, total);
   const textRect = flip ? { x: 7.25, y: 1.58, w: 4.8, h: 4.55 } : { x: 0.92, y: 1.58, w: 5.15, h: 4.55 };
-  const imgRect = flip ? { x: 0.92, y: 1.52, w: 5.72, h: 4.82 } : { x: 6.75, y: 1.52, w: 5.62, h: 4.82 };
+  const imgRect = flip ? { x: 0.92, y: 1.52, w: 5.72, h: 4.82 } : { x: 6.75, y: 1.52, w: 5.62, h: s.native_vertical_spread ? 5.22 : 4.82 };
   addParagraph(slide, subText(s, spec), { ...textRect, h: 0.72 }, style, { fontSize: 18, color: style.fg, bold: true });
-  numberedPoints(slide, ShapeType, firstText(s), { x: textRect.x, y: textRect.y + 1.05, w: textRect.w, h: 3.2 }, style, { max: 4, fontSize: 15.8 });
+  numberedPoints(slide, ShapeType, firstText(s), { x: textRect.x, y: textRect.y + 1.05, w: textRect.w, h: s.native_vertical_spread ? 3.8 : 3.2 }, style, { max: 4, fontSize: 15.8 });
   if (hasImageAsset(asset)) {
     addIntegratedImage(slide, ShapeType, asset?.output_path, imgRect, style, asset?.integration_treatment || "60/40 split");
   } else {
@@ -183,14 +199,14 @@ function textVisual(slide, ShapeType, s, spec, style, asset, idx, total, flip = 
 function threePoint(slide, ShapeType, s, spec, style, idx, total) {
   defaultHeader(slide, ShapeType, s, spec, style, idx, total);
   const items = firstText(s).slice(0, 3);
-  insightBlock(slide, ShapeType, { x: 0.9, y: 1.55, w: 3.05, h: 3.85 }, "KEY MESSAGE", subText(s, spec) || items[0] || "", style);
+  insightBlock(slide, ShapeType, { x: 0.9, y: 1.55, w: 3.05, h: 3.85 }, "体験の要点", subText(s, spec) || items[0] || "", style);
   const rect = { x: 4.45, y: 1.55, w: 7.72, h: 3.85 };
   const gap = 0.22;
   const h = (rect.h - gap * 2) / 3;
   items.forEach((item, i) => {
     const y = rect.y + i * (h + gap);
     surface(slide, ShapeType, { x: rect.x, y, w: rect.w, h }, style, { fill: i === 0 ? style.surface2 : style.surface, line: style.line, radius: 0.02 });
-    addText(slide, `0${i + 1}`, { x: rect.x + 0.22, y: y + 0.25, w: 0.5, h: 0.24 }, style, "label", { color: style.accent, bold: true, fontSize: 11 });
+    addText(slide, `0${i + 1}`, { x: rect.x + 0.22, y, w: 0.5, h }, style, "label", { color: style.accent, bold: true, fontSize: 13, valign: "mid", paraSpaceAfterPt: 0 });
     addParagraph(slide, item, { x: rect.x + 0.86, y: y + 0.18, w: rect.w - 1.14, h: h - 0.26 }, style, { fontSize: 16.2 });
   });
 }
@@ -209,21 +225,35 @@ function chart(slide, ShapeType, s, spec, style, idx, total, hero = false) {
 function process(slide, ShapeType, s, spec, style, idx, total, cycle = false) {
   defaultHeader(slide, ShapeType, s, spec, style, idx, total);
   const items = firstText(s).slice(0, cycle ? 4 : 5);
-  progressStack(slide, ShapeType, { x: 1.0, y: 2.0, w: 10.8, h: 1.0 }, style, items);
-  numberedPoints(slide, ShapeType, items, { x: 1.05, y: 3.42, w: 10.2, h: 2.15 }, style, { max: 5, fontSize: 14.6 });
+  progressStack(slide, ShapeType, { x: 1.0, y: 1.8, w: 10.8, h: 1.0 }, style, lines(s.step_labels || items));
+  if (s.align_step_details) {
+    items.forEach((item,i)=> {
+      const detail=item.includes("｜")?item.split("｜").slice(1).join("｜"):item;
+      numberedPoints(slide,ShapeType,[detail],{x:1.0+i*2.725,y:3.1,w:2.5,h:2.65},style,{max:1,fontSize:18,startIndex:i,highlightIndex:items.length-1});
+    });
+  } else numberedPoints(slide, ShapeType, items, { x: 1.05, y: 3.15, w: 10.2, h: 2.8 }, style, { max: 5, fontSize: 19, highlightIndex:items.length-1 });
 }
 
 function comparison(slide, ShapeType, s, spec, style, idx, total, beforeAfter = false) {
   defaultHeader(slide, ShapeType, s, spec, style, idx, total);
   const items = firstText(s);
-  const left = { x: 0.95, y: 1.62, w: 5.35, h: 4.15 };
-  const right = { x: 6.98, y: 1.62, w: 5.35, h: 4.15 };
+  const left = { x: 0.95, y: 1.62, w: 5.35, h: 3.75 };
+  const right = { x: 6.98, y: 1.62, w: 5.35, h: 3.75 };
   surface(slide, ShapeType, left, style, { fill: style.surface, line: style.line, radius: 0.02 });
   surface(slide, ShapeType, right, style, { fill: style.surface2, line: style.accent, radius: 0.02, lineWidth: 1.1 });
   addText(slide, beforeAfter ? "いつもの読書" : "これまで", { x: left.x + 0.28, y: left.y + 0.26, w: left.w - 0.56, h: 0.26 }, style, "label", { bold: true, color: style.muted });
   addText(slide, beforeAfter ? "編集室の読書" : "編集室", { x: right.x + 0.28, y: right.y + 0.26, w: right.w - 0.56, h: 0.26 }, style, "label", { bold: true, color: style.accent });
-  addBullets(slide, items.slice(0, 3), { x: left.x + 0.34, y: left.y + 0.9, w: left.w - 0.7, h: 2.8 }, style, { max: 3, fontSize: 15.2 });
-  addBullets(slide, items.slice(3, 6).length ? items.slice(3, 6) : items.slice(0, 3), { x: right.x + 0.34, y: right.y + 0.9, w: right.w - 0.7, h: 2.8 }, style, { max: 3, fontSize: 15.2 });
+  if (s.comparison_axes) {
+    [left,right].forEach((r,col)=>s.comparison_axes.slice(0,3).forEach((axis,row)=> {
+      const y=r.y+0.82+row*0.98;
+      addText(slide,axis,{x:r.x+0.32,y,w:r.w-0.64,h:0.22},style,"label",{fontSize:11.5,color:style.muted});
+      addParagraph(slide,items[col*3+row]||"",{x:r.x+0.32,y:y+0.27,w:r.w-0.64,h:0.49},style,{fontSize:18});
+      if(row<2) hairline(slide,ShapeType,r.x+0.32,y+0.88,r.w-0.64,style);
+    }));
+  } else {
+  addBullets(slide, items.slice(0, 3), { x: left.x + 0.34, y: left.y + 0.9, w: left.w - 0.7, h: 2.5 }, style, { max: 3, fontSize: 20, valign: "top", paraSpaceAfterPt: 24 });
+  addBullets(slide, items.slice(3, 6).length ? items.slice(3, 6) : items.slice(0, 3), { x: right.x + 0.34, y: right.y + 0.9, w: right.w - 0.7, h: 2.5 }, style, { max: 3, fontSize: 20, valign: "top", paraSpaceAfterPt: 24 });
+  }
 }
 
 function matrix(slide, ShapeType, s, spec, style, idx, total) {
@@ -242,22 +272,23 @@ function matrix(slide, ShapeType, s, spec, style, idx, total) {
 
 function quote(slide, ShapeType, s, spec, style, idx, total) {
   defaultHeader(slide, ShapeType, { ...s, title: spec.kicker || "企画の宣言" }, spec, style, idx, total);
-  addText(slide, `“${titleText(s, spec)}”`, { x: 1.1, y: 1.55, w: 10.8, h: 1.9 }, style, "statement", { fontSize: 52 });
+  addText(slide, `“${titleText(s, spec)}”`, { x: 1.1, y: 1.55, w: 9.7, h: 1.25 }, style, "statement", { fontSize: 34 });
   addParagraph(slide, subText(s, spec) || firstText(s)[0] || "", { x: 1.18, y: 3.25, w: 6.7, h: 0.72 }, style, { fontSize: 18, color: style.muted });
-
+  visualMotif(slide, ShapeType, { x: 9.35, y: 3.0, w: 2.7, h: 2.15 }, style, "stack");
 }
 
 function roadmap(slide, ShapeType, s, spec, style, idx, total) {
   defaultHeader(slide, ShapeType, s, spec, style, idx, total);
   const items = firstText(s).slice(0, 5);
-  const y = 3.05;
+  const y = 2.65;
   hairline(slide, ShapeType, 1.2, y, 10.5, style, style.accent);
   items.forEach((item, i) => {
-    const x = 1.2 + i * 2.55;
+    const x = 1.85 + i * 2.78;
     slide.addShape(ShapeType.ellipse, { x: x - 0.1, y: y - 0.1, w: 0.2, h: 0.2, fill: { color: i === 0 ? style.accent : style.surface }, line: { color: style.accent, width: 1 } });
     addText(slide, `0${i + 1}`, { x: x - 0.24, y: y - 0.58, w: 0.48, h: 0.2 }, style, "label", { align: "center", color: style.accent, bold: true, fontSize: 10 });
-    addParagraph(slide, item, { x: x - 0.65, y: y + 0.36, w: 1.5, h: 0.75 }, style, { fontSize: 12.8 });
+    addParagraph(slide, item, { x: x - 1.05, y: y + 0.36, w: 2.1, h: 1.75 }, style, { fontSize: 17, align: "center", valign: "top" });
   });
+  if (s.roadmap_note) insightBlock(slide, ShapeType, { x: 1.05, y: 4.9, w: 10.9, h: 1.0 }, "実施前に確認", s.roadmap_note, style);
 }
 
 export function drawSlide(slide, ShapeType, s, context) {

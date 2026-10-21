@@ -1,0 +1,40 @@
+{
+  "author": "Codex",
+  "archive_under_test": "design-dna-example-ja.zip",
+  "archive_sha256_before_receipt_added": "8863eb287cdc2d67dcbf3d00b124b96fca0cd82b5592f4cdc623ec2e92dcffd4",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "source/rebuild.py"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "Built 6 HTML slides from extracted DNA tokens and Page Specs. Run the original Node layout guard next.\n"
+    },
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "source/upstream/scripts/ppt-layout-guard.js",
+        "index.html",
+        "--report",
+        "layout-guard-report.json"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "PASS index.html: 6 slides, 27 zones checked.\n"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "index.html",
+      "published_sha256": "5c8d50eeb9c3906552962b970e69d10eccbc529dc90299976b97139fe505aef3",
+      "replayed_sha256": "5c8d50eeb9c3906552962b970e69d10eccbc529dc90299976b97139fe505aef3",
+      "equal": true
+    }
+  ],
+  "all_commands_exit_zero": true,
+  "published_artifact_byte_identical": true,
+  "environment_scope": "Replayed from fresh extraction using existing compatible Python/Node/browser runtimes. Beatdeck reuses the locked existing node_modules through a junction; a fresh npm ci is not claimed.",
+  "independent_visual_review": "Not an evaluator score. The public current output was separately read in full."
+}

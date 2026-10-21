@@ -1,11 +1,1 @@
-# 別の題材へ置き換えて使える依頼文
-
-eluckydog/ppt-scene-graph固定commit646e3dc4b72a444278d320c8984d5986d7fbf4bbの実APIを使い、日本語6枚「遠くの席へ、伝わる資料。」を作ってください。説明用の自作原稿で、距離による可読性改善や最適pt値を測定したとは述べません。
-
-input/outline.jsonを元OutlineSpec/SlideSpecへ読み、create_from_outlineでdesignhub_warmのdraft.pptxを作成。その同じ本文を元beautifyでprojectionへ変え、deck.pptxを保存してください。元beautifyは短いkeyを拒否するため、load_theme('projection').nameを渡します。original cover/section/content/ending factoryと枠、色の役割を用い、概念図factoryがないので原典外のアートは追加しません。
-
-元vendorのparts/欠落は同版公式python-pptx1.0.2のparts8ファイルだけをruntimeへ補完したキットを利用し、元原本を保全。URL/version/hash/MIT原文・追加一覧と日本語fontの局所diffを保持してください。DesignSystemの字体をBIZ UDPGothicに対応し、a:ea/a:cs/langも設定。TTF/OFLは公式固定配布だけを使います。
-
-parse_slideは宣言されていても実装/exportがないため使ったと称しません。evaluate採点も不要です。必要な原典生成、PowerPoint通常export、初回表紙だけの表示、短いSKILL検証で十分。全頁詳細検査・独立review・構造監査・全ZIP再実行は不要です。共有PowerPointではApplication.Quitを呼ばず、自分のdeckだけCloseします。
-
-別の題材ではinput/MANUSCRIPT.mdとoutline.jsonを置き換えます。大きい文字・短い見出し・少ない本文という生成設定を、実証された最適値として表現しないでください。
+大綱input/outline.jsonの本文を使い、原典create_from_outlineで暖色draftを作り、元beautifyでprojectionへ変更してください。章番号と章題の余白を確保し、元APIが残す旧装飾色は明示した局所adapterで移行する。同じ頁の前後をPowerPointで描画し、全6頁を目視。原典・diff・MIT/OFL・欠落vendor補完記録を保持。parse_slideはこのpinに実装がなく、抽出や読みやすさの実測を称しません。元evaluateは診断として実行し、独立Kimi K3/Opus5.5評価とは区別してください。

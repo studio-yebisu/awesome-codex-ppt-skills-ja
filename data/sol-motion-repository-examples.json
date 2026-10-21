@@ -23,8 +23,8 @@
     "method": "Original viewport-base.css included verbatim; html-template.md stage and SlidePresentation architecture directly adapted; animation-patterns.md staggered editorial reveal. Bespoke Japanese composition authored with CSS/SVG, no common renderer.",
     "sample_notice": "架空の図書館企画。実在の施設、実施決定、利用実績ではありません。",
     "editability": "html_css_svg_js",
-    "status": "light_check_complete",
-    "execution_status": "light_check_complete",
+    "status": "all_pages_visual_checked",
+    "execution_status": "all_pages_visual_and_inline_edit_checked",
     "navigation": "native-runtime-bridge",
     "artifact_download": "downloads/sol-motion-example-ja.zip",
     "source_download": "downloads/sol-motion-example-ja.zip",
@@ -50,11 +50,29 @@
       "width": 1920,
       "height": 1080
     },
-    "preview_image_count": 2,
-    "preview_image_notice": "HTML全6ページのうち、静止画は表紙と選書ページの代表2枚です。",
+    "preview_image_count": 6,
+    "preview_image_notice": "全6頁の実ブラウザー表示。独立再評価は未了。",
     "representative_previews": [
       "examples/repositories/sol-motion-showcase/render/slide-01.png",
       "examples/repositories/sol-motion-showcase/render/slide-04.png"
-    ]
+    ],
+    "pages": [
+      "examples/repositories/sol-motion-showcase/render/slide-01.png",
+      "examples/repositories/sol-motion-showcase/render/slide-02.png",
+      "examples/repositories/sol-motion-showcase/render/slide-03.png",
+      "examples/repositories/sol-motion-showcase/render/slide-04.png",
+      "examples/repositories/sol-motion-showcase/render/slide-05.png",
+      "examples/repositories/sol-motion-showcase/render/slide-06.png"
+    ],
+    "editability_proof": {
+      "before_path": "examples/repositories/sol-motion-showcase/render/effect-page-06-after.jpg",
+      "after_path": "examples/repositories/sol-motion-showcase/render/inline-edit-reopened.jpg",
+      "before_label": "元の本文",
+      "after_label": "本文を変えて保存したHTML",
+      "artifact_path": "examples/repositories/sol-motion-showcase/qa/inline-edited.html",
+      "artifact_label": "変更したHTMLを取得 ↓",
+      "report_path": "examples/repositories/sol-motion-showcase/qa/inline-edit.json",
+      "description": "Eキーで本文を直し、HTMLとして保存。別のファイルを開き直し、変更した本文が残ることを確認した。"
+    }
   }
 ]

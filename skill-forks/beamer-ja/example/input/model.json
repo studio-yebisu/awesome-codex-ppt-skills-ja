@@ -1,0 +1,52 @@
+{
+  "notice": "学習用の一定時間モデル。実測ではありません。",
+  "processing_seconds": 5,
+  "arrival_intervals_seconds": [
+    3,
+    4,
+    6
+  ],
+  "jobs": 8,
+  "formula": "w_i = (i-1)*max(0,p-d)",
+  "chart": [
+    {
+      "interval_seconds": 3,
+      "waiting_seconds": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14
+      ]
+    },
+    {
+      "interval_seconds": 4,
+      "waiting_seconds": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "interval_seconds": 6,
+      "waiting_seconds": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ]
+}

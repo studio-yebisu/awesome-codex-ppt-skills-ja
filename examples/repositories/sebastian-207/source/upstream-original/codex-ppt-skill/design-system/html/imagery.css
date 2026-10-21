@@ -1,0 +1,58 @@
+.image-frame { overflow: hidden; background: var(--deck-surface-2); border: 1px solid var(--deck-line); }
+.image-frame img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.image-frame.tinted img { filter: saturate(.72) contrast(1.04); }
+.image-frame.semantic-image { margin: 0; box-shadow: none; }
+.image-frame.semantic-image.full-bleed img,
+.image-frame.semantic-image.atmospheric img { object-fit: cover; }
+.image-frame.semantic-image.contain img,
+.image-frame.semantic-image.diagram img { object-fit: contain; padding: 24px; background: var(--deck-surface-2); }
+.semantic-visual {
+  overflow: hidden;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--deck-accent) 11%, transparent), transparent 45%),
+    var(--deck-surface-2);
+  border: 1px solid var(--deck-line);
+  padding: 46px 50px;
+}
+.visual-label {
+  font-family: var(--font-heading);
+  font-size: 18px;
+  letter-spacing: 0;
+  color: var(--deck-accent);
+  font-weight: 800;
+}
+.visual-message {
+  margin-top: 52px;
+  max-width: 82%;
+  font-family: var(--font-heading);
+  font-size: 34px;
+  line-height: 1.18;
+  font-weight: 800;
+  color: var(--deck-fg);
+}
+.semantic-visual ol {
+  display: grid;
+  gap: 20px;
+  margin: 60px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.semantic-visual li {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 18px;
+  align-items: start;
+  font-size: 24px;
+  line-height: 1.32;
+  color: var(--deck-muted);
+}
+.semantic-visual li b {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--deck-accent);
+  color: #fff;
+  font-size: 15px;
+}

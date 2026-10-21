@@ -1,0 +1,258 @@
+{
+  "slug": "incident-review",
+  "name": "Incident Review",
+  "tagline": "A sober technical postmortem with severity cover, impact, detection log, timeline, causal chain, recovery evidence and owned actions.",
+  "mood": [
+    "serious",
+    "clear",
+    "accountable"
+  ],
+  "occasion": [
+    "incident postmortem",
+    "service reliability review",
+    "operational learning"
+  ],
+  "tone": [
+    "technical",
+    "precise",
+    "non-blaming"
+  ],
+  "formality": "high",
+  "density": "medium-high",
+  "scheme": "mixed",
+  "palette": {
+    "navy": "#13253B",
+    "blue": "#24577A",
+    "paper": "#F3F5F2",
+    "white": "#FFFFFF",
+    "ink": "#1A2E3D",
+    "line": "#ADC0C8",
+    "orange": "#F5A340",
+    "red": "#B74D3B",
+    "pale": "#D9E8E8",
+    "description": "Operational navy and cool paper with amber severity markers and restrained red cause emphasis."
+  },
+  "typography": {
+    "display": "IBM Plex Sans",
+    "body": "IBM Plex Sans",
+    "style": "Clear sans-serif incident headlines and monospaced timestamps, status and technical evidence."
+  },
+  "best_for": "Blameless incident reviews needing timeline, impact scope, root cause, response, recovery verification and action owners.",
+  "avoid_for": "Marketing testimonials, unverified production claims, or visually playful launch decks.",
+  "slide_count": 9,
+  "features": {
+    "format": "single-file-html",
+    "navigation": true,
+    "keyboard_navigation": true,
+    "touch_navigation": true,
+    "progress_bar": true,
+    "slide_counter": false,
+    "aspect_ratio": "fullscreen-responsive"
+  },
+  "content_limits": {
+    "max_title_chars": 70,
+    "max_subtitle_chars": 170,
+    "max_body_chars_per_slide": 700,
+    "max_bullets": 6,
+    "max_cards": 4,
+    "recommended_slide_count_min": 7,
+    "recommended_slide_count_max": 13
+  },
+  "layouts": [
+    "severity-cover",
+    "impact-summary",
+    "detection-signal",
+    "event-timeline",
+    "causal-chain",
+    "response-actions",
+    "recovery-verification",
+    "preventive-action-table",
+    "learning-close"
+  ],
+  "layout_slots": {
+    "severity-cover": [
+      {
+        "name": "severity",
+        "type": "label",
+        "required": true,
+        "description": "Replace the severity in this layout."
+      },
+      {
+        "name": "headline",
+        "type": "text",
+        "required": false,
+        "description": "Replace the headline in this layout."
+      },
+      {
+        "name": "incident_window",
+        "type": "text",
+        "required": false,
+        "description": "Replace the incident window in this layout."
+      },
+      {
+        "name": "summary",
+        "type": "text",
+        "required": false,
+        "description": "Replace the summary in this layout."
+      },
+      {
+        "name": "operator_photo",
+        "type": "image",
+        "description": "Original editorial workspace photograph on the cover."
+      }
+    ],
+    "impact-summary": [
+      {
+        "name": "headline",
+        "type": "text",
+        "required": true,
+        "description": "Replace the headline in this layout."
+      },
+      {
+        "name": "impact_metrics",
+        "type": "text",
+        "required": false,
+        "description": "Replace the impact metrics in this layout."
+      },
+      {
+        "name": "impact_scope",
+        "type": "text",
+        "required": false,
+        "description": "Replace the impact scope in this layout."
+      }
+    ],
+    "detection-signal": [
+      {
+        "name": "first_signal",
+        "type": "text",
+        "required": true,
+        "description": "Replace the first signal in this layout."
+      },
+      {
+        "name": "event_log",
+        "type": "text",
+        "required": false,
+        "description": "Replace the event log in this layout."
+      },
+      {
+        "name": "detection_summary",
+        "type": "text",
+        "required": false,
+        "description": "Replace the detection summary in this layout."
+      }
+    ],
+    "event-timeline": [
+      {
+        "name": "timeline_events",
+        "type": "text",
+        "required": true,
+        "description": "Replace the timeline events in this layout."
+      },
+      {
+        "name": "event_times",
+        "type": "text",
+        "required": false,
+        "description": "Replace the event times in this layout."
+      }
+    ],
+    "causal-chain": [
+      {
+        "name": "trigger",
+        "type": "text",
+        "required": true,
+        "description": "Replace the trigger in this layout."
+      },
+      {
+        "name": "amplifier",
+        "type": "text",
+        "required": false,
+        "description": "Replace the amplifier in this layout."
+      },
+      {
+        "name": "visible_effect",
+        "type": "text",
+        "required": false,
+        "description": "Replace the visible effect in this layout."
+      },
+      {
+        "name": "contributing_condition",
+        "type": "text",
+        "required": false,
+        "description": "Replace the contributing condition in this layout."
+      }
+    ],
+    "response-actions": [
+      {
+        "name": "response_tracks",
+        "type": "text",
+        "required": true,
+        "description": "Replace the response tracks in this layout."
+      },
+      {
+        "name": "actions",
+        "type": "text",
+        "required": false,
+        "description": "Replace the actions in this layout."
+      }
+    ],
+    "recovery-verification": [
+      {
+        "name": "recovery_metric",
+        "type": "text",
+        "required": true,
+        "description": "Replace the recovery metric in this layout."
+      },
+      {
+        "name": "verification_checks",
+        "type": "text",
+        "required": false,
+        "description": "Replace the verification checks in this layout."
+      }
+    ],
+    "preventive-action-table": [
+      {
+        "name": "action_rows",
+        "type": "text",
+        "required": true,
+        "description": "Replace the action rows in this layout."
+      },
+      {
+        "name": "owners",
+        "type": "text",
+        "required": false,
+        "description": "Replace the owners in this layout."
+      },
+      {
+        "name": "due_dates",
+        "type": "text",
+        "required": false,
+        "description": "Replace the due dates in this layout."
+      },
+      {
+        "name": "proof_of_done",
+        "type": "text",
+        "required": false,
+        "description": "Replace the proof of done in this layout."
+      }
+    ],
+    "learning-close": [
+      {
+        "name": "learning",
+        "type": "text",
+        "required": true,
+        "description": "Replace the learning in this layout."
+      },
+      {
+        "name": "next_review",
+        "type": "text",
+        "required": false,
+        "description": "Replace the next review in this layout."
+      }
+    ]
+  },
+  "source_inspiration": {
+    "name": "Beautiful.ai Incident Report",
+    "url": "https://www.beautiful.ai/presentations/incident-report",
+    "notes": "Independent, source-inspired operational narrative with an original generated workspace photograph and original fictional data; source image was not used."
+  }
+}

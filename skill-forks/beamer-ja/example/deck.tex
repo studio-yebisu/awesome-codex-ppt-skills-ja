@@ -1,0 +1,92 @@
+% Derived from upstream styles/warm-editorial/template-169.tex at e63b61b140a00596e5260ec7611e42bfde7efb5f.
+\documentclass[aspectratio=169,10pt]{beamer}
+\input{font-paths.tex}
+\input{theme-portable.tex}
+\usepackage{xeCJK}
+\setCJKmainfont[Path=fonts/shipporimincho/,BoldFont=ShipporiMincho-Bold.ttf]{ShipporiMincho-Regular.ttf}
+\setCJKsansfont[Path=fonts/zenkakugothicnew/,BoldFont=ZenKakuGothicNew-Bold.ttf]{ZenKakuGothicNew-Regular.ttf}
+% Japanese type adapter and user-requested ink navy; original macro geometry remains.
+\definecolor{BMEInk}{HTML}{243746}
+\definecolor{BMEBrown}{HTML}{243746}
+\newcommand{\Base}[3]{\fill[BMEIvory] (current page.south west) rectangle (current page.north east);\WarmFrameHeader{#1}{#2}{#3}}
+\newcommand{\Foot}{\WarmFrameFooter{学習用の仮定・試算 / 一つの窓口・受付順・一定処理時間 / 実測値ではありません}}
+\tikzset{jptext/.style={anchor=north west,inner sep=0pt,align=left,font=\sffamily\fontsize{9}{13}\selectfont,text=BMEInk},jpsmall/.style={font=\sffamily\fontsize{7}{10}\selectfont,text=BMEMuted}}
+\begin{document}
+
+% Cover geometry follows the original Warm Editorial starter.
+\begin{frame}[plain]
+\begin{tikzpicture}[remember picture,overlay]
+\fill[BMEIvory] (current page.south west) rectangle (current page.north east);
+\fill[BMETerracotta] ([xshift=.88cm,yshift=-1.22cm]current page.north west) rectangle ++(.14cm,-.86cm);
+\node[anchor=north west,inner sep=0pt,text=BMETerracotta,font=\sffamily\fontsize{7}{9}\selectfont\bfseries] at ([xshift=1.24cm,yshift=-1.25cm]current page.north west) {SYSTEMS / 学習ノート};
+\node[anchor=north west,inner sep=0pt,text=BMEBrown,font=\rmfamily\fontsize{29}{37}\selectfont\bfseries,text width=8cm] at ([xshift=1.22cm,yshift=-2.60cm]current page.north west) {待ち時間の\\しくみ};
+\node[jptext,text width=8cm,text=BMEMuted] at ([xshift=1.25cm,yshift=-5.15cm]current page.north west) {仕事の速さと、届く間隔。\\二つの時間から、列の長さを考える。};
+\draw[BMEStone,line width=.55pt] ([xshift=1.25cm,yshift=-6.45cm]current page.north west) -- ++(7.3cm,0);
+\node[anchor=south west,inner sep=0pt,jpsmall] at ([xshift=1.25cm,yshift=.72cm]current page.south west) {仮定に基づく5枚の教材 / 2026.10};
+\begin{scope}[shift={([xshift=11.2cm,yshift=-3.1cm]current page.north west)}]
+\foreach \y/\qname in {0/qone,-.9/qtwo,-1.8/qthree} {\node[warm/node,minimum width=2.5cm,minimum height=.65cm] (\qname) at (0,\y) {待っている仕事};}
+\node[warm/node,draw=BMETerracotta,fill=BMESand,minimum width=2.5cm] (service) at (0,-3.25) {窓口で処理};
+\draw[warm/highlight] (qthree.south) -- (service.north);
+\node[jpsmall] at (0,.75) {順番が来るまで待つ};
+\end{scope}
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}[plain]\begin{tikzpicture}[remember picture,overlay]
+\Base{一つの窓口に、仕事が届く}{MODEL / 前提}{02}
+\node[jptext,text width=13cm] at ([xshift=.98cm,yshift=-1.72cm]current page.north west) {窓口は一つ。先に届いた仕事から、1件ずつ処理する。};
+\begin{scope}[shift={([xshift=.98cm,yshift=-3.25cm]current page.north west)}]
+\node[warm/terminal,minimum width=2.3cm,font=\sffamily\fontsize{9}{12}\selectfont] (a) at (1.2,0) {到着};
+\node[warm/node,minimum width=2.3cm,font=\sffamily\fontsize{9}{12}\selectfont] (w) at (5,0) {順番待ち};
+\node[warm/node,fill=BMESand,draw=BMETerracotta,minimum width=2.3cm,font=\sffamily\fontsize{9}{12}\selectfont] (p) at (8.8,0) {処理};
+\node[warm/terminal,minimum width=2.3cm,font=\sffamily\fontsize{9}{12}\selectfont] (f) at (12.6,0) {完了};
+\draw[warm/flow] (a.east) -- (w.west);\draw[warm/flow] (w.east) -- (p.west);\draw[warm/flow] (p.east) -- (f.west);
+\end{scope}
+\draw[BMEStone,line width=.45pt] ([xshift=.98cm,yshift=-4.65cm]current page.north west) -- ++(13.8cm,0);
+\node[jptext,text width=5.8cm] at ([xshift=1.02cm,yshift=-5.05cm]current page.north west) {\color{BMETerracotta}\bfseries 処理時間 $p=5$ 秒\par\vspace{.25cm}\WarmBodyText 1件の仕事が、窓口を使う時間。\\途中で割り込まず、毎回同じ長さ。};
+\node[jptext,text width=6cm] at ([xshift=8cm,yshift=-5.05cm]current page.north west) {\color{BMESage}\bfseries 到着間隔 $d$ 秒\par\vspace{.25cm}\WarmBodyText 次の仕事が届くまでの時間。\\この教材では一定の間隔にする。};
+\Foot\end{tikzpicture}\end{frame}
+
+\begin{frame}[plain]\begin{tikzpicture}[remember picture,overlay]
+\Base{待ち時間を式にする}{RECURRENCE / 計算}{03}
+% Heading and each formula are separate nodes; \strut gives every formula the same WarmDisplayMath line box.
+\node[jptext,text width=6cm] at ([xshift=.98cm,yshift=-1.8cm]current page.north west) {\bfseries 前の仕事が終わったら、始める};
+\node[jptext] at ([xshift=.98cm,yshift=-2.45cm]current page.north west) {\WarmDisplayMath\strut$s_i=\max(a_i,f_{i-1})$};
+\node[jptext] at ([xshift=.98cm,yshift=-3.20cm]current page.north west) {\WarmDisplayMath\strut$f_i=s_i+p$};
+\node[jptext] at ([xshift=.98cm,yshift=-3.95cm]current page.north west) {\WarmDisplayMath\strut$w_i=s_i-a_i$};
+\node[jptext,text width=6.2cm] at ([xshift=8cm,yshift=-1.85cm]current page.north west) {\WarmBodyText $a_i$：到着時刻　$s_i$：開始時刻\\$f_i$：完了時刻　$w_i$：待ち時間\par\vspace{.45cm}最初の仕事は時刻0に到着。\\初期値は $f_0=0$ とする。};
+\draw[BMEStone,line width=.45pt] ([xshift=.98cm,yshift=-4.95cm]current page.north west) -- ++(13.8cm,0);
+\node[jptext,text width=13cm] at ([xshift=1cm,yshift=-5.25cm]current page.north west) {例：3件目は8秒に到着。前の仕事は10秒に完了。};
+\begin{scope}[shift={([xshift=2cm,yshift=-6.85cm]current page.north west)}]
+\draw[warm/flow] (0,0) -- (10.8,0);
+\foreach \x/\t in {0/8,3/10,10.5/15} {\draw[BMEInk] (\x,-.1) -- (\x,.1);\node[jpsmall,below] at (\x,-.2) {\t 秒};}
+\draw[BMESage,line width=3pt] (0,.3) -- (3,.3);\draw[BMETerracotta,line width=3pt] (3,.3) -- (10.5,.3);
+\node[jpsmall,above] at (1.5,.5) {待ち $2$ 秒};\node[jpsmall,above] at (6.75,.5) {処理 $5$ 秒};
+\end{scope}
+\Foot\end{tikzpicture}\end{frame}
+
+\begin{frame}[plain]\begin{tikzpicture}[remember picture,overlay]
+\Base{間隔が1秒違うと、待ちは積み上がる}{COMPARISON / 仮の試算}{04}
+\begin{scope}[shift={([xshift=1.45cm,yshift=-6.4cm]current page.north west)},x=1cm,y=.24cm]
+\foreach \y in {0,5,10,15} {\draw[BMEStone,line width=.35pt] (0,\y) -- (7.4,\y);\node[jpsmall,left] at (-.1,\y) {\y};}
+\draw[warm/flow] (0,0) -- (7.9,0);\draw[warm/flow] (0,0) -- (0,17.3);
+\foreach \x in {0,...,7} {\pgfmathtruncatemacro{\n}{\x+1}\node[jpsmall,below] at (\x,-.3) {\n};}
+\draw[BMETerracotta,line width=1.3pt] (0,0) -- (7,14);
+\draw[BMEInk,line width=1.1pt] (0,0) -- (7,7);
+\draw[BMESage,line width=1.2pt] (0,0) -- (7,0);
+\foreach \x in {0,...,7} {\fill[BMETerracotta] (\x,2*\x) circle[radius=1.3pt];\fill[BMEInk] (\x,\x) circle[radius=1.3pt];}
+\node[jpsmall,anchor=west,text=BMETerracotta] at (7.2,14) {$d=3$ 秒};\node[jpsmall,anchor=west,text=BMEInk] at (7.2,7) {$d=4$ 秒};\node[jpsmall,anchor=west,text=BMESage] at (7.2,1) {$d=6$ 秒};
+\node[jpsmall,anchor=west] at (0,18) {待ち時間（秒）};\node[jpsmall,anchor=west] at (6,-2.5) {仕事の番号};
+\end{scope}
+\node[jptext,text width=4cm] at ([xshift=11cm,yshift=-2.15cm]current page.north west) {\bfseries 処理は毎回5秒\par\vspace{.45cm}\WarmBodyText 3秒間隔なら、\\1件進むごとに2秒ずつ\\待ちが増える。\par\vspace{.35cm}6秒間隔なら、この仮定では\\順番待ちは生じない。\par\vspace{.5cm}\WarmDisplayMath\raggedright $w_i=(i-1)$\par\vspace{.08cm}$\phantom{w_i=}\cdot\max(0,p-d)$};
+\Foot\end{tikzpicture}\end{frame}
+
+\begin{frame}[plain]\begin{tikzpicture}[remember picture,overlay]
+\Base{待ち時間を減らす、三つの方法}{DESIGN / 考え方}{05}
+\node[anchor=north west,inner sep=0pt,slide/prose,text width=3.8cm] at ([xshift=.98cm,yshift=-1.85cm]current page.north west) {\color{BMETerracotta}\sffamily\fontsize{7}{9}\selectfont\bfseries 01 / 処理を短く\par\vspace{.3cm}\color{BMEBrown}\rmfamily\fontsize{15}{19}\selectfont\bfseries 5秒を4秒に\par\vspace{.4cm}\WarmBodyText 4秒間隔の到着に間に合う。\\同じ仮定なら待ちは0秒。};
+\node[anchor=north west,inner sep=0pt,slide/prose,text width=3.8cm] at ([xshift=5.55cm,yshift=-1.85cm]current page.north west) {\color{BMESage}\sffamily\fontsize{7}{9}\selectfont\bfseries 02 / 到着を分散\par\vspace{.3cm}\color{BMEBrown}\rmfamily\fontsize{15}{19}\selectfont\bfseries 4秒を5秒に\par\vspace{.4cm}\WarmBodyText 5秒の処理と到着間隔が揃う。\\変動があれば余裕も必要。};
+\node[anchor=north west,inner sep=0pt,slide/prose,text width=3.8cm] at ([xshift=10.12cm,yshift=-1.85cm]current page.north west) {\color{BMETerracotta}\sffamily\fontsize{7}{9}\selectfont\bfseries 03 / 窓口を増やす\par\vspace{.3cm}\color{BMEBrown}\rmfamily\fontsize{15}{19}\selectfont\bfseries 同時に処理\par\vspace{.4cm}\WarmBodyText 仕事を複数の窓口に配分する。\\窓口ごとの空き時刻を計算。};
+\draw[BMEStone,line width=.45pt] ([xshift=.98cm,yshift=-4.65cm]current page.north west) -- ++(13.8cm,0);
+\node[jptext,text width=13cm] at ([xshift=1.02cm,yshift=-5.15cm]current page.north west) {\color{BMEBrown}\rmfamily\fontsize{16}{22}\selectfont\bfseries 平均だけでなく、ばらつきも見る\par\vspace{.4cm}\WarmBodyText 実際の仕事は、到着も処理も一定ではない。\\この式で関係を理解したら、次は到着時刻と処理時間の記録で確かめる。};
+\Foot\end{tikzpicture}\end{frame}
+\end{document}

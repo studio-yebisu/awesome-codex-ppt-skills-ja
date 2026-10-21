@@ -1,0 +1,32 @@
+{
+  "artifact_sha256": "c22d8bd39e4dd796e0580ef49d3c305debaa2a20cae411e1da1171f5e9285d44",
+  "renderer": "Microsoft PowerPoint16 PDF→PDFium RGB",
+  "pages_reviewed": [
+    1,
+    2,
+    3,
+    4,
+    5
+  ],
+  "method": "Every actual current PNG opened; visual effect inspected before critical text/geometry issues",
+  "findings": [
+    "Cover8:00–10:00 remains one line; simple purpose copy",
+    "Roles/handoffs and9:45→10:00 schedule visible",
+    "650*15/25/35 gives9750/16250/22750 revenue, not profit",
+    "All10 record rows present, em dash means not collected",
+    "Shippori Mincho headings/BIZ UDPGothic body confirmed in actual PDF resources"
+  ],
+  "corrected_attempts": [
+    {
+      "evidence": "source/attempt1/slide-01.png",
+      "issue": "Unresolved semantic role aliases initially rendered black; original font resolution weakened Japanese hierarchy",
+      "repair": "Resolve theme colors; explicitly map headings/body to official static Shippori Mincho/BIZ UDPGothic; retain public API/native parts"
+    },
+    {
+      "issue": "Static font changed cover time width",
+      "repair": "Widen cover time box and shorten cover purpose line; no time data change"
+    }
+  ],
+  "human_adoption": false,
+  "independent_current_version_review": "pending"
+}

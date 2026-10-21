@@ -5,6 +5,7 @@ from pptx.util import Inches,Pt
 from pptx.dml.color import RGBColor
 from pptx.enum.shapes import MSO_SHAPE,MSO_CONNECTOR
 from pptx.enum.text import PP_ALIGN
+from pptx.oxml.xmlchemy import OxmlElement
 import json
 ROOT=Path(__file__).resolve().parents[1]
 p=Presentation(ROOT/'source/academic-template.pptx')
@@ -13,7 +14,7 @@ for _ in range(6):
  s=p.slides.add_slide(base.slide_layout)
  for sh in base.shapes:s.shapes._spTree.insert_element_before(deepcopy(sh.element),'p:extLst')
 INK='0B3A5B';GRAY='5D6B78';BLUE='DDEAF1';TEAL='347B7F';WHITE='FFFFFF';DARK='202A33'
-def text(s,x,y,w,h,t,size=20,color=INK,bold=False,font='Noto Sans CJK JP'):
+def text(s,x,y,w,h,t,size=20,color=INK,bold=False,font='BIZ UDPGothic'):
  sh=s.shapes.add_textbox(Inches(x), Inches(y), Inches(w), Inches(h));tf=sh.text_frame;tf.word_wrap=True
  tf.margin_left=tf.margin_right=0;tf.margin_top=tf.margin_bottom=0
  for i,line in enumerate(t.split('\n')):
@@ -22,8 +23,10 @@ def text(s,x,y,w,h,t,size=20,color=INK,bold=False,font='Noto Sans CJK JP'):
  return sh
 def rect(s,x,y,w,h,color=BLUE,line=WHITE):
  sh=s.shapes.add_shape(MSO_SHAPE.RECTANGLE, Inches(x), Inches(y), Inches(w), Inches(h));sh.fill.solid();sh.fill.fore_color.rgb=RGBColor.from_string(color);sh.line.color.rgb=RGBColor.from_string(line);return sh
-def line(s,x,y,x2,y2,color=GRAY,width=1):
+def line(s,x,y,x2,y2,color=GRAY,width=1,arrow=False):
  sh=s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT, Inches(x), Inches(y), Inches(x2), Inches(y2));sh.line.color.rgb=RGBColor.from_string(color);sh.line.width=Pt(width)
+ if arrow:
+  end=OxmlElement('a:tailEnd');end.set('type','triangle');sh.line._get_or_add_ln().append(end)
 def clear(s,cover=False):
  # Preserve content template rule, footer bar and slide layout/master, replacing specimen strings.
  keep=[] if cover else [3,4]
@@ -39,7 +42,7 @@ def page(s,n,title,section,claim,note):
  text(s,12.35,7.2,.45,.2,f'{n:02d}',8,WHITE)
  text(s,.75,6.3,11.6,.55,note,10,GRAY)
  s.notes_slide.notes_text_frame.text=f'{title}\n{claim}\n{note}\n架空の未実施研究提案。数値結果・実在の被験者・外部引用は含まない。'
-titles=['静けさを選べる\n図書館','利用目的と音環境のずれ','ゾーンの境界と音の伝わり方','検証する関係','配置案の比較','試行と観察の順序','評価項目と判断の条件','実施前に確認すること']
+titles=['静けさを選べる\n図書館','活動と音の希望を対応させる','ゾーンの境界と音の伝わり方','検証する関係','配置案の比較','試行と観察の順序','評価項目と判断の条件','実施前に確認すること']
 notes=[]
 s=p.slides[0];clear(s,True)
 text(s,.75,1.25,10,1.55,titles[0],38,INK,True)
@@ -49,18 +52,32 @@ line(s,.75,5.3,12.2,5.3,INK,2)
 text(s,.75,5.55,10,.5,'静かな閲覧　／　小声の相談　／　会話のある活動',15,INK)
 text(s,12.35,7.2,.45,.2,'01',8,INK)
 notes.append('表紙。架空の未実施研究提案。')
-s=p.slides[1];page(s,2,titles[1],'背景','同じ図書館でも、必要とする音環境は異なる。','読図：利用目的と期待する音環境の対応を読む。分類はこの提案の設計仮説。')
-for i,(a,b) in enumerate([('読む・集中する','静かな席を探す'),('短く相談する','小声で話せる席を探す'),('活動を共有する','会話できる場所を探す')]):
- y=2.2+i*1.05;text(s,.8,y,4,.45,a,23,INK,True);line(s,5,y+.24,6.2,y+.24,TEAL,2);text(s,6.8,y,5,.6,b,20,DARK)
+s=p.slides[1];page(s,2,titles[1],'背景','活動に合わせて、会話できる場所から静かな席まで選べるようにする。','読図：活動と音の希望を対応させた設計仮説。実測した音量の尺度ではない。')
+text(s,.8,2.3,11,.45,'会話できる側から、静かな側へ',20,INK,True)
+for i,(activity,expectation,col,ink) in enumerate([('会話しながら本を選ぶ','会話できる場所',INK,WHITE),('短く相談する','小声で相談できる席',TEAL,WHITE),('集中して読む','静かな閲覧席',BLUE,INK)]):
+ x=.8+i*3.8
+ rect(s,x,3.1,3.8,1.1,col,col)
+ text(s,x+.2,3.4,3.4,.6,activity,19,ink,True)
+ text(s,x+.2,4.55,3.4,.6,expectation,19,DARK)
+line(s,.95,5.6,12.0,5.6,TEAL,2,True)
+text(s,.95,5.85,11,.35,'音への希望は人や状況で変わる。固定した利用者タイプには分けない。',13,GRAY)
 notes.append('利用目的と期待する音環境の対応。分類は設計仮説。')
 s=p.slides[2];page(s,3,titles[2],'空間モデル','静かな席へ向かう動線と、会話のある活動を分けて考える。','読図：入口から静穏ゾーンへ進む経路と、隣接する境界を見る。縮尺のない概念図。')
 rect(s,.8,2.3,2.5,2.9,INK);rect(s,3.45,2.3,3.1,2.9,TEAL);rect(s,6.7,2.3,5.5,2.9,BLUE)
 for x,w,a,b,c in [(.95,2.2,'会話','活動・相談',WHITE),(3.65,2.7,'移行','通路・書架',WHITE),(7,4.9,'静穏','閲覧・集中',INK)]:text(s,x,2.75,w,.6,a,29,c,True);text(s,x,3.7,w,.7,b,16,c)
-text(s,.8,5.45,11,.6,'入口　　　　　　　　　　　案内表示　　　　　　　　　　静かな席',14,GRAY)
+# Two explicit routes, not an inferred flow through the coloured zones.
+text(s,.95,5.45,1.4,.4,'入口',14,GRAY)
+line(s,1.1,4.85,5.7,4.85,WHITE,3,True)
+text(s,3.65,4.35,2.7,.38,'本を探す',16,WHITE,True)
+line(s,1.1,5.98,11.45,5.98,INK,2,True)
+text(s,3.3,5.45,6.9,.4,'集中席へ：活動域を通らない経路',14,INK,True)
+text(s,10.55,5.45,1.6,.4,'集中席',14,INK)
+
 notes.append('縮尺のないゾーニング概念図。建築図や実測音分布ではない。')
 s=p.slides[3];page(s,4,titles[3],'研究仮説','配置と表示が、席の選択と音環境の評価に関係するか。','読図：左は介入する条件、中央は行動、右は評価。線は検証候補で、因果関係の実証ではない。')
 for x,t,b in [(.8,'配置・表示','境界の配置\n音のルールの説明'),(5,'席の選択','希望に合う席を選べるか\n迷いや移動が起きるか'),(9.3,'音環境の評価','集中しやすさ\n会話のしやすさ')]:text(s,x,2.55,3.3,.65,t,24,INK,True);text(s,x,3.65,3.2,1.1,b,17,DARK)
-line(s,3.75,3,4.65,3,TEAL,3);line(s,8.1,3,9,3,TEAL,3)
+line(s,3.75,3,4.65,3,TEAL,3,True);line(s,8.1,3,9,3,TEAL,3,True)
+text(s,3.55,2.55,1.4,.3,'検証候補',10,GRAY);text(s,7.9,2.55,1.4,.3,'検証候補',10,GRAY)
 text(s,.8,5.15,11,.5,'交絡の候補：混雑、時間帯、利用目的、活動内容',16,GRAY)
 notes.append('配置・表示と席選択・評価の仮説モデル。実証済み因果関係ではない。')
 s=p.slides[4];page(s,5,titles[4],'比較条件','案Aと案Bを、同じ観察項目で比較する。','読表：境界と表示だけを先に比較する。席数や面積の最終設定は現地条件の確認後に決める。')
@@ -82,7 +99,7 @@ for i,(a,b) in enumerate([('席の選びやすさ','利用者への任意の短�
  y=2.2+i*.78;text(s,.8,y,4.5,.5,a,20,INK,True);text(s,6,y,6,.5,b,17,DARK);line(s,.8,y+.65,12,y+.65,BLUE)
 notes.append('評価項目と予定取得方法。調査結果・基準値を捏造しない。')
 s=p.slides[7];page(s,8,titles[7],'実施の条件','運用とプライバシーを確認してから、試行の範囲を決める。','提案の位置づけ：設計と評価の計画。効果、利用者の支持、実施可否はまだ確認していない。')
-text(s,.8,2.25,5.8,2.1,'静かな席も、\n話せる場所も。',32,INK,True)
+text(s,.8,2.25,5.8,2.1,'運用と記録の条件を\n先に確認する',32,INK,True)
 for i,(a,b) in enumerate([('施設との合意','避難・動線・運用への影響'),('参加者への説明','任意参加、同意、断る自由'),('記録の取り扱い','識別情報を集めない方針')]):text(s,7,2.25+i*1.05,5,.45,a,19,TEAL,True);text(s,7,2.78+i*1.05,5,.45,b,14,DARK)
 notes.append('施設合意、任意参加、個人識別情報を集めない方針。効果未確認。')
 for s,n in zip(p.slides,notes):s.notes_slide.notes_text_frame.text=n+'\n架空の未実施研究提案。'

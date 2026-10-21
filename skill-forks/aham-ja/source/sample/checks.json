@@ -1,0 +1,220 @@
+{
+  "mode": "sample",
+  "generated_at": "2026-10-16T01:52:01+09:00",
+  "pages": [
+    1,
+    2
+  ],
+  "outputs": {
+    "svg_dir": "source/sample/svg",
+    "pptx": "source/sample/sample.pptx",
+    "preview": "source/sample/preview.html"
+  },
+  "adapters": [
+    {
+      "id": "font-family",
+      "what": "原典の SANS / MONO 字体列を完全一致で JA_FONT に置き換える",
+      "value": "Manrope, 'Zen Kaku Gothic New', sans-serif"
+    },
+    {
+      "id": "ea-font-registration",
+      "what": "変換器の和文字体集合 EA_FONTS に実行時だけ Zen Kaku Gothic New を加え、PPTX で latin=Manrope / ea=Zen Kaku Gothic New にする（ファイルは変更しない）"
+    },
+    {
+      "id": "fixed-labels",
+      "what": "原典の中国語固定文字と凡例を和訳する",
+      "value": {
+        ">目录　CONTENTS<": ">目次<",
+        ">来源：": ">出典：",
+        ">已承诺<": ">実施確定<",
+        ">计划中<": ">計画<",
+        ">拟议<": ">提案<"
+      }
+    },
+    {
+      "id": "chart-label-readability",
+      "what": "P2の目盛り・所要時間・作業名を16px/INK1にし、原典と同じ軸式で20分終端を追加。棒と比率は不変"
+    },
+    {
+      "id": "stage-centering-and-detail",
+      "what": "P3原典stage_flowを右67px平行移動し、ラベルを16/18pxへ。原典Tで入力済み補足を各段下へ加える。相対接続と箱サイズは不変"
+    },
+    {
+      "id": "roadmap-legend-readability",
+      "what": "P4原典凡例を表示。凡例14px、目盛り/泳道名16px、ブロック名14pxへ濃く補正。proposed状態は維持"
+    }
+  ],
+  "status": "pass",
+  "failed_checks": [],
+  "checks": [
+    {
+      "check": "brand_color_whitelist",
+      "ok": true,
+      "detail": {
+        "used": [
+          "#262626",
+          "#336EE8",
+          "#6E6E6E",
+          "#9B9B9B",
+          "#E7E7E7",
+          "#FFFFFF"
+        ],
+        "outside": []
+      }
+    },
+    {
+      "check": "font_family_only_ja_font",
+      "ok": true,
+      "detail": {
+        "used": [
+          "Manrope, 'Zen Kaku Gothic New', sans-serif"
+        ]
+      }
+    },
+    {
+      "check": "no_layout_id_in_text",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "no_untranslated_fixed_label",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "text_right_edge_le_1240",
+      "ok": true,
+      "detail": []
+    },
+    {
+      "check": "chrome_brand_clear_of_dot",
+      "ok": true,
+      "detail": {
+        "brand": "朝作業",
+        "gap_px": 7.0
+      }
+    },
+    {
+      "check": "action_title_rules",
+      "ok": true,
+      "detail": {
+        "violations": []
+      }
+    },
+    {
+      "check": "subject_alternates",
+      "ok": true,
+      "detail": [
+        "サンプル行程"
+      ]
+    },
+    {
+      "check": "upstream_lint_svg_before_convert",
+      "ok": true,
+      "detail": {
+        "command": [
+          "python",
+          "upstream/assets/tools/lint_svg.py",
+          "source/sample/svg"
+        ],
+        "returncode": 0,
+        "scanned": 2,
+        "expected": 2,
+        "findings": [],
+        "stdout_file": "lint_svg.before_convert.txt",
+        "note": "lint_svg.py は常に終了コード0を返すため、[!] 行と ⚠ 行の有無で判定する"
+      }
+    },
+    {
+      "check": "upstream_svg_to_native_pptx",
+      "ok": true,
+      "detail": {
+        "returned": true,
+        "exception": null,
+        "succeeded_failed": [
+          "2",
+          "0"
+        ],
+        "warnings": [],
+        "errors": [],
+        "log_file": "convert.log"
+      }
+    },
+    {
+      "check": "slide_count",
+      "ok": true,
+      "detail": {
+        "pptx": 2,
+        "svg": 2
+      }
+    },
+    {
+      "check": "native_slide-01",
+      "ok": true,
+      "detail": {
+        "shapes": 16,
+        "pictures": 0,
+        "text_missing_in_pptx": [],
+        "text_extra_in_pptx": [],
+        "ea_fonts": [
+          "Zen Kaku Gothic New"
+        ],
+        "latin_fonts": [
+          "Manrope"
+        ],
+        "notes_ok": true
+      }
+    },
+    {
+      "check": "native_slide-02",
+      "ok": true,
+      "detail": {
+        "shapes": 39,
+        "pictures": 0,
+        "text_missing_in_pptx": [],
+        "text_extra_in_pptx": [],
+        "ea_fonts": [
+          "Zen Kaku Gothic New"
+        ],
+        "latin_fonts": [
+          "Manrope"
+        ],
+        "notes_ok": true
+      }
+    },
+    {
+      "check": "file_size_info",
+      "ok": true,
+      "detail": {
+        "kb": 33.7,
+        "upstream_normal_range_kb": [
+          50,
+          300
+        ],
+        "in_range": false
+      }
+    },
+    {
+      "check": "upstream_lint_svg_after_convert",
+      "ok": true,
+      "detail": {
+        "command": [
+          "python",
+          "upstream/assets/tools/lint_svg.py",
+          "source/sample/svg"
+        ],
+        "returncode": 0,
+        "scanned": 2,
+        "expected": 2,
+        "findings": [],
+        "stdout_file": "lint_svg.after_convert.txt",
+        "note": "lint_svg.py は常に終了コード0を返すため、[!] 行と ⚠ 行の有無で判定する"
+      }
+    }
+  ],
+  "not_performed_here": [
+    "PowerPoint / LibreOffice での描画と目視",
+    "原典 Phase 7 の3ページごとの確認",
+    "原典 Phase 8 の五層QCと人による内容・視覚監査"
+  ]
+}

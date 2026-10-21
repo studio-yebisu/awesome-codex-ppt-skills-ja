@@ -1,6 +1,6 @@
 {
-  "status": "light_check_complete",
-  "browser": "Existing Google Chrome / Playwright",
+  "status": "original_html_all6_visual_checked",
+  "browser": "Codex in-app browser",
   "canvas": {
     "width": 1600,
     "height": 900
@@ -12,11 +12,46 @@
     "render/slide-01.png",
     "render/slide-02.png"
   ],
-  "scope": "Build plus cover/interior initial display and original keyboard page advance only",
-  "detailed_all_pages_review": false,
+  "scope": "All six pages at 1280x720; repaired comparison/spacing also inspected at 1600x900.",
+  "detailed_all_pages_review": true,
   "independent_review": false,
   "structure_audit": false,
-  "ZIP_reexecution": false,
+  "ZIP_reexecution": true,
   "same_origin_parent_bridge": "Added to native controller; parent integration not tested here",
-  "visual_review": "Cover and font-comparison PNGs displayed once; no obvious missing content on these two representatives"
+  "visual_review": "All6 full pages inspected. Redundant arrows crossing captions removed; counter rings attached to the actual glyph.",
+  "repair_author": "Codex",
+  "independent_recheck": "pending_after_repair",
+  "visual_proofs": [
+    {
+      "index": 0,
+      "image": "render/effect-page-01-after.jpg",
+      "sha256": "d0217ffd5df01afc38fb7f7ecb99d192cfd1abff1202b8f75448085c4c2c73fd"
+    },
+    {
+      "index": 1,
+      "image": "render/effect-page-02-after.jpg",
+      "sha256": "1f567e6993deabd38657bc9382f879493d714c29e251f5e57c8be8e1b739a3a5"
+    },
+    {
+      "index": 2,
+      "image": "render/effect-page-03-after.jpg",
+      "sha256": "4c46a850c1c19ee75df5e187d215b111567ce1f1b95fbadfa6f175c72ab67ff0"
+    },
+    {
+      "index": 3,
+      "image": "render/effect-page-04-after.jpg",
+      "sha256": "9e17c25f6f477f60ef2dd1a6e8cb301c349d982c15dc5589bb9b6ca7a47e1b9d"
+    },
+    {
+      "index": 4,
+      "image": "render/effect-page-05-after.jpg",
+      "sha256": "83235f6fc4ca74de34c6e43edc1ef677ddf0a8b3af7da71bfd47782bb0f351df"
+    },
+    {
+      "index": 5,
+      "image": "render/effect-page-06-after.jpg",
+      "sha256": "5e81041f92389bd30bf7f7cbaa44673802f827ea28ccab027fd259fff78f5d61"
+    }
+  ],
+  "zip_reexecution_scope": "Extracted source ZIP rebuilt with original CSS/controller packaging helper; index.html byte-identical. No fresh environment install needed (Python stdlib)."
 }

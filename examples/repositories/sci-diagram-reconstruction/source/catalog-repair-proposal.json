@@ -1,0 +1,53 @@
+{
+  "case_id": "sci-diagram-reconstruction",
+  "implemented_by": "Codex current evidence/usage repair; original Opus5.5 reconstruction preserved",
+  "current_pptx_sha256": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0",
+  "case_patch": {
+    "method": "Reconstruction：公式portable雛形による単純4箱・直線4本の復元、原典checker/renderer、XML方向検査、別コピーの実PowerPoint編集検査。",
+    "sample_notice": "自作の4箱・直線4本の入力を復元する限定例。入れ子・数式・inset・破線/交差・自動接続は未実証。見た目の美化・時短の比較ではない。",
+    "font_families": [
+      "Yu Gothic"
+    ],
+    "font_notice_ja": "Windows同梱のYu Gothicを参照。OFL書体ではなく、字体ファイルは再配布しない。"
+  },
+  "guide_patch": {
+    "summary_ja": "提供された科学模式図の文言・記号・方向関係を優先し、意味を担う文字・図形・線を個別編集できるPowerPointへ復元する。既存PPTXの修復、変更しない検査も別経路として持つ。",
+    "requirements": [
+      "復元用画像、読めるラベル。修復・検査の場合はPPTXと対象の欠陥を指定。",
+      "本配布のPptxGenJS経路はNode.js20+、既存PptxGenJS4.0.1、Python3.10+、LibreOffice、pdftoppm。作業passは準備済みホストruntime配下へ置く。",
+      "PowerPointの編集・実表示検査にはWindows PowerPoint16。Yu GothicはWindows同梱を参照し、字体ファイルは配布しない。新規installは検査していない。"
+    ],
+    "steps": [
+      "科学模式図の画像から復元、既存PPTXの修復、変更しない検査のうち一つを選び、該当する原典参照文書を読む。",
+      "復元では元の解像度で文言・包含・方向・線の意味を読み、NODES/EDGES/INSETSへ一度だけ所有を割り当てる。数式・混在書体がある場合はmath-and-fonts.mdも読む。",
+      "利用可能なruntimeを一つ選ぶ。PptxGenJS経路は準備済みホスト配下でprobeし、pass-01/source.pngとbuild.mjsからPPTXを作る。欠けた依存は制作中に導入しない。",
+      "原典checkerへ--source pass-01/source.pngを渡し、原典rendererで表示し、元画像と文言・方向・欠落を照合する。原典既定は2passまでで、全blockerをまとめて一度直す。",
+      "PPTXの構造と必要な編集を別コピーで確認する。本作例の再実行は作例rootでpython source/reproduce.py --overwrite --renderを使う。"
+    ],
+    "commands": [
+      "python source/reproduce.py --overwrite --render --node <Node.js実体> --soffice <既存soffice> --pdftoppm <既存pdftoppm>",
+      "python source/check_native_lines.py",
+      "pwsh -NoProfile -File source/test_shape_edit.ps1 -PresentationPath pass-01/editable.pptx -OutputDirectory qa/editability"
+    ],
+    "limitations": [
+      "本作例は自作PNGの4箱・4本の直線矢印を復元するReconstruction。既存PPTXのRepairとInspectionは未実施。PptxGenJSはRepairに使わない。",
+      "入れ子、数式、実験画像のinset所有分離、破線の意味、交差、双方向・折れ線の関係は未実証。統計グラフや新しい科学図の考案、時間短縮を示す例でもない。",
+      "原典checkerはhard failure 0・warning 0。connector 0はp:cxnSpがない意味で、4本の軸に平行なnative線は幅か高さが0のため集計対象外。別のXML検査で線・矢じり・方向・元座標を確認した。",
+      "4本は別々に編集できる標準の線で、箱への接続リンクはない。箱を動かしても線が自動追従するとは示さない。",
+      "箱の塗りは元画像よりわずかに灰色寄り。原文・方向・編集性を優先し、画素単位の一致や見た目の改善は主張しない。",
+      "Windows同梱のYu Gothicを参照する。OFL書体ではなく字体ファイルを再配布しない。別環境は対応する字体が必要。",
+      "採用pass-01の復元コード・PPTXは変更していない。追加の箱・線の編集は別のQAコピーで、原図忠実な採用版と区別する。"
+    ],
+    "execution_type": "Reconstruction：公式portable雛形による単純4箱・直線4本の復元、原典checker/renderer、XML方向検査、別コピーの実PowerPoint編集検査。"
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native1-r8.json",
+  "root_final_override_note": "Apply these current constraints/how_to_use over previous SCI fields in root-owned zz-root-consistency. General IO remains general. Windows font notice must replace any generic OFL footer.",
+  "additional_edit_proof": {
+    "before": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+    "after": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.png",
+    "artifact": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.pptx",
+    "report": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-editability.json"
+  },
+  "independent_review": "pending",
+  "record_scope": "Historical repair proposal for the simple water-cycle example only, before the supplementary complex example. Its not-demonstrated list does not describe the current combined catalog; use current README/GUIDE/QA and complex-example/PROVENANCE.json."
+}

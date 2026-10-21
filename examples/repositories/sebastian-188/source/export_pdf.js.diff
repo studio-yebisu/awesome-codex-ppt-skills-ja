@@ -1,0 +1,12 @@
+--- original/export_pdf.js
++++ windows/export_pdf.js
+@@ -224,7 +224,8 @@
+   let browser;
+   try {
+     browser = await chromium.launch({
+-      headless: true
++      headless: true,
++      ...(process.env.SVG_CHROME_EXECUTABLE ? {executablePath: process.env.SVG_CHROME_EXECUTABLE} : {})
+     });
+   } catch (e) {
+     if (e.message.includes('Executable doesn\'t exist') || e.message.includes('browserType.launch')) {

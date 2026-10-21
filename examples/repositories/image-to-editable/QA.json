@@ -1,41 +1,53 @@
 {
-  "status": "qa_complete",
+  "status": "original_run_complete_current_powerpoint_pages_inspected_independent_review_pending",
+  "artifact": "deck.pptx",
+  "artifact_sha256": "7a6b9696cf5525d0f14b32fe494649df82b9fba29487c3728cb4a56f56a4ecf2",
   "page_count": 2,
-  "artifact_sha256": "5d33a5a7b579caec47cdd22c7b6205e41ebe0660be8389e887788018622ebedf",
-  "upstream_validation": {
-    "pptx": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\final\\slide_01_edited.pptx",
-    "deck_manifest": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\image-to-editable\\run\\deck_manifest.json",
-    "expected_pages": 2,
-    "slides": 2,
-    "page_manifests_missing": [],
-    "page_validation_missing": [],
-    "failed_page_validations": [],
-    "page_contract_violations": [],
-    "notes_expected": 0,
-    "notes_found": 0,
-    "notes_hash_mismatches": [],
-    "missing_parts": [],
-    "warnings": [],
-    "passed": true
+  "original_run": "run-repair-r4",
+  "original_run_complete": true,
+  "original_deck_validation": "run-repair-r4/final/validation.json",
+  "original_validation_passed": true,
+  "actual_workers": [
+    "/root/repair_core_examples",
+    "/root"
+  ],
+  "orchestration_receipts": "source/round4-orchestration.json",
+  "native_inventory": "source/native-elements.json",
+  "native_totals": {
+    "native_shapes": 41,
+    "pictures": 7,
+    "native_charts": 0,
+    "native_tables": 0
   },
+  "native_text_count": 21,
+  "separate_native_edit_check": "qa/editability/native-edit.json",
+  "notes_addition": "source/notes-addition.json",
+  "before_after": "qa/before-after.json",
   "visual_review": {
-    "artifact_sha256": "5d33a5a7b579caec47cdd22c7b6205e41ebe0660be8389e887788018622ebedf",
-    "pages_reviewed": [
-      1,
-      2
+    "reviewer": "Codex implementation review; no independent score",
+    "all_current_pngs_opened": true,
+    "pages": [
+      0,
+      1
     ],
-    "method": "新規日本語ノート追加後のPPTXをMicrosoft PowerPoint16.0で1600×900PNGに再描画し、全2ページを個別に視認",
-    "result": "本文・図形・アイコンの配置と日本語の表示を全2頁確認。切れ・不正な重なりなし。ノート2件はinput/data.jsonとPPTX再読込で一致。",
-    "warnings": [
-      "Yu Gothic/Arial Narrow代替による文字の太さ・間隔の差",
-      "アイコンの輪郭と比率の微差",
-      "微細な元画像テクスチャは平面native塗りで置換"
-    ],
-    "native_text_boxes": 21,
-    "native_structures": 20,
-    "bitmap_icons": 7,
-    "human_adoption": "pending"
+    "separate_edited_copy_render_inspected": true,
+    "findings": [
+      "1頁の9文字・カード・2矢印と3bitmap iconを保持。",
+      "2頁の3状態・2矢印・12文字を保持し、commit字間と右pill間隔を修復。",
+      "Arial幅・Yu/BIZ書体と平塗り・アイコン細部は近似で、画素同一ではない。"
+    ]
   },
-  "editability": "Native Japanese text, cards, simple arrows; separated icons remain bitmap images",
-  "human_adoption": "pending"
+  "independent_current_version_review": "pending",
+  "human_adoption": false,
+  "production_adoption": false,
+  "distribution_replay": {
+    "status": "passed_both_archives",
+    "evidence": "source/distribution-replay.json",
+    "native_content_equal": true,
+    "all_page_render_rgb_equal": true,
+    "archive_count": 2,
+    "replayed_page_count": 4,
+    "fresh_install_tested": false
+  },
+  "current_distribution_replay": "source/distribution-replay.json"
 }

@@ -1,0 +1,63 @@
+[
+  {
+    "argv": [
+      "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\upstream\\scripts\\build_content_lock.py",
+      "--outline",
+      ".\\input\\outline.json",
+      "--slide",
+      "1",
+      "--out",
+      ".\\design\\slide-01-content-lock.json"
+    ],
+    "cwd": ".",
+    "exit_code": 0,
+    "log": "review/replay/01-build_content_lock.log",
+    "log_sha256": "43adc2e8b733acfc7f2969570515acc9c628be0e91e6b82d22efcd7a823a6597",
+    "original_gate_failure_expected": false
+  },
+  {
+    "argv": [
+      "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+      ".\\source\\prepare_measurements.py",
+      "1"
+    ],
+    "cwd": ".",
+    "exit_code": 0,
+    "log": "review/replay/02-prepare_measurements.log",
+    "log_sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+    "original_gate_failure_expected": false
+  },
+  {
+    "argv": [
+      "<user-profile>\\AppData\\Local\\nodejs\\node-v24.18.0-win-x64\\node.EXE",
+      ".\\source\\reconstruct.cjs",
+      "1"
+    ],
+    "cwd": ".",
+    "exit_code": 0,
+    "log": "review/replay/03-reconstruct.log",
+    "log_sha256": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
+    "original_gate_failure_expected": false
+  },
+  {
+    "argv": [
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      ".\\source\\render_powerpoint.ps1",
+      "-PresentationPath",
+      ".\\pages\\slide-01.pptx",
+      "-OutputDirectory",
+      ".\\render\\page-01"
+    ],
+    "cwd": ".",
+    "exit_code": 1,
+    "log": "review/replay-first-render-failure.log",
+    "log_sha256": "61a45f1cc68f59fc372ce7d9e68f4984d2f317a15a058840f994a51bbef2f26c",
+    "original_gate_failure_expected": false,
+    "resolved_by": "review/replay/04--NoProfile.log"
+  }
+]

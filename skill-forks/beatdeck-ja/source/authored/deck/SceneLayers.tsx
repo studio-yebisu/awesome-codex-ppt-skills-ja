@@ -13,11 +13,11 @@ function Opening_(){const {here,b}=useScene();return <>
 export const Opening=()=> <Scene index={0}><Opening_/></Scene>;
 function Materials_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text={<>はじまりは、<br/>素材から。</>} body="流れの最初の位置を、ひとつの図で見る。"/><Statement on={here&&b===1} text="次の工程へ。" body="素材から、生地をつくるところへ。"/></>;}
 export const Materials=()=> <Scene index={1}><Materials_/></Scene>;
-function DoughScene_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="混ぜる。" size={180} body="素材が、生地になる場面。"/><Statement on={here&&b===1} out={here&&b>1} text="形づくる。" size={170} body="生地の形を整え、次の工程へ渡す。"/><Statement on={here&&b===2} text="焼く場所へ。" body="この資料は工程の関係を示す概念図。"/></>;}
+function DoughScene_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="混ぜる。" size={180} body="素材が、生地になる場面。"/><Statement on={here&&b===1} out={here&&b>1} text="形づくる。" size={170} body="生地の形を整え、次の工程へ渡す。"/><Statement on={here&&b===2} text="焼く場所へ。" body="形を整えた生地を、焼く工程へ渡す。"/></>;}
 export const DoughScene=()=> <Scene index={2}><DoughScene_/></Scene>;
-function Baking_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="焼く。" size={180} body="図形の色の変化は、工程を示す演出。"/><Statement on={here&&b===1} text={<>パンとして、<br/>店先へ。</>} body="焼き方の条件・時間・温度は、この資料に含めない。"/></>;}
+function Baking_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="焼く。" size={180} body="生地を焼き、パンへ変わるところ。"/><Statement on={here&&b===1} text={<>パンとして、<br/>店先へ。</>} body="焼く工程を終え、店先へ運ぶ。"/></>;}
 export const Baking=()=> <Scene index={3}><Baking_/></Scene>;
-function Shop_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="店先に、届く。" body="焼く工程から、並べる場所へ。"/><Statement on={here&&b===1} out={here&&b>1} text={<>並べて、<br/>見つけやすく。</>} body="棚のパンは説明用の図形。個数はデータではない。"/><Statement on={here&&b===2} text="選ぶ時間へ。" body="つくる流れから、選ぶ体験へ。"/></>;}
+function Shop_(){const {here,b}=useScene();return <><Statement on={here&&b===0} out={here&&b>0} text="店先に、届く。" body="焼く工程から、並べる場所へ。"/><Statement on={here&&b===1} out={here&&b>1} text={<>並べて、<br/>見つけやすく。</>} body="棚の中で、並べる位置を整える。"/><Statement on={here&&b===2} text="選ぶ時間へ。" body="つくる流れから、選ぶ体験へ。"/></>;}
 export const Shop=()=> <Scene index={4}><Shop_/></Scene>;
 function Handoff_(){const {here,b,entry}=useScene();const reduced=useSyncExternalStore(reducedMotion.subscribe,reducedMotion.get);return <>
  <Statement on={here&&b===0} out={here&&b>0} text="選ぶ。" size={180} body="店先で、気になるパンを見つける。"/>

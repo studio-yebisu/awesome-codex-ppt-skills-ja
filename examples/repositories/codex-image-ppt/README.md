@@ -1,56 +1,50 @@
-# Gitの保存・記録・共有 — 画像型PPTX
+# 原稿と共通仕様から画像スライドを作る
 
-Codex内蔵の `image_gen.imagegen` で生成した日本語3ページを、ningzimu/codex-ppt-skill の原典 `assemble_ppt.py` でPowerPointにしました。全ページの元画像とPowerPoint 16.0のPNG/PDFを制作担当が確認済みです。
+各頁を1枚の生成画像として作り、話者ノート付きPPTXへまとめる。本文の文字・図形は個別編集できない。原稿から構成・共通書式・画像生成環境・見本を確認し、見本と同じ生成方法で頁を分担して作り、原典スクリプトで状態を記録し統合する。
 
-**各ページは1枚の画像です。本文・図・コマンドをPowerPoint上で個別編集できません。** 発表者ノートは日本語で3ページ分入っています。内蔵ツールの実モデル名は公開されないため、GPT Image2使用とは記載しません。
+## 入力と出力
 
-## 再現する
+渡すもの：記事・報告・論文・メモ・構成案、読者と目的、残す文字や図、書式の希望、使用できる画像生成環境。
 
-カタログrootからproject-local Python環境を使います。必要な組版依存は `python-pptx`, `Pillow`, `filelock`。共通skill runtimeのbootstrap、APIキー設定、外部API呼び出しは行いません。
+得られるもの：各頁1枚の生成画像を収めたPPTX、編集可能な話者ノート、頁画像と状態記録。本文の文字・図形は個別編集できない。
 
-1. `source/upstream/` の原典コードとLICENSE、`deck_spec.json`、`outline.md`、`style.json`を確認します。
-2. 新しい制作フォルダーで原典 `prepare_slide_prompts.py --spec <deck_spec.json> --out-dir <deck>` を実行します。既存の生成記録を上書きしないでください。
-3. `prompts/slide_XX.json` を読み、実際に利用可能なnative画像ツールで1頁ずつ生成します。実際に送った全文と引数は `source/native-imagegen-requests.json` にあります。2・3頁は1頁目を作風だけの参考にしています。
-4. 原典 `record_slide_dispatch.py` / `record_slide_result.py` で本当の担当者ID・生成元パス・目視結果を記録します。生成画像を描画コードで置換しません。
-5. 全画像を視認し、`speech.md` を用意して原典 `assemble_ppt.py <deckの親> <deck名>.pptx --aspect-ratio 16:9` を実行します。
-6. PowerPointで全ページを再描画し、画像とノートを確認します。このカタログでは `pwsh -File tools/render_powerpoint.ps1 -PresentationPath <pptx> -OutputDirectory <render>` を使用しました。
+原典 [ningzimu/codex-ppt-skill](https://github.com/ningzimu/codex-ppt-skill/tree/941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c)、固定commit `941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c`、MIT。原文と利用条件を保存した日本語派生で、公式翻訳ではない。
 
-既存画像からの再組版は `python tools/build_codex_image_repository_example.py assemble` で可能です。新規画像の生成はホストツールが必要で、Pythonだけでは実行できません。再組版後はPowerPointレンダーも更新します。
+## 自分の原稿から始める
 
-## 原典手順との差分
+[最初の具体例と原典docs](START-HERE.ja.md)から、自分の原稿を構成案にする。そこにある未実行草案を置き換え、構成確認から見本へ進む。保存済み画像を再出力するREPRODUCEとは別の入口。
 
-ユーザーから自律制作を依頼された範囲で、outline・style・sampleを制作担当が判断しました。人が見て承認したという記録ではありません。また、3頁を1人の割り当て済み制作agentが担当し、1頁ごとの追加子agentは作っていません。原典のdispatch/result CLIには実担当者IDを記録しています。`workflow-decisions.json` に差分を明示しました。
+## 使う手順
 
-原典prompt compilerには言語共通のChinese-text文が残るため、実送信prompt末尾でJapanese指定を明確化しました。原典ソースは無改変です。元画像1672×941を原典packagerが16:9ページへ配置しています。画像の文字を手作業で描き足す処理はしていません。
+1. 最初に原典docs/outline-style-and-sample.mdとworkflow-gates-and-progress.mdを読む。読者・目的・自分の原稿から、各頁の見出し・要点・役割・必須画像を構成案へまとめる。
+2. 構成・書式・画像生成環境を確認して、代表する内容頁を1枚だけ見本として作る。確認省略の明示指示がある場合はその委任を記録し、人間承認と区別する。
+3. 見本の採用後にdeck_specへ共通書式と実際の生成方法を固定し、prepare_slide_prompts.pyで各頁の仕事を作る。残りは1頁だけを担当する別エージェントへ割り当てる。
+4. record_slide_dispatch.pyで割当を記録し、生成後は画像を読んでrecord_slide_result.pyで採用画像を記録する。文字・図・原稿の対応を確認し、修復したら最終画像の記録も更新する。
+5. slide_job_status.pyで未完了がないことを調べ、speech.mdのノートをそろえ、assemble_ppt.pyでPPTXへ収める。自分の原稿の最初の例はSTART-HERE.ja.mdを使う。
 
-## 出典と権利
+## 今回の作例：原典手順の部分実行
 
-Gitの説明は [Pro Git: Recording Changes](https://git-scm.com/book/en/v2/Git-Basics-Recording-Changes-to-the-Repository) と [Working with Remotes](https://git-scm.com/book/en/v2/Git-Basics-Working-with-Remotes) を確認した独自の日本語要約です。実際のpushは行っていません。
+原典手順の部分実行。白・紺・青緑の共通仕様からGit入門3頁を画像生成し、原典assembleで画像と講稿をPPTX化した。3頁の右下注意文を二行へ拡大し、原典の結果記録を現行埋込画像へ合わせた。頁分担・個別の人間承認・厳密な修復順序は未実施。
 
-原典コードはMIT。`LICENSE.upstream` と `source/upstream/LICENSE` の著作権・許諾表示を保持しています。画像は今回の生成物で、原典MITコードと生成画像の扱いを同一視しません。
+**1頁：Gitの保存・記録・共有**：白・紺・青緑と太い見出し、3つの図の線幅を見る。保存・コミット・共有を別段階で描く。 原典は共通スタイル仕様を各頁promptへ適用し、全体の見た目と原稿の対応を揃える。
 
-## 再現キットに含めるファイル
+**2頁：変更は3つの場所を進む**：作業ツリー→ステージ→ローカル履歴の3箱と、git add/commitの矢印を見る。共通styleを保ち頁固有の関係図へ変えた。 原典の逐頁promptは共通styleに加えてその頁の主張・構成・必要な文字を指定する。
 
-自動の再現スクリプトは**既存3画像の原典組版だけ**を実行します。画像再生成は画像利用枠を消費する別操作です。同梱promptをnative画像ツールへ依頼する手順として案内し、APIキーを探す処理や自動画像生成は入れません。
+**3頁：確認してから、チームへ共有する**：右下の「pushの前に、／共有先と作業ブランチを確認」を見る。以前の一行の小さい注意から、二行の大きな注意へ画像編集で変えた。左の4手順とコマンドは維持。 頁固有promptで画像を作り、実画像の文字と配置を確認して選択する。今回の局所反復を未実施のworker分担・人間承認と区別する。
 
-最小のオフライン組版キットは、次の配置にします。
+## 必要な環境
 
-```text
-reproduce/
-  source/upstream/LICENSE
-  source/upstream/skills/codex-ppt/scripts/assemble_ppt.py
-  workspace/codex-image-ppt/origin_image/slide_01.png
-  workspace/codex-image-ppt/origin_image/slide_02.png
-  workspace/codex-image-ppt/origin_image/slide_03.png
-  workspace/codex-image-ppt/speech.md
-```
+- Python3.10+、python-pptx。原典の状態記録にはfilelock。
+- 新規制作は内蔵の画像生成・編集ツールと、頁を担当する別エージェントを使える環境。保存済み画像の再出力には新規生成不要。
+- 原典docsとMIT利用条件を同梱。PowerPointの実描画はWindows PowerPoint16、PDF→PNGにはpypdfium2。新規installは未検査。
 
-キット内の隔離Pythonへ `python-pptx` と `Pillow` を導入済みなら、キットrootから次を実行できます。原典packagerは画像の原本と3頁のノートを読み、同名フォルダー内にPPTXを出力します。
+## 制約と未実施
 
-```powershell
-& ./.venv/Scripts/python.exe ./source/upstream/skills/codex-ppt/scripts/assemble_ppt.py ./workspace codex-image-ppt.pptx --aspect-ratio 16:9
-```
+- 各頁は画像1枚で、本文の文字・図の線は個別編集できない。話者ノートと頁画像の差し替えに対応する。
+- この作例の初回3頁は同一担当が生成。複数頁worker分担と構成・書式・生成環境・見本の個別の人間承認は未実施のため、原典手順の部分実行。
+- 3頁の修復候補は割当記録の更新前に生成され、注意文の最終修復にも新しい割当はなかった。この逸脱をslide_jobsとslide_run_stateの構造化した履歴へ残し、後から順序や承認を作らない。
+- 現在の最終画像は原典record_slide_result.pyで再記録し、実PPTXの埋込画像hashと照合した。今回の記録整合は、新たな画像生成や原典手順全体の完走を意味しない。
+- 内蔵画像ツールの正確なmodel IDは不明。特定の画像モデルやOpus制作とは記載しない。Gitコマンドは学習用説明でpushは実行していない。
+- 配布再実行は保存済み画像の再統合を検査。新規install・新しい原稿からの全工程は未検査。
 
-配布の再現証拠には上記に加え、`LICENSE.upstream`、`PROVENANCE.json`、`QA.json`、`environment.json`、`input/`、`PROMPT.txt`、`outline.md`、`style.json`、`deck_spec.json`、`workflow-decisions.json`、`slide_jobs.json`、`slide_run_state.json`、`prompts/`、`source/native-imagegen-requests.json`、`source/commands.json`、`source/logs/`、`render/powerpoint-render.json` を含めます。原典のjobs/state経路も再現する場合は `source/upstream/skills/codex-ppt/scripts/` の同梱Pythonスクリプト一式と `filelock` が必要です。
-
-`tools/build_codex_image_repository_example.py` はカタログ用の補助で、単体の画像生成器ではありません。カタログroot、`.build/actual-upstreams/ningzimu__codex-ppt-skill`、`.build/ppt-master-venv/Scripts/python.exe`、`examples/repositories/codex-image-ppt` という配置に依存します。持ち運ぶキットでは、このhelperをそのまま動かすより上記の原典packagerを直接呼んでください。PowerPointによる再QAはWindowsとPowerPointを別途要します。
+現在版の実画像を制作担当が確認した。独立モデル再評価と人間の採用は別。自己採点はしていない。[QA.json](QA.json)、[PROVENANCE.json](PROVENANCE.json)、保存済み画像の[再出力](REPRODUCE.md)を確認する。

@@ -18,7 +18,101 @@
       "to": "slides_recorded",
       "at": "2026-10-13T15:09:20Z",
       "note": "all slide images recorded"
+    },
+    {
+      "from": "slides_recorded",
+      "to": "slides_dispatched",
+      "at": "2026-10-15T13:35:48Z",
+      "note": "all slide jobs dispatched"
+    },
+    {
+      "from": "slides_dispatched",
+      "to": "slides_recorded",
+      "at": "2026-10-15T13:36:06Z",
+      "note": "all slide images recorded"
+    },
+    {
+      "event": "final_image_state_artifact_reconciled",
+      "at": "2026-10-15T17:35:30Z",
+      "slide_id": "slide_03",
+      "generation_repeated": false,
+      "human_approval_obtained": false,
+      "record": "source/state-artifact-reconciliation.json"
     }
   ],
-  "updated_at": "2026-10-13T15:09:20Z"
+  "updated_at": "2026-10-15T17:35:30Z",
+  "workflow_compliance": {
+    "scope": "partial_original_workflow",
+    "expected_generation_order": [
+      "dispatch",
+      "image_generation",
+      "result_recording"
+    ],
+    "observed_repair_order": [
+      "spacing_generation",
+      "spacing_dispatch_record",
+      "spacing_result_record",
+      "warning_generation_without_new_dispatch",
+      "final_image_artifact_assembly",
+      "administrative_final_result_reconciliation"
+    ],
+    "deviations": [
+      {
+        "id": "spacing_generated_before_repair_dispatch",
+        "phase": "spacing_edit",
+        "generation_at": null,
+        "generation_time_known": false,
+        "generation_before_dispatch": true,
+        "dispatch_at": "2026-10-15T13:36:06Z",
+        "generation_source_record": "source/imagegen-repair.json",
+        "image_sha256": "77dc8f10f723b57b949b787f9c7d65e159d7bda4945b3ad664728aa6efd19876",
+        "evidence": "Previous result qa_note explicitly recorded candidate-before-refreshed-dispatch.",
+        "full_chronological_workflow_claimed": false
+      },
+      {
+        "id": "warning_edit_without_new_dispatch",
+        "phase": "warning_legibility_edit",
+        "generation_at": null,
+        "generation_time_known": false,
+        "generation_tool": "image_gen.imagegen",
+        "tool_call_id": "exec-2e568a74-6513-44be-9981-f92c7d5767a8",
+        "image_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
+        "new_generation_dispatch_executed": false,
+        "evidence": "source/imagegen-warning-repair.json",
+        "full_chronological_workflow_claimed": false
+      }
+    ],
+    "human_approval_obtained": false,
+    "multiple_page_workers_used": false,
+    "current_user_delegation": "Autonomous improvement requested; does not retroactively establish missing historical human approvals or worker dispatches.",
+    "full_original_workflow_complete": false
+  },
+  "artifact_binding": {
+    "artifact": "codex-image-ppt.pptx",
+    "artifact_sha256": "661602d6d753221d3e15bd6b6fb71f8eeba3dccabe8d41c1495840e5a263d59f",
+    "slides": [
+      {
+        "slide_id": "slide_01",
+        "final_image": "origin_image/slide_01.png",
+        "source_sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
+        "embedded_image_sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
+        "match": true
+      },
+      {
+        "slide_id": "slide_02",
+        "final_image": "origin_image/slide_02.png",
+        "source_sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
+        "embedded_image_sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
+        "match": true
+      },
+      {
+        "slide_id": "slide_03",
+        "final_image": "origin_image/slide_03.png",
+        "source_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
+        "embedded_image_sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
+        "match": true
+      }
+    ],
+    "scope": "Image bytes physically read from delivered PPTX; not inferred from state."
+  }
 }

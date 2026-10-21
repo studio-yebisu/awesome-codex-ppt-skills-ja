@@ -1,0 +1,97 @@
+{
+  "status": "pass_payload_bound",
+  "checked_at": "2026-10-16T03:23:43.021273+00:00",
+  "author": "Codex R13",
+  "scope": "Both executed ZIP payloads independently rebuilt original S3/S4 and PP16/PDFium outputs. A final metadata-only repack adds these receipts; this does not claim byte-identical archive hashes before/after repack.",
+  "archives": [
+    {
+      "archive": "mck-native-example-ja.zip",
+      "executed_archive_sha256": "bde3e430ed30b5178f2390b68af70f7b824578363bc17ec8a7a9ce26a8d9d8c4",
+      "SOURCE_files": 78,
+      "all_SOURCE_hashes_match": true,
+      "native_slide_xml_and_media_equal": true,
+      "all4_pages": [
+        {
+          "page": 1,
+          "RGB_equal": true,
+          "expected_sha256": "80817093634cfed717ddde7b45371c55cad0920afba54b582ecbc41f67b98f86",
+          "replayed_sha256": "80817093634cfed717ddde7b45371c55cad0920afba54b582ecbc41f67b98f86"
+        },
+        {
+          "page": 2,
+          "RGB_equal": true,
+          "expected_sha256": "a4a3bc9e0de4ea263fc84bf76d49de0c3593816538a992fb232bc4dc8878d90f",
+          "replayed_sha256": "a4a3bc9e0de4ea263fc84bf76d49de0c3593816538a992fb232bc4dc8878d90f"
+        },
+        {
+          "page": 3,
+          "RGB_equal": true,
+          "expected_sha256": "604d1c01709cf654984190e2973cc567c57da11367dc86475ddce5b8abd5132f",
+          "replayed_sha256": "604d1c01709cf654984190e2973cc567c57da11367dc86475ddce5b8abd5132f"
+        },
+        {
+          "page": 4,
+          "RGB_equal": true,
+          "expected_sha256": "4d5dd1c58a551af94b2a845f72caec887851729ab3ed1cf6d88578e9566590eb",
+          "replayed_sha256": "4d5dd1c58a551af94b2a845f72caec887851729ab3ed1cf6d88578e9566590eb"
+        }
+      ],
+      "S3_passed": true,
+      "S4_passed": true,
+      "S4_score": 98,
+      "S4_checklist": {
+        "user_code_errors": 0,
+        "engine_bug_errors": 0,
+        "warnings": 1
+      },
+      "count_checks_passed": true,
+      "replayed_pptx_sha256": "a3a809ee03b1a06c106c15ce3bf1f3a14f7d3aefb4265d8a917ffa2700bbecb8"
+    },
+    {
+      "archive": "mck-native-ja.zip",
+      "executed_archive_sha256": "63e9a11fbe8cbca312e7ba2ea44ef2d64af81dcbede7d12a98dd2c06fcabda43",
+      "SOURCE_files": 78,
+      "all_SOURCE_hashes_match": true,
+      "native_slide_xml_and_media_equal": true,
+      "all4_pages": [
+        {
+          "page": 1,
+          "RGB_equal": true,
+          "expected_sha256": "80817093634cfed717ddde7b45371c55cad0920afba54b582ecbc41f67b98f86",
+          "replayed_sha256": "80817093634cfed717ddde7b45371c55cad0920afba54b582ecbc41f67b98f86"
+        },
+        {
+          "page": 2,
+          "RGB_equal": true,
+          "expected_sha256": "a4a3bc9e0de4ea263fc84bf76d49de0c3593816538a992fb232bc4dc8878d90f",
+          "replayed_sha256": "a4a3bc9e0de4ea263fc84bf76d49de0c3593816538a992fb232bc4dc8878d90f"
+        },
+        {
+          "page": 3,
+          "RGB_equal": true,
+          "expected_sha256": "604d1c01709cf654984190e2973cc567c57da11367dc86475ddce5b8abd5132f",
+          "replayed_sha256": "604d1c01709cf654984190e2973cc567c57da11367dc86475ddce5b8abd5132f"
+        },
+        {
+          "page": 4,
+          "RGB_equal": true,
+          "expected_sha256": "4d5dd1c58a551af94b2a845f72caec887851729ab3ed1cf6d88578e9566590eb",
+          "replayed_sha256": "4d5dd1c58a551af94b2a845f72caec887851729ab3ed1cf6d88578e9566590eb"
+        }
+      ],
+      "S3_passed": true,
+      "S4_passed": true,
+      "S4_score": 98,
+      "S4_checklist": {
+        "user_code_errors": 0,
+        "engine_bug_errors": 0,
+        "warnings": 1
+      },
+      "count_checks_passed": true,
+      "replayed_pptx_sha256": "3f5eb74e6ed16f99448c492603fdb725c1beb999cf9c8e61f3374fe1b924c16b"
+    }
+  ],
+  "post_execution_metadata_only_repack": true,
+  "not_reexecuted_after_metadata_repack": true,
+  "production_payload_scope": "input/*,upstream/*,fonts/*,deck.pptx,source build/render/edit/inspect scripts and font-count-checks.json unchanged after execution."
+}

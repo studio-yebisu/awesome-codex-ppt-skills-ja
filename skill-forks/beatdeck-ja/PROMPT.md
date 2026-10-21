@@ -1,13 +1,18 @@
-# 制作依頼
+# 再制作の指示
 
-原典borjaperfra/beatdeck固定commit `329a971303bedd3eeaae7c5216317fafdf2ef6a3`を実使用し、日本語「パンが、店先に届くまで。」を6場面・12〜16段階で制作する。架空のパン店を説明する概念資料。素材→混ぜる/形づくる→焼く→店先→選ぶ/手渡すを、ひとつのstage worldへ組む。
+一つずつ話す内容に合わせて、同じ場面の図をクリックで変える。
 
-私有copyのinit対象絶対パスをworkspace内と確認してから原典npm run initを実行する。未変更原本を別保存し、元src/beatdeckを私有controllerへ置換しない。content audit→SceneDef[]のref/source/note→scene/timeline→元React stage→npm run build（実typecheck/bundle/offline check）を実行する。
+入力: 原稿・話者のメモ・出典と、何を一回のクリックで見せるかの対応表。
+出力: 6場面15段階のReact資料。共通の工程図、発表者用のsource/note、自動beatを持つ。
 
-原典light themeを土台に、温かい紙・墨・朱というブランド指定をtokensへ重ねる。Dela Gothic Oneの短い大見出し、BIZ UDPGothic本文、Manrope英数字を公式実字体/OFLからlocalへ用意する。hairline・huge type・negative space、説明用SVG、元Scene/Reveal/NodeBox+Arrow/Typewriter/Timelineを必要箇所で使う。丸いカード列やdashboardにしない。
+1. 原稿をreferenceへ保持し、何を舞台に置き何を講稿へ回すかCONTENT-AUDITで照合する。
+2. sceneとbeatを定義し、各段階のref/source/noteと自動進行の要否を記録する。
+3. 元Scene/Reveal等で段階を組み、戻りや直接URLでも同じ表示になるよう状態から描く。
+4. 原典buildで型検査・bundle・外部URL検査を通し、原典verify --sourceで全beatを前進・逆戻り・直接表示で比較する。
+5. contact sheetと重要フレームを開いて確認し、RUNBOOKと実施していない実機稽古を引き渡す。
 
-原料仕様・食品安全・時間・売上・科学値など、実証していない事実を作らない。QR targetは未指定なので外部URLを発明せず、QRなしの最終段階にする。MIT対象外のexamples/kernel-panic/assetsは使わず同梱しない。
+同梱作例の実施範囲: 原典buildと未変更verifyを実行。15状態すべての前進・逆戻り・直接表示が既定0.1%で一致、layout/error/remote/warningは0。全15枚を個別に開いて目視。
 
-元APIへ最小same-origin bridgeを外側から追加し、yebisu-slide/pageのindexは全scene/beatをflattenした0-based indexで対応させる。主出力はdist/index.html+assetsのフォルダーで、単独HTMLとは称さない。Web完成一式ZIPを主downloadにする。
-
-実build、主要初回表示、元1click=1beatの一段移動、初回2PNGだけを確認する。最新ユーザー指定により原典verifyの全forward/back/direct/frame比較は今回実施しない。source/fork ZIP、短い日本語SKILL/SOURCE、原本/差分、入力/原稿/brand/content audit、PROVENANCE、font/OFLとfragmentを完成させる。
+制約: 原典verifyは15段階、既定0.1%の閾値で一致。QR URL未指定でQRなし、Terminal/data-exact照合は0要素。
+制約: 3.1〜3.3は同じ工程内で、ボウル→生地→天板と矢印へ図も変わる。材料量・温度・時間・実際の製パン方法は表現していない。
+制約: 全キーの手動稽古、実機Wi-Fi切断、別端末・プロジェクターでの通し確認は未実施。

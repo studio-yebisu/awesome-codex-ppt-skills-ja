@@ -1,0 +1,92 @@
+{
+  "repository": "HututuWorks/sci-diagram-pptx",
+  "upstream_commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
+  "license": "Apache-2.0",
+  "runtime": "PptxGenJS 4.0.1 (MIT)",
+  "route": "Reconstruction",
+  "accepted_pass": "pass-01",
+  "source": {
+    "kind": "original_authored_reconstruction_test_input",
+    "author": "Studio Yebisu",
+    "description_ja": "科学模式図の復元を試すため、Studio Yebisuが先に作成したPNG入力。既存資料の改善前例や、スキル未使用AI出力ではない。",
+    "source_dimensions_px": {
+      "width": 1600,
+      "height": 900
+    },
+    "source_file": "pass-01/source.png",
+    "source_sha256": "5d886f134754d7dd86b315f9ee963f27a5a70de0944939544c5ee70d2d2ec690",
+    "source_svg_file": "input/authored-source.svg",
+    "source_svg_sha256": "c2d1cbe123b3db0ab1042824ef41b1df370864f6320ecedd350cdfa2b759c46c",
+    "license": "CC0-1.0",
+    "scientific_scope_ja": "水循環の代表的な経路の一部。定量値、移動時間、地形の縮尺は示さない。",
+    "sources": [
+      {
+        "title": "USGS: Condensation and the Water Cycle",
+        "url": "https://www.usgs.gov/water-science-school/science/condensation-and-water-cycle",
+        "supports_ja": "大気中の水蒸気から液体水への凝結と、雲から落下する降水。"
+      },
+      {
+        "title": "USGS: Follow a Drip Through the Water Cycle",
+        "url": "https://www.usgs.gov/water-science-school/science/follow-a-drip-through-water-cycle",
+        "supports_ja": "蒸発、凝結、地表水、海・湖へ戻る経路。"
+      }
+    ],
+    "science_verification_date": "2026-10-15",
+    "usgs_image_reproduced": false,
+    "before_after_quality_or_speed_claim": false,
+    "input_source_file": "input/source.png"
+  },
+  "inventory": "input/reconstruction-inventory.json",
+  "production": {
+    "requested_model": "claude-opus-5-5",
+    "reported_model": "claude-opus-5-5",
+    "scope_ja": "原典SKILLと実入力PNGを読み、復元用build.mjsと要素対応表を執筆。実行と検査はCodexが担当。"
+  },
+  "template": "upstream/assets/pptxgenjs-build-template.mjs",
+  "applied_rules": [
+    "Provided bitmap input reconstructed as one editable slide",
+    "Original visible labels and directed topology preserved",
+    "Simple example: native ownership for all meaning-bearing objects; its INSETS is empty. Supplementary complex example has one explicitly raster-owned synthetic inset.",
+    "One source-pixel-to-slide transform and original directed connector helpers"
+  ],
+  "not_claimed": [
+    "aesthetic improvement over input",
+    "time saving",
+    "arbitrary figure reconstruction",
+    "pixel identity across renderers",
+    "mathematical formulas or empirical experiment-photo reconstruction",
+    "edge-edge crossing",
+    "automatic box-attached connector rerouting",
+    "existing PPTX Repair or Inspection"
+  ],
+  "source_sha256": "5d886f134754d7dd86b315f9ee963f27a5a70de0944939544c5ee70d2d2ec690",
+  "build_sha256": "52d5ad5c4e617caeb8a560b0691a52054dd51bdc2f5527e2a393fb13e5b200ea",
+  "pptx_sha256": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0",
+  "editability_proof": "qa/editability/native-editability.json",
+  "preview_pipeline": "PowerPoint PDF export → Poppler pdftoppm PNG, 1600px width",
+  "approximation_note_ja": "箱の塗り色は入力よりわずかに灰色寄りの近似です。原典の優先順位に従い、意味・ラベル・矢印の方向・編集性を保っています。画素単位の一致や見た目の改善を示す例ではありません。",
+  "current_codex_repair_scope": "Current R13: self-contained saved pass04 handoff, corrected current/historical scope, complex main evidence. Original engine/checker and simple pass01 unchanged. Python arrow helper and R12 evidence retained as history.",
+  "native_line_topology": "qa/native-line-topology.json",
+  "native_shape_editability": "qa/editability/native-shapes-editability.json",
+  "distribution_replay": "source/distribution-replay.json",
+  "original_renderer_evidence": "qa/original-libreoffice/evidence.json",
+  "supplementary_complex_example": {
+    "readme": "complex-example/README.md",
+    "provenance": "complex-example/PROVENANCE.json",
+    "accepted_pass": 4,
+    "accepted_pptx_sha256": "0814a76ebd341ddce69d766cef4f27b1eaca94ce3f05f3486432d5b36796d57a",
+    "initial_author": "actual claude-opus-5-5",
+    "terminal_font_repair_and_execution": "Codex",
+    "original_simple_accepted_unchanged": true,
+    "current_refinement_author": "Codex",
+    "current_refinement_scope": "Current self-contained packaging of saved pass04; native/XML/media and actual PP/LO appearance equal to R12 accepted corner/arrow refinement. This is not a new reconstruction from the input.",
+    "current_render": "complex-example/render-pass04/powerpoint.png",
+    "original_standard_pass_budget": 2
+  },
+  "distribution_replay_scope": "source/distribution-replay.json is the earlier archive execution record; current rebuilt archives require their own execution evidence.",
+  "current_archive_replay": "source/replay-round13.json",
+  "current_archive_replay_scope": "Both separately extracted archive payloads, 4 saved builds, 8 PP/LO RGB comparisons and 2 complex native edit save/reopen comparisons; final metadata/documentation-only repack bound separately.",
+  "current_saved_archive_builds_verified": 4,
+  "current_saved_archive_render_rgb_comparisons": 8,
+  "current_complex_native_edit_reopen_comparisons": 2
+}

@@ -18,8 +18,12 @@ def main():
         if (ROOT / ('data/' + name + '.json')).exists():
             for c in load('data/' + name + '.json'):
                 by_id[c['id']] = c
-    for fragment in sorted((ROOT / 'data').glob('sol-*-repository-examples.json')):
-        for c in load(fragment.relative_to(ROOT)):
+    fragments = sorted((ROOT / 'data').glob('sol-*-repository-examples.json'))
+    fragments += [ROOT / 'data' / name for name in ['sci-reconstruction-fragment.json', 'mck-native-fragment.json', 'presentation-repair-fragment.json'] if (ROOT / 'data' / name).exists()]
+    for fragment in fragments:
+        content = load(fragment.relative_to(ROOT))
+        fragment_cases = [content['case']] if isinstance(content, dict) else content
+        for c in fragment_cases:
             # Parallel producers write their fragments while exports/packages finish.
             # Keep the live site on completed files until that case is ready.
             required=['qa','artifact_download','source_download','fork_download','cover','preview']
@@ -29,8 +33,21 @@ def main():
             by_id[c['id']] = c
     cases = list(by_id.values())
     integration_notes = load('data/case-integration-notes.json') if (ROOT/'data/case-integration-notes.json').exists() else {}
+    case_overrides = {}
+    case_fields = {'title','style','artifact_download','input_data','status','execution_status','sample_notice','preview_notice','preview_image_notice','method','prompt_text','pages','page_count','titles','notes','font_download','font_families','font_notice_ja','preview_kind','license_notice_ja'}
+    for patch_path in sorted((ROOT/'data/skill-effect-patches').glob('*.json')):
+        for patch in load(patch_path.relative_to(ROOT)):
+            case_overrides.setdefault(patch['case_id'], {}).update({k:v for k,v in patch.items() if k in case_fields})
     for c in cases:
         c.update(integration_notes.get(c['id'], {}))
+        c.update(case_overrides.get(c['id'], {}))
+        if c['id'] == 'beatdeck-showcase':
+            base = Path(c['preview']).parent.parent
+            index = base / 'source/verification-index.json'
+            if (ROOT / index).exists():
+                verified = load(index)
+                c['pages'] = [(base / row['image']).as_posix() for row in verified]
+                c['verification'] = (base / 'verification.html').as_posix()
         if 'repository.html?' not in c['guide']:
             c['case_guide'] = c['guide']
         c['guide'] = 'repository.html?repo=' + quote(c['repository'], safe='/')
@@ -61,6 +78,20 @@ def main():
             guide = {k: v for k, v in guide.items() if k not in ['license_paths', 'skill_paths']}
             merged.update(guide)
             authored[repo] = merged
+    if (ROOT / 'data/mck-native-fragment.json').exists():
+        guide = load('data/mck-native-fragment.json')['guide']
+        authored[guide['repository']] = guide
+    if (ROOT / 'data/skill-effect-repository-guides.json').exists():
+        for guide in load('data/skill-effect-repository-guides.json'):
+            authored.setdefault(guide['repository'], {}).update(guide)
+    for path in sorted((ROOT / 'data/skill-effect-patches').glob('*.json')):
+        for patch in load(path.relative_to(ROOT)):
+            case = by_id.get(patch['case_id'])
+            if case and patch.get('guide_patch'):
+                repo = case['repository']
+                authored.setdefault(repo, {}).update(patch['guide_patch'])
+    verified_descriptions = load('data/verified-skill-descriptions.json') if (ROOT/'data/verified-skill-descriptions.json').exists() else {}
+    maintained_effects = {e['repository']:e for e in load('data/skill-effects.json')['skills']} if (ROOT/'data/skill-effects.json').exists() else {}
     profiles = []
     for s in original:
         repo = s['repo_full_name']
@@ -79,19 +110,28 @@ def main():
             'limitations': [] if works else ['この環境での制作は未着手です。原典の入口は取得済みです。'],
             'forks': sorted({c['fork_id'] for c in works if c.get('fork_id')})}
         profile.update(authored.get(repo, {}))
+        for field in ('requirements','commands','steps','limitations'):
+            if isinstance(profile.get(field), str):profile[field]=[profile[field]]
+        if works and not profile['steps']:
+            profile['steps']=maintained_effects.get(repo,{}).get('how_to_use',[])
+        profile['license_notice_ja']=profile.get('license_notice_ja') or profile.get('license_note') or ('原典の利用条件: '+str(profile.get('license') or '同梱LICENSEを確認')+'。素材・書体・依存物はそれぞれの条件を保持する。')
         if works: profile['production_status'] = 'generated'
-        profile['original_description_ja'] = s['description_ja']
+        profile['original_description_ja'] = verified_descriptions.get(repo, {}).get('description_ja', s['description_ja'])
         profile['example_ids'] = [c['id'] for c in works]
         if works:
             states = [load(c['qa']).get('status') for c in works]
-            profile['execution_status'] = 'generated_light_check' if 'light_check_complete' in states else ('generated_verified_locally' if all(s == 'qa_complete' for s in states) else 'generated_with_review_record')
+            profile['execution_status'] = 'generated_light_check' if 'light_check_complete' in states else ('generated_author_qa_complete' if all(s == 'qa_complete' for s in states) else 'generated_author_qa_recorded')
+            profile['author_qa_states'] = states
+            profile['independent_current_version_review'] = '修正後の独立評価は別の固定版ごとに記録。現行版の最終合格は未確定。'
         if works and not profile['commands']:
             c = works[0]
             provenance = load(c['provenance'])
-            profile['execution_type'] = provenance.get('execution_type', 'original_skill_workflow')
+            profile['execution_type'] = profile.get('execution_type') or provenance.get('execution_type', 'original_skill_workflow')
             profile['method_ja'] = c['method']
-            profile['requirements'] = ['原典のスキルを読めるコーディングエージェント', '各作例のPROVENANCE.jsonに記録した制作環境', '作例のREADMEに指定した書体と個別条件']
-            profile['steps'] = ['日本語派生版を取得し、そのSKILL.mdを読む', '作例の入力資料を、自分の題材へ置き換える', '日本語の依頼文を添付して制作を依頼', '原典のビルドと主要な完成ファイルの初回表示を確認する']
+            if not profile['requirements']:
+                profile['requirements'] = ['原典のスキルを読めるコーディングエージェント', '各作例のPROVENANCE.jsonに記録した制作環境', '作例のREADMEに指定した書体と個別条件']
+            if not profile['steps']:
+                profile['steps'] = ['日本語派生版と固定原典を読み、入力資料を自分の題材へ置き換える', '原典の方式で制作し、全頁の実表示・内容・書体・関係を確認する', '原典の検査、必要な編集や操作と配布物の再現を確認し、未実施の範囲を記録する']
         profiles.append(profile)
     dump('data/repository-guides.json', profiles)
     dump('data/production-ledger.json', {'catalog_count': len(original),

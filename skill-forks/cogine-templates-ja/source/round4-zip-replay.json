@@ -1,0 +1,47 @@
+{
+  "author": "Codex",
+  "archive_under_test": "cogine-templates-example-ja.zip",
+  "archive_sha256_before_receipt_added": "723c8527a610069689265ba4c672be1f07c26f566b34e1f82a6a87be5c1ccf12",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "source/build.py",
+        "--case",
+        ".",
+        "--upstream",
+        "source/upstream"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "Cloned editorial-luxury folder; mapped and replaced six real slide layouts.\n"
+    },
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "source/upstream/scripts/validate-visual.mjs",
+        "--root",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\cogine-templates-showcase\\.private\\round4-zip-replay\\cogine-templates-showcase\\.private\\validation-root",
+        "--template",
+        "editorial-luxury",
+        "--browser",
+        "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "Visual validation passed for 1 template(s) at 1280x720.\n- editorial-luxury\n"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "template.html",
+      "published_sha256": "0ead00d14907c806226e97309003083b5255c2ffad3955bb0c091c00c821cf99",
+      "replayed_sha256": "0ead00d14907c806226e97309003083b5255c2ffad3955bb0c091c00c821cf99",
+      "equal": true
+    }
+  ],
+  "all_commands_exit_zero": true,
+  "published_artifact_byte_identical": true,
+  "environment_scope": "Replayed from fresh extraction using existing compatible Python/Node/browser runtimes. Beatdeck reuses the locked existing node_modules through a junction; a fresh npm ci is not claimed.",
+  "independent_visual_review": "Not an evaluator score. The public current output was separately read in full."
+}

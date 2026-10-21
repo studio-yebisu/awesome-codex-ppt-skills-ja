@@ -8,7 +8,7 @@
   "case_studies": [
     "presentation-forge-showcase"
   ],
-  "method": "Original new_deck.py, per-slide HTML + notes, obsidian components/motion, unchanged engine/build.py; official Japanese font adaptation and post-build bridge/notices.",
+  "method": "original scripts/new_deck.py -> original template scaffold -> authored one-HTML-per-slide -> unchanged template/build.py -> inline fonts/styles/icons/scripts -> appended origin-checked bridge and license notices",
   "modifications": [
     "Japanese source/notes",
     "theme fonts and Japanese spacing",
@@ -307,8 +307,32 @@
   "fonts": "OFL-1.1 official original TTF; source/FONT-SOURCE.json",
   "files": [
     {
+      "path": "LICENSE",
+      "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "8f1f595d3c6ca5e2902634f9479a0a205f9d04414c423b61933a07a483ac508c"
+    },
+    {
       "path": "example/index.html",
       "sha256": "c68be597afc7daa13aec2b1be4e3234ba339d5f0696045186a6a7c2c94424007"
+    },
+    {
+      "path": "example/PROMPT.md",
+      "sha256": "88823afddc37fe1d5147d593950a71147058571b3e48cb8d6a65bce36d9e079d"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "17adfc67bf1210ef492f7d2848bb259643b2aaec61d6545a95eccbc69d2bbc5f"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "8d576815f48d043ad9376bb241befa5f04dc05dc8bb18f66389cd1aa3266f06a"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "1e93e499bf95ac4a04030659375e1299e9a31397c379ace1c07a9bed239d64f3"
     },
     {
       "path": "example/input/deck-plan.json",
@@ -319,20 +343,16 @@
       "sha256": "4bee0aa056b60fca078df29d53d834426e4e95efc1bd73bb4e2f2de5c7db15fe"
     },
     {
-      "path": "example/PROMPT.md",
-      "sha256": "c0eeb771743c7fe4a31df7f3fb28a3a708ccb651162d1a43213779dd65c943fc"
+      "path": "example/render/all-pages-contact.jpg",
+      "sha256": "e89e47910e49e7d11fb6732c78eaf7060e83ca129f9a2b52d4b7d88599849a92"
     },
     {
-      "path": "example/PROVENANCE.json",
-      "sha256": "2149cd0bbbcfcfe09fc1deb9b2b3537431e6ef422713b72a79a3b3dcc50e78ed"
+      "path": "example/render/effect-page-04.jpg",
+      "sha256": "68b0925041b7c817adfa26484f8708fa38906bad4bec813a592c5b65d80ef83a"
     },
     {
-      "path": "example/QA.json",
-      "sha256": "a6701d1b02ab7e4c998b24ef623b86c7a20647d7caaba9b0a9d4c279154b23f5"
-    },
-    {
-      "path": "example/README.md",
-      "sha256": "55ca97b2ab9869fdf8f425e712e6127a28c4ef1c182c7f60ac7032f948926101"
+      "path": "example/render/presenter-notes-page-04.png",
+      "sha256": "5c7e018ceebe862edaff4ee8f88007f8fc1b6bf6b6fad7b8b5a66cd594f96417"
     },
     {
       "path": "example/render/slide-01.png",
@@ -343,6 +363,50 @@
       "sha256": "3cff30b57e37f920b99977f236d0be227f94b765f1a7d275ba6f84c0a390a4b2"
     },
     {
+      "path": "example/render/slide-03.png",
+      "sha256": "8d856f0ad4593fbdf9f445f8ef7adcb941accb3430161da7387ea7fad154fc2d"
+    },
+    {
+      "path": "example/render/slide-04.png",
+      "sha256": "555b1d145548450264ef046a4286fb1a50fca9a5fd6e8be279643d8ed71523d4"
+    },
+    {
+      "path": "example/render/slide-05.png",
+      "sha256": "72f9833df9020a855e795f92eeb739edc1ca10a78dbcb2b74d3af31abb873a3e"
+    },
+    {
+      "path": "example/render/slide-06.png",
+      "sha256": "cefec69ccdbe94b92ea6f7ef0273763592c9c0ff4cc0d69d8550f3b3037999a4"
+    },
+    {
+      "path": "example/render/original-check/sheet.png",
+      "sha256": "01a5e4efeb24815c2d3c05af37775f3434f0b0041edc05f270ba45bd0a7ce10a"
+    },
+    {
+      "path": "example/render/original-check/slide-01.png",
+      "sha256": "39816d793b6db589e2d628d9cf5335a18c9cb9af296bcc569f98ee651aace007"
+    },
+    {
+      "path": "example/render/original-check/slide-02.png",
+      "sha256": "3cff30b57e37f920b99977f236d0be227f94b765f1a7d275ba6f84c0a390a4b2"
+    },
+    {
+      "path": "example/render/original-check/slide-03.png",
+      "sha256": "8d856f0ad4593fbdf9f445f8ef7adcb941accb3430161da7387ea7fad154fc2d"
+    },
+    {
+      "path": "example/render/original-check/slide-04.png",
+      "sha256": "555b1d145548450264ef046a4286fb1a50fca9a5fd6e8be279643d8ed71523d4"
+    },
+    {
+      "path": "example/render/original-check/slide-05.png",
+      "sha256": "72f9833df9020a855e795f92eeb739edc1ca10a78dbcb2b74d3af31abb873a3e"
+    },
+    {
+      "path": "example/render/original-check/slide-06.png",
+      "sha256": "cefec69ccdbe94b92ea6f7ef0273763592c9c0ff4cc0d69d8550f3b3037999a4"
+    },
+    {
       "path": "example/source/BUILD.json",
       "sha256": "a3e9f4a7be1b687c4e8c65d05b5978765016ed362defb270ed1baa198d56779f"
     },
@@ -351,8 +415,36 @@
       "sha256": "ef91cb51f7cf90b724fa2c8d40c6ac52e935e61125db6860616314352de67cc0"
     },
     {
-      "path": "example/source/deck/assets/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      "path": "example/source/FONT-SOURCE.json",
+      "sha256": "36120bfd19485cf7582092c0c8c9c2357b0c98757194aa4957a1a9c23f037926"
+    },
+    {
+      "path": "example/source/original-gates.json",
+      "sha256": "008029e4794b14adada8368c3eecff42921e3b4d9890b578bcb1cc0ce2eff5bf"
+    },
+    {
+      "path": "example/source/presenter-check.json",
+      "sha256": "ec3c6bb53e3c1927a74c5ebd8da53b16e045925ad9b4ecb7f34c2aad18705682"
+    },
+    {
+      "path": "example/source/rebuild.py",
+      "sha256": "eaee8b5c70b31fc0ec3d089bad74177076baa92f06dbfbe114977582a9ade39e"
+    },
+    {
+      "path": "example/source/repair-qa.json",
+      "sha256": "4fb816390b1b8d3c53be9f8a94dab3c2f0ba8f0daa2de39224822f5be8335ad7"
+    },
+    {
+      "path": "example/source/theme.patch",
+      "sha256": "1333f988ffc5b45f1f16f34fe4bce60beeeb29a4041dbbac1245ee910a24c039"
+    },
+    {
+      "path": "example/source/verify-controls.cjs",
+      "sha256": "62306192a82566462bf93678cb85c526bc797f54b2a5f5e6e97e5d57fbe5c187"
+    },
+    {
+      "path": "example/source/zip-replay.json",
+      "sha256": "3961431d017c9ad62e5d90c3e993a3a16fe6b697f007404a097f625e909508ca"
     },
     {
       "path": "example/source/deck/build.py",
@@ -367,12 +459,48 @@
       "sha256": "0d587d5badd74dec67471404e68e181cc32b42a282e269008c8f575a01fe296b"
     },
     {
+      "path": "example/source/deck/index.html",
+      "sha256": "64c010e7741aac9eea5087c4d37ea832d3995e8ddec2f6c7c3154d7a797d072a"
+    },
+    {
+      "path": "example/source/deck/LICENSE",
+      "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3"
+    },
+    {
+      "path": "example/source/deck/README.fr.md",
+      "sha256": "773a06717a03118d91d97136310e315ab28a8966a889897fd29b2d72caae8ab8"
+    },
+    {
+      "path": "example/source/deck/README.md",
+      "sha256": "b641feb9ab9df49ff099bcbcd449234d98711993d254a680952b76655a49c4c2"
+    },
+    {
+      "path": "example/source/deck/assets/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
       "path": "example/source/deck/docs/writing-slides.md",
       "sha256": "dbcc597e8bb4bfb83cc5a6648ad277ec81b6e964b3089ac9ceb2235ae92e323f"
     },
     {
       "path": "example/source/deck/engine/base.css",
       "sha256": "6761309108d21bb4d88cfe99ae68437c22293e5db3c11eb3c1632467842a1073"
+    },
+    {
+      "path": "example/source/deck/engine/deck-stage.js",
+      "sha256": "f0c961621d987fd015e5e6b11844f7432b15c9593a8a0e04c4ba309e7544b1aa"
+    },
+    {
+      "path": "example/source/deck/engine/icons-LICENSE",
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+    },
+    {
+      "path": "example/source/deck/engine/icons.json",
+      "sha256": "603a02c80234b49ff32388264f2bfe20045319e8cdcc5211ba7e71991754d56f"
+    },
+    {
+      "path": "example/source/deck/engine/motion.css",
+      "sha256": "7db372b632b4d694ef1b5b086edca3f5e22d8e4d58ac367285f8cc13acbd6d79"
     },
     {
       "path": "example/source/deck/engine/components/bars.css",
@@ -411,38 +539,6 @@
       "sha256": "552e87039e8992178b6a161a90c080ca9675d7cc7e7f807d669d29e6a9375b0c"
     },
     {
-      "path": "example/source/deck/engine/deck-stage.js",
-      "sha256": "f0c961621d987fd015e5e6b11844f7432b15c9593a8a0e04c4ba309e7544b1aa"
-    },
-    {
-      "path": "example/source/deck/engine/icons-LICENSE",
-      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
-    },
-    {
-      "path": "example/source/deck/engine/icons.json",
-      "sha256": "603a02c80234b49ff32388264f2bfe20045319e8cdcc5211ba7e71991754d56f"
-    },
-    {
-      "path": "example/source/deck/engine/motion.css",
-      "sha256": "7db372b632b4d694ef1b5b086edca3f5e22d8e4d58ac367285f8cc13acbd6d79"
-    },
-    {
-      "path": "example/source/deck/index.html",
-      "sha256": "64c010e7741aac9eea5087c4d37ea832d3995e8ddec2f6c7c3154d7a797d072a"
-    },
-    {
-      "path": "example/source/deck/LICENSE",
-      "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3"
-    },
-    {
-      "path": "example/source/deck/README.fr.md",
-      "sha256": "773a06717a03118d91d97136310e315ab28a8966a889897fd29b2d72caae8ab8"
-    },
-    {
-      "path": "example/source/deck/README.md",
-      "sha256": "b641feb9ab9df49ff099bcbcd449234d98711993d254a680952b76655a49c4c2"
-    },
-    {
       "path": "example/source/deck/slides/.gitkeep",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
@@ -471,12 +567,20 @@
       "sha256": "15826aaa31f983d9336a21be2b3e2e1cb3f10b0b492c2a121b0a706432d03c80"
     },
     {
-      "path": "example/source/deck/themes/ink-blue/fonts/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
       "path": "example/source/deck/themes/ink-blue/fonts.css",
       "sha256": "6a90b1e83aa3d1e6813101661b3282bcb6bacbb1b1339d52a44fef73f75e167d"
+    },
+    {
+      "path": "example/source/deck/themes/ink-blue/slides.css",
+      "sha256": "eeba1546273739e206a8a221d655b613a8361d80a7cb5d482c3dd0d6d34fe3cc"
+    },
+    {
+      "path": "example/source/deck/themes/ink-blue/tokens.css",
+      "sha256": "9a186221ca9dd2dc9a60e1062879b978ef5e96d697d361ac08b38b5cc9834b67"
+    },
+    {
+      "path": "example/source/deck/themes/ink-blue/fonts/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "path": "example/source/deck/themes/ink-blue/images/.gitkeep",
@@ -487,12 +591,16 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
-      "path": "example/source/deck/themes/ink-blue/slides.css",
-      "sha256": "eeba1546273739e206a8a221d655b613a8361d80a7cb5d482c3dd0d6d34fe3cc"
+      "path": "example/source/deck/themes/obsidian/fonts.css",
+      "sha256": "3ba5028c4451733ff7dce3ef8ebbb5b9ce0df177a4a7d302ba2084b44c5e83f9"
     },
     {
-      "path": "example/source/deck/themes/ink-blue/tokens.css",
-      "sha256": "9a186221ca9dd2dc9a60e1062879b978ef5e96d697d361ac08b38b5cc9834b67"
+      "path": "example/source/deck/themes/obsidian/slides.css",
+      "sha256": "44cf3a223b7b127230ce1c0fbecdd291565681bc6b661c0a076da98990bc8992"
+    },
+    {
+      "path": "example/source/deck/themes/obsidian/tokens.css",
+      "sha256": "e6971902e476a0e978717ac1b782547f16f45489fecc11f9c3d5bfcaad002973"
     },
     {
       "path": "example/source/deck/themes/obsidian/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
@@ -531,10 +639,6 @@
       "sha256": "63bc4eddc74793f671c3ab827c5175e773ffbe569d0bf50ee65375ea9e3bc286"
     },
     {
-      "path": "example/source/deck/themes/obsidian/fonts.css",
-      "sha256": "3ba5028c4451733ff7dce3ef8ebbb5b9ce0df177a4a7d302ba2084b44c5e83f9"
-    },
-    {
       "path": "example/source/deck/themes/obsidian/images/.gitkeep",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
@@ -543,32 +647,16 @@
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
-      "path": "example/source/deck/themes/obsidian/slides.css",
-      "sha256": "44cf3a223b7b127230ce1c0fbecdd291565681bc6b661c0a076da98990bc8992"
-    },
-    {
-      "path": "example/source/deck/themes/obsidian/tokens.css",
-      "sha256": "e6971902e476a0e978717ac1b782547f16f45489fecc11f9c3d5bfcaad002973"
-    },
-    {
-      "path": "example/source/FONT-SOURCE.json",
-      "sha256": "36120bfd19485cf7582092c0c8c9c2357b0c98757194aa4957a1a9c23f037926"
-    },
-    {
-      "path": "example/source/rebuild.py",
-      "sha256": "eaee8b5c70b31fc0ec3d089bad74177076baa92f06dbfbe114977582a9ade39e"
-    },
-    {
-      "path": "example/source/theme.patch",
-      "sha256": "1333f988ffc5b45f1f16f34fe4bce60beeeb29a4041dbbac1245ee910a24c039"
-    },
-    {
       "path": "example/source/upstream/LICENSE",
       "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3"
     },
     {
       "path": "example/source/upstream/README.md",
       "sha256": "4ed661370612a582a866d5ecd9b2e687aef096039a135acc8c79640e93ff2051"
+    },
+    {
+      "path": "example/source/upstream/SKILL.md",
+      "sha256": "90894464fe3588ccf90770327930b353e96e8683ba19681ba1e7f8d028f4a740"
     },
     {
       "path": "example/source/upstream/reference/components.md",
@@ -619,14 +707,6 @@
       "sha256": "2707f2734c51a7e0ff72595bf3a1007d504e8dcb60fe5869be2b4882a2ccf979"
     },
     {
-      "path": "example/source/upstream/SKILL.md",
-      "sha256": "90894464fe3588ccf90770327930b353e96e8683ba19681ba1e7f8d028f4a740"
-    },
-    {
-      "path": "example/source/upstream/template/assets/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
       "path": "example/source/upstream/template/build.py",
       "sha256": "db50c69167cfa3f9368adabb5f950126c854f32a4ca60481c24badbfd70fdffe"
     },
@@ -635,12 +715,44 @@
       "sha256": "6faf9494f8172158082b6389b0d46f581721288187e41cc4b66f2313ddbdb4e2"
     },
     {
+      "path": "example/source/upstream/template/LICENSE",
+      "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3"
+    },
+    {
+      "path": "example/source/upstream/template/README.fr.md",
+      "sha256": "773a06717a03118d91d97136310e315ab28a8966a889897fd29b2d72caae8ab8"
+    },
+    {
+      "path": "example/source/upstream/template/README.md",
+      "sha256": "b641feb9ab9df49ff099bcbcd449234d98711993d254a680952b76655a49c4c2"
+    },
+    {
+      "path": "example/source/upstream/template/assets/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
       "path": "example/source/upstream/template/docs/writing-slides.md",
       "sha256": "dbcc597e8bb4bfb83cc5a6648ad277ec81b6e964b3089ac9ceb2235ae92e323f"
     },
     {
       "path": "example/source/upstream/template/engine/base.css",
       "sha256": "6761309108d21bb4d88cfe99ae68437c22293e5db3c11eb3c1632467842a1073"
+    },
+    {
+      "path": "example/source/upstream/template/engine/deck-stage.js",
+      "sha256": "f0c961621d987fd015e5e6b11844f7432b15c9593a8a0e04c4ba309e7544b1aa"
+    },
+    {
+      "path": "example/source/upstream/template/engine/icons-LICENSE",
+      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
+    },
+    {
+      "path": "example/source/upstream/template/engine/icons.json",
+      "sha256": "603a02c80234b49ff32388264f2bfe20045319e8cdcc5211ba7e71991754d56f"
+    },
+    {
+      "path": "example/source/upstream/template/engine/motion.css",
+      "sha256": "7db372b632b4d694ef1b5b086edca3f5e22d8e4d58ac367285f8cc13acbd6d79"
     },
     {
       "path": "example/source/upstream/template/engine/components/bars.css",
@@ -679,52 +791,12 @@
       "sha256": "552e87039e8992178b6a161a90c080ca9675d7cc7e7f807d669d29e6a9375b0c"
     },
     {
-      "path": "example/source/upstream/template/engine/deck-stage.js",
-      "sha256": "f0c961621d987fd015e5e6b11844f7432b15c9593a8a0e04c4ba309e7544b1aa"
-    },
-    {
-      "path": "example/source/upstream/template/engine/icons-LICENSE",
-      "sha256": "b495047bd93a9b06913511076f504daba17d5bbeb3e0650f3bb53a4220329c57"
-    },
-    {
-      "path": "example/source/upstream/template/engine/icons.json",
-      "sha256": "603a02c80234b49ff32388264f2bfe20045319e8cdcc5211ba7e71991754d56f"
-    },
-    {
-      "path": "example/source/upstream/template/engine/motion.css",
-      "sha256": "7db372b632b4d694ef1b5b086edca3f5e22d8e4d58ac367285f8cc13acbd6d79"
-    },
-    {
-      "path": "example/source/upstream/template/LICENSE",
-      "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3"
-    },
-    {
-      "path": "example/source/upstream/template/README.fr.md",
-      "sha256": "773a06717a03118d91d97136310e315ab28a8966a889897fd29b2d72caae8ab8"
-    },
-    {
-      "path": "example/source/upstream/template/README.md",
-      "sha256": "b641feb9ab9df49ff099bcbcd449234d98711993d254a680952b76655a49c4c2"
-    },
-    {
       "path": "example/source/upstream/template/slides/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "example/source/upstream/template/themes/ink-blue/fonts/.gitkeep",
       "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "path": "example/source/upstream/template/themes/ink-blue/fonts.css",
       "sha256": "6a90b1e83aa3d1e6813101661b3282bcb6bacbb1b1339d52a44fef73f75e167d"
-    },
-    {
-      "path": "example/source/upstream/template/themes/ink-blue/images/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "example/source/upstream/template/themes/ink-blue/logos/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "path": "example/source/upstream/template/themes/ink-blue/slides.css",
@@ -735,16 +807,20 @@
       "sha256": "9a186221ca9dd2dc9a60e1062879b978ef5e96d697d361ac08b38b5cc9834b67"
     },
     {
+      "path": "example/source/upstream/template/themes/ink-blue/fonts/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/template/themes/ink-blue/images/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/upstream/template/themes/ink-blue/logos/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
       "path": "example/source/upstream/template/themes/obsidian/fonts.css",
       "sha256": "ca45ba0045b5dcda46a32192db3f2bdc6abab63bf1b057943897f945ed48f85d"
-    },
-    {
-      "path": "example/source/upstream/template/themes/obsidian/images/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
-    },
-    {
-      "path": "example/source/upstream/template/themes/obsidian/logos/.gitkeep",
-      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
       "path": "example/source/upstream/template/themes/obsidian/slides.css",
@@ -755,12 +831,30 @@
       "sha256": "a5af3200293d654e9a33984bdee0aff5358e7cd9a2b2acda8849f941f1708477"
     },
     {
-      "path": "LICENSE",
-      "sha256": "1a6e109485ea6df2b4e145f761b037c72607db068ac9f4a95bfa6c2b9687bfe3"
+      "path": "example/source/upstream/template/themes/obsidian/images/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     },
     {
-      "path": "SKILL.md",
-      "sha256": "05cc8546f387e00b5d6bae70ae65d4730c92bf7a3d67a570be8ba4b7d44c6f82"
+      "path": "example/source/upstream/template/themes/obsidian/logos/.gitkeep",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
     }
-  ]
+  ],
+  "verification_scope": "未変更の原典check_deck --slides allで6頁・問題0。全6実PNGを目視。Pキーで現在4頁・次5頁・4頁の新しい話す説明と進行合図が一致することを確認。",
+  "repair_author": "Codex",
+  "repair_receipt": "example/source/repair-qa.json",
+  "completed_sample_included": true,
+  "example_root": "example/",
+  "documentation_update": {
+    "scope": "Japanese sentence correction only; runtime/input/build unchanged",
+    "file": "SKILL.md",
+    "sha256": "8f1f595d3c6ca5e2902634f9479a0a205f9d04414c423b61933a07a483ac508c"
+  },
+  "current_verification": "example/source/repair-qa.json",
+  "zip_reexecution": "example/source/round4-zip-replay.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "current_preview_canvas": {
+    "width": 1920,
+    "height": 1080,
+    "scope": "All current public deck pages; original Cogine validator separately at1280×720."
+  }
 }

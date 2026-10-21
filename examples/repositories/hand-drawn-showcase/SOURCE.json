@@ -1,10 +1,244 @@
 {
   "repository": "ABYR1206/claude-skill-hand-drawn-slides",
   "commit": "322a265344e73cd54f77f3f07b6a9f15bb7d2d99",
-  "license": "MIT",
-  "scope": "Japanese chapter-divider implementation using original PptxGenJS recipe and SVG library",
-  "upstream_preserved": true,
-  "case_studies": [
-    "hand-drawn-showcase"
+  "license": "MIT upstream; PptxGenJS MIT; sharp Apache-2.0 with individual binary dependencies. Windows fonts referenced, not redistributed.",
+  "scope": "Original pinned instruction/SVG library/license plus Japanese chapter example and portable source. Private history/dependencies excluded.",
+  "files": [
+    {
+      "path": ".gitignore",
+      "sha256": "2f2328044469447b4d89afc737ee70354f37e5a3b9719d7d482d220002bdf95d"
+    },
+    {
+      "path": "build.cjs",
+      "sha256": "83a57280057afb4af53b9fef418431d64a3aa3c73fdfcdf25a4367246915b28e"
+    },
+    {
+      "path": "deck.pptx",
+      "sha256": "148303c7c2453fe9a56341518911a6c0feb5afa018275dd699e2411a803aebbd"
+    },
+    {
+      "path": "dependency-licenses/pptxgenjs/LICENSE",
+      "sha256": "7a2bfe96150786ed1908b8e63f98ebab88875c1e79e28faff6649e0f11f77e52"
+    },
+    {
+      "path": "dependency-licenses/sharp/LICENSE",
+      "sha256": "73ba74dfaa520b49a401b5d21459a8523a146f3b7518a833eea5efa85130bf68"
+    },
+    {
+      "path": "illustrations/chapter-01.svg",
+      "sha256": "ebf6ab02f0a6d6a50c5e11dad46bdf6477f17d02c8efc19a225019208b6e0351"
+    },
+    {
+      "path": "illustrations/chapter-02.svg",
+      "sha256": "f42db4e7ab5f41d9cb46620f1b99d656cf63528a7caaf72be9fe928cd795a195"
+    },
+    {
+      "path": "illustrations/chapter-03.svg",
+      "sha256": "943dcd8215b4e5c22cba2f8dba16a832be63ab38d3ae3cb74d0287f16f43cda8"
+    },
+    {
+      "path": "illustrations/chapter-04.svg",
+      "sha256": "15433e22d33f9f563da8d73a1af5dc7c02fb765e5dd5ccf3a44e761ff97df50d"
+    },
+    {
+      "path": "illustrations/cover-sparkle.svg",
+      "sha256": "6775cb7e9e377d85e5667d084e15b778d510a6ad8b27557cfe8e1be62f9654d5"
+    },
+    {
+      "path": "index.html",
+      "sha256": "dc759fb8586278fc939ed2df3bccddb988022826e1578a7cea24672f3ec7c683"
+    },
+    {
+      "path": "input/BRIEF.md",
+      "sha256": "db2e64a45b5986f203dbcd2f6181a74830e1a080b9ed31682948885d6cf6ac8f"
+    },
+    {
+      "path": "input/data.json",
+      "sha256": "8eb4374d5b180a41aac34ad4285bcd6db48cdf31a179c81e95c7e0ffca2701dc"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "939cf67b24635f051b6a7ba8e0bcbb3e95d8bb22edcd98c12975de2a031e6277"
+    },
+    {
+      "path": "package.json",
+      "sha256": "cdec4772bbc467e9fb241be08ec1b7023c276203ee67b971245e05a0119bcc18"
+    },
+    {
+      "path": "PROMPT.txt",
+      "sha256": "1a9af3f2be97f105c829ef48740684c3eb4879bccf6a68479c9d251555a8b310"
+    },
+    {
+      "path": "PROVENANCE.json",
+      "sha256": "e1612b2081884c81342c84d9afdd512604ff807fc7723a092e320580fd2d4d9e"
+    },
+    {
+      "path": "qa/editability/native-editability.json",
+      "sha256": "ea77cb094255bffe8c6b32fbb2e246940870811c1f80c7d0f3d28e857dd1df78"
+    },
+    {
+      "path": "qa/editability/native-title-edited-render.json",
+      "sha256": "9e65f92adb5477119cb991310de6dfdaea9b17f3777815fec93c7567396492de"
+    },
+    {
+      "path": "qa/editability/native-title-edited.pdf",
+      "sha256": "fbd7a98d61a3de2df32def1618327c247cd6a4264621dde196346b7aacb924a0"
+    },
+    {
+      "path": "qa/editability/native-title-edited.png",
+      "sha256": "de56cbb1cfc3d1209a21621ca86aee7e1492258bdcd7bd812ef783f030943774"
+    },
+    {
+      "path": "qa/editability/native-title-edited.pptx",
+      "sha256": "d154dd7228a5e4e5a2c19b5f37550d76d63c148f2e61ba4d410d6917ef2ec0c2"
+    },
+    {
+      "path": "QA.json",
+      "sha256": "3b3410536d64fe81b28505e3ddeb16be6163a76490ef95cdd380946a5031286b"
+    },
+    {
+      "path": "README.md",
+      "sha256": "af7e458586e43f767e24f699627d0a17dd2aca330dc0118eee0841fbaf007bf7"
+    },
+    {
+      "path": "render/deck.pdf",
+      "sha256": "ea4a13ebe164525a4cc77322e20d8e729d313f9d9186d4ece7fd07bcf6b79ab0"
+    },
+    {
+      "path": "render/pdf-preview.json",
+      "sha256": "396c0ed756ed4be14bd76e3e613e24779885da1b2da7ecc5a3944509fe5fc2da"
+    },
+    {
+      "path": "render/powerpoint-render.json",
+      "sha256": "a2ecca2a3f5e5fae993165b9a6a2b6b8b6145515d90913c3b512f5972779afde"
+    },
+    {
+      "path": "render/slide-01.png",
+      "sha256": "2e6babf14955c8f158c51391b8fe1be8206f150a6a968c333d5e67278ed83a36"
+    },
+    {
+      "path": "render/slide-02.png",
+      "sha256": "4e2ee09bb55907f8c821bedd31251ae0ed4c34e008308f1b55232ac2cf791af0"
+    },
+    {
+      "path": "render/slide-03.png",
+      "sha256": "8aef592720f10871fcbb840eea281a0ec3b5b0fbd025c6d9c579eb96bcef1c50"
+    },
+    {
+      "path": "render/slide-04.png",
+      "sha256": "2235860fb9f32652fb079098193b1e34d8ed238db23f8898e9878794310afe4b"
+    },
+    {
+      "path": "render/slide-05.png",
+      "sha256": "4620ada1bc89aaa9714a01d41b1fd63a4159568bab75b5450e56eed937af3f57"
+    },
+    {
+      "path": "REPRODUCE.md",
+      "sha256": "2608c797c5ef7b63e1ad976ca9a9b496744cb22a1663635d76b99cd25050c5e2"
+    },
+    {
+      "path": "reviews/libreoffice/deck.pdf",
+      "sha256": "254927178f8c3f2092c8809f5d49abf1cda517aa55dc95e048518317a5aa793d"
+    },
+    {
+      "path": "reviews/libreoffice/slide-1.jpg",
+      "sha256": "69514a0af5e862a4b562fdaa7a6d9c708294c092c6ceba0f7d1cd7a94eccf6df"
+    },
+    {
+      "path": "reviews/libreoffice/slide-2.jpg",
+      "sha256": "495d1f828e9e684bd8591d0c137da412db052719025c583a56ae55926dfef81f"
+    },
+    {
+      "path": "reviews/libreoffice/slide-3.jpg",
+      "sha256": "53244cff81bfaf1fc9248dad51dcf09aefd8cc8dc3b8ffbf7fa715c26e6dbe71"
+    },
+    {
+      "path": "reviews/libreoffice/slide-4.jpg",
+      "sha256": "14baec905ceecce02c6e7748d4404ab9e1eb52939ea6191559c563b7e46ae82f"
+    },
+    {
+      "path": "reviews/libreoffice/slide-5.jpg",
+      "sha256": "e0832f5737da2cebe952eb08ab3c52ad0199dd41cb8e03730d869d6ac5a0526e"
+    },
+    {
+      "path": "reviews/page-audit.json",
+      "sha256": "8049e77f639f9c12941892eca142b995f127d091c25356c8778fee4fba81d4b6"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "238f2ae0f1ba4c2f19402620fc478506ea58f51763425044a9611c436403c941"
+    },
+    {
+      "path": "source/build_hand_drawn_showcase.py",
+      "sha256": "d9fedabf381f8f9701ab9c9d2ded1ff725cf47390649f4dfa5b246ee4e88cdcd"
+    },
+    {
+      "path": "source/catalog-repair-proposal.json",
+      "sha256": "4e1403944d2c6dfab7951f61521f40f82bcbee1f2e746c1a683725bd6a7daadb"
+    },
+    {
+      "path": "source/check_recipe.py",
+      "sha256": "4aea6f2e95e0e4ee6a0cbb361352fa05227c8095cc0db51ff02ef1965f90f227"
+    },
+    {
+      "path": "source/japanese-font-adapter.json",
+      "sha256": "abd0641f728b40976ff270aec40f81e84e6e12986c7ad992df2a519402be2716"
+    },
+    {
+      "path": "source/japanese_font_adapter.py",
+      "sha256": "b9668fe0dae79fdc5c3d420fa721d87bb69f00cb09149b389e914da7ff62440f"
+    },
+    {
+      "path": "source/pdf-fonts.json",
+      "sha256": "c2f3897a709f44fc876075b640779ab835ede00ff72f36fe9fe11206ad253bef"
+    },
+    {
+      "path": "source/recipe-check.json",
+      "sha256": "42ce979d66661f0e1fdd9f021e0e26c6742cc375e9599f2becba5600ca5316f4"
+    },
+    {
+      "path": "source/render_pdf_previews.py",
+      "sha256": "bc8cbc0f110342fb7c0e7de035c03dcf808708d4e30adbc8ab22f34ce7966fa3"
+    },
+    {
+      "path": "source/render_powerpoint.ps1",
+      "sha256": "97636ba763cce206308e05076cc53932bbba3351b327859fbffe18fa14354bcc"
+    },
+    {
+      "path": "source/reproduce.py",
+      "sha256": "e17a88507e759fa2f44c8a7d985ad18fbcb71822f295805e9d2633e578ebdf57"
+    },
+    {
+      "path": "source/reproduction.json",
+      "sha256": "c6b40eafbf783ea9be0e8f7505f418c72ff1fff93a68871cb1987ede4e654878"
+    },
+    {
+      "path": "source/test_native_edit.ps1",
+      "sha256": "368746c7e685fc764444f83c6795e137dc572b68d07c62e77786558fb7f58993"
+    },
+    {
+      "path": "source/zip-replay.json",
+      "sha256": "43a72aa86dbcf1c0a56efa34557043537852b10db0e4fb32fba9289d5c9b4990"
+    },
+    {
+      "path": "upstream/examples/demo-chapter-slides.pptx",
+      "sha256": "03523776bea6de78eefb7d819c6e1ede926b668bedbe31086d34dd4dfe272a54"
+    },
+    {
+      "path": "upstream/hand-drawn-chapter-slides/scripts/illustrations.md",
+      "sha256": "4aad8d2fb7884bc6a03b9da53ec98cfd84ace0721ca45657a3a691ba54dd896f"
+    },
+    {
+      "path": "upstream/hand-drawn-chapter-slides/SKILL.md",
+      "sha256": "a9948eadf49f7cb5d4a586ea81f8baaf8390e4cb8c7b1631bf115b0fafe02887"
+    },
+    {
+      "path": "upstream/LICENSE",
+      "sha256": "939cf67b24635f051b6a7ba8e0bcbb3e95d8bb22edcd98c12975de2a031e6277"
+    },
+    {
+      "path": "upstream/README.md",
+      "sha256": "1347b87439ef0e465a4fa75c96232107e98104dd4817a015ec4b49ac00186a64"
+    }
   ]
 }

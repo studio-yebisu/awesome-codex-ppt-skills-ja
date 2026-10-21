@@ -1,0 +1,66 @@
+[
+  {
+    "id": "presentation-skill-showcase",
+    "title": "引き継ぎメモを一枚にまとめる",
+    "use_case": "native図解・表で整える引継ぎの6枚教材",
+    "repository": "siril9/presentation-skill",
+    "skill_repository": "siril9/presentation-skill",
+    "upstream_commit": "efd899c5ddf866af2ce0001c4c9340af775d4d55",
+    "fork_id": "presentation-skill-ja",
+    "page_count": 6,
+    "format": "pptx",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "原典outline/role contracts/PptxGenJSによるnative文字・形状・表。PowerPoint内で編集可能。",
+    "editability": "native_tables",
+    "editable_features": [
+      "text",
+      "shapes",
+      "tables"
+    ],
+    "style": "原典lavender-ops / Operating Grid / 明暗・明朝・native flowと表",
+    "cover": "examples/repositories/presentation-skill-showcase/render/slide-01.png",
+    "interior": "examples/repositories/presentation-skill-showcase/render/slide-04.png",
+    "preview": "examples/repositories/presentation-skill-showcase/index.html",
+    "artifact_download": "examples/repositories/presentation-skill-showcase/deck.pptx",
+    "pdf_download": "examples/repositories/presentation-skill-showcase/render/deck.pdf",
+    "source_download": "downloads/presentation-skill-example-ja.zip",
+    "fork_download": "downloads/presentation-skill-ja.zip",
+    "input": "examples/repositories/presentation-skill-showcase/input/BRIEF.md",
+    "input_data": "examples/repositories/presentation-skill-showcase/input/outline.json",
+    "prompt": "examples/repositories/presentation-skill-showcase/PROMPT.md",
+    "prompt_text": "日本語6枚「引き継ぎメモを一枚にまとめる」を制作してください。\n架空の社内運用。必要情報・担当・確認の関係、引継ぎ順、期限と状態のnative表、次に動く条件を原典native要素で示す。\nsiril9/presentation-skillのoriginal outline schema、Operating Grid grammar、render-plan/role-layout contracts、既定PptxGenJS生成器を実際に使用する。\n大きく短い見出し、明暗の切替、図解と余白。6枚すべてを角丸カード格子にしない。Shippori明朝の見出し、BIZ UDPGothicの本文、Manropeの番号・英数字を役割別に使う。\n人名・会社名・実績値を作らず、送り手・次の担当・確認役という仮の役割、相対期限・仮の状態例として明記。\n原典必須engineを省略せず、汎用rendererへのラベル貼りや生成済みPPTXの手修正をしない。artifact-toolホストSDKは使わない。\n原典finalizeの検査結果と全6枚の実描画を確認し、禁則、見出しの重なり、仮ラベル、文字色の不具合をsourceで修正して再生成する。独立レビューと修正を繰り返し、実施した工程と未実施を区別して記録する。\nPPTX/PNG/PDF、原稿/入力/依頼、再生成コード、未変更原本/局所差分、短い日本語SKILL、SOURCE/許諾/実TTF/OFL、制作ZIPとfork ZIPを完成させる。",
+    "provenance": "examples/repositories/presentation-skill-showcase/PROVENANCE.json",
+    "qa": "examples/repositories/presentation-skill-showcase/QA.json",
+    "guide": "repository.html?repo=siril9/presentation-skill",
+    "titles": [
+      "引き継ぎメモを一枚にまとめる",
+      "情報・担当・確認をそろえる",
+      "引き継ぎは、順番を決める",
+      "期限と状態を、一枚に並べる",
+      "次に動く条件を、明らかに",
+      "次の担当が、動ける状態まで。"
+    ],
+    "notes": [
+      "架空の運用例。人名・会社・実測値なし。期限は相対案、状態は説明用。",
+      "架空の運用例。人名・会社・実測値なし。期限は相対案、状態は説明用。",
+      "架空の運用例。人名・会社・実測値なし。期限は相対案、状態は説明用。",
+      "架空の運用例。人名・会社・実測値なし。期限は相対案、状態は説明用。",
+      "架空の運用例。人名・会社・実測値なし。期限は相対案、状態は説明用。",
+      "架空の運用例。人名・会社・実測値なし。期限は相対案、状態は説明用。"
+    ],
+    "method": "原典present.py briefのOperating Grid候補/readabilityをoutlineへ継承。原典既定PptxGenJS builder・render-plan・role-layout/template modulesでnative flow/timeline/table/comparison生成。PowerPoint16 PNG/PDF実描画。",
+    "sample_notice": "架空の社内運用。担当は仮の役割、期限は相対的な案、状態は説明用の例です。",
+    "pages": [
+      "examples/repositories/presentation-skill-showcase/render/slide-01.png",
+      "examples/repositories/presentation-skill-showcase/render/slide-02.png",
+      "examples/repositories/presentation-skill-showcase/render/slide-03.png",
+      "examples/repositories/presentation-skill-showcase/render/slide-04.png",
+      "examples/repositories/presentation-skill-showcase/render/slide-05.png",
+      "examples/repositories/presentation-skill-showcase/render/slide-06.png"
+    ],
+    "case_guide": "examples/repositories/presentation-skill-showcase/README.md",
+    "content_revision": "3c70ac7bf582c8d7",
+    "repair_authoring_model": "claude-opus-5-5",
+    "repair_scope": "F05: source title, header clearance, section labels and text contrast; original Node pipeline rebuilt and original finalize passed with documented Windows compatibility adapters"
+  }
+]

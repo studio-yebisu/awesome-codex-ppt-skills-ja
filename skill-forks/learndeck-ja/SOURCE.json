@@ -37,7 +37,7 @@
   "modifications": [
     "Local converter only: collect computed fontFamily for elements/text runs and use its first family instead of forcing every run to one font.",
     "Local converter language metadata changed zh-CN to ja-JP.",
-    "Original DOM measurement, PptxGenJS native reconstruction, SVG/PNG extraction and gradient patch pipeline unchanged."
+    "SVG export local repair: persist actual DOM viewport width/height before sharp rasterization so preserveAspectRatio letterboxing survives PPTX placement. Original DOM measurement, native reconstruction and gradient patch pipeline retained."
   ],
   "editability": {
     "text": "Native editable text boxes with Dela/Shippori/BIZ roles.",
@@ -109,69 +109,125 @@
     }
   ],
   "artifact_tool_used": false,
-  "case_studies": [
-    "learndeck-showcase"
+  "repair_authoring": {
+    "author": "Codex",
+    "scope": "Source HTML letter spacing/heading gap, source SVG viewport repair, actual comparison/audit; no fresh Opus call."
+  },
+  "conversion": "conversion.json",
+  "runtime_diff": "source/html_to_editable_pptx.js.diff",
+  "html_and_pptx_comparison": [
+    "render/html-pptx-compare-01.png",
+    "render/html-pptx-compare-03.png"
   ],
+  "verification": "Explicit requested revision loop: edit original HTML, rerun original HTML-to-PPT alias with local font/language and SVG viewport adapters; all5HTML and all5PowerPoint pages viewed; DOM text/native object inventory and6SVG viewport checks.",
   "files": [
     {
+      "path": "LICENSE.txt",
+      "sha256": "6a7c8c5b686d968cc09b19ca4351797f7358c04fb8c8727c4af0940674f2ac29"
+    },
+    {
+      "path": "README.md",
+      "sha256": "7a66dd4218c4297aa0fc8fbd3633dd9139b91db0a10d9361b93b354c80fa436b"
+    },
+    {
+      "path": "SKILL.md",
+      "sha256": "3ebba4070a25c985e458028eb3040dc6805d8d24827cc89ab6437ee6b4b05568"
+    },
+    {
       "path": "example/conversion.json",
-      "sha256": "bc5fab6254d46ae750000568570247877dba8e08e465663ea789a6684ef38bee"
-    },
-    {
-      "path": "example/deck-assets/png/slide-01-icon-01.png",
-      "sha256": "378a83651dc6ec885e99bc9c09aadfda9c358fc3487f8c15a9e6a3f490c162e0"
-    },
-    {
-      "path": "example/deck-assets/png/slide-02-icon-01.png",
-      "sha256": "378a83651dc6ec885e99bc9c09aadfda9c358fc3487f8c15a9e6a3f490c162e0"
-    },
-    {
-      "path": "example/deck-assets/png/slide-03-icon-01.png",
-      "sha256": "a527596e6cd1ceb04a497860a051e2542e9a75acd36429c2fa0c22f25612f6a8"
-    },
-    {
-      "path": "example/deck-assets/png/slide-03-icon-02.png",
-      "sha256": "a527596e6cd1ceb04a497860a051e2542e9a75acd36429c2fa0c22f25612f6a8"
-    },
-    {
-      "path": "example/deck-assets/png/slide-03-icon-03.png",
-      "sha256": "a527596e6cd1ceb04a497860a051e2542e9a75acd36429c2fa0c22f25612f6a8"
-    },
-    {
-      "path": "example/deck-assets/png/slide-04-icon-01.png",
-      "sha256": "8c02582bec85504bd55c316ca17ceabbe851d56436ab92b9a8340ad5ac79290d"
-    },
-    {
-      "path": "example/deck-assets/svg/slide-01-icon-01.svg",
-      "sha256": "00b35be2c0ffedb5439f5352bfa6cf4c0d4a91f099c8bfeed4f930982e99269e"
-    },
-    {
-      "path": "example/deck-assets/svg/slide-02-icon-01.svg",
-      "sha256": "00b35be2c0ffedb5439f5352bfa6cf4c0d4a91f099c8bfeed4f930982e99269e"
-    },
-    {
-      "path": "example/deck-assets/svg/slide-03-icon-01.svg",
-      "sha256": "0c96b93121774d5fac1ccaac278deef267c88ef916607b439e9ac57d74a385a2"
-    },
-    {
-      "path": "example/deck-assets/svg/slide-03-icon-02.svg",
-      "sha256": "0c96b93121774d5fac1ccaac278deef267c88ef916607b439e9ac57d74a385a2"
-    },
-    {
-      "path": "example/deck-assets/svg/slide-03-icon-03.svg",
-      "sha256": "0c96b93121774d5fac1ccaac278deef267c88ef916607b439e9ac57d74a385a2"
-    },
-    {
-      "path": "example/deck-assets/svg/slide-04-icon-01.svg",
-      "sha256": "e13aa21b2fd07dad2aba3a89204d3788452cef691b10cfb59e8a436f7d8e2792"
+      "sha256": "8f4f9310dc554d4ce78e963326799246efb00bc69165c58eb5943129a22e8b40"
     },
     {
       "path": "example/deck-editable.pptx",
-      "sha256": "be9c20ea85b1faba9a19e8470528b8236022d103a41701e4833c400f4b708aef"
+      "sha256": "50301c9ce7b2d019ac74ace08af3e0385069d06901986cc3c3e93c9d8f960f6c"
     },
     {
       "path": "example/deck.pptx",
-      "sha256": "be9c20ea85b1faba9a19e8470528b8236022d103a41701e4833c400f4b708aef"
+      "sha256": "50301c9ce7b2d019ac74ace08af3e0385069d06901986cc3c3e93c9d8f960f6c"
+    },
+    {
+      "path": "example/index.html",
+      "sha256": "c930998c10d010dbee561cb7925c4665a311aab6a1396e0f916d126c8575fcc4"
+    },
+    {
+      "path": "example/LICENSE.txt",
+      "sha256": "6a7c8c5b686d968cc09b19ca4351797f7358c04fb8c8727c4af0940674f2ac29"
+    },
+    {
+      "path": "example/PROMPT.md",
+      "sha256": "48fc8b33a00157d9ce144800fe0622e0602ed6e71ff63dafecd9fde60a301cfb"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "0c6a741136a8556e7d4acaeb51be9c029737b478e43f08bf6ab9452a75a75256"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "a731cd7de1ae72676271e35200115b945c74549949479d6a0ea1132507ebb03c"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "15127c1cfa6bacf92bedafe3ec0de7161b75eb70143882a9623516ab843596b7"
+    },
+    {
+      "path": "example/REPRODUCE.md",
+      "sha256": "322de4b31a68ab7c240f96318a1deb3d850da0a403f33ea909f331c57a68da20"
+    },
+    {
+      "path": "example/source.html",
+      "sha256": "736066e5033e5478653775c4e81dbd96e0f77160fbf76e7f9f8ef3f3ce858ef2"
+    },
+    {
+      "path": "example/SOURCE.json",
+      "sha256": "ee34175ab68df3b2f3c168f8892163eea21b4ea92881949ba6a929862430d8f3"
+    },
+    {
+      "path": "example/deck-assets/png/slide-01-icon-01.png",
+      "sha256": "f6833d5cd0fd0743324a6c97a4e9efb8ceb956f1dcaba236f3648429b8d32033"
+    },
+    {
+      "path": "example/deck-assets/png/slide-02-icon-01.png",
+      "sha256": "8a7230fd1357efda03f8499f2323d62fa77f9c47b7be1ed7644e71dfc059271a"
+    },
+    {
+      "path": "example/deck-assets/png/slide-03-icon-01.png",
+      "sha256": "77f75d79c59e8c4928f3ef0ad0348c1e46d3be4d766da589cb1c9f1b6e24f8b7"
+    },
+    {
+      "path": "example/deck-assets/png/slide-03-icon-02.png",
+      "sha256": "77f75d79c59e8c4928f3ef0ad0348c1e46d3be4d766da589cb1c9f1b6e24f8b7"
+    },
+    {
+      "path": "example/deck-assets/png/slide-03-icon-03.png",
+      "sha256": "77f75d79c59e8c4928f3ef0ad0348c1e46d3be4d766da589cb1c9f1b6e24f8b7"
+    },
+    {
+      "path": "example/deck-assets/png/slide-04-icon-01.png",
+      "sha256": "e494fdda3ffdea20ee605dc7ac71930eb1690d14954b43dbcc74b98269846478"
+    },
+    {
+      "path": "example/deck-assets/svg/slide-01-icon-01.svg",
+      "sha256": "bc862555dffe392445880d37bfaf462b6e3d47d514851d79f211527c631550ba"
+    },
+    {
+      "path": "example/deck-assets/svg/slide-02-icon-01.svg",
+      "sha256": "b7048f70c95f9ca2868e6f82a61c654e726749366d8cc1877f12bafc47e1a07d"
+    },
+    {
+      "path": "example/deck-assets/svg/slide-03-icon-01.svg",
+      "sha256": "4e141e6a86573e373f7f08c255e639c95776108a71e4c478f79b8a8fe47174f9"
+    },
+    {
+      "path": "example/deck-assets/svg/slide-03-icon-02.svg",
+      "sha256": "4e141e6a86573e373f7f08c255e639c95776108a71e4c478f79b8a8fe47174f9"
+    },
+    {
+      "path": "example/deck-assets/svg/slide-03-icon-03.svg",
+      "sha256": "4e141e6a86573e373f7f08c255e639c95776108a71e4c478f79b8a8fe47174f9"
+    },
+    {
+      "path": "example/deck-assets/svg/slide-04-icon-01.svg",
+      "sha256": "54f1617584aefa0175c3d7ed522d1de50122b57c01991a48d00e5ccaf1e1a271"
     },
     {
       "path": "example/fonts/BIZUDPGothic-Bold.ttf",
@@ -210,64 +266,76 @@
       "sha256": "41fba056279be5f45ff9a99e44b7b53897b42732f5806d8e666e0ab49ac6bd38"
     },
     {
-      "path": "example/index.html",
-      "sha256": "c930998c10d010dbee561cb7925c4665a311aab6a1396e0f916d126c8575fcc4"
-    },
-    {
       "path": "example/input/BRIEF.md",
-      "sha256": "0bc86a7dc7fd0c78364b1628833cc7a22383760d3a45399fd690cbfa5cb19860"
+      "sha256": "48fc8b33a00157d9ce144800fe0622e0602ed6e71ff63dafecd9fde60a301cfb"
     },
     {
       "path": "example/input/data.json",
-      "sha256": "79ea2a3e6b02e51b634189dbc0fc510a239230e1daf67f2fca97c800525518f5"
-    },
-    {
-      "path": "example/LICENSE.txt",
-      "sha256": "6a7c8c5b686d968cc09b19ca4351797f7358c04fb8c8727c4af0940674f2ac29"
-    },
-    {
-      "path": "example/PROMPT.md",
-      "sha256": "077cb58ef8c38d665a7049a645905db491c024295fcc46d5910b759b4a895fb2"
-    },
-    {
-      "path": "example/PROVENANCE.json",
-      "sha256": "6a0e30f50236140facc85d93f70443d9d57b2e12611ea6bd69b48ca74e175a0f"
-    },
-    {
-      "path": "example/QA.json",
-      "sha256": "b97f644c8f2044bebe1c074e2b6b2e28faeb3db4627b9f141e4f3c611a46c411"
-    },
-    {
-      "path": "example/README.md",
-      "sha256": "8db818c59adc8196399bdb90a17dafa0e2482cc42bf8a5e41d7f86d1e5b5b01a"
+      "sha256": "6c9c49afab9d733527a7be78c7cff491930bd28c373b22512d2a0868740bf92e"
     },
     {
       "path": "example/render/deck.pdf",
-      "sha256": "2a5030640374d94ac1d373146c014c5b192090d24f598a99475a765759d0873e"
+      "sha256": "7d4ca66fb380ac6b30541ab4df5c08e30afb19ababdb67c83ba012509066545f"
+    },
+    {
+      "path": "example/render/html-pptx-compare-01.png",
+      "sha256": "c5cc35b8604305549dc34589fc87589a6e3c924dcb7159d059193c0eaea89942"
+    },
+    {
+      "path": "example/render/html-pptx-compare-03.png",
+      "sha256": "a1ac8b5b63b011a2cae83c89c1444072ec71e2f0c9a7ec2e4b50cd50b1e05fe9"
     },
     {
       "path": "example/render/powerpoint-render.json",
-      "sha256": "af43140bf3db4b7c64d2de7591666ba63d408411ee745327e55020b745d9cc1d"
+      "sha256": "ac0a62b770cb2265989bdb461fb2404bcc19acb57cde9f9a483a1e1a854fbdb7"
+    },
+    {
+      "path": "example/render/repair-html-contact.jpg",
+      "sha256": "c32f75d04c08a99ef5609887702257471092f3737736a82cb9bc9d8849838527"
+    },
+    {
+      "path": "example/render/repair-pptx-contact.jpg",
+      "sha256": "02ff486f550db71a8b0201be332c6a473ab6c326c7682bc1d1d4223b2c8e38c0"
     },
     {
       "path": "example/render/slide-01.png",
-      "sha256": "bc8e1c691ad0310a900efbc6685cdd1b912aa639f87dc9d0c522644b1378612b"
+      "sha256": "eda0de8b1bfe03e09418497830468d11b4bac0f9c5c7ab04be572bc56f6a7610"
     },
     {
       "path": "example/render/slide-02.png",
-      "sha256": "b3e1e4e8f85468a8b8d47490cdb3f9a06f48d638514c69d4b3eb39bdf0420fb0"
+      "sha256": "30d8d9f3279536bf09362c4ff80f3e1786bfd67b6b66100c1bc949767fa2ef1f"
     },
     {
       "path": "example/render/slide-03.png",
-      "sha256": "715b3471e9cb9b1ee77afebb8e17cbb1be590af14c9413612bdfa7561fd0b958"
+      "sha256": "aea29cf2efc9106ed548621b2fb1be0bbc11e449b9e081c12db89c5029be392a"
     },
     {
       "path": "example/render/slide-04.png",
-      "sha256": "25957401a471263eda83017757d62f63a35ddc16215eeb7fccbc17a98939b13a"
+      "sha256": "092dbf6a44cbc6635f597b94f564e332f457e4257b286d4a8d3216796dc47376"
     },
     {
       "path": "example/render/slide-05.png",
       "sha256": "0e41731064a4e258fe9ac99c6e3b7c4fa3603bb62d85fea6c83478aa0f411c21"
+    },
+    {
+      "path": "example/render/html/slide-01.png",
+      "sha256": "18c531cfc12f49186b9b2d9448ee29cf7947b413db7dcbb8b8383a60223df0fe"
+    },
+    {
+      "path": "example/render/html/slide-02.png",
+      "sha256": "103f07d26d18bf50254c8b4dfe760cf8fa3d9d06526e5a0541d2bfdc48562bf8"
+    },
+    {
+      "path": "example/render/html/slide-03.png",
+      "sha256": "0ab516ba010b6fd11923b776b3d0aa583a7b8284b5126c1de6cdf63cde9834ca"
+    },
+    {
+      "path": "example/render/html/slide-04.png",
+      "sha256": "d82386be687cf9c8ae5e42295caecd60881d2f44418d95209e071281d18b9953"
+    },
+    {
+      "path": "example/render/html/slide-05.png",
+      "sha256": "17b5da2a6b0aadf382246a5aad36491f43be28f0505f14a6e3a5b43aec66e899"
     },
     {
       "path": "example/runtime/DEPENDENCIES.json",
@@ -279,15 +347,95 @@
     },
     {
       "path": "example/runtime/scripts/html_to_editable_pptx.js",
-      "sha256": "cf99e930b3e57cbe129ec34e14aa195fdf4370cce2b42a3ef24f88b449ae6364"
+      "sha256": "ca96f2176070d0e721f749551954e9f5f0854613466d9e709751ab6ede68e8e8"
     },
     {
       "path": "example/runtime/scripts/html_to_ppt.js",
       "sha256": "788136cca09f3bc8e22e468542aa7316f0b5a374ca82d11f9b1d3ee996e16790"
     },
     {
-      "path": "example/source.html",
-      "sha256": "8a965065ecffae416d7739b565d4f2c2be27fdb857a5885de7b863b97b80c8a7"
+      "path": "example/source/build_learndeck_showcase.py",
+      "sha256": "4301c7890d479ea8b0ddbddfd88681ddb6e8e7af3f09f88a751c2b7a28258589"
+    },
+    {
+      "path": "example/source/capture_source.cjs",
+      "sha256": "91bbabd307b5a2638306387c937165baddc1617607e04a5a0bbc73cb8440e8ac"
+    },
+    {
+      "path": "example/source/catalog-repair-proposal.json",
+      "sha256": "dca42fef450a3e3e8d2bd7c4e35ccc33439bf7b1a539ddce6d2fc23c8830fe45"
+    },
+    {
+      "path": "example/source/footer-conversion-receipt.json",
+      "sha256": "2d15874ce0f7ce6fb8d1d1c51897a76a93adc5582ebd91b5f0b45785f5448df9"
+    },
+    {
+      "path": "example/source/footer-conversion.txt",
+      "sha256": "ce60e150908abdf957b7cdd5967da71e99149786388ac22b91a0e95d41ab7a1e"
+    },
+    {
+      "path": "example/source/footer-powerpoint.txt",
+      "sha256": "cceb1374e83f0c5fa6a45070af185870a4d5477103a2b4a490eeda69d4802449"
+    },
+    {
+      "path": "example/source/footer-repair.json",
+      "sha256": "6dfb90e9e5a90ed54f723996c00a8ec622f01cb4f359631cbe7dbff687541603"
+    },
+    {
+      "path": "example/source/generator-repair.diff",
+      "sha256": "e602c84cb244e9bb417d75a340e74ae385d50dbeeb9688f0f7ba5d4a790c73c4"
+    },
+    {
+      "path": "example/source/html-dom-metrics.json",
+      "sha256": "e66842330bcf8ce30208e667c003ff6b38fcde3c62a5199e1b13072db7257878"
+    },
+    {
+      "path": "example/source/html-pptx-compare-01.html",
+      "sha256": "7098279abfc7b1344449d6f849f36b7f6a187c0aa77f0d37b9172a0abe5cea00"
+    },
+    {
+      "path": "example/source/html-pptx-compare-03.html",
+      "sha256": "f3ea329f461449782be9d0368e4d07dbe472a54783e3ae23818edbe11e670a7d"
+    },
+    {
+      "path": "example/source/html_to_editable_pptx.js.diff",
+      "sha256": "efa273cfab072ebc555d79c29f031e814321c24ae0b8ac3fffae1e24cc093202"
+    },
+    {
+      "path": "example/source/html_to_ppt.js.diff",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "example/source/layout-conversion-audit.json",
+      "sha256": "f482dc6115e9a1b47060addda2dbe376d734caba331a781171e96d5570bc74f6"
+    },
+    {
+      "path": "example/source/native-object-inventory.json",
+      "sha256": "303aea60b166976509f9940cb44200518bc1f09e82cc4a95bdd8118e60159d40"
+    },
+    {
+      "path": "example/source/pdf-fonts.json",
+      "sha256": "775c627e84d9be23ec6bb4b2d37563e8ac00d963a54cbfc6ae09cf165e8e7cfe"
+    },
+    {
+      "path": "example/source/refresh_existing_fonts.ps1",
+      "sha256": "1ca32e56d2c3d63bfbd441913aaadca7a758c0bcc09ae356746f316bc9b04d76"
+    },
+    {
+      "path": "example/source/render_powerpoint.ps1",
+      "sha256": "1d5b67b5d088b432fe518cfe900311d6fd8c672d5428bd62b42259b0fcba8a85"
+    },
+    {
+      "path": "example/source/repaired-artifact-manifest.json",
+      "sha256": "d3d7cf507e9334dd6504702c1a0ea5fcd024a1aa4adb3ac45001fa8df5c1421e"
+    },
+    {
+      "path": "example/source/round3-zip-replay.json",
+      "sha256": "42eba70781f17d066e8ac8d4074a6922e005899b5b45df9902248b6acf716bf2"
+    },
+    {
+      "path": "example/source/round3-zip-replay.txt",
+      "sha256": "9357eae7358c56feafbba37c86d00b42da69559ec1e5d9d27cf98044f6d5cfb1"
     },
     {
       "path": "example/upstream/LICENSE.txt",
@@ -296,6 +444,10 @@
     {
       "path": "example/upstream/package.json",
       "sha256": "74a88613fd8354c5ddad4d76d199c63e1e02788a326ced6cd7135621df34018e"
+    },
+    {
+      "path": "example/upstream/SKILL.md",
+      "sha256": "af235cad0f4270d8ad8df004f56ddce33c68ac36263200a2b3edca91dca9bc28"
     },
     {
       "path": "example/upstream/scripts/generate_ppt.js",
@@ -310,16 +462,8 @@
       "sha256": "788136cca09f3bc8e22e468542aa7316f0b5a374ca82d11f9b1d3ee996e16790"
     },
     {
-      "path": "example/upstream/SKILL.md",
-      "sha256": "af235cad0f4270d8ad8df004f56ddce33c68ac36263200a2b3edca91dca9bc28"
-    },
-    {
-      "path": "LICENSE.txt",
-      "sha256": "6a7c8c5b686d968cc09b19ca4351797f7358c04fb8c8727c4af0940674f2ac29"
-    },
-    {
-      "path": "README.md",
-      "sha256": "7a66dd4218c4297aa0fc8fbd3633dd9139b91db0a10d9361b93b354c80fa436b"
+      "path": "references/WORKFLOW.md",
+      "sha256": "15127c1cfa6bacf92bedafe3ec0de7161b75eb70143882a9623516ab843596b7"
     },
     {
       "path": "runtime/DEPENDENCIES.json",
@@ -331,15 +475,11 @@
     },
     {
       "path": "runtime/scripts/html_to_editable_pptx.js",
-      "sha256": "cf99e930b3e57cbe129ec34e14aa195fdf4370cce2b42a3ef24f88b449ae6364"
+      "sha256": "ca96f2176070d0e721f749551954e9f5f0854613466d9e709751ab6ede68e8e8"
     },
     {
       "path": "runtime/scripts/html_to_ppt.js",
       "sha256": "788136cca09f3bc8e22e468542aa7316f0b5a374ca82d11f9b1d3ee996e16790"
-    },
-    {
-      "path": "SKILL.md",
-      "sha256": "808a95e3ccd004cb668da53f89f0890754ad4fb3c0f5a781bb0c643a69d13dec"
     },
     {
       "path": "upstream/LICENSE.txt",
@@ -348,6 +488,10 @@
     {
       "path": "upstream/package.json",
       "sha256": "74a88613fd8354c5ddad4d76d199c63e1e02788a326ced6cd7135621df34018e"
+    },
+    {
+      "path": "upstream/SKILL.md",
+      "sha256": "af235cad0f4270d8ad8df004f56ddce33c68ac36263200a2b3edca91dca9bc28"
     },
     {
       "path": "upstream/scripts/generate_ppt.js",
@@ -360,10 +504,7 @@
     {
       "path": "upstream/scripts/html_to_ppt.js",
       "sha256": "788136cca09f3bc8e22e468542aa7316f0b5a374ca82d11f9b1d3ee996e16790"
-    },
-    {
-      "path": "upstream/SKILL.md",
-      "sha256": "af235cad0f4270d8ad8df004f56ddce33c68ac36263200a2b3edca91dca9bc28"
     }
-  ]
+  ],
+  "round3_repair_author": "Codex"
 }

@@ -9,7 +9,7 @@
     "fork_id": "sebastian-192-ja",
     "page_count": 8,
     "format": "pptx",
-    "preview_kind": "generated-png-byte-matched-to-pptx-media",
+    "preview_kind": "generated_png_plus_all8_powerpoint_checked",
     "editability": "image_only_with_editable_speaker_notes",
     "style": "白い地中海模型：砂色、深緑、白い建築、断面と透明レイヤー",
     "cover": "examples/repositories/sebastian-192/pages/01-slide.png",
@@ -29,7 +29,7 @@
     "source_download": "downloads/sebastian-192-example-ja.zip",
     "fork_download": "downloads/sebastian-192-ja.zip",
     "input": "examples/repositories/sebastian-192/input/BRIEF.md",
-    "input_data": "examples/repositories/sebastian-192/input/data.json",
+    "input_data": "examples/repositories/sebastian-192/page-spec.json",
     "prompt": "examples/repositories/sebastian-192/PROMPT.txt",
     "prompt_text": "原典helloo1568/slidemuseの固定commit 7034412b4c19915c17f8d7206e3723e9e53cf8d2 と同梱日本語派生SKILLを使い、『夏の余白』を8頁の日本語画像主体PowerPointとして作成してください。\n入力はinput/BRIEF.mdとdata.json。架空・未実施のデザイン研究として、日陰、通過、休憩を組み合わせる検討を示します。実測温度、環境効果、健康効果、利用実績を捏造しないでください。概念図・仮設定・影が日影計算結果ではないことを可視で残します。\n要件→完全な頁別内容稿と自己点検→同内容の4style overviewを独立4call→ユーザー委任に基づく選択→Page Specのexact content/stable IDs/tokens→各頁PNGを逐次生成し直後レビュー→画像主体PPTXの順を守ってください。\n砂色、深い樹木の緑、白い建築模型。原典の4案後に選んだ白い地中海模型の方向。俯瞰、敷地図、時間連作、配置、断面、透明レイヤー、環境模式図、記録/模型/仮設の連作で変化させます。全頁同じ都市背景や箱カードにしません。\n各頁は宿主native imagegenを利用。モデルが露出されない場合GPT Image2.5を指定したと偽らない。生成PNGのプログラム画像加工はしません。\n原典validator/packer/render codeは実行せず、同梱の独立最小チェック/包装へ変えた日本語派生です。原典完全QA合格と呼ばない。PPTX画像主体・ノート編集可を明示し、生成PNGプレビューと完成PPTXレンダリングを区別します。課金API、公開push、秘密情報、認証変更は含みません。\n",
     "provenance": "examples/repositories/sebastian-192/PROVENANCE.json",
@@ -55,7 +55,9 @@
       "要因を分けて記録し、配置による影響と天候の影響を混同しない。",
       "完成形を先に決めず、影と人の動きを読みながら設計を更新する。"
     ],
-    "method": "原典の画像優先手順、独立4style+逐頁8call native imagegen。独立最小包装/チェックへ置換。",
-    "sample_notice": "架空・未実施。画像主体PPTX・ノート編集可。原典全QA未実行、overview縮略頁比率未達。PPTX実レンダリングなし。"
+    "method": "Content outline →4independent style overviews→delegated option3→page spec→8AI PNGs; repaired with original strict validator/image packer/PowerPoint render_deck.",
+    "sample_notice": "架空・未実施。4スタイルから画像主体8頁を制作。総覧内部16:9とnative編集版は未達。",
+    "preview_image_notice": "元の生成PNG。現在PPTXを原典PowerPoint rendererで全8頁確認済み。文字・図は画像です。",
+    "execution_status": "original_strict_packer_powerpoint_all8_checked"
   }
 ]

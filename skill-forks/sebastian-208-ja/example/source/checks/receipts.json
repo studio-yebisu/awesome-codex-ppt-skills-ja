@@ -1,0 +1,53 @@
+[
+  {
+    "argv": [
+      "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\sebastian-208\\source\\upstream-original\\skills\\academic-image-ppt\\scripts\\package_image_pptx_with_notes.mjs",
+      "--images",
+      "image_pages",
+      "--notes",
+      "NOTES.md",
+      "--out",
+      "deck.pptx",
+      "--title",
+      "雨の図書室"
+    ],
+    "exit_code": 0,
+    "log": "source/checks/original-packager.log",
+    "log_sha256": "87749884cec0d9ca5042ff4f8d4800e7b2830bdb9a39b277cc4db4b76e8909ce"
+  },
+  {
+    "argv": [
+      "pwsh",
+      "-NoProfile",
+      "-File",
+      "source/render_powerpoint.ps1",
+      "-PresentationPath",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\sebastian-208\\deck.pptx",
+      "-OutputDirectory",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\sebastian-208\\render"
+    ],
+    "exit_code": 0,
+    "log": "source/checks/powerpoint.log",
+    "log_sha256": "831bade29be2cd85cb561e3b92e8d777d2baefb6074509038db455ff57156b4e"
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "source/render_pdf_previews.py",
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\sebastian-208\\render"
+    ],
+    "exit_code": 0,
+    "log": "source/checks/pdf-rgb.log",
+    "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+      "source/verify_current.py"
+    ],
+    "exit_code": 0,
+    "log": "source/checks/image-notes-proof.log",
+    "log_sha256": "9b24822993f3d349b096e6dcb966383afd0f694a6911c2b115dc35712bbe7f7b"
+  }
+]

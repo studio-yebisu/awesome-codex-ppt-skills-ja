@@ -1,0 +1,408 @@
+[
+  {
+    "case_id": "sci-diagram-reconstruction",
+    "name": "科学模式図の文字と関係を編集可能な図へ復元する",
+    "job": "",
+    "upstream_principle": "提供された科学模式図の文言・記号・方向関係を優先し、意味を担う文字・図形・線を個別編集できるPowerPointへ復元する。既存PPTXの修復、変更しない検査も別経路として持つ。",
+    "change": "画像内の文字・箱・方向付きの線を、元の意味と配置を保つ個別編集可能なPowerPointの部品へ復元する。",
+    "input": "復元する科学模式図の画像、または修復・検査するPPTXと対象箇所。文字と方向を判読できる資料。",
+    "output": "選んだ経路に応じた編集可能なPPTXと実行用ソース、または変更しない検査結果。復元は図1点をスライド1枚へまとめる。",
+    "how_to_use": [
+      "科学模式図の画像から復元、既存PPTXの修復、変更しない検査のうち一つを選び、該当する原典参照文書を読む。",
+      "復元では元の解像度で文言・包含・方向・線の意味を読み、NODES/EDGES/INSETSへ一度だけ所有を割り当てる。数式・混在書体がある場合はmath-and-fonts.mdも読む。",
+      "利用可能なruntimeを一つ選ぶ。PptxGenJS経路は準備済みホスト配下でprobeし、pass-01/source.pngとbuild.mjsからPPTXを作る。欠けた依存は制作中に導入しない。",
+      "原典checkerへ--source pass-01/source.pngを渡し、原典rendererで表示し、元画像と文言・方向・欠落を照合する。原典既定は2passまでで、全blockerをまとめて一度直す。",
+      "PPTXの構造と必要な編集を別コピーで確認する。本作例の再実行は作例rootでpython source/reproduce.py --overwrite --renderを使う。"
+    ],
+    "constraints": [
+      "本作例は自作PNGの4箱・4本の直線矢印を復元するReconstruction。既存PPTXのRepairとInspectionは未実施。PptxGenJSはRepairに使わない。",
+      "入れ子、数式、実験画像のinset所有分離、破線の意味、交差、双方向・折れ線の関係は未実証。統計グラフや新しい科学図の考案、時間短縮を示す例でもない。",
+      "原典checkerはhard failure 0・warning 0。connector 0はp:cxnSpがない意味で、4本の軸に平行なnative線は幅か高さが0のため集計対象外。別のXML検査で線・矢じり・方向・元座標を確認した。",
+      "4本は別々に編集できる標準の線で、箱への接続リンクはない。箱を動かしても線が自動追従するとは示さない。",
+      "箱の塗りは元画像よりわずかに灰色寄り。原文・方向・編集性を優先し、画素単位の一致や見た目の改善は主張しない。",
+      "Windows同梱のYu Gothicを参照する。OFL書体ではなく字体ファイルを再配布しない。別環境は対応する字体が必要。",
+      "採用pass-01の復元コード・PPTXは変更していない。追加の箱・線の編集は別のQAコピーで、原図忠実な採用版と区別する。"
+    ],
+    "demonstration": {
+      "summary": "先に作った自作PNGの4箱と4関係を、元の文言・配置・方向を保つ18個のnative部品へ復元した。原典checkerとは別に4本の線と到着点の矢じりをXMLで検証し、別コピーでラベル編集、箱の色と線の色・太さの編集を保存して再表示した。",
+      "applied_features": [
+        "NODES/EDGES/INSETSと一つの座標変換で原文と4方向を保持。全体画像や隠れたトレース画像は埋め込まない。",
+        "原典checkerと原典rendererに加え、XMLから標準線の向き・反転・target側tailEndを4本分照合。原典集計が除外する線の範囲を明記した。",
+        "PowerPointでラベル、箱、線を別々に編集・保存・再表示。採用pass-01は変更せず、別QAコピーを証拠にした。",
+        "2 ZIPを別展開し、原典生成・検査・LibreOffice/PowerPoint描画と3種類の編集性検査を実行。native内容が一致し、採用版＋文字編集＋箱/線編集の6 PNGはRGB差0。"
+      ],
+      "not_demonstrated": [
+        "入れ子、数式、実験画像insetの所有分離、破線、交差、双方向・折れ線、箱移動への自動追従、既存PPTXのRepair/Inspection、統計グラフの復元、見た目の改善・時短、現在版の独立100点。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "復元結果：4箱と4関係",
+          "title": "水循環の代表的な経路",
+          "what_to_inspect": "左上→右上の凝結、右上→右下の降水、右下→左下の水の流れ、左下→左上の蒸発を入力PNGと比べる。原文・配置・方向を保持する。",
+          "skill_rule": "関係を見た目の円形配置から推測せず、元図のfrom/toと経路をEDGESへ記録する。線は一つのnative部品として持つ。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：文字だけの変更",
+          "title": "「海・湖の水」を「湖の水」へ",
+          "what_to_inspect": "左下のラベルだけが変わり、箱・線・ほかの文言が残る。画像全体を置き換えていない。",
+          "skill_rule": "各文字にnativeの所有者を一つ与える。画像内文字との二重描画や全面bitmapを使わない。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：箱と線の変更",
+          "title": "箱の塗りと矢印の色・太さを変更",
+          "what_to_inspect": "左下の箱だけが淡い緑、上の凝結の矢印だけが緑の太線へ変わる。文言と矢印の方向は保持し、保存後に開き直した。",
+          "skill_rule": "意味を持つ箱と関係を示す線を編集可能なnative部品へ分ける。自動接続とは区別し、PPTX XMLでも個別性を確かめる。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sci-diagram-reconstruction/pass-01/build.mjs",
+        "examples/repositories/sci-diagram-reconstruction/pass-01/source.png",
+        "examples/repositories/sci-diagram-reconstruction/input/reconstruction-inventory.json",
+        "examples/repositories/sci-diagram-reconstruction/upstream/SKILL.md",
+        "examples/repositories/sci-diagram-reconstruction/upstream/references/reconstruction.md",
+        "examples/repositories/sci-diagram-reconstruction/upstream/references/runtime-pptxgenjs.md",
+        "examples/repositories/sci-diagram-reconstruction/upstream/scripts/check_pptx.py",
+        "examples/repositories/sci-diagram-reconstruction/upstream/scripts/render_pptx.py",
+        "examples/repositories/sci-diagram-reconstruction/qa/check-pass-01.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/native-line-topology.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-editability.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-editability.json",
+        "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.pptx",
+        "examples/repositories/sci-diagram-reconstruction/source/check_native_lines.py",
+        "examples/repositories/sci-diagram-reconstruction/source/test_shape_edit.ps1",
+        "examples/repositories/sci-diagram-reconstruction/source/reproduce.py",
+        "examples/repositories/sci-diagram-reconstruction/QA.json",
+        "examples/repositories/sci-diagram-reconstruction/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "提供された科学模式図の文言・記号・方向関係を優先し、意味を担う文字・図形・線を個別編集できるPowerPointへ復元する。既存PPTXの修復、変更しない検査も別経路として持つ。",
+      "requirements": [
+        "復元用画像、読めるラベル。修復・検査の場合はPPTXと対象の欠陥を指定。",
+        "本配布のPptxGenJS経路はNode.js20+、既存PptxGenJS4.0.1、Python3.10+、LibreOffice、pdftoppm。作業passは準備済みホストruntime配下へ置く。",
+        "PowerPointの編集・実表示検査にはWindows PowerPoint16。Yu GothicはWindows同梱を参照し、字体ファイルは配布しない。新規installは検査していない。"
+      ],
+      "steps": [
+        "科学模式図の画像から復元、既存PPTXの修復、変更しない検査のうち一つを選び、該当する原典参照文書を読む。",
+        "復元では元の解像度で文言・包含・方向・線の意味を読み、NODES/EDGES/INSETSへ一度だけ所有を割り当てる。数式・混在書体がある場合はmath-and-fonts.mdも読む。",
+        "利用可能なruntimeを一つ選ぶ。PptxGenJS経路は準備済みホスト配下でprobeし、pass-01/source.pngとbuild.mjsからPPTXを作る。欠けた依存は制作中に導入しない。",
+        "原典checkerへ--source pass-01/source.pngを渡し、原典rendererで表示し、元画像と文言・方向・欠落を照合する。原典既定は2passまでで、全blockerをまとめて一度直す。",
+        "PPTXの構造と必要な編集を別コピーで確認する。本作例の再実行は作例rootでpython source/reproduce.py --overwrite --renderを使う。"
+      ],
+      "commands": [
+        "python source/reproduce.py --overwrite --render --node <Node.js実体> --soffice <既存soffice> --pdftoppm <既存pdftoppm>",
+        "python source/check_native_lines.py",
+        "pwsh -NoProfile -File source/test_shape_edit.ps1 -PresentationPath pass-01/editable.pptx -OutputDirectory qa/editability"
+      ],
+      "limitations": [
+        "本作例は自作PNGの4箱・4本の直線矢印を復元するReconstruction。既存PPTXのRepairとInspectionは未実施。PptxGenJSはRepairに使わない。",
+        "入れ子、数式、実験画像のinset所有分離、破線の意味、交差、双方向・折れ線の関係は未実証。統計グラフや新しい科学図の考案、時間短縮を示す例でもない。",
+        "原典checkerはhard failure 0・warning 0。connector 0はp:cxnSpがない意味で、4本の軸に平行なnative線は幅か高さが0のため集計対象外。別のXML検査で線・矢じり・方向・元座標を確認した。",
+        "4本は別々に編集できる標準の線で、箱への接続リンクはない。箱を動かしても線が自動追従するとは示さない。",
+        "箱の塗りは元画像よりわずかに灰色寄り。原文・方向・編集性を優先し、画素単位の一致や見た目の改善は主張しない。",
+        "Windows同梱のYu Gothicを参照する。OFL書体ではなく字体ファイルを再配布しない。別環境は対応する字体が必要。",
+        "採用pass-01の復元コード・PPTXは変更していない。追加の箱・線の編集は別のQAコピーで、原図忠実な採用版と区別する。"
+      ],
+      "execution_type": "Reconstruction：公式portable雛形による単純4箱・直線4本の復元、原典checker/renderer、XML方向検査、別コピーの実PowerPoint編集検査。"
+    },
+    "font_families": [
+      "Yu Gothic"
+    ],
+    "font_notice_ja": "Windows同梱のYu Gothicを参照。OFL書体ではなく、字体ファイルは再配布しない。",
+    "method": "Reconstruction：公式portable雛形による単純4箱・直線4本の復元、原典checker/renderer、XML方向検査、別コピーの実PowerPoint編集検査。",
+    "sample_notice": "自作の4箱・直線4本の入力を復元する限定例。入れ子・数式・inset・破線/交差・自動接続は未実証。見た目の美化・時短の比較ではない。"
+  },
+  {
+    "case_id": "html-editable-showcase",
+    "name": "HTMLの文字と図形を編集できるPowerPointへ変換する",
+    "job": "",
+    "upstream_principle": "ブラウザーでHTML資料の文字位置と書式を実測し、文字・単純図形を編集できるPowerPointへ変換する。原典は必要な字体の取得・部分埋込みと、複雑装飾の画像化、元HTMLとの比較・局所修復まで扱う。",
+    "change": "HTMLの文字と単純な図形を、受け取った人がPowerPointで個別に直せる部品へ変換し、元の表示と比較して修復する。",
+    "input": "既存のHTML資料と参照する画像・字体、字体導入と比較方法の条件。",
+    "output": "文字・単純図形を編集できるPPTXと修復用HTML。複雑装飾は画像になり、字体埋込みは実行条件に応じて確認する。",
+    "how_to_use": [
+      "元HTML・画像・字体をそろえ、字体導入可否と比較方法を既存の指定・configへ合わせる。原典supported-css.mdで編集可能な表現と画像化される表現を確認する。",
+      "原典convert.pyへHTMLを渡す。原HTMLを保管し、修復は自動生成される.audited.htmlに限定する。字体の部分埋込みと無効化のどちらを使ったかを記録する。",
+      "Stage5aの構造検査とStage5bのHTML/PPTX比較を行う。pageは全頁、triageは一覧から選んだ頁を別担当で読む。生成成功だけを合格にしない。",
+      "指摘を全部そろえて最小差分で一括修復し、変更頁を再変換する。全体CSS・字体の変更は全頁、同じ頁/要素の指摘が2回続く場合はsticky候補として判断を返す。",
+      "原典lessons-learnedへ再利用できる回避則を記録し、文字・図形を別PPTXで編集/保存/再表示する。字体条件と残る差を比較画像の近くに書いて渡す。"
+    ],
+    "constraints": [
+      "この作例では字体埋込みの成功は未実証。埋込版をPowerPointで開けず、原因は未確定のため--no-embed-fontsで配布する。文字と単純図形の編集性、全頁比較、修復の実行を確認した範囲を示す。",
+      "旗は原典SVG通路の画像を、その5頂点と位置を保つnative freeformへ置き換えるcase専用adapterで対応。原典converterの汎用SVG変換機能ではなく、任意のSVGをnative化できるとは示さない。",
+      "日本語TTF登録・5点旗のnative化・暗黙effectRefを0へ・比較ラベルの英語化・PowerPointをQuitしない描画を局所adapterとして分離。原典convert/measure/assemble/embedは未改変。",
+      "HTMLのfont-weight900は原典の写像でOOXMLのbold表現となる。実PDFはZen Kaku Gothic New Boldを使用し、ブラウザーのBlackとの字重・字幅の厳密一致は保証しない。",
+      "本例は架空のブランド案5頁。全CSS、任意のHTML、動き・動画・Web操作の再現、字体埋込みの成功、新規installを試した例ではない。",
+      "原典の最小修復は追加/削除行数が指摘数×3行以下、同一頁/要素が連続2回残る場合はsticky。今回は既存の自律改善指示と親の具体修復指示により番号の追加修復を行い、判断を履歴に残した。",
+      "原典のpage審査をCodexの別担当読解で実施。全5比較とp2/p5単体、p5修復後を親が実見した。原典Claude Agent APIの同一実装や独立Kimi/Opus満点・人間採用とは主張しない。"
+    ],
+    "demonstration": {
+      "summary": "この作例では字体埋込みの成功は未実証。埋込版をPowerPointで開けず、原因は未確定のため--no-embed-fontsで配布する。文字と単純図形の編集性、全頁比較、修復の実行を確認した範囲を示す。 原典preflight→DOM実測→assemble→Stage5a/5bを実行し、全5比較を別担当が読んだ。旗を同形のnative部品にし、2頁罫線の下端と5頁番号の独立行を修復。別PPTXで店名と旗の塗りを編集・保存・再表示した。",
+      "applied_features": [
+        "元HTMLを保持し、audited.htmlで2頁罫線と5頁の番号を局所修復。初回2指摘4変更行、番号の追加修復1指摘2変更行。",
+        "原典のDOM実測・文字/単純図形の編集可能な組立・Stage5a/5bを使用。全5頁はnative要素で、旗1点だけを明示した5頂点専用adapterで補った。",
+        "別担当が全5比較と修復した5頁を実見。原典構造警告0と目視を分け、実際に文字と旗の塗りを変更・保存・再表示した。",
+        "両ZIPを別展開して原典5頁変換・Stage5・PowerPointと2種類の保存/再表示を実再実行。3成果物のnative内容一致、14 PNGはRGB差0。新規installと字体埋込は未検査。"
+      ],
+      "not_demonstrated": [
+        "字体埋込み成功、失敗原因の特定、任意SVGのnative化、全CSSやブラウザー操作の完全再現、原典Claude Agent API同一実装、新規install、現在版の独立モデル100点。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1頁：旗と文字を別のnative部品へ",
+          "title": "小さな店の、ひとつの旗。",
+          "what_to_inspect": "右の5頂点の旗と左の見出しを同頁の比較で確認する。別コピーでは右上の店名だけ、別のコピーでは旗の塗りだけを変更した。",
+          "skill_rule": "単純図形は編集可能な表現を優先する。本例の旗は原典が画像化したSVGから専用adapterでnative freeformへ置換した範囲で、原典の汎用SVG機能とは分ける。",
+          "proof_path": "examples/repositories/html-editable-showcase/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 1,
+          "label": "2頁：本文と罫線の下端をそろえる",
+          "title": "味の前に、姿勢が伝わる。",
+          "what_to_inspect": "右本文の最終行まで縦罫線が届き、文字を横切らないことをHTML/PPTX比較で見る。暗色背景・見出し・引用と本文を別部品として保つ。",
+          "skill_rule": "原HTMLを保持し、audited.htmlの局所修復後に同じ頁を比較する。罫線のような単純要素を画像へ統合せず編集可能にする。",
+          "proof_path": "examples/repositories/html-editable-showcase/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 4,
+          "label": "5頁：番号を本文から分ける",
+          "title": "一杯の記憶を、店の旗に。",
+          "what_to_inspect": "01/02/03が各列の独立した行となり、直下の見出しへ接触しないことを見る。3列の本文・上罫線は保持する。",
+          "skill_rule": "全指摘を最小差分で直し、該当頁を増分で再変換する。空白だけでは修復未達だったため、明示改行で直し、前4頁の画像hash不変も確認した。",
+          "proof_path": "examples/repositories/html-editable-showcase/render/slide-05.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/html-editable-showcase/index.html",
+        "examples/repositories/html-editable-showcase/index.audited.html",
+        "examples/repositories/html-editable-showcase/convert_local_fonts.py",
+        "examples/repositories/html-editable-showcase/native_flag.py",
+        "examples/repositories/html-editable-showcase/clear_implicit_effects.py",
+        "examples/repositories/html-editable-showcase/no_quit_render.py",
+        "examples/repositories/html-editable-showcase/qa/native-flag.json",
+        "examples/repositories/html-editable-showcase/qa/native-objects-current.json",
+        "examples/repositories/html-editable-showcase/qa/round8-html-minimal.diff",
+        "examples/repositories/html-editable-showcase/qa/round8-p5-newline.diff",
+        "examples/repositories/html-editable-showcase/qa/finding-resolution.json",
+        "examples/repositories/html-editable-showcase/deck_audit/audit_findings.md",
+        "examples/repositories/html-editable-showcase/upstream/SKILL.md",
+        "examples/repositories/html-editable-showcase/upstream/references/supported-css.md",
+        "examples/repositories/html-editable-showcase/upstream/references/lessons-learned.md",
+        "examples/repositories/html-editable-showcase/references/lessons-learned.local.md",
+        "examples/repositories/html-editable-showcase/test_native_edit.ps1",
+        "examples/repositories/html-editable-showcase/qa/editability/native-editability.json",
+        "examples/repositories/html-editable-showcase/qa/editability/native-flag-editability.json",
+        "examples/repositories/html-editable-showcase/qa/editability/native-flag-edited.png",
+        "examples/repositories/html-editable-showcase/QA.json",
+        "examples/repositories/html-editable-showcase/qa/comparison/slide_01_compare.png",
+        "examples/repositories/html-editable-showcase/qa/comparison/slide_02_compare.png",
+        "examples/repositories/html-editable-showcase/qa/comparison/slide_03_compare.png",
+        "examples/repositories/html-editable-showcase/qa/comparison/slide_04_compare.png",
+        "examples/repositories/html-editable-showcase/qa/comparison/slide_05_compare.png",
+        "examples/repositories/html-editable-showcase/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "ブラウザーでHTML資料の文字位置と書式を実測し、文字・単純図形を編集できるPowerPointへ変換する。原典は必要な字体の取得・部分埋込みと、複雑装飾の画像化、元HTMLとの比較・局所修復まで扱う。 この作例では字体埋込みの成功は未実証。埋込版をPowerPointで開けず、原因は未確定のため--no-embed-fontsで配布する。文字と単純図形の編集性、全頁比較、修復の実行を確認した範囲を示す。",
+      "requirements": [
+        "既存HTMLと参照素材。Python依存はupstream/requirements.txt、Playwright ChromiumとPPTX描画用PowerPointまたはLibreOffice。",
+        "この作例の変換は既存.venv、字体導入no、audit.mode=page、cleanup.keep。新規installは検査していない。",
+        "同梱TTF/OFLの使用条件を確認する。PPTXは埋込なしなので利用端末に字体が必要。PDF掲載PNGには別途pypdfium2/Pillowを使う。"
+      ],
+      "steps": [
+        "元HTML・画像・字体をそろえ、字体導入可否と比較方法を既存の指定・configへ合わせる。原典supported-css.mdで編集可能な表現と画像化される表現を確認する。",
+        "原典convert.pyへHTMLを渡す。原HTMLを保管し、修復は自動生成される.audited.htmlに限定する。字体の部分埋込みと無効化のどちらを使ったかを記録する。",
+        "Stage5aの構造検査とStage5bのHTML/PPTX比較を行う。pageは全頁、triageは一覧から選んだ頁を別担当で読む。生成成功だけを合格にしない。",
+        "指摘を全部そろえて最小差分で一括修復し、変更頁を再変換する。全体CSS・字体の変更は全頁、同じ頁/要素の指摘が2回続く場合はsticky候補として判断を返す。",
+        "原典lessons-learnedへ再利用できる回避則を記録し、文字・図形を別PPTXで編集/保存/再表示する。字体条件と残る差を比較画像の近くに書いて渡す。"
+      ],
+      "limitations": [
+        "この作例では字体埋込みの成功は未実証。埋込版をPowerPointで開けず、原因は未確定のため--no-embed-fontsで配布する。文字と単純図形の編集性、全頁比較、修復の実行を確認した範囲を示す。",
+        "旗は原典SVG通路の画像を、その5頂点と位置を保つnative freeformへ置き換えるcase専用adapterで対応。原典converterの汎用SVG変換機能ではなく、任意のSVGをnative化できるとは示さない。",
+        "日本語TTF登録・5点旗のnative化・暗黙effectRefを0へ・比較ラベルの英語化・PowerPointをQuitしない描画を局所adapterとして分離。原典convert/measure/assemble/embedは未改変。",
+        "HTMLのfont-weight900は原典の写像でOOXMLのbold表現となる。実PDFはZen Kaku Gothic New Boldを使用し、ブラウザーのBlackとの字重・字幅の厳密一致は保証しない。",
+        "本例は架空のブランド案5頁。全CSS、任意のHTML、動き・動画・Web操作の再現、字体埋込みの成功、新規installを試した例ではない。",
+        "原典の最小修復は追加/削除行数が指摘数×3行以下、同一頁/要素が連続2回残る場合はsticky。今回は既存の自律改善指示と親の具体修復指示により番号の追加修復を行い、判断を履歴に残した。",
+        "原典のpage審査をCodexの別担当読解で実施。全5比較とp2/p5単体、p5修復後を親が実見した。原典Claude Agent APIの同一実装や独立Kimi/Opus満点・人間採用とは主張しない。"
+      ],
+      "execution_type": "原典変換・Stage5a/5b＋明示したcase adapter、Codex別担当による全5頁比較、文字/旗の実PowerPoint編集検査。字体埋込成功は未実証。",
+      "commands": [
+        "python convert_local_fonts.py index.audited.html --out deck.pptx --keep-screenshots --no-embed-fonts",
+        "pwsh -NoProfile -File render_current.ps1 -PresentationPath deck.pptx -OutputDirectory render",
+        "pwsh -NoProfile -File test_native_edit.ps1 -PresentationPath deck.pptx -OutputDirectory qa/editability",
+        "python render_pdf_previews.py render"
+      ]
+    },
+    "method": "原典変換・Stage5a/5b＋明示したcase adapter、Codex別担当による全5頁比較、文字/旗の実PowerPoint編集検査。字体埋込成功は未実証。",
+    "sample_notice": "字体埋込みの成功は未実証。架空のブランド案を原典で変換し、旗1点の専用native adapterと局所修復を明示。文字と旗の実編集・全5比較を確認。",
+    "compatibility_notice": "配布PPTXは--no-embed-fonts。埋込版のPowerPoint open失敗原因は未確定。必要なTTF/OFLを同梱し、端末の字体による字重差を比較画像付近に記載。"
+  },
+  {
+    "case_id": "hand-drawn-showcase",
+    "name": "章題に合う手描き図で資料を区切る",
+    "job": "",
+    "upstream_principle": "低彩度の単色背景、左下の章題と章番号、右側の手描き風の象徴図を一定の配置へ揃え、プレゼンテーションの章扉・区切り頁を作る。",
+    "change": "章の題名と話題から、意味に合う手描き図・背景・章番号を揃えた章扉を作り、文字を個別編集できる。",
+    "input": "章数、各章の短い題名・話題、表紙の有無、章番号とページ番号の開始値。",
+    "output": "手描き風の象徴図と章題を組み合わせた章扉PPTXと生成用ソース。文字は個別編集でき、挿絵は原典方式ではPNGになる。",
+    "how_to_use": [
+      "章数・各章題・表紙の有無・章とページの開始番号を決め、原典SKILLのStep1を確認する。",
+      "隣り合う章で似た色を避け、原典の低彩度の寒暖色から背景を選ぶ。各章の意味に合うSVGを40点のライブラリーから選ぶ。",
+      "原典のPptxGenJS＋sharp雛形で13.333×7.5の章扉を作る。章題Georgia40pt regular、章ラベルとページCalibri14pt、指定座標を保つ。日本語書体を補う場合は差分として記録する。",
+      "表紙を含める場合は左上54pt以上の見出しと小さな装飾だけを置き、章ラベルや章扉と同じ大きな図を置かない。",
+      "Step6通りにPPTXをLibreOfficeでPDF化し、pdftoppm150dpiで全ページを画像化する。切れ・重なり・図の位置・配色・番号を目視し、修復後も該当頁を再描画する。"
+    ],
+    "constraints": [
+      "章扉・区切り頁を作るスキル。本文の論理構成、業務データのグラフ、図表を備えたフル資料の作成をこの例では示さない。",
+      "原典はGeorgia/Calibriを厳密指定する。本例は欧文指定を保持し、日本語グリフだけYu Minchoへ明示する派生。和文まで原典と同一書体とは説明しない。",
+      "CalibriとYu MinchoはWindows既存書体を参照し、字体ファイルはZIPへ同梱・PPTXへ埋込みしない。別環境は対応する書体が必要。",
+      "手描きの挿絵は原SVGからPNG化するため線や塗りの個別編集はできない。変更する場合はSVGを編集して再生成する。",
+      "同梱の表紙sparkleは原典の新規図形ルールに沿う小さな派生SVG。章の4点は原典SVGを未改変使用。チェックリストの線は象徴的な記号で実際の記録内容ではない。",
+      "原典に対話で要件を集める段階があるが、本例は委任された改修で要件を確定した。過去の人間承認や現行版の独立評価合格は主張しない。"
+    ],
+    "demonstration": {
+      "summary": "架空のワークショップの表紙と4章を制作。原典の低彩度の寒暖色と固定配置、未改変SVG4点を使い、表紙は小markだけにした。和文グリフのみYu Minchoへ補い、原典の全頁QAと別コピーの文字編集を確認。",
+      "applied_features": [
+        "原典の寒暖色5色と章扉の文字・図・番号の固定配置。",
+        "原典SVG#1虫眼鏡/#2吹き出し/#20階段/#23チェックリストを話題へ対応。挿絵はPNG。",
+        "表紙は54ptの見出し＋小sparkleのみ。章題はnative文字で保存・再編集。",
+        "全5頁のLO JPEG150dpiとPowerPoint PNGを実見。2 ZIPから原典方式の生成・全頁描画・文字編集を再実行。"
+      ],
+      "not_demonstrated": [
+        "フル業務資料、本文構成・データグラフ、原典40SVGの全使用、PNG挿絵の個別編集、原典Georgiaだけでの日本語表示、人間との要件対話・現在版の独立合格。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "表紙：小さな装飾だけ",
+          "title": "話し合いの進め方",
+          "what_to_inspect": "左上に2行の見出し、右上には小さなsparkleだけ。章ラベルと大きな図、赤枠を置かない。",
+          "skill_rule": "原典Step5の表紙変種。54pt以上の見出しと小markに限定する。",
+          "proof_path": "examples/repositories/hand-drawn-showcase/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 1,
+          "label": "章題に合う原SVGと固定配置",
+          "title": "気づきを集める",
+          "what_to_inspect": "右の虫眼鏡と左下の「気づきを集める」を対応させる。章ラベルと番号はCalibri14pt、章題は40pt regular。",
+          "skill_rule": "Step3の話題→象徴図選択とStep4の章扉座標。原SVG#1は未改変。日本語のYu Minchoは明示差分。",
+          "proof_path": "examples/repositories/hand-drawn-showcase/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 4,
+          "label": "記録の章と低彩度背景",
+          "title": "結果を記録する",
+          "what_to_inspect": "右の原SVGチェックリストを「結果を記録する」と対応させる。前頁の青から黄土色へ切り替わる。チェック数は実績を表さない。",
+          "skill_rule": "意味に合う原SVG#23を選択。Step2の寒暖色の変化と原典の墨線・オフ白を維持。",
+          "proof_path": "examples/repositories/hand-drawn-showcase/render/slide-05.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 1,
+          "label": "別コピー：章題の編集",
+          "title": "観察を記録する",
+          "what_to_inspect": "2頁の章題だけを「観察を記録する」に変更して保存・再表示。虫眼鏡、背景、章ラベル、番号を保持。",
+          "skill_rule": "文字をPNGにせずnative textとして作る。SVG挿絵の編集性とは区別する。",
+          "proof_path": "examples/repositories/hand-drawn-showcase/qa/editability/native-title-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/hand-drawn-showcase/build.cjs",
+        "examples/repositories/hand-drawn-showcase/input/data.json",
+        "examples/repositories/hand-drawn-showcase/PROMPT.txt",
+        "examples/repositories/hand-drawn-showcase/source/japanese_font_adapter.py",
+        "examples/repositories/hand-drawn-showcase/source/japanese-font-adapter.json",
+        "examples/repositories/hand-drawn-showcase/source/check_recipe.py",
+        "examples/repositories/hand-drawn-showcase/source/recipe-check.json",
+        "examples/repositories/hand-drawn-showcase/source/reproduce.py",
+        "examples/repositories/hand-drawn-showcase/source/reproduction.json",
+        "examples/repositories/hand-drawn-showcase/source/render_powerpoint.ps1",
+        "examples/repositories/hand-drawn-showcase/source/test_native_edit.ps1",
+        "examples/repositories/hand-drawn-showcase/source/pdf-fonts.json",
+        "examples/repositories/hand-drawn-showcase/source/zip-replay.json",
+        "examples/repositories/hand-drawn-showcase/reviews/page-audit.json",
+        "examples/repositories/hand-drawn-showcase/QA.json",
+        "examples/repositories/hand-drawn-showcase/qa/editability/native-editability.json",
+        "examples/repositories/hand-drawn-showcase/qa/editability/native-title-edited.pptx",
+        "examples/repositories/hand-drawn-showcase/upstream/hand-drawn-chapter-slides/SKILL.md",
+        "examples/repositories/hand-drawn-showcase/upstream/hand-drawn-chapter-slides/scripts/illustrations.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "章題の意味に合う手描きSVGと低彩度背景で、資料の章扉を揃える。",
+      "requirements": [
+        "Node.js、PptxGenJS、sharp。日本語派生作例はPython3とCalibri/Yu Minchoが必要。",
+        "原典Step6はLibreOfficeとpdftoppm。追加の実アプリ編集・描画はWindows PowerPointとpypdfium2。"
+      ],
+      "steps": [
+        "章数・各章題・表紙の有無・章とページの開始番号を決め、原典SKILLのStep1を確認する。",
+        "隣り合う章で似た色を避け、原典の低彩度の寒暖色から背景を選ぶ。各章の意味に合うSVGを40点のライブラリーから選ぶ。",
+        "原典のPptxGenJS＋sharp雛形で13.333×7.5の章扉を作る。章題Georgia40pt regular、章ラベルとページCalibri14pt、指定座標を保つ。日本語書体を補う場合は差分として記録する。",
+        "表紙を含める場合は左上54pt以上の見出しと小さな装飾だけを置き、章ラベルや章扉と同じ大きな図を置かない。",
+        "Step6通りにPPTXをLibreOfficeでPDF化し、pdftoppm150dpiで全ページを画像化する。切れ・重なり・図の位置・配色・番号を目視し、修復後も該当頁を再描画する。"
+      ],
+      "limitations": [
+        "章扉・区切り頁を作るスキル。本文の論理構成、業務データのグラフ、図表を備えたフル資料の作成をこの例では示さない。",
+        "原典はGeorgia/Calibriを厳密指定する。本例は欧文指定を保持し、日本語グリフだけYu Minchoへ明示する派生。和文まで原典と同一書体とは説明しない。",
+        "CalibriとYu MinchoはWindows既存書体を参照し、字体ファイルはZIPへ同梱・PPTXへ埋込みしない。別環境は対応する書体が必要。",
+        "手描きの挿絵は原SVGからPNG化するため線や塗りの個別編集はできない。変更する場合はSVGを編集して再生成する。",
+        "同梱の表紙sparkleは原典の新規図形ルールに沿う小さな派生SVG。章の4点は原典SVGを未改変使用。チェックリストの線は象徴的な記号で実際の記録内容ではない。",
+        "原典に対話で要件を集める段階があるが、本例は委任された改修で要件を確定した。過去の人間承認や現行版の独立評価合格は主張しない。"
+      ],
+      "execution_type": "instruction_template_and_original_svg_library",
+      "caveats": "日本語グリフだけYu Minchoへ置換する派生。PNG挿絵の線は個別編集できない。"
+    },
+    "title": "話し合いの進め方",
+    "page_count": 5,
+    "style": "原典の低彩度背景・手描き墨線・固定章扉配置。日本語だけYu Minchoへ補う派生。",
+    "sample_notice": "架空のワークショップの章扉。本文資料や実績・効果を示すものではない。",
+    "preview_notice": "現在PPTXをPowerPoint PDFから画像化。全5頁をLO JPEGとともに実見した実装側QAで、独立評価の合格ではない。",
+    "preview_image_notice": "実PPTXのPowerPoint描画。挿絵は原SVGのPNG、文字はnative。",
+    "method": "原典PptxGenJS＋sharp雛形と未改変の原SVG4点を使用。小mark表紙、低彩度5色、原座標・字号を適用し、和文だけYu Minchoへ補う。原典Step6全頁QA、PowerPoint描画・文字編集・2ZIP再実行。",
+    "prompt_text": "原典の章扉機能を示す日本語作例を修復する。話題は架空のワークショップ「話し合いの進め方」。表紙＋4章（気づきを集める／意見を共有する／小さく試す／結果を記録する）。原典の低彩度の寒暖色、13.333×7.5、左下Georgia40pt regular、章ラベルと右下番号Calibri14pt、原座標を使う。日本語グリフだけYu Minchoとする明示adapterを加え、原典と完全同一字体とは説明しない。原典SVG#1/#2/#20/#23は未改変。表紙は54ptと小sparkleのみ。赤枠・巨大な苗木・詩的captionは使わない。原典Step6を全5頁実行し、PowerPoint全頁・native文字編集の追加証拠・2 ZIPの再実行まで確認。現在の修復はCodex実装。過去の人間承認やモデルによる制作・独立100点を捏造しない。",
+    "titles": [
+      "話し合いの進め方",
+      "気づきを集める",
+      "意見を共有する",
+      "小さく試す",
+      "結果を記録する"
+    ],
+    "pages": [
+      "examples/repositories/hand-drawn-showcase/render/slide-01.png",
+      "examples/repositories/hand-drawn-showcase/render/slide-02.png",
+      "examples/repositories/hand-drawn-showcase/render/slide-03.png",
+      "examples/repositories/hand-drawn-showcase/render/slide-04.png",
+      "examples/repositories/hand-drawn-showcase/render/slide-05.png"
+    ],
+    "notes": [
+      "表紙。原典Step5に沿い、章ラベルや大きな図を置かず、小さな装飾マークだけを添える。",
+      "観察した場面を集める章。原典#1の虫眼鏡を対応させた。章扉なので本文の手順や集計は含まない。",
+      "集めた気づきについて意見を共有する章。原典#2の吹き出しを対応させた。",
+      "一度に大きく変えず、試行を進める章。原典#20の階段を対応させた。",
+      "試した結果を記録する章。原典#23のチェックリストを対応させた。旧版の循環矢印は使用しない。"
+    ],
+    "font_families": [
+      "Georgia",
+      "Calibri",
+      "Yu Mincho"
+    ],
+    "font_download": null,
+    "license_notice_ja": "原典・SVGはMIT。Windows書体は参照のみで再配布しない。依存の原文条件を同梱。"
+  }
+]

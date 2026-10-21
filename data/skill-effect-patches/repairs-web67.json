@@ -1,0 +1,467 @@
+[
+  {
+    "case_id": "quarto-talks-showcase",
+    "name": "QMDから図・式・コードの発表を作る",
+    "job": "",
+    "change": "原稿・図・数式・短いコードをQMDにまとめ、発表用の配置を持つHTMLへ変換する。",
+    "input": "発表の目的・読み手・原稿・図の元データ・参考文献",
+    "output": "QMD・計算コード・SVGと、ブラウザーで発表するHTML",
+    "how_to_use": [
+      "原典template.qmdと拡張をコピーし、読み手に伝える議論の順序を決める。",
+      "QMDで表・visual・math・code等を選ぶ。図のデータと出典を記し、計算は実行する。",
+      "quarto render talk.qmdでHTMLを生成する。",
+      "全頁を通常の発表画面で確認し、図・式・コードの欠け、字の大きさ、説明順を直して再生成する。"
+    ],
+    "constraints": [
+      "出力はQMDからのHTML。PPTXの編集可能化は扱わない。",
+      "5分・6枚の作例として、原典の16〜24枚既定を短縮した。",
+      "表示コードとは別にPythonを実行した。Quartoのnotebook実行ではない。",
+      "Quarto1.9.38の色変数書き出し警告は残る。HTML/CSS生成と全6頁表示は確認済み。"
+    ],
+    "demonstration": {
+      "summary": "同じ合成5点を、表・散布図・直線式・実計算コード・当てはめ結果へ接続した。原典拡張でHTMLを生成し、コード枠の幅を局所SCSSで修正。全6頁を実表示で確認した。",
+      "applied_features": [
+        "原典QMDとsemantic visual/math/code/question",
+        "実データからのNumPy計算とSVG",
+        "原典render→全頁確認→局所修正"
+      ],
+      "not_demonstrated": [
+        "実観測データによる分析",
+        "Quarto notebookとしてのPython実行",
+        "PowerPoint出力",
+        "独立再評価は修復後に実施予定"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "表を、点にする。",
+          "skill_rule": "元データから図を作り、軸と対象を保つvisual配置を使う。",
+          "what_to_inspect": "5点の散布図とx/y軸を見る。表の(0,1)〜(4,4)を変えずに図へ移している。",
+          "proof_path": "examples/repositories/quarto-talks-showcase/render/effect-page-02-after.jpg",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "直線を、二つの数で表す。",
+          "skill_rule": "math配置の中心に一つの式を置き、使う記号を定義する。",
+          "what_to_inspect": "中央のy=ax+bと、その下のa=傾き・b=切片を見る。長い導出を詰め込んでいない。",
+          "proof_path": "examples/repositories/quarto-talks-showcase/render/effect-page-03-after.jpg",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "コードで、線を求める。",
+          "skill_rule": "code配置では学習に必要な短い処理と実行結果を分ける。",
+          "what_to_inspect": "6行のコード、結果a=0.8・b=1.4、実行済みPythonと公式出典を見る。枠の右端まで背景が揃っている。",
+          "proof_path": "examples/repositories/quarto-talks-showcase/render/effect-page-04-after.jpg",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/quarto-talks-showcase/talk.qmd",
+        "examples/repositories/quarto-talks-showcase/source/compute_fit.py",
+        "examples/repositories/quarto-talks-showcase/output/results.json",
+        "examples/repositories/quarto-talks-showcase/source/japanese.scss",
+        "examples/repositories/quarto-talks-showcase/QA.json",
+        "examples/repositories/quarto-talks-showcase/source/zip-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "QMDへ図・式・短いコードを記し、Quarto Talksの発表用配置を持つHTMLへ変換する。",
+      "requirements": [
+        "Quarto >=1.4（本作例1.9.38）",
+        "実計算用Python・NumPy・Matplotlib",
+        "同梱OFL書体と原典MIT拡張"
+      ],
+      "commands": [
+        "python source/compute_fit.py",
+        "quarto render talk.qmd"
+      ],
+      "limitations": [
+        "出力はQMDからのHTML。PPTXの編集可能化は扱わない。",
+        "5分・6枚の作例として、原典の16〜24枚既定を短縮した。",
+        "表示コードとは別にPythonを実行した。Quartoのnotebook実行ではない。",
+        "Quarto1.9.38の色変数書き出し警告は残る。HTML/CSS生成と全6頁表示は確認済み。"
+      ],
+      "production_status": "all6_visual_checked_independent_recheck_pending"
+    }
+  },
+  {
+    "case_id": "sketch-note-showcase",
+    "name": "手描き注釈付きのWeb資料を作る",
+    "job": "",
+    "change": "原稿を紙面・吹き出し・手描き線・段階表示のあるHTMLに組み、比較や図解を見せる。",
+    "input": "題材・読み手・ページ構成・原稿と図にする関係",
+    "output": "ブラウザーで発表する単一HTMLと、編集用HTML・SVG・CSS・JS",
+    "how_to_use": [
+      "原典SKILLとCSSを読み、読み手が見るべき主題を各頁に一つ決める。",
+      "紙面、吹き出し、比較、手描き注釈、図解部品を内容に合わせて選ぶ。",
+      "HTML/SVG/CSSへ日本語を組み、元controllerとrevealを適用して単一HTMLへまとめる。",
+      "全頁を表示し、注釈の指す先、本文との接触、改行、前後・先頭末尾の操作を確認して直す。"
+    ],
+    "constraints": [
+      "出力はHTML・SVG・CSS・JS。PPTXや画像からの自動復元は扱わない。",
+      "比較する書体や図形は本作例の制作判断。書体選択や学習効果を自動評価するスキルではない。",
+      "原典CSSとcontrollerを保持し、日本語書体と注釈は局所差分。独立再評価は修復後に実施予定。"
+    ],
+    "demonstration": {
+      "summary": "書体の字形・太さ・余白・改行を比較する6頁へ、原典の紙面・吹き出し・図解・段階表示を適用した。空白を囲んでいた丸を実際の字へ固定し、本文を横切る矢印を除去。全6頁と大小2画面の修復箇所を確認した。",
+      "applied_features": [
+        "原典の紙面・吹き出し・下線・decision-tree",
+        "手描きSVGと主対象の段階表示",
+        "元go()controllerと単一HTML包装"
+      ],
+      "not_demonstrated": [
+        "PowerPoint出力",
+        "書体選択や学習効果の自動評価",
+        "親サイトbridgeのこの作例単体での実操作",
+        "修復後の独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "skill_rule": "比較する対象を同じ大きさで並べ、手描き注釈を実際の観察箇所へ置く。",
+          "what_to_inspect": "Zen Maru GothicとBIZ UDPGothicの同じ「あいうえお」と丸で示す箇所を見る。説明文に矢印がかからない。",
+          "title": "丸さは、線の終わりに出る。",
+          "proof_path": "examples/repositories/sketch-note-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "skill_rule": "注釈は装飾として浮かせず、説明する対象と一緒に配置する。",
+          "what_to_inspect": "Regular/Boldの「雨」に付く丸と白いすき間を比較する。字を大きくしても丸が追従する。",
+          "title": "太さを変えると、白いすき間も変わる。",
+          "proof_path": "examples/repositories/sketch-note-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 5,
+          "label": "6ページ目",
+          "skill_rule": "原典decision-treeとbubbleを使い、問いから選択肢と結論を図でつなぐ。",
+          "what_to_inspect": "中央の問い→2つの伝える声→異なる字体の例をたどる。下の吹き出しは選んだ後の確認を示す。",
+          "title": "伝える声に、書体を合わせる。",
+          "proof_path": "examples/repositories/sketch-note-showcase/render/slide-06.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sketch-note-showcase/source/slides.html",
+        "examples/repositories/sketch-note-showcase/source/adaptation.css",
+        "examples/repositories/sketch-note-showcase/source/rebuild.py",
+        "examples/repositories/sketch-note-showcase/source/controller.patch",
+        "examples/repositories/sketch-note-showcase/source/annotation-repair.diff",
+        "examples/repositories/sketch-note-showcase/source/zip-replay.json",
+        "examples/repositories/sketch-note-showcase/QA.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原稿を紙面・吹き出し・手描き線・図解・段階表示を備えたHTMLへ組む。",
+      "requirements": [
+        "Python3標準ライブラリ（単一HTMLの梱包用）",
+        "モダンブラウザー",
+        "同梱の原典CSS/JSとOFL字体"
+      ],
+      "commands": [
+        "python source/rebuild.py"
+      ],
+      "steps": [
+        "主題と説明順を決める",
+        "原典CSSと図解・注釈を使ってHTMLへ組む",
+        "単一HTMLを作る",
+        "全頁の注釈・改行・移動を確認して直す"
+      ],
+      "limitations": [
+        "出力はHTML・SVG・CSS・JS。PPTXや画像からの自動復元は扱わない。",
+        "比較する書体や図形は本作例の制作判断。書体選択や学習効果を自動評価するスキルではない。",
+        "原典CSSとcontrollerを保持し、日本語書体と注釈は局所差分。独立再評価は修復後に実施予定。"
+      ],
+      "production_status": "all6_visual_and_zip_replay_complete_independent_pending"
+    }
+  },
+  {
+    "case_id": "sol-motion-showcase",
+    "name": "原稿から動き・本文編集つきHTMLを作る",
+    "job": "",
+    "upstream_principle": "原稿またはPPTXを、見た目の比較から単一HTMLの発表資料へ仕上げる。固定16:9 stage、段階表示、標準の本文編集・保存を備える。",
+    "change": "内容と見た目を分けて検討し、ブラウザーで発表・本文編集できる単一HTMLへ組む。",
+    "input": "目的・聴衆・枚数・発表/配布の密度・原稿や画像。変換時は元PPTX。",
+    "output": "固定16:9の単一HTML、編集用CSS/JS/原稿、書体・帰属・確認記録",
+    "how_to_use": [
+      "目的・聴衆・素材と発表/配布の密度を決める。",
+      "新規作成では3案の実表紙を比較して見た目を選ぶ。PPTX変換では抽出内容を先に確認する。",
+      "原典のstage・CSS・controllerと選んだ設計でHTMLを作り、本文編集と保存を付ける。",
+      "全頁の本文・図・重なり、大小画面、移動、編集→保存→再表示を確認して直す。"
+    ],
+    "constraints": [
+      "出力は単一HTML。PPTXの編集可能化は扱わない。",
+      "3案からの選択・PPTX変換・画像フォルダー評価は今回未実行。",
+      "選書タブと配色/SVGは本作例の追加設計。原典既成テンプレートではない。",
+      "本文の編集・自動保存・HTML保存と再表示を実確認。修復後の独立再評価は未了。"
+    ],
+    "demonstration": {
+      "summary": "6頁を固定stageへ組み、段階表示と本文編集を適用。企画固有の選書タブは本文と本の強調を連動。全6頁・3タブを確認し、実際に文字を直してHTML保存・再表示した。",
+      "applied_features": [
+        "原典viewport-base.css全文と固定1920×1080 stage",
+        "段階的な入場表示とキーボード等の移動",
+        "原典標準のEキー編集・自動保存・HTML出力"
+      ],
+      "not_demonstrated": [
+        "新規制作時の3案比較",
+        "PPTX変換・画像フォルダー評価",
+        "修復後の独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "予定のない夜にも、入口がある。",
+          "skill_rule": "固定16:9 stageに情報の順序を置き、段階表示する。",
+          "what_to_inspect": "一つの見出しの下に3段階を並べる。ブラウザー幅を変えても3列の位置関係は変わらない。",
+          "proof_path": "examples/repositories/sol-motion-showcase/render/effect-page-03-after.jpg",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "今夜の気分は、どの棚に近い？",
+          "skill_rule": "単一HTMLのJSを、内容に必要な操作へ追加できる。",
+          "what_to_inspect": "タブを切り替えると説明と本の強調が対応して変わる。この選書タブは作例独自の追加。",
+          "proof_path": "examples/repositories/sol-motion-showcase/render/effect-page-04-after.jpg",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 5,
+          "label": "6ページ目",
+          "title": "本文を変え、HTMLで保存する",
+          "skill_rule": "ロック指定がなければ本文編集と保存を標準で付ける。",
+          "what_to_inspect": "元のページと保存後の比較を見る。編集した一文が別HTMLを開いても残る。",
+          "proof_path": "examples/repositories/sol-motion-showcase/render/inline-edit-reopened.jpg",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sol-motion-showcase/source/controller.js",
+        "examples/repositories/sol-motion-showcase/source/viewport-base.css",
+        "examples/repositories/sol-motion-showcase/source/rebuild.py",
+        "examples/repositories/sol-motion-showcase/qa/inline-edit.json",
+        "examples/repositories/sol-motion-showcase/QA.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "見た目を比較して選び、本文編集できる単一HTMLの発表資料へ仕上げる。",
+      "requirements": [
+        "原典SKILLを読める制作エージェント",
+        "モダンブラウザー",
+        "同梱例の再組立はPython3標準ライブラリ"
+      ],
+      "steps": [
+        "目的・聴衆・素材と発表/配布の密度を決める。",
+        "新規作成では3案の実表紙を比較して見た目を選ぶ。PPTX変換では抽出内容を先に確認する。",
+        "原典のstage・CSS・controllerと選んだ設計でHTMLを作り、本文編集と保存を付ける。",
+        "全頁の本文・図・重なり、大小画面、移動、編集→保存→再表示を確認して直す。"
+      ],
+      "commands": [
+        "python source/rebuild.py"
+      ],
+      "limitations": [
+        "出力は単一HTML。PPTXの編集可能化は扱わない。",
+        "3案からの選択・PPTX変換・画像フォルダー評価は今回未実行。",
+        "選書タブと配色/SVGは本作例の追加設計。原典既成テンプレートではない。",
+        "本文の編集・自動保存・HTML保存と再表示を実確認。修復後の独立再評価は未了。"
+      ],
+      "production_status": "all6_visual_and_text_edit_save_checked_independent_pending"
+    }
+  },
+  {
+    "case_id": "slidespeak-showcase",
+    "name": "ブリーフから独自デザインのHTMLを作る",
+    "job": "",
+    "upstream_principle": "内容と見た目のブリーフから専用のtokens・レイアウト・固定テンプレートを設計し、ホストLLMが本文を埋め、原典engineが1920×1080のHTMLへ変換・検査する。",
+    "change": "題材と見た目の条件から、その資料専用の書体・配色・レイアウトを持つHTMLへ組む。",
+    "input": "題材・原稿・聴衆と、見た目の説明・ブランドURL・参考画像などの手掛かり",
+    "output": "専用styleの6ファイル、slide-treeと1920×1080 HTML",
+    "how_to_use": [
+      "題材・聴衆・内容と、色/ブランド/参考画像など見た目の手掛かりを渡す。",
+      "briefからtokens/chrome/components/layout grammar/image-style/SKILLの6ファイルを設計する。",
+      "原典loadSkill/generateDeck/rendererを使い、原典のstyle・内容・見た目の検査を通す。",
+      "全頁を実表示し、文字・改行・図・空白・移動を確認して直す。"
+    ],
+    "constraints": [
+      "主出力は1920×1080のHTML。編集可能PPTXの出力例ではない。",
+      "原典engineへ、作者が用意したslide-treeをLLMClientで渡した。ライブLLMの生成は未実行。",
+      "FAL/AI画像/stock画像は未使用。コード図形だけで制作した。",
+      "全6頁と原典検査を確認。独立再評価は修復後に実施予定。"
+    ],
+    "demonstration": {
+      "summary": "書店の仮ブリーフから専用6ファイルstyleを作り、保存したslide-treeを原典engineでHTML化。全6頁を確認し、原典style/occupancy/legibility/richness検査を通した。",
+      "applied_features": [
+        "brief由来の専用tokens・6種のテンプレート",
+        "原典loadSkill/generateDeck/renderer",
+        "原典のstyleと実DOM品質検査"
+      ],
+      "not_demonstrated": [
+        "ライブLLMによるslide-tree生成",
+        "AI/stock画像",
+        "編集可能PPTX",
+        "修復後の独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "探していた本と、まだ知らない自分に。",
+          "skill_rule": "題材に合わせた固定テンプレートで、本文をslotsへ入れる。",
+          "what_to_inspect": "statementテンプレートの大きな見出しと本文。slide-treeのtitle/bodyが専用の配置へ入る。",
+          "proof_path": "examples/repositories/slidespeak-showcase/render/effect-page-02-after.jpg",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "緑は、街の目印。",
+          "skill_rule": "専用styleの色・書体・余白を、複数レイアウトへ通す。",
+          "what_to_inspect": "生成り/緑、和文見出し、上下の長い罫線を共通化し、本文と開いた本の図を左右へ分ける。",
+          "proof_path": "examples/repositories/slidespeak-showcase/render/effect-page-04-after.jpg",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 4,
+          "label": "5ページ目",
+          "title": "言葉から、店先まで。",
+          "skill_rule": "layout grammarに沿う工程テンプレートへ本文を割り当て、実DOMを検査する。",
+          "what_to_inspect": "3工程の順序・番号・説明を見る。文章を意味単位で改行し、原典検査と実表示の両方で確認した。",
+          "proof_path": "examples/repositories/slidespeak-showcase/render/effect-page-05-after.jpg",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/slidespeak-showcase/input/slide-tree.json",
+        "examples/repositories/slidespeak-showcase/build.mts",
+        "examples/repositories/slidespeak-showcase/styles/green-book-editorial/layout-grammar.md",
+        "examples/repositories/slidespeak-showcase/source/original-dom-gates.json",
+        "examples/repositories/slidespeak-showcase/source/original-source-check.json",
+        "examples/repositories/slidespeak-showcase/QA.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "内容と見た目のbriefから専用のデザインを設計し、原典engineでHTMLへ変換・検査する。",
+      "requirements": [
+        "Node20+とnpm依存",
+        "原典engineと6ファイルstyle",
+        "新規制作時はホストLLM。画像APIは任意。"
+      ],
+      "steps": [
+        "題材・聴衆・内容と、色/ブランド/参考画像など見た目の手掛かりを渡す。",
+        "briefからtokens/chrome/components/layout grammar/image-style/SKILLの6ファイルを設計する。",
+        "原典loadSkill/generateDeck/rendererを使い、原典のstyle・内容・見た目の検査を通す。",
+        "全頁を実表示し、文字・改行・図・空白・移動を確認して直す。"
+      ],
+      "limitations": [
+        "主出力は1920×1080のHTML。編集可能PPTXの出力例ではない。",
+        "原典engineへ、作者が用意したslide-treeをLLMClientで渡した。ライブLLMの生成は未実行。",
+        "FAL/AI画像/stock画像は未使用。コード図形だけで制作した。",
+        "全6頁と原典検査を確認。独立再評価は修復後に実施予定。"
+      ],
+      "production_status": "original_engine_all6_visual_and_gates_complete_independent_pending"
+    }
+  },
+  {
+    "case_id": "soil-teaching-showcase",
+    "name": "教材を「考える順序」のスライドへ整理する",
+    "job": "",
+    "upstream_principle": "教材を、各頁の教える一点・学習者の作業・認知的役割・図・結論へ計画し、画像中心PPTX・編集可能PPTX・オフラインHTMLのいずれかに仕上げる。",
+    "change": "教材を、学習者が何に注目し、何を比べ、どんな結論へ進むかが分かるページへ分ける。",
+    "input": "教材・対象学年・教える一点・学習者の作業・必要な図や数値・出力Mode",
+    "output": "確認用のページ計画と選んだModeの教材。今回の作例は段階表示HTML。",
+    "how_to_use": [
+      "教材から、各頁の教える一点・学習者の作業・図の関係・短いラベル・結論を計画する。",
+      "計画と出力Modeを確認する。HTMLを選ぶ場合は見た目も決め、原典Mode Cテンプレートへ内容を入れる。",
+      "根拠から答えへ段階表示する。図の個数・区画・式が説明と一致するように作る。",
+      "原典validatorを実行し、全頁の大小画面、段階移動、hash、印刷の全段表示を確認して直す。"
+    ],
+    "constraints": [
+      "原典は画像中心PPTX・編集可能PPTX・オフラインHTMLの3Mode。本作例はHTMLのみ。",
+      "画像版と編集PPTXはそれぞれ専用の制作環境が必要。このHTMLはブラウザーと同梱ファイルだけで開く。",
+      "SOIL方法説明・原典/派生SKILLはCC BY-NC-SA4.0。softwareはMIT、書体はOFL。",
+      "学習効果と紙プリンター互換性、Mode A/B、修復後の独立再評価は未確認。"
+    ],
+    "demonstration": {
+      "summary": "頁ごとの学習目標・比較/量/応用/練習の役割を計画し、原典Mode Cで6頁のHTMLにした。比較では図を先に見せ、式、結論の順に表示。原典validator、全頁表示、段階操作、全段印刷を確認した。",
+      "applied_features": [
+        "頁ごとのteaching point/learner task/role/labels/takeaway",
+        "原典Mode Cのsemantic sectionと図解",
+        "原典fragment/controllerによる根拠→答え→結論"
+      ],
+      "not_demonstrated": [
+        "Mode A画像版・Mode B編集PPTX",
+        "授業での理解度改善",
+        "紙プリンターでの確認",
+        "修復後の独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "同じ6個でも、割合は変わる",
+          "skill_rule": "比較する対象を先に見せ、根拠となる式と結論を後から表示する。",
+          "what_to_inspect": "赤は双方6個、全体は20個/40個。同じ大きさのマスで比べ、式→結論を「進む」で順に示す。",
+          "proof_path": "examples/repositories/soil-teaching-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "60個の30%は、18個",
+          "skill_rule": "量を求める順序に合わせて、図と計算を分ける。",
+          "what_to_inspect": "10%を一つ分6個としてから、三つ分18個へ進む。10等分の帯の3区画と計算が対応する。",
+          "proof_path": "examples/repositories/soil-teaching-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 5,
+          "label": "6ページ目",
+          "title": "8個は、32個の何%？",
+          "skill_rule": "練習頁では作業を先に提示し、答えと判断を後から示す。",
+          "what_to_inspect": "32個のうち赤8個を見て式を考える。段階表示後に8÷32=0.25と25%、割合の定義を表示する。",
+          "proof_path": "examples/repositories/soil-teaching-showcase/render/slide-06.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/soil-teaching-showcase/input/PLAN.json",
+        "examples/repositories/soil-teaching-showcase/slides.js",
+        "examples/repositories/soil-teaching-showcase/source/original-validation.json",
+        "examples/repositories/soil-teaching-showcase/source/browser-checks.json",
+        "examples/repositories/soil-teaching-showcase/render/step-02-initial.jpg",
+        "examples/repositories/soil-teaching-showcase/render/step-02-complete.jpg",
+        "examples/repositories/soil-teaching-showcase/QA.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "教材から学習者の作業と図の関係を計画し、選んだModeの教材へ仕上げる。",
+      "steps": [
+        "教材から、各頁の教える一点・学習者の作業・図の関係・短いラベル・結論を計画する。",
+        "計画と出力Modeを確認する。HTMLを選ぶ場合は見た目も決め、原典Mode Cテンプレートへ内容を入れる。",
+        "根拠から答えへ段階表示する。図の個数・区画・式が説明と一致するように作る。",
+        "原典validatorを実行し、全頁の大小画面、段階移動、hash、印刷の全段表示を確認して直す。"
+      ],
+      "requirements": [
+        "この作例:モダンブラウザーのみ（offline可）",
+        "原典validator:Node.js",
+        "画像版/編集PPTXは原典の各Modeの専用環境"
+      ],
+      "limitations": [
+        "原典は画像中心PPTX・編集可能PPTX・オフラインHTMLの3Mode。本作例はHTMLのみ。",
+        "画像版と編集PPTXはそれぞれ専用の制作環境が必要。このHTMLはブラウザーと同梱ファイルだけで開く。",
+        "SOIL方法説明・原典/派生SKILLはCC BY-NC-SA4.0。softwareはMIT、書体はOFL。",
+        "学習効果と紙プリンター互換性、Mode A/B、修復後の独立再評価は未確認。"
+      ],
+      "production_status": "mode_c_all6_visual_reveal_validator_print_checked_independent_pending"
+    }
+  }
+]

@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "directory": "<slides-workspace>\\.build\\cyberppt-portable-voibuhg4\\case",
+  "node_dependency_resolution": "source/node_modules installed from package.json by npm; fallback repository .build/node_modules not needed",
+  "input_alias_byte_identical": true,
+  "native_text_identical": true,
+  "render_comparison": "review/portable-render-comparison.json",
+  "execution_receipts": [
+    {
+      "argv": [
+        "<user-profile>\\AppData\\Local\\nodejs\\node-v24.18.0-win-x64\\npm.cmd",
+        "install",
+        "--prefix",
+        "source",
+        "--ignore-scripts",
+        "--no-audit",
+        "--no-fund"
+      ],
+      "cwd": "<slides-workspace>\\.build\\cyberppt-portable-voibuhg4\\case",
+      "exit_code": 0,
+      "log": "review\\portable-npm.log",
+      "log_sha256": "127c1db0bf1c467c3d5362f3ae2d6967a0e2b4844843421b522f8e575bed437c"
+    },
+    {
+      "argv": [
+        "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source/reproduce.py",
+        "--input",
+        "input/data.json",
+        "--render"
+      ],
+      "cwd": "<slides-workspace>\\.build\\cyberppt-portable-voibuhg4\\case",
+      "exit_code": 0,
+      "log": "review\\portable-reproduce.log",
+      "log_sha256": "83534db8916475e1e27c9aefa9da5e8bed008d415a5e65d617e89e114bcb70ea"
+    },
+    {
+      "argv": [
+        "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        ".\\source\\upstream\\scripts\\compare_merged_render.py",
+        "--approved-dir",
+        ".\\render",
+        "--merged-dir",
+        "<slides-workspace>\\.build\\cyberppt-portable-voibuhg4\\case\\render",
+        "--out",
+        ".\\review\\portable-render-comparison.json"
+      ],
+      "cwd": "<slides-workspace>\\.build\\cyberppt-portable-voibuhg4\\case",
+      "exit_code": 0,
+      "log": "review\\portable-render-compare.log",
+      "log_sha256": "8eb77cab946bcd074d86c55c31768158c2e6fa372c477b12af0a5bca493775cc"
+    }
+  ],
+  "original_gate_not_passed": true,
+  "source_artifact_sha256": "21e4dbd0d00bd7f8f5379f464b7e28482fec74bd5e9a92ccdce78679de39c70e",
+  "portable_artifact_sha256": "11a58a76350098a503324444e37fc3513af4d228be7f41beec0026d056f462db"
+}

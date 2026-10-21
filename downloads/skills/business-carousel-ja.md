@@ -4,6 +4,17 @@ description: ai-business-skillsの43番を使い、日本語のSNSカルーセ�
 license: MIT
 ---
 
+## このスキルでできること
+
+投稿案を「困りごと→記入例→行動」の順に整理し、制作ブリーフと確認画面にできる。
+
+- 困っている状況: スライド画像を作り始める前に、最初の引き込みから最後の行動までを確認できない。
+- 必要な入力: 読者・伝える目的・元の原稿・ブランドの配色や書体・最後に促す行動。
+- 受け取るもの: 見出し・本文・絵の方向・背景を記した頁別の制作ブリーフと、カルーセル構成を確認するHTML。
+- 必要環境: この作例のHTML再生成はPython 3.13、fontTools・Brotli、固定版のBIZ UDPGothicとOFL。最小Python版は未確認。 / HTMLプレビューをHTTPで表示できるブラウザー。原典は制作ブリーフの指示で、自動レンダラーはこの作例の専用実装。 / 公開用制作データへ仕上げる場合はCanva/Figma/Adobe Express等が別途必要で、この例では未実施。
+- 作例で試した範囲: 架空ブランドの引き継ぎメモを6枚の制作ブリーフと1080角HTMLへ構成。公開用の仕上げと人の承認は行っていない。
+
+
 # 日本語のカルーセルを構成確認する
 
 原典はminhnv0807/ai-business-skillsの43-carousel-brief-global。原作者Over Powers AgencyのMIT表示と固定原文をupstreamに保持した、Studio Yebisuの日本語派生版です。
@@ -32,13 +43,28 @@ references/WORKFLOW.mdとreferences/recipe.jsonに、今回の日本語6枚、�
 
 完成例と再現キットはカタログの当該リポに掲載。環境と制約はreferences/WORKFLOW.mdに記載する。上流コードと書体の条件はupstream内の原文を保持し、カタログのCC0を上流へ適用しない。
 
+## 原典の検査を省かない
+
+- 読む人・目的・掲載先とブランド条件をinput/data.jsonへ書く
+- 先に原稿を六つの役割へ分ける
+- carousel-brief.mdに各頁の文章・図案とBrand directionを書く
+- 専用builderで1080角の構成確認HTMLを生成する
+- 移動・進捗・最後の記入型を確認し、公開用仕上げは別に判断する
+
+- 原典は指示型の制作スキルで、原典製レンダラーは存在しない
+- 本例の専用HTMLは原典の構成指示を実装したもの
+- Canva/Figma仕上げ・LinkedIn PDF・公開・人の承認は未実施
+- 連絡先は未設定。実績の代わりに架空の記入例を使う
+
+原典の必須工程と、実施できなかった対人確認・実機条件を分けて記録する。再生成後に古いQA合格を引き継がない。作例の現在の検査記録はexample/QA.json。
+
 ## 単体の本文から使う
 
 この本文は `skill-forks/business-carousel-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/minhnv0807/ai-business-skills/tree/0360adced422a08f70c3eff8905b81962872105d
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `business-carousel-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `business-carousel-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: minhnv0807 / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 

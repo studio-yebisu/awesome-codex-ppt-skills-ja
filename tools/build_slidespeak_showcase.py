@@ -8,29 +8,29 @@ PROMPT='SlideSpeak/slide-design-skill原典engine API、slide templates、gate�
 SLIDES=[
  {'type':'cover','density':'editorial','slots':{'title':'本の向こうへ。','subtitle':'読んだあとに、景色が少し変わる。','label':'余白書店 / リブランディング案（仮）','notice':'架空の独立書店の企画。実在店舗の実績ではありません。'}},
  {'type':'statement','density':'editorial','slots':{'title':'探していた本と、\nまだ知らない自分に。','body':'本を売る場所から、次の関心がひらく場所へ。','label':'店の約束を、言葉にする。'}},
- {'type':'quote','density':'editorial','slots':{'title':'「この棚の隣も、見てみたい。」','body':'一冊の出会いが、もうひとつの問いにつながる。','label':'企画の言葉（仮） / 利用者の実際の発言ではありません。'}},
- {'type':'split','density':'balanced','slots':{'title':'緑は、街にひらく目印。','body':'大きな文字と、長い罫線。読む順番を整え、棚の続きがあることを伝える。','caption':'書影や実在ロゴを用いず、ページを開く形をコードで描く。','label':'見た目の提案 / 色は印刷サンプルで確認する。'}},
- {'type':'timeline','density':'balanced','slots':{'title':'言葉から、店先まで。','first':'店の声を集める。','second':'小さく形にする。','third':'続け方を決める。','one':'店主の思いと、棚の案内を整理。','two':'看板と棚札を試作し、読みやすさを確認。','three':'素材・費用・運営の負担を見て、採用範囲を決める。','label':'試行の順序案 / 日程や実施決定ではありません。'}},
- {'type':'closing','density':'editorial','slots':{'title':'一冊の先に、街の続き。','body':'余白書店の、新しい入口を。','label':'仮の提案 / 採用・実施・効果の主張ではありません。'}}]
+ {'type':'quote','density':'editorial','slots':{'title':'「この棚の隣も、\n見てみたい。」','body':'一冊の出会いが、もうひとつの問いにつながる。','label':'企画の言葉（仮） / 利用者の実際の発言ではありません。'}},
+ {'type':'split','density':'balanced','slots':{'title':'緑は、\n街の目印。','body':'大きな文字と、長い罫線。\n読む順番を整え、\n棚の続きがあることを伝える。','caption':'書影や実在ロゴを用いず、ページを開く形をコードで描く。','label':'見た目の提案 / 色は印刷サンプルで確認する。'}},
+ {'type':'timeline','density':'balanced','slots':{'title':'言葉から、店先まで。','first':'店の声を集める。','second':'小さく形にする。','third':'続け方を決める。','one':'店主の思いと、\n棚の案内を整理。','two':'看板と棚札を試作し、\n読みやすさを確認。','three':'素材・費用・運営の負担を見て、\n採用範囲を決める。','label':'試行の順序案 / 日程や実施決定ではありません。'}},
+ {'type':'closing','density':'editorial','slots':{'title':'一冊の先に、\n街の続き。','body':'余白書店の、新しい入口を。','label':'仮の提案 / 採用・実施・効果の主張ではありません。'}}]
 CSS=r'''
 .slide{position:relative;overflow:hidden;color:#11211b;background:#f1eddf;font-family:"Zen Kaku Gothic New",sans-serif;padding:0!important}
 .slide h1,.slide h2,.slide p{margin:0}.slide h1,.slide h2{font-family:"Zen Kaku Gothic New",sans-serif;font-weight:900;line-height:1.24;letter-spacing:-5px}
 .bookgreen{background:#146846;color:#f1eddf}.slide .book-label{position:absolute;left:110px;top:72px;font-size:27px;line-height:1.6}.slide .book-footer{position:absolute;left:110px;bottom:45px;font-size:23px;line-height:1.5}.slide .folio{position:absolute;right:100px;bottom:46px;font-family:Manrope,sans-serif;font-size:26px}
-.slide .long-rule{position:absolute;left:110px;top:146px;width:1630px;height:2px;background:currentColor}.slide .lower-rule{position:absolute;left:110px;bottom:115px;width:1700px;height:2px;background:currentColor}
+.slide .long-rule{position:absolute;left:110px;top:146px;width:1700px;height:2px;background:currentColor}.slide .lower-rule{position:absolute;left:110px;bottom:115px;width:1700px;height:2px;background:currentColor}
 .book-cover h1{position:absolute;left:100px;top:275px;font-size:155px;width:1150px}.book-cover .sub{position:absolute;left:113px;top:680px;font-size:44px;line-height:1.8}.book-cover svg{position:absolute;right:100px;top:355px;width:590px;height:470px}
 .book-statement h2{white-space:pre-line;position:absolute;left:105px;top:268px;width:1390px;font-size:127px;line-height:1.36}.book-statement .sub{position:absolute;left:113px;top:770px;font-size:42px}.book-statement .spine{position:absolute;right:145px;top:240px;width:80px;height:660px;border-left:4px solid #146846;border-right:4px solid #146846}
-.book-quote h2{position:absolute;left:150px;top:277px;width:1540px;font-family:"Shippori Mincho",serif;font-weight:700;font-size:120px;line-height:1.55;letter-spacing:-3px}.book-quote .sub{position:absolute;left:163px;top:760px;font-size:39px}.book-quote .quote-mark{position:absolute;left:108px;top:225px;width:25px;height:580px;background:#146846}
-.book-split h2{position:absolute;left:110px;top:182px;width:830px;font-size:109px}.book-split .sub{position:absolute;left:115px;top:625px;width:745px;font-size:38px;line-height:1.9}.book-split .caption{position:absolute;left:1120px;top:793px;width:650px;font-size:27px;line-height:1.8}.book-split svg{position:absolute;left:1050px;top:248px;width:720px;height:465px}.book-split .vertical{position:absolute;left:977px;top:217px;height:660px;width:2px;background:#146846}
-.book-timeline h2{position:absolute;left:110px;top:220px;font-size:116px}.book-timeline .process{position:absolute;left:110px;top:540px;width:1670px;display:grid;grid-template-columns:repeat(3,1fr);gap:62px}.book-timeline .step{position:relative;border-top:3px solid #146846;padding-top:38px}.book-timeline .step h3{font-size:47px;line-height:1.5;font-weight:900}.book-timeline .step p{font-size:32px;line-height:1.85;margin-top:25px}.book-timeline .step b{font:600 38px Manrope,sans-serif;display:block;margin-bottom:19px;color:#146846}.book-timeline svg{position:absolute;right:90px;top:255px;width:290px;height:105px}
-.book-closing h2{position:absolute;left:105px;top:263px;width:1280px;font-size:142px;line-height:1.36}.book-closing .sub{position:absolute;left:115px;top:761px;font-size:43px}.book-closing svg{position:absolute;right:100px;top:420px;width:460px;height:310px}
+.book-quote h2{white-space:pre-line;position:absolute;left:150px;top:277px;width:1540px;font-family:"Shippori Mincho",serif;font-weight:700;font-size:120px;line-height:1.55;letter-spacing:-3px}.book-quote .sub{position:absolute;left:163px;top:760px;font-size:39px}.book-quote .quote-mark{position:absolute;left:108px;top:225px;width:25px;height:580px;background:#146846}
+.book-split h2{white-space:pre-line;position:absolute;left:110px;top:182px;width:830px;font-size:109px}.book-split .sub{white-space:pre-line;position:absolute;left:115px;top:625px;width:745px;font-size:38px;line-height:1.9}.book-split .caption{position:absolute;left:1120px;top:793px;width:650px;font-size:27px;line-height:1.8}.book-split svg{position:absolute;left:1050px;top:248px;width:720px;height:465px}.book-split .vertical{position:absolute;left:977px;top:217px;height:660px;width:2px;background:#146846}
+.book-timeline h2{position:absolute;left:110px;top:220px;font-size:116px}.book-timeline .process{position:absolute;left:110px;top:540px;width:1670px;display:grid;grid-template-columns:repeat(3,1fr);gap:62px}.book-timeline .step{position:relative;border-top:3px solid #146846;padding-top:38px}.book-timeline .step h3{font-size:47px;line-height:1.5;font-weight:900}.book-timeline .step p{white-space:pre-line;font-size:32px;line-height:1.85;margin-top:25px}.book-timeline .step b{font:600 38px Manrope,sans-serif;display:block;margin-bottom:19px;color:#146846}.book-timeline svg{position:absolute;right:90px;top:255px;width:290px;height:105px}
+.book-closing h2{white-space:pre-line;position:absolute;left:105px;top:263px;width:1280px;font-size:142px;line-height:1.36}.book-closing .sub{position:absolute;left:115px;top:761px;font-size:43px}.book-closing svg{position:absolute;right:100px;top:420px;width:460px;height:310px}
 .slide[data-density="editorial"] .sub{max-width:1380px}.slide[data-density="balanced"] .book-label{font-size:27px}
 '''
 BOOK='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 460" data-visual-event="signature-mark"><path d="M300 420 L45 315 V40 L300 146 L555 40 V315 Z" fill="none" stroke="currentColor" stroke-width="3"/><path d="M300 146 V420 M75 80 L275 163 M75 122 L275 205 M325 163 L525 80 M325 205 L525 122" stroke="currentColor" fill="none" stroke-width="3"/></svg>'
 ARROW='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 300" data-visual-event="signature-mark"><path d="M25 150 H430 M300 35 L440 150 L300 265" stroke="currentColor" fill="none" stroke-width="4"/></svg>'
-def footer():return '<div class="lower-rule"></div><p class="book-footer">{{label}}</p><span class="folio">{{page-no}}</span>'
+def footer():return '<div class="lower-rule"></div><p class="book-footer">{{label}}</p>'
 def common():return '<div class="long-rule"></div>'
 COMPONENTS='\n'.join([
- '<template id="slide-cover"><section class="slide bookgreen book-cover"><p class="book-label">{{label}}</p>'+common()+'<h1>{{title}}</h1><p class="sub">{{subtitle}}</p>'+BOOK+'<div class="lower-rule"></div><p class="book-footer">{{notice}}</p><span class="folio">{{page-no}}</span></section></template>',
+ '<template id="slide-cover"><section class="slide bookgreen book-cover"><p class="book-label">{{label}}</p>'+common()+'<h1>{{title}}</h1><p class="sub">{{subtitle}}</p>'+BOOK+'<div class="lower-rule"></div><p class="book-footer">{{notice}}</p></section></template>',
  '<template id="slide-statement"><section class="slide book-statement">'+common()+'<h2>{{title}}</h2><p class="sub">{{body}}</p><div class="spine" data-visual-event="signature-mark"></div>'+footer()+'</section></template>',
  '<template id="slide-quote"><section class="slide book-quote">'+common()+'<div class="quote-mark"></div><h2>{{title}}</h2><p class="sub">{{body}}</p>'+footer()+'</section></template>',
  '<template id="slide-split"><section class="slide book-split">'+common()+'<h2>{{title}}</h2><p class="sub">{{body}}</p><div class="vertical"></div>'+BOOK+'<p class="caption">{{caption}}</p>'+footer()+'</section></template>',
@@ -95,7 +95,7 @@ def finish():
 
 再生成: `cd upstream` → `npm ci` → `cd ..` → `node upstream/node_modules/tsx/dist/cli.mjs build.mts`。styleを変えるときはstyles/green-book-editorialの6ファイルとinput/slide-tree.jsonを編集。スタイルgate: `node upstream/node_modules/tsx/dist/cli.mjs upstream/scripts/validate-skill.ts styles green-book-editorial`（stylesを絶対パス指定可）。必要なruntimeは通常Node OSS依存だけ。
 
-初回の生成・原典gate・主画面だけを確認。全ページ詳細目視・独立レビュー・ZIP再実行はしません。
+原典gateを実行し、全ページの改行・図・ページ移動を確認して直す。現在の実施範囲はQA.jsonへ記録する。独立再評価と区別する。
 ''')
  write(FORK/'SKILL.md','''---
 name: slidespeak-ja
@@ -107,7 +107,7 @@ description: SlideSpeak原典engineでbrief由来の日本語styleを作り、�
 1. 同梱upstream/SKILL.md、docs/INTEGRATION.md、docs/SKILL-FORMAT.mdを読む。題材と見た目のbriefを決め、既存preset名で代用しない。
 2. tokens、chrome、components、layout grammar、image-style、SKILLの6ファイルを作る。原典templates規約とgateに合わせる。見出し・本文・英数字の書体役割を決め、日本語は意味単位で改行し、過密ならページを分ける。
 3. 原典loadSkill→generateDeck→wrapAsStandaloneHtmlを使う。LLMClientに完成slide-treeを渡し、原典検証・brand guard・rendererを通す。無料のコード図形だけでも制作できる。
-4. build.mtsと独自style/入力を作品ZIPから利用。Node20+と `npm ci` が必要。原典gateと主画面初回表示だけを確認し、実行範囲を記録する。
+4. build.mtsと独自style/入力を作品ZIPから利用。Node20+と `npm ci` が必要。原典gateを実行し、全頁の本文・図・改行・ページ移動を確認して直す。確認範囲を記録する。
 5. 原典MIT、使用フォントの原TTF/OFLを保持。ホスト専有runtimeやAPI keyをZIPへ含めない。
 
 技能本文だけではengineを含みません。一式ZIPのupstream sourceと作品ZIPのstyle/入力/build.mtsを使用。
@@ -122,5 +122,5 @@ def package():
  for folder,name in [(OUT,'slidespeak-example-ja'),(FORK,'slidespeak-ja')]:
   with zipfile.ZipFile(ROOT/f'downloads/{name}.zip','w',zipfile.ZIP_DEFLATED) as z:
    for p in sorted(folder.rglob('*')):
-    if p.is_file() and not set(p.parts)&{'node_modules','cache','__pycache__'} and p.suffix!='.log' and '.occ-measure' not in p.name:z.write(p,(Path(name)/p.relative_to(folder)).as_posix())
+    if p.is_file() and not set(p.parts)&{'.private','node_modules','cache','__pycache__'} and p.suffix!='.log' and '.occ-measure' not in p.name:z.write(p,(Path(name)/p.relative_to(folder)).as_posix())
 if __name__=='__main__':main()

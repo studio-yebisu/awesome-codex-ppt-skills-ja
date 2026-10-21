@@ -1,22 +1,33 @@
-# 香りを、贈る。
+# 原稿に合うテンプレートを選ぶ
 
-[完成template.html](template.html)は、架空の茶の贈りもの企画6枚。商品仕様・価格・効能・売上実績は含まない。茶葉・包み・結びは自作の説明用SVGで、特定商品ではない。
+用途と原稿量をテンプレートのメタデータと比べ、合う枠へ内容を配置します。選定した理由と、字体・余白の変更箇所も確認できます。
 
-原典cogine-ai/ai-slide-templatesの`editorial-luxury`を選び、folder clone→slot mapping→demo差替えの方式で実制作した。石色の紙面、金の細線、大きな明朝、画像枠、元navigationを保持。8枚のdemoからcover / contents / image-grid / quote / positioning / closingの6版式を使った。[選択と対応](input/template-selection-and-slots.json)に候補比較・content_limits・実DOMを記録。原典JSONにはlayout_slotsがないため、局所DOM mappingとして区別した。
+入力: 読み手・用途・本文の量。各テンプレートのscheme/density/avoid_for/content_limits。
 
-ユーザーは日本語派生と字体変更を承認済み。原典のPlayfair Display/Interを、Shippori Mincho Boldの見出し、Zen Kaku Gothic New Regularの本文、Manropeの英数字へ変更した。日本語の行間だけ調整し、原典のpalette・grid・装飾・navigationは維持した。[公式未改変TTF/OFLと出所](fonts/SOURCE.json)を保持し、HTMLに字体・CSS・SVGをinline化。単独HTMLを外部字体や写真なしで開ける。OS字体は抽出していない。
+出力: 選んだeditorial-luxuryの配色・枠・ページ操作を保った日本語HTML6枚。
 
-## 編集と再生成
+## この作例で確かめること
 
-編集対象はtemplate.htmlの文字・SVG・CSS。[input/content.json](input/content.json)のreplacementsが原典demoの対応表で、[source/build.py](source/build.py)が選択folderをコピーして差し替える。PPTX/PDFは生成していない。
+- 実60件のtemplate.jsonを読取・3候補の用途と密度を比較
+- 原典editorial-luxuryの全フォルダー複製・見本文字を置換
+- 明示した日本語字体・文字寸法・縦余白の派生と原典visual validator
 
-```powershell
-python source/build.py --case . --upstream source/upstream
-python -m http.server 8000 --bind 127.0.0.1
-```
+3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。
 
-ブラウザで`http://127.0.0.1:8000/template.html`を開く。主制作はPython標準ライブラリとブラウザだけで、npm buildは不要。矢印キー・Space/PageUp/PageDown・ボタン・スワイプで移動、Home/Endで先頭/末尾。原典の元controllerへ0-based同一originのカタログbridgeを追加している。
+## 使い方
 
-[source/upstream/](source/upstream/AGENTS.md)は原典AGENTS、INPUT_GUIDE、SKILL、選択template.html/template.json、全template metadataの未変更原本。[局所差分](source/template-local.diff)では字体base64だけを表示用placeholderへ省略し、完全データは完成HTMLと実TTFに保持。[MIT原文](LICENSE)、[SOURCE](SOURCE.json)、[PROVENANCE](PROVENANCE.json)を同梱する。
+1. 原典AGENTSを読み、全templates/*/template.jsonのscheme・density・用途・避ける場面を比較する。
+2. content_limitsと必要版式を確認し、合うテンプレートのフォルダー全体を複製する。
+3. 実HTMLの埋める場所を対応付ける。今回の原典JSONにはlayout_slotsがないため局所のDOM対応表を使う。
+4. 見本の文字・数字・画像をすべて置換し、本文やカードの上限を越える場合は頁を分ける。
+5. 全頁をブラウザーで確認し、カウンターと章番号を区別する。利用可能な原典validate-visualも実行する。
 
-確認は生成成功、完成HTMLと代表表紙の初回表示、原典navigationの1→2、短い日本語SKILLのquick_validateだけ。代表PNGは最初の2枚を1600×900で出力。[任意の出力補助](source/render_representatives.cjs)はNode/Playwright/Chromeの新しいheadlessブラウザを使う。全頁PNG・全頁詳細検査・optional visual-validator・全kit再実行・採点は実施していない。
+## 実施範囲
+
+- 原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。
+- layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。
+- 原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。
+
+今回の修復はCodex。独立再評価は変更後の版に対して別に取得します。[実行・全頁確認](source/repair-qa.json)、[原典検査](source/round4-original-gates.json)に実記録を保存しています。固定原典・利用条件はPROVENANCE.jsonとsource/upstream、元のLICENSE/NOTICE、字体のOFLを保持します。
+
+[展開ZIPからの再生成検査](source/round4-zip-replay.json)も実行済み。既存の互換実行環境を使い、公開HTMLと同一バイトの出力を確認しました。Beatdeckの依存は既存lock済みnode_modulesを再利用し、新規npm ciの実証とはしていません。

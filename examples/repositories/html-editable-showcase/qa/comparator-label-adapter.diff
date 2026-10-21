@@ -1,0 +1,13 @@
+--- original visual_audit.py
++++ visual_audit_labels.py
+@@ -248,8 +248,8 @@
+     # 标题栏
+     d.rectangle((0, 0, 1920, bar_h), fill=(245, 245, 247))
+     d.rectangle((1928, 0, 3848, bar_h), fill=(255, 245, 235))
+-    d.text((28, 12), f"HTML 参考  ·  slide {page_idx:02d}", fill=(20, 20, 20), font=title_font)
+-    d.text((1956, 12), f"PPT 输出  ·  slide {page_idx:02d}", fill=(20, 20, 20), font=title_font)
++    d.text((28, 12), f"HTML source  ·  slide {page_idx:02d}", fill=(20, 20, 20), font=title_font)
++    d.text((1956, 12), f"PowerPoint output  ·  slide {page_idx:02d}", fill=(20, 20, 20), font=title_font)
+     # 中间分隔
+     d.rectangle((1920, 0, 1928, 1080 + bar_h), fill=(200, 200, 200))
+     composite.paste(html_img, (0, bar_h))

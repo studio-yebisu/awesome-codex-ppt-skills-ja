@@ -1,0 +1,82 @@
+{
+  "reviewer": "Kimi K3",
+  "requested_model": "kimi-code/k3",
+  "artifact_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+  "snapshot_manifest_sha256": "6dba78bfe48721afe36463b5857b1336d9af1af9a870e4be7deda30677eea939",
+  "raw_review_sha256": "782ff1808761412e656804501c5241f40f052e4b9c7f8e73b28fd7af9fae7c66",
+  "images": [
+    {
+      "file": "render/slide-01.png",
+      "sha256": "2c306af337abc88d52509f400603e16b24542beb47bba0965068bfef8a2ffee2"
+    },
+    {
+      "file": "render/slide-02.png",
+      "sha256": "feb4c6253c4a9d02cd1f06e51c36a8b9b67d24004eedab3636527a02d0d014ff"
+    },
+    {
+      "file": "render/slide-03.png",
+      "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8"
+    },
+    {
+      "file": "render/slide-04.png",
+      "sha256": "1fe06bd1132cfd78a2ba37ac8eb9340daf2b6fad7adc767f99817848496e8c6b"
+    },
+    {
+      "file": "render/slide-05.png",
+      "sha256": "00497d9811e6e7d629e30b8633b4d288552b4f14a0c918cb00b152258c1520f2"
+    }
+  ],
+  "blind_first_checked_from_actual_tool_order": true,
+  "commands": [
+    {
+      "command": [
+        "python.exe",
+        "source/upstream/skills/slide-maker/scripts/validate_review.py",
+        "critic",
+        "review\\round8-current-version\\kimi-critic.json",
+        "--record",
+        "."
+      ],
+      "exit_code": 0,
+      "log": "review/round8-current-version/critic.txt",
+      "log_sha256": "4d81793a744f94da54e034162ebc3231be6443f241ac2d0714dec456600af366"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source/prepare_blind_packet.py"
+      ],
+      "exit_code": 0,
+      "log": "review/round8-current-version/blind-packet.txt",
+      "log_sha256": "d06af6668179e02827f4922b6e9d9d07e5d66e6b8f8f1c61b3981ee3cfa31022"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source/upstream/skills/slide-maker/scripts/blind_read.py",
+        "compare",
+        ".",
+        "--render-dir",
+        "qa/original-blind-render",
+        "--answers",
+        "review\\round8-current-version\\kimi-blind.json",
+        "--write"
+      ],
+      "exit_code": 1,
+      "log": "review/round8-current-version/blind-compare.txt",
+      "log_sha256": "d7966904207d4db8729860ad581bf57654c3537120bceea31549dbbf16c1b7e2"
+    },
+    {
+      "command": [
+        "python.exe",
+        "source/upstream/skills/slide-maker/scripts/render_deck.py",
+        "deck.pptx",
+        "--gate-check"
+      ],
+      "exit_code": 1,
+      "log": "review/round8-current-version/handoff.txt",
+      "log_sha256": "deb012e3a4c7e74b51c17a4bd03a263308c6152d332240409d7de3979e80a036"
+    }
+  ],
+  "scope": "Only this exact artifact and image set; later slide edits invalidate these results."
+}

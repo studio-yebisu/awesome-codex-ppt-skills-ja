@@ -1,0 +1,96 @@
+[
+  {
+    "case_id": "and-scene-showcase",
+    "guide_patch": {
+      "requirements": [
+        "Node.jsとnpm（作例実行はNode24.18.0/npm11.16.0）、app/package-lock.jsonの固定依存",
+        "検査はPython3とChrome/Chromium、distのHTTP配信"
+      ],
+      "commands": [
+        "cd app && npm ci",
+        "cd app && npm run build",
+        "python -m http.server 8000 --bind 127.0.0.1 --directory dist"
+      ]
+    }
+  },
+  {
+    "case_id": "sebastian-178",
+    "guide_patch": {
+      "requirements": [
+        "Python3/fontTools/Pillow、BashとPerl、Chrome/Chromium、同梱Noto Sans CJK JP/OFL",
+        "Windowsは同梱パス変換adapterとpython3 shim。YEBISU_PYTHON/CHROME_BINを既存環境へ指定"
+      ],
+      "commands": [
+        "python source/build.py",
+        "bash source/upstream/scripts/check-deck-quality.sh source/index.html",
+        "bash source/upstream/scripts/check-deck-contrast.sh source/index.html",
+        "bash source/upstream/scripts/check-deck-fit.sh source/index.html",
+        "bash source/upstream/scripts/render.sh source/index.html"
+      ]
+    }
+  },
+  {
+    "case_id": "sebastian-173",
+    "guide_patch": {
+      "requirements": [
+        "Python3とPlaywright/PyMuPDF/pypdf、Chrome/Chromium、作例の日本語書体",
+        "原典圧縮はGhostscript。本作例では存在しないcompact-pdf.shを使わずpypdfへ局所置換"
+      ],
+      "commands": [
+        "python source/build.py",
+        "python source/render-pc.py"
+      ]
+    }
+  },
+  {
+    "case_id": "port-town",
+    "guide_patch": {
+      "requirements": [
+        "モダンブラウザー。原典validatorにはNode.js",
+        "原典単独HTMLは直接開ける。本サイトのiframe/親子操作検証では同一originのHTTP配信を使用"
+      ],
+      "commands": [
+        "node source/upstream/scripts/validate-presenter-mode.mjs index.html",
+        "node source/validate-presenter-ja.mjs index.html",
+        "python -m http.server 8000 --bind 127.0.0.1"
+      ]
+    }
+  },
+  {
+    "case_id": "html-scrolline",
+    "guide_patch": {
+      "requirements": [
+        "Node.jsとnpm、原典runtimeの固定lock、Chrome/ChromiumとPlaywright",
+        "作例再生はHTTP配信。MP4書出しは別の原典export環境が必要で未実施"
+      ],
+      "commands": [
+        "python source/reproduce.py --input input/data.json --render"
+      ]
+    }
+  },
+  {
+    "case_id": "react-slide-deck",
+    "guide_patch": {
+      "requirements": [
+        "Node.jsとnpm、source/app/package-lock.jsonの固定React/Vite依存",
+        "Chrome/ChromiumとHTTP配信。元Tailwind peer衝突の対応内容をREADMEで確認"
+      ],
+      "commands": [
+        "cd source/app && npm ci",
+        "cd source/app && npm run build"
+      ]
+    }
+  },
+  {
+    "case_id": "qiaomu-bento",
+    "guide_patch": {
+      "requirements": [
+        "Python3、fontTools/Brotliとモダンブラウザー",
+        "同梱standalone shellが標準経路。原始Bento checkoutと追加shell gateは任意"
+      ],
+      "commands": [
+        "python source/rebuild_bento.py --output-dir new-output"
+      ]
+    }
+  }
+]

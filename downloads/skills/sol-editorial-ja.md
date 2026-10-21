@@ -14,13 +14,18 @@ description: 原典MckEngineを編集誌風へ明示拡張し、大胆な日本�
 
 原典：likaku/Mck-ppt-design-skill、commit e190e083b715b63172e1c4fea01bc5f9bb21a021。Apache-2.0のLICENSE/NOTICEを保持。これはStudio Yebisuの日本語編集誌レイアウト派生例で、原作者の公式日本語版ではない。
 
+## この方式で気をつけること
+
+- 同梱専用生成器の再生と、自分の原稿から適切な高水準APIを選ぶ一般手順を区別する。
+- 原典固定パス ~/.workbuddy/skills/mck-ppt-design を同梱upstreamへ切り替える。references/layoutsは固定原典にも存在しないため、API/容量表/公開引数を読む。
+
 ## 単体の本文から使う
 
 この本文は `skill-forks/sol-editorial-ja/SKILL.md` を元にした日本語派生です。読み手・目的・自分の原稿を添えてAIへ渡す。
 
 原典: https://github.com/likaku/Mck-ppt-design-skill/tree/e190e083b715b63172e1c4fea01bc5f9bb21a021
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `sol-editorial-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `sol-editorial-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: likaku / 原典条件: Apache-2.0。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 

@@ -1,0 +1,69 @@
+{
+  "repository": "ABYR1206/claude-skill-hand-drawn-slides",
+  "commit": "322a265344e73cd54f77f3f07b6a9f15bb7d2d99",
+  "license": "MIT",
+  "scope": "Japanese chapter-divider implementation using original PptxGenJS recipe and SVG library",
+  "upstream_preserved": true,
+  "case_studies": [
+    "hand-drawn-showcase"
+  ],
+  "source_refs": [
+    {
+      "path": "hand-drawn-chapter-slides/SKILL.md",
+      "sha256": "a9948eadf49f7cb5d4a586ea81f8baaf8390e4cb8c7b1631bf115b0fafe02887",
+      "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/hand-drawn-chapter-slides/SKILL.md"
+    },
+    {
+      "path": "hand-drawn-chapter-slides/scripts/illustrations.md",
+      "sha256": "4aad8d2fb7884bc6a03b9da53ec98cfd84ace0721ca45657a3a691ba54dd896f",
+      "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/hand-drawn-chapter-slides/scripts/illustrations.md"
+    },
+    {
+      "path": "examples/demo-chapter-slides.pptx",
+      "sha256": "03523776bea6de78eefb7d819c6e1ede926b668bedbe31086d34dd4dfe272a54",
+      "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/examples/demo-chapter-slides.pptx"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "939cf67b24635f051b6a7ba8e0bcbb3e95d8bb22edcd98c12975de2a031e6277",
+      "url": "https://github.com/ABYR1206/claude-skill-hand-drawn-slides/blob/322a265344e73cd54f77f3f07b6a9f15bb7d2d99/LICENSE"
+    }
+  ],
+  "method": "Pinned original PptxGenJS+sharp recipe with unchanged SVGs1/2/20/23, original chapter positions and muted background examples. Japanese glyph font fallback only is a derived adapter.",
+  "applied": [
+    "Original 13.333×7.5 canvas, muted warm/cool variation, lower-left40pt regular chapter title, Calibri14pt label and right page number.",
+    "Original svgToBase64Png sharp900×750 and SVG blocks1/2/20/23 unchanged.",
+    "Original optional cover: large upper-left title with small decorative mark only.",
+    "Original Step6 LO PDF→all-page JPEG150dpi, all5 actually viewed."
+  ],
+  "modifications": [
+    "Japanese a:ea Yu Mincho explicitly declared; Latin Georgia retained. Not identical original Japanese typography.",
+    "Small new cover sparkle follows original allowed Bezier stroke/fill rules.",
+    "PowerPoint PDF/PNG, native title edit, structure/hash and ZIP replay are additional implementation checks."
+  ],
+  "fonts": "Windows Georgia/Calibri/Yu Mincho referenced; font files not embedded or redistributed. Actual PDF has YuMincho-Regular and Calibri. No Georgia Latin glyph is present in these Japanese-only titles.",
+  "runtime_versions": {
+    "Node.js": "24.19.0",
+    "pptxgenjs": "4.0.1",
+    "sharp": "0.35.5",
+    "PowerPoint": "16.0",
+    "LibreOffice": "24.2.5.2"
+  },
+  "historical_layout_repair_20261015": {
+    "authoring_model": "claude-opus-5-5",
+    "scope": "decorative frame height only",
+    "authoring_date": "2026-10-15",
+    "qa": "reviews/page-audit.json",
+    "native_xml_check": "source/frame-repair-check.json",
+    "independent_review": "pending"
+  },
+  "latest_repair": {
+    "author": "Codex",
+    "authoring_model": null,
+    "artifact_sha256": "148303c7c2453fe9a56341518911a6c0feb5afa018275dd699e2411a803aebbd",
+    "scope": "Replace red-frame/large-cover variant with original style chapter recipe; plain titles; checklist for record chapter.",
+    "source": "build.cjs",
+    "QA": "QA.json",
+    "independent_review": false
+  }
+}

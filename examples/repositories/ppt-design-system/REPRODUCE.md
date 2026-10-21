@@ -1,14 +1,33 @@
-# 雨の日も迷わない、図書館イベント案内の日本語派生・再現キット
+# 見出し・数値・問い・比較を、同じ配色と文字の規則で揃えられる。
 
-標準生成はPython3の標準ライブラリだけで実行します。Webの書体は端末の游明朝・游ゴシックなどを使用し、フォントファイルは配布しません。
+入力：架空の図書館イベントの参加案内6頁とForest Ink指定。
+出力：原典テンプレートのナビゲーションを持つ日本語HTML。
 
-1. ZIPを展開してPowerShellを開く。
-2. `.\reproduce\Reproduce.ps1` を実行。
-3. 出力は `reproduce/workspace/examples/repositories/ppt-design-system/deck.html`。新出力のQAは確認前です。
-4. そのフォルダーで `python -m http.server 8000 --bind 127.0.0.1` を実行し、`http://127.0.0.1:8000/deck.html` で全ページを確認します。
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全6頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-`-Render` を追加すると、Node.js22以上とインストール済みChrome/EdgeでHTTP描画・原典操作を検査します。
+## 使い方
 
-原典template.html、Forest Ink配色、cover・cards・body・question・comparison・closingのレイアウトを使う。固有ナビゲーションJSを保持し、日本語の行間・字体・同じ重要度の比較欄を調整する。HTTPで全ページとキー・dot操作を確認。HTML生成CLIは原典にないため、同梱Pythonは原典テンプレートを埋める再現入口である。PPTX出力と印刷は今回未検証。
+1. 原典themes.mdから5配色の一つを選ぶ
+2. input/data.jsonに日時・会場・持ち物と頁の役割を書く
+3. layoutの数値カード・大きな問い・並列比較を内容で選ぶ
+4. python source/reproduce.pyで原典templateへ差し込む
+5. 全頁のP0/P1項目と元ナビゲーションを実画面で確認する
 
-自分の内容にはinput/data.jsonの見出し・本文HTMLを更新し、日本語SKILLと原典レイアウトを使って調整します。6ページ・Forest Inkの再現用経路で、他テーマ・PPTX・印刷の対応を確認したものではありません。原典MIT表示を保持し、正式採用と公開は未実施です。
+## 生成・検査
+
+`python source/reproduce.py`
+
+原典presetとJavaScriptの一致を再検査。数値の単位の透過を弱めて読みやすくし、全6頁を再描画。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
+
+## 範囲
+
+- 作例はHTMLのみでPPTX laneは未実施
+- 原典テンプレートのJavaScriptを無改変で保持
+- 游明朝・游ゴシック等の端末書体に依存。OS書体は配布しない
+- 10種の全レイアウトや他4配色を実演した例ではない
+
+## 実行環境
+
+Python 3標準ライブラリ。表示には游明朝・游ゴシック等の日本語書体を持つブラウザーが必要。
+
+配布ZIPの展開後再実行はsource/zip-replay.jsonに記録。依存の導入・ブラウザーの実行パスは受け手の環境へ合わせる。

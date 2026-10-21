@@ -11,7 +11,7 @@
     "Generated template typefaces changed Microsoft YaHei to BIZ UDPGothic / Shippori Mincho; geometry, sizes, red band, navigation and content frames retained.",
     "Local clone and local export helper never call Application.Quit: close only this case presentation for parallel COM work.",
     "Japanese source content and original native diagrams/tables added inside existing template areas.",
-    "User-requested six slides and initial-main-display checks replace upstream defaults of 12–16 slides and extensive QA."
+    "User-requested six-slide scope replaces12–16slide default; original visual/overflow/stale-text quality gate restored for the current revision."
   ],
   "editability": "native_elements",
   "editable_features": [
@@ -84,23 +84,56 @@
   "dependencies": "python-pptx, Pillow; original Markdown module imported; Windows PowerPoint COM used for native clone/export. Extraction/PDF dependencies in original requirements retained but not used for this Markdown case.",
   "third_party_images_or_logos": false,
   "artifact_tool_used": false,
-  "dependency_versions_and_conditions": [
+  "layout_repair": {
+    "authoring_model": "claude-opus-5-5",
+    "date": "2026-10-15",
+    "scope": "Page2 same-metric exposure comparison and page3 top-edge label clearance",
+    "qa": "reviews/quality-gate.json",
+    "original_quality_gate_restored": true,
+    "independent_review": "pending"
+  },
+  "quality_gate_source_refs": [
     {
-      "package": "python-pptx",
-      "version": "1.0.2",
-      "license": "MIT",
-      "bundled": false
+      "path": "skills/thesis-defense-pptx/scripts/export_pptx_png.ps1",
+      "sha256": "3eb5f5227d16a05372b77fe5b1aee3aaf9dafc6265d3ae058d874288e4ee36ab"
     },
     {
-      "package": "Pillow",
-      "version": "12.3.0",
-      "license": "MIT-CMU",
-      "bundled": false
+      "path": "skills/thesis-defense-pptx/scripts/inspect_pptx_overflow.ps1",
+      "sha256": "7717944e0b4c617e3c312ba04fdebd412ab9dc45ab89e5f91222c5937934114f"
     },
     {
-      "component": "Microsoft PowerPoint 16.0 COM",
-      "license": "Requires installed licensed Microsoft PowerPoint; not redistributed",
-      "bundled": false
+      "path": "skills/thesis-defense-pptx/scripts/make_contact_sheet.py",
+      "sha256": "fea85be505432e53ceb8ed6fddb35d69337e0c15dbb584dcb7219036c822d1a8"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/scripts/scan_pptx_text.py",
+      "sha256": "aaaa96a14709a8ddd7421b1b56da693d39d2ea3f362e4f16dbff03d57656b331"
+    },
+    {
+      "path": "skills/thesis-defense-pptx/references/pptx_quality_gate.md",
+      "sha256": "c08d2c6c96c3410ebf78783657964c9362d4d7b26d7f6d520c753c53809ae49e"
     }
-  ]
+  ],
+  "current_repair": {
+    "author": "Codex",
+    "pptx_sha256": "e451ba4b2ea22fc52404f24e6274d5ab9e82fddf3ffd58211126c8b017023378",
+    "changed_pages": [
+      3,
+      6
+    ],
+    "unchanged_page_PNGs": [
+      1,
+      2,
+      4,
+      5
+    ],
+    "input_sha256": "47a081e470d6b49a5d63ff19bc8018515537fe4a9740946f070f07a92c0a1c6b",
+    "changes": [
+      "Edges now show both time/exposure in minutes, B uses the input node name.",
+      "Future-work note is larger and clear of the card corner."
+    ],
+    "original_overflow_tolerance": 40,
+    "independent_review": "pending"
+  },
+  "current_artifact_sha256": "e451ba4b2ea22fc52404f24e6274d5ab9e82fddf3ffd58211126c8b017023378"
 }

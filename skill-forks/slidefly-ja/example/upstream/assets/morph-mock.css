@@ -1,0 +1,131 @@
+/* ===========================================================
+   MORPH-SLIDES MOCKS: app frames drawn in CSS, so a deck can show
+   a chat, a terminal, a web page or a phone without screenshots.
+     .mock.mock-chat     window + chat bubbles (.msg.user / .msg.ai)
+     .mock.mock-term     dark terminal (.cmd typed after a prompt, .out lines)
+     .mock.mock-browser  window with an address bar (data-url)
+     .mock.mock-phone    phone body; may hold a .mock-chat (its bar is dropped)
+   Window title = data-title. Motion (morph-mock.js sets the timing):
+     .type   the text is typed letter by letter
+     .lines  the children appear one line after another
+     .think  "..." dots first, then the lines (use with .lines)
+   Units run one after another inside the same click (data-step).
+   Final look = everything shown, so screenshots and the audit see it.
+   =========================================================== */
+:where(.deck-stage) {
+  /* a raised surface: a bit lighter than the stage on dark and light styles alike */
+  --mock-bg: color-mix(in srgb, var(--bg) 82%, #fff);
+  --mock-bar: color-mix(in srgb, var(--fg) 8%, var(--mock-bg));
+  --mock-line: color-mix(in srgb, var(--fg) 16%, transparent);
+  --mock-radius: 22px;
+  --mock-mono: var(--font-mono, ui-monospace, Consolas, monospace);
+}
+
+/* ---------- window frame ---------- */
+.mock {
+  position: absolute; display: flex; flex-direction: column; gap: 22px;
+  padding: 92px 40px 40px; overflow: hidden; text-align: left;
+  background: var(--mock-bg); color: var(--fg);
+  border: 2px solid var(--mock-line); border-radius: var(--mock-radius);
+  box-shadow: 0 40px 90px -40px rgba(0, 0, 0, .5);
+  font: 400 28px/1.45 var(--font-body);
+}
+.mock-chat, .mock-term, .mock-browser { min-height: 300px; }
+.mock:is(.mock-chat, .mock-term, .mock-browser)::before {
+  content: attr(data-title);
+  position: absolute; left: 0; right: 0; top: 0; height: 60px;
+  display: flex; align-items: center; justify-content: center;
+  border-bottom: 2px solid var(--mock-line);
+  background:
+    radial-gradient(circle at 32px 30px, #FF5F57 0 7px, transparent 8px),
+    radial-gradient(circle at 58px 30px, #FEBC2E 0 7px, transparent 8px),
+    radial-gradient(circle at 84px 30px, #28C840 0 7px, transparent 8px),
+    var(--mock-bar);
+  font: 600 20px/1 var(--font-body); color: var(--muted, currentColor); letter-spacing: .02em;
+}
+.mock > :is(p, h3, ul, ol) { margin: 0; }
+
+/* ---------- chat ---------- */
+.mock .msg { position: relative; max-width: 84%; padding: 18px 26px; border-radius: 24px; }
+.mock .msg > * + * { margin-top: .45em; }
+.mock .msg :is(p, ul, ol) { margin-bottom: 0; }
+.mock .msg.user { align-self: flex-end; background: color-mix(in srgb, var(--accent) 22%, var(--bg)); border-bottom-right-radius: 6px; }
+.mock .msg.ai { align-self: flex-start; border: 2px solid var(--mock-line); border-bottom-left-radius: 6px; }
+.mock .msg[data-who]::before { content: attr(data-who); display: block; margin-bottom: 6px; font-size: .72em; font-weight: 700; letter-spacing: .04em; color: var(--accent); }
+.mock .composer {
+  margin-top: auto; display: flex; align-items: center; gap: 16px;
+  padding: 16px 22px; border: 2px solid var(--mock-line); border-radius: 18px;
+  background: var(--bg); color: var(--fg);
+}
+.mock .composer > :first-child { flex: 1; }
+.mock .composer .ico { font-size: 34px; color: var(--accent); }
+.mock code, .mock .mono { font-family: var(--mock-mono); font-size: .9em; }
+
+/* ---------- terminal: dark on every style ---------- */
+.mock-term {
+  --mock-line: rgba(255, 255, 255, .12); --mock-bar: #1A1F27; --muted: #9BA7B4;
+  gap: 4px; background: #0E1116; color: #E6EDF3;
+  font: 400 26px/1.5 var(--mock-mono);
+}
+.mock-term .cmd::before { content: var(--prompt, "$ "); color: #7EE787; }
+.mock-term .cmd:not(:first-child) { margin-top: 14px; }
+.mock-term .out { color: #9BA7B4; }
+.mock-term .ok { color: #7EE787; }
+.mock-term .err { color: #FF7B72; }
+.mock-term .hi { color: #FFD866; }
+
+/* ---------- browser ---------- */
+.mock-browser::after {
+  content: attr(data-url);
+  position: absolute; left: 120px; right: 36px; top: 12px; height: 36px;
+  display: flex; align-items: center; padding: 0 20px; border-radius: 18px;
+  background: var(--mock-bg); color: var(--muted, currentColor);
+  font: 400 19px/1 var(--mock-mono); white-space: nowrap; overflow: hidden;
+}
+.mock-browser img { display: block; width: 100%; border-radius: 10px; }
+
+/* ---------- phone ---------- */
+.mock-phone {
+  padding: 74px 22px 34px; border: 14px solid var(--phone-ink, #15171C); border-radius: 64px;
+  aspect-ratio: 9 / 19; width: 420px;
+}
+.mock-phone::before {
+  content: ""; position: absolute; left: 50%; top: 16px; width: 120px; height: 32px;
+  border-radius: 16px; background: var(--phone-ink, #15171C); transform: translateX(-50%);
+}
+.mock-phone .mock { position: relative; inset: auto; flex: 1; min-height: 0; padding: 0; border: 0; box-shadow: none; background: none; font-size: inherit; }
+.mock-phone .mock::before { content: none; }
+.mock-phone { font-size: 24px; }
+
+/* ---------- motion: units, typed letters, lines, thinking dots ---------- */
+.mock :is(.type, .lines, .msg) { opacity: 0; }
+.slide.active .mock :is(.type, .lines, .msg):not(.pending, .pending *) {
+  opacity: 1;
+  transition: opacity .35s ease calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s + var(--d0, 0s));
+}
+.mock .ch { opacity: 0; }
+.slide.active .mock .ch:not(.pending .ch) {
+  opacity: 1;
+  transition: opacity 0s linear calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s + var(--d0, 0s) + var(--k) * var(--per, .03s));
+}
+.mock .lines > :not(.dots) { opacity: 0; transform: translateY(14px); }
+.slide.active .mock .lines:not(.pending, .pending *) > :not(.dots) {
+  opacity: 1; transform: none;
+  transition: opacity .4s ease, transform .6s var(--morph-ease);
+  transition-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s + var(--d0, 0s) + var(--think-t, 0s) + var(--j, 0) * var(--line-gap, .35s));
+}
+.mock .think { --think-t: .9s; position: relative; }
+.mock .dots { position: absolute; left: 26px; top: 22px; display: flex; gap: 8px; opacity: 0; }
+.mock .msg[data-who] > .dots { top: 58px; }
+.mock .dots i { width: 12px; height: 12px; border-radius: 50%; background: currentColor; animation: sf-dot 1s ease-in-out infinite; }
+.mock .dots i:nth-child(2) { animation-delay: .15s; }
+.mock .dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes sf-dot { 0%, 100% { opacity: .25; transform: none; } 40% { opacity: .9; transform: translateY(-6px); } }
+@keyframes sf-life { from { opacity: 1; } to { opacity: 0; } }
+.slide.active .mock .think:not(.pending, .pending *) > .dots {
+  animation: sf-life var(--think-t) steps(1, end) both;
+  animation-delay: calc(var(--t0, var(--reveal-base)) + var(--d, 0) * 1s + var(--d0, 0s));
+}
+
+/* deck.audit() measures the finished slide */
+.deck-stage.auditing .mock :is(.type, .lines, .msg, .ch, .lines > *) { opacity: 1 !important; transform: none !important; transition: none !important; }

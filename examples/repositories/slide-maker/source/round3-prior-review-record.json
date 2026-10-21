@@ -1,0 +1,62 @@
+{
+  "reviewer": "Kimi K3",
+  "artifact_sha256": "66209c92d6d38c8050f2944fed633870ae27dc63c32743d210e366102bed0718",
+  "review_snapshot_id": "round3-kimi-05-20261015T143131Z",
+  "raw_review_sha256": "c56ccf539dfa6a674cf9aa002c85fa086fef90f622e7e028229c48da5c2f3f08",
+  "actual_tool_order_sha256": "a557345a9fb6cbec3657de5fb1b667fba25d89c7b5477e8fabdec18d7d076446",
+  "origin": "Parent verified actual raw tool order: blind packet/answer schema→five ReadMedia images→blind answers write→first manifest/contract/SKILL read. Only this case extracted.",
+  "critic": "review/round3-prior-version/kimi-critic.json",
+  "blind_answers": "review/round3-prior-version/kimi-blind.json",
+  "scope": "Prior revision only. This consent is never applied to the subsequently modified artifact.",
+  "commands": [
+    {
+      "command": [
+        "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Scripts/python.exe",
+        "<case>\\source\\upstream\\skills\\slide-maker\\scripts\\validate_review.py",
+        "critic",
+        "<case>\\review\\round3-prior-version\\kimi-critic.json",
+        "--record",
+        "<case>"
+      ],
+      "exit_code": 0,
+      "log": "review/round3-prior-version/command-1.txt",
+      "sha256": "0ba2c5c78754fe374ad9c7cb5458c71171498eb95b1728701f8f6d406158429c"
+    },
+    {
+      "command": [
+        "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Scripts/python.exe",
+        "<case>\\source\\prepare_blind_packet.py"
+      ],
+      "exit_code": 0,
+      "log": "review/round3-prior-version/command-2.txt",
+      "sha256": "d06af6668179e02827f4922b6e9d9d07e5d66e6b8f8f1c61b3981ee3cfa31022"
+    },
+    {
+      "command": [
+        "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Scripts/python.exe",
+        "<case>\\source\\upstream\\skills\\slide-maker\\scripts\\blind_read.py",
+        "compare",
+        "<case>",
+        "--render-dir",
+        "qa/original-blind-render",
+        "--answers",
+        "<case>\\review\\round3-prior-version\\kimi-blind.json",
+        "--write"
+      ],
+      "exit_code": 1,
+      "log": "review/round3-prior-version/command-3.txt",
+      "sha256": "d704fc3b341d4f3044b99119766dc03972b2c2eff4b50f42e2470adcb298cf20"
+    },
+    {
+      "command": [
+        "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Scripts/python.exe",
+        "<case>\\source\\upstream\\skills\\slide-maker\\scripts\\render_deck.py",
+        "<case>\\deck.pptx",
+        "--gate-check"
+      ],
+      "exit_code": 1,
+      "log": "review/round3-prior-version/command-4.txt",
+      "sha256": "68e94d5bd810e076cca276bc56054de053a15fa52acd963e008c776456e956f1"
+    }
+  ]
+}

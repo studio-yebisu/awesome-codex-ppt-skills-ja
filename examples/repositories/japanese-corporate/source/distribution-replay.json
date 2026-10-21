@@ -1,0 +1,380 @@
+{
+  "case_id": "japanese-corporate",
+  "artifact_sha256": "92173daab8ef598c3fbba8606594a1471bfda191dee35c979fe8394e4b2e758a",
+  "archive_count": 2,
+  "page_count": 12,
+  "all_commands_completed": true,
+  "archive_replays": [
+    {
+      "archive": "japanese-corporate-example-ja.zip",
+      "tested_archive_sha256": "af947a8b0bf00e4e3a1c1fcf696911903706ffe2764f5e09925245b723e97794",
+      "packaged_native_slide_chart_workbook_content_matches_rebuild": true,
+      "all_6_rgb_pages_match": true,
+      "pages": [
+        {
+          "page": 1,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "dea3882b1c95a506464512740664b8c9e181a0a001557869ef3d3c7569b1ca10"
+        },
+        {
+          "page": 2,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "91dda8cc949d6a480a22ec35fa18ad3024e1742777569c2417150747ad48656c"
+        },
+        {
+          "page": 3,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "cec1e2c2a8a6f4ca7e613732ca9b25aeb74ca246a9bf9998a2d33d16fcb6c962"
+        },
+        {
+          "page": 4,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "97db28de60328de46a425c5c659e39f7a7b2bc6030e5f969e291fe4acdfc58a1"
+        },
+        {
+          "page": 5,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "b43e2152953db77f134dca6a989e58af944c95e81ec7c54e2c831c6630bfe860"
+        },
+        {
+          "page": 6,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "41be5597d58325869c14bec84dc279cc75a2c29d9fbf9769b6b1981ed96db114"
+        }
+      ],
+      "commands": [
+        {
+          "command": [
+            "python",
+            "source/rebuild.py"
+          ],
+          "exit": 0,
+          "stdout": "Gonta native template saved, six slides",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "powershell",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            "source/render_powerpoint.ps1",
+            "-PresentationPath",
+            "deck.pptx",
+            "-OutputDirectory",
+            "render"
+          ],
+          "exit": 0,
+          "stdout": "PowerPoint 16.0: 6 slides exported to PNG and PDF",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "python",
+            "source/render_pdf_previews.py",
+            "render"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "python",
+            "source/check_native.py"
+          ],
+          "exit": 0,
+          "stdout": "{\"native\": {\"objects\": 237, \"native_shapes\": 237, \"pictures\": 0, \"native_charts\": 1, \"native_tables\": 2, \"native_connectors\": 13}, \"chart_matches\": true, \"unchanged_template_parts\": 2, \"bounds_violations\": 0, \"crc\": \"passed\"}",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "powershell",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            "source/check_overflow.ps1"
+          ],
+          "exit": 0,
+          "stdout": "Measured 184 text objects; overflow issues 0",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "powershell",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            "source/check_edit_reopen.ps1"
+          ],
+          "exit": 0,
+          "stdout": "PowerPoint native table edit, save and reopen passed; main deck unchanged",
+          "stderr": ""
+        }
+      ],
+      "edit_save_reopen": {
+        "author": "Codex",
+        "application": "Microsoft PowerPoint",
+        "version": "16.0",
+        "source_sha256": "e597bf111badfbc3c8ce7c4960b54bc74cb75c06e6accb252fbac8a4f430be50",
+        "operation": "Open a private copy -> edit native table cell -> SaveAs PPTX -> close that deck -> reopen -> read cell and export actual page",
+        "native_table": "page-02-native-metric-table",
+        "cell": "row2,column1",
+        "before": "売上",
+        "after": "売上（編集確認）",
+        "pptx_saved_and_reopened": true,
+        "edited_copy_public": false,
+        "main_deliverable_modified": false,
+        "image": "render/editability/slide-02-edited.png",
+        "pdf": "render/editability/edited.pdf",
+        "edited_copy_sha256": "00848f106d3e7a019df7ec3ec1952d6e3be38b0aa6fe9a3ce2ee69de3e34b0bb",
+        "source_unchanged": true,
+        "shared_application_quit_called": false
+      }
+    },
+    {
+      "archive": "japanese-corporate-ja.zip",
+      "tested_archive_sha256": "de830a56d78baef17d6a4a84fbf6b6a91aa6fd349483875857596283b4f8067e",
+      "packaged_native_slide_chart_workbook_content_matches_rebuild": true,
+      "all_6_rgb_pages_match": true,
+      "pages": [
+        {
+          "page": 1,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "dea3882b1c95a506464512740664b8c9e181a0a001557869ef3d3c7569b1ca10"
+        },
+        {
+          "page": 2,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "91dda8cc949d6a480a22ec35fa18ad3024e1742777569c2417150747ad48656c"
+        },
+        {
+          "page": 3,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "cec1e2c2a8a6f4ca7e613732ca9b25aeb74ca246a9bf9998a2d33d16fcb6c962"
+        },
+        {
+          "page": 4,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "97db28de60328de46a425c5c659e39f7a7b2bc6030e5f969e291fe4acdfc58a1"
+        },
+        {
+          "page": 5,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "b43e2152953db77f134dca6a989e58af944c95e81ec7c54e2c831c6630bfe860"
+        },
+        {
+          "page": 6,
+          "mean_absolute_RGB": 0.0,
+          "identical_pixels": true,
+          "sha256": "41be5597d58325869c14bec84dc279cc75a2c29d9fbf9769b6b1981ed96db114"
+        }
+      ],
+      "commands": [
+        {
+          "command": [
+            "python",
+            "source/rebuild.py"
+          ],
+          "exit": 0,
+          "stdout": "Gonta native template saved, six slides",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "powershell",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            "source/render_powerpoint.ps1",
+            "-PresentationPath",
+            "deck.pptx",
+            "-OutputDirectory",
+            "render"
+          ],
+          "exit": 0,
+          "stdout": "PowerPoint 16.0: 6 slides exported to PNG and PDF",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "python",
+            "source/render_pdf_previews.py",
+            "render"
+          ],
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "python",
+            "source/check_native.py"
+          ],
+          "exit": 0,
+          "stdout": "{\"native\": {\"objects\": 237, \"native_shapes\": 237, \"pictures\": 0, \"native_charts\": 1, \"native_tables\": 2, \"native_connectors\": 13}, \"chart_matches\": true, \"unchanged_template_parts\": 2, \"bounds_violations\": 0, \"crc\": \"passed\"}",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "powershell",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            "source/check_overflow.ps1"
+          ],
+          "exit": 0,
+          "stdout": "Measured 184 text objects; overflow issues 0",
+          "stderr": ""
+        },
+        {
+          "command": [
+            "powershell",
+            "-NoProfile",
+            "-ExecutionPolicy",
+            "Bypass",
+            "-File",
+            "source/check_edit_reopen.ps1"
+          ],
+          "exit": 0,
+          "stdout": "PowerPoint native table edit, save and reopen passed; main deck unchanged",
+          "stderr": ""
+        }
+      ],
+      "edit_save_reopen": {
+        "author": "Codex",
+        "application": "Microsoft PowerPoint",
+        "version": "16.0",
+        "source_sha256": "d53ea2c556dc2aec6b6f0aa20a9ac5278054a3047d1a8a68f81040c7c8043eeb",
+        "operation": "Open a private copy -> edit native table cell -> SaveAs PPTX -> close that deck -> reopen -> read cell and export actual page",
+        "native_table": "page-02-native-metric-table",
+        "cell": "row2,column1",
+        "before": "売上",
+        "after": "売上（編集確認）",
+        "pptx_saved_and_reopened": true,
+        "edited_copy_public": false,
+        "main_deliverable_modified": false,
+        "image": "render/editability/slide-02-edited.png",
+        "pdf": "render/editability/edited.pdf",
+        "edited_copy_sha256": "ef754e51f9941fb742220b5ed675f36278aba16a9f6bb2ecbcf200b43ae10dee",
+        "source_unchanged": true,
+        "shared_application_quit_called": false
+      }
+    }
+  ],
+  "dependency_scope": "Existing Python/python-pptx/lxml/Pillow/PDFium and Windows PowerPoint16; no dependency install, no new environment, no network. PowerPoint application Quit never called.",
+  "scope": "Fresh ZIP extraction, actual original-template code rebuild, PowerPoint PNG/PDF export, PDFium RGB all six pages per archive, native OOXML data comparison, overflow and representative edit-save-reopen. Reproducibility is not independent visual/JTC acceptance.",
+  "native_comparison_exclusions": "ZIP container timestamps and embedded workbook docProps/core.xml created/modified timestamps only; worksheets/series/categories/formulas/styles and all slide/chart OOXML compared.",
+  "independent_current_review": "pending",
+  "final_archive_note": "The tested archive SHA values precede addition of this receipt. Final ZIPs only update non-executing documentation/QA/provenance/SOURCE/this receipt. Exact executable/input/selected-template byte hashes match each tested extraction; canonical PPTX hash and all 12 RGB page hashes are bound above. ZIP container and embedded workbook created/modified timestamps are not content comparisons.",
+  "tested_execution_input_bindings": [
+    {
+      "archive": "japanese-corporate-example-ja.zip",
+      "execution_input_bindings_match_tested_extraction": true,
+      "files": [
+        {
+          "path": "input/data.json",
+          "sha256": "7f60fd3caaefd5121330e8276eefc9838694f1509f24131b324dbe01fe671a25"
+        },
+        {
+          "path": "input/flow-plan.json",
+          "sha256": "00729641fe8a132c9d26dbcf166a98bb85b858b423bb12a30fca1d5f10589737"
+        },
+        {
+          "path": "source/template-map.json",
+          "sha256": "33413b6a2f28d8d93c345c0df1ebdd5cdccd6aebf9fbcbea0b3bd91266aaee72"
+        },
+        {
+          "path": "source/rebuild.py",
+          "sha256": "656babb7b43c55443c32dab0e3aba55d4ba880721e1d7cba77f0978a51bddf7b"
+        },
+        {
+          "path": "source/render_powerpoint.ps1",
+          "sha256": "7a73b1d84192236b9f86ac24513c8704b8bb9ad49190cc66ab34f5560dbe201a"
+        },
+        {
+          "path": "source/render_pdf_previews.py",
+          "sha256": "3052b04c2d2ef5a7635962a49dcfe7e7152f42651494a3dd83ecc9f927a56205"
+        },
+        {
+          "path": "source/check_native.py",
+          "sha256": "aa8cabd544566af13aa6da657b055129843e26252d78dedab67884c0a14039c7"
+        },
+        {
+          "path": "source/check_overflow.ps1",
+          "sha256": "46df7bcbb02ccc6f31e8aff34897b00d186d083af4ce1d0502354e536586b974"
+        },
+        {
+          "path": "source/check_edit_reopen.ps1",
+          "sha256": "ca5f3632b50df0acf6a61eae76b9ece2e205b03ff3f5fe3dd3bcf37ad6a67eb7"
+        },
+        {
+          "path": "source/upstream/skills/japanese-corporate-pptx/assets/japanese-corporate-ponchi-template.pptx",
+          "sha256": "3d409d186cb0224632dd09d13e0f59425b0759ce2c2e34787d39ff18989b8012"
+        }
+      ]
+    },
+    {
+      "archive": "japanese-corporate-ja.zip",
+      "execution_input_bindings_match_tested_extraction": true,
+      "files": [
+        {
+          "path": "input/data.json",
+          "sha256": "7f60fd3caaefd5121330e8276eefc9838694f1509f24131b324dbe01fe671a25"
+        },
+        {
+          "path": "input/flow-plan.json",
+          "sha256": "00729641fe8a132c9d26dbcf166a98bb85b858b423bb12a30fca1d5f10589737"
+        },
+        {
+          "path": "source/template-map.json",
+          "sha256": "33413b6a2f28d8d93c345c0df1ebdd5cdccd6aebf9fbcbea0b3bd91266aaee72"
+        },
+        {
+          "path": "source/rebuild.py",
+          "sha256": "656babb7b43c55443c32dab0e3aba55d4ba880721e1d7cba77f0978a51bddf7b"
+        },
+        {
+          "path": "source/render_powerpoint.ps1",
+          "sha256": "7a73b1d84192236b9f86ac24513c8704b8bb9ad49190cc66ab34f5560dbe201a"
+        },
+        {
+          "path": "source/render_pdf_previews.py",
+          "sha256": "3052b04c2d2ef5a7635962a49dcfe7e7152f42651494a3dd83ecc9f927a56205"
+        },
+        {
+          "path": "source/check_native.py",
+          "sha256": "aa8cabd544566af13aa6da657b055129843e26252d78dedab67884c0a14039c7"
+        },
+        {
+          "path": "source/check_overflow.ps1",
+          "sha256": "46df7bcbb02ccc6f31e8aff34897b00d186d083af4ce1d0502354e536586b974"
+        },
+        {
+          "path": "source/check_edit_reopen.ps1",
+          "sha256": "ca5f3632b50df0acf6a61eae76b9ece2e205b03ff3f5fe3dd3bcf37ad6a67eb7"
+        },
+        {
+          "path": "source/upstream/skills/japanese-corporate-pptx/assets/japanese-corporate-ponchi-template.pptx",
+          "sha256": "3d409d186cb0224632dd09d13e0f59425b0759ce2c2e34787d39ff18989b8012"
+        }
+      ]
+    }
+  ]
+}

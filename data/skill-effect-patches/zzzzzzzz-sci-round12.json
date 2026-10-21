@@ -1,0 +1,82 @@
+[
+  {
+    "case_id": "sci-diagram-reconstruction",
+    "constraints": [
+      "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+      "複合例で入れ子の配置・双方向線・破線の折れ線・合成画像insetの所有分離を確認。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+      "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+      "複合例の小図内部はrasterで、内側の「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示する方式で、不可視領域の削除や情報秘匿は保証しない。",
+      "複合例pass-04は元SVGの角丸値をroundRectの調整値へ反映し、3個の矢じりをnative lg/lgへ補正した。字体・破線パターン・色・線幅などのrenderer差と近似は残り、画素一致・見た目の改善・時短は主張しない。単純例の矢じりは元画像よりやや小さいまま保持する。",
+      "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存と字体の新規installは検査していない。",
+      "単純例はpass-01を保持し、複合例の現在の採用版は明示された追加改善によるpass-04。旧pass-01/02と、採用版とは別の編集証拠を保全する。現在版の独立Kimi K3/Opus5.5評価は制作担当の確認と分ける。"
+    ],
+    "demonstration": {
+      "pages": [
+        {
+          "index": 0,
+          "label": "復元結果：4箱と4関係",
+          "title": "水循環の代表的な経路",
+          "what_to_inspect": "左上→右上の凝結、右上→右下の降水、右下→左下の水の流れ、左下→左上の蒸発を入力PNGと比べる。原文・配置・方向を保持する。",
+          "skill_rule": "関係を見た目の円形配置から推測せず、元図のfrom/toと経路をEDGESへ記録する。線は一つのnative部品として持つ。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/input/source.png"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：文字だけの変更",
+          "title": "「海・湖の水」を「湖の水」へ",
+          "what_to_inspect": "左下のラベルだけが変わり、箱・線・ほかの文言が残る。画像全体を置き換えていない。",
+          "skill_rule": "各文字にnativeの所有者を一つ与える。画像内文字との二重描画や全面bitmapを使わない。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：箱と線の変更",
+          "title": "箱の塗りと矢印の色・太さを変更",
+          "what_to_inspect": "左下の箱だけが淡い緑、上の凝結の矢印だけが緑の太線へ変わる。文言と矢印の方向は保持し、保存後に開き直した。",
+          "skill_rule": "意味を持つ箱と関係を示す線を編集可能なnative部品へ分ける。自動接続とは区別し、PPTX XMLでも個別性を確かめる。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html"
+        },
+        {
+          "index": 0,
+          "label": "複合例：入れ子・双方向・破線・画像小図",
+          "title": "2区画の可逆交換（概念モデル）",
+          "what_to_inspect": "外側領域内の2区画と記号、両端矢じり、条件u→区画Bの破線終端、raster小図とnative見出しの分担を入力と比べる。",
+          "skill_rule": "NODES/EDGES/INSETSの所有を一つずつ割り当て、親領域で関係線を隠さないよう描画順を調整する。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/complex-example/render-pass04/powerpoint.png",
+          "proof_kind": "actual_powerpoint_render",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/complex-example/input/source.png"
+        },
+        {
+          "index": 0,
+          "label": "複合例の別コピー：Xだけを変更",
+          "title": "XをX*へ変更して保存",
+          "what_to_inspect": "区画AのXだけがX*に変わり、双方向線・破線・小図が保持される。",
+          "skill_rule": "native文字の編集コピーを採用PPTXとは別に保存し、元hashを保持する。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/complex-example/qa/current-nativeedit/edited-copy.png",
+          "proof_kind": "actual_saved_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/complex-example/render-pass04/powerpoint.png",
+          "input_label": "変更前",
+          "output_label": "Xを変更した後"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sci-diagram-reconstruction/complex-example/pass-04/build.mjs",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/pass-04/editable.pptx",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/check-pass-04.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/native-structure-pass04.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/geometry-and-edit-pass04.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/current-nativeedit/edit-proof.json",
+        "examples/repositories/sci-diagram-reconstruction/source/adjust_native_arrows.py"
+      ]
+    }
+  }
+]

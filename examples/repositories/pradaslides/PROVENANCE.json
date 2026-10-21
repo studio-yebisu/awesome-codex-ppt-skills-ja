@@ -233,8 +233,8 @@
       "url": "https://github.com/prodigeproject/pradaslides/blob/b9219b238d812d0dd7b4ed9fb514effbad0d0928/assets/starter/visual-generation-plan.json"
     }
   ],
-  "input_sha256": "cc573c2c40733651a93f59b56b044edafbfb406fa172f5cee0e98c9d4a74e8a1",
-  "artifact_sha256": "2b09378bbb0b3c44f87c2c90a10a68d88d6c0d5e8cc2f2827e24123e8e27c754",
+  "input_sha256": "0dae30fc18afd8f5ece5bb19ff50ee36ec5b241ec13adda62a2214cb6aa67e98",
+  "artifact_sha256": "e322119782ffe042a87d238f6e4c11baad9c8bab094ab3fc1daa2444006e892d",
   "execution_receipts": [
     "review/author-receipt.json",
     "review/bootstrap-receipt.json",
@@ -530,5 +530,275 @@
       "reason": "Initial design-system object omitted required fields; the plan was corrected and the original unmodified validator passed."
     }
   ],
-  "execution_type": "original_workflow_native_pptx_render_parity"
+  "execution_type": "original_workflow_native_pptx_render_parity",
+  "native5_repair": {
+    "implemented_by": "Codex integration; not a new Opus production",
+    "current_artifact": "output/deck.pptx",
+    "current_pptx_sha256": "e322119782ffe042a87d238f6e4c11baad9c8bab094ab3fc1daa2444006e892d",
+    "current_qa": "QA.json",
+    "actual_native_inventory": "source/native-elements.json",
+    "actual_pdf_fonts": "source/pdf-fonts.json",
+    "all_current_pages_visually_inspected": true,
+    "independent_current_version_review": "pending_after_round3_repairs",
+    "historical_records": "Previous execution/model/consent records describe their original version; current repair evidence is explicitly separate."
+  },
+  "historical_initial_execution": {
+    "artifact_sha256": "2b09378bbb0b3c44f87c2c90a10a68d88d6c0d5e8cc2f2827e24123e8e27c754",
+    "input_sha256": "cc573c2c40733651a93f59b56b044edafbfb406fa172f5cee0e98c9d4a74e8a1",
+    "commands_executed": [
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "source/author.py"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timestamp": "2026-10-13T23:18:49.664982+00:00",
+        "log": "review/author.log",
+        "receipt": "review/author-receipt.json"
+      },
+      {
+        "argv": [
+          "C:\\Users\\owner\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\bootstrap_project.py",
+          "--output",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\project",
+          "--intent",
+          "teaching-workshop",
+          "--project",
+          "町内会の備品貸出",
+          "--contracts",
+          "full"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log": "review/bootstrap.log",
+        "log_sha256": "8f0236d81cc688d08e9cc19ac56e530bc243eb1878e387808767125298317c2d",
+        "receipt": "review/bootstrap-receipt.json"
+      },
+      {
+        "argv": [
+          "node",
+          "source/qa_http.mjs",
+          "--entry",
+          "presenter/index.html",
+          "--url",
+          "http://127.0.0.1:52342/presenter/index.html",
+          "--count",
+          "6",
+          "--output",
+          "review/html-qa.json",
+          "--deck-plan",
+          "project/deck-plan.json",
+          "--render-dir",
+          "review/html-render",
+          "--console-shot",
+          "review/console.png"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "7c467db7f25f0ed0cc7cbd963a6942ddc349f31e90afeeed4d0b9793a2ccc68f",
+        "timestamp": "2026-10-13T23:19:33.870953+00:00",
+        "log": "review/html-qa.log",
+        "receipt": "review/html-qa-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\inspect_pptx.py",
+          "output/deck.pptx",
+          "--json",
+          "review/pptx-inspection.json"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "1ef212d4345742c9c4792ffa00d57cec7dfcc753b4407b3fd839b1c3cbe5730d",
+        "timestamp": "2026-10-13T23:18:53.979297+00:00",
+        "log": "review/inspect.log",
+        "receipt": "review/inspect-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\lint_deck_plan.py",
+          "project/deck-plan.json",
+          "--strict-visual",
+          "--json-output",
+          "review/lint.json",
+          "--brief",
+          "project/brief.json",
+          "--source-ledger",
+          "project/source-ledger.json",
+          "--asset-manifest",
+          "project/asset-manifest.json",
+          "--design-system",
+          "project/design-system.json",
+          "--layout-manifest",
+          "project/layout-manifest.json"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "8bcfc899b1e15a9080e343df64c50d29a89208f587c5c1e337fa1c6c88cb68b9",
+        "timestamp": "2026-10-13T23:18:49.413713+00:00",
+        "log": "review/lint.log",
+        "receipt": "review/lint-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "source/plan.py"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "timestamp": "2026-10-13T23:18:48.803139+00:00",
+        "log": "review/plan.log",
+        "receipt": "review/plan-receipt.json"
+      },
+      {
+        "argv": [
+          "pwsh",
+          "-NoProfile",
+          "-File",
+          "source/render_powerpoint.ps1",
+          "-PresentationPath",
+          "output/deck.pptx",
+          "-OutputDirectory",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\render"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "734dcc7a76b844d0360e57d986f2b1d15d93743cf02d2471ba84cc523803bf9b",
+        "timestamp": "2026-10-13T23:18:53.866396+00:00",
+        "log": "review/powerpoint.log",
+        "receipt": "review/powerpoint-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\build_pptx_preview.py",
+          "--output",
+          "presenter",
+          "--slides-dir",
+          "render",
+          "--deck-plan",
+          "project/deck-plan.json",
+          "--title",
+          "町内会の備品貸出を、迷わない手順に",
+          "--force"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "d4ef3e5d8c49dc0b7d5dddfd052d05beb436622925f7b60450e86ace754939ff",
+        "timestamp": "2026-10-13T23:18:54.057427+00:00",
+        "log": "review/preview.log",
+        "receipt": "review/preview-receipt.json"
+      },
+      {
+        "argv": [
+          "C:\\Users\\owner\\AppData\\Local\\Programs\\Python\\Python313\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\prodigeproject__pradaslides\\scripts\\self_test.py"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\prodigeproject__pradaslides",
+        "exit_code": 0,
+        "log": "review/original-self-test.log",
+        "log_sha256": "d1e91f1cabd46576ac3101e41b6e4d297f320f6598eaae080dae2f41e2b0aef9",
+        "receipt": "review/self-test-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\validate_asset_manifest.py",
+          "project/asset-manifest.json",
+          "--json-output",
+          "review/validate_asset_manifest.json"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "0512d093e0a21cdf415b64362ece3bf87f2b0d361378e012b628297d2859bd5d",
+        "timestamp": "2026-10-13T23:18:49.232087+00:00",
+        "log": "review/validate_asset_manifest.log",
+        "receipt": "review/validate_asset_manifest-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\validate_brief.py",
+          "project/brief.json",
+          "--json-output",
+          "review/validate_brief.json"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "4bb773a2c89efd1898d045a5cdddca6bbdf63dd8fec2bb96888ac5256118beec",
+        "timestamp": "2026-10-13T23:18:48.889157+00:00",
+        "log": "review/validate_brief.log",
+        "receipt": "review/validate_brief-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\validate_design_system.py",
+          "project/design-system.json",
+          "--json-output",
+          "review/validate_design_system.json"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "417dd02edf6c911cbbfcbfa377d856347118b907fe4d60518028b32d4fa559e7",
+        "timestamp": "2026-10-13T23:18:48.981683+00:00",
+        "log": "review/validate_design_system.log",
+        "receipt": "review/validate_design_system-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\validate_layout_manifest.py",
+          "project/layout-manifest.json",
+          "--json-output",
+          "review/validate_layout_manifest.json"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "68c61d5b4661cf4f3f76385f8593f60126b532b0269d783b26ef785a05295750",
+        "timestamp": "2026-10-13T23:18:49.145775+00:00",
+        "log": "review/validate_layout_manifest.log",
+        "receipt": "review/validate_layout_manifest-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\validate_source_ledger.py",
+          "project/source-ledger.json",
+          "--json-output",
+          "review/validate_source_ledger.json"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "91ccc1cf1722dd09e877c877b0b409a15fba43bfdc39e1c9fd50c62602f98378",
+        "timestamp": "2026-10-13T23:18:49.064433+00:00",
+        "log": "review/validate_source_ledger.log",
+        "receipt": "review/validate_source_ledger-receipt.json"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides\\source\\upstream\\scripts\\validate_visual_generation_plan.py",
+          "project/visual-generation-plan.json",
+          "--json-output",
+          "review/validate_visual_generation_plan.json"
+        ],
+        "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\pradaslides",
+        "exit_code": 0,
+        "log_sha256": "ae8921aa7bf9beb33cf3e9b0f0e05fe95b91e5c08ad63f64bc34517d3b8b0dbb",
+        "timestamp": "2026-10-13T23:18:49.321086+00:00",
+        "log": "review/validate_visual_generation_plan.log",
+        "receipt": "review/validate_visual_generation_plan-receipt.json"
+      }
+    ]
+  },
+  "method": "備品を借りる人の問いを6頁へ分け、申込み・受取りの記録・異常時の連絡・返却照合を異なる図と欄で示した。原典の計画検査とPPTX由来HTML presenterを実行。",
+  "current_source": "source/reproduce.py",
+  "current_distribution_replay": "source/distribution-replay.json"
 }

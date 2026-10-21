@@ -1,36 +1,17 @@
-# Runbook — パンが、店先に届くまで。
+# 当日の操作 — パンが、店先に届くまで。
 
-## Before the talk
+6場面・15段階（待機を含む）の架空パン店概念資料。完成フォルダーは`dist/`。index.htmlだけを抜き出さずassetsと一緒に使う。
 
-1. `npm install` (once, with internet) · `npm run present` → opens `http://127.0.0.1:4173/` from `dist/`.
-   `dist/` is self-contained: any static server works (`npx serve dist`), or copy the folder to another laptop.
-2. Wi-Fi can be off. No request leaves the machine.
-3. Projector at 1920×1080 if possible; any other ratio gets black bars, never distortion.
-4. Press **P** to open the presenter window; drag it to your screen. It must say "stage connected".
-5. Click the stage window, press **F** for fullscreen. You are on 1.1 (standby).
+```powershell
+python -m http.server 8000 --bind 127.0.0.1 --directory dist
+```
 
-## During the talk
+`http://127.0.0.1:8000/#1.1`で待機画面。紙色と小さな題名を表示し、最初のクリックで本題へ。stageのクリック・矢印・PageDown/PageUpで一段ずつ移動、1〜6で場面へ、Home/Endで先頭/末尾、Fで全画面、Oでoverview、Pでpresenter、B/ピリオドでblackout。
 
-| Key | Action |
-| --- | --- |
-| → ↓ PageDown, click, Space (fullscreen) | next beat |
-| ← ↑ PageUp | previous beat |
-| 1–9 | jump to scene |
-| Home / End | first / last beat |
-| B or . | blackout on/off |
-| O | overview (click a beat to jump) |
-| F | fullscreen |
+原典のURLは`#場面.段階`（それぞれ1-based）。カタログbridgeだけは全15段階をflattenした0-based index。親iframeとの同一origin通信以外は受け付けない。
 
-Automatic beats: <list the auto beats and how long they run>.
+字体・JS・CSSはbuildのlocal assets。外部CDNやAPIは不要だが、ES moduleのためlocal HTTPで開く。接続不要という意味のoffline buildであり、HTML一ファイルではない。
 
-## If something goes wrong
+未提示のQR URLは作らず、QRなしで閉じる。原料・温度・工程時間・安全・売上・科学値は含まない。演出のミリ秒はmotionの設定で、工程の実測ではない。
 
-- Lost position or refreshed by accident: the URL keeps `#scene.beat`; reload and you are back on the beat.
-- Presenter says "no connection": press **resync** in the presenter, or close it and press **P** again.
-  Both windows must be the same browser on the same machine.
-- Frozen animation: press ← then → (re-entering a beat rebuilds it from scratch).
-- Total failure: `dist/` on a USB stick + any laptop with a browser.
-
-## Config to check on the day
-
-`deck/deck.config.ts`: title, speaker, `qrUrl` (currently: <value>). Rebuild after editing.
+原典 `npm run verify -- --source=reference/SCRIPT.md` を実施する。全15段階の前進・後退・URL直接表示を比較し、contact sheetを確認する。実施済みの結果はQA.jsonとrender/verify/report.jsonに記録し、全キーの手動稽古・物理Wi-Fi断・別端末での通し確認は別の未実施項目として残す。

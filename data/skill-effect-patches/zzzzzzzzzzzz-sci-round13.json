@@ -1,0 +1,177 @@
+[
+  {
+    "case_id": "sci-diagram-reconstruction",
+    "name": "科学模式図を編集可能なPPTXへ復元",
+    "job": "",
+    "change": "画像にまとまった科学模式図を、元の文言・包含・方向を保つ編集可能な文字・図形・線へ分ける。",
+    "constraints": [
+      "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+      "主な効果の証拠は複合例の入れ子・双方向線・破線の折れ線・合成画像insetの所有分離。単純4箱の例は原文と最小方向保持の補足。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+      "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、12文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+      "小図内部はrasterで「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示するため、不可視部分の削除や情報秘匿は保証しない。",
+      "複合例pass04の角丸と3個のlg/lg矢じりを保持。現在のbuild.mjsは矢じり補正まで自己完結する。生成した非ZIP64・STORE形式PPTXだけを扱う局所処理で、汎用PPTX変換器ではない。",
+      "原典既定の最大2passは変更しない。標準制作はpass02で終了した履歴を残し、明示された継続改善によるpass04と区別する。checkerのpass-index省略は構造検査の指定で、pass04の承認証明ではない。",
+      "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存や字体の新規installは検査していない。入力との画素一致、見た目の改善、時短は主張しない。"
+    ],
+    "how_to_use": [
+      "科学模式図の画像からの復元、既存PPTXの修復、変更しない検査を選び、原典SKILLと該当する参照文書を読む。",
+      "元の解像度で文言・包含・関係の方向を読み、NODES/EDGES/INSETSへ所有を一つずつ割り当てる。混在書体や式があればmath-and-fonts.mdも確認する。",
+      "利用可能なruntimeを一つ選び、準備済みホスト配下でprobeする。PptxGenJS復元では新しいpass-01にsource.pngとbuild.mjsを置き、欠けた依存を制作中に導入しない。",
+      "原典checkerへ実際のsource.pngとbuild.mjsを渡し、元図と実表示の文言・包含・方向・欠落を照合する。原典標準は最大2passで、全blockerをまとめて一度だけ直す。",
+      "PptxGenJSによる復元ではbuild.mjs・元画像・PPTXの3ファイルと検査結果を渡す。修復・検査は各経路の成果物を返す。必要な編集は別コピーで保存・再表示し、元の意味や方向を変えない。"
+    ],
+    "method": "Reconstruction：主証拠は入れ子・双方向・破線・合成画像insetの複合例。単純4箱は最小方向保持の補足。現在の複合buildは3ファイル引き渡しで自己完結。",
+    "sample_notice": "2例とも自作の模式図PNG。複合例を所有分離・関係保持の主証拠とし、単純例は最小方向保持の補足。数式・実験写真・Repair/Inspection・自動接続・時短は未実証。",
+    "preview_notice": "単純例のplayerは補足。効果の主証拠は複合例の入力比較と実PowerPoint表示。文字・箱・線の別コピー編集を確認。過去点数を現在の保存プログラムへ引き継がない。",
+    "demonstration": {
+      "summary": "入れ子・双方向・破線をnative部品へ復元し、合成画像小図だけをrasterに分ける。Xだけの保存編集と3ファイル再生を実証。単純4箱は最小方向保持の補足。",
+      "applied_features": [
+        "元PNGの文言・包含・関係方向を保つReconstruction",
+        "NODES/EDGES/INSETSの所有分離：23 native図形（12文字）とcrop画像1個",
+        "両端矢じりと3破線の終端方向をnative構造で確認",
+        "自己完結した保存buildと元画像・PPTXの3ファイル再生、別コピーのX→X*保存編集"
+      ],
+      "not_demonstrated": [
+        "数式・実験写真の復元",
+        "既存PPTXのRepair/Inspection",
+        "PowerPointグループ化、線同士の交差、箱移動への自動追従",
+        "任意入力の自動変換・画素一致・美観や時間短縮の比較"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "主証拠：入れ子・双方向・破線・画像小図",
+          "title": "2区画の可逆交換（概念モデル）",
+          "what_to_inspect": "外側領域内の2区画と記号、両端矢じり、条件u→区画Bの破線終端、raster小図とnative見出しの分担を入力と比べる。 塗り領域で線を隠さない描画順は、この入力に対する作例判断。",
+          "skill_rule": "元画像の意味・包含・方向を保ち、NODES/EDGES/INSETSで各要素のnative/raster所有を一つにする。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/complex-example/render-pass04/powerpoint.png",
+          "proof_kind": "actual_powerpoint_render",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/complex-example/input/source.png",
+          "artifact_path": "examples/repositories/sci-diagram-reconstruction/complex-example/pass-04/editable.pptx",
+          "artifact_label": "復元したPPTXを取得 ↓"
+        },
+        {
+          "index": 0,
+          "label": "複合例の別コピー：Xだけを変更",
+          "title": "XをX*へ変更して保存",
+          "what_to_inspect": "区画AのXだけがX*に変わり、双方向線・破線・小図が保持される。",
+          "skill_rule": "native文字の編集コピーを採用PPTXとは別に保存し、元hashを保持する。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/complex-example/qa/current-nativeedit/edited-copy.png",
+          "proof_kind": "actual_saved_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/complex-example/render-pass04/powerpoint.png",
+          "input_label": "変更前",
+          "output_label": "Xを変更した後",
+          "artifact_path": "examples/repositories/sci-diagram-reconstruction/complex-example/qa/current-nativeedit/edited-copy.pptx",
+          "artifact_label": "編集したPPTXを取得 ↓"
+        },
+        {
+          "index": 0,
+          "label": "補足：最小4箱の方向保持",
+          "title": "水循環の代表的な経路",
+          "what_to_inspect": "左上→右上の凝結、右上→右下の降水、右下→左下の水の流れ、左下→左上の蒸発を入力PNGと比べる。原文・配置・方向を保持する。 4箱と直線4本の限定例で、複合図の主証拠とは分ける。",
+          "skill_rule": "関係を見た目の円形配置から推測せず、元図のfrom/toと経路をEDGESへ記録する。線は一つのnative部品として持つ。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/input/source.png"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：文字だけの変更",
+          "title": "「海・湖の水」を「湖の水」へ",
+          "what_to_inspect": "左下のラベルだけが変わり、箱・線・ほかの文言が残る。画像全体を置き換えていない。",
+          "skill_rule": "各文字にnativeの所有者を一つ与える。画像内文字との二重描画や全面bitmapを使わない。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：箱と線の変更",
+          "title": "箱の塗りと矢印の色・太さを変更",
+          "what_to_inspect": "左下の箱だけが淡い緑、上の凝結の矢印だけが緑の太線へ変わる。文言と矢印の方向は保持し、保存後に開き直した。",
+          "skill_rule": "意味を持つ箱と関係を示す線を編集可能なnative部品へ分ける。自動接続とは区別し、PPTX XMLでも個別性を確かめる。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sci-diagram-reconstruction/complex-example/pass-04/build.mjs",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/pass-04/source.png",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/pass-04/editable.pptx",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/ownership.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/check-pass-04.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/native-structure-pass04.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/self-contained-handoff-r13.json",
+        "examples/repositories/sci-diagram-reconstruction/complex-example/qa/current-nativeedit/edit-proof.json",
+        "examples/repositories/sci-diagram-reconstruction/source/reproduce_complex.py",
+        "examples/repositories/sci-diagram-reconstruction/upstream/SKILL.md",
+        "examples/repositories/sci-diagram-reconstruction/upstream/references/reconstruction.md",
+        "examples/repositories/sci-diagram-reconstruction/upstream/references/runtime-pptxgenjs.md"
+      ],
+      "editability": {
+        "before_path": "examples/repositories/sci-diagram-reconstruction/complex-example/render-pass04/powerpoint.png",
+        "after_path": "examples/repositories/sci-diagram-reconstruction/complex-example/qa/current-nativeedit/edited-copy.png",
+        "before_label": "復元したPPTX：X",
+        "after_label": "文字だけを変更：X*",
+        "artifact_path": "examples/repositories/sci-diagram-reconstruction/complex-example/qa/current-nativeedit/edited-copy.pptx",
+        "report_path": "examples/repositories/sci-diagram-reconstruction/complex-example/qa/current-nativeedit/edit-proof.json",
+        "description": "区画AのXだけをX*へ変更して別PPTXに保存し、PowerPointで開き直した。双方向線・破線・小図と採用版の元hashを保持した。"
+      }
+    },
+    "guide_patch": {
+      "summary_ja": "科学模式図の元の文言・包含・方向を保ち、意味を担う文字・図形・線を個別編集できるPPTXへ復元する。修復・変更しない検査は別経路。",
+      "requirements": [
+        "復元用の模式図画像、または修復・検査するPPTXと対象箇所。文字と関係を読める資料。",
+        "PptxGenJS経路は準備済みNode.js20+、PptxGenJS4.0.x。原典の検査・表示にはPython3.10+、LibreOffice、pdftoppm。本例のR13実測はNode24.19.0/PptxGenJS4.0.1/Python3.13.7/LibreOffice24.2.5.2。",
+        "--renderのPowerPoint工程と編集保存の確認はWindows PowerPoint16、Yu Gothic、PATH上のPowerShell7（pwsh）。R13実測PowerShell7.6.6。依存・書体の新規導入は今回未検査。"
+      ],
+      "steps": [
+        "科学模式図の画像からの復元、既存PPTXの修復、変更しない検査を選び、原典SKILLと該当する参照文書を読む。",
+        "元の解像度で文言・包含・関係の方向を読み、NODES/EDGES/INSETSへ所有を一つずつ割り当てる。混在書体や式があればmath-and-fonts.mdも確認する。",
+        "利用可能なruntimeを一つ選び、準備済みホスト配下でprobeする。PptxGenJS復元では新しいpass-01にsource.pngとbuild.mjsを置き、欠けた依存を制作中に導入しない。",
+        "原典checkerへ実際のsource.pngとbuild.mjsを渡し、元図と実表示の文言・包含・方向・欠落を照合する。原典標準は最大2passで、全blockerをまとめて一度だけ直す。",
+        "PptxGenJSによる復元ではbuild.mjs・元画像・PPTXの3ファイルと検査結果を渡す。修復・検査は各経路の成果物を返す。必要な編集は別コピーで保存・再表示し、元の意味や方向を変えない。"
+      ],
+      "limitations": [
+        "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+        "主な効果の証拠は複合例の入れ子・双方向線・破線の折れ線・合成画像insetの所有分離。単純4箱の例は原文と最小方向保持の補足。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+        "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、12文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+        "小図内部はrasterで「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示するため、不可視部分の削除や情報秘匿は保証しない。",
+        "複合例pass04の角丸と3個のlg/lg矢じりを保持。現在のbuild.mjsは矢じり補正まで自己完結する。生成した非ZIP64・STORE形式PPTXだけを扱う局所処理で、汎用PPTX変換器ではない。",
+        "原典既定の最大2passは変更しない。標準制作はpass02で終了した履歴を残し、明示された継続改善によるpass04と区別する。checkerのpass-index省略は構造検査の指定で、pass04の承認証明ではない。",
+        "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存や字体の新規installは検査していない。入力との画素一致、見た目の改善、時短は主張しない。"
+      ],
+      "caveats": [
+        "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+        "主な効果の証拠は複合例の入れ子・双方向線・破線の折れ線・合成画像insetの所有分離。単純4箱の例は原文と最小方向保持の補足。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+        "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、12文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+        "小図内部はrasterで「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示するため、不可視部分の削除や情報秘匿は保証しない。",
+        "複合例pass04の角丸と3個のlg/lg矢じりを保持。現在のbuild.mjsは矢じり補正まで自己完結する。生成した非ZIP64・STORE形式PPTXだけを扱う局所処理で、汎用PPTX変換器ではない。",
+        "原典既定の最大2passは変更しない。標準制作はpass02で終了した履歴を残し、明示された継続改善によるpass04と区別する。checkerのpass-index省略は構造検査の指定で、pass04の承認証明ではない。",
+        "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存や字体の新規installは検査していない。入力との画素一致、見た目の改善、時短は主張しない。"
+      ],
+      "commands": [
+        "python source/reproduce_complex.py --overwrite --render --node <既存Node.js実体> --soffice <既存soffice> --pdftoppm <既存pdftoppm>",
+        "python source/reproduce.py --overwrite --render --node <既存Node.js実体> --soffice <既存soffice> --pdftoppm <既存pdftoppm>"
+      ],
+      "recipe_notes": [
+        "掲載効果の主証拠は複合例。単純例の4箱・4方向は最小復元と文字・箱・線の編集を確かめる補足。",
+        "初稿のコードと対応表は実Claude Opus5.5。標準制作pass02のFONT修正、継続改善pass04の角丸・矢じりと現在の自己完結化、実行・検査はCodex。",
+        "複合例の標準2pass終了と追加改善pass04、R13の保存プログラムの引き渡し修正は異なる工程。--pass-index Noneを追加改善の承認証拠にしない。",
+        "現在のpass04/build.mjsに矢じり補正を内包し、準備済みruntimeでbuild.mjs/source.png/editable.pptxの3ファイルだけを再生。旧Python補正と旧profileのpass02終端・角丸近似は履歴で、現在の仕様ではない。"
+      ],
+      "execution_type": "原典ReconstructionとPptxGenJS portable雛形。複合・最小方向保持の2例、原典checker/renderer、native構造と別コピー編集を確認。",
+      "source_download": "downloads/sci-diagram-reconstruction-example-ja.zip",
+      "fork_download": "downloads/sci-diagram-reconstruction-ja.zip",
+      "guide": "examples/repositories/sci-diagram-reconstruction/README.md",
+      "example_ids": [
+        "sci-diagram-reconstruction"
+      ],
+      "upstream_commit": "cc8f0030edf80eeab6e52849b8c39fe638466776"
+    }
+  }
+]

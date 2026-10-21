@@ -1,13 +1,1386 @@
 {
   "repository": "ningzimu/image-to-editable-ppt-skill",
   "commit": "b7be494e31a0ed56ef98716891db5474606b8cdf",
-  "scope": "Japanese entrypoint, repository-specific refinements, original source and actual production recipe",
-  "example_ids": [
-    "image-to-editable"
-  ],
-  "upstream_preserved": true,
-  "proprietary_export_engine_included": null,
+  "original_source_preserved": true,
+  "license": "MIT; retain component/font notices",
+  "scope": "Pinned upstream plus Japanese example; current entry points and historical records distinguished.",
   "files": [
+    {
+      "path": "example/comparison.html",
+      "sha256": "153ec89d4c2ebc7236bbf7a5d22f61b0d0f3ea21621a669ebc17c183871dc63c"
+    },
+    {
+      "path": "example/deck.pptx",
+      "sha256": "7a6b9696cf5525d0f14b32fe494649df82b9fba29487c3728cb4a56f56a4ecf2"
+    },
+    {
+      "path": "example/index.html",
+      "sha256": "a1b03cbea896e9b9a7cc4d98c0d29e1d3c026ebfcfd067bb758386fcfb41bde1"
+    },
+    {
+      "path": "example/input/data.json",
+      "sha256": "e35e17387a7adf6ca2e7066952fe32de18ed26acbc05220d79364b72efb16db8"
+    },
+    {
+      "path": "example/input/slide_01.png",
+      "sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1"
+    },
+    {
+      "path": "example/input/slide_02.png",
+      "sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30"
+    },
+    {
+      "path": "example/LICENSE.upstream",
+      "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154"
+    },
+    {
+      "path": "example/PROMPT.txt",
+      "sha256": "577db36ddea1288d342eadbe707cc5d23505a74f9ef7d37af8d633803aece22d"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "07c0cba0ddc4f305c8a476049f335c5ffce4730f5e2188789985cee648e40ea5"
+    },
+    {
+      "path": "example/qa/before-after-page-01.png",
+      "sha256": "d2563b9d618a55f029fce3d71ca0e0195ab22b4aabe2ac4c7eb5f22485389362"
+    },
+    {
+      "path": "example/qa/before-after-page-02.png",
+      "sha256": "9ba0ffa93e88ec6b2f105c452dc6ce337cf7f27eabf1fe70f4f48d28c14f1ec9"
+    },
+    {
+      "path": "example/qa/before-after.json",
+      "sha256": "43dfb5f76e9b3622831b60c2d3908a9054732e7f676dd4025c418668f13a6c75"
+    },
+    {
+      "path": "example/qa/editability/native-edit.json",
+      "sha256": "828d1215ce2a7760829e61413d3c74f8539c438f5ad11cc65fde8b3e97e44195"
+    },
+    {
+      "path": "example/qa/editability/native-label-edited.pptx",
+      "sha256": "4baa64ed4b177004f3e81dbc44441b4e54394645746f289678901b66d61abcdc"
+    },
+    {
+      "path": "example/qa/editability/powerpoint.log",
+      "sha256": "9924e42062fec309d1093e96e1a3076489de2cbf9da0e32c7f127cbceddffef2"
+    },
+    {
+      "path": "example/qa/editability/render/deck.pdf",
+      "sha256": "ff26670c87db0c10c8d0c0e9d1667dca3e563c9708694e35f9bbf10b76d3d0d3"
+    },
+    {
+      "path": "example/qa/editability/render/pdf-preview.json",
+      "sha256": "10817a5d0f51ef810920540d9c811a02dac51ffb7ba06429263c74e882540ef7"
+    },
+    {
+      "path": "example/qa/editability/render/powerpoint-render.json",
+      "sha256": "44581c60994695b002604be067b13cb72ee505300975372d686dbae70d7fa222"
+    },
+    {
+      "path": "example/qa/editability/render/slide-01.png",
+      "sha256": "d7bcb0b78a51de12e9563ec2906abdf1c25b1561a8d3faa53b70a24a262b97be"
+    },
+    {
+      "path": "example/qa/editability/render/slide-02.png",
+      "sha256": "25c4823e58a656c2011c2ff7e39d7982d6b1041819254828950bfa4ad12fd989"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "b0eff1af2789c9736dfccb5c9c0c7272a2f4622a5e96933708da53b50692fa39"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "24e04d2fa233a6fc353b81b6e396556bb6e1e2c267a70312a1a3705da64fe0f5"
+    },
+    {
+      "path": "example/render/deck.pdf",
+      "sha256": "b7829048e4f18cd1569f0822ecdb35994756865203455127f8466f70785cd0ce"
+    },
+    {
+      "path": "example/render/pdf-preview.json",
+      "sha256": "985e64d024ba1f1dbc2168700cfc3c1eb0e41670640fddcccde9104989da8c85"
+    },
+    {
+      "path": "example/render/powerpoint-render.json",
+      "sha256": "6d29caa8235b407bfad0eea5df83b27c66b26aef9de8bd14c1821ddb53915153"
+    },
+    {
+      "path": "example/render/slide-01.png",
+      "sha256": "d7bcb0b78a51de12e9563ec2906abdf1c25b1561a8d3faa53b70a24a262b97be"
+    },
+    {
+      "path": "example/render/slide-02.png",
+      "sha256": "f1405cd201a870a5944e558ae8681168accc076ce37907843c2303fcede34f20"
+    },
+    {
+      "path": "example/REPRODUCE.md",
+      "sha256": "019f4d96494d28812ed06676b01a56b40ee7b7cef535453f012df581bd74c229"
+    },
+    {
+      "path": "example/run/deck_manifest.json",
+      "sha256": "8dac760cdbe0cc4205c85865e57802a397d3c3e867c16154739efe475f563377"
+    },
+    {
+      "path": "example/run/final/run_summary.json",
+      "sha256": "f2e6509566e2df0150bfc1658cbfe526b5ca30471529e4377c50cc5b028b40c1"
+    },
+    {
+      "path": "example/run/final/slide_01_edited.pptx",
+      "sha256": "d705fe61e83861ad4a86f379b082441f2ad6635440b7460fabea032bbf2472af"
+    },
+    {
+      "path": "example/run/final/validation.json",
+      "sha256": "dfd4271ed9da0b5cd1ba1d03043707ca0ac249dd6844f006ba100648fbf889f4"
+    },
+    {
+      "path": "example/run/input/slide_01.png",
+      "sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1"
+    },
+    {
+      "path": "example/run/input/slide_02.png",
+      "sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30"
+    },
+    {
+      "path": "example/run/notes_manifest.json",
+      "sha256": "8bbdd53317d14851820e622fc00990263f4d6220eae924422d1079ddd5230f60"
+    },
+    {
+      "path": "example/run/page_jobs.json",
+      "sha256": "0acb9cf41c57ac6eb7125f46edac49e49770f004bb577a3880f9a32a02b62be7"
+    },
+    {
+      "path": "example/run/pages/page_001/asset-sheet.prompt.txt",
+      "sha256": "ab53d94f7b29f057629db4241bf35af5b8fef32c3889a7cee8570e42a7a54691"
+    },
+    {
+      "path": "example/run/pages/page_001/assets/asset-regions.json",
+      "sha256": "3649ebb6921fc738d49d90cf54b327b8b612e88afd25cea33f9c81175ad29ab9"
+    },
+    {
+      "path": "example/run/pages/page_001/assets/icon-sheet.asset-sheet-alpha.png",
+      "sha256": "290d904a134968aacc5ab1260b3acee89c4c407e5df87cd61eaacaf2ca803af9"
+    },
+    {
+      "path": "example/run/pages/page_001/assets/icon-sheet.asset-sheet-chroma.png",
+      "sha256": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581"
+    },
+    {
+      "path": "example/run/pages/page_001/assets/icon-sheet.png",
+      "sha256": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581"
+    },
+    {
+      "path": "example/run/pages/page_001/assets/icon-sheet.split-report.json",
+      "sha256": "86c73da3c8d56de91eddafcc54579c5bdbb98537e8e963f586b5351c92a9adf1"
+    },
+    {
+      "path": "example/run/pages/page_001/assets/icons/document.png",
+      "sha256": "d2f8cf4f38da42ae6e6f069e4c46f700dc09035bd62de2b6b3b7be3ca544613a"
+    },
+    {
+      "path": "example/run/pages/page_001/assets/icons/history.png",
+      "sha256": "8a8f165ece112ae5287a2431fe54dce33410efeb9ffdcb3b3dbe146e2d8b31c7"
+    },
+    {
+      "path": "example/run/pages/page_001/assets/icons/upload.png",
+      "sha256": "a98c225cac106a5307ce1bbb477a70e50da60a1c07f4b720bda67af3a96efdaa"
+    },
+    {
+      "path": "example/run/pages/page_001/build.log",
+      "sha256": "25946f7a28dadc5ded5694128124208dc928d70acab5e9eb935c34acfd76d44c"
+    },
+    {
+      "path": "example/run/pages/page_001/builtin-imagegen-receipt.json",
+      "sha256": "a9fb89438b57ff3ba3353ae05ab7cac2a1dc1f9f3cf03d95facb3d14e4b36213"
+    },
+    {
+      "path": "example/run/pages/page_001/cli-receipts.json",
+      "sha256": "a922ec1704d16bcb8ec19d6cde62344a6ff124be79dfadb8c4df0ae7e947df9c"
+    },
+    {
+      "path": "example/run/pages/page_001/command-receipts.txt",
+      "sha256": "822ccf0f29ba5e132d4d2a726cb7c0e66c71c67f6227271feae437e55eb43cf3"
+    },
+    {
+      "path": "example/run/pages/page_001/contact-sheet.log",
+      "sha256": "1b198cbf3ce69cd3382ef9595119f5fa95b6d549f09402792b0cfc4d92767ca6"
+    },
+    {
+      "path": "example/run/pages/page_001/imagegen-jobs.json",
+      "sha256": "0e13d61e4f532eef0dc9e718e7a1987ee9f1a9fbfd184991c0fd3ae625cf6403"
+    },
+    {
+      "path": "example/run/pages/page_001/import.log",
+      "sha256": "9aa9f8c5f5bf7abf1d04c32030460c7792dbff84867c5e142d2b05779b8c38ae"
+    },
+    {
+      "path": "example/run/pages/page_001/inventory.txt",
+      "sha256": "1508523baf87f7f5c7d674550c23add75f84974ae94ed31d3498303d3efbd812"
+    },
+    {
+      "path": "example/run/pages/page_001/manifest.json",
+      "sha256": "1d78ab76be9d8b2c8437ed41389b96a06876e85d1e08f5f55dfc812390dcff92"
+    },
+    {
+      "path": "example/run/pages/page_001/page.pptx",
+      "sha256": "17328011ec6f136aa99d8370fbc9d45a769891e560168e0ecfde5e93802bad9f"
+    },
+    {
+      "path": "example/run/pages/page_001/page_request.json",
+      "sha256": "d0582db45e7126fcba2744e6b84aa87ba2ef3cd884133be035b9671ea56143cd"
+    },
+    {
+      "path": "example/run/pages/page_001/page_result.json",
+      "sha256": "b9a0d2f2ab6fe03b85c5f8d93c4399c7dc20f79cc7eb0fec2a520a823690c477"
+    },
+    {
+      "path": "example/run/pages/page_001/preview.png",
+      "sha256": "6ba4e21a01a96a4950e03732ceb10e36cd48acba3823b8051bfb625a8ac4ff2e"
+    },
+    {
+      "path": "example/run/pages/page_001/process-sheet-repair.log",
+      "sha256": "a303f04a78f9195d7053624d50c570708de3c8f1a5e3cb63c97de1626a73d1fe"
+    },
+    {
+      "path": "example/run/pages/page_001/process-sheet.log",
+      "sha256": "e9efa148fcba0730da5e64cc0d26a466539af7cbf41abad4de6d1ca0832f1e06"
+    },
+    {
+      "path": "example/run/pages/page_001/record_review.py",
+      "sha256": "d484a757e2aa0a57fd0b412a9016b9b78e1f817a4cd3ea8aab789b414c23c9f2"
+    },
+    {
+      "path": "example/run/pages/page_001/source.png",
+      "sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618"
+    },
+    {
+      "path": "example/run/pages/page_001/split_assets_contact.png",
+      "sha256": "ef686b17726a7353ca520b870753fa776e33db7bebe86c716a26267fc5d585fd"
+    },
+    {
+      "path": "example/run/pages/page_001/supplement_validation.py",
+      "sha256": "831387fd351ef01d6975b24556a1d8c3083c7652521cf4716a668e0042235e48"
+    },
+    {
+      "path": "example/run/pages/page_001/text_hints.json",
+      "sha256": "c5e83686cba339da1ec2b23d950af7e23ef4933d2d8ff98dc5daea619773b67f"
+    },
+    {
+      "path": "example/run/pages/page_001/text_hints.png",
+      "sha256": "cb30fe048154dd302d1430c1bfcf8ec0a25b0a51ab5e544767e24f16e52913bb"
+    },
+    {
+      "path": "example/run/pages/page_001/validate.log",
+      "sha256": "23be0a2681400397bef32d051368c3256fd89fd39883fb8a37dafcf8f67b7911"
+    },
+    {
+      "path": "example/run/pages/page_001/validation.json",
+      "sha256": "964c109daf5dd46d4692f6ad011ea28b108429c7efa32b7b8e7f81f3adba55c2"
+    },
+    {
+      "path": "example/run/pages/page_001/worker-prompt.md",
+      "sha256": "a207f7152c0b9acbd81f3a797153f13569c3a5dfd32feb11166792d6952480c1"
+    },
+    {
+      "path": "example/run/pages/page_001/write_manifest.py",
+      "sha256": "cc1d9442937b69b5b8b5d413ff86fd109aad184d050b71a9ce9c187df042e7ff"
+    },
+    {
+      "path": "example/run/pages/page_001/write_receipts.py",
+      "sha256": "ad1fa39bbd30697f2db31ad32fbdfaa9aaac17db0785dfa30246f4e4d140f554"
+    },
+    {
+      "path": "example/run/pages/page_002/asset-sheet.prompt.txt",
+      "sha256": "d92813dfa4adfc24aa14269868413b041fedf8399d130ba5eb50a9a5cb6e86e7"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/asset-regions.json",
+      "sha256": "3baf7a57976022e4ad20de11cd7b8bca04837c9a235ff5f9d225a5d4e9072191"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/icon-sheet.asset-sheet-alpha.png",
+      "sha256": "9f6f7acb5366e6a75126a504e220d312aedb9e812333c3b81b72c246dcd0b4c1"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/icon-sheet.asset-sheet-chroma.png",
+      "sha256": "388f1f37d44b48e53d8ec35b831f09269646fbe42f1ed0e718a4fa9c84edbbd9"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/icon-sheet.png",
+      "sha256": "388f1f37d44b48e53d8ec35b831f09269646fbe42f1ed0e718a4fa9c84edbbd9"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/icon-sheet.split-report.json",
+      "sha256": "93ac84336bb59d460c9c92985fd17ad80c93cee63d576bb6b64f3cf24899a929"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/icons/database.png",
+      "sha256": "51e73ac070d07563c7b830c83281f8c13a3aea6f96117223dd444c551f00ef7a"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/icons/document.png",
+      "sha256": "915884aad15c89748b6668ec6681e44e969bcdfa3a5bd66323b484746e629c0e"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/icons/laptop.png",
+      "sha256": "27fed14a2e33cb5e349fe64526f6a74ef23f4735b083fc737d5554b27f95a6fd"
+    },
+    {
+      "path": "example/run/pages/page_002/assets/icons/staging.png",
+      "sha256": "6a675142a0d28fd7c8109dbb77e3dcd2db5f6962bc6b62c8c478b1798dcb5afd"
+    },
+    {
+      "path": "example/run/pages/page_002/build-calibrated.log",
+      "sha256": "d010cc06c21ef77f05f67ecfc34e88ab3187987f70e5fcf14d6cc5628e99d4c8"
+    },
+    {
+      "path": "example/run/pages/page_002/build.log",
+      "sha256": "d010cc06c21ef77f05f67ecfc34e88ab3187987f70e5fcf14d6cc5628e99d4c8"
+    },
+    {
+      "path": "example/run/pages/page_002/builtin-imagegen-receipt.json",
+      "sha256": "b3ed37240e3cbc4c585cf6d2a41fd77d7d5ad560a6a7c14825dec7ad402e8f32"
+    },
+    {
+      "path": "example/run/pages/page_002/cli-receipts.json",
+      "sha256": "ec71269e7709aa16807a078899cdb81993f6a2202fc034154b3789a4c42307f4"
+    },
+    {
+      "path": "example/run/pages/page_002/contact-sheet.log",
+      "sha256": "5bb647955f23a8bb7951edf37ac013cad4bfcad183be25df61f46cf53e729458"
+    },
+    {
+      "path": "example/run/pages/page_002/imagegen-jobs.json",
+      "sha256": "f62c9182374cf91093ce42138918bb311782de173454cc577d7a8d4d8fab3b13"
+    },
+    {
+      "path": "example/run/pages/page_002/import.log",
+      "sha256": "d33104b8ff6a4100e41b5a8929f6bd653c19e8e761c8bcbcf517048e9dcd115c"
+    },
+    {
+      "path": "example/run/pages/page_002/inventory.txt",
+      "sha256": "78b06f6f82dd0e6a3e6e073f8c58f6dc300e0e830c8668c4b555f95cde6a82ba"
+    },
+    {
+      "path": "example/run/pages/page_002/manifest.json",
+      "sha256": "df6b4d31e957a12ec4988db6e9ac4cd13f6b1be249bf58e7d99f9cb1cf2e7fbc"
+    },
+    {
+      "path": "example/run/pages/page_002/page.pptx",
+      "sha256": "50e17e6b1230db2527a0e709d4571ae7e51c5cbae2f43a18dd599179675dee00"
+    },
+    {
+      "path": "example/run/pages/page_002/page_request.json",
+      "sha256": "24b28617bc2c626b2b22514b3386d82656bda66376a11ea6aebac93adc049260"
+    },
+    {
+      "path": "example/run/pages/page_002/page_result.json",
+      "sha256": "b9a0d2f2ab6fe03b85c5f8d93c4399c7dc20f79cc7eb0fec2a520a823690c477"
+    },
+    {
+      "path": "example/run/pages/page_002/preview.png",
+      "sha256": "004db18cc8180a9ca885563de1a141d8ac24920f9a82e16f9cab935552588898"
+    },
+    {
+      "path": "example/run/pages/page_002/process-sheet.log",
+      "sha256": "15340a54d0c0fc71eaefa6235c1837e57387a66faf1210fb589cf4e06ed10e86"
+    },
+    {
+      "path": "example/run/pages/page_002/record_review.py",
+      "sha256": "980087b293cc98912d09a2c797d46d0651fad2de3c7f36d19ba27b1b062ac79f"
+    },
+    {
+      "path": "example/run/pages/page_002/run_cli.py",
+      "sha256": "c8351cc6f24ec5ea2e3172037bfa1791bba157ba84a1dea74c606eacafe0e665"
+    },
+    {
+      "path": "example/run/pages/page_002/source.png",
+      "sha256": "718a1e281ec10356527ed6c830232d1c1926ee81c714363fd26bebd4ff3966a5"
+    },
+    {
+      "path": "example/run/pages/page_002/split_assets_contact.png",
+      "sha256": "36387a7f0ec067e4c481a3509231dd45a748869baa5d96fae36f20735b98ad76"
+    },
+    {
+      "path": "example/run/pages/page_002/text_hints.json",
+      "sha256": "8a363aa93b25aeef255a479202dc0472c28fab9a4d2836d8f37762c87ec2e3e9"
+    },
+    {
+      "path": "example/run/pages/page_002/text_hints.png",
+      "sha256": "0184a83abb4a63082a26a4f100a54f73af07410629d0a6eaad5f306d6064987e"
+    },
+    {
+      "path": "example/run/pages/page_002/validate.log",
+      "sha256": "737d22f212ba252c01913cfb55fba1bf7b4dc6ae91be069f13214be16cab60e5"
+    },
+    {
+      "path": "example/run/pages/page_002/validation.json",
+      "sha256": "d0f62fa8586727dd955942f0f244ff74a27fc209fc5e41cd375d7ea82540bf23"
+    },
+    {
+      "path": "example/run/pages/page_002/worker-prompt.md",
+      "sha256": "40fdc55018ba3954e469162e726ee68d198740f3c3e4102d6a9f2109c56dfd93"
+    },
+    {
+      "path": "example/run/pages/page_002/write_manifest.py",
+      "sha256": "d5bdbe1b50bba2b4aa7c6583fa0826b0eed6bffa81d0189db99944222d41dbf9"
+    },
+    {
+      "path": "example/run/pages/page_002/write_receipts.py",
+      "sha256": "0494a73e8883d695739fcf8e49e6c82da180ba8dc9f5a0c2b8213e7eb5a74871"
+    },
+    {
+      "path": "example/run/run_state.json",
+      "sha256": "a21d28ef95ed3f604fea78f487c9c44ba40ea90db94af145cada947d1216b995"
+    },
+    {
+      "path": "example/run-repair/deck_manifest.json",
+      "sha256": "71337f6686a08cef384cdb07939577eab3b9836855b1ef6f0049f1e75b8fc8cb"
+    },
+    {
+      "path": "example/run-repair/final/run_summary.json",
+      "sha256": "f0a5e2b3705a0ae48183bd7ed725fe21cd31e4992e7940ba390277c9c79e8cba"
+    },
+    {
+      "path": "example/run-repair/final/slide_01_edited.pptx",
+      "sha256": "55889e9927af94ad0773450ccf7df3080d7cf1713cf67efa2bbba95b2c4816bc"
+    },
+    {
+      "path": "example/run-repair/final/validation.json",
+      "sha256": "6da2de7871fec69d55ae1114156bd5eed4bff48c80705b5d98823ee2636b4288"
+    },
+    {
+      "path": "example/run-repair/input/slide_01.png",
+      "sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1"
+    },
+    {
+      "path": "example/run-repair/input/slide_02.png",
+      "sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30"
+    },
+    {
+      "path": "example/run-repair/notes_manifest.json",
+      "sha256": "8bbdd53317d14851820e622fc00990263f4d6220eae924422d1079ddd5230f60"
+    },
+    {
+      "path": "example/run-repair/page_jobs.json",
+      "sha256": "d5cd86087bf1d93f537ebbc456df2f51c85f7ea46a8d80b6ebdb1841b3a5c4a9"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/asset-regions.json",
+      "sha256": "3649ebb6921fc738d49d90cf54b327b8b612e88afd25cea33f9c81175ad29ab9"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/fonts/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/fonts/OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/icon-sheet.asset-sheet-alpha.png",
+      "sha256": "290d904a134968aacc5ab1260b3acee89c4c407e5df87cd61eaacaf2ca803af9"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/icon-sheet.asset-sheet-chroma.png",
+      "sha256": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/icon-sheet.png",
+      "sha256": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/icon-sheet.split-report.json",
+      "sha256": "86c73da3c8d56de91eddafcc54579c5bdbb98537e8e963f586b5351c92a9adf1"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/icons/document.png",
+      "sha256": "d2f8cf4f38da42ae6e6f069e4c46f700dc09035bd62de2b6b3b7be3ca544613a"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/icons/history.png",
+      "sha256": "8a8f165ece112ae5287a2431fe54dce33410efeb9ffdcb3b3dbe146e2d8b31c7"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/assets/icons/upload.png",
+      "sha256": "a98c225cac106a5307ce1bbb477a70e50da60a1c07f4b720bda67af3a96efdaa"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/imagegen-jobs.json",
+      "sha256": "5c9ce26e50a51f5703c34e5f1b9db0c52091ba1ea788ad30c5e1d2836b9f6844"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/manifest.json",
+      "sha256": "7327ddb07056c2b243244d148978e3e5099a167741294a80c496a45ad7f76161"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/page.pptx",
+      "sha256": "c7ce8b1997057ae31c81cff3968a14fa35268cd5af942c077e068944e09962e0"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/page_request.json",
+      "sha256": "99fb7feb01dec0f653390f59cd8973f40ba539af2907b9e9aae791b367917b15"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/page_result.json",
+      "sha256": "601b96583f0f3a4bed18b8ed81ad87be8db477d57cff8195503d888d8aed2176"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/preview.png",
+      "sha256": "0438329881d29e204857664598281f0f2d5ddfa1e104155462e1a17ef083473a"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/source.png",
+      "sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/split_assets_contact.png",
+      "sha256": "eab94eaa445dec829b91faad50470cf680b0506448740c00dece54a5d1311628"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/text_hints.json",
+      "sha256": "c5e83686cba339da1ec2b23d950af7e23ef4933d2d8ff98dc5daea619773b67f"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/text_hints.png",
+      "sha256": "cb30fe048154dd302d1430c1bfcf8ec0a25b0a51ab5e544767e24f16e52913bb"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/validation.json",
+      "sha256": "b21e98b1bc7bacdc39aac1b5f07a5733e5560500020818ed6245749495e513f6"
+    },
+    {
+      "path": "example/run-repair/pages/page_001/worker-prompt.md",
+      "sha256": "4b1a5bbc579e39aefc4cc73098d17d33823753baa0ff46c3155b917dd32051af"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/asset-reuse-receipt.json",
+      "sha256": "a1e9a6f64ffa960db5faae0ab97c9c33ccf70061ccad1318d5856786fee1f9f5"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/asset-sheet.prompt.txt",
+      "sha256": "d92813dfa4adfc24aa14269868413b041fedf8399d130ba5eb50a9a5cb6e86e7"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/asset-regions.json",
+      "sha256": "3baf7a57976022e4ad20de11cd7b8bca04837c9a235ff5f9d225a5d4e9072191"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/icon-sheet.asset-sheet-alpha.png",
+      "sha256": "9f6f7acb5366e6a75126a504e220d312aedb9e812333c3b81b72c246dcd0b4c1"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/icon-sheet.asset-sheet-chroma.png",
+      "sha256": "388f1f37d44b48e53d8ec35b831f09269646fbe42f1ed0e718a4fa9c84edbbd9"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/icon-sheet.png",
+      "sha256": "388f1f37d44b48e53d8ec35b831f09269646fbe42f1ed0e718a4fa9c84edbbd9"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/icon-sheet.split-report.json",
+      "sha256": "2984a5b4497250a6249ef1184314398af9e7c0ff34b2aa26c6272fea62c06ab3"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/icons/database.png",
+      "sha256": "51e73ac070d07563c7b830c83281f8c13a3aea6f96117223dd444c551f00ef7a"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/icons/document.png",
+      "sha256": "915884aad15c89748b6668ec6681e44e969bcdfa3a5bd66323b484746e629c0e"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/icons/laptop.png",
+      "sha256": "27fed14a2e33cb5e349fe64526f6a74ef23f4735b083fc737d5554b27f95a6fd"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/assets/icons/staging.png",
+      "sha256": "6a675142a0d28fd7c8109dbb77e3dcd2db5f6962bc6b62c8c478b1798dcb5afd"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/build-calibrated.log",
+      "sha256": "6852ab506eb890d07900cd4a773b07f66420024f7feaffb151e726b1fcba1fec"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/build.log",
+      "sha256": "6852ab506eb890d07900cd4a773b07f66420024f7feaffb151e726b1fcba1fec"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/builtin-imagegen-receipt.json",
+      "sha256": "b3ed37240e3cbc4c585cf6d2a41fd77d7d5ad560a6a7c14825dec7ad402e8f32"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/cli-receipts.json",
+      "sha256": "ab198f7c842fc4055d0593827f046e5fe23fb25f6b8597da652e2c6f0cb5b4ab"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/command-font-calibration.json",
+      "sha256": "c4f3cb027f7477e6f0d1eb3caae0ff2c99ff80bc5ef1987cc4913848a673b7b5"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/contact-sheet-calibrated.log",
+      "sha256": "d3092621704adce444f83b4285eb0673cbfc89665ee6c5355448c7b9ac2b13d8"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/contact-sheet.log",
+      "sha256": "d3092621704adce444f83b4285eb0673cbfc89665ee6c5355448c7b9ac2b13d8"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/imagegen-jobs.json",
+      "sha256": "ac4e150355a18de233cdc957ca03f8c931bb71fc6091e09c01e3f000dd59ef0f"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/import.log",
+      "sha256": "55f377e4cfac2c9e6974e944018f87324e0956e712ac0684b9e4b39b557db6c1"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/inventory.txt",
+      "sha256": "1e76833f3dca1ad02c0376fafb25cef6c0b85ee34178937d2cde28b48d8a265d"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/manifest.json",
+      "sha256": "f5114d523f31496d3ecea19b190f9db4b70e2e175c3c0487eee37eeaa7787bc4"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/page.pptx",
+      "sha256": "43bbc4bfd8d5f4923f10d8ea32d31c372d1797b052bb8349a217dd24505ae2cf"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/page_request.json",
+      "sha256": "f3a46f0749b137301c9f3552ab925637f15862127b42d875de034a1ce357f4a7"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/page_result.json",
+      "sha256": "26743d6b179805ccb5357e60cbf68ab3df9983a235d884c4001817b022488e7a"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/preview.png",
+      "sha256": "68dc84b6218f01e37f0d62116dc652cdfba92c82abe4fc57457778cc7a24b4ec"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/process-sheet.log",
+      "sha256": "c005915a1aa684ea74469d19e22c2eb20d902df0c08636d2e5f66fcbde5240be"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/run_cli.py",
+      "sha256": "fab565ef8931a93e997a34a12c2044256d910878d300ce734da362ea5413c325"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/source.png",
+      "sha256": "718a1e281ec10356527ed6c830232d1c1926ee81c714363fd26bebd4ff3966a5"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/split_assets_contact.png",
+      "sha256": "b7f33f2d95069d1ecd9f9e310de6ea07c7b1a6bbc9b610cf22e20d761efed324"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/text_hints.json",
+      "sha256": "8a363aa93b25aeef255a479202dc0472c28fab9a4d2836d8f37762c87ec2e3e9"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/text_hints.png",
+      "sha256": "0184a83abb4a63082a26a4f100a54f73af07410629d0a6eaad5f306d6064987e"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/validate.log",
+      "sha256": "f3a4ef1feb7a81fbd7a52af10071985b208f691d1afc4a2b3a683796584acb84"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/validation.json",
+      "sha256": "f3a4ef1feb7a81fbd7a52af10071985b208f691d1afc4a2b3a683796584acb84"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/visual-review.json",
+      "sha256": "90596aa2b0350873640e4364d8bf1fb6a2afa3440db8aad677f49d639fab88fa"
+    },
+    {
+      "path": "example/run-repair/pages/page_002/worker-prompt.md",
+      "sha256": "e6e01f27e3d9f4ebd81f5056d709a3b545a3ede1793d7ee4c1fb40f28cb42a10"
+    },
+    {
+      "path": "example/run-repair/run_state.json",
+      "sha256": "3c3234754f97e90f23e5bc39ed11299db5c0310b1c2ff50e4c66a9f51631f2b9"
+    },
+    {
+      "path": "example/run-repair-r4/deck_manifest.json",
+      "sha256": "e249f7f27cf68e0105fc56b3212084f914982a394eb5f426dedd821e500bcc8e"
+    },
+    {
+      "path": "example/run-repair-r4/final/run_summary.json",
+      "sha256": "4877eb9fab2f9898bf79e504bec5b8b639396f8f881764dd1fd0a5909bea9486"
+    },
+    {
+      "path": "example/run-repair-r4/final/source_edited.pptx",
+      "sha256": "827e7a32e247554b270ca955f1db2b30c093707d22727a84982a84113c7cd87a"
+    },
+    {
+      "path": "example/run-repair-r4/final/validation.json",
+      "sha256": "7e28b484a2c4a5e65faec19c021cdbb7b759ef8748477edcae8429584a60343c"
+    },
+    {
+      "path": "example/run-repair-r4/input/source-2.png",
+      "sha256": "718a1e281ec10356527ed6c830232d1c1926ee81c714363fd26bebd4ff3966a5"
+    },
+    {
+      "path": "example/run-repair-r4/input/source.png",
+      "sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618"
+    },
+    {
+      "path": "example/run-repair-r4/notes_manifest.json",
+      "sha256": "8bbdd53317d14851820e622fc00990263f4d6220eae924422d1079ddd5230f60"
+    },
+    {
+      "path": "example/run-repair-r4/page_jobs.json",
+      "sha256": "0bc5a4db5b7ecbfa48cddc053c5b67ab5ff9121c21ba14c7f20a13350f23adce"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/asset-regions.json",
+      "sha256": "3649ebb6921fc738d49d90cf54b327b8b612e88afd25cea33f9c81175ad29ab9"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/fonts/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/fonts/OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/icon-sheet.asset-sheet-alpha.png",
+      "sha256": "290d904a134968aacc5ab1260b3acee89c4c407e5df87cd61eaacaf2ca803af9"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/icon-sheet.asset-sheet-chroma.png",
+      "sha256": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/icon-sheet.png",
+      "sha256": "cc2d44a7d61b7da26b6e576929548ce00f369f8e5693b5752e28012654e7d581"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/icon-sheet.split-report.json",
+      "sha256": "e2a3ebccdc513471c61617da2c7d0db4f4f624c5d45087fa150e5556c18baa1f"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/icons/document.png",
+      "sha256": "d2f8cf4f38da42ae6e6f069e4c46f700dc09035bd62de2b6b3b7be3ca544613a"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/icons/history.png",
+      "sha256": "8a8f165ece112ae5287a2431fe54dce33410efeb9ffdcb3b3dbe146e2d8b31c7"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/assets/icons/upload.png",
+      "sha256": "a98c225cac106a5307ce1bbb477a70e50da60a1c07f4b720bda67af3a96efdaa"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/imagegen-jobs.json",
+      "sha256": "5dc7ec54d7a8f86454ee3ad9a2d4d4ad80638449b925a8861891e14bf8d6e4e8"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/manifest.json",
+      "sha256": "ccc2d577ab1b6292bc22073d47633380c5b153c79109bfafbbb9d17bb89b9ba7"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/page.pptx",
+      "sha256": "225db3211d975584749972fc9d9cd3795b2b2147aca9715d1f9cbf4e238a6b75"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/page_request.json",
+      "sha256": "0e384e1b6dac5f19e8bfb1c5c7560f86ed7e612c6f030537b78224b18c7db144"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/page_result.json",
+      "sha256": "0744a535c678efd7286685904e0068bd38422961af6b21ecdaba9f3bf046c4f4"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/preview.png",
+      "sha256": "0438329881d29e204857664598281f0f2d5ddfa1e104155462e1a17ef083473a"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/reuse_worker.py",
+      "sha256": "b3559a88a629ad464b5ccd45797a6b3b351666d1b1c5a57b48eda2833d1b77d0"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/source.png",
+      "sha256": "653627b29ffe866f46702b864b88332ea06eff32ab1309e177a114455ccf9618"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/split_assets_contact.png",
+      "sha256": "eab94eaa445dec829b91faad50470cf680b0506448740c00dece54a5d1311628"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/text_hints.json",
+      "sha256": "c5e83686cba339da1ec2b23d950af7e23ef4933d2d8ff98dc5daea619773b67f"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/text_hints.png",
+      "sha256": "cb30fe048154dd302d1430c1bfcf8ec0a25b0a51ab5e544767e24f16e52913bb"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/validation.json",
+      "sha256": "490dad56694aae9103ee7dcaf7c5a872d10838a72e208242b9c392bbff77ab37"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/worker-build.log",
+      "sha256": "fd1b1380f5d9c03572a70d1485bf4e4f0d1cde2aecb0698420978dd7a9663736"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/worker-contact-sheet.log",
+      "sha256": "a6500185be9f75f86b93eff6ee9893567dff451e600c5d3404a3725377a17023"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/worker-prompt.md",
+      "sha256": "25fb8fbd145dc7acb5f8265ed461727f4a659248d862eaef117a72e7e2a2fc00"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/worker-reuse-receipt.json",
+      "sha256": "096dc96181fed2cb5bcccc8c20d1c4c8a1034da24715a0957c7909d3958b2551"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_001/worker-validate.log",
+      "sha256": "af770f751ec5a2c98aa35147bf9c028f42e5ff41741d2324e05110c4aed9ef11"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/asset-sheet.prompt.txt",
+      "sha256": "d92813dfa4adfc24aa14269868413b041fedf8399d130ba5eb50a9a5cb6e86e7"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/asset-regions.json",
+      "sha256": "3baf7a57976022e4ad20de11cd7b8bca04837c9a235ff5f9d225a5d4e9072191"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/icon-sheet.asset-sheet-alpha.png",
+      "sha256": "9f6f7acb5366e6a75126a504e220d312aedb9e812333c3b81b72c246dcd0b4c1"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/icon-sheet.asset-sheet-chroma.png",
+      "sha256": "388f1f37d44b48e53d8ec35b831f09269646fbe42f1ed0e718a4fa9c84edbbd9"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/icon-sheet.png",
+      "sha256": "388f1f37d44b48e53d8ec35b831f09269646fbe42f1ed0e718a4fa9c84edbbd9"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/icon-sheet.split-report.json",
+      "sha256": "2984a5b4497250a6249ef1184314398af9e7c0ff34b2aa26c6272fea62c06ab3"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/icons/database.png",
+      "sha256": "51e73ac070d07563c7b830c83281f8c13a3aea6f96117223dd444c551f00ef7a"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/icons/document.png",
+      "sha256": "915884aad15c89748b6668ec6681e44e969bcdfa3a5bd66323b484746e629c0e"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/icons/laptop.png",
+      "sha256": "27fed14a2e33cb5e349fe64526f6a74ef23f4735b083fc737d5554b27f95a6fd"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/assets/icons/staging.png",
+      "sha256": "6a675142a0d28fd7c8109dbb77e3dcd2db5f6962bc6b62c8c478b1798dcb5afd"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/builtin-imagegen-receipt.json",
+      "sha256": "b3ed37240e3cbc4c585cf6d2a41fd77d7d5ad560a6a7c14825dec7ad402e8f32"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/command-font-calibration.json",
+      "sha256": "fdb35a641bf96ce0bcf5ce46411222f286f779ffda8691320209a23ed1393661"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/imagegen-jobs.json",
+      "sha256": "8bf60f587158ada8e645591202b81f64000fcc3b8b24c43318c8a590c47d6508"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/inventory.txt",
+      "sha256": "3e38ba663368b05b8df436de1f2bf6fb9aa208892894ed25fa3b4e5339d7d695"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/manifest-before-command-repair.json",
+      "sha256": "f5114d523f31496d3ecea19b190f9db4b70e2e175c3c0487eee37eeaa7787bc4"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/manifest.json",
+      "sha256": "ac1607497604800093ab277e01fb4094a1e52da6617af6e8dd47522acf0a3b21"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/page.pptx",
+      "sha256": "bedb31210718bacad25aa1ca1b339cedd6a184e163c16607b5d0e00143c3f91c"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/page_request.json",
+      "sha256": "6b1f4c08de7842ca3a4e509985a6a67584c70462791d5c547038751f65562c22"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/page_result.json",
+      "sha256": "d0e6f0ecc71b75c99df52667fe4ab814c9d2d761e5e67660d740e15e1d4e6a62"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/preview.png",
+      "sha256": "c13a4c26e4fb2d4ba88396e3af2bd6e1003c99abdd7727b6cf7ea6dc2fa30464"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/r4-reuse-receipt.json",
+      "sha256": "987a2e1e4b6147ac0818719dd4a20fe28dd69d72166ae8e99e94906f41b30cd1"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/source.png",
+      "sha256": "718a1e281ec10356527ed6c830232d1c1926ee81c714363fd26bebd4ff3966a5"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/split_assets_contact.png",
+      "sha256": "04bc01a6856d315071e6d475d3ad249604509aa946a1ae22a0cdb2b7caeaf9cf"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/text_hints.json",
+      "sha256": "8a363aa93b25aeef255a479202dc0472c28fab9a4d2836d8f37762c87ec2e3e9"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/text_hints.png",
+      "sha256": "0184a83abb4a63082a26a4f100a54f73af07410629d0a6eaad5f306d6064987e"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/validation.json",
+      "sha256": "92bc826d01567f558690d5d95bfbc828c49fcf01e1f4ce18c60637ad9326b0d7"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/worker-prompt.md",
+      "sha256": "3e61277e01a3b1aa891f8e5402e7a201ba4a97ffe5f38626f52a40ecb861cd4f"
+    },
+    {
+      "path": "example/run-repair-r4/pages/page_002/worker-repair-receipt.json",
+      "sha256": "4d2714906efef20e904d746f677e2d4d85c82a59a577d1d203de48302dd3ccd3"
+    },
+    {
+      "path": "example/run-repair-r4/run_state.json",
+      "sha256": "0a76742962f1ca39ef04f98296c5f179aee33b1cc084d8279e2c52e1a8171f56"
+    },
+    {
+      "path": "example/SKILL.md",
+      "sha256": "6ea52ec12905dc6dc65e2e2ac0b84c85245fc9437fa636adde5a156ad59547b9"
+    },
+    {
+      "path": "example/source/build_image_editable_repository_example.py",
+      "sha256": "9a072b74855bbbf6836314820657c40db811e454c1f52749139be2a5e35ebdb0"
+    },
+    {
+      "path": "example/source/catalog-repair-proposal.json",
+      "sha256": "1ad575845c57cd000205f0d5b2bd2df38fb6a6dfa7d65690b98eff467c31d1c7"
+    },
+    {
+      "path": "example/source/current-finalize.json",
+      "sha256": "43e9e1a9a3675bc40fbb771322367889499b59e3c9aaf67a9be2cc085a9b76ca"
+    },
+    {
+      "path": "example/source/current-finalize.log",
+      "sha256": "5aa03764a699bd4d158443cca5a348dea8d343d7fb8036a6369f6d48e3f9762b"
+    },
+    {
+      "path": "example/source/distribution-replay.json",
+      "sha256": "526fba143dd3d6f76e1bafbd2af383b970b78be081ec1c4cf27d92e5df140883"
+    },
+    {
+      "path": "example/source/ENTRYPOINTS.md",
+      "sha256": "81ff1a931cccf983f07ac093d6d16b2138c0c609e30bfe7fe62508a29cc1fea0"
+    },
+    {
+      "path": "example/source/inspect_current.py",
+      "sha256": "3b506171fe26d7e140c6370e8fe6b42b94956079f87bfbdb1d4e0f5f6de0a0cc"
+    },
+    {
+      "path": "example/source/logs/add-notes-and-package-repaired.log",
+      "sha256": "fc070e43650dd5c9f0ec88bfb7fa2d2249b72313abc7299df72e85bb1e6a305f"
+    },
+    {
+      "path": "example/source/logs/add-notes-and-package-repaired.receipt.json",
+      "sha256": "780c588531f9bc6c1b19db13277662c5ce6c9d8ebd8a122245bcaf0dd53576c3"
+    },
+    {
+      "path": "example/source/logs/add-notes-and-package.log",
+      "sha256": "9eed54ac7a668094be3c9b5dc1596e014cec709c75a1e3b1a89a628ad8d47203"
+    },
+    {
+      "path": "example/source/logs/add-notes-and-package.receipt.json",
+      "sha256": "0cea740e4bb0d4079371140cd1735b4de0d2f9bda23e5727015da84f578e282c"
+    },
+    {
+      "path": "example/source/logs/dispatch-page001.log",
+      "sha256": "13a581a645d7b7becad63b7f6bbef279aa5463c7cfea5111e15bc409ca5b0f39"
+    },
+    {
+      "path": "example/source/logs/dispatch-page001.receipt.json",
+      "sha256": "ecdb3c84182d898c9b452d9391108aff85ed9e3682a5c815be686436ad1d753e"
+    },
+    {
+      "path": "example/source/logs/dispatch-page002.log",
+      "sha256": "0d5b6f8ca5ba059f05f441f070645ea031dbd0b6ddbf2a3bd43c50af82d8399a"
+    },
+    {
+      "path": "example/source/logs/dispatch-page002.receipt.json",
+      "sha256": "219ef9a0f2eccbb8fa88a43b07c14209254a9f3c40db89735da34cdc91b5af8e"
+    },
+    {
+      "path": "example/source/logs/doctor.log",
+      "sha256": "162a0b5f3616198521fccaaaf77d38179597dd80814f2901c3b52b800f065697"
+    },
+    {
+      "path": "example/source/logs/doctor.receipt.json",
+      "sha256": "dd60b2538430168e84a5a5493c353991368b64164789c11801d6a957bbf9578c"
+    },
+    {
+      "path": "example/source/logs/finalize.log",
+      "sha256": "3dfac99b88b3bf28a3fa8411a3cb1a15fcab930e64ae4e3569b198822ab5db9b"
+    },
+    {
+      "path": "example/source/logs/finalize.receipt.json",
+      "sha256": "044d50a0db68a15ced95cedf3a01fa394b6777a64d1c05750beda0693c0e854c"
+    },
+    {
+      "path": "example/source/logs/help.log",
+      "sha256": "2326020bef72b0398fa4489fd31ca5d878fd3cea94056ff9f28c95b92b7ee8db"
+    },
+    {
+      "path": "example/source/logs/help.receipt.json",
+      "sha256": "fd567e8cde1fbb88be9a23c720d61757d6fbcb3c8215d4dd96bf50d4598dacb2"
+    },
+    {
+      "path": "example/source/logs/next.log",
+      "sha256": "a6222be201369be9e532861c0d7bde5a90f2e1408eb06263e68601a90477e635"
+    },
+    {
+      "path": "example/source/logs/next.receipt.json",
+      "sha256": "27b7e26a318b5596bfbb9bddf5cdd62f5ecc09a43615d21d737a4c7bd4334576"
+    },
+    {
+      "path": "example/source/logs/powerpoint-render-notes.log",
+      "sha256": "5e8603c3d73cae29d46c18d586be1a315fbaadf5e8e3624548054590e4245fb4"
+    },
+    {
+      "path": "example/source/logs/powerpoint-render-notes.receipt.json",
+      "sha256": "3dd4eb017a067cc822b2ef61230d230f04811329083e508c7ec9bd441293bb59"
+    },
+    {
+      "path": "example/source/logs/powerpoint-render.log",
+      "sha256": "5e8603c3d73cae29d46c18d586be1a315fbaadf5e8e3624548054590e4245fb4"
+    },
+    {
+      "path": "example/source/logs/powerpoint-render.receipt.json",
+      "sha256": "4f95af6d0da64cea98ec4e964c8341ab8a86b8676556d97c7f057850530afdba"
+    },
+    {
+      "path": "example/source/logs/prepare.log",
+      "sha256": "318df73867e2dfc7e589bbcae29f7647203bf505328bc51d1f74e5580690edec"
+    },
+    {
+      "path": "example/source/logs/prepare.receipt.json",
+      "sha256": "a6df9429d249a24c479fc4e36d0433ce02f31b5b9a8a1f66dbf568c00179835c"
+    },
+    {
+      "path": "example/source/logs/prompt-page002.log",
+      "sha256": "cc1bfd04b7f697b0ab0dea14987f647303b63afa2dbb83834cda6acd7fdef27c"
+    },
+    {
+      "path": "example/source/logs/prompt-page002.receipt.json",
+      "sha256": "3c24ec48bad601531469a4bd4f37c6f96054d93ce19276e936b2a02cde1daa70"
+    },
+    {
+      "path": "example/source/logs/record-page001.log",
+      "sha256": "28f3a385862aa421fb1676a9dd1ca7984e8734c394ee249b3c900cfe3b1ec817"
+    },
+    {
+      "path": "example/source/logs/record-page001.receipt.json",
+      "sha256": "dd31d9471e4aba10ff8d28ca150b06f0c7310378310cd7efe7c713de761e7cff"
+    },
+    {
+      "path": "example/source/logs/record-page002.log",
+      "sha256": "68201541a25ce95758525346d316e03d347db52f3b5a5b5815ff0fcf95106212"
+    },
+    {
+      "path": "example/source/logs/record-page002.receipt.json",
+      "sha256": "7948120454d97fb4d0e975e0d6de2c69acdf7330474815636522eaf11bbe1222"
+    },
+    {
+      "path": "example/source/logs/replay-with-notes.log",
+      "sha256": "d3088005fc678d49fe004f79c27445f58977d0a69cb0544b3efd82f609ac91e7"
+    },
+    {
+      "path": "example/source/logs/replay-with-notes.receipt.json",
+      "sha256": "8bd9ce5599f200d5c7aced2500bebcc86a0278511de0330361082f9931bdeaca"
+    },
+    {
+      "path": "example/source/native-elements.json",
+      "sha256": "56eff44b0f99fc10330676761b14d1b36adb206e0e35c18ec79804af22c22416"
+    },
+    {
+      "path": "example/source/notes-addition.json",
+      "sha256": "a3a4339cb33ba53cc7f633e1f6f81e8ad8e849379884e0bd76d7a1c24c32dff2"
+    },
+    {
+      "path": "example/source/original-NOTES.md",
+      "sha256": "634825852c3600f0d1f22c07f8197cb291353ca846f5d1287610bb10b84aed35"
+    },
+    {
+      "path": "example/source/original-PROVENANCE.json",
+      "sha256": "b726a6a3772120b9f4ff93879de8d0a2c42473b8841ad063b2d545e71bc35869"
+    },
+    {
+      "path": "example/source/pdf-fonts.json",
+      "sha256": "e56186250c0c89ea17913aad4dc108c113d811802ae12900b6f5705c0d16968c"
+    },
+    {
+      "path": "example/source/render_pdf_previews.py",
+      "sha256": "3052b04c2d2ef5a7635962a49dcfe7e7152f42651494a3dd83ecc9f927a56205"
+    },
+    {
+      "path": "example/source/render_powerpoint.ps1",
+      "sha256": "1d5b67b5d088b432fe518cfe900311d6fd8c672d5428bd62b42259b0fcba8a85"
+    },
+    {
+      "path": "example/source/repair-orchestrator-receipts.json",
+      "sha256": "a95d57d00d5d31cbe6e4dbacc4ca78019ecf0f5e12a18c6c52c4c450a4279133"
+    },
+    {
+      "path": "example/source/replay-notes-verification.json",
+      "sha256": "ac229dba6993d0f354ea9a86721aabba80174a200e17cd40f8efa446b00312c1"
+    },
+    {
+      "path": "example/source/replay-verification.json",
+      "sha256": "1ab0620a41ed9ca4c18c49de643d8a3717d2e3fd2eb155467416fe67aeb70a8b"
+    },
+    {
+      "path": "example/source/reproduce.py",
+      "sha256": "d5d953357cd21047135c63e0d148ee281f83ee1d3ecf3d24d19249ca5983d9a1"
+    },
+    {
+      "path": "example/source/requirements.txt",
+      "sha256": "bfd5fd683409c31e468169d5e6b88a2b76e5e9e9130a6bb60a285938bccfa147"
+    },
+    {
+      "path": "example/source/round4-dispatch-page_001.log",
+      "sha256": "794c5f34d8e1d18663a014668cbbcfcc713a1f3150c7ebc5e3ee234d5eda5ffa"
+    },
+    {
+      "path": "example/source/round4-dispatch-page_002.log",
+      "sha256": "62cbdd9974971d4678503acc341c9a865a7b339b24fefe43f555e191bde88057"
+    },
+    {
+      "path": "example/source/round4-next.log",
+      "sha256": "2b9879beac19b2e21d7df55c40417bdd3bc687fc1ed93da14aefb908b39a8867"
+    },
+    {
+      "path": "example/source/round4-orchestration.json",
+      "sha256": "c40903adb9b0806f8a3bd0e6a4915da9654285358879f39ab66aa5ea429f442c"
+    },
+    {
+      "path": "example/source/round4-prepare.log",
+      "sha256": "61080e33af5a9a2b765b61a13d0c703aee05f5f2f4fa1ef9e98f35bf7c67f895"
+    },
+    {
+      "path": "example/source/round4-prompt-page_001.log",
+      "sha256": "2ec166192c1ef17b2baa5381cd6fb8965c92e6d26f9fc2c2fae4dff21a9bb4fc"
+    },
+    {
+      "path": "example/source/round4-prompt-page_002.log",
+      "sha256": "fa1f5ffc6b339e430aee6ffebdf25d8f0906da26d8d32b24b88bc96ab717bb26"
+    },
+    {
+      "path": "example/source/round4-record-page_001.log",
+      "sha256": "28a96d33601f70045c942f20bab0165778a3e9f294212ba3ef7f9a216ceca600"
+    },
+    {
+      "path": "example/source/round4-record-page_002.log",
+      "sha256": "c5a985871a188f260ff6887bf5cc8a5d95789055090769cb088e9c3a5a6aee15"
+    },
+    {
+      "path": "example/source/upstream/AGENTS.md",
+      "sha256": "cb595dec23644359c4bfc7066be0f30e4ab469a6dd641091e47529b512c6edc3"
+    },
+    {
+      "path": "example/source/upstream/LICENSE",
+      "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154"
+    },
+    {
+      "path": "example/source/upstream/README.md",
+      "sha256": "51aa0d1d9fda94e98b6fafbf0b0edf540c1886ba7504f9010fb158c2e7d66dd1"
+    },
+    {
+      "path": "example/source/upstream/README_en.md",
+      "sha256": "dbfd1650b5ca4fdb08864a1c018dfdc16135209829fd418c48900e0396c49148"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/agents/openai.yaml",
+      "sha256": "bd4f362b6b02ed889053e3519e82a96f69b16cec6468c4ea44872c148c33d4e2"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/__init__.py",
+      "sha256": "a7833154ef22876fa19e1ec8355064aea30a04319390cb28d4b11b33a9b1de38"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/cli.py",
+      "sha256": "7a1fef4e8c9e9bdcb877e05d5191f3d0daf1d884449fa944602107c1dda699ac"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/__init__.py",
+      "sha256": "3ca19eef7cca8923807c80dc0ecd6d67b262f45c889ae761edd9b5c1dc5c4e54"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/_input_normalization.py",
+      "sha256": "aea66757f8a7bcee2b2751443a98f74f413e1d67ae405a6653ea85ece2d06c65"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/_page_artifacts.py",
+      "sha256": "2f141c8837c82b5074e0ec886d308d15228c99135df979b0c6f4ffc056eb3695"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/build_pptx_from_manifest.py",
+      "sha256": "856e86fc59e73ad591b6e13d7e2eae318c5a46f5e4e4ecee907367cf5c275571"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/configure_image_backend.py",
+      "sha256": "ab93885fb5984d090644acc4c248bd8083f27a14508436360052d4b84c70ebd0"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/deck_run_state.py",
+      "sha256": "f23da1f111e711f36e1f4ac3244bd64e38a50d9591f4a23b2380bb31891f04e9"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/deck_text_hints.py",
+      "sha256": "2f267a49504992ce3829683daa7f4a8bd54cf70912ab61263393f792099feda6"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/finalize_deck_run.py",
+      "sha256": "d3d2df4e58d440edf45fb69317c190103c4cb09fa27d07df1a131bc9d9c960b2"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/formula_renderer.py",
+      "sha256": "65f4c0883d3457f67fcc1f13ba8bcfe001216641839bacd9b6affea30f86202e"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/image_gen.py",
+      "sha256": "c04d8688bcf5e514fe51a5b39df93044c72019efef5313f5fdb5e87b7ea8d1e6"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/main.py",
+      "sha256": "a18eba1b84147203a13fc1b509045052e24c652cf9e3dbd2304f3ae521a63bba"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/make_page_contact_sheet.py",
+      "sha256": "b205774265de2fcca2c3ea3228cb1b9e3da82b394f320255f5d82c3fe67a4412"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/native_tables.py",
+      "sha256": "915c329163991e3b63b6c63cd42bfe00e62edfcb87942dd8eeaf37ce787c1ec8"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/paddle_text_hints.py",
+      "sha256": "1f9647acc267863c693bc9284bcf1bbb6a4eceb572f2a8a63d6ed214a323377d"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/page_job_status.py",
+      "sha256": "01e8effade4c3ab6719341c60490cb874f6c9d780e1fdbe00088696362d8703b"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/page_text_metrics.py",
+      "sha256": "683948879b666ea47eb12fb10bc2371be52f271cf531e3802d759fc6398a1595"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/path_geometry.py",
+      "sha256": "7a4550b89bbc82ace904bdf5fc6dc5f2e5e0fba32dc3860a7dbf4d13c0af7a99"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/prepare_deck_run.py",
+      "sha256": "b0f96ea60479cb62f001d49c5384739e13187e8a8605a871de00b7cc3c8d3cf7"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/process_asset_sheet.py",
+      "sha256": "cf4e34db733a3093ecb725bf5020e86c8a88165263ee145349ed699329213088"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/record_imagegen_result.py",
+      "sha256": "fc959b5809ccd59c4b58ba5bf1e705dff18895046b818dc928776c217a3242fb"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/record_page_dispatch.py",
+      "sha256": "d91b45281c0eafa10801b1344f3c423712b5aeae0aea0231d2243003176f0522"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/record_page_result.py",
+      "sha256": "34f73bcc70da439e6a547f2737148812485fee130df6c49ce33e58721643eb55"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/remove_chroma_key.py",
+      "sha256": "68b018feee3e97f140daa3216b05cfb09f79efb58c305f2bf8656f1ff751939d"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/reset_page_job.py",
+      "sha256": "787a05361c69f114a9177633eac2556833c711a1bd16da6bd6ad6c0b9ab7e63b"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/runtime_env.py",
+      "sha256": "2b289ab00d6ebbe95c85d783c638519ba352f0661f631af79188bbae6a341025"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/split_alpha_components.py",
+      "sha256": "732908babf636659e60a2572cd5b73c178db4ffd889200bb7c306627d98119cd"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/text_hints.py",
+      "sha256": "07daccc89a847bf9c481fa8f2f2044cc7924e59389e12e0a36eff0a43b45001d"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/editppt/runtime/validate_pptx.py",
+      "sha256": "536721ac565c589d54f09b6c21dd29d751c8babe6be0017ef895d13429b60e1a"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/cli/pyproject.toml",
+      "sha256": "b9a90cdf26b98e76d28eced7c63375c9ef0cc3bd34ad7a2306b5cfdb822c2cba"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/prompts/page-worker.md",
+      "sha256": "8b30866caeacef3209324bb6b4cbb11c3d52623dec06242d8bf8d709bc2deacc"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/references/cli-helper.md",
+      "sha256": "1ef924ad2643d4db447d786ccea772e74dda74d15443d3e3ea7ed492ee5cafce"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/references/manifest-schema.md",
+      "sha256": "006cfaab11a03a7e559e0aaa3b82bb8f6ab70615e3f3ad9a2b4a19b9e54b5d2e"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/references/page-decision-tree.md",
+      "sha256": "fa1ccfb5489b81c93068c1e2900663a031319cca26e7073e18dcbebc9fce517f"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/scripts/build-page-worker-prompt.py",
+      "sha256": "8a92d0cea004f7b41c55b105128ec846510be0cd036c24e700e2c9c27af2fc7c"
+    },
+    {
+      "path": "example/source/upstream/skills/image-to-editable-ppt/SKILL.md",
+      "sha256": "899725dfaaadc7ba36f9a4f8864358312f7b4fd5b0ffc39fc09d8cc0be7240c5"
+    },
+    {
+      "path": "example/source/upstream-acquisition.json",
+      "sha256": "820654af14459ad366b9c325d4b6cac46c19f21dbc6fd545108ad5df7a2a3945"
+    },
+    {
+      "path": "example/source/verify_editability.py",
+      "sha256": "552ae349e874e63f34c94f07d73539388a69671bdb4da7a8029db376c7b31101"
+    },
+    {
+      "path": "example/source/visual-review.json",
+      "sha256": "053615321abaee209391697b7134f951eecaa8078481bd0d75e585d2686d9741"
+    },
+    {
+      "path": "example/SOURCE.json",
+      "sha256": "4be91dcf0a362555d8ed394561f9551e1af6e49e09043311f18da79113a1008c"
+    },
+    {
+      "path": "README.md",
+      "sha256": "ca39c82eef4fdc5a3a9e0779e1a5c08f26ed1ec903c1a3e3de90feab622aec40"
+    },
     {
       "path": "references/example-source/build_image_editable_repository_example.py",
       "sha256": "9a072b74855bbbf6836314820657c40db811e454c1f52749139be2a5e35ebdb0"
@@ -22,7 +1395,7 @@
     },
     {
       "path": "SKILL.md",
-      "sha256": "a8bfd9f99ef091b5e965dcf721f7cac42e25894e844255b0449d64888ce0e601"
+      "sha256": "3f5df3f6d88c78fd5196aa38f0cfbfc3c60ef52e1a45bc9190b59b05ca0ce1b8"
     },
     {
       "path": "upstream/ACQUISITION.json",
@@ -196,8 +1569,5 @@
       "path": "upstream/skills/image-to-editable-ppt/SKILL.md",
       "sha256": "899725dfaaadc7ba36f9a4f8864358312f7b4fd5b0ffc39fc09d8cc0be7240c5"
     }
-  ],
-  "case_studies": [
-    "image-to-editable"
   ]
 }

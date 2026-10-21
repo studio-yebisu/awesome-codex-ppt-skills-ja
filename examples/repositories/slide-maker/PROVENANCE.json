@@ -589,436 +589,65 @@
       "url": "https://github.com/addsumtech/slides_maker/blob/3767cc346d63ef1646082c87f15fbf0be582b152/skills/slide-maker/assets/vl/samples/chalkboard.jpg"
     }
   ],
-  "execution": "unmodified original deckkit components and native_chart with original validation tools; scoped workflow, not complete upstream workflow",
-  "local_changes": [
-    "新規日本語教材と実測探索入力",
-    "フォントYu Gothic / Consolas",
-    "PowerPoint16.0による描画を使用",
-    "静的selfread、独立criticの分岐説明指摘を修正"
-  ],
-  "upstream_modified": false,
-  "commands": [
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\sigs.py",
-        "blank_deck",
-        "add_slide",
-        "text",
-        "box",
-        "native_chart",
-        "title_bar",
-        "footer",
-        "takeaway_rail",
-        "a11y_title",
-        "declare_delivery",
-        "--full"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/helper-signatures.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\lint_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--json",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\lint.json"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/lint.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\trace_composed.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--source",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\input\\data.json"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/trace-composed.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--gate-check"
-      ],
-      "exit_code": 1,
-      "log": "source/logs/gate-check.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\source\\build_slide_maker_repository_example.py",
-        "--upstream-dir",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\source\\upstream",
-        "--output-dir",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-replay"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/replay.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\arc_divergence.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\design\\arc-candidates.json"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/arc-comparison.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\validate_review.py",
-        "critic",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\critic-round1.json",
-        "--record",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/critic-record.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\blind_read.py",
-        "compare",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker",
-        "--render-dir",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-blind",
-        "--answers",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\blind-answers.json",
-        "--write"
-      ],
-      "exit_code": 1,
-      "log": "source/logs/blind-compare.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--gate-check"
-      ],
-      "exit_code": 1,
-      "log": "source/logs/gate-check-supplemental.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\directions_diversity.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\design\\directions.json"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/direction-diversity.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\blind_read.py",
-        "compare",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker",
-        "--render-dir",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-blind",
-        "--answers",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\blind-answers.json",
-        "--write"
-      ],
-      "exit_code": 1,
-      "log": "source/logs/blind-compare-classified.log"
-    },
-    {
-      "command": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--gate-check"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/gate-check-resolved.log",
-      "executed_at": "2026-10-13T19:27:41.230002+00:00"
-    },
-    {
-      "command": "python <original>/scripts/render_deck.py deck.pptx --gate-check",
-      "cwd": "examples/repositories/slide-maker",
-      "exit_code": 0,
-      "log": "source/logs/gate-check-cwd-resolved.log",
-      "executed_at": "2026-10-13T19:30:12.061725+00:00"
-    }
-  ],
-  "artifact_sha256": "3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f",
-  "input_sha256": "e651667858be382e90c3e4f097d6536e743685d2a019b1a06d8a47b9a2ef9593",
-  "python": "3.13.7",
-  "dependencies": {
-    "python-pptx": "1.0.2",
-    "pymupdf": "1.28.2",
-    "Pillow": "12.3.0",
-    "numpy": "2.5.4",
-    "matplotlib": "3.11.2"
+  "execution_type": "original_deckkit_native_chart_executed_traces_powerpoint_render_codex_round5_repair_review_pending",
+  "artifact_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+  "producer": "Codex repair; historical model records remain version-bound",
+  "current_review": {
+    "independent_critic": "pending",
+    "blind_read": "pending",
+    "original_handoff_passed": false,
+    "codex_delivery_pass_receipt": false
   },
-  "workflow_limitations": [
-    "Initial build omitted planning gates; supplemental arc/design comparison was done after build and explicitly timestamped, not retroactively called pre-approved",
-    "Final original handoff gate exits0 with explicit waiver for URL-only provenance on locally executed inputs",
-    "No taste/registry writes; no human adoption or external publication",
-    "No art-director agent was dispatched; actor performed post-build comparison, separate critic audits it"
+  "historical_records": "review/round3-prior-version/superseded-provenance.json — superseded, never current approval",
+  "original_review_record": "source/round4-opus-review-record.json",
+  "current_checks": "source/round5-original-gates.json",
+  "local_adapters": [
+    "Text boxes13/16/24/32/34pt; chart labels16pt; fixed arrays remain native deckkit boxes/text. Title optional kicker/rule omitted.",
+    "Linear blue, binary purple, target13 brown fill/outline; exact executed chart data retained.",
+    "All4 binary decisions and the targets1–3 counterexample are now on-slide. Notes retain supporting context.",
+    "Original blind filename adapter copies actual pixels to slide01.png names without alteration."
   ],
-  "failed_attempts": [
-    {
-      "command": "sigs.py blank_deck new_slide text box line native_chart save --example",
-      "exit_code": 1,
-      "reason": "line/save are not helper names; corrected helper-signatures command succeeded. First call auto-installed missing matplotlib into the project venv."
-    },
-    {
-      "command": "blind_read.py packet with PowerPoint hyphenated render names",
-      "exit_code": 1,
-      "reason": "original expects slideNN.png; exact PNG bytes copied to temporary alias directory and packet succeeded"
-    },
-    {
-      "command": "visual_languages.direction chalkboard in partial source snapshot",
-      "exit_code": 1,
-      "reason": "missing bundled sample; exact upstream MIT sample copied then succeeded"
-    }
+  "limitations": [
+    "Initial interview/content/design chronology was supplemental after the first build, not retroactively completed.",
+    "Current original handoff blocks on fresh independent critic/blind read; the Codex-only gate also lists incomplete full workflow records.",
+    "No template profile, talk-time, Q&A, image-series or image-generating mode was exercised.",
+    "Only existing values1–15 in an already ascending array were run; elapsed time and sorting cost were not measured."
   ],
-  "post_build_supplement": {
-    "at": "2026-10-13T19:30:12.061725+00:00",
-    "candidate_sha256": "3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f",
-    "plan": "design/post-build-plan.json",
-    "arc": "design/arc-candidates.json",
-    "directions": "design/directions.json",
-    "blind_read": "review/blind-answers.json",
-    "gate_record": ".deck-gates.json"
+  "current_artifacts": {
+    "pptx": "deck.pptx",
+    "data": "input/data.json",
+    "object_proof": "source/object-proof.json",
+    "native_inventory": "source/native-elements.json",
+    "fonts": "source/pdf-fonts.json",
+    "all_pages": "render/contact-current.jpg"
   },
-  "execution_type": "original_deckkit_native_chart_executed_python_traces_powerpoint_render_independent_critic_and_blind_read",
-  "commands_executed": [
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\sigs.py",
-        "blank_deck",
-        "add_slide",
-        "text",
-        "box",
-        "native_chart",
-        "title_bar",
-        "footer",
-        "takeaway_rail",
-        "a11y_title",
-        "declare_delivery",
-        "--full"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/helper-signatures.log",
-      "log_sha256": "1ce55ec6882be7817a2604bc68031a9e39a4e33421234af7c0f4f77d0e4f4f7c",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja"
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\lint_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--json",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\lint.json"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/lint.log",
-      "log_sha256": "cbdc0c8a3d5b7e5eee9f50944ee55050efe4c036279fcef87ac2f61408fa4041",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja"
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\trace_composed.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--source",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\input\\data.json"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/trace-composed.log",
-      "log_sha256": "9cd506e776b71e1454cc5569054bab88cf9d0ce4a03b3d0f1d8fc4762bdb3dd4",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja"
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--gate-check"
-      ],
-      "exit_code": 1,
-      "log": "source/logs/gate-check.log",
-      "log_sha256": "985d5d0b0aa648578f76675e4fe8b00f9e81d45ede79b681ca0abe9162c2e52e",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
-      "resolved_by_log": "source/logs/gate-check-cwd-resolved.log",
-      "resolution_reason": "Post-build arc and direction comparisons, audience/content records, independent blind read and explicit finding resolutions were added. URL-only provenance was waived for hashed local executable primary inputs. Final original handoff gate returned 0, preserving earlier failure logs."
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\source\\build_slide_maker_repository_example.py",
-        "--upstream-dir",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\source\\upstream",
-        "--output-dir",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-replay"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/replay.log",
-      "log_sha256": "37aab2ee803fcc0451946d2e208829be991158b18a16a138fb72c31c68b3ac63",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja"
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\arc_divergence.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\design\\arc-candidates.json"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/arc-comparison.log",
-      "log_sha256": "2a8ef4a1fde648c2aa80e78014b0f49d6f790e2699341003d948914c289e045b",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja"
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\validate_review.py",
-        "critic",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\critic-round1.json",
-        "--record",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/critic-record.log",
-      "log_sha256": "2f54dcf55170e0165b1df73125df42d76496b0ea18ae07fcf1e4556cf5ac7eca",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja"
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\blind_read.py",
-        "compare",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker",
-        "--render-dir",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-blind",
-        "--answers",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\blind-answers.json",
-        "--write"
-      ],
-      "exit_code": 1,
-      "log": "source/logs/blind-compare.log",
-      "log_sha256": "c45e21595637adddd479413247ae0e0d72237e51ae1d81791a13c1e61abd578d",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
-      "resolved_by_log": "source/logs/gate-check-cwd-resolved.log",
-      "resolution_reason": "Independent reader classified Japanese legibility findings; accepted selfread limitations and source-verified none-icon false positive were explicitly resolved in .deck-gates.json. The final original handoff gate checked those resolutions and returned 0; this does not claim blind_read compare itself returned 0."
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--gate-check"
-      ],
-      "exit_code": 1,
-      "log": "source/logs/gate-check-supplemental.log",
-      "log_sha256": "9756c74bba81815bb8ee860938aee13103bbf92be6a2b532b1fc5fd06788394e",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
-      "resolved_by_log": "source/logs/gate-check-cwd-resolved.log",
-      "resolution_reason": "Post-build arc and direction comparisons, audience/content records, independent blind read and explicit finding resolutions were added. URL-only provenance was waived for hashed local executable primary inputs. Final original handoff gate returned 0, preserving earlier failure logs."
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\directions_diversity.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\design\\directions.json"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/direction-diversity.log",
-      "log_sha256": "4e40879c434536e6928767e08dfc726fa2f894865ee072e54d03cc589612c52f",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja"
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\blind_read.py",
-        "compare",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker",
-        "--render-dir",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\slide-maker-blind",
-        "--answers",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\review\\blind-answers.json",
-        "--write"
-      ],
-      "exit_code": 1,
-      "log": "source/logs/blind-compare-classified.log",
-      "log_sha256": "e5b06e852d80bdbb57c226d8c0e900617757cd805810028f91d0e6d7667744c4",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
-      "resolved_by_log": "source/logs/gate-check-cwd-resolved.log",
-      "resolution_reason": "Independent reader classified Japanese legibility findings; accepted selfread limitations and source-verified none-icon false positive were explicitly resolved in .deck-gates.json. The final original handoff gate checked those resolutions and returned 0; this does not claim blind_read compare itself returned 0."
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--gate-check"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/gate-check-resolved.log",
-      "log_sha256": "545810e6b84a7998b7b40ddcbf485b076e9d1fd55cdd53e41f778ec9c59a0ad1",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja",
-      "executed_at": "2026-10-13T19:27:41.230002+00:00"
-    },
-    {
-      "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\addsumtech__slides_maker\\skills\\slide-maker\\scripts\\render_deck.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker\\deck.pptx",
-        "--gate-check"
-      ],
-      "exit_code": 0,
-      "log": "source/logs/gate-check-cwd-resolved.log",
-      "log_sha256": "c9b3b4bc703cdd22e13c45571cc831cb4d753cb3f4d52a24eee83501fe99422d",
-      "cwd": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\slide-maker",
-      "executed_at": "2026-10-13T19:30:12.061725+00:00"
-    }
-  ],
-  "receipt_gaps": [
-    {
-      "command_as_recorded": "sigs.py blank_deck new_slide text box line native_chart save --example",
-      "exit_code": 1,
-      "missing": [
-        "persistent standalone log",
-        "fully recorded argv"
-      ],
-      "note": "Original failure summary preserved; not converted into a fabricated command receipt.",
-      "resolution_summary": "line/save are not helper names; corrected helper-signatures command succeeded. First call auto-installed missing matplotlib into the project venv."
-    },
-    {
-      "command_as_recorded": "blind_read.py packet with PowerPoint hyphenated render names",
-      "exit_code": 1,
-      "missing": [
-        "persistent standalone log",
-        "fully recorded argv"
-      ],
-      "note": "Original failure summary preserved; not converted into a fabricated command receipt.",
-      "resolution_summary": "original expects slideNN.png; exact PNG bytes copied to temporary alias directory and packet succeeded"
-    },
-    {
-      "command_as_recorded": "visual_languages.direction chalkboard in partial source snapshot",
-      "exit_code": 1,
-      "missing": [
-        "persistent standalone log",
-        "fully recorded argv"
-      ],
-      "note": "Original failure summary preserved; not converted into a fabricated command receipt.",
-      "resolution_summary": "missing bundled sample; exact upstream MIT sample copied then succeeded"
-    }
-  ],
-  "schema_mapping": {
-    "original_qa": "source/original-QA.json",
-    "original_provenance": "source/original-PROVENANCE.json",
-    "notes": "13 existing command records mapped. Final cwd-resolved command expanded from its actual subprocess invocation, not from the shortened display string. Three early failure summaries lack persistent command/log receipts and remain explicit gaps."
+  "human_adoption": false,
+  "current_repair": "source/unit-definition-repair.json",
+  "current_distribution_replay": "source/distribution-replay.json",
+  "current_contact_sheet": {
+    "source_pages": [
+      {
+        "path": "render/slide-01.png",
+        "sha256": "2c306af337abc88d52509f400603e16b24542beb47bba0965068bfef8a2ffee2"
+      },
+      {
+        "path": "render/slide-02.png",
+        "sha256": "feb4c6253c4a9d02cd1f06e51c36a8b9b67d24004eedab3636527a02d0d014ff"
+      },
+      {
+        "path": "render/slide-03.png",
+        "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8"
+      },
+      {
+        "path": "render/slide-04.png",
+        "sha256": "1fe06bd1132cfd78a2ba37ac8eb9340daf2b6fad7adc767f99817848496e8c6b"
+      },
+      {
+        "path": "render/slide-05.png",
+        "sha256": "00497d9811e6e7d629e30b8633b4d288552b4f14a0c918cb00b152258c1520f2"
+      }
+    ],
+    "sha256": "4b69c5285d1f7a5dbdd0268cbbf4d6943df135620252e421c77ec743477eaf21",
+    "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043"
   }
 }

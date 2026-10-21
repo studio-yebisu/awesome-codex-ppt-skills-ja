@@ -107,7 +107,7 @@ finally {
         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($pres) | Out-Null
     }
     if ($pp -ne $null) {
-        try { $pp.Quit() } catch {}
+        # Shared PowerPoint: close this presentation only; keep Application running.
         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($pp) | Out-Null
     }
 }

@@ -1,0 +1,406 @@
+component chart on page space (5 of 6): content, kind "hierarchy"
+name: Plot
+what it is: Numbers drawn as a shape: bars, stacked or 100% columns, bars under a line, a line, an area, slices, a funnel, a from-and-to pair, a point cloud, or one arc against a target.
+choose it: Choose it when the audience should grasp the shape of the numbers at a glance. Use data_table when exact values must be read row by row, and comparison when the attributes are words rather than figures.
+not for: Several independent headline figures, which belong in kpi_cards.
+full-body: no
+limits on this page:
+  at most 8 series in each chart (line and area charts, past which the lines stop reading apart), validate warns past it
+schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "component": "chart",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "chart"
+    },
+    "title": {
+      "description": "A short name for the chart, printed over it, such as \"参保职工与离退休人员之比\" or \"Workers per retiree\". A theme that numbers its figures prints it after the figure's number.",
+      "type": "string"
+    },
+    "chart_type": {
+      "type": "string",
+      "enum": [
+        "bar",
+        "line",
+        "pie",
+        "funnel",
+        "dumbbell",
+        "scatter",
+        "area",
+        "donut",
+        "gauge",
+        "stacked",
+        "percent_stacked",
+        "combo"
+      ],
+      "description": "How to plot the series. bar/line: categories on one axis, for trends or comparisons. stacked: each category's series piled into one column with its total printed above (two or more series, negatives pile down from zero). percent_stacked: the same piles scaled to 100%, to compare make-up rather than size (two or more series, no negatives, every category above zero). combo: bars and lines on one category axis for two measures over one period, such as revenue and margin. Mark each line series `plot: \"line\"`, the rest are bars, at least one of each. `axis: \"right\"` gives a series its own right-hand scale, titled by axes.y2_title / axes.y2_unit. scatter: a numeric x-y point cloud (a per-point `size` makes bubbles); a category x takes line or bar. area: a line filled down to the baseline, for volume or a running total. pie: part-to-whole share. donut: the ring form of pie (`center_total: true` prints the total in the middle). funnel: one value narrowing across ordered stages. dumbbell: a from→to change per row. gauge: ONE value's progress toward a target as a half-ring with the number centred, such as 62% of goal. Several headline metrics side by side are `kpi_cards`, never a row of gauges."
+    },
+    "direction": {
+      "description": "bar: \"horizontal\" lays the bars on their side. stacked: \"horizontal\" draws one whole as a single share bar across the page, every series one part with its one value at the chart's one category, whose name captions the bar.",
+      "type": "string",
+      "enum": [
+        "horizontal",
+        "vertical"
+      ]
+    },
+    "style": {
+      "type": "string",
+      "enum": [
+        "donut"
+      ]
+    },
+    "center_total": {
+      "type": "boolean"
+    },
+    "gauge": {
+      "type": "object",
+      "properties": {
+        "min": {
+          "type": "number"
+        },
+        "max": {
+          "type": "number"
+        }
+      },
+      "additionalProperties": false
+    },
+    "axes": {
+      "type": "object",
+      "properties": {
+        "x_title": {
+          "type": "string"
+        },
+        "y_title": {
+          "type": "string"
+        },
+        "x_unit": {
+          "type": "string"
+        },
+        "y_unit": {
+          "description": "The unit the values are counted in, after each tick of the value axis (\"%\", \"千\"). A pie, a donut and a funnel have no axis and print it after every value they name (\"1200 个\", \"30%\").",
+          "type": "string"
+        },
+        "y2_title": {
+          "type": "string"
+        },
+        "y2_unit": {
+          "type": "string"
+        },
+        "show_grid": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "tag": {
+      "description": "A few words over the chart saying what kind of figures it draws, such as 企业口径 or \"Company figures\", printed as a small tag at the start of its legend row. Give it an evidence kind to colour it by its source. Not on a share bar.",
+      "$ref": "#/$defs/Tag"
+    },
+    "changes": {
+      "description": "Up to three changes between two of the chart's bars, each printed as a figure: a relative change (\"+11%\"), or points when the value axis is in percent. Without `at`, from and to name two categories (x values) and the change is bracketed over their columns: each category carries one bar, or the chart is stacked. With `at`, from and to name two series compared at that category, the change set beside the later bar. A change ending on the marked series takes the lead colour. Bar and stacked charts only.",
+      "minItems": 1,
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "at": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "bands": {
+      "description": "Up to two value ranges marked across the plot behind the data, such as a target range a line should stay in. Each runs from `from` to `to` on the value axis, which grows to hold it, and may carry a short `label`. line, area and bar charts only. Write a range this way rather than as two flat series at its edges.",
+      "minItems": 1,
+      "maxItems": 2,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "number",
+            "description": "Where the range starts on the value axis."
+          },
+          "to": {
+            "type": "number",
+            "description": "Where it ends."
+          },
+          "label": {
+            "description": "What the range is, printed in it, such as \"2026 年目标区间 4.5%—5%\" or \"Target range\".",
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "emphasis_label": {
+      "description": "One line a share bar states for its marked parts, in the author's words, such as what they add up to: \"第 73 章制品 €93.5 亿，占 69.5%\" or \"Downstream goods €9.35bn, 69.5%\". It replaces the total the bar would compute. A share bar (stacked, direction \"horizontal\") with at least one marked series only.",
+      "type": "string",
+      "minLength": 1
+    },
+    "reference": {
+      "description": "One value drawn as a dashed line across the bars, such as a benchmark, an average or a threshold the bars are read against: { \"value\": 1.37, \"label\": \"EU benchmark 1.370\" }. The value axis grows to hold it, and its label names the line in the legend. Bar charts only, upright or on their side. Write a benchmark this way rather than as a bar of its own.",
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "description": "Where the line stands on the value axis."
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1,
+          "description": "What the value is, such as \"欧盟基准 1.370\" or \"EU benchmark 1.370\"."
+        }
+      },
+      "required": [
+        "value",
+        "label"
+      ],
+      "additionalProperties": false
+    },
+    "markers": {
+      "description": "Up to three dashed lines drawn down a line chart where a category begins, such as the ages a rule changes at: [{ \"before\": \"50-54 岁\", \"label\": \"女 50 岁\" }]. Each stands halfway between the category it names and the one before it, its label over the plot. Line charts only, on a category that is not the first.",
+      "minItems": 1,
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "before": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The category the line stands before, halfway between it and the one before it, such as \"50-54 岁\" or \"Age 50-54\"."
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What happens there, printed over the line, such as \"女 50 岁\" or \"Women, 50\"."
+          }
+        },
+        "required": [
+          "before",
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "gaps": {
+      "description": "Places kept for categories with no published value, such as a year a survey skipped: [{ \"after\": \"2017\", \"x\": \"2018\", \"label\": \"未公布\" }]. Upright bar and line charts only.",
+      "minItems": 1,
+      "maxItems": 3,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "after": {
+            "type": "string",
+            "minLength": 1,
+            "description": "The category it follows, such as \"2017\"."
+          },
+          "x": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Its name on the axis, such as \"2018\"."
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1,
+            "description": "What it says, such as \"未公布\" or \"Not published\"."
+          }
+        },
+        "required": [
+          "after",
+          "x",
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "series": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "x": {
+                  "type": [
+                    "string",
+                    "number"
+                  ]
+                },
+                "y": {
+                  "type": "number"
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "status": {
+                  "description": "A value that is not a reported figure. \"forecast\" is an estimate of what will happen: its bar is hatched, and a lone bar's label says it is a forecast. \"target\" is a level a plan calls for: its bar is drawn as a dashed outline. \"estimate\" is a value worked out, not published: pale in a dashed outline. Bar and stacked charts only.",
+                  "type": "string",
+                  "enum": [
+                    "forecast",
+                    "target",
+                    "estimate"
+                  ]
+                },
+                "emphasis": {
+                  "description": "Marks the one bar the page is about, such as the latest year in a run of years. It keeps its series' colour and the other bars step back. On a stacked or percent_stacked chart it marks the column the point stands in: that column keeps its colours and the other columns step back. One point per chart, on a bar, stacked or percent_stacked chart (not a share bar), and not together with a series' own emphasis.",
+                  "type": "boolean"
+                },
+                "note": {
+                  "description": "A few words printed with the value, such as \"基准线\", \"低约 37%\" or \"62.36 元\": after the value of a bar on its side or a share bar's part, and beside a point of a line, such as \"最低\" on its lowest year or \"回升\" on the year it recovers. Bars on their side (bar with direction \"horizontal\"), the parts of a share bar and lines only.",
+                  "type": "string",
+                  "minLength": 1
+                },
+                "icon": {
+                  "description": "A symbol set before the category's name. Bars on their side only, on the first series.",
+                  "$ref": "#/$defs/IconName"
+                },
+                "upper": {
+                  "description": "The high end when a value is only known as a range, with y its low end: y 60 and upper 70 for \"60% to 70%\", or y 1.8 and upper 24.2 for rates that run from 1.8% to 24.2% across 108 models. The bar is drawn solid to y and dashed on to upper, and its label names both ends. Bars on their side (bar with direction \"horizontal\") only.",
+                  "type": "number"
+                }
+              },
+              "required": [
+                "x",
+                "y"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "plot": {
+            "description": "combo only: \"line\" draws this series as a line over the bars, and omitted or \"bar\" draws it as bars.",
+            "type": "string",
+            "enum": [
+              "bar",
+              "line"
+            ]
+          },
+          "axis": {
+            "description": "combo only: \"right\" reads this series against its own right-hand axis (for a second unit, such as a rate beside amounts), and omitted or \"left\" shares the left axis.",
+            "type": "string",
+            "enum": [
+              "left",
+              "right"
+            ]
+          },
+          "emphasis": {
+            "description": "Marks the one series the page is about. It keeps the lead color and the others turn grey. At most one series, on bar, line, area, scatter, stacked, percent_stacked or combo charts with two or more series. A marked combo line also prints its values. A share bar (a stacked chart with direction \"horizontal\") may mark a run of adjacent parts, and states the run's total and share under it.",
+            "type": "boolean"
+          },
+          "steps": {
+            "description": "scatter only: joins the series' points as steps, each value held until the next point and then jumping to it, such as a statutory age by date of birth or a rate by income band. Write the points in order of x, one where each step begins. The points are not dotted.",
+            "type": "boolean"
+          },
+          "tone": {
+            "description": "What kind of news the series is, drawn in the colour every theme keeps for it: \"success\" for the share that got better, \"danger\" for the share that got worse, \"warning\" for one to watch. Use it when a series is good or bad news by what it counts, such as the people whose burnout fell beside those whose pace rose. On bar, line, area, scatter, stacked, percent_stacked or combo charts, not a share bar.",
+            "$ref": "#/$defs/Tone"
+          }
+        },
+        "required": [
+          "name",
+          "data"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "type",
+    "chart_type",
+    "series"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Tag": {
+      "type": "object",
+      "properties": {
+        "text": {
+          "type": "string",
+          "minLength": 1,
+          "description": "A few words for the tag, such as \"改为区间\", \"新增\" or \"Unchanged\". Keep it short: it is printed whole on one line."
+        },
+        "quiet": {
+          "description": "Marks a tag that says nothing changed, such as 不变 or Unchanged: it steps back in a grey outline.",
+          "type": "boolean"
+        },
+        "evidence": {
+          "type": "string",
+          "enum": [
+            "trial",
+            "label",
+            "company",
+            "press",
+            "draft",
+            "official",
+            "registry",
+            "preprint"
+          ],
+          "description": "What kind of source the tag names, outlined in the ink the theme keeps for it: \"trial\" for a trial or a study published in a peer-reviewed journal, \"label\" for a product's approved label, \"company\" for a company's own figures, \"press\" for a press report, \"draft\" for a draft out for comment, \"official\" for a government or regulator's document, \"registry\" for a trial registry, \"preprint\" for a working paper or a preprint no journal has reviewed yet."
+        },
+        "settled": {
+          "description": "Marks a tag whose verdict is final, such as 纳入, 不纳入 or Approved, against one still open or conditional, such as 暂缓 or Case by case: it is filled instead of outlined, in the emphasis colour, or in grey on a quiet tag.",
+          "type": "boolean"
+        },
+        "tone": {
+          "description": "What kind of news the tag says, outlined in the theme's own colour for it: \"danger\" for a breach or a risk, such as 超说明书 or Off-label, \"warning\" for something to watch, \"success\" for something that went right.",
+          "$ref": "#/$defs/Tone"
+        },
+        "basis": {
+          "type": "string",
+          "enum": [
+            "law",
+            "estimate",
+            "pending",
+            "proposal"
+          ],
+          "description": "What it rests on, so a reader knows how firm it is: \"law\" for a provision in force, which the tag cites; \"estimate\" for a figure worked out under a stated assumption, not published and not a forecast; \"pending\" for a figure or item still to be confirmed or filled in; \"proposal\" for a rule proposed or still negotiated, not yet law."
+        }
+      },
+      "required": [
+        "text"
+      ],
+      "additionalProperties": false
+    },
+    "Tone": {
+      "type": "string",
+      "enum": [
+        "danger",
+        "warning",
+        "success"
+      ],
+      "description": "What kind of news the item is, painted in the theme's own colour for it: \"danger\" for something that broke, \"warning\" for something to watch or still being handled, \"success\" for something that recovered or went right."
+    },
+    "IconName": {
+      "type": "string",
+      "description": "One icon name from the bundled catalog. Run `pptwise icons` for the full list."
+    }
+  }
+}

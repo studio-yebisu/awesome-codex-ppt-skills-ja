@@ -1,0 +1,67 @@
+component steps on page journey (3 of 6): content, kind "process"
+name: Sequence
+what it is: Two to five titled steps in order, each with its line of explanation. The instructions printed on the back of the packet.
+choose it: Choose it for a straight sequence with a beginning and an end. Use flowchart when the path branches on a decision, and cycle when the last step returns to the first.
+not for: A process that loops back to its start, which belongs in cycle.
+full-body: no
+schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "component": "steps",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "steps"
+    },
+    "items": {
+      "minItems": 2,
+      "maxItems": 5,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "icon": {
+            "description": "A symbol for the step, drawn in its badge where its number would stand, such as ruler or ban. Run `pptwise icons` for the names.",
+            "$ref": "#/$defs/IconName"
+          },
+          "tone": {
+            "description": "What kind of step it is, painted in the theme's own colour for it: \"danger\" for a check that can stop the process there, \"warning\" for one to watch, \"success\" for one that confirms it can go on.",
+            "$ref": "#/$defs/Tone"
+          }
+        },
+        "required": [
+          "title",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "type",
+    "items"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Tone": {
+      "type": "string",
+      "enum": [
+        "danger",
+        "warning",
+        "success"
+      ],
+      "description": "What kind of news the item is, painted in the theme's own colour for it: \"danger\" for something that broke, \"warning\" for something to watch or still being handled, \"success\" for something that recovered or went right."
+    },
+    "IconName": {
+      "type": "string",
+      "description": "One icon name from the bundled catalog. Run `pptwise icons` for the full list."
+    }
+  }
+}

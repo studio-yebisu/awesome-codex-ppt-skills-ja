@@ -1,0 +1,38 @@
+# QA Report
+
+- Status: PASS
+- Slide count: 8
+- Notes count: 8
+
+## Errors
+- none
+
+## Warnings
+- slide 1 possible overlap:  / 週末編集室｜架空の企画
+- slide 1 possible overlap:  / 書店の 週末編集室
+- slide 1 possible overlap:  / 読む・歩く・編集する 架空の地域文化企画
+- slide 3 possible overlap:  / 01
+- slide 3 possible overlap:  / 読む｜気になる一冊を選ぶ
+- slide 3 possible overlap:  / 02
+- slide 3 possible overlap:  / 歩く｜言葉につながる場所を探す
+- slide 3 possible overlap:  / 03
+- slide 3 possible overlap:  / 持ち寄る｜写真と短文を共有する
+- slide 4 possible overlap:  / いつもの読書
+- slide 4 possible overlap:  / 本との関わり
+- slide 4 possible overlap:  / 一人で本を選び、読む
+- slide 4 possible overlap:  / 感想と体験
+- slide 4 possible overlap:  / 感想は自分の中で整理する
+- slide 4 possible overlap:  / 持ち帰るもの
+- slide 4 possible overlap:  / 街での体験とは別々に持ち帰る
+- slide 4 possible overlap:  / 編集室の読書
+- slide 4 possible overlap:  / 本との関わり
+- slide 4 possible overlap:  / 一冊と言葉を紹介し合う
+- slide 4 possible overlap:  / 感想と体験
+- slide 4 possible overlap:  / 街の写真と短文を持ち寄る
+- slide 4 possible overlap:  / 持ち帰るもの
+- slide 4 possible overlap:  / 一緒に編集して小冊子に残す
+- slide 5 possible overlap:  / 体験の断片
+- slide 5 possible overlap:  / 街を見る目の違いを楽しむ。
+- slide 5 possible overlap:  / 本の一節をメモした紙片
+- slide 5 possible overlap:  / 路地で見つけた光の写真
+- slide 5 possible overlap:  / 店先の会話から生まれた短文

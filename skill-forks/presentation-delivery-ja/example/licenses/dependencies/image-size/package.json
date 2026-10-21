@@ -1,0 +1,99 @@
+{
+  "name": "image-size",
+  "version": "2.0.3",
+  "description": "get dimensions of any image file",
+  "type": "commonjs",
+  "sideEffects": false,
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "types": "./dist/esm/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/esm/index.d.ts",
+        "default": "./dist/esm/index.js"
+      },
+      "require": {
+        "types": "./dist/cjs/index.d.ts",
+        "default": "./dist/cjs/index.js"
+      }
+    },
+    "./fromFile": {
+      "import": {
+        "types": "./dist/esm/fromFile.d.ts",
+        "default": "./dist/esm/fromFile.js"
+      },
+      "require": {
+        "types": "./dist/cjs/fromFile.d.ts",
+        "default": "./dist/cjs/fromFile.js"
+      }
+    },
+    "./types/*": {
+      "import": {
+        "types": "./dist/esm/types/*.d.ts",
+        "default": "./dist/esm/types/*.js"
+      },
+      "require": {
+        "types": "./dist/cjs/types/*.d.ts",
+        "default": "./dist/cjs/types/*.js"
+      }
+    }
+  },
+  "files": [
+    "dist",
+    "bin/image-size.js"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "bin": {
+    "image-size": "bin/image-size.js"
+  },
+  "keywords": [
+    "image",
+    "size",
+    "dimensions",
+    "resolution",
+    "width",
+    "height",
+    "avif",
+    "bmp",
+    "cur",
+    "gif",
+    "heic",
+    "heif",
+    "icns",
+    "ico",
+    "jpeg",
+    "jxl",
+    "png",
+    "psd",
+    "svg",
+    "tga",
+    "tiff",
+    "webp"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://codeberg.org/image-size/image-size.git"
+  },
+  "author": "netroy <aditya@netroy.in> (http://netroy.in/)",
+  "license": "MIT",
+  "devDependencies": {
+    "@biomejs/biome": "2.5.12",
+    "@types/node": "26.5.0",
+    "c8": "12.0.0",
+    "glob": "13.0.6",
+    "tsc-alias": "1.9.5",
+    "tsx": "4.23.13",
+    "typescript": "7.0.2"
+  },
+  "scripts": {
+    "lint": "biome check lib specs",
+    "format": "biome format --write lib specs",
+    "test": "c8 --reporter=text --reporter=lcov node --import=tsx --test --test-reporter=dot specs/*.spec.ts",
+    "test:watch": "node --import=tsx --test --watch specs/*.spec.ts",
+    "clean": "rm -rf dist docs coverage",
+    "build": "tsc -p tsconfig.json && tsc-alias -p tsconfig.json --resolve-full-paths && tsc -p tsconfig.cjs.json && node scripts/write-type-markers.js"
+  }
+}

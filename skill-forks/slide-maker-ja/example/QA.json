@@ -1,0 +1,96 @@
+{
+  "status": "codex_repair_candidate_all_pages_read_original_delivery_blocked_independent_review_pending",
+  "artifact": "deck.pptx",
+  "artifact_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+  "page_count": 5,
+  "all_pages_visually_inspected_by_integrator": true,
+  "reviewer": "Codex production check; no self score",
+  "human_adoption": false,
+  "independent_current_version_review": "pending",
+  "actual_render": "PowerPoint16 PDF rasterized to RGB PNG with PDFium; direct PowerPoint PNGs retained separately",
+  "native_inventory": "source/native-elements.json",
+  "native_totals": {
+    "native_shapes": 209,
+    "pictures": 0,
+    "native_charts": 1,
+    "native_tables": 0
+  },
+  "actual_pdf_fonts": "source/pdf-fonts.json",
+  "pages": [
+    {
+      "index": 0,
+      "file": "render/slide-01.png",
+      "sha256": "2c306af337abc88d52509f400603e16b24542beb47bba0965068bfef8a2ffee2",
+      "visual_verdict": "目標から未定義の中央という語を除き、配列直下に比較1回の定義を16ptで追加。全行を実描画で確認。"
+    },
+    {
+      "index": 1,
+      "file": "render/slide-02.png",
+      "sha256": "feb4c6253c4a9d02cd1f06e51c36a8b9b67d24004eedab3636527a02d0d014ff",
+      "visual_verdict": "配列直下の16pt凡例と訪問順、上端が揃った13回を確認。単一の主張へ整理。"
+    },
+    {
+      "index": 2,
+      "file": "render/slide-03.png",
+      "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8",
+      "visual_verdict": "各段の24pt比較判断、太字の値、茶枠/茶塗り/空枠の凡例、昇順と左右の理由を確認。"
+    },
+    {
+      "index": 3,
+      "file": "render/slide-04.png",
+      "sha256": "1fe06bd1132cfd78a2ba37ac8eb9340daf2b6fad7adc767f99817848496e8c6b",
+      "visual_verdict": "native軸名と16pt目盛/凡例、全15条件の2系列、目的値1〜3の例外を24ptで確認。"
+    },
+    {
+      "index": 4,
+      "file": "render/slide-05.png",
+      "sha256": "00497d9811e6e7d629e30b8633b4d288552b4f14a0c918cb00b152258c1520f2",
+      "visual_verdict": "計測した比較回数と未計測の秒数をnativeの塗り/枠で対比。速度倍率を断定しない一つの結論へ整理。"
+    }
+  ],
+  "original_lint": {
+    "file": "source/current-lint.json",
+    "hard_findings": 0,
+    "warnings": 0,
+    "advisory": "NO ICONS ON CATEGORY CONTENT at1–3: literal numeric coordinates require values, not category pictograms; precise rationale recorded, not suppressed.",
+    "stats_warnings": [
+      "NO ICONS ON CATEGORY CONTENT: slides 1, 2, 3 carry parallel label sets (3+ short peers on one baseline across half the canvas — the shape of a category row) and the deck contains no icon-sized picture at all. On category-rich content an icon family is a design must, not a taste call (slide-design self-verify (g)). Build one (scripts/icons.py, one family, recolored to the palette), or record `icon_family: \"none — <why THESE slides read better without one>\"` in .deck-gates.json — the detector over-counts on tables and timelines, so this is a re-decision, not a verdict"
+    ],
+    "pixel_checks": {
+      "ran": true,
+      "reason": null,
+      "not_checked": []
+    }
+  },
+  "in_memory_lint_layout": {
+    "strict": true,
+    "critical": 0,
+    "warnings": 6,
+    "explanation": "Five condition footers and one repeated-array advisory. Serialized lint and actual images are checked separately."
+  },
+  "component_audit": {
+    "file": "source/current-components.json",
+    "exit_code": 2,
+    "unresolved_advisories": "Geometry detector remains exit2; all three numeric-array intents accepted by original check_components. Full delivery still awaits independent reviews.",
+    "intent_verified_by_original_function": "source/component-intent-verification.json"
+  },
+  "original_gates": "source/round6-original-gates.json",
+  "current_handoff_gate_passed": false,
+  "previous_consent_not_reused": true,
+  "previous_version": "review/round5-prior-version/binding.json",
+  "unexercised": [
+    "Initial interview/content/design chronology was supplemental after the first build, not retroactively completed.",
+    "Current original handoff blocks on fresh independent critic/blind read; the Codex-only gate also lists incomplete full workflow records.",
+    "No template profile, talk-time, Q&A, image-series or image-generating mode was exercised.",
+    "Only existing values1–15 in an already ascending array were run; elapsed time and sorting cost were not measured."
+  ],
+  "current_distribution_replay": {
+    "source": "source/distribution-replay.json",
+    "all_native_content_and_notes_match": true,
+    "all_pages_rendered_with_powerpoint": true,
+    "all_page_RGB_difference_mean": 0,
+    "existing_dependencies_only": true,
+    "archive_count": 2
+  },
+  "current_handoff_open_gates": "Read source/current-handoff-gate.txt. New independent critic/blind are pending."
+}

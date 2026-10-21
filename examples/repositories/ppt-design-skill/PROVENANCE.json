@@ -2,7 +2,7 @@
   "repository": "sunchaokun/PPT-Design-Skill",
   "upstream_commit": "cbf7ef1324a026b29e2b77b71e2034554ddd3e22",
   "execution_type": "original_skill_build_mode_published_public_api",
-  "generator": "tools/build_ppt_design_repository_example.py",
+  "generator": "source/build_ppt_design_repository_example.py",
   "references": [
     {
       "path": "LICENSE",
@@ -241,13 +241,13 @@
     }
   ],
   "input_sha256": "1153e02eb4412d72736fa61482d2569fb9521132ad72a13900c07da7b38a9890",
-  "artifact_sha256": "efbcf9d9f8df268ff29f6716ac1e0b60b7d80724ec3a6177fd36a1976975ed69",
+  "artifact_sha256": "8deab35046f912b4d270f41fd9a8e7c7b15f9f6beba7975680152221e9225602",
   "output": "deck.pptx",
   "package": "pptx-designer==1.0.0b11",
   "source_contract": "skill/SKILL.md and references/public-api.md; init_presentation_task.py; ThemeComposer; strict Presentation; public text/shapes/bar_chart",
   "local_changes": [
     "Japanese content and page plan authored under original Build Mode.",
-    "Theme font atoms resolved to Noto Serif JP/Noto Sans JP; ja-JP proofing.",
+    "Theme font atoms resolved to Shippori Mincho/BIZ UDPGothic; ja-JP proofing.",
     "No upstream source modifications. Chart helper used unchanged.",
     "Autonomous sample direction lock based on user request; no human adoption claimed."
   ],
@@ -271,33 +271,87 @@
     },
     {
       "argv": [
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\sunchaokun__PPT-Design-Skill\\skill\\scripts\\inspect_pptx.py",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\ppt-design-skill\\deck.pptx",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\source\\upstream\\skill\\scripts\\inspect_pptx.py",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\deck.pptx",
         "--pretty"
       ],
       "exit_code": 0,
       "log": "source/logs/inspect.log",
-      "log_sha256": "00f92e4be3a4bc139089c0b2999da1c09ec468750259ea84e41473719228f1c2"
+      "log_sha256": "5e9241aa40c23f568dfceeca37579b95ec3ce00a0fc59218bff39e9825e9fff4"
     },
     {
       "argv": [
         "pwsh",
         "-NoProfile",
         "-File",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\tools\\render_powerpoint.ps1",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\source\\render_powerpoint.ps1",
         "-PresentationPath",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\ppt-design-skill\\deck.pptx",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\deck.pptx",
         "-OutputDirectory",
-        "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\ppt-design-skill\\render"
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\render"
       ],
       "exit_code": 0,
       "log": "source/logs/powerpoint.log",
-      "log_sha256": "314c1e936dc7ff4a9e2c30008cf7a04975f5c81f0ed9d99e7d023da8b85df7d6"
+      "log_sha256": "cf1cd328d2f04534134c90177fe0f18bf3557fea3725b473caf74efa1f102874"
     }
   ],
   "library_build_receipt": {
     "file": "source/logs/build.log",
-    "sha256": "6a9faeee09609c5d7ccba2a251286dd3854900f1a9606ab4085698dfef26fb33"
-  }
+    "sha256": "1c75947523f4b3c767241b0c8daf22d9d5dfd6c52ecc0f96ec8816ed8d3db2c0"
+  },
+  "historical_initial_execution": {
+    "artifact_sha256": "8deab35046f912b4d270f41fd9a8e7c7b15f9f6beba7975680152221e9225602",
+    "input_sha256": "1153e02eb4412d72736fa61482d2569fb9521132ad72a13900c07da7b38a9890",
+    "commands_executed": [
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\.build\\actual-upstreams\\sunchaokun__PPT-Design-Skill\\skill\\scripts\\init_presentation_task.py",
+          "--project",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\ppt-design-skill",
+          "--name",
+          "cafe-pilot",
+          "--destination",
+          "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\ppt-design-skill\\source\\task\\cafe-pilot"
+        ],
+        "exit_code": 0,
+        "log": "source/logs/initialize.log",
+        "log_sha256": "c97d8299b9a61917fff4b5f42ed2a78c7bb5e1544bd9a078a95feddb9b28e5d5"
+      },
+      {
+        "argv": [
+          "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+          "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\source\\upstream\\skill\\scripts\\inspect_pptx.py",
+          "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\deck.pptx",
+          "--pretty"
+        ],
+        "exit_code": 0,
+        "log": "source/logs/inspect.log",
+        "log_sha256": "5e9241aa40c23f568dfceeca37579b95ec3ce00a0fc59218bff39e9825e9fff4"
+      },
+      {
+        "argv": [
+          "pwsh",
+          "-NoProfile",
+          "-File",
+          "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\source\\render_powerpoint.ps1",
+          "-PresentationPath",
+          "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\deck.pptx",
+          "-OutputDirectory",
+          "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\ppt-design-skill\\render"
+        ],
+        "exit_code": 0,
+        "log": "source/logs/powerpoint.log",
+        "log_sha256": "cf1cd328d2f04534134c90177fe0f18bf3557fea3725b473caf74efa1f102874"
+      }
+    ],
+    "generator": "tools/build_ppt_design_repository_example.py"
+  },
+  "method": "公開ThemeComposerとstrict Presentation、文字/図形/bar_chartで架空のカフェ試行計画を5頁制作。暖色・和文書体・頁構成を固定し、受入条件R1–R7を実画像へ対応。人間承認R7は未達を保持。",
+  "current_source": "source/build_ppt_design_repository_example.py",
+  "current_runtime_trace": "source/runtime-trace.json",
+  "current_visual_acceptance": "source/visual-review.json",
+  "delivery_grade_complete": false,
+  "current_distribution_replay": "source/distribution-replay.json"
 }

@@ -7,20 +7,12 @@
   "evaluate_run": false,
   "theme_source_map": "input/theme-source-map.json",
   "dependency_versions": {
-    "lxml": "6.1.3",
+    "lxml": "6.1.1",
     "Pillow": "12.3.0",
     "typing_extensions": "4.16.0",
     "XlsxWriter": "3.2.9"
   },
   "native_elements": "text boxes and rectangle shapes from original factories/decor",
-  "local_changes": "DesignSystem Japanese default families and a:ea/a:cs/lang mapping; original factories/geometry/font-size tokens/heuristics retained; missing original vendor parts8 files repaired from same-version official wheel",
-  "notes_support": "SlideSpec.notes field accepted but original create code does not write speaker notes; manuscript notes remain in input",
-  "beautify_types_from_generation_stdout": [
-    "content",
-    "content",
-    "content",
-    "content",
-    "content",
-    "ending"
-  ]
+  "local_changes": "Japanese font mapping; original factories and size tokens retained. Explicit local geometry adapter separates section number/title and cover subtitle; final decor adapter migrates old fills and deduplicates bars. See theme-layout-repair.json.",
+  "notes_support": "SlideSpec.notes field accepted but original create code does not write speaker notes; manuscript notes remain in input"
 }

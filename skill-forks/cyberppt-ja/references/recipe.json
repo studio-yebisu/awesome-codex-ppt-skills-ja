@@ -1,11 +1,11 @@
 {
   "repository": "crazyykhllc-bit/CyberPPT",
-  "execution_type": "original_content_lock_measurement_diff_and_pptxgenjs_japanese_fork",
-  "execution_status": "generated_and_reviewed",
+  "execution_type": "original_stage3_technical_subset_with_failed_full_acceptance",
+  "execution_status": "technical_subset_repaired_original_acceptance_failed",
   "case_ids": [
     "cyberppt"
   ],
-  "summary_ja": "原典の画像blueprint方式を実行し、日本語の可読性と編集性を優先した5枚へ。原版strict一致は未達。",
+  "summary_ja": "元資料の根拠と画像案をそろえ、主要情報をPptxGenJSで編集可能にし、原図との一致まで逐頁で検査する。",
   "requirements": [
     "Node.js / PptxGenJS 4.0.1",
     "Python / Pillow, numpy, pywin32",
@@ -14,14 +14,13 @@
     "新規設計見本にはImageGen"
   ],
   "steps": [
-    "内容lockとImageGen設計見本5枚",
-    "原典の要素署名・測定登録",
-    "PptxGenJSで単頁ずつ再構築",
-    "PowerPoint描画・原典diffと日本語派生QA",
-    "原典mergeの派生実装で統合・回帰比較"
+    "元資料を読み、値・期間・単位・出所・不明点を証拠表へ置き、SCRの複数案と頁別の主張/図表/密度を確認する。",
+    "原典の固定8画像を提示して方向を選び、実内容を固定してから全頁のImageGen原図を作る。原図文字を事実の根拠にしない。",
+    "承認した各原図について署名と全可視要素の座標を固定し、再構築計画→PptxGenJS単頁→PowerPoint実描画→局所比較を行う。",
+    "原典のpixel/bboxと全指定strictが通り、その頁の確認が済んでから次頁へ進む。全頁通過後に単頁を統合し、再描画で回帰確認する。"
   ],
   "commands": [
-    "python examples/repositories/cyberppt/source/reproduce.py"
+    "python example/source/reproduce.py --input example/input/outline.json --render"
   ],
   "source_refs": [
     {
@@ -153,16 +152,17 @@
   ],
   "license": "MIT",
   "limitations": [
-    "原典の厳密な画像一致は全5枚で未達。日本語派生版の確認済み作例として掲載。",
-    "エージェントが全ページを確認。独立審査・人による採用・公開は未実施。",
-    "商店街・日付・会場・料金・運営案は架空の例。実施効果は未測定。",
-    "再現キットは保存済み見本からの再構築。別原稿には新しい設計見本と測定が必要。",
-    "新しく生成した出力は、全ページを改めて表示確認する。"
+    "実証は保存済みImageGen原図5枚からの再構築を中心とする部分例。元の資料分析・MBB証拠表・2〜3のSCR案・8スタイル選択・利用者の段階/逐頁承認は未実施。",
+    "原典のpixel/bbox比較と全指定付きstrictを実行したが全5頁で未達。文字・図形の編集性、はみ出し0、読みやすさの確認は原典合格の代わりにしない。",
+    "新題材では自分の根拠資料、内容の固定、ImageGen原図、要素/座標/署名が必要。同梱の測定コードはこの5原図用で、別原稿へそのまま使えない。",
+    "主要文字・表・線・フローはnative。表紙の小さなSVGアイコン3点だけが画像で、Officeのデータ連動Chart/Tableではない。",
+    "原図の紙の明暗、字形・字重、ヘッダー形式の差を保持/開示。原図のpixel一致・ユーザー承認・現版独立再評価・実業務効果は未取得。"
   ],
   "artifact_paths": [
     "examples/repositories/cyberppt/deck.pptx"
   ],
   "fork": "cyberppt-ja",
   "method_ja": "原典の内容lock、ImageGen設計見本、測定・比較スクリプトを使い、主要文字と表をPptxGenJSで再構築。厳密画像一致と日本語派生QAを分離。",
-  "original_gate_not_passed": true
+  "original_gate_not_passed": true,
+  "current_qa": "example/QA.json"
 }

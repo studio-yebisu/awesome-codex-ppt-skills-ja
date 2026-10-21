@@ -27,6 +27,6 @@ source/upstreamのtemplate.qmd、_extensions、SKILL、LICENSEは固定commitの
 
 ## 確認
 
-実計算、Quarto render exit0、初回主要表示、元→キーの1→2、代表2PNG、短いSKILL quick_validateのみ。全頁詳細検査・独立レビュー・全ZIP再実行はしていない。Quarto1.9.38に非致命的SCSS CSS-variable export warningが出たが、生成CSSは出力され、初回字体/白青の表示とnavigationを確認した。ログをoutput/quarto-render.logへ保持。色変数のCSS custom property書出しはこの警告の対象であり、拡張SCSS本体を置き換えていない。
+実計算、Quarto render exit0、全6頁のブラウザー表示と次頁・先頭への移動を確認した。コードの背景幅はsource/japanese.scssだけで修正した。render/effect-page-01-after.jpg〜06-after.jpgが現在の実画面。独立再評価は未了。Quarto1.9.38のSCSS色変数書き出し警告は残るが、CSSとHTMLの生成はexit0で完了し、全頁の白・青・字体を確認した。元拡張SCSSとReveal runtimeは変更していない。
 
 原文条件はLICENSE、DEPENDENCIES.md、licenses、fonts/*/OFL.txtを参照。SOURCE/PROVENANCE/QAは確認範囲を区別する。

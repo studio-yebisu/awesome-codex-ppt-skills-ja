@@ -1,0 +1,21 @@
+page close (6 of 6): ending, theme "font-catalog"
+heading: 配布前に、書体と利用条件を確かめる
+summary: 候補を選んだら、元配布と実文面へ戻る
+file: pages/close.json (filled)
+
+page file keys (the top-level keys of pages/close.json): components, background, image_side, notes (speaker notes, never drawn)
+components (2): paragraph, timeline
+  expand one with --component <type>
+
+signature layouts (the theme's own drawings on face marquee-ending, the ones its samples are made of):
+  photograph: The ending drawn over a photograph, the face's own lettering kept
+    write: background {"kind": "asset", "asset_id": "<a picture>"}
+  drawn now: none of them, the face's plain layout. Write to one where the content holds it, never add content to fit
+
+limits (validate refuses the page past these):
+  at most 2 components (timeline or paragraph) on the page (the face's body slot)
+  at most 4 items in each timeline (the face's body slot, blank items not counted)
+
+errors: none
+warnings: none
+fit: not checked here. Run --fit to draw this page and see what it would lose

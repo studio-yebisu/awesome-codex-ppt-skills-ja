@@ -1,0 +1,20 @@
+--- runtime/templates/pptxgenjs/slides.js (after legibility.diff)
++++ runtime/templates/pptxgenjs/slides.js
+@@ -6723,7 +6723,7 @@
+   if (indexBox) {
+     const horizontal = indexBox.h < body.h * 0.4;
+     const label = '引き継ぎメモ';
+-    const detail = `${table.rows.length}項目${horizontal ? ' | ' : '\n'}${table.headers.map((text) => safeText(text)).join(horizontal ? ' | ' : '\n')}`;
++    const detail = `${table.rows.length}件の記入例`;
+     const detailW = horizontal ? indexBox.w - 1.42 : indexBox.w - 0.24;
+     const height = horizontal
+       ? Math.max(measure(label, 1.06, metadataFont, preset.font_heading, true),
+@@ -6839,7 +6839,7 @@
+       fontSize: options.bodyFontSize, rowH, objectName: `Editable table: ${safeText(slideData.title)}` });
+     if (caption) slide.addText(caption, textOpts({ x: tableBox.x, y: tableBox.y + tableH + captionGap,
+       w: tableBox.w, h: captionH, fontFace: preset.font_caption || preset.font_body, fontSize: captionFont,
+-      italic: true, color: firstReadableColor(preset.bg, [preset.text_muted, preset.text]), wrap: true,
++      italic: false, color: firstReadableColor(preset.bg, [preset.text_muted, preset.text]), wrap: true,
+       objectName: 'metadata:table-caption' }));
+   };
+   const slots = { index: addIndex, table: addTable, readout: addReadout };

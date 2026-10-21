@@ -176,5 +176,35 @@
   "editability": "DNA/Page Specs JSON + HTML text / inline SVG / CSS / JS",
   "pptx_generated": false,
   "saved_profile": false,
-  "qa_scope": "Mandatory source guard plus representative cover/inventory first browser display and ArrowRight advance; no additional scoring or all-page review"
+  "verification_scope": "原典guardは6頁27領域PASS。利用者の追加依頼により、修復後の全6頁を1920×1080で実描画・目視。2頁の机の図、3頁の役割説明、4頁の二つの矢印を修復。",
+  "repair_author": "Codex",
+  "repair_receipt": "source/repair-qa.json",
+  "not_demonstrated": [
+    "作例は明示画像からのスタイル抽出。画像なし探索、既存資料の修復、保存profileの再利用・差分、Design Adapterは実証していない。",
+    "原典は完成rendererを配布しておらず、HTML/SVGとページ送りは規則に基づく局所実装。原典の変換CLIとは称さない。",
+    "元画像を新資料へ埋め込んでいない。PPTXと保存profileは未生成。"
+  ],
+  "current_repair": {
+    "author": "Codex",
+    "verification": "source/repair-qa.json",
+    "original_gates": "source/round4-original-gates.json",
+    "independent_rereview": "pending for repaired version"
+  },
+  "superseded_history": [
+    {
+      "revision": "before round4-web07-repair",
+      "old_metadata": {
+        "qa_scope": "Mandatory source guard plus representative cover/inventory first browser display and ArrowRight advance; no additional scoring or all-page review"
+      },
+      "current_authority": "QA.json and source/repair-qa.json in the included case; historical limited checks do not describe the current revision."
+    }
+  ],
+  "current_verification": "source/repair-qa.json",
+  "zip_reexecution": "source/round4-zip-replay.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "current_preview_canvas": {
+    "width": 1920,
+    "height": 1080,
+    "scope": "All current public deck pages; original Cogine validator separately at1280×720."
+  }
 }

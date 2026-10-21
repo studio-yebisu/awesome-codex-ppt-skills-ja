@@ -1,97 +1,103 @@
 {
-  "status": "qa_complete",
+  "status": "repaired_technical_checks_complete_original_acceptance_failed",
+  "artifact_sha256": "81b90ccf3d2ad42e52c550fcfd94f24154c8e8e6e63864b59c8ad7458704701f",
   "page_count": 5,
-  "render_engine": "Microsoft PowerPoint 16.0",
-  "all_pages_visually_reviewed": true,
-  "human_adoption": "pending",
-  "production_adoption": false,
-  "publication": false,
-  "artifact_sha256": "21e4dbd0d00bd7f8f5379f464b7e28482fec74bd5e9a92ccdce78679de39c70e",
-  "input_sha256": "06ea8a49baff0ef2a48cadfb1f8d2102458c6f52efbba63b3ac4cd46c4f85a1a",
-  "original_gate_not_passed": true,
-  "original_visual_gates": {
-    "all_passed": false,
-    "report": "review/original-visual-qa-gate.json",
-    "pixel_diff_failures_retained": true,
-    "numeric_fidelity_failures_retained": true,
-    "field_boolean_semantics": "The unmodified upstream gate builder sets all visual booleans false when its pixel diff fails. These are not independent findings of content loss or clipping."
-  },
-  "original_structure_cli": {
-    "exit_code": 0,
-    "report": "review/original-strict-validation.json",
-    "scope": "Structural CLI without full original manifest policy validation; this is not the full original production gate."
-  },
-  "japanese_fork_qa": {
-    "passed": true,
-    "policy": "source/JAPANESE-FORK-POLICY.md",
-    "content_and_component_mapping": "review/component-checks.json",
-    "merge_regression": "review/merge-regression.json",
-    "merge_regression_passed": true,
-    "original_fidelity_not_claimed": true
-  },
-  "editability": {
+  "repaired_by": "Codex; no new model call",
+  "all_pages_inspected_by_integrator": true,
+  "all_saved_blueprints_inspected": true,
+  "independent_current_version_review": "pending",
+  "human_adoption": false,
+  "native_inventory": "source/native-elements.json",
+  "structure": {
+    "native_shapes": 154,
     "native_text_shapes": 90,
-    "native_graphic_shapes": 64,
     "pictures": 3,
-    "picture_scope": "three small cover icons only",
-    "tables_implementation": "editable text boxes and rules; not native table objects",
-    "full_slide_raster_images": 0,
-    "native_shapes_total": 154,
-    "counting_rule": "Text shapes have at least one nonempty a:t run. Other native shapes exclude those text shapes. Total is 154, not 90 + 154."
+    "native_charts": 0,
+    "native_tables": 0
   },
-  "visual_review": {
-    "pages_reviewed": [
-      1,
-      2,
-      3,
-      4,
-      5
-    ],
-    "method": "Author viewed every single-page PowerPoint PNG and all merged full-page renders. Text wrapping on slides 2 and 5 was corrected. Original image comparison failures are retained separately.",
-    "result": "No clipping or semantic omissions observed in final pages. Small footnotes are for self-reading. Original blueprint fonts and icons differ from native reconstruction; strict 1:1 gate not passed.",
-    "evidence": [
-      "render/powerpoint-render.json",
-      "review/component-checks.json",
-      "review/merge-regression.json",
-      "review/original-visual-qa-gate.json"
-    ]
+  "original_gates": {
+    "pixel_bbox_all_five": "failed; unchanged thresholds",
+    "unqualified_structure_only_validator_exit": 0,
+    "required_manifest_visual_qa_strict": "review/original-strict-validation.json",
+    "technical_evidence_full_strict": "review/repair-strict-validation.json",
+    "current_full_strict_exit": 1,
+    "current_full_strict_errors": 207,
+    "error_codes": {
+      "MANIFEST_FINAL_MERGE_REGENERATED_PAGES": 1,
+      "MANIFEST_MERGE_REGRESSION_FAILED": 1,
+      "SPATIAL_PASS_WITHOUT_RENDER_MEASUREMENT": 90,
+      "P0_RENDER_DELTA_EXCEEDED": 15,
+      "P1_RENDER_DELTA_EXCEEDED": 75,
+      "MANIFEST_GENERATION_ENGINE_INCOMPLETE": 5,
+      "MANIFEST_PAGE_APPROVAL_MISSING": 5,
+      "MANIFEST_SPATIAL_REGISTRATION_FAILED": 5,
+      "VISUAL_QA_CHECK_FAILED": 5,
+      "VISUAL_QA_DELIVERY_BLOCKED": 5
+    },
+    "unqualified_strict_is_not_original_full_gate": true
   },
-  "font_dependency": [
-    "Yu Gothic",
-    "Yu Mincho",
-    "Times New Roman"
-  ],
-  "reviewed_at": "2026-10-13T20:42:24.676440+00:00",
-  "packaging_exclude": [
-    "**/__pycache__/**",
-    "**/*.pyc"
+  "actual_technical_checks": {
+    "all_content_lock_text_and_registered_ids_present": true,
+    "powerpoint_text_boxes": 90,
+    "overflow_issues": 0,
+    "reconstruction_plans": "design/slide_manifest.json",
+    "every_visible_element_actual_measured": "design/slide-XX-registry.json",
+    "container_flow_table_local_evidence": "review/repair-visual-evidence.json",
+    "comparison_sources": "review/preview-comparison-sources.json",
+    "same_pdf_rgb_merge_regression": "review/pdf-merge-regression.json",
+    "original_direct_png_merge_regression": "review/merge-regression.json",
+    "visual_inspection_receipt": "review/codex-visual-inspection.json",
+    "actual_pdf_fonts": "source/pdf-fonts.json"
+  },
+  "images": [
+    {
+      "page": 1,
+      "file": "render/slide-01.png",
+      "sha256": "a5874df8ed7ac4e8f3a98107c05dd7fe0c3967f0f6a8fa10ba7f6c6cca2f55bd"
+    },
+    {
+      "page": 2,
+      "file": "render/slide-02.png",
+      "sha256": "d1c71c59ea350a76b80c647931a844eba2bc103d374ea3c7ea75ab32a3c417a9"
+    },
+    {
+      "page": 3,
+      "file": "render/slide-03.png",
+      "sha256": "cfbf7ac5665b75a877fcf27444070431c581b6d9d718bf34f220c76ae4547693"
+    },
+    {
+      "page": 4,
+      "file": "render/slide-04.png",
+      "sha256": "c75b0a0b7506c56d3e4b0bc526a2b8dbd0b1fce3b70f754209feb65ac34046ea"
+    },
+    {
+      "page": 5,
+      "file": "render/slide-05.png",
+      "sha256": "b8178ccb074479247b2d46f4010c9f19d197ab2307a8514980ec2cf120cf240b"
+    }
   ],
   "limitations": [
-    "Original strict 1:1 fidelity gate not passed; this is a Japanese derivative example.",
-    "Agent review only; no independent or human adoption review is claimed.",
-    "Dates, venues, fees and operating plan are fictional; no real-world effects measured.",
-    "New rebuilt artifacts need another full visual review."
+    "実証は保存済みImageGen原図5枚からの再構築を中心とする部分例。元の資料分析・MBB証拠表・2〜3のSCR案・8スタイル選択・利用者の段階/逐頁承認は未実施。",
+    "原典のpixel/bbox比較と全指定付きstrictを実行したが全5頁で未達。文字・図形の編集性、はみ出し0、読みやすさの確認は原典合格の代わりにしない。",
+    "新題材では自分の根拠資料、内容の固定、ImageGen原図、要素/座標/署名が必要。同梱の測定コードはこの5原図用で、別原稿へそのまま使えない。",
+    "主要文字・表・線・フローはnative。表紙の小さなSVGアイコン3点だけが画像で、Officeのデータ連動Chart/Tableではない。",
+    "原図の紙の明暗、字形・字重、ヘッダー形式の差を保持/開示。原図のpixel一致・ユーザー承認・現版独立再評価・実業務効果は未取得。"
   ],
-  "numeric_fidelity_interpretation": {
-    "what_failed": "Pixel position, width and height alignment of rendered glyph/shape ink versus generated bitmap blueprint. This does not mean event dates, times, fees or the two-week proposal changed.",
-    "content_lock_comparison": "review/component-checks.json",
-    "all_required_locked_text_present": true,
-    "normalization": "Whitespace/newlines only; Japanese wording, dates, times, fees and punctuation remain required.",
-    "cause": "Different generated glyphs/icon geometry and native font metrics, plus limited threshold-based local ink measurement. No OCR was used to infer content values.",
-    "original_bbox_tolerances_unchanged": true
-  },
-  "input_alias": {
-    "path": "input/data.json",
-    "byte_identical_to": "input/outline.json",
-    "sha256": "06ea8a49baff0ef2a48cadfb1f8d2102458c6f52efbba63b3ac4cd46c4f85a1a"
-  },
-  "portable_reproduction": {
-    "passed": true,
-    "proof": "review/portable-proof.json",
-    "node_install": "npm install --prefix source",
-    "command": "python source/reproduce.py --input input/data.json --render",
-    "native_text_identical": true,
-    "render_comparison_passed": true,
-    "whole_pptx_bytes_identical": false
+  "not_demonstrated": [
+    "Stage1 full source analysis/MBB/SCR alternatives",
+    "Stage2 fixed eight-style user choice and blueprint approval",
+    "Original exact visual fidelity",
+    "Original per-page user approval and approved merge",
+    "Current independent review",
+    "Real operational outcomes or adoption"
+  ],
+  "current_distribution_replay": "source/distribution-replay.json",
+  "zip_reexecution": {
+    "status": "passed",
+    "archives": 2,
+    "rebuilt_pages": 10,
+    "all_native_and_rgb_pages_match": true,
+    "receipt": "source/distribution-replay.json",
+    "original_acceptance": "failed in both actual replays"
   }
 }

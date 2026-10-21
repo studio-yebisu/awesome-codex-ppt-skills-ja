@@ -1,0 +1,86 @@
+{
+  "groups": [
+    {
+      "slide": 8,
+      "name": "GROUP_prototype",
+      "members": [
+        "NODE_prototype",
+        "TEXT_prototype"
+      ]
+    },
+    {
+      "slide": 8,
+      "name": "GROUP_procedure",
+      "members": [
+        "NODE_procedure",
+        "TEXT_procedure"
+      ]
+    },
+    {
+      "slide": 8,
+      "name": "GROUP_evaluate",
+      "members": [
+        "NODE_evaluate",
+        "TEXT_evaluate"
+      ]
+    },
+    {
+      "slide": 8,
+      "name": "GROUP_revise",
+      "members": [
+        "NODE_revise",
+        "TEXT_revise"
+      ]
+    }
+  ],
+  "connectors": [
+    {
+      "slide": 8,
+      "name": "ARROW_prototype_procedure",
+      "from": {
+        "shape": "NODE_prototype",
+        "site": 3
+      },
+      "to": {
+        "shape": "NODE_procedure",
+        "site": 1
+      }
+    },
+    {
+      "slide": 8,
+      "name": "ARROW_procedure_evaluate",
+      "from": {
+        "shape": "NODE_procedure",
+        "site": 3
+      },
+      "to": {
+        "shape": "NODE_evaluate",
+        "site": 1
+      }
+    },
+    {
+      "slide": 8,
+      "name": "ARROW_evaluate_revise",
+      "from": {
+        "shape": "NODE_evaluate",
+        "site": 2
+      },
+      "to": {
+        "shape": "NODE_revise",
+        "site": 0
+      }
+    },
+    {
+      "slide": 8,
+      "name": "ARROW_revise_prototype",
+      "from": {
+        "shape": "NODE_revise",
+        "site": 1
+      },
+      "to": {
+        "shape": "NODE_prototype",
+        "site": 2
+      }
+    }
+  ]
+}

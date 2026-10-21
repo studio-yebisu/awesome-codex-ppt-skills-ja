@@ -1,30 +1,139 @@
 {
-  "status": "light_check_complete",
-  "checks": [
-    {
-      "kind": "original_extraction",
-      "result": "passed",
-      "detail": "Unmodified extract-pptx.py extracted 5 input slides, texts/notes and zero raster pictures; source-native OOXML geometry supplement built five SVG pages."
-    },
-    {
-      "kind": "first_web_display",
-      "result": "observed",
-      "detail": "Chromium opened offline single HTML at1600x900, local fonts loaded and main output PNG inspected."
-    },
-    {
-      "kind": "first_navigation",
-      "result": "passed",
-      "detail": "First ArrowRight moved original controller index0 to1; page indicator changed from1/5 to2/5. Two representative PNGs generated."
-    }
-  ],
+  "status": "author_qa_complete_independent_review_pending",
   "page_count": 5,
-  "new_pptx_generated": false,
-  "all_page_visual_review": false,
-  "structure_audit": false,
-  "independent_review": false,
-  "zip_reexecution": false,
-  "limits": [
-    "First major page and first page-forward action only; not all pages or complete keyboard/touch/overview regression.",
-    "SVG text baseline/line metrics not claimed pixel-identical with PowerPoint."
-  ]
+  "artifact_sha256": "a83bfbf9435f79588be015f3523dcd4b72379d6df7c358805008cd536f28ac98",
+  "all_pages_visually_reviewed": true,
+  "visual_review": {
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "finding": "2頁の「場所・作品・言葉」を図形中央へ合わせ、3頁と合わせ15ラベルを検査。二重のHTML頁番号を非表示にし、元PPTXの番号を一つ残す。",
+    "images": [
+      {
+        "page": 1,
+        "path": "render/slide-01.png",
+        "sha256": "3289be70fc986d1d3113cdd08335808ef5c0e29b3896abfe47e7abf431562d17"
+      },
+      {
+        "page": 2,
+        "path": "render/slide-02.png",
+        "sha256": "c3ffec24363d61d632e606bf3ee13a8975bb4039644a5d8a39c09d7c051407b3"
+      },
+      {
+        "page": 3,
+        "path": "render/slide-03.png",
+        "sha256": "23ba36615554051e044cef0f33c9f887582ee9e0d1e2af2168234512916274c1"
+      },
+      {
+        "page": 4,
+        "path": "render/slide-04.png",
+        "sha256": "f71f736d0c9e70e5fe12b8bac098180c89c42a87c526deea3aa5dde4a85bfa0f"
+      },
+      {
+        "page": 5,
+        "path": "render/slide-05.png",
+        "sha256": "caad27105993af9fd4dc8b1dd6fe1068ae972ce41e15fceabe2af1e1df84fa4b"
+      }
+    ]
+  },
+  "original_gates": {
+    "original_extract": 0,
+    "input_pptx_powerpoint_render": {
+      "exit_code": 0,
+      "pages": 5
+    },
+    "bounded_label_check": {
+      "status": "passed",
+      "kind": "bounded_svg_layout_repair_check",
+      "changed_pages": [
+        2,
+        3
+      ],
+      "changed_label_count": 15,
+      "changed_labels": [
+        "T120",
+        "T121",
+        "T122",
+        "T140",
+        "T141",
+        "T142",
+        "T143",
+        "T144",
+        "T145",
+        "T146",
+        "T147",
+        "T148",
+        "T149",
+        "T150",
+        "T151"
+      ],
+      "only_changed_svg_attributes": [
+        "text x",
+        "text-anchor"
+      ],
+      "input_preserved": true,
+      "input_sha256": "a57652396782363b3d0b186063e9f80e066030cf8a04f5d67140551de241427a",
+      "original_extractor_sha256": "4f5e7603c99b8b53e20c5b2a65abdf5edf9422b4c490dca9f2b872a752c17d2a",
+      "source_generator_sha256": "ecf0cba27aedae9dd66fc1a24f27f3a171ae1ce080e5a8f0e976b5b8ab3f6a3b",
+      "html_sha256": "a83bfbf9435f79588be015f3523dcd4b72379d6df7c358805008cd536f28ac98",
+      "pages": [
+        {
+          "page": 1,
+          "result": "passed",
+          "geometry_colors_arrows_and_content_preserved": true,
+          "svg_sha256": "92605d187ba4ff22c7aa21237b16888a4435e02d12905a0f155324a2ad50ea59"
+        },
+        {
+          "page": 2,
+          "result": "passed",
+          "geometry_colors_arrows_and_content_preserved": true,
+          "svg_sha256": "c1a7c2655a6f3c067ee07f071ca3722eaec0e1049b459390e101001400738fd5"
+        },
+        {
+          "page": 3,
+          "result": "passed",
+          "geometry_colors_arrows_and_content_preserved": true,
+          "svg_sha256": "eb60f71a47b32c87f96eccb2481885b2ce9221a0ae7fd904569fc7ed7a280280"
+        },
+        {
+          "page": 4,
+          "result": "passed",
+          "geometry_colors_arrows_and_content_preserved": true,
+          "svg_sha256": "a239024eaf03a58c00583b012bfa3ec5dde45429c0b533400088948efed5b285"
+        },
+        {
+          "page": 5,
+          "result": "passed",
+          "geometry_colors_arrows_and_content_preserved": true,
+          "svg_sha256": "c27af252a3645bc46252172636a0641771f33bf12160b702e978eec497edbc2d"
+        }
+      ],
+      "browser_visual_review": "separate evidence; not claimed by this check",
+      "independent_review": false
+    },
+    "browser_pages": 5
+  },
+  "constraints": [
+    "ネイティブ図形のSVG化と中央揃えは作例の補助実装で、原典extractor単体の機能ではない",
+    "入力PPTXは無改変。変換後2・3頁の15ラベルだけx/anchorを変更",
+    "この入力に画像と講稿はなく、それらの抽出を実証した例ではない",
+    "HTML/SVG編集用。新しい編集可能PPTXは出力しない",
+    "AWS/原作者との公認・提携ではない"
+  ],
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json",
+  "round3_zip_replay": {
+    "receipt": "source/zip-replay.json",
+    "all_commands_passed": true,
+    "html_byte_identical": true
+  }
 }

@@ -1,169 +1,98 @@
 {
-  "status": "qa_complete",
+  "status": "codex_repair_candidate_all_pages_read_original_delivery_blocked_independent_review_pending",
+  "artifact": "deck.pptx",
+  "artifact_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
   "page_count": 5,
-  "render_engine": "Microsoft PowerPoint 16.0",
-  "all_pages_visually_reviewed": true,
-  "independent_critic": {
-    "verdict": "consent",
-    "file": "review/critic-round1.json",
-    "full_slide_coverage": [
-      1,
-      2,
-      3,
-      4,
-      5
-    ],
-    "supplemental_plan_audit": "review/supplemental-plan-audit.json",
-    "supplemental_result": "consistent_with_qualifications"
+  "all_pages_visually_inspected_by_integrator": true,
+  "reviewer": "Codex production check; no self score",
+  "human_adoption": false,
+  "independent_current_version_review": "pending",
+  "actual_render": "PowerPoint16 PDF rasterized to RGB PNG with PDFium; direct PowerPoint PNGs retained separately",
+  "native_inventory": "source/native-elements.json",
+  "native_totals": {
+    "native_shapes": 209,
+    "pictures": 0,
+    "native_charts": 1,
+    "native_tables": 0
   },
-  "blind_read": {
-    "independent_blank_context": true,
-    "file": "review/blind-answers.json",
-    "full_slide_coverage": [
-      1,
-      2,
-      3,
-      4,
-      5
-    ],
-    "findings_and_resolutions": ".deck-gates.json / blind_read",
-    "accepted_limitation": "Small footer is for selfread; not validated for back-of-room projection"
-  },
+  "actual_pdf_fonts": "source/pdf-fonts.json",
+  "pages": [
+    {
+      "index": 0,
+      "file": "render/slide-01.png",
+      "sha256": "2c306af337abc88d52509f400603e16b24542beb47bba0965068bfef8a2ffee2",
+      "visual_verdict": "目標から未定義の中央という語を除き、配列直下に比較1回の定義を16ptで追加。全行を実描画で確認。"
+    },
+    {
+      "index": 1,
+      "file": "render/slide-02.png",
+      "sha256": "feb4c6253c4a9d02cd1f06e51c36a8b9b67d24004eedab3636527a02d0d014ff",
+      "visual_verdict": "配列直下の16pt凡例と訪問順、上端が揃った13回を確認。単一の主張へ整理。"
+    },
+    {
+      "index": 2,
+      "file": "render/slide-03.png",
+      "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8",
+      "visual_verdict": "各段の24pt比較判断、太字の値、茶枠/茶塗り/空枠の凡例、昇順と左右の理由を確認。"
+    },
+    {
+      "index": 3,
+      "file": "render/slide-04.png",
+      "sha256": "1fe06bd1132cfd78a2ba37ac8eb9340daf2b6fad7adc767f99817848496e8c6b",
+      "visual_verdict": "native軸名と16pt目盛/凡例、全15条件の2系列、目的値1〜3の例外を24ptで確認。"
+    },
+    {
+      "index": 4,
+      "file": "render/slide-05.png",
+      "sha256": "00497d9811e6e7d629e30b8633b4d288552b4f14a0c918cb00b152258c1520f2",
+      "visual_verdict": "計測した比較回数と未計測の秒数をnativeの塗り/枠で対比。速度倍率を断定しない一つの結論へ整理。"
+    }
+  ],
   "original_lint": {
-    "exit_code": 0,
+    "file": "source/current-lint.json",
     "hard_findings": 0,
-    "log": "source/logs/lint.log"
-  },
-  "original_handoff_gate": {
-    "exit_code": 0,
-    "log": "source/logs/gate-check-cwd-resolved.log",
-    "scope": "pass with explicit local-primary-source provenance waiver; not full original chronological workflow",
-    "post_build_supplemental_planning": true,
-    "initial_failed_log": "source/logs/gate-check.log",
-    "coverage": "26 section(s) ran — 18 bound, 8 NOT CHECKED"
-  },
-  "arc_comparison": {
-    "candidates": 3,
-    "exit_code": 0,
-    "log": "source/logs/arc-comparison.log"
-  },
-  "direction_comparison": {
-    "candidates": 5,
-    "actual_powerpoint_renders": "design/render",
-    "exit_code": 0,
-    "log": "source/logs/direction-diversity.log"
-  },
-  "editability": {
-    "replay_exit_code": 0,
-    "input_identical": true,
-    "slide_chart_notes_xml_identical": true,
-    "whole_pptx_byte_identical": false,
-    "slides": [
-      {
-        "page": 1,
-        "native_text_runs": 26,
-        "native_shapes": 42,
-        "native_charts": 0,
-        "pictures": 0
-      },
-      {
-        "page": 2,
-        "native_text_runs": 25,
-        "native_shapes": 41,
-        "native_charts": 0,
-        "pictures": 0
-      },
-      {
-        "page": 3,
-        "native_text_runs": 78,
-        "native_shapes": 139,
-        "native_charts": 0,
-        "pictures": 0
-      },
-      {
-        "page": 4,
-        "native_text_runs": 12,
-        "native_shapes": 13,
-        "native_charts": 1,
-        "pictures": 0
-      },
-      {
-        "page": 5,
-        "native_text_runs": 11,
-        "native_shapes": 12,
-        "native_charts": 0,
-        "pictures": 0
-      }
+    "warnings": 0,
+    "advisory": "NO ICONS ON CATEGORY CONTENT at1–3: literal numeric coordinates require values, not category pictograms; precise rationale recorded, not suppressed.",
+    "stats_warnings": [
+      "NO ICONS ON CATEGORY CONTENT: slides 1, 2, 3 carry parallel label sets (3+ short peers on one baseline across half the canvas — the shape of a category row) and the deck contains no icon-sized picture at all. On category-rich content an icon family is a design must, not a taste call (slide-design self-verify (g)). Build one (scripts/icons.py, one family, recolored to the palette), or record `icon_family: \"none — <why THESE slides read better without one>\"` in .deck-gates.json — the detector over-counts on tables and timelines, so this is a re-decision, not a verdict"
     ],
-    "chart_series": [
-      [
-        1.0,
-        2.0,
-        3.0,
-        4.0,
-        5.0,
-        6.0,
-        7.0,
-        8.0,
-        9.0,
-        10.0,
-        11.0,
-        12.0,
-        13.0,
-        14.0,
-        15.0
-      ],
-      [
-        4.0,
-        3.0,
-        4.0,
-        2.0,
-        4.0,
-        3.0,
-        4.0,
-        1.0,
-        4.0,
-        3.0,
-        4.0,
-        2.0,
-        4.0,
-        3.0,
-        4.0
-      ]
-    ],
-    "chart_matches_executed_traces": true,
-    "embedded_workbooks": 1
+    "pixel_checks": {
+      "ran": true,
+      "reason": null,
+      "not_checked": []
+    }
   },
-  "artifact_sha256": "3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f",
-  "input_sha256": "e651667858be382e90c3e4f097d6536e743685d2a019b1a06d8a47b9a2ef9593",
-  "font_dependency": [
-    "Yu Gothic",
-    "Consolas"
+  "in_memory_lint_layout": {
+    "strict": true,
+    "critical": 0,
+    "warnings": 6,
+    "explanation": "Five condition footers and one repeated-array advisory. Serialized lint and actual images are checked separately."
+  },
+  "component_audit": {
+    "file": "source/current-components.json",
+    "exit_code": 2,
+    "unresolved_advisories": "Geometry detector remains exit2; all three numeric-array intents accepted by original check_components. Full delivery still awaits independent reviews.",
+    "intent_verified_by_original_function": "source/component-intent-verification.json"
+  },
+  "original_gates": "source/round6-original-gates.json",
+  "current_handoff_gate_passed": false,
+  "previous_consent_not_reused": true,
+  "previous_version": "review/round5-prior-version/binding.json",
+  "unexercised": [
+    "Initial interview/content/design chronology was supplemental after the first build, not retroactively completed.",
+    "Current original handoff blocks on fresh independent critic/blind read; the Codex-only gate also lists incomplete full workflow records.",
+    "No template profile, talk-time, Q&A, image-series or image-generating mode was exercised.",
+    "Only existing values1–15 in an already ascending array were run; elapsed time and sorting cost were not measured."
   ],
-  "production_adoption": false,
-  "publication": false,
-  "reviewed_at": "2026-10-13T19:30:12.061725+00:00",
-  "packaging_exclude": [
-    "**/__pycache__/**",
-    "**/*.pyc"
-  ],
-  "human_adoption": "pending",
-  "visual_review": {
-    "pages_reviewed": [
-      1,
-      2,
-      3,
-      4,
-      5
-    ],
-    "method": "Microsoft PowerPoint 16.0 exported all 5 slides as 1600x900 PNG/PDF; author viewed every page; independent critic reviewed the final render and executable data; separate blank-context reader inspected only the PNG packet; supplemental independent audit compared post-build plans and 5 actual direction renders.",
-    "result": "Independent critic consented after the missing binary-search branch reasons were added. All 15 search traces and 30 native chart values agree. No clipping or overlap was identified. Small footnotes were accepted for selfread use, not certified for back-of-room projection. Supplemental audit found consistency with qualifications; human adoption remains pending.",
-    "evidence": [
-      "render/powerpoint-render.json",
-      "review/critic-round1.json",
-      "review/evidence.json",
-      "review/blind-answers.json",
-      "review/supplemental-plan-audit.json"
-    ]
-  }
+  "current_distribution_replay": {
+    "source": "source/distribution-replay.json",
+    "all_native_content_and_notes_match": true,
+    "all_pages_rendered_with_powerpoint": true,
+    "all_page_RGB_difference_mean": 0,
+    "existing_dependencies_only": true,
+    "archive_count": 2
+  },
+  "current_handoff_open_gates": "Read source/current-handoff-gate.txt. New independent critic/blind are pending.",
+  "current_review_integration": "source/current-review-integration.json",
+  "current_review_scope": "Kimi K3 exact current five rendered slides consented; copy/contact repairs require catalog recheck; Opus current version pending."
 }

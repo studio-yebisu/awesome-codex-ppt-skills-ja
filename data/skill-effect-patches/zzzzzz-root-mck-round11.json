@@ -1,0 +1,81 @@
+[
+  {
+    "case_id": "mck-native-showcase",
+    "production_model": "claude-opus-5-5（初回コード・計画）、Codex（現行修正・実行・検証）",
+    "sample_notice": "実カタログの30字体を集計した作例。初稿はOpus5.5、現在の修正・実行・検証はCodex。実績や時間短縮の測定ではない。",
+    "titles": [
+      "フォント構成と制作手順",
+      "30字体を用途の近い書体群へまとめて比べる",
+      "言語別に見ると、装飾は日本語のみ、等幅は欧文のみ",
+      "制作は五段階で進め、原稿と描画を原典の検査で確かめる"
+    ],
+    "constraints": [
+      "この作例はcover/donut/data_table/timelineの4種類。ほかの版式・外部表紙画像API・TaskCreateは未実施。",
+      "文字・図形・円弧は個別編集できるが、Officeのデータ連動チャートやネイティブ表ではない。再集計は元入力から生成する。",
+      "日本語用のBIZ UDPGothicを指定。PPTXへ埋め込まないため、閲覧環境への字体登録が必要。",
+      "同梱生成器はフォント集計専用。自分の資料は原典のAPIと容量表で版式を選ぶ。",
+      "固定ホームディレクトリとTaskCreateは作例用に置き換えた。欠けている原典layout文書、警告・免除の実数と表示範囲はQA.jsonとreading-record.jsonに記録。"
+    ],
+    "demonstration": {
+      "summary": "同じ30字体から構成比と内訳表を作り、12/30=40.0%の結論を図の補足へ表示する。制作の5段階は原稿と検査結果に対応させる。",
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・構成比",
+          "title": "30字体を用途の近い書体群へまとめて比べる",
+          "what_to_inspect": "12・8・3・7字体の4群と凡例を比較し、補足の12字体・40.0%が同じ集計から出ていることを確認する。",
+          "skill_rule": "donutへ比率と分類名を渡すと、円弧・色・凡例をそろえて作れる。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 2,
+          "label": "3頁・内訳表",
+          "title": "言語別に見ると、装飾は日本語のみ、等幅は欧文のみ",
+          "what_to_inspect": "装飾4＋等幅3の合算と、日本語17・欧文13・合計30を円と照合する。",
+          "skill_rule": "data_tableへ列と行を渡し、内訳を同じ書式で並べる。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-03.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・制作工程",
+          "title": "制作は五段階で進め、原稿と描画を原典の検査で確かめる",
+          "what_to_inspect": "要件から交付まで、各段階の役割と保存ファイルを左から読む。",
+          "skill_rule": "timelineへ工程名と説明を渡し、順番を図で示す。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-04.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "applied_features": [
+        "固定原典の4高水準メソッドとS3/S4検査を使用。エンジンの位置・色・サイズ・免除は改変しない。",
+        "同じデータを円と内訳表で照合。summaryも元データの最大分類から算出する。",
+        "現在の別PPTXを実PowerPointで文字編集してSaveCopyAsし、採用PPTXのhashが変わらないことを確認。"
+      ],
+      "not_demonstrated": [
+        "他63メソッド・外部表紙画像API・TaskCreate/TaskUpdate・Fast Track・Officeデータ連動・時短の実測・現在版の独立受理と利用者採用。"
+      ],
+      "scope_notes": [
+        "原典S4は94点・user0。中心文字箱の重複警告1と、交付ラベル本文領域右0.47インチの原典免除1を保持。全4頁を実PowerPoint描画で目視。",
+        "表示名の装飾はsource category=display。初回制作は実Opus5.5、現在修正はCodex。"
+      ],
+      "source_proof_paths": [
+        "examples/repositories/mck-native-showcase/input/plan.json",
+        "examples/repositories/mck-native-showcase/input/oss-font-kit.json",
+        "examples/repositories/mck-native-showcase/source/build_mck_native_showcase.py",
+        "examples/repositories/mck-native-showcase/source/reading-record.json",
+        "examples/repositories/mck-native-showcase/source/current-pptx-inspection.json",
+        "examples/repositories/mck-native-showcase/native-elements.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/content.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/gate_s3.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/gate_result.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/delivery-and-refinement.json",
+        "examples/repositories/mck-native-showcase/QA.json",
+        "examples/repositories/mck-native-showcase/PROVENANCE.json",
+        "examples/repositories/mck-native-showcase/qa/native-edit/report.json",
+        "examples/repositories/mck-native-showcase/qa/native-edit/edited-copy.pptx",
+        "examples/repositories/mck-native-showcase/source/distribution-replay.json"
+      ]
+    }
+  }
+]

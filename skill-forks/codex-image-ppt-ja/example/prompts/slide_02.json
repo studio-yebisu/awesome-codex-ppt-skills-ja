@@ -1,0 +1,40 @@
+{
+  "slide": 2,
+  "title": "変更は3つの場所を進む",
+  "prompt": "# Codex PPT Slide Image Prompt\n\n## Canvas\n{\n  \"type\": \"16:9 full-slide PowerPoint image\",\n  \"language\": \"Japanese\",\n  \"slide_number\": 2,\n  \"render_slide_number\": false\n}\n\n## Required Background\n{\n  \"deck_context\": {\n    \"source_summary\": \"Git basics; saving files, selecting staged content, committing locally, pushing to remote are distinct actions.\",\n    \"canonical_terms\": [\n      \"作業ツリー\",\n      \"ステージ\",\n      \"ローカル履歴\",\n      \"リモート\"\n    ],\n    \"core_claim\": \"Confirm the exact changes before recording and sharing.\"\n  }\n}\n\n## Global Style\n{\n  \"name\": \"Japanese clean vector explainer\",\n  \"visual_direction\": \"Pure white background; crisp flat vector-like diagrams, deep navy headings, teal accents, pale blue panels; no photo, no texture, no gradients, no 3D. Generous whitespace. All visible copy Japanese except Git commands.\",\n  \"color_palette\": \"white #FFFFFF, navy #172B4D, teal #168B87, pale blue #EAF3F8\",\n  \"typography\": \"Large legible Japanese sans-serif, bold title, high contrast; all exact text is readable at presentation size.\"\n}\n\n## Slide\n{\n  \"number\": 2,\n  \"title\": \"変更は3つの場所を進む\",\n  \"role\": \"concept diagram\",\n  \"intent\": \"Show working tree, staging area and local repository accurately\"\n}\n\n## Text\n{\n  \"title\": \"変更は3つの場所を進む\",\n  \"key_points\": [\n    \"作業ツリー\",\n    \"ステージ\",\n    \"ローカル履歴\"\n  ],\n  \"speaker_focus\": null\n}\n\n## Layout\n{\n  \"composition\": \"Large title top. Three large panels left-to-right at same height, connected by rightward arrows. Left panel exact body 編集中のファイル; middle 次に記録する内容; right コミットの記録. Arrow left→middle labeled git add; middle→right labeled git commit. Bottom two short callouts.\"\n}\n\n## Visual Elements\n{\n  \"main_visual\": \"Three-stage state diagram with local computer boundary enclosing ALL three panels. No cloud on this page.\"\n}\n\n## Constraints\n[\n  \"Bottom exact text: git add は記録する内容を選ぶ\",\n  \"Bottom exact text: git commit で手元の履歴に残す\",\n  \"Show only these texts and title; do not invent commands or labels.\"\n]\n\n## Universal Constraints\n- The final image itself must contain the title and key points.\n- Render Chinese text exactly and legibly; avoid garbled characters.\n- Keep the confirmed deck style consistent while varying layout by slide role.\n- No watermark, unrelated logo, or extra slide number.\n\n\nUse the attached sample ONLY for the white/navy/teal visual style and typography. Use this page's exact text and composition, not the sample content. The sample was selected by the production agent.",
+  "out": "slide_02.png",
+  "input_images": [
+    {
+      "path": "M:\\Codex\\Projects\\awesome-codex-ppt-skills-ja\\examples\\repositories\\codex-image-ppt\\origin_image\\slide_01.png",
+      "role": "style-only sample selected by production agent; not human-approved"
+    }
+  ],
+  "requires_context_images": false,
+  "expected_backend": "built-in image_gen.imagegen",
+  "sample_generation_method": {
+    "backend_used": "built-in image_gen.imagegen",
+    "tool_name": "image_gen.imagegen",
+    "mode": "generate",
+    "model": null,
+    "model_evidence": "Tool does not expose an exact model identifier.",
+    "size": "16:9 requested in prompt; inspect actual raster dimensions",
+    "input_context_preparation": "View generated sample before referencing it as style only",
+    "approval_authority": "production agent under user-authorized autonomous generation; no human visual approval claimed"
+  },
+  "generation_contract": {
+    "must_use_selected_image_backend": true,
+    "must_match_sample_generation_method": true,
+    "forbidden_final_image_methods": [
+      "local drawing/rendering scripts",
+      "Pillow-generated slides",
+      "SVG/HTML/CSS/canvas screenshots",
+      "python-pptx/PptxGenJS/native PPT layout screenshots",
+      "manually composited text/image overlays"
+    ],
+    "must_return": [
+      "backend_used",
+      "selected_source",
+      "qa_note"
+    ]
+  }
+}

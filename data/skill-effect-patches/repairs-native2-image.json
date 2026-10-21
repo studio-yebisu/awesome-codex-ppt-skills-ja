@@ -1,0 +1,320 @@
+[
+  {
+    "case_id": "sebastian-207",
+    "name": "編集条件に合わせて制作経路を選ぶ",
+    "job": "",
+    "change": "原稿と編集条件を先にそろえ、参照資料で書式を決めて、比較・手順・日程を後から直せる資料へ組む。",
+    "input": "原稿・元資料、読み手と目的、発表時間、PPTXの後編集やHTML表示の条件、使うテンプレート・配色・書体・参考資料。画像版にする場合は個別編集できないことへの同意。",
+    "output": "選んだ方式の編集可能PPTX、HTML/PDF/PNG、または全面画像PPTX。選択理由・書式指定・頁計画・画像来歴・話者ノート・機能/美術QA・納品目録を添える。画像版の本文は個別編集不可。",
+    "upstream_principle": "用途・制約からtemplate/native/html/image-firstの制作経路を選び、実在参照のreference boardとDesign DNA、頁固有の画像計画、spec/plan/notesを整え、機能QAと85点以上の美術QAを通して資料を仕上げる。",
+    "how_to_use": [
+      "元資料と読み手・目的・発表時間を渡す。既存PPTXの書式維持ならtemplate、テンプレートなしで後編集するならnative、HTML/PDF表示でよければHTML、個別編集を諦める同意がある場合だけimage-firstを選ぶ。",
+      "原典build_reference_board.pyで参照を選び、使う書式・書体・配色と引用範囲をdesign_specへ記す。",
+      "頁の主張・図・画像計画・ノートを固定。必須画像はbuilt-in imagegenで作り、保存した実画像を原典captureへ渡して頁と結び付ける。",
+      "選んだ原典経路で制作し、機能検査・85点以上の原典美術QA・全頁描画を確認して不具合を直す。",
+      "原稿・完成物・実描画・QAとdelivery_manifestをそろえて渡す。新しい生成結果へ過去の目視を引き継がない。"
+    ],
+    "constraints": [
+      "実演はnative経路。原典はpresentations/$slidesを優先し、ここでは原典PptxGenJSのローカルfallbackを使用。他3経路は未実施。",
+      "新規資料の原典合格条件には、Codex built-in imagegenで生成して保存した、頁の内容に合う画像が最低1枚必要。native図形やプレースホルダーで画像生成済みとはしない。",
+      "本例は表紙の実AI挿絵を保持。その他の頁はnative文字・図を計画し、画像生成必須=false・省略禁止=falseへ整合。必須画像を生成せず済ませた扱いにしない。",
+      "原典のnative APIを使い、日本語ラベル、文字箱、2列の項目、比較軸、工程の対応、締めの確認項目を派生差分として保存。原典ファイルとQA/閾値は未変更。",
+      "原典美術QAは87.6/PASS。右側未使用0件、overfillを含むfailure_modes/issue0件。possible-overlap警告は別の機能QAで保持し、全8頁の実物を確認。",
+      "書店企画と4週間は架空・実施前。開催実績や効果の測定値を作っていない。機械87.6点は独立採点の100点ではない。"
+    ],
+    "demonstration": {
+      "summary": "後編集を優先してnative経路を選び、参照・原稿・画像の役割を固定。表紙の実AI挿絵を残し、4頁では同じ観点の比較、6頁では工程と説明、8頁では未確定条件をnative要素で示す。原典機能QAと美術QAを再実行した。",
+      "applied_features": [
+        "参照選択と頁固有の表紙挿絵をspec/plan/asset/notesへ接続。その他のnative頁の画像必須フラグを計画と整合。",
+        "2頁の4条件を左右へ分け、4頁の比較に同じ3観点を対応。6頁は4本の工程バーの下に同じ順の説明を置き、共有と番号4だけを同じ意味で強調。",
+        "8頁の空パネルを除き、場所・運営・成果物の未確定条件を表示。原典QAの右側未使用とoverfillを実物の修正で解消。",
+        "原典plan/PPTX/aesthetic QAを実行。87.6/PASS、failure_modes/issue0、right_underused0。PowerPoint全8頁を個別に目視。",
+        "両ZIPを別展開し原典plan/native/機能/美術QAとPowerPoint8頁ずつを再実行。native XML・埋込画像・ノートが一致し、全16頁PNGのRGB差0。新規installなし。",
+        "2頁の下段条件と5頁の手順・例を下半分へ均等に広げた。文章・数値を増やさず、原典native部品とQAの閾値を保持。"
+      ],
+      "not_demonstrated": [
+        "template照合、HTML変換、全面画像版、実在調査データ、独立モデルによる現在版100点。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1頁・頁に結び付いた挿絵",
+          "title": "表紙の画像と文字を分ける",
+          "what_to_inspect": "開いた本から街が立ち上がる実imagegen挿絵が右枠に入り、左の編集可能な見出しと干渉しない。画像はこの頁の本と街の主張に結び付く。",
+          "skill_rule": "原典はbuilt-in imagegenの実画像を最低1枚要求し、頁の題名・主張・枠・保存画像の来歴をasset_planで追跡する。",
+          "proof_path": "examples/repositories/sebastian-207/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・同じ観点の比較",
+          "title": "比較軸を左右でそろえる",
+          "what_to_inspect": "本との関わり・感想と体験・持ち帰るものの3観点が、左右の同じ高さで比べられる。下半分まで内容を置き、空の比較枠を残さない。",
+          "skill_rule": "原典before-afterのnative面と文字へ比較を渡す。comparison_axesの日本語拡張を明示し、同じ観点の比較へ整える。",
+          "proof_path": "examples/repositories/sebastian-207/render/slide-04.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 5,
+          "label": "6頁・工程と説明の対応",
+          "title": "工程バーと説明の強調をそろえる",
+          "what_to_inspect": "選書・街歩き・編集・共有の4本と、その真下の同じ番号の説明を読む。終点の共有と番号4だけが朱色で、番号1との矛盾がない。",
+          "skill_rule": "原典progressStackとnumberedPointsのnative要素を維持し、開始番号/強調番号と列の配置を派生引数で対応させる。",
+          "proof_path": "examples/repositories/sebastian-207/render/slide-06.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-207/input/slides_plan.json",
+        "examples/repositories/sebastian-207/input/asset_plan.json",
+        "examples/repositories/sebastian-207/notes/route_decision.md",
+        "examples/repositories/sebastian-207/notes/requirement_check.md",
+        "examples/repositories/sebastian-207/notes/design_spec.md",
+        "examples/repositories/sebastian-207/qa/reference-selection/reference_board.json",
+        "examples/repositories/sebastian-207/qa/slides-plan-validation.json",
+        "examples/repositories/sebastian-207/qa/pptx-validation.json",
+        "examples/repositories/sebastian-207/qa/aesthetic_qa_report.json",
+        "examples/repositories/sebastian-207/source/reproduce.py",
+        "examples/repositories/sebastian-207/source/runtime-adapters.json",
+        "examples/repositories/sebastian-207/source/runtime-adapter.diff",
+        "examples/repositories/sebastian-207/qa/current-pptx-inspection.json",
+        "examples/repositories/sebastian-207/QA.json",
+        "examples/repositories/sebastian-207/source/distribution-replay.json",
+        "examples/repositories/sebastian-207/qa/vertical-density-review.json",
+        "examples/repositories/sebastian-207/source/upstream-original/codex-ppt-skill/SKILL.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原稿と編集条件を先にそろえ、参照資料で書式を決めて、比較・手順・日程を後から直せる資料へ組む。",
+      "requirements": [
+        "新規制作はCodex built-in imagegenと保存画像のcaptureが必要。原典はpresentations/$slides優先、ローカルfallbackはNode/PptxGenJS。画像生成手段がなければ原典の完成資料合格条件を満たせない。",
+        "保存済み例の再実行はNode・既存PptxGenJS4.0.1、Python3/Pillow/python-pptx。新規installや画像再生成は今回未実施。",
+        "PowerPoint全頁描画はWindows版PowerPointとPDF描画用pypdfium2。同梱OFL字体を登録。"
+      ],
+      "steps": [
+        "元資料と読み手・目的・発表時間を渡す。既存PPTXの書式維持ならtemplate、テンプレートなしで後編集するならnative、HTML/PDF表示でよければHTML、個別編集を諦める同意がある場合だけimage-firstを選ぶ。",
+        "原典build_reference_board.pyで参照を選び、使う書式・書体・配色と引用範囲をdesign_specへ記す。",
+        "頁の主張・図・画像計画・ノートを固定。必須画像はbuilt-in imagegenで作り、保存した実画像を原典captureへ渡して頁と結び付ける。",
+        "選んだ原典経路で制作し、機能検査・85点以上の原典美術QA・全頁描画を確認して不具合を直す。",
+        "原稿・完成物・実描画・QAとdelivery_manifestをそろえて渡す。新しい生成結果へ過去の目視を引き継がない。"
+      ],
+      "limitations": [
+        "実演はnative経路。原典はpresentations/$slidesを優先し、ここでは原典PptxGenJSのローカルfallbackを使用。他3経路は未実施。",
+        "新規資料の原典合格条件には、Codex built-in imagegenで生成して保存した、頁の内容に合う画像が最低1枚必要。native図形やプレースホルダーで画像生成済みとはしない。",
+        "本例は表紙の実AI挿絵を保持。その他の頁はnative文字・図を計画し、画像生成必須=false・省略禁止=falseへ整合。必須画像を生成せず済ませた扱いにしない。",
+        "原典のnative APIを使い、日本語ラベル、文字箱、2列の項目、比較軸、工程の対応、締めの確認項目を派生差分として保存。原典ファイルとQA/閾値は未変更。",
+        "原典美術QAは87.6/PASS。右側未使用0件、overfillを含むfailure_modes/issue0件。possible-overlap警告は別の機能QAで保持し、全8頁の実物を確認。",
+        "書店企画と4週間は架空・実施前。開催実績や効果の測定値を作っていない。機械87.6点は独立採点の100点ではない。"
+      ],
+      "commands": [
+        "python source/reproduce.py --node <Node実体> --node-modules <既存node_modules> --render"
+      ],
+      "execution_type": "原典native design-system＋明示した日本語差分。参照・計画・機能QA・美術QA87.6とPowerPoint全8頁。"
+    },
+    "method": "原典native design-system＋明示した日本語差分。参照・計画・機能QA・美術QA87.6とPowerPoint全8頁。",
+    "prompt_text": "固定原典codex-ppt-skillで架空の書店企画を8頁へまとめる。後編集を優先しnative経路の原典PptxGenJSを使う。参照選択、spec/plan/asset/notes、頁に結び付く保存済み実imagegen表紙を維持。native頁は画像生成必須フラグと整合させる。2頁の条件は2列、4頁の比較は同じ3観点、6頁は各工程の下へ説明を置き、共有と番号4を同じ意味で強調。8頁に未確定の場所・運営・成果物を表示する。派生差分を原典と分離し、原典QA/閾値を変えず機能・美術QAとPowerPoint全頁描画を実行する。実績・測定値を加えない。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し全頁を目視。独立再評価は別。",
+    "preview_image_notice": "現在の実PowerPoint PDF由来PNG。本文・図の編集性は出力説明を参照。",
+    "notes": [
+      "第1頁。読むことと街を歩くことを、一冊の編集へつなぐ。 。架空の企画であり開催実績や測定値ではありません。場所・時間・参加方法は協力書店と相談して決める想定です。",
+      "第2頁。本・場所・参加方法・成果物を先に決める。 使う場所｜既存の書棚と編集台 / 参加の入口｜本を選び、気になる言葉をメモする / 持ち寄る物｜街の写真と短い文章 / 残す物｜参加者が一緒に編集した小冊子。架空の企画であり開催実績や測定値ではありません。場所・時間・参加方法は協力書店と相談して決める想定です。",
+      "第3頁。知識を受け取るだけでなく、経験を編集して返す。 読む｜気になる一冊を選ぶ / 歩く｜言葉につながる場所を探す / 持ち寄る｜写真と短文を共有する。架空の企画であり開催実績や測定値ではありません。場所・時間・参加方法は協力書店と相談して決める想定です。",
+      "第4頁。読書のよさを守りながら、共有の時間を少し足す。 一人で本を選び、読む / 感想は自分の中で整理する / 街での体験とは別々に持ち帰る / 一冊と言葉を紹介し合う / 街の写真と短文を持ち寄る / 一緒に編集して小冊子に残す。架空の企画であり開催実績や測定値ではありません。場所・時間・参加方法は協力書店と相談して決める想定です。",
+      "第5頁。街を見る目の違いを楽しむ。 一冊を選ぶ｜心に残る言葉をひとつ / 街を歩く｜その言葉と出会う場所を探す / 一頁にする｜写真と短文を編集する。架空の企画であり開催実績や測定値ではありません。場所・時間・参加方法は協力書店と相談して決める想定です。",
+      "第6頁。読む→歩く→つくる→話す。各時間の長さは運営時に調整する。 選書｜気になる一冊と言葉を選ぶ / 街歩き｜言葉につながる写真を撮る / 編集｜写真と短文を一頁にまとめる / 共有｜頁を見せ合い、感想を話す。架空の企画であり開催実績や測定値ではありません。場所・時間・参加方法は協力書店と相談して決める想定です。",
+      "第7頁。初回は小さく試し、参加者と書店の声から次の形を決める。 第1週\n書店と設計\n運営条件の案 / 第2週\n参加を募る\n本と募集案内 / 第3週\n編集室を試す\n写真と短文 / 第4週\n意見を聞く\n次回の改善案。架空の企画であり開催実績や測定値ではありません。場所・時間・参加方法は協力書店と相談して決める想定です。",
+      "第8頁。企画の次の一歩は、場所と人の無理のない接点を探すこと。 試行に向けて、書店の使い方と参加の入口を話し合う。。架空の企画であり開催実績や測定値ではありません。場所・時間・参加方法は協力書店と相談して決める想定です。"
+    ],
+    "pages": [
+      "examples/repositories/sebastian-207/render/slide-01.png",
+      "examples/repositories/sebastian-207/render/slide-02.png",
+      "examples/repositories/sebastian-207/render/slide-03.png",
+      "examples/repositories/sebastian-207/render/slide-04.png",
+      "examples/repositories/sebastian-207/render/slide-05.png",
+      "examples/repositories/sebastian-207/render/slide-06.png",
+      "examples/repositories/sebastian-207/render/slide-07.png",
+      "examples/repositories/sebastian-207/render/slide-08.png"
+    ],
+    "font_families": [
+      "Shippori Mincho",
+      "BIZ UDPGothic",
+      "Manrope"
+    ],
+    "sample_notice": "架空書店企画のnative経路。原典美術QA87.6/PASS、右側未使用・failure_modes0。表紙は実AI挿絵、本文は編集可能図形。独立再評価は未完了。"
+  },
+  {
+    "case_id": "sebastian-208",
+    "name": "研究原稿から書式をそろえた画像スライドを作る",
+    "job": "",
+    "change": "原稿の主張と図の役割を頁ごとに整理し、選んだ書式を全頁へ引き継ぐ画像スライドと話者ノートを作る。",
+    "input": "論文・研究報告・稿、発表条件、保持する主張・数値・図、参考画像や書式の希望。",
+    "output": "各頁を全面画像1枚で収めたPPTX、話者ノート、元の頁画像。本文・図の個別編集には対応しない。",
+    "upstream_principle": "論文・研究報告・稿などを根拠に、Academic Input Packと頁ごとのBlueprintを整え、imagegenによる3案・アンカー・全頁画像を経て、文字・数値・図の原典忠実性を確認し、全面画像1枚と話者ノートを各頁へ包装する。",
+    "how_to_use": [
+      "最初に発表の目的・聴衆・時間・必要な資料や図を対話で揃え、Alignment Summaryをユーザーに示して確認を得る。確認前に制作方向を固定しない。",
+      "原稿からAcademic Input Packと全頁Blueprintを作り、章・主張・根拠・正確なコピー・図の役割・ノートを対応させる。全頁計画をユーザーへ示し、承認後に3案へ進む。",
+      "image_genで原典形式の3案ボードを作り、ユーザーの選択と修正確認を記録する。採用ボードから配色・書体・図・密度など9項目のスタイル契約を固定する。",
+      "採用契約から1〜2頁の実サンプルを生成して示し、品質と書式の継承についてユーザー承認を得る。必要な修正契約を作り、アンカーから残りの頁へ展開する。",
+      "全頁の意味を持つ文字・数値・図と出典を照合する。原典package_image_pptx_with_notes.mjsで画像1枚と話者ノートを各頁へ包装し、頁数・画像・ノートと実表示を確認する。"
+    ],
+    "constraints": [
+      "本文・図は画像で個別編集できない。ノートの編集と頁画像の差し替えに対応する。",
+      "この作例は架空の研究構想の稿を使用。公刊論文の抽出、原論文グラフの厳密再描画、実測結果や施工・安全性の検証は未実施。",
+      "現在の11頁は稿と全頁Blueprintを凍結して新規生成した。旧版は現物の出力として混在させない。",
+      "ボードA採用と実サンプル確認は、現在の自律改修指示に基づく制作担当判断。過去の個別ユーザー承認は未取得。",
+      "3案は実image_gen生成。各ボードの6枠の厳密な16:9比率は未計測。最終頁は原典既定の1280×720。",
+      "画像内の明朝／ゴシックは見え方の指定。実フォントの埋込・種類を証明するものではない。",
+      "この自律作例では、目的合わせ・Blueprint・3案選択・実サンプルのユーザー承認ゲートを実演していない。現在の改善委任に基づく制作担当判断で進め、承認取得とは記録しない。",
+      "4・8・10頁の挿絵内にあるノートの手書き風の線・擬似文字は装飾で、内容や研究証拠を持たない。正確な文として照合する対象は見出し・本文・図のラベル・数値・ページ番号である。"
+    ],
+    "demonstration": {
+      "summary": "架空の研究構想の稿から4部構成を計画し、採用Aの紙白・深紺と建築図の契約を11頁すべてへ適用した。6頁の構造図と1頁の表紙を先に確認し、残り9頁を新規生成。原典包装CLIで画像と話者ノートをPPTXへ収め、実PowerPointで全11頁を読んだ。 この自律作例では、目的合わせ・Blueprint・3案選択・実サンプルのユーザー承認ゲートを実演していない。現在の改善委任に基づく制作担当判断で進め、承認取得とは記録しない。",
+      "applied_features": [
+        "Academic Input Packと全頁Blueprintへ、稿の問い・仮説・図の役割・正確なコピー・未検証事項・ノートを対応させた。",
+        "3案からAを制作担当が選び、9項目の契約→6/1頁の実サンプル→残り9頁へ継承。庇・席・棚の形と図の説明対象を全頁でそろえた。",
+        "原典の未改変包装CLIを使用。全11頁の全面画像byte hash・ノート・native本文0を確認し、PowerPoint全頁を実見。",
+        "両ZIPを別展開して原典包装とPowerPoint11頁ずつを再実行。画像bytes・幾何・ノートが一致し、全22頁PNGのRGB差0。新規installなし。"
+      ],
+      "not_demonstrated": [
+        "公刊論文の読解・実測結果の抽出、原論文グラフの厳密再描画、過去の個別人間承認、全ボード枠の厳密16:9計測、native本文編集、現在版の独立モデル100点。",
+        "対話での目的合わせとBlueprint・ボード・実サンプルの個別ユーザー承認ゲート。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁：稿の4部を索引にする",
+          "title": "提案と検証の4部構成",
+          "what_to_inspect": "4行の視点03–04／空間05–06／体験07–08／検証09–10と短い説明を見る。稿から作った章立てと実際の頁範囲が一致し、下に未検証表記を残す。",
+          "skill_rule": "原典Blueprintは内容から章・頁数を導き、目次と各章の構造を揃える。今回は稿に明記した4部を使う。",
+          "proof_path": "examples/repositories/sebastian-208/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 5,
+          "label": "6頁：庇・席・棚の役割を図で説明",
+          "title": "庇・席・棚の役割",
+          "what_to_inspect": "右図の3本の引出線が屋根端・座面・水平な棚板を指す位置を見る。左の役割名に対応し、「概念図・寸法未設定」と未検証表記も残す。",
+          "skill_rule": "原典はvisual opportunityとmust-preserve evidenceを頁ごとに定め、image_gen後にラベルと図の意味を検査する。",
+          "proof_path": "examples/repositories/sebastian-208/render/slide-06.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 9,
+          "label": "10頁：結果を作らず検証手順を示す",
+          "title": "何を見るかを、先に決める。",
+          "what_to_inspect": "試作・観察・見直しの3場面と対応文、下の「検証計画案／実施前」を読む。前の建築図と同じ片流れ庇・左席・右棚を使い、結果数値は加えない。 挿絵内の手書き風文字は内容を持たない装飾。",
+          "skill_rule": "原典source-faithful契約は根拠のない数値・実験成果・引用を足さない。今回は計画であることを本文とノートに残す。",
+          "proof_path": "examples/repositories/sebastian-208/render/slide-10.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-208/input/manuscript-repair.md",
+        "examples/repositories/sebastian-208/input/data.json",
+        "examples/repositories/sebastian-208/qa/academic-input-pack-current.json",
+        "examples/repositories/sebastian-208/qa/alignment-summary.md",
+        "examples/repositories/sebastian-208/qa/deck-blueprint.md",
+        "examples/repositories/sebastian-208/qa/blueprint-repair.md",
+        "examples/repositories/sebastian-208/qa/thumbnail-style-contract.md",
+        "examples/repositories/sebastian-208/qa/style-board-review.md",
+        "examples/repositories/sebastian-208/qa/sample-revision-contract.md",
+        "examples/repositories/sebastian-208/qa/sample-approval.json",
+        "examples/repositories/sebastian-208/qa/text-source-review-current.json",
+        "examples/repositories/sebastian-208/source/round5-page-prompts.json",
+        "examples/repositories/sebastian-208/source/current-generation-map.json",
+        "examples/repositories/sebastian-208/source/round5-imagegen/page-01-receipt.json",
+        "examples/repositories/sebastian-208/source/round5-imagegen/page-06-receipt.json",
+        "examples/repositories/sebastian-208/thumbnails/option_a.png",
+        "examples/repositories/sebastian-208/thumbnails/option_b.png",
+        "examples/repositories/sebastian-208/thumbnails/option_c.png",
+        "examples/repositories/sebastian-208/source/reproduce.py",
+        "examples/repositories/sebastian-208/source/verify_current.py",
+        "examples/repositories/sebastian-208/source/repair-image-normalization.json",
+        "examples/repositories/sebastian-208/qa/package-current.json",
+        "examples/repositories/sebastian-208/qa/current-pptx-inspection.json",
+        "examples/repositories/sebastian-208/QA.json",
+        "examples/repositories/sebastian-208/source/distribution-replay.json",
+        "examples/repositories/sebastian-208/source/style-board-imagegen-calls.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "架空の研究構想の稿から4部構成を計画し、採用Aの紙白・深紺と建築図の契約を11頁すべてへ適用した。6頁の構造図と1頁の表紙を先に確認し、残り9頁を新規生成。原典包装CLIで画像と話者ノートをPPTXへ収め、実PowerPointで全11頁を読んだ。 この自律作例では、目的合わせ・Blueprint・3案選択・実サンプルのユーザー承認ゲートを実演していない。現在の改善委任に基づく制作担当判断で進め、承認取得とは記録しない。",
+      "requirements": [
+        "Node.jsとPptxGenJS4.0.1（source/package-lock.json）、Python3とPillow/python-pptx。",
+        "実描画にはWindows PowerPoint16、PDF→PNGにはpypdfium2。既存依存を使用し、新規installは未検証。",
+        "新規頁画像の制作にはbuilt-in image_gen。保存済み頁の再包装に画像生成・OCRは不要。"
+      ],
+      "steps": [
+        "最初に発表の目的・聴衆・時間・必要な資料や図を対話で揃え、Alignment Summaryをユーザーに示して確認を得る。確認前に制作方向を固定しない。",
+        "原稿からAcademic Input Packと全頁Blueprintを作り、章・主張・根拠・正確なコピー・図の役割・ノートを対応させる。全頁計画をユーザーへ示し、承認後に3案へ進む。",
+        "image_genで原典形式の3案ボードを作り、ユーザーの選択と修正確認を記録する。採用ボードから配色・書体・図・密度など9項目のスタイル契約を固定する。",
+        "採用契約から1〜2頁の実サンプルを生成して示し、品質と書式の継承についてユーザー承認を得る。必要な修正契約を作り、アンカーから残りの頁へ展開する。",
+        "全頁の意味を持つ文字・数値・図と出典を照合する。原典package_image_pptx_with_notes.mjsで画像1枚と話者ノートを各頁へ包装し、頁数・画像・ノートと実表示を確認する。"
+      ],
+      "limitations": [
+        "本文・図は画像で個別編集できない。ノートの編集と頁画像の差し替えに対応する。",
+        "この作例は架空の研究構想の稿を使用。公刊論文の抽出、原論文グラフの厳密再描画、実測結果や施工・安全性の検証は未実施。",
+        "現在の11頁は稿と全頁Blueprintを凍結して新規生成した。旧版は現物の出力として混在させない。",
+        "ボードA採用と実サンプル確認は、現在の自律改修指示に基づく制作担当判断。過去の個別ユーザー承認は未取得。",
+        "3案は実image_gen生成。各ボードの6枠の厳密な16:9比率は未計測。最終頁は原典既定の1280×720。",
+        "画像内の明朝／ゴシックは見え方の指定。実フォントの埋込・種類を証明するものではない。",
+        "この自律作例では、目的合わせ・Blueprint・3案選択・実サンプルのユーザー承認ゲートを実演していない。現在の改善委任に基づく制作担当判断で進め、承認取得とは記録しない。",
+        "4・8・10頁の挿絵内にあるノートの手書き風の線・擬似文字は装飾で、内容や研究証拠を持たない。正確な文として照合する対象は見出し・本文・図のラベル・数値・ページ番号である。"
+      ],
+      "execution_type": "稿と全頁計画→3案・採用契約→実サンプル→全11頁image_gen新規生成→原典画像包装→PowerPoint描画"
+    },
+    "method": "稿と全頁計画→3案・採用契約→実サンプル→全11頁image_gen新規生成→原典画像包装→PowerPoint描画",
+    "prompt_text": "原典academic-image-pptを使い、渡された論文・報告・稿の主張と根拠を画像版の発表資料へ整理してください。内容と発表条件から頁数を決め、全頁Blueprintに正確な文・図の役割・出典・ノートを固定してください。3案から選んだ書式を9項目で記録し、実サンプルを確認してから全頁へ適用します。数値や成果は足さず、本文・図が画像で個別編集できないことを明示してください。作例の稿と正確なコピーはinput/、採用条件と全頁計画はqa/、実生成の証拠はsource/current-generation-map.jsonを参照してください。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し全11頁を制作担当が目視。独立モデル再評価は別。",
+    "preview_image_notice": "現在の実PowerPoint PDF由来PNG。各頁は画像1枚で本文・図は個別編集不可。",
+    "notes": [
+      "雨宿りの場所に、雨の観察と記録を組み合わせる架空の研究構想です。効果を確かめた計画ではありません。",
+      "視点は問いと仮説、空間は庇・席・棚の関係、体験は見る・聞く・記録する行為、検証は試作・観察・見直しの計画です。架空の構想で、効果はまだ検証していません。",
+      "雨を避ける機能は残しながら、雨を観察する余地をつくれないか、という問いから始めます。",
+      "雨宿り、観察、記録を重ねることで滞在のあり方が変わるかもしれません。これは検証前の仮説です。",
+      "庇、席、棚を別々に足すのでなく、一つの小さな空間として考えます。",
+      "庇は雨を受け、席は雨音を聴く場所、棚は観察メモを置く場所を想定します。引出線は庇、席の座面、棚を指しています。寸法や施工条件は未設定で、これは検証前の概念図です。",
+      "想定する行為は、雨粒を見る、庇に触れる音を聞く、気づきを記録することです。実際の利用者の反応はまだ観察していません。",
+      "想定する行為は、動きを見る、音を聞く、気づきを書くことです。実際の利用者の反応はまだ観察していません。",
+      "効果を前提に建設するのでなく、模型や小さな試作で成立条件を確かめる段階を置きます。",
+      "庇、席、棚の関係を試作し、立ち止まり方と使われ方を観察します。安全性、読みやすさ、居心地は見直す項目です。具体的な評価方法と実施条件は今後決めます。",
+      "設置場所と利用条件について、質問や懸念を含めて対話します。実在の設置場所や実施条件はまだ決まっていません。"
+    ],
+    "pages": [
+      "examples/repositories/sebastian-208/render/slide-01.png",
+      "examples/repositories/sebastian-208/render/slide-02.png",
+      "examples/repositories/sebastian-208/render/slide-03.png",
+      "examples/repositories/sebastian-208/render/slide-04.png",
+      "examples/repositories/sebastian-208/render/slide-05.png",
+      "examples/repositories/sebastian-208/render/slide-06.png",
+      "examples/repositories/sebastian-208/render/slide-07.png",
+      "examples/repositories/sebastian-208/render/slide-08.png",
+      "examples/repositories/sebastian-208/render/slide-09.png",
+      "examples/repositories/sebastian-208/render/slide-10.png",
+      "examples/repositories/sebastian-208/render/slide-11.png"
+    ],
+    "font_families": [],
+    "sample_notice": "架空の未実施研究構想の稿から全11頁を画像化。目的合わせ・Blueprint・ボード・サンプルのユーザー承認は未実演で、制作担当の委任判断。本文・図は個別編集不可。",
+    "title": "雨の図書室",
+    "style": "画像版の研究提案・紙白と深紺",
+    "page_count": 11,
+    "titles": [
+      "雨の図書室",
+      "提案と検証の4部構成",
+      "視点",
+      "雨の日に、立ち止まる理由。",
+      "空間",
+      "庇・席・棚の役割",
+      "体験",
+      "見る。聞く。書き留める。",
+      "検証",
+      "何を見るかを、先に決める。",
+      "質疑・対話"
+    ],
+    "artifact_download": "examples/repositories/sebastian-208/deck.pptx",
+    "input_data": "examples/repositories/sebastian-208/input/data.json",
+    "execution_status": "original_image_packaging_and_all11_pages_visual_checked"
+  }
+]

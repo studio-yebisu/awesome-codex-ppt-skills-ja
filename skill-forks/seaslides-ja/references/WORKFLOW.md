@@ -1,34 +1,26 @@
-# touying-typ/seaslidesの日本語制作
+# 同じ本文をHTML・SVG・PNG・PDFへ揃え、用途に合う紙面を保てる。
 
-原典: https://github.com/touying-typ/seaslides/tree/dcde5bf6c6875b300e2999fc7766f369a13a67ac
+入力：読書会の日程・参加条件・60分の進行・担当と講稿。
+出力：TCSから生成したHTMLと同じbuildのSVG・PNG2経路・PDF。
 
-原典TCS→source gate→html_compiler --all→visual gate。Windows receipt pathのみ派生修正。
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全5頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-原典のHTML lane、TCS、editorial-magazineテーマを使い、source gate→固有compiler --all→visual gateで生成する。Windowsのreceipt相対パスをPOSIX表記へ直す2ファイルの派生差分を保持し、validatorは変更しない。原典Motion・WebGL・ナビゲーションを保持し、日本語OFL書体と講稿を収録する。HTML表示はローカルHTTP経由。PPTXは今回の出力に含めない。
+## 使い方
 
-## 作例
+1. content_design_spec.mdで5頁の役割を決める
+2. content.htmlの本文と講稿、template.cssの再利用部品を編集する
+3. source/rebuild.pyで原典source gate・--all・visual gateを実行する
+4. overviewから全browser PNGを確認し、HTMLプレーヤーの移動も試す
 
-- 読書会を月1回続けるには / 5枚 / html
-- カタログ内の案内: repository.html?repo=touying-typ/seaslides
-- 当面のローカル入口: http://127.0.0.1:8847/repository.html?repo=touying-typ/seaslides
-- 入力、発表者ノート、依頼文、PROVENANCE.json、QA.jsonを完成例に同梱。
+## 生成・検査
 
-## 環境
+`python source/rebuild.py`
 
-- Python 3.13 / Pillow / pypdf / python-pptx
-- Node24 / 原典package-lockのnpm依存 / Chromium1223
-- ローカルHTTPで表示
+脚注を20px相当へ拡大し、透過を解除。4頁は担当ごとの横一行へ変更。原典の全形式compilerを再実行。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
 
-## 元の制作コマンド
+## 範囲
 
-    python tools/build_seaslides_repository_example.py
-
-## 確認範囲
-
-- AI画像生成/APIなし。手入力原稿を原典固有テーマとcompilerで生成。
-- PPTXは生成していない。
-- 汎用フォント依存を除くためNoto JPのOFLフォントを同梱。
-
-## 権利
-
-原典条件はupstream内のLICENSE/NOTICE等を読む。日本語の独自案内はカタログの条件、上流由来のコードは各原典の条件を引き継ぐ。公開画像や依存書体の条件を一括で保証するものではない。
+- この作例はHTML lane。Typst・PPTX・画像生成は未実施
+- Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変
+- 静止画像とプレーヤーの操作UIは別の証拠
+- 架空の読書会の企画で、開催実績ではない

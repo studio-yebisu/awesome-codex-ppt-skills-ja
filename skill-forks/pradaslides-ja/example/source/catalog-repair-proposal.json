@@ -1,0 +1,63 @@
+{
+  "case_id": "pradaslides",
+  "implemented_by": "Codex current repair; not new Opus production",
+  "current_pptx_sha256": "e322119782ffe042a87d238f6e4c11baad9c8bab094ab3fc1daa2444006e892d",
+  "case_patch": {
+    "method": "備品を借りる人の問いを6頁へ分け、申込み・受取りの記録・異常時の連絡・返却照合を異なる図と欄で示した。原典の計画検査とPPTX由来HTML presenterを実行。",
+    "sample_notice": "制作側が現行全頁を実PowerPointで確認。現在版の独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全6頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/pradaslides/render/slide-01.png",
+      "examples/repositories/pradaslides/render/slide-02.png",
+      "examples/repositories/pradaslides/render/slide-03.png",
+      "examples/repositories/pradaslides/render/slide-04.png",
+      "examples/repositories/pradaslides/render/slide-05.png",
+      "examples/repositories/pradaslides/render/slide-06.png"
+    ],
+    "notes": [
+      "架空の町内会を想定した手順案です。実際の貸出規則ではありません。右側は返却まで引き継ぐ記録票の空欄例で、貸出番号・受取数と返却数・返却日時・担当者の確認を残す構成です。",
+      "申込書の例を見せます。折りたたみ椅子10脚、10月20日9時から16時、集会所前での受取りと返却という架空の設定です。実際の担当窓口と貸出条件を確認して記入します。",
+      "受取りの場面です。申込書と現物の品名・数量・付属品を比べ、貸出前の傷や汚れ、欠品を担当者と記録します。この受取記録を返却の照合に使います。返却時の確認は5頁で分けて説明します。",
+      "異常時は使用を止めて担当者に知らせ、扱いの指示を確認する架空の案です。下の空欄は、品名・数量、気づいた時刻、状態と窓口の指示を残すための記録例です。実際の規則と窓口の指示を優先します。",
+      "数量、付属品、状態を記録と照合し、担当者の確認を受けて返却を完了する案です。無人で置いていく可否も各町内会のルールによるため、事前に返却方法を聞きます。",
+      "実際の貸出ルールと窓口を確認することが次の行動です。この6ページは相談用の架空の手順案で、既存の運用規則の代わりにはなりません。"
+    ],
+    "titles": [
+      "町内会の備品貸出を、迷わない手順に",
+      "品名・数量・日時を、まとめて伝える",
+      "受取りは、記録と現物を照合する",
+      "不具合に気づいたら、使う前に窓口へ",
+      "返却は、置くだけで終わらせない",
+      "借りる前に、返却方法まで聞こう。"
+    ]
+  },
+  "guide_patch": {
+    "summary_ja": "読者に起こしたい変化と根拠を先に整理し、資料の構成・視覚表現・納品形式を選ぶ。",
+    "requirements": [
+      "Python3.10+ / python-pptx / PowerPoint16とYu Gothic（今回の描画）",
+      "HTMLの検査にはNode22+とChromeまたはEdge。HTTPで表示。"
+    ],
+    "steps": [
+      "project/brief.jsonで読者の現状・読後の行動・作る形式を決め、source-ledgerへ根拠を書く。",
+      "deck-planの各頁へ主張・必要な根拠・読者の次の行動を対応させ、構成とasset/layout manifestを検査する。",
+      "source/reproduce.pyで計画検査→native制作→PowerPoint描画→原典presenter生成まで実行する。",
+      "全頁の文字・図・手順を確認し、HTMLのpresentモードとサムネイル操作も検査する。"
+    ],
+    "limitations": [
+      "この作例は架空の備品貸出手順。貸出の正式規則や運用効果を示さない。",
+      "PPTX+実描画HTMLの経路を使用。redesign/critique/plan-onlyや他形式、AI画像・動画生成は未実施。",
+      "原典brief validatorの空白区切り単語数により、十分な日本語のjob文にもBRIEF_JOB_THIN助言が出る。抑制せず保存。",
+      "Yu Gothicを使い字体ファイルは再配布しない。新しい出力の目視・独立評価は毎回必要。"
+    ],
+    "commands": [
+      "python source/reproduce.py",
+      "python source/qa.py",
+      "python source/inspect_current.py"
+    ]
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native5.json",
+  "independent_current_version_review": "pending",
+  "distribution_replay": "source/distribution-replay.json"
+}

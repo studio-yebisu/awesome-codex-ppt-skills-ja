@@ -1,0 +1,696 @@
+/* Component family: time. Generated from assets/css/components.css for package-time CSS splitting. */
+.process-step span,
+.value-link span,
+.filter-step span,
+.journey-step span,
+.milestone span,
+.numbered-list-grid span {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  margin-bottom: 18px;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  color: var(--color-accent);
+  font-size: 15px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.process-step strong,
+.stage-card strong,
+.funnel-step strong,
+.filter-result strong,
+.value-link strong,
+.timeline-event strong,
+.horizon-band strong,
+.journey-step strong,
+.phase-card strong,
+.milestone strong,
+.numbered-list-grid strong,
+.dense-list strong {
+  display: block;
+  min-width: 0;
+  color: var(--color-text);
+  font-size: 22px;
+  line-height: 1.12;
+}
+
+.process-step p,
+.stage-card p,
+.funnel-step span,
+.filter-step p,
+.filter-result p,
+.value-link p,
+.timeline-event p,
+.horizon-band p,
+.journey-step p,
+.phase-card p,
+.milestone p,
+.numbered-list-grid p,
+.dense-list span {
+  margin: 10px 0 0;
+  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.32;
+}
+
+.timeline-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 32px;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.timeline-track::before,
+.milestone-track::before {
+  content: "";
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 50%;
+  height: 1px;
+  background: var(--color-line);
+}
+
+.timeline-event {
+  position: relative;
+  z-index: 1;
+  min-width: 0;
+  border-top: 3px solid var(--color-accent);
+  background: var(--color-bg);
+  padding: 22px 20px;
+  overflow: hidden;
+}
+
+.timeline-event span {
+  display: inline-block;
+  margin-bottom: 14px;
+  color: var(--color-accent);
+  font-size: 15px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.horizon-bands {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.horizon-band {
+  display: grid;
+  align-content: end;
+  min-width: 0;
+  min-height: 0;
+  border-top: 4px solid var(--color-accent);
+  background: color-mix(in srgb, var(--color-panel) 74%, var(--color-bg));
+  padding: 30px;
+  overflow: hidden;
+}
+
+.horizon-band:nth-child(2) {
+  background: color-mix(in srgb, var(--color-accent-soft) 76%, var(--color-bg));
+}
+
+.horizon-band:nth-child(3) {
+  background: color-mix(in srgb, var(--color-accent-soft) 52%, var(--color-bg));
+}
+
+.horizon-band span {
+  display: block;
+  margin-bottom: 20px;
+  color: var(--color-accent);
+  font-size: 15px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.journey-map {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 26px;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  padding: 62px 0;
+  overflow: hidden;
+}
+
+.journey-map::before {
+  content: "";
+  position: absolute;
+  right: 4%;
+  left: 4%;
+  top: 50%;
+  height: 1px;
+  background: var(--color-line);
+}
+
+.journey-step {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  min-height: 188px;
+  border: 1px solid var(--color-line);
+  background: var(--color-bg);
+  padding: 22px;
+  overflow: hidden;
+}
+
+.journey-step.is-high {
+  transform: translateY(-44px);
+}
+
+.journey-step.is-low {
+  transform: translateY(44px);
+}
+
+.journey-step.is-mid {
+  transform: translateY(0);
+}
+
+.journey-step span {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.phase-roadmap {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 24px;
+  align-items: stretch;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.phase-card {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  min-height: 0;
+  border-top: 5px solid var(--color-accent);
+  border-bottom: 1px solid var(--color-line);
+  padding: 26px 22px;
+  overflow: hidden;
+}
+
+.milestone-track {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 18px;
+  align-items: center;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.milestone {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  justify-items: center;
+  min-width: 0;
+  background: var(--color-bg);
+  padding: 16px 10px;
+  text-align: center;
+  overflow: hidden;
+}
+
+.milestone span {
+  width: 22px;
+  height: 22px;
+  margin-bottom: 18px;
+  background: var(--color-bg);
+}
+
+.milestone.is-complete span,
+.milestone.is-current span {
+  background: var(--color-accent);
+}
+
+.milestone.is-current span {
+  box-shadow: 0 0 0 7px var(--color-accent-soft);
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.timeline-step {
+  border-top: 3px solid var(--color-accent);
+  padding-top: 16px;
+}
+
+.timeline-step strong {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 20px;
+}
+
+.timeline-step span {
+  color: var(--color-muted);
+  font-size: 15px;
+  line-height: 1.35;
+}
+
+.gantt-workplan.is-dense {
+  grid-template-columns: 170px repeat(12, minmax(0, 1fr));
+  font-size: 12px;
+}
+
+.gantt-workplan.is-dense .gantt-workstream {
+  font-size: 13px;
+}
+
+.phase-meeting-plan {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0;
+  height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-top: 1px solid var(--color-line);
+  border-left: 1px solid var(--color-line);
+}
+
+.meeting-phase {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  border-right: 1px solid var(--color-line);
+}
+
+.meeting-phase h3 {
+  margin: 0;
+  border-bottom: 1px solid var(--color-line);
+  padding: 16px;
+  font-size: 20px;
+  line-height: 1.12;
+}
+
+.meeting-phase ul {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  margin: 0;
+  padding: 18px 18px 18px 34px;
+  color: var(--color-text);
+  font-size: 15px;
+  line-height: 1.28;
+}
+
+.horizon-curve {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.horizon-curve-line {
+  position: absolute;
+  left: 6%;
+  right: 6%;
+  bottom: 18%;
+  height: 54%;
+  border-top: 4px solid var(--color-accent);
+  border-radius: 50% 50% 0 0;
+  transform: skewX(-15deg);
+  opacity: 0.74;
+}
+
+.horizon-point {
+  position: absolute;
+  display: grid;
+  gap: 7px;
+  width: 220px;
+  min-height: 116px;
+  padding: 16px;
+  border-left: 4px solid var(--color-accent);
+  background: color-mix(in srgb, var(--color-bg) 92%, var(--color-accent) 8%);
+}
+
+.horizon-point span {
+  color: var(--color-accent);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.horizon-point strong {
+  font-size: 20px;
+  line-height: 1.12;
+}
+
+.horizon-point p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.25;
+}
+
+.horizon-point.is-one { left: 6%; bottom: 12%; }
+
+.horizon-point.is-two { left: 31%; bottom: 26%; }
+
+.horizon-point.is-three { left: 56%; bottom: 43%; }
+
+.horizon-point.is-four { right: 4%; bottom: 61%; }
+
+.journey-arc {
+  position: relative;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.journey-arc-band {
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: 8%;
+  height: 58%;
+  background:
+    linear-gradient(to top, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 70%),
+    radial-gradient(ellipse at 50% 100%, transparent 55%, var(--color-accent) 56% 57%, transparent 58%);
+  border-bottom: 1px solid var(--color-line);
+}
+
+.journey-arc-step {
+  position: absolute;
+  display: grid;
+  width: 190px;
+  min-height: 108px;
+  gap: 6px;
+  padding: 14px;
+  border: 1px solid var(--color-line);
+  background: var(--color-bg);
+}
+
+.journey-arc-step span {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.journey-arc-step strong {
+  font-size: 19px;
+  line-height: 1.1;
+}
+
+.journey-arc-step p {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 13px;
+  line-height: 1.24;
+}
+
+.journey-arc-step.is-one { left: 4%; bottom: 12%; }
+
+.journey-arc-step.is-two { left: 24%; bottom: 27%; }
+
+.journey-arc-step.is-three { left: 43%; bottom: 43%; }
+
+.journey-arc-step.is-four { left: 62%; bottom: 56%; }
+
+.journey-arc-step.is-five { right: 3%; bottom: 64%; }
+
+.gantt-workplan {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.85fr) repeat(6, minmax(0, 1fr));
+  grid-template-rows: 42px repeat(4, minmax(72px, 1fr));
+  align-items: stretch;
+  height: 100%;
+  min-height: 0;
+  border-top: 1px solid var(--color-line);
+  border-left: 1px solid var(--color-line);
+  background:
+    repeating-linear-gradient(to right, transparent 0, transparent calc((100% - 150px) / 6 - 1px), var(--color-line) calc((100% - 150px) / 6)),
+    var(--color-bg);
+  overflow: hidden;
+}
+
+.gantt-head,
+.gantt-row-label {
+  display: grid;
+  align-items: center;
+  min-width: 0;
+  border-right: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line);
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.gantt-head {
+  background: color-mix(in srgb, var(--color-panel) 82%, #fff);
+  color: var(--color-muted);
+}
+
+.gantt-row-label {
+  grid-column: 1;
+  color: var(--color-text);
+}
+
+.gantt-bar {
+  z-index: 2;
+  align-self: center;
+  min-width: 0;
+  margin: 0 8px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  background: var(--color-accent-soft);
+  color: var(--color-text);
+  font-size: 13px;
+  font-weight: 850;
+  line-height: 1.1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gantt-bar.is-focus {
+  background: var(--color-accent);
+  color: var(--color-bg);
+}
+
+.gantt-bar.is-muted {
+  background: var(--color-panel);
+  color: var(--color-muted);
+}
+
+.stair-step span {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-line);
+  border-radius: 50%;
+  color: var(--color-accent);
+  font-size: 14px;
+  font-weight: 850;
+  line-height: 1;
+}
+
+.stair-step-timeline {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-items: end;
+  gap: 18px;
+  height: min(100%, 390px);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.stair-step {
+  display: grid;
+  align-content: start;
+  min-width: 0;
+  border-top: 4px solid var(--color-accent);
+  border-bottom: 1px solid var(--color-line);
+  background: color-mix(in srgb, var(--color-panel) 68%, var(--color-bg));
+  padding: 20px 16px;
+  overflow: hidden;
+}
+
+.stair-step:nth-child(1) { min-height: 170px; }
+
+.stair-step:nth-child(2) { min-height: 210px; }
+
+.stair-step:nth-child(3) { min-height: 250px; }
+
+.stair-step:nth-child(4) { min-height: 290px; }
+
+.stair-step:nth-child(5) { min-height: 330px; }
+
+.stair-step.is-focus {
+  background: var(--color-accent-soft);
+}
+
+.stair-step strong,
+.journey-wave-step strong,
+.calendar-day strong,
+.schedule-item strong {
+  display: block;
+  min-width: 0;
+  color: var(--color-text);
+  font-size: 20px;
+  line-height: 1.12;
+}
+
+.stair-step p,
+.journey-wave-step p,
+.calendar-task,
+.schedule-item p {
+  min-width: 0;
+  margin: 10px 0 0;
+  color: var(--color-muted);
+  font-size: 14px;
+  line-height: 1.28;
+}
+
+.journey-wave {
+  position: relative;
+  height: 430px;
+  max-height: 100%;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.journey-wave-line {
+  position: absolute;
+  inset: 88px 36px 92px;
+  background: linear-gradient(90deg, transparent 0 4%, var(--color-line) 4% 96%, transparent 96%);
+  clip-path: polygon(0 58%, 20% 24%, 40% 68%, 60% 36%, 80% 54%, 100% 18%, 100% 24%, 80% 60%, 60% 42%, 40% 74%, 20% 30%, 0 64%);
+}
+
+.journey-wave-step {
+  position: absolute;
+  display: grid;
+  align-content: start;
+  width: 188px;
+  min-height: 132px;
+  min-width: 0;
+  border: 1px solid var(--color-line);
+  background: var(--color-bg);
+  padding: 18px;
+  overflow: hidden;
+}
+
+.journey-wave-step span {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  margin-bottom: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  color: var(--color-bg);
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.journey-wave-step.is-one { left: 0; bottom: 20%; }
+
+.journey-wave-step.is-two { left: 20%; top: 4%; }
+
+.journey-wave-step.is-three { left: 40%; bottom: 3%; }
+
+.journey-wave-step.is-four { left: 60%; top: 13%; }
+
+.journey-wave-step.is-five { right: 0; top: 0; }
+
+.calendar-workplan {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 16px;
+  height: min(100%, 410px);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.calendar-day {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  min-width: 0;
+  min-height: 0;
+  border: 1px solid var(--color-line);
+  border-top: 5px solid var(--color-line);
+  padding: 20px 16px;
+  overflow: hidden;
+}
+
+.calendar-day.is-focus {
+  border-top-color: var(--color-accent);
+  background: var(--color-accent-soft);
+}
+
+.calendar-task {
+  display: block;
+  margin: 0;
+  border-top: 1px solid var(--color-line);
+  padding-top: 12px;
+}
+
+.schedule-list {
+  display: grid;
+  gap: 0;
+  height: min(100%, 390px);
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.schedule-item {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 24px;
+  align-items: start;
+  min-width: 0;
+  border-top: 1px solid var(--color-line);
+  padding: 20px 0;
+  overflow: hidden;
+}
+
+.schedule-item:last-child {
+  border-bottom: 1px solid var(--color-line);
+}
+
+.schedule-time {
+  color: var(--color-accent);
+  font-size: 18px;
+  font-weight: 850;
+  line-height: 1;
+}

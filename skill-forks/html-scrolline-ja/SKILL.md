@@ -13,6 +13,10 @@ Studio Yebisuの日本語派生版。原作者の公式翻訳ではありませ�
 
 同梱references/WORKFLOW.mdで、実作例・入力・環境・コマンドと確認範囲を読む。
 
+## スキルの選択肢
+
+原典はrail/data/launch/zoom/canvas/kineticの6conceptを持ち、MP4は`npm run export`で出力する。今回の例はrailだけを使い、他conceptとMP4は未実施。
+
 ## 固有の制作方式
 
 原典deck.yaml・plan・Vite build・Scrolline engineとrail-advance/era-shiftで6停止点を連続的につなぐ。engine/moves/conceptsは原典と一致。内部localeはen、HTMLの表示は日本語。Windows Chrome探索だけを明示adapterで補正する。原典全体CIのWindowsパス3件不合格を保持し、HTTP上のcore・smoke・操作確認と分ける。GSAP独自条件と各MITの原文通知を分けて保持。
@@ -30,9 +34,19 @@ Studio Yebisuの日本語派生版。原作者の公式翻訳ではありませ�
 - 先に読み手、目的、結論、必要なページ、出力形式を決める。
 - 入力の出典と数値を確認し、万円・件・%・ポイントを区別する。架空条件と評価目標を実績に見せない。
 - 日本語の見出しは意味の区切りで改行し、数字と単位が不自然に分かれないようにする。
-- Webは必要文字を収録したOFL書体を埋め込む。PowerPointは受け手の書体環境と全ページの実描画を確認する。
+- この作例は端末の游明朝・游ゴシック等を使い、Webフォントを埋め込んでいない。書体を替えたら全停止点を描画し直す。PPTXは対象外。
 - 原典の方式で実ファイルを生成し、全ページの本文、グラフ、図、ノート、移動を確認する。
 
 ## 再現と利用条件
 
 完成例と再現キットはカタログの当該リポに掲載。環境と制約はreferences/WORKFLOW.mdに記載する。上流コードと書体の条件はupstream内の原文を保持し、カタログのCC0を上流へ適用しない。
+
+## 現在の作例の実施範囲（Round4）
+
+railだけを使い、5月企画→6月会場→7月案内→8月当日を連続して示す。月の間隔を広げて項目名を添え、停止画と自然な移動途中の両方で変化を確かめた。
+
+- 原典はrail/data/launch/zoom/canvas/kineticの6conceptとMP4 exportを持つ。今回制作したのはrailだけで、残り5conceptとMP4は未実施。
+- 内部localeはenのまま、日本語本文と端末字体を利用。日本語locale機能を実装した作例ではない。
+- 原典全体CIのWindowsパス3件不合格は旧実行記録を保持。今回のbuild/smokeと操作検査を、全CI合格へ読み替えない。印刷・縦長mobile・60fpsの定量確認も未実施。
+
+全6頁の実描画と個別の動作証拠は制作側の確認。独立Kimi K3/Opus5.5の新しい版の評価は別に行う。過去の採点を新しい画像へ引き継がない。

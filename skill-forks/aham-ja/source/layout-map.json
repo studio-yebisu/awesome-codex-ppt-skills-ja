@@ -1,0 +1,84 @@
+{
+  "purpose": "版式IDと原典関数の対応表。版式IDはページ本文に出さず、ここだけに置く（本文の section_label は内容名）。",
+  "plan_source": "input/phase-05-layout-plan.json",
+  "theme": "A（upstream/references/theme-tiers.md：白地・中性グレー・青は点在のみ）",
+  "pages": [
+    {
+      "page": 1,
+      "layout_id": "SPC-01",
+      "function": "themes.cover('A', ...)",
+      "section_label_in_body": null,
+      "previous_layout_id": "SPC cover"
+    },
+    {
+      "page": 2,
+      "layout_id": "V-02",
+      "function": "charts.gantt(40,150,1120,420,...,20)+16pxラベル補正+終端20",
+      "section_label_in_body": "時間配分",
+      "previous_layout_id": "E-03"
+    },
+    {
+      "page": 3,
+      "layout_id": "E-03",
+      "function": "layouts.stage_flow(3段,dark_last=False)+translate(67,0)+入力補足",
+      "section_label_in_body": "作業の入口",
+      "previous_layout_id": "E-04"
+    },
+    {
+      "page": 4,
+      "layout_id": "A-90",
+      "function": "structures.swimlane_roadmap(40,140,1180,440,...,4,unit_label='週',legend=True)+日本語凡例と可読性補正",
+      "section_label_in_body": "四週間の試行計画",
+      "previous_layout_id": "A-90"
+    }
+  ],
+  "chrome": "themes.chrome('A', section_label, action_title, footer_source, page, 4, body, brand='朝作業')（tsize は原典既定の32）",
+  "adapters": [
+    {
+      "id": "font-family",
+      "what": "原典の SANS / MONO 字体列を完全一致で JA_FONT に置き換える",
+      "value": "Manrope, 'Zen Kaku Gothic New', sans-serif"
+    },
+    {
+      "id": "ea-font-registration",
+      "what": "変換器の和文字体集合 EA_FONTS に実行時だけ Zen Kaku Gothic New を加え、PPTX で latin=Manrope / ea=Zen Kaku Gothic New にする（ファイルは変更しない）"
+    },
+    {
+      "id": "fixed-labels",
+      "what": "原典の中国語固定文字と凡例を和訳する",
+      "value": {
+        ">目录　CONTENTS<": ">目次<",
+        ">来源：": ">出典：",
+        ">已承诺<": ">実施確定<",
+        ">计划中<": ">計画<",
+        ">拟议<": ">提案<"
+      }
+    },
+    {
+      "id": "chart-label-readability",
+      "what": "P2の目盛り・所要時間・作業名を16px/INK1にし、原典と同じ軸式で20分終端を追加。棒と比率は不変"
+    },
+    {
+      "id": "stage-centering-and-detail",
+      "what": "P3原典stage_flowを右67px平行移動し、ラベルを16/18pxへ。原典Tで入力済み補足を各段下へ加える。相対接続と箱サイズは不変"
+    },
+    {
+      "id": "roadmap-legend-readability",
+      "what": "P4原典凡例を表示。凡例14px、目盛り/泳道名16px、ブロック名14pxへ濃く補正。proposed状態は維持"
+    }
+  ],
+  "coordinate_adapters": "原典のstage_flow全体を右67px平行移動。相対接続と箱サイズを保持。P2/P4の全体幅は原典引数で指定。原典ファイル未変更。",
+  "removed_from_previous": [
+    "コバルト・黄色への色置換（page別 mapping）",
+    "角丸 rx の一律削除",
+    "font-size を16px未満から16pxへ一律拡大（chrome の品牌文字が蓝点に接触した原因）",
+    "『月』→『週』の全文置換",
+    "section_label への版式ID（SPC cover / E-03 / E-04 / A-90）の露出",
+    "tsize=38（原典既定32へ戻す）"
+  ],
+  "current_style_changes": [
+    "P2ラベル16px/INK1と終端20追加",
+    "P3箱内ラベル16/18px、下に原典Tで補足",
+    "P4目盛り/泳道名16px、ブロック/凡例14pxで濃く表示"
+  ]
+}

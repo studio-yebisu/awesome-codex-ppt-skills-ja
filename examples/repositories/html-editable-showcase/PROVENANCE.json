@@ -2,17 +2,19 @@
   "repository": "Hasasasa/html-to-editable-pptx",
   "commit": "17c1dbb76e958543dc2741a7d50ca374354f33b7",
   "license": "MIT",
-  "scope": "Original converter plus local full-TTF Japanese font registry adapter",
+  "scope": "Original converter plus declared font/nativeflag/effects/auditlabel/shared-PowerPoint adapters",
   "upstream_preserved": true,
   "case_studies": [
     "html-editable-showcase"
   ],
-  "method": "Original convert.py CLI → preflight → original Playwright measure → python-pptx assemble; original --no-embed-fonts compatibility option. Wrapper registers local Japanese font families and maps seeded Noto SC aliases to JP fonts; no converter replacement.",
-  "command": "python convert_local_fonts.py index.html --out deck.pptx --keep-screenshots --no-embed-fonts --no-verify --no-visual-audit",
+  "method": "原典変換・Stage5a/5b＋明示したcase adapter、Codex別担当による全5頁比較、文字/旗の実PowerPoint編集検査。字体埋込成功は未実証。",
+  "command": "python convert_local_fonts.py index.audited.html --out deck.pptx --keep-screenshots --no-embed-fonts",
   "modifications": [
-    "Local font resolver adapter only; core converter remains unchanged.",
-    "No OS font installation. Detailed structural/visual audit disabled per project scope.",
-    "Embedded-TTF output failed PowerPoint COM open; original --no-embed-fonts output opened successfully. Full original TTFs/OFL provided for manual font installation."
+    "Local official TTF registry; no font embedding in delivered output.",
+    "Original CSS flag workaround remains SVG in audited HTML; known5vertices converted to1native freeform after original assemble, before Stage5.",
+    "Implicit shape effects cleared before Stage5; no original source changes.",
+    "Audit labels ASCII only; shared PowerPoint renderer closes only opened presentation, never application.",
+    "Local audited HTML changes for rule length and numbered rows; original index.html unchanged."
   ],
   "source_refs": [
     {
@@ -47,11 +49,34 @@
     }
   ],
   "preview_export": {
-    "method": "tools/render_powerpoint.ps1 run once on no-embed deck.pptx",
-    "application": "Microsoft PowerPoint 16.0",
+    "method": "render_current.ps1 actual PowerPoint PDF → render_pdf_previews.py RGB PNG",
     "pages": 5,
-    "output": "render/slide-01.png through slide-05.png and render/deck.pdf",
-    "source_html": "index.html",
-    "detail_review": false
-  }
+    "detail_review": true,
+    "all5_source_compares_read_by_separate_parent": true
+  },
+  "current_pptx_sha256": "e516d41f8380551214c3770b4a82a1d6320e2333d080f3e5461d2cd62a92ff39",
+  "current_finding_resolution": "qa/finding-resolution.json",
+  "new_opus_production": false,
+  "historical_repair_20261015": {
+    "checked_at": "2026-10-15T15:06:47.264425+00:00",
+    "command": "python convert_local_fonts.py index.audited.html --out deck.pptx --keep-screenshots --no-embed-fonts",
+    "audit_mode": "page",
+    "original_stage5a_structural_warnings": 0,
+    "original_stage5b_compare_pages": 5,
+    "agent_read_all5_compare_images": true,
+    "native_edit_saved_and_reopened": true,
+    "pptx_sha256": "ddb5c11d1ca379b61d7c3dffb53f752f559e4aa45fe52dc60e2be95fd4e9b2bf",
+    "input_original_sha256": "a0033881523aba941718bff8df7c575a09f8ad784d6edda777caaf9b9d1c60fb",
+    "audited_copy_sha256": "ca6196303a69704a431f44af5d77c0a07d056341eff7b79c7fd55d5f470b21b5",
+    "fixed": [
+      "CSS border triangle flag replaced with equivalent SVG in audited copy",
+      "Implicit Office theme effects removed by a declared adapter before original Stage5 checks"
+    ],
+    "remaining": [
+      "Browser and PowerPoint line metrics and font weights differ slightly",
+      "SVG flag remains an image object; fonts are not embedded",
+      "Repair not independently regraded yet"
+    ]
+  },
+  "current_distribution_replay": "source/distribution-replay.json"
 }

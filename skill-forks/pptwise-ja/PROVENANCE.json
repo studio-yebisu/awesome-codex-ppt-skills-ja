@@ -1,0 +1,79 @@
+{
+  "repository": "liustack/pptwise",
+  "upstream_commit": "65690bc705c1b5db41b5593015675945673da542",
+  "license": "MIT",
+  "runtime": "pptwise 0.44.0 original source-built CLI / Node24",
+  "read_files": [
+    "LICENSE",
+    "README.md",
+    "skills/pptwise/SKILL.md",
+    "skills/pptwise/references/spec.md",
+    "skills/pptwise/references/components.md",
+    "skills/pptwise/references/validate.md",
+    "docs/ir.md",
+    "docs/themes.md",
+    "tsup.config.ts",
+    "package.json"
+  ],
+  "original_cli_live_truth": [
+    "schema --spec",
+    "narratives --json",
+    "themes --json",
+    "schema --component flowchart/hub_spoke/architecture/paragraph",
+    "doctor"
+  ],
+  "theme_method": "Original Rally menu retained; orange/ink/paper palette, darker subtitle and diagram border, localized fonts through an explicit memory-only allowlist adapter.",
+  "concept_method": "Original steps+icon_cards for selection and actualpreset examples; hub_spoke for unordered metadata; allotment for actual17/13font-family counts.",
+  "source_acquisition": "Fixed Git commit with sparse checkout src/skills/docs/scripts/themes; common archive acquisition stopped above200MB, so giant media/gallery were excluded. Original source tsup ESM+DTS build succeeded, no full test run.",
+  "commands": [
+    "python source/rebuild_pptwise.py --node <Node実体>",
+    "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath .pptwise/input/deck.pptx -OutputDirectory render",
+    "python source/render_pdf_previews.py render"
+  ],
+  "pptx_sha256": "18c15404d5a658092ce0df60bd2844dcf119466cb1c8edd8f9c5869540743be3",
+  "method": "Original fixed source-built CLI spec→inspect→pages→build (assemble/validate/audit/preview/render), with explicit in-memory font allowlist adapter only.",
+  "current_pptx": ".pptwise/input/deck.pptx",
+  "repair_model": {
+    "scope": "Integration agent implemented the current project/build/font-adapter repair",
+    "opus_authored_current_pptwise_repair": false
+  },
+  "source_refs": [
+    {
+      "path": "src/render/fonts.ts",
+      "preserved_path": "runtime/src/render/fonts.ts",
+      "sha256": "3f95699206230528da53e8546fa070e438f04761a3df827a7f9515bedf80eca8",
+      "url": "https://github.com/liustack/pptwise/blob/65690bc705c1b5db41b5593015675945673da542/src/render/fonts.ts"
+    }
+  ],
+  "font_adapter": {
+    "file": "source/pptwise_ja_font_adapter.mjs",
+    "scope": "In-memory SAFE_FONTS/CJK_SAFE_FACES additions only",
+    "added": [
+      "Zen Kaku Gothic New",
+      "Space Grotesk"
+    ],
+    "original_chunk_sha256": "36c3b6ef31a0e36b5814e357e8033b12ae61f9e90537b0ddb6e54c7b19df2d1e"
+  },
+  "original_files_modified": false,
+  "pptx_post_processed": false,
+  "signature_recipe": {
+    "page": 5,
+    "drawnBy": "allotment",
+    "evidence": "source/pipeline/build-final.json",
+    "source": "input/oss-font-kit.json",
+    "source_sha256": "aab65d0e2ac99c70b0f97a3da6e7d69f047a361b5bc501314eb7b3833e8d8530",
+    "derived_counts": {
+      "ja": 17,
+      "latin": 13,
+      "total": 30
+    },
+    "invented_for_recipe": false
+  },
+  "image_workflow": {
+    "status": "not_used_current",
+    "legacy": "Previous concept image and fictitious allocation retained only in local history, not current input or evidence"
+  },
+  "original_self_check": "CLI JSON build/fit report only",
+  "catalog_visual_check": "Separately requested PowerPointPNG visual check",
+  "revision": "Codex implementation after Round4 source-contract critique; no new Opus production"
+}

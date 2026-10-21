@@ -1,0 +1,70 @@
+component row_cards on page space (5 of 6): content, kind "list"
+name: Full-Width Rows
+what it is: Full-width bands stacked down the page, each numbered, optionally marked with a symbol, and carrying up to three levels of text. The itemised list in an annual report.
+choose it: Choose it when each item carries more than a line and deserves a band of its own. Use icon_cards for short parallel items, and bullets when one line each is enough.
+not for: Short parallel items, which belong in icon_cards.
+full-body: no
+schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "component": "row_cards",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "row_cards"
+    },
+    "items": {
+      "minItems": 3,
+      "maxItems": 6,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "icon": {
+            "$ref": "#/$defs/IconName"
+          },
+          "title": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "sub": {
+            "type": "string"
+          },
+          "highlight": {
+            "type": "boolean"
+          },
+          "tone": {
+            "$ref": "#/$defs/Tone"
+          }
+        },
+        "required": [
+          "title"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "type",
+    "items"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "Tone": {
+      "type": "string",
+      "enum": [
+        "danger",
+        "warning",
+        "success"
+      ],
+      "description": "What kind of news the item is, painted in the theme's own colour for it: \"danger\" for something that broke, \"warning\" for something to watch or still being handled, \"success\" for something that recovered or went right."
+    },
+    "IconName": {
+      "type": "string",
+      "description": "One icon name from the bundled catalog. Run `pptwise icons` for the full list."
+    }
+  }
+}

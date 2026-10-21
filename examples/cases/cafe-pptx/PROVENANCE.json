@@ -25,11 +25,11 @@
     }
   ],
   "fork": "ppt-master-ja",
-  "method": "日本語の文字・図形profile。上流guard・checker・native SVG→PPTX変換器を使用。Default全工程ではない。PowerPoint本体でPNG/PDF出力。",
+  "method": "日本語専用器のSVGから、無変更の原典guard・P05 early・座標検証・final・native変換を実行。BIZ字体登録と実測文字枠幅補正は局所adapter。原典の全Quick/Default工程ではない。",
   "input_sha256": "32d1c7807f60b1c510477946ea668f3884776a09c2d3dc5f3c1e44b38285c545",
   "input": "input/data.json",
   "output": "deck.pptx",
-  "generator": "tools/make_business_pptx.py",
+  "generator": "source/reproduce.py",
   "changes": [
     "日本語入力・講稿",
     "日本語書体と改行",
@@ -37,7 +37,67 @@
     "当地プレビュー同期"
   ],
   "license": "MIT",
-  "fonts": "licenses/fonts",
+  "fonts": "fonts/ (official static BIZ UDPGothic; OFL retained)",
   "qa": "QA.json",
-  "render_report": "render/powerpoint-render.json"
+  "render_report": "render/powerpoint-render.json",
+  "artifact_sha256": "13e0634e921d7dd3d4ce03ebbc717aa5327bba1c525b1fb17a480eca6c20dffe",
+  "repair": {
+    "implemented_by": "Codex integration; no new Opus call",
+    "scope": "Independent round1 review findings plus defects found by opening every page",
+    "native_inventory": "source/native-elements.json",
+    "actual_fonts": "source/pdf-fonts.json",
+    "preview_method": "PowerPoint16 exported PDF rasterized to RGB PNG; direct PowerPoint PNGs retained in render/direct-png",
+    "all_pages_inspected": true,
+    "independent_current_version_recheck": "pending",
+    "user_adoption": false
+  },
+  "powerpoint_verified": true,
+  "render_method": "PowerPoint16 exported PDF rasterized to RGB PNG; direct PowerPoint PNGs retained in render/direct-png",
+  "not_demonstrated": [
+    "Original complete Quick authoring lifecycle including main-agent hand-authored SVG/init/import",
+    "Default/Brand/Style/Layout/Deck workflows",
+    "Office data-bound Chart/Table",
+    "Complex animation/narration/video",
+    "User business decisions, current independent review, adoption, real operational results"
+  ],
+  "current_distribution_replay": "source/distribution-replay.json",
+  "historical_execution_records": "Any older command records describe prior builds; current repair checks are QA.json, source/current-check-receipts.json and source/distribution-replay.json.",
+  "execution_type": "dedicated_quick_svg_technical_subset_with_disclosed_font_and_frame_adapters",
+  "current_repair": {
+    "implemented_by": "Codex",
+    "model_calls": false,
+    "pages": "5 operating relationships; 6 risk/check/evidence grid; 7 source-scaled five-week schedule; 8 current vs future decision",
+    "native_objects": {
+      "native_shapes": 183,
+      "native_text_shapes": 141,
+      "pictures": 0,
+      "native_charts": 0,
+      "native_tables": 0
+    },
+    "all_pages_read": true,
+    "original_checker_errors": 0,
+    "original_checker_warnings": 8,
+    "text_overflow": 0,
+    "new_adapters": [
+      "source/export_with_biz.py",
+      "source/fit_text_frames.py"
+    ],
+    "source_svg_native_comparisons": "review/svg-native-sources.json",
+    "original_quick_authority": "source/upstream/workflows/profiles/quick-generate.md",
+    "independent_current_review": "pending"
+  },
+  "limitations": [
+    "日本語の専用生成器で、Quick Generateの意味付きSVG・P05 early gate・final gate・座標検証・native変換を実行した技術部分例。原典の主エージェントによる全頁手書き、init/importを含むQuick全工程やDefaultは実証していない。",
+    "原典のguard・checker・converter本体は不変。BIZを東アジア字体として登録するメモリー内adapterと、PowerPoint実測に基づく文字枠幅だけの後処理を明示する。",
+    "表・工程表は個別に編集できる文字・図形で、Office Table/Chartは0。8頁はflat生成で、既存PPTXの母版を保持する編集やBrand/Style/Layout/Deck制作は未実証。",
+    "店名・数値・計画は架空の入力。調査・契約・投資の実績や承認、実業務の効果を主張しない。",
+    "全8頁を制作側が実視認。原典のPPT-safe字体に関するwarnings8を保持。独立の現版評価・利用者採用・別端末の表示は未確認。"
+  ],
+  "current_execution_receipts": [
+    "build-log.json",
+    "source/execution-receipts.json",
+    "source/current-check-receipts.json",
+    "source/edit-reopen.json",
+    "source/distribution-replay.json"
+  ]
 }

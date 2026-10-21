@@ -1,26 +1,59 @@
 {
-  "status": "light_check_complete",
-  "generation": "Six semantic slides built from original Mode C template; six full-reveal PNGs rendered in Chromium.",
-  "checks": [
+  "status": "all6_visual_original_validator_and_reveal_print_checked",
+  "repair_author": "Codex",
+  "original_validator": "source/original-validation.json",
+  "original_validator_result": "VALIDATION_OK; document-language zh-Hant-TW warning retained for this Japanese adaptation.",
+  "browser_checks": "source/browser-checks.json",
+  "visual_scope": "All6 pages at1600x900 viewed. All6 captured with correct page/reveal state at1280x720 and1920x1080; repaired page2/6 additionally viewed at those sizes.",
+  "images": [
     {
-      "kind": "generation_success",
-      "result": "passed",
-      "details": "Original template/controller + BIZ UDPGothic/Manrope local TTF loaded in headless Chromium; six PNG previews generated."
+      "index": 1,
+      "path": "render/slide-01.png",
+      "sha256": "0f9216fbb539bac172bdd271f685992bbb1e5f5a8fdaeb349eba49a724419601"
     },
     {
-      "kind": "first_main_display",
-      "result": "observed",
-      "details": "Cover and whole/part comparison first displays inspected. A cover caption/rule overlap was corrected by moving the rule; previews regenerated."
+      "index": 2,
+      "path": "render/slide-02.png",
+      "sha256": "ea026d87c8699698a5d251c80275cde3cb885352d43cdcbc31fbad689d5a15ae"
+    },
+    {
+      "index": 3,
+      "path": "render/slide-03.png",
+      "sha256": "6ef1675e6c0a4c3a4845f3cd6999168b28ff2ee7d2c50b2d468b54c584333aa3"
+    },
+    {
+      "index": 4,
+      "path": "render/slide-04.png",
+      "sha256": "99e3f848adb6046617ca02958805217e417001c9ec015e63e90e0141eb9472fb"
+    },
+    {
+      "index": 5,
+      "path": "render/slide-05.png",
+      "sha256": "aa6e97005870efae466d4accf9a96965129effbf126d4d77ec12cb436034cd70"
+    },
+    {
+      "index": 6,
+      "path": "render/slide-06.png",
+      "sha256": "a5baacc3c806adbb8e6621020e25e4483394876bda2784d82292946f1c622c25"
     }
   ],
-  "all_pages_detailed_visual_review": false,
+  "checks": [
+    "Unique per-page teaching points/labels/core takeaways recorded.",
+    "Cover has10 actual sectors with3red.",
+    "Comparison arrays have equal square size/top alignment; formulas include0.3/0.15.",
+    "Page6 conclusion clear of divider.",
+    "ArrowRight/Space reveal same-page steps; ArrowLeft removes a step; Home/End and6hash routes work.",
+    "Print forces all19fragments visible and produces6PDFpages."
+  ],
   "independent_review": false,
-  "structural_audit": false,
-  "zip_reexecution": false,
-  "classroom_effectiveness_test": false,
-  "limitations": [
-    "Only initial main/representative display was visually checked.",
-    "No all-page detailed visual review, independent review, structural audit, ZIP re-execution, fullscreen/keyboard regression suite or print/PDF verification.",
-    "Original controller mechanisms retained; runtime display success does not establish classroom adoption."
-  ]
+  "independent_recheck": "pending",
+  "not_performed": [
+    "Mode A image-first PPTX",
+    "Mode B editable PPTX",
+    "Classroom learning-effect study",
+    "Physical printer compatibility",
+    "Independent repaired-candidate review",
+    "Formal adoption"
+  ],
+  "distribution_replay": "source/zip-replay.json"
 }

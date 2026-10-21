@@ -1,0 +1,78 @@
+{
+  "status": "codex_round4_repair_all_pages_read_independent_recheck_pending",
+  "author": "Codex",
+  "page_count": 8,
+  "artifact_sha256": "15bca2d76d9372760ef6c7ae0230e8bc77c40db048667675bc31fd7532bbde0c",
+  "all_pages_visually_reviewed": true,
+  "visual_review": "Current full-size page images inspected for Japanese text, diagrams, hierarchy and accidental overlap. Author review, not independent approval.",
+  "independent_review": "pending new artifact",
+  "human_adoption": "pending",
+  "publication": false,
+  "images": [
+    {
+      "file": "render/slide-01.png",
+      "sha256": "25955b17cc0b311cb4456be2039b12cd4fe8f415418a8d22c60434adff41cef2"
+    },
+    {
+      "file": "render/slide-02.png",
+      "sha256": "4f7020349f398d0b4147c37293e07da2676751aa66748acc8217f07a5c9e4867"
+    },
+    {
+      "file": "render/slide-03.png",
+      "sha256": "54947965187546baa0e2a27c72e476176f5adc4199d5892fea3d5554bb53721c"
+    },
+    {
+      "file": "render/slide-04.png",
+      "sha256": "87ab757253262752991085eb8af55b355ff24acfc2f7ae6e3e09f1b7d386d764"
+    },
+    {
+      "file": "render/slide-05.png",
+      "sha256": "a47661c4249e6b6c484d73527dbd895cf0c751ae5d719fc2edcfb2197cdd3d2a"
+    },
+    {
+      "file": "render/slide-06.png",
+      "sha256": "a4579ec0b1c1141a2d636ef4f0490b4f538e5f0e4a2770c601f7f7319c8b430b"
+    },
+    {
+      "file": "render/slide-07.png",
+      "sha256": "1c619551ef133f8922c4d9e066c85960ca9cc84b94f1051e8346c2ff82f5e01c"
+    },
+    {
+      "file": "render/slide-08.png",
+      "sha256": "f388b26ee4276c392a1bc25f5ca54e5da5f6b1b2049008fd148bc2a341236f82"
+    }
+  ],
+  "original_gates": "source/round4-original-gates.json",
+  "notes": [
+    "Original verify Windows spawn EINVAL preserved; adapter changes launch/browser selection only",
+    "Original inspect all8 steps at1440x900 and390x844; narrow canvas becomes small and desktop is recommended",
+    "Step5 book no longer hides next reader label"
+  ],
+  "not_executed": [
+    "independent model re-review",
+    "fresh dependency install for this repair"
+  ],
+  "zip_replay": "source/round3-zip-replay.json",
+  "zip_replay_note": "Source checks executed from the first synchronized archive; final packaging adds these receipts. Current source hashes remain checked.",
+  "round3_repair": "source/round3-label-repair.json",
+  "round4": {
+    "source_proofs": [
+      "source/round4-original-gates.json",
+      "source/round4-motion-proof.json",
+      "input/steps.json",
+      "render/major-02.png",
+      "render/morph-before.png",
+      "render/morph-mid.png",
+      "render/morph-after.png",
+      "render/present-mode.png"
+    ],
+    "visual_review": "All46 current page PNGs read by Codex across seven cases. Relevant natural motion frames, W2–W4 and all7 presenter notes screenshots also read. Independent review of this exact artifact remains pending.",
+    "not_demonstrated": [
+      "段階ごとに固定座標を与える経路を使用。原典の自動レイアウト再中央揃え、sync-kit、既存資料の編集、スワイプ操作は未実証。",
+      "狭い画面は原典canvas全体が縮小する。文字を読む用途には広い画面を推奨。PPTX/PDF出力は対象外。",
+      "自然な遷移の3時点を確認した範囲。連続動画全フレームやフレームレートの品質を保証しない。"
+    ]
+  },
+  "normal_motion": "source/round4-motion-proof.json",
+  "distribution_reexecution": "source/round4-zip-replay.json"
+}

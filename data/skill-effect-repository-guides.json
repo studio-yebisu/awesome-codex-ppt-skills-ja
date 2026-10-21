@@ -1,0 +1,51 @@
+[
+  {
+    "repository": "HututuWorks/sci-diagram-pptx",
+    "summary_ja": "読める模式図PNGの日本語・箱・矢印を、個別に編集できるPowerPoint図へ復元する。",
+    "execution_type": "original_reconstruction_portable_pptxgenjs",
+    "method_ja": "原典Reconstructionの要素対応表と公式PptxGenJS templateを使用。原典checkerと実際の文字編集・保存・再表示を確認。",
+    "upstream_commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
+    "license": "Apache-2.0",
+    "license_note": "原典LICENSE、PptxGenJS MITを一式に保持。原典取得物にNOTICEはない。非公式の日本語派生。",
+    "requirements": [
+      "復元したい模式図PNGと読める日本語ラベル",
+      "Node.js 20以上、PptxGenJS 4.0.1、Python 3.10以上とlxml",
+      "作例の書体はWindowsのYu Gothic（ファイルは再配布しない）",
+      "描画確認はPowerPoint、またはLibreOfficeとPoppler。実際の編集確認はPowerPoint。"
+    ],
+    "commands": [
+      "cd pass-01",
+      "node build.mjs",
+      "python ../upstream/scripts/check_pptx.py editable.pptx --source source.png --build-source build.mjs --require-single-slide --pass-index 1 --output ../qa/check-pass-01.json"
+    ],
+    "steps": [
+      "原図PNGと正確なラベルを渡す",
+      "文字・図形・矢印・画像のまま残す領域を対応表へ分ける",
+      "公式templateのSOURCE/NODES/EDGES/INSETSを原図のpixel座標で埋めて生成する",
+      "原典checkerを実行し、元画像と描画を比較して意味と方向を確認する",
+      "PPTXの文字を別コピーで変更・保存し、開き直して編集性を確かめる"
+    ],
+    "limitations": [
+      "この作例はReconstruction専用。既存PPTXのRepairはartifact runtimeが必要で未実施。",
+      "新しい科学的関係の考案、統計グラフや実験写真の忠実復元、見た目の改善率・時短の測定は示さない。",
+      "見た目が同じでも、復元前PNGは一つの画像、PPTXは個別の文字・図形・矢印。"
+    ],
+    "source_download": "downloads/sci-diagram-reconstruction-example-ja.zip",
+    "fork_download": "downloads/sci-diagram-reconstruction-ja.zip",
+    "guide": "examples/repositories/sci-diagram-reconstruction/GUIDE.md",
+    "source_refs": [
+      {
+        "path": "skills/sci-diagram-pptx/SKILL.md",
+        "url": "https://github.com/HututuWorks/sci-diagram-pptx/blob/cc8f0030edf80eeab6e52849b8c39fe638466776/skills/sci-diagram-pptx/SKILL.md"
+      }
+    ]
+  },
+  {
+    "repository": "NomiciAI/mbb-page-maker",
+    "execution_type": "original_golden_path_with_byte_identical_runtime_and_catalog_bridge"
+  },
+  {
+    "repository": "kimsh-1/deck-factory",
+    "execution_type": "original_html_design_with_browser_pdf_and_pypdf_lite_substitute"
+  }
+]

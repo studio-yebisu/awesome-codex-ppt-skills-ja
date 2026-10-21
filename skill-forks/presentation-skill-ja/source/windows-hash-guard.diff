@@ -1,0 +1,12 @@
+--- upstream/scripts/render_cache.py
++++ runtime/scripts/render_cache.py
+@@ -16,7 +16,8 @@
+ def file_hash(path: Path) -> str:
+     """Hash bytes, rejecting files replaced or modified during the read."""
+     def signature(stat: os.stat_result) -> tuple[int, ...]:
+-        return (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
++        creation_ns = getattr(stat, "st_birthtime_ns", stat.st_ctime_ns) if os.name == "nt" else stat.st_ctime_ns
++        return (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns, creation_ns)
+ 
+     digest = hashlib.sha256()
+     with path.open("rb") as handle:

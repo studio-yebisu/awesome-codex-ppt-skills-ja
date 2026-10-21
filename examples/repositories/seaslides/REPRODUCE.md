@@ -1,31 +1,32 @@
-# 読書会を月1回続けるにはの再現キット
+# 同じ本文をHTML・SVG・PNG・PDFへ揃え、用途に合う紙面を保てる。
 
-完成資料はこのフォルダー直下。生成経路・使用した原典・当時の確認範囲はPROVENANCE.jsonとQA.jsonに記録しています。
+入力：読書会の日程・参加条件・60分の進行・担当と講稿。
+出力：TCSから生成したHTMLと同じbuildのSVG・PNG2経路・PDF。
 
-## Windowsで同じ作例を生成
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全5頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-1. ZIPを展開。PowerShellでこのフォルダーへ移動。
-2. Python 3.13、Node.js、必要に応じてGit Bashを用意。
-3. 次を実行（project内venv・固定npm依存・公式固定commitの書体を取得します）。
+## 使い方
 
-    .\reproduce\Reproduce.ps1
+1. content_design_spec.mdで5頁の役割を決める
+2. content.htmlの本文と講稿、template.cssの再利用部品を編集する
+3. source/rebuild.pyで原典source gate・--all・visual gateを実行する
+4. overviewから全browser PNGを確認し、HTMLプレーヤーの移動も試す
 
-生成先: reproduce/workspace/examples/repositories/seaslides/
+## 生成・検査
 
-PowerPoint本体でPNG/PDFを描画する場合は、Noto Sans JPをインストール済みのWindows / PowerPoint / pwshを使用し、-Renderを指定します。HTMLは生成したファイルを開き、原典のページ操作を使います。再生成した出力は確認前として記録し、元のQAを成功扱いで引き継ぎません。
+`python source/rebuild.py`
 
-## 自分の題材へ
+脚注を20px相当へ拡大し、透過を解除。4頁は担当ごとの横一行へ変更。原典の全形式compilerを再実行。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
 
-完成例のinputとPROMPT.txtを参考に、読み手・目的・数値・結論を用意。日本語派生版SKILL.mdから当該原典の手順へ進みます。この再現スクリプトは比較用の固定原稿を作るもので、input/data.jsonだけを変えれば全ページの文章が自動で変わる汎用アプリではありません。
+## 範囲
 
-原典のHTML lane、TCS、editorial-magazineテーマを使い、source gate→固有compiler --all→visual gateで生成する。Windowsのreceipt相対パスをPOSIX表記へ直す2ファイルの派生差分を保持し、validatorは変更しない。原典Motion・WebGL・ナビゲーションを保持し、日本語OFL書体と講稿を収録する。HTML表示はローカルHTTP経由。PPTXは今回の出力に含めない。
+- この作例はHTML lane。Typst・PPTX・画像生成は未実施
+- Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変
+- 静止画像とプレーヤーの操作UIは別の証拠
+- 架空の読書会の企画で、開催実績ではない
 
-## 原典と権利
+## 実行環境
 
-https://github.com/touying-typ/seaslides/tree/dcde5bf6c6875b300e2999fc7766f369a13a67ac
+Python 3 + Pillow/pypdf/python-pptx、Node 24。原典source/upstream/skills/seaslides-html-slides-skill/scripts/html_to_svgでnpm ciし、同じlockのPlaywright Chromiumを導入してからsource/rebuild.pyを実行する。OFL書体とMotion bundleは同梱。
 
-原典のコード、個別のライセンス、書体のOFLを保持。原典の広告用画像・動画・不要な既存デッキや実行環境はキットへ収録しません。
-
-原典package-lockからPlaywright 1.60とChromium headless shell 1223を使用します。Motion11.11.17はMIT表示とともにローカルbundleを同梱。生成HTMLはES moduleを使うため、出力フォルダーを `python -m http.server 8000` 等で配信して開きます。書き換え後も原典source/visual gateを通し、全ページを実表示して確認してください。
-
-固定renderer依存のnpm audit記録はsource/dependency-qa.jsonです。form-dataのHigh 1件を未解消として記録しています。この実例の再現は同梱原稿のローカル描画で、外部AI APIは呼びません。依存の検出記録と再現成功を区別します。
+配布ZIPの展開後再実行はsource/zip-replay.jsonに記録。依存の導入・ブラウザーの実行パスは受け手の環境へ合わせる。

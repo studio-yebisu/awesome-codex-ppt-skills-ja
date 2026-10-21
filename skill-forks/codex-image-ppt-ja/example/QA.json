@@ -1,0 +1,74 @@
+{
+  "status": "partial_original_workflow_current_artifact_and_state_checked_independent_review_pending",
+  "artifact_sha256": "661602d6d753221d3e15bd6b6fb71f8eeba3dccabe8d41c1495840e5a263d59f",
+  "prior_review_not_transferred": true,
+  "page_count": 3,
+  "images": [
+    {
+      "index": 0,
+      "path": "render/slide-01.png",
+      "sha256": "2d55abb2ebad56a1ea6ec5e76b2ad60ca2eed594b82c00e3bfb788c5a6270687"
+    },
+    {
+      "index": 1,
+      "path": "render/slide-02.png",
+      "sha256": "2c875f6c51e5e800714646b9bff69851c9f7017e5360872e1a120637528d63ae"
+    },
+    {
+      "index": 2,
+      "path": "render/slide-03.png",
+      "sha256": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13"
+    }
+  ],
+  "all_pages_visually_reviewed_by_author": true,
+  "independent_current_version_review": "pending_after_current_state_and_usage_repairs",
+  "human_adoption": false,
+  "production_adoption": false,
+  "current_native_inventory": "source/native-elements.json",
+  "current_pdf_fonts": "source/pdf-fonts.json",
+  "distribution_replay": {
+    "status": "passed_both_archives",
+    "evidence": "source/distribution-replay.json",
+    "native_content_equal": true,
+    "all_page_render_rgb_equal": true,
+    "archive_count": 2,
+    "replayed_page_count": 6,
+    "fresh_install_tested": false
+  },
+  "visual_review": {
+    "reviewer": "Codex implementation review; not independent scoring",
+    "all_current_pngs_opened": true,
+    "pages": [
+      0,
+      1,
+      2
+    ],
+    "findings": [
+      "白・紺・青緑と太い見出し、3つの図の線幅を見る。保存・コミット・共有を別段階で描く。",
+      "作業ツリー→ステージ→ローカル履歴の3箱と、git add/commitの矢印を見る。共通styleを保ち頁固有の関係図へ変えた。",
+      "右下の「pushの前に、／共有先と作業ブランチを確認」を見る。以前の一行の小さい注意から、二行の大きな注意へ画像編集で変えた。左の4手順とコマンドは維持。"
+    ]
+  },
+  "page3_generation_record": "source/imagegen-warning-repair.json",
+  "image_hash_check": "source/image-assembly-verification.json",
+  "current_workflow_scope": "Partial: multiple page workers, individual historical human approvals and repair dispatch-before-generation not performed. Deviations structured in both state files.",
+  "current_distribution_replay": "source/distribution-replay.json",
+  "current_comparison": {
+    "record": "source/imagegen-repair/comparison.json",
+    "before_preserved": true,
+    "after_is_current_powerpoint_render": true,
+    "current_after_sha256": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13",
+    "composition_visually_opened_by_author": true,
+    "slide_artifact_changed": false,
+    "independent_comparison_recheck": "pending"
+  },
+  "current_state_reconciliation": "source/state-artifact-reconciliation.json",
+  "all_current_state_image_hashes_match_embedded_images": true,
+  "current_distribution_validation": {
+    "type": "metadata_state_and_docs_revision_after_prior_full_replay",
+    "all_slide_artifact_image_render_pdf_and_existing_comparison_bytes_unchanged": true,
+    "original_reproduction_and_render_scripts_unchanged": true,
+    "full_powerpoint_replay_repeated_for_this_metadata_revision": false,
+    "details": "source/distribution-replay.json"
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-slides.com/schemas/archetypes.schema.json",
+  "title": "ArchetypeLibrary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "archetypes"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "archetypes": {
+      "type": "object",
+      "minProperties": 1,
+      "additionalProperties": {
+        "$ref": "#/$defs/archetype"
+      }
+    }
+  },
+  "$defs": {
+    "archetype": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "content_layout",
+        "story_roles"
+      ],
+      "properties": {
+        "content_layout": {
+          "type": "string",
+          "minLength": 1
+        },
+        "story_roles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "description": {
+          "type": "string"
+        },
+        "guidelines": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prohibitions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "goal": {
+          "type": "string"
+        },
+        "when_to_use": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "op_recipe": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["op"],
+            "properties": {
+              "op": {
+                "type": "string",
+                "description": "Operation name from slides operation batch"
+              },
+              "note": {
+                "type": "string",
+                "description": "How to populate this op for this archetype"
+              }
+            }
+          },
+          "description": "Canonical sequence of slides operations to render this archetype"
+        },
+        "template_layout_hint": {
+          "type": "string"
+        },
+        "allowed_slide_layouts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "sample_slide_numbers": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "sample_titles": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "avg_confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "visual_hint": {
+          "type": "string",
+          "description": "Short layout description for agent visual planning"
+        },
+        "action_title_template": {
+          "type": "string",
+          "description": "Title template with {subject} placeholder for deterministic plan generation"
+        },
+        "fallback_layout_tokens": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "description": "Ordered layout name search tokens for template layout inference"
+        },
+        "default_geometry": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "left": { "type": "number" },
+            "top": { "type": "number" },
+            "width": { "type": "number" },
+            "height": { "type": "number" },
+            "font_size": { "type": "integer", "minimum": 6 }
+          },
+          "description": "Fallback text-box geometry (inches) for text-only rendering"
+        }
+      }
+    }
+  }
+}

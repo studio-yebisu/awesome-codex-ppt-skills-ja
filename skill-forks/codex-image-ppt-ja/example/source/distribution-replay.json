@@ -1,0 +1,136 @@
+{
+  "scope": "Actual separate extraction/rebuild/native-content comparison/PowerPoint rendering for both example and skill ZIPs. No fresh install, image generation or independent score.",
+  "artifact": "codex-image-ppt.pptx",
+  "current_artifact_sha256": "661602d6d753221d3e15bd6b6fb71f8eeba3dccabe8d41c1495840e5a263d59f",
+  "tested_archives": [
+    {
+      "path": "downloads/codex-image-ppt-example-ja.zip",
+      "tested_archive_sha256": "869f436c62923ba4a6a0851050f9768057cfc03d0020ea8f31674abc1162c71c",
+      "source_manifests": [
+        {
+          "root": "codex-image-ppt-example-ja",
+          "file_hashes_checked": 78,
+          "mismatches": []
+        }
+      ],
+      "replayed_artifact_sha256": "2bf6caaa5ecab40a7a341a5c0ce6a38d8e91a9cb010e632ee617a3a957288821",
+      "native_geometry_text_chart_table_picture_bytes_notes_equal": true,
+      "all_page_render_differences": [
+        {
+          "index": 0,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "2d55abb2ebad56a1ea6ec5e76b2ad60ca2eed594b82c00e3bfb788c5a6270687",
+          "replayed_png_sha256": "2d55abb2ebad56a1ea6ec5e76b2ad60ca2eed594b82c00e3bfb788c5a6270687"
+        },
+        {
+          "index": 1,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "2c875f6c51e5e800714646b9bff69851c9f7017e5360872e1a120637528d63ae",
+          "replayed_png_sha256": "2c875f6c51e5e800714646b9bff69851c9f7017e5360872e1a120637528d63ae"
+        },
+        {
+          "index": 2,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13",
+          "replayed_png_sha256": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13"
+        }
+      ],
+      "commands": [
+        {
+          "entry": "source/reproduce.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "pwsh",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/render_pdf_previews.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/inspect_current.py",
+          "exit_code": 0
+        }
+      ]
+    },
+    {
+      "path": "downloads/codex-image-ppt-ja.zip",
+      "tested_archive_sha256": "8d7cdfe864cc18b9d60917901ea5ca2e09cf5c651f304229dac0fb38917cdbc9",
+      "source_manifests": [
+        {
+          "root": "codex-image-ppt-ja",
+          "file_hashes_checked": 167,
+          "mismatches": []
+        },
+        {
+          "root": "codex-image-ppt-ja/example",
+          "file_hashes_checked": 78,
+          "mismatches": []
+        }
+      ],
+      "replayed_artifact_sha256": "1ca736a354f903ea7ffe0b70ec54b1ebaf553d109bb80877a39f6ffd0fc8c9ca",
+      "native_geometry_text_chart_table_picture_bytes_notes_equal": true,
+      "all_page_render_differences": [
+        {
+          "index": 0,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "2d55abb2ebad56a1ea6ec5e76b2ad60ca2eed594b82c00e3bfb788c5a6270687",
+          "replayed_png_sha256": "2d55abb2ebad56a1ea6ec5e76b2ad60ca2eed594b82c00e3bfb788c5a6270687"
+        },
+        {
+          "index": 1,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "2c875f6c51e5e800714646b9bff69851c9f7017e5360872e1a120637528d63ae",
+          "replayed_png_sha256": "2c875f6c51e5e800714646b9bff69851c9f7017e5360872e1a120637528d63ae"
+        },
+        {
+          "index": 2,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13",
+          "replayed_png_sha256": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13"
+        }
+      ],
+      "commands": [
+        {
+          "entry": "source/reproduce.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "pwsh",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/render_pdf_previews.py",
+          "exit_code": 0
+        },
+        {
+          "entry": "source/inspect_current.py",
+          "exit_code": 0
+        }
+      ]
+    }
+  ],
+  "final_repack": "After replay, only QA/provenance/guide/source-index/replay-receipt metadata is added. Final archive substantive payload is compared to the retained tested archive separately.",
+  "dependency_scope": "Existing pinned Python/Node/PowerPoint; no new installation.",
+  "independent_visual_review": "Pending for current version; reproduction is not artistic acceptance.",
+  "later_metadata_state_and_docs_revision": {
+    "scope": "Final image result recorded via original CLI; structured deviation/artifact binding, general usage, exact upstream docs and read-only QA crops added.",
+    "new_generation": false,
+    "artifact_and_all_actual_render_payload_unchanged": true,
+    "protected_payload_sha256": {
+      "codex-image-ppt.pptx": "661602d6d753221d3e15bd6b6fb71f8eeba3dccabe8d41c1495840e5a263d59f",
+      "render/deck.pdf": "079c52a66e37db539d4f356fe4bf2cf33852a4bcf1af5b56f7e015d14f89ab4b",
+      "render/slide-01.png": "2d55abb2ebad56a1ea6ec5e76b2ad60ca2eed594b82c00e3bfb788c5a6270687",
+      "render/slide-02.png": "2c875f6c51e5e800714646b9bff69851c9f7017e5360872e1a120637528d63ae",
+      "render/slide-03.png": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13",
+      "origin_image/slide_01.png": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1",
+      "origin_image/slide_02.png": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30",
+      "origin_image/slide_03.png": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad",
+      "source/imagegen-repair/before-after-page-03.png": "33745d47bee436dbba30c4c013b1f7c3d387f3f0b9f152f364bccf1e5a6a055c"
+    },
+    "current_state_record": "source/state-artifact-reconciliation.json",
+    "powerpoint_replay_repeated_for_metadata_only_revision": false,
+    "fresh_install_tested": false
+  }
+}

@@ -1,0 +1,1 @@
+固定原典SlideMuseと同梱SKILLを使い、input/BRIEF.mdから日本語8頁の画像主体PPTXへ。5要件→頁別内容稿と自己点検→同内容4作風一覧→委任された選択→strict Page Spec→各頁の画像生成と確認→原典build_image_ppt.py→render_deck.pyで全頁確認の順。架空の研究計画として根拠のない環境効果・数値を作らない。S6のnative再構築と総覧内部16:9未適合は明示し、未実施の独立評価を合格扱いしない。

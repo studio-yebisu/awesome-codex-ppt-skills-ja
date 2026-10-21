@@ -1,0 +1,71 @@
+{
+  "case_id": "aham-showcase",
+  "case_patch": {
+    "title": "朝の作業ワークショップ案",
+    "titles": [
+      "朝の作業ワークショップ案",
+      "サンプル行程は選択から記録までを分ける",
+      "本案は前日に作業の入口を一つ決めておく",
+      "試行計画は取り組み・記録・相談を週ごとに並べる"
+    ],
+    "pages": [
+      "examples/repositories/aham-showcase/render/slide-01.png",
+      "examples/repositories/aham-showcase/render/slide-02.png",
+      "examples/repositories/aham-showcase/render/slide-03.png",
+      "examples/repositories/aham-showcase/render/slide-04.png"
+    ],
+    "notes": [
+      "架空の働き方ワークショップ案です。朝の20分は例示の配置で、効果を実証した方法ではありません。",
+      "3分で一つ選び、10分取り組み、5分でメモし、2分で次を残す案です。合計20分。仕事の条件に合わせて調整します。",
+      "前日に作業の入口を一つ決め、朝はその作業を進め、終了時に続きを一言残す流れの案です。",
+      "一週目に観察、二・三週目に一つ試し、四週目に続け方を話す例示計画。記録と相談を並行させ、負担があれば変更します。"
+    ],
+    "sample_notice": "架空ワークショップの版式選択・変換の例。8段階の人間対話は未実施。P5/P6は自律委任による担当判断。時間は例示で効果は未測定。",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、全4頁のPDF由来PNGを目視。原典QA・独立再評価・人間承認は別。",
+    "preview_image_notice": "現PPTXの実PowerPoint PDF由来画像。画像貼り込みではなく原典native変換。",
+    "method": "原典P5決定表・Aテーマ関数・SVG→native変換・変換前後lint。対話8段階は部分実行。",
+    "prompt_text": "Aham原典の版式決定表・Aテーマ（白地・中性グレー・点在する青）を使い、架空の朝作業ワークショップを4頁へする。P1〜P5の中間原稿と計画を保存。表紙は朝の作業ワークショップ案、2頁は3/10/5/2分のGantt、3頁は前日→朝→終了時の流れ、4頁は3泳道×4週。原典関数を維持し、必要なラベル可読性・流れ図中央配置・終端20・日本語凡例を局所差分として明示する。P5担当判断→見本2頁→実PowerPoint確認→P6担当判断→全頁生成を実行。過去の人間承認や8段階対話を実施したとは書かない。原典lintを変換の前後に実行し、PPTX・ノート・全頁描画・出典を保存する。",
+    "font_families": [
+      "Zen Kaku Gothic New",
+      "Manrope"
+    ],
+    "preview_kind": "powerpoint-render",
+    "style": "原典A：白・グレー・点在する青 / V-02・E-03・A-90、局所可読性補正を明記",
+    "artifact_download": "examples/repositories/aham-showcase/deck.pptx",
+    "input_data": "examples/repositories/aham-showcase/input/data.json"
+  },
+  "guide_patch": {
+    "summary_ja": "各段階で論点と版式を確認してから、SVGを編集可能PPTXへ変換する。作例は版式選択と変換の部分実行で、8段階対話は未実施。",
+    "requirements": [
+      "固定原典を含む一式ZIP、Python、原典requirementsの依存（python-pptx/CairoSVG等）。今回は既存固定環境で実行。",
+      "同梱の公式Zen Kaku Gothic New/ManropeとOFL。全頁の実描画にはWindows版PowerPointとPDF描画用pypdfium2。"
+    ],
+    "steps": [
+      "原典のPhase1〜3で読み手・目的・材料を整理し、主張と期待行動を各段階で確認する。",
+      "Phase4で標題列と証拠の対応を決め、Phase5の決定表で各頁の内容と推奨版式・代替を同時に選ぶ。",
+      "Phase6で表紙・複雑な内容・図表の見本を描画し、配色・密度・専門性の判断を記録する。",
+      "Phase7で計画どおりのSVGを原典関数で作り、原典変換器でPPTXへ変換する。PPTXを直接直さずSVGへ戻る。",
+      "変換の前後に原典lintの出力を確認し、Phase8の五層QC・内容/視覚監査を行って配布物を整える。"
+    ],
+    "limitations": [
+      "この作例は版式選択と変換の部分実行。8段階のユーザー対話・coach-engine・P7の3頁ごとの確認・P8の全五層QCを完走していない。",
+      "現在のP5計画判断とP6見本判断は、自律改修の委任を受けた担当の判断。過去のユーザー承認として扱わない。",
+      "Aテーマの白地・中性グレー・青を使用。初回依頼のコバルト・黄・墨は現版に使わない。",
+      "原典関数と変換器は固定保存。書体/和訳に加え、P2/P4ラベルのサイズ・濃度、P3の平行移動・補足、終端20・日本語凡例を局所補正する。原典そのままの字号・座標とは記載しない。",
+      "数値と期間は架空ワークショップの例示計画。仕事の改善・健康・時間短縮の実績ではない。",
+      "公式Zen Kaku Gothic New/Manropeを同梱し、実PDFでも使用を確認。PPTXへ埋め込まない。",
+      "SVG/HTMLの画像スライドが目的なら原典は別のppt-svgへ振り分ける。ここで実証するのは編集可能なPPTXの経路。",
+      "原典lintは終了コード0だけで合格とせず、出力の警告/違反行も確認。独立再評価と利用者採用は別。"
+    ],
+    "execution_type": "原典P5決定表・Aテーマ関数・SVG→native変換・変換前後lint。対話8段階は部分実行。",
+    "commands": [
+      "python generate.py --sample",
+      "見本を描画しinput/phase-06-decision.jsonへ担当判断かユーザー確認かを区別して記録",
+      "python generate.py --final"
+    ]
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-design.json",
+  "current_pptx_sha256": "a6170f6dd2f8d93212020c4b2fd6bd01f44720988466e9aaa8aff84777e8c781",
+  "production_attribution": "Initial actual Opus5.5 artifacts; current Round5 repair by Codex. Not new Opus production.",
+  "independent_recheck": "pending"
+}

@@ -8,4 +8,10 @@
 
 再生成: `cd upstream` → `npm ci` → `cd ..` → `node upstream/node_modules/tsx/dist/cli.mjs build.mts`。styleを変えるときはstyles/green-book-editorialの6ファイルとinput/slide-tree.jsonを編集。スタイルgate: `node upstream/node_modules/tsx/dist/cli.mjs upstream/scripts/validate-skill.ts styles green-book-editorial`（stylesを絶対パス指定可）。必要なruntimeは通常Node OSS依存だけ。
 
-初回の生成・原典gate・主画面だけを確認。全ページ詳細目視・独立レビュー・ZIP再実行はしません。
+原典gateを実行し、全ページの改行・図・ページ移動を確認して直す。現在の実施範囲はQA.jsonへ記録する。独立再評価と区別する。
+
+## 2026-10-15 修復と確認
+
+引用・工程・結びの文章を意味単位で改行し、上下の罫線幅を統一。全6頁を1280×720で確認した。原典style検査1/1、occupancy/legibility6/6、richness4/4を現HTMLで再実行し通過。元engineのhashはsource/original-source-check.jsonへ記録。Windowsの実行パス/file URLだけをadapterへ分け、採点関数は変更していない。
+
+ブリーフから、この作例専用の6ファイルstyleとslide-treeを作者が用意し、原典APIへ渡した。外部LLMへ原稿生成を依頼する部分、AI/stock画像、編集可能PPTXは実行していない。独立再評価は未了。ZIP再実行の結果はQA.jsonを参照。

@@ -1,0 +1,78 @@
+{
+  "author": "Codex",
+  "status": "passed",
+  "archive_under_test": "marp-mcp-example-ja.zip",
+  "archive_sha256_before_receipt_added": "22648d02f377ec2d8c126ea8e3ec749e47eae8e359598f5a901f6a57a847cd25",
+  "commands": [
+    {
+      "arguments": [
+        "cmd",
+        "/c",
+        "mklink",
+        "/J",
+        "<extracted-case>\\source\\runtime\\node_modules",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\marp-mcp-runtime\\node_modules"
+      ],
+      "exit_code": 0,
+      "output_tail": "Junction created for <extracted-case>\\source\\runtime\\node_modules <<===>> M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\marp-mcp-runtime\\node_modules\n"
+    },
+    {
+      "arguments": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\marp-mcp-runtime\\node_modules\\typescript\\bin\\tsc",
+        "-p",
+        "<extracted-case>\\source\\runtime\\tsconfig.json"
+      ],
+      "exit_code": 0,
+      "output_tail": ""
+    },
+    {
+      "arguments": [
+        "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Scripts/python.exe",
+        "source/run_mcp.py",
+        "--case",
+        "<extracted-case>",
+        "--runtime",
+        "<extracted-case>\\source\\runtime",
+        "--node",
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "--marp-cli",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\repository-runtime\\node_modules\\@marp-team\\marp-cli\\marp-cli.js"
+      ],
+      "exit_code": 0,
+      "output_tail": "warning: The `fitz` API is deprecated and will be removed in future. Use `import pymupdf` instead.\nMCP export: html\nMCP export: pdf\nMCP export: pptx\nMCP exports successful; PDF pages: 6\n"
+    },
+    {
+      "arguments": [
+        "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Scripts/python.exe",
+        "source/check_cli.py",
+        "--case",
+        "<extracted-case>",
+        "--runtime",
+        "<extracted-case>\\source\\runtime",
+        "--node",
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "--marp-cli",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\repository-runtime\\node_modules\\@marp-team\\marp-cli\\marp-cli.js"
+      ],
+      "exit_code": 0,
+      "output_tail": "Original CLI list/create/set-frontmatter/manage/read/generate-ids/export HTML/PDF passed\n"
+    }
+  ],
+  "results": {
+    "six_pdf_pages_pixel_identical": [
+      true,
+      true,
+      true,
+      true,
+      true,
+      true
+    ],
+    "original_mcp_id_edit_replayed": true,
+    "original_cli_replayed": true,
+    "html_byte_identity_claimed": false,
+    "reason": "Fresh create generates fresh UUID page IDs. Compare rendered page pixels and preserved IDs inside each edit operation, not a whole-file hash across creates."
+  },
+  "environment": "Fresh ZIP extraction; existing Python/Node/browser and lock-matched dependencies reused. No fresh npm install or alternate environment is claimed.",
+  "independent_score": false
+}

@@ -2,3 +2,20 @@
 .sample-label { position:fixed; bottom:18px; right:28px; font:16px "Yu Gothic",sans-serif; color:#555; z-index:40; pointer-events:none; }
 
 .nav-help { position:fixed; top:18px; right:28px; font:16px "Yu Gothic",sans-serif; color:#555; z-index:40; pointer-events:none; }
+
+/* Keep the now marker below the heading; show the rolling month once. */
+.sl-concept-rail .sl-chronology__now{inset-block:32% 22%;height:auto}
+.sl-concept-rail .sl-chronology__ghost,.sl-concept-rail .sl-chronology__date{display:none}
+
+/* Round4 authored rail: expand monthly geometry and label the persistent event points. */
+.sl-concept-rail [data-now]>.sl-chronology__track{width:calc(var(--sl-span) * 360 * var(--px) * 1px)}
+.sl-concept-rail [data-now]>.sl-chronology__track::after{background:repeating-linear-gradient(to right,var(--sl-fg) 0 calc(var(--rail-u) * 2),transparent calc(var(--rail-u) * 2) calc(var(--rail-u) * 360))}
+.sl-concept-rail .sl-chronology__date{display:block;font-size:calc(var(--rail-u) * 24)}
+.sl-concept-rail .sl-chronology__event::after{position:absolute;top:calc(100% + 76 * var(--rail-u));left:0;white-space:nowrap;font:calc(var(--rail-u) * 24) var(--sl-font-text);color:var(--sl-fg);content:""}
+.sl-concept-rail [data-beat="prepare"] .sl-chronology__event:nth-child(1)::after{content:"5月 / 企画"}
+.sl-concept-rail [data-beat="prepare"] .sl-chronology__event:nth-child(2)::after{content:"6月 / 会場"}
+.sl-concept-rail [data-beat="deliver"] .sl-chronology__event:nth-child(1)::after{content:"7月 / 案内"}
+.sl-concept-rail [data-beat="deliver"] .sl-chronology__event:nth-child(2)::after{content:"8月 / 当日"}
+.plan-route{position:fixed;bottom:10%;left:6.25%;right:6.25%;display:flex;justify-content:space-between;z-index:35;pointer-events:none;color:#373329;font:24px "Yu Gothic",sans-serif;letter-spacing:.02em}.plan-route span+span::before{content:"→";margin-right:34px;color:#6b6457}
+
+.sl-concept-rail .sl-chronology__now{inset-block:32% 30%}

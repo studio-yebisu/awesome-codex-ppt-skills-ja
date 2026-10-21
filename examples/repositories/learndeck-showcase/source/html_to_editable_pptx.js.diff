@@ -1,0 +1,57 @@
+--- upstream/scripts/html_to_editable_pptx.js
++++ runtime/scripts/html_to_editable_pptx.js
+@@ -254,6 +254,7 @@
+         id: el.id || "",
+         cls: typeof el.className === "string" ? el.className : "",
+         display: s.display,
++        fontFamily: s.fontFamily,
+         fontSize: s.fontSize,
+         lineHeight: s.lineHeight,
+         fontWeight: s.fontWeight,
+@@ -314,6 +315,7 @@
+     function runStyle(node) {
+       const s = getComputedStyle(node.nodeType === Node.ELEMENT_NODE ? node : node.parentElement);
+       return {
++        fontFamily: s.fontFamily,
+         fontSize: s.fontSize,
+         fontWeight: s.fontWeight,
+         fontStyle: s.fontStyle,
+@@ -360,6 +362,9 @@
+       clone.querySelectorAll("*").forEach((n) => {
+         if (!n.getAttribute("stroke") && stroke !== "none") n.setAttribute("stroke", stroke);
+       });
++      const viewport = svg.getBoundingClientRect();
++      clone.setAttribute("width", String(viewport.width));
++      clone.setAttribute("height", String(viewport.height));
+       return clone.outerHTML;
+     }
+ 
+@@ -433,7 +438,7 @@
+     return {
+       text: r.text,
+       options: {
+-        fontFace: opts.fontFace,
++        fontFace: (rs.fontFamily || style.fontFamily || opts.fontFace).split(",")[0].replace(/['"]/g, "").trim(),
+         fontSize: ctx.pt(pxNum(rs.fontSize, pxNum(style.fontSize, 12))),
+         color: c.alpha <= 0.01 ? fallbackColor : c.hex,
+         bold: Number(rs.fontWeight || style.fontWeight || 400) >= 600,
+@@ -446,7 +451,7 @@
+   slide.addText(runs.length ? runs : item.text, {
+     objectName: name,
+     ...ctx.pos(box),
+-    fontFace: opts.fontFace,
++    fontFace: (style.fontFamily || opts.fontFace).split(",")[0].replace(/['"]/g, "").trim(),
+     fontSize: ctx.pt(pxNum(style.fontSize, 12)),
+     color: color.alpha <= 0.01 ? fallbackColor : color.hex,
+     transparency: color.alpha <= 0.01 ? 0 : Math.round((1 - color.alpha) * 100),
+@@ -707,8 +712,8 @@
+   pptx.author = "Codex";
+   pptx.subject = "Editable PPTX converted from HTML with DOM positions";
+   pptx.title = baseName;
+-  pptx.lang = "zh-CN";
+-  pptx.theme = { headFontFace: opts.fontFace, bodyFontFace: opts.fontFace, lang: "zh-CN" };
++  pptx.lang = "ja-JP";
++  pptx.theme = { headFontFace: opts.fontFace, bodyFontFace: opts.fontFace, lang: "ja-JP" };
+ 
+   const gradientPatches = [];
+   for (const s of slideData) {

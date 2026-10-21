@@ -3,7 +3,7 @@
   "commit": "646e3dc4b72a444278d320c8984d5986d7fbf4bb",
   "license": "MIT",
   "copyright": "2026 PPT Scene Graph Contributors",
-  "method": "Original OutlineSpec/SlideSpec -> create_from_outline(designhub_warm) -> native draft.pptx -> original beautify(load_theme(projection).name) -> native deck.pptx; original core factories/decor retained, Japanese DesignSystem/East Asian font mapping local; missing vendor parts8 modules repaired from same official python-pptx1.0.2 distribution only.",
+  "method": "原典の大綱生成→既存PPTXテーマ変更を実行。章題余白と旧装飾の色移行は明示した局所adapterで補正。native文字・長方形は保持。",
   "source_refs": [
     {
       "path": "SKILL.md",
@@ -50,12 +50,13 @@
   ],
   "upstream_preserved": true,
   "modifications": [
-    "BIZ UDPGothic default family mapping in DesignSystem; a:ea/a:cs/lang added at existing font callsites, no geometry/FONT_SIZES changes",
     "Original vendor parts/ missing; same-version official wheel adds8 modules only to runtime, original source preserved unchanged",
     "Documented projection key validation defect and used display-name argument without replacing API",
-    "Source assumptions preserved: detected types content/content/content/content/content/ending after decor; existing warm shape fills retained",
     "Local PowerPoint exporter manages only openedDeck and does not call Application.Quit",
-    "Added Japanese guide, outline/manuscript and PNG-only viewer; production artifact remains native PPTX"
+    "Added Japanese guide, outline/manuscript and PNG-only viewer; production artifact remains native PPTX",
+    "Existing Japanese font defaults/East Asian mapping retained. Original create/beautify pipeline and FONT_SIZES remain unchanged.",
+    "Local native geometry adapter separates section number/title and cover subtitle before draft save.",
+    "After original beautify: map old warm primary/accent fills to projection roles; normalize and deduplicate left accent bars. See source/theme-layout-repair.json."
   ],
   "vendor_repair": {
     "purpose": "Repair missing parts only, same original vendored engine version; upstream untouched",
@@ -128,7 +129,7 @@
     "vendor_license_url": "https://raw.githubusercontent.com/scanny/python-pptx/v1.0.2/LICENSE",
     "vendor_license_note": "Original Scene Graph archive omitted python-pptx license; official same-version MIT text added separately, unmodified upstream kept",
     "external_packages": {
-      "lxml": "6.1.3",
+      "lxml": "6.1.1",
       "Pillow": "12.3.0",
       "typing_extensions": "4.16.0",
       "XlsxWriter": "3.2.9"
@@ -182,7 +183,7 @@
   "pdf": "deck.pdf",
   "parse_slide_implemented": false,
   "parse_slide_used": false,
-  "evaluate_run": false,
+  "evaluate_run": true,
   "speaker_notes_written_by_original_create": false,
   "content_status": "Self-authored explanatory proposal; no measured distance-readability improvement or optimal point-size evidence",
   "native_editing": "Text boxes and rectangle frame/accent shapes",
@@ -195,22 +196,14 @@
     "evaluate_run": false,
     "theme_source_map": "input/theme-source-map.json",
     "dependency_versions": {
-      "lxml": "6.1.3",
+      "lxml": "6.1.1",
       "Pillow": "12.3.0",
       "typing_extensions": "4.16.0",
       "XlsxWriter": "3.2.9"
     },
     "native_elements": "text boxes and rectangle shapes from original factories/decor",
-    "local_changes": "DesignSystem Japanese default families and a:ea/a:cs/lang mapping; original factories/geometry/font-size tokens/heuristics retained; missing original vendor parts8 files repaired from same-version official wheel",
-    "notes_support": "SlideSpec.notes field accepted but original create code does not write speaker notes; manuscript notes remain in input",
-    "beautify_types_from_generation_stdout": [
-      "content",
-      "content",
-      "content",
-      "content",
-      "content",
-      "ending"
-    ]
+    "local_changes": "Japanese font mapping; original factories and size tokens retained. Explicit local geometry adapter separates section number/title and cover subtitle; final decor adapter migrates old fills and deduplicates bars. See theme-layout-repair.json.",
+    "notes_support": "SlideSpec.notes field accepted but original create code does not write speaker notes; manuscript notes remain in input"
   },
   "render": {
     "application": "Microsoft PowerPoint",
@@ -219,5 +212,14 @@
     "application_quit_called": false,
     "report": "render/powerpoint-render.json"
   },
-  "verification": "Original API generation, normal6PNG/PDF export, cover initial viewing only, short Japanese SKILL validation. No rerun of generation/export/view on finishing resume."
+  "verification": "Original create and beautify rerun; original evaluate returns diagnostics only; all six final PowerPoint PNGs viewed; draft pages1-3 and same-page comparison images viewed. No independent approval or ZIP replay.",
+  "repair_authoring": {
+    "author": "Codex",
+    "scope": [
+      "source/theme_layout_adapter.py",
+      "tools/build_scene_graph_showcase.py",
+      "comparison evidence and current QA"
+    ],
+    "opus_used_for_this_repair": false
+  }
 }

@@ -1,29 +1,51 @@
-# まちを、余白から。
+# 編集条件に合わせて制作経路を選ぶ
 
-小さな書店の週末編集室。架空の地域文化企画を8ページの日本語資料にしたサンプルです。開催実績、調査データ、第三者の発言は含みません。4週間は仮定です。
+原稿と編集条件を先にそろえ、参照資料で書式を決めて、比較・手順・日程を後から直せる資料へ組む。
 
-## ファイル
-- deck.pptx：編集可能なPowerPoint。見出し・本文・比較・工程・ロードマップはネイティブ要素。表紙の挿絵は画像です。
-- index.html：完成PPTXを読み込んだ実レンダリングPNGのプレイヤー。
-- preview.pdf：同じPNGをまとめた画像ベースのプレビューPDF。編集可能PDFではありません。
-- input/：日本語入力、原典入力JSON、画像と画像用プロンプト。
-- source/upstream-adapted/：固定commitの原典生成器と日本語差分。MIT LICENSE保持。
-- SKILL.md：日本語派生の短い使い方。
+原典codex-ppt-skillは、要件からtemplate/native/HTML/image-firstを選び、参照から書式を決め、頁ごとの図・画像とノートを計画して、機能検査と美術検査を通す。作例は後編集のためnativeのローカルfallbackを使う。
 
-## 原典と方式
-MURMURE11118586/codex-xkppt-skill、commit 978b46d116fd8fd971f9cd963f745da62f7f1f26。原典build_native_pptx.mjs、native design-system、editorial-inkを実際に利用しました。日本語固定ラベル、言語、コピー、改行、書体、締めのプレースホルダー、図形・文字主体ページの画像計画を改変しています。
+## 渡すものと受け取るもの
 
-## 再現
-Node.jsとpptxgenjsを事前に用意し、source/upstream-adapted/package.jsonの依存条件を確認してください。自動installは行いません。このフォルダをカレントディレクトリにして実行します。画像・プロンプトは同梱の相対パスを使います。
+渡すもの：原稿・元資料、読み手と目的、発表時間、PPTXの後編集やHTML表示の条件、使うテンプレート・配色・書体・参考資料。画像版にする場合は個別編集できないことへの同意。
 
-node source/upstream-adapted/codex-ppt-skill/scripts/build_native_pptx.mjs --spec input/spec_lock.json --slides input/slides_plan.json --asset-plan input/asset_plan.json --notes input/speaker_notes.json --style-card source/upstream-adapted/codex-ppt-skill/assets/style-cards/editorial-ink.json --output reproduced.pptx
+受け取るもの：選んだ方式の編集可能PPTX、HTML/PDF/PNG、または全面画像PPTX。選択理由・書式指定・頁計画・画像来歴・話者ノート・機能/美術QA・納品目録を添える。画像版の本文は個別編集不可。
 
-生成器とnative design-systemの両方が必要です。SKILL本文だけで生成コードが揃うわけではありません。画像再生成は表紙のページ固有プロンプトをbuilt-in imagegenへ渡します。表紙画像を差し替えても文字は編集可能です。
+## 用意するもの
 
-## 書体と表示
-PPTX指定はNoto Serif CJK JP、Noto Sans CJK JP、DejaVu Sans。環境内書体を表示に利用しましたが、OS書体は抽出・配布していません。別の環境では書体の導入、または配布元のOSS書体に合わせたJSON更新が必要です。artifact-toolの日本語レンダリングは見出しがゴシック調に見えるため、明朝の厳密再現は保証しません。
+- 新規制作はCodex built-in imagegenと保存画像のcaptureが必要。原典はpresentations/$slides優先、ローカルfallbackはNode/PptxGenJS。画像生成手段がなければ原典の完成資料合格条件を満たせない。
+- 保存済み例の再実行はNode・既存PptxGenJS4.0.1、Python3/Pillow/python-pptx。新規installや画像再生成は今回未実施。
+- PowerPoint全頁描画はWindows版PowerPointとPDF描画用pypdfium2。同梱OFL字体を登録。
 
-## 確認と限界
-原典生成・構造validation成功。8頁の実PPTX import PNGを表示確認。PowerPointやLibreOfficeで開いたとは主張しません。artifact-toolの直接PDF出力はruntime依存不足で失敗し、実PNGから画像PDFを作成しました。
+## 手順
 
-原典aesthetic_qaは80.7点でFAILです。紙色の背景占有と文字主体ページ2・3の右余白を警告しました。機械報告を保持し、今回の最小確認仕様では意図した誌面の静けさとして目視判断しています。原典85点以上のqualified final判定を通過したとは表示しません。
+1. 元資料と読み手・目的・発表時間を渡す。既存PPTXの書式維持ならtemplate、テンプレートなしで後編集するならnative、HTML/PDF表示でよければHTML、個別編集を諦める同意がある場合だけimage-firstを選ぶ。
+2. 原典build_reference_board.pyで参照を選び、使う書式・書体・配色と引用範囲をdesign_specへ記す。
+3. 頁の主張・図・画像計画・ノートを固定。必須画像はbuilt-in imagegenで作り、保存した実画像を原典captureへ渡して頁と結び付ける。
+4. 選んだ原典経路で制作し、機能検査・85点以上の原典美術QA・全頁描画を確認して不具合を直す。
+5. 原稿・完成物・実描画・QAとdelivery_manifestをそろえて渡す。新しい生成結果へ過去の目視を引き継がない。
+
+## 作例の見る場所
+
+後編集を優先してnative経路を選び、参照・原稿・画像の役割を固定。表紙の実AI挿絵を残し、4頁では同じ観点の比較、6頁では工程と説明、8頁では未確定条件をnative要素で示す。原典機能QAと美術QAを再実行した。
+
+- 1頁・頁に結び付いた挿絵：開いた本から街が立ち上がる実imagegen挿絵が右枠に入り、左の編集可能な見出しと干渉しない。画像はこの頁の本と街の主張に結び付く。
+- 4頁・同じ観点の比較：本との関わり・感想と体験・持ち帰るものの3観点が、左右の同じ高さで比べられる。下半分まで内容を置き、空の比較枠を残さない。
+- 6頁・工程と説明の対応：選書・街歩き・編集・共有の4本と、その真下の同じ番号の説明を読む。終点の共有と番号4だけが朱色で、番号1との矛盾がない。
+
+2頁の条件は2列で配置、8頁は空の背景パネルを取り除き、未確定の相談事項をnativeで示す。原典QA87.6/PASS、右側未使用0・overfillを含むfailure_modes/issue0。機能QAのpossible-overlap警告は保持し、全8頁を実物で確認した。
+
+## 差分と限界
+
+- 実演はnative経路。原典はpresentations/$slidesを優先し、ここでは原典PptxGenJSのローカルfallbackを使用。他3経路は未実施。
+- 新規資料の原典合格条件には、Codex built-in imagegenで生成して保存した、頁の内容に合う画像が最低1枚必要。native図形やプレースホルダーで画像生成済みとはしない。
+- 本例は表紙の実AI挿絵を保持。その他の頁はnative文字・図を計画し、画像生成必須=false・省略禁止=falseへ整合。必須画像を生成せず済ませた扱いにしない。
+- 原典のnative APIを使い、日本語ラベル、文字箱、2列の項目、比較軸、工程の対応、締めの確認項目を派生差分として保存。原典ファイルとQA/閾値は未変更。
+- 原典美術QAは87.6/PASS。右側未使用0件、overfillを含むfailure_modes/issue0件。possible-overlap警告は別の機能QAで保持し、全8頁の実物を確認。
+- 書店企画と4週間は架空・実施前。開催実績や効果の測定値を作っていない。機械87.6点は独立採点の100点ではない。
+
+新規画像の生成はCodex built-in imagegenを使い、原典captureで保存した画像の来歴を残す。日本語ユーザーには日本語で説明する（原典の中国語指示は中国語ユーザー向け）。用語だけを列挙せず、参照から何を引き継ぐかと、各画像がどの主張を示すかを記す。
+
+原典MURMURE11118586/codex-xkppt-skill、固定commit978b46d116fd8fd971f9cd963f745da62f7f1f26、MIT保持。raw原典はsource/upstream-original、派生差分はsource/runtime-adapter.diff、実行はsource/reproduce.py。保存済み例の再生成では新しい画像生成を実行しない。現在独立再評価は別。配布再実行はsource/distribution-replay.json。
+
+
+今回の2・5頁は、既存項目を下半分まで均等に配置し直した。本文の追加・削除や新しい画像の生成はしていない。配置の意図と比較はqa/vertical-density-review.json。原典の図形APIとQA閾値は変更していない。PowerPointの自動処理は開いた資料だけを閉じ、アプリのQuitを呼ばない。

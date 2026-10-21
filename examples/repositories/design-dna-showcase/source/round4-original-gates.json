@@ -1,0 +1,27 @@
+{
+  "author": "Codex",
+  "html_sha256": "5c8d50eeb9c3906552962b970e69d10eccbc529dc90299976b97139fe505aef3",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "source/rebuild.py"
+      ],
+      "exit_code": 0,
+      "log": "source/round4-build.log"
+    },
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "source/upstream/scripts/ppt-layout-guard.js",
+        "index.html",
+        "--report",
+        "layout-guard-report.json"
+      ],
+      "exit_code": 0,
+      "log": "source/round4-guard.log"
+    }
+  ],
+  "original_script_sha256": "663b8c156c72ff94c553241cbb83c18511addc147b7bfb2775cafa915529890d",
+  "original_workflow": "Guard PASS then artifact handoff; no default post-generation browser QA. The user separately requested the actual all-page browser review."
+}

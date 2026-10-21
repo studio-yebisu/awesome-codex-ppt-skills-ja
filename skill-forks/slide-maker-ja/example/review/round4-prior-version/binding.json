@@ -1,0 +1,88 @@
+{
+  "reviewer": "Claude Opus5.5",
+  "requested_model": "claude-opus-5-5",
+  "artifact_sha256": "b8f099a3879bc94e3a006c14d4110315aba02c04703c31f5e18da633edeb76ff",
+  "snapshot_manifest_sha256": "e2ebdb53756bcca5dffd649b13f4b520e74b3a7bb663608af242dd0800ade878",
+  "raw_review_sha256": "0a895fce316a46952c7e78ba61b704bbd53b4b8e3359ebed9e93c7454a095a6d",
+  "origin": "Parent verified exact model/exit0 and blind-first actual tool ordering; current5PNG hashes independently matched this frozen snapshot before original CLI recording.",
+  "images": [
+    {
+      "file": "render/slide-01.png",
+      "sha256": "43903295fd681c983f12e2b4dd79aad49ca04aac915357fcfd6d04ab48283ecc",
+      "equals_reviewed_snapshot": true
+    },
+    {
+      "file": "render/slide-02.png",
+      "sha256": "deb6c872fd244166b399859ba5b5ec78b024e2809bb1eba0a3d1e480260b995d",
+      "equals_reviewed_snapshot": true
+    },
+    {
+      "file": "render/slide-03.png",
+      "sha256": "87199c5aceb8b8e8863829b9681fdfb1fe0dd6be2276ffeb93cd899d76f87f27",
+      "equals_reviewed_snapshot": true
+    },
+    {
+      "file": "render/slide-04.png",
+      "sha256": "41da23dab966cc7ac01749cd37ee460595b54f084723aab159a30de330c83d66",
+      "equals_reviewed_snapshot": true
+    },
+    {
+      "file": "render/slide-05.png",
+      "sha256": "4436a12d81de2b1073d41a3392f45098fed0f591f96e92cda7cf8d04662bc49d",
+      "equals_reviewed_snapshot": true
+    }
+  ],
+  "critic_verdict": "revise",
+  "scope": "Round4 SHA only. This revise verdict is not consent and is not applied to later production changes.",
+  "commands": [
+    {
+      "command": [
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\validate_review.py",
+        "critic",
+        "review\\round4-prior-version\\opus-critic.json",
+        "--record",
+        "."
+      ],
+      "exit_code": 0,
+      "log": "review/round4-prior-version/critic.txt",
+      "log_sha256": "0ba2c5c78754fe374ad9c7cb5458c71171498eb95b1728701f8f6d406158429c"
+    },
+    {
+      "command": [
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source\\prepare_blind_packet.py"
+      ],
+      "exit_code": 0,
+      "log": "review/round4-prior-version/blind-packet.txt",
+      "log_sha256": "d06af6668179e02827f4922b6e9d9d07e5d66e6b8f8f1c61b3981ee3cfa31022"
+    },
+    {
+      "command": [
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\blind_read.py",
+        "compare",
+        ".",
+        "--render-dir",
+        "qa/original-blind-render",
+        "--answers",
+        "review\\round4-prior-version\\opus-blind.json",
+        "--write"
+      ],
+      "exit_code": 1,
+      "log": "review/round4-prior-version/blind-compare.txt",
+      "log_sha256": "82fb1e8fabccdf9099d42a326e0a0d2cdf627552a8636b8dd5acbc7d921cbb82"
+    },
+    {
+      "command": [
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        "source\\upstream\\skills\\slide-maker\\scripts\\render_deck.py",
+        "deck.pptx",
+        "--gate-check"
+      ],
+      "exit_code": 1,
+      "log": "review/round4-prior-version/handoff.txt",
+      "log_sha256": "e894fbb82671368699f6e3170dbd3564f8e36d95826551922075b856d907bf8a"
+    }
+  ]
+}

@@ -1,0 +1,710 @@
+[
+  {
+    "case_id": "seaslides",
+    "job": "",
+    "change": "同じ本文をHTML・SVG・PNG・PDFへ揃え、用途に合う紙面を保てる。",
+    "input": "読書会の日程・参加条件・60分の進行・担当と講稿",
+    "output": "TCSから生成したHTMLと同じbuildのSVG・PNG2経路・PDF",
+    "how_to_use": [
+      "content_design_spec.mdで5頁の役割を決める",
+      "content.htmlの本文と講稿、template.cssの再利用部品を編集する",
+      "source/rebuild.pyで原典source gate・--all・visual gateを実行する",
+      "overviewから全browser PNGを確認し、HTMLプレーヤーの移動も試す"
+    ],
+    "constraints": [
+      "この作例はHTML lane。Typst・PPTX・画像生成は未実施",
+      "Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変",
+      "静止画像とプレーヤーの操作UIは別の証拠",
+      "架空の読書会の企画で、開催実績ではない"
+    ],
+    "demonstration": {
+      "summary": "同じ本文をHTML・SVG・PNG・PDFへ揃え、用途に合う紙面を保てる。",
+      "applied_features": [
+        "本文・テーマCSS・shellを分けるTCS",
+        "editorial-magazine / forest-inkと原典の部品",
+        "source gate→全形式build→visual gate"
+      ],
+      "not_demonstrated": [
+        "この作例はHTML lane。Typst・PPTX・画像生成は未実施",
+        "Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変",
+        "静止画像とプレーヤーの操作UIは別の証拠",
+        "架空の読書会の企画で、開催実績ではない"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "条件を並べる",
+          "title": "三つだけ先に決める",
+          "what_to_inspect": "日時・長さ・参加条件を同じpillarで揃える。",
+          "skill_rule": "テーマの共通部品を使う",
+          "proof_path": "examples/repositories/seaslides/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 2,
+          "label": "時間を比較する",
+          "title": "60分の進行",
+          "what_to_inspect": "10・35・15分を三行で対応させ、合計60分を示す。",
+          "skill_rule": "内容に合わせrowlineを選ぶ",
+          "proof_path": "examples/repositories/seaslides/render/slide-03.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 3,
+          "label": "役割を分ける",
+          "title": "三人の担当",
+          "what_to_inspect": "案内・会場・進行を一行ずつ比較し、2頁の三列とは変える。",
+          "skill_rule": "TCSを保ち、役割に合う部品をCSSで定義する",
+          "proof_path": "examples/repositories/seaslides/render/slide-04.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/seaslides/content.html",
+        "examples/repositories/seaslides/template.css",
+        "examples/repositories/seaslides/content_design_spec.md",
+        "examples/repositories/seaslides/source/logs/source-gate-web9.log",
+        "examples/repositories/seaslides/source/logs/compiler-web9.log",
+        "examples/repositories/seaslides/source/logs/visual-gate-web9.log",
+        "examples/repositories/seaslides/output/compile-manifest.json",
+        "examples/repositories/seaslides/output/dom-audit.json",
+        "examples/repositories/seaslides/output/render-fidelity.json",
+        "examples/repositories/seaslides/source/browser-repair.json",
+        "examples/repositories/seaslides/render/export-routes-page-03.png",
+        "examples/repositories/seaslides/source/zip-replay.json",
+        "examples/repositories/seaslides/source/logs/source-gate-round3.log",
+        "examples/repositories/seaslides/source/logs/compiler-round3.log",
+        "examples/repositories/seaslides/source/logs/visual-gate-round3.log",
+        "examples/repositories/seaslides/render/round3-contact.jpg"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "同じ本文をHTML・SVG・PNG・PDFへ揃え、用途に合う紙面を保てる。",
+      "requirements": [
+        "原典の固定ソース・LICENSEと入力を保持",
+        "対象形式に必要なPython/Node/既存ブラウザー（例のREADME参照）"
+      ],
+      "steps": [
+        "content_design_spec.mdで5頁の役割を決める",
+        "content.htmlの本文と講稿、template.cssの再利用部品を編集する",
+        "source/rebuild.pyで原典source gate・--all・visual gateを実行する",
+        "overviewから全browser PNGを確認し、HTMLプレーヤーの移動も試す"
+      ],
+      "limitations": [
+        "この作例はHTML lane。Typst・PPTX・画像生成は未実施",
+        "Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変",
+        "静止画像とプレーヤーの操作UIは別の証拠",
+        "架空の読書会の企画で、開催実績ではない"
+      ]
+    }
+  },
+  {
+    "case_id": "minorun-marp",
+    "job": "",
+    "change": "操作の説明を問いと段階図に変え、保存・選択・記録・共有の違いを追える。",
+    "input": "Gitを初めて使う人への5分の導入原稿と4段階の図",
+    "output": "minorun-darkのMarp原稿・HTML・9頁PDFとPNG",
+    "how_to_use": [
+      "5分の導入範囲と読み手をinput/BRIEF.mdで確定する",
+      "deck.mdで問いと回答を続け、見出しを一行にする",
+      "段階SVGで既存の箱の位置を保って一要素ずつ足す",
+      "source/rebuild.pyへMarp CLIとブラウザーの場所を渡す",
+      "check-ai-smell --allとPDF全頁を確認する"
+    ],
+    "constraints": [
+      "元35分教材のうち5分の導入抜粋。元依頼は入力内へ保存",
+      "20分演習・ブランチ・レビュー・競合解消は扱わない",
+      "Gitコマンドは説明例で、リモート送信はしていない",
+      "本文を変えたときは埋込サブセット書体の収録文字も更新する"
+    ],
+    "demonstration": {
+      "summary": "操作の説明を問いと段階図に変え、保存・選択・記録・共有の違いを追える。",
+      "applied_features": [
+        "問いを次の頁で答えるstory構成",
+        "同じ位置に要素を足す4段階のSVG",
+        "原典黒地テーマとcheck-ai-smell --all"
+      ],
+      "not_demonstrated": [
+        "元35分教材のうち5分の導入抜粋。元依頼は入力内へ保存",
+        "20分演習・ブランチ・レビュー・競合解消は扱わない",
+        "Gitコマンドは説明例で、リモート送信はしていない",
+        "本文を変えたときは埋込サブセット書体の収録文字も更新する"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "問いを置く",
+          "title": "保存した変更はどこにある？",
+          "what_to_inspect": "見出しが一行で終わり、3・4頁で現在地を答える。",
+          "skill_rule": "crossheadの問いを近くで回収する",
+          "proof_path": "examples/repositories/minorun-marp/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 4,
+          "label": "選ぶ段階",
+          "title": "記録したい変更を選ぶ",
+          "what_to_inspect": "4頁の作業フォルダと同じ位置を保ち、右へステージを足す。",
+          "skill_rule": "差分だけ足すbuild図を3〜5段階で作る",
+          "proof_path": "examples/repositories/minorun-marp/render/slide-05.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 6,
+          "label": "共有まで追う",
+          "title": "履歴をチームへ届ける",
+          "what_to_inspect": "同じ三つの箱にリモートを足す。箱内文字と矢印を分離。",
+          "skill_rule": "図を大きくし、位置と語を揃える",
+          "proof_path": "examples/repositories/minorun-marp/render/slide-07.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/minorun-marp/deck.md",
+        "examples/repositories/minorun-marp/images/location-4.svg",
+        "examples/repositories/minorun-marp/minorun-dark.css",
+        "examples/repositories/minorun-marp/source/repair-command-2.txt",
+        "examples/repositories/minorun-marp/source/marp-pdf-repair.txt",
+        "examples/repositories/minorun-marp/source/marp-png-repair.txt",
+        "examples/repositories/minorun-marp/source/brief-scope-repair.json",
+        "examples/repositories/minorun-marp/source/compiler-export-receipts.json",
+        "examples/repositories/minorun-marp/source/zip-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "操作の説明を問いと段階図に変え、保存・選択・記録・共有の違いを追える。",
+      "requirements": [
+        "原典の固定ソース・LICENSEと入力を保持",
+        "対象形式に必要なPython/Node/既存ブラウザー（例のREADME参照）"
+      ],
+      "steps": [
+        "5分の導入範囲と読み手をinput/BRIEF.mdで確定する",
+        "deck.mdで問いと回答を続け、見出しを一行にする",
+        "段階SVGで既存の箱の位置を保って一要素ずつ足す",
+        "source/rebuild.pyへMarp CLIとブラウザーの場所を渡す",
+        "check-ai-smell --allとPDF全頁を確認する"
+      ],
+      "limitations": [
+        "元35分教材のうち5分の導入抜粋。元依頼は入力内へ保存",
+        "20分演習・ブランチ・レビュー・競合解消は扱わない",
+        "Gitコマンドは説明例で、リモート送信はしていない",
+        "本文を変えたときは埋込サブセット書体の収録文字も更新する"
+      ]
+    },
+    "title": "Gitの変更、どこに保存された？",
+    "titles": [
+      "Gitの変更、どこに保存された？",
+      "保存した変更はどこにある？",
+      "まず、変更の現在地を見る",
+      "変更は作業フォルダにある",
+      "記録したい変更を選ぶ",
+      "選んだ変更を履歴へ残す",
+      "履歴をチームへ届ける",
+      "迷ったら、まず状態と差分を読む",
+      "今の変更を、git statusで見てみよう"
+    ]
+  },
+  {
+    "case_id": "ppt-design-system",
+    "job": "",
+    "change": "見出し・数値・問い・比較を、同じ配色と文字の規則で揃えられる。",
+    "input": "架空の図書館イベントの参加案内6頁とForest Ink指定",
+    "output": "原典テンプレートのナビゲーションを持つ日本語HTML",
+    "how_to_use": [
+      "原典themes.mdから5配色の一つを選ぶ",
+      "input/data.jsonに日時・会場・持ち物と頁の役割を書く",
+      "layoutの数値カード・大きな問い・並列比較を内容で選ぶ",
+      "python source/reproduce.pyで原典templateへ差し込む",
+      "全頁のP0/P1項目と元ナビゲーションを実画面で確認する"
+    ],
+    "constraints": [
+      "作例はHTMLのみでPPTX laneは未実施",
+      "原典テンプレートのJavaScriptを無改変で保持",
+      "游明朝・游ゴシック等の端末書体に依存。OS書体は配布しない",
+      "10種の全レイアウトや他4配色を実演した例ではない"
+    ],
+    "demonstration": {
+      "summary": "見出し・数値・問い・比較を、同じ配色と文字の規則で揃えられる。",
+      "applied_features": [
+        "指定5配色のForest Inkを使用",
+        "Hero Cover / Big Numbers Grid / Hero Question / Before-After",
+        "明朝見出し・ゴシック本文・共通の頁情報"
+      ],
+      "not_demonstrated": [
+        "作例はHTMLのみでPPTX laneは未実施",
+        "原典テンプレートのJavaScriptを無改変で保持",
+        "游明朝・游ゴシック等の端末書体に依存。OS書体は配布しない",
+        "10種の全レイアウトや他4配色を実演した例ではない"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "配色と文字を揃える",
+          "title": "参加案内の表紙",
+          "what_to_inspect": "Forest Inkの濃色地に明朝見出し。2頁では同じ色を明るい紙面へ反転。",
+          "skill_rule": "指定presetとserif/sans/monoの役割を守る",
+          "proof_path": "examples/repositories/ppt-design-system/render/slide-01.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 1,
+          "label": "必要事項を拾う",
+          "title": "予定の6項目",
+          "what_to_inspect": "開始・所要時間・会場・費用・持ち物・入口を数値カードで見分ける。",
+          "skill_rule": "Big Numbers Gridと強調色の縦罫を使う",
+          "proof_path": "examples/repositories/ppt-design-system/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 4,
+          "label": "次の行動を比べる",
+          "title": "予定どおりと変更時",
+          "what_to_inspect": "左右を同じ濃さにし、各条件で取る行動を対応させる。",
+          "skill_rule": "Before / Afterの並列比較を使う",
+          "proof_path": "examples/repositories/ppt-design-system/render/slide-05.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/ppt-design-system/input/data.json",
+        "examples/repositories/ppt-design-system/source/reproduce.py",
+        "examples/repositories/ppt-design-system/source/upstream/assets/template.html",
+        "examples/repositories/ppt-design-system/source/upstream/references/layouts.md",
+        "examples/repositories/ppt-design-system/review/template-proof.json",
+        "examples/repositories/ppt-design-system/source/browser-repair.json",
+        "examples/repositories/ppt-design-system/source/zip-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "見出し・数値・問い・比較を、同じ配色と文字の規則で揃えられる。",
+      "requirements": [
+        "原典の固定ソース・LICENSEと入力を保持",
+        "対象形式に必要なPython/Node/既存ブラウザー（例のREADME参照）"
+      ],
+      "steps": [
+        "原典themes.mdから5配色の一つを選ぶ",
+        "input/data.jsonに日時・会場・持ち物と頁の役割を書く",
+        "layoutの数値カード・大きな問い・並列比較を内容で選ぶ",
+        "python source/reproduce.pyで原典templateへ差し込む",
+        "全頁のP0/P1項目と元ナビゲーションを実画面で確認する"
+      ],
+      "limitations": [
+        "作例はHTMLのみでPPTX laneは未実施",
+        "原典テンプレートのJavaScriptを無改変で保持",
+        "游明朝・游ゴシック等の端末書体に依存。OS書体は配布しない",
+        "10種の全レイアウトや他4配色を実演した例ではない"
+      ]
+    }
+  },
+  {
+    "case_id": "business-carousel",
+    "job": "",
+    "change": "投稿案を「困りごと→記入例→行動」の順に整理し、制作ブリーフと確認画面にできる。",
+    "input": "架空ブランドの色・書体と引き継ぎメモの原稿",
+    "output": "6枚の制作ブリーフと1080角のHTML構成確認プレビュー",
+    "how_to_use": [
+      "読む人・目的・掲載先とブランド条件をinput/data.jsonへ書く",
+      "先に原稿を六つの役割へ分ける",
+      "carousel-brief.mdに各頁の文章・図案とBrand directionを書く",
+      "専用builderで1080角の構成確認HTMLを生成する",
+      "移動・進捗・最後の記入型を確認し、公開用仕上げは別に判断する"
+    ],
+    "constraints": [
+      "原典は指示型の制作スキルで、原典製レンダラーは存在しない",
+      "本例の専用HTMLは原典の構成指示を実装したもの",
+      "Canva/Figma仕上げ・LinkedIn PDF・公開・人の承認は未実施",
+      "連絡先は未設定。実績の代わりに架空の記入例を使う"
+    ],
+    "demonstration": {
+      "summary": "投稿案を「困りごと→記入例→行動」の順に整理し、制作ブリーフと確認画面にできる。",
+      "applied_features": [
+        "Hook→Problem→Insight→Solution→Example→CTA",
+        "1枚1論点とHook/CTA濃色・本文淡色",
+        "ブランド指示と最後の行動を明記"
+      ],
+      "not_demonstrated": [
+        "原典は指示型の制作スキルで、原典製レンダラーは存在しない",
+        "本例の専用HTMLは原典の構成指示を実装したもの",
+        "Canva/Figma仕上げ・LinkedIn PDF・公開・人の承認は未実施",
+        "連絡先は未設定。実績の代わりに架空の記入例を使う"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "読む入口を作る",
+          "title": "引き継ぎ、何を書けばいい？",
+          "what_to_inspect": "濃色表紙の問いから、次頁の困りごとへ進む。下の操作と進捗が切れない。",
+          "skill_rule": "Hookとページ移動を作る",
+          "proof_path": "examples/repositories/business-carousel/render/slide-01.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 4,
+          "label": "具体例で確かめる",
+          "title": "資料確認の記入例",
+          "what_to_inspect": "目的・次の一手・相談先に何を書くかを、架空の一例で示す。",
+          "skill_rule": "Proofがなければ捏造せずExampleを明示する",
+          "proof_path": "examples/repositories/business-carousel/render/slide-05.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 5,
+          "label": "次の行動を置く",
+          "title": "まず1件書く",
+          "what_to_inspect": "最後の「記入型をコピー」とページ番号・進捗を独立させる。",
+          "skill_rule": "CTAを一つにし、5〜7枚で一連の流れを作る",
+          "proof_path": "examples/repositories/business-carousel/render/slide-06.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/business-carousel/input/data.json",
+        "examples/repositories/business-carousel/carousel-brief.md",
+        "examples/repositories/business-carousel/source/recipe.json",
+        "examples/repositories/business-carousel/source/repair-generation-receipt.json",
+        "examples/repositories/business-carousel/source/build_business_carousel_repository_example.py",
+        "examples/repositories/business-carousel/source/browser-repair.json",
+        "examples/repositories/business-carousel/source/zip-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "投稿案を「困りごと→記入例→行動」の順に整理し、制作ブリーフと確認画面にできる。",
+      "requirements": [
+        "原典の固定ソース・LICENSEと入力を保持",
+        "対象形式に必要なPython/Node/既存ブラウザー（例のREADME参照）"
+      ],
+      "steps": [
+        "読む人・目的・掲載先とブランド条件をinput/data.jsonへ書く",
+        "先に原稿を六つの役割へ分ける",
+        "carousel-brief.mdに各頁の文章・図案とBrand directionを書く",
+        "専用builderで1080角の構成確認HTMLを生成する",
+        "移動・進捗・最後の記入型を確認し、公開用仕上げは別に判断する"
+      ],
+      "limitations": [
+        "原典は指示型の制作スキルで、原典製レンダラーは存在しない",
+        "本例の専用HTMLは原典の構成指示を実装したもの",
+        "Canva/Figma仕上げ・LinkedIn PDF・公開・人の承認は未実施",
+        "連絡先は未設定。実績の代わりに架空の記入例を使う"
+      ]
+    }
+  },
+  {
+    "case_id": "magic-slide",
+    "job": "",
+    "change": "同じ数字や持ち物を次頁へ引き継ぎ、前夜と朝の役割の変化を追える。",
+    "input": "朝の支度40分→30分を仮定する実験案、5頁のoutlineとBrief Lite",
+    "output": "元のMagic Move・Overview・講稿を持つHTML",
+    "how_to_use": [
+      "sources/outline.mdで結論・読み手・終わり方を決める",
+      "sources/brief.mdで題材・書体・配色と採らない表現を決める",
+      "数字と持ち物に同じmagic-idを付け、各頁の意味に沿って置く",
+      "原典mergeと認証scopeのみ派生したinjectorで生成する",
+      "原典serveでOverview→通常再生→全境界の動きを確認する"
+    ],
+    "constraints": [
+      "40・30・4・3・3分は仮定、短縮効果は未検証",
+      "認証付きQA関数のscope修正のみ。server認証と保存先制限は原典のまま",
+      "静的カタログiframeでは編集・保存が使えない",
+      "agentの検証と人のrevision/adoptionは別。後者はpending",
+      "静止画だけcursorとtrailを非表示にして撮影。通常runtimeは保持"
+    ],
+    "demonstration": {
+      "summary": "同じ数字や持ち物を次頁へ引き継ぎ、前夜と朝の役割の変化を追える。",
+      "applied_features": [
+        "outline / Brief Lite / モジュールHTML",
+        "同じdata-magic-idの数字・持ち物を隣接頁へ受け渡す",
+        "原典Overviewを先に確認して全頁とmotionを検査",
+        "原典serveの全4境界を前・途中・後で実撮影。native clone1/3/3/2、エラー・外部通信0。"
+      ],
+      "not_demonstrated": [
+        "40・30・4・3・3分は仮定、短縮効果は未検証",
+        "認証付きQA関数のscope修正のみ。server認証と保存先制限は原典のまま",
+        "静的カタログiframeでは編集・保存が使えない",
+        "agentの検証と人のrevision/adoptionは別。後者はpending",
+        "静止画だけcursorとtrailを非表示にして撮影。通常runtimeは保持"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "数字を引き継ぐ",
+          "title": "10分を前夜へ移す",
+          "what_to_inspect": "表紙の10分が短縮候補の合計へ移る。4+3+3は仮定と明記。",
+          "skill_rule": "同じmagic-idを別の説明位置へ受け渡す",
+          "proof_path": "examples/repositories/magic-slide/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 2,
+          "label": "持ち物を引き継ぐ",
+          "title": "前夜の三つ",
+          "what_to_inspect": "前頁の服・鍵・バッグを三つの準備カードへ引き継ぐ。",
+          "skill_rule": "同じ対象の見出しを保ち、Magic Moveで関係をつなぐ",
+          "proof_path": "examples/repositories/magic-slide/render/slide-03.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 3,
+          "label": "役割を引き継ぐ",
+          "title": "朝は確認して出る",
+          "what_to_inspect": "同じ持ち物が左の前夜リストへ集まり、右に朝の30分目標を置く。",
+          "skill_rule": "装飾ではなく、説明する役割の変化に動きを対応させる",
+          "proof_path": "examples/repositories/magic-slide/render/slide-04.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 0,
+          "label": "動きの実撮影",
+          "title": "4つの遷移を前・途中・後で見る",
+          "what_to_inspect": "各行を左から右へ。10分、服・鍵・バッグ、30分と5日間が元のMagic Moveで移る。途中は自然な再生中のフレーム。",
+          "skill_rule": "隣接ページの同じdata-magic-idを元FLIPで引き継ぎ、実serveでOverview後に動きを確認する。",
+          "proof_path": "examples/repositories/magic-slide/render/motion-before-mid-after.jpg",
+          "proof_kind": "actual_native_transition_before_mid_after"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/magic-slide/sources/outline.md",
+        "examples/repositories/magic-slide/sources/brief.md",
+        "examples/repositories/magic-slide/sources/style.css",
+        "examples/repositories/magic-slide/source/logs/merge-web9.log",
+        "examples/repositories/magic-slide/source/logs/inject-web9.log",
+        "examples/repositories/magic-slide/source/overview-capture.json",
+        "examples/repositories/magic-slide/source/browser-observations.json",
+        "examples/repositories/magic-slide/source/ja-runtime/changes.diff",
+        "examples/repositories/magic-slide/source/zip-replay.json",
+        "examples/repositories/magic-slide/source/motion-check.json",
+        "examples/repositories/magic-slide/render/motion-before-mid-after.jpg",
+        "examples/repositories/magic-slide/render/transition-1-2-before.png",
+        "examples/repositories/magic-slide/render/transition-1-2-mid.png",
+        "examples/repositories/magic-slide/render/transition-1-2-after.png",
+        "examples/repositories/magic-slide/render/transition-2-3-before.png",
+        "examples/repositories/magic-slide/render/transition-2-3-mid.png",
+        "examples/repositories/magic-slide/render/transition-2-3-after.png",
+        "examples/repositories/magic-slide/render/transition-3-4-before.png",
+        "examples/repositories/magic-slide/render/transition-3-4-mid.png",
+        "examples/repositories/magic-slide/render/transition-3-4-after.png",
+        "examples/repositories/magic-slide/render/transition-4-5-before.png",
+        "examples/repositories/magic-slide/render/transition-4-5-mid.png",
+        "examples/repositories/magic-slide/render/transition-4-5-after.png"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "同じ数字や持ち物を次頁へ引き継ぎ、前夜と朝の役割の変化を追える。",
+      "requirements": [
+        "原典の固定ソース・LICENSEと入力を保持",
+        "対象形式に必要なPython/Node/既存ブラウザー（例のREADME参照）"
+      ],
+      "steps": [
+        "sources/outline.mdで結論・読み手・終わり方を決める",
+        "sources/brief.mdで題材・書体・配色と採らない表現を決める",
+        "数字と持ち物に同じmagic-idを付け、各頁の意味に沿って置く",
+        "原典mergeと認証scopeのみ派生したinjectorで生成する",
+        "原典serveでOverview→通常再生→全境界の動きを確認する"
+      ],
+      "limitations": [
+        "40・30・4・3・3分は仮定、短縮効果は未検証",
+        "認証付きQA関数のscope修正のみ。server認証と保存先制限は原典のまま",
+        "静的カタログiframeでは編集・保存が使えない",
+        "agentの検証と人のrevision/adoptionは別。後者はpending",
+        "静止画だけcursorとtrailを非表示にして撮影。通常runtimeは保持"
+      ]
+    }
+  },
+  {
+    "case_id": "revealjs-skill",
+    "job": "",
+    "change": "説明原稿をブラウザーで順に見せる資料にし、同じ内容をPDFでも配れる。",
+    "input": "社内文書30件を4週間で試す架空の検索企画と講稿",
+    "output": "reveal.jsのHTML・原典Decktapeの6頁PDFと画像",
+    "how_to_use": [
+      "話す順番と枚数を決め、create-presentation.jsで骨格を作る",
+      "本文はp要素、2列はinline gridで書く",
+      "項目の関係は矢印、表の見出しと行は色と罫線で分ける",
+      "原典check-overflow.jsを実行する",
+      "Decktapeで全頁画像とPDFを出し、実表示を確認する"
+    ],
+    "constraints": [
+      "原典scaffold後の日本語組版は専用の手作業実装",
+      "fragment・縦方向の入れ子・PDFからの逆変換は未実演",
+      "企画の数値は架空の条件と目標で、効果実績ではない",
+      "Decktape3.16.1を同caseのQA依存へ固定。ブラウザーは既存Edgeを指定"
+    ],
+    "demonstration": {
+      "summary": "説明原稿をブラウザーで順に見せる資料にし、同じ内容をPDFでも配れる。",
+      "applied_features": [
+        "原典create-presentation.jsの骨格とpt単位",
+        "明示した2列grid・関係図・期間表のレイアウト",
+        "原典overflow検査とDecktape全頁出力"
+      ],
+      "not_demonstrated": [
+        "原典scaffold後の日本語組版は専用の手作業実装",
+        "fragment・縦方向の入れ子・PDFからの逆変換は未実演",
+        "企画の数値は架空の条件と目標で、効果実績ではない",
+        "Decktape3.16.1を同caseのQA依存へ固定。ブラウザーは既存Edgeを指定"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "二つを比べる",
+          "title": "困りごとと試す範囲",
+          "what_to_inspect": "見出しから二列の小見出しを離し、3項目ずつを対応させる。",
+          "skill_rule": "gridをinlineに定義し、文字をp要素に入れる",
+          "proof_path": "examples/repositories/revealjs-skill/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 2,
+          "label": "順序を示す",
+          "title": "権限のある文書だけ",
+          "what_to_inspect": "利用者→検索→回答の矢印は処理順。線は三つの同階層を揃える。",
+          "skill_rule": "情報の関係に合うレイアウトを選ぶ",
+          "proof_path": "examples/repositories/revealjs-skill/render/slide-03.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 3,
+          "label": "表で計画を読む",
+          "title": "4週間の判断材料",
+          "what_to_inspect": "見出し行を濃色にし、四つの週を罫線で区切って対応を読む。",
+          "skill_rule": "表と文字の階層を設け、overflowと全頁画像を検査する",
+          "proof_path": "examples/repositories/revealjs-skill/render/slide-04.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/revealjs-skill/source/scaffold-receipt.json",
+        "examples/repositories/revealjs-skill/source/upstream/skills/revealjs/SKILL.md",
+        "examples/repositories/revealjs-skill/source/overflow-original-windows.txt",
+        "examples/repositories/revealjs-skill/source/decktape-repair.txt",
+        "examples/repositories/revealjs-skill/source/qa/package-lock.json",
+        "examples/repositories/revealjs-skill/source/browser-repair.json",
+        "examples/repositories/revealjs-skill/render/decktape-contact.jpg",
+        "examples/repositories/revealjs-skill/source/zip-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "説明原稿をブラウザーで順に見せる資料にし、同じ内容をPDFでも配れる。",
+      "requirements": [
+        "原典の固定ソース・LICENSEと入力を保持",
+        "対象形式に必要なPython/Node/既存ブラウザー（例のREADME参照）"
+      ],
+      "steps": [
+        "話す順番と枚数を決め、create-presentation.jsで骨格を作る",
+        "本文はp要素、2列はinline gridで書く",
+        "項目の関係は矢印、表の見出しと行は色と罫線で分ける",
+        "原典check-overflow.jsを実行する",
+        "Decktapeで全頁画像とPDFを出し、実表示を確認する"
+      ],
+      "limitations": [
+        "原典scaffold後の日本語組版は専用の手作業実装",
+        "fragment・縦方向の入れ子・PDFからの逆変換は未実演",
+        "企画の数値は架空の条件と目標で、効果実績ではない",
+        "Decktape3.16.1を同caseのQA依存へ固定。ブラウザーは既存Edgeを指定"
+      ]
+    }
+  },
+  {
+    "case_id": "aws-html-showcase",
+    "job": "",
+    "change": "既存PPTXの文字と図形を保ち、ブラウザーで順に再生できる資料へ変えられる。",
+    "input": "Akxan方式で制作した自作5頁PPTXの保存コピー",
+    "output": "元extract結果とネイティブ図形を補助変換したHTML/SVG",
+    "how_to_use": [
+      "入力PPTXを保存し、原典extract-pptx.pyで文字・画像・notesを抽出する",
+      "図形が意味を持つ入力はOOXMLのgeometryと色を別に記録する",
+      "元Neon controllerへ固定viewBoxのSVGを載せる",
+      "必要な出力だけの配置変更をadapterへ記録する",
+      "元PPTXの全頁描画と変換後を比べ、頁移動・ラベル・番号を確認する"
+    ],
+    "constraints": [
+      "ネイティブ図形のSVG化と中央揃えは作例の補助実装で、原典extractor単体の機能ではない",
+      "入力PPTXは無改変。変換後2・3頁の15ラベルだけx/anchorを変更",
+      "この入力に画像と講稿はなく、それらの抽出を実証した例ではない",
+      "HTML/SVG編集用。新しい編集可能PPTXは出力しない",
+      "AWS/原作者との公認・提携ではない",
+      "ページ送り・日本語の操作案内・再表示時の動きはsource/controller.diffの局所差分。"
+    ],
+    "demonstration": {
+      "summary": "既存PPTXの文字と図形を保ち、ブラウザーで順に再生できる資料へ変えられる。",
+      "applied_features": [
+        "原典PPT conversionのextract-pptx.py",
+        "原典Neonのcontroller・移動・reveal animation",
+        "元OOXMLの図形を補助抽出し、15ラベルだけ出力で中央揃え"
+      ],
+      "not_demonstrated": [
+        "ネイティブ図形のSVG化と中央揃えは作例の補助実装で、原典extractor単体の機能ではない",
+        "入力PPTXは無改変。変換後2・3頁の15ラベルだけx/anchorを変更",
+        "この入力に画像と講稿はなく、それらの抽出を実証した例ではない",
+        "HTML/SVG編集用。新しい編集可能PPTXは出力しない",
+        "AWS/原作者との公認・提携ではない",
+        "ページ送り・日本語の操作案内・再表示時の動きはsource/controller.diffの局所差分。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "入力の見た目を引き継ぐ",
+          "title": "展示の表紙",
+          "what_to_inspect": "制作元の円・四角・三角と文言を保ち、ブラウザーの枠内へ収める。",
+          "skill_rule": "PPT conversionでは元内容を抽出し、新内容を補わない",
+          "proof_path": "examples/repositories/aws-html-showcase/render/slide-01.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 1,
+          "label": "図とラベルを対応させる",
+          "title": "場所・作品・言葉",
+          "what_to_inspect": "三つのラベルを対応図形の中心へ揃える。頁番号は右下の一か所。",
+          "skill_rule": "入力と区別して出力の配置変更を明記する",
+          "proof_path": "examples/repositories/aws-html-showcase/render/slide-02.png",
+          "proof_kind": "png"
+        },
+        {
+          "index": 2,
+          "label": "関係を順に見せる",
+          "title": "入口から持ち帰るまで",
+          "what_to_inspect": "四つの図形の下へ番号・見出し・説明を一組ずつ中央揃え。矢印の方向と対応。",
+          "skill_rule": "元のcontrollerと動きを保ち、文字・図の対応を全頁確認する",
+          "proof_path": "examples/repositories/aws-html-showcase/render/slide-03.png",
+          "proof_kind": "png"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/aws-html-showcase/input/deck.pptx",
+        "examples/repositories/aws-html-showcase/input/render/slide-01.png",
+        "examples/repositories/aws-html-showcase/input/render/slide-02.png",
+        "examples/repositories/aws-html-showcase/input/render/slide-03.png",
+        "examples/repositories/aws-html-showcase/extraction/extracted-slides.json",
+        "examples/repositories/aws-html-showcase/extraction/native-shapes.json",
+        "examples/repositories/aws-html-showcase/source/extract-web9.txt",
+        "examples/repositories/aws-html-showcase/source/svg-label-alignment.json",
+        "examples/repositories/aws-html-showcase/source/label-alignment-qa.json",
+        "examples/repositories/aws-html-showcase/source/layout_adapter.py",
+        "examples/repositories/aws-html-showcase/source/browser-repair.json",
+        "examples/repositories/aws-html-showcase/source/extraction-inventory.json",
+        "examples/repositories/aws-html-showcase/render/input-output-page-02.png",
+        "examples/repositories/aws-html-showcase/source/zip-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "既存PPTXの文字と図形を保ち、ブラウザーで順に再生できる資料へ変えられる。",
+      "requirements": [
+        "原典の固定ソース・LICENSEと入力を保持",
+        "対象形式に必要なPython/Node/既存ブラウザー（例のREADME参照）"
+      ],
+      "steps": [
+        "入力PPTXを保存し、原典extract-pptx.pyで文字・画像・notesを抽出する",
+        "図形が意味を持つ入力はOOXMLのgeometryと色を別に記録する",
+        "元Neon controllerへ固定viewBoxのSVGを載せる",
+        "必要な出力だけの配置変更をadapterへ記録する",
+        "元PPTXの全頁描画と変換後を比べ、頁移動・ラベル・番号を確認する"
+      ],
+      "limitations": [
+        "ネイティブ図形のSVG化と中央揃えは作例の補助実装で、原典extractor単体の機能ではない",
+        "入力PPTXは無改変。変換後2・3頁の15ラベルだけx/anchorを変更",
+        "この入力に画像と講稿はなく、それらの抽出を実証した例ではない",
+        "HTML/SVG編集用。新しい編集可能PPTXは出力しない",
+        "AWS/原作者との公認・提携ではない",
+        "ページ送り・日本語の操作案内・再表示時の動きはsource/controller.diffの局所差分。"
+      ]
+    }
+  }
+]

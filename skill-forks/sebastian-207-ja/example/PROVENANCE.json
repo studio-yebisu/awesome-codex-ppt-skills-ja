@@ -1,0 +1,50 @@
+{
+  "fictional": true,
+  "content_provenance": "Assistant-authored fictional cultural project; no factual survey, third-party quote, real event, or achieved metric claimed.",
+  "upstream_repository": "MURMURE11118586/codex-xkppt-skill",
+  "commit": "978b46d116fd8fd971f9cd963f745da62f7f1f26",
+  "license": "MIT",
+  "upstream_skill_url": "https://github.com/MURMURE11118586/codex-xkppt-skill/blob/978b46d116fd8fd971f9cd963f745da62f7f1f26/codex-ppt-skill/SKILL.md",
+  "planned_adaptations": [
+    "日本語コピーと意味区切り改行",
+    "OSS日本語・英数字フォント指定",
+    "中国語固定ラベルの日本語化",
+    "言語メタデータja-JP",
+    "原典生成器とnative design-systemを使用"
+  ],
+  "execution": "Repaired locally using original native runtime and exact pinned unmodified QA",
+  "publication": "not_requested",
+  "image_assets": [
+    {
+      "path": "input/images/slide_01.png",
+      "slide_id": "slide_01",
+      "method": "built-in imagegen by parent",
+      "visual_check": "paper book and town, no visible text",
+      "pixels": [
+        1145,
+        1374
+      ]
+    }
+  ],
+  "method": "upstream build_native_pptx.mjs + native design-system/editorial-ink",
+  "render_method": "PowerPoint16 PDF -> RGB PNG",
+  "pdf_method": "Actual PowerPoint PDF",
+  "upstream_aesthetic_gate": "PASS87.6;0failure_modes/0issues/right_underused0;originalthreshold/QAunchanged",
+  "font_distribution": "Official OFL BIZ UDPGothic/Shippori Mincho/Manrope included; no OS font extraction",
+  "adaptations": [
+    "Japanese fixed labels and ja-JP metadata",
+    "Japanese headings and copy",
+    "CJK fonts selected from available environment",
+    "closing placeholder image panel removed",
+    "declarative typographic whitespace",
+    "native visual plan for editable process/closing rather than auto-required raster assets"
+  ],
+  "runtime_adapters": "source/runtime-adapters.json",
+  "runtime_diff": "source/runtime-adapter.diff",
+  "unmodified_original": "source/upstream-original/codex-ppt-skill",
+  "current_deck_sha256": "6b4c2399479b4568ddd8dd87c1b1f86c81bc5102906aa480fcc62611526285f7",
+  "repair_model": "Codex, not a new Opus run",
+  "pptx_sha256": "cb446b7743e618b687453716d72afcc2978ba93c641de9605a37d9f64ec72bd1",
+  "revision": "Round8 Codex: explicit generic IO route mapping; bounded vertical spread for existing2/5content; application Quit removed. Original QA unchanged.",
+  "runtime_adapter": "source/runtime-adapters.json"
+}

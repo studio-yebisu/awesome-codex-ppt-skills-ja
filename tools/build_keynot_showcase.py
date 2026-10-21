@@ -10,6 +10,19 @@ CASE=ROOT/'examples/repositories/keynot-showcase' if (ROOT/'examples').exists() 
 def build():
     s=CASE/'source'
     brand=json.loads((CASE/'input/brand-record.json').read_text(encoding='utf-8'))
+    # This input is an explicit text brand brief, not a PDF or URL extraction demo.
+    import re
+    brief=(CASE/'input/BRAND.md').read_text(encoding='utf-8')
+    fields={'primary':'黒','accent':'赤','cream':'紙','stone':'罫線','ink':'黒','muted':'補足','white':'黒い面の文字'}
+    evidence=[]
+    for key,label in fields.items():
+        match=re.search(r'^- '+re.escape(label)+r': (#[0-9a-fA-F]{6})',brief,re.M)
+        if not match: raise ValueError('Missing exact brand value: '+label)
+        brand[key]=match.group(1)
+        evidence.append({'field':key,'source_label':label,'value':match.group(1),'line':brief[:match.start()].count('\n')+1})
+    (CASE/'input/brand-record.json').write_text(json.dumps(brand,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+    (s/'brand-extraction.json').write_text(json.dumps({'source':'input/BRAND.md','source_sha256':hashlib.sha256(brief.encode()).hexdigest(),'scope':'Structured Japanese text brief; exact color entries parsed and carried into CSS. PDF/URL recognition is not exercised.','fields':evidence,'rules':['accent is a small rule/highlight, never a whole background','own text wordmark only','paper70/black28/red2 is a target, not a measurement']},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+
     old_js=(s/'controller.original.js').read_text(encoding='utf-8')
     bridge='''
 // Japanese case adapter appended to the untouched original controller.

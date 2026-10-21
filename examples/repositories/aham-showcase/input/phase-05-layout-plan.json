@@ -1,0 +1,307 @@
+{
+  "phase": "5/8 大綱と版式の選択",
+  "upstream_file": "upstream/references/phase-05.md",
+  "decision_table": "upstream/references/layout-library.md §版式選択速查",
+  "theme": "A",
+  "deck_mode": "hybrid（原典既定。確認していない）",
+  "brand": "朝作業",
+  "brand_reason": "原典 chrome は右上の品牌を x=1240 右揃え 12px、蓝点を x=1188〜1197 に置く。和文は1字12pxなので、5字の『朝の作業案』は x=1180 から始まり蓝点に重なる。3字（36px、x=1204 から）まで短くした。",
+  "footer_source": "架空のワークショップ案。時間配分は例示で効果は未測定",
+  "pages": [
+    {
+      "page": 1,
+      "action_title": null,
+      "narrative_purpose": "structure",
+      "visual_lead": "案件名",
+      "layout": {
+        "recommended": "SPC-01",
+        "template": "themes.cover(theme='A')",
+        "alternatives": [
+          "themes.cover(theme='B')",
+          "themes.cover_dark（C档）"
+        ]
+      },
+      "render_args": {
+        "title": "朝の作業ワークショップ案",
+        "subtitle": "",
+        "chapters": [
+          [
+            "01",
+            "時間配分",
+            "",
+            ""
+          ],
+          [
+            "02",
+            "作業の入口",
+            "",
+            ""
+          ],
+          [
+            "03",
+            "四週間の試行計画",
+            "",
+            ""
+          ]
+        ],
+        "meta_left": "架空のワークショップ案。時間配分は例示で、効果は測定していない",
+        "meta_right": "試行前の案"
+      },
+      "page_rules": [
+        "副題は空にする。A档の表紙短線（x=42, y=398, 116×4）は副題の直下に来るため、副題があると文字の一部だけに下線が付いて見える。副題を渡さなければ原典どおり題名の下の短線として残る。",
+        "副題に入れていた『架空・効果未測定』は meta_left（原典の落款位置）へ移す。"
+      ],
+      "speaker_note": "架空の働き方ワークショップ案です。朝の20分は例示の配置で、効果を実証した方法ではありません。"
+    },
+    {
+      "page": 2,
+      "section_label": "時間配分",
+      "action_title": "サンプル行程は選択から記録までを分ける",
+      "narrative_purpose": "explain",
+      "visual_lead": "データ図表（四つの手順の所要時間）",
+      "points": [
+        "手順ごとの所要時間 3・10・5・2分",
+        "合計20分",
+        "時間配分は例示値"
+      ],
+      "data_sources": [
+        "input/data.json durations_minutes"
+      ],
+      "layout": {
+        "recommended": "V-02",
+        "component": "charts.gantt",
+        "skeleton": "svg-skeleton-v.md → V-02（FULL 区に charts を直接置く。補足注は (56,656)）",
+        "alternatives": [
+          "E-90（consulting.chevron_flow：段階＋量）",
+          "E-03（layouts.stage_flow：量なしの流れ）"
+        ],
+        "reason": "D1〜D4 の4件が数値データ。phase-05 §2.5-1『D類データ3件以上は charts で図表化、文字化しない』に当たる。phase-02 の図表形態予測は『分期排期 → gantt』。旧版の E-03 は分を眉標の文字で示すだけで、この規則を満たしていなかった。"
+      },
+      "render_args": {
+        "x": 40,
+        "y": 150,
+        "w": 1120,
+        "h": 420,
+        "steps": [
+          "作業を選ぶ",
+          "作業に取り組む",
+          "進み具合をメモ",
+          "次の手順を書く"
+        ],
+        "highlight_index": 1,
+        "unit_label": "分",
+        "total_minutes": 20,
+        "note": {
+          "x": 56,
+          "y": 656,
+          "text": "合計20分（3＋10＋5＋2分）。時間配分は例示値"
+        }
+      },
+      "page_rules": [
+        "gantt の title 引数は使わない。title を入れると図題（y+16）と目盛り数字（pyt-8）が同じ高さで重なる。合計は V-02 の補足注位置 (56,656) に書く。",
+        "w=1180 にする。w=1200 だと最後の棒の右に付く『2分』が x≈1246 まで出て、原典 lint の右界 1242 を超える。",
+        "青は手順2（10分）の1本だけ（brand §2.4：高亮は一つまで）。",
+        "原典ganttの目盛りと棒ラベルだけ16px・INK1へ局所補正し、20分終端の線と文字を同じ軸式で追加。w=1120で拡大した最後の2分ラベルを収める。棒・元値・比率・原典QAは不変。"
+      ],
+      "self_check": {
+        "data_charted": true,
+        "non_data_graphic": "対象外（データページ）",
+        "lead_matches_layout": true
+      },
+      "speaker_note": "3分で一つ選び、10分取り組み、5分でメモし、2分で次を残す案です。合計20分。仕事の条件に合わせて調整します。"
+    },
+    {
+      "page": 3,
+      "section_label": "作業の入口",
+      "action_title": "本案は前日に作業の入口を一つ決めておく",
+      "narrative_purpose": "explain",
+      "visual_lead": "流れ図（前日→朝→終了時）",
+      "points": [
+        "前日：作業を一つ決めておく",
+        "朝：決めた作業を進める",
+        "終了時：続きを一言残す"
+      ],
+      "data_sources": [
+        "input/data.json notes[2]"
+      ],
+      "layout": {
+        "recommended": "E-03",
+        "component": "layouts.stage_flow",
+        "skeleton": "svg-skeleton-e.md → E-03（段の間は前後関係であること）",
+        "alternatives": [
+          "直排 · grid-composition §時間線",
+          "E-04（layouts.tri_layer）"
+        ],
+        "reason": "前日→朝→終了時は時間の前後関係で、速查表の『流程步骤 → E-03』に当たる。旧版の E-04 tri_layer は『系统架构/层次』用で、層名も8字以内の規律に収まっていなかった。"
+      },
+      "render_args": {
+        "stages": [
+          [
+            "前日",
+            "作業を一つ決めておく"
+          ],
+          [
+            "朝",
+            "決めた作業を進める"
+          ],
+          [
+            "終了時",
+            "続きを一言残す"
+          ]
+        ],
+        "dark_last": false,
+        "center_translation_x": 67,
+        "supplements": [
+          [
+            "必要な資料をそろえる",
+            "始める位置をメモする"
+          ],
+          [
+            "決めた作業だけ始める",
+            "時間配分の案を試す"
+          ],
+          [
+            "途中でも記録を残す",
+            "次の開始位置を書く"
+          ]
+        ]
+      },
+      "page_rules": [
+        "dark_last=False。原典既定は最終段を濃色にするが、このページの主題は最初の段（前日）なので最終段を強調しない。stage_flow は最初の段だけを強調する引数を持たない。",
+        "原典stage_flowの箱・矢印の相対配置を保持して全体を右へ67px平行移動し、左右余白をそろえる。元の各段に対応する補足を原典Tで下へ2行ずつ加える。",
+        "原典の箱内ラベルだけ16/18pxへ拡大。箱と矢印の相対配置は維持。"
+      ],
+      "self_check": {
+        "data_charted": "対象外（数値なし）",
+        "non_data_graphic": "E系の流れ図を使用",
+        "lead_matches_layout": true
+      },
+      "speaker_note": "前日に作業の入口を一つ決め、朝はその作業を進め、終了時に続きを一言残す流れの案です。"
+    },
+    {
+      "page": 4,
+      "section_label": "四週間の試行計画",
+      "action_title": "試行計画は取り組み・記録・相談を週ごとに並べる",
+      "narrative_purpose": "explain",
+      "visual_lead": "泳道路線図（3泳道×4週）",
+      "points": [
+        "取り組み：観察（1週目）→ 一つ試す（2〜3週目）→ 続け方を話す（4週目）",
+        "記録：4週間通して一言を残す",
+        "相談：2週目と4週目"
+      ],
+      "data_sources": [
+        "input/data.json notes[3]"
+      ],
+      "layout": {
+        "recommended": "A-90",
+        "component": "structures.swimlane_roadmap(mode='gantt')",
+        "skeleton": "svg-skeleton-a.md → A-90",
+        "alternatives": [
+          "A-90 mode=phase_bucket",
+          "直排 · grid-composition §時間線"
+        ],
+        "reason": "3本の並行作業を週単位で並べる内容で、速查表の『多泳道路線图 → A-90』に当たる。"
+      },
+      "render_args": {
+        "x": 40,
+        "y": 140,
+        "w": 1180,
+        "h": 440,
+        "total_units": 4,
+        "unit_label": "週",
+        "legend": true,
+        "lanes": [
+          {
+            "name": "取り組み",
+            "blocks": [
+              [
+                "今の朝を観察する",
+                0,
+                1,
+                "proposed"
+              ],
+              [
+                "一つの作業を試す",
+                1,
+                2,
+                "proposed"
+              ],
+              [
+                "続け方を話す",
+                3,
+                1,
+                "proposed"
+              ]
+            ]
+          },
+          {
+            "name": "記録",
+            "blocks": [
+              [
+                "その日の一言を残す",
+                0,
+                4,
+                "proposed"
+              ]
+            ]
+          },
+          {
+            "name": "相談",
+            "blocks": [
+              [
+                "途中で相談する",
+                1,
+                1,
+                "proposed"
+              ],
+              [
+                "四週を振り返る",
+                3,
+                1,
+                "proposed"
+              ]
+            ]
+          }
+        ]
+      },
+      "page_rules": [
+        "右端の目盛り『4週』は unit_label='週'（1字）と w=1190 で収める。目盛りは中央揃えのため、w=1200 だと x=1240 を中心に右へ約7px はみ出す。座標を後から書き換える adapter は使わない。",
+        "today / milestones は渡さない（試行前で今日の位置も節目もない）。",
+        "legend=True。原典の3状態の凡例を日本語へ訳す。全ブロックはproposed（提案）で、実績・承認済みへ変えない。凡例文字は14pxに局所補正。",
+        "目盛りと泳道名は16px、ブロック名は14pxへ濃く補正。w=1180で右端目盛りを収める。"
+      ],
+      "self_check": {
+        "data_charted": "対象外（期間のみ）",
+        "non_data_graphic": "A系の路線図を使用",
+        "lead_matches_layout": true
+      },
+      "speaker_note": "一週目に観察、二・三週目に一つ試し、四週目に続け方を話す例示計画。記録と相談を並行させ、負担があれば変更します。"
+    }
+  ],
+  "rhythm_check": {
+    "series": [
+      "SPC",
+      "V",
+      "E",
+      "A"
+    ],
+    "same_series_3_in_row": "なし",
+    "window_10_pages": "4ページのため窓を満たさない",
+    "impact_I_series": "なし（4ページ）",
+    "transition_T_series": "なし（4ページ）",
+    "chart_pages_min": "内容3ページ → 必要 ⌈3/6⌉=1、実際 1（P2）"
+  },
+  "gate": {
+    "upstream_requirement": "全ページの規劃カードを出して停止し、ユーザー確認後に Phase 6 へ。確認前に SVG を作らない。",
+    "this_run": "停止待ちを統合担当判断に置き換える。統合担当は generate.py --sample の前に本ファイルを確認する。",
+    "user_confirmed": false,
+    "integrator_decision": {
+      "decision": "approve",
+      "decided_by": "Codex integration agent under current autonomous repair instruction",
+      "at": "2026-10-15T16:52:00.955188+00:00",
+      "scope": "Current4page plan read and approved before this recorded sample/final cycle; not human approval",
+      "user_confirmed": false,
+      "rationale": "Original layout selection retained; local label readability/centering/legend corrections explicit. All4plans inspected."
+    }
+  }
+}

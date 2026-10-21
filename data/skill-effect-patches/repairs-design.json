@@ -1,0 +1,435 @@
+[
+  {
+    "case_id": "mck-native-showcase",
+    "name": "集計値から図・表・工程をそろえる",
+    "job": "",
+    "change": "同じ元データから、構成比の図、内訳の表、工程図をそろった書式で作れる。",
+    "input": "読者・目的・発表時間、頁ごとの主張と根拠、図や表にする元データ。",
+    "output": "図・表・比較・工程を編集可能な図形と文字でまとめたPPTXと、原典S3/S4の検査記録。",
+    "how_to_use": [
+      "読み手・目的・時間・主張・元データをbriefへ記し、数値の単位・分母・集計時点を確認する。",
+      "原典のengine-apiとlayout-matrixで版式・文量・項目数を選び、outlineとcontentへまとめる。",
+      "原典S3を通した同じcontentを高水準メソッドへ渡し、PPTXを生成する。",
+      "原典S4の結果と全頁の実描画を確認し、文量や入力を直す。免除と警告を記録する。",
+      "合格結果と成果物を保存し、修正を一回限りか再発する型かに分け、後者をexperiencesへ記す。"
+    ],
+    "constraints": [
+      "原典67メソッドのうち、表紙・ドーナツ図・表・タイムラインの4種類を使用。他の版式や外部表紙画像APIは未実施。",
+      "図と表は編集可能な図形。Officeのデータ連動チャートやネイティブ表ではない。再集計は入力から再生成する。",
+      "原典S3/S4は合格、S4は94点。中心の文字箱重複警告1件、4頁「交付」の本文領域右0.47インチを原典が免除する1件を保持。",
+      "書体を同梱のBIZ UDPGothicへ指定し、凡例の百分率を小数1桁へ補正。原典の座標・色・字号・QA・免除一覧は変更しない。",
+      "五段階のファイルとS5経験記録を保存。TaskCreate/TaskUpdateは使用せず、固定ホームディレクトリの代わりに同梱固定原典を読む差分がある。",
+      "原典SKILLが参照するreferences/layouts/は固定原典に含まれないため、存在するAPI文書とlayout-matrixを参照した。",
+      "同梱のBIZ UDPGothic Regular/BoldとOFLを利用。PPTXへ埋め込まないため閲覧環境への字体登録が必要。",
+      "実データがない構成比、写真中心の表現、自由な装飾配置にはこの作例の方式を使わない。独立再評価と利用者採用は別。"
+    ],
+    "demonstration": {
+      "summary": "同じ30字体の実集計を、4書体群の構成比と元の5分類の内訳表で照合する。制作の五段階を保存ファイルと結び、S3/S4の合格後、凡例の間隔を直した経験をS5として残す。",
+      "applied_features": [
+        "原典donutへ、実分類12・8・3・7字体を渡す。見出し調4＋等幅3を明示してまとめ、4凡例と補足欄の間隔を確保。",
+        "原典data_tableへ元の5分類を残し、日本語17・欧文13・総数30を同じ入力から計算。",
+        "原典timelineの5段階にbrief/outline/content/gate/experiencesを対応させ、架空の所要時間を加えない。",
+        "原典S3/S4の実JSONを保存し、S5でPATTERN修正を派生側experiences/chart-limits.mdへ記録。原典エンジンとゲートは未変更。",
+        "両ZIPを別展開し原典S3/S4/S5とPowerPoint全4頁を再実行。native構造・画像・ノートが一致し、各PNGのRGB差0。既存依存を利用し新規installなし。"
+      ],
+      "not_demonstrated": [
+        "他63メソッド、外部表紙画像API、TaskCreate/TaskUpdate進捗管理、Fast Track、Officeデータ連動、時間短縮の実測、独立再評価・利用者採用。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・比率",
+          "title": "30字体を4書体群で比べる",
+          "what_to_inspect": "右の4凡例は12・8・3・7字体。見出し調と等幅を合算した7字体の出典を脚注で確認する。最下段の凡例と下の補足欄が離れ、次頁に元の5分類が残る。",
+          "skill_rule": "原典donutの図形と凡例を同じ数値から作る。summary付きでは4区分以下という派生側の予防則で、原典の配置を変えず接触を防いだ。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-02.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 2,
+          "label": "3頁・内訳",
+          "title": "分類と言語を横断して比較",
+          "what_to_inspect": "表の各分類の日本語・欧文・計を見て、下段の17・13・30と2頁の総数が一致するか確認する。",
+          "skill_rule": "原典data_tableで横断比較を行い、同じデータの総数を保持する。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-03.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・工程",
+          "title": "五段階と保存ファイルを対応させる",
+          "what_to_inspect": "要件→構成→原稿→描画→交付を左から読む。各段階のbrief.md/outline.json/content.json/gate_result.json/experiencesを確認する。「交付」の文字箱は本文右端から0.47インチ出る原典免除で、本文内とは記載しない。",
+          "skill_rule": "原典timelineへ5段階と説明を渡し、S5は合格後の交付準備と修正パターンの経験記録まで行う。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-04.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/mck-native-showcase/input/oss-font-kit.json",
+        "examples/repositories/mck-native-showcase/input/plan.json",
+        "examples/repositories/mck-native-showcase/source/build_mck_native_showcase.py",
+        "examples/repositories/mck-native-showcase/native-elements.json",
+        "examples/repositories/mck-native-showcase/source/current-pptx-inspection.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/brief.md",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/outline.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/content.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/gate_s3.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/gate_result.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/delivery-and-refinement.json",
+        "examples/repositories/mck-native-showcase/experiences/chart-limits.md",
+        "examples/repositories/mck-native-showcase/build-record.json",
+        "examples/repositories/mck-native-showcase/QA.json",
+        "examples/repositories/mck-native-showcase/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "元データを同じ書式の図形・表・工程へ変換し、内容をS3、完成PPTXをS4で検査。合格後に修正パターンを経験記録へ残す。",
+      "requirements": [
+        "Python、python-pptx、lxml。固定原典と日本語生成器を含む一式ZIP。",
+        "同梱の公式BIZ UDPGothic Regular/BoldとOFL。PPTXへ埋め込まないため環境へ登録する。",
+        "全頁の実描画確認にはWindows版PowerPointとPDF描画用pypdfium2。"
+      ],
+      "steps": [
+        "読み手・目的・時間・主張・元データをbriefへ記し、数値の単位・分母・集計時点を確認する。",
+        "原典のengine-apiとlayout-matrixで版式・文量・項目数を選び、outlineとcontentへまとめる。",
+        "原典S3を通した同じcontentを高水準メソッドへ渡し、PPTXを生成する。",
+        "原典S4の結果と全頁の実描画を確認し、文量や入力を直す。免除と警告を記録する。",
+        "合格結果と成果物を保存し、修正を一回限りか再発する型かに分け、後者をexperiencesへ記す。"
+      ],
+      "limitations": [
+        "原典67メソッドのうち、表紙・ドーナツ図・表・タイムラインの4種類を使用。他の版式や外部表紙画像APIは未実施。",
+        "図と表は編集可能な図形。Officeのデータ連動チャートやネイティブ表ではない。再集計は入力から再生成する。",
+        "原典S3/S4は合格、S4は94点。中心の文字箱重複警告1件、4頁「交付」の本文領域右0.47インチを原典が免除する1件を保持。",
+        "書体を同梱のBIZ UDPGothicへ指定し、凡例の百分率を小数1桁へ補正。原典の座標・色・字号・QA・免除一覧は変更しない。",
+        "五段階のファイルとS5経験記録を保存。TaskCreate/TaskUpdateは使用せず、固定ホームディレクトリの代わりに同梱固定原典を読む差分がある。",
+        "原典SKILLが参照するreferences/layouts/は固定原典に含まれないため、存在するAPI文書とlayout-matrixを参照した。",
+        "同梱のBIZ UDPGothic Regular/BoldとOFLを利用。PPTXへ埋め込まないため閲覧環境への字体登録が必要。",
+        "実データがない構成比、写真中心の表現、自由な装飾配置にはこの作例の方式を使わない。独立再評価と利用者採用は別。"
+      ],
+      "execution_type": "原典MckEngineの4高水準メソッド＋S1〜S5記録・原典S3/S4・実PowerPoint描画",
+      "commands": [
+        "python source/build_mck_native_showcase.py --out rebuild --render",
+        "python source/render_pdf_previews.py rebuild/render"
+      ]
+    },
+    "method": "原典MckEngineの4高水準メソッド＋S1〜S5記録・原典S3/S4・実PowerPoint描画",
+    "prompt_text": "固定原典MckEngineのcover/donut/data_table/timelineを上書きせず、同梱input/oss-font-kit.jsonの実30字体を日本語4頁へまとめる。円は用途の近い4書体群へ集計し、見出し調と等幅の合算を明示、次頁の表に元の5分類を残す。制作の五段階には保存ファイルを対応させる。架空の時間・実績・品質値を加えない。日本語書体と凡例小数表記の差分を明示し、S3/S4の原典JSON、S5の修正パターン、再生成コード、全頁描画、原典条件を保存する。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、PDF由来RGB PNGを全頁目視した。独立再評価は別。",
+    "preview_image_notice": "現在PPTXの実PowerPoint PDF由来画像。機械合格と独立採点は別。",
+    "notes": [
+      "実カタログの集計。文字範囲・書体品質の測定ではない。",
+      "見出し調4と等幅3を合算した4書体群。元の5分類は次頁に保存。",
+      "元の5分類と言語のクロス集計。日本語17・欧文13。",
+      "五段階の実保存ファイルを示す。所要時間は計測していない。"
+    ],
+    "pages": [
+      "examples/repositories/mck-native-showcase/render/slide-01.png",
+      "examples/repositories/mck-native-showcase/render/slide-02.png",
+      "examples/repositories/mck-native-showcase/render/slide-03.png",
+      "examples/repositories/mck-native-showcase/render/slide-04.png"
+    ],
+    "font_families": [
+      "BIZ UDPGothic"
+    ],
+    "sample_notice": "実カタログの集計と原典4メソッドの例。五段階の記録を保存するがTaskCreateは未使用。S4は94点、警告1件・原典免除1件を保持。",
+    "titles": [
+      "フォント構成と制作手順",
+      "30字体を用途の近い書体群へまとめて比べる",
+      "言語別に見ると、見出し・手書き調は日本語のみ、等幅は欧文のみ",
+      "制作は五段階で進め、原稿と描画を原典の検査で確かめる"
+    ]
+  },
+  {
+    "case_id": "aham-showcase",
+    "name": "対話で構成と版式を決める（版式・変換の実演）",
+    "job": "",
+    "change": "読者と目的から構成・版式を決め、確認を挟みながら、編集できる図形と文字のPPTXにする。",
+    "input": "読み手・目的・期待する行動、元の資料と出典、データの単位、配色や発表条件。",
+    "output": "各段階の確認記録、頁別の版式計画、SVG原稿、編集可能PPTXと検査記録。",
+    "how_to_use": [
+      "原典のPhase1〜3で読み手・目的・材料を整理し、主張と期待行動を各段階で確認する。",
+      "Phase4で標題列と証拠の対応を決め、Phase5の決定表で各頁の内容と推奨版式・代替を同時に選ぶ。",
+      "Phase6で表紙・複雑な内容・図表の見本を描画し、配色・密度・専門性の判断を記録する。",
+      "Phase7で計画どおりのSVGを原典関数で作り、原典変換器でPPTXへ変換する。PPTXを直接直さずSVGへ戻る。",
+      "変換の前後に原典lintの出力を確認し、Phase8の五層QC・内容/視覚監査を行って配布物を整える。"
+    ],
+    "constraints": [
+      "この作例は版式選択と変換の部分実行。8段階のユーザー対話・coach-engine・P7の3頁ごとの確認・P8の全五層QCを完走していない。",
+      "現在のP5計画判断とP6見本判断は、自律改修の委任を受けた担当の判断。過去のユーザー承認として扱わない。",
+      "Aテーマの白地・中性グレー・青を使用。初回依頼のコバルト・黄・墨は現版に使わない。",
+      "原典関数と変換器は固定保存。書体/和訳に加え、P2/P4ラベルのサイズ・濃度、P3の平行移動・補足、終端20・日本語凡例を局所補正する。原典そのままの字号・座標とは記載しない。",
+      "数値と期間は架空ワークショップの例示計画。仕事の改善・健康・時間短縮の実績ではない。",
+      "公式Zen Kaku Gothic New/Manropeを同梱し、実PDFでも使用を確認。PPTXへ埋め込まない。",
+      "SVG/HTMLの画像スライドが目的なら原典は別のppt-svgへ振り分ける。ここで実証するのは編集可能なPPTXの経路。",
+      "原典lintは終了コード0だけで合格とせず、出力の警告/違反行も確認。独立再評価と利用者採用は別。"
+    ],
+    "demonstration": {
+      "summary": "版式選択と変換の実演で、8段階対話の実演ではない。頁ごとの内容から、時間配分をGantt、前後関係を流れ図、並行する試行を泳道図へ当て、同じSVGから編集可能PPTXへ変換する。",
+      "applied_features": [
+        "P1〜P5の中間原稿と頁別計画を保存。現P5に担当判断を記録し、見本2頁を実PowerPointで確認してから現P6の担当判断と全4頁を生成。",
+        "P2は例示の3・10・5・2分を実比率のGanttへ。青は10分の1本だけ。目盛りと所要時間を濃く拡大し、終端20を追加。",
+        "P3は前日→朝→終了時の順序を原典stage_flowで作り、全体の平行移動と補足で左右と内容量を調整。",
+        "P4は3並行活動×4週をswimlane_roadmapへ渡し、全ブロックのproposed状態と日本語凡例を一致。",
+        "原典lintを変換の前後に実行し、警告行なし・文字一致・画像0・ノート保持を確認。全4頁の実PowerPoint PDF由来PNGを目視。",
+        "両ZIPを別展開し見本2頁＋完成4頁の原典変換/lintとPowerPoint描画を再実行。native構造・画像・ノートが一致し、全12画像のRGB差0。既存依存を再利用。"
+      ],
+      "not_demonstrated": [
+        "8段階のユーザー確認対話、coach-engine、P7の3頁ごとの確認、P8の全五層QC、人間の最終承認・採用、効果測定。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・時間配分",
+          "title": "時間の実比率を図にする",
+          "what_to_inspect": "3・10・5・2分の棒と0〜20の軸を照合する。青は10分だけ。下の合計20分と例示値の注記を確認する。",
+          "skill_rule": "Phase5はD類データ3件以上を文字の列挙で済ませず、chartsへ渡す。V-02のganttを選び、ラベルのみ可読性補正した。",
+          "proof_path": "examples/repositories/aham-showcase/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 2,
+          "label": "3頁・前後関係",
+          "title": "流れ図で順序を対応させる",
+          "what_to_inspect": "前日→朝→終了時の矢印と、各箱の下の具体的行動を読む。箱と矢印の相対配置を保ち、全体を中央へ移した。",
+          "skill_rule": "決定表の「手順の前後関係」にはE-03を使う。階層用のtri_layerと区別し、stage_flowを呼ぶ。",
+          "proof_path": "examples/repositories/aham-showcase/render/slide-03.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・並行する計画",
+          "title": "並行活動と状態を分けて示す",
+          "what_to_inspect": "取り組み・記録・相談の横の3泳道と0〜4週を照合。破線枠はすべて凡例の「提案」で、実施確定の実績へ変えていない。",
+          "skill_rule": "決定表の複数泳道にはA-90を使い、状態記号には凡例を付ける。原典legendを有効にして日本語化した。",
+          "proof_path": "examples/repositories/aham-showcase/render/slide-04.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/aham-showcase/generate.py",
+        "examples/repositories/aham-showcase/input/data.json",
+        "examples/repositories/aham-showcase/input/phase-01-audience.json",
+        "examples/repositories/aham-showcase/input/phase-02-materials.json",
+        "examples/repositories/aham-showcase/input/phase-03-argument.json",
+        "examples/repositories/aham-showcase/input/phase-04-ghost-deck.json",
+        "examples/repositories/aham-showcase/input/phase-05-layout-plan.json",
+        "examples/repositories/aham-showcase/input/phase-06-decision.json",
+        "examples/repositories/aham-showcase/source/layout-map.json",
+        "examples/repositories/aham-showcase/source/round5-execution.json",
+        "examples/repositories/aham-showcase/source/sample/checks.json",
+        "examples/repositories/aham-showcase/source/final/checks.json",
+        "examples/repositories/aham-showcase/source/final/native-elements.json",
+        "examples/repositories/aham-showcase/source/final/integrator-inspection.json",
+        "examples/repositories/aham-showcase/source/final/pdf-fonts.json",
+        "examples/repositories/aham-showcase/source/zip-replay.json",
+        "examples/repositories/aham-showcase/QA.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "各段階で論点と版式を確認してから、SVGを編集可能PPTXへ変換する。作例は版式選択と変換の部分実行で、8段階対話は未実施。",
+      "requirements": [
+        "固定原典を含む一式ZIP、Python、原典requirementsの依存（python-pptx/CairoSVG等）。今回は既存固定環境で実行。",
+        "同梱の公式Zen Kaku Gothic New/ManropeとOFL。全頁の実描画にはWindows版PowerPointとPDF描画用pypdfium2。"
+      ],
+      "steps": [
+        "原典のPhase1〜3で読み手・目的・材料を整理し、主張と期待行動を各段階で確認する。",
+        "Phase4で標題列と証拠の対応を決め、Phase5の決定表で各頁の内容と推奨版式・代替を同時に選ぶ。",
+        "Phase6で表紙・複雑な内容・図表の見本を描画し、配色・密度・専門性の判断を記録する。",
+        "Phase7で計画どおりのSVGを原典関数で作り、原典変換器でPPTXへ変換する。PPTXを直接直さずSVGへ戻る。",
+        "変換の前後に原典lintの出力を確認し、Phase8の五層QC・内容/視覚監査を行って配布物を整える。"
+      ],
+      "limitations": [
+        "この作例は版式選択と変換の部分実行。8段階のユーザー対話・coach-engine・P7の3頁ごとの確認・P8の全五層QCを完走していない。",
+        "現在のP5計画判断とP6見本判断は、自律改修の委任を受けた担当の判断。過去のユーザー承認として扱わない。",
+        "Aテーマの白地・中性グレー・青を使用。初回依頼のコバルト・黄・墨は現版に使わない。",
+        "原典関数と変換器は固定保存。書体/和訳に加え、P2/P4ラベルのサイズ・濃度、P3の平行移動・補足、終端20・日本語凡例を局所補正する。原典そのままの字号・座標とは記載しない。",
+        "数値と期間は架空ワークショップの例示計画。仕事の改善・健康・時間短縮の実績ではない。",
+        "公式Zen Kaku Gothic New/Manropeを同梱し、実PDFでも使用を確認。PPTXへ埋め込まない。",
+        "SVG/HTMLの画像スライドが目的なら原典は別のppt-svgへ振り分ける。ここで実証するのは編集可能なPPTXの経路。",
+        "原典lintは終了コード0だけで合格とせず、出力の警告/違反行も確認。独立再評価と利用者採用は別。"
+      ],
+      "execution_type": "原典P5決定表・Aテーマ関数・SVG→native変換・変換前後lint。対話8段階は部分実行。",
+      "commands": [
+        "python generate.py --sample",
+        "見本を描画しinput/phase-06-decision.jsonへ担当判断かユーザー確認かを区別して記録",
+        "python generate.py --final"
+      ]
+    },
+    "method": "原典P5決定表・Aテーマ関数・SVG→native変換・変換前後lint。対話8段階は部分実行。",
+    "sample_notice": "架空ワークショップの版式選択・変換の例。8段階の人間対話は未実施。P5/P6は自律委任による担当判断。時間は例示で効果は未測定。",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、全4頁のPDF由来PNGを目視。原典QA・独立再評価・人間承認は別。",
+    "preview_image_notice": "現PPTXの実PowerPoint PDF由来画像。画像貼り込みではなく原典native変換。",
+    "prompt_text": "Aham原典の版式決定表・Aテーマ（白地・中性グレー・点在する青）を使い、架空の朝作業ワークショップを4頁へする。P1〜P5の中間原稿と計画を保存。表紙は朝の作業ワークショップ案、2頁は3/10/5/2分のGantt、3頁は前日→朝→終了時の流れ、4頁は3泳道×4週。原典関数を維持し、必要なラベル可読性・流れ図中央配置・終端20・日本語凡例を局所差分として明示する。P5担当判断→見本2頁→実PowerPoint確認→P6担当判断→全頁生成を実行。過去の人間承認や8段階対話を実施したとは書かない。原典lintを変換の前後に実行し、PPTX・ノート・全頁描画・出典を保存する。",
+    "titles": [
+      "朝の作業ワークショップ案",
+      "サンプル行程は選択から記録までを分ける",
+      "本案は前日に作業の入口を一つ決めておく",
+      "試行計画は取り組み・記録・相談を週ごとに並べる"
+    ],
+    "notes": [
+      "架空の働き方ワークショップ案です。朝の20分は例示の配置で、効果を実証した方法ではありません。",
+      "3分で一つ選び、10分取り組み、5分でメモし、2分で次を残す案です。合計20分。仕事の条件に合わせて調整します。",
+      "前日に作業の入口を一つ決め、朝はその作業を進め、終了時に続きを一言残す流れの案です。",
+      "一週目に観察、二・三週目に一つ試し、四週目に続け方を話す例示計画。記録と相談を並行させ、負担があれば変更します。"
+    ],
+    "pages": [
+      "examples/repositories/aham-showcase/render/slide-01.png",
+      "examples/repositories/aham-showcase/render/slide-02.png",
+      "examples/repositories/aham-showcase/render/slide-03.png",
+      "examples/repositories/aham-showcase/render/slide-04.png"
+    ],
+    "font_families": [
+      "Zen Kaku Gothic New",
+      "Manrope"
+    ],
+    "preview_kind": "powerpoint-render"
+  },
+  {
+    "case_id": "pptwise-showcase",
+    "name": "話の順序と頁の役割から配置を選ぶ",
+    "job": "",
+    "change": "話の順序と頁の役割を決め、内容に合う部品やテーマ固有の図で、編集可能な資料へ組む。",
+    "input": "読者・目的・話の順序、頁の役割、根拠のある本文・数値・利用できる画像。",
+    "output": "配置を原典へ任せた編集可能PPTXと、spec・頁原稿・build/fitの検査記録。",
+    "how_to_use": [
+      "原典schema/narratives/themesを読み、読者と目的から話の順序・themeを選び、deck.spec.jsonへtype/kind/headingを書く。",
+      "構成とthemeを示した後、inspectで頁と部品の契約を読み、意味に合う部品へ原稿を渡す。",
+      "元の内容が契約を満たす場合だけsignatureを使う。型を満たすための数値・画像は作らない。",
+      "最大4頁ごとに原典buildを実行し、JSONのerrors/warningsと各頁fitを読み、入力を直す。",
+      "原典が返したPPTXをその場所で渡す。別途の掲載確認として全頁を実描画し、文字・根拠・単位を確かめる。"
+    ],
+    "constraints": [
+      "5頁は実カタログの和文17・欧文13を原典allotmentへ渡す。提示された他4件のsignatureは未実施で、内容にない情報を足して埋めない。",
+      "図表は編集可能な図形と文字。Officeのデータ連動チャートやネイティブ表ではない。",
+      "画像を使わない現版。原典images generateやasset-briefの画像経路は今回実証していない。旧版の架空配分とAI概念画像は現版の根拠に含めない。",
+      "Rallyのmenuを保持した橙・墨・紙色の派生theme。日本語書体allowlistをメモリー内で追加するadapterのみで、原典配置・QA・出力PPTXの後加工なし。",
+      "原典のself-checkはCLIのJSON report。全頁PowerPoint目視はユーザー依頼の掲載確認で、原典self-checkとは別。",
+      "日本語書体に原典の厳密な幅表はなく、保守的な推定へfallbackする通知を保持。実PDFは同梱のZen Kaku Gothic NewとSpace Groteskを確認。",
+      "既存固定依存で再実行。新規npm ci、代替themeへの再切替、過去の個別人間承認、利用者採用は未検証。"
+    ],
+    "demonstration": {
+      "summary": "実フォントカタログを題材に、6頁の順序と役割をspecへ固定。3頁は順序と実プリセット例、4頁は順序のない関連情報、5頁は実件数17・13をallotmentへ渡し、原典build/fitで検査する。",
+      "applied_features": [
+        "spec→頁/部品inspect→4頁ずつ原稿→原典build→各頁fitを実行。",
+        "3頁はstepsとicon_cardsで選定の順序と実presetsの組合せを分け、4頁はhub_spokeで中央との関係を示す。",
+        "5頁は実language件数17・13を横積み上げ棒と2つの確認カードへ変換し、allotment signature1件を実描画。",
+        "元の実数をそのまま使い、recipeを埋めるための仮定値・写真を作らない。原典出力PPTXを改名・後加工せずPowerPoint全6頁で確認。",
+        "両ZIPを別展開し原典spec/inspect/build/fitとPowerPoint全6頁を再実行。native構造・画像・ノートが一致し、各PNGのRGB差0。既存依存を利用し新規installなし。"
+      ],
+      "not_demonstrated": [
+        "他4件の提示signature、画像取得・生成、theme再切替、新規npm ci、Officeデータ連動、過去の個別人間承認・利用者採用。"
+      ],
+      "pages": [
+        {
+          "index": 2,
+          "label": "3頁・順序と具体例",
+          "title": "選ぶ順序を実プリセットへつなぐ",
+          "what_to_inspect": "上の4本の矢印は条件→候補→組合せ→確認。下に実プリセット2例の見出し・本文書体を置き、「組合せを試す」操作に具体例を対応させた。",
+          "skill_rule": "directionのある手順にはsteps、短い同列の候補例にはicon_cardsを使い、座標を原稿へ書かず原典へ配置を任せる。",
+          "proof_path": "examples/repositories/pptwise-showcase/render/slide-03.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・関連情報",
+          "title": "候補に関係する情報を分ける",
+          "what_to_inspect": "中央の候補と、書体情報・元配布・利用条件・組合せの4項目を見る。番号と線は順序や品質順位ではないことを脚注で確認する。",
+          "skill_rule": "順序のない中央関係をhub_spokeへ渡し、順序を表すstepsと使い分ける。",
+          "proof_path": "examples/repositories/pptwise-showcase/render/slide-04.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 4,
+          "label": "5頁・実集計の構成比",
+          "title": "実件数を原典固有の図へ渡す",
+          "what_to_inspect": "橙17書体・墨13書体の横棒、欧文側の括弧、下の確認カードを照合。全30書体の内訳と出典が一致し、架空の比率や品質順位を加えていない。",
+          "skill_rule": "原典allotmentは1カテゴリの横stacked図、連続する強調区分、emphasis_label、任意の2〜3icon_cardsを受ける。元の17/13件がその契約へ適合するため実行した。",
+          "proof_path": "examples/repositories/pptwise-showcase/render/slide-05.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/pptwise-showcase/input/oss-font-kit.json",
+        "examples/repositories/pptwise-showcase/input/deck.spec.json",
+        "examples/repositories/pptwise-showcase/input/pages/journey.json",
+        "examples/repositories/pptwise-showcase/input/pages/network.json",
+        "examples/repositories/pptwise-showcase/input/pages/space.json",
+        "examples/repositories/pptwise-showcase/source/rebuild_pptwise.py",
+        "examples/repositories/pptwise-showcase/source/outline.md",
+        "examples/repositories/pptwise-showcase/source/fontdata-construction.json",
+        "examples/repositories/pptwise-showcase/source/pipeline/spec-validate.txt",
+        "examples/repositories/pptwise-showcase/source/pipeline/inspect-space.txt",
+        "examples/repositories/pptwise-showcase/source/pipeline/build-final.json",
+        "examples/repositories/pptwise-showcase/source/pipeline/execution.json",
+        "examples/repositories/pptwise-showcase/source/pipeline/native-elements.json",
+        "examples/repositories/pptwise-showcase/source/pipeline/pdf-fonts.json",
+        "examples/repositories/pptwise-showcase/QA.json",
+        "examples/repositories/pptwise-showcase/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "話の順序と頁の役割を決め、内容に合う部品やテーマ固有の図で、編集可能な資料へ組む。",
+      "requirements": [
+        "固定runtimeを含む一式ZIP、Node22.19+、Python、runtimeの固定依存。新規インストールは今回未検証。",
+        "同梱の公式Zen Kaku Gothic NewとSpace GroteskをOFLに従い登録。PowerPoint実描画はWindows版PowerPoint、PDF画像化はpypdfium2。"
+      ],
+      "steps": [
+        "原典schema/narratives/themesを読み、読者と目的から話の順序・themeを選び、deck.spec.jsonへtype/kind/headingを書く。",
+        "構成とthemeを示した後、inspectで頁と部品の契約を読み、意味に合う部品へ原稿を渡す。",
+        "元の内容が契約を満たす場合だけsignatureを使う。型を満たすための数値・画像は作らない。",
+        "最大4頁ごとに原典buildを実行し、JSONのerrors/warningsと各頁fitを読み、入力を直す。",
+        "原典が返したPPTXをその場所で渡す。別途の掲載確認として全頁を実描画し、文字・根拠・単位を確かめる。"
+      ],
+      "limitations": [
+        "5頁は実カタログの和文17・欧文13を原典allotmentへ渡す。提示された他4件のsignatureは未実施で、内容にない情報を足して埋めない。",
+        "図表は編集可能な図形と文字。Officeのデータ連動チャートやネイティブ表ではない。",
+        "画像を使わない現版。原典images generateやasset-briefの画像経路は今回実証していない。旧版の架空配分とAI概念画像は現版の根拠に含めない。",
+        "Rallyのmenuを保持した橙・墨・紙色の派生theme。日本語書体allowlistをメモリー内で追加するadapterのみで、原典配置・QA・出力PPTXの後加工なし。",
+        "原典のself-checkはCLIのJSON report。全頁PowerPoint目視はユーザー依頼の掲載確認で、原典self-checkとは別。",
+        "日本語書体に原典の厳密な幅表はなく、保守的な推定へfallbackする通知を保持。実PDFは同梱のZen Kaku Gothic NewとSpace Groteskを確認。",
+        "既存固定依存で再実行。新規npm ci、代替themeへの再切替、過去の個別人間承認、利用者採用は未検証。"
+      ],
+      "execution_type": "原典pptwiseのspec→inspect→pages→build/fit。実集計をallotmentへ渡し、別途PowerPoint全頁を確認。",
+      "commands": [
+        "python source/rebuild_pptwise.py --node <Node実体>",
+        "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath .pptwise/input/deck.pptx -OutputDirectory render",
+        "python source/render_pdf_previews.py render"
+      ]
+    },
+    "method": "原典pptwiseのspec→inspect→pages→build/fit。実集計をallotmentへ渡し、別途PowerPoint全頁を確認。",
+    "prompt_text": "原典pptwiseのschema/narratives/themesを読み、Rally派生の橙・墨・紙色で、実フォントカタログの使い方を6頁へまとめる。構成は目的→実カタログの範囲→選定手順と実プリセット→関連情報→和文17・欧文13の内訳→配布前の確認。元データはinput/oss-font-kit.json。3頁はsteps＋icon_cards、4頁はhub_spoke、5頁は実件数が適合するallotmentを使う。recipeを埋めるための数値や画像を作らない。原典build/fitのJSONを確認し、そのself-checkと別の掲載確認としてPowerPoint全頁を実見する。日本語書体allowlistの局所adapterを明示し、原典の配置・QA・出力PPTXを後加工・改名しない。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現在PPTXをPowerPoint16でPDFへ描画し、PDF由来RGB PNGを全6頁目視。独立再評価は未完了。",
+    "preview_image_notice": "現PPTXの実PowerPoint PDF由来画像。原典report-only self-checkとは別の掲載確認。",
+    "notes": [
+      "同梱input/oss-font-kit.jsonは2026-10-15の実カタログ。30書体、45個のフォントファイル、15組のプリセット、4種類の配布bundleを含む。カタログの分類は収録文字範囲や品質を測ったものではない。",
+      "familiesの件数30、各families.filesの合計45、presetsの件数15を実集計。すべてlicense=OFL-1.1。利用条件は各配布のOFLと元配布へ戻って確かめる。",
+      "元カタログにはcategory、language、use_jaと、presetsのheading/body/latin/instructionがある。この頁は制作担当がそれらを確認する手順を示す。\n下の2例は実presets editorial/friendlyのheading/body。品質順位や最適性の測定ではない。",
+      "family/category/use_ja、official_url/commit、license/license_url/license_file、presetsのheading/body/latinを対応させる。原典hub_spokeは順序のない中央関係に用いる。",
+      "30件のfamiliesをlanguageで集計：ja17、latin13。合計30。原典allotmentは1カテゴリの横積み上げ棒と任意の2〜3icon_cardsを受ける。元データを図に合わせて作った数値ではない。",
+      "候補決定後も、必要な文字・版面の読みやすさ・配布元OFL・フォント登録・他環境への持ち出しを確認する。15プリセットは候補の入口で、最適性や品質の測定結果ではない。"
+    ],
+    "pages": [
+      "examples/repositories/pptwise-showcase/render/slide-01.png",
+      "examples/repositories/pptwise-showcase/render/slide-02.png",
+      "examples/repositories/pptwise-showcase/render/slide-03.png",
+      "examples/repositories/pptwise-showcase/render/slide-04.png",
+      "examples/repositories/pptwise-showcase/render/slide-05.png",
+      "examples/repositories/pptwise-showcase/render/slide-06.png"
+    ],
+    "font_families": [
+      "Zen Kaku Gothic New",
+      "Space Grotesk"
+    ],
+    "sample_notice": "実カタログの30書体を案内する例。5頁は実件数17・13のallotment。原典JSON検査と、別途のPowerPoint掲載確認を実施。",
+    "titles": [
+      "資料に使うフォントを選ぶ",
+      "候補の範囲を、元データで確かめる",
+      "条件から選び、実際の文面で確かめる",
+      "書体と利用条件を一緒に確認する",
+      "30書体の内訳は和文17・欧文13",
+      "配布前に、書体と利用条件を確かめる"
+    ]
+  }
+]

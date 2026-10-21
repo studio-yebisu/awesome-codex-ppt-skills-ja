@@ -1,0 +1,156 @@
+[
+  {
+    "case_id": "mck-native-showcase",
+    "name": "集計値を統一した図・表・工程へ組み立てる",
+    "job": "",
+    "change": "根拠のある値を同じ書式の図・表・工程へまとめ、原稿と完成PPTXを段階ごとに検査する。",
+    "demonstration": {
+      "summary": "実カタログ30字体の元5分類×2言語を整数barと表で比べ、実5工程と保存ファイルを原典value_chainで対応させた。S5は固定修復記録の再生。",
+      "applied_features": [
+        "原典cover/grouped_bar/data_table/value_chainの4高水準メソッドを上書きせず使用",
+        "family/file/presetと言語・分類を入力JSONから計算し、5分類×2言語のbarと表をfont-count-checks.jsonで照合",
+        "表紙と表を保持し、grouped_barの整数軸とvalue_chainの5工程を使用",
+        "今回全文読んだexperiences4件と原典S3/S4の実行結果",
+        "PowerPointで集計結果を別コピー上だけ集計確認へ編集、保存して再open描画し元hash保持を確認"
+      ],
+      "not_demonstrated": [
+        "残り63高水準メソッド、外部表紙画像API/Hunyuan",
+        "TaskCreate/TaskUpdateとFast Track",
+        "実行時の新たなSelf-Refinement判断。S5は固定経験fixtureの再生",
+        "Officeデータ連動チャート/ネイティブ表、時短・書体品質の実測"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "5分類×言語の比較",
+          "title": "言語ごとの字体数を5分類で比べる",
+          "what_to_inspect": "元JSONの5分類×日本語/欧文6/6、5/3、4/0、2/1、0/3を0〜6の整数軸で照合。0件は棒なし。合算せず、集計結果の総数17・13・30も確認。",
+          "skill_rule": "元の分類と単位を保ち、data/seriesを原典grouped_bar容量内へ渡す。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-02.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 2,
+          "label": "元分類と言語の表",
+          "title": "言語別に見ると、装飾は日本語のみ、等幅は欧文のみ",
+          "what_to_inspect": "5分類の17・13・30合計と、言語ごとの先頭書体/該当なしを2行で照合。列幅は原典col_widths引数で調整し、行高は原典固定。",
+          "skill_rule": "同じ分類・単位で比較し、表の項目数と文字量を制限する。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-03.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 3,
+          "label": "段階と保存ファイル",
+          "title": "制作は五段階で進め、原稿と描画を原典の検査で確かめる",
+          "what_to_inspect": "横5段階の番号と見出しの中心、各ファイルと確認行為。下部では今回のS3/S4実行とS5固定経験の再生を分ける。中央下の余白は残る。",
+          "skill_rule": "S1〜S4の段階を飛ばさず、JSONの合否を確認する。S5は修正の型を判断し経験へ残す。今回の生成器はその判断を新規自動化していない。",
+          "proof_path": "examples/repositories/mck-native-showcase/render/slide-04.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/mck-native-showcase/source/build_mck_native_showcase.py",
+        "examples/repositories/mck-native-showcase/source/reading-record.json",
+        "examples/repositories/mck-native-showcase/source/current-pptx-inspection.json",
+        "examples/repositories/mck-native-showcase/native-elements.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/gate_s3.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/gate_result.json",
+        "examples/repositories/mck-native-showcase/ppt-project-font-kit/delivery-and-refinement.json",
+        "examples/repositories/mck-native-showcase/experiences/chart-limits.md",
+        "examples/repositories/mck-native-showcase/qa/native-edit/report.json",
+        "examples/repositories/mck-native-showcase/qa/native-edit/edited-copy.pptx",
+        "examples/repositories/mck-native-showcase/source/distribution-replay.json",
+        "examples/repositories/mck-native-showcase/font-count-checks.json",
+        "examples/repositories/mck-native-showcase/source/public-api-layout-scope.json",
+        "examples/repositories/mck-native-showcase/source/gate-exclusions.json"
+      ],
+      "editability": {
+        "before_path": "examples/repositories/mck-native-showcase/render/slide-02.png",
+        "after_path": "examples/repositories/mck-native-showcase/qa/native-edit/edited-copy.png",
+        "before_label": "採用PPTX：「集計結果」",
+        "after_label": "編集コピー：「集計確認」",
+        "artifact_path": "examples/repositories/mck-native-showcase/qa/native-edit/edited-copy.pptx",
+        "report_path": "examples/repositories/mck-native-showcase/qa/native-edit/report.json",
+        "description": "2頁のsummaryラベルだけをPowerPointで変更し別PPTXへ保存。その保存物を再openして描画し、元PPTXのhash保持も確認。"
+      },
+      "scope_notes": [
+        "原典の自動検査S3/S4は合格。S4は92点・user_code_errors=0・原典既定免除2・警告0。2頁の小見出し13ptと凡例12pt、4頁の番号Arialと見出しBIZ UDPGothicのpeer_font_inconsistencyを既存whitelistが除外する。新規免除はなく、独立評価や視覚品質の合格を意味しない。",
+        "4/67高水準メソッドを実行。TaskCreate/TaskUpdate・他63種類・新しいS5自動判断は未実証。",
+        "専用生成器は実カタログの集計を再生し、任意原稿の自動変換器ではない。図表はOfficeデータ連動chart/tableではない。",
+        "表紙のtitle改行と表のcol_widths/セル改行は公開引数。元5分類×2言語をgrouped_barのdata/seriesと整数軸へ、実5工程をvalue_chainのstagesへ渡す。工程の番号と見出しは同じ中心へそろうが、中央下の余白と表の固定行高は残る。原典エンジン・QA・whitelistは未変更。"
+      ]
+    },
+    "sample_notice": "実データ集計を原典4メソッドへ渡す例。原典自動検査S3/S4は今回実行、S4は92点・既定免除2・警告0。S5は固定fixture。独立再評価は別。",
+    "preview_notice": "現在PPTXをPowerPoint16で描画しPDF由来PNG全4頁を作者Codexが確認。5分類×2言語の整数barと横5工程を使用。中央下余白は残り、独立再評価は未確定。",
+    "method": "原典MckEngine cover/grouped_bar/data_table/value_chain＋実S3/S4・S5固定経験再生・実PowerPoint編集/描画",
+    "titles": [
+      "フォント構成と制作手順",
+      "言語ごとの字体数を5分類で比べる",
+      "言語別に見ると、装飾は日本語のみ、等幅は欧文のみ",
+      "制作は五段階で進め、原稿と描画を原典の検査で確かめる"
+    ],
+    "notes": [
+      "実30字体・45ファイル・15プリセット、言語内訳を元JSONから計算。",
+      "元5分類×日本語/欧文は6/6、5/3、4/0、2/1、0/3。縦軸は0〜6の整数。",
+      "5分類×言語の実集計と代表書体を言語別2行で照合。",
+      "原典value_chainで5段階とファイルを対応。番号中心を見出しへそろえ、S5固定記録の再生を明示。"
+    ],
+    "prompt_text": "固定原典MckEngineのcover/grouped_bar/data_table/value_chainを上書きせず、同梱oss-font-kit.jsonのfamily/file/presetと言語・分類を計算して4頁を作る。元5分類×2言語の実数を整数軸のgrouped_barへ、実5工程と保存ファイルをvalue_chainへ渡す。表紙と元5分類表は保持する。図と表の合計を検査し、数値を捏造しない。原典S3/S4実行、S5固定fixture、別コピーの文字編集・保存・再open描画を記録する。原典既定peer_font_inconsistency免除2件と残る余白を記録し、独立視覚評価と混同しない。",
+    "guide_patch": {
+      "summary_ja": "根拠のある値や原稿を同じ書式の図・表・工程へまとめ、原稿と完成PPTXを段階ごとに検査する。",
+      "steps": [
+        "読者・目的・主張・時間・元資料をbriefへ書き、実データの単位・分母・集計時点を確認する。",
+        "原典ブランド・guard・experiencesを読み、API/容量表から入力に合う版式を選びoutline/contentへ整理する。原典固定ホームと同梱upstreamの違い、存在しないlayouts文書の扱いを確認する。",
+        "原典S3のJSONがpassed=trueになった同じcontentを高水準メソッドへ渡し、PPTXを生成する。図・表に使う集計値や補足は元データから計算する。",
+        "原典S4のJSONと全頁の実描画を確認する。公開引数の範囲で文量・列幅・セル改行を修正し、固定配置の制約と機械警告を残す。",
+        "成果物・制作ソース・検査結果を交付し、その資料で実際に判断した修正の型を経験へ残す。作例生成器のS5固定fixtureを新しい自己改善判断と扱わない。"
+      ],
+      "limitations": [
+        "原典は67高水準メソッドを案内する。この作例はcover/grouped_bar/data_table/value_chainの4種類を実行し、残り63種類・外部表紙画像API/Hunyuanは未実証。全67種類の使用を完成条件にしない。",
+        "図表は個別編集可能な図形で、Officeのデータ連動チャートやネイティブ表ではない。",
+        "原典の自動検査S3/S4は合格。S4は92点・user_code_errors=0・原典既定免除2・警告0。2頁の小見出し13ptと凡例12pt、4頁の番号Arialと見出しBIZ UDPGothicのpeer_font_inconsistencyを既存whitelistが除外する。新規免除はなく、独立評価や視覚品質の合格を意味しない。",
+        "原典SKILLの固定場所は ~/.workbuddy/skills/mck-ppt-design 。この配布物は同じ固定commitの upstream/ を読む。元のホームへ自動導入せず、原典のgateが別QAを先に読まないよう既存ホームがある場合は生成器が停止する。",
+        "references/layouts/*.md は固定取得した原典全体にも同梱原典にも存在しない。想像で補わず、存在するengine-api.md・layout-matrix.yamlと実engineの公開引数を参照する。",
+        "表紙のtitle改行と表のcol_widths/セル改行は公開引数。元5分類×2言語をgrouped_barのdata/seriesと整数軸へ、実5工程をvalue_chainのstagesへ渡す。工程の番号と見出しは同じ中心へそろうが、中央下の余白と表の固定行高は残る。原典エンジン・QA・whitelistは未変更。",
+        "BIZ UDPGothicを原典constantsへ局所指定。現版は生成後文字adapterなし。原典本体・QA・免除一覧は未変更。RegularとOFLのみ同梱、Boldは太字スタイル指定でPPTXへ埋め込まない。",
+        "S5は修復時の固定経験fixtureを再生し、実行時の新規診断やPATTERN判断は自動化しない。TaskCreate/TaskUpdateとFast Trackは未実行。",
+        "同梱生成器はoss-font-kit.jsonの集計専用。family/file/presetのレコード数を検査し、任意原稿の自動変換や全フォントの描画品質・glyph範囲の検査は行わない。"
+      ],
+      "requirements": [
+        "Python、python-pptx、lxml、固定原典と制作ソースを含む一式ZIP。一般の制作では原稿・元データと目的を用意する。",
+        "描画に使う書体と個別の利用条件。例では公式BIZ UDPGothic RegularとOFLを同梱し、環境へ登録する。",
+        "この例の実描画はWindows版PowerPoint、PDF由来PNGはpypdfium2。PowerShellで自動化する場合は対象ファイルだけを開閉する。"
+      ],
+      "commands": [
+        "python source/build_mck_native_showcase.py --out rebuild --render",
+        "python source/render_pdf_previews.py rebuild/render"
+      ],
+      "execution_type": "原典MckEngineの入力に合う高水準API＋原典S3/S4。掲載例は4種類とS5固定経験の再生。",
+      "recipe_notes": [
+        "同梱専用生成器の再生と、自分の原稿から適切な高水準APIを選ぶ一般手順を区別する。",
+        "原典固定パス ~/.workbuddy/skills/mck-ppt-design を同梱upstreamへ切り替える。references/layoutsは固定原典にも存在しないため、API/容量表/公開引数を読む。"
+      ],
+      "production_status": "round13_actual_original_gates_render_and_native_edit_checked_independent_pending"
+    },
+    "input": "原稿・元データ、読者・目的・時間、集計値の単位・分母・出典、必要な実行環境と書体。",
+    "output": "編集可能なPowerPoint、制作ソース、S3/S4検査JSONと、実施した確認・残る制約の記録。",
+    "how_to_use": [
+      "読者・目的・主張・時間・元資料をbriefへ書き、実データの単位・分母・集計時点を確認する。",
+      "原典ブランド・guard・experiencesを読み、API/容量表から入力に合う版式を選びoutline/contentへ整理する。原典固定ホームと同梱upstreamの違い、存在しないlayouts文書の扱いを確認する。",
+      "原典S3のJSONがpassed=trueになった同じcontentを高水準メソッドへ渡し、PPTXを生成する。図・表に使う集計値や補足は元データから計算する。",
+      "原典S4のJSONと全頁の実描画を確認する。公開引数の範囲で文量・列幅・セル改行を修正し、固定配置の制約と機械警告を残す。",
+      "成果物・制作ソース・検査結果を交付し、その資料で実際に判断した修正の型を経験へ残す。作例生成器のS5固定fixtureを新しい自己改善判断と扱わない。"
+    ],
+    "constraints": [
+      "原典は67高水準メソッドを案内する。この作例はcover/grouped_bar/data_table/value_chainの4種類を実行し、残り63種類・外部表紙画像API/Hunyuanは未実証。全67種類の使用を完成条件にしない。",
+      "図表は個別編集可能な図形で、Officeのデータ連動チャートやネイティブ表ではない。",
+      "原典の自動検査S3/S4は合格。S4は92点・user_code_errors=0・原典既定免除2・警告0。2頁の小見出し13ptと凡例12pt、4頁の番号Arialと見出しBIZ UDPGothicのpeer_font_inconsistencyを既存whitelistが除外する。新規免除はなく、独立評価や視覚品質の合格を意味しない。",
+      "原典SKILLの固定場所は ~/.workbuddy/skills/mck-ppt-design 。この配布物は同じ固定commitの upstream/ を読む。元のホームへ自動導入せず、原典のgateが別QAを先に読まないよう既存ホームがある場合は生成器が停止する。",
+      "references/layouts/*.md は固定取得した原典全体にも同梱原典にも存在しない。想像で補わず、存在するengine-api.md・layout-matrix.yamlと実engineの公開引数を参照する。",
+      "表紙のtitle改行と表のcol_widths/セル改行は公開引数。元5分類×2言語をgrouped_barのdata/seriesと整数軸へ、実5工程をvalue_chainのstagesへ渡す。工程の番号と見出しは同じ中心へそろうが、中央下の余白と表の固定行高は残る。原典エンジン・QA・whitelistは未変更。",
+      "BIZ UDPGothicを原典constantsへ局所指定。現版は生成後文字adapterなし。原典本体・QA・免除一覧は未変更。RegularとOFLのみ同梱、Boldは太字スタイル指定でPPTXへ埋め込まない。",
+      "S5は修復時の固定経験fixtureを再生し、実行時の新規診断やPATTERN判断は自動化しない。TaskCreate/TaskUpdateとFast Trackは未実行。",
+      "同梱生成器はoss-font-kit.jsonの集計専用。family/file/presetのレコード数を検査し、任意原稿の自動変換や全フォントの描画品質・glyph範囲の検査は行わない。"
+    ]
+  }
+]

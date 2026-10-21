@@ -1,5 +1,7 @@
-# beamer-ja
+# 日本語Beamer
 
-日本語SKILL、原典Warm Editorial source、日本語font adapter、公式TTF/OFL、template-ja.texを同梱。PDF/.tex用でPPTX未生成。
+原典Warm Editorial・日本語字体adapter・TTF/OFLと、example/に5枚の編集用TeX/PDF/PNG・2回compile記録・全頁page-audit・500dpi cropを同梱。PPTXは生成しない。
 
-このフォルダで `xelatex template-ja.tex` を2回、または公式Tectonic 0.17.0を取得して `tectonic template-ja.tex`。ランタイムやcacheは同梱しない。原典の元英語説明スライドを残した最小スターターで、全5枚の教材は別のbeamer-example-ja.zipを参照。
+全5枚の再生成はexample/で `python build.py --tectonic C:/path/to/tectonic.exe`。TeX engineとcacheは同梱しない。全変更頁とcropを原典page-auditで確認し、作者検査後に指定済みの独立評価へ渡す。
+
+rootのtemplate-ja.texは元の英語説明を残した日本語字体スターターで、今回全5枚教材のQA対象ではない。

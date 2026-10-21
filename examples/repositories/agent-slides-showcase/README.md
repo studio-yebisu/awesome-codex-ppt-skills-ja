@@ -4,7 +4,7 @@
 
 ## 原典方式
 
-mpuig/agent-slidesの元CLIとplan+ops形式を使用。空の16:9コンテナだけをローカルで作り、元extractでtemplate/layout契約を抽出。preflight、dry-run、renderを実行しました。表示要素は全て元のnative add_text/add_rectangle/add_oval/add_line_shape操作です。左の行程は順序、右の人・道具・街は場との関係を表し、循環を捏造しません。
+mpuig/agent-slidesの元CLIとplan+ops形式を使用。自作の実書式templateにWorkshop Cover/Split layoutとtitle/body placeholder、紺背景と橙panelを持たせ、元extractで契約化。元preflight、dry-run、render、qaを実行します。背景・位置・字体はlayoutから、主題と説明はset_semantic_textで継承し、その他は元native操作です。templateはこの作例のための自作で、会社や第三者のtemplateではありません。左の行程は順序、右の人・道具・街は場との関係を表し、循環を捏造しません。
 
 原典のWWWH、結論先行、split-panel、階層、badge/timelineパターンを反映。1枚指定と巨大和文の美術指示を優先して、元skillの自動構造ページ追加・24pt標準サイズ・反復カードを採用しない明示派生です。PPTXを別rendererで偽装していません。
 
@@ -30,4 +30,4 @@ fonts/のZen Kaku Gothic New（和文）とManrope（英数字）をTTFから導
 
 ## 確認範囲
 
-元extract/preflight/dry-run/render、PowerPoint必要な1回書き出し、主出力初回確認のみ。全テスト、全ページ詳細目視、native監査、独立レビュー、全ZIP再実行は未実施。QA.jsonに状態を記録。
+元extract/preflight/dry-run/renderと必須slides qaを実行し、実描画を目視します。source/template-inventory.json、入力templateと抽出manifest、継承の照合記録、reviews/original-qa.jsonを参照。独立評価の合格とZIP再実行は別記録で、未実施を完了扱いにしません。

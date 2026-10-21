@@ -1,0 +1,24 @@
+[gates] delivery='selfread', read from M:\Codex\Projects\studio-yebisu\workspace\slides\examples\repositories\slide-maker\.deck-gates.json — budgets and floors follow the RECORDED mode, not the default.
+[lint] builds: RECORDED as static in .deck-gates.json — NO BUILDS stands down (the user opted out; this is not a missing motion manifest)
+
+  ── deck stats (mode: selfread) — measured, advisory ──
+     #  load  text%  ink%  maxpt  shp  pic  cht  build  notes  sim↑   lum   sat  Δlum
+     1    85    64%    64%   34.0   41    0    0    —      44    0.96  0.02  0.00
+     2    71    55%    55%   34.0   39    0    0    —      41  0.04  0.94  0.05  0.03
+     3    99    47%    60%   34.0  103    0    0    —      46  0.15  0.96  0.02  0.02
+     4    54    37%    69%   34.0    9    0    1    —      89  0.04  0.97  0.01  0.01
+     5    65    62%    62%   34.0   13    0    0    —      60  0.29  0.94  0.04  0.03
+     title spine (the consultants' titles-only test — read it as one argument):
+        1. 昇順なら、中央から範囲を絞れる
+        2. 線形探索は、先頭から13回比較する
+        3. 二分探索は、大小で残す側を決める
+        4. 二分探索は、15通りとも4回以内
+        5. 比較回数から、秒数は決められない
+     fonts: body-median 13pt · deck max 34pt · type drama 2.6× · size tokens in use 5 (target 4-5 deck-wide) · distinct skeletons 5 · distinct envelopes 2/3 (modal 67%) | builds 0/5 · transitions 0/5 · avg occupancy 62%
+  [stats] NO ICONS ON CATEGORY CONTENT: slides 1, 2, 3 carry parallel label sets (3+ short peers on one baseline across half the canvas — the shape of a category row) and the deck contains no icon-sized picture at all. On category-rich content an icon family is a design must, not a taste call (slide-design self-verify (g)). Build one (scripts/icons.py, one family, recolored to the palette), or record `icon_family: "none — <why THESE slides read better without one>"` in .deck-gates.json — the detector over-counts on tables and timelines, so this is a re-decision, not a verdict
+
+deck.pptx: 0 layout finding(s)  ✓ clean (no hard findings)
+  [stats] lines are advisory — which to act on vs accept: references/troubleshooting-faq.md §7
+  [json] wrote source/current-lint.json
+M:\Codex\Projects\studio-yebisu\workspace\slides\examples\repositories\slide-maker\source\upstream\skills\slide-maker\scripts\lint_deck.py:2625: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(im.getdata())

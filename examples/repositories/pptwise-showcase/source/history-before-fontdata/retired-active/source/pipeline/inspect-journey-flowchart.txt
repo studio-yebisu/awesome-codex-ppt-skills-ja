@@ -1,0 +1,84 @@
+component flowchart on page journey (3 of 6): content, kind "process"
+name: Flow
+what it is: Labelled boxes joined by arrows: mark a branch as a decision and it draws as a diamond. The process map drawn on a whiteboard and then drawn properly.
+choose it: Choose it when the path branches on a decision and reaches a real end. Use steps for a straight sequence, cycle when the end returns to the start, and sankey when the branches carry quantities.
+not for: A loop with no endpoint, which belongs in cycle.
+full-body: no
+schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "component": "flowchart",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "flowchart"
+    },
+    "nodes": {
+      "maxItems": 20,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "rect",
+              "diamond",
+              "round"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "label"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "edges": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "direction": {
+      "type": "string",
+      "enum": [
+        "TB",
+        "TD",
+        "BT",
+        "LR",
+        "RL"
+      ]
+    }
+  },
+  "required": [
+    "type",
+    "nodes",
+    "edges"
+  ],
+  "additionalProperties": false
+}

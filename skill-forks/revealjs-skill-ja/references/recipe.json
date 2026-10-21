@@ -1,51 +1,22 @@
 {
-  "execution_type": "scaffold_cli_then_skill_authoring",
-  "summary_ja": "reveal.jsの骨格を公式スクリプトで生成し、日本語の説明・表・発表ノートを組む。横方向の移動とスライドの演出に向く。",
-  "requirements": [
-    "Node.js 24.18（今回使用）",
-    "reveal.js 5.2.1（公式MIT版を同梱）",
-    "スキルを読んでHTML/CSSを書けるエージェント"
+  "case_id": "revealjs-skill",
+  "entrypoints": [
+    "node source/upstream/skills/revealjs/scripts/check-overflow.js index.html",
+    "npm ci --prefix source/qa --ignore-scripts",
+    "node source/qa/node_modules/decktape/decktape.js reveal --chrome-path <browser> --screenshots --screenshots-directory render/decktape <HTML-URL> deck.pdf"
   ],
-  "commands": [
-    "node skills/revealjs/scripts/create-presentation.js --structure 1,1,1,1,1,1 --title \"社内検索を4週間で試す\" --output my-deck.html"
+  "features": [
+    "原典create-presentation.jsの骨格とpt単位",
+    "明示した2列grid・関係図・期間表のレイアウト",
+    "原典overflow検査とDecktape全頁出力"
   ],
-  "steps": [
-    "日本語版スキル一式を取得しSKILL.mdを読む",
-    "原典のscaffoldで必要なページ構成を作る",
-    "pt単位の文字とレイアウトで、入力原稿・図・表・ノートを組む",
-    "同梱したreveal.jsを使ってHTMLを開く。矢印キーで移動し全ページを見る"
+  "scope": [
+    "原典scaffold後の日本語組版は専用の手作業実装",
+    "fragment・縦方向の入れ子・PDFからの逆変換は未実演",
+    "企画の数値は架空の条件と目標で、効果実績ではない",
+    "Decktape3.16.1を同caseのQA依存へ固定。ブラウザーは既存Edgeを指定"
   ],
-  "limitations": [
-    "今回確認したのは横6ページの再生・表・日本語書体・ノート。チャートプラグインは使っていません。"
-  ],
-  "fork": "revealjs-skill-ja",
-  "repository": "ryanbbrown/revealjs-skill",
-  "example_ids": [
-    "revealjs-skill"
-  ],
-  "method_ja": "原典create-presentation.jsで6ページの骨格とbase-styles.cssを生成。原典のpt単位・2カラム・section構造に日本語本文を組み、reveal.jsの公式ナビゲーションで再生。",
-  "license": "MIT",
-  "license_review_status": "reviewed_for_example",
-  "source_refs": [
-    {
-      "path": "skills/revealjs/SKILL.md",
-      "sha256": "da9cd7a5528b3ed4049c7a3779965d55c8bffd420fbdf299ec25a1f73f4acd1d",
-      "url": "https://github.com/ryanbbrown/revealjs-skill/blob/d0ccd344c4aaf9f045e5a15be6a2ab67b595796f/skills/revealjs/SKILL.md"
-    },
-    {
-      "path": "skills/revealjs/scripts/create-presentation.js",
-      "sha256": "1232e956c32f7569e562c2e2b035efc7a34c9f3bf313a1078323208da863b805",
-      "url": "https://github.com/ryanbbrown/revealjs-skill/blob/d0ccd344c4aaf9f045e5a15be6a2ab67b595796f/skills/revealjs/scripts/create-presentation.js"
-    },
-    {
-      "path": "skills/revealjs/references/base-styles.css",
-      "sha256": "d6957216b9634e044d1114e652ca185ff5ae81eeb9d5d7b4e706f2d65a4610b5",
-      "url": "https://github.com/ryanbbrown/revealjs-skill/blob/d0ccd344c4aaf9f045e5a15be6a2ab67b595796f/skills/revealjs/references/base-styles.css"
-    },
-    {
-      "path": "LICENSE",
-      "sha256": "8420e97c15e6735d6ce87be8eb1a3e90af53bdacd4b4423dd826e0f1479216e6",
-      "url": "https://github.com/ryanbbrown/revealjs-skill/blob/d0ccd344c4aaf9f045e5a15be6a2ab67b595796f/LICENSE"
-    }
-  ]
+  "qa": "example/QA.json",
+  "input": "example/input/BRIEF.md",
+  "repair_author": "Codex"
 }

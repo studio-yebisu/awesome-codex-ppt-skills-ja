@@ -233,7 +233,8 @@ $codeFont: "JetBrains Mono", "BIZ UDPGothic", monospace;
 .reveal .slides .context {color:#62717a;font-size:.53em;line-height:1.65;margin-top:1.1em;}
 .reveal .slides section.math>p {max-width:1100px;font-size:.75em;}
 .reveal .definition {font-size:.68em;margin:1em 0 1.8em;}
-.reveal .slides section.code pre {width:100%;max-width:1300px;}
+.reveal .slides section.code div.sourceCode {width:100%;background:#f4f6f7;}
+.reveal .slides section.code div.sourceCode pre,.reveal .slides section.code div.sourceCode code {width:100%;max-width:none;box-sizing:border-box;}
 .reveal .actual-output {color:#315f7d;font-size:.8em;margin-top:1em;}
 .reveal .slides section.visual .limit {margin:.3em auto 0;text-align:center;}
 .reveal .slides section.question::before {content:"問い";}

@@ -1,0 +1,661 @@
+[
+  {
+    "case_id": "sebastian-203",
+    "name": "研究計画を仮説・図・評価へ整理する",
+    "job": "",
+    "change": "研究概要を問い・仮説・比較・評価の順へ分け、図の読み方と未検証の範囲を添えられる。",
+    "input": "図書館の音環境についての架空の研究概要と、原典の学術テンプレート。",
+    "output": "読図・読表の注記を持つ8頁の編集可能PPTX、話者ノート、検査記録。",
+    "how_to_use": [
+      "研究概要・論文・レビューのうち、実際に渡せる原稿とテンプレートを用意する。この例は研究概要モード。",
+      "主張を問い・仮説・比較条件・調査方法・評価へ分け、出典と未確認事項を対応表にする。",
+      "主要図に読み方、仮説に検証前の注記を付け、同梱テンプレートのmaster・下部帯を保って生成する。",
+      "source/build_deck.pyで生成し、原典scan_ppt_text.pyを実行する。PowerPointで全頁を描画して図・書体・注記を確認する。"
+    ],
+    "constraints": [
+      "原典が受け付ける研究概要モードを使用。論文PDFからの図表・数式抽出、外部引用の照合は未実施。",
+      "配置図と関係図は設計仮説。研究の結果、実測音分布、縮尺のある建築図を示さない。",
+      "日本語書体をBIZ UDPGothicへ明示変更。原典テンプレートのmaster・layout・themeを保存し、本文の見本情報は置換。",
+      "原典の禁止語スキャンとPowerPoint全8頁の実画像を確認。学術内容の第三者監査と修復版の独立再評価は未完了。"
+    ],
+    "demonstration": {
+      "summary": "研究概要を背景・空間モデル・仮説・比較条件・調査・評価・制約へ組み替え、主要図に読図注記を付けた。結果を補作せず、仮説と計画を表示する。",
+      "applied_features": [
+        "学術テンプレートのmaster・layout・themeと下部帯を引き継ぐ。",
+        "仮説の方向と交絡候補をnative図形・矢印・文字で表し、因果の実証と区別する。",
+        "比較表と評価項目へ読表注記を付け、原典の禁止語スキャンと描画後確認を実施。"
+      ],
+      "not_demonstrated": [
+        "論文図表・数式の抽出、外部引用の検証、測定済み研究結果、第三者の学術監査、独立再評価。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・図の読み方",
+          "title": "目的と期待する音環境を対応させる",
+          "what_to_inspect": "左の利用目的と右の席の希望、下段の「分類は設計仮説」を読む。",
+          "skill_rule": "技術的な対象の対応を図で示し、主要図へ読み方と仮説の範囲を添える。",
+          "proof_path": "examples/repositories/sebastian-203/render/slide-02.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・仮説の関係",
+          "title": "介入・行動・評価を分ける",
+          "what_to_inspect": "左右の矢印と「検証候補」、下段の交絡候補・読図注記を確認する。",
+          "skill_rule": "仮説を実証済みの因果関係として描かず、関係の向きと読図上の制約を示す。",
+          "proof_path": "examples/repositories/sebastian-203/render/slide-04.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 4,
+          "label": "5頁・同じ基準で比較",
+          "title": "二つの未実施案を比較する",
+          "what_to_inspect": "ゾーン境界・案内表示・検証したい点の3行で案A/Bを比べ、下部の設定条件を読む。",
+          "skill_rule": "比較対象を同じ評価軸へそろえ、条件未確定の数値や結果を作らない。",
+          "proof_path": "examples/repositories/sebastian-203/render/slide-05.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-203/source/build_deck.py",
+        "examples/repositories/sebastian-203/source/academic-template.pptx",
+        "examples/repositories/sebastian-203/source/template-retention.json",
+        "examples/repositories/sebastian-203/source/claim-map.json",
+        "examples/repositories/sebastian-203/source/current-check-receipts.json",
+        "examples/repositories/sebastian-203/source/original-text-scan.txt",
+        "examples/repositories/sebastian-203/source/pdf-fonts.json",
+        "examples/repositories/sebastian-203/input/BRIEF.md",
+        "examples/repositories/sebastian-203/input/data.json",
+        "examples/repositories/sebastian-203/QA.json",
+        "examples/repositories/sebastian-203/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "研究概要やレビューの章を並べるだけで終えず、問い・仮説・比較・評価の関係へ組み替える。出典と仮説を区別し、主要図の読み方を付けて学術テンプレートへ配置する。",
+      "requirements": [
+        "Python / python-pptx、原典テンプレートを含む一式ZIP。",
+        "公式BIZ UDPGothicとPowerPoint等の実描画環境。PDF由来RGBプレビューにはpypdfium2。"
+      ],
+      "steps": [
+        "原稿とテンプレートの優先順位、事実・仮説・計画を確認する。",
+        "主張と出典の対応を作り、問いから評価までを構成する。",
+        "重要図の読図注記と未確認の条件を入れ、テンプレートを保持して生成する。",
+        "原典の禁止語スキャンと全頁の実画像を確認し、修正後に再検査する。"
+      ],
+      "limitations": [
+        "原典が受け付ける研究概要モードを使用。論文PDFからの図表・数式抽出、外部引用の照合は未実施。",
+        "配置図と関係図は設計仮説。研究の結果、実測音分布、縮尺のある建築図を示さない。",
+        "日本語書体をBIZ UDPGothicへ明示変更。原典テンプレートのmaster・layout・themeを保存し、本文の見本情報は置換。",
+        "原典の禁止語スキャンとPowerPoint全8頁の実画像を確認。学術内容の第三者監査と修復版の独立再評価は未完了。"
+      ]
+    }
+  },
+  {
+    "case_id": "sebastian-193",
+    "name": "テンプレートを保って研究内容の図を組む",
+    "job": "",
+    "change": "既存テンプレートの青・master・themeを保ち、研究の関係に合う図を編集可能な要素で作れる。",
+    "input": "架空の公共空間サイン研究計画、原典テンプレートの書式情報とnative部品。",
+    "output": "フロー・比較案・平面図・注釈図など8頁のPPTXと、最終ファイルのhashに結び付く原典QA。",
+    "how_to_use": [
+      "入力・テンプレート・作り直す範囲を確認し、source/template-dna.jsonへ配色・文字の役割・保持する部品を記録する。",
+      "source/layout-plan.jsonへ頁の役割と図の型を割り当てる。既存の研究結果や著者・組織は流用しない。",
+      "Route Bの作者方式でnode source/build.cjsを実行し、source/preserve_master.pyで固定のmaster/theme/layoutを保全する。",
+      "PowerPointで全頁を描画し、原典qa_pptx.pyとverify_final_qa.pyをgroup-meeting条件で実行する。完成PPTXとQAのhash一致を確認する。"
+    ],
+    "constraints": [
+      "原典は中国語学術向け。本派生では日本語とBIZ UDPGothicのstatic字体へ明示変更。",
+      "Route Bの作者方式を使用。Route Aの画像案制作とRoute Cの画像再構築は未実施。",
+      "master/theme/layoutのXMLを保全し、slide側の要素はPptxGenJSで新規作成。見本の科学データや組織を引き継がない。",
+      "原典group-meeting QAはerror0/warning0、verify_final_qaで完成hash一致。native要素の対話的な移動試験と独立再評価は未実施。"
+    ],
+    "demonstration": {
+      "summary": "原典のTemplate DNAから青と階層を引き継ぎ、研究の意味に合わせて8種類の頁を作る。内容とmaster保全を別の証拠で検査する。",
+      "applied_features": [
+        "Template DNAと頁別計画を先に作り、本文は研究の伝達課題に合わせて新規配置。",
+        "比較・経路・仕様注釈をnativeの文字・図形・線で構成。",
+        "原典qa_pptxとverify_final_qaを実行し、最終PPTXのhashにQAを結び付ける。"
+      ],
+      "not_demonstrated": [
+        "Route A画像案、Route C画像再構築、実論文の抽出、利用者の制作経路・見本承認、対話的な移動試験、独立再評価。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・関係を図にする",
+          "title": "三つの判断を順序で示す",
+          "what_to_inspect": "見つける→読む→方向を決めるの矢印と、各段階の問いを読む。",
+          "skill_rule": "情報の意味が順序なら順序図を選び、同じカード骨格を全頁へ流用しない。",
+          "proof_path": "examples/repositories/sebastian-193/render/slide-02.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 3,
+          "label": "4頁・nativeの概念図",
+          "title": "案内の置き場所を対応させる",
+          "what_to_inspect": "左のA入口・B分岐・C受付と、右の全体・方向・到着を照合する。入口・トイレはパネル内へ配置。",
+          "skill_rule": "経路とラベルを編集可能な要素で作り、概念図と実施設の実測図を区別する。",
+          "proof_path": "examples/repositories/sebastian-193/render/slide-04.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 4,
+          "label": "5頁・注釈図",
+          "title": "案内表示の部品を分ける",
+          "what_to_inspect": "矢印・主行き先・補助情報・背景・余白の引出線と、下部の要検証条件を確認する。",
+          "skill_rule": "図の構造と文字の階層を優先し、形・文字・目印の併用と確認条件を示す。",
+          "proof_path": "examples/repositories/sebastian-193/render/slide-05.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-193/source/build.cjs",
+        "examples/repositories/sebastian-193/source/preserve_master.py",
+        "examples/repositories/sebastian-193/source/native-template-parts.zip",
+        "examples/repositories/sebastian-193/source/template-dna.json",
+        "examples/repositories/sebastian-193/source/template-retention.json",
+        "examples/repositories/sebastian-193/source/layout-plan.json",
+        "examples/repositories/sebastian-193/source/qa-report.json",
+        "examples/repositories/sebastian-193/source/original-verify-final-qa.txt",
+        "examples/repositories/sebastian-193/source/current-check-receipts.json",
+        "examples/repositories/sebastian-193/source/package.json",
+        "examples/repositories/sebastian-193/source/pdf-fonts.json",
+        "examples/repositories/sebastian-193/input/data.json",
+        "examples/repositories/sebastian-193/QA.json",
+        "examples/repositories/sebastian-193/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "学術テンプレートのどの部分を保持するかを先に決め、研究の関係に合うnative図を組む。原典のQAと最終hash検証まで行う。",
+      "requirements": [
+        "Node / PptxGenJS4.0.1、Python、原典QAと保持XMLを含む一式ZIP。",
+        "公式BIZ UDPGothic、PowerPoint。PDF由来RGBプレビューにはpypdfium2。"
+      ],
+      "steps": [
+        "制作範囲とテンプレートの権限を確認する。",
+        "Template DNAと頁別計画から、意味に合う図の型を選ぶ。",
+        "作者方式でnative PPTXを作り、必要なmaster/theme/layoutを保全する。",
+        "全頁の描画、原典QA、最終hash検証を繰り返す。"
+      ],
+      "limitations": [
+        "原典は中国語学術向け。本派生では日本語とBIZ UDPGothicのstatic字体へ明示変更。",
+        "Route Bの作者方式を使用。Route Aの画像案制作とRoute Cの画像再構築は未実施。",
+        "master/theme/layoutのXMLを保全し、slide側の要素はPptxGenJSで新規作成。見本の科学データや組織を引き継がない。",
+        "原典group-meeting QAはerror0/warning0、verify_final_qaで完成hash一致。native要素の対話的な移動試験と独立再評価は未実施。"
+      ]
+    }
+  },
+  {
+    "case_id": "cyberppt",
+    "name": "画像案を測って編集可能な図表へ組み直す",
+    "job": "",
+    "change": "画像案と内容を照合し、主要な文字・表・フローを編集可能なPPTXへ組み直せる。",
+    "input": "内容を固定した商店街の企画原稿と、実際に生成済みの5枚の画像設計見本。",
+    "output": "主要文字・表・フローが編集できる5頁のPPTX、原図との対照、原典比較の未達記録。",
+    "how_to_use": [
+      "自分の元資料から値・出所・論点を整理する。一般手順ではSCR案と固定8スタイルの確認から進める。",
+      "実内容を固定してImageGen原図を作り、その原図の全要素・座標・署名を登録する。保存済み5原図の座標を別題材へ流用しない。",
+      "各頁の再構築計画を先に作り、PptxGenJS単頁→PowerPoint描画→原図/局所比較→manifest/visual-qa付きstrictを実行する。",
+      "原典の全ゲートと逐頁確認を満たした後に単頁を統合し回帰確認する。同梱作例はゲート未達を残す技術部分例。"
+    ],
+    "constraints": [
+      "実証は保存済みImageGen原図5枚からの再構築を中心とする部分例。元の資料分析・MBB証拠表・2〜3のSCR案・8スタイル選択・利用者の段階/逐頁承認は未実施。",
+      "原典のpixel/bbox比較と全指定付きstrictを実行したが全5頁で未達。文字・図形の編集性、はみ出し0、読みやすさの確認は原典合格の代わりにしない。",
+      "新題材では自分の根拠資料、内容の固定、ImageGen原図、要素/座標/署名が必要。同梱の測定コードはこの5原図用で、別原稿へそのまま使えない。",
+      "主要文字・表・線・フローはnative。表紙の小さなSVGアイコン3点だけが画像で、Officeのデータ連動Chart/Tableではない。",
+      "原図の紙の明暗、字形・字重、ヘッダー形式の差を保持/開示。原図のpixel一致・ユーザー承認・現版独立再評価・実業務効果は未取得。"
+    ],
+    "demonstration": {
+      "summary": "保存済みImageGen bitmapを要素へ分け、主要文字・表・フローをnativeへ再構築。原図との一致、内容、編集性を別々に検査する。",
+      "applied_features": [
+        "実内容の固定、全可視要素/構成署名、画布換算と実描画の反測。",
+        "PptxGenJS単頁とPowerPoint実描画。表紙の小さなTablerアイコン3点だけが画像。",
+        "全指定strict、元pixel/bbox、局所比較、文字枠90個の実測を記録。失敗した位置差・視覚差を合格にしない。"
+      ],
+      "not_demonstrated": [
+        "Stage1 full source analysis/MBB/SCR alternatives",
+        "Stage2 fixed eight-style user choice and blueprint approval",
+        "Original exact visual fidelity",
+        "Original per-page user approval and approved merge",
+        "Current independent review",
+        "Real operational outcomes or adoption"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・フローの再構築",
+          "title": "原図とnativeフローを比較",
+          "what_to_inspect": "左のImageGen原図と右の再構築で、SNS/Web/掲示板→一覧→各店詳細の箱・線・文字を照合する。",
+          "skill_rule": "フローの意味と関係を保持し、箱・線・主要文字をnative要素として再構築する。",
+          "proof_path": "examples/repositories/cyberppt/review/slide-02-preview-side-by-side.png",
+          "proof_kind": "blueprint-comparison"
+        },
+        {
+          "index": 2,
+          "label": "3頁・表の再構築",
+          "title": "日付・費用・条件を照合",
+          "what_to_inspect": "左のImageGen bitmapと右のPowerPoint描画で5列×3行の日時・費用・雨天条件を照合。右の結論と脚注の間隔も確認。元pixel/bbox未達は別記録。",
+          "skill_rule": "表と重要数値はnativeの文字と線で再構築し、内容lockとの対応と画像の一致を別々に検査する。",
+          "proof_path": "examples/repositories/cyberppt/review/slide-03-preview-side-by-side.png",
+          "proof_kind": "blueprint-comparison"
+        },
+        {
+          "index": 3,
+          "label": "4頁・手順と要点",
+          "title": "更新手順と下段の要点を照合",
+          "what_to_inspect": "左のImageGen原図と右のPPTX描画で3段階の番号・矢印、担当案、確認項目、結論と脚注を比べる。",
+          "skill_rule": "手順矢印・表・SO WHAT・脚注を編集可能に保つ。読みやすさのための原図差分は隠さない。",
+          "proof_path": "examples/repositories/cyberppt/review/slide-04-preview-side-by-side.png",
+          "proof_kind": "blueprint-comparison"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/cyberppt/input/outline.json",
+        "examples/repositories/cyberppt/source/prepare_measurements.py",
+        "examples/repositories/cyberppt/source/reconstruct.cjs",
+        "examples/repositories/cyberppt/source/optical-alignment.json",
+        "examples/repositories/cyberppt/source/recheck.py",
+        "examples/repositories/cyberppt/source/reproduce.py",
+        "examples/repositories/cyberppt/design/slide-03-blueprint.png",
+        "examples/repositories/cyberppt/design/slide-03-content-lock.json",
+        "examples/repositories/cyberppt/design/slide-03-elements.json",
+        "examples/repositories/cyberppt/design/slide-03-registry.json",
+        "examples/repositories/cyberppt/review/component-checks.json",
+        "examples/repositories/cyberppt/review/original-visual-qa-gate.json",
+        "examples/repositories/cyberppt/review/repair-diff-summary.json",
+        "examples/repositories/cyberppt/review/merge-regression.json",
+        "examples/repositories/cyberppt/review/pdf-merge-regression.json",
+        "examples/repositories/cyberppt/QA.json",
+        "examples/repositories/cyberppt/source/distribution-replay.json",
+        "examples/repositories/cyberppt/source/upstream/references/source-analysis.md",
+        "examples/repositories/cyberppt/source/upstream/references/storyline.md",
+        "examples/repositories/cyberppt/source/upstream/references/visual-system.md",
+        "examples/repositories/cyberppt/source/upstream/references/ppt-production.md",
+        "examples/repositories/cyberppt/source/upstream/references/quality-assurance.md",
+        "examples/repositories/cyberppt/source/prepare_repair_manifest.py",
+        "examples/repositories/cyberppt/source/check_layout.ps1",
+        "examples/repositories/cyberppt/source/layout-overflow.json",
+        "examples/repositories/cyberppt/source/build_preview_comparisons.py",
+        "examples/repositories/cyberppt/review/preview-comparison-sources.json",
+        "examples/repositories/cyberppt/review/repair-visual-evidence.json",
+        "examples/repositories/cyberppt/review/repair-strict-receipt.json",
+        "examples/repositories/cyberppt/review/repair-strict-validation.json",
+        "examples/repositories/cyberppt/design/slide-02-blueprint.png",
+        "examples/repositories/cyberppt/design/slide-04-blueprint.png",
+        "examples/repositories/cyberppt/review/codex-visual-inspection.json",
+        "examples/repositories/cyberppt/source/pdf-fonts.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "元資料の根拠と画像案をそろえ、主要情報をPptxGenJSで編集可能にし、原図との一致まで逐頁で検査する。",
+      "requirements": [
+        "Windows / PowerPoint / Node / PptxGenJS4.0.1、Python / pywin32 / Pillow / numpy / pypdfium2。",
+        "新しい題材の制作には画像生成手段と新規測定が必要。固定作例のreplayは保存済み5原図を使用。",
+        "Windows字体Yu Gothic・Yu Mincho・Times New Roman。OS字体本体は同梱しない。"
+      ],
+      "steps": [
+        "元資料を読み、値・期間・単位・出所・不明点を証拠表へ置き、SCRの複数案と頁別の主張/図表/密度を確認する。",
+        "原典の固定8画像を提示して方向を選び、実内容を固定してから全頁のImageGen原図を作る。原図文字を事実の根拠にしない。",
+        "承認した各原図について署名と全可視要素の座標を固定し、再構築計画→PptxGenJS単頁→PowerPoint実描画→局所比較を行う。",
+        "原典のpixel/bboxと全指定strictが通り、その頁の確認が済んでから次頁へ進む。全頁通過後に単頁を統合し、再描画で回帰確認する。"
+      ],
+      "limitations": [
+        "実証は保存済みImageGen原図5枚からの再構築を中心とする部分例。元の資料分析・MBB証拠表・2〜3のSCR案・8スタイル選択・利用者の段階/逐頁承認は未実施。",
+        "原典のpixel/bbox比較と全指定付きstrictを実行したが全5頁で未達。文字・図形の編集性、はみ出し0、読みやすさの確認は原典合格の代わりにしない。",
+        "新題材では自分の根拠資料、内容の固定、ImageGen原図、要素/座標/署名が必要。同梱の測定コードはこの5原図用で、別原稿へそのまま使えない。",
+        "主要文字・表・線・フローはnative。表紙の小さなSVGアイコン3点だけが画像で、Officeのデータ連動Chart/Tableではない。",
+        "原図の紙の明暗、字形・字重、ヘッダー形式の差を保持/開示。原図のpixel一致・ユーザー承認・現版独立再評価・実業務効果は未取得。"
+      ]
+    },
+    "problem": "画像案の主要文字や表・フローを、見た目と照合しながらPowerPointで編集できる部品へ戻したい。",
+    "method": "保存済みImageGen原図5枚を内容/要素へ登録し、PptxGenJSで単頁を再構築、PowerPointで描画して比較。原典の全工程・合格を主張しない。",
+    "sample_notice": "架空企画の保存済みImageGen原図からのStage3技術部分例。原典の全5頁pixel/bbox・全指定strictは不合格。新規モデル制作・人間承認は主張しない。",
+    "preview_image_notice": "左は保存済みImageGen原図、右は現PPTXのPowerPoint/PDF描画。全5頁実視認・文字枠90個overflow0。原典視覚合格と独立再評価は未達。"
+  },
+  {
+    "case_id": "cafe-pptx",
+    "name": "SVGの本文と図を編集可能PPTXへ変換する",
+    "job": "",
+    "change": "文章で並ぶ店舗の関係・リスク・工程を、文字や数値を直せる図と表に変えられる。",
+    "input": "顧客像、候補地評価、客数・費用の仮定、運営関係、リスクと5週の予定を含む架空の提案。",
+    "output": "8頁のnative文字・図形PPTX、入力SVG、話者ノート、実SVG/PowerPoint比較、原典検査と再実行記録。",
+    "how_to_use": [
+      "新題材では元SkillのroutingからGenerate/Template/Editを1つ選ぶ。固定の喫茶店データは一般手順の持参物ではない。",
+      "関係は矢印と共通領域、リスクは確認表、期間は元の週数から工程表へ組み替える。各SVGに意味ID・境界・言語を付ける。",
+      "元guard、7頁以上のP05 early、値/期間の座標検証、final、fingerprintが一致するnative変換を行う。",
+      "実PowerPointと入力SVGを比べ、文字・関係・注記・字体を確かめる。今回のフォント/文字枠adapterは原典本体と分けて記録する。",
+      "PPTXの私的コピーで文字を編集・保存・再表示し、正本と配布ZIPの再生成を照合する。"
+    ],
+    "constraints": [
+      "日本語の専用生成器で、Quick Generateの意味付きSVG・P05 early gate・final gate・座標検証・native変換を実行した技術部分例。原典の主エージェントによる全頁手書き、init/importを含むQuick全工程やDefaultは実証していない。",
+      "原典のguard・checker・converter本体は不変。BIZを東アジア字体として登録するメモリー内adapterと、PowerPoint実測に基づく文字枠幅だけの後処理を明示する。",
+      "表・工程表は個別に編集できる文字・図形で、Office Table/Chartは0。8頁はflat生成で、既存PPTXの母版を保持する編集やBrand/Style/Layout/Deck制作は未実証。",
+      "店名・数値・計画は架空の入力。調査・契約・投資の実績や承認、実業務の効果を主張しない。",
+      "全8頁を制作側が実視認。原典のPPT-safe字体に関するwarnings8を保持。独立の現版評価・利用者採用・別端末の表示は未確認。"
+    ],
+    "demonstration": {
+      "summary": "関係図・確認表・工程表を意味付きSVGへ作り、元の検査/座標確認/native変換で編集可能PPTXへ戻す技術部分例。",
+      "applied_features": [
+        "P05 earlyと最終SVG検査、原典native変換、全SVG文字の保存。",
+        "Ganttの週軸と端点を元calculator2回で照合。",
+        "SVG/実PP前後比較、実PDF字体、141文字枠実測、代表文字の編集/保存/再表示。"
+      ],
+      "not_demonstrated": [
+        "Original complete Quick authoring lifecycle including main-agent hand-authored SVG/init/import",
+        "Default/Brand/Style/Layout/Deck workflows",
+        "Office data-bound Chart/Table",
+        "Complex animation/narration/video",
+        "User business decisions, current independent review, adoption, real operational results"
+      ],
+      "pages": [
+        {
+          "index": 4,
+          "label": "5頁・支援関係",
+          "title": "既存店から新店へ何を支えるか",
+          "what_to_inspect": "既存店→新店の仕込み支援、両店から共通の購買・品質・日報へ伸びる線、負荷が未確認という注記を左右で照合。",
+          "skill_rule": "意味のある支援・共通化をSVGの関係とnative文字/線へ保持する。",
+          "proof_path": "examples/cases/cafe-pptx/review/slide-05-svg-native.png",
+          "proof_kind": "actual-svg-native-comparison"
+        },
+        {
+          "index": 5,
+          "label": "6頁・リスクと確認",
+          "title": "判断に必要な材料をそろえる",
+          "what_to_inspect": "客数・工事・店長の3行を横に読み、リスク→確認方法→決裁材料が対応することを左右で確認。",
+          "skill_rule": "行列の交点の事実・条件を落とさず、SVG前後のnative文字と図形へ残す。",
+          "proof_path": "examples/cases/cafe-pptx/review/slide-06-svg-native.png",
+          "proof_kind": "actual-svg-native-comparison"
+        },
+        {
+          "index": 6,
+          "label": "7頁・期間の対応",
+          "title": "5週目の仮判断へ進む",
+          "what_to_inspect": "開始/1〜5週末の目盛りに対し1〜2週、3〜4週、5週のバー端点を比べる。延期条件と決裁後の範囲も残る。",
+          "skill_rule": "元の期間から同じ軸の位置・幅を導出し、原典Gantt座標検証を経て変換する。",
+          "proof_path": "examples/cases/cafe-pptx/review/slide-07-svg-native.png",
+          "proof_kind": "actual-svg-native-comparison"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/cases/cafe-pptx/input/data.json",
+        "examples/cases/cafe-pptx/source/build_cafe.py",
+        "examples/cases/cafe-pptx/source/svg_output/02.svg",
+        "examples/cases/cafe-pptx/source/svg_output/03.svg",
+        "examples/cases/cafe-pptx/source/svg_output/04.svg",
+        "examples/cases/cafe-pptx/source/validation/svg_quality_report.json",
+        "examples/cases/cafe-pptx/build-log.json",
+        "examples/cases/cafe-pptx/calculations.json",
+        "examples/cases/cafe-pptx/source/native-elements.json",
+        "examples/cases/cafe-pptx/source/pdf-fonts.json",
+        "examples/cases/cafe-pptx/QA.json",
+        "examples/cases/cafe-pptx/source/validation/svg_quality_early_report.json",
+        "examples/cases/cafe-pptx/source/distribution-replay.json",
+        "examples/cases/cafe-pptx/source/upstream/SKILL.upstream.md",
+        "examples/cases/cafe-pptx/source/upstream/workflows/profiles/quick-generate.md",
+        "examples/cases/cafe-pptx/source/upstream/references/executor-table.md",
+        "examples/cases/cafe-pptx/source/upstream/references/executor-chart.md",
+        "examples/cases/cafe-pptx/source/upstream/workflows/stages/verify-charts.md",
+        "examples/cases/cafe-pptx/source/reproduce.py",
+        "examples/cases/cafe-pptx/source/export_with_biz.py",
+        "examples/cases/cafe-pptx/source/fit_text_frames.py",
+        "examples/cases/cafe-pptx/source/svg_output/05.svg",
+        "examples/cases/cafe-pptx/source/svg_output/06.svg",
+        "examples/cases/cafe-pptx/source/svg_output/07.svg",
+        "examples/cases/cafe-pptx/review/svg-native-sources.json",
+        "examples/cases/cafe-pptx/review/chart-geometry.json",
+        "examples/cases/cafe-pptx/review/text-frame-fit.json",
+        "examples/cases/cafe-pptx/review/text-frame-fit-render-regression.json",
+        "examples/cases/cafe-pptx/source/layout-overflow.json",
+        "examples/cases/cafe-pptx/review/codex-visual-inspection.json",
+        "examples/cases/cafe-pptx/source/edit-reopen.json",
+        "examples/cases/cafe-pptx/source/execution-receipts.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "用途に応じて制作経路を選び、意味付きSVGの本文と図を原典検査・native変換で編集可能PPTXへ出す。",
+      "requirements": [
+        "Python / python-pptx / lxml / Pillow、原典PPT Masterのscriptsと契約資料。",
+        "Windows / PowerPoint / PowerShell、公式BIZ UDPGothic。PDF由来RGBプレビューにはpypdfium2。"
+      ],
+      "steps": [
+        "原典の帰属ガードとroutingを読み、Generate/Template/Editの1経路を選ぶ。Default/Quickの条件と確認門を保つ。",
+        "自分の資料から根拠・判断・値と単位をそろえ、関係・行列・量的な図を対応する元参照に従ってSVGへ作る。",
+        "必要な座標・P05 early・finalを検査し、最終fingerprintが一致する元変換器でnative PPTXと必要なノートを出す。",
+        "実アプリで全頁を比較し、追加adapterと実施範囲を開示する。再生成・独立評価・利用者の採用を区別する。"
+      ],
+      "limitations": [
+        "日本語の専用生成器で、Quick Generateの意味付きSVG・P05 early gate・final gate・座標検証・native変換を実行した技術部分例。原典の主エージェントによる全頁手書き、init/importを含むQuick全工程やDefaultは実証していない。",
+        "原典のguard・checker・converter本体は不変。BIZを東アジア字体として登録するメモリー内adapterと、PowerPoint実測に基づく文字枠幅だけの後処理を明示する。",
+        "表・工程表は個別に編集できる文字・図形で、Office Table/Chartは0。8頁はflat生成で、既存PPTXの母版を保持する編集やBrand/Style/Layout/Deck制作は未実証。",
+        "店名・数値・計画は架空の入力。調査・契約・投資の実績や承認、実業務の効果を主張しない。",
+        "全8頁を制作側が実視認。原典のPPT-safe字体に関するwarnings8を保持。独立の現版評価・利用者採用・別端末の表示は未確認。"
+      ],
+      "commands": [
+        "python example/source/reproduce.py --preview-python C:/path/to/pdfium/python.exe"
+      ]
+    },
+    "upstream_principle": "原典は編集可能PPTXの生成・画像再構築・Brand/Style/Layout/Deckの再利用・nativeテンプレート編集・既存PPTXの強化を目的別の経路へ振り分ける。今回の作例はQuick Generateの直接SVG制作・検査・native変換を使う。",
+    "method": "日本語専用器のSVGから、無変更の原典guard・P05 early・座標検証・final・native変換を実行。BIZ字体登録と実測文字枠幅補正は局所adapter。原典の全Quick/Default工程ではない。",
+    "sample_notice": "原典QuickのSVG技術契約を使う専用器。原典の全Quick/Default工程ではない。BIZ字体登録と文字枠幅の補正を開示。",
+    "preview_image_notice": "全8頁の実PowerPoint描画。比較は左=実入力SVG、右=現native PPTX。制作側全頁視認・独立現版評価は未完了。"
+  },
+  {
+    "case_id": "japanese-corporate",
+    "name": "根拠・担当・判断条件を一頁にまとめる",
+    "job": "",
+    "change": "数値に解釈を添え、担当間で渡す記録と判断条件を一頁で追えるようにする。",
+    "input": "数値・単位・期間、担当・期限を記録した架空のEC月次データと、業務の受け渡し案。",
+    "output": "元15型から6型を選び、nativeチャート1・表2・担当間の線と判断分岐を持つ編集可能PPTX。",
+    "how_to_use": [
+      "読者と今回の判断を決め、数値・単位・期間・担当・条件をそろえる。新規制作では原典の参照優先順と視覚調査を先に行う。",
+      "原典の6参照と15型を確認し、図解の型を選ぶ。今回の対応はsource/template-map.json、担当間の受け渡しはinput/flow-plan.jsonで確認できる。",
+      "source/rebuild.pyで元PPTXの本文・チャート系列・比較表・論点表を更新する。判断ひし形と記録名付き矢印を接続し、目標・仮説・実績を区別する。",
+      "全頁をPowerPointで描画し、source/check_native.pyとcheck_overflow.ps1で数値・部品・範囲・はみ出しを検査する。代表セルを編集・保存して開き直す。",
+      "contactと各頁を実サイズで読み、原典QAとJTC authenticityの独立判定を受ける。再生成した版へ過去の評価を引き継がない。"
+    ],
+    "constraints": [
+      "原典は指示Skillと15型PPTXテンプレート。専用の自動生成APIはなく、今回のsource/rebuild.pyはpython-pptxによる作例用の編集コード。",
+      "修復前に3種類の画像検索を実行したが結果は0件。公式リンク・通常Web検索から企業2件、政府・団体4件の実図/PDFを確認し、構成だけを参照した。初回制作時の調査とは扱わない。",
+      "組織・数値・担当・業務案は架空。分類率100%は目標で実績ではなく、施策の効果・承認・利用者の採用は未実証。",
+      "本文はBIZ系、元チャートはCalibri/MS Gothicを含む。原典母版・layout・themeは内容を保持し、保存時のXML表記・相対参照だけが変わる。",
+      "PowerPointで全6頁の実描画、184文字枠/表セルのoverflow、チャート系列、代表セルの編集・保存・再表示を確認。独立再評価と原典JTC 17/20の受理は未完了。"
+    ],
+    "demonstration": {
+      "summary": "数値の報告に解釈を添え、担当間で渡す記録と判断条件を一頁で追えるようにする。元15型のPowerPointを編集し、図形・チャート・表を残す。",
+      "applied_features": [
+        "元15型の1・2・11・9・8・14頁を内容に合わせて選択。青帯・母版・出所・含意を保持。",
+        "nativeチャートへ前年/当月の系列を設定し、差・留意点・判断を同じ頁へ記載。",
+        "担当間の10関係/13線分と判断分岐、分類目標、比較表と論点表、頁別講稿。",
+        "修復前の3画像検索/公式6資料の実視認を構成へ適用。代表セルの編集・保存・再表示を実証。"
+      ],
+      "not_demonstrated": [
+        "組織・数値・担当・業務案は架空。分類率100%は目標で実績ではなく、施策の効果・承認・利用者の採用は未実証。",
+        "独立再評価と原典JTC17/20の受理、初回制作時の外部視覚調査、別PC/依存新規導入。"
+      ],
+      "pages": [
+        {
+          "index": 2,
+          "label": "3頁・データと解釈",
+          "title": "増収の内訳と判断を照合する",
+          "what_to_inspect": "左の前年/当月の編集可能チャート、自然検索+90万円の注記、右の留意点と下部の含意を合わせて読む。売上寄与を利益改善と取り違えない。",
+          "skill_rule": "確認した値と単位でnativeチャートを作り、読み取れること・留意点・判断を同じ頁に置く。",
+          "proof_path": "examples/repositories/japanese-corporate/render/slide-03.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 4,
+          "label": "5頁・担当をまたぐ受け渡し",
+          "title": "分類・判断・改稿・効果確認を線で追う",
+          "what_to_inspect": "対象一覧→返品理由分類→責任者の『分類完了？』→改稿記録→効果・粗利を追う。赤い不足時の戻りと、『10/09の目標／分類率100%』を確認。上帯は段階名で、実際の受け渡しは担当をまたぐ矢印。",
+          "skill_rule": "業務プロセスは段階と役割の格子だけで終えず、受け渡す記録と判断・例外をnative connectorで接続する。",
+          "proof_path": "examples/repositories/japanese-corporate/render/slide-05.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 5,
+          "label": "6頁・判断条件",
+          "title": "担当・期限・状態をそろえる",
+          "what_to_inspect": "論点表の把握している状況・対応条件・担当・期限・状態を読む。青の提案、赤の要確認、灰の継続審議と下段の今回/次回を区別する。",
+          "skill_rule": "一頁で次の判断へ進めるよう、根拠・例外・担当・期限・未決定事項を同時に置く。",
+          "proof_path": "examples/repositories/japanese-corporate/render/slide-06.png",
+          "proof_kind": "powerpoint-render"
+        },
+        {
+          "index": 1,
+          "label": "2頁・比較条件と編集",
+          "title": "率・額・増加率を分ける",
+          "what_to_inspect": "前年/当月の比較表で20%増と2ポイントの変化を区別し、下段の380/432万円の式と52万円増を照合する。",
+          "skill_rule": "比較には期間・単位・差の定義を置き、表と解釈を編集可能な部品で残す。",
+          "proof_path": "examples/repositories/japanese-corporate/render/slide-02.png",
+          "proof_kind": "powerpoint-render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/japanese-corporate/input/data.json",
+        "examples/repositories/japanese-corporate/input/flow-plan.json",
+        "examples/repositories/japanese-corporate/source/rebuild.py",
+        "examples/repositories/japanese-corporate/source/template-map.json",
+        "examples/repositories/japanese-corporate/source/process-relationships.json",
+        "examples/repositories/japanese-corporate/source/reference-research.json",
+        "examples/repositories/japanese-corporate/source/style-ledger.md",
+        "examples/repositories/japanese-corporate/source/jtc-check.md",
+        "examples/repositories/japanese-corporate/source/native-elements.json",
+        "examples/repositories/japanese-corporate/source/overflow.json",
+        "examples/repositories/japanese-corporate/source/pdf-fonts.json",
+        "examples/repositories/japanese-corporate/source/edit-reopen.json",
+        "examples/repositories/japanese-corporate/render/editability/slide-02-edited.png",
+        "examples/repositories/japanese-corporate/NOTES.md",
+        "examples/repositories/japanese-corporate/QA.json",
+        "examples/repositories/japanese-corporate/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "数値の報告に解釈を添え、担当間で渡す記録と判断条件を一頁で追えるようにする。元15型のPowerPointを編集し、図形・チャート・表を残す。",
+      "requirements": [
+        "読者と判断、数値・単位・期間・出典、主体・入出力・条件を記録した資料。",
+        "native PPTXを調査・編集・描画・再読込できるホストと、原典15型/必須6参照。今回の再生成はPython/python-pptx、Windows PowerPoint、BIZ系等、PDFium。"
+      ],
+      "steps": [
+        "読者と判断を決め、参照優先順に実画像を調べ、style ledgerを作る。",
+        "原典6参照と15型を読み、関係・根拠・判断に合う型を選ぶ。",
+        "native部品で作り、担当間の記録と判断分岐、仮説/目標/実績を示す。",
+        "全頁の実描画・overflow・データ・package・編集保存再読込を検査し、原典JTCを独立判定する。"
+      ],
+      "limitations": [
+        "原典は指示Skillと15型PPTXテンプレート。専用の自動生成APIはなく、今回のsource/rebuild.pyはpython-pptxによる作例用の編集コード。",
+        "修復前に3種類の画像検索を実行したが結果は0件。公式リンク・通常Web検索から企業2件、政府・団体4件の実図/PDFを確認し、構成だけを参照した。初回制作時の調査とは扱わない。",
+        "組織・数値・担当・業務案は架空。分類率100%は目標で実績ではなく、施策の効果・承認・利用者の採用は未実証。",
+        "本文はBIZ系、元チャートはCalibri/MS Gothicを含む。原典母版・layout・themeは内容を保持し、保存時のXML表記・相対参照だけが変わる。",
+        "PowerPointで全6頁の実描画、184文字枠/表セルのoverflow、チャート系列、代表セルの編集・保存・再表示を確認。独立再評価と原典JTC 17/20の受理は未完了。"
+      ]
+    },
+    "method": "原典15型PPTXの1・2・11・9・8・14頁をpython-pptxで編集。nativeチャート・表・母版を保持し、担当間の10関係と判断分岐、比較表を加えた。原典に専用生成APIはない。",
+    "sample_notice": "架空EC月次会議の作例。今回の修復前に公式6資料の構成を確認し、本文・受け渡し・比較表をCodexで修正した。原典JTCと独立再評価は未受理。",
+    "preview_image_notice": "全6頁は現PPTXをPowerPointでPDF出力したRGBプレビュー。制作側で全頁確認済み。独立再評価は未完了。"
+  },
+  {
+    "case_id": "presentation-delivery",
+    "name": "HTMLを正本にして資料を作る",
+    "job": "",
+    "change": "画面で読むHTML資料を先に作り、必要なときだけ本文や図形を編集できるPPTXも出せる。",
+    "input": "架空の社内引き継ぎガイドの原稿、頁の役割、HTMLの配色・文字・図の構成。",
+    "output": "正本のHTML deckと概覧・ページ操作、PDF、変換条件内で本文と図形を編集できるPPTX派生。",
+    "how_to_use": [
+      "読者・目的・題材の資料と出力形式を決める。HTMLを正本とし、PPTXが必要なら変換範囲を確認する。",
+      "原典は早い確認点と、5頁以上なら2頁のshowcaseを要求する。書式と内容を決めてから残りのHTMLを作る。",
+      "PPTXを派生する場合は960×540pt、p/h見出し、外側divの図形、非対応背景を避ける4条件を守る。複数行はDIVのdata-pptx-mergeを使う。",
+      "source/reproduce.pyで原典のHTML寸法・overflow検査とDOM変換を実行する。HTMLとPowerPointの全頁を比べ、違いや失われた表現を記録する。"
+    ],
+    "constraints": [
+      "原典visual-deck-studioはHTMLを正本とし、PPTXは依頼時のbest-effort派生。PPTXの制約のためにHTML設計を下げない。",
+      "今回の自律制作では早期の利用者承認と3方向Fallbackを実施していない。2頁showcaseは保持するが利用者の選択済みとは扱わない。",
+      "HTTP入口・字体待ち・日本語ノート・Windows環境継承を局所adapterで補う。原典の寸法・overflow検査は維持。",
+      "file URL、動画、音声/TTS、生産用Webアプリ・バックエンドはこの例の対象外。",
+      "HTML全6頁の寸法・overflow・字体と、PPTX本文・全頁の実画像を確認。pixel一致・利用者採用・独立再評価は未完了。"
+    ],
+    "demonstration": {
+      "summary": "原典のHTML-first Path Aで6頁を作り、4条件に合う要素を元DOM変換器でPPTXへ派生。HTMLとPPTXを並べて内容と表示差を確認する。",
+      "applied_features": [
+        "原典deck_indexの概覧・ページ操作とHTML正本を保持。",
+        "4条件に合わせたHTML要素から、文字・矩形・線をnative PPTXへ変換。",
+        "原典DIV mergeで段落内の行間を修復し、HTML/PPTXの全頁と本文の一致を検査。"
+      ],
+      "not_demonstrated": [
+        "利用者の早期確認、3方向Fallback、file URL、動画、音声/TTS、生産用Webアプリ、pixel一致、独立再評価。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁・HTMLからの派生",
+          "title": "段落を保ってPPTXへ出す",
+          "what_to_inspect": "左のHTMLと右のPowerPointを比べ、3項目の本文が一段落の通常行間で読めるか確認。",
+          "skill_rule": "4条件内のp/h要素を変換し、複数行の段落は外側DIVのdata-pptx-mergeで同じ編集枠へまとめる。",
+          "proof_path": "examples/repositories/presentation-delivery/review/html-pptx-page-02.png",
+          "proof_kind": "html-pptx-comparison"
+        },
+        {
+          "index": 2,
+          "label": "3頁・内容に合う図示",
+          "title": "ファイル名の意味を分ける",
+          "what_to_inspect": "上の例を用途・版・状態の3行へ分けたHTMLとPPTXを比較する。元の3列骨格を繰り返さない。",
+          "skill_rule": "HTMLの視覚構成を正本にし、頁の役割へ図示を合わせる。対応する図形と本文を派生PPTXにも残す。",
+          "proof_path": "examples/repositories/presentation-delivery/review/html-pptx-page-03.png",
+          "proof_kind": "html-pptx-comparison"
+        },
+        {
+          "index": 3,
+          "label": "4頁・正本と派生を照合",
+          "title": "完了と保留の区別を残す",
+          "what_to_inspect": "暗色の背景と2欄、本文の意味が両方で残るか確認。字幅や太さのpixel一致は主張しない。",
+          "skill_rule": "HTMLを先に完成し、変換で保持できる内容と表現を確認する。PPTXはbest-effortとして損失を記録する。",
+          "proof_path": "examples/repositories/presentation-delivery/review/html-pptx-page-04.png",
+          "proof_kind": "html-pptx-comparison"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/presentation-delivery/input/data.json",
+        "examples/repositories/presentation-delivery/source/reproduce.py",
+        "examples/repositories/presentation-delivery/source/runtime-adapter.diff",
+        "examples/repositories/presentation-delivery/source/upstream/skills/visual-deck-studio/SKILL.md",
+        "examples/repositories/presentation-delivery/source/runtime/html2pptx.js",
+        "examples/repositories/presentation-delivery/source/runtime/export_deck_pptx.mjs",
+        "examples/repositories/presentation-delivery/html-render/metrics.json",
+        "examples/repositories/presentation-delivery/source/html-pptx-text-check.json",
+        "examples/repositories/presentation-delivery/review/html-pptx-comparisons.json",
+        "examples/repositories/presentation-delivery/source/native-elements.json",
+        "examples/repositories/presentation-delivery/source/pdf-fonts.json",
+        "examples/repositories/presentation-delivery/QA.json",
+        "examples/repositories/presentation-delivery/source/distribution-replay.json",
+        "examples/repositories/presentation-delivery/review/comparison-sources/page-02-html.png",
+        "examples/repositories/presentation-delivery/review/comparison-sources/page-02-powerpoint.png",
+        "examples/repositories/presentation-delivery/review/comparison-sources/page-03-html.png",
+        "examples/repositories/presentation-delivery/review/comparison-sources/page-03-powerpoint.png",
+        "examples/repositories/presentation-delivery/review/comparison-sources/page-04-html.png",
+        "examples/repositories/presentation-delivery/review/comparison-sources/page-04-powerpoint.png",
+        "examples/repositories/presentation-delivery/source/build_comparisons.py"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "HTML deckを正本として視覚構成を作り、概覧とページ操作で読む。PPTXは必要な場合だけ4条件の範囲で派生し、内容と表示の違いを検査する。",
+      "requirements": [
+        "Python、Node22以上、固定Node依存とChromium。",
+        "PPTX確認にはWindows / PowerPoint / PowerShellと公式BIZ UDPGothic。PDF由来RGBプレビューにはpypdfium2。"
+      ],
+      "steps": [
+        "読者・題材・資料の役割と出力形式を確認する。",
+        "HTML正本の見本と書式を確認してから残りを作る。",
+        "必要な場合だけ4条件に合わせてPPTXを派生する。",
+        "HTMLとPPTXの実表示と内容を比較し、変換損失を明記する。"
+      ],
+      "limitations": [
+        "原典visual-deck-studioはHTMLを正本とし、PPTXは依頼時のbest-effort派生。PPTXの制約のためにHTML設計を下げない。",
+        "今回の自律制作では早期の利用者承認と3方向Fallbackを実施していない。2頁showcaseは保持するが利用者の選択済みとは扱わない。",
+        "HTTP入口・字体待ち・日本語ノート・Windows環境継承を局所adapterで補う。原典の寸法・overflow検査は維持。",
+        "file URL、動画、音声/TTS、生産用Webアプリ・バックエンドはこの例の対象外。",
+        "HTML全6頁の寸法・overflow・字体と、PPTX本文・全頁の実画像を確認。pixel一致・利用者採用・独立再評価は未完了。"
+      ]
+    },
+    "upstream_principle": "原典はHTMLで高精細なプロトタイプ・スライド・アニメーション・可視化を制作する。スライドはHTML deckを正本にPDFを出し、依頼がある場合だけPPTXをbest-effort派生として出す。"
+  }
+]

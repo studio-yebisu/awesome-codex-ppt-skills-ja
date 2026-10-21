@@ -1,0 +1,55 @@
+{
+  "case_id": "ppt-design-skill",
+  "implemented_by": "Codex current repair; not new Opus production",
+  "current_pptx_sha256": "8deab35046f912b4d270f41fd9a8e7c7b15f9f6beba7975680152221e9225602",
+  "case_patch": {
+    "method": "公開ThemeComposerとstrict Presentation、文字/図形/bar_chartで架空のカフェ試行計画を5頁制作。暖色・和文書体・頁構成を固定し、受入条件R1–R7を実画像へ対応。人間承認R7は未達を保持。",
+    "prompt_text": "原典Build Modeと公開APIで架空のカフェ試行計画を自律制作。Theme Lock・受入条件・実画像の条件ID別検査を残し、人間の最終承認を取得済みとは扱わない。",
+    "sample_notice": "個別の人間承認は未取得の自律制作作例。制作側が現行全頁を実PowerPointで確認。現在版の独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全5頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/ppt-design-skill/render/slide-01.png",
+      "examples/repositories/ppt-design-skill/render/slide-02.png",
+      "examples/repositories/ppt-design-skill/render/slide-03.png",
+      "examples/repositories/ppt-design-skill/render/slide-04.png",
+      "examples/repositories/ppt-design-skill/render/slide-05.png"
+    ],
+    "notes": [
+      "架空の朝凪カフェで、通常10時開店前の8時から10時まで朝営業を試す提案です。2週間の平日10日間に限り、開始前に担当と準備量を決めます。",
+      "商品はコーヒーとトーストのセット1種類、仮価格650円です。調理と会計の役割を分け、通常営業の仕込みを圧迫しない方法を試します。",
+      "1日の販売数を15・25・35セットと仮定して売上を比較しています。価格650円を掛けた試算で、原価や追加人件費を引いた利益ではありません。",
+      "来店数・販売数・待ち時間・廃棄数を毎日記録する計画です。表の空欄は未収集を意味し、ゼロや達成済みという意味ではありません。",
+      "10日分を振り返り、需要と現場負担の両方を見て継続・変更・終了を選びます。数値の採否基準は開始前に店内で決め、今回の資料では未合意と明記します。"
+    ]
+  },
+  "guide_patch": {
+    "summary_ja": "構成と見た目の条件を先に定め、テーマを固定して公開APIで制作し、実画像を条件ごとに確認して修正する。",
+    "requirements": [
+      "Python3.10+ / pptx-designer1.0.0b11 / python-pptx1.0.2",
+      "PowerPoint、公式Shippori Mincho/BIZ UDPGothic。原典task toolsはsource/upstream/。"
+    ],
+    "steps": [
+      "原典task初期化を使い、source/task/cafe-pilotへbrief・構成・MUST/SHOULD/NICEの合格条件を置く。",
+      "recommend_stylesの候補と公開ThemeComposer atomsを比較し、theme lock・書体・配色を定める。",
+      "source/build_ppt_design_repository_example.pyから公開APIだけで役割図・試算・10日表を生成する。",
+      "原典inspectとPowerPoint描画を実行。全頁を視覚効果→重大欠陥の順に見て、theme aliasや字体fallbackを直す。"
+    ],
+    "limitations": [
+      "作例はBuild Modeと公開helperによる5頁。原典FreeStyle/VI Build/外部画像生成は未実施。",
+      "初回の構成・方向と最終結果の個別の人間承認は未取得。今回の自律制作委任とは区別し、納品版の人間承認R7はBLOCKED。",
+      "R1–R6は実PPTXと全頁PNGで確認し、R7は未達のまま条件ID別に記録。原典runtime trace検証の成功は人間承認や独立採点の代わりではない。",
+      "販売数・価格は架空の仮定、売上は利益ではなく実績未収集。判断基準の欄は未合意で、実店舗で開始前に決める。"
+    ],
+    "execution_type": "原典Build Modeと公開APIの自律制作作例。原典の納品版に必要な個別の人間承認は未達。",
+    "commands": [
+      "python source/build_ppt_design_repository_example.py --upstream source/upstream --input input/data.json --output-dir . --render",
+      "python source/render_pdf_previews.py render",
+      "python source/inspect_current.py"
+    ]
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native5.json",
+  "independent_current_version_review": "pending",
+  "distribution_replay": "source/distribution-replay.json"
+}

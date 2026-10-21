@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<!-- Original template: Copyright (c) 2026 att6113. MIT; see licenses/LICENSE-upstream.txt. -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>雨の日も迷わない、図書館イベント案内</title>
+<style>
+  /* ===== 主题色 (靛蓝瓷 默认) ===== */
+  /* 如需切换主题，整体替换以下6行 + accent色 */
+  :root {
+    --ink: #1a2e1f;    --ink-rgb: 26,46,31;
+    --paper: #f5f1e8;  --paper-rgb: 245,241,232;
+    --paper-tint: #ece7da;
+    --ink-tint: #253d2c;
+    --accent: #2d8a4e; --accent-rgb: 45,138,78;
+    --success: #16a34a; --warning: #d97706; --danger: #dc2626;
+    /* 字体 */
+    --serif-zh: 'Yu Mincho','Hiragino Mincho ProN',serif;
+    --sans-zh: 'Yu Gothic','Hiragino Kaku Gothic ProN',sans-serif;
+    --sans-en: 'Yu Gothic',sans-serif;
+    --mono: 'Consolas','Yu Gothic',monospace;
+  }
+
+  *,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+  html { font-size:16px; }
+  body {
+    font-family: var(--sans-zh); color: var(--ink); background: var(--paper);
+    overflow: hidden; height: 100vh; width: 100vw;
+  }
+
+  .deck-wrapper {
+    display: flex; height: 100vh; width: 100%;
+    overflow-x: auto; overflow-y: hidden;
+    scroll-snap-type: x mandatory; scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .deck-wrapper::-webkit-scrollbar { display: none; }
+
+  .slide {
+    flex: 0 0 100vw; height: 100vh; scroll-snap-align: start;
+    display: grid; grid-template-rows: auto 1fr auto;
+    padding: 3vh 5vw; position: relative; overflow: hidden;
+  }
+  .light { background: var(--paper); color: var(--ink); }
+  .dark  { background: var(--ink); color: var(--paper); }
+  .hero.light { background: linear-gradient(135deg,var(--paper),var(--paper-tint)); }
+  .hero.dark  { background: linear-gradient(135deg,var(--ink),var(--ink-tint)); }
+
+  .chrome {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 1vh 0 2vh;
+    font-family: var(--mono); font-size: clamp(10px,0.7vw,14px);
+    letter-spacing: .05em; opacity: .5; border-bottom: 1px solid;
+  }
+  .foot {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 2vh 0 1vh;
+    font-family: var(--mono); font-size: clamp(10px,0.65vw,13px); opacity: .4;
+    border-top: 1px solid;
+  }
+  .frame { display: flex; flex-direction: column; justify-content: center; padding: 2vh 0; height: 100%; }
+
+  .kicker { font-family:var(--mono); font-size:clamp(11px,0.8vw,15px); font-weight:500; letter-spacing:.15em; opacity:.6; text-transform:uppercase; margin-bottom:1.5vh; }
+  .h-hero { font-family:var(--serif-zh); font-weight:900; font-size:clamp(36px,6vw,80px); line-height:1.15; letter-spacing:-.02em; }
+  .h-xl { font-family:var(--serif-zh); font-weight:700; font-size:clamp(28px,3.5vw,52px); line-height:1.2; letter-spacing:-.01em; }
+  .h-sub { font-family:var(--serif-zh); font-weight:600; font-size:clamp(20px,2vw,32px); line-height:1.3; opacity:.8; margin-top:.5vh; }
+  .lead { font-family:var(--sans-zh); font-weight:300; font-size:clamp(15px,1.15vw,20px); line-height:1.7; opacity:.75; max-width:55vw; margin-top:2vh; }
+  .meta-row { display:flex; gap:.8vw; align-items:center; font-family:var(--mono); font-size:clamp(11px,0.7vw,14px); opacity:.55; margin-top:2vh; }
+
+  .grid-6 { display:grid; grid-template-columns:repeat(3,1fr); gap:2vw 3vh; margin-top:3vh; }
+  .grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:2vw 3vh; margin-top:3vh; }
+  .grid-3-3 { display:grid; grid-template-columns:repeat(3,1fr); gap:2vw 2vh; margin-top:3vh; }
+  .grid-2-7-5 { display:grid; grid-template-columns:7fr 5fr; gap:3vw; align-items:start; }
+  .grid-2-6-6 { display:grid; grid-template-columns:1fr 1fr; gap:3vw; align-items:start; }
+
+  .stat-card { padding:2.5vh 1.5vw; border-left:3px solid var(--accent); background:rgba(var(--ink-rgb),.03); }
+  .dark .stat-card { background:rgba(255,255,255,.05); }
+  .stat-label { font-family:var(--mono); font-size:clamp(10px,.7vw,13px); letter-spacing:.1em; opacity:.5; margin-bottom:.8vh; }
+  .stat-nb { font-family:var(--sans-en); font-weight:700; font-size:clamp(32px,3.5vw,56px); line-height:1; letter-spacing:-.03em; }
+  .stat-unit { font-family:var(--serif-zh); font-size:.5em; opacity:.6; margin-left:.15em; }
+  .stat-note { font-size:clamp(12px,.8vw,15px); opacity:.5; margin-top:.5vh; }
+
+  .frame-img { width:100%; border-radius:4px; overflow:hidden; position:relative; }
+  .frame-img.r-16x10 { aspect-ratio:16/10; }
+  .frame-img.r-3x4 { aspect-ratio:3/4; max-height:60vh; }
+  .frame-img img { width:100%; height:100%; object-fit:cover; object-position:top center; }
+  .img-cap { position:absolute; bottom:0; left:0; right:0; padding:.8vh 1vw; background:linear-gradient(transparent,rgba(0,0,0,.6)); font-family:var(--mono); font-size:clamp(9px,.6vw,12px); color:#fff; opacity:.8; }
+
+  .pipeline-section { margin-top:3vh; }
+  .pipeline-label { font-family:var(--mono); font-size:clamp(10px,.7vw,13px); letter-spacing:.1em; opacity:.5; margin-bottom:1.5vh; }
+  .pipeline { display:flex; gap:1.5vw; }
+  .step { flex:1; padding:2vh 1.2vw; border:1px solid; opacity:.35; }
+  .step.active { opacity:1; border-color:var(--accent); }
+  .step-nb { font-family:var(--mono); font-size:clamp(12px,.8vw,15px); opacity:.4; }
+  .step-title { font-weight:600; font-size:clamp(14px,1vw,18px); margin:.5vh 0; }
+  .step-desc { font-size:clamp(11px,.7vw,14px); opacity:.6; }
+
+  .callout { border-left:3px solid; padding:1.5vh 1.5vw; margin-top:2vh; font-family:var(--serif-zh); font-weight:600; font-size:clamp(14px,1.1vw,20px); opacity:.85; max-width:40vw; }
+  .callout-src { font-family:var(--mono); font-size:clamp(10px,.65vw,13px); opacity:.5; margin-top:.8vh; }
+
+  blockquote.bq { font-family:var(--serif-zh); font-weight:700; font-size:clamp(28px,4vw,64px); line-height:1.2; letter-spacing:-.01em; max-width:65vw; }
+
+  .col-header { font-family:var(--mono); font-size:clamp(10px,.7vw,13px); letter-spacing:.15em; opacity:.5; margin-bottom:1.5vh; }
+  .col-list { list-style:none; margin-top:2vh; }
+  .col-list li { font-size:clamp(13px,.95vw,17px); line-height:1.6; padding:.6vh 0; border-bottom:1px solid; opacity:.4; }
+  .before-col { opacity:.5; }
+  .after-col .col-list li { opacity:.7; }
+
+  .bg-ornament { position:absolute; font-family:var(--serif-zh); font-size:clamp(120px,20vw,300px); font-weight:900; opacity:.03; right:-2vw; bottom:-5vh; line-height:1; pointer-events:none; user-select:none; }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .anim { animation:fadeUp .6s ease-out both; }
+  .anim-d1 { animation-delay:.1s; } .anim-d2 { animation-delay:.2s; }
+  .anim-d3 { animation-delay:.3s; } .anim-d4 { animation-delay:.4s; }
+  .anim-d5 { animation-delay:.5s; } .anim-d6 { animation-delay:.6s; }
+
+  .progress-bar { height:3px; background:var(--accent); width:0; transition:width .3s; position:fixed; top:0; left:0; z-index:200; }
+  #nav { position:fixed; bottom:3vh; left:50%; transform:translateX(-50%); display:flex; gap:.8vw; z-index:100; }
+  #nav .dot { width:8px; height:8px; border-radius:50%; background:currentColor; opacity:.25; cursor:pointer; transition:opacity .2s,transform .2s; }
+  #nav .dot.active { opacity:.8; transform:scale(1.4); }
+
+  @media (max-width:768px) {
+    .slide { padding:2vh 4vw; }
+    .h-hero { font-size:clamp(28px,8vw,42px); }
+    .lead { max-width:85vw; }
+    .grid-2-7-5, .grid-2-6-6 { grid-template-columns:1fr; }
+    .grid-6 { grid-template-columns:repeat(2,1fr); }
+    .pipeline { flex-direction:column; }
+    .callout, blockquote.bq { max-width:85vw; }
+  }
+
+/* Japanese adaptation: local fonts, line spacing, larger metadata, equal comparison weight. */
+ .h-hero{line-height:1.38;font-size:clamp(36px,5vw,80px)}.h-xl{line-height:1.4}
+ .lead{font-size:clamp(18px,1.4vw,27px);font-weight:400;max-width:80vw;opacity:.85}
+ .chrome,.foot{font-size:clamp(12px,.9vw,18px);opacity:.7}.foot{padding-bottom:2vh}
+ .kicker,.meta-row,.stat-label,.stat-note,.col-header{font-size:clamp(14px,1.1vw,22px);opacity:.75}
+ .stat-unit{opacity:.85}.stat-nb{font-size:clamp(32px,3vw,56px)}.stat-note{margin-top:1vh}
+ .callout{max-width:80vw;font-size:clamp(18px,1.5vw,28px);line-height:1.8}
+ .compare{margin-top:5vh}.before-col{opacity:1}.col-list li,.after-col .col-list li{font-size:clamp(17px,1.3vw,25px);opacity:.85;line-height:1.8;padding:1.2vh 0}
+ .closing{font-family:var(--serif-zh);font-size:clamp(25px,2.7vw,45px);font-weight:600}
+ #nav{color:var(--accent);bottom:1.8vh}#nav .dot{width:10px;height:10px}
+ </style>
+</head>
+<body>
+<div class="progress-bar" id="progressBar"></div>
+<div class="deck-wrapper" id="deck">
+<section class="slide hero dark" aria-label="雨の日も迷わない、図書館イベント案内"><div class="chrome"><div>みどり図書館 · 参加案内の例</div><div>01 / 06</div></div><div class="frame"><div class="kicker anim">雨の午後に、本と出会う</div><h1 class="h-hero">雨の日も迷わない、<br>図書館イベント案内</h1><p class="lead">出発前・入口・会場。<br>三つの確認で、落ち着いて参加する。</p><div class="meta-row">架空の「みどり図書館」読書会を使った案内例</div></div><div class="foot"><div>図書館・催し・日時は架空の設定</div><div>雨の日の読書会</div></div></section>
+<section class="slide light" aria-label="まず、今日の予定を確認"><div class="chrome"><div>みどり図書館 · 参加案内の例</div><div>02 / 06</div></div><div class="frame"><div class="kicker anim">例の読書会について</div><h2 class="h-xl">まず、今日の予定を確認</h2><div class="grid-6"><div class="stat-card"><div class="stat-label">開始</div><div class="stat-nb">14:00</div><div class="stat-note">受付は13:45から</div></div><div class="stat-card"><div class="stat-label">所要時間</div><div class="stat-nb">60<span class="stat-unit">分</span></div><div class="stat-note">15:00終了予定</div></div><div class="stat-card"><div class="stat-label">会場</div><div class="stat-nb">2<span class="stat-unit">階</span></div><div class="stat-note">交流室</div></div><div class="stat-card"><div class="stat-label">参加費</div><div class="stat-nb">無料</div><div class="stat-note">予約者向けの読書会</div></div><div class="stat-card"><div class="stat-label">持ち物</div><div class="stat-nb">1<span class="stat-unit">冊</span></div><div class="stat-note">紹介したい本</div></div><div class="stat-card"><div class="stat-label">入口</div><div class="stat-nb">正面</div><div class="stat-note">傘は入口の傘立てへ</div></div></div><p class="lead">この予定は説明用の設定です。参加する催しの案内に置き換えてください。</p></div><div class="foot"><div>図書館・催し・日時は架空の設定</div><div>雨の日の読書会</div></div></section>
+<section class="slide light" aria-label="出発前に、案内をもう一度"><div class="chrome"><div>みどり図書館 · 参加案内の例</div><div>03 / 06</div></div><div class="frame"><div class="kicker anim">家を出る前のひと手間</div><h2 class="h-xl">出発前に、案内をもう一度</h2><p class="lead">開催状況と会場変更を、主催者の最新のお知らせで確認。<br>予約済みなら、受付で見せる画面をすぐ開けるように。</p><div class="callout">保存するのは「日時・会場・問い合わせ先」。<br>スクリーンショットにも、更新日を残す。</div><p class="lead">判断に迷ったら、案内に載っている窓口へ。<br>雨の強さだけで開催・中止を決めつけない。</p></div><div class="foot"><div>図書館・催し・日時は架空の設定</div><div>雨の日の読書会</div></div></section>
+<section class="slide hero dark" aria-label="着いたら、どこへ？"><div class="chrome"><div>みどり図書館 · 参加案内の例</div><div>04 / 06</div></div><div class="frame"><div class="kicker anim">入口で、ひと呼吸</div><h1 class="h-hero">着いたら、<br>どこへ？</h1><p class="lead">まずは入口の掲示で、イベント名と会場を照合。<br>見つからなければ、受付でイベント名を伝える。</p></div><div class="foot"><div>図書館・催し・日時は架空の設定</div><div>雨の日の読書会</div></div></section>
+<section class="slide dark" aria-label="お知らせに合わせて、次の行動を"><div class="chrome"><div>みどり図書館 · 参加案内の例</div><div>05 / 06</div></div><div class="frame"><div class="kicker anim">会場の掲示を読んだら</div><h2 class="h-xl">お知らせに合わせて、次の行動を</h2><div class="grid-2-6-6 compare"><div class="before-col"><div class="col-header">予定どおりの案内</div><h3 class="h-sub">受付へ進む</h3><ul class="col-list"><li>イベント名と開始時刻を確かめる</li><li>傘を片づけ、予約画面を用意する</li><li>会場へは館内表示に沿って進む</li></ul></div><div class="after-col"><div class="col-header">変更・中止のお知らせ</div><h3 class="h-sub">変更内容を確かめる</h3><ul class="col-list"><li>会場だけの変更か、開催中止かを読む</li><li>新しい会場と時刻を確認する</li><li>不明点は受付で聞いてから移動する</li></ul></div></div></div><div class="foot"><div>図書館・催し・日時は架空の設定</div><div>雨の日の読書会</div></div></section>
+<section class="slide hero light" aria-label="確認するのは、この三つ。"><div class="chrome"><div>みどり図書館 · 参加案内の例</div><div>06 / 06</div></div><div class="frame"><div class="kicker anim">次に参加するときは</div><h1 class="h-hero">確認するのは、<br>この三つ。</h1><p class="lead closing">開催状況　／　入口　／　会場</p><p class="lead">最新の案内を保存して、余裕を持って出発。<br>迷ったら、イベント名を添えて受付へ。</p></div><div class="foot"><div>図書館・催し・日時は架空の設定</div><div>雨の日の読書会</div></div></section>
+
+</div>
+<div id="nav"></div>
+
+<script>
+(function(){
+  const deck=document.getElementById('deck'), slides=document.querySelectorAll('.slide'), nav=document.getElementById('nav'), progress=document.getElementById('progressBar');
+  slides.forEach((_,i)=>{const d=document.createElement('span');d.className='dot'+(i===0?' active':'');d.addEventListener('click',()=>slides[i].scrollIntoView({behavior:'smooth'}));nav.appendChild(d);});
+  function onScroll(){
+    const r=deck.scrollLeft/(deck.scrollWidth-deck.clientWidth);
+    progress.style.width=(r*100)+'%';
+    let ai=0; slides.forEach((s,i)=>{const b=s.getBoundingClientRect(),m=b.left+b.width/2;if(m>0&&m<window.innerWidth)ai=i;});
+    document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===ai));
+  }
+  deck.addEventListener('scroll',onScroll);
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();const n=slides[Math.min(currentSlide()+1,slides.length-1)];n.scrollIntoView({behavior:'smooth'});}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();const p=slides[Math.max(currentSlide()-1,0)];p.scrollIntoView({behavior:'smooth'});}
+  });
+  function currentSlide(){let i=0;slides.forEach((s,idx)=>{const r=s.getBoundingClientRect();if(r.left<window.innerWidth/2)i=idx;});return i;}
+  onScroll();
+})();
+</script>
+<script id="catalog-bridge">
+ (()=>{const slides=[...document.querySelectorAll('.slide')],deck=document.getElementById('deck');let last=-1;
+ const current=()=>Math.max(0,Math.min(slides.length-1,Math.round(deck.scrollLeft/innerWidth)));
+ const notify=()=>{const i=current();if(i!==last){last=i;if(parent!==window)parent.postMessage({type:'yebisu-page',index:i},location.origin)}};
+ addEventListener('message',e=>{if(e.source!==parent||parent===window||e.origin!==location.origin||e.data?.type!=='yebisu-slide')return;const i=e.data.index;if(Number.isInteger(i)&&i>=0&&i<slides.length)slides[i].scrollIntoView({behavior:'smooth'})});
+ addEventListener('keydown',e=>{if(e.key==='Escape'&&parent!==window)parent.postMessage({type:'yebisu-close'},location.origin)});
+ deck.addEventListener('scroll',notify);notify();})();
+ </script>
+</body>
+</html>

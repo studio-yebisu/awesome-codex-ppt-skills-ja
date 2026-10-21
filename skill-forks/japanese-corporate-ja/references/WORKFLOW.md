@@ -1,40 +1,11 @@
-# gonta223/japanese-corporate-pptx-skillの日本語制作
+# 日本語会議資料の制作
 
-原典: https://github.com/gonta223/japanese-corporate-pptx-skill/tree/05480bfa2d8f097ab397861cbe390429e1dbb824
+原典はMITの指示Skillと15型PPTX。一般の制作工程は上位SKILL.md、原典全工程はupstream/skills/japanese-corporate-pptx/SKILL.mdを読む。
 
-公式15型PPTXから1・2・11・9・8・14枚目を選択し、SKILLの規約に従ってネイティブ図形・チャート・表を編集。専用生成APIは同梱されていない。
+新規の題材では原典6参照・15型・参照優先順・視覚調査・style ledgerから始める。実値と仮説/提案/目標を区別し、担当間の受け渡しと判断条件をnative部品で示す。全頁の互換描画、実サイズ目視、overflow、contact、package、再読込とJTC判定までを残す。
 
-原典の15型PowerPointテンプレートから必要な型を選び、図形・文字・表・グラフを編集する。企画の結論、担当、期日、確認方法を日本語で書く。原典の図形を勝手に共通HTMLへ置き換えない。
+今回の6頁は架空EC月次会議の例。現在の再生成入口はexample/source/rebuild.py、手順はexample/REPRODUCE.md。references/example-source/build_japanese_repository_examples.pyは初回制作コードの保存であり現版の再生成器ではない。
 
-## 作例
+修復前の調査は3画像検索0件を記録したうえで、公式6資料の実図/PDFを確認。公開物へ外部画像・文言・数値を取り込んでいない。全6頁の実表示、nativeチャート1/表2、代表セルの編集・保存・再表示と配布再実行はexample/QA.jsonと各receiptを確認する。独立JTC17/20受理と再評価は未完了。
 
-- くらし便 EC事業 9月報告 / 6枚 / pptx
-- カタログ内の案内: repository.html?repo=gonta223/japanese-corporate-pptx-skill
-- 当面のローカル入口: http://127.0.0.1:8847/repository.html?repo=gonta223/japanese-corporate-pptx-skill
-- 入力、発表者ノート、依頼文、PROVENANCE.json、QA.jsonを完成例に同梱。
-
-## 環境
-
-- Python 3.13 / python-pptx / lxml / Pillow
-- Microsoft PowerPoint 16.0 と PowerShell 7（PNG/PDF描画）
-- 同梱の japanese-corporate-ponchi-template.pptx
-
-## 元の制作コマンド
-
-    git clone https://github.com/gonta223/japanese-corporate-pptx-skill .build/actual-upstreams/gonta223__japanese-corporate-pptx-skill
-
-    git -C .build/actual-upstreams/gonta223__japanese-corporate-pptx-skill checkout 05480bfa2d8f097ab397861cbe390429e1dbb824
-
-    python -m venv .venv
-
-    .venv\Scripts\python -m pip install python-pptx lxml Pillow
-
-    .venv\Scripts\python tools/build_japanese_repository_examples.py --only gonta --render
-
-## 確認範囲
-
-- 独立した生成プログラムではなく指示SkillとPPTXテンプレートを用いた制作。原典テンプレートの再配布はMIT LICENSEを保持。
-
-## 権利
-
-原典条件はupstream内のLICENSE/NOTICE等を読む。日本語の独自案内はカタログの条件、上流由来のコードは各原典の条件を引き継ぐ。公開画像や依存書体の条件を一括で保証するものではない。
+原典の固定commit・LICENSEを保持する。外部資料やOSフォントの再配布権を一括で保証しない。

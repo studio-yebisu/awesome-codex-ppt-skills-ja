@@ -1,0 +1,132 @@
+{
+  "status": "original_build_audit_all6_visual_checked_recheck_pending",
+  "page_count": 6,
+  "original_spec_validate_passed": true,
+  "original_build_status": "ok",
+  "original_audit_completed": true,
+  "original_errors": [],
+  "original_warnings": [],
+  "build_report": "source/pipeline/build-final.json",
+  "execution": "source/pipeline/execution.json",
+  "all6_images_viewed_after_repair": true,
+  "powerpoint_version": "16.0",
+  "actual_pdf_fonts": "source/pipeline/pdf-fonts.json",
+  "native_inventory": "source/pipeline/native-elements.json",
+  "current_pptx": ".pptwise/input/deck.pptx",
+  "pptx_sha256": "18c15404d5a658092ce0df60bd2844dcf119466cb1c8edd8f9c5869540743be3",
+  "font_adapter": {
+    "file": "source/pptwise_ja_font_adapter.mjs",
+    "scope": "In-memory SAFE_FONTS/CJK_SAFE_FACES additions only",
+    "added": [
+      "Zen Kaku Gothic New",
+      "Space Grotesk"
+    ],
+    "original_chunk_sha256": "36c3b6ef31a0e36b5814e357e8033b12ae61f9e90537b0ddb6e54c7b19df2d1e"
+  },
+  "signature_recipes": {
+    "pages": 6,
+    "offered": 5,
+    "drawn": 1,
+    "perPage": [
+      {
+        "page": 1,
+        "pageId": "open",
+        "file": "pages/open.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "photograph",
+          "look": "The cover drawn over a photograph, the face's own lettering kept",
+          "write": "background {\"kind\": \"asset\", \"asset_id\": \"<a picture>\"}",
+          "changes": [
+            "add a background photograph"
+          ]
+        }
+      },
+      {
+        "page": 3,
+        "pageId": "journey",
+        "file": "pages/journey.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "timetable",
+          "look": "A plan month by month",
+          "write": "gantt (2 to 6 items, axis_labels)",
+          "changes": [
+            "turn the steps into gantt (2 to 6 items, axis_labels)",
+            "the recipe has no room for the icon_cards"
+          ]
+        }
+      },
+      {
+        "page": 4,
+        "pageId": "network",
+        "file": "pages/network.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "allotment",
+          "look": "A whole cut into shares",
+          "write": "chart (1 category, chart_type stacked, direction horizontal, emphasis_label, emphasis on a series) + icon_cards (2 to 3 items, optional)",
+          "changes": [
+            "add chart (1 category, chart_type stacked, direction horizontal, emphasis_label, emphasis on a series)",
+            "the recipe has no room for the hub_spoke"
+          ]
+        }
+      },
+      {
+        "page": 5,
+        "pageId": "space",
+        "file": "pages/space.json",
+        "drawnBy": "allotment"
+      },
+      {
+        "page": 6,
+        "pageId": "close",
+        "file": "pages/close.json",
+        "drawnBy": null,
+        "nearest": {
+          "id": "photograph",
+          "look": "The ending drawn over a photograph, the face's own lettering kept",
+          "write": "background {\"kind\": \"asset\", \"asset_id\": \"<a picture>\"}",
+          "changes": [
+            "add a background photograph"
+          ]
+        }
+      }
+    ]
+  },
+  "independent_recheck": "pending",
+  "not_performed": [
+    "他4件の提示signature、画像取得・生成、theme再切替、新規npm ci、Officeデータ連動、過去の個別人間承認・利用者採用。"
+  ],
+  "zip_replay": {
+    "status": "pass",
+    "evidence": "source/distribution-replay.json",
+    "both_archives_executed": true,
+    "render_replayed": true,
+    "all_pages_rgb_difference": 0
+  },
+  "fictional_signature_inputs": null,
+  "image_generation": "not_used_in_current_version",
+  "original_self_check": "CLI JSON build/fit report only",
+  "separate_catalog_visual_check": "PowerPoint16 PDF-derived PNGs individually inspected, not original self-check",
+  "source_data": {
+    "file": "input/oss-font-kit.json",
+    "sha256": "aab65d0e2ac99c70b0f97a3da6e7d69f047a361b5bc501314eb7b3833e8d8530",
+    "families": 30,
+    "files": 45,
+    "presets": 15,
+    "ja": 17,
+    "latin": 13
+  },
+  "superseded_round4_issue": {
+    "issue": "Invented allocation figures and concept image supplied to origins to satisfy its recipe contrary to original rule",
+    "correction": "Changed all6pages to actual font-catalog topic; actual17/13counts fit allotment with no new facts/pictures",
+    "not_treated_as_acceptable_assumption": true
+  },
+  "visual_observations": [
+    "All6PowerPointimages read; pages1/2/6 unchanged by final copy refinements.",
+    "Page3steps and actualpreset examples share frame; no textcut/overlap.",
+    "Page4fourunordered relationships marked as such.",
+    "Page5actual17/13bar,bracket,legend and2cards; no photo or fakepercent."
+  ]
+}

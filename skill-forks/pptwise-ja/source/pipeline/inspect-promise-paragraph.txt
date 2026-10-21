@@ -1,0 +1,26 @@
+component paragraph on page promise (2 of 6): content, kind "statement"
+name: Prose
+what it is: A block of running text, set as written. The paragraph a printed page gives room to when the sentences have to stay sentences.
+choose it: Choose it when the argument lives in connected sentences and chopping it into fragments would lose it. Use bullets when the items are genuinely parallel lines.
+not for: Parallel items, which belong in bullets.
+full-body: no
+schema:
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "component": "paragraph",
+  "type": "object",
+  "properties": {
+    "type": {
+      "type": "string",
+      "const": "paragraph"
+    },
+    "text": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "type",
+    "text"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Advanced Analytics Readout Archetype</title>
+  <link rel="stylesheet" href="../../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../../assets/css/base.css">
+  <link rel="stylesheet" href="../../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../../assets/css/components.css">
+  <link rel="stylesheet" href="../../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../../assets/themes/mono.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Advanced Analytics Readout Archetype">
+    <section class="slide dark cover simple-title-cover dark-cover" data-title="Cover">
+      <div class="default-opening-main">
+        <div class="slide-kicker">Full-deck archetype</div>
+        <h1 class="slide-title">Advanced analytics readout</h1>
+        <p class="slide-subtitle">A reusable storyline for explaining analytical results, drivers, scenarios, caveats, and actions.</p>
+        <div class="cover-meta">Mono theme | Data / model / insight-to-action logic</div>
+      </div>
+      <footer class="footer"><span>Analytics readout archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Analytical answer">
+      <header><div class="slide-kicker">Analytical answer</div><h2 class="slide-title">The readout should answer the business question before describing the model</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="safe-stack">
+          <div class="metric-strip">
+            <div class="metric"><strong>Q</strong><span>Business question the analysis answers.</span></div>
+            <div class="metric"><strong>Finding</strong><span>Primary result or pattern.</span></div>
+            <div class="metric"><strong>Driver</strong><span>Most important explanatory factor.</span></div>
+            <div class="metric"><strong>Action</strong><span>Decision or intervention the result changes.</span></div>
+          </div>
+          <div class="callout">Use the first page to translate analytics into management action; keep method detail for the next page or appendix.</div>
+        </div>
+      </div>
+      <footer class="footer"><span>Analytics readout archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Method and data">
+      <header><div class="slide-kicker">Method and data</div><h2 class="slide-title">Method pages should make the analysis credible without becoming model documentation</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <table class="comparison-table">
+          <thead><tr><th class="row-head">Element</th><th>What to show</th><th>Why it matters</th><th>Common fallback</th></tr></thead>
+          <tbody>
+            <tr><td class="row-head">Population</td><td>Rows, segments, time period</td><td>Defines where the result applies</td><td>State scope limits</td></tr>
+            <tr><td class="row-head">Features</td><td>Variables or evidence families</td><td>Explains driver interpretation</td><td>Group into themes</td></tr>
+            <tr><td class="row-head">Method</td><td>Model or analytical approach</td><td>Builds trust in the result</td><td>Use plain language</td></tr>
+            <tr><td class="row-head">Caveats</td><td>Bias, missing data, confidence</td><td>Prevents overclaiming</td><td>Use open questions</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="footer"><span>Analytics readout archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Driver analysis">
+      <header><div class="slide-kicker">Driver analysis</div><h2 class="slide-title">Driver pages should connect the strongest pattern to the action it changes</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-rail">
+          <div class="region">
+            <div class="ranked-bars">
+              <div class="rank-row"><div class="rank-num">1</div><div class="bar-label">Primary driver</div><div class="rank-track"><div class="rank-fill" style="--value: 100%"></div></div><div class="bar-value">100</div></div>
+              <div class="rank-row"><div class="rank-num">2</div><div class="bar-label">Secondary driver</div><div class="rank-track"><div class="rank-fill" style="--value: 76%"></div></div><div class="bar-value">76</div></div>
+              <div class="rank-row"><div class="rank-num">3</div><div class="bar-label">Segment effect</div><div class="rank-track"><div class="rank-fill" style="--value: 58%"></div></div><div class="bar-value">58</div></div>
+              <div class="rank-row"><div class="rank-num">4</div><div class="bar-label">Residual factor</div><div class="rank-track"><div class="rank-fill" style="--value: 30%"></div></div><div class="bar-value">30</div></div>
+            </div>
+          </div>
+          <aside class="region is-muted"><div class="region-body is-centered"><h3 class="region-title">Interpretation</h3><p class="region-copy">Ranked drivers should lead to a changed threshold, segment focus, policy, or next experiment.</p><div class="callout">Do not show model output without the management implication.</div></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Analytics readout archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Segment readout">
+      <header><div class="slide-kicker">Segment readout</div><h2 class="slide-title">Segment pages should show where the average hides different actions</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <table class="comparison-table">
+          <thead><tr><th class="row-head">Segment</th><th>Pattern</th><th>Driver</th><th>Recommended action</th><th>Caveat</th></tr></thead>
+          <tbody>
+            <tr><td class="row-head">Segment A</td><td class="is-best">Highest response</td><td>Primary driver</td><td>Prioritize intervention</td><td>Watch capacity</td></tr>
+            <tr><td class="row-head">Segment B</td><td>Moderate response</td><td>Secondary driver</td><td>Test tailored offer</td><td>Needs sample check</td></tr>
+            <tr><td class="row-head">Segment C</td><td>Low response</td><td>Weak fit</td><td>Deprioritize or redesign</td><td>Validate exclusions</td></tr>
+            <tr><td class="row-head">Segment D</td><td>Unstable result</td><td>Data quality</td><td>Collect more evidence</td><td>Do not overclaim</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="footer"><span>Analytics readout archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Scenario sensitivity">
+      <header><div class="slide-kicker">Scenario sensitivity</div><h2 class="slide-title">Sensitivity should show whether the recommended action survives assumption changes</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <table class="sensitivity-grid">
+          <thead><tr><th>Scenario</th><th>Assumption</th><th>Low case</th><th>Base case</th><th>High case</th><th>Implication</th></tr></thead>
+          <tbody>
+            <tr><td class="row-head">Adoption</td><td>Target population response</td><td class="is-risk">Low</td><td>Plan</td><td class="is-upside">High</td><td>Controls benefit timing.</td></tr>
+            <tr><td class="row-head">Cost</td><td>Intervention cost per record</td><td class="is-upside">Low</td><td>Plan</td><td class="is-risk">High</td><td>Sets viability threshold.</td></tr>
+            <tr><td class="row-head">Quality</td><td>False positive / exception load</td><td class="is-upside">Contained</td><td>Moderate</td><td class="is-risk">High</td><td>Defines governance need.</td></tr>
+            <tr class="total-row"><td class="row-head">Decision read</td><td>Combined case</td><td>Pilot only</td><td>Proceed with gates</td><td>Scale faster</td><td>Use gates where low case changes the answer.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="footer"><span>Analytics readout archetype</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Actions">
+      <header><div class="slide-kicker">Actions</div><h2 class="slide-title">The close should convert insight into action, owner, and next test</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <table class="decision-log">
+          <thead><tr><th>Action</th><th>Analytical basis</th><th>Owner</th><th>Next test</th></tr></thead>
+          <tbody>
+            <tr><td>Prioritize segment</td><td class="is-open">Highest response and strongest driver</td><td>Business owner</td><td>Pilot threshold</td></tr>
+            <tr><td>Change policy</td><td>Base case survives sensitivity</td><td>Ops lead</td><td>Exception rate</td></tr>
+            <tr><td>Improve data</td><td>One segment unstable</td><td>Analytics lead</td><td>Data quality check</td></tr>
+            <tr><td>Review impact</td><td>Decision depends on adoption</td><td>SteerCo</td><td>30-day readout</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <footer class="footer"><span>Analytics readout archetype</span><span class="page-number"></span></footer>
+    </section>
+  </main>
+  <script src="../../../assets/js/runtime.js"></script>
+</body>
+</html>

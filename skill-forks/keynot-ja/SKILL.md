@@ -1,25 +1,31 @@
 ---
 name: keynot-ja
-description: Keynotのブランド抽出と元HTML例のCSS・inline navigation/reveal/swipe/fullscreenを使い、日本語の単一HTMLスライドを作る。
-license: MIT
+description: ブランドの色・字体・余白の規則を、資料全体に一貫して使う。
 ---
-# Keynot 日本語ガイド
+# ブランド規則を資料に反映する
 
-原典: **shawnzam/keynot**、固定commit `d1f9e449ddb89da707b489cb69c520a64975b47c`、MIT ©2026 Shawn Zamechek。字体は別のOFL-1.1です。
+固定原典・commit・利用条件は[SOURCE.json](SOURCE.json)と同梱LICENSE。字体等の別条件を保持する。原典の全契約は[未変更SKILL](example/source/upstream/skills/keynot/SKILL.md)を読む。以下は日本語の入口で、原典QAを省略する許可ではない。
 
-このMDだけをAIへ渡す場合も、次の固定原典を読んで実物を取得してください。
+## 手順
 
-- [全文SKILL](https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/skills/keynot/SKILL.md)
-- [元HTML例・CSS・完全controller](https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/examples/keynot-for-zombies.html)
-- [原文MIT](https://github.com/shawnzam/keynot/blob/d1f9e449ddb89da707b489cb69c520a64975b47c/LICENSE)
+1. PDF・画像・URL・文章など実際のブランド資料を読み、正確な色値、表示・本文の字体、使用範囲、ロゴ規則を記録する。今回は色指定済みの文章を使う。
+2. 原稿を表紙・分割面・手順・引用・締めの構成へ分ける。
+3. CSS変数へ記録値を渡し、原典の完成JSを一体として保持する。
+4. 一頁ごとに編集し、ページ数の計算、URLからの直接移動、前回ページの記憶、端末を横向きにする案内を維持する。
+5. 全頁をブラウザーで確認する。印刷・別端末・編集保存は実行した場合だけ検証済みと記す。
 
-日本語再現には、同じ配布元の **keynot-ja.zip**（`downloads/keynot-ja.zip`）を取得し、`example/input/`のブランド/原稿、`example/source/`の原典原本・CSS・HTML・JS・rebuild.py、`example/source/fonts/`の実TTF/OFLを使います。[作例](example/index.html)と[一式ZIPへのサイト相対リンク](../../downloads/keynot-ja.zip)も利用できます。MD単独では日本語ソースや字体が添付されたとは仮定しないでください。
+## 検証と引き渡し
 
-1. [BRAND](example/input/BRAND.md)を自分のブランド記述へ置換。原典Step1のprimary/accent/neutrals正確なhex、serif/sans組、色の使用比率、版式・声・文字wordmarkを、コードを書く前に[brand-record](example/input/brand-record.json)へ抽出する。
-2. [依頼文](example/PROMPT.md)と[原稿](example/input/MANUSCRIPT.md)から各頁の一つの役目を決める。原典のtitle、split panel、approach rows、large display quote、feature bars、closeを内容に合わせ、同じカード列を反復しない。
-3. 元HTMLのdeck/slide/nav/rotate/printとCSSを実使用する。[原本](example/source/upstream/)を保持し、和文サイズ・安全な行高・字間・ブランド色・SVG説明図は[local CSS](example/source/adaptation.css)へ分ける。
-4. 完全inline JSを一つの単位で保存する。go()の`cur = (n + slides.length) % slides.length`、前後の±1、swipeの差、const slidesの宣言を改変しない。JSを含むHTMLへ一括文字置換をしない。日本語chromeの対象箇所だけを編集し、処理後にJS部を読む。
-5. CDN字体は公式固定TTFのinline @font-faceへ置換し、元OFLを保持。作例のGoogle Fonts pinは `66928797f271fed5ee428544e7229685e2d90127`、[URL/hash](example/source/FONT-SOURCE.json)から取得可能。OS字体の抽出や商標・外部写真を流用しない。
-6. `python example/source/rebuild.py` で単一HTMLを作る。元controllerの算術はそのまま、同一originの0-based yebisu-slide/pageは[末尾patch](example/source/controller.patch)だけ追加。字体/CSS/JS/原文条件を内包する。
+指定色7項目を実抽出し全6頁を実描画・目視。3頁のローラーと「日」を離し、6頁の締めを指示書の明朝へ統一。1頁は原典navが自動で消えるまで待ち実撮影。
 
-編集はHTML/SVG/CSS/JS。作例は架空の体験案、日時・会場・費用・参加人数は未定で、実施実績・安全性能の実証を発明しません。承認済み自律制作でブランドと構成を判断し、工程ごとに新規確認を挟みません。確認は必要な梱包build、代表出力の初回表示と元navigation1→2、短いSKILL検証だけ。[QA](example/QA.json)に未実施の範囲を保持し、全頁詳細検査・独立採点・ZIP再実行を必須にしません。
+上記は同梱作例の確認結果です。新しい題材では原典に指定された検査を実行します。検査失敗を閾値緩和や未実施の成功表記で解消しない。独立評価と実機発表の確認は別に記録する。
+
+## 作例と制約
+
+[再生成・実施範囲](example/README.md)と[QA](example/source/repair-qa.json)。
+
+- 色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。
+- 紙70/黒28/赤2は設計目標であり面積の測定値ではない。
+- 元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。
+
+元SKILL・LICENSE・NOTICE・実素材と出所を配布に残す。秘密情報・モデル実行履歴・依存キャッシュを追加しない。

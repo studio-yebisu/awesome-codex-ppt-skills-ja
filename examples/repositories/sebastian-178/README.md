@@ -1,27 +1,30 @@
-# 動画一本を、教材へ。
+# 読み手が決めることから逆算し、主張と根拠を工程・比較表・判断図へ整理する。
 
-日本語7頁の編集可能HTMLデッキ。架空・未実施の教材化企画例。
+数値の根拠がない箇所は、工程図・比較表・判断の分岐を選んだ。判断図には接続線を入れ、小テストは3欄の幅をそろえ、日本語を句のまとまりで読めるようにした。
 
-## 開く
-index.htmlはCSS、OSS日本語フォント、最小navigationを内包した単一ファイルです。ネット取得なしで開けます。←/→、PageUp/PageDown、Space、横swipeでページ送り。Oで一覧、Escapeで戻る。ボタンでも操作できます。
+## 入力と出力
 
-source/index.htmlは層別CSSと自作JSを読む編集用です。文言・table・工程をHTMLで編集できます。PPTXはありません。
+入力：読者の判断、答え、根拠となる原稿・データ。作例は動画を教材へ組み替える架空の7頁。
 
-## 由来
-NomiciAI/mbb-page-maker固定commit 36074669b8041783d9637a87dfed2a8733d47357のstarter、CSS5層＋blue theme、工程・比較表・関係構造・変換・decision logを使用。テンプレの名札だけを替えず、教材化の判断に沿ってexhibitを組み直しました。
-原典runtime.js・QA/export scriptsは実行していません。自作最小navigationへ差替えた派生版で、原典の全機能・全QAとの同等性を保証しません。
+出力：原典runtime付きHTML7頁、単体package、PNG/PDF、Golden Path検査記録。
 
-## PC連携
-HTTP同一originで親からyebisu-slide/index（0-based整数）を受信し、yebisu-page/indexを返します。送信元parent・origin・範囲を確認します。file://はoriginがnullのため親連携を送信しませんが、内部ナビゲーションは利用できます。外側PC連携の実環境確認はQAをご覧ください。
+## 自分の資料へ使う
 
-## ライセンス
-root LICENSE Apache-2.0を維持。原典SKILLはMITを記載しており不一致があります。原文はsource/SKILL.mdへ保持。変更点はPROVENANCEに記録。Saitop at NomiciAI <saitop@nomici.ai>への既存帰属を保持。原典webfontは使わず、SIL OFLのNoto Sans CJK JPサブセットを同梱しました。
+1. 読者が何を決めるかを先に定め、答えと根拠を分けて書く。分からない数値を作らない。
+2. 原典content-to-exhibit-routerから、比較には表、順序には工程図、理由には関係図を選ぶ。
+3. 1600×900の原典starterと6層CSS、元runtimeを保ち、source/build.pyで本文と日本語字体を生成する。
+4. Golden Pathのquality→contrast→fit→renderを実行し、単体packageと全頁PNG/PDFを確認する。Windows差分はパス変換だけに限定する。
 
-## 確認の範囲
-QA.jsonに実施・未実施を記録。数値成果、公開実績、実ユーザー資料は含みません。
+## 実際に使った機能
 
-## 実描画
-許可済ユーザーPCの既存Google ChromeとPlaywrightで7頁のPNGとPDFを出力。内部arrowとoverviewを確認。初回表示で5頁の日本語ラベル割れを修正し、対象頁を再確認しました。追加インストール・上流runtime/QA/export実行なし。PDFはPNGと同じHTMLから実出力、別個の全頁精査は未実施。
+- 原典starter、6層CSS、原典runtime.jsをそのまま使用し、親との接続だけ局所bridgeへ分離。
+- 日本語入力と公式字体subsetから7頁を生成し、quality/contrast/fit/renderの原典4工程をWindowsのパス差分だけで再実行。
+- 実際のpackage出力から全7 PNG/PDFを更新。判断図の分岐、3欄の本文、24pxの表見出しを確認。
 
+## 未実施と条件
 
-2026-10-14 字体置換: Noto Sans CJK JPは公式 notofonts/noto-cjk固定commit f8d157532fbfaeda587e826d4cd5b21a49186f7c のOTFをsource/fonts/へ未変更保存し、そこからsubset・HTML埋込みを作り直しました。OFLはsource/fonts/OFL.txt、出所はsource/FONT-SOURCE.json。旧クラウド制作記録はPROVENANCE-CLOUD.jsonに保存しています。使用326字のglyph輪郭・横幅・縦メトリクスが一致するため、既存PNG/PDFを保持しています。現在の配布物にOS抽出字体は含みません。
+- 架空の企画。学習効果・制作時間・収益の実績は含まない。原典のroot LICENSEとSKILLの記載不一致は解消していない。
+- 原典runtimeを置き換えた初期実装は旧履歴。現在は元runtimeと局所catalog bridgeを使用。
+- 日本語用CSSは原典CSSの後に追加。新しい原稿では同じ4検査と全頁の実描画をやり直す。
+
+現在の再現コマンドはREPRODUCE.md、原典の条件と日本語での一般手順はSKILL.md、現在の実行・画像hashはQA.json。初回PROMPTの限定検査指示は過去の依頼で、後続修復の範囲はこの記録とsourceのRound4ログを使う。

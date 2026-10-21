@@ -1,0 +1,211 @@
+{
+  "schema": "studio-yebisu.sci-diagram.reconstruction-inventory.v1",
+  "authoring_model": "claude-opus-5-5",
+  "derived_by": "Visual read of pass-01/source.png at its original 1600x900 dimensions. Coordinates are source pixels read from the image (glyph bounds approximately ±4 px); authored-source.svg was not consulted.",
+  "source_image": {
+    "file": "source.png",
+    "copies": ["input/source.png", "pass-01/source.png"],
+    "width_px": 1600,
+    "height_px": 900,
+    "sha256": "5d886f134754d7dd86b315f9ee963f27a5a70de0944939544c5ee70d2d2ec690",
+    "sha256_origin": "input/SOURCE-PROVENANCE.json (byte equality of the pass-01 copy is left to the separate runtime check)",
+    "author": "Studio Yebisu",
+    "kind": "original_authored_reconstruction_test_input"
+  },
+  "upstream_skill": {
+    "repository": "HututuWorks/sci-diagram-pptx",
+    "commit": "cc8f0030edf80eeab6e52849b8c39fe638466776",
+    "files_read": [
+      "skills/sci-diagram-pptx/SKILL.md",
+      "skills/sci-diagram-pptx/references/reconstruction.md",
+      "skills/sci-diagram-pptx/references/runtime-pptxgenjs.md",
+      "skills/sci-diagram-pptx/assets/pptxgenjs-build-template.mjs"
+    ],
+    "route": "Reconstruction",
+    "runtime": "pptxgenjs",
+    "runtime_version": "4.0.1",
+    "runtime_selection": "explicit SCI_DIAGRAM_RUNTIME=pptxgenjs"
+  },
+  "transform": {
+    "source_px": { "width": 1600, "height": 900 },
+    "slide_in": { "width": 13.333333, "height": 7.5 },
+    "aspect_ratio_preserved": true,
+    "points_per_source_px": 0.6,
+    "rule": "single toSlidePoint/toSlideBox mapping in build.mjs"
+  },
+  "palette": {
+    "heading_text": "163A4F",
+    "box_and_arrow_stroke": "1C5A78",
+    "box_fill": "EAF3FA",
+    "edge_label_text": "3A4F5E",
+    "footnote_text": "4A5C68",
+    "background": "FFFFFF",
+    "note": "Hex values are visual approximations of the source blue palette."
+  },
+  "semantic_nodes": [
+    {
+      "id": "atmospheric-vapor",
+      "text": "大気中の水蒸気",
+      "shape": "rect",
+      "bounds_px": { "x": 100, "y": 220, "w": 500, "h": 140 },
+      "text_glyph_bounds_px": { "x": 224, "y": 272, "w": 252, "h": 36 },
+      "style": { "fill": "EAF3FA", "stroke": "1C5A78", "stroke_px": 3, "font_px": 36, "font_pt": 21.6, "bold": true, "align": "center" }
+    },
+    {
+      "id": "cloud-droplets",
+      "text": "雲の中の水滴",
+      "shape": "rect",
+      "bounds_px": { "x": 1000, "y": 220, "w": 500, "h": 140 },
+      "text_glyph_bounds_px": { "x": 1142, "y": 272, "w": 216, "h": 36 },
+      "style": { "fill": "EAF3FA", "stroke": "1C5A78", "stroke_px": 3, "font_px": 36, "font_pt": 21.6, "bold": true, "align": "center" }
+    },
+    {
+      "id": "river-water",
+      "text": "川の水",
+      "shape": "rect",
+      "bounds_px": { "x": 1000, "y": 560, "w": 500, "h": 140 },
+      "text_glyph_bounds_px": { "x": 1196, "y": 612, "w": 108, "h": 36 },
+      "style": { "fill": "EAF3FA", "stroke": "1C5A78", "stroke_px": 3, "font_px": 36, "font_pt": 21.6, "bold": true, "align": "center" }
+    },
+    {
+      "id": "sea-lake-water",
+      "text": "海・湖の水",
+      "shape": "rect",
+      "bounds_px": { "x": 100, "y": 560, "w": 500, "h": 140 },
+      "text_glyph_bounds_px": { "x": 260, "y": 612, "w": 180, "h": 36 },
+      "style": { "fill": "EAF3FA", "stroke": "1C5A78", "stroke_px": 3, "font_px": 36, "font_pt": 21.6, "bold": true, "align": "center" }
+    }
+  ],
+  "directed_edges": [
+    {
+      "id": "vapor-to-cloud-condensation",
+      "from": "atmospheric-vapor",
+      "to": "cloud-droplets",
+      "direction": "forward",
+      "arrowhead_at": "to",
+      "line": "solid straight",
+      "points_px": [{ "x": 600, "y": 290 }, { "x": 1000, "y": 290 }],
+      "label": "凝結",
+      "label_glyph_bounds_px": { "x": 768, "y": 232, "w": 64, "h": 32 },
+      "label_box_px": { "x": 752, "y": 224, "w": 96, "h": 48 },
+      "label_background": "FFFFFF",
+      "style": { "stroke": "1C5A78", "stroke_px": 3, "font_px": 32, "font_pt": 19.2, "bold": false }
+    },
+    {
+      "id": "cloud-to-river-precipitation",
+      "from": "cloud-droplets",
+      "to": "river-water",
+      "direction": "forward",
+      "arrowhead_at": "to",
+      "line": "solid straight",
+      "points_px": [{ "x": 1250, "y": 360 }, { "x": 1250, "y": 560 }],
+      "label": "降水",
+      "label_glyph_bounds_px": { "x": 1303, "y": 444, "w": 64, "h": 32 },
+      "label_box_px": { "x": 1287, "y": 436, "w": 96, "h": 48 },
+      "label_background": "FFFFFF",
+      "style": { "stroke": "1C5A78", "stroke_px": 3, "font_px": 32, "font_pt": 19.2, "bold": false }
+    },
+    {
+      "id": "river-to-sea-flow",
+      "from": "river-water",
+      "to": "sea-lake-water",
+      "direction": "forward",
+      "arrowhead_at": "to",
+      "line": "solid straight",
+      "points_px": [{ "x": 1000, "y": 630 }, { "x": 600, "y": 630 }],
+      "label": "水の流れ",
+      "label_glyph_bounds_px": { "x": 736, "y": 652, "w": 128, "h": 32 },
+      "label_box_px": { "x": 720, "y": 644, "w": 160, "h": 48 },
+      "label_background": "FFFFFF",
+      "style": { "stroke": "1C5A78", "stroke_px": 3, "font_px": 32, "font_pt": 19.2, "bold": false }
+    },
+    {
+      "id": "sea-to-vapor-evaporation",
+      "from": "sea-lake-water",
+      "to": "atmospheric-vapor",
+      "direction": "forward",
+      "arrowhead_at": "to",
+      "line": "solid straight",
+      "points_px": [{ "x": 350, "y": 560 }, { "x": 350, "y": 360 }],
+      "label": "蒸発",
+      "label_glyph_bounds_px": { "x": 233, "y": 444, "w": 64, "h": 32 },
+      "label_box_px": { "x": 217, "y": 436, "w": 96, "h": 48 },
+      "label_background": "FFFFFF",
+      "style": { "stroke": "1C5A78", "stroke_px": 3, "font_px": 32, "font_pt": 19.2, "bold": false }
+    }
+  ],
+  "topology_note": "Each of the four relationships has a visible arrowhead at its destination in the source. The closed loop is the sum of these four drawn arrows, not an inference from the circular layout. No bidirectional or undirected relation is visible.",
+  "standalone_annotations": [
+    {
+      "id": "title",
+      "text": "水循環の代表的な経路",
+      "is_topology_node": false,
+      "text_glyph_bounds_px": { "x": 102, "y": 66, "w": 518, "h": 48 },
+      "textbox_px": { "x": 100, "y": 54, "w": 760, "h": 72 },
+      "style": { "color": "163A4F", "font_px": 52, "font_pt": 31.2, "bold": true, "align": "left" }
+    },
+    {
+      "id": "footnote",
+      "text": "水の移動の一部のみを示す。量・時間・縮尺は表していない。",
+      "is_topology_node": false,
+      "text_glyph_bounds_px": { "x": 100, "y": 777, "w": 740, "h": 28 },
+      "textbox_px": { "x": 100, "y": 767, "w": 900, "h": 48 },
+      "style": { "color": "4A5C68", "font_px": 27, "font_pt": 16.2, "bold": false, "align": "left" }
+    }
+  ],
+  "build_mapping": {
+    "NODES": "4 semantic rect nodes (role=semantic, native shape plate + separate text box) and 2 annotation text boxes (role=annotation, type=textbox, no plate). Edges may only reference role=semantic.",
+    "EDGES": "4 forward edges, each one native straight line with endArrowType=triangle at the destination, plus one white-filled label text box.",
+    "INSETS": []
+  },
+  "ownership": {
+    "rule": "Every visible word and arrow has exactly one native owner; no raster owner exists.",
+    "visible_text_count": 10,
+    "visible_arrow_count": 4,
+    "items": [
+      { "visible": "水循環の代表的な経路", "owner": "native", "object": "Annotation:title" },
+      { "visible": "大気中の水蒸気", "owner": "native", "object": "Node-label:atmospheric-vapor" },
+      { "visible": "雲の中の水滴", "owner": "native", "object": "Node-label:cloud-droplets" },
+      { "visible": "川の水", "owner": "native", "object": "Node-label:river-water" },
+      { "visible": "海・湖の水", "owner": "native", "object": "Node-label:sea-lake-water" },
+      { "visible": "凝結", "owner": "native", "object": "Edge-label:vapor-to-cloud-condensation" },
+      { "visible": "降水", "owner": "native", "object": "Edge-label:cloud-to-river-precipitation" },
+      { "visible": "水の流れ", "owner": "native", "object": "Edge-label:river-to-sea-flow" },
+      { "visible": "蒸発", "owner": "native", "object": "Edge-label:sea-to-vapor-evaporation" },
+      { "visible": "水の移動の一部のみを示す。量・時間・縮尺は表していない。", "owner": "native", "object": "Annotation:footnote" },
+      { "visible": "arrow 大気中の水蒸気 → 雲の中の水滴", "owner": "native", "object": "Edge:vapor-to-cloud-condensation:segment-1" },
+      { "visible": "arrow 雲の中の水滴 → 川の水", "owner": "native", "object": "Edge:cloud-to-river-precipitation:segment-1" },
+      { "visible": "arrow 川の水 → 海・湖の水", "owner": "native", "object": "Edge:river-to-sea-flow:segment-1" },
+      { "visible": "arrow 海・湖の水 → 大気中の水蒸気", "owner": "native", "object": "Edge:sea-to-vapor-evaporation:segment-1" }
+    ],
+    "source_bitmap_on_slide": false,
+    "tracing_reference_or_hidden_slide": false,
+    "slide_count": 1
+  },
+  "demonstrates_original_skill_behaviors": [
+    {
+      "id": "reconstruction-route-single-native-slide",
+      "skill_basis": "SKILL.md / reconstruction.md: an image becomes a new single-slide editable PPTX with no full-slide source bitmap, hidden tracing image, or reference slide."
+    },
+    {
+      "id": "source-recorded-directed-topology",
+      "skill_basis": "SKILL.md shared invariants: relationships recorded from the source (from, to, direction, exact points); a line label is not a node; no relation guessed from proximity or layout."
+    },
+    {
+      "id": "single-owner-native-ownership-map",
+      "skill_basis": "SKILL.md / reconstruction.md: every visible label and arrow assigned to exactly one owner across NODES/EDGES/INSETS; here all are native and INSETS is empty."
+    },
+    {
+      "id": "portable-template-one-transform-explicit-runtime",
+      "skill_basis": "runtime-pptxgenjs.md / template: explicit pptxgenjs 4.0.1 selection, template body with one source-to-slide transform, connectOneWay using endArrowType at the target, relative assets, and silent-overwrite refusal."
+    }
+  ],
+  "does_not_demonstrate": [
+    "time_saving: no measurement of authoring or production time is made.",
+    "arbitrary_figure_reconstruction: one simple four-box, four-arrow schematic authored as a test input; no claim about dense, curved, formula-bearing, raster-inset, or third-party figures.",
+    "pixel_identity: the slide is a close native approximation; font rendering, colors, line weight, and arrowhead shape may differ.",
+    "aesthetic_improvement: the source is reproduced, not redesigned or improved.",
+    "repair_or_inspection_routes, raster insets, Office Math, or cross-application rendering parity.",
+    "runtime_success: build execution, render, and package check are performed separately after authoring and are not claimed here."
+  ]
+}

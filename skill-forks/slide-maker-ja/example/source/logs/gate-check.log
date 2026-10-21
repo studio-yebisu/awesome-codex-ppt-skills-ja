@@ -1,0 +1,106 @@
+[gates] taste ledger: empty — nothing this user has taught is still ungated
+[gates] blind read: 0 answer(s), 0 finding(s) answered (0 hard)
+[gates] no provenance record — fine for a deck built from the user's own material; a research-sourced deck should carry one.
+[gates] sameness: not applied — 3 content slide(s), under the 8 this is calibrated for (the per-signal [stats] warnings still print)
+[gates] a11y: 0 of 6 floor(s) fired (alt-text · slide titles · reading order · non-text contrast · text contrast)
+[gates] surface: wide13 (PPT 16:9 (13.33in, PowerPoint's default))
+  [--] template profile: NOT CHECKED — no template profiles are registered (scripts/registry.py --list)
+  [--] purpose: NOT CHECKED — no registry purpose binds to the recorded purpose '<nothing recorded>' — nothing was checked. That is correct when the deck is a genre this registry does not carry (a product pitch, a teaching deck); guessing a genre would fire a whole section list at the wrong deck. `python3 scripts/purposes.py --list` shows what is registered.
+  [--] talk time: NOT CHECKED — no time budget recorded — the interview asks for one on a talk (`interview.length`, or `content.talk_minutes`). Nothing to check: a deck that will be READ rather than presented is never late
+  [--] Q&A backup: NOT CHECKED — no anticipated questions recorded (`content.qa`) — nothing to check. Preparing backup slides is a practice, not a law: a gate that demanded it of every deck would just teach people to record an empty list
+  [--] citations: NOT CHECKED — no citation plan recorded (`content.citations`) — nothing to check. Most decks cite nothing, and a gate that demanded a bibliography of every deck would only teach authors to record an empty one
+  [--] image series: NOT CHECKED — not an image-led deck (design_plan.imagery is not 'series')
+  [--] visual language: NOT CHECKED — none recorded (design_plan.visual_language)
+[gates] fonts: every face this deck names resolves here (2 checked)
+[gates] register pixels: 0 of 0 declared colour(s) reached the pages — design_plan.palette names no hex colour, so the declared-vs-rendered half could not run; only the stock-register and freshness checks did
+  [--] register guard: no preset register declared (design_plan.style_pick names none) — a bespoke or generated look has no FORBIDS to check, which is not the same as clean
+  [--] direction: no directions.json beside the deck — this deck did not go through the direction gate, which is NOT the same as its direction being honoured
+[gates] timidity: not applied — 3 content slide(s), under the 8 this is calibrated for (the per-signal [stats] warnings still print)
+[gates] canon: notes-echo, category titles and chart redundancy all clean
+[gates] density: 0/5 slide(s) over the text budget, median 63 words a slide
+[gates] COVERAGE: 26 section(s) ran — 17 bound, 9 NOT CHECKED
+        · sameness: 3 content slide(s), under the 8 this is calibrated for (the per-signal [stats] warnings still print)
+        · template_profile: no template profiles are registered (scripts/registry.py --list)
+        · purpose: no registry purpose binds to the recorded purpose '<nothing recorded>' — nothing was checked. That is correct when the deck is a genre this registry d
+        · talk_time: no time budget recorded — the interview asks for one on a talk (`interview.length`, or `content.talk_minutes`). Nothing to check: a deck that will be 
+        · qa_backup: no anticipated questions recorded (`content.qa`) — nothing to check. Preparing backup slides is a practice, not a law: a gate that demanded it of ever
+        · citations: no citation plan recorded (`content.citations`) — nothing to check. Most decks cite nothing, and a gate that demanded a bibliography of every deck wou
+        · image_series: not an image-led deck (design_plan.imagery is not 'series')
+        · visual_language: none recorded (design_plan.visual_language)
+        · timidity: 3 content slide(s), under the 8 this is calibrated for (the per-signal [stats] warnings still print)
+        A gate that could not bind checked NOTHING. That is the right answer for a deck the section does not apply to, and it is how a capability goes quietly unused — read the rows before treating a pass as coverage.
+render_deck: 8 hand-off gate(s) failed. ALL of them are listed below — fix them in ONE pass, then re-run.
+
+[1/8] critic
+M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\slide-maker\.deck-gates.json has no usable `critic` record — needs {"verdict": "consent"|"revise"} or {"waived": "<reason>", "waived_category": "<one of these>"}:
+    already-reviewed-minor-edit  a 1-2 slide edit to a deck that already passed its loop
+    cap-reached-majors-open      the loop RAN to its round cap and majors remain open (needs `open` + `surfaced_to_user`)
+    external-deck                a deck this skill did not author (redesign diagnosis / critique-only run)
+    no-dispatch-on-host          the runtime cannot dispatch a subagent (record it in the capability ledger too)
+    user-waived                  the user was asked and chose to ship over it
+
+[2/8] design_plan
+no `design_plan` record. Step 2 dispatches agents/slide-design.md as the deck's art director; nothing else decides deck rhythm or the signature move.
+    {"design_plan": {"concept": ..., "boldness": ..., "signature_move": ..., "carried_by": ..., "form_ledger": ..., "icon_family": ..., "palette": ..., "type_scale": ..., "signature_proof": ..., "motif_generates": ..., "style_pick": ..., "image_sources": ...}}
+    (type_scale is {"display": 34, "title": 24, "body": 14}; signature_proof is the
+     THREE-anchor list [{"role": "signature"|"complex"|"data", "slide": N,
+     "png": "render/slideNN.png"}, ...] — rendered evidence that the move survived, that
+     the design holds the densest page, and that the charts speak the same language)
+    or {"design_plan": {"waived": "<reason>"}}
+
+[3/8] content.arc
+`content.arc` is missing — the arc competition (Step 1, agents/content-planner.md §3).
+  2-3 candidate arcs over ONE ledger. Put the CANDIDATES here; this gate scores them itself:
+
+    "content": {"arc": {"chosen": "<the name of the arc that won>",
+                        "candidates": [<2-3 arc objects — python3 scripts/arc_divergence.py --template>],
+                        "rejected": [{"name": "<runner-up>", "why_lost": "<one clause>"}]}}
+
+  Or waive it: {"content": {"waived": "<why this deck had one possible arc>"}}.
+
+[4/8] content.audience_brief
+`content.audience_brief` is missing. Step 1 opens by writing down what the AUDIENCE has to DECIDE — in the order they will face it, each with what they need in hand — and the information gathering is aimed at that list. On a deck with NO SOURCE this replaces the comprehension brief outright: there is no source to comprehend, and a brief about the SUBJECT produces a deck about the subject where one for the audience was asked for.
+    {"audience_brief": {"who": "<who is in the room, and what they are about to do>",
+                        "decisions": [{"decision": "<what they must decide>",
+                                       "needs": "<what they need in hand to decide it>"}, …]}}
+  Or claim a carve: {"waived": "<why this audience has nothing to decide>", "waived_category": "reference-only | external-deck | tiny-ask | user-waived"}
+
+[5/8] content.slides
+`interview` is missing the answers the deck was BUILT from: `language` (中文 / English / bilingual EN+中文) and `density` (diagram-heavy / balanced / text-heavy) and `length` (the slide count or range the USER saw) and `goal` (inform / support a decision / inspire action).
+  These four are singled out because NOTHING ELSE demands them, which is exactly why
+  they go unasked — measured, LANGUAGE was never asked on a real build and no gate noticed.
+
+    python3 scripts/deck_gates.py interview <deck-dir> --lang <en|zh>   # prints the questions
+    python3 scripts/deck_gates.py interview <deck-dir> --set language="<中文 / English / bilingual EN+中文>" --set density="<diagram-heavy / balanced / text-heavy>" --set length="<the slide count or range the USER saw>" --set goal="<inform / support a decision / inspire action>"
+
+  Under the auto waiver these are your delegated picks — the waiver removes the STOP, never
+  the record. Or waive: {"interview": {"waived": "<why>"}}.
+
+[6/8] checkpoints
+the 🔴 checkpoint record is missing or malformed for: content, design.
+
+    "content": {"checkpoint": {"mode": "approved", "record": "<what was shown and what came back>"}},
+    "design":  {"checkpoint": {"mode": "auto", "record": "<what was shown and what came back>"}}
+
+  `approved` = presented, and the user approved before the build continued.
+  `auto`     = presented under the per-deck AUTO WAIVER, and the build continued (the waiver removes
+               the stop, never the record).
+  Same two values codex_delivery_gate has always accepted. There is no third one: a run that SKIPPED the
+  checkpoint has nothing true to write here, and that is the point — delegation changes WHO approves,
+  not WHETHER the step happened.
+
+[7/8] render_selfcheck
+`render_selfcheck.slides` is missing — Step 5's per-slide verdict, one line per slide (a slide with no line was not looked at):
+
+    "render_selfcheck": {"slides": [
+        {"n": 1, "verdict": "ok — signature move lands, 4.9% buried below the line"},
+        {"n": 2, "verdict": "teal glyph on aqua tile <3:1 — recoloured"},
+        ...]}
+
+  Read render/contact.png, then EVERY slide PNG in one message, and write the verdict as you go.
+  No rendered deck to look at? Waive it: {"render_selfcheck": {"waived": "<why>"}}.
+
+[8/8] blind_read
+`blind_read`: `answers` is missing — one answer object per slide, from a reader that was not shown the content record.
+
+8 hand-off gate(s) failed (all 8 listed above) — fix them in ONE pass, then re-run.

@@ -1,17 +1,27 @@
-# Marp MCP・日本語キット
+# Marpのページ作成とID指定更新
 
-[SKILL.md](SKILL.md)から始める。原典MIT、字体は各OFL、出所は[SOURCE.json](SOURCE.json)。原典TypeScript・build済みJSと局所adapter、6枚の構造化入力、CSS、実TTF/OFL、stdio操作用Pythonを収録する。node_modules、ブラウザ、キャッシュは含めない。
+箇条書きや表を資料へ整え、ページIDで指定した内容だけを更新する。入力はページごとの見出し・本文・箇条書き・表と、変更したい内容。出力は編集元のMarkdownとHTML・PDF。MCP実装のPPTX出力は各頁の画像を収めた形式。
 
-必要条件はNode.js 18以上、Python 3/PyMuPDF、Chrome/EdgeなどMarp CLI対応ブラウザ。
+## この作例で確認すること
 
-```powershell
-npm --prefix source/runtime ci --ignore-scripts --no-audit --no-fund
-npm --prefix source/runtime install --ignore-scripts --save-dev --save-exact @marp-team/marp-cli@4.4.0
-node source/runtime/node_modules/typescript/bin/tsc -p source/runtime/tsconfig.json
-python -m pip install PyMuPDF
-python source/run_mcp.py --case . --runtime source/runtime --node node --marp-cli source/runtime/node_modules/@marp-team/marp-cli/marp-cli.js
-```
+- 原典CLIのlist/create/manage/read/generate-ids/exportを実操作した2頁の独立確認
+- 同じリポジトリのMCP実装による6頁作成・ID指定replace・一時頁insert/delete
+- HTML/PDF/画像主体PPTXの実出力と、ID変更前後のPDF画像
 
-`input/content.json`と`source/workshop.css`を編集する。実MCPサーバーのtools/callでdeck.mdを作り、原典export_slideでHTML/PDF/画像主体PPTXを出力する。HTMLには同一originの小さなbridgeを加える。画像PPTXの文字・表・図形はnative編集不能。実験的editable PPTXは使っていない。
+元MCPで全6頁を再生成しHTML/PDF/PPTXを書出し。元CLIでも作成・ID更新・ID保持・HTML/PDF出力を実行。HTML6頁・PDF6頁を実描画し目視。3頁の4動作、4頁の表幅、6頁の文字コントラストを修復。
 
-このキットは架空の衣服お直しワークショップ作例。開催・効果・売上の実績はなく、120分は仮の企画設定。完成物と今回の操作ログはサイト側の[制作一式ZIP](../../downloads/marp-mcp-example-ja.zip)で別配布する。この相対リンクはサイト配置用。
+## 別の原稿で使う手順
+
+1. marp-mcp --versionでCLIを確認する。list-layoutsで版式と必須項目を調べ、-tで基本テーマ、-sで追加スタイルを選ぶ。-s指定時は原則-t defaultになる。
+2. createで資料を作り、set-frontmatterで見出しや頁番号を設定する。manageのlayoutとparamsへ原稿を渡して頁を追加する。
+3. generate-idsでIDを付け、readで対象IDを調べる。manage --mode replace/deleteと--slide-idで変更箇所を指定する。既存IDは再発行しても変わらない。
+4. export -f htmlまたは-f pdfで書き出す。generate-agendaとadd-image-transitionはHTML用の機能として必要な時に使う。MCP経由も選べるが、原典SKILLの主な入口はCLI。
+5. 出力した全頁を開き、文字・表・改行・ID指定の変更箇所を確認する。PPTXの出力方式と編集できる範囲を分けて伝える。
+
+## 実施範囲
+
+- 6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。
+- 原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。
+- 工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。
+
+[全頁と実行の記録](source/repair-qa.json)、[元の工程](source/round5-original-gates.json)、[再生成](source/ROUND5-REPRODUCE.md)。今回の修復はCodex。変更後の独立評価は別に取得します。

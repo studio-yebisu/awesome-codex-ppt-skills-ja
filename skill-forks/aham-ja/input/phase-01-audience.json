@@ -1,0 +1,39 @@
+{
+  "phase": "1/8 規範と受け手の定義",
+  "upstream_file": "upstream/references/phase-01.md",
+  "inputs": ["input/BRIEF.md", "input/data.json"],
+  "brand_rules": {
+    "mode": "品牌模式（upstream/references/brand-spec/brand.md が存在）",
+    "theme": "A",
+    "theme_reason": "2026-10-15の制作指示で、原典A档（白地・中性グレー・青は点在のみ）へ戻す。BRIEF.mdのコバルト・黄色指定はこの指示で置き換えた（BRIEF.md自体は初版依頼の記録として残す）。",
+    "local_font_adaptation": "和文 Zen Kaku Gothic New、英数字 Manrope。原典の Inter / JetBrains Mono / 微软雅黑 の代わりで、色・座標は変えない。"
+  },
+  "audience_card": {
+    "audience": "未指定。入力に受け手の記載がない。作業仮定：朝の作業の始め方を見直したい、ワークショップ参加を検討している人（架空）。",
+    "concerns": ["朝の20分で何をするか", "四週間の試行で何をするか"],
+    "expected_action": "作業仮定：四週間の試行に参加するかを判断する。",
+    "main_objection": "未記録（入力に記載なし）。",
+    "secondary_audience": null,
+    "assumption_flag": "受け手・関心・行動はいずれも入力にない作業仮定。原典は『受け手は必ずユーザーが答える』としている。"
+  },
+  "delivery": {
+    "deck_mode": "hybrid（原典既定値。確認していない）",
+    "output_format": "both（SVG と編集できる PPTX）",
+    "pages": 4,
+    "pages_source": "input/BRIEF.md（4枚）"
+  },
+  "capability_tier": "未判定（coach-engine の初期3問を実施していない）",
+  "glossary": [
+    {"term": "サンプル行程", "meaning": "朝の20分を 3分・10分・5分・2分 の四つの手順に分けた例示の配置。効果を確かめた方法ではない。"},
+    {"term": "手順", "meaning": "サンプル行程を構成する四つの段階（作業を一つ選ぶ／選んだ作業に取り組む／進み具合をメモする／次にやることを書く）。"},
+    {"term": "作業の入口", "meaning": "前日に決めておく、翌朝最初に手をつける一つの作業。"},
+    {"term": "試行計画", "meaning": "四週間の例示計画（観察→一つ試す→続け方を話す、記録と相談を並行）。実績ではない。"},
+    {"term": "効果", "meaning": "この案では測定していない。ページに効果・改善・健康の主張を書かない。"}
+  ],
+  "gate": {
+    "upstream_requirement": "受け手の質問に回答をもらい、完成カードをユーザーが確認してから Phase 2 へ進む。",
+    "this_run": "ユーザーの自律制作指示により停止待ちを行わず、統合担当の判断に置き換える。",
+    "user_confirmed": false,
+    "integrator_decision": null
+  }
+}

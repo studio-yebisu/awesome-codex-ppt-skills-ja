@@ -1,0 +1,44 @@
+{
+  "case_id": "html-editable-showcase",
+  "implemented_by": "Codex original-converter repair; no new Opus production",
+  "current_pptx_sha256": "e516d41f8380551214c3770b4a82a1d6320e2333d080f3e5461d2cd62a92ff39",
+  "case_patch": {
+    "method": "原典変換・Stage5a/5b＋明示したcase adapter、Codex別担当による全5頁比較、文字/旗の実PowerPoint編集検査。字体埋込成功は未実証。",
+    "sample_notice": "字体埋込みの成功は未実証。架空のブランド案を原典で変換し、旗1点の専用native adapterと局所修復を明示。文字と旗の実編集・全5比較を確認。",
+    "compatibility_notice": "配布PPTXは--no-embed-fonts。埋込版のPowerPoint open失敗原因は未確定。必要なTTF/OFLを同梱し、端末の字体による字重差を比較画像付近に記載。"
+  },
+  "guide_patch": {
+    "summary_ja": "ブラウザーでHTML資料の文字位置と書式を実測し、文字・単純図形を編集できるPowerPointへ変換する。原典は必要な字体の取得・部分埋込みと、複雑装飾の画像化、元HTMLとの比較・局所修復まで扱う。 この作例では字体埋込みの成功は未実証。埋込版をPowerPointで開けず、原因は未確定のため--no-embed-fontsで配布する。文字と単純図形の編集性、全頁比較、修復の実行を確認した範囲を示す。",
+    "requirements": [
+      "既存HTMLと参照素材。Python依存はupstream/requirements.txt、Playwright ChromiumとPPTX描画用PowerPointまたはLibreOffice。",
+      "この作例の変換は既存.venv、字体導入no、audit.mode=page、cleanup.keep。新規installは検査していない。",
+      "同梱TTF/OFLの使用条件を確認する。PPTXは埋込なしなので利用端末に字体が必要。PDF掲載PNGには別途pypdfium2/Pillowを使う。"
+    ],
+    "steps": [
+      "元HTML・画像・字体をそろえ、字体導入可否と比較方法を既存の指定・configへ合わせる。原典supported-css.mdで編集可能な表現と画像化される表現を確認する。",
+      "原典convert.pyへHTMLを渡す。原HTMLを保管し、修復は自動生成される.audited.htmlに限定する。字体の部分埋込みと無効化のどちらを使ったかを記録する。",
+      "Stage5aの構造検査とStage5bのHTML/PPTX比較を行う。pageは全頁、triageは一覧から選んだ頁を別担当で読む。生成成功だけを合格にしない。",
+      "指摘を全部そろえて最小差分で一括修復し、変更頁を再変換する。全体CSS・字体の変更は全頁、同じ頁/要素の指摘が2回続く場合はsticky候補として判断を返す。",
+      "原典lessons-learnedへ再利用できる回避則を記録し、文字・図形を別PPTXで編集/保存/再表示する。字体条件と残る差を比較画像の近くに書いて渡す。"
+    ],
+    "limitations": [
+      "この作例では字体埋込みの成功は未実証。埋込版をPowerPointで開けず、原因は未確定のため--no-embed-fontsで配布する。文字と単純図形の編集性、全頁比較、修復の実行を確認した範囲を示す。",
+      "旗は原典SVG通路の画像を、その5頂点と位置を保つnative freeformへ置き換えるcase専用adapterで対応。原典converterの汎用SVG変換機能ではなく、任意のSVGをnative化できるとは示さない。",
+      "日本語TTF登録・5点旗のnative化・暗黙effectRefを0へ・比較ラベルの英語化・PowerPointをQuitしない描画を局所adapterとして分離。原典convert/measure/assemble/embedは未改変。",
+      "HTMLのfont-weight900は原典の写像でOOXMLのbold表現となる。実PDFはZen Kaku Gothic New Boldを使用し、ブラウザーのBlackとの字重・字幅の厳密一致は保証しない。",
+      "本例は架空のブランド案5頁。全CSS、任意のHTML、動き・動画・Web操作の再現、字体埋込みの成功、新規installを試した例ではない。",
+      "原典の最小修復は追加/削除行数が指摘数×3行以下、同一頁/要素が連続2回残る場合はsticky。今回は既存の自律改善指示と親の具体修復指示により番号の追加修復を行い、判断を履歴に残した。",
+      "原典のpage審査をCodexの別担当読解で実施。全5比較とp2/p5単体、p5修復後を親が実見した。原典Claude Agent APIの同一実装や独立Kimi/Opus満点・人間採用とは主張しない。"
+    ],
+    "execution_type": "原典変換・Stage5a/5b＋明示したcase adapter、Codex別担当による全5頁比較、文字/旗の実PowerPoint編集検査。字体埋込成功は未実証。",
+    "commands": [
+      "python convert_local_fonts.py index.audited.html --out deck.pptx --keep-screenshots --no-embed-fonts",
+      "pwsh -NoProfile -File render_current.ps1 -PresentationPath deck.pptx -OutputDirectory render",
+      "pwsh -NoProfile -File test_native_edit.ps1 -PresentationPath deck.pptx -OutputDirectory qa/editability",
+      "python render_pdf_previews.py render"
+    ]
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native1-r8.json",
+  "root_final_override_note": "Current constraints/how_to_use replace prior HTML fields in root zz-root-consistency. General upstream capability must stay distinct from known5vertex native adapter and unproven font embedding.",
+  "independent_review": "pending"
+}

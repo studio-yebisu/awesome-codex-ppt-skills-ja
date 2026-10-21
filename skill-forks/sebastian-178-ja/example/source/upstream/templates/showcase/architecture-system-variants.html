@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MBB Page Maker Architecture System Variants</title>
+  <link rel="stylesheet" href="../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../assets/themes/blue.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Architecture system variants">
+    <section class="slide" data-title="A system context map should show the governed center and its adjacent systems">
+      <header><div class="slide-kicker">Architecture pattern</div><h2 class="slide-title">A system context map should show the governed center and its adjacent systems</h2><div class="slide-rule"></div></header>
+      <div class="content"><div class="system-context-map"><div class="context-node is-core"><strong>Decision layer</strong><span>Rules, recommendations, audit trail</span></div><div class="context-ring"><article class="context-node" style="--x: 50%; --y: 3%">Identity</article><article class="context-node" style="--x: 86%; --y: 29%">Workflow apps</article><article class="context-node" style="--x: 72%; --y: 78%">Data platform</article><article class="context-node" style="--x: 22%; --y: 78%">Controls</article><article class="context-node" style="--x: 7%; --y: 29%">Users</article></div></div></div>
+      <footer class="footer"><span>Showcase: system-context-map</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Dependency maps clarify which teams must move together before launch">
+      <header><div class="slide-kicker">Architecture pattern</div><h2 class="slide-title">Dependency maps clarify which teams must move together before launch</h2><div class="slide-rule"></div></header>
+      <div class="content"><div class="dependency-map"><div class="dependency-lane"><strong>Product</strong><span>Use case backlog</span><span>Acceptance criteria</span><span>Release readiness</span></div><div class="dependency-lane"><strong>Platform</strong><span>Identity integration</span><span>Data contracts</span><span>Monitoring hooks</span></div><div class="dependency-lane"><strong>Risk</strong><span>Policy classes</span><span>Human review</span><span>Audit evidence</span></div><div class="dependency-links"></div></div></div>
+      <footer class="footer"><span>Showcase: dependency-map</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Interaction flows make the control path visible without an engineering diagram">
+      <header><div class="slide-kicker">Architecture pattern</div><h2 class="slide-title">Interaction flows make the control path visible without an engineering diagram</h2><div class="slide-rule"></div></header>
+      <div class="content"><div class="sequence-interaction-flow"><div class="sequence-actor">User</div><div class="sequence-actor">Application</div><div class="sequence-actor">Decision layer</div><div class="sequence-actor">Control log</div><div class="sequence-step" style="grid-column: 1 / 3">1. Submit request</div><div class="sequence-step" style="grid-column: 2 / 4">2. Retrieve context</div><div class="sequence-step" style="grid-column: 3 / 5">3. Check policy and confidence</div><div class="sequence-step" style="grid-column: 2 / 4">4. Return approved action</div><div class="sequence-step" style="grid-column: 1 / 5">5. Capture outcome and exception</div></div></div>
+      <footer class="footer"><span>Showcase: sequence-interaction-flow</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Architecture option pages should compare the path before detailing rollout">
+      <header><div class="slide-kicker">Architecture pattern</div><h2 class="slide-title">Architecture option pages should compare the path before detailing rollout</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered"><table class="architecture-option-comparison"><thead><tr><th>Architecture path</th><th>Control</th><th>Speed</th><th>Reuse</th><th>Recommendation</th></tr></thead><tbody><tr><td class="row-head">Point solution</td><td>Low</td><td>High</td><td>Low</td><td>Use only for experiments.</td></tr><tr><td class="row-head">Shared orchestration</td><td>High</td><td>Med</td><td>High</td><td class="is-best">Recommended platform path.</td></tr><tr><td class="row-head">Central rebuild</td><td>High</td><td>Low</td><td>Med</td><td>Too slow for current window.</td></tr></tbody></table></div>
+      <footer class="footer"><span>Showcase: architecture-option-comparison</span><span class="page-number"></span></footer>
+    </section>
+  </main>
+  <script src="../../assets/js/runtime.js"></script>
+</body>
+</html>

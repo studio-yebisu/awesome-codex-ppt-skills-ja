@@ -1,30 +1,44 @@
-# 並べておくと、探し方が変わる
+# 原稿から図表を作り、読み手の指摘で直す
 
-addsumtech/slides_maker の固定commit `3767cc346d63ef1646082c87f15fbf0be582b152` にある、未改変の `deckkit`、`native_chart`、`title_bar`、`footer`、`takeaway_rail` を実行した5枚の日本語教材です。MITの原典コードとライセンスをsource/upstreamへ保持しています。
+原稿・データ・既存資料を、読者に必要な頁順と図表へ整理する。受け取るものは編集可能PPTX、全頁の描画、根拠、実施した検査と読解・批評の記録。
 
-配列1〜15をPythonで実際に探索し、全15ターゲットの訪問要素・範囲・比較回数をinput/data.jsonへ保存。13の探索は線形13回、二分4回（8→12→14→13）。全15通りの最大は線形15回、二分4回です。秒数、整列コスト、大規模データの性能は測定していません。
+原典addsumtech/slides_maker、固定commit3767cc346d63ef1646082c87f15fbf0be582b152。元SKILLとMIT LICENSEを保持した日本語派生で、公式翻訳ではない。
 
-## 再実行
+## 用意するもの
 
-Python 3.10+へ `python-pptx pymupdf Pillow matplotlib numpy` を導入し、作例フォルダで次を実行します。
+- Python3.10+、python-pptx、原典deckkit。
+- 原典render/lint環境のLibreOffice。今回だけWindowsのPowerPoint16→PDF→PDFiumを描画adapterとして使った。Yu Gothicの字体ファイルは再配布しない。
+- 内容と設計を確認する独立critic、原稿を見ない独立読解者。
 
-```powershell
-python source/build_slide_maker_repository_example.py --upstream-dir source/upstream --output-dir ../slide-maker-replay
-```
+## 入力から仕上げる手順
 
-Python 3.13環境で再実行し、入力JSONと全スライド・chart・notes XMLの一致を検証しました。ZIPの時刻情報等を含むPPTX全体のbyte一致は主張しません。字体はYu GothicとConsolas。表示先に同じ字体がない場合は代替フォントになります。
+1. 読者の知識と読む目的を決め、各頁の主張と根拠を対応させる。
+2. 複数の構成・図案を比較し、比較条件、文字の役割、色や印の意味を定める。
+3. 原典deckkitの編集可能な文字・図形・グラフを使い、判断理由を読み手に必要な位置へ置く。
+4. 全頁を描画しlint・component・visual contractを確認する。独立読解と内容/設計の批評を原典CLIへ記録し、指摘を修正する。
+5. 修正した版を新しい独立評価へ渡し、原典の承認とdelivery/handoffの条件を満たすまで合格扱いしない。
 
-## 確認した範囲
+原典interview→content/design checkpoint→制作→render/lint→critic/blind read→修正→consentの順序を省かない。Codexでは同梱codex-runtime.mdに従い、palette/component、全頁render_selfcheck、visual contract、delivery evidence/receipt、handoff guardも実行する。批評は内容と設計の両観点を持ち、blindは計画・原稿を見る前に実画像から答える。実行不足を納品承認へ読み替えない。
 
-PowerPoint 16.0で全5枚をPNG/PDFへ出力し、実視認しました。文字・数字・図はnative object、グラフは編集可能なchartと埋込Excelデータ、発表者ノートは全5枚。図を全面画像に置き換えていません。読み上げ用タイトルも追加しています。
+適用外・注意：独立読解者を用意できない場合は原典のno-reader carve/unverifiedへ記録する。Codex adapterをClaude Code/Kimiで動かす用途、PPTX以外の納品はこの実証の対象外。
 
-原典lint_deck、trace_composed、helper signatures、validate_reviewを使用。独立criticによる内容・視覚レビューと修正はreview/に記録します。これは技術・内容QAであり、人間による正式採用ではありません。
+## 原典の主な使い分け
 
-初回render_deck --gate-checkは計画とblind readの欠落を検出しました（source/logs/gate-check.logを保全）。その後、構成3案の比較、実描画した方向5案の比較、別担当による画像だけのblind read、計画と完成版の追加監査を実施。最終引き渡し検査はexit0です（source/logs/gate-check-cwd-resolved.log）。ただし計画は制作後の追加実施で、事前承認だったとは扱いません。URLを要求する出典ゲートはローカル実行入力へ適合しないため理由付き適用除外にし、代わりに実行コード・入力SHA・独立再計算を保存しています。レジストリやtasteへの書込、外部画像API、課金はしていません。
+既存PPTXの修正・再設計にも使えます。まず既存資料を読んで問題を整理し、指定された内容とテンプレートを基準に直します。新しい資料では、元のコード・論文・図・データを読み、材料がなければ調査と事実確認を行います。
 
-## 証跡
+構成や見た目を途中で選びたい場合は共同制作モードで、方向案→構成→残りの頁の順に確認します。画像が必要な資料では生成画像と画像シリーズの規則、外部の主張や数値には引用・出典の規則を使います。大きい資料でも一つの主張を無関係な作業者へ分割せず、素材準備など独立する作業を並列化します。詳細は同梱の固定原典 `source/upstream/skills/slide-maker/SKILL.md` と、その分岐で指定される参照を読みます。
 
-input/data.jsonが数値の一次入力、source/build_slide_maker_repository_example.pyが実行コードです。source/object-proof.jsonにチャート数値とXML再現性、source/commands.jsonに検査コマンド、PROVENANCE.jsonに原典と変更点、QA.jsonに最終状態があります。初回の失敗と最終の解決は別ログで保持しています。
+## 作例の実施範囲
 
+探索教材5頁。線形=青、二分=紫、目的値13=茶はこの作例の割当てで、一般手順の固定値ではない。実Opusの旧版critic/blindを原典CLIへ記録し、各段に判断理由が欠けるという指摘を修復した。現在版は全5頁を制作側で実読した候補。新しい独立critic/blindとconsentは未取得で、最終gateは失敗を保持している。
 
-追加選定：図中心、静的5枚、既存テンプレートなしの明るい配列図を採用候補にしました。方向Bの端末、Cの棒のみ、Dの木状配置、Eの原典黒板は実描画で比較し、同じ配列位置を保てるAを選定。正式な人間の採用は未実施です。小さい脚注は独習用の補足として受容し、教室後方からの投影可読性は保証しません。
+1頁の配列直下では「1回」を16ptで定義する。2頁は訪問順と配列直下の16pt凡例、3頁は24ptの大小比較→左右判断、4頁は全条件グラフと1〜3の反例を見る。5頁は比較回数と未計測の秒数を分ける。
+
+- 原典はLibreOfficeで描画する。今回のWindows作例はPowerPoint16→PDF→PDFiumを局所adapterとして使った。
+- 独立読解者がいない環境は原典のno-reader carve/unverified。Codex専用adapterをClaude Code/Kimiで動かす用途や、PPTX以外の納品はこの実証の対象外。
+- 実Opus Round4の指摘とblind回答は旧SHAb8f099a3…へ束縛して原典CLIに記録済み。現在版の新しい独立評価・consentは待機中で、旧承認を流用しない。
+- 初回の構成・図案比較は制作後の補完。テンプレート、発表時間、質疑用頁、画像シリーズは未実施。
+- component auditは固定15値の配列をカード群と検出しexit2。頁ごとの意図は原典deliveryの正式なwaiver欄へ記録し、元のcheck_components関数が受理することを確認。これは全deliveryの合格ではない。
+- 作例は既に昇順の1〜15から存在する値を探す計測。回数は訪問要素数で、秒数・整列費用・未発見条件は測っていない。
+
+現在の実行結果はQA.jsonとPROVENANCE.json、再実行はREPRODUCE.md。旧レビューは対象SHAを保持し、修正した別版へ承認を引き継がない。

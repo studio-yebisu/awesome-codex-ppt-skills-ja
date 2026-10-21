@@ -2,7 +2,12 @@ from pathlib import Path
 import json,html
 import fitz
 B=Path(__file__).resolve().parents[1]; R='#E2001A'; K='#000000'; W='#FFFFFF'
-font='Microsoft YaHei,Noto Sans CJK JP,SimHei,PingFang SC,sans-serif'
+structure=json.loads((B/'.ppt-session/structure.json').read_text(encoding='utf-8'))
+design=json.loads((B/'.ppt-session/design.json').read_text(encoding='utf-8'))
+assert __import__('hashlib').sha256((B/'input/BRIEF.md').read_bytes()).hexdigest()==structure['source_sha256']
+assert len(structure['pages'])==7
+font=design['font_stack']
+R,K,W=design['colors']
 def rect(x,y,w,h,c):return f'<rect x="{x}" y="{y}" width="{w}" height="{h}" fill="{c}"/>'
 def line(x,y,x2,y2,c=K,w=2):return f'<line x1="{x}" y1="{y}" x2="{x2}" y2="{y2}" stroke="{c}" stroke-width="{w}"/>'
 def text(x,y,s,z=36,c=K,b=400):return f'<text x="{x}" y="{y}" style="font-family:{font};font-size:{z}px;font-weight:{b};" fill="{c}">{html.escape(s)}</text>'
@@ -37,19 +42,22 @@ for i,(a,b) in enumerate(req):
  y=280+i*112;s+=text(620,y,a,28,R,700)+text(620,y+50,b,36)+line(620,y+75,1810,y+75)
 s+=lines(620,920,['まず一案を作成。送信はせず、レビュー用の文章で渡す。'],32,K,700)+text(100,1016,'架空例 / SVG ORIGINAL',20,W)
 slides.append(('ending','五つを一つの依頼へ',s))
-structure={'source_file':'input/BRIEF.md','metadata':{'title':'AIに任せる前の設計図','total_pages':7,'fictional':True},'pages':[{'page_number':i,'type':a,'title':b,'density':'low' if i==1 else 'medium'} for i,(a,b,c) in enumerate(slides,1)]}
-(B/'.ppt-session/structure.json').write_text(json.dumps(structure,ensure_ascii=False,indent=2))
-design={'style_name':'Swiss Style / 日本語派生','style_file':'source/upstream/styles/04-swiss-style.md','canvas':{'width':1920,'height':1080},'colors':[R,K,W],'font_stack':font,'margin':100,'changes':['日本語に合わせたNoto Sans CJK JP fallback','見出しの拡大と行分割','役割別の非カード組版','HTMLページ送りと再生']}
-(B/'.ppt-session/design.json').write_text(json.dumps(design,ensure_ascii=False,indent=2))
+assert [(r['type'],r['title']) for r in structure['pages']]==[(a,b) for a,b,c in slides]
 for i,(kind,title,s) in enumerate(slides,1):
  (B/f'svg/slide-{i:02}-{kind}.svg').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">'+s+'</svg>')
-import subprocess,tempfile
-merged=fitz.open()
-with tempfile.TemporaryDirectory() as tmp:
- for i,f in enumerate(sorted((B/'svg').glob('*.svg')),1):
-  out=Path(tmp)/f'{i}.pdf'
-  subprocess.run(['inkscape',str(f),'--export-type=pdf',f'--export-filename={out}'],check=True,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL)
-  d=fitz.open(out);merged.insert_pdf(d)
-  d[0].get_pixmap(matrix=fitz.Matrix(1,1),alpha=False).save(B/f'render/slide-{i:02}.png')
-merged.save(B/'deck.pdf')
-print('Created seven SVG pages; Inkscape PDF and PDF-render PNG previews')
+import subprocess,os,hashlib
+out=B/'.private/export-current.pdf'
+out.parent.mkdir(parents=True,exist_ok=True)
+if out.exists():
+ old=B/'.private'/('previous-export-'+hashlib.sha256(out.read_bytes()).hexdigest()[:12]+'.pdf')
+ if not old.exists():out.rename(old)
+ else:out.unlink()
+cmd=['node',str(B/'source/export_pdf.js'),str(B/'svg'),str(out)]
+r=subprocess.run(cmd,capture_output=True,text=True,encoding='utf-8')
+(B/'source/original-export-receipt.json').write_text(json.dumps({'command':['node','source/export_pdf.js','svg','output.pdf'],'exit_code':r.returncode,'stdout':r.stdout,'stderr':r.stderr,'adapter':'Only optional SVG_CHROME_EXECUTABLE is added; original SVG rendering/PDF merging unchanged.','source_sha256':hashlib.sha256((B/'source/upstream/scripts/export_pdf.js').read_bytes()).hexdigest()},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+assert r.returncode==0,r.stderr
+(B/'deck.pdf').write_bytes(out.read_bytes())
+doc=fitz.open(B/'deck.pdf');assert len(doc)==7
+for i,page in enumerate(doc,1):page.get_pixmap(matrix=fitz.Matrix(1600/page.rect.width,1600/page.rect.width),alpha=False).save(B/f'render/slide-{i:02}.png')
+(B/'source/plan-before-svg.json').write_text(json.dumps({'repair_run':True,'planning_read_before_svg':True,'structure_sha256':hashlib.sha256((B/'.ppt-session/structure.json').read_bytes()).hexdigest(),'design_sha256':hashlib.sha256((B/'.ppt-session/design.json').read_bytes()).hexdigest(),'source_sha256':hashlib.sha256((B/'input/BRIEF.md').read_bytes()).hexdigest(),'pages':7},ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+print('7 SVG pages built from pre-existing plan/design; original browser PDF exporter with explicit Chrome executable adapter.')

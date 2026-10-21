@@ -8,7 +8,7 @@
   "runtime": "source/runtime",
   "original_skill": "source/upstream/skills/marp/SKILL.md",
   "adapter_diff": "source/windows-export-adapter.diff",
-  "method": "実MCP stdio JSON-RPC tools/call → 原典minimalの構造化templates → 原典export_slide → Marp CLI4.4.0 HTML/PDF/画像主体PPTX",
+  "method": "原典CLIの独立2頁確認＋同梱MCP実装の6頁制作・ID指定編集→原典Marp CLIによるHTML/PDF/画像主体PPTX出力",
   "mcp_calls": [
     "list_themes_and_styles",
     "list_layouts",
@@ -58,5 +58,26 @@
   "source_binaries": "node_modules/browser/cache not bundled",
   "fictional": true,
   "sample_notice": "架空の衣服お直しワークショップ。開催・効果・売上実績なし。時間は企画設定、日時・会場・参加条件未定。",
-  "verification_scope": "原典buildとMCP生成/export、PDF6枚、表紙PNG初回表示のみ。全頁詳細目視・独立review・構造監査・ZIP再実行なし。"
+  "superseded_history": [
+    {
+      "revision": "initial source-copy metadata",
+      "old_metadata": {
+        "verification_scope": "原典buildとMCP生成/export、PDF6枚、表紙PNG初回表示のみ。全頁詳細目視・独立review・構造監査・ZIP再実行なし。"
+      },
+      "authority": "Current state is the bound QA receipt, not these superseded statements."
+    }
+  ],
+  "verification_scope": "元MCPで全6頁を再生成しHTML/PDF/PPTXを書出し。元CLIでも作成・ID更新・ID保持・HTML/PDF出力を実行。HTML6頁・PDF6頁を実描画し目視。3頁の4動作、4頁の表幅、6頁の文字コントラストを修復。",
+  "current_verification": "source/repair-qa.json",
+  "current_status": "author_visual_qa_complete_independent_rereview_pending",
+  "not_demonstrated": [
+    "6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。",
+    "原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。",
+    "工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。"
+  ],
+  "current_preview_canvas": [
+    1920,
+    1080
+  ],
+  "zip_reexecution": "source/round5-zip-replay.json"
 }

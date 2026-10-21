@@ -1,6 +1,6 @@
-Font payloads only are normalized in this human-readable diff; actual HTML and TTF remain complete.
---- upstream/deck-template.md HTML skeleton
-+++ night-observatory.html (font payload normalized)
+Full font payloads normalized for readability only. Actual data is in the deck.
+--- original deck-template.md
++++ current night-observatory.html
 @@ -1,16 +1,15 @@
  <!DOCTYPE html>
 -<html lang="en">
@@ -21,7 +21,7 @@ Font payloads only are normalized in this human-readable diff; actual HTML and T
  
    <!-- ONLY for decks with code slides. Load a syntax theme close to the deck palette
         (atom-one-dark/-light, monokai, github), then restyle the <pre> container below
-@@ -18,142 +17,130 @@
+@@ -18,142 +17,137 @@
    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css" /> -->
  
    <style>
@@ -36,10 +36,10 @@ Font payloads only are normalized in this human-readable diff; actual HTML and T
 -      --text-muted:    /* #... secondary text */;
 -      --accent:        /* #... */;
 -      --accent-2:      /* #... optional second accent */;
-+@font-face{font-family:NightNumber;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED_FROM_DIFF>) format("truetype");font-weight:100 900;font-display:swap;}
-+@font-face{font-family:NightBody;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED_FROM_DIFF>) format("truetype");font-weight:700;font-display:swap;}
-+@font-face{font-family:NightBody;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED_FROM_DIFF>) format("truetype");font-weight:400;font-display:swap;}
-+@font-face{font-family:NightDisplay;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD_OMITTED_FROM_DIFF>) format("truetype");font-weight:400;font-display:swap;}
++@font-face{font-family:NightNumber;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD>) format("truetype");font-weight:100 900;font-display:swap;}
++@font-face{font-family:NightBody;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD>) format("truetype");font-weight:700;font-display:swap;}
++@font-face{font-family:NightBody;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD>) format("truetype");font-weight:400;font-display:swap;}
++@font-face{font-family:NightDisplay;src:url(data:font/ttf;base64,<OFFICIAL_TTF_PAYLOAD>) format("truetype");font-weight:400;font-display:swap;}
 +/* THEME: a unique orbit system for this event proposal; no stock theme. */
 +:root {--bg:#07131f;--bg-alt:#0e2737;--text:#f4f0e6;--text-muted:#b4cad1;--accent:#69e2f2;--accent-2:#f3b95e;--font-display:NightDisplay,sans-serif;--font-body:NightBody,sans-serif;--ease:cubic-bezier(.16,1,.3,1);--dur:.65s;}
 +/* BASE: original 1920x1080 canvas, background sections and frame contract. */
@@ -73,7 +73,7 @@ Font payloads only are normalized in this human-readable diff; actual HTML and T
 +.night-activities {margin-left:700px;margin-top:80px;display:flex;flex-direction:column;gap:42px;}
 +.night-activities h3 {font-size:46px;}
 +.night-activities p {font-size:31px;margin-top:10px;color:var(--text-muted);}
-+.orbit-word {position:absolute;left:190px;top:575px;width:420px;text-align:center;font-family:var(--font-display);font-size:51px;line-height:1.6;}
++.orbit-word {position:absolute;left:195px;top:535px;width:420px;text-align:center;font-family:var(--font-display);font-size:51px;line-height:1.6;}
 +.route {position:relative;display:flex;justify-content:space-between;margin-top:125px;gap:80px;}
 +.route:before {content:'';position:absolute;left:100px;right:100px;top:67px;border-top:2px solid var(--accent);opacity:.6;}
 +.route>div {width:420px;position:relative;}
@@ -105,7 +105,12 @@ Font payloads only are normalized in this human-readable diff; actual HTML and T
 -      /* Typography */
 -      --font-display:  /* 'Display Font', sans-serif */;
 -      --font-body:     /* 'Body Font', sans-serif */;
--
++/* Small Japanese headings use the quiet body face; the display face stays on titles. */
++.reveal h3,.orbit-word,.decision-center{font-family:var(--font-body);font-weight:700}
++.decision-branches h3{font-size:45px}
++/* Keep the recurring circle in an area without text on the comparison page. */
++.paper .closing-orbit{width:210px;height:210px;right:50px;top:800px;opacity:.35}
+ 
 -      /* Motion */
 -      --ease:          cubic-bezier(0.16, 1, 0.3, 1);
 -      --dur:           0.6s;
@@ -198,7 +203,8 @@ Font payloads only are normalized in this human-readable diff; actual HTML and T
 +<section data-auto-animate>
 +  <div class="frame content-frame">
 +    <div class="orbit small-orbit" data-id="observation-orbit"><svg viewBox="0 0 1000 1000" aria-hidden="true"><circle cx="500" cy="500" r="430" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="500" cy="500" r="360" fill="none" stroke="currentColor" stroke-width="1" opacity=".35"/><circle cx="805" cy="197" r="13" fill="#f3b95e"/></svg></div>
-+    <div class="entrance"><p class="eyebrow">AT THE VENUE</p><h2>みんなで、夜を見上げる。</h2><div class="orbit-word">急がず、<br>過ごす。</div><div class="night-activities"><div><h3>案内を聞く</h3><p>会場での過ごし方を、最初に共有。</p></div><div><h3>静かに待つ</h3><p>眺めたい場所で、ゆっくり過ごす。</p></div><div><h3>見えたものを話す</h3><p>気になったことを、言葉にしてみる。</p></div></div></div>
++    <div class="orbit-word">急がず、<br>過ごす。</div>
++    <div class="entrance"><p class="eyebrow">AT THE VENUE</p><h2>みんなで、夜を見上げる。</h2><div class="night-activities"><div><h3>案内を聞く</h3><p>会場での過ごし方を、最初に共有。</p></div><div><h3>静かに待つ</h3><p>眺めたい場所で、ゆっくり過ごす。</p></div><div><h3>見えたものを話す</h3><p>気になったことを、言葉にしてみる。</p></div></div></div>
 +  </div>
 +  <aside class="notes">過ごし方の提案です。特定の天体が見えることや観測成果を約束しません。会場の導線・安全条件は未定です。</aside>
 +</section>
@@ -279,7 +285,7 @@ Font payloads only are normalized in this human-readable diff; actual HTML and T
  
      </div>
    </div>
-@@ -173,10 +160,24 @@
+@@ -173,10 +167,24 @@
        controls: true,
        progress: true,
        hash: true,

@@ -1,16 +1,16 @@
 {
-  "status": "light_check_complete",
+  "status": "original_generation_and_all5_visual_check_complete",
   "original_generation_success": true,
   "original_injection_success": true,
   "residual_math_placeholders": 0,
-  "formula_definitions": 9,
+  "formula_definitions": 6,
   "powerpoint_rendered": true,
   "representative_page_opened": true,
-  "whole_deck_detailed_review": false,
+  "whole_deck_detailed_review": true,
   "independent_review": false,
   "full_pptx_structure_audit": false,
   "zip_reexecution": false,
-  "review_mode": "user_requested_minimal",
+  "review_mode": "all5_visual_and_original_overlap_check",
   "native_math_editing": "Microsoft PowerPoint math text, not images",
   "office_render_receipt": "render/powerpoint-render.json",
   "representative_pages": [
@@ -18,6 +18,29 @@
     4
   ],
   "repairs": [
-    "Fixed native horizontal bar chart category label frequency to display A and B"
-  ]
+    "Fixed native horizontal bar chart category label frequency to display A and B",
+    "2026-10-15: Graph caption moved above the chart, explicit A/B squared deviations added; original generator and OMML injection rerun; PowerPoint 16 rendered all 5 pages; page 3 visually checked."
+  ],
+  "repair_20261015": {
+    "displayed_math_blocks_by_page": [
+      0,
+      2,
+      2,
+      2,
+      0
+    ],
+    "chart_data_labels": true,
+    "semantic_text_colors": {
+      "blue": "006B98",
+      "orange": "A65A00"
+    },
+    "original_overlap_checker": {
+      "report": "qa/original-overlaps.json",
+      "critical": 0,
+      "major": 0,
+      "warnings": 0
+    },
+    "all5_visual_checked": true,
+    "independent_review": "pending_after_repair"
+  }
 }

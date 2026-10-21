@@ -1,0 +1,58 @@
+{
+  "case_id": "image-to-editable",
+  "implemented_by": "Codex orchestrator plus two real page workers; no new Opus production",
+  "current_pptx_sha256": "7a6b9696cf5525d0f14b32fe494649df82b9fba29487c3728cb4a56f56a4ecf2",
+  "case_patch": {
+    "method": "原図2枚を新規runの実worker2名へ渡し、1頁は成功版のSHA照合で再利用、2頁はgit commitの字間と位置を原図に合わせて修復。原典record/finalizeを通し、文字21件を含むnative41要素とbitmap7点を統合。",
+    "sample_notice": "既存画像2枚の再構成。文字21件を含むnative41要素、bitmap7点。実worker/原典検査/PowerPoint全頁確認済み、独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "新run-r4を原典検査・統合し、PowerPoint全2頁を再描画。",
+    "preview_image_notice": "現在のPowerPoint PDFからPNG化。原図の字体・texture・細部は近似。",
+    "pages": [
+      "examples/repositories/image-to-editable/render/slide-01.png",
+      "examples/repositories/image-to-editable/render/slide-02.png"
+    ],
+    "titles": [
+      "Gitの保存・記録・共有",
+      "変更は3つの場所を進む"
+    ],
+    "notes": [
+      "このページでは、エディターでの保存、Gitへの記録、リモートへの共有を区別します。保存だけでは履歴に残らず、コミットだけでは共有先へ送られません。この作例は元画像から文字とカードを編集可能に再構成し、アイコンは画像として保持しています。この案内ノートはカタログ制作時に新規追加したもので、元画像から抽出したものではありません。",
+      "変更は作業ツリー、ステージ、ローカル履歴の順に進みます。git addで次に記録する内容を選び、git commitでその内容を手元の履歴に残します。add後の追加編集は自動でステージへ入らないため、必要なら再度addして確認します。この案内ノートはカタログ制作時に新規追加したものです。"
+    ]
+  },
+  "guide_patch": {
+    "summary_ja": "既存画像を頁ごとに分解し、文字や普通図形をnative、複雑なアイコンを個別画像へ分け、原典CLIで検査・統合する。",
+    "requirements": [
+      "Python3.10+と原典editppt CLIの固定依存（PyMuPDF/python-pptx等）",
+      "新規入力には頁worker対応エージェントと選択した画像backend。保存済み結果の再統合は画像生成不要。",
+      "今回の描画はWindows PowerPoint/Yu Gothic/Arial Narrow、同梱BIZ UDPGothic Bold。"
+    ],
+    "steps": [
+      "原典run prepareで画像を入力し、頁ごとのworker promptと入力SHAを作る。文字/普通図形/画像の分類を各頁で決める。",
+      "別workerへ各頁をdispatchする。workerだけが頁manifestを作り、分離アイコンをprocess-sheetし、page build/contact-sheet/validateまで行う。",
+      "orchestratorは結果とSHA・validationを確かめてrecordし、全頁受入後に原典run finalizeで統合・検査する。",
+      "PowerPointで原図と出力の両頁を見比べ、別コピーで文字変更と再表示を確認する。保存済みworker結果だけの再出力はsource/reproduce.pyを使う。"
+    ],
+    "limitations": [
+      "元画像は同じカタログ内のcodex-image-pptで作ったGit説明画像。外部の複雑な実資料の復元精度は示さない。",
+      "文字・カード・背景・普通矢印はnative。7アイコンは元画像の実image_gen編集で分離済みのbitmapで、内部の線や色は編集できない。",
+      "今回の修復は2名の実workerが各頁build/validateを担当し、orchestratorが原典dispatch/record/finalizeを実行。元の分離画像はSHA照合で再利用し、新しい画像生成・外部OCRは未実施。",
+      "字体・平塗りと改行は近似。画素一致を保証せず、正しい文字・箱・矢印方向・編集性を照合する。",
+      "1頁は公式BIZ UDPGothic Bold/OFL同梱。2頁はYu GothicとArial Bold/Arial Narrow Boldを使用しOS字体は非再配布。新規入力のOCR/backend設定は原典に従う。",
+      "講稿はカタログ制作時に新規追加した説明で、画像から抽出したノートではない。本文XMLと画像bytesを保つnotes-only処理を記録。"
+    ],
+    "execution_type": "原典CLIと実worker2名による頁別再構成/校正。保存済みmanifestの再統合と新規worker実行を区別。",
+    "commands": [
+      "python source/reproduce.py",
+      "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render",
+      "python source/render_pdf_previews.py render",
+      "python source/verify_editability.py --render",
+      "python source/render_pdf_previews.py qa/editability/render",
+      "python source/inspect_current.py"
+    ]
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native5.json",
+  "independent_current_version_review": "pending",
+  "distribution_replay": "source/distribution-replay.json"
+}

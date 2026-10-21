@@ -55,8 +55,9 @@ def main() -> int:
         presentation.SaveAs(output)
     finally:
         presentation.Close()
-        if not had_presentations:
-            app.Quit()
+        # Shared PowerPoint process: close only this deck. Never quit the application.
+        del presentation
+        del app
 
     manifest = {
         "method": "merge_japanese_fork_reviewed_single_page_pptx",

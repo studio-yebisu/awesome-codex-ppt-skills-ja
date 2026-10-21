@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MBB Page Maker Advanced Analytics Diagnostic Variants</title>
+  <link rel="stylesheet" href="../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../assets/themes/blue.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Advanced analytics diagnostic variants">
+    <section class="slide" data-title="Segment trajectories show which pockets are improving versus decaying">
+      <header><div class="slide-kicker">Analytics diagnostic</div><h2 class="slide-title">Segment trajectories show which pockets are improving versus decaying</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-sidebar">
+          <main class="region"><div class="region-body"><div class="small-multiples-chart">
+            <article class="chart-multiple-panel"><h3>Priority accounts</h3><svg viewBox="0 0 260 150" role="img"><line class="chart-grid-line" x1="18" y1="38" x2="244" y2="38"></line><line class="chart-grid-line" x1="18" y1="88" x2="244" y2="88"></line><line class="chart-axis" x1="18" y1="128" x2="244" y2="128"></line><path class="chart-series-primary" d="M18 112 L72 98 L126 76 L180 58 L236 34"></path></svg><span>+18 pts</span></article>
+            <article class="chart-multiple-panel"><h3>Long tail</h3><svg viewBox="0 0 260 150" role="img"><line class="chart-grid-line" x1="18" y1="38" x2="244" y2="38"></line><line class="chart-grid-line" x1="18" y1="88" x2="244" y2="88"></line><line class="chart-axis" x1="18" y1="128" x2="244" y2="128"></line><path class="chart-series-primary" d="M18 96 L72 86 L126 92 L180 68 L236 60"></path></svg><span>+9 pts</span></article>
+            <article class="chart-multiple-panel"><h3>Low engagement</h3><svg viewBox="0 0 260 150" role="img"><line class="chart-grid-line" x1="18" y1="38" x2="244" y2="38"></line><line class="chart-grid-line" x1="18" y1="88" x2="244" y2="88"></line><line class="chart-axis" x1="18" y1="128" x2="244" y2="128"></line><path class="chart-series-primary" d="M18 70 L72 72 L126 78 L180 86 L236 102"></path></svg><span>-7 pts</span></article>
+            <article class="chart-multiple-panel"><h3>New cohorts</h3><svg viewBox="0 0 260 150" role="img"><line class="chart-grid-line" x1="18" y1="38" x2="244" y2="38"></line><line class="chart-grid-line" x1="18" y1="88" x2="244" y2="88"></line><line class="chart-axis" x1="18" y1="128" x2="244" y2="128"></line><path class="chart-series-primary" d="M18 116 L72 108 L126 90 L180 84 L236 66"></path></svg><span>+12 pts</span></article>
+          </div></div></main>
+          <aside class="region is-muted"><div class="region-body is-centered"><div class="driver-recap-columns"><article><strong>Use when</strong><span>Multiple comparable segments need the same trend frame.</span></article><article><strong>Fallback</strong><span>Use one line chart if segments do not each need inspection.</span></article></div></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Showcase: small-multiples-chart</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide is-dense" data-title="Cohort retention separates launch quality from portfolio averages">
+      <header><div class="slide-kicker">Analytics diagnostic</div><h2 class="slide-title">Cohort retention separates launch quality from portfolio averages</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-rail">
+          <main class="region"><div class="cohort-retention-grid">
+            <div class="cohort-cell is-head">Cohort</div><div class="cohort-cell is-head">M0</div><div class="cohort-cell is-head">M1</div><div class="cohort-cell is-head">M2</div><div class="cohort-cell is-head">M3</div><div class="cohort-cell is-head">M4</div>
+            <div class="cohort-cell is-label">Jan launch</div><div class="cohort-cell is-5">100</div><div class="cohort-cell is-4">78</div><div class="cohort-cell is-3">63</div><div class="cohort-cell is-3">58</div><div class="cohort-cell is-2">49</div>
+            <div class="cohort-cell is-label">Feb launch</div><div class="cohort-cell is-5">100</div><div class="cohort-cell is-4">82</div><div class="cohort-cell is-4">70</div><div class="cohort-cell is-3">61</div><div class="cohort-cell is-3">56</div>
+            <div class="cohort-cell is-label">Mar launch</div><div class="cohort-cell is-5">100</div><div class="cohort-cell is-5">88</div><div class="cohort-cell is-4">76</div><div class="cohort-cell is-4">69</div><div class="cohort-cell is-muted">-</div>
+            <div class="cohort-cell is-label">Apr launch</div><div class="cohort-cell is-5">100</div><div class="cohort-cell is-5">91</div><div class="cohort-cell is-4">80</div><div class="cohort-cell is-muted">-</div><div class="cohort-cell is-muted">-</div>
+          </div></main>
+          <aside class="region is-muted"><div class="safe-stack"><h3 class="region-title">Interpretation</h3><p class="region-copy">Use cohort grids when timing of entry changes the readout; do not average away cohort age.</p><div class="callout"><strong>Minimum data</strong><p>Cohort labels, ordered periods, and retention or conversion values.</p></div></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Showcase: cohort-retention-grid</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Distribution and variance pages show whether the average is hiding operating spread">
+      <header><div class="slide-kicker">Analytics diagnostic</div><h2 class="slide-title">Distribution and variance pages show whether the average is hiding operating spread</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout split-even">
+          <main class="region"><div class="safe-stack"><div class="chart-title-row"><h3>Cycle-time distribution</h3><p>Days by transaction, illustrative</p></div><div class="distribution-plot"><div class="distribution-bars"><span style="--h: 18%"></span><span style="--h: 34%"></span><span style="--h: 56%"></span><span style="--h: 88%"></span><span style="--h: 72%"></span><span style="--h: 46%"></span><span style="--h: 25%"></span></div><div class="distribution-summary"><div class="distribution-box"><span class="distribution-whisker" style="--min: 14%; --max: 88%"></span><span class="distribution-iqr" style="--min: 38%; --max: 66%"></span><span class="distribution-median" style="--value: 54%"></span></div><div class="distribution-scale"><span>Low</span><span>Median</span><span>High</span></div></div></div></div></main>
+          <aside class="region"><div class="safe-stack"><div class="chart-title-row"><h3>Plan variance by driver</h3><p>Actual versus plan</p></div><table class="variance-bridge-table"><thead><tr><th>Driver</th><th>Plan</th><th>Actual</th><th>Variance</th><th>Readout</th></tr></thead><tbody><tr><td class="row-head">Activation</td><td>74</td><td>82</td><td><span class="variance-bar is-positive" style="--value: 68%">+8</span></td><td>Faster onboarding.</td></tr><tr><td class="row-head">Conversion</td><td>31</td><td>27</td><td><span class="variance-bar is-negative" style="--value: 44%">-4</span></td><td>Friction persists.</td></tr><tr><td class="row-head">Expansion</td><td>18</td><td>24</td><td><span class="variance-bar is-positive" style="--value: 56%">+6</span></td><td>Module attach improved.</td></tr></tbody></table></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Showcase: distribution-plot plus variance-bridge-table</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Driver trees should connect model output to the business action">
+      <header><div class="slide-kicker">Analytics diagnostic</div><h2 class="slide-title">Driver trees should connect model output to the business action</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-sidebar">
+          <main class="region"><div class="region-body is-centered"><div class="driver-recap-columns"><article><strong>Demand signal</strong><span>Repeat workflow frequency explains most predicted value.</span></article><article><strong>Adoption signal</strong><span>Named owner and embedded policy are the strongest use predictors.</span></article><article><strong>Cost signal</strong><span>Exception handling drives the margin downside case.</span></article></div></div></main>
+          <aside class="region is-muted"><div class="region-body is-centered"><div class="callout"><strong>Router note</strong><p>Use driver recaps after a model when the audience needs implication more than coefficient audit.</p></div></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Showcase: driver-recap-columns</span><span class="page-number"></span></footer>
+    </section>
+  </main>
+  <script src="../../assets/js/runtime.js"></script>
+</body>
+</html>

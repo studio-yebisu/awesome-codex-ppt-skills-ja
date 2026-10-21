@@ -1,0 +1,25 @@
+// Two artifact exports only; no fullverify/last/dense/mobile inspection.
+import {chromium} from 'playwright';
+import fs from 'node:fs';
+const output=process.argv[2]??'artifacts/representatives';
+fs.mkdirSync(output,{recursive:true});
+const browser=await chromium.launch({channel:'chrome',headless:true});
+const page=await browser.newPage({viewport:{width:1600,height:900},deviceScaleFactor:1});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));page.on('console',m=>{if(m.type()==='error')errors.push(m.text());});
+await page.goto('http://127.0.0.1:8945/index.html',{waitUntil:'networkidle'});
+await page.locator('[data-testid="step-progress"][data-step-index="0"]').waitFor();
+await page.evaluate(()=>document.fonts.ready);
+await page.waitForTimeout(900);
+await page.evaluate(()=>{window.__initialBook=document.querySelector('.book');});
+await page.screenshot({path:output+'/major-01.png'});
+const first=await page.locator('[data-presentation-title]').innerText();
+await page.getByRole('button',{name:'next →',exact:true}).click();
+await page.locator('[data-testid="step-progress"][data-step-index="1"]').waitFor();
+await page.waitForTimeout(900);
+await page.screenshot({path:output+'/major-02.png'});
+const second=await page.locator('[data-presentation-title]').innerText();
+const sameBook=await page.evaluate(()=>window.__initialBook===document.querySelector('.book'));
+const count=await page.locator('[data-testid="step-progress"]').getAttribute('data-step-count');
+const result={check:'Initial major display + original next1→2 only',viewport:[1600,900],original_stage_canvas:[880,380],first,second,step_count:Number(count),persistent_book_dom_across_1_to_2:sameBook,page_or_console_errors:errors};
+fs.writeFileSync(output+'/DISPLAY.json',JSON.stringify(result,null,2));console.log(JSON.stringify(result,null,2));
+await browser.close();if(errors.length)process.exit(1);

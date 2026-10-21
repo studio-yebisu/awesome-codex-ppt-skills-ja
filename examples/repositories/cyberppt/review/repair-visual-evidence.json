@@ -1,0 +1,1801 @@
+{
+  "artifact_sha256": "81b90ccf3d2ad42e52c550fcfd94f24154c8e8e6e63864b59c8ad7458704701f",
+  "scope": "Current technical checks plus Codex all-page visual inspection. Does not replace unchanged original failed gate.",
+  "slides": [
+    {
+      "slide": 1,
+      "artifact_sha256": "81b90ccf3d2ad42e52c550fcfd94f24154c8e8e6e63864b59c8ad7458704701f",
+      "blueprint_render_path": "design/slide-01-blueprint.png",
+      "ppt_render_path": "render/slide-01.png",
+      "side_by_side_comparison_path": "review/slide-01-preview-side-by-side.png",
+      "local_overlay_artifacts": [
+        "review/slide-01-overlay.png"
+      ],
+      "measurement_evidence_path": "design/slide-01-registry.json",
+      "spatial_numeric_check_path": "review/slide-01-numeric.json",
+      "component_signature_check_path": "review/slide-01-component-check.json",
+      "visual_element_registry_path": "design/slide-01-registry.json",
+      "bbox_delta_report_path": "review/slide-01-numeric.json",
+      "overlay_comparison_path": "review/slide-01-overlay.png",
+      "pixel_diff_report_path": "review/slide-01-original-diff.json",
+      "local_crop_comparisons": [
+        "review/slide-01-title-crop.png",
+        "review/slide-01-main-crop.png",
+        "review/slide-01-takeaway-crop.png",
+        "review/slide-01-footer-crop.png"
+      ],
+      "visual_differences": [
+        {
+          "severity": "High",
+          "what": "Original unmodified pixel/bbox comparison not passed; flat native paper versus generated bitmap tonal variation, glyphs/icons differ. Footer clearance deliberately repaired.",
+          "evidence": "review/slide-01-original-diff.json"
+        }
+      ],
+      "evidence": {
+        "main_chart_semantics_match": {
+          "method": "Codex full-size source/native comparison",
+          "proof": "review/slide-01-main-crop.png",
+          "result": "Same table rows/columns or flow nodes and labels; exact geometry checked separately"
+        },
+        "editable_information_layer_pass": {
+          "objects": "review/original-object-inspection.json",
+          "content_and_ids": "review/slide-01-component-check.json",
+          "full_slide_blueprint_embedded": false
+        },
+        "label_collision_pass": {
+          "passed": true,
+          "checked_regions": [
+            "render/slide-01.png",
+            "review/slide-01-main-crop.png"
+          ],
+          "collisions": [],
+          "allowed_text_overlaps": "Labels inside intended table cells, node labels, and numbered discs only",
+          "reviewer": "Codex inspection bound to exact source/render pixel SHA; no independent score",
+          "inspection_receipt": "review/codex-visual-inspection.json",
+          "current_pixels_match_inspected_pixels": true
+        },
+        "text_overflow_pass": {
+          "report": "source/layout-overflow.json",
+          "result": "Actual PowerPoint TextFrame2 text/cell inner-bound measurements, 90 objects, zero issues"
+        },
+        "container_overflow_pass": {
+          "passed": true,
+          "checked_regions": [
+            {
+              "id": "title",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "page-number",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "label-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "label-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "label-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            }
+          ],
+          "failures": [],
+          "measurement": "source/layout-overflow.json; native text extents measured by PowerPoint, plus all-page visual read"
+        },
+        "continuous_text_flow_pass": {
+          "passed": true,
+          "checked_text_runs": [
+            {
+              "id": "title",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "page-number",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "label-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "label-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "label-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            }
+          ],
+          "failures": []
+        },
+        "table_semantic_typography_pass": {
+          "text_objects": [],
+          "result": "Prose cells use T7, never T11; actual font sizes retained and upper-range deviations disclosed"
+        },
+        "table_density_pass": {
+          "applies": false,
+          "reason": "Not a table; actual diagram fully inspected",
+          "proof": "review/slide-01-main-crop.png"
+        },
+        "blueprint_background_not_used": {
+          "actual_object_inventory": "review/original-object-inspection.json",
+          "pictures": 3,
+          "scope": "Only three small non-text SVG icons on cover, no page bitmap in deck"
+        }
+      },
+      "surface_system_match": false,
+      "main_chart_semantics_match": true,
+      "visual_semantics_preserved": false,
+      "editable_information_layer_pass": true,
+      "spatial_registration_pass": false,
+      "curve_fidelity_pass": false,
+      "label_collision_pass": true,
+      "text_overflow_pass": true,
+      "container_overflow_pass": true,
+      "continuous_text_flow_pass": true,
+      "table_semantic_typography_pass": true,
+      "table_density_pass": true,
+      "blueprint_background_not_used": true,
+      "deliverable_allowed": false,
+      "notes": [
+        "Technical evidence collected during current Codex repair; original acceptance remains failed. No user approval or new model generation is claimed.",
+        "Visual fields reuse only exact pixel SHA from review/codex-visual-inspection.json; changed pixels require new inspection.",
+        "curve_fidelity_pass stays false because exact source geometry has not passed; not a claim that a trace gate was completed."
+      ]
+    },
+    {
+      "slide": 2,
+      "artifact_sha256": "81b90ccf3d2ad42e52c550fcfd94f24154c8e8e6e63864b59c8ad7458704701f",
+      "blueprint_render_path": "design/slide-02-blueprint.png",
+      "ppt_render_path": "render/slide-02.png",
+      "side_by_side_comparison_path": "review/slide-02-preview-side-by-side.png",
+      "local_overlay_artifacts": [
+        "review/slide-02-overlay.png"
+      ],
+      "measurement_evidence_path": "design/slide-02-registry.json",
+      "spatial_numeric_check_path": "review/slide-02-numeric.json",
+      "component_signature_check_path": "review/slide-02-component-check.json",
+      "visual_element_registry_path": "design/slide-02-registry.json",
+      "bbox_delta_report_path": "review/slide-02-numeric.json",
+      "overlay_comparison_path": "review/slide-02-overlay.png",
+      "pixel_diff_report_path": "review/slide-02-original-diff.json",
+      "local_crop_comparisons": [
+        "review/slide-02-title-crop.png",
+        "review/slide-02-main-crop.png",
+        "review/slide-02-takeaway-crop.png",
+        "review/slide-02-footer-crop.png"
+      ],
+      "visual_differences": [
+        {
+          "severity": "High",
+          "what": "Original unmodified pixel/bbox comparison not passed; flat native paper versus generated bitmap tonal variation, glyphs/icons differ. Footer clearance deliberately repaired.",
+          "evidence": "review/slide-02-original-diff.json"
+        }
+      ],
+      "evidence": {
+        "main_chart_semantics_match": {
+          "method": "Codex full-size source/native comparison",
+          "proof": "review/slide-02-main-crop.png",
+          "result": "Same table rows/columns or flow nodes and labels; exact geometry checked separately"
+        },
+        "editable_information_layer_pass": {
+          "objects": "review/original-object-inspection.json",
+          "content_and_ids": "review/slide-02-component-check.json",
+          "full_slide_blueprint_embedded": false
+        },
+        "label_collision_pass": {
+          "passed": true,
+          "checked_regions": [
+            "render/slide-02.png",
+            "review/slide-02-main-crop.png"
+          ],
+          "collisions": [],
+          "allowed_text_overlaps": "Labels inside intended table cells, node labels, and numbered discs only",
+          "reviewer": "Codex inspection bound to exact source/render pixel SHA; no independent score",
+          "inspection_receipt": "review/codex-visual-inspection.json",
+          "current_pixels_match_inspected_pixels": true
+        },
+        "text_overflow_pass": {
+          "report": "source/layout-overflow.json",
+          "result": "Actual PowerPoint TextFrame2 text/cell inner-bound measurements, 90 objects, zero issues"
+        },
+        "container_overflow_pass": {
+          "passed": true,
+          "checked_regions": [
+            {
+              "id": "page-number",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "title",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "section",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "current",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "proposal",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "keep",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "source-label-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "source-label-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "source-label-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "list-label",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "details-label",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "caveat",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            }
+          ],
+          "failures": [],
+          "measurement": "source/layout-overflow.json; native text extents measured by PowerPoint, plus all-page visual read"
+        },
+        "continuous_text_flow_pass": {
+          "passed": true,
+          "checked_text_runs": [
+            {
+              "id": "page-number",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "title",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "section",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "current",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "proposal",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "keep",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "source-label-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "source-label-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "source-label-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "list-label",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "details-label",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "caveat",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            }
+          ],
+          "failures": []
+        },
+        "table_semantic_typography_pass": {
+          "text_objects": [],
+          "result": "Prose cells use T7, never T11; actual font sizes retained and upper-range deviations disclosed"
+        },
+        "table_density_pass": {
+          "applies": false,
+          "reason": "Not a table; actual diagram fully inspected",
+          "proof": "review/slide-02-main-crop.png"
+        },
+        "blueprint_background_not_used": {
+          "actual_object_inventory": "review/original-object-inspection.json",
+          "pictures": 0,
+          "scope": "Only three small non-text SVG icons on cover, no page bitmap in deck"
+        }
+      },
+      "surface_system_match": false,
+      "main_chart_semantics_match": true,
+      "visual_semantics_preserved": false,
+      "editable_information_layer_pass": true,
+      "spatial_registration_pass": false,
+      "curve_fidelity_pass": false,
+      "label_collision_pass": true,
+      "text_overflow_pass": true,
+      "container_overflow_pass": true,
+      "continuous_text_flow_pass": true,
+      "table_semantic_typography_pass": true,
+      "table_density_pass": true,
+      "blueprint_background_not_used": true,
+      "deliverable_allowed": false,
+      "notes": [
+        "Technical evidence collected during current Codex repair; original acceptance remains failed. No user approval or new model generation is claimed.",
+        "Visual fields reuse only exact pixel SHA from review/codex-visual-inspection.json; changed pixels require new inspection.",
+        "curve_fidelity_pass stays false because exact source geometry has not passed; not a claim that a trace gate was completed."
+      ]
+    },
+    {
+      "slide": 3,
+      "artifact_sha256": "81b90ccf3d2ad42e52c550fcfd94f24154c8e8e6e63864b59c8ad7458704701f",
+      "blueprint_render_path": "design/slide-03-blueprint.png",
+      "ppt_render_path": "render/slide-03.png",
+      "side_by_side_comparison_path": "review/slide-03-preview-side-by-side.png",
+      "local_overlay_artifacts": [
+        "review/slide-03-overlay.png"
+      ],
+      "measurement_evidence_path": "design/slide-03-registry.json",
+      "spatial_numeric_check_path": "review/slide-03-numeric.json",
+      "component_signature_check_path": "review/slide-03-component-check.json",
+      "visual_element_registry_path": "design/slide-03-registry.json",
+      "bbox_delta_report_path": "review/slide-03-numeric.json",
+      "overlay_comparison_path": "review/slide-03-overlay.png",
+      "pixel_diff_report_path": "review/slide-03-original-diff.json",
+      "local_crop_comparisons": [
+        "review/slide-03-title-crop.png",
+        "review/slide-03-main-crop.png",
+        "review/slide-03-takeaway-crop.png",
+        "review/slide-03-footer-crop.png"
+      ],
+      "visual_differences": [
+        {
+          "severity": "High",
+          "what": "Original unmodified pixel/bbox comparison not passed; flat native paper versus generated bitmap tonal variation, glyphs/icons differ. Footer clearance deliberately repaired.",
+          "evidence": "review/slide-03-original-diff.json"
+        }
+      ],
+      "evidence": {
+        "main_chart_semantics_match": {
+          "method": "Codex full-size source/native comparison",
+          "proof": "review/slide-03-main-crop.png",
+          "result": "Same table rows/columns or flow nodes and labels; exact geometry checked separately"
+        },
+        "editable_information_layer_pass": {
+          "objects": "review/original-object-inspection.json",
+          "content_and_ids": "review/slide-03-component-check.json",
+          "full_slide_blueprint_embedded": false
+        },
+        "label_collision_pass": {
+          "passed": true,
+          "checked_regions": [
+            "render/slide-03.png",
+            "review/slide-03-main-crop.png"
+          ],
+          "collisions": [],
+          "allowed_text_overlaps": "Labels inside intended table cells, node labels, and numbered discs only",
+          "reviewer": "Codex inspection bound to exact source/render pixel SHA; no independent score",
+          "inspection_receipt": "review/codex-visual-inspection.json",
+          "current_pixels_match_inspected_pixels": true
+        },
+        "text_overflow_pass": {
+          "report": "source/layout-overflow.json",
+          "result": "Actual PowerPoint TextFrame2 text/cell inner-bound measurements, 90 objects, zero issues"
+        },
+        "container_overflow_pass": {
+          "passed": true,
+          "checked_regions": [
+            {
+              "id": "page-number",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "title",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-3",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-4",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-3",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-4",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-3",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-4",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-3",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-4",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "note-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "note-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            }
+          ],
+          "failures": [],
+          "measurement": "source/layout-overflow.json; native text extents measured by PowerPoint, plus all-page visual read"
+        },
+        "continuous_text_flow_pass": {
+          "passed": true,
+          "checked_text_runs": [
+            {
+              "id": "page-number",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "title",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-3",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-4",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-3",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-4",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-3",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-4",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-3",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-4",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "note-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "note-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            }
+          ],
+          "failures": []
+        },
+        "table_semantic_typography_pass": {
+          "text_objects": [
+            {
+              "id": "cell-0-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-0-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-0-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-0-3",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-0-4",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-1-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-1-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-1-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-1-3",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-1-4",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-2-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-2-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-2-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-2-3",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            },
+            {
+              "id": "cell-2-4",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 21
+            }
+          ],
+          "result": "Prose cells use T7, never T11; actual font sizes retained and upper-range deviations disclosed"
+        },
+        "table_density_pass": {
+          "passed": true,
+          "checked_cells": [
+            {
+              "id": "cell-0-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-3",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-4",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-3",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-4",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-3",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-4",
+              "semantic_role": "table_body",
+              "status": "passed"
+            }
+          ],
+          "evidence": "review/slide-03-main-crop.png",
+          "scope": "Rows/columns and content preserved; font weight and whitespace are disclosed blueprint differences",
+          "inspection_receipt": "review/codex-visual-inspection.json"
+        },
+        "blueprint_background_not_used": {
+          "actual_object_inventory": "review/original-object-inspection.json",
+          "pictures": 0,
+          "scope": "Only three small non-text SVG icons on cover, no page bitmap in deck"
+        }
+      },
+      "surface_system_match": false,
+      "main_chart_semantics_match": true,
+      "visual_semantics_preserved": false,
+      "editable_information_layer_pass": true,
+      "spatial_registration_pass": false,
+      "curve_fidelity_pass": false,
+      "label_collision_pass": true,
+      "text_overflow_pass": true,
+      "container_overflow_pass": true,
+      "continuous_text_flow_pass": true,
+      "table_semantic_typography_pass": true,
+      "table_density_pass": true,
+      "blueprint_background_not_used": true,
+      "deliverable_allowed": false,
+      "notes": [
+        "Technical evidence collected during current Codex repair; original acceptance remains failed. No user approval or new model generation is claimed.",
+        "Visual fields reuse only exact pixel SHA from review/codex-visual-inspection.json; changed pixels require new inspection.",
+        "curve_fidelity_pass stays false because exact source geometry has not passed; not a claim that a trace gate was completed."
+      ]
+    },
+    {
+      "slide": 4,
+      "artifact_sha256": "81b90ccf3d2ad42e52c550fcfd94f24154c8e8e6e63864b59c8ad7458704701f",
+      "blueprint_render_path": "design/slide-04-blueprint.png",
+      "ppt_render_path": "render/slide-04.png",
+      "side_by_side_comparison_path": "review/slide-04-preview-side-by-side.png",
+      "local_overlay_artifacts": [
+        "review/slide-04-overlay.png"
+      ],
+      "measurement_evidence_path": "design/slide-04-registry.json",
+      "spatial_numeric_check_path": "review/slide-04-numeric.json",
+      "component_signature_check_path": "review/slide-04-component-check.json",
+      "visual_element_registry_path": "design/slide-04-registry.json",
+      "bbox_delta_report_path": "review/slide-04-numeric.json",
+      "overlay_comparison_path": "review/slide-04-overlay.png",
+      "pixel_diff_report_path": "review/slide-04-original-diff.json",
+      "local_crop_comparisons": [
+        "review/slide-04-title-crop.png",
+        "review/slide-04-main-crop.png",
+        "review/slide-04-takeaway-crop.png",
+        "review/slide-04-footer-crop.png"
+      ],
+      "visual_differences": [
+        {
+          "severity": "High",
+          "what": "Original unmodified pixel/bbox comparison not passed; flat native paper versus generated bitmap tonal variation, glyphs/icons differ. Footer clearance deliberately repaired.",
+          "evidence": "review/slide-04-original-diff.json"
+        }
+      ],
+      "evidence": {
+        "main_chart_semantics_match": {
+          "method": "Codex full-size source/native comparison",
+          "proof": "review/slide-04-main-crop.png",
+          "result": "Same table rows/columns or flow nodes and labels; exact geometry checked separately"
+        },
+        "editable_information_layer_pass": {
+          "objects": "review/original-object-inspection.json",
+          "content_and_ids": "review/slide-04-component-check.json",
+          "full_slide_blueprint_embedded": false
+        },
+        "label_collision_pass": {
+          "passed": true,
+          "checked_regions": [
+            "render/slide-04.png",
+            "review/slide-04-main-crop.png"
+          ],
+          "collisions": [],
+          "allowed_text_overlaps": "Labels inside intended table cells, node labels, and numbered discs only",
+          "reviewer": "Codex inspection bound to exact source/render pixel SHA; no independent score",
+          "inspection_receipt": "review/codex-visual-inspection.json",
+          "current_pixels_match_inspected_pixels": true
+        },
+        "text_overflow_pass": {
+          "report": "source/layout-overflow.json",
+          "result": "Actual PowerPoint TextFrame2 text/cell inner-bound measurements, 90 objects, zero issues"
+        },
+        "container_overflow_pass": {
+          "passed": true,
+          "checked_regions": [
+            {
+              "id": "page-number",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "title",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "step-number-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "step-number-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "step-number-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "note-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            }
+          ],
+          "failures": [],
+          "measurement": "source/layout-overflow.json; native text extents measured by PowerPoint, plus all-page visual read"
+        },
+        "continuous_text_flow_pass": {
+          "passed": true,
+          "checked_text_runs": [
+            {
+              "id": "page-number",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "title",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "step-number-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "step-number-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "step-number-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "note-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            }
+          ],
+          "failures": []
+        },
+        "table_semantic_typography_pass": {
+          "text_objects": [
+            {
+              "id": "cell-0-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-0-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-0-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-1-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-1-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-1-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-2-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-2-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-2-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            }
+          ],
+          "result": "Prose cells use T7, never T11; actual font sizes retained and upper-range deviations disclosed"
+        },
+        "table_density_pass": {
+          "passed": true,
+          "checked_cells": [
+            {
+              "id": "cell-0-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            }
+          ],
+          "evidence": "review/slide-04-main-crop.png",
+          "scope": "Rows/columns and content preserved; font weight and whitespace are disclosed blueprint differences",
+          "inspection_receipt": "review/codex-visual-inspection.json"
+        },
+        "blueprint_background_not_used": {
+          "actual_object_inventory": "review/original-object-inspection.json",
+          "pictures": 0,
+          "scope": "Only three small non-text SVG icons on cover, no page bitmap in deck"
+        }
+      },
+      "surface_system_match": false,
+      "main_chart_semantics_match": true,
+      "visual_semantics_preserved": false,
+      "editable_information_layer_pass": true,
+      "spatial_registration_pass": false,
+      "curve_fidelity_pass": false,
+      "label_collision_pass": true,
+      "text_overflow_pass": true,
+      "container_overflow_pass": true,
+      "continuous_text_flow_pass": true,
+      "table_semantic_typography_pass": true,
+      "table_density_pass": true,
+      "blueprint_background_not_used": true,
+      "deliverable_allowed": false,
+      "notes": [
+        "Technical evidence collected during current Codex repair; original acceptance remains failed. No user approval or new model generation is claimed.",
+        "Visual fields reuse only exact pixel SHA from review/codex-visual-inspection.json; changed pixels require new inspection.",
+        "curve_fidelity_pass stays false because exact source geometry has not passed; not a claim that a trace gate was completed."
+      ]
+    },
+    {
+      "slide": 5,
+      "artifact_sha256": "81b90ccf3d2ad42e52c550fcfd94f24154c8e8e6e63864b59c8ad7458704701f",
+      "blueprint_render_path": "design/slide-05-blueprint.png",
+      "ppt_render_path": "render/slide-05.png",
+      "side_by_side_comparison_path": "review/slide-05-preview-side-by-side.png",
+      "local_overlay_artifacts": [
+        "review/slide-05-overlay.png"
+      ],
+      "measurement_evidence_path": "design/slide-05-registry.json",
+      "spatial_numeric_check_path": "review/slide-05-numeric.json",
+      "component_signature_check_path": "review/slide-05-component-check.json",
+      "visual_element_registry_path": "design/slide-05-registry.json",
+      "bbox_delta_report_path": "review/slide-05-numeric.json",
+      "overlay_comparison_path": "review/slide-05-overlay.png",
+      "pixel_diff_report_path": "review/slide-05-original-diff.json",
+      "local_crop_comparisons": [
+        "review/slide-05-title-crop.png",
+        "review/slide-05-main-crop.png",
+        "review/slide-05-takeaway-crop.png",
+        "review/slide-05-footer-crop.png"
+      ],
+      "visual_differences": [
+        {
+          "severity": "High",
+          "what": "Original unmodified pixel/bbox comparison not passed; flat native paper versus generated bitmap tonal variation, glyphs/icons differ. Footer clearance deliberately repaired.",
+          "evidence": "review/slide-05-original-diff.json"
+        }
+      ],
+      "evidence": {
+        "main_chart_semantics_match": {
+          "method": "Codex full-size source/native comparison",
+          "proof": "review/slide-05-main-crop.png",
+          "result": "Same table rows/columns or flow nodes and labels; exact geometry checked separately"
+        },
+        "editable_information_layer_pass": {
+          "objects": "review/original-object-inspection.json",
+          "content_and_ids": "review/slide-05-component-check.json",
+          "full_slide_blueprint_embedded": false
+        },
+        "label_collision_pass": {
+          "passed": true,
+          "checked_regions": [
+            "render/slide-05.png",
+            "review/slide-05-main-crop.png"
+          ],
+          "collisions": [],
+          "allowed_text_overlaps": "Labels inside intended table cells, node labels, and numbered discs only",
+          "reviewer": "Codex inspection bound to exact source/render pixel SHA; no independent score",
+          "inspection_receipt": "review/codex-visual-inspection.json",
+          "current_pixels_match_inspected_pixels": true
+        },
+        "text_overflow_pass": {
+          "report": "source/layout-overflow.json",
+          "result": "Actual PowerPoint TextFrame2 text/cell inner-bound measurements, 90 objects, zero issues"
+        },
+        "container_overflow_pass": {
+          "passed": true,
+          "checked_regions": [
+            {
+              "id": "page-number",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "title",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "header-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "note-1",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "note-2",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "owner_container": "native text box, inset within its table/diagram region",
+              "status": "passed"
+            }
+          ],
+          "failures": [],
+          "measurement": "source/layout-overflow.json; native text extents measured by PowerPoint, plus all-page visual read"
+        },
+        "continuous_text_flow_pass": {
+          "passed": true,
+          "checked_text_runs": [
+            {
+              "id": "page-number",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "title",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "subtitle",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "header-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "note-1",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "note-2",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "takeaway",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            },
+            {
+              "id": "footer",
+              "method": "Single native textbox; locked text checked with whitespace/newline normalization",
+              "status": "passed"
+            }
+          ],
+          "failures": []
+        },
+        "table_semantic_typography_pass": {
+          "text_objects": [
+            {
+              "id": "cell-0-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-0-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-0-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-1-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-1-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-1-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-2-0",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-2-1",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            },
+            {
+              "id": "cell-2-2",
+              "semantic_role": "table_body",
+              "role": "T7",
+              "font_size_pt": 20
+            }
+          ],
+          "result": "Prose cells use T7, never T11; actual font sizes retained and upper-range deviations disclosed"
+        },
+        "table_density_pass": {
+          "passed": true,
+          "checked_cells": [
+            {
+              "id": "cell-0-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-0-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-1-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-0",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-1",
+              "semantic_role": "table_body",
+              "status": "passed"
+            },
+            {
+              "id": "cell-2-2",
+              "semantic_role": "table_body",
+              "status": "passed"
+            }
+          ],
+          "evidence": "review/slide-05-main-crop.png",
+          "scope": "Rows/columns and content preserved; font weight and whitespace are disclosed blueprint differences",
+          "inspection_receipt": "review/codex-visual-inspection.json"
+        },
+        "blueprint_background_not_used": {
+          "actual_object_inventory": "review/original-object-inspection.json",
+          "pictures": 0,
+          "scope": "Only three small non-text SVG icons on cover, no page bitmap in deck"
+        }
+      },
+      "surface_system_match": false,
+      "main_chart_semantics_match": true,
+      "visual_semantics_preserved": false,
+      "editable_information_layer_pass": true,
+      "spatial_registration_pass": false,
+      "curve_fidelity_pass": false,
+      "label_collision_pass": true,
+      "text_overflow_pass": true,
+      "container_overflow_pass": true,
+      "continuous_text_flow_pass": true,
+      "table_semantic_typography_pass": true,
+      "table_density_pass": true,
+      "blueprint_background_not_used": true,
+      "deliverable_allowed": false,
+      "notes": [
+        "Technical evidence collected during current Codex repair; original acceptance remains failed. No user approval or new model generation is claimed.",
+        "Visual fields reuse only exact pixel SHA from review/codex-visual-inspection.json; changed pixels require new inspection.",
+        "curve_fidelity_pass stays false because exact source geometry has not passed; not a claim that a trace gate was completed."
+      ]
+    }
+  ]
+}

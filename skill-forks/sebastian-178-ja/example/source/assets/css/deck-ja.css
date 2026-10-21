@@ -3,3 +3,12 @@
 
 /* Initial display correction: prevent flex from splitting Japanese exhibit labels. */
 .issue-tree .tree-node{display:block;line-height:1.4;padding:20px 24px}
+
+.process-flow{gap:36px;overflow:visible}.process-step{overflow:visible;padding-left:14px;padding-right:14px}.process-step:not(:last-child)::after{right:-26px;top:48%;width:14px;height:14px}.keep-word{white-space:nowrap}
+
+.simple-title-cover .default-opening-main .slide-title{font-size:100px;line-height:1.23}.footer{font-size:15px}.page-number{font-size:14px;color:var(--color-muted)}
+
+/* Round4: equal reading columns and explicit source→relation→exhibit links. */
+.input-process-output-layers{grid-template-columns:minmax(0,1fr) 34px minmax(0,1.15fr) 34px minmax(0,1fr)!important;gap:24px}.ipo-layer{padding:22px;min-height:310px}.ipo-layer.is-process{min-height:310px}.ipo-layer strong{font-size:30px}.ipo-layer span{font-size:24px;line-height:1.55}.ipo-arrow{width:28px;height:28px}
+.issue-tree{grid-template-columns:.8fr 1.1fr 1.4fr;gap:54px;overflow:visible}.tree-column{position:relative}.tree-column:not(:first-child){display:grid;grid-template-rows:repeat(3,132px);gap:18px}.tree-node{min-height:132px;align-content:center;padding:14px 20px!important;font-size:24px;line-height:1.4}.tree-root{font-size:30px}.tree-column:nth-child(2)::before{content:"";position:absolute;left:-28px;top:55px;bottom:55px;border-left:2px solid var(--color-accent)}.tree-column:nth-child(2) .tree-node{position:relative}.tree-column:nth-child(2) .tree-node::before{content:"";position:absolute;width:26px;left:-28px;top:50%;border-top:2px solid var(--color-accent)}.tree-column:first-child .tree-node{position:relative}.tree-column:first-child .tree-node::after{content:"";position:absolute;width:28px;right:-28px;top:50%;border-top:2px solid var(--color-accent)}.tree-column:nth-child(2) .tree-node::after{content:"→";position:absolute;right:-44px;top:calc(50% - 20px);color:var(--color-accent);font-size:30px}
+.decision-log th{font-size:24px!important;font-weight:700}.decision-log td{font-size:23px}.outcome-card .concept-label{font-size:21px}

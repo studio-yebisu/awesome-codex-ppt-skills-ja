@@ -1,0 +1,756 @@
+[
+  {
+    "case_id": "sebastian-192",
+    "name": "4案比較→逐頁画像生成",
+    "job": "",
+    "change": "原稿から4種類の作風を並べて選び、選んだ作風で全ページを画像化する。編集可能版は別工程。",
+    "input": "書籍・PDF・論文・原稿と5要件（源材料・参考作風・場面と聴衆・頁数・納品範囲）",
+    "output": "頁画像を並べた画像主体PPTXとpage-spec.json。編集可能PPTXは利用者が明示したときだけ別工程（S6）で再構築",
+    "when_to_use": "審査・ピッチ・講義などで、制作前に見た目の方向を比べて決め、空間や構造を画像で見せたいとき。既存の編集可能PPTXを普通に直す用途は原典の対象外。",
+    "how_to_use": [
+      "5要件（源材料・参考作風・場面と聴衆・頁数・納品範囲）を揃え、足りない項目だけを確認する。",
+      "頁別内容稿をdeck-spec.mdに書いて内容自検を通し、利用者の確認を受ける（代行の明示授権がなければS2で待つ）。",
+      "同じ代表頁・同じ内容で4つの作風一覧を1案1回ずつ生成し、validate_style_options.pyで確かめてから選んでもらう。",
+      "page-spec.jsonに確定文字・安定ID・style.tokensを書き、validate_page_spec.py --strictを通してから1頁ずつ生成し、生成直後に点検する。",
+      "build_image_ppt.pyで合併し、render_deck.pyで完成PPTXを描画して頁順・画幅・文字を確認する。編集可能版が必要ならS6でscene.jsonを作る。"
+    ],
+    "constraints": [
+      "宿主に画像生成能力が必要。無い場合はその状態で止まり、仮の画像で代用しない（原典）。",
+      "既存の編集可能PPTXの通常修正には使わない（原典の非対象）。",
+      "本作例は画像主体PPTX。文字と図はラスタで、編集できるのは話者ノートだけ。S6の編集可能PPTX再構築は実施していない。",
+      "4つの作風一覧の内部縮略頁は原典の16:9要件を満たしていない（方針比較用として保持）。",
+      "原典のvalidate_style_options・validate_page_spec・build_image_ppt・render_deck・audit_page_contentは未実行。独立した最小包装と構造確認で代替し、完成PPTXの実描画もしていない。原典の完全QA合格ではない。",
+      "内容確認（S2）と作風選択（S4）は、この作例では依頼者の委任に基づき制作側が代行した。一般の利用では原典どおり利用者が確認・選択する。",
+      "図内の補助注記はAI生成の文字で、完全な文字照合（OCR）は未実施。"
+    ],
+    "demonstration": {
+      "summary": "架空の小広場研究『夏の余白』8頁。頁別内容稿→同じ8頁内容で4作風一覧（4回生成）→案3『白い地中海模型』を委任に基づき選択→Page Spec→8回の逐頁生成→独立包装で画像主体PPTXにした。",
+      "applied_features": [
+        "頁別内容稿とPage Spec（確定文字・安定ID・tokens）",
+        "同一内容の4作風一覧を独立4回生成",
+        "選択案を参照画像にした逐頁8回生成",
+        "話者ノートの保持"
+      ],
+      "not_demonstrated": [
+        "編集可能PPTXへの再構築（S6：分層・scene.json・build_editable_ppt・audit_editability）",
+        "原典validator・build_image_ppt・render_deck・audit_page_content・evaluate_deliveryの実行",
+        "完成PPTXの実描画（プレビューはPPTX内画像とバイト一致した生成PNG）",
+        "作風一覧の16:9縮略要件の充足",
+        "利用者本人による内容確認と作風選択（委任により代行）"
+      ],
+      "pages": [
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "影は動く。使い方も動く",
+          "what_to_inspect": "同じ俯瞰構図の広場を朝・昼・午後の3枚で並べ、建物の影と樹陰の位置だけを変えている。右下に『影の形は説明用。日影計算の結果ではない』、左下に『架空・未実施の研究計画｜概念図』が残る。",
+          "skill_rule": "Page Specに確定文字と境界を保存し、生成指示へそのまま渡す。材料にない因果や数値を絵で作らない（原典Step 2）。",
+          "proof_path": "examples/repositories/sebastian-192/pages/03-slide.png",
+          "proof_kind": "generated-image"
+        },
+        {
+          "index": 4,
+          "label": "5ページ目",
+          "title": "座る高さで、風景を確かめる",
+          "what_to_inspect": "地面を断面で切り、腰かける人から右の『日除け案（候補）』へ緑の点線『見通し』を引く。白い人物模型・砂色の地面・深緑の樹冠は、作風一覧の案3（source/styles/03-sorter.png の05）と同じ視覚系。",
+          "skill_rule": "4つの作風一覧から選んだ視覚規範をstyle.tokensとreference_imagesに固定し、逐頁生成で全頁へ引き継ぐ（原典Step 1B→Step 2）。",
+          "proof_path": "examples/repositories/sebastian-192/pages/05-slide.png",
+          "proof_kind": "generated-image"
+        },
+        {
+          "index": 5,
+          "label": "6ページ目",
+          "title": "評価計画：影と行動を重ねる",
+          "what_to_inspect": "透明な3層（日陰の範囲・人の動き・居場所の配置）を重ね、右列に『現況確認→試作→観察→振り返り』。左下に『各層は記録様式の概念』。右列下の本文は他の要素より小さい。",
+          "skill_rule": "各頁を生成直後に画幅・文字・裁ち切れ・頁間の一貫性で点検し、失敗頁だけ作り直す（原典Step 2）。本作例の点検は目視記録のみで、audit_page_content.pyは使っていない。",
+          "proof_path": "examples/repositories/sebastian-192/pages/06-slide.png",
+          "proof_kind": "generated-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-192/input/BRIEF.md",
+        "examples/repositories/sebastian-192/input/deck-spec.md",
+        "examples/repositories/sebastian-192/input/page-spec.json",
+        "examples/repositories/sebastian-192/source/style-options.json",
+        "examples/repositories/sebastian-192/source/styles/01-sorter.png",
+        "examples/repositories/sebastian-192/source/styles/02-sorter.png",
+        "examples/repositories/sebastian-192/source/styles/03-sorter.png",
+        "examples/repositories/sebastian-192/source/styles/04-sorter.png",
+        "examples/repositories/sebastian-192/source/prompts/style-03.txt",
+        "examples/repositories/sebastian-192/source/prompts/page-05.txt",
+        "examples/repositories/sebastian-192/QA.json",
+        "examples/repositories/sebastian-192/PROVENANCE.json",
+        "examples/repositories/sebastian-192/deck.pptx",
+        "skill-forks/sebastian-192-ja/source/upstream/SKILL.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典は『内容提炼→画像版PPT→（明示要求時のみ）編集可能PPTX還原』の状態機械。本作例は画像版までをS0〜S5の順で実行し、包装と検査は独立した最小実装に置き換えた。編集可能PPTXは作っていない。",
+      "requirements": [
+        "宿主の画像生成能力。モデル名が表示されない環境では型番を指定したと称さない。",
+        "原典scriptsを使う場合はPython 3.10+（install.pyの.venv推奨）。本作例の再包装はPython 3・python-pptx・Pillow。",
+        "原典render_deck.pyで完成PPTXを描画する場合はPowerPointまたはLibreOffice/Poppler（本作例では未使用）。",
+        "5要件：源材料・参考作風・場面と聴衆・頁数・納品範囲。"
+      ],
+      "steps": [
+        "S0：5要件を確定。",
+        "S1/S2：頁別内容稿をdeck-spec.mdへ書き内容自検。確認は委任により代行。",
+        "S3/S4：同じ8頁内容の作風一覧を独立4回生成し、案3を委任に基づき選択（縮略頁16:9は未達）。",
+        "S5：page-spec.jsonに確定文字・安定ID・tokensを固定し、8頁を1頁ずつ生成して各頁を目視。",
+        "独立した最小包装で画像主体PPTXにし、頁数・ノート一致・画像バイト一致・画幅を確認。"
+      ],
+      "limitations": [
+        "編集可能PPTXへの再構築（S6）は未実施。PPTXは画像主体で、話者ノートのみ編集可能。",
+        "原典validator/合併/render_deck/audit_page_contentおよび原典全QAは未実行。",
+        "完成PPTXの実描画は未実施。プレビューはPPTX内とバイト一致した生成PNG。",
+        "作風一覧の内部縮略頁は16:9要件未達。",
+        "内容確認と作風選択は委任により代行。一般利用では利用者が確認・選択する。",
+        "図内の補助注記はAI生成で、完全な文字照合は未実施。"
+      ]
+    }
+  },
+  {
+    "case_id": "ppt-agent-showcase",
+    "name": "内容別版式HTML→PPTX",
+    "job": "",
+    "change": "目的と原稿を構成案へ整理し、26種類の作風から選んで、配布用のPowerPointへ仕上げる。",
+    "input": "主題・原稿・既存大綱のいずれかと、需要調査への回答（場面・聴衆・補足など）",
+    "output": "頁別HTML・preview.html・SVG・PPTX（このpinのsvg2pptx.pyはSVGの文字と図形をPowerPointの文字枠・図形として書き出す）",
+    "when_to_use": "報告・研修・路演などで、内容に合わせて頁ごとに版式を変えたHTML版とPowerPoint版を一緒に作りたいとき。",
+    "how_to_use": [
+      "Step 1で需要調査の質問を出し、回答を待つ（8頁以下は場面・聴衆・補足の3問）。",
+      "資料搜集→大綱→策划稿（page_type・layout_hint・cards）をplanning.jsonへ保存し、planning_validator.pyで確認する。",
+      "styles/index.mdの26作風から1つ選んでstyle.jsonにし、配図の要否は調査の回答に従う。",
+      "頁ごとに1280×720のHTMLを書き、pipeline-compat.mdの禁止事項（::before/::afterの装飾、conic-gradient、CSS border三角など）を避ける。",
+      "html_packager.py→html2svg.py→svg2pptx.pyを順に実行し、PowerPointで文字と図形を個別に選択できるか確認する。"
+    ],
+    "constraints": [
+      "原典はStep 1の需要調査を『禁止跳过』とし、各内容頁に3枚以上のカード・2種のcard_type・1枚のdataカードを求める。本作例はこの2点を依頼者の指定で外しており、これらの原典規則の実証ではない。",
+      "外部調査（Step 2）は未実施。展示企画は仮想で、日時・会場・参加条件は未定。",
+      "AI配図は使わず、三原色の幾何図形だけで構成（依頼で配図なしを指定）。",
+      "Node.jsやdom-to-svgが使えない環境ではSVG/PPTX変換が飛ばされ、preview.htmlだけになる（原典の降級規則）。",
+      "原典SKILL本文は『右クリック→図形に変換』で編集と書くが、このpinのsvg2pptx.pyは文字枠・図形を直接書き出す（コードで確認）。native表・グラフ・数式は使っていない。",
+      "全頁の詳細目視・構造監査・ZIP再実行・独立評価は未完了。3枚目のラベル位置修正だけ数値で検証済み。",
+      "本文はBIZ UDPMinchoを指定しているが、描画で明朝に見えない箇所があり、字体置換の有無は未確認。"
+    ],
+    "demonstration": {
+      "summary": "仮想の展示企画5頁。planning.jsonで頁ごとのlayout_hint（asymmetric・single-focus・waterfall・primary-secondary）を決め、原典bauhaus_block作風のHTMLを原典packager→html2svg→svg2pptxでPPTXにし、PowerPoint 16で描画した。",
+      "applied_features": [
+        "planning.jsonの頁別layout_hint",
+        "26作風からbauhaus_blockを選択",
+        "原典html_packager・html2svg（dom-to-svg）・svg2pptx",
+        "native文字枠と図形のPPTX"
+      ],
+      "not_demonstrated": [
+        "Step 1需要調査の提示と回答待ち（依頼者の指定で省略）",
+        "Step 2資料搜集",
+        "策划稿のカード規則（3カード・2種・dataカード）と品質自検（内容頁の60%以上にデータ）",
+        "5bのAI配図",
+        "planning_validator・contract_validator・visual_qaなど原典検査スクリプト",
+        "全頁詳細目視と独立評価"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "作品・場所・言葉を、つなぐ",
+          "what_to_inspect": "紺の四角『場所』・赤い円『作品』・黄の三角『言葉』を2本の線で結んだ関係図と、下の一文『配置と案内が、作品との距離を決める。』だけで構成している。",
+          "skill_rule": "策划稿で頁ごとにlayout_hintを決め、関係を見せる頁はsingle-focusで焦点を1つにする（原典Step 4・内容驱动版式）。この頁にカード数規則は適用していない。",
+          "proof_path": "examples/repositories/ppt-agent-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "入口から、余韻まで。",
+          "what_to_inspect": "赤い円→紺の四角→赤い円→黄の三角を矢印でつなぎ、各図形の下に番号01〜04・見出し（入口・見る・話す・持ち帰る）・説明を中央揃えで置く。",
+          "skill_rule": "順序のある内容はwaterfall型の版式にする。中央揃えは12個のラベルのx座標だけをHTMLで直し、同じ原典DOM→SVG→PPTX経路で再生成した。",
+          "proof_path": "examples/repositories/ppt-agent-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "準備は、四つの区切りで。",
+          "what_to_inspect": "左に-4W・-3W・-1W・DAY 0、中央に縦線と色付きの四角、右に見出しと説明の時系列。下に『開場日から逆算した、相対的な準備案。』。",
+          "skill_rule": "HTMLの文字・四角・線はSVGの<text>と図形を経て、svg2pptx.pyでPowerPointの文字枠と図形になる（原典Step 6）。QAのXML比較では全5頁の図形を確認済みだが、PowerPoint上での編集操作の記録はない。",
+          "proof_path": "examples/repositories/ppt-agent-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/ppt-agent-showcase/input/BRIEF.md",
+        "examples/repositories/ppt-agent-showcase/input/requirements.json",
+        "examples/repositories/ppt-agent-showcase/input/planning.json",
+        "examples/repositories/ppt-agent-showcase/input/style.json",
+        "examples/repositories/ppt-agent-showcase/slides/slide-03.html",
+        "examples/repositories/ppt-agent-showcase/svg/slide-03.svg",
+        "examples/repositories/ppt-agent-showcase/source/build.py",
+        "examples/repositories/ppt-agent-showcase/source/BUILD.json",
+        "examples/repositories/ppt-agent-showcase/source/label-alignment-qa.json",
+        "examples/repositories/ppt-agent-showcase/QA.json",
+        "examples/repositories/ppt-agent-showcase/PROVENANCE.json",
+        "examples/repositories/ppt-agent-showcase/deck.pptx",
+        "skill-forks/ppt-agent-ja/upstream/SKILL.md",
+        "skill-forks/ppt-agent-ja/upstream/scripts/svg2pptx.py"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典は需要調査→資料搜集→大綱→策划稿→作風・配図・HTML設計稿→DOM/SVG/PPTX後処理の6段階。本作例は依頼者が企画・作風・字体を指定済みのため調査・搜集・カード数規則を外し、作風選択以降と後処理を原典スクリプトで実行した。",
+      "requirements": [
+        "Node.js 24+ / puppeteer 25.13.0 / dom-to-svg 0.12.2 / esbuild 0.28.2",
+        "Python 3.12 / python-pptx / lxml / Pillow",
+        "Chrome / Microsoft PowerPoint 16（PNG/PDF書き出し）",
+        "Zen Kaku Gothic New Black / BIZ UDPMincho / Manrope（OFL）"
+      ],
+      "steps": [
+        "企画・作風・字体は依頼者が指定（Step 1需要調査・Step 2資料搜集は未実施）。",
+        "planning.jsonに5頁のpage_typeとlayout_hintを記録（カード数規則は不適用）。",
+        "原典bauhaus_block mockのCSSで頁別HTMLを作成。",
+        "html_packager→html2svg（dom-to-svg）→svg2pptxを実行。画像PPTXへの代替なし。",
+        "PowerPoint 16で5頁のPNG/PDFを書き出し、3枚目のラベル12個を中央揃えに直して同じ経路で再生成。"
+      ],
+      "limitations": [
+        "仮想の企画。日時・会場・参加条件は未定、日程は相対案。",
+        "需要調査・資料搜集・カード数規則・AI配図は未実施。",
+        "native表・グラフ・数式は未使用。",
+        "全頁詳細目視・構造監査・ZIP再実行・独立評価は未完了。"
+      ]
+    }
+  },
+  {
+    "case_id": "presentation-skill-showcase",
+    "name": "outline正本のnative資料",
+    "job": "",
+    "change": "内容を図・表・工程図へ配置し、生成後の検査で不具合を直しながらPowerPointを作る。",
+    "input": "原稿・数値・図の元データ・発表の目的（判断が変わる場合だけ最大3問の確認）",
+    "output": "outline.jsonから再生成できる編集可能PPTX（文字・図形・表）とfinalize受領書",
+    "when_to_use": "研究・業務・提案資料で、順序・期限・比較など関係ごとに図表を選び、後から同じソースで作り直したいとき。",
+    "how_to_use": [
+      "npm run doctorで実行環境を確認する。科学データの図を作るときはnpm run setup:pythonも行う。",
+      "present.py briefで候補のgrammar・style_presetとreadability_contractを受け取り、outline.jsonのdeck_styleへ写す。",
+      "各頁のrole・variant（flow・timeline・table・comparisonなど）を内容の関係から決め、座標はoutlineに書かない。",
+      "present.py finalizeで生成と検査を行い、失敗したらrepair_packet.jsonの箇所をソースで直して再実行する（生成済みPPTXを手で直さない）。",
+      "描画した全頁を自分で見て、空白・端の詰まり・重複した文字を探す。公開や監査用にはvisual_review_receipt.pyで目視を描画ハッシュに紐づける。"
+    ],
+    "constraints": [
+      "finalizeの自動検査合格は目視判断とは別。本作例の受領書はvisual_inspection_status=not_recordedで、qa_gateは--skip-manual-reviewで実行された。visual_review_receipt.pyによる目視記録は作っていない。",
+      "4ページ目の表の上に見出し語を繰り返す行『引き継ぎメモ 4項目｜項目｜担当…』が残り、表下の注記は斜体。finalizeは合格したが、目視上の欠点として残っている。",
+      "Python runtimeのdoctorは未合格（matplotlib・numpy・pandasなどが未導入または版不一致）。科学データの図表経路は使えず、Node既定ビルダーの経路だけを実行した。",
+      "Windowsで実行するため、finalizeのQA補助に互換差分2件（windows-hash-guard・windows-native-output）を当てた。検査の閾値は変えていない。",
+      "架空の社内運用。人名・会社・実績値はなく、期限は相対的な案。",
+      "修理後のKimi K3/Opus 5.5による独立再評価は保留中。"
+    ],
+    "demonstration": {
+      "summary": "架空の引き継ぎ運用6頁。present.py briefのoperations-grid／lavender-opsをoutlineへ継承し、原典PptxGenJSビルダーでflow・timeline・表・比較・sectionを生成。Opus 5.5がソースで可読性を修理した後、finalize（preflight→build→qa_gate）とZIP展開からの再生成が合格した。",
+      "applied_features": [
+        "present.py brief→outline.json",
+        "operations-grid／lavender-ops",
+        "役割別版式（flow・timeline・table・comparison・section）",
+        "finalize自動検査とソース修理後の再生成",
+        "ZIP展開からの再生成一致"
+      ],
+      "not_demonstrated": [
+        "visual_review_receipt.pyで描画ハッシュに紐づけた目視記録",
+        "科学データ・図スクリプトの経路（scaffold_figure_artifacts、Python runtime）",
+        "既存PPTX編集（reference_deck.py）・Saved Workspace・audition比較",
+        "修理後の独立再評価"
+      ],
+      "pages": [
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "引き継ぎは、順番を決める",
+          "what_to_inspect": "01 WRITE〜04 HANDOFFの4点を1本の横線で結び、各点の下に動詞の見出し（書く・合わせる・確認する・渡す）と2行の説明。下部に『順序を説明する仮の運用案』。下半分の余白は大きい。",
+          "skill_rule": "順序の内容にはtimelineのroleを選ぶ。役割で構造を決め、座標はビルダーに任せる（原典Design Decisions）。",
+          "proof_path": "examples/repositories/presentation-skill-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "期限と状態を、一枚に並べる",
+          "what_to_inspect": "項目・担当・期限（仮）・状態例・次に動く条件の5列×4行のnative表。表の上の『引き継ぎメモ 4項目｜項目｜担当｜期限（仮）…』は見出しを繰り返す余分な行で、未修正。",
+          "skill_rule": "表で伝わる内容は表にする（原典：単純な表も有効）。自動検査に通っても、重複文字のような欠点は描画を見て探す必要がある（原典QA）。",
+          "proof_path": "examples/repositories/presentation-skill-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 5,
+          "label": "6ページ目",
+          "title": "次の担当が、動ける状態まで。",
+          "what_to_inspect": "暗い背景のsection頁。左の2枠『確認時点：担当変更前』『着手条件：記録を確認』は、修理前に残っていた英字の仮置きCYCLE/CONTROLを日本語のラベルと値へ替えたもの。",
+          "skill_rule": "仮置き文字やコントラスト不足は、生成済みPPTXではなくソース（outlineのstage_labels・renderContractStage）を直して再生成する（原典Core Contract）。",
+          "proof_path": "examples/repositories/presentation-skill-showcase/render/slide-06.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/presentation-skill-showcase/input/BRIEF.md",
+        "examples/repositories/presentation-skill-showcase/input/agent-brief.json",
+        "examples/repositories/presentation-skill-showcase/input/outline.json",
+        "examples/repositories/presentation-skill-showcase/input/design-decisions.json",
+        "examples/repositories/presentation-skill-showcase/source/OPUS-F05-REPAIR.md",
+        "examples/repositories/presentation-skill-showcase/source/legibility.diff",
+        "examples/repositories/presentation-skill-showcase/qa/finalize/finalize_receipt.json",
+        "examples/repositories/presentation-skill-showcase/qa/finalize/repair_packet.json",
+        "examples/repositories/presentation-skill-showcase/qa/zip-replay.json",
+        "examples/repositories/presentation-skill-showcase/qa/f05-native-check.json",
+        "examples/repositories/presentation-skill-showcase/QA.json",
+        "examples/repositories/presentation-skill-showcase/PROVENANCE.json",
+        "examples/repositories/presentation-skill-showcase/deck.pptx",
+        "skill-forks/presentation-skill-ja/upstream/SKILL.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典のQuick Deck経路（brief→outline→finalize）を実行。Opus 5.5のソース修理後、finalizeの自動検査とZIP展開からの再生成は合格した。目視判断の受領書と独立再評価は未完了。",
+      "requirements": [
+        "Node.js / PptxGenJS 4.0.1 / jszip 3.10.1",
+        "Python 3（present.py・qa_gate）。科学データの経路にはnpm run setup:pythonのruntimeが必要（本作例では未整備）。",
+        "Microsoft PowerPoint 16（PNG/PDF描画）",
+        "Shippori Mincho / BIZ UDPGothic / Manrope（OFL）"
+      ],
+      "steps": [
+        "present.py briefでoperations-grid／lavender-opsとreadability_contractを取得。",
+        "outline.jsonに6頁のrole・variant（flow・timeline・table・comparison・section）を記述。",
+        "原典build_deck_pptxgenjs.jsでnative PPTXを生成し、PowerPoint 16で描画。",
+        "Opus 5.5が描画を見て、表紙題の折返し・見出し位置・sectionの仮置き文字・コントラストをソースで修理。",
+        "present.py finalize（preflight→build→qa_gate）が合格し、ZIP展開からの再生成も一致。"
+      ],
+      "limitations": [
+        "finalizeは--skip-manual-reviewで実行。目視判断の受領書はない。",
+        "4ページ目に見出しの繰り返し行と斜体注記が残る。",
+        "Python doctor未合格。科学データの経路は未使用。",
+        "修理後の独立再評価は保留中。",
+        "架空の運用。期限は相対案、実績値なし。"
+      ]
+    }
+  },
+  {
+    "case_id": "scene-graph-showcase",
+    "name": "大綱からPPTX＋テーマ変更",
+    "job": "",
+    "change": "章立てから資料を作り、同じ本文のまま見出しと本文の色・書体を別テーマへ変えられる。",
+    "input": "大綱（OutlineSpec/SlideSpec、YAML/JSON）。beautifyだけなら既存PPTX",
+    "output": "テーマを当てた編集可能PPTX（文字枠と四角形）。このcommitでは構造データの抽出（parse_slide）は使えない",
+    "when_to_use": "短い大綱から骨組みのPPTXを作り、designhub_warm・designhub_pro・projectionのいずれかのテーマへ揃えたいとき。",
+    "how_to_use": [
+      "大綱をcover・section・content・endingのSlideSpecに分け、OutlineSpecにまとめる。",
+      "create_from_outline(outline, theme=…, output_path=…)で初稿を保存する。",
+      "beautify(input, theme=…)で別テーマへ変える。このcommitは短いテーマキーを拒否するため、load_theme('projection').nameのような表示名を渡す。",
+      "変換後の描画で、表紙・章頁が正しい型で扱われたか、旧テーマの色が残っていないかを確認する。"
+    ],
+    "constraints": [
+      "原典SKILLは場面図解析（parse_slide）と品質評価（evaluate）を掲げるが、このcommitではparse_slideが未実装・未export。本作例はevaluateも実行していない。",
+      "原典が同梱するpython-pptxにparts/が欠けており、同じ版の公式wheelから8ファイルを実行環境へ補った。原本は変更していない。",
+      "beautifyは装飾を足した後で頁型を判定するため、ending以外の5頁がcontentと判定された。2ページ目では章番号『1』と見出しが重なる。",
+      "beautifyは既存の図形の塗りを替えないため、projection適用後も旧warmテーマの赤い左縦帯（2〜5頁）と表紙の黄色い線が残る。",
+      "createは話者ノート欄を書き込まない。原稿のノートは入力側に残るだけ。",
+      "大きい文字・少ない本文はコードの設定値で、会場での読みやすさを測った結果ではない。",
+      "目視は表紙の初回表示のみ。全頁の詳細確認・構造監査・独立評価・ZIP再実行は未実施。"
+    ],
+    "demonstration": {
+      "summary": "説明用の自作教材6頁。outline.jsonをcreate_from_outline(designhub_warm)でdraft.pptxにし、同じ本文をbeautifyでprojectionテーマへ変えてdeck.pptxを保存、PowerPoint 16で6頁を書き出した。",
+      "applied_features": [
+        "OutlineSpec/SlideSpec",
+        "create_from_outline",
+        "beautifyによるテーマ変更",
+        "native文字枠と四角形"
+      ],
+      "not_demonstrated": [
+        "parse_slideによる要素木・空間関係の抽出（このcommitに実装なし）",
+        "evaluateによる品質評価",
+        "任意の既存PPTXへのbeautify",
+        "draft.pptxの描画画像（変更前後はdraft.pptxとdeck.pptxを開いて比べる）",
+        "全頁詳細目視と独立評価"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "一頁に、一つの問い。",
+          "what_to_inspect": "巨大な章番号『1』の下端が見出し『一頁に、一つの問い。』の上端と重なっている。左端の縦帯は赤。",
+          "skill_rule": "beautifyは装飾を足した後に頁型を判定する。section factoryで作った章頁がcontentと判定され、この重なりが出た（BUILD.jsonの型判定出力）。",
+          "proof_path": "examples/repositories/scene-graph-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "強い文字を、少なく。",
+          "what_to_inspect": "紺の太字見出しと濃い灰色の本文3行。見出し下の赤線は『強い文字』までの固定幅で、下半分は空いている。",
+          "skill_rule": "projectionテーマのtokens（見出し48pt紺・本文32pt濃灰）がcontent頁の文字枠に当たる。値は原典コードの設定で、実測した最適値ではない。",
+          "proof_path": "examples/repositories/scene-graph-showcase/render/slide-04.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 5,
+          "label": "6ページ目",
+          "title": "最後に、何を残す？",
+          "what_to_inspect": "左縦帯・見出し・副題『Q&A / 次に直す、一つの場所。』がすべて紺。2〜5頁には赤い縦帯が残っており、頁によって旧テーマ色の残り方が違う。",
+          "skill_rule": "beautifyは文字の色・字体をテーマに合わせるが、既存の非文字図形の塗りは保持する（theme-source-map.jsonの注記）。",
+          "proof_path": "examples/repositories/scene-graph-showcase/render/slide-06.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/scene-graph-showcase/input/MANUSCRIPT.md",
+        "examples/repositories/scene-graph-showcase/input/outline.json",
+        "examples/repositories/scene-graph-showcase/input/theme-source-map.json",
+        "examples/repositories/scene-graph-showcase/source/rebuild.py",
+        "examples/repositories/scene-graph-showcase/source/BUILD.json",
+        "examples/repositories/scene-graph-showcase/source/INITIAL-FAILURE.json",
+        "examples/repositories/scene-graph-showcase/source/vendor-parts-repair.json",
+        "examples/repositories/scene-graph-showcase/draft.pptx",
+        "examples/repositories/scene-graph-showcase/deck.pptx",
+        "examples/repositories/scene-graph-showcase/QA.json",
+        "examples/repositories/scene-graph-showcase/PROVENANCE.json",
+        "skill-forks/scene-graph-ja/example/source/upstream/SKILL.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典のcreate_from_outline→beautifyを実APIで実行し、designhub_warmの初稿をprojectionテーマへ変えた。parse_slideとevaluateは使っていない。",
+      "requirements": [
+        "Python 3 / 原典runtimeと同梱python-pptx（欠けたparts/は同版公式wheelから補完）",
+        "lxml 6.1.3 / Pillow 12.3.0 / typing_extensions 4.16.0 / XlsxWriter 3.2.9（同梱python-pptxの実行依存）",
+        "公式BIZ UDPGothic（PPTXに字体は埋め込まない。編集・書き出し時に登録）",
+        "PowerPoint（PNG/PDFの通常書き出し）"
+      ],
+      "steps": [
+        "outline.jsonを原典OutlineSpec/SlideSpecへ読み込む。",
+        "create_from_outlineでdesignhub_warmのdraft.pptxを保存。",
+        "beautifyへload_theme('projection').nameを渡し、同じ本文のdeck.pptxを保存。",
+        "自分のdeckだけ開いて6頁をPNG/PDFへ書き出し、表紙の初回表示を目視。"
+      ],
+      "limitations": [
+        "parse_slideは未実装、evaluateは未実施。",
+        "同版公式parts 8ファイルのみ補完。原本は未変更で保存。",
+        "2ページ目で章番号と見出しが重なる（頁型判定の影響）。",
+        "旧warmテーマの赤い縦帯・黄色い線が残る。",
+        "createは話者ノートを書かない。PPTXに字体は未埋込。",
+        "全頁詳細検査・独立評価・構造監査・ZIP再実行は未実施。"
+      ]
+    }
+  },
+  {
+    "case_id": "sebastian-188",
+    "name": "Markdown→PPT互換SVG",
+    "job": "",
+    "change": "Markdownの内容をページ構成とデザインに分け、編集できるSVG資料へ組み立てる。",
+    "input": "Markdown原稿と作風（5プリセット・自定義・AI推薦のいずれか）",
+    "output": "頁別SVG。任意で/ppt-exportによるPDF・PPTX",
+    "when_to_use": "原稿をベクター形式の頁にし、PowerPointへ取り込んで『図形に変換』した後に手直ししたいとき。",
+    "how_to_use": [
+      "/ppt-analyze @原稿.mdで頁構造の清单（題・要点・頁型・情報密度）を出し、必要なら直す。",
+      "/ppt-designで5プリセット・自定義（主色は必須）・AI推薦から選び、設計規範を固定する。",
+      "/ppt-generateでSVGを作り、svg-compatibility.mdの7項目（角丸はrxでなくpath、字体順、style属性、#RRGGBB、filterなし、UTF-8、1920×1080）を確認する。",
+      "/ppt-exportでPDF/PPTXにするか、SVGをPowerPointへ挿入して『図形に変換』し、文字位置や字号のずれを直す。",
+      "プリセットで一括作成するなら/ppt-quick @原稿.md --style=…を使う。"
+    ],
+    "constraints": [
+      "本作例はPowerPointへの取り込みも図形変換もしていない。PPT互換は原典の仕様で、作例では未検証。",
+      "原典scripts/export_pdf.js・export_pptx.js（/ppt-export）は実行せず、InkscapeでPDFを作った。PPTXは作っていない。",
+      "SVGは作例専用のbuild.pyに書いた座標から生成した。.ppt-session/structure.jsonとdesign.jsonも同じスクリプトが生成時に書き出したもので、分析・設計を別段階で行った記録ではない。",
+      "原典の字体規則どおりMicrosoft YaHeiを先頭にしている。YaHeiのある環境では日本語の漢字が中国語字形で表示されうる（今回の描画はNoto Sans CJK JP）。",
+      "ブラウザでのHTMLページ送りは未確認（Chromium起動失敗）。目視は表紙と主要表示の初回確認のみ。"
+    ],
+    "demonstration": {
+      "summary": "AIへの制作依頼を書き分ける架空の7頁。BRIEF.md（Markdown）を頁構成にし、Swiss（瑞士平面）プリセットで1920×1080のSVGを書き、InkscapeでPDF化してPDF描画のPNGで確認した。",
+      "applied_features": [
+        "Markdown原稿の頁分け",
+        "Swissプリセット（信号赤#E2001A・黒・白）",
+        "SVG互換規範（path・style属性・#RRGGBB・filterなし）",
+        "1920×1080のSVG"
+      ],
+      "not_demonstrated": [
+        "PowerPointへのSVG挿入と『図形に変換』後の編集",
+        "/ppt-exportによるPDF/PPTX出力",
+        "/ppt-analyze・/ppt-designを独立した段階として実行した記録",
+        "自定義・AI推薦の作風モード",
+        "ブラウザでの再生"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "依頼は五つの問いで組み立てる",
+          "what_to_inspect": "赤い番号01〜05、太字の項目名（目的・読み手・入力・制約・完成条件）、問いの3列を黒の細線で区切った表組み。角丸や影はない。",
+          "skill_rule": "角丸rectや影filterを使わず、線と直角の図形で組む（原典SVG互換規範1・5：rxとfilterはPowerPoint変換で崩れる）。",
+          "proof_path": "examples/repositories/sebastian-188/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "材料と空欄を分ける",
+          "what_to_inspect": "太い黒線の下に『渡すもの』と赤の『渡せないもの』の2列、中央に縦線、下端に赤帯の依頼文。文字はすべて左揃え。",
+          "skill_rule": "text-anchorやdominant-baselineに頼らず、左揃えで座標を計算し、書式はstyle属性にまとめる（原典SVG互換規範3）。",
+          "proof_path": "examples/repositories/sebastian-188/render/slide-04.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 4,
+          "label": "5ページ目",
+          "title": "いい感じを仕様にする",
+          "what_to_inspect": "黒地に白の見出し。左に赤い正方形『A3 縦向き 印刷用PDF』、右に赤い番号01〜03と白線で区切った3項目（載せる・避ける・揃える）。",
+          "skill_rule": "Swissプリセットの信号赤・黒・白と大きな字号差で、頁ごとに地の色を切り替える（原典styles/04-swiss-style.md）。色は#RRGGBBだけで書く（互換規範4）。",
+          "proof_path": "examples/repositories/sebastian-188/render/slide-05.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-188/input/BRIEF.md",
+        "examples/repositories/sebastian-188/input/data.json",
+        "examples/repositories/sebastian-188/.ppt-session/structure.json",
+        "examples/repositories/sebastian-188/.ppt-session/design.json",
+        "examples/repositories/sebastian-188/source/build.py",
+        "examples/repositories/sebastian-188/svg/slide-02-summary.svg",
+        "examples/repositories/sebastian-188/svg/slide-05-constraints.svg",
+        "examples/repositories/sebastian-188/source/upstream/specs/svg-compatibility.md",
+        "examples/repositories/sebastian-188/source/upstream/styles/04-swiss-style.md",
+        "examples/repositories/sebastian-188/QA.json",
+        "examples/repositories/sebastian-188/PROVENANCE.json",
+        "examples/repositories/sebastian-188/deck.pdf",
+        "skill-forks/sebastian-188-ja/source/upstream/SKILL.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典の分析→設計→SVG生成を、Swissプリセットの手書きSVGとして実施。成果物はSVGとInkscapeによるPDFで、PowerPointへの取り込みと原典exportは実行していない。",
+      "requirements": [
+        "Python 3 / Inkscape / PyMuPDF（本作例のPDF化とPNG化）",
+        "Noto Sans CJK JP（再配布なし）",
+        "原典/ppt-exportを使う場合はNode.jsと原典scripts（本作例では未実行）",
+        "SVGを図形化する場合は『図形に変換』に対応したPowerPoint"
+      ],
+      "steps": [
+        "BRIEF.mdを7頁の構成に分ける（structure.jsonはbuild.pyが生成時に書き出す）。",
+        "Swissプリセットを選び、色・字体・余白を固定（design.json）。",
+        "SVG互換規範に沿って1920×1080のSVGを7枚書く。",
+        "InkscapeでPDF化し、PyMuPDFでPNGにして表紙と主要表示を初回確認。"
+      ],
+      "limitations": [
+        "PowerPointでの図形変換は未検証。PPTXは作っていない。",
+        "原典export_pdf.js・export_pptx.jsは未実行。",
+        "structure.json・design.jsonは生成後の書き出しで、段階別の記録ではない。",
+        "字体順の先頭がMicrosoft YaHeiのため、環境により漢字が中国語字形になりうる。",
+        "PDFは固定レイアウト。HTMLのブラウザ再生は未確認。"
+      ]
+    }
+  },
+  {
+    "case_id": "slidepoise-showcase",
+    "name": "生成画像をnative図解へ再構築",
+    "job": "",
+    "change": "画像で決めた見た目を測り、文字・図形を個別に編集できるPowerPointへ作り直す。",
+    "input": "原稿、各頁の意図（主張・関係・出所）、プロファイルと参照資源、画像生成ツール（無ければ手動生成）",
+    "output": "native文字・図形・freeform・connectorの編集可能PPTXと、頁別の生成画像・semantic map・計測overlay・contract・constructor scene",
+    "when_to_use": "画像生成で作ったデザインを、文字や矢印を後から個別に直せるPowerPointにしたいとき。",
+    "how_to_use": [
+      "slidepoise doctorとprofile showで実行環境とプロファイルを確認し、resolve_config.pyで今回の上書きを決める。",
+      "work/deck-outline.jsonに頁の役割・主張・必要な内容を書き、頁ごとに参照候補を検索して選ぶ。",
+      "prepare_generationでrequestをcompileし、そのpromptのまま画像を生成する（生成できなければ手動モードで書き出して取り込む）。",
+      "採用画像にsemantic mapを書き、reconstruct-slideでOpenCV計測→contract→constructorを作り、overlayで所有範囲を確かめる。",
+      "render-deckで組み立て、全頁を生成画像と同じ縮尺で比べる。複数頁なら独立した最終レビューを行う。"
+    ],
+    "constraints": [
+      "原典は複数頁デッキに独立した最終レビューを求めるが、本作例は依頼者の指定で省いた。全頁詳細目視・構造監査・ZIP再実行も未実施。",
+      "3ページ目は詳細目視をしていない。生成画像では『4操作』『90%』『60秒』の数値と単位が詰まって並ぶが、完成描画では間が大きく空き、数値の下に細い縦の残留線が見える。再構築で生じた差で、未修正。",
+      "1ページ目の『会員登録』がシェブロンの切り欠き線に接している。",
+      "見出しは生成画像では極太、完成PPTXでは細めに見える。句点の折返しを直すためsemantic mapで字号・字重を調整した結果で、字形や紙の陰影の一致は保証しない。",
+      "外部資源の参照検索、Console・プロファイルの導入、SAM、画像編集は使っていない。",
+      "汎用のPptxGenJS・python-pptx・HTML・SVGで直接組み立てる代替は原典で禁止。本作例も原典rendererを使った。",
+      "『8操作→4操作』『入力完了率90%』『入力60秒』は目標値で実測ではない。会場名と120分も画面例の架空設定。"
+    ],
+    "demonstration": {
+      "summary": "仮想の予約サイト改善案3頁。原典prepare_generation→builtin画像生成→normalizer→semantic map→OpenCV計測→contract→constructor→render-deckを全頁で通し、34・28・24個のnative要素に再構築した。",
+      "applied_features": [
+        "prepare_generationのrequestをそのまま画像生成",
+        "Agentが書いたsemantic map",
+        "OpenCV計測とoverlayでの所有範囲確認",
+        "reconstruction contract→constructor scene",
+        "render-deckによるnative文字・freeform・connector"
+      ],
+      "not_demonstrated": [
+        "独立した最終レビュー（複数頁デッキで原典が求める）",
+        "3ページ目の生成画像との詳細比較",
+        "参照資源の検索・選択とプロファイル運用",
+        "SAM・画像編集・実在のロゴや写真の保持"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1ページ目",
+          "title": "迷う操作を、半分に。",
+          "what_to_inspect": "上段は白地に黒線の8つのシェブロン（一覧〜完了）、下段は青塗りの4つのシェブロン。シェブロンは編集可能なfreeform。『会員登録』の左端が切り欠き線に接している。",
+          "skill_rule": "再構築は生成画像のデザインを編集可能な要素へ写す工程で、デザインを作り直さない（原典Per-slide reconstruction）。",
+          "proof_path": "examples/repositories/slidepoise-showcase/render/slide-01.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 1,
+          "label": "2ページ目",
+          "title": "分岐は、空席で決まる。",
+          "what_to_inspect": "開催日→ひし形『空席？』→『空席あり』は青の折れ線で予約入力へ、『満席』は朱の折れ線で次の日程へ。生成画像と同じ配置で、計測overlayではdate-to-seat・seat-to-input・seat-to-nextの接続が別々に割り当てられている。",
+          "skill_rule": "OpenCVは位置と色の証拠を測るだけで、どれが何の接続かはAgentがsemantic mapで決める（原典Absolute authority rule）。",
+          "proof_path": "examples/repositories/slidepoise-showcase/render/slide-02.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 2,
+          "label": "3ページ目",
+          "title": "目標を決めて、順に直す。",
+          "what_to_inspect": "『4 操作』『90 %』『60 秒』の数値と単位の間が空き、数値の下に細い縦線が残る。生成画像（targets-and-order/accepted-slide.png）では数値と単位が詰まって並ぶ。この頁は詳細目視をしておらず、差は未修正。",
+          "skill_rule": "受け入れる前に完成描画を生成画像と同じ縮尺で比べ、文字のかたまり・基線・間隔を確認する（原典Visual reviews）。本作例ではこの頁の確認が抜けている。",
+          "proof_path": "examples/repositories/slidepoise-showcase/render/slide-03.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/slidepoise-showcase/input/SOURCE.md",
+        "examples/repositories/slidepoise-showcase/input/case-data.json",
+        "examples/repositories/slidepoise-showcase/input/BRIEF.md",
+        "examples/repositories/slidepoise-showcase/work/deck-scenes.json",
+        "examples/repositories/slidepoise-showcase/work/reconstruction-config.json",
+        "skill-forks/slidepoise-ja/example/slides/reduce-steps/work/accepted-slide.png",
+        "skill-forks/slidepoise-ja/example/slides/branch-and-information/work/accepted-slide.png",
+        "skill-forks/slidepoise-ja/example/slides/branch-and-information/work/semantic-map.json",
+        "skill-forks/slidepoise-ja/example/slides/branch-and-information/work/reconstruction/measurement/debug_overlay.png",
+        "skill-forks/slidepoise-ja/example/slides/branch-and-information/work/reconstruction/reconstruction-contract.json",
+        "skill-forks/slidepoise-ja/example/slides/branch-and-information/work/reconstruction/constructor-scene.json",
+        "skill-forks/slidepoise-ja/example/slides/targets-and-order/work/accepted-slide.png",
+        "examples/repositories/slidepoise-showcase/QA.json",
+        "examples/repositories/slidepoise-showcase/PROVENANCE.json",
+        "examples/repositories/slidepoise-showcase/deck.pptx",
+        "skill-forks/slidepoise-ja/upstream/slidepoise/SKILL.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典の画像生成→semantic map→OpenCV計測→contract→constructor→render-deckを3頁すべてで実行。確認は1・2頁の初回表示と句点の修正までで、3頁目の詳細目視と独立レビューは未実施。",
+      "requirements": [
+        "Python 3.10+ / OpenCV / numpy / Pillow / python-pptx",
+        "Node / pptxgenjs 4.0.1 / jszip 3.10.1（原典scene rendererの内部で使用）",
+        "画像を作り直す場合のみbuiltin画像ツールなど（または手動モード）",
+        "PowerPoint 16（PNG/PDF書き出し）",
+        "原典はSlidePoise CLI（doctor・profile）を前提とする。本作例はConsole・global profileを導入せず同梱runtimeで実行。"
+      ],
+      "steps": [
+        "原典prepare_generationで3頁のrequestをcompile。",
+        "builtin image_genで生成し、原典normalizerで1600×900に整える。",
+        "Agentがsemantic mapを書き、reconstruct-slideでOpenCV計測→contract→constructor（34・28・24要素）。",
+        "render-deckでnative PPTXにし、PowerPoint 16でPNG/PDFを書き出す。",
+        "1頁目の句点折返しをsemantic mapで直して再構築し、1・2頁の初回表示を確認。"
+      ],
+      "limitations": [
+        "独立した最終レビュー・全頁詳細目視・構造監査・ZIP再実行は未実施。",
+        "3頁目で数値と単位の間隔が開き、数値下に残留線がある（未修正）。",
+        "見出しの字形・字重と紙の陰影は生成画像と一致しない。",
+        "参照資源の検索・Console・SAM・画像編集は未使用。",
+        "数値は目標値、会場名と120分は架空設定。"
+      ]
+    }
+  },
+  {
+    "case_id": "sebastian-205",
+    "name": "研究ノート→出典付きPPTX",
+    "job": "",
+    "change": "研究ノートの主張と根拠を対応づけ、出典と限界を示す発表資料へ整理する。",
+    "input": "論文PDF・DOI・本文・図の説明、または研究ノート",
+    "output": "編集可能PPTX（既定はpresentation_zh.pptx）とqa_report.md。図を抽出した場合はasset_manifest.mdとassets/",
+    "when_to_use": "抄読会・ゼミ・研究発表で、論文や研究メモを根拠の位置が追える発表にしたいとき。一般の業務資料、スライド画像の再構築、論文検索だけの依頼は原典の対象外。",
+    "how_to_use": [
+      "preflight.pyで入力・出力・言語・時間・テンプレート・資料充足性を確認する（既定は簡体中国語・12〜16頁・15〜20分。指定があれば変える）。",
+      "資料をfull-paper・partial-paper・notes-onlyに分類し、qa_report.mdへ記録する。",
+      "原稿を書く前にclaim-to-source mapを作り、各頁に結論型の題・1つの主張・出典ラベル・根拠と限界のノートを付ける。",
+      "内容QA、inspect_pptx.pyによる構造QA、全頁描画の視覚QAを行い、pass・structurally-verified-with-disclosure・blockedのいずれかで判定する。"
+    ],
+    "constraints": [
+      "本作例はnotes-onlyの架空・未実施の研究計画で、論文全文の読解も図の抽出もしていない。",
+      "原典preflight.pyとinspect_pptx.pyは実行していない。自作の最小確認（再読込・ノート8件・ZIP CRC・簡易bounds・LibreOffice描画の初回確認）で代替した。",
+      "qa_report.mdは原典の書式・状態語で書かれておらず、原典quality gateの判定は記録されていない。描画環境はあったが全頁の詳細な視覚QAをしていないため、原典基準のpassには当たらない。",
+      "各頁の見える出典は全頁共通の『出典：架空の研究ノート｜未実施・実測結果なし｜入力 BRIEF / data.json』。入力の節番号（§1〜8）は話者ノートにだけ書かれている。",
+      "claim-to-source.jsonの主張欄は頁題の写しで、support・caveatは8行とも同じ文言。",
+      "依頼に合わせて日本語8頁にし、原典の最小出力（PPTXとqa_report.mdのみ）を超える一式（描画画像・HTMLなど）を付けた。",
+      "PowerPoint実機での表示は未確認（LibreOfficeで描画）。"
+    ],
+    "demonstration": {
+      "summary": "食品在庫UIの架空・未実施の研究ノートをnotes-onlyと判定し、入力§1〜8を8頁へ1対1で対応させた。原典が認めるpython-pptxの経路でnative文字・図形と8件の話者ノートを作り、LibreOfficeで描画した。",
+      "applied_features": [
+        "notes-only判定",
+        "claim-to-source map（頁と入力§の対応）",
+        "1頁1主張の結論型の題",
+        "全頁の出典ラベルと話者ノート",
+        "python-pptxによる編集可能PPTX"
+      ],
+      "not_demonstrated": [
+        "論文PDF・DOIの読解と図の抽出（asset_manifest）",
+        "原典preflight.py・inspect_pptx.py",
+        "原典の状態語によるqa_report.mdとquality gate判定",
+        "全頁の詳細な視覚QAとPowerPoint実機確認"
+      ],
+      "pages": [
+        {
+          "index": 3,
+          "label": "4ページ目",
+          "title": "場所から探し、状態で選ぶ",
+          "what_to_inspect": "左に提案UIの架空画面（冷蔵／冷凍／常温。にんじん『少なめ』・豆腐『半分ほど』・冷凍ごはん『不明』。各行に『更新：前回の買い物時／期限：未登録』）。右に『不明な状態を、隠さない。』と朱色の『説明用の架空表示』。",
+          "skill_rule": "資料に根拠のない値は作らず、図示した再構成には再構成だと表示する（原典Source sufficiency）。",
+          "proof_path": "examples/repositories/sebastian-205/render/slide-04.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 5,
+          "label": "6ページ目",
+          "title": "見つけやすさと、更新しやすさを評価する",
+          "what_to_inspect": "課題・観察する点・聞くことの3列の表と、下の『評価結果はまだない』。下端の出典ラベルは全頁共通で、§6は話者ノート側にだけある。",
+          "skill_rule": "結果頁には結論型の題・1つの主張・出典ラベル・根拠と限界のノートを付ける（原典Evidence and attribution）。",
+          "proof_path": "examples/repositories/sebastian-205/render/slide-06.png",
+          "proof_kind": "render-image"
+        },
+        {
+          "index": 6,
+          "label": "7ページ目",
+          "title": "画面の在庫と、実物はずれる",
+          "what_to_inspect": "左に画面の一覧（3本の帯）、右に実物の棚（ずれた位置のライム色の箱）、間に『更新のずれ』。下に『可食判断を、自動化しない。』と『未入力・更新忘れ・共有による変化。実物と包装表示の確認が必要。』。",
+          "skill_rule": "重要な限界・失敗条件・一般化の境界を示す（原典content QA）。",
+          "proof_path": "examples/repositories/sebastian-205/render/slide-07.png",
+          "proof_kind": "render-image"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/sebastian-205/input/BRIEF.md",
+        "examples/repositories/sebastian-205/input/data.json",
+        "examples/repositories/sebastian-205/notes/claim-to-source.json",
+        "examples/repositories/sebastian-205/notes/qa_report.md",
+        "examples/repositories/sebastian-205/source/build.py",
+        "examples/repositories/sebastian-205/source/upstream-references/quality-gates.md",
+        "examples/repositories/sebastian-205/QA.json",
+        "examples/repositories/sebastian-205/PROVENANCE.json",
+        "examples/repositories/sebastian-205/deck.pptx",
+        "skill-forks/sebastian-205-ja/upstream/SKILL.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原典のevidence-first手順を研究ノート（notes-only）に当て、python-pptxの経路で8頁を作った。原典preflight/inspect_pptxと、状態語による品質判定は実施していない。",
+      "requirements": [
+        "Python、python-pptx 1.0.2+",
+        "既存のNoto Sans CJK JP（再配布なし）",
+        "実描画用のLibreOffice・PyMuPDF",
+        "原典preflight.py・inspect_pptx.pyを使う場合は原典scripts一式（本作例では未実行）"
+      ],
+      "steps": [
+        "原典SKILLと日本語SKILLを読み、資料をnotes-onlyに分類。",
+        "入力§1〜8を8頁の主張へ対応（claim-to-source.json）。",
+        "python-pptxでnative文字・図形・出典ラベル・話者ノートを生成。",
+        "PPTXを再読込し、ノート数・ZIP CRC・簡易boundsを確認。",
+        "LibreOfficeで8頁を描画して初回表示を確認し、5頁目の操作連作のハイライトを修正。"
+      ],
+      "limitations": [
+        "PowerPoint実機では未確認。",
+        "架空の研究ノートのみ。実測・査読論文・定量効果なし。",
+        "原典preflight/inspect_pptxは未実行。最小確認は原典の全検査と同等ではない。",
+        "qa_report.mdは原典の状態語での判定がない。",
+        "頁ごとの入力§は話者ノートにのみあり、見える出典は全頁共通。"
+      ]
+    }
+  }
+]

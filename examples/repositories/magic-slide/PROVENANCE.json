@@ -161,7 +161,7 @@
   "execution_type": "original_modular_html_with_authenticated_qa_scope_fix",
   "generator": "tools/build_magic_slide_repository_example.py",
   "input_sha256": "fd094c61ddfa2adc0c7bdd6d2dc1d605df6910fc5be2c7bfc102325596acdb72",
-  "artifact_sha256": "f7ad90944cdcfc65757a0f2bf68e268ae8c8f85bf734e41a99d0beff3e163a42",
+  "artifact_sha256": "398234e85de0a15197aa35a4a81ef346ba01c9872fbe857ba2bb2a7b2d61d8b0",
   "output": "index.html",
   "commands_executed": [
     {
@@ -204,5 +204,44 @@
   "license": "MIT original, Noto Sans JP OFL",
   "human_revision_gate": "pending; autonomous sample and separate agent QA requested by user",
   "navigation": "global go(from,to), cur, native arrows/dock/overview",
-  "static_limitations": "Presentation-only. Edit/Save/image replacement require original serve.py; runtime controls retained unchanged."
+  "static_limitations": "Presentation-only. Edit/Save/image replacement require original serve.py; runtime controls retained unchanged.",
+  "latest_repair": {
+    "author": "Codex",
+    "description": "脚注を15→20px、本文色へ変更。全5頁と4境界の実Magic Moveを再確認。静止画のcursor/trailだけ撮影時に除外。",
+    "gates": {
+      "original_merge": 0,
+      "derived_injector": 0,
+      "overview_first": {
+        "ready": true,
+        "pending": "0",
+        "timeouts": "0",
+        "errors": "0",
+        "iframeCount": 5
+      },
+      "normal_playback": {
+        "pages": 5,
+        "motion_boundaries": 4,
+        "errors": [],
+        "unauthorized_status": 401
+      },
+      "human_revision_adoption": "pending"
+    },
+    "source_proof_paths": [
+      "sources/outline.md",
+      "sources/brief.md",
+      "sources/style.css",
+      "source/logs/merge-web9.log",
+      "source/logs/inject-web9.log",
+      "source/overview-capture.json",
+      "source/browser-observations.json",
+      "source/ja-runtime/changes.diff"
+    ],
+    "independent_rescore": "pending"
+  },
+  "round3_motion_proof": {
+    "receipt": "source/motion-check.json",
+    "composite": "render/motion-before-mid-after.jpg",
+    "origin": "original authenticated serve and native ArrowRight transitions",
+    "api_or_auth_changes": false
+  }
 }

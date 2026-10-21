@@ -1,0 +1,80 @@
+{
+  "method": "Microsoft PowerPoint: move one native box-and-label group, save, close and reopen",
+  "source": "deck.pptx",
+  "source_sha256": "c3b8605520205dabb8a0b3e2e9ff7c8dacba54d1821bb7e03717cd45e50f711b",
+  "edited": "qa/editability/group-moved.pptx",
+  "edited_sha256": "64782fee298bc0ece553ba4fc5c50691c4d5630d788a579fed0d48ab46da113a",
+  "group": "GROUP_procedure",
+  "before": {
+    "left": 342.0,
+    "top": 309.6,
+    "members": 2
+  },
+  "after": {
+    "left": 366.0,
+    "top": 327.6,
+    "members": 2
+  },
+  "connections_before": [
+    {
+      "name": "ARROW_prototype_procedure",
+      "begin_connected": true,
+      "end_connected": true,
+      "from": "NODE_prototype",
+      "to": "NODE_procedure"
+    },
+    {
+      "name": "ARROW_procedure_evaluate",
+      "begin_connected": true,
+      "end_connected": true,
+      "from": "NODE_procedure",
+      "to": "NODE_evaluate"
+    },
+    {
+      "name": "ARROW_evaluate_revise",
+      "begin_connected": true,
+      "end_connected": true,
+      "from": "NODE_evaluate",
+      "to": "NODE_revise"
+    },
+    {
+      "name": "ARROW_revise_prototype",
+      "begin_connected": true,
+      "end_connected": true,
+      "from": "NODE_revise",
+      "to": "NODE_prototype"
+    }
+  ],
+  "connections_after": [
+    {
+      "name": "ARROW_prototype_procedure",
+      "begin_connected": true,
+      "end_connected": true,
+      "from": "NODE_prototype",
+      "to": "NODE_procedure"
+    },
+    {
+      "name": "ARROW_procedure_evaluate",
+      "begin_connected": true,
+      "end_connected": true,
+      "from": "NODE_procedure",
+      "to": "NODE_evaluate"
+    },
+    {
+      "name": "ARROW_evaluate_revise",
+      "begin_connected": true,
+      "end_connected": true,
+      "from": "NODE_evaluate",
+      "to": "NODE_revise"
+    },
+    {
+      "name": "ARROW_revise_prototype",
+      "begin_connected": true,
+      "end_connected": true,
+      "from": "NODE_revise",
+      "to": "NODE_prototype"
+    }
+  ],
+  "scope": "One representative group and four real connection bindings; other editing behavior untested.",
+  "passed": true
+}

@@ -1,0 +1,898 @@
+[
+  {
+    "case_id": "pradaslides",
+    "name": "読者の次の行動から資料を設計する",
+    "job": "",
+    "change": "読者にしてほしい行動を先に決め、必要な根拠と手順を図・記入欄・確認項目へ変える。",
+    "input": "資料の読者・用途・読後にしてほしい行動、原稿や根拠資料、希望する出力形式。",
+    "output": "読者の問いと主張・根拠を対応させた資料と、選択した形式の成果物・描画確認記録。",
+    "how_to_use": [
+      "project/brief.jsonで読者の現状・読後の行動・作る形式を決め、source-ledgerへ根拠を書く。",
+      "deck-planの各頁へ主張・必要な根拠・読者の次の行動を対応させ、構成とasset/layout manifestを検査する。",
+      "source/reproduce.pyで計画検査→native制作→PowerPoint描画→原典presenter生成まで実行する。",
+      "全頁の文字・図・手順を確認し、HTMLのpresentモードとサムネイル操作も検査する。"
+    ],
+    "constraints": [
+      "この作例は架空の備品貸出手順。貸出の正式規則や運用効果を示さない。",
+      "PPTX+実描画HTMLの経路を使用。redesign/critique/plan-onlyや他形式、AI画像・動画生成は未実施。",
+      "原典brief validatorの空白区切り単語数により、十分な日本語のjob文にもBRIEF_JOB_THIN助言が出る。抑制せず保存。",
+      "Yu Gothicを使い字体ファイルは再配布しない。新しい出力の目視・独立評価は毎回必要。"
+    ],
+    "demonstration": {
+      "summary": "備品を借りる人の問いを6頁へ分け、申込み・受取りの記録・異常時の連絡・返却照合を異なる図と欄で示した。原典の計画検査とPPTX由来HTML presenterを実行。",
+      "applied_features": [
+        "各頁のaudience_questionを実際の問いとし、claim・source ledger・次の行動を対応させ、原典validator/strict lintを実行。",
+        "表紙に空欄付きの記録票、3頁に受取り記録の保存、4頁に連絡記録欄、5頁に返却時の4項目をnativeで制作。",
+        "実PowerPoint全6頁を確認し、原典presenter生成とHTTP用互換QAを実行（0 errors/0 warnings）。",
+        "作例ZIPと日本語派生ZIPを別々に展開して再実行。実PowerPoint計12頁のRGB差0、native文字・図表・画像bytes・ノート一致（既存固定依存、fresh install未検査）。"
+      ],
+      "not_demonstrated": [
+        "他の出力形式、redesign/critique/plan-only、AI生成visual preferenceの実行、利用者の構成承認。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1頁：町内会の備品貸出を、迷わない手順に",
+          "title": "町内会の備品貸出を、迷わない手順に",
+          "what_to_inspect": "右の記録票の空欄と返却確認の□を見る。単なる項目一覧から、貸出番号・受取/返却数・日時を残す用紙へ変えた。",
+          "skill_rule": "読者が最終的に取る行動をcommunication contractへ定め、見える記録欄へ落とす。",
+          "proof_path": "examples/repositories/pradaslides/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 2,
+          "label": "3頁：受取りは、記録と現物を照合する",
+          "title": "受取りは、記録と現物を照合する",
+          "what_to_inspect": "3列の品名と数／貸出前の状態／受取記録を保存を見る。持ち帰る前の記録を、返却時の照合へ引き継ぐ。",
+          "skill_rule": "各頁が答える読者の問いを先に置き、受取りと返却の役割を分ける。",
+          "proof_path": "examples/repositories/pradaslides/render/slide-03.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 4,
+          "label": "5頁：返却は、置くだけで終わらせない",
+          "title": "返却は、置くだけで終わらせない",
+          "what_to_inspect": "数量・付属品・状態・確認の4行を見る。受取記録との照合から、担当者の確認を残すところまで扱う。",
+          "skill_rule": "主張・必要な証拠・次の行動に合うtopologyを選び、説明を確認項目に変える。",
+          "proof_path": "examples/repositories/pradaslides/render/slide-05.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/pradaslides/project/brief.json",
+        "examples/repositories/pradaslides/project/source-ledger.json",
+        "examples/repositories/pradaslides/project/deck-plan.json",
+        "examples/repositories/pradaslides/review/lint.json",
+        "examples/repositories/pradaslides/review/pptx-inspection.json",
+        "examples/repositories/pradaslides/review/current-presenter-qa.json",
+        "examples/repositories/pradaslides/source/author.py",
+        "examples/repositories/pradaslides/source/reproduce.py",
+        "examples/repositories/pradaslides/QA.json",
+        "examples/repositories/pradaslides/source/native-elements.json",
+        "examples/repositories/pradaslides/source/pdf-fonts.json",
+        "examples/repositories/pradaslides/source/inspect_current.py",
+        "examples/repositories/pradaslides/source/plan.py",
+        "examples/repositories/pradaslides/review/html-qa.json",
+        "examples/repositories/pradaslides/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "読者に起こしたい変化と根拠を先に整理し、資料の構成・視覚表現・納品形式を選ぶ。",
+      "requirements": [
+        "Python3.10+ / python-pptx / PowerPoint16とYu Gothic（今回の描画）",
+        "HTMLの検査にはNode22+とChromeまたはEdge。HTTPで表示。"
+      ],
+      "steps": [
+        "project/brief.jsonで読者の現状・読後の行動・作る形式を決め、source-ledgerへ根拠を書く。",
+        "deck-planの各頁へ主張・必要な根拠・読者の次の行動を対応させ、構成とasset/layout manifestを検査する。",
+        "source/reproduce.pyで計画検査→native制作→PowerPoint描画→原典presenter生成まで実行する。",
+        "全頁の文字・図・手順を確認し、HTMLのpresentモードとサムネイル操作も検査する。"
+      ],
+      "limitations": [
+        "この作例は架空の備品貸出手順。貸出の正式規則や運用効果を示さない。",
+        "PPTX+実描画HTMLの経路を使用。redesign/critique/plan-onlyや他形式、AI画像・動画生成は未実施。",
+        "原典brief validatorの空白区切り単語数により、十分な日本語のjob文にもBRIEF_JOB_THIN助言が出る。抑制せず保存。",
+        "Yu Gothicを使い字体ファイルは再配布しない。新しい出力の目視・独立評価は毎回必要。"
+      ],
+      "commands": [
+        "python source/reproduce.py",
+        "python source/qa.py",
+        "python source/inspect_current.py"
+      ]
+    },
+    "upstream_principle": "読者に起こしたい変化と根拠を先に整理し、資料の構成・視覚表現・納品形式を選ぶ。",
+    "method": "備品を借りる人の問いを6頁へ分け、申込み・受取りの記録・異常時の連絡・返却照合を異なる図と欄で示した。原典の計画検査とPPTX由来HTML presenterを実行。",
+    "sample_notice": "制作側が現行全頁を実PowerPointで確認。現在版の独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全6頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/pradaslides/render/slide-01.png",
+      "examples/repositories/pradaslides/render/slide-02.png",
+      "examples/repositories/pradaslides/render/slide-03.png",
+      "examples/repositories/pradaslides/render/slide-04.png",
+      "examples/repositories/pradaslides/render/slide-05.png",
+      "examples/repositories/pradaslides/render/slide-06.png"
+    ],
+    "notes": [
+      "架空の町内会を想定した手順案です。実際の貸出規則ではありません。右側は返却まで引き継ぐ記録票の空欄例で、貸出番号・受取数と返却数・返却日時・担当者の確認を残す構成です。",
+      "申込書の例を見せます。折りたたみ椅子10脚、10月20日9時から16時、集会所前での受取りと返却という架空の設定です。実際の担当窓口と貸出条件を確認して記入します。",
+      "受取りの場面です。申込書と現物の品名・数量・付属品を比べ、貸出前の傷や汚れ、欠品を担当者と記録します。この受取記録を返却の照合に使います。返却時の確認は5頁で分けて説明します。",
+      "異常時は使用を止めて担当者に知らせ、扱いの指示を確認する架空の案です。下の空欄は、品名・数量、気づいた時刻、状態と窓口の指示を残すための記録例です。実際の規則と窓口の指示を優先します。",
+      "数量、付属品、状態を記録と照合し、担当者の確認を受けて返却を完了する案です。無人で置いていく可否も各町内会のルールによるため、事前に返却方法を聞きます。",
+      "実際の貸出ルールと窓口を確認することが次の行動です。この6ページは相談用の架空の手順案で、既存の運用規則の代わりにはなりません。"
+    ],
+    "titles": [
+      "町内会の備品貸出を、迷わない手順に",
+      "品名・数量・日時を、まとめて伝える",
+      "受取りは、記録と現物を照合する",
+      "不具合に気づいたら、使う前に窓口へ",
+      "返却は、置くだけで終わらせない",
+      "借りる前に、返却方法まで聞こう。"
+    ]
+  },
+  {
+    "case_id": "office-powerpoint-mcp",
+    "name": "MCPの操作で作成・比較・修正する",
+    "job": "",
+    "change": "原稿と数値をMCPへ渡し、文字・表・データ連動チャートを持つPPTXを作成・修正できる。",
+    "input": "作成・編集したい資料の内容、表やチャートの元データ、必要に応じて元PPTXやテンプレート。",
+    "output": "MCPツールで作成・編集したPPTXと、実行した操作・保存・描画確認の記録。",
+    "how_to_use": [
+      "source/upstream/ppt_mcp_server.pyをstdioで起動し、list_toolsで実際の操作と引数を調べる。",
+      "source/build_mcp.pyで元MCPの作成・文字・表・チャート操作とbefore_after_comparisonテンプレートを呼ぶ。input/data.jsonを数値の正本にする。",
+      "source/runtime-adapters.mdの局所互換処理を確認し、PowerPoint描画で表・凡例・単位・前後値を照合する。",
+      "source/check_native_edit.pyで別コピーの本文とチャート1点を変更・保存し、元ファイルのSHAが変わらないことを確認する。"
+    ],
+    "constraints": [
+      "原典はSKILL文書ではなくMCPサーバー。固定コミットを同梱し、現在の公開保守状態はこの実行では判定しない。",
+      "実作成95操作と別コピー編集5操作を実行。25テンプレートのうち1種を使用。画像効果・professional design・自動text修正は未実施。",
+      "日本語書式/ノート・凡例/斜線・セル縦中央・空段落・テンプレート横幅変換と装飾除去/見出し配置は明示adapter。原典API単独の出力とは区別。",
+      "BIZ UDPGothicの公式TTF/OFLを同梱し非埋込。数値は架空の例。チャート1点の書換保存は原典MCPで行い、GUI編集は未検査。"
+    ],
+    "demonstration": {
+      "summary": "原典MCPへ95操作を実行し、比較表・2系列チャート・比較テンプレートを制作。日本語と比較型の局所調整はadapterへ分け、別コピーへ本文変更と220→221のchart更新を保存した。",
+      "applied_features": [
+        "create_presentation_from_template/manage_text/add_table/add_chart/apply_slide_templateなど原典95操作の引数と返答を保存。",
+        "比較型の左右見出しと本文を維持し、不要な楕円/矢印を互換層で除去。共通見出しへ整列し、差額チャートと注記を分離。",
+        "原典MCPの5操作で別コピーの本文とchart1点を編集・保存し、正本SHA不変と更新値を再確認。",
+        "作例ZIPと日本語派生ZIPを別々に展開して再実行。実PowerPoint計12頁のRGB差0、native文字・図表・画像bytes・ノート一致（既存固定依存、fresh install未検査）。"
+      ],
+      "not_demonstrated": [
+        "他24テンプレート、画像処理、professional-design、自動text修正、GUIからの編集。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁：売上増と粗利率低下を同時に見る",
+          "title": "売上増と粗利率低下を同時に見る",
+          "what_to_inspect": "表の売上1000→1200、粗利率38→36、返品率4→6を照合する。セルはデータを持つOffice表。",
+          "skill_rule": "原典のadd_table/format_table_cellで構造化した行列を作り、数値と書式を分けて操作する。",
+          "proof_path": "examples/repositories/office-powerpoint-mcp/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 2,
+          "label": "3頁：売上増200万円の中心は自然検索",
+          "title": "売上増200万円の中心は自然検索",
+          "what_to_inspect": "斜線/塗りの2系列と8値、下に一度だけ置いた凡例を見る。上の45%は自然検索の増加90÷全増加200の計算で、構成比ではない。",
+          "skill_rule": "原典のadd_chartは系列・カテゴリ・値からnativeチャートを作る。斜線/凡例位置と和文字体は明示adapter。",
+          "proof_path": "examples/repositories/office-powerpoint-mcp/render/slide-03.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 3,
+          "label": "4頁：粗利額は増え、率は2ポイント低下",
+          "title": "粗利額は増え、率は2ポイント低下",
+          "what_to_inspect": "左右の前年/当年と下の差額棒を読む。原典比較型へ実データを渡し、無関係な黄色の楕円・矢印はadapterで外して他頁の見出し位置へ合わせた。",
+          "skill_rule": "高水準before_after_comparisonで比較構造を作る。未対応の日本語・配置調整は元の生成機能と分けて記録する。",
+          "proof_path": "examples/repositories/office-powerpoint-mcp/render/slide-04.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/office-powerpoint-mcp/source/build_mcp.py",
+        "examples/repositories/office-powerpoint-mcp/source/mcp-calls.json",
+        "examples/repositories/office-powerpoint-mcp/source/mcp-tools.json",
+        "examples/repositories/office-powerpoint-mcp/source/native-edit-check.json",
+        "examples/repositories/office-powerpoint-mcp/source/native-edit-calls.json",
+        "examples/repositories/office-powerpoint-mcp/source/check_native_edit.py",
+        "examples/repositories/office-powerpoint-mcp/source/runtime-adapters.md",
+        "examples/repositories/office-powerpoint-mcp/source/native-elements.json",
+        "examples/repositories/office-powerpoint-mcp/source/pdf-fonts.json",
+        "examples/repositories/office-powerpoint-mcp/input/data.json",
+        "examples/repositories/office-powerpoint-mcp/source/inspect_current.py",
+        "examples/repositories/office-powerpoint-mcp/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "python-pptxを使うMCPサーバーのツールを通して、PPTXの作成・管理・文字・表・図表・テンプレートを操作する。",
+      "requirements": [
+        "Python3.10+ / mcp1.30.0 / python-pptx1.0.2 / Pillow",
+        "PowerPointとBIZ UDPGothic（非埋込）。PDF→PNGにはpypdfium2。"
+      ],
+      "steps": [
+        "source/upstream/ppt_mcp_server.pyをstdioで起動し、list_toolsで実際の操作と引数を調べる。",
+        "source/build_mcp.pyで元MCPの作成・文字・表・チャート操作とbefore_after_comparisonテンプレートを呼ぶ。input/data.jsonを数値の正本にする。",
+        "source/runtime-adapters.mdの局所互換処理を確認し、PowerPoint描画で表・凡例・単位・前後値を照合する。",
+        "source/check_native_edit.pyで別コピーの本文とチャート1点を変更・保存し、元ファイルのSHAが変わらないことを確認する。"
+      ],
+      "limitations": [
+        "原典はSKILL文書ではなくMCPサーバー。固定コミットを同梱し、現在の公開保守状態はこの実行では判定しない。",
+        "実作成95操作と別コピー編集5操作を実行。25テンプレートのうち1種を使用。画像効果・professional design・自動text修正は未実施。",
+        "日本語書式/ノート・凡例/斜線・セル縦中央・空段落・テンプレート横幅変換と装飾除去/見出し配置は明示adapter。原典API単独の出力とは区別。",
+        "BIZ UDPGothicの公式TTF/OFLを同梱し非埋込。数値は架空の例。チャート1点の書換保存は原典MCPで行い、GUI編集は未検査。"
+      ],
+      "execution_type": "固定版MCPの95操作で制作し、明示した日本語・配置adapterを適用。別コピーへ原典MCP5操作で編集保存。",
+      "commands": [
+        "python source/build_mcp.py",
+        "python source/check_native_edit.py",
+        "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render",
+        "python source/render_pdf_previews.py render",
+        "python source/inspect_current.py"
+      ]
+    },
+    "upstream_principle": "python-pptxを使うMCPサーバーのツールを通して、PPTXの作成・管理・文字・表・図表・テンプレートを操作する。",
+    "method": "原典MCPへ95操作を実行し、比較表・2系列チャート・比較テンプレートを制作。日本語と比較型の局所調整はadapterへ分け、別コピーへ本文変更と220→221のchart更新を保存した。",
+    "sample_notice": "制作側が現行全頁を実PowerPointで確認。現在版の独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全6頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/office-powerpoint-mcp/render/slide-01.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-02.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-03.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-04.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-05.png",
+      "examples/repositories/office-powerpoint-mcp/render/slide-06.png"
+    ],
+    "notes": [
+      "架空のEC事業の月次報告です。2026年9月と前年同月を比較し、商品説明の修正と粗利分析を先行する判断を求めます。",
+      "売上は1,200万円、前年比20%増。粗利率は38%から36%へ2ポイント低下し、返品率は4%から6%へ2ポイント上昇しました。",
+      "広告20万円、自然検索90万円、メール50万円、リピート直訪40万円の増加で、合計200万円です。構成比と増加額を混同しません。",
+      "前年粗利は1,000万円×38%=380万円、当月は1,200万円×36%=432万円。52万円の増加です。値引きと商品構成は原因の仮説で、商品別に確認します。",
+      "10月9日までにCSが返品理由を分類。16日までに商品担当が説明を改稿し、販売担当が粗利差分を分析します。担当名は架空です。",
+      "広告増額は分析結果を見てから決めます。次回会議には施策の完了、返品内訳、商品別粗利の差分を持ち寄ります。"
+    ],
+    "prompt_text": "原典MCPの操作で架空のEC月次報告を制作。日本語はBIZ UDPGothic。前年と当月の表・データ連動チャート・比較型を使い、互換調整を明記する。"
+  },
+  {
+    "case_id": "ppt-design-skill",
+    "name": "ブリーフとテーマを定めてnative PPTXを作る",
+    "job": "",
+    "change": "目的と合格条件から構成・書体・配色を選び、役割図と記録表を持つ編集可能PPTXへ組む。",
+    "input": "読者・目的・原稿・根拠資料、希望する編集性、必須条件と見た目の条件、参考やブランド指定。",
+    "output": "固定したテーマで組んだ編集可能PPTX、PDF/PNG、条件IDごとの検査記録。最終承認は別途行う。",
+    "how_to_use": [
+      "原典task初期化を使い、source/task/cafe-pilotへbrief・構成・MUST/SHOULD/NICEの合格条件を置く。",
+      "recommend_stylesの候補と公開ThemeComposer atomsを比較し、theme lock・書体・配色を定める。",
+      "source/build_ppt_design_repository_example.pyから公開APIだけで役割図・試算・10日表を生成する。",
+      "原典inspectとPowerPoint描画を実行。全頁を視覚効果→重大欠陥の順に見て、theme aliasや字体fallbackを直す。"
+    ],
+    "constraints": [
+      "作例はBuild Modeと公開helperによる5頁。原典FreeStyle/VI Build/外部画像生成は未実施。",
+      "初回の構成・方向と最終結果の個別の人間承認は未取得。今回の自律制作委任とは区別し、納品版の人間承認R7はBLOCKED。",
+      "R1–R6は実PPTXと全頁PNGで確認し、R7は未達のまま条件ID別に記録。原典runtime trace検証の成功は人間承認や独立採点の代わりではない。",
+      "販売数・価格は架空の仮定、売上は利益ではなく実績未収集。判断基準の欄は未合意で、実店舗で開始前に決める。"
+    ],
+    "demonstration": {
+      "summary": "公開ThemeComposerとstrict Presentation、文字/図形/bar_chartで架空のカフェ試行計画を5頁制作。暖色・和文書体・頁構成を固定し、受入条件R1–R7を実画像へ対応。人間承認R7は未達を保持。",
+      "applied_features": [
+        "原典task初期化・テーマ候補・resolved theme・公開API生成・inspectを実行。原典runtime-trace schema検証も実行。",
+        "1頁の店舗名をカップの領域へ寄せ、5頁右へ未合意の判断基準を記入する欄を追加。",
+        "全5頁をPowerPointで再描画し、原典二段階レビューを条件ID別に記録。人間の最終方向確認はBLOCKED。",
+        "作例ZIPと日本語派生ZIPを別々に展開して再実行。実PowerPoint計10頁のRGB差0、native文字・図表・画像bytes・ノート一致（既存固定依存、fresh install未検査）。"
+      ],
+      "not_demonstrated": [
+        "FreeStyle/VI Build、ユーザーのvisual direction承認、Officeデータ連動、実営業と効果測定。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1頁：朝の2時間を、2週間だけ試す",
+          "title": "朝の2時間を、2週間だけ試す",
+          "what_to_inspect": "暖色の用紙、和文明朝、右のカップと店舗名、左下の営業時間/期間/仮価格を見る。店舗名は価格ラベルから離してカップ内へ寄せた。",
+          "skill_rule": "先に決めたvisual thesisを、色だけでなく視線の順・見出し・余白の役割へ反映する。",
+          "proof_path": "examples/repositories/ppt-design-skill/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 2,
+          "label": "3頁：売上は仮定を変えて比べる",
+          "title": "売上は仮定を変えて比べる",
+          "what_to_inspect": "左の15/25/35セットと右の9,750/16,250/22,750円を照合。棒も数値も編集可能で、下に利益ではない旨を示す。",
+          "skill_rule": "公開bar_chartを使い、受入条件R2の計算と仮定の明示をPNGとnative要素で確かめる。",
+          "proof_path": "examples/repositories/ppt-design-skill/render/slide-03.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 4,
+          "label": "5頁：2週間後に、続ける条件を確かめる",
+          "title": "2週間後に、続ける条件を確かめる",
+          "what_to_inspect": "需要・負担・廃棄と、右の「開始前に記入（未合意）」の空欄を見る。未収集や未合意を達成済みと誤認させない。",
+          "skill_rule": "必須/推奨条件をID別にPASS/NEEDS_REVISION/BLOCKEDと証拠で記録し、未達を残す。",
+          "proof_path": "examples/repositories/ppt-design-skill/render/slide-05.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/ppt-design-skill/source/build_ppt_design_repository_example.py",
+        "examples/repositories/ppt-design-skill/source/task/cafe-pilot/acceptance-contract.md",
+        "examples/repositories/ppt-design-skill/source/task/cafe-pilot/visual-direction.md",
+        "examples/repositories/ppt-design-skill/source/resolved-theme.json",
+        "examples/repositories/ppt-design-skill/source/style-candidates.json",
+        "examples/repositories/ppt-design-skill/source/engine-runtime.json",
+        "examples/repositories/ppt-design-skill/source/visual-review.json",
+        "examples/repositories/ppt-design-skill/source/native-elements.json",
+        "examples/repositories/ppt-design-skill/source/pdf-fonts.json",
+        "examples/repositories/ppt-design-skill/input/data.json",
+        "examples/repositories/ppt-design-skill/source/inspect_current.py",
+        "examples/repositories/ppt-design-skill/source/runtime-trace.json",
+        "examples/repositories/ppt-design-skill/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "構成と見た目の条件を先に定め、テーマを固定して公開APIで制作し、実画像を条件ごとに確認して修正する。",
+      "requirements": [
+        "Python3.10+ / pptx-designer1.0.0b11 / python-pptx1.0.2",
+        "PowerPoint、公式Shippori Mincho/BIZ UDPGothic。原典task toolsはsource/upstream/。"
+      ],
+      "steps": [
+        "原典task初期化を使い、source/task/cafe-pilotへbrief・構成・MUST/SHOULD/NICEの合格条件を置く。",
+        "recommend_stylesの候補と公開ThemeComposer atomsを比較し、theme lock・書体・配色を定める。",
+        "source/build_ppt_design_repository_example.pyから公開APIだけで役割図・試算・10日表を生成する。",
+        "原典inspectとPowerPoint描画を実行。全頁を視覚効果→重大欠陥の順に見て、theme aliasや字体fallbackを直す。"
+      ],
+      "limitations": [
+        "作例はBuild Modeと公開helperによる5頁。原典FreeStyle/VI Build/外部画像生成は未実施。",
+        "初回の構成・方向と最終結果の個別の人間承認は未取得。今回の自律制作委任とは区別し、納品版の人間承認R7はBLOCKED。",
+        "R1–R6は実PPTXと全頁PNGで確認し、R7は未達のまま条件ID別に記録。原典runtime trace検証の成功は人間承認や独立採点の代わりではない。",
+        "販売数・価格は架空の仮定、売上は利益ではなく実績未収集。判断基準の欄は未合意で、実店舗で開始前に決める。"
+      ],
+      "execution_type": "原典Build Modeと公開APIの自律制作作例。原典の納品版に必要な個別の人間承認は未達。",
+      "commands": [
+        "python source/build_ppt_design_repository_example.py --upstream source/upstream --input input/data.json --output-dir . --render",
+        "python source/render_pdf_previews.py render",
+        "python source/inspect_current.py"
+      ]
+    },
+    "upstream_principle": "構成と見た目の条件を先に定め、テーマを固定して公開APIで制作し、実画像を条件ごとに確認して修正する。",
+    "method": "公開ThemeComposerとstrict Presentation、文字/図形/bar_chartで架空のカフェ試行計画を5頁制作。暖色・和文書体・頁構成を固定し、受入条件R1–R7を実画像へ対応。人間承認R7は未達を保持。",
+    "sample_notice": "個別の人間承認は未取得の自律制作作例。制作側が現行全頁を実PowerPointで確認。現在版の独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全5頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/ppt-design-skill/render/slide-01.png",
+      "examples/repositories/ppt-design-skill/render/slide-02.png",
+      "examples/repositories/ppt-design-skill/render/slide-03.png",
+      "examples/repositories/ppt-design-skill/render/slide-04.png",
+      "examples/repositories/ppt-design-skill/render/slide-05.png"
+    ],
+    "notes": [
+      "架空の朝凪カフェで、通常10時開店前の8時から10時まで朝営業を試す提案です。2週間の平日10日間に限り、開始前に担当と準備量を決めます。",
+      "商品はコーヒーとトーストのセット1種類、仮価格650円です。調理と会計の役割を分け、通常営業の仕込みを圧迫しない方法を試します。",
+      "1日の販売数を15・25・35セットと仮定して売上を比較しています。価格650円を掛けた試算で、原価や追加人件費を引いた利益ではありません。",
+      "来店数・販売数・待ち時間・廃棄数を毎日記録する計画です。表の空欄は未収集を意味し、ゼロや達成済みという意味ではありません。",
+      "10日分を振り返り、需要と現場負担の両方を見て継続・変更・終了を選びます。数値の採否基準は開始前に店内で決め、今回の資料では未合意と明記します。"
+    ],
+    "prompt_text": "原典Build Modeと公開APIで架空のカフェ試行計画を自律制作。Theme Lock・受入条件・実画像の条件ID別検査を残し、人間の最終承認を取得済みとは扱わない。"
+  },
+  {
+    "case_id": "hands-on-deck",
+    "name": "既存PPTXを検査し、JSON差分で編集する",
+    "job": "",
+    "change": "元資料の要素IDを指定し、文章・書式・配置を差分で直し、変更していない部品を照合できる。",
+    "input": "編集する既存PPTX、変更したい文章・書式・配置、必要に応じて追加する素材。",
+    "output": "差分を適用した編集可能なPPTXと、適用patch・変更前後のdiff・描画確認の記録。",
+    "how_to_use": [
+      "元PPTXを原典deck.py inspectへ渡し、0始まりの頁とstable shape ID、現在の書式・配置を調べる。",
+      "対象IDへset-text/set-style/move/resizeなど必要な変更だけをJSON patchに書く。",
+      "原典apply→fix→inspect→diffを実行し、実際に適用された操作と残るalignment助言を読む。",
+      "元資料と変更版を描画し、文字・図表の読みやすさと対象外の部品を照合する。"
+    ],
+    "constraints": [
+      "作例は既存5頁へ203操作を適用。set-text79・set-style21・move50・resize47・set-notes5・set-props1。新規制作、html2patch、merge、画像交換は未実施。",
+      "元資料はカタログ内の過去CyberPPT派生作例を固定SHAで保存した架空資料。実際の地域の運用規則ではない。",
+      "元と結果の34部品を比較し、theme/media8部品はbyte一致。master/layoutとその参照26部品はXML再保存でbyteが変わるが、要素・属性・文字と参照ID/対象は一致。",
+      "原典fixは0修正/残留0だが、inspectのalignment助言は残る。表は文字と図形で構成し、native chart編集は未対応。OS字体は非再配布。"
+    ],
+    "demonstration": {
+      "summary": "既存5頁の同じ要素IDに203操作を適用。表紙の来訪者図を点検基準として説明し、表と脚注の位置を調整した。master/layoutはXML内容、theme/mediaはbyteで保持を照合した。",
+      "applied_features": [
+        "原典inspect/apply/fix/diffを未変更で実行。実適用203操作の内訳とeffective patchを保存。",
+        "1頁は元アイコンと矢印を使い、案内を読む3行動を公開前の点検基準として説明。3/4頁は既存表と脚注をmove/resizeで調整。",
+        "34部品すべての内容が一致。theme/media8部品はbyte一致、master/layoutと参照26部品はXML再保存の差を区別して記録。",
+        "現在PPTXをPowerPointで全5頁再描画し、元資料との1/3/4頁の比較画像を現行PNGから再作成。",
+        "作例ZIPと日本語派生ZIPを別々に展開して再実行。実PowerPoint計10頁のRGB差0、native文字・図表・画像bytes・ノート一致（既存固定依存、fresh install未検査）。"
+      ],
+      "not_demonstrated": [
+        "html2patch、merge、swap-image、白紙からの制作、native chart編集、GUI操作による編集。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1頁：イベント案内の公開前チェック",
+          "title": "イベント案内の公開前チェック",
+          "what_to_inspect": "右の副題「来訪者の行動を、点検の基準にする」と下の要点を見る。元の3アイコンは点検担当者の工程ではなく、案内を読む人の行動として説明した。",
+          "skill_rule": "既存のアイコン・矢印を作り直さず、stable shape IDへのset-textとノート更新で内容を改める。",
+          "proof_path": "examples/repositories/hands-on-deck/review/before-after-page-01.png",
+          "proof_kind": "actual_before_after"
+        },
+        {
+          "index": 2,
+          "label": "3頁：見つけた問題を、次の対応につなげる",
+          "title": "見つけた問題を、次の対応につなげる",
+          "what_to_inspect": "変更後の表の左右余白、2本の注記、下の要点帯を見る。原稿更新と表全体の位置/サイズ変更を分けて適用した。",
+          "skill_rule": "set-textとmove/resizeで対象要素を変更。対象外の部品はXML内容と画像byteを分けて照合する。",
+          "proof_path": "examples/repositories/hands-on-deck/review/before-after-page-03.png",
+          "proof_kind": "actual_before_after"
+        },
+        {
+          "index": 3,
+          "label": "4頁：原稿の確認と、公開後の更新を分担する",
+          "title": "原稿の確認と、公開後の更新を分担する",
+          "what_to_inspect": "右の表の最下行と、その下の「この表は担当を決めるための案」の間隔を見る。脚注を0.10インチ下げ、要点帯に触れず表から離した。",
+          "skill_rule": "原典のapply→fix→diff→render loopで変更箇所を確認し、機械のalignment助言と実文字の読みやすさを区別する。",
+          "proof_path": "examples/repositories/hands-on-deck/review/before-after-page-04.png",
+          "proof_kind": "actual_before_after"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/hands-on-deck/source/reproduce.py",
+        "examples/repositories/hands-on-deck/source/effective-patch.json",
+        "examples/repositories/hands-on-deck/source/edit-preservation.json",
+        "examples/repositories/hands-on-deck/review/replay/execution-receipts.json",
+        "examples/repositories/hands-on-deck/review/replay/diff.log",
+        "examples/repositories/hands-on-deck/review/before-after.json",
+        "examples/repositories/hands-on-deck/input/data.json",
+        "examples/repositories/hands-on-deck/input/patch.json",
+        "examples/repositories/hands-on-deck/source/native-elements.json",
+        "examples/repositories/hands-on-deck/source/audit_preservation.py",
+        "examples/repositories/hands-on-deck/source/pdf-fonts.json",
+        "examples/repositories/hands-on-deck/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "既存PPTXをstable IDで差分編集し、保持部分を照合する。",
+      "requirements": [
+        "Python3.10+ / python-pptxほか原典requirements",
+        "PowerPoint、元資料と同じOS字体。元資料をinput/donor.pptxへ固定。"
+      ],
+      "steps": [
+        "元PPTXを原典deck.py inspectへ渡し、0始まりの頁とstable shape ID、現在の書式・配置を調べる。",
+        "対象IDへset-text/set-style/move/resizeなど必要な変更だけをJSON patchに書く。",
+        "原典apply→fix→inspect→diffを実行し、実際に適用された操作と残るalignment助言を読む。",
+        "元資料と変更版を描画し、文字・図表の読みやすさと対象外の部品を照合する。"
+      ],
+      "limitations": [
+        "作例は既存5頁へ203操作を適用。set-text79・set-style21・move50・resize47・set-notes5・set-props1。新規制作、html2patch、merge、画像交換は未実施。",
+        "元資料はカタログ内の過去CyberPPT派生作例を固定SHAで保存した架空資料。実際の地域の運用規則ではない。",
+        "元と結果の34部品を比較し、theme/media8部品はbyte一致。master/layoutとその参照26部品はXML再保存でbyteが変わるが、要素・属性・文字と参照ID/対象は一致。",
+        "原典fixは0修正/残留0だが、inspectのalignment助言は残る。表は文字と図形で構成し、native chart編集は未対応。OS字体は非再配布。"
+      ],
+      "execution_type": "原典deck.pyのinspect/apply/fix/diffを使用した既存PPTX編集。現在版の独立再評価は待機中。",
+      "commands": [
+        "python source/reproduce.py --render",
+        "python source/render_pdf_previews.py render",
+        "python source/audit_preservation.py"
+      ]
+    },
+    "method": "既存5頁の同じ要素IDに203操作を適用。表紙の来訪者図を点検基準として説明し、表と脚注の位置を調整した。master/layoutはXML内容、theme/mediaはbyteで保持を照合した。",
+    "prompt_text": "既存の架空資料を公開前の点検案へ直す。来訪者の3行動を点検基準として説明し、表・脚注・要点帯を離す。対象外の部品は内容とbyteを分けて照合する。",
+    "sample_notice": "制作側が現行全頁を実PowerPointで確認。現在版の独立再評価は待機中。",
+    "preview_notice": "現行PPTXを実PowerPointで全5頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "preview_kind": "powerpoint-render",
+    "pages": [
+      "examples/repositories/hands-on-deck/render/slide-01.png",
+      "examples/repositories/hands-on-deck/render/slide-02.png",
+      "examples/repositories/hands-on-deck/render/slide-03.png",
+      "examples/repositories/hands-on-deck/render/slide-04.png",
+      "examples/repositories/hands-on-deck/render/slide-05.png"
+    ],
+    "notes": [
+      "来訪者が案内を見つけ、日時・場所を確かめ、迷わず会場へ行くという3行動を想定し、必要な情報が原稿にあるか公開前に点検する架空の案です。右の図は点検担当者の作業順ではなく、案内を読む人の行動です。運用・公開・利用者テストは未実施です。",
+      "SNS、Web、掲示板から一覧へ進み、各イベントの詳細へたどれるかを確認する案です。実際のリンク検証は未実施です。",
+      "表の不具合は想定例です。日時や場所の食い違い、費用や雨天対応の不足、連絡窓口の不明瞭さを、確認する人と次の対応へ結びます。",
+      "編集窓口が原稿を点検し、主催者が内容を確認してから公開します。公開後の変更連絡も担当を決めるという提案で、合意はまだありません。",
+      "公開前に利用者の目線で確認する計画です。結果を測定した表ではありません。問題が出たら対応と再確認日を記録します。"
+    ]
+  },
+  {
+    "case_id": "codex-image-ppt",
+    "name": "原稿と共通仕様から画像スライドを作る",
+    "job": "",
+    "change": "原稿を頁ごとの主張と図へ整理し、共通の書式で作った頁画像と話者ノートをPowerPointへまとめる。",
+    "input": "記事・報告・論文・メモ・構成案、読者と目的、残す文字や図、書式の希望、使用できる画像生成環境。",
+    "output": "各頁1枚の生成画像を収めたPPTX、編集可能な話者ノート、頁画像と状態記録。本文の文字・図形は個別編集できない。",
+    "how_to_use": [
+      "最初に原典docs/outline-style-and-sample.mdとworkflow-gates-and-progress.mdを読む。読者・目的・自分の原稿から、各頁の見出し・要点・役割・必須画像を構成案へまとめる。",
+      "構成・書式・画像生成環境を確認して、代表する内容頁を1枚だけ見本として作る。確認省略の明示指示がある場合はその委任を記録し、人間承認と区別する。",
+      "見本の採用後にdeck_specへ共通書式と実際の生成方法を固定し、prepare_slide_prompts.pyで各頁の仕事を作る。残りは1頁だけを担当する別エージェントへ割り当てる。",
+      "record_slide_dispatch.pyで割当を記録し、生成後は画像を読んでrecord_slide_result.pyで採用画像を記録する。文字・図・原稿の対応を確認し、修復したら最終画像の記録も更新する。",
+      "slide_job_status.pyで未完了がないことを調べ、speech.mdのノートをそろえ、assemble_ppt.pyでPPTXへ収める。自分の原稿の最初の例はSTART-HERE.ja.mdを使う。"
+    ],
+    "constraints": [
+      "各頁は画像1枚で、本文の文字・図の線は個別編集できない。話者ノートと頁画像の差し替えに対応する。",
+      "この作例の初回3頁は同一担当が生成。複数頁worker分担と構成・書式・生成環境・見本の個別の人間承認は未実施のため、原典手順の部分実行。",
+      "3頁の修復候補は割当記録の更新前に生成され、注意文の最終修復にも新しい割当はなかった。この逸脱をslide_jobsとslide_run_stateの構造化した履歴へ残し、後から順序や承認を作らない。",
+      "現在の最終画像は原典record_slide_result.pyで再記録し、実PPTXの埋込画像hashと照合した。今回の記録整合は、新たな画像生成や原典手順全体の完走を意味しない。",
+      "内蔵画像ツールの正確なmodel IDは不明。特定の画像モデルやOpus制作とは記載しない。Gitコマンドは学習用説明でpushは実行していない。",
+      "配布再実行は保存済み画像の再統合を検査。新規install・新しい原稿からの全工程は未検査。"
+    ],
+    "demonstration": {
+      "summary": "原典手順の部分実行。白・紺・青緑の共通仕様からGit入門3頁を画像生成し、原典assembleで画像と講稿をPPTX化した。3頁の右下注意文を二行へ拡大し、原典の結果記録を現行埋込画像へ合わせた。頁分担・個別の人間承認・厳密な修復順序は未実施。",
+      "applied_features": [
+        "共通styleと頁固有の主張・必要文字をpromptへ記録し、全3画像を実生成。",
+        "3頁の注意文を内蔵画像編集で二行へ拡大。タイトル・4手順・コマンド・関係図・要点を保持し、実生成のprompt/hashを保存。",
+        "未変更の原典assemble CLIで3画像＋3講稿を再統合。画像bytes一致、本文native0、ノート3件を検査しPowerPointで全頁を再描画。",
+        "作例ZIPと日本語派生ZIPを別々に展開して再実行。実PowerPoint計6頁のRGB差0、native文字・図表・画像bytes・ノート一致（既存固定依存、fresh install未検査）。",
+        "原典record_slide_result.pyで現行3頁を再記録。3頁すべての採用画像hashと実PPTX埋込hashを照合し、過去の順序逸脱を構造化して保存した。"
+      ],
+      "not_demonstrated": [
+        "複数頁worker分担、個別の人間承認、修復のdispatch→生成→結果記録という厳密な時系列、新規install、自分の別原稿での全工程、現在版の独立100点。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1頁：Gitの保存・記録・共有",
+          "title": "Gitの保存・記録・共有",
+          "what_to_inspect": "白・紺・青緑と太い見出し、3つの図の線幅を見る。保存・コミット・共有を別段階で描く。",
+          "skill_rule": "原典は共通スタイル仕様を各頁promptへ適用し、全体の見た目と原稿の対応を揃える。",
+          "proof_path": "examples/repositories/codex-image-ppt/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 1,
+          "label": "2頁：変更は3つの場所を進む",
+          "title": "変更は3つの場所を進む",
+          "what_to_inspect": "作業ツリー→ステージ→ローカル履歴の3箱と、git add/commitの矢印を見る。共通styleを保ち頁固有の関係図へ変えた。",
+          "skill_rule": "原典の逐頁promptは共通styleに加えてその頁の主張・構成・必要な文字を指定する。",
+          "proof_path": "examples/repositories/codex-image-ppt/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 2,
+          "label": "3頁：確認してから、チームへ共有する",
+          "title": "確認してから、チームへ共有する",
+          "what_to_inspect": "右下の「pushの前に、／共有先と作業ブランチを確認」を見る。以前の一行の小さい注意から、二行の大きな注意へ画像編集で変えた。左の4手順とコマンドは維持。",
+          "skill_rule": "頁固有promptで画像を作り、実画像の文字と配置を確認して選択する。今回の局所反復を未実施のworker分担・人間承認と区別する。",
+          "proof_path": "examples/repositories/codex-image-ppt/source/imagegen-repair/before-after-page-03.png",
+          "proof_kind": "actual_before_after"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/codex-image-ppt/style.json",
+        "examples/repositories/codex-image-ppt/deck_spec.json",
+        "examples/repositories/codex-image-ppt/prompts/slide_01.json",
+        "examples/repositories/codex-image-ppt/prompts/slide_02.json",
+        "examples/repositories/codex-image-ppt/prompts/slide_03.json",
+        "examples/repositories/codex-image-ppt/slide_jobs.json",
+        "examples/repositories/codex-image-ppt/speech.md",
+        "examples/repositories/codex-image-ppt/source/imagegen-repair.json",
+        "examples/repositories/codex-image-ppt/source/imagegen-repair/comparison.json",
+        "examples/repositories/codex-image-ppt/source/imagegen-repair/state-receipts.json",
+        "examples/repositories/codex-image-ppt/source/embedded-image-check.json",
+        "examples/repositories/codex-image-ppt/source/reproduce.py",
+        "examples/repositories/codex-image-ppt/source/native-elements.json",
+        "examples/repositories/codex-image-ppt/source/pdf-fonts.json",
+        "examples/repositories/codex-image-ppt/source/inspect_current.py",
+        "examples/repositories/codex-image-ppt/source/imagegen-warning-repair.json",
+        "examples/repositories/codex-image-ppt/source/image-assembly-verification.json",
+        "examples/repositories/codex-image-ppt/workflow-decisions.json",
+        "examples/repositories/codex-image-ppt/source/distribution-replay.json",
+        "examples/repositories/codex-image-ppt/slide_run_state.json",
+        "examples/repositories/codex-image-ppt/START-HERE.ja.md",
+        "examples/repositories/codex-image-ppt/input/outline-first.draft.md",
+        "examples/repositories/codex-image-ppt/source/reconcile_image_state.py",
+        "examples/repositories/codex-image-ppt/source/state-artifact-reconciliation.json",
+        "examples/repositories/codex-image-ppt/source/upstream-docs-acquisition.json",
+        "examples/repositories/codex-image-ppt/source/upstream/skills/codex-ppt/docs/outline-style-and-sample.md",
+        "examples/repositories/codex-image-ppt/source/upstream/skills/codex-ppt/docs/workflow-gates-and-progress.md",
+        "examples/repositories/codex-image-ppt/source/build_warning_detail.py",
+        "examples/repositories/codex-image-ppt/source/imagegen-repair/warning-detail.json",
+        "examples/repositories/codex-image-ppt/source/imagegen-repair/warning-detail-before.png",
+        "examples/repositories/codex-image-ppt/source/imagegen-repair/warning-detail-after.png"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "各頁を1枚の生成画像として作り、話者ノート付きPPTXへまとめる。本文の文字・図形は個別編集できない。原稿から構成・共通書式・画像生成環境・見本を確認し、見本と同じ生成方法で頁を分担して作り、原典スクリプトで状態を記録し統合する。",
+      "requirements": [
+        "Python3.10+、python-pptx。原典の状態記録にはfilelock。",
+        "新規制作は内蔵の画像生成・編集ツールと、頁を担当する別エージェントを使える環境。保存済み画像の再出力には新規生成不要。",
+        "原典docsとMIT利用条件を同梱。PowerPointの実描画はWindows PowerPoint16、PDF→PNGにはpypdfium2。新規installは未検査。"
+      ],
+      "steps": [
+        "最初に原典docs/outline-style-and-sample.mdとworkflow-gates-and-progress.mdを読む。読者・目的・自分の原稿から、各頁の見出し・要点・役割・必須画像を構成案へまとめる。",
+        "構成・書式・画像生成環境を確認して、代表する内容頁を1枚だけ見本として作る。確認省略の明示指示がある場合はその委任を記録し、人間承認と区別する。",
+        "見本の採用後にdeck_specへ共通書式と実際の生成方法を固定し、prepare_slide_prompts.pyで各頁の仕事を作る。残りは1頁だけを担当する別エージェントへ割り当てる。",
+        "record_slide_dispatch.pyで割当を記録し、生成後は画像を読んでrecord_slide_result.pyで採用画像を記録する。文字・図・原稿の対応を確認し、修復したら最終画像の記録も更新する。",
+        "slide_job_status.pyで未完了がないことを調べ、speech.mdのノートをそろえ、assemble_ppt.pyでPPTXへ収める。自分の原稿の最初の例はSTART-HERE.ja.mdを使う。"
+      ],
+      "limitations": [
+        "各頁は画像1枚で、本文の文字・図の線は個別編集できない。話者ノートと頁画像の差し替えに対応する。",
+        "この作例の初回3頁は同一担当が生成。複数頁worker分担と構成・書式・生成環境・見本の個別の人間承認は未実施のため、原典手順の部分実行。",
+        "3頁の修復候補は割当記録の更新前に生成され、注意文の最終修復にも新しい割当はなかった。この逸脱をslide_jobsとslide_run_stateの構造化した履歴へ残し、後から順序や承認を作らない。",
+        "現在の最終画像は原典record_slide_result.pyで再記録し、実PPTXの埋込画像hashと照合した。今回の記録整合は、新たな画像生成や原典手順全体の完走を意味しない。",
+        "内蔵画像ツールの正確なmodel IDは不明。特定の画像モデルやOpus制作とは記載しない。Gitコマンドは学習用説明でpushは実行していない。",
+        "配布再実行は保存済み画像の再統合を検査。新規install・新しい原稿からの全工程は未検査。"
+      ],
+      "execution_type": "部分実行：同一担当の内蔵画像生成と原典assemble。現在の結果記録は修復済み。複数頁分担・個別人間承認・厳密な修復時系列は未実施。",
+      "commands": [
+        "python source/reproduce.py",
+        "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath codex-image-ppt.pptx -OutputDirectory render",
+        "python source/render_pdf_previews.py render",
+        "python source/inspect_current.py"
+      ]
+    },
+    "upstream_principle": "各頁を1枚の生成画像として作り、話者ノート付きPPTXへまとめる。本文の文字・図形は個別編集できない。原稿から構成・共通書式・画像生成環境・見本を確認し、見本と同じ生成方法で頁を分担して作り、原典スクリプトで状態を記録し統合する。",
+    "method": "原典手順の部分実行。白・紺・青緑の共通仕様からGit入門3頁を画像生成し、原典assembleで画像と講稿をPPTX化した。3頁の右下注意文を二行へ拡大し、原典の結果記録を現行埋込画像へ合わせた。頁分担・個別の人間承認・厳密な修復順序は未実施。",
+    "sample_notice": "原典手順の部分実行。各頁は画像1枚で本文要素の個別編集不可。現行画像・状態・PPTXのhashを照合済み。複数頁分担と個別人間承認、厳密な修復順序は未実施。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全3頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/codex-image-ppt/render/slide-01.png",
+      "examples/repositories/codex-image-ppt/render/slide-02.png",
+      "examples/repositories/codex-image-ppt/render/slide-03.png"
+    ],
+    "notes": [
+      "エディターでファイルを保存すること、Gitで履歴に記録すること、リモートへ共有することを分けて覚えます。保存しただけではコミットされません。コミットしても、まだ他の人へ送ったことにはなりません。まず手元で変更を確かめ、小さな単位で記録してから共有しましょう。",
+      "作業ツリーは編集中のファイルです。git addは次のコミットに含める内容をステージへ選びます。git commitはそのステージの内容をローカルの履歴に記録します。addした後にさらに編集した内容は自動でステージへ入りません。必要ならもう一度addし、git diff --stagedで内容を確かめます。",
+      "最初にgit statusとgit diffで変更の範囲を確認します。対象ファイルだけをaddし、git diff --stagedで記録される差分を読みます。秘密情報や不要なファイルがないことを確かめてcommitします。共有先と作業ブランチを確認し、チームのルールに従ってpushとレビュー依頼を行います。ここでは共有の手順を説明しているだけで、実際のpushは実行しません。"
+    ],
+    "status": "partial_original_workflow_current_images_and_state_checked",
+    "execution_status": "partial_builtin_image_workflow_with_final_state_binding_checked"
+  },
+  {
+    "case_id": "slide-maker",
+    "name": "原稿から構成・図表を作り、読み手の検査で直す",
+    "job": "研究・業務報告・講演の作り手が、読者・目的・原稿やデータを渡し、構成と図表を持つ編集可能PPTXを作成・再設計・批評する。",
+    "change": "原稿とデータを構成・図表へ変え、独立した読み手の指摘で説明を直す。",
+    "input": "読者、目的、覚えてほしい主張、原稿・データ・既存資料。",
+    "output": "編集可能PPTX、全頁render、根拠データ、実施した検査と独立読解・批評の記録。",
+    "how_to_use": [
+      "読者の知識と読む目的を決め、各頁の主張と根拠を対応させる。",
+      "複数の構成・図案を比較し、比較条件、文字の役割、色や印の意味を定める。",
+      "原典deckkitの編集可能な文字・図形・グラフを使い、判断理由を読み手に必要な位置へ置く。",
+      "全頁を描画しlint・component・visual contractを確認する。独立読解と内容/設計の批評を原典CLIへ記録し、指摘を修正する。",
+      "修正した版を新しい独立評価へ渡し、原典の承認とdelivery/handoffの条件を満たすまで合格扱いしない。"
+    ],
+    "constraints": [
+      "原典はLibreOfficeで描画する。今回のWindows作例はPowerPoint16→PDF→PDFiumを局所adapterとして使った。",
+      "独立読解者がいない環境は原典のno-reader carve/unverified。Codex専用adapterをClaude Code/Kimiで動かす用途や、PPTX以外の納品はこの実証の対象外。",
+      "実Opus Round4の指摘とblind回答は旧SHAb8f099a3…へ束縛して原典CLIに記録済み。現在版の新しい独立評価・consentは待機中で、旧承認を流用しない。",
+      "初回の構成・図案比較は制作後の補完。テンプレート、発表時間、質疑用頁、画像シリーズは未実施。",
+      "component auditは固定15値の配列をカード群と検出しexit2。意図を記録し、元の結果を成功へ書き換えない。",
+      "作例は既に昇順の1〜15から存在する値を探す計測。回数は訪問要素数で、秒数・整列費用・未発見条件は測っていない。"
+    ],
+    "demonstration": {
+      "summary": "実行した探索ログを、同じ位置の配列と全15条件のnative chartへした。実Opusの「判断理由が本文にない」という指摘を受け、各段に大小比較と残す側を追加した。",
+      "applied_features": [
+        "原典deckkitで文字・図形・データ連動native chartを生成し、探索の全30結果と一致を検査。",
+        "実Opus Round4 criticのreviseと先行blindを同版SHAへ束縛し、原典validate_review/compareへ記録。指摘を本文修復へ反映。",
+        "各段の24pt比較判断、直下16pt凡例、native軸名、1〜3の反例、計測/未計測の図を追加して全5頁をPowerPointで再描画。",
+        "元lint/palette/component/visual contractとdelivery/handoffを再実行。新しい版の独立承認は未取得として失敗状態を保持。",
+        "一式ZIPを別フォルダーへ展開し、同梱ソースで再生成・PowerPoint全5頁を再描画。図形・文字・グラフ・ノート一致、全頁RGB差0（既存固定依存、新規導入は未検証）。"
+      ],
+      "not_demonstrated": [
+        "原典はLibreOfficeで描画する。今回のWindows作例はPowerPoint16→PDF→PDFiumを局所adapterとして使った。",
+        "独立読解者がいない環境は原典のno-reader carve/unverified。Codex専用adapterをClaude Code/Kimiで動かす用途や、PPTX以外の納品はこの実証の対象外。",
+        "実Opus Round4の指摘とblind回答は旧SHAb8f099a3…へ束縛して原典CLIに記録済み。現在版の新しい独立評価・consentは待機中で、旧承認を流用しない。",
+        "初回の構成・図案比較は制作後の補完。テンプレート、発表時間、質疑用頁、画像シリーズは未実施。",
+        "component auditは固定15値の配列をカード群と検出しexit2。意図を記録し、元の結果を成功へ書き換えない。",
+        "作例は既に昇順の1〜15から存在する値を探す計測。回数は訪問要素数で、秒数・整列費用・未発見条件は測っていない。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "2頁：訪問順と比較回数",
+          "title": "線形探索は、先頭から13回比較する",
+          "what_to_inspect": "配列直下の青/茶/灰の16pt凡例、左からの訪問順と上端がそろった13回を見る。",
+          "skill_rule": "同じ意味の色と位置を保ち、主張を証拠の近くへ置く。",
+          "proof_path": "examples/repositories/slide-maker/render/slide-02.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 2,
+          "label": "3頁：読み手の指摘で判断理由を補う",
+          "title": "二分探索は、大小で残す側を決める",
+          "what_to_inspect": "四段の13>8/13>12/13<14/13=13と、右半分/左半分/発見を24ptで読む。昇順と左右の関係が本文だけで追えるかを見る。",
+          "skill_rule": "独立criticが指摘した自力理解の不足を修復し、修正した版の再読解を求める。",
+          "proof_path": "examples/repositories/slide-maker/render/slide-03.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        },
+        {
+          "index": 3,
+          "label": "4頁：全条件と反例を示す",
+          "title": "二分探索は、15通りとも4回以内",
+          "what_to_inspect": "青=線形、紫=二分の全15条件、軸名16pt、目的値1〜3では線形が少ないという24ptの注記を見る。",
+          "skill_rule": "数値は実データで描き、最大回数と個々の値の違いを隠さない。",
+          "proof_path": "examples/repositories/slide-maker/render/slide-04.png",
+          "proof_kind": "actual_powerpoint_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/slide-maker/source/round4-opus-review-record.json",
+        "examples/repositories/slide-maker/review/round4-prior-version/opus-critic.json",
+        "examples/repositories/slide-maker/review/round4-prior-version/opus-blind.json",
+        "examples/repositories/slide-maker/review/round4-prior-version/binding.json",
+        "examples/repositories/slide-maker/source/round5-original-gates.json",
+        "examples/repositories/slide-maker/source/current-lint.json",
+        "examples/repositories/slide-maker/source/current-components.json",
+        "examples/repositories/slide-maker/source/object-proof.json",
+        "examples/repositories/slide-maker/source/native-elements.json",
+        "examples/repositories/slide-maker/source/pdf-fonts.json",
+        "examples/repositories/slide-maker/source/upstream/skills/slide-maker/references/codex-runtime.md",
+        "examples/repositories/slide-maker/design/directions.json",
+        "examples/repositories/slide-maker/design/direction-probes.pptx",
+        "examples/repositories/slide-maker/visual-contract-final.json",
+        "examples/repositories/slide-maker/render/slide-01.png",
+        "examples/repositories/slide-maker/render/slide-02.png",
+        "examples/repositories/slide-maker/render/slide-03.png",
+        "examples/repositories/slide-maker/render/slide-04.png",
+        "examples/repositories/slide-maker/render/slide-05.png",
+        "examples/repositories/slide-maker/render/contact-round5.jpg",
+        "examples/repositories/slide-maker/visual-contract.json",
+        "examples/repositories/slide-maker/.codex-deck-evidence.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "実行した探索ログを、同じ位置の配列と全15条件のnative chartへした。実Opusの「判断理由が本文にない」という指摘を受け、各段に大小比較と残す側を追加した。",
+      "requirements": [
+        "Python/python-pptxと原典deckkit。原典描画はLibreOffice。今回のみWindows PowerPointとPDFiumを代替使用。",
+        "内容・設計の独立criticと、原稿を見ない独立blind reader。"
+      ],
+      "steps": [
+        "読者の知識と読む目的を決め、各頁の主張と根拠を対応させる。",
+        "複数の構成・図案を比較し、比較条件、文字の役割、色や印の意味を定める。",
+        "原典deckkitの編集可能な文字・図形・グラフを使い、判断理由を読み手に必要な位置へ置く。",
+        "全頁を描画しlint・component・visual contractを確認する。独立読解と内容/設計の批評を原典CLIへ記録し、指摘を修正する。",
+        "修正した版を新しい独立評価へ渡し、原典の承認とdelivery/handoffの条件を満たすまで合格扱いしない。"
+      ],
+      "limitations": [
+        "原典はLibreOfficeで描画する。今回のWindows作例はPowerPoint16→PDF→PDFiumを局所adapterとして使った。",
+        "独立読解者がいない環境は原典のno-reader carve/unverified。Codex専用adapterをClaude Code/Kimiで動かす用途や、PPTX以外の納品はこの実証の対象外。",
+        "実Opus Round4の指摘とblind回答は旧SHAb8f099a3…へ束縛して原典CLIに記録済み。現在版の新しい独立評価・consentは待機中で、旧承認を流用しない。",
+        "初回の構成・図案比較は制作後の補完。テンプレート、発表時間、質疑用頁、画像シリーズは未実施。",
+        "component auditは固定15値の配列をカード群と検出しexit2。意図を記録し、元の結果を成功へ書き換えない。",
+        "作例は既に昇順の1〜15から存在する値を探す計測。回数は訪問要素数で、秒数・整列費用・未発見条件は測っていない。"
+      ]
+    },
+    "upstream_principle": "原稿・データ・既存資料を、読者と目的に合う構成・図表へ変え、制作側の実描画確認と独立した読み手の検査で直す。",
+    "problem": "伝えたい主張と根拠がばらばらな原稿を、読者が追える頁順と図表へ整理したい。"
+  },
+  {
+    "case_id": "image-to-editable",
+    "name": "既存画像を編集できる文字と図形へ再構成する",
+    "job": "",
+    "change": "元画像を文字・図形・アイコンへ分け、文字とカードを編集できるPPTXへ戻す。",
+    "input": "編集できるようにしたい既存のスライド画像、PDF、画像を含むPPT/PPTX。ノートがあれば元ファイルも渡す。",
+    "output": "文字・普通の図形・画像を分けた編集可能なPPTX、再構成manifestと頁/全体の検査記録。",
+    "how_to_use": [
+      "原典run prepareで画像を入力し、頁ごとのworker promptと入力SHAを作る。文字/普通図形/画像の分類を各頁で決める。",
+      "別workerへ各頁をdispatchする。workerだけが頁manifestを作り、分離アイコンをprocess-sheetし、page build/contact-sheet/validateまで行う。",
+      "orchestratorは結果とSHA・validationを確かめてrecordし、全頁受入後に原典run finalizeで統合・検査する。",
+      "PowerPointで原図と出力の両頁を見比べ、別コピーで文字変更と再表示を確認する。保存済みworker結果だけの再出力はsource/reproduce.pyを使う。"
+    ],
+    "constraints": [
+      "元画像は同じカタログ内のcodex-image-pptで作ったGit説明画像。外部の複雑な実資料の復元精度は示さない。",
+      "文字・カード・背景・普通矢印はnative。7アイコンは元画像の実image_gen編集で分離済みのbitmapで、内部の線や色は編集できない。",
+      "今回の修復は2名の実workerが各頁build/validateを担当し、orchestratorが原典dispatch/record/finalizeを実行。元の分離画像はSHA照合で再利用し、新しい画像生成・外部OCRは未実施。",
+      "字体・平塗りと改行は近似。画素一致を保証せず、正しい文字・箱・矢印方向・編集性を照合する。",
+      "1頁は公式BIZ UDPGothic Bold/OFL同梱。2頁はYu GothicとArial Bold/Arial Narrow Boldを使用しOS字体は非再配布。新規入力のOCR/backend設定は原典に従う。",
+      "講稿はカタログ制作時に新規追加した説明で、画像から抽出したノートではない。本文XMLと画像bytesを保つnotes-only処理を記録。"
+    ],
+    "demonstration": {
+      "summary": "原図2枚を新規runの実worker2名へ渡し、1頁は成功版のSHA照合で再利用、2頁はgit commitの字間と位置を原図に合わせて修復。原典record/finalizeを通し、文字21件を含むnative41要素とbitmap7点を統合。",
+      "applied_features": [
+        "元画像を原典prepareし、同じsource/backendを確認した実worker2名へ新規dispatch。1頁の再利用と2頁の字間校正を各workerが検査。",
+        "原典record/finalizeで2頁のmanifest・画像来歴・geometryを検証。validationはpassed=true、欠落/違反/warning0。",
+        "PowerPoint全2頁を再描画。別コピーの中央ラベルだけをnative runで変更・保存し、正本SHA不変と実再描画を確認。",
+        "作例ZIPと日本語派生ZIPを別々に展開して再実行。実PowerPoint計4頁のRGB差0、native文字・図表・画像bytes・ノート一致（既存固定依存、fresh install未検査）。"
+      ],
+      "not_demonstrated": [
+        "外部OCR/API経路、今回の新規画像生成、画素同一、bitmap内の部品編集、GUIからの文字編集。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "1頁：Gitの保存・記録・共有",
+          "title": "Gitの保存・記録・共有",
+          "what_to_inspect": "原図と完成版の3カード・2矢印・9文字を見る。文字とpillはnative、3アイコンだけbitmapとして分かれる。",
+          "skill_rule": "原典はtext_inventoryとelement manifestで各要素をnative text/shapeと画像へ分類し、頁workerが再構成する。",
+          "proof_path": "examples/repositories/image-to-editable/qa/before-after-page-01.png",
+          "proof_kind": "actual_before_after"
+        },
+        {
+          "index": 1,
+          "label": "2頁：変更は3つの場所を進む",
+          "title": "変更は3つの場所を進む",
+          "what_to_inspect": "中央から右のgit commitとpillの間を見る。普通の空白1個、同じ21.5pt、原図の文字幅に近い字体と位置へ戻し、箱間を35px確保した。12文字と箱/矢印はnative、4アイコンはbitmap。",
+          "skill_rule": "原典のpage build/validateはmanifestから再構成して要素・画像来歴を検査する。字体の手動校正は原典schemaの例外として記録。",
+          "proof_path": "examples/repositories/image-to-editable/qa/before-after-page-02.png",
+          "proof_kind": "actual_before_after"
+        },
+        {
+          "index": 1,
+          "label": "2頁：2頁のラベルを別コピーで編集",
+          "title": "2頁のラベルを別コピーで編集",
+          "what_to_inspect": "中央の説明だけが「次に記録する内容」から「次回の記録内容」へ変わる。PPTXへ文字変更を保存し、再描画した実画像。",
+          "skill_rule": "原典のeditable出力は文字を画像へ焼き込まない。別PPTXのnative文字runを実変更し、主成果物のSHA不変も確認する。",
+          "proof_path": "examples/repositories/image-to-editable/qa/editability/render/slide-02.png",
+          "proof_kind": "actual_native_text_edit"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/image-to-editable/source/reproduce.py",
+        "examples/repositories/image-to-editable/run-repair-r4/page_jobs.json",
+        "examples/repositories/image-to-editable/run-repair-r4/run_state.json",
+        "examples/repositories/image-to-editable/run-repair-r4/pages/page_001/manifest.json",
+        "examples/repositories/image-to-editable/run-repair-r4/pages/page_001/validation.json",
+        "examples/repositories/image-to-editable/run-repair-r4/pages/page_002/manifest.json",
+        "examples/repositories/image-to-editable/run-repair-r4/pages/page_002/validation.json",
+        "examples/repositories/image-to-editable/run-repair-r4/pages/page_002/command-font-calibration.json",
+        "examples/repositories/image-to-editable/run-repair-r4/final/validation.json",
+        "examples/repositories/image-to-editable/source/notes-addition.json",
+        "examples/repositories/image-to-editable/source/native-elements.json",
+        "examples/repositories/image-to-editable/qa/editability/native-edit.json",
+        "examples/repositories/image-to-editable/qa/before-after.json",
+        "examples/repositories/image-to-editable/source/round4-orchestration.json",
+        "examples/repositories/image-to-editable/source/verify_editability.py",
+        "examples/repositories/image-to-editable/source/inspect_current.py",
+        "examples/repositories/image-to-editable/run-repair-r4/pages/page_001/worker-reuse-receipt.json",
+        "examples/repositories/image-to-editable/run-repair-r4/pages/page_002/worker-repair-receipt.json",
+        "examples/repositories/image-to-editable/source/distribution-replay.json"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "既存画像を頁ごとに分解し、文字や普通図形をnative、複雑なアイコンを個別画像へ分け、原典CLIで検査・統合する。",
+      "requirements": [
+        "Python3.10+と原典editppt CLIの固定依存（PyMuPDF/python-pptx等）",
+        "新規入力には頁worker対応エージェントと選択した画像backend。保存済み結果の再統合は画像生成不要。",
+        "今回の描画はWindows PowerPoint/Yu Gothic/Arial Narrow、同梱BIZ UDPGothic Bold。"
+      ],
+      "steps": [
+        "原典run prepareで画像を入力し、頁ごとのworker promptと入力SHAを作る。文字/普通図形/画像の分類を各頁で決める。",
+        "別workerへ各頁をdispatchする。workerだけが頁manifestを作り、分離アイコンをprocess-sheetし、page build/contact-sheet/validateまで行う。",
+        "orchestratorは結果とSHA・validationを確かめてrecordし、全頁受入後に原典run finalizeで統合・検査する。",
+        "PowerPointで原図と出力の両頁を見比べ、別コピーで文字変更と再表示を確認する。保存済みworker結果だけの再出力はsource/reproduce.pyを使う。"
+      ],
+      "limitations": [
+        "元画像は同じカタログ内のcodex-image-pptで作ったGit説明画像。外部の複雑な実資料の復元精度は示さない。",
+        "文字・カード・背景・普通矢印はnative。7アイコンは元画像の実image_gen編集で分離済みのbitmapで、内部の線や色は編集できない。",
+        "今回の修復は2名の実workerが各頁build/validateを担当し、orchestratorが原典dispatch/record/finalizeを実行。元の分離画像はSHA照合で再利用し、新しい画像生成・外部OCRは未実施。",
+        "字体・平塗りと改行は近似。画素一致を保証せず、正しい文字・箱・矢印方向・編集性を照合する。",
+        "1頁は公式BIZ UDPGothic Bold/OFL同梱。2頁はYu GothicとArial Bold/Arial Narrow Boldを使用しOS字体は非再配布。新規入力のOCR/backend設定は原典に従う。",
+        "講稿はカタログ制作時に新規追加した説明で、画像から抽出したノートではない。本文XMLと画像bytesを保つnotes-only処理を記録。"
+      ],
+      "execution_type": "原典CLIと実worker2名による頁別再構成/校正。保存済みmanifestの再統合と新規worker実行を区別。",
+      "commands": [
+        "python source/reproduce.py",
+        "pwsh -NoProfile -File source/render_powerpoint.ps1 -PresentationPath deck.pptx -OutputDirectory render",
+        "python source/render_pdf_previews.py render",
+        "python source/verify_editability.py --render",
+        "python source/render_pdf_previews.py qa/editability/render",
+        "python source/inspect_current.py"
+      ]
+    },
+    "method": "原図2枚を新規runの実worker2名へ渡し、1頁は成功版のSHA照合で再利用、2頁はgit commitの字間と位置を原図に合わせて修復。原典record/finalizeを通し、文字21件を含むnative41要素とbitmap7点を統合。",
+    "sample_notice": "既存画像2枚の再構成。文字21件を含むnative41要素、bitmap7点。実worker/原典検査/PowerPoint全頁確認済み、独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "新run-r4を原典検査・統合し、PowerPoint全2頁を再描画。",
+    "preview_image_notice": "現在のPowerPoint PDFからPNG化。原図の字体・texture・細部は近似。",
+    "pages": [
+      "examples/repositories/image-to-editable/render/slide-01.png",
+      "examples/repositories/image-to-editable/render/slide-02.png"
+    ],
+    "titles": [
+      "Gitの保存・記録・共有",
+      "変更は3つの場所を進む"
+    ],
+    "notes": [
+      "このページでは、エディターでの保存、Gitへの記録、リモートへの共有を区別します。保存だけでは履歴に残らず、コミットだけでは共有先へ送られません。この作例は元画像から文字とカードを編集可能に再構成し、アイコンは画像として保持しています。この案内ノートはカタログ制作時に新規追加したもので、元画像から抽出したものではありません。",
+      "変更は作業ツリー、ステージ、ローカル履歴の順に進みます。git addで次に記録する内容を選び、git commitでその内容を手元の履歴に残します。add後の追加編集は自動でステージへ入らないため、必要なら再度addして確認します。この案内ノートはカタログ制作時に新規追加したものです。"
+    ]
+  }
+]

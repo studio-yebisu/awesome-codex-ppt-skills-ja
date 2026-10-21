@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MBB Page Maker Decision Option Comparison Variants</title>
+  <link rel="stylesheet" href="../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../assets/themes/mono.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Decision option comparison variants">
+    <section class="slide is-dense" data-title="The option funnel should show both narrowing logic and the final scorecard">
+      <header><div class="slide-kicker">Decision pattern</div><h2 class="slide-title">The option funnel should show both narrowing logic and the final scorecard</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="option-funnel-scorecard">
+          <article class="option-funnel-stage"><strong>12</strong><span>Long list</span></article><article class="option-funnel-stage"><strong>6</strong><span>Meets gates</span></article><article class="option-funnel-stage"><strong>3</strong><span>Short list</span></article><article class="option-funnel-stage is-recommended"><strong>1</strong><span>Recommend</span></article>
+          <table class="option-scorecard"><thead><tr><th>Option</th><th>Fit</th><th>Value</th><th>Risk</th><th>Decision</th></tr></thead><tbody><tr><td class="row-head">Option A</td><td>High</td><td>High</td><td>Med</td><td class="is-best">Select</td></tr><tr><td class="row-head">Option B</td><td>Med</td><td>High</td><td>High</td><td>Pilot</td></tr><tr><td class="row-head">Option C</td><td>High</td><td>Med</td><td>Med</td><td>Hold</td></tr></tbody></table>
+        </div>
+      </div>
+      <footer class="footer"><span>Showcase: option-funnel-scorecard</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="A tradeoff frontier makes dominated options visible before scoring detail">
+      <header><div class="slide-kicker">Decision pattern</div><h2 class="slide-title">A tradeoff frontier makes dominated options visible before scoring detail</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="tradeoff-frontier">
+          <div class="tradeoff-plot"><span class="tradeoff-frontier-line"></span><span class="tradeoff-point" style="--x: 22%; --y: 30%">A</span><span class="tradeoff-point" style="--x: 42%; --y: 54%">B</span><span class="tradeoff-point is-best" style="--x: 66%; --y: 68%">C</span><span class="tradeoff-point" style="--x: 82%; --y: 62%">D</span><span class="tradeoff-axis is-x">Higher value</span><span class="tradeoff-axis is-y">Lower risk</span></div>
+          <aside class="tradeoff-legend"><strong>Frontier logic</strong><span>Use before detailed scoring when two dimensions explain the recommendation.</span></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Showcase: tradeoff-frontier</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Scenario comparison pages should connect assumptions to decision posture">
+      <header><div class="slide-kicker">Decision pattern</div><h2 class="slide-title">Scenario comparison pages should connect assumptions to decision posture</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <table class="scenario-comparison-table"><thead><tr><th>Scenario</th><th>Assumption</th><th>Impact</th><th>Decision posture</th></tr></thead><tbody><tr><td class="row-head">Downside</td><td>Adoption reaches only priority teams.</td><td><span class="scenario-impact is-risk">-18%</span></td><td>Gate spend after pilot.</td></tr><tr><td class="row-head">Base</td><td>Adoption follows current enablement plan.</td><td><span class="scenario-impact">+12%</span></td><td>Approve phased rollout.</td></tr><tr><td class="row-head">Upside</td><td>Platform reuse lowers delivery cost.</td><td><span class="scenario-impact is-upside">+27%</span></td><td>Accelerate shared services.</td></tr></tbody></table>
+      </div>
+      <footer class="footer"><span>Showcase: scenario-comparison-table</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide is-dense" data-title="Open assumptions belong beside the recommendation rather than in speaker notes">
+      <header><div class="slide-kicker">Decision pattern</div><h2 class="slide-title">Open assumptions belong beside the recommendation rather than in speaker notes</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="region-layout right-rail">
+          <main class="region"><table class="assumption-register-table"><thead><tr><th>Assumption</th><th>Evidence today</th><th>Test</th><th>Owner</th><th>Status</th></tr></thead><tbody><tr><td class="row-head">Users accept guided workflow</td><td>Two teams opted into pilot.</td><td>Measure weekly active use.</td><td>Product</td><td><span class="assumption-status is-open">Open</span></td></tr><tr><td class="row-head">Integration cost stays bounded</td><td>Core API path validated.</td><td>Run security review.</td><td>Platform</td><td><span class="assumption-status is-watch">Watch</span></td></tr><tr><td class="row-head">Owners absorb change</td><td>Named leads in three functions.</td><td>Confirm release capacity.</td><td>PMO</td><td><span class="assumption-status is-closed">Ready</span></td></tr></tbody></table></main>
+          <aside class="region is-muted"><div class="safe-stack"><h3 class="region-title">Use when</h3><p class="region-copy">The decision is supportable, but the audience must see which assumptions remain testable gates.</p></div></aside>
+        </div>
+      </div>
+      <footer class="footer"><span>Showcase: assumption-register-table</span><span class="page-number"></span></footer>
+    </section>
+  </main>
+  <script src="../../assets/js/runtime.js"></script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+[
+  {
+    "case_id": "sci-diagram-reconstruction",
+    "output": "復元では編集可能なPPTXと実行用ソース。修復では変更したPPTX、検査では元のPPTXを変更しない検査結果。",
+    "demonstration": {
+      "pages": [
+        {
+          "index": 0,
+          "label": "復元結果：4箱と4関係",
+          "title": "水循環の代表的な経路",
+          "what_to_inspect": "左上→右上の凝結、右上→右下の降水、右下→左下の水の流れ、左下→左上の蒸発を入力PNGと比べる。原文・配置・方向を保持する。",
+          "skill_rule": "関係を見た目の円形配置から推測せず、元図のfrom/toと経路をEDGESへ記録する。線は一つのnative部品として持つ。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/render/slide-01.png",
+          "proof_kind": "actual_powerpoint_pdf_render",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/input/source.png"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：文字だけの変更",
+          "title": "「海・湖の水」を「湖の水」へ",
+          "what_to_inspect": "左下のラベルだけが変わり、箱・線・ほかの文言が残る。画像全体を置き換えていない。",
+          "skill_rule": "各文字にnativeの所有者を一つ与える。画像内文字との二重描画や全面bitmapを使わない。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-label-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html"
+        },
+        {
+          "index": 0,
+          "label": "別コピー：箱と線の変更",
+          "title": "箱の塗りと矢印の色・太さを変更",
+          "what_to_inspect": "左下の箱だけが淡い緑、上の凝結の矢印だけが緑の太線へ変わる。文言と矢印の方向は保持し、保存後に開き直した。",
+          "skill_rule": "意味を持つ箱と関係を示す線を編集可能なnative部品へ分ける。自動接続とは区別し、PPTX XMLでも個別性を確かめる。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/qa/editability/native-shapes-edited.png",
+          "proof_kind": "actual_saved_and_reopened_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html"
+        },
+        {
+          "index": 0,
+          "label": "複合例：入れ子・双方向・破線・画像小図",
+          "title": "2区画の可逆交換（概念モデル）",
+          "what_to_inspect": "外側領域内の2区画と記号、両端矢じり、条件u→区画Bの破線終端、raster小図とnative見出しの分担を入力と比べる。",
+          "skill_rule": "NODES/EDGES/INSETSの所有を一つずつ割り当て、親領域で関係線を隠さないよう描画順を調整する。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/complex-example/render/powerpoint.png",
+          "proof_kind": "actual_powerpoint_render",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/complex-example/input/source.png"
+        },
+        {
+          "index": 0,
+          "label": "複合例の別コピー：Xだけを変更",
+          "title": "XをX*へ変更して保存",
+          "what_to_inspect": "区画AのXだけがX*に変わり、双方向線・破線・小図が保持される。",
+          "skill_rule": "native文字の編集コピーを採用PPTXとは別に保存し、元hashを保持する。",
+          "proof_path": "examples/repositories/sci-diagram-reconstruction/complex-example/qa/native-edit.png",
+          "proof_kind": "actual_saved_powerpoint_edit",
+          "preview_path": "examples/repositories/sci-diagram-reconstruction/index.html",
+          "input_path": "examples/repositories/sci-diagram-reconstruction/complex-example/render/powerpoint.png",
+          "input_label": "変更前",
+          "output_label": "Xを変更した後"
+        }
+      ]
+    }
+  }
+]

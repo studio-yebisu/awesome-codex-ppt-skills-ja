@@ -1,0 +1,51 @@
+{
+  "components": [
+    {
+      "type": "chart",
+      "chart_type": "stacked",
+      "direction": "horizontal",
+      "emphasis_label": "欧文13書体も候補に含む",
+      "axes": {
+        "y_unit": "書体"
+      },
+      "series": [
+        {
+          "name": "和文",
+          "data": [
+            {
+              "x": "全30書体",
+              "y": 17
+            }
+          ]
+        },
+        {
+          "name": "欧文",
+          "emphasis": true,
+          "data": [
+            {
+              "x": "全30書体",
+              "y": 13
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "icon_cards",
+      "items": [
+        {
+          "icon": "book-open",
+          "title": "和文の候補",
+          "text": "和文向けの17書体。必要な文字は元配布で確認。"
+        },
+        {
+          "icon": "globe",
+          "title": "欧文の候補",
+          "text": "欧文向けの13書体。数字や記号も実文面で確認。"
+        }
+      ]
+    }
+  ],
+  "footnote": "出典：input/oss-font-kit.jsonのlanguageを実集計。文字収録範囲の保証ではありません。",
+  "notes": "30件のfamiliesをlanguageで集計：ja17、latin13。合計30。原典allotmentは1カテゴリの横積み上げ棒と任意の2〜3icon_cardsを受ける。元データを図に合わせて作った数値ではない。"
+}

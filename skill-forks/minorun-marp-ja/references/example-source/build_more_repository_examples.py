@@ -38,9 +38,9 @@ def reveal():
     doc = read(p.out / 'index.html')
     bodies = [
         '<h1>社内検索を<br>4週間で試す</h1><p>50人の会社から始める、社内文書30件の検索企画</p><p class="subtitle">企画例 / 架空の条件による説明資料</p>',
-        '<h2>問い合わせの前に、<br>探せる場所をつくる</h2><div class="columns"><div class="col"><h3>今の困りごと</h3><p>保存先がばらばら</p><p>同じ質問が繰り返される</p><p>どの版が新しいか分からない</p></div><div class="col"><h3>試す範囲</h3><p>対象文書は30件</p><p>回答には出典を付ける</p><p>判断は担当者が行う</p></div></div>',
-        '<h2>見せてよい資料だけを検索する</h2><div class="flow"><div><strong>利用者</strong><p>所属・権限を確認</p></div><span>→</span><div><strong>検索</strong><p>閲覧できる文書だけ</p></div><span>→</span><div><strong>回答</strong><p>出典付きで提示</p></div></div><p class="caution">権限外の資料は、検索候補にも入れない</p>',
-        '<h2>4週間で導入判断の材料を集める</h2><table><tr><th>期間</th><th>やること</th><th>残すもの</th></tr><tr><td>1週目</td><td>文書と権限を整理</td><td>対象30件の一覧</td></tr><tr><td>2週目</td><td>検索の試作</td><td>出典付きの回答</td></tr><tr><td>3週目</td><td>質問で評価</td><td>品質・権限の記録</td></tr><tr><td>4週目</td><td>継続を判断</td><td>改善項目と担当</td></tr></table>',
+        '<h2>問い合わせの前に、<br>探せる場所をつくる</h2><div class="columns" style="display:grid;grid-template-columns:1fr 1fr"><div class="col"><h3>今の困りごと</h3><p>保存先がばらばら</p><p>同じ質問が繰り返される</p><p>どの版が新しいか分からない</p></div><div class="col"><h3>試す範囲</h3><p>対象文書は30件</p><p>回答には出典を付ける</p><p>判断は担当者が行う</p></div></div>',
+        '<h2>見せてよい資料だけを検索する</h2><div class="flow"><div><strong>利用者</strong><p>所属・権限を確認</p></div><p class="flow-arrow">→</p><div><strong>検索</strong><p>閲覧できる文書だけ</p></div><p class="flow-arrow">→</p><div><strong>回答</strong><p>出典付きで提示</p></div></div><p class="caution">権限外の資料は、検索候補にも入れない</p>',
+        '<h2>4週間で判断の材料を集める</h2><table><tr><th>期間</th><th>やること</th><th>残すもの</th></tr><tr><td>1週目</td><td>文書と権限を整理</td><td>対象30件の一覧</td></tr><tr><td>2週目</td><td>検索の試作</td><td>出典付きの回答</td></tr><tr><td>3週目</td><td>質問で評価</td><td>品質・権限の記録</td></tr><tr><td>4週目</td><td>継続を判断</td><td>改善項目と担当</td></tr></table>',
         '<h2>答えの正しさと権限を別々に測る</h2><div class="metrics"><div><strong>24 / 30</strong><p>根拠を示せる質問数</p></div><div><strong>0 / 20</strong><p>権限外への漏えい数</p></div><div><strong>翌営業日</strong><p>更新を反映する期限</p></div></div><p class="caution">すべて試行で測る目標値です</p>',
         '<h2>小さく試して、継続を決める</h2><blockquote>品質・権限・運用の条件を<br>揃えてから、利用を広げる。</blockquote><p>最初の一歩：対象30件と、文書を確認する担当者を決める</p>']
     soup = BeautifulSoup(doc, 'html.parser')
@@ -55,7 +55,7 @@ def reveal():
     doc = re.sub(r'<(?:script|link)[^>]*(?:chart\.js|reveal\.js-plugins|font-awesome)[^>]*(?:></script>|>)', '', doc)
     doc = re.sub(r'https://cdn.jsdelivr.net/npm/reveal\.js@[^/]+/dist/', 'reveal/', doc)
     doc = doc.replace('plugins: [ RevealChart ]', 'plugins: []')
-    css = "body,.reveal,.reveal p,.reveal li,.reveal td,.reveal th{font-family:'Yebisu Noto Sans JP',sans-serif}.reveal{background:#F4F6F6;color:#1C2833}.reveal h1{font-size:58pt;line-height:1.25}.reveal h2{font-size:34pt;line-height:1.3;color:#277884}.reveal h3{font-size:25pt}.reveal p,.reveal td,.reveal th{font-size:22pt}.reveal section{padding:64px 80px;box-sizing:border-box}.reveal .subtitle,.reveal .caution{font-size:16pt;color:#5D676E;margin-top:38px}.columns{display:grid;grid-template-columns:1fr 1fr;gap:64px}.metrics,.flow{display:flex;align-items:center;justify-content:space-between;gap:30px;margin-top:70px}.metrics strong{font-size:36pt;color:#FE4447}.flow strong{font-size:29pt;color:#277884}.reveal table{width:100%;margin-top:34px}.reveal td,.reveal th{padding:18px;text-align:left}.reveal blockquote{font-size:35pt;line-height:1.55;border-left:0;padding:50px 0}"
+    css = "body,.reveal,.reveal p,.reveal li,.reveal td,.reveal th{font-family:'Yebisu Noto Sans JP',sans-serif}.reveal{background:#F4F6F6;color:#1C2833}.reveal h1{font-size:58pt;line-height:1.25}.reveal h2{font-size:34pt;line-height:1.3;color:#277884}.reveal h3{font-size:27pt;margin:0 0 28px}.reveal p,.reveal td,.reveal th{font-size:22pt}.reveal section{padding:64px 80px;box-sizing:border-box}.reveal .subtitle,.reveal .caution{font-size:16pt;color:#5D676E;margin-top:38px}.columns{gap:64px;margin-top:52px}.columns p{margin:22px 0;line-height:1.5}.metrics,.flow{display:flex;align-items:center;justify-content:space-between;gap:30px;margin-top:70px}.metrics strong{font-size:36pt;color:#FE4447}.flow strong{font-size:32pt;color:#277884}.flow>div{padding:32px 22px;border-top:3px solid #277884}.flow .flow-arrow{color:#b63d35;font-size:32pt}.flow p{line-height:1.5}.flow .flow-arrow{margin:0}.reveal table{width:100%;margin-top:46px;border-collapse:collapse}.reveal th{background:#277884;color:#fff;font-weight:600}.reveal td{border-bottom:1px solid #9fb4b7}.reveal td,.reveal th{padding:18px;text-align:left}.reveal blockquote{font-size:35pt;line-height:1.55;border-left:0;padding:50px 0}"
     write(p.out / 'index.html', append_assets(doc, p, css, bridge('Reveal.slide(n);')))
     return p.finish(KNOWLEDGE_TITLES, KNOWLEDGE_NOTES, use_case='業務改善')
 
@@ -143,20 +143,26 @@ def minorun():
     p = Production('minorun365/minorun-marp-skill', 'minorun-marp', 'git', 'Gitの変更、どこに保存された？', 'minorun-dark / Marp',
         '原典のslide-story・slide-figures・slide-design-darkを適用。黒地テーマ本体を保持し、作業・ステージ・記録・共有の図を段階的に開示するMarp原稿を制作。Marp CLIで実HTMLを生成。',
         'instruction_skill_and_marp_cli', ['skills/slide-story/SKILL.md', 'skills/slide-figures/SKILL.md', 'skills/slide-design-dark/SKILL.md', 'theme/minorun-dark.css', 'tools/check-ai-smell.py', 'LICENSE'])
-    titles = ['Gitの変更、どこに保存された？', '保存したのに、相手の画面に出ていない？', 'まず、変更の現在地を見る', '変更は作業フォルダにある', '記録したい変更を選ぶ', '選んだ変更を履歴へ残す', '履歴をチームへ届ける', '迷ったら、まず状態と差分を読む', '今の変更を、git statusで見てみよう']
+    # This showcase is a five-minute introductory excerpt, not the full 35-minute training.
+    if not (p.out / 'input/original-broad-data.json').exists():
+        write(p.out / 'input/original-broad-data.json', json.dumps(p.input, ensure_ascii=False, indent=2))
+    p.input = {'title': p.title, 'audience': 'Gitを初めて使う人への5分の導入抜粋', 'goal': '保存・選択・記録・共有の違いを4段階の図で説明できる', 'duration_minutes': 5, 'commands': ['git status', 'git add README.md', 'git commit -m "手順を追加"', 'git push'], 'scope': '図による説明例。20分演習・ブランチ・レビュー依頼・競合解消は含めない。pushは送信先確認を説明するだけで実行しない。'}
+    write(p.out / 'input/data.json', json.dumps(p.input, ensure_ascii=False, indent=2))
+    write(p.out / 'input/BRIEF.md', '# Gitの変更、どこに保存された？\n\n初めてGitを使う人に5分で説明する導入抜粋。保存→ステージ→履歴→リモートの違いを、位置を揃えた4段階の図で示す。status/add/commit/pushは説明例。20分演習、ブランチ、レビュー、競合解消の教材ではない。送信操作は実行しない。元の35分教材の依頼はORIGINAL-BRIEF.mdとoriginal-broad-data.jsonへ保持する。\n')
+    titles = ['Gitの変更、どこに保存された？', '保存した変更はどこにある？', 'まず、変更の現在地を見る', '変更は作業フォルダにある', '記録したい変更を選ぶ', '選んだ変更を履歴へ残す', '履歴をチームへ届ける', '迷ったら、まず状態と差分を読む', '今の変更を、git statusで見てみよう']
     notes = ['初めてGitを使う人向けの5分程度の架空勉強会です。', 'エディターで保存しただけではチームへ共有されません。', 'statusの表示を入口に、変更の場所を説明します。', 'まずファイルを編集して、作業フォルダが変わります。', 'addで、次に記録するファイルを選びます。', 'commitで、選んだ変更と理由が履歴に残ります。', 'pushで、指定したリモートへ履歴を送ります。送り先を確認してから行います。', '操作を続ける前に確認します。状態が分からないまま、復元や削除のコマンドを試さないでください。', '練習用フォルダで、いま何が変わったかを見てみましょう。']
     diagrams = []
     labels = ['作業フォルダ', 'ステージ', '履歴', 'リモート']
     for count in range(1, 5):
         elements = []
         for i in range(count):
-            x = 18 + i * 247
-            elements.append('<rect x="' + str(x) + '" y="40" width="218" height="122" rx="5" fill="' + ('#08616B' if i == count - 1 else '#1C2E30') + '"/><text x="' + str(x + 109) + '" y="110" text-anchor="middle" fill="#FFFFFF" font-family="Noto Sans JP" font-size="28">' + labels[i] + '</text>')
+            x = i * 260
+            elements.append('<rect x="' + str(x) + '" y="40" width="210" height="210" rx="5" fill="' + ('#08616B' if i == count - 1 else '#1C2E30') + '"/><text x="' + str(x + 105) + '" y="155" text-anchor="middle" fill="#FFFFFF" font-family="Noto Sans JP" font-size="31">' + labels[i] + '</text>')
             if i:
-                elements.append('<path d="M' + str(x - 10) + ',100 h-14" stroke="#00C4E4" stroke-width="4"/>')
-        image = '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="210" viewBox="0 0 1000 210">' + ''.join(elements) + '</svg>'
+                elements.append('<path d="M' + str(x - 40) + ',145 h30" stroke="#00C4E4" stroke-width="4" marker-end="url(#next)"/>')
+        image = '<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="320" viewBox="0 0 1000 320"><defs><marker id="next" markerWidth="6" markerHeight="6" refX="4" refY="3" orient="auto"><path d="M0 0L6 3L0 6" fill="#00C4E4"/></marker></defs>' + ''.join(elements) + '</svg>'
         write(p.out / ('images/location-' + str(count) + '.svg'), image)
-        diagrams.append('![w:1000](images/location-' + str(count) + '.svg)')
+        diagrams.append('![w:1100](images/location-' + str(count) + '.svg)')
     bodies = ['# ' + titles[0] + '\n\nはじめてのGit勉強会', '# ' + titles[1], '# ' + titles[2] + '\n\n```console\n$ git status\nmodified: README.md\n```',
               '# ' + titles[3] + '\n\n' + diagrams[0] + '\n\nエディターで保存すると、ファイルが変わる。',
               '# ' + titles[4] + '\n\n' + diagrams[1] + '\n\n`git add README.md`',
@@ -164,13 +170,15 @@ def minorun():
               '# ' + titles[6] + '\n\n' + diagrams[3] + '\n\n`git push` の前に、送り先とブランチを確認。',
               '# ' + titles[7] + '\n\n`git status` で変更の位置を見る。\n\n`git diff` で変更の中身を読む。', '# ' + titles[8]]
     for i in [0, 1, 8]: bodies[i] = '<!-- _class: ' + ('top' if i == 0 else 'crosshead') + ' -->\n\n' + bodies[i]
-    font = p.fonts('\n'.join(bodies))
-    deck = '---\nmarp: true\npaginate: true\ntheme: minorun-dark\n---\n\n<style>' + font + "\nsection{font-family:'Yebisu Noto Sans JP',sans-serif}</style>\n\n" + '\n\n---\n\n'.join(body + '\n\n<!-- ' + note + ' -->' for body, note in zip(bodies, notes)) + '\n'
+    font = p.fonts('\n'.join(bodies)+''.join(labels))
+    for svg in (p.out/'images').glob('location-*.svg'):
+        raw=read(svg).replace('font-family="Noto Sans JP"','font-family="Yebisu Noto Sans JP"');cut=raw.index('>')+1;write(svg,raw[:cut]+'<style>'+font+'</style>'+raw[cut:])
+    deck = '---\nmarp: true\npaginate: true\ntheme: minorun-dark\n---\n\n<style>' + font + "\nsection{font-family:'Yebisu Noto Sans JP',sans-serif}section.top h1,section.top p{transform:translateY(-64px)}section img{margin-top:24px;margin-bottom:20px}</style>\n\n" + '\n\n---\n\n'.join(body + '\n\n<!-- ' + note + ' -->' for body, note in zip(bodies, notes)) + '\n'
     write(p.out / 'deck.md', deck)
     shutil.copyfile(p.up / 'theme/minorun-dark.css', p.out / 'minorun-dark.css')
     marp = ROOT / '.build/repository-runtime/node_modules/@marp-team/marp-cli/marp-cli.js'
     p.run(['node', marp, '--no-stdin', p.out / 'deck.md', '--html', '--theme', p.out / 'minorun-dark.css', '--allow-local-files', '-o', p.out / 'index.html'])
-    p.run(['python', p.up / 'tools/check-ai-smell.py', p.out / 'deck.md'])
+    p.run(['python', p.up / 'tools/check-ai-smell.py', '--all', p.out / 'deck.md'])
     # Bespoke slides remain the Marp output. Hash navigation is provided by Marp's bespoke runtime.
     doc = read(p.out / 'index.html')
     doc = re.sub(r'<html[^>]*>', '<html lang="ja">', doc, count=1)
@@ -285,18 +293,19 @@ def bento():
     p.fonts(json.dumps(slides,ensure_ascii=False))
     doc={'format':'bento/slides','version':1,'title':p.title,'size':{'width':1280,'height':720},'theme':{'background':'#101B19','color':'#F2F0EA','accent':'#66D1AF','fontFamily':'Yebisu Noto Sans JP'},'slides':slides,'modified':'2026-10-13T00:00:00Z','assets':{'jp-font':'data:font/woff2;base64,'+base64.b64encode((p.out/'fonts/noto-sans-jp.woff2').read_bytes()).decode()},'fonts':[{'family':'Yebisu Noto Sans JP','asset':'jp-font','weight':'100 900'}]}
     old=p.out/'deck.json'
-    doc['docId']=json.loads(read(old)).get('docId') if old.exists() else str(uuid.uuid4())
-    dump(old,doc)
-    write(p.out/'deck-plan.md','# 社内検索を4週間で試す\n\n読者: 導入を検討する50人の架空企業の担当者。\n形式: 編集可能なBento文書と、浮遊再生用のreadonlyコピー。\n6ページ: 企画→対象範囲→権限確認→根拠付き回答→評価目標→着手。\n意味のある動き: 3から4ページで同じ検索ノードと強調線をmorphする。\n原典の固定shellは変更しない。字体は公式OFL由来のJP subsetを文書assetsへ埋める。\n')
-    p.run(['python',p.up/'scripts/bento_deck.py','locate'])
-    editable=p.out/'deck.bento.html'
-    identity=['--identity-source',editable] if editable.exists() else ['--new-document']
-    p.run(['python',p.up/'scripts/bento_deck.py','build',old,'--output',editable,*identity,'--overwrite','--report',p.out/'source/bento-validation.json'])
-    p.run(['python',p.up/'scripts/bento_deck.py','extract',editable,'--output',old,'--overwrite'])
-    doc=json.loads(read(old))
-    player_doc=dict(doc,readonly=True)
-    dump(p.out/'player.json',player_doc)
-    p.run(['python',p.up/'scripts/bento_deck.py','build',p.out/'player.json','--identity-source',editable,'--output',p.out/'player.bento.html','--overwrite','--report',p.out/'source/player-validation.json'])
+    # Preserve the entire existing document, including unknown fields and stable IDs.
+    if old.exists():
+        doc=json.loads(read(old))
+    else:
+        doc['docId']=str(uuid.uuid4());dump(old,doc)
+    helper=p.out/'source/rebuild_bento.py'
+    if not helper.exists():raise RuntimeError('Bento case requires source/rebuild_bento.py; do not overwrite an identity source.')
+    destination=p.out/'rebuilds'/('build-'+uuid.uuid4().hex[:10])
+    p.run(['python',helper,'--input',old,'--output-dir',destination])
+    for name in ['deck.json','player.json','deck.bento.html','player.bento.html']:
+        shutil.copy2(destination/name,p.out/name)
+    shutil.copy2(destination/'noto-sans-jp.woff2',p.out/'fonts/noto-sans-jp.woff2')
+    write(p.out/'deck-plan.md','# 社内検索を4週間で試す\n\n3役の位置は固定し、3→4頁で同じ文書トークンが権限確認から回答と出典へ移る。固定Bento shellは変更せず、全JSONを保存して別出力へbuildする。\n')
     shutil.copyfile(p.up/'NOTICE.md',p.out/'NOTICE.md')
     shutil.copyfile(p.up/'THIRD_PARTY_LICENSES/bento-MIT.txt',p.out/'LICENSE.bento')
     return p.finish(titles,notes,preview='player.bento.html',use_case='業務改善・動き付き説明',extra={'navigation':'native-keyboard','editable_artifact':rel(p.out/'deck.bento.html')})

@@ -1,0 +1,33 @@
+{
+  "id": "agent-slides-showcase",
+  "canonical_data_edited": false,
+  "prompt_text": "架空の一日ワークショップ企画「土曜日を、街の作業場に。」を、企画の意図がすぐ伝わる完成1枚のネイティブ編集可能なPowerPointにしてください。紺、鮮やかな橙、白。巨大な日本語見出し、短い企画の約束、仮の一日の流れ、人・道具・街と場の関係図を組みます。原典mpuig/agent-slidesのtemplate extract→preflight→plan+ops→dry-run→render CLIを実際に使い、別の汎用rendererへ名前を貼らないでください。自作の紺/橙templateに書式付きtitle/body placeholderと複数layoutを用意し、元extractで契約化。Workshop Splitの背景・位置・字体をset_semantic_textで継承し、残りの要素は元native operationで生成。1枚指定を優先して表紙・免責・終頁を追加しない。日時・人数・会場・参加条件は未定、行程は仮案と表示し、実績を捏造しない。原典slides qaを実行しok:true、全1頁の実描画を確認する。独立評価は別記録とし、未確認を合格扱いしない。入力、依頼文、原典source/license、短い日本語SKILL、PPTX、PNG/PDF、2ZIPを完成させてください。",
+  "method": "自作の実書式templateを原典extractし、title/bodyの位置・字体・大きさ・白をset_semantic_textで継承。元CLIのpreflight/dry-run/render/qaを実行し、PowerPointの全1頁を確認。",
+  "effect_change_ja": "PPTXから書式と配置の契約を抽出し、そのplaceholder書式を保ったまま企画文とnative図を入れて検査する。",
+  "what_to_inspect_ja": "主題と説明の位置・白・52/23ptは入力のWorkshop Split layoutを継承。左下は10/12/15時の仮行程、右は人・道具・街と場の関係。参加方法は掲載していない。",
+  "input_preview": "examples/repositories/agent-slides-showcase/reviews/template-render/slide-02.png",
+  "template_input": "examples/repositories/agent-slides-showcase/input/self-authored-workshop-template.pptx",
+  "preview_notice": "原典extract→placeholder書式継承→plan+ops→qa。本文・図はnative、固定背景はSlide Masterで編集。",
+  "not_demonstrated": [
+    "Real company template test",
+    "Original automatic structural-page insertion and24pt defaults overridden by1page/style request",
+    "Original split-panel title relocation heuristic overridden to preserve authored layout",
+    "Independent reviewer pass pending"
+  ],
+  "freeze_files": [
+    "source/build_styled_template.py",
+    "source/build_agent_slides_showcase.py",
+    "source/template-inventory.json",
+    "source/template-inheritance-check.json",
+    "source/command-evidence.json",
+    "source/*-report.txt",
+    "input/self-authored-workshop-template.pptx",
+    "input/project/resolved_manifest.json",
+    "input/project/design-profile.json",
+    "input/slides.json",
+    "reviews/original-qa.json",
+    "reviews/original-lint.json",
+    "reviews/template-and-visual-audit.json",
+    "reviews/template-render/slide-02.png"
+  ]
+}

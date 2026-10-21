@@ -1,0 +1,969 @@
+[
+  {
+    "case_id": "marp-mcp-showcase",
+    "job": "箇条書きや表を資料へ整え、ページIDで指定した内容だけを更新する。",
+    "change": "箇条書きや表を資料へ整え、ページIDで指定した内容だけを更新する。",
+    "input": "ページごとの見出し・本文・箇条書き・表と、変更したい内容。",
+    "output": "編集元のMarkdownとHTML・PDF。MCP実装のPPTX出力は各頁の画像を収めた形式。",
+    "how_to_use": [
+      "marp-mcp --versionでCLIを確認する。list-layoutsで版式と必須項目を調べ、-tで基本テーマ、-sで追加スタイルを選ぶ。-s指定時は原則-t defaultになる。",
+      "createで資料を作り、set-frontmatterで見出しや頁番号を設定する。manageのlayoutとparamsへ原稿を渡して頁を追加する。",
+      "generate-idsでIDを付け、readで対象IDを調べる。manage --mode replace/deleteと--slide-idで変更箇所を指定する。既存IDは再発行しても変わらない。",
+      "export -f htmlまたは-f pdfで書き出す。generate-agendaとadd-image-transitionはHTML用の機能として必要な時に使う。MCP経由も選べるが、原典SKILLの主な入口はCLI。",
+      "出力した全頁を開き、文字・表・改行・ID指定の変更箇所を確認する。PPTXの出力方式と編集できる範囲を分けて伝える。"
+    ],
+    "constraints": [
+      "6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。",
+      "原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。",
+      "工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。"
+    ],
+    "demonstration": {
+      "summary": "箇条書きや表を資料へ整え、ページIDで指定した内容だけを更新する。",
+      "applied_features": [
+        "原典CLIのlist/create/manage/read/generate-ids/exportを実操作した2頁の独立確認",
+        "同じリポジトリのMCP実装による6頁作成・ID指定replace・一時頁insert/delete",
+        "HTML/PDF/画像主体PPTXの実出力と、ID変更前後のPDF画像"
+      ],
+      "not_demonstrated": [
+        "6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。",
+        "原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。",
+        "工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "同じIDの頁を差し替える",
+          "title": "同じIDの頁を差し替える",
+          "what_to_inspect": "変更前画像の「持ってくるもの」「相談できる案内役」と、変更後の「持参するもの」「作業範囲を相談する案内役」を比較する。対象IDとページ位置が同じことはreceiptに記録。",
+          "skill_rule": "readでIDを取得し、manageのreplaceで指定頁だけを置き換える。",
+          "proof_path": "examples/repositories/marp-mcp-showcase/render/id-edit-after.png",
+          "proof_kind": "actual_pdf_render"
+        },
+        {
+          "index": 3,
+          "label": "表を頁幅へ配置する",
+          "title": "表を頁幅へ配置する",
+          "what_to_inspect": "役割・当日すること・次へ渡すものの表が本文幅に広がり、3行を読める。",
+          "skill_rule": "原典tableレイアウトのtableMarkdownへ内容を渡す。",
+          "proof_path": "examples/repositories/marp-mcp-showcase/render/slide-04.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 5,
+          "label": "PDFの固定出力を確認する",
+          "title": "PDFの固定出力を確認する",
+          "what_to_inspect": "PDFから描画した最終頁の日本語と注記を見る。PPTXの画像主体という形式は別のXML検査で確認している。",
+          "skill_rule": "原典exportでPDFへ書き出す。PPTX形式は同梱MCP実装の検査として区別する。",
+          "proof_path": "examples/repositories/marp-mcp-showcase/render/pdf/slide-06.png",
+          "proof_kind": "actual_pdf_render"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/marp-mcp-showcase/render/slide-01.png",
+        "examples/repositories/marp-mcp-showcase/render/slide-02.png",
+        "examples/repositories/marp-mcp-showcase/render/slide-03.png",
+        "examples/repositories/marp-mcp-showcase/render/slide-04.png",
+        "examples/repositories/marp-mcp-showcase/render/slide-05.png",
+        "examples/repositories/marp-mcp-showcase/render/slide-06.png",
+        "examples/repositories/marp-mcp-showcase/source/repair-qa.json",
+        "examples/repositories/marp-mcp-showcase/source/round5-original-gates.json",
+        "examples/repositories/marp-mcp-showcase/source/upstream/skills/marp/SKILL.md",
+        "examples/repositories/marp-mcp-showcase/source/round5-cli-proof.json",
+        "examples/repositories/marp-mcp-showcase/source/round5-id-visual-proof.json",
+        "examples/repositories/marp-mcp-showcase/source/round5-format-inspection.json",
+        "examples/repositories/marp-mcp-showcase/source/logs/id-edit-receipt.json",
+        "examples/repositories/marp-mcp-showcase/source/logs/id-edit-before.md",
+        "examples/repositories/marp-mcp-showcase/source/logs/id-edit-after.md",
+        "examples/repositories/marp-mcp-showcase/source/logs/mcp-operations.json",
+        "examples/repositories/marp-mcp-showcase/render/id-edit-before.png",
+        "examples/repositories/marp-mcp-showcase/render/id-edit-after.png",
+        "examples/repositories/marp-mcp-showcase/render/pdf/slide-01.png",
+        "examples/repositories/marp-mcp-showcase/render/pdf/slide-02.png",
+        "examples/repositories/marp-mcp-showcase/render/pdf/slide-03.png",
+        "examples/repositories/marp-mcp-showcase/render/pdf/slide-04.png",
+        "examples/repositories/marp-mcp-showcase/render/pdf/slide-05.png",
+        "examples/repositories/marp-mcp-showcase/render/pdf/slide-06.png",
+        "examples/repositories/marp-mcp-showcase/source/round5-zip-replay.json",
+        "examples/repositories/marp-mcp-showcase/source/ROUND5-REPRODUCE.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "箇条書きや表を資料へ整え、ページIDで指定した内容だけを更新する。",
+      "requirements": [
+        "Node.js18以上、固定原典runtimeと互換依存、Marp CLI4.4.0、Chrome/Edge。再生成helperのPDF描画にはPython3とPyMuPDFが必要。"
+      ],
+      "steps": [
+        "marp-mcp --versionでCLIを確認する。list-layoutsで版式と必須項目を調べ、-tで基本テーマ、-sで追加スタイルを選ぶ。-s指定時は原則-t defaultになる。",
+        "createで資料を作り、set-frontmatterで見出しや頁番号を設定する。manageのlayoutとparamsへ原稿を渡して頁を追加する。",
+        "generate-idsでIDを付け、readで対象IDを調べる。manage --mode replace/deleteと--slide-idで変更箇所を指定する。既存IDは再発行しても変わらない。",
+        "export -f htmlまたは-f pdfで書き出す。generate-agendaとadd-image-transitionはHTML用の機能として必要な時に使う。MCP経由も選べるが、原典SKILLの主な入口はCLI。",
+        "出力した全頁を開き、文字・表・改行・ID指定の変更箇所を確認する。PPTXの出力方式と編集できる範囲を分けて伝える。"
+      ],
+      "limitations": [
+        "6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。",
+        "原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。",
+        "工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "元MCPで全6頁を再生成しHTML/PDF/PPTXを書出し。元CLIでも作成・ID更新・ID保持・HTML/PDF出力を実行。HTML6頁・PDF6頁を実描画し目視。3頁の4動作、4頁の表幅、6頁の文字コントラストを修復。 今回の修復はCodex。新版の独立再評価は未取得。 配布ZIPを新規展開して再生成・実描画を再実行。",
+    "method": "原典CLIの独立2頁確認＋同梱MCP実装の6頁制作・ID指定編集→原典Marp CLIによるHTML/PDF/画像主体PPTX出力",
+    "prompt_text": "# 再制作の指示\n\n箇条書きや表を資料へ整え、ページIDで指定した内容だけを更新する。\n\n入力: ページごとの見出し・本文・箇条書き・表と、変更したい内容。\n出力: 編集元のMarkdownとHTML・PDF。MCP実装のPPTX出力は各頁の画像を収めた形式。\n\n1. marp-mcp --versionでCLIを確認する。list-layoutsで版式と必須項目を調べ、-tで基本テーマ、-sで追加スタイルを選ぶ。-s指定時は原則-t defaultになる。\n2. createで資料を作り、set-frontmatterで見出しや頁番号を設定する。manageのlayoutとparamsへ原稿を渡して頁を追加する。\n3. generate-idsでIDを付け、readで対象IDを調べる。manage --mode replace/deleteと--slide-idで変更箇所を指定する。既存IDは再発行しても変わらない。\n4. export -f htmlまたは-f pdfで書き出す。generate-agendaとadd-image-transitionはHTML用の機能として必要な時に使う。MCP経由も選べるが、原典SKILLの主な入口はCLI。\n5. 出力した全頁を開き、文字・表・改行・ID指定の変更箇所を確認する。PPTXの出力方式と編集できる範囲を分けて伝える。\n\n同梱作例の範囲: 元MCPで全6頁を再生成しHTML/PDF/PPTXを書出し。元CLIでも作成・ID更新・ID保持・HTML/PDF出力を実行。HTML6頁・PDF6頁を実描画し目視。3頁の4動作、4頁の表幅、6頁の文字コントラストを修復。\n\n制約: 6頁の主作例は同梱MCP実装で制作。CLIだけで6頁を制作した例ではない。原典CLIは別の2頁で実操作確認した。\n制約: 原典SKILLのCLI exportはHTML/PDF。今回のPPTXはREADME・MCP実装の画像出力で、文字・表・図形を個別編集できない。\n制約: 工程図と3列図はcontentへ追加したHTML/CSS。generate-agenda・add-image-transition、編集可能PPTX、PowerPoint実機表示は未実証。\n",
+    "pages": [
+      "examples/repositories/marp-mcp-showcase/render/slide-01.png",
+      "examples/repositories/marp-mcp-showcase/render/slide-02.png",
+      "examples/repositories/marp-mcp-showcase/render/slide-03.png",
+      "examples/repositories/marp-mcp-showcase/render/slide-04.png",
+      "examples/repositories/marp-mcp-showcase/render/slide-05.png",
+      "examples/repositories/marp-mcp-showcase/render/slide-06.png"
+    ],
+    "sample_notice": "架空の題材を使った実制作例。元MCPで全6頁を再生成しHTML/PDF/PPTXを書出し。元CLIでも作成・ID更新・ID保持・HTML/PDF出力を実行。HTML6頁・PDF6頁を実描画し目視。3頁の4動作、4頁の表幅、6頁の文字コントラストを修復。",
+    "titles": [
+      "ひとつの服を、もう一度。",
+      "一着と、ひとつの気がかり。",
+      "見つけて、相談し、試して、記録する。",
+      "役割を、先に分けておく。",
+      "持ち帰るのは、この三つ。",
+      "直せたところも、次の一手も。"
+    ],
+    "page_count": 6
+  },
+  {
+    "case_id": "slide-wright-showcase",
+    "job": "同じ配色・書体・図形を保ちながら、既存資料のページを追加・修正する。",
+    "change": "同じ配色・書体・図形を保ちながら、既存資料のページを追加・修正する。",
+    "input": "題材と原稿、または原典の方式で作られた既存HTML。",
+    "output": "本文・テーマ・字体を収めたHTML。ページ操作に必要なスクリプトは固定CDNから読み込む。",
+    "how_to_use": [
+      "新規資料では目的・読み手・発表用か単独で読む資料かを判断し、原典theme-generationとdesign-aestheticsから1方向の専用テーマを作る。",
+      "同じ完成ファイルに実表紙と本文の2頁だけを作り、ブラウザーで表示する。テーマ名は説明に記し、スライド内へ制作過程のラベルを入れない。",
+      "新規資料では2頁を提示して止まり、人間の承認・調整・方向変更を待つ。承認前に残りを作らず、方向変更時は配色・字体・図形・動きを改める。",
+      "承認後は最初の2sectionを保持し、同じHTMLへ追加する。既存の対応HTMLを編集する場合は見た目を保ってその場で修正し、別形式のHTMLへ無理に移植しない。",
+      "全頁を実ブラウザーで開き、16:9、字体、重なり、講稿、矢印と一覧表示を確認する。公開やPDF保存は実行した場合だけ完了と記す。"
+    ],
+    "constraints": [
+      "今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。",
+      "既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。",
+      "固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。"
+    ],
+    "demonstration": {
+      "summary": "同じ配色・書体・図形を保ちながら、既存資料のページを追加・修正する。",
+      "applied_features": [
+        "現在の実2頁を別画像として保存し、Night Orbitの配色・字体・円の設計判断を記録",
+        "同じHTMLで最初の2sectionを保持して4頁を追加する組立部分を再実行",
+        "小さい和文見出しを読みやすい字体へ修正し、4頁の円を本文のない右下へ移動"
+      ],
+      "not_demonstrated": [
+        "今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。",
+        "既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。",
+        "固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "2頁見本の表紙",
+          "title": "2頁見本の表紙",
+          "what_to_inspect": "濃紺の面、大きな表示用字体、シアンの円と小さい琥珀色の点。2頁段階の実画像。",
+          "skill_rule": "資料ごとに配色・字体・繰返す図形を決め、実表紙を含む2頁で見た目を試す。",
+          "proof_path": "examples/repositories/slide-wright-showcase/render/two-page-stage/slide-01.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 1,
+          "label": "2頁見本の本文",
+          "title": "2頁見本の本文",
+          "what_to_inspect": "同じ色と円を使った本文。案内を聞く等の小見出しには静かな太字を使う。",
+          "skill_rule": "話して説明する密度に合わせ、表示用字体と本文用字体の役割を分ける。",
+          "proof_path": "examples/repositories/slide-wright-showcase/render/two-page-stage/slide-02.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 3,
+          "label": "追加頁でも同じ体系を使う",
+          "title": "追加頁でも同じ体系を使う",
+          "what_to_inspect": "明るい面へ変わっても同じ円と字体を使う。円は右下に収まり、見る・話すの本文を横切らない。",
+          "skill_rule": "同じテーマで版式を変え、編集後は実画面の重なりを確認する。",
+          "proof_path": "examples/repositories/slide-wright-showcase/render/slide-04.png",
+          "proof_kind": "actual_browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/slide-wright-showcase/render/slide-01.png",
+        "examples/repositories/slide-wright-showcase/render/slide-02.png",
+        "examples/repositories/slide-wright-showcase/render/slide-03.png",
+        "examples/repositories/slide-wright-showcase/render/slide-04.png",
+        "examples/repositories/slide-wright-showcase/render/slide-05.png",
+        "examples/repositories/slide-wright-showcase/render/slide-06.png",
+        "examples/repositories/slide-wright-showcase/source/repair-qa.json",
+        "examples/repositories/slide-wright-showcase/source/round5-original-gates.json",
+        "examples/repositories/slide-wright-showcase/source/upstream/slide-wright/SKILL.md",
+        "examples/repositories/slide-wright-showcase/source/round5-direction-review.json",
+        "examples/repositories/slide-wright-showcase/source/stages.json",
+        "examples/repositories/slide-wright-showcase/source/DESIGN.md",
+        "examples/repositories/slide-wright-showcase/source/upstream/slide-wright/references/theme-generation.md",
+        "examples/repositories/slide-wright-showcase/source/upstream/slide-wright/references/design-aesthetics.md",
+        "examples/repositories/slide-wright-showcase/render/two-page-stage/slide-01.png",
+        "examples/repositories/slide-wright-showcase/render/two-page-stage/slide-02.png",
+        "examples/repositories/slide-wright-showcase/source/round5-zip-replay.json",
+        "examples/repositories/slide-wright-showcase/source/ROUND5-REPRODUCE.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "同じ配色・書体・図形を保ちながら、既存資料のページを追加・修正する。",
+      "requirements": [
+        "Python 3、ブラウザー、固定CDNへの接続。追加のnpmビルドは不要。"
+      ],
+      "steps": [
+        "新規資料では目的・読み手・発表用か単独で読む資料かを判断し、原典theme-generationとdesign-aestheticsから1方向の専用テーマを作る。",
+        "同じ完成ファイルに実表紙と本文の2頁だけを作り、ブラウザーで表示する。テーマ名は説明に記し、スライド内へ制作過程のラベルを入れない。",
+        "新規資料では2頁を提示して止まり、人間の承認・調整・方向変更を待つ。承認前に残りを作らず、方向変更時は配色・字体・図形・動きを改める。",
+        "承認後は最初の2sectionを保持し、同じHTMLへ追加する。既存の対応HTMLを編集する場合は見た目を保ってその場で修正し、別形式のHTMLへ無理に移植しない。",
+        "全頁を実ブラウザーで開き、16:9、字体、重なり、講稿、矢印と一覧表示を確認する。公開やPDF保存は実行した場合だけ完了と記す。"
+      ],
+      "limitations": [
+        "今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。",
+        "既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。",
+        "固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "修復後の実2頁をブラウザー表示して個別画像と設計判断を保存。その2sectionを保持して同じHTMLへ4頁appendし、全6頁を1920×1080で実描画・目視。矢印の戻りと一覧表示も確認。人間の美術承認は未取得。 今回の修復はCodex。新版の独立再評価は未取得。 配布ZIPを新規展開して再生成・実描画を再実行。",
+    "prompt_text": "# 再制作の指示\n\n同じ配色・書体・図形を保ちながら、既存資料のページを追加・修正する。\n\n入力: 題材と原稿、または原典の方式で作られた既存HTML。\n出力: 本文・テーマ・字体を収めたHTML。ページ操作に必要なスクリプトは固定CDNから読み込む。\n\n1. 新規資料では目的・読み手・発表用か単独で読む資料かを判断し、原典theme-generationとdesign-aestheticsから1方向の専用テーマを作る。\n2. 同じ完成ファイルに実表紙と本文の2頁だけを作り、ブラウザーで表示する。テーマ名は説明に記し、スライド内へ制作過程のラベルを入れない。\n3. 新規資料では2頁を提示して止まり、人間の承認・調整・方向変更を待つ。承認前に残りを作らず、方向変更時は配色・字体・図形・動きを改める。\n4. 承認後は最初の2sectionを保持し、同じHTMLへ追加する。既存の対応HTMLを編集する場合は見た目を保ってその場で修正し、別形式のHTMLへ無理に移植しない。\n5. 全頁を実ブラウザーで開き、16:9、字体、重なり、講稿、矢印と一覧表示を確認する。公開やPDF保存は実行した場合だけ完了と記す。\n\n同梱作例の範囲: 修復後の実2頁をブラウザー表示して個別画像と設計判断を保存。その2sectionを保持して同じHTMLへ4頁appendし、全6頁を1920×1080で実描画・目視。矢印の戻りと一覧表示も確認。人間の美術承認は未取得。\n\n制約: 今回の対象は既存6頁の修復。新規資料で人間の承認を得て停止解除した実例ではない。2頁の画像とCodexの設計判断を示す部分例。\n制約: 既存編集は原典の方式のHTMLに限定する。今回のappendは既存作例の再生成として明示指定し、人間の美術承認を記録したことにはしない。\n制約: 固定CDNへの接続が必要。PDF印刷、発表者用の別ウィンドウ、外部公開、実機発表は未確認。\n",
+    "pages": [
+      "examples/repositories/slide-wright-showcase/render/slide-01.png",
+      "examples/repositories/slide-wright-showcase/render/slide-02.png",
+      "examples/repositories/slide-wright-showcase/render/slide-03.png",
+      "examples/repositories/slide-wright-showcase/render/slide-04.png",
+      "examples/repositories/slide-wright-showcase/render/slide-05.png",
+      "examples/repositories/slide-wright-showcase/render/slide-06.png"
+    ],
+    "titles": [
+      "星を待つ、夜の天文台。",
+      "みんなで、夜を見上げる。",
+      "入口から、星へ。",
+      "見るだけの日も、あっていい。",
+      "待つ時間も、企画の一部。",
+      "今夜の空を、次の話に。"
+    ],
+    "notes": [
+      "開催前の架空企画です。円と軌道は説明用の図形で、天体の位置・観測データを表すものではありません。",
+      "過ごし方の提案です。特定の天体が見えることや観測成果を約束しません。会場の導線・安全条件は未定です。",
+      "行程は企画上の案です。天文学の解説や観測技法の手順ではありません。",
+      "参加者が会話や観察のペースを選べるというイベント案です。科学的効果を主張していません。",
+      "天候による運用の提案です。開催判断の確定条件や観測予測は示していません。現場条件の決定は次工程です。",
+      "企画の締めくくりです。見えたものを次の会話に持ち帰るという提案で、実施成果ではありません。"
+    ],
+    "sample_notice": "架空の題材を使った実制作例。修復後の実2頁をブラウザー表示して個別画像と設計判断を保存。その2sectionを保持して同じHTMLへ4頁appendし、全6頁を1920×1080で実描画・目視。矢印の戻りと一覧表示も確認。人間の美術承認は未取得。",
+    "method": "既存6頁の修復→実2頁の表示・設計判断記録→同じHTMLの2sectionを保持して4頁appendする組立部分の再実行。新規制作の人間承認ゲートは未実証。",
+    "page_count": 6
+  },
+  {
+    "case_id": "design-dna-showcase",
+    "job": "参考画像から色・文字・構図の規則を抜き出し、別の原稿へ展開する。",
+    "change": "参考画像から色・文字・構図の規則を抜き出し、別の原稿へ展開する。",
+    "input": "スタイル参考の画像と、別の内容の原稿。参考画像は完成資料の素材にしない。",
+    "output": "抽出した5層の規則、配色値、頁ごとの配置仕様から作ったHTML6枚。",
+    "how_to_use": [
+      "明示された参考画像を読み、使える色・構図と、転用してはいけない被写体を分ける。",
+      "Mood/Composition/Visual/Content Strategy/Presentationの5層と数値パネルを示し、確認・調整する。",
+      "方向の決定後に題材・読者・枚数・画像利用を確認し、Design ContractとBlueprintを作る。",
+      "各頁のPage Specsとlayout_box_budgetを数値化してから、固定1920×1080のHTMLを作る。",
+      "原典ppt-layout-guard.jsがPASSした成果物を引き渡す。生成後ブラウザーQAは原典の既定工程ではなく、依頼された場合の追加作業。profileは明示的に希望された時だけ保存する。"
+    ],
+    "constraints": [
+      "作例は明示画像からのスタイル抽出。画像なし探索、既存資料の修復、保存profileの再利用・差分、Design Adapterは実証していない。",
+      "原典は完成rendererを配布しておらず、HTML/SVGとページ送りは規則に基づく局所実装。原典の変換CLIとは称さない。",
+      "元画像を新資料へ埋め込んでいない。PPTXと保存profileは未生成。"
+    ],
+    "demonstration": {
+      "summary": "参考画像から色・文字・構図の規則を抜き出し、別の原稿へ展開する。",
+      "applied_features": [
+        "明示した画像から5層の規則と数値パネルを抽出",
+        "数値Page Specsから別題材のHTML/SVGを生成",
+        "未変更の原典layout guardで6頁27領域を検査"
+      ],
+      "not_demonstrated": [
+        "作例は明示画像からのスタイル抽出。画像なし探索、既存資料の修復、保存profileの再利用・差分、Design Adapterは実証していない。",
+        "原典は完成rendererを配布しておらず、HTML/SVGとページ送りは規則に基づく局所実装。原典の変換CLIとは称さない。",
+        "元画像を新資料へ埋め込んでいない。PPTXと保存profileは未生成。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "参考の配色を別の図へ",
+          "title": "参考の配色を別の図へ",
+          "what_to_inspect": "青い円内の机の図形と紙色の地。元画像の被写体を貼らず、新しい道具棚の内容へ規則を使う。",
+          "skill_rule": "Visual DNAの色・幾何と新題材を分け、Page Specsへ寸法を記す。",
+          "proof_path": "examples/repositories/design-dna-showcase/render/slide-02.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 2,
+          "label": "大きな語を役割説明へつなぐ",
+          "title": "大きな語を役割説明へつなぐ",
+          "what_to_inspect": "左の「当番を分担」と、右の受付・点検・相談。左の二行から右の担当へ意味が続く。",
+          "skill_rule": "Content Strategyと文字階層を新原稿へ適用する。",
+          "proof_path": "examples/repositories/design-dna-showcase/render/slide-03.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 3,
+          "label": "順序を二本の矢印で示す",
+          "title": "順序を二本の矢印で示す",
+          "what_to_inspect": "借りる→使う→戻すの各接続に矢印の先端がある。",
+          "skill_rule": "数値Page Specsで図と接続の範囲を確保する。",
+          "proof_path": "examples/repositories/design-dna-showcase/render/slide-04.png",
+          "proof_kind": "actual_browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/design-dna-showcase/input/reference/slide-01.png",
+        "examples/repositories/design-dna-showcase/input/reference/PROVENANCE.json",
+        "examples/repositories/design-dna-showcase/input/reference-analysis.json",
+        "examples/repositories/design-dna-showcase/input/design-dna.json",
+        "examples/repositories/design-dna-showcase/input/DNA-PANEL.md",
+        "examples/repositories/design-dna-showcase/specs/design-contract.json",
+        "examples/repositories/design-dna-showcase/specs/ppt-blueprint.json",
+        "examples/repositories/design-dna-showcase/specs/page-specs.json",
+        "examples/repositories/design-dna-showcase/layout-guard-report.json",
+        "examples/repositories/design-dna-showcase/source/upstream/scripts/ppt-layout-guard.js",
+        "examples/repositories/design-dna-showcase/source/original-gates.json",
+        "examples/repositories/design-dna-showcase/source/all-pages-check.json",
+        "examples/repositories/design-dna-showcase/render/slide-01.png",
+        "examples/repositories/design-dna-showcase/render/slide-02.png",
+        "examples/repositories/design-dna-showcase/render/slide-03.png",
+        "examples/repositories/design-dna-showcase/render/slide-04.png",
+        "examples/repositories/design-dna-showcase/render/slide-05.png",
+        "examples/repositories/design-dna-showcase/render/slide-06.png",
+        "examples/repositories/design-dna-showcase/source/round4-original-gates.json",
+        "examples/repositories/design-dna-showcase/source/repair-qa.json",
+        "examples/repositories/design-dna-showcase/source/round4-zip-replay.json",
+        "examples/repositories/design-dna-showcase/source/ROUND4-REPRODUCE.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "参考画像から色・文字・構図の規則を抜き出し、別の原稿へ展開する。",
+      "requirements": [
+        "Python 3、Node.js、ブラウザー。配布内の原典guardと公式TTF/OFLを使う。"
+      ],
+      "steps": [
+        "明示された参考画像を読み、使える色・構図と、転用してはいけない被写体を分ける。",
+        "Mood/Composition/Visual/Content Strategy/Presentationの5層と数値パネルを示し、確認・調整する。",
+        "方向の決定後に題材・読者・枚数・画像利用を確認し、Design ContractとBlueprintを作る。",
+        "各頁のPage Specsとlayout_box_budgetを数値化してから、固定1920×1080のHTMLを作る。",
+        "原典ppt-layout-guard.jsがPASSした成果物を引き渡す。生成後ブラウザーQAは原典の既定工程ではなく、依頼された場合の追加作業。profileは明示的に希望された時だけ保存する。"
+      ],
+      "limitations": [
+        "作例は明示画像からのスタイル抽出。画像なし探索、既存資料の修復、保存profileの再利用・差分、Design Adapterは実証していない。",
+        "原典は完成rendererを配布しておらず、HTML/SVGとページ送りは規則に基づく局所実装。原典の変換CLIとは称さない。",
+        "元画像を新資料へ埋め込んでいない。PPTXと保存profileは未生成。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "原典guardは6頁27領域PASS。利用者の追加依頼により、修復後の全6頁を1920×1080で実描画・目視。2頁の机の図、3頁の役割説明、4頁の二つの矢印を修復。 今回の修復はCodex。変更後の独立再評価は未取得。 配布ZIP展開から再生成と原典検査を再実行し、公開HTMLとの一致を確認。",
+    "prompt_text": "# 再制作の指示\n\n参考画像から色・文字・構図の規則を抜き出し、別の原稿へ展開する。\n\n入力: スタイル参考の画像と、別の内容の原稿。参考画像は完成資料の素材にしない。\n出力: 抽出した5層の規則、配色値、頁ごとの配置仕様から作ったHTML6枚。\n\n1. 明示された参考画像を読み、使える色・構図と、転用してはいけない被写体を分ける。\n2. Mood/Composition/Visual/Content Strategy/Presentationの5層と数値パネルを示し、確認・調整する。\n3. 方向の決定後に題材・読者・枚数・画像利用を確認し、Design ContractとBlueprintを作る。\n4. 各頁のPage Specsとlayout_box_budgetを数値化してから、固定1920×1080のHTMLを作る。\n5. 原典ppt-layout-guard.jsがPASSした成果物を引き渡す。生成後ブラウザーQAは原典の既定工程ではなく、依頼された場合の追加作業。profileは明示的に希望された時だけ保存する。\n\n同梱作例の実施範囲: 原典guardは6頁27領域PASS。利用者の追加依頼により、修復後の全6頁を1920×1080で実描画・目視。2頁の机の図、3頁の役割説明、4頁の二つの矢印を修復。\n\n制約: 作例は明示画像からのスタイル抽出。画像なし探索、既存資料の修復、保存profileの再利用・差分、Design Adapterは実証していない。\n制約: 原典は完成rendererを配布しておらず、HTML/SVGとページ送りは規則に基づく局所実装。原典の変換CLIとは称さない。\n制約: 元画像を新資料へ埋め込んでいない。PPTXと保存profileは未生成。\n",
+    "pages": [
+      "examples/repositories/design-dna-showcase/render/slide-01.png",
+      "examples/repositories/design-dna-showcase/render/slide-02.png",
+      "examples/repositories/design-dna-showcase/render/slide-03.png",
+      "examples/repositories/design-dna-showcase/render/slide-04.png",
+      "examples/repositories/design-dna-showcase/render/slide-05.png",
+      "examples/repositories/design-dna-showcase/render/slide-06.png"
+    ],
+    "sample_notice": "架空の題材を使った実制作例。原典guardは6頁27領域PASS。利用者の追加依頼により、修復後の全6頁を1920×1080で実描画・目視。2頁の机の図、3頁の役割説明、4頁の二つの矢印を修復。"
+  },
+  {
+    "case_id": "cogine-templates-showcase",
+    "job": "原稿量と用途からテンプレートを比較し、選んだ枠へ内容を配置する。",
+    "change": "原稿量と用途からテンプレートを比較し、選んだ枠へ内容を配置する。",
+    "input": "読み手・用途・本文の量。各テンプレートのscheme/density/avoid_for/content_limits。",
+    "output": "選んだeditorial-luxuryの配色・枠・ページ操作を保った日本語HTML6枚。",
+    "how_to_use": [
+      "原典AGENTSを読み、全templates/*/template.jsonのscheme・density・用途・避ける場面を比較する。",
+      "content_limitsと必要版式を確認し、合うテンプレートのフォルダー全体を複製する。",
+      "実HTMLの埋める場所を対応付ける。今回の原典JSONにはlayout_slotsがないため局所のDOM対応表を使う。",
+      "見本の文字・数字・画像をすべて置換し、本文やカードの上限を越える場合は頁を分ける。",
+      "全頁をブラウザーで確認し、カウンターと章番号を区別する。利用可能な原典validate-visualも実行する。"
+    ],
+    "constraints": [
+      "原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。",
+      "layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。",
+      "原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。"
+    ],
+    "demonstration": {
+      "summary": "原稿量と用途からテンプレートを比較し、選んだ枠へ内容を配置する。",
+      "applied_features": [
+        "実60件のtemplate.jsonを読取・3候補の用途と密度を比較",
+        "原典editorial-luxuryの全フォルダー複製・見本文字を置換",
+        "明示した日本語字体・文字寸法・縦余白の派生と原典visual validator"
+      ],
+      "not_demonstrated": [
+        "原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。",
+        "layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。",
+        "原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "候補を比較して選ぶ",
+          "title": "候補を比較して選ぶ",
+          "what_to_inspect": "採用editorial-luxuryと、earthy-handmade・matisse-collageのscheme、density、avoid_for、推奨頁数の差を見る。",
+          "skill_rule": "全template.jsonの用途と制約を比較してからテンプレートを選ぶ。",
+          "proof_path": "examples/repositories/cogine-templates-showcase/render/template-comparison.png",
+          "proof_kind": "actual_selection_comparison_screenshot"
+        },
+        {
+          "index": 1,
+          "label": "原稿を既存の二列へ置く",
+          "title": "原稿を既存の二列へ置く",
+          "what_to_inspect": "左の導入と右の3手順。文字を大きくし、上下の空白へ配分した箇所を見る。",
+          "skill_rule": "原典の主要グリッドと装飾を保ち、content_limits内で見本を置き換える。",
+          "proof_path": "examples/repositories/cogine-templates-showcase/render/slide-02.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 4,
+          "label": "三つの選択肢を読める大きさへ",
+          "title": "三つの選択肢を読める大きさへ",
+          "what_to_inspect": "贈り物の三つの選択肢が同じ高さに並び、各カードの説明まで読める。",
+          "skill_rule": "字体保持規定からの日本語保守差分を明記し、全頁で可読性を確認する。",
+          "proof_path": "examples/repositories/cogine-templates-showcase/render/slide-05.png",
+          "proof_kind": "actual_browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/cogine-templates-showcase/source/upstream/AGENTS.md",
+        "examples/repositories/cogine-templates-showcase/input/template-metadata-inventory.json",
+        "examples/repositories/cogine-templates-showcase/input/template-selection-and-slots.json",
+        "examples/repositories/cogine-templates-showcase/source/upstream/templates/editorial-luxury/template.json",
+        "examples/repositories/cogine-templates-showcase/input/content.json",
+        "examples/repositories/cogine-templates-showcase/source/original-gates.json",
+        "examples/repositories/cogine-templates-showcase/source/all-pages-check.json",
+        "examples/repositories/cogine-templates-showcase/render/slide-01.png",
+        "examples/repositories/cogine-templates-showcase/render/slide-02.png",
+        "examples/repositories/cogine-templates-showcase/render/slide-03.png",
+        "examples/repositories/cogine-templates-showcase/render/slide-04.png",
+        "examples/repositories/cogine-templates-showcase/render/slide-05.png",
+        "examples/repositories/cogine-templates-showcase/render/slide-06.png",
+        "examples/repositories/cogine-templates-showcase/source/round4-original-gates.json",
+        "examples/repositories/cogine-templates-showcase/source/repair-qa.json",
+        "examples/repositories/cogine-templates-showcase/render/template-comparison.png",
+        "examples/repositories/cogine-templates-showcase/source/round4-original-deviations.json",
+        "examples/repositories/cogine-templates-showcase/source/round4-zip-replay.json",
+        "examples/repositories/cogine-templates-showcase/source/ROUND4-REPRODUCE.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "原稿量と用途からテンプレートを比較し、選んだ枠へ内容を配置する。",
+      "requirements": [
+        "Python 3、ブラウザー。原典visual validatorはNode.js24以上と互換Chromeを使う。"
+      ],
+      "steps": [
+        "原典AGENTSを読み、全templates/*/template.jsonのscheme・density・用途・避ける場面を比較する。",
+        "content_limitsと必要版式を確認し、合うテンプレートのフォルダー全体を複製する。",
+        "実HTMLの埋める場所を対応付ける。今回の原典JSONにはlayout_slotsがないため局所のDOM対応表を使う。",
+        "見本の文字・数字・画像をすべて置換し、本文やカードの上限を越える場合は頁を分ける。",
+        "全頁をブラウザーで確認し、カウンターと章番号を区別する。利用可能な原典validate-visualも実行する。"
+      ],
+      "limitations": [
+        "原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。",
+        "layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。",
+        "原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。 今回の修復はCodex。変更後の独立再評価は未取得。 配布ZIP展開から再生成と原典検査を再実行し、公開HTMLとの一致を確認。",
+    "license_notice_ja": "MIT ©2026 Cogine AI。日本語字体は同梱のOFL-1.1。",
+    "prompt_text": "# 再制作の指示\n\n原稿量と用途からテンプレートを比較し、選んだ枠へ内容を配置する。\n\n入力: 読み手・用途・本文の量。各テンプレートのscheme/density/avoid_for/content_limits。\n出力: 選んだeditorial-luxuryの配色・枠・ページ操作を保った日本語HTML6枚。\n\n1. 原典AGENTSを読み、全templates/*/template.jsonのscheme・density・用途・避ける場面を比較する。\n2. content_limitsと必要版式を確認し、合うテンプレートのフォルダー全体を複製する。\n3. 実HTMLの埋める場所を対応付ける。今回の原典JSONにはlayout_slotsがないため局所のDOM対応表を使う。\n4. 見本の文字・数字・画像をすべて置換し、本文やカードの上限を越える場合は頁を分ける。\n5. 全頁をブラウザーで確認し、カウンターと章番号を区別する。利用可能な原典validate-visualも実行する。\n\n同梱作例の実施範囲: 3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。\n\n制約: 原典は字体・主要レイアウトの保持を求める。今回は日本語化と可読性の保守依頼により、字体・文字寸法・縦余白を意図的に変更した。原典どおりの字体保持は今回の実証範囲に含めない。\n制約: layout_slotsは原典JSONに未定義。局所DOM対応表を原典の機能と称さない。\n制約: 原典validator自体は未変更。今回の日本語資料を検査し、60テンプレート全体の検査や保守はしていない。\n",
+    "pages": [
+      "examples/repositories/cogine-templates-showcase/render/slide-01.png",
+      "examples/repositories/cogine-templates-showcase/render/slide-02.png",
+      "examples/repositories/cogine-templates-showcase/render/slide-03.png",
+      "examples/repositories/cogine-templates-showcase/render/slide-04.png",
+      "examples/repositories/cogine-templates-showcase/render/slide-05.png",
+      "examples/repositories/cogine-templates-showcase/render/slide-06.png"
+    ],
+    "sample_notice": "架空の題材を使った実制作例。3候補比較の実画面を追加。2頁の手順、3頁の見出し間隔、5頁の三つの選択肢を調整し全6頁を実描画・目視。未変更の原典visual validatorは現HTMLで1280×720 PASS。"
+  },
+  {
+    "case_id": "keynot-showcase",
+    "job": "指示書にある色・字体・余白を、全頁へ一貫して反映する。",
+    "change": "指示書にある色・字体・余白を、全頁へ一貫して反映する。",
+    "input": "ブランド指示書と原稿。今回は色のhex値まで明示した架空ブランドの文章。",
+    "output": "指示書の値をCSSへ転記した、元のページ送りを持つ単独HTML6枚。",
+    "how_to_use": [
+      "PDF・画像・URL・文章など実際のブランド資料を読み、正確な色値、表示・本文の字体、使用範囲、ロゴ規則を記録する。今回は色指定済みの文章を使う。",
+      "原稿を表紙・分割面・手順・引用・締めの構成へ分ける。",
+      "CSS変数へ記録値を渡し、原典の完成JSを一体として保持する。",
+      "一頁ごとに編集し、ページ数の計算、URLからの直接移動、前回ページの記憶、端末を横向きにする案内を維持する。",
+      "全頁をブラウザーで確認する。印刷・別端末・編集保存は実行した場合だけ検証済みと記す。"
+    ],
+    "constraints": [
+      "色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。",
+      "紙70/黒28/赤2は設計目標であり面積の測定値ではない。",
+      "元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。"
+    ],
+    "demonstration": {
+      "summary": "指示書にある色・字体・余白を、全頁へ一貫して反映する。",
+      "applied_features": [
+        "日本語BRAND.mdの正確な色7項目を実抽出",
+        "元HTML/CSSとcontrollerを保持したブランド値の適用",
+        "締めの指定明朝、図形と文字の離隔、実際のnav消灯後表示"
+      ],
+      "not_demonstrated": [
+        "色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。",
+        "紙70/黒28/赤2は設計目標であり面積の測定値ではない。",
+        "元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。"
+      ],
+      "pages": [
+        {
+          "index": 0,
+          "label": "指定色の使用",
+          "title": "指定色の使用",
+          "what_to_inspect": "紙色の地、黒い本文、小さな赤い線。赤を全面の背景へ広げない。",
+          "skill_rule": "指示書の正確な色値と使用範囲をCSS変数へ反映する。",
+          "proof_path": "examples/repositories/keynot-showcase/render/slide-01.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 2,
+          "label": "図と文字の役割を分ける",
+          "title": "図と文字の役割を分ける",
+          "what_to_inspect": "第三のパネルの「休日」と右上のローラーの間に余白がある。",
+          "skill_rule": "ブランド版式内で要素を配置し、文字を図形で隠さない。",
+          "proof_path": "examples/repositories/keynot-showcase/render/slide-03.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 5,
+          "label": "締めにも指定字体を使う",
+          "title": "締めにも指定字体を使う",
+          "what_to_inspect": "締めの大見出しが指示書の明朝で表示される。",
+          "skill_rule": "抽出した表示用字体をページの役割を通じて一貫して適用する。",
+          "proof_path": "examples/repositories/keynot-showcase/render/slide-06.png",
+          "proof_kind": "actual_browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/keynot-showcase/input/BRAND.md",
+        "examples/repositories/keynot-showcase/input/brand-record.json",
+        "examples/repositories/keynot-showcase/source/brand-extraction.json",
+        "examples/repositories/keynot-showcase/input/ARCHITECTURE.md",
+        "examples/repositories/keynot-showcase/source/controller.original.js",
+        "examples/repositories/keynot-showcase/source/controller.patch",
+        "examples/repositories/keynot-showcase/source/all-pages-check.json",
+        "examples/repositories/keynot-showcase/render/slide-01.png",
+        "examples/repositories/keynot-showcase/render/slide-02.png",
+        "examples/repositories/keynot-showcase/render/slide-03.png",
+        "examples/repositories/keynot-showcase/render/slide-04.png",
+        "examples/repositories/keynot-showcase/render/slide-05.png",
+        "examples/repositories/keynot-showcase/render/slide-06.png",
+        "examples/repositories/keynot-showcase/source/round4-original-gates.json",
+        "examples/repositories/keynot-showcase/source/repair-qa.json",
+        "examples/repositories/keynot-showcase/source/round4-zip-replay.json",
+        "examples/repositories/keynot-showcase/source/ROUND4-REPRODUCE.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "指示書にある色・字体・余白を、全頁へ一貫して反映する。",
+      "requirements": [
+        "Python 3とブラウザー。字体を埋め込んだ単独HTMLは外部CDN不要。"
+      ],
+      "steps": [
+        "PDF・画像・URL・文章など実際のブランド資料を読み、正確な色値、表示・本文の字体、使用範囲、ロゴ規則を記録する。今回は色指定済みの文章を使う。",
+        "原稿を表紙・分割面・手順・引用・締めの構成へ分ける。",
+        "CSS変数へ記録値を渡し、原典の完成JSを一体として保持する。",
+        "一頁ごとに編集し、ページ数の計算、URLからの直接移動、前回ページの記憶、端末を横向きにする案内を維持する。",
+        "全頁をブラウザーで確認する。印刷・別端末・編集保存は実行した場合だけ検証済みと記す。"
+      ],
+      "limitations": [
+        "色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。",
+        "紙70/黒28/赤2は設計目標であり面積の測定値ではない。",
+        "元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "指定色7項目を実抽出し全6頁を実描画・目視。3頁のローラーと「日」を離し、6頁の締めを指示書の明朝へ統一。1頁は原典navが自動で消えるまで待ち実撮影。 今回の修復はCodex。変更後の独立再評価は未取得。 配布ZIP展開から再生成と原典検査を再実行し、公開HTMLとの一致を確認。",
+    "method": "色指定済みの日本語ブランド指示書→正確な色値の実抽出→brand record→元HTML/CSS/controller→局所の日本語本文・字体・版式",
+    "prompt_text": "# 再制作の指示\n\n指示書にある色・字体・余白を、全頁へ一貫して反映する。\n\n入力: ブランド指示書と原稿。今回は色のhex値まで明示した架空ブランドの文章。\n出力: 指示書の値をCSSへ転記した、元のページ送りを持つ単独HTML6枚。\n\n1. PDF・画像・URL・文章など実際のブランド資料を読み、正確な色値、表示・本文の字体、使用範囲、ロゴ規則を記録する。今回は色指定済みの文章を使う。\n2. 原稿を表紙・分割面・手順・引用・締めの構成へ分ける。\n3. CSS変数へ記録値を渡し、原典の完成JSを一体として保持する。\n4. 一頁ごとに編集し、ページ数の計算、URLからの直接移動、前回ページの記憶、端末を横向きにする案内を維持する。\n5. 全頁をブラウザーで確認する。印刷・別端末・編集保存は実行した場合だけ検証済みと記す。\n\n同梱作例の実施範囲: 指定色7項目を実抽出し全6頁を実描画・目視。3頁のローラーと「日」を離し、6頁の締めを指示書の明朝へ統一。1頁は原典navが自動で消えるまで待ち実撮影。\n\n制約: 色指定済みの文章を入力した例。PDFやURLから未知のブランド規則を読み取る精度は実証していない。\n制約: 紙70/黒28/赤2は設計目標であり面積の測定値ではない。\n制約: 元JSを保持したが、全画面・タッチ・印刷・実機での通し確認は未実施。PPTXは生成していない。\n",
+    "pages": [
+      "examples/repositories/keynot-showcase/render/slide-01.png",
+      "examples/repositories/keynot-showcase/render/slide-02.png",
+      "examples/repositories/keynot-showcase/render/slide-03.png",
+      "examples/repositories/keynot-showcase/render/slide-04.png",
+      "examples/repositories/keynot-showcase/render/slide-05.png",
+      "examples/repositories/keynot-showcase/render/slide-06.png"
+    ],
+    "sample_notice": "架空の題材を使った実制作例。指定色7項目を実抽出し全6頁を実描画・目視。3頁のローラーと「日」を離し、6頁の締めを指示書の明朝へ統一。1頁は原典navが自動で消えるまで待ち実撮影。"
+  },
+  {
+    "case_id": "beatdeck-showcase",
+    "job": "一つずつ話す内容に合わせて、同じ場面の図をクリックで変える。",
+    "change": "一つずつ話す内容に合わせて、同じ場面の図をクリックで変える。",
+    "input": "原稿・話者のメモ・出典と、何を一回のクリックで見せるかの対応表。",
+    "output": "6場面15段階のReact資料。共通の工程図、発表者用のsource/note、自動beatを持つ。",
+    "how_to_use": [
+      "原稿をreferenceへ保持し、何を舞台に置き何を講稿へ回すかCONTENT-AUDITで照合する。",
+      "sceneとbeatを定義し、各段階のref/source/noteと自動進行の要否を記録する。",
+      "元Scene/Reveal等で段階を組み、戻りや直接URLでも同じ表示になるよう状態から描く。",
+      "原典buildで型検査・bundle・外部URL検査を通し、原典verify --sourceで全beatを前進・逆戻り・直接表示で比較する。",
+      "contact sheetと重要フレームを開いて確認し、RUNBOOKと実施していない実機稽古を引き渡す。"
+    ],
+    "constraints": [
+      "原典verifyは15段階、既定0.1%の閾値で一致。QR URL未指定でQRなし、Terminal/data-exact照合は0要素。",
+      "3.1〜3.3は同じ工程内で、ボウル→生地→天板と矢印へ図も変わる。材料量・温度・時間・実際の製パン方法は表現していない。",
+      "全キーの手動稽古、実機Wi-Fi切断、別端末・プロジェクターでの通し確認は未実施。"
+    ],
+    "demonstration": {
+      "summary": "一つずつ話す内容に合わせて、同じ場面の図をクリックで変える。",
+      "applied_features": [
+        "原稿・CONTENT-AUDITと各beatのref/source/note対応",
+        "同一scene内で混ぜる→形→焼く場所へ図も変化",
+        "元verifyの全15状態を前進・逆戻り・直接表示で比較"
+      ],
+      "not_demonstrated": [
+        "原典verifyは15段階、既定0.1%の閾値で一致。QR URL未指定でQRなし、Terminal/data-exact照合は0要素。",
+        "3.1〜3.3は同じ工程内で、ボウル→生地→天板と矢印へ図も変わる。材料量・温度・時間・実際の製パン方法は表現していない。",
+        "全キーの手動稽古、実機Wi-Fi切断、別端末・プロジェクターでの通し確認は未実施。"
+      ],
+      "pages": [
+        {
+          "index": 4,
+          "label": "混ぜる",
+          "title": "混ぜる",
+          "what_to_inspect": "3.1の右図はボウル。下の工程図では「混ぜる・形」を強調。",
+          "skill_rule": "同じsceneのbeatを状態から描き、話す一歩と図を対応させる。",
+          "proof_path": "examples/repositories/beatdeck-showcase/render/verify/walk-03-01.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 5,
+          "label": "形を整える",
+          "title": "形を整える",
+          "what_to_inspect": "3.2は同じ右側の位置で生地の形へ変わる。見出しだけの切替ではない。",
+          "skill_rule": "持続する図の位置を保ち、段階ごとに必要な要素を置き換える。",
+          "proof_path": "examples/repositories/beatdeck-showcase/render/verify/walk-03-02.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 6,
+          "label": "次の工程へ渡す",
+          "title": "次の工程へ渡す",
+          "what_to_inspect": "3.3は生地が天板に載り、右矢印が付く。工程の強調はまだ「混ぜる・形」。",
+          "skill_rule": "状態由来の図で戻りと直接URLも同じ表示になることを検証する。",
+          "proof_path": "examples/repositories/beatdeck-showcase/render/verify/walk-03-03.png",
+          "proof_kind": "actual_browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/beatdeck-showcase/reference/SCRIPT.md",
+        "examples/repositories/beatdeck-showcase/docs/CONTENT-AUDIT.md",
+        "examples/repositories/beatdeck-showcase/input/scene-plan.json",
+        "examples/repositories/beatdeck-showcase/source/authored/deck/World.tsx",
+        "examples/repositories/beatdeck-showcase/source/VERIFY.json",
+        "examples/repositories/beatdeck-showcase/render/verify/report.json",
+        "examples/repositories/beatdeck-showcase/render/verify/contact.png",
+        "examples/repositories/beatdeck-showcase/source/verification-index.json",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-01-01.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-01-02.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-02-01.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-02-02.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-03-01.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-03-02.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-03-03.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-04-01.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-04-02.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-05-01.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-05-02.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-05-03.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-06-01.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-06-02.png",
+        "examples/repositories/beatdeck-showcase/render/verify/walk-06-03.png",
+        "examples/repositories/beatdeck-showcase/source/round4-original-gates.json",
+        "examples/repositories/beatdeck-showcase/source/repair-qa.json",
+        "examples/repositories/beatdeck-showcase/source/authored/deck/ProcessVisual.tsx",
+        "examples/repositories/beatdeck-showcase/source/round4-zip-replay.json",
+        "examples/repositories/beatdeck-showcase/source/ROUND4-REPRODUCE.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "一つずつ話す内容に合わせて、同じ場面の図をクリックで変える。",
+      "requirements": [
+        "Node.jsとruntime/package-lock.jsonの依存、対応ブラウザー。完成物はdistフォルダー一式。"
+      ],
+      "steps": [
+        "原稿をreferenceへ保持し、何を舞台に置き何を講稿へ回すかCONTENT-AUDITで照合する。",
+        "sceneとbeatを定義し、各段階のref/source/noteと自動進行の要否を記録する。",
+        "元Scene/Reveal等で段階を組み、戻りや直接URLでも同じ表示になるよう状態から描く。",
+        "原典buildで型検査・bundle・外部URL検査を通し、原典verify --sourceで全beatを前進・逆戻り・直接表示で比較する。",
+        "contact sheetと重要フレームを開いて確認し、RUNBOOKと実施していない実機稽古を引き渡す。"
+      ],
+      "limitations": [
+        "原典verifyは15段階、既定0.1%の閾値で一致。QR URL未指定でQRなし、Terminal/data-exact照合は0要素。",
+        "3.1〜3.3は同じ工程内で、ボウル→生地→天板と矢印へ図も変わる。材料量・温度・時間・実際の製パン方法は表現していない。",
+        "全キーの手動稽古、実機Wi-Fi切断、別端末・プロジェクターでの通し確認は未実施。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "原典buildと未変更verifyを実行。15状態すべての前進・逆戻り・直接表示が既定0.1%で一致、layout/error/remote/warningは0。全15枚を個別に開いて目視。 今回の修復はCodex。変更後の独立再評価は未取得。 配布ZIP展開から再生成と原典検査を再実行し、公開HTMLとの一致を確認。",
+    "method": "Verified private copy → original npm run init --theme light → source/content audit → SceneDef[] ref/source/note → authored Scene/Reveal/NodeBox+Arrow/Typewriter/Timeline → unchanged src/beatdeck React stage → original npm run build (typecheck/bundle/offline check)",
+    "license_notice_ja": "MIT ©2026 Borja Pérez Francés。字体はOFL。GSAP3.15.0はGSAP Standard No Charge License。原典の第三者examples素材は未使用。",
+    "prompt_text": "# 再制作の指示\n\n一つずつ話す内容に合わせて、同じ場面の図をクリックで変える。\n\n入力: 原稿・話者のメモ・出典と、何を一回のクリックで見せるかの対応表。\n出力: 6場面15段階のReact資料。共通の工程図、発表者用のsource/note、自動beatを持つ。\n\n1. 原稿をreferenceへ保持し、何を舞台に置き何を講稿へ回すかCONTENT-AUDITで照合する。\n2. sceneとbeatを定義し、各段階のref/source/noteと自動進行の要否を記録する。\n3. 元Scene/Reveal等で段階を組み、戻りや直接URLでも同じ表示になるよう状態から描く。\n4. 原典buildで型検査・bundle・外部URL検査を通し、原典verify --sourceで全beatを前進・逆戻り・直接表示で比較する。\n5. contact sheetと重要フレームを開いて確認し、RUNBOOKと実施していない実機稽古を引き渡す。\n\n同梱作例の実施範囲: 原典buildと未変更verifyを実行。15状態すべての前進・逆戻り・直接表示が既定0.1%で一致、layout/error/remote/warningは0。全15枚を個別に開いて目視。\n\n制約: 原典verifyは15段階、既定0.1%の閾値で一致。QR URL未指定でQRなし、Terminal/data-exact照合は0要素。\n制約: 3.1〜3.3は同じ工程内で、ボウル→生地→天板と矢印へ図も変わる。材料量・温度・時間・実際の製パン方法は表現していない。\n制約: 全キーの手動稽古、実機Wi-Fi切断、別端末・プロジェクターでの通し確認は未実施。\n",
+    "pages": [
+      "examples/repositories/beatdeck-showcase/render/verify/walk-01-01.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-01-02.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-02-01.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-02-02.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-03-01.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-03-02.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-03-03.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-04-01.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-04-02.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-05-01.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-05-02.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-05-03.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-06-01.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-06-02.png",
+      "examples/repositories/beatdeck-showcase/render/verify/walk-06-03.png"
+    ],
+    "sample_notice": "架空の題材を使った実制作例。原典buildと未変更verifyを実行。15状態すべての前進・逆戻り・直接表示が既定0.1%で一致、layout/error/remote/warningは0。全15枚を個別に開いて目視。"
+  },
+  {
+    "case_id": "zhongguose-showcase",
+    "job": "章扉と各頁の章ナビを使い、原稿のどの章を話しているか示す。",
+    "change": "章扉と各頁の章ナビを使い、原稿のどの章を話しているか示す。",
+    "input": "確定した原稿、章の対応表、選ぶテーマ色。",
+    "output": "独立した章扉・章ナビゲーション・紙色の本文・テーマ色の表紙を持つ全7頁のHTMLとローカル素材。",
+    "how_to_use": [
+      "中国語内容、中国的な視覚表現の意図、またはスキルを使う明示指定がある時に適用する。原稿の文言と章立てをsource-logic・architectureへ対応付ける。",
+      "原典templateフォルダーを複製し、見本の本文・リンク・画像を置換する。",
+      "章の入口をS09章扉で示し、各本文へ同じ順の章ラベルを置く。現在章を一つだけ強調する。",
+      "本文と配置の確定後、原典由来のcover-font処理を実行し、変更のたびにfontとmanifestを更新する。",
+      "原典extract-deck-outlineとvalidate-deckを実行し、原稿と大綱を比較する。字体の読み込みを待って全頁を目視する。"
+    ],
+    "constraints": [
+      "中国語向け原典を日本語へ派生。QijiではなくShippori Minchoを使う局所subset処理と字体・色の差分を保存。",
+      "この日本語作例では中国色の視覚体系を意図して指定し、章扉・本文・締めを実装。PPTXと実機タッチは未実証。",
+      "全7枚のPNGは原典Bキー相当の静止モードで確認。ASCII動画の品質を静止画だけで保証しない。"
+    ],
+    "demonstration": {
+      "summary": "章扉と各頁の章ナビを使い、原稿のどの章を話しているか示す。",
+      "applied_features": [
+        "原典S09章扉を追加し本文の章ナビへ接続",
+        "見つける・めぐる・持ち帰るを同じ順で全本文に配置",
+        "字体subset更新後の原典outline/validateと全7頁の静止表示確認"
+      ],
+      "not_demonstrated": [
+        "中国語向け原典を日本語へ派生。QijiではなくShippori Minchoを使う局所subset処理と字体・色の差分を保存。",
+        "この日本語作例では中国色の視覚体系を意図して指定し、章扉・本文・締めを実装。PPTXと実機タッチは未実証。",
+        "全7枚のPNGは原典Bキー相当の静止モードで確認。ASCII動画の品質を静止画だけで保証しない。"
+      ],
+      "pages": [
+        {
+          "index": 1,
+          "label": "章の入口",
+          "title": "章の入口",
+          "what_to_inspect": "大きな「01 見つける」と短い章の説明。本文と別の章扉である。",
+          "skill_rule": "原典S09のsection-divider構造で章の切替を示す。",
+          "proof_path": "examples/repositories/zhongguose-showcase/render/slide-02.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 2,
+          "label": "本文の現在章",
+          "title": "本文の現在章",
+          "what_to_inspect": "本文の「01 見つける」が一つだけ強調され、章扉と対応する。",
+          "skill_rule": "各本文頁で同じ順のsection-tabsとactiveSectionを持つ。",
+          "proof_path": "examples/repositories/zhongguose-showcase/render/slide-03.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 6,
+          "label": "締めの章ナビ",
+          "title": "締めの章ナビ",
+          "what_to_inspect": "最終頁下部の3章ラベルと英語補助。持ち帰るが現在章として読める。",
+          "skill_rule": "締めにも同じ章構造を保ち、ナビゲーションを読める大きさにする。",
+          "proof_path": "examples/repositories/zhongguose-showcase/render/slide-07.png",
+          "proof_kind": "actual_browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/zhongguose-showcase/input/MANUSCRIPT.md",
+        "examples/repositories/zhongguose-showcase/input/source-logic.json",
+        "examples/repositories/zhongguose-showcase/input/slide-architecture.json",
+        "examples/repositories/zhongguose-showcase/source/outline-actual.txt",
+        "examples/repositories/zhongguose-showcase/source/original-gates.json",
+        "examples/repositories/zhongguose-showcase/source/subset-japanese.patch",
+        "examples/repositories/zhongguose-showcase/assets/fonts/zhongguose-cover.manifest.json",
+        "examples/repositories/zhongguose-showcase/source/all-pages-check.json",
+        "examples/repositories/zhongguose-showcase/render/slide-01.png",
+        "examples/repositories/zhongguose-showcase/render/slide-02.png",
+        "examples/repositories/zhongguose-showcase/render/slide-03.png",
+        "examples/repositories/zhongguose-showcase/render/slide-04.png",
+        "examples/repositories/zhongguose-showcase/render/slide-05.png",
+        "examples/repositories/zhongguose-showcase/render/slide-06.png",
+        "examples/repositories/zhongguose-showcase/render/slide-07.png",
+        "examples/repositories/zhongguose-showcase/source/round4-original-gates.json",
+        "examples/repositories/zhongguose-showcase/source/repair-qa.json",
+        "examples/repositories/zhongguose-showcase/input/round4-chapter-plan.json",
+        "examples/repositories/zhongguose-showcase/source/round4-zip-replay.json",
+        "examples/repositories/zhongguose-showcase/source/ROUND4-REPRODUCE.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "章扉と各頁の章ナビを使い、原稿のどの章を話しているか示す。",
+      "requirements": [
+        "Python 3/fontTools/Brotli、Node.js、ブラウザー。HTMLとassetsを一緒に保持。"
+      ],
+      "steps": [
+        "中国語内容、中国的な視覚表現の意図、またはスキルを使う明示指定がある時に適用する。原稿の文言と章立てをsource-logic・architectureへ対応付ける。",
+        "原典templateフォルダーを複製し、見本の本文・リンク・画像を置換する。",
+        "章の入口をS09章扉で示し、各本文へ同じ順の章ラベルを置く。現在章を一つだけ強調する。",
+        "本文と配置の確定後、原典由来のcover-font処理を実行し、変更のたびにfontとmanifestを更新する。",
+        "原典extract-deck-outlineとvalidate-deckを実行し、原稿と大綱を比較する。字体の読み込みを待って全頁を目視する。"
+      ],
+      "limitations": [
+        "中国語向け原典を日本語へ派生。QijiではなくShippori Minchoを使う局所subset処理と字体・色の差分を保存。",
+        "この日本語作例では中国色の視覚体系を意図して指定し、章扉・本文・締めを実装。PPTXと実機タッチは未実証。",
+        "全7枚のPNGは原典Bキー相当の静止モードで確認。ASCII動画の品質を静止画だけで保証しない。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "6本文を保持して原典S09章扉を追加した7頁。原典outline抽出・validateは7頁PASS・警告0。全7頁を原典静止モードで実描画・目視。締めの章ナビと表紙現在点も修復。 今回の修復はCodex。変更後の独立再評価は未取得。 配布ZIP展開から再生成と原典検査を再実行し、公開HTMLとの一致を確認。",
+    "prompt_text": "# 再制作の指示\n\n章扉と各頁の章ナビを使い、原稿のどの章を話しているか示す。\n\n入力: 確定した原稿、章の対応表、選ぶテーマ色。\n出力: 独立した章扉・章ナビゲーション・紙色の本文・テーマ色の表紙を持つ全7頁のHTMLとローカル素材。\n\n1. 中国語内容、中国的な視覚表現の意図、またはスキルを使う明示指定がある時に適用する。原稿の文言と章立てをsource-logic・architectureへ対応付ける。\n2. 原典templateフォルダーを複製し、見本の本文・リンク・画像を置換する。\n3. 章の入口をS09章扉で示し、各本文へ同じ順の章ラベルを置く。現在章を一つだけ強調する。\n4. 本文と配置の確定後、原典由来のcover-font処理を実行し、変更のたびにfontとmanifestを更新する。\n5. 原典extract-deck-outlineとvalidate-deckを実行し、原稿と大綱を比較する。字体の読み込みを待って全頁を目視する。\n\n同梱作例の実施範囲: 6本文を保持して原典S09章扉を追加した7頁。原典outline抽出・validateは7頁PASS・警告0。全7頁を原典静止モードで実描画・目視。締めの章ナビと表紙現在点も修復。\n\n制約: 中国語向け原典を日本語へ派生。QijiではなくShippori Minchoを使う局所subset処理と字体・色の差分を保存。\n制約: この日本語作例では中国色の視覚体系を意図して指定し、章扉・本文・締めを実装。PPTXと実機タッチは未実証。\n制約: 全7枚のPNGは原典Bキー相当の静止モードで確認。ASCII動画の品質を静止画だけで保証しない。\n",
+    "pages": [
+      "examples/repositories/zhongguose-showcase/render/slide-01.png",
+      "examples/repositories/zhongguose-showcase/render/slide-02.png",
+      "examples/repositories/zhongguose-showcase/render/slide-03.png",
+      "examples/repositories/zhongguose-showcase/render/slide-04.png",
+      "examples/repositories/zhongguose-showcase/render/slide-05.png",
+      "examples/repositories/zhongguose-showcase/render/slide-06.png",
+      "examples/repositories/zhongguose-showcase/render/slide-07.png"
+    ],
+    "titles": [
+      "町の手仕事を、ひらく。",
+      "01 見つける",
+      "つくる人に、会いに行く。",
+      "一つの町を、三つの道で。",
+      "気になる手仕事で、少し止まる。",
+      "持ち帰るのは、次のきっかけ。",
+      "手仕事の名前を、一つ覚える。"
+    ],
+    "page_count": 7,
+    "sample_notice": "架空の題材を使った実制作例。6本文を保持して原典S09章扉を追加した7頁。原典outline抽出・validateは7頁PASS・警告0。全7頁を原典静止モードで実描画・目視。締めの章ナビと表紙現在点も修復。"
+  },
+  {
+    "case_id": "presentation-forge-showcase",
+    "job": "一枚ずつ編集した本文と話す講稿を、発表者画面付きHTMLへまとめる。",
+    "change": "一枚ずつ編集した本文と話す講稿を、発表者画面付きHTMLへまとめる。",
+    "input": "原稿、頁ごとのHTML、発表者用の講稿、テーマ。",
+    "output": "素材と字体を内包したHTML6枚。原典の発表者画面で現在頁・次頁・講稿を確認できる。",
+    "how_to_use": [
+      "新規資料はnew_deck.pyで作る。既存ブランドからのtheme作成では原典のimport-theme手順を使い、完成themeを.pfstyle.jsonへpackして引き渡す。再利用はunpackする。",
+      "1ファイル1section.slideに分け、本文と話す説明・進行合図をaside.notesへ書く。見た目はthemeへ置き、motionはnone/subtle/balanced/lively/extraから選ぶ。engineは変えない。",
+      "原典build.pyでCSS・JS・字体・素材を単独index.htmlへまとめる。",
+      "ブラウザーが使える場合は原典check_deck.pyを必ず実行し、問題を直してcontact sheetと全頁を見る。",
+      "Pキーで現在頁・次頁・講稿を確認する。編集保存や実機接続は実行できた範囲だけを記録する。"
+    ],
+    "constraints": [
+      "未変更の原典engine/builderを使用。日本語の字体・改行と末尾の同一origin bridgeは局所差分。",
+      "今回Pキーの発表者画面と講稿の一致をheadlessで実確認。実機プロジェクター、手動通し稽古、保存編集は未確認。",
+      "HTML出力。native PPTXは生成しない。",
+      "今回は既存obsidianテーマとbalancedを使用。theme import、.pfstyle.jsonのpack/unpack、5段階motionの比較は未実証。"
+    ],
+    "demonstration": {
+      "summary": "一枚ずつ編集した本文と話す講稿を、発表者画面付きHTMLへまとめる。",
+      "applied_features": [
+        "1ファイル1section.slideと頁固有のaside.notes",
+        "未変更の元builder/engineで単独HTMLを生成",
+        "原典check_deck全6頁と実Pキーの現在頁・次頁・講稿確認"
+      ],
+      "not_demonstrated": [
+        "未変更の原典engine/builderを使用。日本語の字体・改行と末尾の同一origin bridgeは局所差分。",
+        "今回Pキーの発表者画面と講稿の一致をheadlessで実確認。実機プロジェクター、手動通し稽古、保存編集は未確認。",
+        "HTML出力。native PPTXは生成しない。",
+        "今回は既存obsidianテーマとbalancedを使用。theme import、.pfstyle.jsonのpack/unpack、5段階motionの比較は未実証。"
+      ],
+      "pages": [
+        {
+          "index": 2,
+          "label": "内容を小さなページへ分ける",
+          "title": "内容を小さなページへ分ける",
+          "what_to_inspect": "3段階の工程と、その頁で言う短い説明。各頁のソースは独立して編集できる。",
+          "skill_rule": "本文はslidesのsection.slideへ置き、原典engineを変えずbuildする。",
+          "proof_path": "examples/repositories/presentation-forge-showcase/render/slide-03.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 3,
+          "label": "講稿を発表者画面へ出す",
+          "title": "講稿を発表者画面へ出す",
+          "what_to_inspect": "現在4頁と次5頁、その下の4頁の話す説明と「進行」の合図。",
+          "skill_rule": "aside.notesを話す内容として記し、Pキーで現在頁の講稿を確認する。",
+          "proof_path": "examples/repositories/presentation-forge-showcase/render/presenter-notes-page-04.png",
+          "proof_kind": "actual_browser_screenshot"
+        },
+        {
+          "index": 4,
+          "label": "選択を順番と区別する",
+          "title": "選択を順番と区別する",
+          "what_to_inspect": "CHANGEを含む三つの候補は同じ輪郭で、特定の一つを現在工程として塗らない。",
+          "skill_rule": "themeの部品で内容を構成し、図の強調が説明の意味と合うか検査する。",
+          "proof_path": "examples/repositories/presentation-forge-showcase/render/slide-05.png",
+          "proof_kind": "actual_browser_screenshot"
+        }
+      ],
+      "source_proof_paths": [
+        "examples/repositories/presentation-forge-showcase/source/deck/slides/02-page.html",
+        "examples/repositories/presentation-forge-showcase/source/deck/slides/04-page.html",
+        "examples/repositories/presentation-forge-showcase/source/deck/slides/05-page.html",
+        "examples/repositories/presentation-forge-showcase/source/original-gates.json",
+        "examples/repositories/presentation-forge-showcase/source/presenter-check.json",
+        "examples/repositories/presentation-forge-showcase/render/original-check/sheet.png",
+        "examples/repositories/presentation-forge-showcase/source/BUILD.json",
+        "examples/repositories/presentation-forge-showcase/render/slide-01.png",
+        "examples/repositories/presentation-forge-showcase/render/slide-02.png",
+        "examples/repositories/presentation-forge-showcase/render/slide-03.png",
+        "examples/repositories/presentation-forge-showcase/render/slide-04.png",
+        "examples/repositories/presentation-forge-showcase/render/slide-05.png",
+        "examples/repositories/presentation-forge-showcase/render/slide-06.png",
+        "examples/repositories/presentation-forge-showcase/source/round4-original-gates.json",
+        "examples/repositories/presentation-forge-showcase/source/repair-qa.json",
+        "examples/repositories/presentation-forge-showcase/render/presenter-notes-page-04.png",
+        "examples/repositories/presentation-forge-showcase/source/round4-zip-replay.json",
+        "examples/repositories/presentation-forge-showcase/source/ROUND4-REPRODUCE.md"
+      ]
+    },
+    "guide_patch": {
+      "summary_ja": "一枚ずつ編集した本文と話す講稿を、発表者画面付きHTMLへまとめる。",
+      "requirements": [
+        "Python 3標準ライブラリーとChrome/Edge。check_deckの--outはWindowsでは絶対パスにする。"
+      ],
+      "steps": [
+        "新規資料はnew_deck.pyで作る。既存ブランドからのtheme作成では原典のimport-theme手順を使い、完成themeを.pfstyle.jsonへpackして引き渡す。再利用はunpackする。",
+        "1ファイル1section.slideに分け、本文と話す説明・進行合図をaside.notesへ書く。見た目はthemeへ置き、motionはnone/subtle/balanced/lively/extraから選ぶ。engineは変えない。",
+        "原典build.pyでCSS・JS・字体・素材を単独index.htmlへまとめる。",
+        "ブラウザーが使える場合は原典check_deck.pyを必ず実行し、問題を直してcontact sheetと全頁を見る。",
+        "Pキーで現在頁・次頁・講稿を確認する。編集保存や実機接続は実行できた範囲だけを記録する。"
+      ],
+      "limitations": [
+        "未変更の原典engine/builderを使用。日本語の字体・改行と末尾の同一origin bridgeは局所差分。",
+        "今回Pキーの発表者画面と講稿の一致をheadlessで実確認。実機プロジェクター、手動通し稽古、保存編集は未確認。",
+        "HTML出力。native PPTXは生成しない。",
+        "今回は既存obsidianテーマとbalancedを使用。theme import、.pfstyle.jsonのpack/unpack、5段階motionの比較は未実証。"
+      ]
+    },
+    "status": "author_visual_qa_complete_independent_rereview_pending",
+    "preview_image_notice": "未変更の原典check_deck --slides allで6頁・問題0。全6実PNGを目視。Pキーで現在4頁・次5頁・4頁の新しい話す説明と進行合図が一致することを確認。 今回の修復はCodex。変更後の独立再評価は未取得。 配布ZIP展開から再生成と原典検査を再実行し、公開HTMLとの一致を確認。",
+    "prompt_text": "# 再制作の指示\n\n一枚ずつ編集した本文と話す講稿を、発表者画面付きHTMLへまとめる。\n\n入力: 原稿、頁ごとのHTML、発表者用の講稿、テーマ。\n出力: 素材と字体を内包したHTML6枚。原典の発表者画面で現在頁・次頁・講稿を確認できる。\n\n1. 新規資料はnew_deck.pyで作る。既存ブランドからのtheme作成では原典のimport-theme手順を使い、完成themeを.pfstyle.jsonへpackして引き渡す。再利用はunpackする。\n2. 1ファイル1section.slideに分け、本文と話す説明・進行合図をaside.notesへ書く。見た目はthemeへ置き、motionはnone/subtle/balanced/lively/extraから選ぶ。engineは変えない。\n3. 原典build.pyでCSS・JS・字体・素材を単独index.htmlへまとめる。\n4. ブラウザーが使える場合は原典check_deck.pyを必ず実行し、問題を直してcontact sheetと全頁を見る。\n5. Pキーで現在頁・次頁・講稿を確認する。編集保存や実機接続は実行できた範囲だけを記録する。\n\n同梱作例の実施範囲: 未変更の原典check_deck --slides allで6頁・問題0。全6実PNGを目視。Pキーで現在4頁・次5頁・4頁の新しい話す説明と進行合図が一致することを確認。\n\n制約: 未変更の原典engine/builderを使用。日本語の字体・改行と末尾の同一origin bridgeは局所差分。\n制約: 今回Pキーの発表者画面と講稿の一致をheadlessで実確認。実機プロジェクター、手動通し稽古、保存編集は未確認。\n制約: HTML出力。native PPTXは生成しない。\n制約: 今回は既存obsidianテーマとbalancedを使用。theme import、.pfstyle.jsonのpack/unpack、5段階motionの比較は未実証。\n",
+    "pages": [
+      "examples/repositories/presentation-forge-showcase/render/slide-01.png",
+      "examples/repositories/presentation-forge-showcase/render/slide-02.png",
+      "examples/repositories/presentation-forge-showcase/render/slide-03.png",
+      "examples/repositories/presentation-forge-showcase/render/slide-04.png",
+      "examples/repositories/presentation-forge-showcase/render/slide-05.png",
+      "examples/repositories/presentation-forge-showcase/render/slide-06.png"
+    ],
+    "sample_notice": "架空の題材を使った実制作例。未変更の原典check_deck --slides allで6頁・問題0。全6実PNGを目視。Pキーで現在4頁・次5頁・4頁の新しい話す説明と進行合図が一致することを確認。"
+  }
+]

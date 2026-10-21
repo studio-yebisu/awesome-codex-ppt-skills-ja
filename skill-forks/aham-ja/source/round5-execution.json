@@ -1,0 +1,75 @@
+{
+  "scope": "Actual current P5 integrator plan decision→sample→actualPPimagecomparison→P6 integrator decision→final→PowerPoint render; not human confirmation or full8phase workflow",
+  "receipts": [
+    {
+      "argv": [
+        "python.exe",
+        "generate.py",
+        "--sample"
+      ],
+      "exit_code": 0,
+      "log": "source/round5-sample.log"
+    },
+    {
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "source/render_powerpoint.ps1",
+        "-PresentationPath",
+        "source/sample/sample.pptx",
+        "-OutputDirectory",
+        "source/sample/render"
+      ],
+      "exit_code": 0,
+      "log": "source/round5-sample-render.log"
+    },
+    {
+      "argv": [
+        "python.exe",
+        "source/render_pdf_previews.py",
+        "source/sample/render"
+      ],
+      "exit_code": 0,
+      "log": "source/round5-sample-pdf-png.log"
+    },
+    {
+      "argv": [
+        "python.exe",
+        "generate.py",
+        "--final"
+      ],
+      "exit_code": 0,
+      "log": "source/round5-final.log"
+    },
+    {
+      "argv": [
+        "pwsh",
+        "-NoProfile",
+        "-File",
+        "source/render_powerpoint.ps1",
+        "-PresentationPath",
+        "deck.pptx",
+        "-OutputDirectory",
+        "render"
+      ],
+      "exit_code": 0,
+      "log": "source/round5-final-render.log"
+    },
+    {
+      "argv": [
+        "python.exe",
+        "source/render_pdf_previews.py",
+        "render"
+      ],
+      "exit_code": 0,
+      "log": "source/round5-final-pdf-png.log"
+    }
+  ],
+  "P5": "input/phase-05-layout-plan.json",
+  "P6": "input/phase-06-decision.json",
+  "original_upstream_modified": false,
+  "sample_original_lint_native_status": "pass",
+  "final_original_lint_native_status": "pass",
+  "pptx_sha256": "a6170f6dd2f8d93212020c4b2fd6bd01f44720988466e9aaa8aff84777e8c781"
+}

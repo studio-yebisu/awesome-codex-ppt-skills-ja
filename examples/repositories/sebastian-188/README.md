@@ -1,17 +1,9 @@
-# AIに任せる前の設計図
+# MarkdownをSVGのページへ組む
 
-日本語の制作依頼を書く、7頁の架空例集。Swissの赤・黒・白で、目的／読み手／入力／制約／完成条件を具体化します。
+原稿を「ページ構成→デザイン→SVG」に分けるスキルです。本作例はSwissの赤・黒・白を使った架空例集7頁。文字・図形はsvg/で編集でき、PDFは固定レイアウトです。
 
-- 完成資料：deck.pdf（7頁・ベクターPDF）
-- 原典方式の正本：svg/ の1920×1080 SVG（text・図形をソースで編集可）
-- 閲覧：index.html（ページ送り、矢印キー、5秒再生、フルスクリーン）
-- PNG：render/（実PDFの描画）
-- 制作入力：input/BRIEF.md、input/data.json、PROMPT.txt
-- 日本語派生：SKILL.md
-- 再生成：Python 3 + Inkscape + PyMuPDF + Noto Sans CJK JP、`python source/build.py`
+今回の修復では構成と設計を先に保存し、生成器が日本語font stackと配色を読みます。全7頁の実PDFを見て、HTMLでも全7頁の送り戻りを確認。原典PDF exporterを実行し、既存Chromeを選ぶ1行のadapterを加えました。原本・diff・実行記録はsource/にあります。PowerPointへの挿入・図形変換と原典PPTX exportは未確認です。
 
-原典 [https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb](https://github.com/vigorX777/ppt-svg-generator/tree/c873b61673ab0ada5c09f863bff89c8f1b3248fb)、commit c873b61673ab0ada5c09f863bff89c8f1b3248fb。MIT / Copyright (c) 2025 vigorX777。
+再現: Python＋PyMuPDF、Node.jsとsource/package-lock.jsonの依存、Chrome/Chromium、Noto Sans CJK JPを用意。`npm ci --prefix source` → 必要ならSVG_CHROME_EXECUTABLEを設定 → `python source/build.py`。新しい環境へのnpm ciは未実施。現在の固定7頁を作り直すコードであり、題材変更時は構成・デザイン・著述内容を変更します。再生成後は全頁を確認してください。
 
-原典のMarkdown→構成→style→作者SVGという方式を使い、Swissの大色面・巨大活字・対比分割を日本語へ調整。上流export scriptは実行せず、既存InkscapeでPDFを書き出しました。Playwright/Chromiumの起動は環境のsocket権限制限で失敗したため代替しました。HTMLプレイヤーは独自追加です。
-
-PDFは固定レイアウト、SVGはソース編集。PowerPointでの個別要素変換は未確認。特定AIの性能・料金は主張していません。フォントは環境のNoto Sans CJK JPを使用、ファイルは再配布していません。原配布元：https://github.com/notofonts/noto-cjk （SIL OFL）。
+初回は構成と設計を生成後に書き出し、InkscapeでPDF化していました。その履歴はPROVENANCE.jsonに保持。今回の検査と混同しません。独立再評価・正式採用は別です。原典MITと帰属を保持し、OSの書体ファイルは同梱しません。

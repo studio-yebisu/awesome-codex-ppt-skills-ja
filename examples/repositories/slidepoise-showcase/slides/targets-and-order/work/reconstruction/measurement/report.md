@@ -1,8 +1,8 @@
 # Measurement report
 
-- Image: `M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\slidepoise-showcase\slides\targets-and-order\work\accepted-slide.png`
+- Image: `M:\Codex\Projects\studio-yebisu\workspace\slides\examples\repositories\slidepoise-showcase\slides\targets-and-order\work\accepted-slide.png`
 - Size: 1600 x 900
-- Entities measured: 24
+- Entities measured: 21
 - OpenCV: 4.12.0
 - Host-authored geometry adjustments: 0
 

@@ -1,0 +1,643 @@
+{
+  "delivery": "selfread",
+  "builds": "static",
+  "interview": {
+    "angle": "昇順の配列で探索方法の違いを学ぶ",
+    "audience": "探索を初めて学ぶ人",
+    "purpose": "teaching / instructional",
+    "template": "none",
+    "language": "Japanese",
+    "goal": "inform",
+    "density": "diagram-heavy",
+    "length": "5 slides",
+    "style": "conservative native array diagrams",
+    "builds": "static",
+    "picks": [
+      {
+        "axis": "angle",
+        "source": "stated",
+        "value": "昇順の配列で探索方法の違いを学ぶ",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "audience",
+        "source": "genre-default",
+        "value": "探索を初めて学ぶ人",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "purpose",
+        "source": "genre-default",
+        "value": "teaching / instructional",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "template",
+        "source": "inferred-from-request",
+        "value": "none",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "language",
+        "source": "stated",
+        "value": "Japanese",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "goal",
+        "source": "genre-default",
+        "value": "inform",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "density",
+        "source": "inferred-from-request",
+        "value": "diagram-heavy",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "length",
+        "source": "stated",
+        "value": "5 slides",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "style",
+        "source": "inferred-from-request",
+        "value": "conservative native array diagrams",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      },
+      {
+        "axis": "builds",
+        "source": "inferred-from-request",
+        "value": "static",
+        "basis": "日本語の探索教材5枚という依頼と静的配布作例の用途",
+        "alternative": "既存テンプレートや動画ではなく編集可能な説明図を優先"
+      }
+    ]
+  },
+  "content": {
+    "slides": [
+      {
+        "slide": 1,
+        "role": "hook",
+        "takeaway": "昇順の1〜15で13を探すと、線形探索は13回、二分探索は4回。",
+        "evidence": [
+          "input/data.json traces[12]"
+        ],
+        "units": 3
+      },
+      {
+        "slide": 2,
+        "role": "worked-example",
+        "takeaway": "先頭からなら、13まで13回",
+        "evidence": [
+          "input/data.json traces[12].linear"
+        ],
+        "units": 3
+      },
+      {
+        "slide": 3,
+        "role": "worked-example",
+        "takeaway": "真ん中で分けると、4回で届く",
+        "evidence": [
+          "input/data.json traces[12].binary"
+        ],
+        "units": 4
+      },
+      {
+        "slide": 4,
+        "role": "evidence",
+        "takeaway": "15個すべてで試すと、最大4回",
+        "evidence": [
+          "input/data.json traces[*]"
+        ],
+        "units": 3
+      },
+      {
+        "slide": 5,
+        "role": "recap",
+        "takeaway": "二分探索には昇順が必要で、比較回数の減少から実時間の速さは判断できない。",
+        "evidence": [
+          "input/data.json timing_measured / sorting_cost_measured"
+        ],
+        "units": 3
+      }
+    ],
+    "arc": {
+      "chosen": "worked-comparison",
+      "candidates": [
+        {
+          "name": "worked-comparison",
+          "shape": "worked-example",
+          "roles": [
+            "hook",
+            "worked-example",
+            "worked-example",
+            "evidence",
+            "recap"
+          ],
+          "audience_question": "同じ配列から13をどう探すか",
+          "serves_goal": "既知の順番探しを足場に、中央で範囲を捨てる一手を追体験して学ぶ",
+          "objection": "中央を調べた後どちらへ進むか分からない",
+          "closing_ask": "13の4回の照合を説明し、秒数の測定と区別できる",
+          "evidence": [
+            "trace13-linear",
+            "trace13-binary",
+            "all15",
+            "limits"
+          ]
+        },
+        {
+          "name": "misconception-first",
+          "shape": "misconception-first",
+          "roles": [
+            "misconception",
+            "counterexample",
+            "prerequisite",
+            "worked-example",
+            "check"
+          ],
+          "audience_question": "二分探索はいつでも速いのか",
+          "serves_goal": "目的値1なら線形1回対二分4回の反例から、条件と比較単位を問う",
+          "objection": "二分探索なら全ての目的値で少ない回数になる",
+          "closing_ask": "最大比較回数の改善と個別ターゲットの有利不利を分けられる",
+          "evidence": [
+            "all15",
+            "limits",
+            "trace13-linear",
+            "trace13-binary"
+          ]
+        },
+        {
+          "name": "condition-first",
+          "shape": "prerequisite-chain",
+          "roles": [
+            "prerequisite",
+            "concept",
+            "method",
+            "comparison",
+            "practice"
+          ],
+          "audience_question": "なぜ半分を捨てても目的値を失わないか",
+          "serves_goal": "昇順という不変条件から捨てる側の正当性を先に導き、例へ適用する",
+          "objection": "途中の値を飛ばすと13を見落とすのではないか",
+          "closing_ask": "目的値と中央の大小から次の探索範囲を自分で選べる",
+          "evidence": [
+            "limits",
+            "trace13-binary",
+            "all15",
+            "trace13-linear"
+          ]
+        }
+      ],
+      "rejected": [
+        {
+          "name": "misconception-first",
+          "why_lost": "初手の反例は比較方法を未習の読者に条件を増やすため、終章の注意へ回す"
+        },
+        {
+          "name": "condition-first",
+          "why_lost": "正しさの証明から始めると具体的な探索のイメージが後回しになる"
+        }
+      ]
+    },
+    "audience_brief": {
+      "who": "探索を初めて学び、手順を追う読者",
+      "decisions": [
+        {
+          "decision": "次にどの値を調べるか",
+          "needs": "現在の範囲、中央の値、13との大小"
+        },
+        {
+          "decision": "片側を除外してよいか",
+          "needs": "配列が昇順である前提と中央との大小関係"
+        },
+        {
+          "decision": "比較が少ない結果から速度を言い切れるか",
+          "needs": "測定単位と未計測の秒数・整列コスト"
+        }
+      ]
+    },
+    "open_ledger": [
+      {
+        "claim": "秒数と整列コストは未測定",
+        "source": "input/data.json timing_measured=false, sorting_cost_measured=false",
+        "in_deck": "slide5に未測定と表示"
+      }
+    ],
+    "checkpoint": {
+      "mode": "auto",
+      "record": "2026-10-13T19:24:17.653672+00:00 POST-BUILD supplemental comparison. Initial production had not completed this checkpoint. Parent authorized reversible remaining work; present candidate SHA 3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f. Results announced in chat; this is not prior human approval."
+    }
+  },
+  "design_plan": {
+    "concept": {
+      "chosen": "配列の同じ場所を保ち、残る範囲だけを可視化する教材",
+      "rejected": [
+        {
+          "concept": "端末に探索ログを表示",
+          "why_lost": "Bは数字の位置が動き、残る範囲の比較ができない"
+        },
+        {
+          "concept": "大きな回数の棒だけで差を示す",
+          "why_lost": "Cは差は強いが、どう4回になるかを説明できない"
+        },
+        {
+          "concept": "訪問順を木のように置く",
+          "why_lost": "Dは15要素の全体と除外範囲が見えず別概念の学習になる"
+        }
+      ]
+    },
+    "boldness": "conservative",
+    "boldness_derivation": "初学者向けの正確な静的教材",
+    "signature_move": "deliberately restrained: repeated native number cells retain their coordinate while the candidate range narrows; clarity before novelty",
+    "carried_by": [
+      1,
+      2,
+      3
+    ],
+    "form_ledger": "native array diagrams on 3/5 slides; chart on 1/5; textual recap on 1/5",
+    "icon_family": "none",
+    "palette": "TEXT-safe #132C3B on #FFFFFF; #116B8A and #A8471C accents; white on strong filled cells; FILL-only #E8EEF0 #D8EAF0 #F2F5F6",
+    "type_scale": {
+      "display": 34,
+      "title": 32,
+      "body": 24,
+      "diagram": 16,
+      "footnote": 13
+    },
+    "style_pick": "bespoke for introductory algorithm teaching · beat terminal, bars-only and tree probes · anti-pick avoided: code-terminal look before basic concepts",
+    "motif_generates": {
+      "background": "white reading canvas",
+      "markers": "numbered array elements and step numerals",
+      "page": "slide3 uses the same 15-column coordinate system for all four comparisons"
+    },
+    "image_sources": "n/a — numeric traces are represented with native text and shapes; no photos or illustrations",
+    "material_probe": {
+      "png": "render/slide-03.png",
+      "safe_version": "a bullet list of 8→12→14→13 would hide the discarded ranges; the repeated array exposes them",
+      "post_build": true,
+      "recorded_at": "2026-10-13T19:24:17.653672+00:00"
+    },
+    "signature_proof": [
+      {
+        "role": "signature",
+        "slide": 3,
+        "png": "render/slide-03.png"
+      },
+      {
+        "role": "complex",
+        "slide": 3,
+        "png": "render/slide-03.png"
+      },
+      {
+        "role": "data",
+        "slide": 4,
+        "png": "render/slide-04.png"
+      }
+    ],
+    "build_shape": "solo — five short tightly coupled teaching pages, independent review separate",
+    "checkpoint": {
+      "mode": "auto",
+      "record": "2026-10-13T19:24:17.653672+00:00 POST-BUILD supplemental comparison. Initial production had not completed this checkpoint. Parent authorized reversible remaining work; present candidate SHA 3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f. Results announced in chat; this is not prior human approval."
+    },
+    "supplemental_direction_comparison": {
+      "chosen": "A",
+      "file": "design/direction-probes.pptx",
+      "rendered_all": true,
+      "recorded_at": "2026-10-13T19:24:17.653672+00:00",
+      "candidate_sha256": "3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f",
+      "note": "post-build supplemental, not the upstream pre-build direction checkpoint",
+      "rejected_chalkboard": "E was generated through original visual_languages.use and rendered in PowerPoint. The chalkboard cover is legible but does not foreground the fixed array positions and adds surface texture; A better matches the array-range proof.",
+      "scope": "Five cover/topic compositions only; E is an actual original chalkboard cover, not a full 5-page chalkboard rival. Interior selection follows array task fit and completed slide3 render."
+    },
+    "direction_gate": {
+      "candidates": "design/directions.json",
+      "picked": "A array",
+      "images": "none",
+      "native_fit": {
+        "language": "chalkboard",
+        "why": "原典の教材向け黒板表現をEとして実際に生成・描画して比較した"
+      },
+      "post_build": true
+    },
+    "build_script": "source/build_slide_maker_repository_example.py",
+    "purpose_section_terms": {
+      "objectives": [
+        "15個の数字から"
+      ],
+      "worked example": [
+        "左から順に照合"
+      ],
+      "recap": [
+        "使える条件も"
+      ]
+    },
+    "icon_rationale": "Slides1–3 are literal numeric arrays, not categories; pictograms would obscure or compete with numeric identities. Zero icons deliberately retained after actual rendered review.",
+    "type_scale_note": "Actual5size roles: title34,hero32,body24,diagram16,footnote13; helper chrome retains its own small kicker/page.",
+    "type_scale_roles": "Display34=visible slide heading; title32=secondary callouts; body24=main text; diagram16=range labels; footnote13=conditions."
+  },
+  "render_selfcheck": {
+    "slides": [
+      {
+        "n": 1,
+        "verdict": "ok — target13 and two counts legible with no clipping"
+      },
+      {
+        "n": 2,
+        "verdict": "ok — sequence and highlighted visited elements agree"
+      },
+      {
+        "n": 3,
+        "verdict": "ok — four ranges, decisions and midpoint cells correspond"
+      },
+      {
+        "n": 4,
+        "verdict": "ok — two chart series, axis units and 4 max agree"
+      },
+      {
+        "n": 5,
+        "verdict": "ok — unmeasured seconds and sorting cost distinguished"
+      }
+    ],
+    "artifact_sha256": "66209c92d6d38c8050f2944fed633870ae27dc63c32743d210e366102bed0718"
+  },
+  "provenance": {
+    "claims": [
+      {
+        "claim": "13: linear13 / binary4 with 8,12,14,13",
+        "verdict": "CONFIRMED",
+        "source": "input/data.json traces[12], source/build_slide_maker_repository_example.py"
+      },
+      {
+        "claim": "all15 maximum linear15 / binary4",
+        "verdict": "CONFIRMED",
+        "source": "input/data.json traces[*] and source/object-proof.json"
+      },
+      {
+        "claim": "seconds / sorting cost not measured",
+        "verdict": "CONFIRMED",
+        "source": "input/data.json timing_measured, sorting_cost_measured"
+      }
+    ],
+    "waived": "This is a local executable-source teaching example, not web research. Primary evidence is input/data.json and source/build_slide_maker_repository_example.py with hashes in PROVENANCE.json; the upstream URL-only provenance validator cannot encode local primary sources. Claims were independently recomputed."
+  },
+  "critic": {
+    "verdict": "consent",
+    "reviews_seen": 1,
+    "blockers": 0,
+    "majors": 0,
+    "source": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\slide-maker\\review\\round3-prior-version\\kimi-critic.json",
+    "sha256": "5c22cb7b6f9f288055cd5ab705c1c134d38864832c5a7d23b5e02f0e32b8ad1a",
+    "reviews": [
+      "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\slide-maker\\review\\round3-prior-version\\kimi-critic.json"
+    ],
+    "recorded_by": "validate_review.py"
+  },
+  "blind_read": {
+    "answers": [
+      {
+        "n": 1,
+        "claim": "ソート済みの並びを使うと、15個の数字から「13」を見つける比較回数を先頭からの13回から4回へ減らせる。",
+        "about": "並べ替えで探索回数が減る",
+        "largest": "大見出し「並べておくと、探し方が変わる」の太字テキスト",
+        "elements": {
+          "text_blocks": 8,
+          "photos": 0,
+          "icons": 0,
+          "charts": 0,
+          "diagrams": 1,
+          "tables": 0,
+          "marks": 1
+        },
+        "legible_text": [
+          "探索のしくみ / 1〜15で実行",
+          "並べておくと、探し方が変わる",
+          "15個の数字から「13」を見つけてる。",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "先頭から、ひとつずつ",
+          "13回",
+          "真ん中から、範囲を半分に",
+          "4回",
+          "同じデータでも、並び方を使うと調べる場所を減らせる。",
+          "条件：昇順の配列 1〜15 / 比較回数=訪問した要素数",
+          "1"
+        ],
+        "unreadable": [],
+        "problems": []
+      },
+      {
+        "n": 2,
+        "claim": "線形探索は左から順に照合するため「13」を見つけるのに13回かかるが、並んでいないデータにも使える。",
+        "about": "線形探索は13回かかる",
+        "largest": "大見出し「先頭からなら、13まで13回」の太字テキスト",
+        "elements": {
+          "text_blocks": 8,
+          "photos": 0,
+          "icons": 0,
+          "charts": 0,
+          "diagrams": 1,
+          "tables": 0,
+          "marks": 1
+        },
+        "legible_text": [
+          "探索のしくみ / 1〜15で実行",
+          "先頭からなら、13まで13回",
+          "線形探索：見つかるまで、左から順に照合",
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "10",
+          "11",
+          "12",
+          "13",
+          "14",
+          "15",
+          "1 → 2 → 3 → … → 12 → 13",
+          "13",
+          "回の比較",
+          "今回は13回目で見つかった。並んでいないデータにも使える。",
+          "青：照合した1〜12　茶：見つかった13　灰：調べなかった14・15",
+          "条件：昇順の配列 1〜15 / 比較回数=訪問した要素数",
+          "2"
+        ],
+        "unreadable": [],
+        "problems": [
+          {
+            "what": "右側の「13」と「回の比較」が2行に分断されて離れて配置されており、一瞥では「13回の比較」と読み取りにくい。",
+            "kind": "legibility"
+          }
+        ]
+      },
+      {
+        "n": 3,
+        "claim": "二分探索は中央で範囲を半分に絞るため、8→12→14→13の4回で「13」に届く。",
+        "about": "二分探索の4ステップ手順",
+        "largest": "大見出し「真ん中で分けると、4回で届く」の太字テキスト",
+        "elements": {
+          "text_blocks": 14,
+          "photos": 0,
+          "icons": 0,
+          "charts": 0,
+          "diagrams": 4,
+          "tables": 0,
+          "marks": 1
+        },
+        "legible_text": [
+          "探索のしくみ / 1〜15で実行",
+          "真ん中で分けると、4回で届く",
+          "1",
+          "範囲 1〜15",
+          "13 > 8：右へ",
+          "2",
+          "範囲 9〜15",
+          "13 > 12：右へ",
+          "3",
+          "範囲 13〜15",
+          "13 < 14：左へ",
+          "4",
+          "範囲 13〜13",
+          "13 = 13：発見",
+          "茶色＝照合する中央の値　8 → 12 → 14 → 13 の4回",
+          "条件：昇順の配列 1〜15 / 比較回数=訪問した要素数",
+          "3"
+        ],
+        "unreadable": [],
+        "problems": [
+          {
+            "what": "各行の15個の数字ボックス内の数字が小さく、特に2〜4行目の範囲外(薄い灰)の数字はコントラストが低く一瞥で読みにくい。",
+            "kind": "legibility"
+          }
+        ]
+      },
+      {
+        "n": 4,
+        "claim": "目的値を1〜15に変えて全15通りを実行すると、二分探索の比較回数は最大4回で、線形探索の最大15回より常に少ない。",
+        "about": "全15通りの比較回数グラフ",
+        "largest": "大見出し「15個すべてで試すと、最大4回」の太字テキスト",
+        "elements": {
+          "text_blocks": 8,
+          "photos": 0,
+          "icons": 0,
+          "charts": 1,
+          "diagrams": 0,
+          "tables": 0,
+          "marks": 1
+        },
+        "legible_text": [
+          "探索のしくみ / 1〜15で実行",
+          "15個すべてで試すと、最大4回",
+          "目的値を1〜15に変えて、全15通りを実行",
+          "比較回数（回）",
+          "線形探索",
+          "二分探索",
+          "二分探索の最大",
+          "4回",
+          "この15通りでは、線形探索は最大15回。",
+          "探す値 →",
+          "実行結果：input/data.json / 配列内に存在する値だけを比較",
+          "条件：昇順の配列 1〜15 / 比較回数=訪問した要素数",
+          "4"
+        ],
+        "unreadable": [],
+        "problems": []
+      },
+      {
+        "n": 5,
+        "claim": "二分探索には「昇順が保たれていること」という前提があり、今回確かめたことと測っていないこと(秒数・並べ替えの手間)を分けて考えるべきだ。",
+        "about": "前提条件と測定範囲の区別",
+        "largest": "大見出し「使える条件も、いっしょに覚える」の太字テキスト",
+        "elements": {
+          "text_blocks": 9,
+          "photos": 0,
+          "icons": 0,
+          "charts": 0,
+          "diagrams": 0,
+          "tables": 0,
+          "marks": 1
+        },
+        "legible_text": [
+          "探索のしくみ / 1〜15で実行",
+          "使える条件も、いっしょに覚える",
+          "二分探索の前提は「昇順が保たれていること」。",
+          "今回、確かめたこと",
+          "1〜15の全15通り",
+          "二分探索の比較は最大4回",
+          "今回、測っていないこと",
+          "実際にかかる秒数",
+          "並べ替えにかかる手間",
+          "「比較が少ない」と「何倍速い」は、分けて考える。",
+          "条件：昇順の配列 1〜15 / 比較回数=訪問した要素数",
+          "5"
+        ],
+        "unreadable": [],
+        "problems": []
+      }
+    ],
+    "findings": [
+      {
+        "n": 2,
+        "code": "READ_LEGIBILITY",
+        "severity": "ask",
+        "finding": "右側の「13」と「回の比較」が2行に分断されて離れて配置されており、一瞥では「13回の比較」と読み取りにくい。",
+        "resolution": "",
+        "fixed": ""
+      },
+      {
+        "n": 3,
+        "code": "READ_LEGIBILITY",
+        "severity": "ask",
+        "finding": "各行の15個の数字ボックス内の数字が小さく、特に2〜4行目の範囲外(薄い灰)の数字はコントラストが低く一瞥で読みにくい。",
+        "resolution": "",
+        "fixed": ""
+      },
+      {
+        "n": 0,
+        "code": "READ_TRIAGE_COVERAGE",
+        "severity": "note",
+        "finding": "triage coverage: 2 problem(s) reported, 2 classified as a defect class, 2 carried an explicit `kind` tag. Unclassified ones are recorded as judgement calls and owe no answer — which is also what a deck in a language the keyword sets do not cover looks like from here.",
+        "resolution": "",
+        "fixed": ""
+      },
+      {
+        "n": 0,
+        "code": "READ_PLAN_UNSEEN",
+        "severity": "hard",
+        "finding": "the design plan sets `icon_family: none`, and the reader saw ZERO icons across all 5 slides. Either they never reached the build, or they are too small/faint to register.",
+        "resolution": "Refuted: the literal numeric arrays deliberately contain zero pictograms, as declared by icon_family and its separate rationale.",
+        "fixed": "",
+        "refuted": "The plan declares icon_family none and icon_rationale explains that the exact numeric identities and fixed positions should not be replaced with pictograms. The independent reader counted zero icons on all five actual images, exactly matching this intent. The comparator uses the raw nonempty string at compare() line545 as a planned icon family instead of its own planned_icon_family() none-normalizer. This is a false positive in this pinned checker; no planned asset is missing. The checker is preserved unchanged."
+      }
+    ]
+  }
+}

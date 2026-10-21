@@ -1,0 +1,57 @@
+{
+  "case_id": "sci-diagram-reconstruction",
+  "author": "Codex",
+  "scope": "Current source input for the profile/effect guide. Historical proposals retain their own time scope.",
+  "guide_patch": {
+    "summary_ja": "科学模式図の元の文言・包含・方向を保ち、意味を担う文字・図形・線を個別編集できるPPTXへ復元する。修復・変更しない検査は別経路。",
+    "requirements": [
+      "復元用の模式図画像、または修復・検査するPPTXと対象箇所。文字と関係を読める資料。",
+      "PptxGenJS経路は準備済みNode.js20+、PptxGenJS4.0.x。原典の検査・表示にはPython3.10+、LibreOffice、pdftoppm。本例のR13実測はNode24.19.0/PptxGenJS4.0.1/Python3.13.7/LibreOffice24.2.5.2。",
+      "--renderのPowerPoint工程と編集保存の確認はWindows PowerPoint16、Yu Gothic、PATH上のPowerShell7（pwsh）。R13実測PowerShell7.6.6。依存・書体の新規導入は今回未検査。"
+    ],
+    "steps": [
+      "科学模式図の画像からの復元、既存PPTXの修復、変更しない検査を選び、原典SKILLと該当する参照文書を読む。",
+      "元の解像度で文言・包含・関係の方向を読み、NODES/EDGES/INSETSへ所有を一つずつ割り当てる。混在書体や式があればmath-and-fonts.mdも確認する。",
+      "利用可能なruntimeを一つ選び、準備済みホスト配下でprobeする。PptxGenJS復元では新しいpass-01にsource.pngとbuild.mjsを置き、欠けた依存を制作中に導入しない。",
+      "原典checkerへ実際のsource.pngとbuild.mjsを渡し、元図と実表示の文言・包含・方向・欠落を照合する。原典標準は最大2passで、全blockerをまとめて一度だけ直す。",
+      "PptxGenJSによる復元ではbuild.mjs・元画像・PPTXの3ファイルと検査結果を渡す。修復・検査は各経路の成果物を返す。必要な編集は別コピーで保存・再表示し、元の意味や方向を変えない。"
+    ],
+    "limitations": [
+      "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+      "主な効果の証拠は複合例の入れ子・双方向線・破線の折れ線・合成画像insetの所有分離。単純4箱の例は原文と最小方向保持の補足。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+      "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、12文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+      "小図内部はrasterで「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示するため、不可視部分の削除や情報秘匿は保証しない。",
+      "複合例pass04の角丸と3個のlg/lg矢じりを保持。現在のbuild.mjsは矢じり補正まで自己完結する。生成した非ZIP64・STORE形式PPTXだけを扱う局所処理で、汎用PPTX変換器ではない。",
+      "原典既定の最大2passは変更しない。標準制作はpass02で終了した履歴を残し、明示された継続改善によるpass04と区別する。checkerのpass-index省略は構造検査の指定で、pass04の承認証明ではない。",
+      "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存や字体の新規installは検査していない。入力との画素一致、見た目の改善、時短は主張しない。"
+    ],
+    "caveats": [
+      "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+      "主な効果の証拠は複合例の入れ子・双方向線・破線の折れ線・合成画像insetの所有分離。単純4箱の例は原文と最小方向保持の補足。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+      "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、12文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+      "小図内部はrasterで「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示するため、不可視部分の削除や情報秘匿は保証しない。",
+      "複合例pass04の角丸と3個のlg/lg矢じりを保持。現在のbuild.mjsは矢じり補正まで自己完結する。生成した非ZIP64・STORE形式PPTXだけを扱う局所処理で、汎用PPTX変換器ではない。",
+      "原典既定の最大2passは変更しない。標準制作はpass02で終了した履歴を残し、明示された継続改善によるpass04と区別する。checkerのpass-index省略は構造検査の指定で、pass04の承認証明ではない。",
+      "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存や字体の新規installは検査していない。入力との画素一致、見た目の改善、時短は主張しない。"
+    ],
+    "commands": [
+      "python source/reproduce_complex.py --overwrite --render --node <既存Node.js実体> --soffice <既存soffice> --pdftoppm <既存pdftoppm>",
+      "python source/reproduce.py --overwrite --render --node <既存Node.js実体> --soffice <既存soffice> --pdftoppm <既存pdftoppm>"
+    ],
+    "recipe_notes": [
+      "掲載効果の主証拠は複合例。単純例の4箱・4方向は最小復元と文字・箱・線の編集を確かめる補足。",
+      "初稿のコードと対応表は実Claude Opus5.5。標準制作pass02のFONT修正、継続改善pass04の角丸・矢じりと現在の自己完結化、実行・検査はCodex。",
+      "複合例の標準2pass終了と追加改善pass04、R13の保存プログラムの引き渡し修正は異なる工程。--pass-index Noneを追加改善の承認証拠にしない。",
+      "現在のpass04/build.mjsに矢じり補正を内包し、準備済みruntimeでbuild.mjs/source.png/editable.pptxの3ファイルだけを再生。旧Python補正と旧profileのpass02終端・角丸近似は履歴で、現在の仕様ではない。"
+    ],
+    "execution_type": "原典ReconstructionとPptxGenJS portable雛形。複合・最小方向保持の2例、原典checker/renderer、native構造と別コピー編集を確認。",
+    "source_download": "downloads/sci-diagram-reconstruction-example-ja.zip",
+    "fork_download": "downloads/sci-diagram-reconstruction-ja.zip",
+    "guide": "examples/repositories/sci-diagram-reconstruction/README.md",
+    "example_ids": [
+      "sci-diagram-reconstruction"
+    ],
+    "upstream_commit": "cc8f0030edf80eeab6e52849b8c39fe638466776"
+  },
+  "effect_patch": "data/skill-effect-patches/zzzzzzzzzzzz-sci-round13.json"
+}

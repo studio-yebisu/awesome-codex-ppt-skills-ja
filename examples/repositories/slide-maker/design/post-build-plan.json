@@ -10,7 +10,9 @@
         "evidence": [
           "input/data.json traces[12]"
         ],
-        "units": 3
+        "units": 3,
+        "title": "昇順なら、中央から範囲を絞れる",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
       },
       {
         "slide": 2,
@@ -19,7 +21,9 @@
         "evidence": [
           "input/data.json traces[12].linear"
         ],
-        "units": 3
+        "units": 3,
+        "title": "線形探索は、先頭から13回比較する",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
       },
       {
         "slide": 3,
@@ -28,7 +32,9 @@
         "evidence": [
           "input/data.json traces[12].binary"
         ],
-        "units": 4
+        "units": 4,
+        "title": "二分探索は、大小で残す側を決める",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
       },
       {
         "slide": 4,
@@ -37,7 +43,9 @@
         "evidence": [
           "input/data.json traces[*]"
         ],
-        "units": 3
+        "units": 3,
+        "title": "二分探索は、15通りとも4回以内",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
       },
       {
         "slide": 5,
@@ -46,7 +54,9 @@
         "evidence": [
           "input/data.json timing_measured / sorting_cost_measured"
         ],
-        "units": 3
+        "units": 3,
+        "title": "比較回数から、秒数は決められない",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
       }
     ],
     "arc": {
@@ -184,11 +194,13 @@
     ],
     "form_ledger": "native array diagrams on 3/5 slides; chart on 1/5; textual recap on 1/5",
     "icon_family": "none",
-    "palette": "TEXT-safe #132C3B on #FFFFFF; #116B8A and #A8471C accents; white on strong filled cells; FILL-only #E8EEF0 #D8EAF0 #F2F5F6",
+    "palette": "White canvas; dark ink132C3B; linear method116B8A blue; binary method7044A0 purple; target13 A8471C brown fill/outline; neutral labels4E626C. The three semantic colours do not reverse across pages.",
     "type_scale": {
-      "display": 46,
-      "title": 26,
-      "body": 24
+      "display": 34,
+      "title": 32,
+      "body": 24,
+      "diagram": 24,
+      "footnote": 13
     },
     "style_pick": "bespoke for introductory algorithm teaching · beat terminal, bars-only and tree probes · anti-pick avoided: code-terminal look before basic concepts",
     "motif_generates": {
@@ -201,23 +213,35 @@
       "png": "render/slide-03.png",
       "safe_version": "a bullet list of 8→12→14→13 would hide the discarded ranges; the repeated array exposes them",
       "post_build": true,
-      "recorded_at": "2026-10-13T19:24:17.653672+00:00"
+      "recorded_at": "2026-10-13T19:24:17.653672+00:00",
+      "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8",
+      "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+      "current_binding_note": "Rebound after full current rendering; this referenced page PNG is byte-identical to the previous revision."
     },
     "signature_proof": [
       {
         "role": "signature",
         "slide": 3,
-        "png": "render/slide-03.png"
+        "png": "render/slide-03.png",
+        "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8",
+        "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+        "current_binding_note": "Rebound after full current rendering; this referenced page PNG is byte-identical to the previous revision."
       },
       {
         "role": "complex",
         "slide": 3,
-        "png": "render/slide-03.png"
+        "png": "render/slide-03.png",
+        "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8",
+        "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+        "current_binding_note": "Rebound after full current rendering; this referenced page PNG is byte-identical to the previous revision."
       },
       {
         "role": "data",
         "slide": 4,
-        "png": "render/slide-04.png"
+        "png": "render/slide-04.png",
+        "sha256": "1fe06bd1132cfd78a2ba37ac8eb9340daf2b6fad7adc767f99817848496e8c6b",
+        "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+        "current_binding_note": "Rebound after full current rendering; this referenced page PNG is byte-identical to the previous revision."
       }
     ],
     "build_shape": "solo — five short tightly coupled teaching pages, independent review separate",
@@ -247,18 +271,22 @@
     },
     "build_script": "source/build_slide_maker_repository_example.py",
     "purpose_section_terms": {
-      "objectives": [
-        "15個の数字から"
-      ],
+      "objectives": "目標：",
       "worked example": [
         "左から順に照合"
       ],
-      "recap": [
-        "使える条件も"
-      ]
+      "recap": "回数の比から"
     },
-    "icon_rationale": "Slides1–3 are literal numeric arrays, not categories; pictograms would obscure or compete with numeric identities. Zero icons deliberately retained after actual rendered review.",
-    "type_scale_note": "Representative display/title/body values, not an exhaustive fixed-size contract. Original helpers and dense array labels use additional sizes; actual sizes are reported in lint statistics. No claim that every run belongs to only three tokens."
+    "icon_rationale": "Literal indexed numeric arrays preserve value/position identity, not categories.",
+    "type_scale_note": "Text boxes13/16/24/32/34pt; key legends16pt; native chart axes/legend16pt; five tokens total.",
+    "type_scale_roles": "Display34=slide heading; title32=large counts; body24=main text and active values; label16=unit definition, legends and chart labels; footnote13=conditions.",
+    "icon_none_category": "editorial-register",
+    "icon_none_checked": [
+      1,
+      2,
+      3
+    ],
+    "direction_adopted_scope": "A array adopts the literal indexed values and fixed within-page positions; the cover uses an upper heading, not the low-left heading position from the exploratory probe."
   },
   "supplemental_audit": "review/supplemental-plan-audit.json"
 }

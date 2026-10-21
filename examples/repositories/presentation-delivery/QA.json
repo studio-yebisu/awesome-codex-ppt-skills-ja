@@ -1,91 +1,91 @@
 {
-  "case": "presentation-delivery",
-  "status": "passed",
+  "status": "repaired_all_pages_visually_checked_independent_recheck_pending",
   "page_count": 6,
-  "artifact_sha256": "e022940ac60e5152d8e89d0abdc023a2902ebb4d6cbccc21801e40fc801aebdf",
-  "human_review": false,
+  "artifact_sha256": "c09a3200fa348b9c698cb70aec941dfe6acd71e2c3ec687fb22e2547ad4cc067",
+  "all_pages_inspected_by_integrator": true,
+  "reviewer": "Codex integration; no self score",
+  "independent_current_version_review": "pending",
   "human_adoption": false,
-  "full_page_visual_review": true,
-  "visual_review": {
-    "reviewer": "root + independent astra_spec",
-    "pages_reviewed": [
-      1,
-      2,
-      3,
-      4,
-      5,
-      6
-    ],
-    "method": "Every original HTML capture and actual PowerPoint PNG displayed; notes/native XML checked. Dependency replay kept every PNG and body/notes XML identical.",
-    "result": "全6枚の日本語・v03・番号・架空記入例とノートを確認。見切れ・重なり・意味の欠落なし。HTML/PPTXの字間・太さ・行間差を記録。"
+  "native_inventory": "source/native-elements.json",
+  "actual_pdf_fonts": "source/pdf-fonts.json",
+  "preview_source": "PowerPoint16 exported PDF rasterized to RGB PNG; direct PowerPoint PNGs retained in render/direct-png",
+  "structure": {
+    "native_shapes": 97,
+    "pictures": 0,
+    "native_charts": 0,
+    "native_tables": 0
   },
   "images": [
     {
-      "file": "render/slide-01.png",
-      "sha256": "f18e30b8ddf2d2a594619564b64eb6f9f6a24ff23111b71395027e29360a2dc7"
-    },
-    {
-      "file": "render/slide-02.png",
-      "sha256": "19d12ec0e470b66509a8a7e5d27100f213fb414192050f461ed7f442769ddb9e"
-    },
-    {
-      "file": "render/slide-03.png",
-      "sha256": "4cbd788a321769557dbac99c9b4e05bff2349522d8815cb5b4f743368a64841c"
-    },
-    {
-      "file": "render/slide-04.png",
-      "sha256": "a83da5f1549f4c2ec2a24ca73568b63a0df4ebd7d8afc296e29b5895e5ad4ed1"
-    },
-    {
-      "file": "render/slide-05.png",
-      "sha256": "e4431e09292ff98a2946e087bd830e6a01a625e9f109b6a07ff47dd6a493299d"
-    },
-    {
-      "file": "render/slide-06.png",
-      "sha256": "6716af8cb3a980eddd7d0904b061f87b9c36fd6c797f170e6be9ff59f6233299"
-    }
-  ],
-  "native_objects": [
-    {
       "page": 1,
-      "native_shapes": 12,
-      "native_text_shapes": 11,
-      "pictures": 0
+      "file": "render/slide-01.png",
+      "sha256": "eb2753e94da25804d3623a9108a8c1747c401a6e9843cf98681efd024c9e2c86"
     },
     {
       "page": 2,
-      "native_shapes": 19,
-      "native_text_shapes": 15,
-      "pictures": 0
+      "file": "render/slide-02.png",
+      "sha256": "27d5a15bbccc12c824ca55fab2a8602b1911ba80c3ea9e446287c2cad787db81"
     },
     {
       "page": 3,
-      "native_shapes": 22,
-      "native_text_shapes": 17,
-      "pictures": 0
+      "file": "render/slide-03.png",
+      "sha256": "43dc9e432d259f8fb78fe3712282d89649ea73665cd180d3d03c1b6881de7c49"
     },
     {
       "page": 4,
-      "native_shapes": 16,
-      "native_text_shapes": 13,
-      "pictures": 0
+      "file": "render/slide-04.png",
+      "sha256": "fe146d0b73319abeb220b60500a10229ae65d61ba8ed25ec655a5a12e34122a9"
     },
     {
       "page": 5,
-      "native_shapes": 16,
-      "native_text_shapes": 15,
-      "pictures": 0
+      "file": "render/slide-05.png",
+      "sha256": "6493e95990d9ef208319f2811d4f514bd2f1b02c950162cc15bd1301251dcf20"
     },
     {
       "page": 6,
-      "native_shapes": 10,
-      "native_text_shapes": 8,
-      "pictures": 0
+      "file": "render/slide-06.png",
+      "sha256": "ff1ef29435a67ff69509b66b48ad88e1fdb72ffbc5c45155a7348f521a987b4f"
     }
   ],
-  "independent_visual_review": "review/astra-visual-review.json",
-  "dependency_regression": "review/dependency/regression-proof.json",
+  "zip_replay": {
+    "source": "source/distribution-replay.json",
+    "all_commands_completed": true,
+    "native_content_matches": true,
+    "all_page_preview_difference_mean": 0.0,
+    "existing_dependencies_only": true,
+    "independent_current_version_review": "pending"
+  },
+  "html_is_authoritative": true,
+  "pptx_is_best_effort_derivative": true,
   "html_layout_checks": "html-render/metrics.json",
-  "independent_reproduction": "passed; complete ZIP replay recorded in data/reproduction-kit-qa.json",
-  "independent_reproduction_tested_zip_sha256": "302bbff75f878b65daeec1d6f16ad067a62aef16d7ba820ab1634eeed33ac0a1"
+  "content_preservation": "source/html-pptx-text-check.json",
+  "comparison": "review/html-pptx-comparisons.json",
+  "not_demonstrated": [
+    "User early checkpoint approvals",
+    "Three-direction Fallback exploration",
+    "file URL route",
+    "Video",
+    "Audio/TTS",
+    "Production web app/backend",
+    "Pixel identity",
+    "Independent current-version review"
+  ],
+  "distribution_checks": {
+    "source_files_included": true,
+    "archive_results": "CRC / SHA validation recorded by packaging run; independent review remains pending",
+    "fresh_dependency_install": false,
+    "independent_current_version_recheck": "pending"
+  },
+  "comparison_proofs": {
+    "source": "review/html-pptx-comparisons.json",
+    "pages": [
+      2,
+      3,
+      4
+    ],
+    "current_source_pixels_recomposed": true,
+    "left_and_right_originals_retained": "review/comparison-sources/",
+    "current_comparisons_visually_inspected": true,
+    "reason": "Round2 Kimi identified stale proof pixels; all3 comparison images rebuilt from current source files. No change to deck.pptx."
+  }
 }

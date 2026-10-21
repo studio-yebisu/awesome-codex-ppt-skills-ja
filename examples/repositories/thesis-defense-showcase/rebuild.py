@@ -1,6 +1,6 @@
 """Six-slide fictitious route study using upstream template + native clone/replace."""
 from pathlib import Path
-import argparse, importlib.util, json, math, shutil, subprocess, sys, zipfile, hashlib
+import argparse, difflib, importlib.util, json, math, os, shutil, subprocess, sys, zipfile, hashlib
 from datetime import datetime
 
 STANDALONE=Path(__file__).parent.name!='tools'
@@ -14,7 +14,7 @@ PIN='7cf83b6fe264410aec39ab73d8cfa48f1c9a73bb'
 TITLE='雨の日の、通学ルート。'
 TITLES=[TITLE,'研究課題','経路モデル','候補の比較','仮想試算','限界と展望']
 NOTES=['学部ゼミ向けの仮想研究です。地点・辺・時間は学習用設定、観測・実測ではありません。','所要時間だけでなく、雨にさらされる時間を評価する経路選択の問題を考えます。','自宅Hと学校Gの間に、交差点A、アーケードB、橋Cを置いた仮想グラフ。辺の時間はinput/routes.jsonに記録しています。','近道14分・露出14分、屋根道18分・露出3分、川沿い16分・露出16分。全て設定値からの合計です。','評価値J=移動時間+λ×露出時間。λ=0なら近道、λ=0.5なら屋根道が最小。コードでの仮想試算で、行動調査の結果ではありません。','一定速度や混雑なし等の仮定を置きました。次は仮想条件を増やし、実測する場合は時間と露出の測定設計を先に決めます。']
-PROMPT='zouchenzhen/thesis-defense-pptx-skill原典のminimal_markdown/build_template.pyで生成した無地templateを、原典COM clone helperとpptx_template_toolsのnative replace/add_text/write_tableで再利用し、日本語研究発表「雨の日の、通学ルート。」を全6枚で作ってください。入力正本は自作Markdown研究メモとroutes.json。学部生ゼミ向けの架空地点・辺・所要時間を用い、関係図、候補比較、J=移動時間+λ×露出時間の仮想試算、限界と次の実験を説明。観測や調査を実施したと偽らず、設定値と仮想試算を明示。第三者写真・大学ロゴは使わない。原典templateのgeometry・濃赤・文字サイズ・native objectsを維持し、字体だけBIZ本文/Shippori見出しへ局所対応。追加の角丸カード量産は避け、既存content frame内を図・表・大きい数値で使い分ける。原典既定12〜16枚より6枚指定を優先、生成成功と主要完成物の初回表示のみ確認。元Apache-2.0/NOTICE、使用TTF/OFL、計算コードと図allowlistを保全。共有PowerPointのApplication.Quitは呼ばず自分のdeckだけClose。'
+PROMPT='zouchenzhen/thesis-defense-pptx-skill原典のminimal_markdown/build_template.pyで生成した無地templateを、原典COM clone helperとpptx_template_toolsのnative replace/add_text/write_tableで再利用し、日本語研究発表「雨の日の、通学ルート。」を全6枚で作ってください。入力正本は自作Markdown研究メモとroutes.json。学部生ゼミ向けの架空地点・辺・所要時間を用い、関係図、候補比較、J=移動時間+λ×露出時間の仮想試算、限界と次の実験を説明。観測や調査を実施したと偽らず、設定値と仮想試算を明示。第三者写真・大学ロゴは使わない。原典templateのgeometry・濃赤・文字サイズ・native objectsを維持し、字体だけBIZ本文/Shippori見出しへ局所対応。追加の角丸カード量産は避け、既存content frame内を図・表・大きい数値で使い分ける。原典既定12〜16枚より6枚指定を優先、原典Quality gateに従い全頁PNGとcontact sheetを目視し、overflow・stale text scanを実行して修正。独立評価の合格は別記録とする。元Apache-2.0/NOTICE、使用TTF/OFL、計算コードと図allowlistを保全。共有PowerPointのApplication.Quitは呼ばず自分のdeckだけClose。'
 MD='''# 雨の日の、通学ルート。
 
 ## 位置づけ
@@ -54,20 +54,27 @@ def jwrite(p,s):write(p,json.dumps(s,ensure_ascii=False,indent=2)+'\n')
 def loadmod(name,path):
  spec=importlib.util.spec_from_file_location(name,path);mod=importlib.util.module_from_spec(spec);spec.loader.exec_module(mod);return mod
 
-def main():
+def main(case_only=False):
  OUT.mkdir(parents=True,exist_ok=True)
  if (OUT/'deck.pptx').exists():
-  (OUT/'backups').mkdir(exist_ok=True)
-  shutil.copy2(OUT/'deck.pptx',OUT/'backups'/('deck-'+datetime.now().strftime('%Y%m%d-%H%M%S')+'.pptx'))
+  (OUT/'.private/backups').mkdir(parents=True,exist_ok=True)
+  shutil.copy2(OUT/'deck.pptx',OUT/'.private/backups'/('deck-'+datetime.now().strftime('%Y%m%d-%H%M%S')+'.pptx'))
  if not STANDALONE:
   # Preserve a useful, scoped subset of the actual source tree; exclude university binaries/logos.
   shutil.copytree(SK/'scripts',OUT/'upstream/skills/thesis-defense-pptx/scripts',dirs_exist_ok=True)
   for f in ['SKILL.md','requirements.txt']:
    shutil.copy2(SK/f,OUT/'upstream/skills/thesis-defense-pptx'/f)
+  (OUT/'upstream/skills/thesis-defense-pptx/references').mkdir(parents=True,exist_ok=True)
+  shutil.copy2(SK/'references/pptx_quality_gate.md',OUT/'upstream/skills/thesis-defense-pptx/references/pptx_quality_gate.md')
   for f in ['build_template.py','build_deck.py','thesis.md','README.md']:
    (OUT/'upstream/examples/minimal_markdown').mkdir(parents=True,exist_ok=True);shutil.copy2(UP/'examples/minimal_markdown'/f,OUT/'upstream/examples/minimal_markdown'/f)
   for f in ['LICENSE','NOTICE']:shutil.copy2(UP/f,OUT/f)
   shutil.copytree(OUT/'upstream/skills/thesis-defense-pptx/scripts',OUT/'runtime/scripts',dirs_exist_ok=True)
+  for helper_name in ['export_pptx_png.ps1','inspect_pptx_overflow.ps1']:
+   original=(SK/'scripts'/helper_name).read_text(encoding='utf-8')
+   adapted=original.replace('try { $pp.Quit() } catch {}','# Shared PowerPoint: close this presentation only; keep Application running.')
+   write(OUT/'runtime/scripts'/helper_name,adapted)
+   write(OUT/'source'/f'{helper_name}.diff',''.join(difflib.unified_diff(original.splitlines(keepends=True),adapted.splitlines(keepends=True),fromfile='upstream/'+helper_name,tofile='runtime/'+helper_name)))
   write(OUT/'runtime/export_case.ps1',(ROOT/'tools/render_powerpoint.ps1').read_text(encoding='utf-8').replace('if ($existingPowerPoint.Count -eq 0 -and $powerPoint.Presentations.Count -eq 0) { $powerPoint.Quit() }','# Parallel case work: leave Application running; close only this openedDeck.'))
   jwrite(OUT/'input/routes.json',DATA);write(OUT/'input/research.md',MD);write(OUT/'input/BRIEF.md','# 制作依頼\n\n'+PROMPT+'\n');write(OUT/'PROMPT.md',PROMPT+'\n')
   for folder,file in [('bizudpgothic','BIZUDPGothic-Regular.ttf'),('bizudpgothic','BIZUDPGothic-Bold.ttf'),('shipporimincho','ShipporiMincho-Bold.ttf')]:
@@ -92,7 +99,7 @@ def main():
  code=(source_root/'skills/thesis-defense-pptx/scripts/clone_template_deck.ps1').read_text(encoding='utf-8')
  code=code.replace('try { $pp.Quit() } catch {}','# Parallel work: do not call Application.Quit; Close only dest above.')
  write(clone,code)
- subprocess.run(['powershell','-NoProfile','-ExecutionPolicy','Bypass','-File',str(clone),'-Template',str(OUT/'template-ja.pptx'),'-Output',str(OUT/'skeleton.pptx'),'-SlideSequence','1,2,3,4,4,3'],check=True)
+ subprocess.run([shutil.which('pwsh') or shutil.which('powershell') or 'powershell','-NoProfile','-File',str(clone),'-Template',str(OUT/'template-ja.pptx'),'-Output',str(OUT/'skeleton.pptx'),'-SlideSequence','1,2,3,4,4,3'],check=True)
  helpers=loadmod('thesis_case_tools',OUT/'runtime/scripts/pptx_template_tools.py')
  # Reuse the original Markdown section parser on the Japanese source.
  example=loadmod('thesis_case_original_builder',minimal/'build_deck.py')
@@ -117,12 +124,13 @@ def main():
   positions={'H':(1.5,4.1),'A':(3.6,2.9),'B':(3.6,4.1),'C':(3.6,5.35),'G':(5.7,4.1)}
   for ed in data['edges']:
    a,b=positions[ed['a']],positions[ed['b']];line=s.shapes.add_connector(MSO_CONNECTOR.STRAIGHT,Inches(a[0]),Inches(a[1]),Inches(b[0]),Inches(b[1]));line.line.color.rgb=RED if 'B' in (ed['a'],ed['b']) else NAVY;line.line.width=Pt(2.3)
-   mx=(a[0]+b[0])/2;my=(a[1]+b[1])/2+(-.25 if ed['b']=='A' or ed['a']=='A' else .08)
-   tx(s,f"{ed['time']}分",mx-.28,my,.7,.29,14,bold=True,color=RED if 'B' in (ed['a'],ed['b']) else NAVY)
+   mx=(a[0]+b[0])/2;my=(a[1]+b[1])/2
+   label=tx(s,f"{ed['time']} / {ed['exposure']}",mx-.45,my-.165,.9,.33,14,bold=True,color=RED if 'B' in (ed['a'],ed['b']) else NAVY,align=PP_ALIGN.CENTER)
+   label.fill.solid();label.fill.fore_color.rgb=WHITE;label.line.fill.background()
   for code,(x,y) in positions.items():
    circle=helpers.rect(s,x-.21,y-.21,.42,.42,line=RED if code=='B' else NAVY,fill=WHITE,radius_shape=MSO_SHAPE.OVAL)
    tx(s,code,x-.19,y-.18,.38,.35,14,True,align=PP_ALIGN.CENTER)
-  for code,label,x,y in [('H','自宅',1.08,4.6),('G','学校',5.31,4.6),('A','交差点',3.02,2.32),('B','屋根のある道',2.83,4.45),('C','橋',3.27,5.76)]:tx(s,label,x,y,1.5,.36,14,color=RED if code=='B' else NAVY)
+  for code,label,x,y in [('H','自宅',1.08,4.4),('G','学校',5.31,4.4),('A','交差点',3.02,2.32),('B',data['nodes']['B'],3.0,3.54),('C','橋',3.27,5.76)]:tx(s,label,x,y,1.5,.36,14,color=RED if code=='B' else NAVY)
  def table(s,rows,x,y,w,h,size=16):
   sh=s.shapes.add_table(len(rows),len(rows[0]),Inches(x),Inches(y),Inches(w),Inches(h));helpers.write_table(sh.table,rows,font_size=size)
   for ri,row in enumerate(sh.table.rows):
@@ -133,7 +141,7 @@ def main():
      for r in p.runs:r.font.name='BIZ UDPGothic';r.font.color.rgb=WHITE if ri==0 else NAVY;r.font.bold=ri==0
   return sh
  # Exact replacements retain native placeholder geometry/size/style from the cloned template.
- maps=[{'学校/实验室模板标题区':'ゼミ研究発表 / 仮想試算','毕业论文答辩':'通学ルートの選択','题目占位：请替换为论文题目':TITLE,'作者 / 专业 / 指导教师 / 日期':'学部ゼミ向け / 学習用の仮想研究'}, {'研究背景':'研究課題','左侧内容占位':'到着までの速さ','右侧内容占位':'雨にさらされる時間'}, {'方法设计':'経路モデル','左侧内容占位':'架空の5地点と6本の辺','右侧内容占位':'辺の時間を足して比較'}, {'实验结果':'候補の比較','左侧内容占位':'移動時間と露出時間','右侧内容占位':'露出時間だけを比べる'}, {'实验结果':'仮想試算','左侧内容占位':'重みを変えると選択が変わる','右侧内容占位':'λ = 0.5 の評価値'}, {'方法设计':'限界と展望','左侧内容占位':'今回置いた仮定','右侧内容占位':'次の実験へ'}]
+ maps=[{'学校/实验室模板标题区':'ゼミ研究発表 / 仮想試算','毕业论文答辩':'通学ルートの選択','题目占位：请替换为论文题目':TITLE,'作者 / 专业 / 指导教师 / 日期':'学部ゼミ向け / 学習用の仮想研究'}, {'研究背景':'研究課題','左侧内容占位':'近道 H–A–G','右侧内容占位':'屋根道 H–B–G'}, {'方法设计':'経路モデル','左侧内容占位':'架空の5地点と6本の辺','右侧内容占位':'辺の時間を足して比較'}, {'实验结果':'候補の比較','左侧内容占位':'移動時間と露出時間','右侧内容占位':'露出時間だけを比べる'}, {'实验结果':'仮想試算','左侧内容占位':'重みを変えると選択が変わる','右侧内容占位':'λ = 0.5 の評価値'}, {'方法设计':'限界と展望','左侧内容占位':'今回置いた仮定','右侧内容占位':'次の実験へ'}]
  for n,s in enumerate(prs.slides):
   helpers.replace_exact_text(s,maps[n]);helpers.replace_exact_text(s,{'结果':'結果','总结':'まとめ'})
   if n:
@@ -156,27 +164,27 @@ def main():
  for y,w in [(2.7,2.4),(3.55,3.1),(4.4,2.75)]:bar(s,9.4,y,w,.1,RED if y==3.55 else NAVY)
  tx(s,'速さと濡れにくさを比べる',.95,5.35,8.4,.5,24,True,color=NAVY)
  # Problem: one contrast per inherited content frame.
- s=prs.slides[1];tx(s,'14分',1.1,2.62,4.7,.76,34,True,color=RED);tx(s,'近道の移動時間',1.1,3.65,4.7,.45,18);tx(s,'最短時間だけで\n経路を選ぶ考え方。',1.1,4.55,4.7,1.08,18)
- tx(s,'3分',7.2,2.62,4.7,.76,34,True,color=RED);tx(s,'屋根道の露出時間',7.2,3.65,4.7,.45,18);tx(s,'濡れにくさも含めて\n経路を選ぶ考え方。',7.2,4.55,4.7,1.08,18)
+ s=prs.slides[1];tx(s,'14分',1.1,2.62,4.7,.76,34,True,color=RED);tx(s,'雨にさらされる時間',1.1,3.65,4.7,.45,18);tx(s,'移動14分＝露出14分。\n全区間で雨にさらされる。',1.1,4.55,4.7,1.08,18)
+ tx(s,'3分',7.2,2.62,4.7,.76,34,True,color=RED);tx(s,'雨にさらされる時間',7.2,3.65,4.7,.45,18);tx(s,'移動18分のうち露出3分。\n移動は長いが露出は短い。',7.2,4.55,4.7,1.08,18)
  # Graph and equation source are the authored Markdown/routes only.
- s=prs.slides[2];graph(s);tx(s,'HからGまでの3候補',7.15,2.55,4.9,.48,24,True,color=NAVY);tx(s,'近道：H–A–G\n屋根道：H–B–G\n川沿い：H–C–G',7.15,3.4,4.8,1.7,18);tx(s,'移動時間 t と露出時間 e を\n別々に足し合わせる。',7.15,5.2,4.9,.75,15)
+ s=prs.slides[2];graph(s);tx(s,'HからGまでの3候補',7.15,2.55,4.9,.48,24,True,color=NAVY);tx(s,'近道：H–A–G\n屋根道：H–B–G\n川沿い：H–C–G',7.15,3.4,4.8,1.7,18);tx(s,'各辺は 移動 t / 露出 e（分）。\nt と e は別々に足し合わせる。',7.15,5.2,4.9,.75,15)
  s=prs.slides[3];table(s,[['候補','移動 t','露出 e']]+[[r['name'],str(r['time'])+'分',str(r['exposure'])+'分'] for r in results],1.05,2.55,5.1,2.65)
  for i,r in enumerate(results):
   y=2.7+i*.92;tx(s,r['name'],7.15,y,1.35,.36,15);bar(s,8.65,y+.03,r['exposure']/16*3.05,.28,RED if i==1 else NAVY);tx(s,str(r['exposure'])+'分',8.65,y+.36,3.05,.32,15,color=RED if i==1 else NAVY)
  tx(s,'屋根道は4分長いが、露出は11分短い。',1.05,5.55,11.1,.38,18,True,color=RED)
  s=prs.slides[4];tx(s,'J = t + λ e',1.05,2.65,5.1,.62,24,True,color=NAVY);tx(s,'λ = 0　　近道が最小\nλ = 0.5　 屋根道が最小',1.05,3.65,5.1,1.14,18);tx(s,'λ は露出時間への重み。\n単位は分にそろえて比較。',1.05,5.05,5.1,.85,15)
  table(s,[['候補','評価値 J']]+[[r['name'],str(r['scores']['0.5'])] for r in results],7.15,2.55,5.1,2.65);tx(s,'最小値 19.5：屋根道',7.15,5.55,5.1,.38,18,True,color=RED)
- s=prs.slides[5];tx(s,'一定速度・混雑なし\n露出の影響は線形\n安全性や選好は未検証',1.05,2.7,5.1,2.2,18);tx(s,'風・雨量・待ち時間を\n次の条件へ加える。',1.05,5.05,5.1,.85,15)
+ s=prs.slides[5];tx(s,'一定速度・混雑なし\n露出の影響は線形\n安全性や選好は未検証',1.05,2.7,5.1,1.55,18);tx(s,'風・雨量・待ち時間を\n次の条件へ加える。',1.05,4.75,5.1,.85,15)
  for i,(a,b) in enumerate([('01','待ち時間を変える'),('02','露出時間を変える'),('03','測定方法を決める')]):
   y=2.65+i*1.08;tx(s,a,7.15,y,.75,.4,20,True,color=RED);tx(s,b,8.12,y,4.1,.4,18);bar(s,7.18,y+.69,4.9,.018,PALE)
- tx(s,'実測は今後の計画。まだ実施していません。',7.15,5.89,5.1,.26,11,color=NAVY)
+ tx(s,'実測は未実施。次に測り方を決める。',7.15,5.55,5.1,.45,14,color=NAVY)
  prs.save(OUT/'deck.pptx')
  print('Built native template-copy six-slide PPTX:',OUT/'deck.pptx')
- if not STANDALONE:metadata(results)
+ if not STANDALONE:metadata(results,write_catalog=not case_only)
 
-def metadata(results):
+def metadata(results,write_catalog=True):
  refs=[{'path':f,'sha256':hashlib.sha256((UP/f).read_bytes()).hexdigest(),'url':f'https://github.com/{REPO}/blob/{PIN}/{f}'} for f in ['skills/thesis-defense-pptx/SKILL.md','examples/minimal_markdown/build_template.py','examples/minimal_markdown/build_deck.py','skills/thesis-defense-pptx/scripts/clone_template_deck.ps1','skills/thesis-defense-pptx/scripts/pptx_template_tools.py','LICENSE','NOTICE']]
- source={'repository':REPO,'commit':PIN,'license':'Apache-2.0','author':'zouchenzhen','official':False,'method':'Original minimal Markdown build_template creates the native blank template; original COM Duplicate/MoveTo helper clones 1,2,3,4,4,3; original Markdown section parser, replace_exact_text/set_text_preserve_style/add_text/rect/write_table fill the Japanese native deck.','template_geometry_and_font_sizes_preserved':True,'upstream_originals_preserved':True,'modifications':['Generated template typefaces changed Microsoft YaHei to BIZ UDPGothic / Shippori Mincho; geometry, sizes, red band, navigation and content frames retained.','Local clone and local export helper never call Application.Quit: close only this case presentation for parallel COM work.','Japanese source content and original native diagrams/tables added inside existing template areas.','User-requested six slides and initial-main-display checks replace upstream defaults of 12–16 slides and extensive QA.'],'editability':'native_elements','editable_features':['text','shapes','tables'],'inputs':['input/research.md','input/routes.json','input/calculation-results.json','input/figure-allowlist.json'],'source_refs':refs,'fonts':[{'family':'BIZ UDPGothic','files':['BIZUDPGothic-Regular.ttf','BIZUDPGothic-Bold.ttf'],'license':'OFL-1.1'},{'family':'Shippori Mincho','files':['ShipporiMincho-Bold.ttf'],'license':'OFL-1.1'}],'font_source_commit':'66928797f271fed5ee428544e7229685e2d90127','font_embedding':False,'dependencies':'python-pptx, Pillow; original Markdown module imported; Windows PowerPoint COM used for native clone/export. Extraction/PDF dependencies in original requirements retained but not used for this Markdown case.','third_party_images_or_logos':False,'artifact_tool_used':False}
+ source={'repository':REPO,'commit':PIN,'license':'Apache-2.0','author':'zouchenzhen','official':False,'method':'Original minimal Markdown build_template creates the native blank template; original COM Duplicate/MoveTo helper clones 1,2,3,4,4,3; original Markdown section parser, replace_exact_text/set_text_preserve_style/add_text/rect/write_table fill the Japanese native deck.','template_geometry_and_font_sizes_preserved':True,'upstream_originals_preserved':True,'modifications':['Generated template typefaces changed Microsoft YaHei to BIZ UDPGothic / Shippori Mincho; geometry, sizes, red band, navigation and content frames retained.','Local clone and local export helper never call Application.Quit: close only this case presentation for parallel COM work.','Japanese source content and original native diagrams/tables added inside existing template areas.','User-requested six-slide scope replaces12–16slide default; original visual/overflow/stale-text quality gate restored for the current revision.'],'editability':'native_elements','editable_features':['text','shapes','tables'],'inputs':['input/research.md','input/routes.json','input/calculation-results.json','input/figure-allowlist.json'],'source_refs':refs,'fonts':[{'family':'BIZ UDPGothic','files':['BIZUDPGothic-Regular.ttf','BIZUDPGothic-Bold.ttf'],'license':'OFL-1.1'},{'family':'Shippori Mincho','files':['ShipporiMincho-Bold.ttf'],'license':'OFL-1.1'}],'font_source_commit':'66928797f271fed5ee428544e7229685e2d90127','font_embedding':False,'dependencies':'python-pptx, Pillow; original Markdown module imported; Windows PowerPoint COM used for native clone/export. Extraction/PDF dependencies in original requirements retained but not used for this Markdown case.','third_party_images_or_logos':False,'artifact_tool_used':False}
  jwrite(OUT/'SOURCE.json',source);jwrite(OUT/'PROVENANCE.json',source)
  write(OUT/'README.md','''# 雨の日の、通学ルート。
 
@@ -192,7 +200,7 @@ def metadata(results):
 
 原典Apache-2.0のLICENSEとNOTICE、未変更原本を保持。非公式作例で大学との提携や公認を意味しません。共有PowerPointを守るためlocal clone/exportはApplication.Quitを呼ばず、自分で開いたdeckだけCloseします。残る無文書PowerPointはユーザーが終了できます。
 
-使ったGoogle Fontsの未改変実TTF/OFLだけ同梱。PPTXはフォント未埋込、別端末ではfonts/を手動導入。検査は生成成功とPowerPoint初回export・代表完成物の初回表示までです。contact sheet、全ページ詳細目視、繰返しoverflow監査、独立review、ZIP再実行は行いません。
+使ったGoogle Fontsの未改変実TTF/OFLだけ同梱。PPTXはフォント未埋込、別端末ではfonts/を手動導入。原典Quality gateとしてPowerPointで全6頁をPNG/PDFへ描画し、contact sheetと全頁画像、overflowとstale text scanを確認します。2頁の比較は両候補の露出時間にそろえ、3頁の辺ラベルを線から離しました。実施結果はreviews/quality-gate.jsonとQA.json。独立評価は別記録とし、未実施を完了扱いにしません。
 ''')
  FORK.mkdir(parents=True,exist_ok=True);shutil.copytree(OUT/'upstream',FORK/'upstream',dirs_exist_ok=True);shutil.copytree(OUT/'runtime',FORK/'runtime',dirs_exist_ok=True)
  for f in ['LICENSE','NOTICE']:shutil.copy2(OUT/f,FORK/f)
@@ -207,7 +215,8 @@ description: 原典Thesis Defense PPTXの無地native template、clone/replace h
 2. 入力に由来する図のallowlistを先に記録。第三者写真や大学ロゴを勝手に持ち込まない。本例は自作JSONとnative diagramだけ。
 3. 同梱upstreamのminimal_markdown/build_template.pyを実行して無地templateを作る。原典clone_template_deck.ps1のDuplicate/MoveToを使い、native template pagesを必要な順で再利用する。
 4. 原典pptx_template_toolsのreplace_exact_text/set_text_preserve_style/add_text/rect/write_tableで内容を入れる。templateのgeometry・サイズ・濃赤・nav/content framesは保持し、日本語字体を局所対応する。文字やnative tableを画像にしない。
-5. ユーザーの枚数・確認範囲を優先。本例は6枚で、原典12–16枚/contact sheet/overflow反復の既定を省き、生成成功と代表完成物初回表示のみ。確認した範囲と未確認を区別する。
+5. ユーザー指定の6枚を保ち、原典Quality gateは省略しない。scripts/export_pptx_png.ps1で全頁PNG、make_contact_sheet.pyで一覧を作り、inspect_pptx_overflow.ps1とscan_pptx_text.pyを実行。contact sheetと全頁を目視し、文字切れ・枠/線との接触・数値や指標の不一致・古いtemplate文字を直す。変更後は再描画・再検査し、reviews/へ記録する。
+6. Quality gateの作者検査とKimi K3/Opus5.5の独立評価を区別し、独立合格前に満点扱いしない。COMのQuit抑止だけの局所adapterはsource/*.diffで示し、検査の閾値や内容を弱めない。
 
 共有PowerPointの保全のためlocal runtime clone/exportはApplication.Quitを呼ばず、このcaseのdeckだけClose。未変更原本をupstreamに保持。example/rebuild.pyとexample/PROMPT.mdが具体的な入力→生成の入口。
 
@@ -218,20 +227,25 @@ description: 原典Thesis Defense PPTXの無地native template、clone/replace h
  base='examples/repositories/thesis-defense-showcase/'
  case={'id':'thesis-defense-showcase','title':TITLE,'repository':REPO,'skill_repository':REPO,'upstream_commit':PIN,'fork_id':'thesis-defense-ja','page_count':6,'format':'pptx','preview_kind':'powerpoint-render','preview_canvas':{'width':1600,'height':900},'style':'原典template保持 / 白・濃赤・墨紺の仮想研究','use_case':'研究発表・仮想試算','preview':base+'index.html','cover':base+'render/slide-01.png','interior':base+'render/slide-03.png','pages':[base+f'render/slide-{n:02}.png' for n in range(1,7)],'artifact_download':'downloads/thesis-defense-example-ja.zip','source_download':'downloads/thesis-defense-example-ja.zip','fork_download':'downloads/thesis-defense-ja.zip','pptx_download':base+'deck.pptx','pdf_download':base+'render/deck.pdf','input':base+'input/research.md','input_data':base+'input/routes.json','prompt':base+'PROMPT.md','prompt_text':PROMPT,'provenance':base+'PROVENANCE.json','qa':base+'QA.json','guide':base+'README.md','titles':TITLES,'notes':NOTES,'sample_notice':'地点・辺・時間は学習用設定、結果は仮想試算。観測・調査・実在ルートではありません。','method':source['method'],'navigation':'native-runtime-bridge','editability':'native_elements','editable_features':['text','shapes','tables'],'status':'generated','execution_status':'generated','preview_notice':'原典native templateをclone/replace。文字・経路図形・表を編集できます。全数値は仮想設定。','representative_previews':[base+'render/slide-01.png',base+'render/slide-03.png'],'preview_image_notice':'6枚のPowerPoint初回書き出しPNG。代表完成物のみ初回表示、全詳細目視なし。'}
  guide={'repository':REPO,'production_status':'generated','execution_status':'generated','execution_type':'original_minimal_template_com_clone_native_replace','case_ids':[case['id']],'summary_ja':'原典無地template/COM clone/helperで日本語6枚。Markdownから架空経路とコード上の仮想試算をnative図表へ。','requirements':['Python3.10+ / python-pptx / Pillow','Windows PowerPoint COM','BIZ UDPGothic/Shippori Mincho（同梱TTF/OFL）'],'steps':['Markdown研究メモとJSONを読み、図allowlistを作る','元build_templateで無地templateを作る','原典COM helperで6枚cloneし元native helperで置換','完成PPTXを初回export/表示'],'commands':['python rebuild.py','powershell -NoProfile -File runtime/export_case.ps1 -PresentationPath deck.pptx -OutputDirectory render'],'source_refs':refs,'upstream_commit':PIN,'license':'Apache-2.0','license_notice_ja':'原典Apache-2.0とNOTICEを保持。使用書体はOFL。大学ロゴ・既存大学templateは含みません。','caveats':['Fictitious educational calculations, no observational data or real route guidance.','PPTX fonts not embedded; full original TTF/OFL provided.','Local COM scripts close only this case document and do not quit shared PowerPoint.'],'skill':'skill-forks/thesis-defense-ja/SKILL.md','guide':case['guide']}
- jwrite(ROOT/'data/sol-thesis-defense-repository-examples.json',[case]);jwrite(ROOT/'data/sol-thesis-defense-repository-guides.json',[guide])
+ if write_catalog:jwrite(ROOT/'data/sol-thesis-defense-repository-examples.json',[case]);jwrite(ROOT/'data/sol-thesis-defense-repository-guides.json',[guide])
 
 def viewer():
  html='''<!doctype html><html lang="ja"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>雨の日の、通学ルート。</title><style>body{margin:0;background:#1B253D;height:100vh;display:grid;place-items:center}img{width:min(100vw,177.777vh);aspect-ratio:16/9;object-fit:contain}nav{position:fixed;bottom:12px;right:16px;background:#830604;color:white;display:flex;align-items:center;gap:14px;padding:9px;font-family:sans-serif}button{font:inherit;background:none;border:1px solid white;color:white;padding:8px 15px}.embed nav{display:none}</style><img id="slide" src="render/slide-01.png" alt="雨の日の、通学ルート。"><nav aria-label="スライド操作"><button id="prev">戻る</button><span id="counter">1 / 6</span><button id="next">進む</button></nav><script>const titles=TITLES;let n=0;function show(i){n=Math.max(0,Math.min(5,i));document.querySelector('#slide').src='render/slide-'+String(n+1).padStart(2,'0')+'.png';document.querySelector('#slide').alt=titles[n];document.querySelector('#counter').textContent=(n+1)+' / 6';if(parent!==window)parent.postMessage({type:'yebisu-page',index:n,total:6},location.origin)}document.querySelector('#prev').onclick=()=>show(n-1);document.querySelector('#next').onclick=()=>show(n+1);addEventListener('keydown',e=>{if(e.key==='ArrowRight')show(n+1);if(e.key==='ArrowLeft')show(n-1)});addEventListener('message',e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.type==='yebisu-slide'&&Number.isInteger(e.data.index))show(e.data.index)});if(parent!==window)document.body.classList.add('embed');show(0)</script></html>'''
  write(OUT/'index.html',html.replace('const titles=TITLES;',f'const titles={json.dumps(TITLES,ensure_ascii=False)};'))
 
 def package():
- viewer();shutil.copytree(OUT,FORK/'example',dirs_exist_ok=True)
+ excluded={'.private','backups','.build','.git','__pycache__','node_modules','cache'}
+ def ignore(folder,names):return [n for n in names if n in excluded or n.endswith(('.pyc','.log')) or (Path(folder)/n).is_symlink() or ((Path(folder)/n).is_dir() and os.path.isjunction(Path(folder)/n))]
+ viewer();shutil.copytree(OUT,FORK/'example',dirs_exist_ok=True,ignore=ignore)
  for folder,name in [(OUT,'thesis-defense-example-ja'),(FORK,'thesis-defense-ja')]:
   with zipfile.ZipFile(ROOT/f'downloads/{name}.zip','w',zipfile.ZIP_DEFLATED) as z:
-   for p in sorted(folder.rglob('*')):
-    if p.is_file() and '__pycache__' not in p.parts and p.suffix!='.pyc':z.write(p,(Path(name)/p.relative_to(folder)).as_posix())
+   for current,dirs,files in os.walk(folder,followlinks=False):
+    dirs[:]=[d for d in dirs if d not in ignore(current,dirs)]
+    for file in sorted(files):
+     p=Path(current)/file
+     if file not in ignore(current,[file]):z.write(p,(Path(name)/p.relative_to(folder)).as_posix())
 
 if __name__=='__main__':
- parser=argparse.ArgumentParser();parser.add_argument('--package-only',action='store_true');args=parser.parse_args()
+ parser=argparse.ArgumentParser();parser.add_argument('--package-only',action='store_true');parser.add_argument('--case-only',action='store_true');args=parser.parse_args()
  if args.package_only:package()
- else:main()
+ else:main(case_only=args.case_only)

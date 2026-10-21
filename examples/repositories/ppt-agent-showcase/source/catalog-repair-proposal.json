@@ -1,0 +1,29 @@
+{
+  "id": "ppt-agent-showcase",
+  "prompt_text": "日本語5枚の仮想展示企画「小さな展示を、ひとつの体験に。」を制作してください。\nAkxan/ppt-agent-skillの26作風から実在するbauhaus_blockを選び、原典のmock/styleとHTML→dom-to-svg→svg2pptxのOSS生成器を実際に使う。\n三原色の円・四角・三角、硬い版式、大きな和文タイトル、展示の関係図、来場導線、準備日程を少ない要素で見せる。\nZen Kaku Gothic New Blackの大見出し、BIZ UDPMinchoの短い説明、Manropeの英数字。角丸カードや無難な業務資料に揃えない。\n全5枚は表紙、関係図、来場導線、準備日程、開く前の体験確認。展示は仮想、日時・会場・参加条件は未定、日程は相対的な仮案。\n指定済みの企画・字体・作風で制作し、3枚目の番号・見出し・説明は対応する図形の横中心へ揃える。\n実生成と実描画を確認し、完成PPTX/PNG/PDFと原典Webプレビュー、入力/原稿/依頼/再生成コード、未変更原本/局所差分、字体許諾、日本語SKILL、SOURCE、2ZIPまで完成させる。独立評価と技術検査の実施範囲を区別し、未確認を合格扱いしない。\nartifact-tool SDKを使わず、原典の許されるOSS経路で実行。別レンダラーへの名前貼りや黙った画像PPTX代替をしない。",
+  "canonical_data_edited": false,
+  "reason_ja": "旧依頼文の軽い確認のみ・独立評価なしという記述を最新依頼に合わせて更新。制作元作例の版と変換入力の保存版を区別。",
+  "model_usage": {
+    "model": "claude-opus-5-5",
+    "scope": "page3 label placement repair authoring only",
+    "original_production_history": "preserved; this does not relabel the complete original deck as Opus-produced"
+  },
+  "layout_repair": {
+    "scope": "12 label x positions on page3; geometry/colors/arrows/fonts/text unchanged",
+    "production_model": "claude-opus-5-5",
+    "production_run_date": "2026-10-15",
+    "verification": "source/label-alignment-qa.json",
+    "output_pptx_sha256": "0667658e36e8a725b1a247235e084826ba3a379d13b159f2a49a9c690b7ce415",
+    "previous_pptx_sha256": "a57652396782363b3d0b186063e9f80e066030cf8a04f5d67140551de241427a",
+    "original_preserved_privately": true,
+    "independent_review": "pending",
+    "runtime_versions": {
+      "python": "3.12.14",
+      "python-pptx": "1.0.2",
+      "lxml": "6.1.1",
+      "Pillow": "12.3.0"
+    }
+  },
+  "method": "original html_packager -> html2svg dom-to-svg -> svg2pptx native OOXML shapes Page3 labels were repaired in authored HTML and rebuilt through the same original DOM/SVG/native PPTX route.",
+  "preview_notice": "原典DOM→SVG→編集可能PPTX。3枚目の番号・見出し・説明を図形中心に修正済み。文字・図形をPowerPointで編集できます。"
+}

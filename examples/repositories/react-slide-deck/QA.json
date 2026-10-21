@@ -1,19 +1,71 @@
 {
-  "status": "qa_complete",
+  "status": "codex_round4_repair_all_pages_read_independent_recheck_pending",
+  "author": "Codex",
   "page_count": 5,
-  "artifact_sha256": "3e6f3614db680b2b1387b49c2f808e4910884f1b4da303c4e5a8c4fb72f0be03",
-  "browser_review": "passed",
-  "visual_review": {
-    "pages_reviewed": [
-      1,
-      2,
-      3,
-      4,
-      5
+  "artifact_sha256": "4025b16470ee5d7c8abe08c477014affa2ed2a94eda2e743e73e5aaf3d4c2bc9",
+  "all_pages_visually_reviewed": true,
+  "visual_review": "Current full-size page images inspected for Japanese text, diagrams, hierarchy and accidental overlap. Author review, not independent approval.",
+  "independent_review": "pending new artifact",
+  "human_adoption": "pending",
+  "publication": false,
+  "images": [
+    {
+      "file": "render/slide-01.png",
+      "sha256": "07d0bc14206f0e2f00186a14c6b520a795b422f159b2b385e286a11bf6cf51da"
+    },
+    {
+      "file": "render/slide-02.png",
+      "sha256": "9da80c1bb0662c40ac28caf13776c7ea3c5453e905e75a257d27aeecc01008cf"
+    },
+    {
+      "file": "render/slide-03.png",
+      "sha256": "e9d54ad661c3d8c777d869300344e886ec34de655bb59fef2ba0f7b2318528fe"
+    },
+    {
+      "file": "render/slide-04.png",
+      "sha256": "d6fe6dbafd8f9fa0c37bfd0d0a6792f18471626eabf91a812c029b4864d9332e"
+    },
+    {
+      "file": "render/slide-05.png",
+      "sha256": "7ecaf4b69abef145cbae054ac1298f3b0118dfafc933dd689033a6a20c0c0753"
+    }
+  ],
+  "current_build": "source/logs/repair-build.txt",
+  "current_browser": "source/repair-browser-review.json",
+  "notes": [
+    "Original tsc -b and Vite build passed",
+    "All5 pages and W1-W4 widget states checked; widget is custom extension, not original built-in feature"
+  ],
+  "not_executed": [
+    "fresh npm ci for this text-only repair",
+    "60fps quantitative measurement",
+    "independent model re-review"
+  ],
+  "zip_replay": "source/zip-replay.json",
+  "zip_replay_note": "Source checks executed from the first synchronized archive; final packaging adds these receipts. Current source hashes remain checked.",
+  "round4": {
+    "source_proofs": [
+      "source/repair-browser-review.json",
+      "source/round4-reveal-proof.json",
+      "source/app/src/slides/deck.tsx",
+      "source/app/src/App.tsx",
+      "source/upstream/skills/slide-deck/slide-guidelines.md",
+      "render/week-1.png",
+      "render/week-2.png",
+      "render/week-3.png",
+      "render/week-4.png",
+      "render/reveal-before.png",
+      "render/reveal-mid.png",
+      "render/reveal-after.png"
     ],
-    "method": "Cua real browser screenshots, reduced-motion all-page view plus original React navigation/widget in normal mode",
-    "result": "全5枚の日本語と図形を視認。矢印重なりを修正。週別タブとページカウンター、最終停止を確認。"
+    "visual_review": "All46 current page PNGs read by Codex across seven cases. Relevant natural motion frames, W2–W4 and all7 presenter notes screenshots also read. Independent review of this exact artifact remains pending.",
+    "not_demonstrated": [
+      "原典のInteractive slideを参考にした週別タブは局所拡張。Recharts、他preset、外部API、量的効果測定は未実施。",
+      "4週間・10問は架空の目標。FAQ改善や問い合わせ削減の実績はない。",
+      "元Vite8/Tailwind4.2.1のpeer不一致はTailwind4.2.2の固定lockへ局所修正。60fpsの定量計測・全端末の検査は未実施。"
+    ]
   },
-  "runtime_evidence": "source/browser-review.json",
-  "human_adoption": "pending"
+  "normal_motion": "source/round4-reveal-proof.json",
+  "current_build_log": "source/round4-build.txt",
+  "distribution_reexecution": "source/round4-zip-replay.json"
 }

@@ -1,0 +1,47 @@
+{
+  "status": "incomplete",
+  "receipts": [
+    {
+      "command": [
+        "node",
+        "<fixed-source-built-cli>",
+        "schema",
+        "--spec"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/schema-spec.txt"
+    },
+    {
+      "command": [
+        "node",
+        "<fixed-source-built-cli>",
+        "narratives",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/narratives.txt"
+    },
+    {
+      "command": [
+        "node",
+        "<fixed-source-built-cli>",
+        "themes",
+        "--json"
+      ],
+      "exit_code": 0,
+      "stdout": "source/pipeline/themes.txt"
+    },
+    {
+      "command": [
+        "node",
+        "<fixed-source-built-cli>",
+        "spec",
+        "validate",
+        "input/deck.spec.json"
+      ],
+      "exit_code": 1,
+      "stdout": "source/pipeline/spec-validate.txt"
+    }
+  ],
+  "no_pass_claim": true
+}

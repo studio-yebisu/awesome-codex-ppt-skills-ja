@@ -1,0 +1,47 @@
+{
+  "status": "original_gates_passed_visual_checked_independent_current_review_pending",
+  "page_count": 8,
+  "powerpoint_opened": true,
+  "render_method": "PowerPoint16 PDF -> RGB PNG",
+  "all_pages_visually_inspected": true,
+  "original_plan_validation": true,
+  "original_pptx_validation": true,
+  "original_pptx_warning_count": 24,
+  "original_aesthetic": {
+    "status": "PASS",
+    "score": 87.6,
+    "threshold": 85,
+    "code_unchanged": true,
+    "failure_modes": [],
+    "issues": [],
+    "right_underused_count": 0
+  },
+  "deck_sha256": "cb446b7743e618b687453716d72afcc2978ba93c641de9605a37d9f64ec72bd1",
+  "proof": "qa/current-pptx-inspection.json",
+  "history": "source/history/initial",
+  "limitations": [
+    "実演はnative経路。原典はpresentations/$slidesを優先し、ここでは原典PptxGenJSのローカルfallbackを使用。他3経路は未実施。",
+    "新規資料の原典合格条件には、Codex built-in imagegenで生成して保存した、頁の内容に合う画像が最低1枚必要。native図形やプレースホルダーで画像生成済みとはしない。",
+    "本例は表紙の実AI挿絵を保持。その他の頁はnative文字・図を計画し、画像生成必須=false・省略禁止=falseへ整合。必須画像を生成せず済ませた扱いにしない。",
+    "原典のnative APIを使い、日本語ラベル、文字箱、2列の項目、比較軸、工程の対応、締めの確認項目を派生差分として保存。原典ファイルとQA/閾値は未変更。",
+    "原典美術QAは87.6/PASS。右側未使用0件、overfillを含むfailure_modes/issue0件。possible-overlap警告は別の機能QAで保持し、全8頁の実物を確認。",
+    "書店企画と4週間は架空・実施前。開催実績や効果の測定値を作っていない。機械87.6点は独立採点の100点ではない。"
+  ],
+  "production_model": "Codex repair; no new Opus production",
+  "distribution_replay": "source/distribution-replay.json",
+  "both_distribution_archives_replayed": true,
+  "round5_followup": {
+    "asset_plan_flags_consistent": true,
+    "visual_pages_repaired": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "current_aesthetic_issue_count": 0,
+    "current_all8_individually_viewed": true
+  },
+  "visual_review_scope": "Current2/5actual pages read; other6pages identical RGB to the previously all8visually read revision.",
+  "vertical_density_review": "qa/vertical-density-review.json",
+  "automation_lifetime": "Only opened presentation closes; application Quit removed and both archives reexecuted."
+}

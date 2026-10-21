@@ -1,0 +1,28 @@
+{
+  "author": "Codex",
+  "archive_under_test": "keynot-example-ja.zip",
+  "archive_sha256_before_receipt_added": "0d50db1d265e2a5721fff0db6df27486da3b6a36fd77cbb4e27d9eef6af8b7aa",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "source/rebuild.py"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "Built6-page Keynot single HTML; original example controller verbatim + appended bridge, original CSS + local brand/layout overrides.\n"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "index.html",
+      "published_sha256": "078e982e32dc2f4460e79413579de9e5611b4e7e1d90a38a3232afc676581de6",
+      "replayed_sha256": "078e982e32dc2f4460e79413579de9e5611b4e7e1d90a38a3232afc676581de6",
+      "equal": true
+    }
+  ],
+  "all_commands_exit_zero": true,
+  "published_artifact_byte_identical": true,
+  "environment_scope": "Replayed from fresh extraction using existing compatible Python/Node/browser runtimes. Beatdeck reuses the locked existing node_modules through a junction; a fresh npm ci is not claimed.",
+  "independent_visual_review": "Not an evaluator score. The public current output was separately read in full."
+}

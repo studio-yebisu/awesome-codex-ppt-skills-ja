@@ -1,0 +1,232 @@
+{
+  "schema_version": "1.2",
+  "name": "町内会の受付用紙",
+  "direction": {
+    "communication_mode": "hybrid",
+    "visual_cluster": "community-instruction",
+    "character": [
+      "落ち着き",
+      "明確な順序",
+      "実用的な用紙"
+    ],
+    "reference_principles": [
+      "one unmistakable focal point per slide",
+      "large display type paired with compact support copy",
+      "light-dark section rhythm",
+      "evidence shown at useful scale",
+      "coherent identity without repeated card grids"
+    ],
+    "avoid": [
+      "generic title-and-bullets",
+      "dashboard-like card walls",
+      "tiny screenshots",
+      "decorative diagrams",
+      "weak contrast",
+      "marketplace-layout cloning"
+    ]
+  },
+  "art_direction": {
+    "visual_thesis": "申込書の罫線と大きな番号で、借りる人と担当者が同じ確認順序をたどれる資料。 The visual system uses a calm civic paper form, large Japanese type, shared baselines, and distinct native process diagrams to help residents follow the complete borrowing and return sequence.",
+    "reference_scope": {
+      "selected_cluster": "community-instruction",
+      "quality_floor": "大きな日本語、読める記入例、手順と照合表の異なる構図。",
+      "anti_copy": "原作者の紹介画像や構図は流用しない。"
+    },
+    "material_language": {
+      "background": "白い受付用紙と濃紺の区切りページ",
+      "surface": "影のない平面。用紙にだけ枠と罫線。",
+      "depth": "文字の大小と余白で順序を示す。"
+    },
+    "edge_language": {
+      "primary": "矩形の用紙、整列した罫線",
+      "secondary": "工程番号の円",
+      "overlap_policy": "本文は独立した領域に収める。"
+    },
+    "image_system": {
+      "roles": [
+        "申込書の記入例",
+        "受取りの手順",
+        "返却の照合表"
+      ],
+      "treatments": [
+        "native editable text",
+        "native flat shapes"
+      ],
+      "reuse_policy": "用紙と工程番号を必要なページだけで使う。",
+      "factual_visual_policy": "写真・画像・生成メディアなし。実物と誤認させない架空の記入例。"
+    },
+    "native_raster_strategy": {
+      "native": [
+        "all audience-facing copy",
+        "shapes and rules",
+        "charts and tables",
+        "exact labels",
+        "page furniture",
+        "links and accessibility metadata"
+      ],
+      "raster": [
+        "Delivery preview only: PowerPoint render parity, never flattened PPTX content"
+      ],
+      "prohibited": [
+        "flattened full slide as default",
+        "generated text image",
+        "rasterized chart labels",
+        "remote hotlink in final artifact"
+      ]
+    },
+    "slide_families": [
+      {
+        "id": "entry",
+        "purpose": "確認の全体像",
+        "macro_composition": "stage",
+        "image_occupation": "none",
+        "tone": "dark"
+      },
+      {
+        "id": "form",
+        "purpose": "申込みの具体例",
+        "macro_composition": "frame",
+        "image_occupation": "none",
+        "tone": "light"
+      },
+      {
+        "id": "flow",
+        "purpose": "受取りの順序",
+        "macro_composition": "spine",
+        "image_occupation": "none",
+        "tone": "light"
+      },
+      {
+        "id": "exception",
+        "purpose": "異常時の行動",
+        "macro_composition": "split",
+        "image_occupation": "none",
+        "tone": "dark"
+      },
+      {
+        "id": "return",
+        "purpose": "返却の照合",
+        "macro_composition": "matrix",
+        "image_occupation": "none",
+        "tone": "light"
+      },
+      {
+        "id": "close",
+        "purpose": "次にすること",
+        "macro_composition": "stage",
+        "image_occupation": "none",
+        "tone": "light"
+      }
+    ]
+  },
+  "canvas": {
+    "aspect_ratio": "16:9",
+    "width_px": 1600,
+    "height_px": 900,
+    "safe_margin_px": 72,
+    "columns": 12,
+    "gutter_px": 24,
+    "baseline_px": 8
+  },
+  "typography": {
+    "display_family": "Yu Gothic",
+    "body_family": "Yu Gothic",
+    "mono_family": "Consolas",
+    "fallback_policy": "system-font-safe",
+    "selection": {
+      "category_prior": "community-instruction",
+      "product_archetype": "町内会の受付案内",
+      "positioning": "急がず確認できる短い日本語",
+      "audience": "備品を借りる人と受付担当",
+      "personality": [
+        "明確",
+        "落ち着き",
+        "実用的"
+      ],
+      "proof_density": "記入例と確認表",
+      "interaction_model": "5分の説明と配布",
+      "rationale": "見出しと本文は游ゴシックで日本語の判読性を優先。大見出し35pt以上、本文20pt以上。数字は桁が読みやすいConsolas。 This community instruction deck uses large Yu Gothic text so residents and reception staff can read the same form and compare the same return checklist during a short explanation."
+    },
+    "sizes_px": {
+      "hero": 88,
+      "headline": 54,
+      "subhead": 32,
+      "body": 25,
+      "caption": 18,
+      "micro": 14
+    },
+    "max_headline_lines": 3,
+    "max_body_line_length_characters": 62,
+    "body_line_height": 1.28
+  },
+  "color": {
+    "accent": "#B7472A",
+    "positive": "#1F9D78",
+    "warning": "#D89A2B",
+    "negative": "#C84242",
+    "tones": {
+      "light": {
+        "background": "#F5F3ED",
+        "surface": "#FFFFFF",
+        "text": "#12324A",
+        "muted": "#435B6A",
+        "line": "#9DAEB4"
+      },
+      "dark": {
+        "background": "#12324A",
+        "surface": "#12324A",
+        "text": "#FFFFFF",
+        "muted": "#DBE4E8",
+        "line": "#7793A4"
+      },
+      "accent": {
+        "background": "#F15A3A",
+        "surface": "#E34D30",
+        "text": "#171817",
+        "muted": "#4A251D",
+        "line": "#B73A25"
+      }
+    }
+  },
+  "furniture": {
+    "default_enabled": [
+      "kicker",
+      "page-number",
+      "progress",
+      "frame-corners"
+    ],
+    "optional": [
+      "section-rail",
+      "ghost-marker",
+      "metric-strip",
+      "page-hint",
+      "source-line"
+    ],
+    "max_decorative_motifs_per_slide": 2,
+    "chrome_must_not_compete_with_claim": true
+  },
+  "rhythm": {
+    "min_distinct_topologies_per_10_slides": 5,
+    "max_consecutive_same_topology": 2,
+    "max_consecutive_same_tone": 3,
+    "min_tone_shifts_per_10_slides": 2,
+    "max_card_grid_ratio": 0.25,
+    "preferred_emphasis_sequence": [
+      "claim",
+      "evidence",
+      "claim",
+      "mechanism",
+      "proof",
+      "decision"
+    ]
+  },
+  "quality_floor": {
+    "thumbnail_test": "Primary hierarchy and deck rhythm remain visible at 12 percent scale",
+    "squint_test": "One focal region is unmistakable before copy is read",
+    "evidence_scale": "Proof objects are large enough to inspect rather than merely decorate",
+    "contrast": "Text and critical marks meet WCAG AA where applicable",
+    "copy_fit": "No headline wraps beyond its budget and no body is shrunk to solve overflow",
+    "reference_floor": "Visual identity, layout variation, and evidence staging must be at least as deliberate as the relevant supplied reference cluster",
+    "target_runtime": "Final visuals must be inspected in the requested delivery runtime"
+  }
+}

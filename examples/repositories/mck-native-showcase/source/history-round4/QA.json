@@ -1,0 +1,63 @@
+{
+  "status": "original_gates_all4_visual_checked_current_recheck_pending",
+  "s3_passed": true,
+  "s4_passed": true,
+  "original_gate_checklist": {
+    "user_code_errors": 0,
+    "engine_bug_errors": 1,
+    "warnings": 1
+  },
+  "original_whitelist_unmodified": true,
+  "powerpoint_rendered": true,
+  "page_count": 4,
+  "all4_rendered_images_inspected": true,
+  "visual_observations": [
+    "All4 current PowerPoint16 PDF-derived images inspected.",
+    "Original donut uses actual5category counts12/8/4/3/3 and summary of preset roles.",
+    "Short Japanese summary uses2semantic lines; no legend/text contact seen. Original dead_whitespace warning resolved without engine/QA changes.",
+    "Timeline 出力 remains0.47in outside original content boundary, visible on slide; original exemption explicitly retained."
+  ],
+  "independent_model_review": "Previous frozen version reviewed; repaired current version pending independent recheck",
+  "score_assigned_by_integrator": null,
+  "user_adoption": "not_requested",
+  "zip_replay": {
+    "status": "pass",
+    "evidence": "source/distribution-replay.json",
+    "both_archives_executed": true,
+    "render_replayed": true,
+    "all_pages_rgb_difference": 0
+  },
+  "font_registry_evidence": {
+    "hklm_registered": "BIZ UDGothic & BIZ UDPGothic (TrueType)",
+    "file": "BIZ-UDGothicR.ttc",
+    "render_reported_font": "BIZ UDPGothic"
+  },
+  "original_gate_score": 94,
+  "repair": {
+    "trigger": "Round3 independent visual finding: unused lower donut area",
+    "changes": [
+      "Input supplies concise2line summary to original donut optional summary argument",
+      "No original engine/geometry/style/QA change; all4native methods retained"
+    ],
+    "upstream_engine_modified": false
+  },
+  "known_issues": [
+    {
+      "page": 2,
+      "original_gate_category": "shape_overlap",
+      "meaning": "Original center count/subtitle text boxes overlap16%; actual30and収録字体 glyphs are separated."
+    },
+    {
+      "page": 4,
+      "original_gate_category": "chart_legend_overflow",
+      "meaning": "Original 出力 label exceeds content-area RIGHT0.47in and original whitelist exempts it. Content-area containment is not claimed."
+    }
+  ],
+  "round2_review_followup": {
+    "issue": "Previous effect text incorrectly described gate exception as empty textbox and claimed content-width containment",
+    "gate_fact": "Slide4 chart_legend_overflow: 出力 label overflows content area RIGHT by 0.47in, exempt under original whitelist",
+    "visible_scope": "Text appears on slide; content-area containment is not claimed",
+    "original_gate_warnings_retained": true
+  },
+  "deck_sha256": "f4822974e116f7d56a0328ce5ddcfb7ae10b3e51c4b2eeda8aaf857cd1412cf2"
+}

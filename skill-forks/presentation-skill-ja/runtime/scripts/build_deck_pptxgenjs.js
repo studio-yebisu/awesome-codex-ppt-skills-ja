@@ -645,14 +645,15 @@ const UNSUPPORTED_VARIANTS = new Set([
 ]);
 
 const FONT_PAIRS = {
-  handoff_ja_v1: { font_heading: 'Shippori Mincho', font_body: 'BIZ UDPGothic', font_number: 'Manrope', font_table_header: 'BIZ UDPGothic' },
   system_clean_v1: {
     font_heading: 'Trebuchet MS',
     font_body: 'Calibri',
   },
   editorial_serif_v1: {
-    font_heading: 'Georgia',
-    font_body: 'Calibri',
+    font_heading: 'Shippori Mincho',
+    font_body: 'BIZ UDPGothic',
+    font_number: 'Manrope',
+    font_table_header: 'BIZ UDPGothic',
   },
   clean_modern_v1: {
     font_heading: 'Helvetica Neue',

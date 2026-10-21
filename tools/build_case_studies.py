@@ -92,7 +92,13 @@ def guizang(cid,title,roster,style,folder):
 const upstreamGo=go;
 go=function(n,opts={}){if(matchMedia('(prefers-reduced-motion: reduce)').matches)opts.force=true;upstreamGo(n,opts);if(parent!==window)parent.postMessage({type:'yebisu-page',index:idx},location.origin)};
 window.addEventListener('message',e=>{if(e.source!==parent||e.origin!==location.origin||e.data?.type!=='yebisu-slide'||!Number.isInteger(e.data.index))return;go(e.data.index,{force:true})});"""
-    return finish(doc.replace("</body>","<script>"+sync+"</script></body>"),DATA["knowledge" if cid=="knowledge-search" else "harbor"]["title"],style,"guizang")
+    result=finish(doc.replace("</body>","<script>"+sync+"</script></body>"),DATA["knowledge" if cid=="knowledge-search" else "harbor"]["title"],style,"guizang")
+    if cid=="port-town":
+        import importlib.util
+        path=folder/'source/port_locale_notes.py'
+        spec=importlib.util.spec_from_file_location('port_locale_notes',path);module=importlib.util.module_from_spec(spec);spec.loader.exec_module(module)
+        result=module.apply_locale_notes(result)
+    return result
 def evidence(repo,cid):
     upstream=UP/repo.replace("/","__")
     if repo=="hugohe3/ppt-master":

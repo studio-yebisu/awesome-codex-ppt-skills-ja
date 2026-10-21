@@ -1,24 +1,25 @@
 {
-  "status": "light_check_complete",
+  "status": "original_render_and_all6_visual_check_complete",
   "checks": {
     "actual_numpy_lstsq": "success: slope0.8 intercept1.4 SSE3.6 (rounded); full floating point values in output/results.json",
     "quarto_render": "exit0 / Output created: index.html / portable1.9.38 / original extension0.4.1",
     "initial_major_display": "dedicated Chrome tab; Japanese title + table; original Reveal displays1/6",
-    "native_navigation": "ArrowRight → scatter plot,2/6",
+    "native_navigation": "ArrowRight through six pages and Home back to page1; correct page counter and notes observed.",
     "representative_artifacts": "only 0 and1,1600x900, original Reveal5.1.0",
     "resource_condition": "representative export requested only index.html; font/SVG/runtime/math inline",
-    "short_skill_quick_validate": "Skill is valid! exit0"
+    "short_skill_quick_validate": "Skill is valid! exit0",
+    "all6_visual": "All six pages inspected in the browser at 1280x720; original Reveal scales the 1600x900 canvas.",
+    "code_frame_repair": "Local SCSS aligns sourceCode background and pre/code widths; no original extension/runtime changes.",
+    "zip_replay": "Extracted example ZIP: Python calculation and original Quarto render exit0; NumPy 2.4.4, Matplotlib 3.11.1. Existing dependencies; extracted rebuild not visually reinspected."
   },
   "known_warning": "Quarto1.9.38 SCSS color-variable export parser warning, non-fatal; CSS is generated and initial white/blue/font display is correct. No replacement of original SCSS.",
   "not_performed": [
-    "all-slide detailed visual inspection",
-    "independent reviewer/scoring",
-    "all-ZIP rerun",
+    "independent re-review after repair",
     "PowerPoint export"
   ],
   "limits": "synthetic unitless teaching data only; HTML/QMD/SVG edits, no native PPTX",
   "display_proof": {
-    "purpose": "Two representative artifact exports only; no all-slide review",
+    "purpose": "All six pages after neutral-title/context-size/layout repair; actual 1280x720 browser screenshots captured after CSS animations settled.",
     "first": {
       "index": 0,
       "count": 6,
@@ -34,6 +35,84 @@
     },
     "requested_resources": [
       "http://127.0.0.1:8944/index.html"
+    ],
+    "pages": [
+      {
+        "index": 1,
+        "image": "render/effect-page-01-after.jpg",
+        "sha256": "197275dfffb3aa16bfdb8225af11ff14573278ae0e25c1aeeee1f610096cd91e"
+      },
+      {
+        "index": 2,
+        "image": "render/effect-page-02-after.jpg",
+        "sha256": "2dd2bbc8c362b5038794bfd5862460551b40d5406d71473ea1da10251da809bc"
+      },
+      {
+        "index": 3,
+        "image": "render/effect-page-03-after.jpg",
+        "sha256": "fdb731959fa52bd0eaa30e2544a4c33639ab4de5acb7fb9e8b248288c6b0f00e"
+      },
+      {
+        "index": 4,
+        "image": "render/effect-page-04-after.jpg",
+        "sha256": "910f9c893a8fcfdff5b8399aa5973f5b47bc0c8dae75e790bdf3639da3843bec"
+      },
+      {
+        "index": 5,
+        "image": "render/effect-page-05-after.jpg",
+        "sha256": "39ec2282c2a0933acb7916360dd125928c2e285cdd9a6d4b6beb40a0745ad2b5"
+      },
+      {
+        "index": 6,
+        "image": "render/effect-page-06-after.jpg",
+        "sha256": "4aba58b85629e9b07ba131a86a77fde0fc94aea204346deb2477a3827e0ad6ca"
+      }
     ]
+  },
+  "independent_review": "pending_after_repair",
+  "current_calculation": {
+    "data_kind": "synthetic teaching points; unitless",
+    "numpy_version": "2.4.4",
+    "matplotlib_version": "3.11.1",
+    "x": [
+      0.0,
+      1.0,
+      2.0,
+      3.0,
+      4.0
+    ],
+    "y": [
+      1.0,
+      3.0,
+      2.0,
+      5.0,
+      4.0
+    ],
+    "slope": 0.7999999999999999,
+    "intercept": 1.3999999999999997,
+    "fitted_y": [
+      1.3999999999999997,
+      2.1999999999999997,
+      2.9999999999999996,
+      3.7999999999999994,
+      4.6
+    ],
+    "residual_y": [
+      -0.3999999999999997,
+      0.8000000000000003,
+      -0.9999999999999996,
+      1.2000000000000006,
+      -0.5999999999999996
+    ],
+    "sum_squared_residuals": 3.6000000000000005,
+    "lstsq_returned_residuals": [
+      3.600000000000002
+    ],
+    "rank": 2,
+    "singular_values": [
+      5.788593144588943,
+      1.2215520481820972
+    ],
+    "display_equation": "y = 0.8x + 1.4"
   }
 }

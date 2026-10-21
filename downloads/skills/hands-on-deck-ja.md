@@ -1,39 +1,63 @@
 ---
 name: hands-on-deck-ja
-description: EveryInc/hands-on-deckの方式で日本語スライドを制作・再現する。原典固有の生成器・テンプレート・実装と個別条件を保ち、実制作例を参考に日本語の資料を作るときに使う。
+description: 元資料の要素IDを指定し、文章・書式・配置を差分で直し、変更していない部品を照合できる。
 ---
 
-# hands-on-deck-ja
+## このスキルでできること
 
-Studio Yebisuの日本語派生版。原作者の公式翻訳ではありません。
+元資料の要素IDを指定し、文章・書式・配置を差分で直し、変更していない部品を照合できる。
 
-## 原典を読む
+- 困っている状況: 既存PPTXの一部を直したいのに、全面生成し直すと元の書式や内容を失いやすい。
+- 必要な入力: 編集する既存PPTX、変更したい文章・書式・配置、必要に応じて追加する素材。
+- 受け取るもの: 差分を適用した編集可能なPPTXと、適用patch・変更前後のdiff・描画確認の記録。
+- 必要環境: Python3.10+ / python-pptxほか原典requirements / PowerPoint、元資料と同じOS字体。元資料をinput/donor.pptxへ固定。
+- 作例で試した範囲: 既存5頁の同じ要素IDに203操作を適用。表紙の来訪者図を点検基準として説明し、表と脚注の位置を調整した。master/layoutはXML内容、theme/mediaはbyteで保持を照合した。
 
-- upstream/skills/hands-on-deck/SKILL.md
 
-同梱references/WORKFLOW.mdで、実作例・入力・環境・コマンドと確認範囲を読む。
+# 既存PPTXを検査し、JSON差分で編集する
 
-## 固有の制作方式
+既存PPTXをstable IDで差分編集し、保持部分を照合する。
 
-原典deck.pyのinspect・atomic JSON patch・apply・fix・diffで既存PPTXを編集する。自作日本語ドナーの図形構造を保って本文・文字サイズ・ノートを更新。元shape ID、入力と差分を残し、全ページを独立レビューする。fix advisoryと実際の見切れを区別し、新しい出力へ元QAを移さない。
+## 入力と出力
 
-## 既存の日本語PPTXを編集する
+渡すもの：編集する既存PPTX、変更したい文章・書式・配置、必要に応じて追加する素材。
 
-元のPPTXを別ファイルに保全し、原典inspectでページ・shape ID・文字・書式を調べる。目的を先に決め、本文・文字サイズ・ノートの変更をatomic patchとして記録する。apply、fix、diffを実行し、元と結果の対応を残す。fixの整列advisoryは実際の描画で判断し、警告だけを機械的に解消しない。
+得られるもの：差分を適用した編集可能なPPTXと、適用patch・変更前後のdiff・描画確認の記録。
 
-当作例の編集元はこのプロジェクトの自作CyberPPT資料。ドナーのSHAと権利表示をinputに保持する。上流の配布条件不明な既存PPTXを無断で素材に替えない。新しい文字で生成した出力は全ページを確認し、元のQAを引き継がない。
+原典 [EveryInc/hands-on-deck](https://github.com/EveryInc/hands-on-deck/tree/a24b996ecff6393ccf39c4fee2b88c493fb0b693)、固定commit `a24b996ecff6393ccf39c4fee2b88c493fb0b693`。原文と利用条件を保存した日本語派生で、公式翻訳ではありません。
 
-## 日本語で完成させる
+## 使う手順
 
-- 先に読み手、目的、結論、必要なページ、出力形式を決める。
-- 入力の出典と数値を確認し、万円・件・%・ポイントを区別する。架空条件と評価目標を実績に見せない。
-- 日本語の見出しは意味の区切りで改行し、数字と単位が不自然に分かれないようにする。
-- Webは必要文字を収録したOFL書体を埋め込む。PowerPointは受け手の書体環境を案内し、主要な完成ファイルが開くことを確認する。
-- 原典の方式で実ファイルを生成し、主要な出力の初回表示を確認する。原典の必須ビルド確認は維持し、明白な欠けだけ直す。
+1. 元PPTXを原典deck.py inspectへ渡し、0始まりの頁とstable shape ID、現在の書式・配置を調べる。
+2. 対象IDへset-text/set-style/move/resizeなど必要な変更だけをJSON patchに書く。
+3. 原典apply→fix→inspect→diffを実行し、実際に適用された操作と残るalignment助言を読む。
+4. 元資料と変更版を描画し、文字・図表の読みやすさと対象外の部品を照合する。
 
-## 再現と利用条件
+## この作例で試した範囲
 
-完成例と再現キットはカタログの当該リポに掲載。環境と制約はreferences/WORKFLOW.mdに記載する。上流コードと書体の条件はupstream内の原文を保持し、カタログのCC0を上流へ適用しない。
+既存5頁の同じ要素IDに203操作を適用。表紙の来訪者図を点検基準として説明し、表と脚注の位置を調整した。master/layoutはXML内容、theme/mediaはbyteで保持を照合した。
+
+**1頁：イベント案内の公開前チェック**：右の副題「来訪者の行動を、点検の基準にする」と下の要点を見る。元の3アイコンは点検担当者の工程ではなく、案内を読む人の行動として説明した。 既存のアイコン・矢印を作り直さず、stable shape IDへのset-textとノート更新で内容を改める。
+
+**3頁：見つけた問題を、次の対応につなげる**：変更後の表の左右余白、2本の注記、下の要点帯を見る。原稿更新と表全体の位置/サイズ変更を分けて適用した。 set-textとmove/resizeで対象要素を変更。対象外の部品はXML内容と画像byteを分けて照合する。
+
+**4頁：原稿の確認と、公開後の更新を分担する**：右の表の最下行と、その下の「この表は担当を決めるための案」の間隔を見る。脚注を0.10インチ下げ、要点帯に触れず表から離した。 原典のapply→fix→diff→render loopで変更箇所を確認し、機械のalignment助言と実文字の読みやすさを区別する。
+
+## 用意するもの
+
+- Python3.10+ / python-pptxほか原典requirements
+- PowerPoint、元資料と同じOS字体。元資料をinput/donor.pptxへ固定。
+
+## 制約と未実施
+
+- 作例は既存5頁へ203操作を適用。set-text79・set-style21・move50・resize47・set-notes5・set-props1。新規制作、html2patch、merge、画像交換は未実施。
+- 元資料はカタログ内の過去CyberPPT派生作例を固定SHAで保存した架空資料。実際の地域の運用規則ではない。
+- 元と結果の34部品を比較し、theme/media8部品はbyte一致。master/layoutとその参照26部品はXML再保存でbyteが変わるが、要素・属性・文字と参照ID/対象は一致。
+- 原典fixは0修正/残留0だが、inspectのalignment助言は残る。表は文字と図形で構成し、native chart編集は未対応。OS字体は非再配布。
+
+現在版は制作側が全頁の実画像を確認しています。独立モデルの現在版再評価・人間の採用とは別です。自己採点はしていません。現在hashと検査は [example/QA.json](example/QA.json)、実行範囲は [example/PROVENANCE.json](example/PROVENANCE.json)、再実行は [example/REPRODUCE.md](example/REPRODUCE.md) を参照してください。
+
+原文は upstream/、現在作例は example/。再実行CWDは example/ です。
 
 ## 単体の本文から使う
 
@@ -41,7 +65,7 @@ Studio Yebisuの日本語派生版。原作者の公式翻訳ではありませ�
 
 原典: https://github.com/EveryInc/hands-on-deck/tree/a24b996ecff6393ccf39c4fee2b88c493fb0b693
 
-本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `hands-on-deck-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は公式配布物とOFL原文を利用する。
+本文内の `upstream/`・`references/`・制作ソースは、サイトの一式ZIP `hands-on-deck-ja.zip` を展開した中の参照です。単体Markdownには実装や素材を内包しません。ZIPを渡すか、固定原典から必要ファイルを取得して制作する。書体は各作例の入手元と利用条件に従い、再配布できるファイルだけを添える。
 
 原作者: EveryInc / 原典条件: MIT。公式日本語版ではありません。原文LICENSE・NOTICEと素材・書体の条件を保持し、カタログのCC0を原典へ広げない。
 

@@ -33,7 +33,7 @@ def page(n):
       for i,(label,y) in enumerate([('SNS',361),('Web',478),('掲示板',595)]):
         r('source-box-'+str(i),[73,y,331,92],stroke='9A5A2E',width=1.2);t('source-label-'+str(i),label,[100,y+20,277,50],21,bold=True,align='center')
       r('list-box',[600,392,472,254],stroke='9A5A2E',width=1.2);t('list-label','共通のイベント一覧',[642,484,399,76],25,bold=True,align='center')
-      r('details-box',[1217,392,415,254],stroke='9A5A2E',width=1.2);t('details-label','各店の詳しい案内への\nリンク',[1232,472,385,100],19,bold=True,align='center')
+      r('details-box',[1217,392,415,254],stroke='9A5A2E',width=1.2);t('details-label','各店の詳しい案内\nへのリンク',[1232,472,385,100],19,bold=True,align='center')
       l('route-1',[404,407,195,73],color='9A5A2E',arrow=True);l('route-2',[404,521,195,.5],color='9A5A2E',arrow=True);l('route-3',[404,560,195,78],color='9A5A2E',arrow=True,flipV=True);l('route-4',[1072,521,144,.5],color='9A5A2E',arrow=True)
       t('caveat','現地調査は未実施',[39,729,500,36],14);l('bottom-rule',[40,804,1592,.5],color='9A5A2E');t('takeaway',a['so_what'][0],[40,832,1290,62],27,bold=True,color='9A5A2E');t('footer','架空の企画例。課題は検証前の仮説です。',[1348,875,289,31],8)
     else:
@@ -53,10 +53,10 @@ def page(n):
           if n==3 and c==1:label=label.replace('）','）\n')
           if n==3 and row==0 and c==3:label='入場無料／\n購入は別'
           if n==3 and row==0 and c==4:label='小雨実施・\n荒天中止'
-          if n==5 and row==0 and c==1:label='来訪者に目的の案内を探して\nもらう'
-          if n==5 and row==2 and c==2:label='文字の読みやすさ・\n問い合わせ'
+          if n==5 and row==0 and c==1:label='来訪者に目的の案内を\n探してもらう'
+          if n==5 and row==2 and c==2:label='文字の読みやすさ・問い合わせ'
           pad=140 if n==4 and c==0 else 27 if n==3 else 40
-          t(f'cell-{row}-{c}',label,[xs[c]+pad,ys[row+1]+20,xs[c+1]-xs[c]-pad-20,ys[row+2]-ys[row+1]-40],19 if n==3 else 20,bold=n==4 and c==0 or n==5 and c==0)
+          t(f'cell-{row}-{c}',label,[xs[c]+pad,ys[row+1]+20,xs[c+1]-xs[c]-pad-20,ys[row+2]-ys[row+1]-40],21 if n==3 else 20,bold=True)
         if n==4:
           cy=[393,535,677][row];add('step-disc-'+str(row),'ellipse',[89,cy-30,60,60],fill='9A5A2E',stroke='none');t('step-number-'+str(row),str(row+1),[91,cy-25,56,50],24,bold=True,color='FFFFFF',align='center')
           if row<2:l('step-arrow-'+str(row),[119,cy+37,.5,69],color='9A5A2E',arrow=True,width=1.2)
@@ -66,10 +66,34 @@ def page(n):
         t('note-1',a['annotations'][0],[50,773,1540,40],15);l('bottom-rule',[49,835,1575,.5],color='9A5A2E');t('takeaway',a['so_what'][0],[400,849,873,58],24,bold=True,color='9A5A2E',align='center');t('footer','架空の企画例。担当体制は提案であり未合意。',[1288,894,339,27],8)
       if n==5:
         t('note-1',a['annotations'][0],[50,683,1550,49],19);t('note-2',a['annotations'][1],[50,736,1550,49],19);l('bottom-rule',[51,811,1570,.5],width=1.4);t('takeaway',a['so_what'][0],[51,829,1250,75],29,bold=True,color='9A5A2E');t('footer','架空の企画例。試行は提案であり未実施。',[1300,875,330,29],9)
+    # Explicit readability adaptation, distinct from strict 1:1 fidelity.
+    for e in E:
+      if e['element_id']=='footer':
+        e['draw_bbox_px']={'x':40,'y':912,'w':1592,'h':26};e['font_size_pt']=11;e['color']='514B44'
+    # Codex readability repair: keep original blueprint bounds, disclose draw-only offsets.
+    for e in E:
+      if e['element_id']=='footer':
+        e['draw_bbox_px']={'x':40,'y':900,'w':1592,'h':26}
+      if n==3 and e['element_id']=='bottom-rule':
+        e['draw_bbox_px']={'x':35,'y':829,'w':1604,'h':.5}
+      if n==3 and e['element_id']=='takeaway':
+        e['draw_bbox_px']={'x':35,'y':840,'w':1550,'h':45}
+      if n==5 and e['element_id']=='cell-2-2':
+        b=e['blueprint_bbox_px'];e['draw_bbox_px']={**b,'x':b['x']-20,'w':b['w']+35}
+
+    # Actual PowerPoint TextFrame2 extents: expand local text boxes, retaining centres.
+    for e in E:
+      key=e['element_id'];b=e.get('draw_bbox_px',e['blueprint_bbox_px'])
+      if n==1 and key=='page-number':e['draw_bbox_px']={**b,'y':15,'w':220,'h':200}
+      if n==2 and key=='list-label':e['draw_bbox_px']={**b,'x':634,'w':415}
+      if n==3 and key in ['cell-1-1','cell-2-1']:e['draw_bbox_px']={**b,'x':b['x']-6,'w':b['w']+12}
+      if n==3 and key=='takeaway':e['draw_bbox_px']={**b,'y':836,'h':54}
+      if n==5 and key=='page-number':e['draw_bbox_px']={**b,'y':58,'h':74}
+
     # Thin strokes need a non-empty comparison crop; preserve draw geometry separately.
     for e in E:
       if e['kind']=='line':
-        e['draw_bbox_px']=dict(e['blueprint_bbox_px'])
+        e.setdefault('draw_bbox_px',dict(e['blueprint_bbox_px']))
         b=e['blueprint_bbox_px']
         if b['h']<4:b['y']-=2;b['h']=5
         if b['w']<4:b['x']-=2;b['w']=5

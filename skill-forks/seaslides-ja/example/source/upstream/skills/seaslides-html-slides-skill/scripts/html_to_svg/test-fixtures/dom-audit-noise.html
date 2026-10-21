@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <style>
+    html, body, #deck { margin: 0; width: 1280px; height: 720px; overflow: hidden; }
+    .slide { position: relative; width: 1280px; height: 720px; overflow: visible; }
+    h1, p { position: absolute; margin: 0; width: 400px; height: 50px; font: 32px sans-serif; }
+    h1 { left: 100px; top: 100px; }
+    p { left: 120px; top: 120px; }
+    .outside { left: 1150px; top: 680px; width: 220px; height: 80px; }
+    .ps-root p { left: 100px; top: 300px; }
+    .ps-root p + p { left: 120px; top: 320px; }
+    .telemetry-only::after { content: ''; position: absolute; left: 1300px; top: 0; width: 20px; height: 20px; }
+  </style>
+</head>
+<body>
+  <main id="deck">
+    <section class="slide active" data-notes="audit fixture">
+      <h1>Heading collision</h1>
+      <p>Body collision</p>
+      <p class="outside">Escapes canvas</p>
+      <div class="ps-root"><p>Pseudocode line one</p><p>Pseudocode line two</p></div>
+    </section>
+    <section class="slide telemetry-only" data-notes="scroll telemetry fixture"><h1>Telemetry only</h1></section>
+  </main>
+</body>
+</html>

@@ -1,27 +1,24 @@
 {
   "updated_at": "2026-10-15",
-  "status": "complete",
-  "objective": "Studio Yebisu独自の日本語AIスライドサイトを育てる。幅広いGitHub原典の固有スキル・テンプレート・CLIを実際に使い、日本語の美しい資料と具体的な作り方をリポごとに揃える。完成作例・短い日本語スキルの直接取得・制作一式・OSS書体とAI向け指示を結び付け、日本語ユーザーが「作例を見る→日本語スキルを取得→自分の内容で作る」まで迷わず進めるようにする。今後の既定モデルはユーザー最新指示によりClaude Opus 5.5。既存の掲載作例はSol 6.1中心の並列制作の実績として扱う。元209件は棚卸しと資料を保持し、使わないものを現行掲載から外せる。Astraと大規模QAを使わず、必要なビルドと主要出力の初回表示を確認する。少数の新作バッチだけを全体完了に読み替えない。",
+  "status": "in_progress",
+  "objective": "GitHubのスライドスキルが何を改善し、どんな入力で何を作れ、その特徴が作例のどのページに表れるかを比較できる日本語サイトに改める。原典の効果説明、作例での活用、視覚品質の三軸でKimi K3とClaude Opus 5.5に独立評価を依頼し、同じ版で両者100/100まで修正と再評価を続ける。冗長な説明とポエム的な表現を使わない。",
   "production_model": "claude-opus-5-5",
   "production_model_note": "2026-10-15のユーザー最新指示で今後の既定をclaude-opus-5-5へ変更。2026-10-14までの作例とcurrent_batchはgpt-6.1-solの並列制作の記録として保持する。使っていないモデルを使用済みと記さない。",
   "parallel_production": true,
   "astra_enabled": false,
-  "quality_policy": "build_and_primary_output_only",
+  "quality_policy": "source_faithful_skill_effects_and_independent_dual_review",
   "completion": [
-    "現行掲載の各リポに原典方式で生成した日本語作例と入力・作り方がある",
-    "原典を使った魅力ある日本語資料が複数の制作方式・作風をカバーする",
-    "作風から選ぶ一覧とフロート再生が完成資料へつながる",
-    "日本語スキル本文の直接取得、一式ZIP、固定原典と個別条件を案内する",
-    "OSS書体とAI向けの書体・デザイン指示を実制作で活用できる"
+    "原典スキルの効果・入力・出力・利用条件から選べる",
+    "原典の特徴と作例の該当ページが対応し、自分の資料への使い方につながる",
+    "実スライドの読みやすさとPC/スマホの操作を確認する",
+    "同じ版をKimi K3とClaude Opus 5.5が固定3軸で独立評価し、両者100/100に達する",
+    "公式配布元のフリーフォントを用途・見本・個別取得・公式リンクから選べる"
   ],
   "excluded_requirements": [
-    "209件すべての制作",
-    "全ページの詳細目視",
-    "独立モデルレビュー",
-    "全キットの完全再実行",
-    "巨大QA台帳と採点"
+    "原209件すべての作例制作",
+    "外部公開・deploy（今回の作業範囲はローカル改訂）"
   ],
-  "app_goal_note": "アプリの既存goal APIはobjectiveの編集を提供しないため、実行目標の改訂はこのファイルとdocs/PROJECT.mdを正本にする。未達成の旧goalを完了扱いにしない。",
+  "app_goal_note": "この会話の継続goalと本ファイルで、同じ凍結版の両者100/100を完了条件として追跡する。未達の作業を完了扱いにしない。",
   "last_completed_batch": "2026-10-14: 原典Quarto・字体生成と色彩・1頁1HTMLで18枚、元scene kitで8段階。厳選61スキル346枚＋23段階。公式JetBrains Monoと技術発表指示を追加。",
   "current_batch": {
     "status": "integrated_locally",
@@ -59,8 +56,8 @@
   "site_edition": {
     "date": "2026-10-15",
     "requested_model": "claude-opus-5-5",
-    "scope": "サイト構成・日本語ガイド・使い方の改訂。作例・スキル本文・制作一式・台帳は対象外",
-    "status": "verified_locally",
+    "scope": "スキルの効果から選ぶ構成、原典と作例の接続、フォント30ファミリー、作例の新規制作・修復、独立評価",
+    "status": "revising_under_independent_review",
     "files": [
       "tools/build_atelier_site.py",
       "assets/yebisu-atelier.css",
@@ -132,5 +129,27 @@
       ],
       "result": "公式原配布10ファミリー17ファイル/8セット。見出し・本文・英数字・コードの指示と実字体。依頼フォームのコード役/希望8段階を実表示"
     }
-  ]
+  ],
+  "skill_effect_review": {
+    "requested_on": "2026-10-15",
+    "status": "repairing_after_initial_full_catalog_review",
+    "reviewers": [
+      "kimi-code/k3",
+      "claude-opus-5-5"
+    ],
+    "axes": {
+      "source_fidelity": 35,
+      "demonstration": 35,
+      "visual_quality_and_ux": 30
+    },
+    "stop_condition": "Both independent reviewers score 100/100 on the same frozen snapshot; no unverified core scope is treated as passed.",
+    "scope": "All 61 active repositories; preserve historical examples and evaluate actual usage/visual evidence.",
+    "documentation": "docs/SKILL_EFFECT_REVIEW.md",
+    "baseline_scores": {
+      "kimi_k3": 76,
+      "claude_opus_5_5": 42,
+      "scope": "代表6件の初回評価。現在版の点数ではない。"
+    },
+    "initial_full_catalog_scores": "data/review-progress.json"
+  }
 }

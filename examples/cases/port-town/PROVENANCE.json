@@ -39,5 +39,29 @@
   "license": "AGPL-3.0",
   "fonts": "licenses/fonts",
   "qa": "QA.json",
-  "render_report": null
+  "render_report": null,
+  "codex_web8_repair": {
+    "author": "Codex",
+    "scope": "Current source repair, actual original-path gates and page review; earlier production attribution retained only for earlier scope",
+    "qa": "QA.json"
+  },
+  "current_round4_repair": {
+    "author": "Codex",
+    "artifact": "index.html",
+    "artifact_sha256": "ba54ec322779811a2ac6b646493bec0e7e83a8ebb5a04beec9761c6f5b749bda",
+    "qa": "QA.json",
+    "changes": [
+      "原典Style A templateを使用し、頁IDと7件の固有講稿を一対一に結ぶ。",
+      "原典Pボタン→次へ6回を操作し、現在/次頁と全7講稿を1920×1440で保存。全メモがスクロールなしで収まる。",
+      "3頁はPipelineの順序を6停留所へ横展開した派生。5頁は原典Layout3の計画値表示。暗→明のテーマ間隔を保つ。",
+      "原文validatorの中国語ラベル不一致3件を保持し、日本語期待値だけの差分では0件。固定1280×720 iframeを等比縮小し、次頁にも十分な高さを配る局所CSS差分。"
+    ],
+    "not_demonstrated": [
+      "Swiss、画像グリッド、スクリーンショット整形、WebGL背景の動き、Step0の上流更新確認は今回未実証。",
+      "独立した観客画面を人が見て同期確認した範囲は未達。同期済みUI表示、現在/次iframeの確認とは区別する。レーザー/囲む・黒白幕・freeze・リハーサル・自動送りも未実証。",
+      "発表者画面の画像は制作側の実ブラウザー操作。直接file表示とHTTP表示の双方を同一条件で比較していない。サイト内作例とQAは同一originのHTTPで配信。",
+      "原典一般ルールの全段階達成を宣言しない。大きな表や長文研修、複数人編集には別方式が適する。"
+    ],
+    "independent_review": "pending"
+  }
 }

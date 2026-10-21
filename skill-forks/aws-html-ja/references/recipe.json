@@ -1,0 +1,22 @@
+{
+  "case_id": "aws-html-showcase",
+  "entrypoints": [
+    "python rebuild.py --case-only",
+    "python source/check_label_alignment.py"
+  ],
+  "features": [
+    "原典PPT conversionのextract-pptx.py",
+    "原典Neonのcontroller・移動・reveal animation",
+    "元OOXMLの図形を補助抽出し、15ラベルだけ出力で中央揃え"
+  ],
+  "scope": [
+    "ネイティブ図形のSVG化と中央揃えは作例の補助実装で、原典extractor単体の機能ではない",
+    "入力PPTXは無改変。変換後2・3頁の15ラベルだけx/anchorを変更",
+    "この入力に画像と講稿はなく、それらの抽出を実証した例ではない",
+    "HTML/SVG編集用。新しい編集可能PPTXは出力しない",
+    "AWS/原作者との公認・提携ではない"
+  ],
+  "qa": "example/QA.json",
+  "input": "example/input/BRIEF.md",
+  "repair_author": "Codex"
+}

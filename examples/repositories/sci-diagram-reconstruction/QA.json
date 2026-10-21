@@ -1,0 +1,125 @@
+{
+  "status": "technical_checks_and_agent_visual_inspection_complete",
+  "accepted_pass": "pass-01",
+  "slide_count": 1,
+  "upstream_checker": {
+    "status": "PASS",
+    "hard_failures": 0,
+    "warnings": 0,
+    "next_action": "deliver",
+    "report": "qa/check-pass-01.json"
+  },
+  "renderers": [
+    "Microsoft PowerPoint 16.0",
+    "LibreOffice 24.2.5.2 via original isolated renderer"
+  ],
+  "source_byte_equality": true,
+  "native_edit_test": {
+    "application": "Microsoft PowerPoint",
+    "slide_count": 1,
+    "shape_count": 18,
+    "text_shape_count": 10,
+    "picture_count": 0,
+    "test": "Native label changed in a separate copy, saved, and reopened",
+    "original_label": "海・湖の水",
+    "edited_label": "湖の水",
+    "saved_edit_reopened": true,
+    "original_pptx_untouched": true,
+    "edited_pptx": "native-label-edited.pptx",
+    "edited_pdf": "native-label-edited.pdf",
+    "render_pipeline": "PowerPoint PDF export → Poppler pdftoppm PNG, 1600px width",
+    "pptx_sha256": "9ab00dffc40e761335635388a9ec0e3512db3b526d9b080f11c7c4d898df08b3",
+    "image_sha256": "073d13cb286b6ab8cb2173446db04e15fa179748621acf0b3f7e51ccfc197851",
+    "original_pptx_sha256": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0"
+  },
+  "agent_visual_inspection": {
+    "reviewer": "Codex",
+    "inspected_files": [
+      "input/source.png",
+      "render/slide-01.png",
+      "qa/editability/native-label-edited.png",
+      "qa/editability/native-shapes-edited.png"
+    ],
+    "checks": [
+      "Original Japanese text retained",
+      "Four relationships and arrow directions retained",
+      "Source box positions retained",
+      "No visible clipping or serious overlap",
+      "Separate native box fill and arrow color/width visibly changed in saved/reopened QA copy",
+      "No clipping or text changes in shape-edit proof"
+    ],
+    "blockers": []
+  },
+  "independent_kimi_opus_review": "Pending for the current R13 source; historical fixed-version reviews are not transferred.",
+  "human_review": false,
+  "measured_time_saving": false,
+  "aesthetic_improvement_comparison": false,
+  "native_edit_test_report": "qa/editability/native-editability.json",
+  "render_preview_pipeline": "PowerPoint PDF export → Poppler pdftoppm PNG, 1600px width",
+  "repair_20261015": {
+    "scope": "Preview render and published native text edit proof",
+    "original_reconstruction_changed": false,
+    "independent_review": "pending"
+  },
+  "approximation_note_ja": "箱の塗り色は入力よりわずかに灰色寄りの近似です。原典の優先順位に従い、意味・ラベル・矢印の方向・編集性を保っています。画素単位の一致や見た目の改善を示す例ではありません。",
+  "native_line_topology": "qa/native-line-topology.json",
+  "native_shape_and_arrow_edit_test": "qa/editability/native-shapes-editability.json",
+  "current_checker_source_path": "pass-01/source.png",
+  "current_scoped_limitations": [
+    "掲載した2例は自作PNGのReconstruction。既存PPTXのRepairとInspection、数式、実験写真の復元は未実施。PptxGenJSで既存PPTXを保ったRepairは行わない。",
+    "主な効果の証拠は複合例の入れ子・双方向線・破線の折れ線・合成画像insetの所有分離。単純4箱の例は原文と最小方向保持の補足。PowerPointのグループ化、線同士の交差、箱移動への自動追従は未実証。",
+    "単純例の原典checkerはhard failure 0・warning 0。複合例はhard failure 0・warning 1で、12文字枠wrap=noneのrenderer間reflow警告が残る。PowerPoint16とLibreOfficeの実表示を制作担当が確認した。",
+    "小図内部はrasterで「参考パネル」は文字編集できない。srcRectでcrop元PNGを表示するため、不可視部分の削除や情報秘匿は保証しない。",
+    "複合例pass04の角丸と3個のlg/lg矢じりを保持。現在のbuild.mjsは矢じり補正まで自己完結する。生成した非ZIP64・STORE形式PPTXだけを扱う局所処理で、汎用PPTX変換器ではない。",
+    "原典既定の最大2passは変更しない。標準制作はpass02で終了した履歴を残し、明示された継続改善によるpass04と区別する。checkerのpass-index省略は構造検査の指定で、pass04の承認証明ではない。",
+    "Yu GothicはWindows同梱の字体を参照し、字体ファイルは配布しない。別環境は対応字体が必要。依存や字体の新規installは検査していない。入力との画素一致、見た目の改善、時短は主張しない。"
+  ],
+  "native_line_checker_scope": {
+    "p_cxnSp_connectors": 0,
+    "axis_aligned_standard_lines_excluded_by_original_checker": 4,
+    "native_standard_lines_verified_separately": 4,
+    "automatic_shape_attachment_tested": false
+  },
+  "original_renderer_evidence": "qa/original-libreoffice/evidence.json",
+  "supplementary_complex_example": {
+    "provenance": "complex-example/PROVENANCE.json",
+    "native_structure": "complex-example/qa/native-structure-pass04.json",
+    "native_edit": "complex-example/qa/current-nativeedit/edit-proof.json",
+    "checker": "complex-example/qa/check-pass-04.json",
+    "checker_hard_failures": 0,
+    "checker_warnings": 1,
+    "warning": "12 text boxes have wrap=none; renderer reflow remains possible",
+    "original_simple_accepted_unchanged": true,
+    "independent_review_on_this_version": false,
+    "accepted_pass": 4,
+    "current_render": "complex-example/render-pass04/powerpoint.png",
+    "geometry_and_edit": "complex-example/qa/self-contained-handoff-r13.json",
+    "agent_visual_inspection": {
+      "reviewer": "Codex",
+      "files": [
+        "complex-example/input/source.png",
+        "complex-example/render-pass04/powerpoint.png",
+        "complex-example/render-pass04/libreoffice.png",
+        "complex-example/qa/current-nativeedit/edited-copy.png"
+      ],
+      "scope": "Current self-contained build rendered in actual PowerPoint and original isolated LibreOffice; both displays RGB-equal to previous accepted appearance. Separate X to X* copy saved and reopened; new edit render inspected.",
+      "independent_review": false,
+      "human_review": false
+    }
+  },
+  "historical_distribution_replay": {
+    "path": "source/distribution-replay.json",
+    "both_archives_actual_reexecuted": true,
+    "all_six_replayed_png_rgb_difference": 0,
+    "scope": "Earlier archive payload; not proof that the newly added complex example was in those archives."
+  },
+  "current_archive_replay": "source/replay-round13.json",
+  "current_archive_replay_scope": "Both separately extracted archive payloads, 4 saved builds, 8 PP/LO RGB comparisons and 2 complex native edit save/reopen comparisons; final metadata/documentation-only repack bound separately.",
+  "current_saved_archive_builds_verified": 4,
+  "current_saved_archive_render_rgb_comparisons": 8,
+  "effect_evidence_order": [
+    "complex-example",
+    "simple-minimum-direction-supplement"
+  ],
+  "current_complex_native_edit_reopen_comparisons": 2
+}

@@ -1,21 +1,93 @@
 {
-  "status": "light_check_complete",
+  "status": "technical_qa_complete_independent_rereview_pending",
   "original_node_generation_success": true,
   "page_count": 6,
   "powerpoint_render_success": true,
   "representative_page_opened": true,
-  "whole_deck_detailed_review": false,
+  "whole_deck_detailed_review": true,
   "independent_review": false,
-  "structure_audit": false,
-  "zip_reexecution": false,
-  "full_finalize_gate_run": false,
+  "structure_audit": true,
+  "zip_reexecution": true,
+  "full_finalize_gate_run": true,
+  "review_receipts": [
+    "qa/finalize/finalize_receipt.json",
+    "qa/f05-native-check.json",
+    "qa/zip-replay.json"
+  ],
   "python_doctor_passed": false,
   "node_pinned_requirements_checked": true,
-  "review_mode": "user_requested_minimal",
-  "representative_page": 4,
+  "review_mode": "independent_review_correction_loop",
+  "authoring_model": "gpt-6.1-sol",
+  "repair_authoring_model": "claude-opus-5-5",
+  "full_finalize_gate_passed": true,
+  "affected_text_minimum_contrast_ratio": 6.1714,
+  "content_title_bar_gap_in": 0.15,
+  "original_authoring_model": "gpt-6.1-sol",
+  "repair_model_record_id": "20261015T103703Z",
+  "repair_model_scope": "Original PNG visual diagnosis and source generator legibility repair authored by Opus. Runtime execution, schema-compatible Japanese font mapping and Windows QA helper portability fixes performed by Codex.",
+  "runtime_doctor": {
+    "core_dependencies": [
+      "python-pptx1.0.2",
+      "Pillow12.3.0",
+      "lxml6.1.1"
+    ],
+    "full_scientific_data_environment_ready": false,
+    "missing_or_pin_mismatched": [
+      "contourpy",
+      "cycler",
+      "fonttools",
+      "kiwisolver",
+      "matplotlib",
+      "numpy",
+      "packaging",
+      "pandas",
+      "pyarrow",
+      "pyparsing"
+    ]
+  },
+  "finalize_compatibility_adapters": [
+    "source/windows-hash-guard.diff",
+    "source/windows-native-output.diff"
+  ],
+  "qa_thresholds_changed": false,
+  "independent_rereview": "Pending parent Kimi K3 and Opus 5.5 review of the repaired artifacts",
+  "pptx_sha256": "3e2a71995161009e7dc93bb46eea6efa647d60676afb8d0fa2d80b28552b01a3",
+  "render_pages": [
+    {
+      "page": 1,
+      "sha256": "67e48332e8d440bda00061b0f0d764028f00b1762cde89664ee685c4f3e03574"
+    },
+    {
+      "page": 2,
+      "sha256": "3532414205f6a554fbe6f204ab2033afa6372e52248f5d97c97fe3eb5a60fa95"
+    },
+    {
+      "page": 3,
+      "sha256": "08edd9dd934d40de9a12fd19fb9f78f1c0fe23f9f231d9d44d407ec38fe339d5"
+    },
+    {
+      "page": 4,
+      "sha256": "80b1f4abfcf287bb209ece74065576ed2ad2e5bfe01ec608762a8d4139b279b9"
+    },
+    {
+      "page": 5,
+      "sha256": "4dff0829c92a0995b3fc7d50fed53e91e421afa0e1c8c2891b582bcf2964f361"
+    },
+    {
+      "page": 6,
+      "sha256": "83d7bbde242b729c8971b95b321e2a8a3d23a6929c73a3a81c10fe9edabd9b83"
+    }
+  ],
   "repairs": [
-    "Original text-fit guard resolved by short source timeline line breaks",
-    "Native table header assigned bundled BIZ UDPGothic bold after initial Shippori glyph loss",
-    "Original TABLE INDEX/rows labels localized for handoff readers"
-  ]
+    "Title shortened to two Japanese lines without punctuation-only wrap",
+    "Measured content header moved below Operating Grid bars",
+    "Section placeholders replaced by explicit Japanese labels and source values",
+    "Stage/footer text uses color selected against actual dark background",
+    "Original allowed font_pair editorial_serif_v1 mapped to bundled Japanese fonts",
+    "Measured table index shows count only; repeated column labels removed.",
+    "Japanese table caption is upright; current PDF verifies Shippori/BIZ/Manrope fonts."
+  ],
+  "zip_replay_receipt": "qa/zip-replay.json",
+  "followup_author": "Codex",
+  "followup_qa": "qa/table-followup.json"
 }

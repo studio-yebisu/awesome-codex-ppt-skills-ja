@@ -30,6 +30,13 @@ CSS='''
 .lead{font-size:1.85vw;line-height:1.75}
 .kicker{font-size:1.2vw;letter-spacing:.1em}
 .chrome,.foot{font-size:1.05vw}
+.foot{font-size:1.25vw;opacity:1;letter-spacing:.04em}
+.slide.light .foot{color:var(--ink)}
+.slide.dark .foot{color:var(--paper)}
+.foot .title{opacity:1}
+.roles-stack{display:grid;gap:1.6vh}
+.roles-stack .pillar{display:grid;grid-template-columns:12% 23% 1fr;align-items:center;gap:2vw;padding:1.3vh 0;border-top:1px solid currentColor}
+.roles-stack .pillar .d br{display:none}
 .pillar .ic{font-size:3.7vw}
 .pillar .t{font-size:2.25vw;line-height:1.55}
 .pillar .d{font-size:1.7vw;line-height:1.75}
@@ -89,9 +96,9 @@ def prepare():
    if licensepath.exists():shutil.copyfile(licensepath,OUT/f'{pkg}-LICENSE.txt')
  bodies=[
  '<div class="kicker" data-anim>ひだまり読書会 / 架空の企画案</div><h1 class="h-hero" data-anim>月に一度、<br>本の話を。</h1><p class="h-sub" data-anim>たくさん読むより、集まれる形から。</p>',
- '<h2 class="h-xl" data-anim>三つだけ、先に決める</h2><div class="grid-3"><div class="pillar" data-anim><div class="ic">01</div><div class="t">いつ集まる？</div><div class="d">毎月第1土曜<br>14時から</div></div><div class="pillar" data-anim><div class="ic">02</div><div class="t">どのくらい？</div><div class="d">まずは60分<br>短く試す</div></div><div class="pillar" data-anim><div class="ic">03</div><div class="t">参加の条件は？</div><div class="d">読み終えて<br>いなくてもOK</div></div></div><p class="lead" data-anim>日時と場所は、参加者の都合を確認する。</p>',
+ '<h2 class="h-xl" data-anim>三つだけ、先に決める</h2><div class="grid-3"><div class="pillar" data-anim><div class="ic">01</div><div class="t">いつ集まる？</div><div class="d">毎月第1土曜<br>14時から</div></div><div class="pillar" data-anim><div class="ic">02</div><div class="t">どのくらい？</div><div class="d">まずは60分<br>短く試す</div></div><div class="pillar" data-anim><div class="ic">03</div><div class="t">参加の条件は？</div><div class="d">読み終えていなくても<br>OK</div></div></div><p class="lead" data-anim>日時と場所は、参加者の都合を確認する。</p>',
  '<h2 class="h-xl" data-anim>60分の流れを共有する</h2><div><div class="rowline" data-anim><div class="k">はじめに</div><div class="v">近況と、持ってきた本を紹介</div><div class="m">10分</div></div><div class="rowline" data-anim><div class="k">本の話</div><div class="v">気になった一節や、感じたこと</div><div class="m">35分</div></div><div class="rowline" data-anim><div class="k">おわりに</div><div class="v">一言ずつ感想、次回を確認</div><div class="m">15分</div></div></div><p class="lead" data-anim>10 ＋ 35 ＋ 15 ＝ 60分の試行案</p>',
- '<h2 class="h-xl" data-anim>運営は、三人で分ける</h2><div class="grid-3"><div class="pillar" data-anim><div class="ic">01</div><div class="t">案内係</div><div class="d">日時と場所を<br>一通にまとめる</div></div><div class="pillar" data-anim><div class="ic">02</div><div class="t">会場係</div><div class="d">席と会場の<br>使い方を確認</div></div><div class="pillar" data-anim><div class="ic">03</div><div class="t">進行係</div><div class="d">時間を見ながら<br>話す順番を案内</div></div></div><p class="lead" data-anim>担当が足りない回は、準備を減らす。</p>',
+ '<h2 class="h-xl" data-anim>運営は、三人で分ける</h2><div class="roles-stack"><div class="pillar" data-anim><div class="ic">01</div><div class="t">案内係</div><div class="d">日時と場所を<br>一通にまとめる</div></div><div class="pillar" data-anim><div class="ic">02</div><div class="t">会場係</div><div class="d">席と会場の<br>使い方を確認</div></div><div class="pillar" data-anim><div class="ic">03</div><div class="t">進行係</div><div class="d">時間を見ながら<br>話す順番を案内</div></div></div><p class="lead" data-anim>担当が足りない回は、準備を減らす。</p>',
  '<div class="kicker" data-anim>まずは3か月、試してみる</div><h2 class="h-xl" data-anim>次回の日程を決めて終える</h2><p class="reading-quote" data-anim>次は、いつ？<br>誰が、何を引き受ける？</p><p class="lead" data-anim>来やすかった点と、負担だった点を残す。<br>続けやすい形へ、少しずつ変えていく。</p>',
  ]
  parts=[]
@@ -114,7 +121,7 @@ Catalog Theme ID: editorial-magazine / Palette: forest-ink
 1 cover / hero dark / frame / h-hero / 中央群: 月に一度、本の話を。
 2 content / light / frame grid-3 / pillar: 日程・長さ・参加条件。
 3 content / light / frame / rowline: 10/35/15分で合計60分。
-4 content / light / frame grid-3 / pillar: 案内・会場・進行の役割比較。
+4 content / light / frame roles-stack / pillar: 案内・会場・進行を横一列ずつ比較。
 5 ending / hero dark / frame / reading-quote: 次回日程・担当・記録。
 ## VI. Image Resource List
 画像なし。デモ写真・原典サンプル文・Lucide・数式・コード依存は不使用。WebGL背景とMotion11.11.17の原典アニメーションを維持。

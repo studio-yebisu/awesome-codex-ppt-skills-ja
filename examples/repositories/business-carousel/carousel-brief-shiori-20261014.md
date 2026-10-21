@@ -18,6 +18,10 @@
 
 Hook → Problem → Insight → Solution → Example → CTA。実績の証拠がないためProofを捏造せず、架空の記入例へ変更。
 
+## Brand direction
+
+色・字体・自作しおりマークはinput/brand-guideline.mdを参照。CTAボタンは「記入型をコピー」。Logoは各頁のしおり図形、contactは未設定で架空の連絡先は作らない。公開用デザイン・連絡先・人の承認は別工程。
+
 ## Slide 1 — HOOK
 
 | 要素 | 内容 |

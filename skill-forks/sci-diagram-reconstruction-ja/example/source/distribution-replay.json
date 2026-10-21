@@ -1,0 +1,99 @@
+{
+  "status": "pass",
+  "scope": "Both archives separately extracted beneath prepared existing host runtime. Original probe/build/checker/isolated LibreOffice renderer, actual PowerPoint, native label/box/line edits saved and reopened, then Poppler rendered. No install or new reconstruction authored.",
+  "archive_count": 2,
+  "current_accepted_pptx_sha256": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0",
+  "accepted_build_sha256": "bb4253908a296fb3cf3101854f9d4e7bf31a06c644057e9021e77e6ade742526",
+  "source": "pass-01/source.png",
+  "source_sha256": "5d886f134754d7dd86b315f9ee963f27a5a70de0944939544c5ee70d2d2ec690",
+  "existing_dependencies_only": true,
+  "fresh_install_tested": false,
+  "protected_authored_pass_unchanged": true,
+  "native_shape_text_line_geometry_and_notes_match": true,
+  "all_six_png_max_rgb_difference": 0,
+  "tested_archives": [
+    {
+      "archive": "downloads/sci-diagram-reconstruction-example-ja.zip",
+      "sha256_at_execution": "32c6b1be7a71e584e06a0590a95f3019b76984363a1fa8384de4a5e754e0f675",
+      "commands": [
+        {
+          "entry": "reproduce",
+          "exit_code": 0
+        },
+        {
+          "entry": "native-label-edit",
+          "exit_code": 0
+        },
+        {
+          "entry": "native-shape-edit",
+          "exit_code": 0
+        },
+        {
+          "entry": "native-label-edited-rgb",
+          "exit_code": 0
+        },
+        {
+          "entry": "native-shapes-edited-rgb",
+          "exit_code": 0
+        }
+      ],
+      "three_artifacts_match": true,
+      "pngs": [
+        {
+          "path": "render/slide-01.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "qa/editability/native-label-edited.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "qa/editability/native-shapes-edited.png",
+          "max_rgb_difference": 0
+        }
+      ]
+    },
+    {
+      "archive": "downloads/sci-diagram-reconstruction-ja.zip",
+      "sha256_at_execution": "fb5c3fcd6f670ff1e9697f0599e04ca1247f11316dc4505e982010f7233d0c4f",
+      "commands": [
+        {
+          "entry": "reproduce",
+          "exit_code": 0
+        },
+        {
+          "entry": "native-label-edit",
+          "exit_code": 0
+        },
+        {
+          "entry": "native-shape-edit",
+          "exit_code": 0
+        },
+        {
+          "entry": "native-label-edited-rgb",
+          "exit_code": 0
+        },
+        {
+          "entry": "native-shapes-edited-rgb",
+          "exit_code": 0
+        }
+      ],
+      "three_artifacts_match": true,
+      "pngs": [
+        {
+          "path": "render/slide-01.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "qa/editability/native-label-edited.png",
+          "max_rgb_difference": 0
+        },
+        {
+          "path": "qa/editability/native-shapes-edited.png",
+          "max_rgb_difference": 0
+        }
+      ]
+    }
+  ],
+  "later_repack": "QA/provenance/receipt/SOURCE and initial-authoring-note context only. Executed code, accepted pass, all PDFs/PNGs, and edit proof PPTX payload unchanged, verified separately."
+}

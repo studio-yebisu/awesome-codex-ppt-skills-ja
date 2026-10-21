@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "run_id": "run-repair-r4",
+  "page_id": "page_001",
+  "page_index": 1,
+  "page_dir": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001",
+  "source_image": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001\\source.png",
+  "source_size_px": {
+    "width": 1672,
+    "height": 941
+  },
+  "slide": {
+    "width": 13.333,
+    "height": 7.5,
+    "size_mode": "wide"
+  },
+  "content_box": {
+    "left": 0.0033756641870352766,
+    "top": 0,
+    "width": 13.32624867162593,
+    "height": 7.5,
+    "fit": "contain"
+  },
+  "max_concurrent_pages": 2,
+  "allowed_write_scope": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001",
+  "forbidden_paths": [
+    "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\deck_manifest.json",
+    "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\page_jobs.json",
+    "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\notes_manifest.json",
+    "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\final",
+    "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\input"
+  ],
+  "required_outputs": {
+    "manifest": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001\\manifest.json",
+    "imagegen_jobs": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001\\imagegen-jobs.json",
+    "page_pptx": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001\\page.pptx",
+    "preview": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001\\preview.png",
+    "contact_sheet": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001\\split_assets_contact.png",
+    "validation": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001\\validation.json",
+    "page_result": "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\image-to-editable\\run-repair-r4\\pages\\page_001\\page_result.json"
+  },
+  "image_backend": {
+    "backend_id": "builtin-imagegen",
+    "tool_name": "image_gen.imagegen",
+    "tool_call": "image_gen.imagegen",
+    "fallback_command": "editppt image generate/edit",
+    "runtime_home": "~/.editppt",
+    "model": null,
+    "requires_openai_api_key": false,
+    "mode_policy": "generate-or-edit-per-asset",
+    "chroma_key_helper": "editppt image process-sheet",
+    "input_context_policy": "generation needs prompt; for editing inspect every local input with view_image first, then pass prompt plus absolute local paths in referenced_image_paths",
+    "save_path_policy": "accept only an explicit output_hint or local path returned by image_gen.imagegen, verify it exists, import the selected output, and never scan for the newest file",
+    "handoff_rule": "call image_gen.imagegen serially, then import the selected local output; use editppt image generate/edit only when the built-in tool fallback policy applies",
+    "fallback_order": [
+      "codex-oauth",
+      "openai-compatible-api"
+    ],
+    "required_parameters": {
+      "generate": [
+        "prompt"
+      ],
+      "edit": [
+        "prompt",
+        "referenced_image_paths"
+      ]
+    },
+    "fallback_policy": {
+      "on": [
+        "tool-unavailable",
+        "tool-error",
+        "input-unreadable",
+        "no-valid-local-output"
+      ],
+      "missing_optional_parameters": false
+    }
+  }
+}

@@ -1,0 +1,91 @@
+[
+  {
+    "argv": [
+      "python",
+      "source/build_cafe.py"
+    ],
+    "exit_code": 0,
+    "stdout": "cafe-pptx: 8 editable slides exported",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "source/check_layout.ps1"
+    ],
+    "exit_code": 2,
+    "stdout": "Measured 141 text objects; overflow issues 58",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      "source/fit_text_frames.py"
+    ],
+    "exit_code": 0,
+    "stdout": "Widened 58 native frames; original glyph layout preserved",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "source/check_layout.ps1"
+    ],
+    "exit_code": 0,
+    "stdout": "Measured 141 text objects; overflow issues 0",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.EXE",
+      "-NoProfile",
+      "-ExecutionPolicy",
+      "Bypass",
+      "-File",
+      "source/render_powerpoint.ps1",
+      "-PresentationPath",
+      "deck.pptx",
+      "-OutputDirectory",
+      "render"
+    ],
+    "exit_code": 0,
+    "stdout": "PowerPoint 16.0: 8 slides exported to PNG and PDF",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+      "source/render_pdf_previews.py",
+      "render"
+    ],
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "C:\\Users\\owner\\AppData\\Local\\nodejs\\node-v24.18.0-win-x64\\node.EXE",
+      "source/capture_svg.cjs"
+    ],
+    "exit_code": 0,
+    "stdout": "Rendered all eight actual source SVG pages with bundled fonts",
+    "stderr": ""
+  },
+  {
+    "argv": [
+      "python",
+      "source/build_comparisons.py"
+    ],
+    "exit_code": 0,
+    "stdout": "Eight source SVG/native comparisons saved",
+    "stderr": ""
+  }
+]

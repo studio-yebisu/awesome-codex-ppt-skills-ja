@@ -362,6 +362,9 @@ async function collectDom(page, opts) {
       clone.querySelectorAll("*").forEach((n) => {
         if (!n.getAttribute("stroke") && stroke !== "none") n.setAttribute("stroke", stroke);
       });
+      const viewport = svg.getBoundingClientRect();
+      clone.setAttribute("width", String(viewport.width));
+      clone.setAttribute("height", String(viewport.height));
       return clone.outerHTML;
     }
 

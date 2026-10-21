@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "scope": "Two separately extracted archives replayed before final QA/documentation packaging. Exact tested ZIP hashes are below. A later metadata/documentation-only repack does not transfer execution to changed code; final production payload equality is checked separately.",
+  "archives": [
+    {
+      "kind": "case",
+      "tested_archive_sha256": "c8fdd887120cde0307d9192c30b3a327c387bb8cbc96e21c3ae4c1760a288018",
+      "tested_archive_bytes": 3534172,
+      "SOURCE_verified_files": 118,
+      "runs": [
+        {
+          "kind": "simple",
+          "exit_code": 0,
+          "generated_pptx_sha256": "b10fdb9721912158b64e64e1110492efc347af8f2626bab077f2ac6b576f6a71",
+          "accepted_pptx_sha256": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0",
+          "part_count": 39,
+          "different_parts": [
+            "docProps/core.xml"
+          ],
+          "all_native_parts_equal": true,
+          "render_comparison": {
+            "powerpoint": {
+              "size": [
+                1600,
+                900
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            },
+            "libreoffice": {
+              "size": [
+                2134,
+                1200
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            }
+          },
+          "commands": [
+            {
+              "phase": "original-runtime-probe",
+              "exit_code": 0
+            },
+            {
+              "phase": "accepted-build",
+              "exit_code": 0
+            },
+            {
+              "phase": "original-package-check",
+              "exit_code": 0
+            },
+            {
+              "phase": "native-line-topology",
+              "exit_code": 0
+            },
+            {
+              "phase": "original-isolated-libreoffice-render",
+              "exit_code": 0
+            },
+            {
+              "phase": "powerpoint-render",
+              "exit_code": 0
+            },
+            {
+              "phase": "actual-powerpoint-pdf-rgb",
+              "exit_code": 0
+            }
+          ]
+        },
+        {
+          "kind": "complex",
+          "exit_code": 0,
+          "generated_pptx_sha256": "72a5f2110cfd76e9bdb57a292fc184fdcc864cc8e6379974e4f33e3fd07b8738",
+          "accepted_pptx_sha256": "0814a76ebd341ddce69d766cef4f27b1eaca94ce3f05f3486432d5b36796d57a",
+          "part_count": 40,
+          "different_parts": [
+            "docProps/core.xml"
+          ],
+          "all_native_parts_equal": true,
+          "render_comparison": {
+            "powerpoint": {
+              "size": [
+                1600,
+                900
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            },
+            "libreoffice": {
+              "size": [
+                2134,
+                1200
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            }
+          },
+          "commands": [
+            {
+              "phase": "original-runtime-probe",
+              "exit_code": 0
+            },
+            {
+              "phase": "saved-additional-pass04-build",
+              "exit_code": 0
+            },
+            {
+              "phase": "original-checker-without-pass-index-override",
+              "exit_code": 0
+            },
+            {
+              "phase": "saved-example-native-structure",
+              "exit_code": 0
+            },
+            {
+              "phase": "original-isolated-libreoffice-render",
+              "exit_code": 0
+            },
+            {
+              "phase": "powerpoint-pdf-export",
+              "exit_code": 0
+            },
+            {
+              "phase": "powerpoint-pdf-png",
+              "exit_code": 0
+            }
+          ],
+          "native_edit": {
+            "saved_copy_reopened": true,
+            "source_unchanged": true,
+            "render_comparison": {
+              "size": [
+                1600,
+                900
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            }
+          }
+        }
+      ]
+    },
+    {
+      "kind": "fork",
+      "tested_archive_sha256": "4d1f78c903dc165eee19bee42f976a31a70e786591908c65f2da7a5e31717e80",
+      "tested_archive_bytes": 3873177,
+      "SOURCE_verified_files": 150,
+      "runs": [
+        {
+          "kind": "simple",
+          "exit_code": 0,
+          "generated_pptx_sha256": "c5fd82e48dc69cdc0bf61940a3cf2189f9c22bada83d697a1236d1a83b4887ec",
+          "accepted_pptx_sha256": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0",
+          "part_count": 39,
+          "different_parts": [
+            "docProps/core.xml"
+          ],
+          "all_native_parts_equal": true,
+          "render_comparison": {
+            "powerpoint": {
+              "size": [
+                1600,
+                900
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            },
+            "libreoffice": {
+              "size": [
+                2134,
+                1200
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            }
+          },
+          "commands": [
+            {
+              "phase": "original-runtime-probe",
+              "exit_code": 0
+            },
+            {
+              "phase": "accepted-build",
+              "exit_code": 0
+            },
+            {
+              "phase": "original-package-check",
+              "exit_code": 0
+            },
+            {
+              "phase": "native-line-topology",
+              "exit_code": 0
+            },
+            {
+              "phase": "original-isolated-libreoffice-render",
+              "exit_code": 0
+            },
+            {
+              "phase": "powerpoint-render",
+              "exit_code": 0
+            },
+            {
+              "phase": "actual-powerpoint-pdf-rgb",
+              "exit_code": 0
+            }
+          ]
+        },
+        {
+          "kind": "complex",
+          "exit_code": 0,
+          "generated_pptx_sha256": "4744ef0ecee1e2a61a42ce61e5b5b189d7287f501246e9d2eae2741c716a1628",
+          "accepted_pptx_sha256": "0814a76ebd341ddce69d766cef4f27b1eaca94ce3f05f3486432d5b36796d57a",
+          "part_count": 40,
+          "different_parts": [
+            "docProps/core.xml"
+          ],
+          "all_native_parts_equal": true,
+          "render_comparison": {
+            "powerpoint": {
+              "size": [
+                1600,
+                900
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            },
+            "libreoffice": {
+              "size": [
+                2134,
+                1200
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            }
+          },
+          "commands": [
+            {
+              "phase": "original-runtime-probe",
+              "exit_code": 0
+            },
+            {
+              "phase": "saved-additional-pass04-build",
+              "exit_code": 0
+            },
+            {
+              "phase": "original-checker-without-pass-index-override",
+              "exit_code": 0
+            },
+            {
+              "phase": "saved-example-native-structure",
+              "exit_code": 0
+            },
+            {
+              "phase": "original-isolated-libreoffice-render",
+              "exit_code": 0
+            },
+            {
+              "phase": "powerpoint-pdf-export",
+              "exit_code": 0
+            },
+            {
+              "phase": "powerpoint-pdf-png",
+              "exit_code": 0
+            }
+          ],
+          "native_edit": {
+            "saved_copy_reopened": true,
+            "source_unchanged": true,
+            "render_comparison": {
+              "size": [
+                1600,
+                900
+              ],
+              "rgb_equal": true,
+              "max_rgb_difference": 0
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "started_at": "2026-10-16T03:27:47.022338+00:00",
+  "completed_at": "2026-10-16T03:28:22.897415+00:00",
+  "status": "pass",
+  "saved_builds": 4,
+  "render_comparisons": 8,
+  "complex_edit_reopen_comparisons": 2,
+  "current_accepted_pptx_sha256": {
+    "simple": "ff9030ab6153cadcc56c8bfbbbf2b9d1c156eb926f2f2726458be9e6be0a3cd0",
+    "complex": "0814a76ebd341ddce69d766cef4f27b1eaca94ce3f05f3486432d5b36796d57a"
+  }
+}

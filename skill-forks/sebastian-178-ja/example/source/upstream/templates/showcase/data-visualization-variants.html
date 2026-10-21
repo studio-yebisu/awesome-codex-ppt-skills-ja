@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MBB Page Maker Data Visualization Variants</title>
+  <link rel="stylesheet" href="../../assets/css/fonts.css">
+  <link rel="stylesheet" href="../../assets/css/base.css">
+  <link rel="stylesheet" href="../../assets/css/layouts.css">
+  <link rel="stylesheet" href="../../assets/css/components.css">
+  <link rel="stylesheet" href="../../assets/css/illustrations.css">
+  <link rel="stylesheet" href="../../assets/themes/mono.css">
+</head>
+<body>
+  <main class="deck" data-deck-title="Data visualization variants">
+    <section class="slide" data-title="Line chart variant">
+      <header><div class="slide-kicker">Charts and data</div><h2 class="slide-title">Line charts should explain movement over time rather than rank categories</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="line-chart">
+          <div class="chart-title-row"><h3>Trend by period</h3><p>Indexed values, first period = 100</p></div>
+          <svg viewBox="0 0 720 320" role="img" aria-label="Line chart"><line class="chart-grid-line" x1="70" y1="60" x2="680" y2="60"></line><line class="chart-grid-line" x1="70" y1="140" x2="680" y2="140"></line><line class="chart-grid-line" x1="70" y1="220" x2="680" y2="220"></line><line class="chart-axis" x1="70" y1="280" x2="680" y2="280"></line><line class="chart-axis" x1="70" y1="40" x2="70" y2="280"></line><path class="chart-series-secondary" d="M70 210 L190 188 L310 172 L430 146 L550 128 L670 104"></path><path class="chart-series-primary" d="M70 232 L190 206 L310 150 L430 132 L550 94 L670 72"></path><circle class="chart-point" cx="70" cy="232" r="6"></circle><circle class="chart-point" cx="190" cy="206" r="6"></circle><circle class="chart-point" cx="310" cy="150" r="6"></circle><circle class="chart-point" cx="430" cy="132" r="6"></circle><circle class="chart-point" cx="550" cy="94" r="6"></circle><circle class="chart-point" cx="670" cy="72" r="6"></circle></svg>
+          <div class="chart-legend"><span class="chart-key">Current case</span><span class="chart-key is-secondary">Reference case</span></div>
+        </div>
+      </div>
+      <footer class="footer"><span>Component: line-chart</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Combo chart variant">
+      <header><div class="slide-kicker">Charts and data</div><h2 class="slide-title">Combo charts work when volume and rate must be read together</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="combo-chart">
+          <div class="chart-title-row"><h3>Volume and rate move together</h3><p>Bars show volume; line shows conversion rate</p></div>
+          <svg viewBox="0 0 720 320" role="img" aria-label="Combo chart"><line class="chart-grid-line" x1="70" y1="70" x2="680" y2="70"></line><line class="chart-grid-line" x1="70" y1="150" x2="680" y2="150"></line><line class="chart-grid-line" x1="70" y1="230" x2="680" y2="230"></line><line class="chart-axis" x1="70" y1="280" x2="680" y2="280"></line><rect class="combo-bar" x="98" y="174" width="46" height="106"></rect><rect class="combo-bar" x="214" y="134" width="46" height="146"></rect><rect class="combo-bar" x="330" y="114" width="46" height="166"></rect><rect class="combo-bar is-focus" x="446" y="82" width="46" height="198"></rect><rect class="combo-bar" x="562" y="104" width="46" height="176"></rect><path class="chart-series-primary" d="M121 210 L237 186 L353 154 L469 118 L585 132"></path><circle class="chart-point" cx="121" cy="210" r="6"></circle><circle class="chart-point" cx="237" cy="186" r="6"></circle><circle class="chart-point" cx="353" cy="154" r="6"></circle><circle class="chart-point" cx="469" cy="118" r="6"></circle><circle class="chart-point" cx="585" cy="132" r="6"></circle></svg>
+          <div class="chart-labels"><span>Q1</span><span>Q2</span><span>Q3</span><span>Q4</span><span>Q5</span></div>
+        </div>
+      </div>
+      <footer class="footer"><span>Component: combo-chart</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Paired bars variant">
+      <header><div class="slide-kicker">Charts and data</div><h2 class="slide-title">Paired bars compare two measures across the same categories</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <div class="paired-bars">
+          <div class="paired-bar-row"><div class="paired-bar-label">Segment A</div><div class="paired-bar-stack"><div class="paired-bar"><div class="paired-bar-track"><div class="paired-bar-fill" style="--value: 82%"></div></div><div class="paired-bar-value">82</div></div><div class="paired-bar is-secondary"><div class="paired-bar-track"><div class="paired-bar-fill" style="--value: 65%"></div></div><div class="paired-bar-value">65</div></div></div></div>
+          <div class="paired-bar-row"><div class="paired-bar-label">Segment B</div><div class="paired-bar-stack"><div class="paired-bar"><div class="paired-bar-track"><div class="paired-bar-fill" style="--value: 58%"></div></div><div class="paired-bar-value">58</div></div><div class="paired-bar is-secondary"><div class="paired-bar-track"><div class="paired-bar-fill" style="--value: 74%"></div></div><div class="paired-bar-value">74</div></div></div></div>
+          <div class="paired-bar-row"><div class="paired-bar-label">Segment C</div><div class="paired-bar-stack"><div class="paired-bar"><div class="paired-bar-track"><div class="paired-bar-fill" style="--value: 76%"></div></div><div class="paired-bar-value">76</div></div><div class="paired-bar is-secondary"><div class="paired-bar-track"><div class="paired-bar-fill" style="--value: 52%"></div></div><div class="paired-bar-value">52</div></div></div></div>
+        </div>
+      </div>
+      <footer class="footer"><span>Component: paired-bars</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Likert bars variant">
+      <header><div class="slide-kicker">Charts and data</div><h2 class="slide-title">Likert bars preserve the negative, neutral, and positive split</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <div class="likert-bars">
+          <div class="likert-row"><div class="likert-label">Statement one</div><div class="likert-track" style="--negative: 24%; --neutral: 18%; --positive: 58%"><span class="likert-segment is-negative"></span><span class="likert-segment is-neutral"></span><span class="likert-segment is-positive"></span></div><div class="likert-values"><span>24</span><span>18</span><span>58</span></div></div>
+          <div class="likert-row"><div class="likert-label">Statement two</div><div class="likert-track" style="--negative: 32%; --neutral: 20%; --positive: 48%"><span class="likert-segment is-negative"></span><span class="likert-segment is-neutral"></span><span class="likert-segment is-positive"></span></div><div class="likert-values"><span>32</span><span>20</span><span>48</span></div></div>
+          <div class="likert-row"><div class="likert-label">Statement three</div><div class="likert-track" style="--negative: 18%; --neutral: 24%; --positive: 58%"><span class="likert-segment is-negative"></span><span class="likert-segment is-neutral"></span><span class="likert-segment is-positive"></span></div><div class="likert-values"><span>18</span><span>24</span><span>58</span></div></div>
+        </div>
+      </div>
+      <footer class="footer"><span>Component: likert-bars</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Waterfall variant">
+      <header><div class="slide-kicker">Charts and data</div><h2 class="slide-title">Waterfall bridges explain how a baseline turns into a decision case</h2><div class="slide-rule"></div></header>
+      <div class="content">
+        <div class="waterfall-bridge">
+          <div class="waterfall"><div class="wf-step"><div class="wf-bar" style="--h: 52%"></div><div class="wf-value">100</div><div class="wf-label">Baseline</div></div><div class="wf-step"><div class="wf-bar positive" style="--h: 20%"></div><div class="wf-value">+18</div><div class="wf-label">Growth</div></div><div class="wf-step"><div class="wf-bar positive" style="--h: 16%"></div><div class="wf-value">+14</div><div class="wf-label">Productivity</div></div><div class="wf-step"><div class="wf-bar negative" style="--h: 10%"></div><div class="wf-value">-9</div><div class="wf-label">Investment</div></div><div class="wf-step"><div class="wf-bar" style="--h: 64%"></div><div class="wf-value">123</div><div class="wf-label">Target</div></div></div>
+        </div>
+      </div>
+      <footer class="footer"><span>Component: waterfall-bridge</span><span class="page-number"></span></footer>
+    </section>
+
+    <section class="slide" data-title="Checkmark table variant">
+      <header><div class="slide-kicker">Charts and data</div><h2 class="slide-title">Checkmark bar tables combine binary fit and quantitative value</h2><div class="slide-rule"></div></header>
+      <div class="content is-vertically-centered">
+        <div class="checkmark-bar-table">
+          <div class="table-head">Option</div><div class="table-head">Fit</div><div class="table-head">Ready</div><div class="table-head">Risk</div><div class="table-head">Value</div>
+          <div><strong>Option A</strong></div><div><span class="table-check">&#10003;</span></div><div><span class="table-check">&#10003;</span></div><div><span class="table-check is-empty">-</span></div><div class="inline-bar"><div class="inline-bar-track"><div class="inline-bar-fill" style="--value: 82%"></div></div><div class="inline-bar-value">82</div></div>
+          <div><strong>Option B</strong></div><div><span class="table-check">&#10003;</span></div><div><span class="table-check is-empty">-</span></div><div><span class="table-check">&#10003;</span></div><div class="inline-bar"><div class="inline-bar-track"><div class="inline-bar-fill" style="--value: 64%"></div></div><div class="inline-bar-value">64</div></div>
+          <div><strong>Option C</strong></div><div><span class="table-check is-empty">-</span></div><div><span class="table-check">&#10003;</span></div><div><span class="table-check">&#10003;</span></div><div class="inline-bar"><div class="inline-bar-track"><div class="inline-bar-fill" style="--value: 48%"></div></div><div class="inline-bar-value">48</div></div>
+        </div>
+      </div>
+      <footer class="footer"><span>Component: checkmark-bar-table</span><span class="page-number"></span></footer>
+    </section>
+  </main>
+  <script src="../../assets/js/runtime.js"></script>
+</body>
+</html>

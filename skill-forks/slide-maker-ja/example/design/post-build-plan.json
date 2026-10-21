@@ -1,0 +1,292 @@
+{
+  "recorded_at": "2026-10-13T19:30:36.289235+00:00",
+  "candidate_sha256": "3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f",
+  "content": {
+    "slides": [
+      {
+        "slide": 1,
+        "role": "hook",
+        "takeaway": "昇順の1〜15で13を探すと、線形探索は13回、二分探索は4回。",
+        "evidence": [
+          "input/data.json traces[12]"
+        ],
+        "units": 3,
+        "title": "昇順なら、中央から範囲を絞れる",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
+      },
+      {
+        "slide": 2,
+        "role": "worked-example",
+        "takeaway": "先頭からなら、13まで13回",
+        "evidence": [
+          "input/data.json traces[12].linear"
+        ],
+        "units": 3,
+        "title": "線形探索は、先頭から13回比較する",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
+      },
+      {
+        "slide": 3,
+        "role": "worked-example",
+        "takeaway": "真ん中で分けると、4回で届く",
+        "evidence": [
+          "input/data.json traces[12].binary"
+        ],
+        "units": 4,
+        "title": "二分探索は、大小で残す側を決める",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
+      },
+      {
+        "slide": 4,
+        "role": "evidence",
+        "takeaway": "15個すべてで試すと、最大4回",
+        "evidence": [
+          "input/data.json traces[*]"
+        ],
+        "units": 3,
+        "title": "二分探索は、15通りとも4回以内",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
+      },
+      {
+        "slide": 5,
+        "role": "recap",
+        "takeaway": "二分探索には昇順が必要で、比較回数の減少から実時間の速さは判断できない。",
+        "evidence": [
+          "input/data.json timing_measured / sorting_cost_measured"
+        ],
+        "units": 3,
+        "title": "比較回数から、秒数は決められない",
+        "repair_round": "Round5 based on actual Round4 Opus revise, fresh review pending."
+      }
+    ],
+    "arc": {
+      "chosen": "worked-comparison",
+      "candidates": [
+        {
+          "name": "worked-comparison",
+          "shape": "worked-example",
+          "roles": [
+            "hook",
+            "worked-example",
+            "worked-example",
+            "evidence",
+            "recap"
+          ],
+          "audience_question": "同じ配列から13をどう探すか",
+          "serves_goal": "既知の順番探しを足場に、中央で範囲を捨てる一手を追体験して学ぶ",
+          "objection": "中央を調べた後どちらへ進むか分からない",
+          "closing_ask": "13の4回の照合を説明し、秒数の測定と区別できる",
+          "evidence": [
+            "trace13-linear",
+            "trace13-binary",
+            "all15",
+            "limits"
+          ]
+        },
+        {
+          "name": "misconception-first",
+          "shape": "misconception-first",
+          "roles": [
+            "misconception",
+            "counterexample",
+            "prerequisite",
+            "worked-example",
+            "check"
+          ],
+          "audience_question": "二分探索はいつでも速いのか",
+          "serves_goal": "目的値1なら線形1回対二分4回の反例から、条件と比較単位を問う",
+          "objection": "二分探索なら全ての目的値で少ない回数になる",
+          "closing_ask": "最大比較回数の改善と個別ターゲットの有利不利を分けられる",
+          "evidence": [
+            "all15",
+            "limits",
+            "trace13-linear",
+            "trace13-binary"
+          ]
+        },
+        {
+          "name": "condition-first",
+          "shape": "prerequisite-chain",
+          "roles": [
+            "prerequisite",
+            "concept",
+            "method",
+            "comparison",
+            "practice"
+          ],
+          "audience_question": "なぜ半分を捨てても目的値を失わないか",
+          "serves_goal": "昇順という不変条件から捨てる側の正当性を先に導き、例へ適用する",
+          "objection": "途中の値を飛ばすと13を見落とすのではないか",
+          "closing_ask": "目的値と中央の大小から次の探索範囲を自分で選べる",
+          "evidence": [
+            "limits",
+            "trace13-binary",
+            "all15",
+            "trace13-linear"
+          ]
+        }
+      ],
+      "rejected": [
+        {
+          "name": "misconception-first",
+          "why_lost": "初手の反例は比較方法を未習の読者に条件を増やすため、終章の注意へ回す"
+        },
+        {
+          "name": "condition-first",
+          "why_lost": "正しさの証明から始めると具体的な探索のイメージが後回しになる"
+        }
+      ]
+    },
+    "audience_brief": {
+      "who": "探索を初めて学び、手順を追う読者",
+      "decisions": [
+        {
+          "decision": "次にどの値を調べるか",
+          "needs": "現在の範囲、中央の値、13との大小"
+        },
+        {
+          "decision": "片側を除外してよいか",
+          "needs": "配列が昇順である前提と中央との大小関係"
+        },
+        {
+          "decision": "比較が少ない結果から速度を言い切れるか",
+          "needs": "測定単位と未計測の秒数・整列コスト"
+        }
+      ]
+    },
+    "open_ledger": [
+      {
+        "claim": "秒数と整列コストは未測定",
+        "source": "input/data.json timing_measured=false, sorting_cost_measured=false",
+        "in_deck": "slide5に未測定と表示"
+      }
+    ],
+    "checkpoint": {
+      "mode": "auto",
+      "record": "2026-10-13T19:24:17.653672+00:00 POST-BUILD supplemental comparison. Initial production had not completed this checkpoint. Parent authorized reversible remaining work; present candidate SHA 3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f. Results announced in chat; this is not prior human approval."
+    }
+  },
+  "design_plan": {
+    "concept": {
+      "chosen": "配列の同じ場所を保ち、残る範囲だけを可視化する教材",
+      "rejected": [
+        {
+          "concept": "端末に探索ログを表示",
+          "why_lost": "Bは数字の位置が動き、残る範囲の比較ができない"
+        },
+        {
+          "concept": "大きな回数の棒だけで差を示す",
+          "why_lost": "Cは差は強いが、どう4回になるかを説明できない"
+        },
+        {
+          "concept": "訪問順を木のように置く",
+          "why_lost": "Dは15要素の全体と除外範囲が見えず別概念の学習になる"
+        }
+      ]
+    },
+    "boldness": "conservative",
+    "boldness_derivation": "初学者向けの正確な静的教材",
+    "signature_move": "deliberately restrained: repeated native number cells retain their coordinate while the candidate range narrows; clarity before novelty",
+    "carried_by": [
+      1,
+      2,
+      3
+    ],
+    "form_ledger": "native array diagrams on 3/5 slides; chart on 1/5; textual recap on 1/5",
+    "icon_family": "none",
+    "palette": "White canvas; dark ink132C3B; linear method116B8A blue; binary method7044A0 purple; target13 A8471C brown fill/outline; neutral labels4E626C. The three semantic colours do not reverse across pages.",
+    "type_scale": {
+      "display": 34,
+      "title": 32,
+      "body": 24,
+      "diagram": 24,
+      "footnote": 13
+    },
+    "style_pick": "bespoke for introductory algorithm teaching · beat terminal, bars-only and tree probes · anti-pick avoided: code-terminal look before basic concepts",
+    "motif_generates": {
+      "background": "white reading canvas",
+      "markers": "numbered array elements and step numerals",
+      "page": "slide3 uses the same 15-column coordinate system for all four comparisons"
+    },
+    "image_sources": "n/a — numeric traces are represented with native text and shapes; no photos or illustrations",
+    "material_probe": {
+      "png": "render/slide-03.png",
+      "safe_version": "a bullet list of 8→12→14→13 would hide the discarded ranges; the repeated array exposes them",
+      "post_build": true,
+      "recorded_at": "2026-10-13T19:24:17.653672+00:00",
+      "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8",
+      "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+      "current_binding_note": "Rebound after full current rendering; this referenced page PNG is byte-identical to the previous revision."
+    },
+    "signature_proof": [
+      {
+        "role": "signature",
+        "slide": 3,
+        "png": "render/slide-03.png",
+        "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8",
+        "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+        "current_binding_note": "Rebound after full current rendering; this referenced page PNG is byte-identical to the previous revision."
+      },
+      {
+        "role": "complex",
+        "slide": 3,
+        "png": "render/slide-03.png",
+        "sha256": "a335f95fd4adb0f97aa796aa4f73d26b2ed9670b51662ce62075ecec5c4881b8",
+        "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+        "current_binding_note": "Rebound after full current rendering; this referenced page PNG is byte-identical to the previous revision."
+      },
+      {
+        "role": "data",
+        "slide": 4,
+        "png": "render/slide-04.png",
+        "sha256": "1fe06bd1132cfd78a2ba37ac8eb9340daf2b6fad7adc767f99817848496e8c6b",
+        "pptx_sha256": "1d09c6f7acd012f69d507090b58ac12bafda3cd31919e8eacbcce1bf2464b043",
+        "current_binding_note": "Rebound after full current rendering; this referenced page PNG is byte-identical to the previous revision."
+      }
+    ],
+    "build_shape": "solo — five short tightly coupled teaching pages, independent review separate",
+    "checkpoint": {
+      "mode": "auto",
+      "record": "2026-10-13T19:24:17.653672+00:00 POST-BUILD supplemental comparison. Initial production had not completed this checkpoint. Parent authorized reversible remaining work; present candidate SHA 3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f. Results announced in chat; this is not prior human approval."
+    },
+    "supplemental_direction_comparison": {
+      "chosen": "A",
+      "file": "design/direction-probes.pptx",
+      "rendered_all": true,
+      "recorded_at": "2026-10-13T19:24:17.653672+00:00",
+      "candidate_sha256": "3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f",
+      "note": "post-build supplemental, not the upstream pre-build direction checkpoint",
+      "rejected_chalkboard": "E was generated through original visual_languages.use and rendered in PowerPoint. The chalkboard cover is legible but does not foreground the fixed array positions and adds surface texture; A better matches the array-range proof.",
+      "scope": "Five cover/topic compositions only; E is an actual original chalkboard cover, not a full 5-page chalkboard rival. Interior selection follows array task fit and completed slide3 render."
+    },
+    "direction_gate": {
+      "candidates": "design/directions.json",
+      "picked": "A array",
+      "images": "none",
+      "native_fit": {
+        "language": "chalkboard",
+        "why": "原典の教材向け黒板表現をEとして実際に生成・描画して比較した"
+      },
+      "post_build": true
+    },
+    "build_script": "source/build_slide_maker_repository_example.py",
+    "purpose_section_terms": {
+      "objectives": "目標：",
+      "worked example": [
+        "左から順に照合"
+      ],
+      "recap": "回数の比から"
+    },
+    "icon_rationale": "Literal indexed numeric arrays preserve value/position identity, not categories.",
+    "type_scale_note": "Text boxes13/16/24/32/34pt; key legends16pt; native chart axes/legend16pt; five tokens total.",
+    "type_scale_roles": "Display34=slide heading; title32=large counts; body24=main text and active values; label16=unit definition, legends and chart labels; footnote13=conditions.",
+    "icon_none_category": "editorial-register",
+    "icon_none_checked": [
+      1,
+      2,
+      3
+    ],
+    "direction_adopted_scope": "A array adopts the literal indexed values and fixed within-page positions; the cover uses an upper heading, not the low-left heading position from the exploratory probe."
+  },
+  "supplemental_audit": "review/supplemental-plan-audit.json"
+}

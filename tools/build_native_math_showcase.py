@@ -14,20 +14,46 @@ PROMPT='''中高生・学び直し向け5分教材「平均の、その先。」
 mean→variance→standard deviationを、動機と同じデータの計算例で簡潔に説明。全3件を全体とした分散で、分母はn。n-1の不偏分散との違いは短く明記。
 原典Noi1r/powerpoint-skillのSandwichテーマとPptxGenJS helpersを実際に使い、render_latex.pyのOMML manifestとinject_omml.pyのPandoc→DOCX→OMML注入を実行。
 暗い表紙・結論、明るい本文、青と橙。Shippori明朝見出し、BIZ UDPGothic本文、Manrope英数字。導入でnative点図/表、本文でnative図表と編集可能な式。カード格子を繰り返さない。
-全ページ詳細目視・独立レビュー・構造監査・ZIP再実行は不要。制作計画は入力へ保存して確認待ちにしない。References/ThankYou/Backupを追加せず5枚を守る。
+全5ページの文字・数式・図表を実描画で確認し、原典overlap検査と独立レビューで修正する。制作計画は入力へ保存する。この5分教材は本編5枚のため、原典のReferences/ThankYou/Backup追加は作例固有の省略として明記する。
 最後のPNG/PDFはPowerPoint16の実描画。数式を画像へ黙って置き換えない。PPTX、PNG/PDF、原典runtime/未変更原本/差分、入力/依頼/ガイド/許諾/日本語SKILL、2ZIPを完成させる。'''
 FORMULAS=[
  {'id':'mean','latex':r'\bar{x}=\frac{1}{n}\sum_{i=1}^{n}x_i'},
  {'id':'mean-a','latex':r'\bar{x}_A=\frac{4+5+6}{3}=5'},
- {'id':'mean-b','latex':r'\bar{x}_B=\frac{0+5+10}{3}=5'},
- {'id':'variance','latex':r'\sigma^2=\frac{1}{n}\sum_{i=1}^{n}(x_i-\bar{x})^2'},
  {'id':'var-a','latex':r'\sigma_A^2=\frac{1+0+1}{3}=\frac{2}{3}'},
  {'id':'var-b','latex':r'\sigma_B^2=\frac{25+0+25}{3}=\frac{50}{3}'},
- {'id':'sd','latex':r'\sigma=\sqrt{\sigma^2}'},
  {'id':'sd-a','latex':r'\sigma_A=\sqrt{\frac{2}{3}}\approx 0.82'},
  {'id':'sd-b','latex':r'\sigma_B=\sqrt{\frac{50}{3}}\approx 4.08'},
 ]
 for f in FORMULAS:f.update(mode='display',render='omml')
+SKILL_JA='''---
+name: native-math-ja
+description: 原稿・研究資料から、数式をPowerPoint内で編集できる発表資料を作る。
+---
+
+# 数式を編集できるPowerPointを作る
+
+原典: Noi1r/powerpoint-skill / commit a39cd8cfba332741a96d52bebd2bb378b638364e / MIT。
+原文はupstream/powerpoint-slides/SKILL.md、テーマと全規則は同梱referencesを読む。非公式の日本語案内。
+
+## 自分の資料で使う
+
+1. 原稿や論文を読み、主要な主張、前提知識、例、数式を抽出する。PPTXが必要な用途で使い、Beamer/TeX出力は別スキルへ分ける。
+2. 発表時間、聞き手、前提、範囲、深さ、テーマを決める。既に依頼に指定があれば使い、足りない条件だけを確認する。
+3. 頁構成・各頁の目的・版式・数式と図の配置を計画する。定義の前に動機、定義から2頁以内に具体例を置く。原典の承認契約はユーザーの既存の指示に合わせる。
+4. 原典themes.mdからテーマとPptxGenJS helpersを使う。字体・配色・版式は資料に合わせる。図形、表、グラフをnativeで作る。
+5. 数式をformulas.jsonへ集める。通常はrender:ommlを使い、原典render_latex.pyでmanifestを生成。addMathTextのplaceholderを配置し、inject_omml.pyでPandoc→DOCX→OMMLを注入する。残存placeholderを0にする。画像への代替は明示し、黙って編集性を失わせない。
+6. 実際にPPTXを生成して全頁を描画する。OMMLはPowerPointで確認する。LibreOfficeでは欠ける場合がある。数式と表の間隔、はみ出し、対比、数式の正確さを頁ごとに確認する。
+7. 原典check_overlaps.py、visual-check、audit、pedagogy、excellenceの契約を読み、対応する検査と修正を行う。原典の採点90点以上条件と独立確認を、生成成功だけで置き換えない。未実行は未実行と記録する。
+8. 完成PPTX、PDF/PNG、原稿・数式・生成ソース、利用条件、検査範囲を渡す。原典のReferences/Thank You/Backup構成から省く場合は、用途と変更を明記する。
+
+## 必要環境
+
+Node.jsとPptxGenJS、Pythonとlxml、Pandoc。OMMLの表示・編集確認にはMicrosoft PowerPointを使う。PptxGenJSはMIT、lxmlはBSD系、PandocはGPLの外部実行依存。字体は公式配布と原文OFLを使い、Office付属字体やXSLを抽出再配布しない。
+
+## 同梱作例の範囲
+
+5分・5枚の仮想得点教材。Sandwichの青と橙を文字の対比が取れる濃さへ調整し、明朝見出しと日本語本文書体を設定した。本編5枚に絞ったためReference/Thank You/Backup追加を省略。研究論文の抽出例ではない。実行と独立評価の状態は作例QA.jsonを確認する。
+'''
 
 SLIDES=r'''
 // Japanese educational slides. Original T/F/masters/math/chart/table helpers above.
@@ -42,7 +68,7 @@ function dots(sl,vals,y,color,dark=false){
 {
  const s=pres.addSlide({masterName:'TITLE_SLIDE'});
  text(s,'DATA / 5分の学習ノート',.55,.55,8.9,.35,14,'F3B156','Manrope',true);
- text(s,'平均の、\nその先。',.55,1.12,5.1,1.7,48,'FFFFFF','Shippori Mincho',true);
+ text(s,'平均の、\nその先。',.55,1.12,4.6,1.7,48,'FFFFFF','Shippori Mincho',true);
  text(s,'同じ「5」に、\n違う散らばり。',.58,3.35,4.6,1,24,'FFFFFF');
  text(s,'A',5.5,1.65,.5,.4,18,'60B5E2','Manrope',true); text(s,'4   5   6',6.05,1.65,3.1,.4,22,'FFFFFF','Manrope');
  text(s,'B',5.5,2.9,.5,.4,18,'F5B451','Manrope',true); text(s,'0   5   10',6.05,2.9,3.1,.4,22,'FFFFFF','Manrope');
@@ -56,19 +82,19 @@ function dots(sl,vals,y,color,dark=false){
  F.tblCell.size=22;F.tblHead.size=16;
  const c=t=>({text:String(t),options:{fontFace:'Manrope',align:'center'}});
  addTable(s,['データ','1件目','2件目','3件目'],[[c('A'),c(4),c(5),c(6)],[c('B'),c(0),c(5),c(10)]],.6,1.92,4.4,[1.2,1.07,1.07,1.06],.6);
- addMathText(s,'mean',5.4,1.68,4,1.05,{fontSize:27});
- addMathText(s,'mean-a',.65,3.77,4.4,1,{fontSize:25,color:T.ac.pos});
- addMathText(s,'mean-b',5.25,3.77,4.1,1,{fontSize:25,color:T.ac.neg});
- text(s,'足して、件数で割る。平均だけでは、散らばりは見えない。',.65,4.83,8.7,.25,14,T.tx.sec);foot(s,2);
+ addMathText(s,'mean',5.4,1.78,4,1.05,{fontSize:27});
+ addMathText(s,'mean-a',.65,3.69,4.4,1,{fontSize:25,color:T.ac.pos});
+ text(s,'Bも合計15点。\n3件で割ると平均は5点。',5.4,3.61,4,1,20,T.ac.neg);
+ text(s,'足して、件数で割る。平均だけでは、散らばりは見えない。',.65,4.75,8.7,.25,14,T.tx.sec);foot(s,2);
 }
 // 03: formula and native bar chart, not an image renderer.
 {
  const s=pres.addSlide({masterName:'CONTENT_SLIDE'});sTitle(s,'分散は、ずれを二乗して平均する');
  text(s,'平均からのずれ。二乗すると、正負が打ち消し合わない。',.6,.95,8.9,.45,17);
- addMathText(s,'variance',.6,1.55,8.8,1.1,{fontSize:29});
+ text(s,'平均との差を二乗 → 足す → 件数で割る',.6,1.55,8.8,.65,25,T.tx.pri,F.body.face,true);
  F.tblCell.size=12;F.caption.size=11;
- addChart(s,pres.ChartType.bar,[{name:'A',labels:['1件目','2件目','3件目'],values:[1,0,1]},{name:'B',labels:['1件目','2件目','3件目'],values:[25,0,25]}],.6,2.75,4.5,1.77,{showLegend:true,chartColors:[T.ac.pos,T.ac.neg],catAxisLabelFontSize:10,valAxisLabelFontSize:10,valAxisMinVal:0,valAxisMaxVal:25,valAxisMajorUnit:5,showValue:false,showTitle:false,showBorder:false,showCatName:false});
- text(s,'二乗したずれの大きさ',.8,4.54,4.1,.25,11,T.tx.sec);
+ addChart(s,pres.ChartType.bar,[{name:'A',labels:['1件目','2件目','3件目'],values:[1,0,1]},{name:'B',labels:['1件目','2件目','3件目'],values:[25,0,25]}],.6,2.75,4.5,1.77,{showLegend:true,chartColors:[T.ac.pos,T.ac.neg],catAxisLabelFontSize:10,valAxisLabelFontSize:10,valAxisMinVal:0,valAxisMaxVal:30,valAxisMajorUnit:10,showValue:true,dataLabelPosition:'outEnd',dataLabelFormatCode:'0',dataLabelColor:T.tx.pri,dataLabelBkgrdColor:T.bg.content,dataLabelFormatCodeSourceLinked:false,showTitle:false,showBorder:false,showCatName:false});
+ text(s,'二乗したずれ：A=1,0,1 ／ B=25,0,25',.8,2.56,4.5,.2,11,T.tx.sec);
  addMathText(s,'var-a',5.3,2.83,4.05,.78,{fontSize:24,color:T.ac.pos});
  addMathText(s,'var-b',5.3,3.92,4.05,.78,{fontSize:24,color:T.ac.neg});
  text(s,'全3件を「全体」として計算。分母はn（ここでは3）。',.6,4.84,8.9,.22,12,T.tx.sec);foot(s,3);
@@ -77,8 +103,8 @@ function dots(sl,vals,y,color,dark=false){
 {
  const s=pres.addSlide({masterName:'CONTENT_SLIDE'});sTitle(s,'標準偏差で、元の単位に戻す');
  text(s,'分散の単位は「点の二乗」。平方根で「点」に戻す。',.6,.97,8.9,.45,18);
- addMathText(s,'sd',.6,1.62,3.1,1,{fontSize:37});
- text(s,'平均からの広がりを\n同じ単位で比べる目安。',4.7,1.7,4.6,.82,21);
+ text(s,'分散の平方根をとる',.65,1.7,4,.65,27,T.tx.pri,F.body.face,true);
+ text(s,'平均からの広がりを\n同じ単位で比べる目安。',5.2,1.7,4.15,.82,21);
  addMathText(s,'sd-a',.65,2.9,4.15,1.05,{fontSize:26,color:T.ac.pos});
  addMathText(s,'sd-b',5.2,2.9,4.15,1.05,{fontSize:26,color:T.ac.neg});
  addChart(s,pres.ChartType.bar,[{name:'標準偏差',labels:['A','B'],values:[.8164965809,4.082482905]}],.7,4.07,8.6,.85,{barDir:'bar',showLegend:false,varyColors:true,chartColors:[T.ac.pos,T.ac.neg],catAxisLabelFontFace:'Manrope',catAxisLabelFontSize:12,catAxisLabelFrequency:'1',valAxisMinVal:0,valAxisMaxVal:5,valAxisMajorUnit:1,valAxisLabelFontSize:10,valGridLine:{color:'D0D0D0',width:.4},showValue:false});
@@ -90,8 +116,8 @@ function dots(sl,vals,y,color,dark=false){
  text(s,'平均と散らばりを、\n一緒に読む',.6,.58,8.8,1.2,35,'FFFFFF','Shippori Mincho',true);
  text(s,'平均',.6,2.3,2.4,.4,18,'C5CDD0');text(s,'中心の位置',3.3,2.3,5.6,.4,25,'FFFFFF');
  text(s,'標準偏差',.6,3.03,2.4,.4,18,'C5CDD0');text(s,'中心からの広がり',3.3,3.03,5.6,.4,25,'FFFFFF');
- s.addTable([[{text:'',options:{fill:{color:T.bg.title}}},{text:'A',options:{color:'60B5E2'}},{text:'B',options:{color:'F5B451'}}],[['平均（点）','5','5']].flat(),[['標準偏差（点）','0.82','4.08']].flat()],{x:.65,y:3.84,w:8.6,colW:[4,2.3,2.3],rowH:.34,fontFace:F.body.face,fontSize:16,color:'FFFFFF',fill:{color:T.bg.title},border:{type:'solid',color:'677276',pt:.4},margin:5,align:'center'});
- text(s,'※ 全体の分散を使用。標本から推定する不偏分散とは区別。',.65,4.94,8.7,.2,11,'C5CDD0');foot(s,5,true);
+ s.addTable([[{text:'',options:{fill:{color:T.bg.title}}},{text:'A',options:{color:'60B5E2'}},{text:'B',options:{color:'F5B451'}}],[['平均（点）','5','5']].flat(),[['標準偏差（点）','0.82','4.08']].flat()],{x:.65,y:3.72,w:8.6,colW:[4,2.3,2.3],rowH:.34,fontFace:F.body.face,fontSize:15,color:'FFFFFF',fill:{color:T.bg.title},border:{type:'solid',color:'677276',pt:.4},margin:3,align:'center'});
+ text(s,'※ 全体の分散を使用。標本から推定する不偏分散とは区別。',.65,4.86,8.7,.2,11,'C5CDD0');foot(s,5,true);
 }
 pres.writeFile({fileName:'source/deck-placeholders.pptx'}).then(()=>console.log('Original theme/helpers: 5 Japanese slides generated.'));
 '''
@@ -116,7 +142,7 @@ def prepare():
     write(source/'render_powerpoint.ps1',render)
     shutil.copy2(SCRIPT,source/'build.py')
     dump(CASE/'input/data.json',{'purpose':'学習用の仮想得点。調査結果ではない','datasets':{'A':[4,5,6],'B':[0,5,10]},'variance_divisor':'n; all three values treated as population','mean':{'A':5,'B':5},'population_variance':{'A':2/3,'B':50/3},'population_standard_deviation':{'A':(2/3)**.5,'B':(50/3)**.5}})
-    dump(CASE/'input/plan.json',{'duration_minutes':5,'audience':'中高生・学び直し','total_slides':5,'theme':'upstream Sandwich','slides':[{'title':t,'layout':l} for t,l in zip(TITLES,['dark title + native dot plot','native table + mean equations','formula + native grouped bars','native radicals + native bar chart','dark conclusion + native summary table'])],'review':'User explicitly requested minimal first display; no interview/outline approval gate or independent reviewers','fixed_extras':'No References/ThankYou/Backup extra slides; conclusion reuses THANK_YOU master only'})
+    dump(CASE/'input/plan.json',{'duration_minutes':5,'audience':'中高生・学び直し','total_slides':5,'theme':'upstream Sandwich, darker semantic colors for contrast','slides':[{'title':t,'layout':l} for t,l in zip(TITLES,['dark title + native dot plot','native table + mean equations','two formulas + native grouped bars with values','two native radical formulas + native bar chart','dark conclusion + native summary table'])],'review':'All5 visual check, original overlap checker, Kimi K3 and Opus5.5 independent review loop','fixed_extras':'No References/ThankYou/Backup extra slides in this5-minute educational example; deviation disclosed'})
     write(CASE/'input/BRIEF.md','# 平均の、その先。\n\n仮想得点A=[4,5,6], B=[0,5,10]。5分・5枚の教材。平均はどちらも5、全体の分散は2/3と50/3、標準偏差は約0.82点と4.08点。分母は全3件を全体としたn。母集団を推定する不偏分散とは区別する。\n')
     write(CASE/'PROMPT.md',PROMPT+'\n')
     dump(CASE/'formulas.json',FORMULAS)
@@ -125,6 +151,9 @@ def prepare():
     # Original theme JSON and complete helpers, with typography/theme substitutions only.
     theme=re.search(r'\*\*Sandwich\*\*.*?```json\n(.*?)\n```',refs,re.S).group(1)
     t=json.loads(theme)
+    # Darker blue/orange retain the semantic pair and meet text contrast on white.
+    t['accent']['positive']='006B98'
+    t['accent']['negative']='A65A00'
     theme_js='const T = '+json.dumps({'bg':t['background'],'tx':{'pri':t['text']['primary'],'sec':t['text']['secondary'],'mut':t['text']['muted'],'wh':'FFFFFF'},'ac':{'pos':t['accent']['positive'],'neg':t['accent']['negative'],'emp':t['accent']['emphasis']},'chart':t['chart'],'cardFill':t['card_fill'],'divider':t['divider']},indent=2)+';'
     adapted=re.sub(r'const T = \{.*?\n\};',theme_js,original,count=1,flags=re.S)
     adapted=adapted.replace('"Georgia"','"Shippori Mincho"').replace('"Calibri"','"BIZ UDPGothic"').replace('pres.author = "Presenter Name";','pres.author = "Studio Yebisu";').replace('pres.title = "Presentation Title";','pres.title = "平均の、その先。";')
@@ -227,6 +256,7 @@ Noi1r/powerpoint-skill `{PIN}` / MIT。原典theme/helpersとinject_ommlを実�
 
 `python source/build.py --node C:/path/to/node.exe --pandoc C:/path/to/pandoc.exe` の成功後、PowerPointで代表完成物を一度開く。
 ''')
+    write(CASE/'SKILL.md', SKILL_JA)
     for directory in ['upstream','source','fonts','dependencies','input']:
         shutil.copytree(CASE/directory,fork/directory,dirs_exist_ok=True,ignore=shutil.ignore_patterns('*.pptx','*.log','__pycache__','*.pyc'))
     for filename in ['SKILL.md','LICENSE','README.md','formulas.json','package.json','requirements.txt','PROMPT.md']:shutil.copy2(CASE/filename,fork/filename)

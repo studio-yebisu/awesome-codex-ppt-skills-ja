@@ -1,0 +1,69 @@
+{
+  "pptx_sha256": "e451ba4b2ea22fc52404f24e6274d5ab9e82fddf3ffd58211126c8b017023378",
+  "commands": [
+    {
+      "command": [
+        "pwsh.EXE",
+        "-NoProfile",
+        "-File",
+        "runtime/scripts/export_pptx_png.ps1",
+        "-Pptx",
+        "deck.pptx",
+        "-OutDir",
+        "reviews/original-export",
+        "-Width",
+        "1600",
+        "-Height",
+        "900"
+      ],
+      "exit_code": 0,
+      "log": "reviews/current-original-export.txt"
+    },
+    {
+      "command": [
+        "pwsh.EXE",
+        "-NoProfile",
+        "-File",
+        "runtime/scripts/inspect_pptx_overflow.ps1",
+        "-Pptx",
+        "deck.pptx",
+        "-Tolerance",
+        "40",
+        "-OutputJson",
+        "reviews/overflow.json"
+      ],
+      "exit_code": 0,
+      "log": "reviews/current-overflow.txt"
+    },
+    {
+      "command": [
+        "python.exe",
+        "runtime/scripts/make_contact_sheet.py",
+        "--input",
+        "render",
+        "--output",
+        "reviews/contact-sheet.png"
+      ],
+      "exit_code": 0,
+      "log": "reviews/current-contact-sheet.txt"
+    },
+    {
+      "command": [
+        "python.exe",
+        "runtime/scripts/scan_pptx_text.py",
+        "--pptx",
+        "deck.pptx",
+        "--bad",
+        "中期检查,项目简介,系统框图,算法设计,成果展示,总结分析,TODO,占位",
+        "--json",
+        "reviews/stale-text-scan.json"
+      ],
+      "exit_code": 0,
+      "log": "reviews/current-stale-text.txt"
+    }
+  ],
+  "original_overflow_tolerance_unchanged": 40,
+  "overflow_count": 0,
+  "visual_review": "Not inferred from these scripts; inspect current contact sheet and actual pages.",
+  "human_or_independent_approval_claimed": false
+}

@@ -1,19 +1,27 @@
-# 雨の日も迷わない、図書館イベント案内
+# 見出し・数値・問い・比較を、同じ配色と文字の規則で揃えられる。
 
-架空の図書館・読書会を題材にした日本語6ページ。`deck.html`（`index.html`も同一内容）が完成物です。原典 att6113/ppt-design-system のHTMLテンプレート、Forest Ink配色、レイアウトとページ移動JSを実際に使用しています。
+入力：架空の図書館イベントの参加案内6頁とForest Ink指定。
+出力：原典テンプレートのナビゲーションを持つ日本語HTML。
 
-## 再生成
+この日本語作例は原典の固定ソースを使った紹介用の試作です。修復後の全6頁をCodexが実描画で確認しました。独立したKimi K3 / Opus5.5の再採点と人の採用判断は別です。
 
-```sh
-python source/reproduce.py --input input/data.json --render
-```
+## 使い方
 
-Python 3、描画にはNode.js 22+とChrome/Edgeが必要です。生成だけなら`--render`を外せます。npm・APIキー・有料サービスは不要。ブラウザの自動検出ができなければ`--chrome`へ実行ファイルを指定します。
+1. 原典themes.mdから5配色の一つを選ぶ
+2. input/data.jsonに日時・会場・持ち物と頁の役割を書く
+3. layoutの数値カード・大きな問い・並列比較を内容で選ぶ
+4. python source/reproduce.pyで原典templateへ差し込む
+5. 全頁のP0/P1項目と元ナビゲーションを実画面で確認する
 
-`input/data.json`の本文は信頼できるローカルHTMLとして扱います。原典テンプレートは`source/upstream/assets/template.html`に無改変で保持。日本語向けの文字サイズ・行間、端末フォント、配色を`source/reproduce.py`で適用します。原典の矢印キー、横スクロール、下部ドットを保持。カタログ用メッセージ橋渡しは別スクリプトです。
+## 生成・検査
 
-再生成時はQAを必ず`generated_awaiting_review`に戻します。自動描画が通っても目視レビュー済みにはなりません。完成物は6ページの全画像をエージェントが確認しました。人による採用・公開は未実施です。
+`python source/reproduce.py`
 
-`PROVENANCE.json`に原典コミット、参照SHA、実行ログを記載。`render/report.json`にページ境界と操作結果、`review/template-proof.json`に原典JS保持、`review/portable-proof.json`に別フォルダ再現結果があります。原典MIT通知は`licenses/LICENSE-upstream.txt`です。フォントは同梱しません。
+原典presetとJavaScriptの一致を再検査。数値の単位の透過を弱めて読みやすくし、全6頁を再描画。 実行記録と画像hashはQA.json、出所はPROVENANCE.jsonと原典LICENSEを参照してください。
 
-確認範囲は1920×1080のHTTP表示。PPTX出力・印刷・スマートフォン縦画面は未検証です。
+## 範囲
+
+- 作例はHTMLのみでPPTX laneは未実施
+- 原典テンプレートのJavaScriptを無改変で保持
+- 游明朝・游ゴシック等の端末書体に依存。OS書体は配布しない
+- 10種の全レイアウトや他4配色を実演した例ではない

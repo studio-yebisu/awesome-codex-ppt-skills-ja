@@ -1,0 +1,23 @@
+page open (1 of 6): cover, theme "machi-kobo"
+heading: 街の作業場の企画案
+summary: 架空のものづくり拠点の提案
+file: pages/open.json (not written yet)
+
+page file keys (the top-level keys of pages/open.json): components, background, image_side, notes (speaker notes, never drawn)
+components (2): bullets, row_cards
+  expand one with --component <type>
+
+signature layouts (the theme's own drawings on face marquee-cover, the ones its samples are made of):
+  photograph: The cover drawn over a photograph, the face's own lettering kept
+    write: background {"kind": "asset", "asset_id": "<a picture>"}
+
+limits (validate refuses the page past these):
+  at most 1 components (row_cards or bullets) on the page (the face's body slot)
+  at most 5 items in each row_cards or bullets (the face's body slot, blank items not counted)
+  at most 29 width units in each bullets item (render-safety limit, where a CJK character is 1 width unit and a Latin letter less)
+advice (validate warns past these):
+  at most 25 width units in each bullets item (balanced pacing, where a CJK character is 1 width unit and a Latin letter less)
+
+errors: none
+warnings: none
+fit: not checked here. Run --fit to draw this page and see what it would lose

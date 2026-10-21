@@ -1,0 +1,31 @@
+{
+  "author": "Codex",
+  "status": "passed",
+  "input_archive_sha256": "d87686c72f0f1e5e9cc70e65d38c6e527005c091c72f117495ff2eb3f47324e6",
+  "current_artifact_sha256": "86ce551f3a29d5f32154cf84f8cc93e8edf55895404f1566470cecb2e5421b2e",
+  "scope": "Actual example ZIP extracted into a fresh private folder and rebuilt with existing installed runtimes. No alternate environment or service installed.",
+  "shared_dependencies": "Existing matching node_modules reused through a private junction where required; dependencies are not in the ZIP.",
+  "results": {
+    "html_byte_identical": true
+  },
+  "commands": [
+    {
+      "program": "python.exe",
+      "arguments": [
+        "source/rebuild.py"
+      ],
+      "exit_code": 0
+    },
+    {
+      "program": "node.exe",
+      "arguments": [
+        "source/upstream/scripts/ppt-layout-guard.js",
+        "index.html",
+        "--report",
+        "layout-guard-report.json"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "fork_equivalence": "The fork ZIP includes these same source inputs; its manifest and CRC are checked separately."
+}

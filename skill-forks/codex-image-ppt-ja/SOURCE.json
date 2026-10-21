@@ -1,13 +1,382 @@
 {
   "repository": "ningzimu/codex-ppt-skill",
   "commit": "941dcafe2f23ea4ae61de99e9b22fb0ef3d9e06c",
-  "scope": "Japanese entrypoint, repository-specific refinements, original source and actual production recipe",
-  "example_ids": [
-    "codex-image-ppt"
-  ],
-  "upstream_preserved": true,
-  "proprietary_export_engine_included": null,
+  "original_source_preserved": true,
+  "license": "MIT; retain component/font notices",
+  "scope": "Pinned upstream plus Japanese example; current entry points and historical records distinguished.",
   "files": [
+    {
+      "path": "example/codex-image-ppt.pptx",
+      "sha256": "661602d6d753221d3e15bd6b6fb71f8eeba3dccabe8d41c1495840e5a263d59f"
+    },
+    {
+      "path": "example/deck_spec.json",
+      "sha256": "42123248c93397fad96064d8179feae53ce519a8d732cc845ac75e4e1fe044c3"
+    },
+    {
+      "path": "example/environment.json",
+      "sha256": "2a53bef71c77bc26fab4e7f887f78b07205b84939779f7afe65c67ccc974986c"
+    },
+    {
+      "path": "example/index.html",
+      "sha256": "61fbb6e07964a292f14fe4027a2b7387cdc7e221d4cee5fd1b7258ea17e557b9"
+    },
+    {
+      "path": "example/input/BRIEF.md",
+      "sha256": "0362bdc4513da312b28678ffdb1d7e17967eb73b89538de3afbc5e1ab98a7a5f"
+    },
+    {
+      "path": "example/input/data.json",
+      "sha256": "6751cd23f391b623103c805cf93bfc43b94e5f24a3d719b41edabdd2cb71a752"
+    },
+    {
+      "path": "example/input/outline-first.draft.md",
+      "sha256": "5c77f573bb93926d7b98aa127c5866fc2cb3629c1e267875d28056a097754e25"
+    },
+    {
+      "path": "example/LICENSE.upstream",
+      "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154"
+    },
+    {
+      "path": "example/NOTES.md",
+      "sha256": "634825852c3600f0d1f22c07f8197cb291353ca846f5d1287610bb10b84aed35"
+    },
+    {
+      "path": "example/origin_image/slide_01.png",
+      "sha256": "26aec1cd543aa79445e64dd327697abbd274ccb0d76821bdfa4715f4b21168f1"
+    },
+    {
+      "path": "example/origin_image/slide_02.png",
+      "sha256": "1554c034b25491ce5f3c2176ee82acfce189b6338707eb983e7dcd58b9190f30"
+    },
+    {
+      "path": "example/origin_image/slide_03.png",
+      "sha256": "418b783fe023c50011830c40c8a90cf68b1f3a42dc076fb09e033670ce8b8fad"
+    },
+    {
+      "path": "example/outline.md",
+      "sha256": "13ff7e7667f18729e305564dbdd5291c7ef840f6d1f9fca95692102dbac3523c"
+    },
+    {
+      "path": "example/PROMPT.txt",
+      "sha256": "733e334f4ba72a5c506a8466ab1d23f09caadb8aad93bdc9ed9823295b042ba7"
+    },
+    {
+      "path": "example/prompts/slide_01.json",
+      "sha256": "91d6ce5c98514f3fb5826c1566ed621564597af5bc482df25ecf8a237fc3a35f"
+    },
+    {
+      "path": "example/prompts/slide_02.json",
+      "sha256": "60d56acc6b3fe048ffdfce91515ff078474194c88cea2f44ca9a228d6d8adafc"
+    },
+    {
+      "path": "example/prompts/slide_03.json",
+      "sha256": "70969005f4e6a1e6524aa497463ff253e9a9e6cf1b506bc272a39d27e9873efd"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "77f4cdf62dee26ba4f0950d8314154cd95c606567bfa72f834c8673c93feffa8"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "cc9f265cb612ab0ff968e20f04ed2229ac644aca48d2d2866b57758dacf5efc6"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "4c6b4831e276a8f48ddd31595cbd467daf2c702709346cfc3c195010ed5c5998"
+    },
+    {
+      "path": "example/render/deck.pdf",
+      "sha256": "079c52a66e37db539d4f356fe4bf2cf33852a4bcf1af5b56f7e015d14f89ab4b"
+    },
+    {
+      "path": "example/render/pdf-preview.json",
+      "sha256": "b99e545a19824ef3aa80df6cf83ca3a9cffb9412ec10bf5b07c893b085c91062"
+    },
+    {
+      "path": "example/render/powerpoint-render.json",
+      "sha256": "b5059b05abfbb84bdae7f41ae52b74e842b8f663d32e02a36fb5bf01cb5ca9b0"
+    },
+    {
+      "path": "example/render/slide-01.png",
+      "sha256": "2d55abb2ebad56a1ea6ec5e76b2ad60ca2eed594b82c00e3bfb788c5a6270687"
+    },
+    {
+      "path": "example/render/slide-02.png",
+      "sha256": "2c875f6c51e5e800714646b9bff69851c9f7017e5360872e1a120637528d63ae"
+    },
+    {
+      "path": "example/render/slide-03.png",
+      "sha256": "00efc8aff64b8cfb8696b99b8159a42c0aecbc3813c44f44c56cf81c239add13"
+    },
+    {
+      "path": "example/REPRODUCE.md",
+      "sha256": "f0464b295e638336099320e26b7789e81fdf14cd647b8362c2a61e8a53662685"
+    },
+    {
+      "path": "example/SKILL.md",
+      "sha256": "47ec825f6c628541079b6cb9c3773b7e252f1ca75d87244654f756d2775ef876"
+    },
+    {
+      "path": "example/slide_jobs.json",
+      "sha256": "6355bbd1870668e0d7f2c54d279a94430176883276b3f3243a8d0aecc428e9a5"
+    },
+    {
+      "path": "example/slide_run_state.json",
+      "sha256": "30246c95dc5d8b7ddff8aa8e857609b06ce08ec464aadacacbfe2fb76e2cf6fc"
+    },
+    {
+      "path": "example/source/build_codex_image_repository_example.py",
+      "sha256": "f9ced9b672e5ac22464825aab3a90b8e400a1c165af3f776540ae9762c0ebd21"
+    },
+    {
+      "path": "example/source/build_repair_comparison.py",
+      "sha256": "6c8d1109a2324c60f0700a076960ab8bb05a9dd6b6cbe8b4c5864a96e95a2682"
+    },
+    {
+      "path": "example/source/build_warning_detail.py",
+      "sha256": "8eb4973e41c95e0f313744ed3e4dd79200f07202944a3e5ad38dafeb8686f218"
+    },
+    {
+      "path": "example/source/catalog-repair-proposal.json",
+      "sha256": "fe1804e9b37f97430e4f6180b0fd0544d6f680dd296e260d8efc75f21e3c1506"
+    },
+    {
+      "path": "example/source/commands.json",
+      "sha256": "55f1cfd3069554844f5bbded729a49ba9b65d1112982f8270117dc441604ff9e"
+    },
+    {
+      "path": "example/source/current-assemble.json",
+      "sha256": "173930f1f9b870f3dfc1bd202551b3fa07e028e6b23682e162e7cb6899d7da29"
+    },
+    {
+      "path": "example/source/current-assemble.log",
+      "sha256": "1133b6bd9c55ea7dd743601d04b65df6103f54bb1d956e2132974defcac5b5a5"
+    },
+    {
+      "path": "example/source/distribution-replay.json",
+      "sha256": "4dab7a5bc89e3b8fb3a05315fb055a5eaa71aa32781c8cab7ed2a8477d018ef9"
+    },
+    {
+      "path": "example/source/embedded-image-check.json",
+      "sha256": "b1750e7e69db7f8920a6a32f8a9aba2abe95e1c17b586d8f883e86ad6bd93051"
+    },
+    {
+      "path": "example/source/ENTRYPOINTS.md",
+      "sha256": "247f32d9771dd7f9de719042a0cc1e354ee53791824f54d161def14812f7f601"
+    },
+    {
+      "path": "example/source/image-assembly-verification.json",
+      "sha256": "8c2a880afae41513ab8643d9bab906a38b367d9cc7577cf1e855af7ca87e818a"
+    },
+    {
+      "path": "example/source/imagegen-repair/before-after-page-03.png",
+      "sha256": "33745d47bee436dbba30c4c013b1f7c3d387f3f0b9f152f364bccf1e5a6a055c"
+    },
+    {
+      "path": "example/source/imagegen-repair/comparison.json",
+      "sha256": "16e8163d1fc32f9b7ff916bf94313c0ae094884c513b42d37559ff4c989b1f3b"
+    },
+    {
+      "path": "example/source/imagegen-repair/previous-slide-jobs.json",
+      "sha256": "48eb6a5d3736699c0bfa420ec611df46dc55d3bb610d96993cb0c40c4b675af0"
+    },
+    {
+      "path": "example/source/imagegen-repair/README.md",
+      "sha256": "a11d8f4eb69c228d71c7dfc3473d536e76c4d3ae9a7aea0d978738a90c606f81"
+    },
+    {
+      "path": "example/source/imagegen-repair/slide-03-after.png",
+      "sha256": "77dc8f10f723b57b949b787f9c7d65e159d7bda4945b3ad664728aa6efd19876"
+    },
+    {
+      "path": "example/source/imagegen-repair/slide-03-before.png",
+      "sha256": "29165a22ae72402cc5ee4221304c27b2e40a7d21c06ee6ebe9a23c2b1ea6e620"
+    },
+    {
+      "path": "example/source/imagegen-repair/slide-03-repair-job.json",
+      "sha256": "c784da68481e85f09f645657b96c3724f09720d35a4c9b80745e835fa67d16c1"
+    },
+    {
+      "path": "example/source/imagegen-repair/state-receipts.json",
+      "sha256": "ea16eefe477513f2cb61a0c0ae065e41471fb3e4c16639de66384ee0fee4e994"
+    },
+    {
+      "path": "example/source/imagegen-repair/warning-detail-after.png",
+      "sha256": "d820995b40202cbf9e080f923bd08f34c3fbbce8a8ccaf4ff70aa1fa860fd470"
+    },
+    {
+      "path": "example/source/imagegen-repair/warning-detail-before.png",
+      "sha256": "78cfceb5860261c866ede7eb33fd9e15fe4fc91ae2c24eeeb8fb4740196e115e"
+    },
+    {
+      "path": "example/source/imagegen-repair/warning-detail.json",
+      "sha256": "a879574d552ec2dbbb86c6c999f5ac85038608f92ef62ed7b8b77daa4a4f5f2a"
+    },
+    {
+      "path": "example/source/imagegen-repair.json",
+      "sha256": "3b8be4bc97e6dc6a56915520a8453ba0086d3dcbb055b98d79b6498ff1c21fe8"
+    },
+    {
+      "path": "example/source/imagegen-warning-repair.json",
+      "sha256": "e40dad8455a07e4e5325b0711901f51e78d00c6c2a8294dfff0d2c2505669bb8"
+    },
+    {
+      "path": "example/source/inspect_current.py",
+      "sha256": "94ad439aa7cf694b27d403f176b7b8321b649d941d4d45a5a79aa5b2a40d9de2"
+    },
+    {
+      "path": "example/source/logs/01-prepare_slide_prompts.py.txt",
+      "sha256": "7e05cd26cb9a9efaaf890a62208dec33331dc7c255e4fcdeadca587fe547173b"
+    },
+    {
+      "path": "example/source/logs/02-record_slide_dispatch.py.txt",
+      "sha256": "169e42d4135d03aa37ece188954faa547dd4fe9292858a21ec58bf32cb3fff1f"
+    },
+    {
+      "path": "example/source/logs/03-prepare_slide_prompts.py.txt",
+      "sha256": "dc8c60948858b5bac6582882a8c1ffe71dd356dcfe40f89f8e21c89d51759c58"
+    },
+    {
+      "path": "example/source/logs/04-record_slide_dispatch.py.txt",
+      "sha256": "e2c6b96581d3ad81cc5d39043ffb571ba831636a944ac9f73916cc7d88327f83"
+    },
+    {
+      "path": "example/source/logs/05-record_slide_result.py.txt",
+      "sha256": "c0b7c545aa5ce740c27435a33e17c4d951645448839b2db61a9568b02d702693"
+    },
+    {
+      "path": "example/source/logs/06-record_slide_dispatch.py.txt",
+      "sha256": "900e8fe4093f871ab96bb46d9b946ef8bc38ed530c2cdf7fa44e350ea63d7c80"
+    },
+    {
+      "path": "example/source/logs/07-record_slide_result.py.txt",
+      "sha256": "7574100af19a76a4d37c73dd3b4a34adf4ff69b9f0fe917d347e657926d2690d"
+    },
+    {
+      "path": "example/source/logs/08-record_slide_dispatch.py.txt",
+      "sha256": "dd95eb05eb09ac4a7adb6c3235c16e246e0d81f3a7d8317c0a4556b0468b6b9b"
+    },
+    {
+      "path": "example/source/logs/09-record_slide_result.py.txt",
+      "sha256": "74c21c5b2faffd750c0990a0018cffad2b3b91a833d7470af0c02f7048b1658b"
+    },
+    {
+      "path": "example/source/logs/10-slide_job_status.py.txt",
+      "sha256": "2c1de81047fc4fb64200d91aa490add9ff3655b9d302e126cbfd2cfdcbb61cde"
+    },
+    {
+      "path": "example/source/logs/11-assemble_ppt.py.txt",
+      "sha256": "655f547c42acd814342a1e786383a3b375e41383cb37a873329896eeb2977e58"
+    },
+    {
+      "path": "example/source/native-elements.json",
+      "sha256": "d699fd5d25cdcec46a769178c46e1997e0bf08086228a95c092d73e55eff9eef"
+    },
+    {
+      "path": "example/source/native-imagegen-requests.json",
+      "sha256": "1021ae31370f95e5b8072760a014fd211b9f10b6a0f9a8871fa46253a9dbcd68"
+    },
+    {
+      "path": "example/source/pdf-fonts.json",
+      "sha256": "af07b65e58369a5326d20025763fa8a37aa5bf41b331b14442d83102aefa124e"
+    },
+    {
+      "path": "example/source/reconcile_image_state.py",
+      "sha256": "939c3f3b041465e73e01178446627455231b6e3c3995e5a8012e43b5c6ea7d77"
+    },
+    {
+      "path": "example/source/record_image_repair.py",
+      "sha256": "c961f3486382c205713fa3b33e6d698e92d5092442ec8aac2376dd3dc912e50f"
+    },
+    {
+      "path": "example/source/render_pdf_previews.py",
+      "sha256": "3052b04c2d2ef5a7635962a49dcfe7e7152f42651494a3dd83ecc9f927a56205"
+    },
+    {
+      "path": "example/source/render_powerpoint.ps1",
+      "sha256": "1d5b67b5d088b432fe518cfe900311d6fd8c672d5428bd62b42259b0fcba8a85"
+    },
+    {
+      "path": "example/source/reproduce.py",
+      "sha256": "b24d84532850ec1f94c64e0b95d840ed4f9b295ef61b573015a13e30b825c0f3"
+    },
+    {
+      "path": "example/source/requirements.txt",
+      "sha256": "877fcdbddcbbc51dc3b01575d2eba67605db1ee608b79016abb33983faf0143a"
+    },
+    {
+      "path": "example/source/state-artifact-reconciliation.json",
+      "sha256": "7b7bf38ee265d24cb8b60fc3b51b9be2d6f0f897c2f886812b107f8b0b942bcb"
+    },
+    {
+      "path": "example/source/upstream/LICENSE",
+      "sha256": "68e435621ab299c7cbe3ad8f088e877f9bca76508c621f27a697606df8ff2154"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/docs/outline-style-and-sample.md",
+      "sha256": "d6f0a477f1027d0c075abcdd5a1df781a499a1d59d9be6d63ddcfc21ad26596c"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/docs/workflow-gates-and-progress.md",
+      "sha256": "dd0fe2bc30851dd1c8830127227c20b1aeaace3e6417a3be003e86dc49e236e6"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/scripts/assemble_ppt.py",
+      "sha256": "c4ac18e2aa28d92ecc50299e6267e127c226e041c601bd3c7224ec7278061fe5"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/scripts/prepare_slide_prompts.py",
+      "sha256": "92cc338a85afa463b1faa09035ab5b73b993813ea54ff95c9e47b4788e45ef81"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/scripts/record_slide_dispatch.py",
+      "sha256": "f5ce8806a0aecf24ea3b7c657c8d20507d83b6fd21a81da86d8f6f9da623ed54"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/scripts/record_slide_result.py",
+      "sha256": "ae14297acf87991ef0cb4af41bd0a591665f288d25ff5d6f0b9b264e5a59bac1"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/scripts/slide_job_status.py",
+      "sha256": "15c90c28b5733275990b162e36c32dd7940465ec7c6522f49aaa8a42c5dbd293"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/scripts/slide_run_state.py",
+      "sha256": "b7534c3aec858a5ec4210e5af80693c899dbbe670083093ec1c055d471ba5e42"
+    },
+    {
+      "path": "example/source/upstream/skills/codex-ppt/SKILL.md",
+      "sha256": "dce8b7ef2c3610fba7bf74115904f460ae1f64b54b50c0f4504f66fd65e5d2bb"
+    },
+    {
+      "path": "example/source/upstream-docs-acquisition.json",
+      "sha256": "1c86429cd10810ec7a75aa36a1aa8d4fc1341aa9f4283459c97bfe121aa248fb"
+    },
+    {
+      "path": "example/SOURCE.json",
+      "sha256": "2930862c3e1d1e6c144e33407d507bc387bcfae927964762db2d2a2b969097e3"
+    },
+    {
+      "path": "example/speech.md",
+      "sha256": "634825852c3600f0d1f22c07f8197cb291353ca846f5d1287610bb10b84aed35"
+    },
+    {
+      "path": "example/START-HERE.ja.md",
+      "sha256": "a3344f4f37e024acc7cc2f0e6e9065978e458f6a26fec4f363344f7b36a94434"
+    },
+    {
+      "path": "example/style.json",
+      "sha256": "ffdfad9b4a674dcd8d1a459b1a8e16db7528455308dc3225dde96b23f23a132e"
+    },
+    {
+      "path": "example/workflow-decisions.json",
+      "sha256": "ee6840b5a84c8ce0f3368113eda8a1a2b38d4c84b6b5cc42d1dedbf54d54914e"
+    },
+    {
+      "path": "README.md",
+      "sha256": "6461e44955162bcd2a9d32f5b15a028dae49ac413e2abed7cf09ae3388e9b939"
+    },
     {
       "path": "references/example-source/build_codex_image_repository_example.py",
       "sha256": "91a2420547ed860f3a40e120737b256b86659cc295caf19a3a11f969196e7652"
@@ -22,7 +391,7 @@
     },
     {
       "path": "SKILL.md",
-      "sha256": "6b00877f43adb29b5aa44de9c5c1af22dabe6508e80a256b600ddd9cf3e99761"
+      "sha256": "ef167a9bab72dfe761abf2a15872372b31e7ea55cf4078874da78f7210a52fd1"
     },
     {
       "path": "upstream/.github/pull_request_template.md",
@@ -356,8 +725,5 @@
       "path": "upstream/tests/test_image_gen_models.py",
       "sha256": "45060e16fb8ffaee8f3f6afe6d41b17bfe5e9557732cfda411e6bf97ad05bccd"
     }
-  ],
-  "case_studies": [
-    "codex-image-ppt"
   ]
 }

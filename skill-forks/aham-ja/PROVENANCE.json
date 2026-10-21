@@ -1,0 +1,113 @@
+{
+  "repository": "Aham-AIAPP/aham-ppt",
+  "commit": "c2b4ece69bbac777557934f981457c1f98c2b73f",
+  "license": "MIT",
+  "scope": "Partial execution: original page-layout choice, themefunctions, SVG-native converter/lint; currentP5/P6integrator decisions, not eight-stage human dialogue.",
+  "case_studies": [
+    "aham-showcase"
+  ],
+  "upstream_preserved": true,
+  "source_refs": [
+    {
+      "path": "SKILL.md",
+      "sha256": "d31e1f3f6158a1fc9818132908d55f28b2b8944a60a1eb0567fccb5cdb7aece5",
+      "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/SKILL.md"
+    },
+    {
+      "path": "references/layout-library.md",
+      "sha256": "2cb076716e20e4a50aea542df13fa0b964a1892368ef12fc3b775506fa1e41dd",
+      "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/references/layout-library.md"
+    },
+    {
+      "path": "assets/components/layouts.py",
+      "sha256": "978f3bce1c6fa5f2528d3a56a0f92b7b31455b5285f4a90d804457d3904d50ed",
+      "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/layouts.py"
+    },
+    {
+      "path": "assets/components/themes.py",
+      "sha256": "8be944b838a9f2505b148bb65c92d2c3026e1962834412dcc2dcdb45a5b1c7c3",
+      "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/themes.py"
+    },
+    {
+      "path": "assets/components/structures.py",
+      "sha256": "ed5fcb6dd3ce3380ee8755277e3eb47a01bb8a3dd384449e43e18fd10a8c9ac1",
+      "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/components/structures.py"
+    },
+    {
+      "path": "assets/svg_to_pptx_wrapper.py",
+      "sha256": "d6d2639a43d4c4a160709317e4f7ad6c0a13bebc64d341ae702c2c0452edbdaf",
+      "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/svg_to_pptx_wrapper.py"
+    },
+    {
+      "path": "assets/svg_to_pptx/LICENSE_NOTE.md",
+      "sha256": "7f7f384d907c4a280f1b0e5c184b5336ae94f14e261f2a31b97bb62410fa95dd",
+      "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/assets/svg_to_pptx/LICENSE_NOTE.md"
+    },
+    {
+      "path": "LICENSE",
+      "sha256": "4c770fc239092d3d2f1f10ff8ea4982fcb202de2d8bda9a0b61503fe19ffef1f",
+      "url": "https://github.com/Aham-AIAPP/aham-ppt/blob/c2b4ece69bbac777557934f981457c1f98c2b73f/LICENSE"
+    }
+  ],
+  "method": "Original A-theme functions and color tokens, original SVG→native DrawingML wrapper and lint, actual PowerPoint16 rendering.",
+  "modifications": [
+    {
+      "id": "font-family",
+      "what": "原典の SANS / MONO 字体列を完全一致で JA_FONT に置き換える",
+      "value": "Manrope, 'Zen Kaku Gothic New', sans-serif"
+    },
+    {
+      "id": "ea-font-registration",
+      "what": "変換器の和文字体集合 EA_FONTS に実行時だけ Zen Kaku Gothic New を加え、PPTX で latin=Manrope / ea=Zen Kaku Gothic New にする（ファイルは変更しない）"
+    },
+    {
+      "id": "fixed-labels",
+      "what": "原典の中国語固定文字と凡例を和訳する",
+      "value": {
+        ">目录　CONTENTS<": ">目次<",
+        ">来源：": ">出典：",
+        ">已承诺<": ">実施確定<",
+        ">计划中<": ">計画<",
+        ">拟议<": ">提案<"
+      }
+    },
+    {
+      "id": "chart-label-readability",
+      "what": "P2の目盛り・所要時間・作業名を16px/INK1にし、原典と同じ軸式で20分終端を追加。棒と比率は不変"
+    },
+    {
+      "id": "stage-centering-and-detail",
+      "what": "P3原典stage_flowを右67px平行移動し、ラベルを16/18pxへ。原典Tで入力済み補足を各段下へ加える。相対接続と箱サイズは不変"
+    },
+    {
+      "id": "roadmap-legend-readability",
+      "what": "P4原典凡例を表示。凡例14px、目盛り/泳道名16px、ブロック名14pxへ濃く補正。proposed状態は維持"
+    }
+  ],
+  "font_delivery": "Original TTF/OFL packaged; fonts not embedded or installed automatically.",
+  "api_calls": 0,
+  "preview_export": "Current PowerPoint16 PDF and RGBPNG, all4individually inspected.",
+  "repair_model": {
+    "requested": "claude-opus-5-5",
+    "reported": [
+      "claude-opus-5-5"
+    ],
+    "scope": "Initial phase artifacts/generator/layout-map/Japanese guide authored in actual claude-opus-5-5 run; current Round5 labels/centering/legend/plan decisions/QA/packaging implemented by Codex, no new Opus production.",
+    "complete_two_case_model_run": false,
+    "private_execution_log_included": false
+  },
+  "pptx_sha256": "a6170f6dd2f8d93212020c4b2fd6bd01f44720988466e9aaa8aff84777e8c781",
+  "repair_checked_at": "2026-10-15T16:52:08.329105+00:00",
+  "not_demonstrated": [
+    "8段階のユーザー確認対話、coach-engine、P7の3頁ごとの確認、P8の全五層QC、人間の最終承認・採用、効果測定。"
+  ],
+  "round3_followup": {
+    "change": "P2 original c.T annotation now explicitly states axis right endpoint20min; original chart geometry unchanged",
+    "color_history": "Initial cobalt/yellow/ink request was replaced during source-rule repair by original A white/grey/blue theme"
+  },
+  "round5_followup": {
+    "visual_corrections": "source/layout-map.json",
+    "execution": "source/round5-execution.json",
+    "P5_P6_human_confirmation": false
+  }
+}

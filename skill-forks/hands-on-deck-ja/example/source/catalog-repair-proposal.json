@@ -1,0 +1,55 @@
+{
+  "case_id": "hands-on-deck",
+  "implemented_by": "Codex current repair; not new Opus production",
+  "current_pptx_sha256": "89506c01b132d698271e1ad44b78be95fedee7672b1ab4762cab18d72ba51b3e",
+  "case_patch": {
+    "method": "既存5頁の同じ要素IDに203操作を適用。表紙の来訪者図を点検基準として説明し、表と脚注の位置を調整した。master/layoutはXML内容、theme/mediaはbyteで保持を照合した。",
+    "prompt_text": "既存の架空資料を公開前の点検案へ直す。来訪者の3行動を点検基準として説明し、表・脚注・要点帯を離す。対象外の部品は内容とbyteを分けて照合する。",
+    "sample_notice": "制作側が現行全頁を実PowerPointで確認。現在版の独立再評価は待機中。",
+    "preview_kind": "powerpoint-render",
+    "preview_notice": "現行PPTXを実PowerPointで全5頁再描画し制作側が確認。独立再評価と人間採用は別。",
+    "preview_image_notice": "実PowerPoint PDFからPNG化した現在版。",
+    "pages": [
+      "examples/repositories/hands-on-deck/render/slide-01.png",
+      "examples/repositories/hands-on-deck/render/slide-02.png",
+      "examples/repositories/hands-on-deck/render/slide-03.png",
+      "examples/repositories/hands-on-deck/render/slide-04.png",
+      "examples/repositories/hands-on-deck/render/slide-05.png"
+    ],
+    "notes": [
+      "来訪者が案内を見つけ、日時・場所を確かめ、迷わず会場へ行くという3行動を想定し、必要な情報が原稿にあるか公開前に点検する架空の案です。右の図は点検担当者の作業順ではなく、案内を読む人の行動です。運用・公開・利用者テストは未実施です。",
+      "SNS、Web、掲示板から一覧へ進み、各イベントの詳細へたどれるかを確認する案です。実際のリンク検証は未実施です。",
+      "表の不具合は想定例です。日時や場所の食い違い、費用や雨天対応の不足、連絡窓口の不明瞭さを、確認する人と次の対応へ結びます。",
+      "編集窓口が原稿を点検し、主催者が内容を確認してから公開します。公開後の変更連絡も担当を決めるという提案で、合意はまだありません。",
+      "公開前に利用者の目線で確認する計画です。結果を測定した表ではありません。問題が出たら対応と再確認日を記録します。"
+    ]
+  },
+  "guide_patch": {
+    "summary_ja": "既存PPTXをstable IDで差分編集し、保持部分を照合する。",
+    "requirements": [
+      "Python3.10+ / python-pptxほか原典requirements",
+      "PowerPoint、元資料と同じOS字体。元資料をinput/donor.pptxへ固定。"
+    ],
+    "steps": [
+      "元PPTXを原典deck.py inspectへ渡し、0始まりの頁とstable shape ID、現在の書式・配置を調べる。",
+      "対象IDへset-text/set-style/move/resizeなど必要な変更だけをJSON patchに書く。",
+      "原典apply→fix→inspect→diffを実行し、実際に適用された操作と残るalignment助言を読む。",
+      "元資料と変更版を描画し、文字・図表の読みやすさと対象外の部品を照合する。"
+    ],
+    "limitations": [
+      "作例は既存5頁へ203操作を適用。set-text79・set-style21・move50・resize47・set-notes5・set-props1。新規制作、html2patch、merge、画像交換は未実施。",
+      "元資料はカタログ内の過去CyberPPT派生作例を固定SHAで保存した架空資料。実際の地域の運用規則ではない。",
+      "元と結果の34部品を比較し、theme/media8部品はbyte一致。master/layoutとその参照26部品はXML再保存でbyteが変わるが、要素・属性・文字と参照ID/対象は一致。",
+      "原典fixは0修正/残留0だが、inspectのalignment助言は残る。表は文字と図形で構成し、native chart編集は未対応。OS字体は非再配布。"
+    ],
+    "execution_type": "原典deck.pyのinspect/apply/fix/diffを使用した既存PPTX編集。現在版の独立再評価は待機中。",
+    "commands": [
+      "python source/reproduce.py --render",
+      "python source/render_pdf_previews.py render",
+      "python source/audit_preservation.py"
+    ]
+  },
+  "effect_patch": "data/skill-effect-patches/repairs-native5.json",
+  "independent_current_version_review": "pending",
+  "distribution_replay": "source/distribution-replay.json"
+}

@@ -1,0 +1,35 @@
+{
+  "case_id": "aws-html-showcase",
+  "archive_sha256_tested": "5325c45f9e426d056d5fdf629696183899834e56edc32f10ce1eee7f0fee41dc",
+  "method": "Expand actual example ZIP into owned private directory; use shipped sources and original entrypoints with already installed matching dependencies",
+  "commands": [
+    {
+      "argv": [
+        "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\aws-html-showcase\\.private\\zip-replay-84cd8438\\aws-html-example-ja\\rebuild.py",
+        "--case-only"
+      ],
+      "exit_code": 0,
+      "log": "source/zip-replay-1.txt",
+      "log_sha256": "fc818511912639b59d3ca00e7ba473a1b16c0115807b3e604eeb71a2502608cf"
+    },
+    {
+      "argv": [
+        "C:\\Users\\owner\\.cache\\codex-runtimes\\codex-primary-runtime\\dependencies\\python\\python.exe",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\aws-html-showcase\\.private\\zip-replay-84cd8438\\aws-html-example-ja\\source\\check_label_alignment.py"
+      ],
+      "exit_code": 0,
+      "log": "source/zip-replay-2.txt",
+      "log_sha256": "c1a9707001f2295da1ff877b308593edeb6ce6f9c83919dc27617cfc44d32fd8"
+    }
+  ],
+  "independent_review": false,
+  "all_commands_passed": true,
+  "replayed_html_sha256": "a83bfbf9435f79588be015f3523dcd4b72379d6df7c358805008cd536f28ac98",
+  "canonical_html_sha256": "a83bfbf9435f79588be015f3523dcd4b72379d6df7c358805008cd536f28ac98",
+  "html_byte_identical": true,
+  "source_sha256": {
+    "source/check_label_alignment.py": "0de7cd611f4be120c64df168ad2b3093280bcc55ea51af1ceca10b4024eea2f3",
+    "source/layout_adapter.py": "4eca56bfda3df13969daa5bbd007d75a27197f2d58fc09bce7cf9a43143033c9"
+  }
+}

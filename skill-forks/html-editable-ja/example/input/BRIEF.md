@@ -1,0 +1,3 @@
+# 制作依頼
+
+原典 Hasasasa/html-to-editable-pptx のSKILLとconvert.pyを使い、架空焙煎所「ひと旗」の日本語ブランド提案を5枚制作。題名「小さな店の、ひとつの旗。」。レモン色×墨黒×濃いコーヒー茶。大胆な和文タイポ、余白、HTML/SVG図形、誌面ごとの構図変化。角丸カードなし。HTML原稿のテキストと簡単な図形を編集できるPPTXへ変換。実在ブランド・売上実績・効果数値を捏造しない。見出しZen Kaku Gothic New、引用Shippori Mincho、英数字Manrope。使用原TTF/OFLとMIT帰属を保持。

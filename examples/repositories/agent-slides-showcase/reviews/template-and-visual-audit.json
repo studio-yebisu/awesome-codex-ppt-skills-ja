@@ -1,0 +1,34 @@
+{
+  "status": "author_template_and_visual_QA_complete_independent_rereview_pending",
+  "original_qa": "reviews/original-qa.json",
+  "qa_ok": true,
+  "validate_issues": 0,
+  "asset_issues": 0,
+  "unresolved_tokens": 0,
+  "original_lint_warning_count": 2,
+  "original_lint": "reviews/original-lint.json",
+  "thresholds_changed": false,
+  "warning_interpretation": [
+    {
+      "code": "SHAPE_OVERLAP",
+      "original_warning": "10 overlaps above0.2; non-blocking in original QA",
+      "actual_inspection": "Relation nodes deliberately contain text and cover their center-to-center lines; timeline dots meet its line. No text-text collision or clipping in the full-size output."
+    },
+    {
+      "code": "LOW_TEXT_CONTRAST_RISK",
+      "original_warning": "3 foreground colors tested against white",
+      "source_fact": "Original _low_contrast_text_risks compares each unique foreground againstFFFFFF regardless of actual background. Real background/foreground pairs are recorded in source/template-inheritance-check.json; minimum4.937."
+    }
+  ],
+  "template_inheritance": "source/template-inheritance-check.json",
+  "self_authored_template": true,
+  "company_template_test": false,
+  "full_final_page_image": "render/slide-01.png",
+  "full_final_page_visually_inspected": true,
+  "template_previews_visually_inspected": [
+    "reviews/template-render/slide-01.png",
+    "reviews/template-render/slide-02.png"
+  ],
+  "independent_review": false,
+  "zip_replay": false
+}

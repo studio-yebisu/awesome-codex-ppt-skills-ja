@@ -10,3 +10,22 @@ h2 {line-height:1.2;}
 .grid .gift-svg {position:absolute;inset:0;padding:35px;}
 .image-block .gift-svg {padding:20px;}
 @media(prefers-reduced-motion:reduce) {.slide,.progress-bar {transition-duration:.01ms!important;}}
+
+/* Round4 authorized Japanese template maintenance */
+
+/* Palette, two-column/grid structure, ornaments and navigation stay from the template.
+   Font substitution and these typography/vertical-spacing changes are explicit local deviations. */
+.contents{align-items:center;gap:4vw}
+.contents>div{align-self:center}
+.contents p{font-size:clamp(20px,1.7vw,32px);line-height:1.6;margin-top:28px}
+.contents li{padding:38px 0;font-size:clamp(24px,2vw,38px);grid-template-columns:80px 1fr}
+.contents li strong{font-size:clamp(24px,2vw,38px)}
+.contents li small,.contents li p{font-size:clamp(20px,1.6vw,30px);line-height:1.6}
+.contents li:before{font-size:clamp(28px,2.5vw,48px)}
+.slide:has(.position) .position{flex:1;display:grid;align-items:stretch}
+.position>article{min-height:58vh;padding:36px 28px;display:flex;flex-direction:column;justify-content:center}
+.position h3{font-size:clamp(26px,2.1vw,40px);line-height:1.4;margin-top:30px}
+.position p{font-size:clamp(22px,1.7vw,32px);line-height:1.65}
+.position .gift-svg{height:220px;margin-bottom:20px}
+.slide:has(.grid)>h2{margin-bottom:38px}
+

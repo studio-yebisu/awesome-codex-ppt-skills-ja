@@ -1,0 +1,50 @@
+{
+  "original_unmodified_verify": "FAIL spawn EINVAL",
+  "windows_adapter": "source/windows-cli.diff",
+  "verify": "PASS build + registry + all8 render",
+  "inspect": [
+    {
+      "argv": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "--experimental-strip-types",
+        "scripts/windows-inspect-presentation.mjs",
+        "book-exchange",
+        "--width",
+        "1440",
+        "--height",
+        "900"
+      ],
+      "exit_code": 0,
+      "label": "desktop"
+    },
+    {
+      "argv": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "--experimental-strip-types",
+        "scripts/windows-inspect-presentation.mjs",
+        "book-exchange",
+        "--width",
+        "390",
+        "--height",
+        "844"
+      ],
+      "exit_code": 0,
+      "label": "narrow"
+    }
+  ],
+  "scope": "Author execution, not independent score",
+  "round3_repair_gate": {
+    "verify_log": "source/round3-verify.txt",
+    "desktop_log": "source/round3-inspect-desktop.txt",
+    "narrow_log": "source/round3-inspect-narrow.txt",
+    "exit_codes": [
+      0,
+      0,
+      0
+    ],
+    "required_env": [
+      "YEBISU_NPM_CLI points to installed npm-cli.js",
+      "YEBISU_CHROMIUM points to installed browser"
+    ]
+  }
+}

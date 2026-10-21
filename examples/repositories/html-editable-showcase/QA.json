@@ -1,15 +1,38 @@
 {
-  "status": "light_check_complete",
+  "status": "original_conversion_and_all5_compare_native_text_flag_edit_checked_independent_review_pending",
   "build": "original converter succeeded, five-page native PPTX",
   "open": "PowerPoint COM successfully opened the original --no-embed-fonts output with 5 slides.",
   "compatibility": "Embedded-TTF version failed PowerPoint COM open with Unexpected HRESULT. Distribution uses original --no-embed-fonts option; no OOXML rewrite or alternative converter.",
-  "representative_preview": "render/slide-01.png is HTML reference; viewed once with no obvious missing Japanese glyphs.",
+  "representative_preview": "render/slide-01.png is an actual PowerPoint render.",
   "not_performed": [
-    "PPTX all-page visual review",
-    "structural audit",
-    "independent review",
-    "ZIP replay",
+    "independent regrade after repair",
     "formal adoption"
   ],
-  "preview_export": "PowerPoint successfully exported all 5 slides as PNG and PDF in one run. No additional visual review or structural audit."
+  "preview_export": "PowerPoint PNG/PDF for all5 pages; source HTML/PPTX comparisons inspected for all5.",
+  "quality_loop": {
+    "command": "python convert_local_fonts.py index.audited.html --out deck.pptx --keep-screenshots --no-embed-fonts",
+    "audit_mode": "page mapped to actual Codex separate-parent allpage read",
+    "original_stage5a_structural_warnings": 0,
+    "original_stage5b_compare_pages": 5,
+    "native_text_and_flag_edit_saved_reopened": true,
+    "pptx_sha256": "e516d41f8380551214c3770b4a82a1d6320e2333d080f3e5461d2cd62a92ff39",
+    "input_original_sha256": "a0033881523aba941718bff8df7c575a09f8ad784d6edda777caaf9b9d1c60fb",
+    "audited_copy_sha256": "64997341ff9ce2b08238f04268e34539d893fcf44c93201cad09230d69ce8f7d",
+    "font_embedding_success_demonstrated": false,
+    "font_embedding_failure_cause": "undetermined"
+  },
+  "native_edit_test": "qa/editability/native-editability.json",
+  "zip_reexecution": true,
+  "comparator_label_adapter": "qa/comparator-label-adapter.diff",
+  "font_embedding": "not_demonstrated",
+  "font_embedding_failure_cause": "undetermined",
+  "current_pptx_sha256": "e516d41f8380551214c3770b4a82a1d6320e2333d080f3e5461d2cd62a92ff39",
+  "current_native_inventory": "qa/native-objects-current.json",
+  "native_flag": "qa/native-flag.json",
+  "native_flag_edit_test": "qa/editability/native-flag-editability.json",
+  "all_current_pages_visually_inspected": true,
+  "current_finding_resolution": "qa/finding-resolution.json",
+  "current_all5_comparisons": "qa/comparison/index.html",
+  "current_distribution_replay": "source/distribution-replay.json",
+  "all14_replay_png_rgb_difference": 0
 }

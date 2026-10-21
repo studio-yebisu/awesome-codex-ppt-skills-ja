@@ -1,0 +1,94 @@
+{
+  "status": "author_qa_complete_independent_review_pending",
+  "page_count": 5,
+  "artifact_sha256": "3dede21dbf7f14f657b907bdc2bba6aaba3666e01ecf241bd6f51a948ef885dd",
+  "all_pages_visually_reviewed": true,
+  "visual_review": {
+    "reviewer": "Codex",
+    "method": "Actual original generated page images viewed; contacts composed only from those images; full-size repair details inspected",
+    "pages": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "finding": "脚注を20px相当へ拡大し、透過を解除。4頁は担当ごとの横一行へ変更。原典の全形式compilerを再実行。",
+    "images": [
+      {
+        "page": 1,
+        "path": "render/slide-01.png",
+        "sha256": "8d49cd72f6209a4b8bbad40388afd5c7ee27c682eeb71cfcc83db179950df3b6"
+      },
+      {
+        "page": 2,
+        "path": "render/slide-02.png",
+        "sha256": "2a613c3bfb8aaa0e7ca5902316c37e9d59237c22f03b8fd1a88dc434439afccf"
+      },
+      {
+        "page": 3,
+        "path": "render/slide-03.png",
+        "sha256": "04e92a58ff32c003eeb681658d54d8115a5af914aa9a12cd65904bffaddc578e"
+      },
+      {
+        "page": 4,
+        "path": "render/slide-04.png",
+        "sha256": "259e1e69ecd812228f20b57e1ef74af092f1e440aebda9abcd2f6bd3cc3dbe98"
+      },
+      {
+        "page": 5,
+        "path": "render/slide-05.png",
+        "sha256": "88cd8088f9b07a1a04211014bee18766cc2f81e70e0a0d5a282d5a7ee44ee841"
+      }
+    ]
+  },
+  "original_gates": {
+    "original_source_gate": 0,
+    "original_compiler_all": 0,
+    "original_visual_gate": 0,
+    "dom_audit": {
+      "status": "pass",
+      "slideCount": 5,
+      "issueCount": 0,
+      "blockerCount": 0,
+      "reviewCount": 0
+    },
+    "render_fidelity": "pass"
+  },
+  "constraints": [
+    "この作例はHTML lane。Typst・PPTX・画像生成は未実施",
+    "Windowsの相対パスと診断文字コードだけ派生補正。validatorは無改変",
+    "静止画像とプレーヤーの操作UIは別の証拠",
+    "架空の読書会の企画で、開催実績ではない"
+  ],
+  "human_adoption": "pending",
+  "independent_model_rescore": "pending",
+  "publication": false,
+  "repair_model": "Codex; no additional Opus call",
+  "zip_replay_receipt": "source/zip-replay.json",
+  "round3_repair": {
+    "author": "Codex",
+    "change": "参加条件の改行を「読み終えていなくても／OK」へ変更。否定表現を途中で分断しない。",
+    "original_source_gate": {
+      "log": "source/logs/source-gate-round3.log",
+      "exit_code": 0
+    },
+    "original_compiler": {
+      "log": "source/logs/compiler-round3.log",
+      "exit_code": 0
+    },
+    "original_visual_gate": {
+      "log": "source/logs/visual-gate-round3.log",
+      "exit_code": 0,
+      "interpreter": "Existing bundled Python3.12 with pypdf; initial system Python3.13 lacked pypdf and that unsuccessful attempt is preserved."
+    },
+    "compiler_pages_viewed": 5,
+    "runtime_pages_viewed": 5,
+    "browser_receipt": "source/browser-repair.json"
+  },
+  "round3_zip_replay": {
+    "receipt": "source/zip-replay.json",
+    "all_commands_passed": true,
+    "html_byte_identical": true
+  }
+}

@@ -72,14 +72,14 @@
   "font_roles": {
     "heading": "Shippori Mincho",
     "body": "BIZ UDPGothic",
-    "native flow indexes / footer page numbers": "Manrope",
-    "native table headers": "BIZ UDPGothic Bold"
+    "native flow indexes / footer page numbers": "Manrope"
   },
   "changes": [
-    "font_pair handoff_ja_v1",
-    "Manrope native numeric metadata mapping",
-    "BIZ UDPGothic native table headers",
-    "Japanese table label localization"
+    "local font_pair adapter",
+    "native numeric metadata font mapping",
+    "operations-grid content header top inset 0.34in (source/legibility.diff)",
+    "renderContractStage stage_labels, 4.5:1 text ink and section footer background (source/legibility.diff)",
+    "Codex follow-up: concise table count, upright Japanese caption (source/table-legibility.diff)"
   ],
   "plan": [
     "dark title",
@@ -90,6 +90,14 @@
     "dark section conclusion"
   ],
   "images": "not required: official native flow_steps and native table route",
-  "python_doctor": "source/python-doctor.log records missing optional scientific data runtime; not declared ready",
-  "review": "User requested minimal generation and first display"
+  "python_doctor": "QA.json records the current scientific-data runtime limitations; raw diagnostics are private",
+  "authoring_model": "gpt-6.1-sol",
+  "repair_authoring_model": "claude-opus-5-5",
+  "repair_scope": [
+    "slide 1 title: two 7-glyph lines, no punctuation-only wrapped line",
+    "operations-grid content header: titleTop >= 0.34in below the 0.08-0.19in top bars (addDarkTitleBar)",
+    "slide 6 section: Japanese kicker, stage values and stage_labels instead of CYCLE/CONTROL placeholders (renderContractStage)",
+    "renderContractStage text ink and section footer >= 4.5:1 on the actual stage background"
+  ],
+  "review": "Independent review and correction loop required by the current user; results are recorded in QA.json only after real execution"
 }

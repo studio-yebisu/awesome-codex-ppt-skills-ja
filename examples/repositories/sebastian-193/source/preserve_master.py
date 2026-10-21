@@ -15,4 +15,12 @@ for n in keep:
 files['[Content_Types].xml']=E.tostring(r,xml_declaration=True,encoding='UTF-8',standalone=True)
 with zipfile.ZipFile(b/'deck.pptx','w',zipfile.ZIP_DEFLATED) as out:
  for n,v in files.items():out.writestr(n,v)
+z.close();t.close()
 (b/'generated.pptx').unlink()
+
+# Original bounded grouping/connector tool; input and output stay distinct.
+import subprocess,sys,os
+subprocess.run([sys.executable,str(b/'source/upstream/scripts/structure_pptx.py'),str(b/'deck.pptx'),'--plan',str(b/'source/structure-plan.json'),'--output',str(b/'structured.pptx'),'--report',str(b/'source/structure-report.json')],check=True)
+import json
+r=json.loads((b/'source/structure-report.json').read_text(encoding='utf-8'));r['details']['input']='deck.pptx';r['details']['output']='structured.pptx';(b/'source/structure-report.json').write_text(json.dumps(r,ensure_ascii=False,indent=2)+'\n',encoding='utf-8')
+os.replace(b/'structured.pptx',b/'deck.pptx')

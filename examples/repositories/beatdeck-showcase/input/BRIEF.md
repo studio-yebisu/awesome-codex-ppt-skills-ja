@@ -6,4 +6,4 @@
 
 ブランド指定：温かい紙、墨、朱。原典light themeへtokensを重ね、Dela Gothic Oneの短い大見出し、BIZ UDPGothic本文、Manrope英数字をlocalに用意する。hairline・巨大な文字・余白を保持し、丸いカード格子やdashboardへ揃えない。
 
-原典npm run init、content audit→SceneDef[]のref/source/note→scene/timeline→元React stage→npm run build（typecheck/bundle/offline check）を実行する。原典engineは改変しない。確認はbuild・初回主要表示・元1click=1beatの一段移動だけ。ユーザー指定によりnpm run verifyの全forward/back/direct/frame比較は実施しない。
+原典 `npm run verify -- --source=reference/SCRIPT.md` を実施する。全15段階の前進・後退・URL直接表示を比較し、contact sheetを確認する。実施済みの結果はQA.jsonとrender/verify/report.jsonに記録し、全キーの手動稽古・物理Wi-Fi断・別端末での通し確認は別の未実施項目として残す。

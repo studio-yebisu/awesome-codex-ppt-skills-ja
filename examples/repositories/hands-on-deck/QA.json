@@ -1,82 +1,63 @@
 {
-  "status": "qa_complete",
+  "status": "original_cli_complete_current_powerpoint_render_visually_inspected_independent_review_pending",
+  "artifact": "deck.pptx",
+  "artifact_sha256": "89506c01b132d698271e1ad44b78be95fedee7672b1ab4762cab18d72ba51b3e",
   "page_count": 5,
-  "render_engine": "Microsoft PowerPoint 16.0",
-  "all_pages_visually_reviewed": true,
-  "human_adoption": "pending",
-  "production_adoption": false,
-  "publication": false,
-  "artifact_sha256": "242c7f3ecc6f26ed81bf6f3b19517c9134a55f5b277b6b8accdb6ca705b8de14",
-  "input_sha256": "e9c7bb7bc83e0daba698e1ceecc6f1ffdf1f079fd8154aaed5cae117bdeb9dea",
-  "editability": {
-    "native_text_shapes": 90,
-    "pictures": 3,
-    "full_slide_raster_images": 0,
-    "tables_implementation": "native text boxes and rules",
-    "native_shapes_total": 154,
-    "native_graphic_shapes": 64,
-    "counting_rule": "Text shapes have at least one nonempty a:t run. Other native shapes exclude those text shapes. Total is 154, not 90 + 154."
+  "current_input_sha256": "29b1416e16f8519f6ab98469a2fa9e6c4170b34ff2f255f0471a914430f7d415",
+  "original_scripts_modified": false,
+  "original_commands": "review/replay/execution-receipts.json",
+  "original_fix": {
+    "fixed": 0,
+    "residue": 0,
+    "alignment_advice_remaining": true,
+    "log": "review/replay/fix.log"
   },
+  "actual_operations": 203,
+  "operations_by_type": {
+    "set-props": 1,
+    "set-style": 21,
+    "move": 50,
+    "resize": 47,
+    "set-text": 79,
+    "set-notes": 5
+  },
+  "part_preservation": "source/edit-preservation.json",
+  "part_preservation_summary": {
+    "part_count": 34,
+    "byte_identical": 8,
+    "content_equal": 34,
+    "master_layout_references_reserialized": 26
+  },
+  "actual_native_elements": "source/native-elements.json",
+  "actual_pdf_fonts": "source/pdf-fonts.json",
+  "before_after": "review/before-after.json",
   "visual_review": {
-    "pages_reviewed": [
+    "reviewer": "Codex implementation review; not an independent score",
+    "all_pages_inspected": [
+      0,
       1,
       2,
       3,
-      4,
-      5
+      4
     ],
-    "method": "Two independent agent batches viewed actual PowerPoint renders.",
-    "result": "pass",
-    "evidence": [
-      "review/independent-visual-review.json",
-      "render/powerpoint-render.json"
-    ]
+    "findings": [
+      "表紙は3つの来訪者行動を点検基準として説明。",
+      "3頁は表・二つの注記・要点帯の分離を確認。",
+      "4頁は表の最下行から注記を0.10インチ離し、要点帯との間隔も確認。",
+      "5頁は問い合わせ先と更新の想定手順が読み取れ、表示欠けなし。"
+    ],
+    "production_adoption": false
   },
-  "original_fix": {
-    "exit_code": 0,
-    "fixed": 0,
-    "residue": 0,
-    "advisories": "slide 2 (0-based): s38/s39 intentionally outside table alignment; independent visual review found no defect.",
-    "report": "review/fix.log"
+  "independent_current_version_review": "pending",
+  "distribution_replay": {
+    "status": "passed_both_archives",
+    "evidence": "source/distribution-replay.json",
+    "native_content_equal": true,
+    "all_page_render_rgb_equal": true,
+    "archive_count": 2,
+    "replayed_page_count": 10,
+    "fresh_install_tested": false
   },
-  "portable_reproduction": {
-    "passed": true,
-    "command": "python source/reproduce.py --input input/data.json --render --libreoffice-render",
-    "isolated_case_copy": true,
-    "native_text_identical": true,
-    "render_pixels_identical": true,
-    "whole_pptx_bytes_identical": false,
-    "pages": [
-      {
-        "page": 1,
-        "pixels_identical": true
-      },
-      {
-        "page": 2,
-        "pixels_identical": true
-      },
-      {
-        "page": 3,
-        "pixels_identical": true
-      },
-      {
-        "page": 4,
-        "pixels_identical": true
-      },
-      {
-        "page": 5,
-        "pixels_identical": true
-      }
-    ]
-  },
-  "font_dependency": [
-    "Yu Gothic",
-    "Yu Mincho",
-    "Times New Roman"
-  ],
-  "limitations": [
-    "エージェントのレビュー済み。人による採用は未承認。",
-    "架空の運用案であり実際の公開・確認・利用者テストは未実施。",
-    "新しい本文で再実行した場合は全ページの再レビューが必要。"
-  ]
+  "historical_round3_evaluation": "Immutable reviewer snapshots concern the previous artifact and are not transferred.",
+  "current_distribution_replay": "source/distribution-replay.json"
 }

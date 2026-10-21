@@ -23,37 +23,7 @@ HTML=r'''<!doctype html><html lang="ja"><head><meta charset="utf-8"><meta name="
 let current=0;const slides=[...document.querySelectorAll('.slide')];function scale(){let f=Math.min(innerWidth/1920,innerHeight/1080);document.getElementById('stage').style.transform=`translate(${(innerWidth-1920*f)/2}px,${(innerHeight-1080*f)/2}px) scale(${f})`}function go(i){current=Math.max(0,Math.min(4,i));slides.forEach((s,n)=>s.classList.toggle('active',n===current));document.getElementById('count').textContent=`${current+1} / 5`;if(parent!==window)parent.postMessage({type:'yebisu-page',index:current,total:5},location.origin)}addEventListener('resize',scale);addEventListener('keydown',e=>{if(['ArrowRight',' '].includes(e.key))go(current+1);if(e.key==='ArrowLeft')go(current-1)});addEventListener('message',e=>{if(e.source===parent&&e.origin===location.origin&&e.data?.type==='yebisu-slide'&&Number.isInteger(e.data.index))go(e.data.index)});document.getElementById('prev').onclick=()=>go(current-1);document.getElementById('next').onclick=()=>go(current+1);scale();go(0);
 </script></body></html>'''
 
-ADAPTER=r'''"""Local full-TTF registry; all rendering/conversion stays in original convert.py."""
-from pathlib import Path
-import os,runpy,sys
-HERE=Path(__file__).resolve().parent
-UP=HERE/'upstream'
-CACHE=HERE/'cache/fonts';CACHE.mkdir(parents=True,exist_ok=True)
-sys.path.insert(0,str(UP/'scripts'))
-import font_paths
-font_paths.CACHE_DIR=CACHE
-import embed_fonts,font_resolver
-from fontTools.ttLib import TTFont
-from fontTools.varLib.instancer import instantiateVariableFont
-import shutil
-entries=[]
-for family,style,cjk,regular,bold,aliases in [
- ('Zen Kaku Gothic New','sans',True,'ZenKakuGothicNew-Regular.ttf','ZenKakuGothicNew-Black.ttf',['Noto Sans SC']),
- ('Shippori Mincho','serif',True,'ShipporiMincho-Bold.ttf','ShipporiMincho-Bold.ttf',['Noto Serif SC']),
- ('Manrope','sans',False,'Manrope[wght].ttf','Manrope[wght].ttf',[])]:
- slots={}
- for slot,filename,weight in [('regular',regular,400),('bold',bold,700)]:
-  destination=CACHE/(family.replace(' ','')+'-'+slot+'.ttf')
-  source=HERE/'fonts'/filename
-  if '[' in filename:
-   font=TTFont(source);instance=instantiateVariableFont(font,{'wght':weight},inplace=False);instance.save(destination)
-  else:shutil.copy2(source,destination)
-  slots[slot]=destination.name
- entries.append({'typeface':family,'charset':'128' if cjk else '0','pitchFamily':'18' if style=='serif' else '34','cjk':cjk,'style':style,'slots':slots,'aliases':aliases})
-font_resolver.register_in_font_plan(entries)
-font_resolver.resolve_fonts=lambda needed,bundled:{'resolved':entries,'unavailable':[],'cached':[e['typeface'] for e in entries]}
-runpy.run_path(str(UP/'convert.py'),run_name='__main__')
-'''
+ADAPTER='"""Local full-TTF registry; all rendering/conversion stays in original convert.py."""\nfrom pathlib import Path\nimport os,runpy,sys\nHERE=Path(__file__).resolve().parent\nUP=HERE/\'upstream\'\nCACHE=HERE/\'cache/fonts\';CACHE.mkdir(parents=True,exist_ok=True)\nsys.path.insert(0,str(UP/\'scripts\'))\nimport font_paths\nfont_paths.CACHE_DIR=CACHE\nimport embed_fonts,font_resolver\nfrom fontTools.ttLib import TTFont\nfrom fontTools.varLib.instancer import instantiateVariableFont\nimport shutil\nentries=[]\nfor family,style,cjk,regular,bold,aliases in [\n (\'Zen Kaku Gothic New\',\'sans\',True,\'ZenKakuGothicNew-Regular.ttf\',\'ZenKakuGothicNew-Black.ttf\',[\'Noto Sans SC\']),\n (\'Shippori Mincho\',\'serif\',True,\'ShipporiMincho-Bold.ttf\',\'ShipporiMincho-Bold.ttf\',[\'Noto Serif SC\']),\n (\'Manrope\',\'sans\',False,\'Manrope[wght].ttf\',\'Manrope[wght].ttf\',[])]:\n slots={}\n for slot,filename,weight in [(\'regular\',regular,400),(\'bold\',bold,700)]:\n  destination=CACHE/(family.replace(\' \',\'\')+\'-\'+slot+\'.ttf\')\n  source=HERE/\'fonts\'/filename\n  if \'[\' in filename:\n   font=TTFont(source);instance=instantiateVariableFont(font,{\'wght\':weight},inplace=False);instance.save(destination)\n  else:shutil.copy2(source,destination)\n  slots[slot]=destination.name\n entries.append({\'typeface\':family,\'charset\':\'128\' if cjk else \'0\',\'pitchFamily\':\'18\' if style==\'serif\' else \'34\',\'cjk\':cjk,\'style\':style,\'slots\':slots,\'aliases\':aliases})\nfont_resolver.register_in_font_plan(entries)\nfont_resolver.resolve_fonts=lambda needed,bundled:{\'resolved\':entries,\'unavailable\':[],\'cached\':[e[\'typeface\'] for e in entries]}\nimport assemble as assemble_runtime\nfrom clear_implicit_effects import clear_implicit_effects\noriginal_assemble=assemble_runtime.assemble\ndef assemble_flat_input(measurement,out_path):\n original_assemble(measurement,out_path)\n clear_implicit_effects(out_path)\nassemble_runtime.assemble=assemble_flat_input\nrunpy.run_path(str(UP/\'convert.py\'),run_name=\'__main__\')\n'
 
 def write(path,text):path.parent.mkdir(parents=True,exist_ok=True);path.write_text(text,encoding='utf-8')
 def main():
@@ -61,7 +31,7 @@ def main():
  OUT.mkdir(parents=True,exist_ok=True);FORK.mkdir(parents=True,exist_ok=True)
  dest=OUT/'upstream'
  if not dest.exists():shutil.copytree(UP,dest,ignore=shutil.ignore_patterns('__pycache__','.git','tests','.config.local.toml','lessons-learned.md'))
- write(dest/'.config.local.toml','[fonts]\nauto_install="no"\n[cleanup]\ndefault="keep"\n[audit]\nmode="manual"\n')
+ write(dest/'.config.local.toml','[fonts]\nauto_install="no"\n[cleanup]\ndefault="keep"\n[audit]\nmode="page"\n')
  write(OUT/'index.html',HTML);write(OUT/'convert_local_fonts.py',ADAPTER)
  write(OUT/'PROMPT.txt',PROMPT+'\n')
  data={'title':'小さな店の、ひとつの旗。 — 焙煎所のブランド提案','sample_notice':'架空ブランド「ひと旗」。実在店舗・商品、売上・効果実績ではありません。','titles':TITLES,'notes':NOTES}
@@ -77,14 +47,14 @@ def main():
 ''')
  if not args.prepare_only:
   py=OUT/'.venv/Scripts/python.exe'
-  command=[str(py),str(OUT/'convert_local_fonts.py'),str(OUT/'index.html'),'--out',str(OUT/'deck.pptx'),'--keep-screenshots','--no-embed-fonts','--no-verify','--no-visual-audit']
+  command=[str(py),str(OUT/'convert_local_fonts.py'),str(OUT/'index.html'),'--out',str(OUT/'deck.pptx'),'--keep-screenshots','--no-embed-fonts']
   with (OUT/'convert.log').open('w',encoding='utf-8') as log:subprocess.run(command,cwd=OUT,stdout=log,stderr=subprocess.STDOUT,check=True)
  finish(data,args.prepare_only)
 
 def finish(data,prepared):
  source={'repository':REPO,'commit':COMMIT,'license':'MIT','scope':'Original converter plus local full-TTF Japanese font registry adapter','upstream_preserved':True,'case_studies':['html-editable-showcase']}
  write(OUT/'SOURCE.json',json.dumps(source,ensure_ascii=False,indent=2))
- prov=dict(source,method='Original convert.py CLI → preflight → original Playwright measure → python-pptx assemble; original --no-embed-fonts compatibility option. Wrapper registers local Japanese font families and maps seeded Noto SC aliases to JP fonts; no converter replacement.',command='python convert_local_fonts.py index.html --out deck.pptx --keep-screenshots --no-embed-fonts --no-verify --no-visual-audit',modifications=['Local font resolver adapter only; core converter remains unchanged.','No OS font installation. Detailed structural/visual audit disabled per project scope.','Embedded-TTF output failed PowerPoint COM open; original --no-embed-fonts output opened successfully. Full original TTFs/OFL provided for manual font installation.'],source_refs=[{'path':f,'sha256':hashlib.sha256((UP/f).read_bytes()).hexdigest(),'url':f'https://github.com/{REPO}/blob/{COMMIT}/{f}'} for f in ['SKILL.md','convert.py','scripts/measure.py','scripts/assemble.py','scripts/embed_fonts.py','LICENSE']])
+ prov=dict(source,method='Original convert.py CLI → preflight → original Playwright measure → python-pptx assemble; original --no-embed-fonts compatibility option. Wrapper registers local Japanese font families and maps seeded Noto SC aliases to JP fonts; no converter replacement.',command='python convert_local_fonts.py index.html --out deck.pptx --keep-screenshots --no-embed-fonts',modifications=['Local font resolver adapter only; core converter remains unchanged.','Original Stage5a/5b enabled. All pages must be compared before delivery.','Embedded-TTF output failed PowerPoint COM open; original --no-embed-fonts output opened successfully. Full original TTFs/OFL provided for manual font installation.'],source_refs=[{'path':f,'sha256':hashlib.sha256((UP/f).read_bytes()).hexdigest(),'url':f'https://github.com/{REPO}/blob/{COMMIT}/{f}'} for f in ['SKILL.md','convert.py','scripts/measure.py','scripts/assemble.py','scripts/embed_fonts.py','LICENSE']])
  write(OUT/'PROVENANCE.json',json.dumps(prov,ensure_ascii=False,indent=2))
  write(OUT/'README.md','''# 小さな店の、ひとつの旗。
 
@@ -94,7 +64,7 @@ def finish(data,prepared):
 
 原典 commit: 17c1dbb76e958543dc2741a7d50ca374354f33b7 / MIT。原文LICENSE、upstream固有converter、入力、依頼文、フルOSS日本語・英数字フォントとOFLを同梱。`convert_local_fonts.py` は日本語TTFを原典FONT_PLANへ登録し、中国語フォントの自動種子を日本語へ対応させる薄いアダプター。核心のmeasure/assemble/embed処理は変更していません。
 
-再変換: Python環境へ `pip install -r upstream/requirements.txt` と `python -m playwright install chromium`、次に `python convert_local_fonts.py index.html --out deck.pptx --keep-screenshots --no-embed-fonts --no-verify --no-visual-audit`。OSへのフォントインストールはしません。PPTX閲覧ソフトによって内包フォントの扱いが異なり、利用端末で手動インストールが必要な場合があります。
+再変換: Python環境へ `pip install -r upstream/requirements.txt` と `python -m playwright install chromium`、次に `python convert_local_fonts.py index.html --out deck.pptx --keep-screenshots --no-embed-fonts`。OSへのフォントインストールはしません。PPTX閲覧ソフトによって内包フォントの扱いが異なり、利用端末で手動インストールが必要な場合があります。
 
 代表プレビューはHTMLの1ページです。原典のフォント埋込版はPowerPoint COMで開かなかったため、原典の --no-embed-fonts 経路を配布。PowerPointは5枚として開けました。端末に書体が無ければ代替書体で表示されます。全ページ詳細目視、構造監査、ZIP再実行、正式採用は未実施。実施した軽い確認だけをQA.jsonに記録します。依存条件はDEPENDENCIES.mdを参照。
 ''')
@@ -113,6 +83,8 @@ description: HTMLスライドをHasasasa原典converterで編集可能なPPTXへ
 
 原典MITと使用フォントOFLを保持。技能本文だけでは変換器は付属しないため、一式ZIPのupstream/とPython依存が必要。
 ''')
+ from publish_html_conversion_qa import SKILL as VERIFIED_SKILL_GUIDE
+ write(FORK/'SKILL.md',VERIFIED_SKILL_GUIDE)
  if not (FORK/'upstream').exists():shutil.copytree(OUT/'upstream',FORK/'upstream',ignore=shutil.ignore_patterns('__pycache__','cache','.config.local.toml','lessons-learned.md'))
  shutil.copy2(UP/'LICENSE',FORK/'LICENSE');(FORK/'references').mkdir(exist_ok=True)
  shutil.copy2(OUT/'convert_local_fonts.py',FORK/'references/convert_local_fonts.py')
@@ -132,6 +104,6 @@ def package():
  for folder,name in [(OUT,'html-editable-example-ja'),(FORK,'html-editable-ja')]:
   with zipfile.ZipFile(ROOT/f'downloads/{name}.zip','w',zipfile.ZIP_DEFLATED) as z:
    for p in sorted(folder.rglob('*')):
-    if p.is_file() and not set(p.parts)&{'cache','.build','__pycache__','.venv'} and '_audit' not in p.as_posix() and p.suffix not in {'.pyc','.log'} and '_measurements' not in p.name and '_preflight' not in p.name:z.write(p,(Path(name)/p.relative_to(folder)).as_posix())
+    if p.is_file() and not set(p.relative_to(folder).parts)&{'cache','.build','__pycache__','.venv','.private'} and p.name!='.config.local.toml' and not any(part.endswith('_audit') for part in p.relative_to(folder).parts[:-1]) and p.suffix not in {'.pyc','.log'} and '_measurements' not in p.name and '_preflight' not in p.name:z.write(p,(Path(name)/p.relative_to(folder)).as_posix())
 
 if __name__=='__main__':main()

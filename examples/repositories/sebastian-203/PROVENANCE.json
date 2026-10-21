@@ -4,26 +4,135 @@
   "source_url": "https://github.com/ficooooo/Paper2ScholarSlides/tree/207f2b6c8493c569f6caf466c87d868c42936cf6",
   "license": "MIT",
   "method": "python-pptx reuse of upstream academic-template.pptx with original layout/master retained",
-  "upstream_scripts_executed": false,
+  "upstream_scripts_executed": true,
   "input": "input/BRIEF.md",
   "input_transform": "原稿を背景・モデル・仮説・方法・評価・制約の研究提案へ再編。装飾アイコンとサイン見本を検証関係・比較表へ置換。",
   "changes": [
-    "Japanese copy and Noto Sans CJK JP",
-    "specimen texts removed",
-    "native zone diagram, hypothesis links, comparison table and method sequence",
-    "8-page research proposal structure",
-    "cover typography enlarged; template content title retained at 25pt"
+    "Japanese research-outline content and static BIZ UDPGothic",
+    "Native hypotheses/diagrams/comparisons and reading notes",
+    "Original master/layout/theme retained",
+    "Original scan_ppt_text.py actually executed on current PPTX"
   ],
   "fonts": [
-    "Noto Sans CJK JP"
+    "BIZ UDPGothic"
   ],
-  "font_files_distributed": false,
-  "render_method": "artifact-tool-pptx-import-render",
-  "powerpoint_verified": false,
+  "font_files_distributed": true,
+  "render_method": "PowerPoint16 exported PDF rasterized to RGB PNG; direct PowerPoint PNGs retained in render/direct-png",
+  "powerpoint_verified": true,
   "limitations": [
-    "Fictional unperformed study. No quantitative results or citations.",
-    "Renderer may differ from Microsoft PowerPoint.",
-    "Template header/body content replaced; master and layout relationships retained."
+    "Fictional unperformed research outline; no measured results or external citations.",
+    "Original-template body specimens replaced; master/layout/theme preserved.",
+    "Current final output rendered with PowerPoint16; independent current-version review pending."
   ],
-  "upstream_bundle_scope": "All upstream text/script files and academic-template.pptx only. Unused sample deck, gallery, figures and poster assets excluded."
+  "upstream_bundle_scope": "All upstream text/script files and academic-template.pptx only. Unused sample deck, gallery, figures and poster assets excluded.",
+  "artifact_sha256": "62e2819e56f0ba925029369f262fd6befcd36105018e4437a598f85c82d58eaa",
+  "repair": {
+    "author": "Codex",
+    "source": "source/route-repair.json",
+    "method": "Original academic template and python-pptx authoring; two native-page corrections, original scan, all8 PowerPoint PDF; six unchanged PNGs exact to prior reviewed version."
+  },
+  "not_demonstrated": [
+    "Paper PDF figure/formula extraction and citation audit",
+    "External bibliography verification",
+    "Measured research outcomes",
+    "Independent current-version review"
+  ],
+  "current_distribution_replay": {
+    "case_id": "sebastian-203",
+    "current_pptx_sha256": "62e2819e56f0ba925029369f262fd6befcd36105018e4437a598f85c82d58eaa",
+    "archives": [
+      {
+        "archive": "downloads/sebastian-203-example-ja.zip",
+        "tested_archive_sha256": "93f520a3ab300dd002ebd9f8b536be0aeafdb923f09bfddf97b8ad115643f079",
+        "all_commands_exit0": true,
+        "pptx_content_parts_compared": 66,
+        "pptx_content_byte_identical": true,
+        "preview_differences": [
+          {
+            "page": 1,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 2,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 3,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 4,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 5,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 6,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 7,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 8,
+            "mean_absolute_RGB": 0.0
+          }
+        ],
+        "source_payload_sha256": "9be9d14b07e81c0e0286f32149e1affc39aeee68441cd5f6e6ef7c1b103ed2d9"
+      },
+      {
+        "archive": "downloads/sebastian-203-ja.zip",
+        "tested_archive_sha256": "91ff387d57baea724b65507985d5e07640220a5c47d5f65e55cb45e1c4032b08",
+        "all_commands_exit0": true,
+        "pptx_content_parts_compared": 66,
+        "pptx_content_byte_identical": true,
+        "preview_differences": [
+          {
+            "page": 1,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 2,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 3,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 4,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 5,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 6,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 7,
+            "mean_absolute_RGB": 0.0
+          },
+          {
+            "page": 8,
+            "mean_absolute_RGB": 0.0
+          }
+        ],
+        "source_payload_sha256": "9be9d14b07e81c0e0286f32149e1affc39aeee68441cd5f6e6ef7c1b103ed2d9"
+      }
+    ],
+    "existing_dependencies_only": true,
+    "fresh_dependency_install": false,
+    "all_commands_completed": true,
+    "native_content_matches": true,
+    "all_page_preview_difference_mean": 0.0,
+    "independent_current_version_review": "pending",
+    "receipt_note": "QA and this receipt are added after testing; replayed source payload stays byte-identical."
+  },
+  "historical_execution_records": "Any older command records describe prior builds; current repair checks are QA.json, source/current-check-receipts.json and source/distribution-replay.json."
 }

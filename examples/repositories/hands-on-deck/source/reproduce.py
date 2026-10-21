@@ -26,7 +26,7 @@ def main():
     def deck(argv,name): run([sys.executable,cli]+argv,name)
     deck([donor,'inspect','-o',review/'donor-inspect.json'],'inspect-donor')
     inventory=json.loads((review/'donor-inspect.json').read_text('utf-8'))
-    ops=[op for op in json.loads((CASE/'input/patch.json').read_text('utf-8'))['ops'] if op['op']=='set-style']
+    ops=[{k:v for k,v in op.items() if k!='repair_native5'} for op in json.loads((CASE/'input/patch.json').read_text('utf-8'))['ops'] if op['op'] in ('set-style','move','resize')]
     ops.insert(0,{'op':'set-props','title':data['title'],'author':'Japanese Example Project','last_modified_by':'Japanese Example Project','subject':'Japanese editing example'})
     for i, slide in enumerate(data['slides']):
         names={v.get('name'):k for k,v in inventory['slides'][str(i)].items() if isinstance(v,dict)}
@@ -42,7 +42,7 @@ def main():
     deck([donor,'diff',CASE/'deck.pptx'],'diff')
     if args.libreoffice_render: deck([CASE/'deck.pptx','render','-o',review/'original-render'],'original-render')
     if args.render:
-        shell=shutil.which('powershell') or shutil.which('pwsh')
+        shell=shutil.which('pwsh') or shutil.which('powershell')
         if not shell: raise SystemExit('PowerShell and Microsoft PowerPoint are required for --render')
         run([shell,'-NoProfile','-ExecutionPolicy','Bypass','-File',CASE/'source/render_powerpoint.ps1','-PresentationPath',CASE/'deck.pptx','-OutputDirectory',CASE/'render'],'powerpoint-render')
     save(review/'result.json',{'input_sha256':digest(args.input.resolve()),'artifact_sha256':digest(CASE/'deck.pptx'),'operations':len(ops),'render_requested':args.render,'visual_review':'required_for_new_output'})

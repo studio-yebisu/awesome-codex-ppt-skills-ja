@@ -1,0 +1,36 @@
+page journey (3 of 6): content, kind "process", theme "font-catalog"
+heading: 条件から選び、実際の文面で確かめる
+file: pages/journey.json (filled)
+
+page file keys (the top-level keys of pages/journey.json): components, background, image_side, footnote (the source line), ballot (the boxes ticked beside each item), notes (speaker notes, never drawn)
+components (63): bullets, paragraph, blockquote, callout, code, kpi_cards, chart, flowchart, architecture, timeline, comparison, icon_cards, row_cards, steps, rings, numbered_cards, roadmap, matrix, insight_panel, verdict_banner, image, image_grid, image_compare, logo_wall, product_cards, quote_wall, swot, bmc, waterfall, gantt, pest, five_forces, heatmap, sankey, data_table, device_mockup, cycle, people_cards, hub_spoke, progress_donuts, staircase, chevron_process, swimlane, journey_map, decision_tree, from_to, org_tree, issue_tree, pyramid, iceberg, pillar_model, value_chain, harvey_balls, scorecard, pictogram, word_cloud, venn, fishbone, positioning_map, concept_equation, segmented_wheel, pros_cons, sketch
+  full-body, each must be the page's only component: swot, bmc, waterfall, gantt, pest, five_forces, heatmap, sankey, harvey_balls, scorecard, pictogram, word_cloud
+  recommended: steps (on the page), icon_cards (on the page)
+  expand one with --component <type>
+
+signature layouts (the theme's own drawings on face marquee-sheet, the ones its samples are made of):
+  season: Where in the year things peak
+    write: heatmap + callout (the text as "lead: rest", optional) + callout (the text as "lead: rest", optional) + callout (optional)
+  route: A weekend walked stop by stop
+    write: steps (2 to 5 items, icon on every item, tone on an item) + kpi_cards (1 item) + chart (2 to 5 categories, chart_type bar, direction horizontal)
+  loop: A chain of steps whose last brings its results back to the first
+    write: chevron_process (3 to 6 items) + callout (optional) + data_table (2 to 3 rows)
+  timetable: A plan month by month
+    write: gantt (2 to 6 items, axis_labels)
+  also on this face, made for other kinds: crest (fact), branch (comparison), makeup (data), origins (hierarchy), spots (photo), wall (comparison), stubs (list), fallbacks (comparison), scoreboard (list), allotment (hierarchy), asks (points)
+  drawn now: none of them, the face's plain layout. Write to one where the content holds it, never add content to fit
+
+limits (validate refuses the page past these):
+  at most 29 width units in each bullets item (render-safety limit, where a CJK character is 1 width unit and a Latin letter less)
+  at most 8 layers in each architecture (the most layers a page holds under its heading)
+advice (validate warns past these):
+  at most 4 components on the page (balanced pacing allows 4, the face's body holds 4)
+  at most 5 items in each bullets (balanced pacing)
+  at most 25 width units in each bullets item (balanced pacing, where a CJK character is 1 width unit and a Latin letter less)
+  at most 5 rows in each comparison (rows the narrowest face holds)
+  at most 3 layers in each architecture (layers the narrowest face holds)
+  at most 8 series in each chart (line and area charts, past which the lines stop reading apart)
+
+errors: none
+warnings: none
+fit: not checked here. Run --fit to draw this page and see what it would lose

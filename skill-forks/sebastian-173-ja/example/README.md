@@ -1,25 +1,30 @@
-# 音を、地図にする。
+# 一頁の主題を絞り、数値の意味と補足を大きさ・罫線・余白で読み分ける。
 
-7頁の日本語HTMLスライド。街を歩いて音の種類と場の印象を記録する、架空の文化イベント企画です。学術成果・実測値・実施実績を示す資料ではありません。
+原典の13スロットから一頁の主オブジェクトを選び、全頁を紙色に統一。表の末尾罫線を外して脚注と離し、締めの3数値は見出し→値→意味の順へ直した。
 
-## 開く
-index.htmlをブラウザで開きます。左右キー、PageUp/PageDown、画面下部の前後ボタンで移動。全7頁。HTML/CSS/SVGのソースを直接編集できます。PowerPointのネイティブ編集形式ではありません。
+## 入力と出力
 
-同一originのiframeでは yebisu-slide / yebisu-page の0-based頁メッセージと接続。file://のorigin=nullでは親連携を無効にし、内部操作だけを使います。
+入力：読者に伝える一文、根拠や図の原稿。作例は音の散歩と展示の架空企画。
 
-日本語表示にはNoto Sans CJK JPまたはNoto Sans JPを推奨。制作環境の既存OSSフォントを使用し、フォントファイルは配布していません。閲覧環境で代替フォントになると改行が変わる場合があります。
+出力：紙色プロフィールのHTML7頁とPNG/PDF。軽量PDFはpypdfによる局所代替。
 
-## 再生成
-python source/build.py
-python source/render.py
+## 自分の資料へ使う
 
-レンダリングにはPython、Playwright、既存Chromium、Ghostscriptが必要です。CHROMIUM_EXECUTABLE環境変数でChromiumのパスを設定できます。styles.cssは原典をそのまま利用。adaptation.cssが日本語組版、スロット構図、画面縮小、印刷に対応します。
+1. 原稿から各頁の主題と一つの主オブジェクトを決め、原典13スロットを選ぶ。
+2. 暗色既定か紙色プロフィールを一つ選ぶ。四隅の情報、action title、主オブジェクト、tailを保ち、数値はラベル→値→補足の三層で組む。
+3. source/build.pyでHTML/SVGを生成し、日本語調整をassets/adaptation.cssへ分離する。
+4. HTML→Chromium PNG/PDFと原典全チェックリストを確認する。軽量化が代替方式なら名称と未実行の元工程を分けて記録する。
 
-原典のwork/premium/slides実例は今回の固定repo内に存在せず、使用していません。原典のcompact-pdf.shも実行していません。必要な既存gsコマンドをsource/render.pyに直接記述しました。原典の全チェック自動化と同等とは主張しません。QA.jsonに実施状態を記録します。
+## 実際に使った機能
 
-音源未収録。再生ボタン・音声ファイルはありません。架空地図は個人の現在地を扱いません。内容の入力はinput/、依頼文はPROMPT.txt、由来と変更はPROVENANCE.jsonを参照。
+- 原典styles.cssを変更せず、日本語と余白の差分をadaptation.cssへ分離。
+- 4頁は三欄の記録表を唯一の主オブジェクトにする。5頁の地図ラベルと注記を拡大し、7頁は受付5分・散歩30分・共有15分の意味を添える。
+- Chromium全7頁と元の980px内側境界を確認。pypdfで現在のPDFを圧縮し、原典Ghostscript未実行と分けた。
 
-## 今回の確認
-既存PC Chromeで初回表示、左右キー送り、PNG7枚と7頁PDFを実出力。紙色頁の文字色を修正して4/6頁を再確認。cloud既存gsでdeck-lite.pdfを作成。5頁tailの内側安全境界8.7px超過warningを保持していますが、1080px内に表示され見切れ・重複はありません。QAは最小範囲です。
+## 未実施と条件
 
-PDF用紙サイズも作者HTMLの1920×1080pxへ合わせ、外側白余白を解消。最終litePDFの4頁を確認しました。
+- 原典の既定はdark editorial。今回実証したのは全頁paper-lightで、既定暗色の完成作例は未制作。
+- hero写真・scrim/glowを実装していないため、原典チェックリストの全条件合格ではない。
+- 固定取得物にcompact-pdf.shがなく、Ghostscriptも未使用。軽量PDFはpypdfの局所代替で、同じ処理と称さない。音声再生も未実装。
+
+現在の再現コマンドはREPRODUCE.md、原典の条件と日本語での一般手順はSKILL.md、現在の実行・画像hashはQA.json。初回PROMPTの限定検査指示は過去の依頼で、後続修復の範囲はこの記録とsourceのRound4ログを使う。

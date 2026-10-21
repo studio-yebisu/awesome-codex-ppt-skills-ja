@@ -1,13 +1,470 @@
 {
   "repository": "sunchaokun/PPT-Design-Skill",
   "commit": "cbf7ef1324a026b29e2b77b71e2034554ddd3e22",
-  "scope": "Japanese entrypoint, repository-specific refinements, original source and actual production recipe",
-  "example_ids": [
-    "ppt-design-skill"
-  ],
-  "upstream_preserved": true,
-  "proprietary_export_engine_included": null,
+  "original_source_preserved": true,
+  "license": "MIT; retain component/font notices",
+  "scope": "Pinned upstream plus Japanese example; current entry points and historical records distinguished.",
   "files": [
+    {
+      "path": "example/deck.pptx",
+      "sha256": "8deab35046f912b4d270f41fd9a8e7c7b15f9f6beba7975680152221e9225602"
+    },
+    {
+      "path": "example/fonts/bizudpgothic/BIZUDPGothic-Bold.ttf",
+      "sha256": "30eba52fc837e8b62c97d4b82e6706583149fb7294e3712dd71a655eaea80a90"
+    },
+    {
+      "path": "example/fonts/bizudpgothic/BIZUDPGothic-Regular.ttf",
+      "sha256": "258d7156c165f2ff774b6efee637c22c3b950de0d8a10e501137061bc8085d01"
+    },
+    {
+      "path": "example/fonts/bizudpgothic/OFL.txt",
+      "sha256": "e753d7155d53c747d037a445e584c8ecfca6dd79846db610417e282a736b28bc"
+    },
+    {
+      "path": "example/fonts/shipporimincho/OFL.txt",
+      "sha256": "41fba056279be5f45ff9a99e44b7b53897b42732f5806d8e666e0ab49ac6bd38"
+    },
+    {
+      "path": "example/fonts/shipporimincho/ShipporiMincho-Bold.ttf",
+      "sha256": "63bc4eddc74793f671c3ab827c5175e773ffbe569d0bf50ee65375ea9e3bc286"
+    },
+    {
+      "path": "example/fonts/shipporimincho/ShipporiMincho-Regular.ttf",
+      "sha256": "769b5269f0f9bc6534b352c0e6bd856a566e03ff788f107191c2d835863570b2"
+    },
+    {
+      "path": "example/index.html",
+      "sha256": "0ccb650421acf82d8c8e72d595973dc2fb4fa0c2bade55eacc60593ae6ccf545"
+    },
+    {
+      "path": "example/input/BRIEF.md",
+      "sha256": "1d7b8db537d1ea8590e720ad298bfde2a8aef36d5ce21b983f4860f2b3e5253f"
+    },
+    {
+      "path": "example/input/data.json",
+      "sha256": "1153e02eb4412d72736fa61482d2569fb9521132ad72a13900c07da7b38a9890"
+    },
+    {
+      "path": "example/LICENSE",
+      "sha256": "48e4a486a6002d2c3f40ae087b833b4b6a2be0bc0116e5e04cf0f4ebbdd968f7"
+    },
+    {
+      "path": "example/NOTES.md",
+      "sha256": "4a15051b95d0f7592198ff4c9fc97b4b95d59029ee5066f7eb7e28a4ceee5c6a"
+    },
+    {
+      "path": "example/pptx-designer-LICENSE.txt",
+      "sha256": "228d0e27b132f62b89944891a93502717d330b3e3af2aef22b3334f2d80e9a0a"
+    },
+    {
+      "path": "example/PROMPT.txt",
+      "sha256": "1dd4ee13e5aba0d7d60bc01695733f3db500ed9adb78df401cadca7e23c82b0c"
+    },
+    {
+      "path": "example/PROVENANCE.json",
+      "sha256": "b484544c922ae34391013a737b97381c0804c8083a2847f5deeafe68f52f2cb7"
+    },
+    {
+      "path": "example/QA.json",
+      "sha256": "c6ba57d96011ada6288c4f95a67abf902f9d2d8591735c4521a71c8613d1c8d8"
+    },
+    {
+      "path": "example/README.md",
+      "sha256": "9108b8988efab397f2b5e1e3e162fc0280925b838c81f05e5e4a432dd803c587"
+    },
+    {
+      "path": "example/render/deck.pdf",
+      "sha256": "1af4653355af8988a05cc2c26e8c9321158f6026388379db291d7b507abf2b83"
+    },
+    {
+      "path": "example/render/pdf-preview.json",
+      "sha256": "e83ba948da88d524e9725b70f9e03214350890f7935c33ac109bcab88e0f8565"
+    },
+    {
+      "path": "example/render/powerpoint-render.json",
+      "sha256": "db769b13c7fb618923db7493afe47b45ab07dae7cd63e4eff848d16d9b66f786"
+    },
+    {
+      "path": "example/render/slide-01.png",
+      "sha256": "ac29781adc0635571f069b49c8a0a3f5b0bc7006c58a275f0f53e21fbb67495b"
+    },
+    {
+      "path": "example/render/slide-02.png",
+      "sha256": "a42fd8b7100f44c9c7f7efe980ad95d51754bcf07e5f7c310c7164be15afd309"
+    },
+    {
+      "path": "example/render/slide-03.png",
+      "sha256": "1f6d069b87d5242185ab61983e1ee1869fad940452db0f57c826ef0b748edf80"
+    },
+    {
+      "path": "example/render/slide-04.png",
+      "sha256": "4eef01151b9963dae520d55f4da80c6c17ffde0cfb4a16e5ebc65e2267a5c304"
+    },
+    {
+      "path": "example/render/slide-05.png",
+      "sha256": "c2d2dde5d146b3309c55ecd7f38f0bac54b2ff27ff578c7953303ec775547b62"
+    },
+    {
+      "path": "example/REPRODUCE.md",
+      "sha256": "aa4732864e51c57ec683d3af2e15a6f608e837c417dccd7d29dbe1730aa76822"
+    },
+    {
+      "path": "example/SKILL.md",
+      "sha256": "0cc6b3e183dae1a1e0cd010b13df7195c9b1a62502969f3984769cd453470ee0"
+    },
+    {
+      "path": "example/source/attempt1/powerpoint.log",
+      "sha256": "314c1e936dc7ff4a9e2c30008cf7a04975f5c81f0ed9d99e7d023da8b85df7d6"
+    },
+    {
+      "path": "example/source/attempt1/slide-01.png",
+      "sha256": "b35c76eb0b222bf34ac639c228a9bf191cfb1fb63c2905ff16ddcf0f5487404c"
+    },
+    {
+      "path": "example/source/build_ppt_design_repository_example.py",
+      "sha256": "f1580a78c4e5b218d35ac1a4a07a191415df94a6f2d59464b64d678d78bff995"
+    },
+    {
+      "path": "example/source/catalog-repair-proposal.json",
+      "sha256": "f28d4526d82c5abf4bd77804023cae06c643976c0e3d10ff1ed357f72bc920d1"
+    },
+    {
+      "path": "example/source/distribution-replay.json",
+      "sha256": "93e7f9067e1fee1e6edb6e42070dc379fb423e2ea5f52310ea8e532882fbe0e2"
+    },
+    {
+      "path": "example/source/engine-runtime.json",
+      "sha256": "e254b463a3436965e32458c1e854f43352f123ac1c8dfc2ff2d372dccb9fff42"
+    },
+    {
+      "path": "example/source/ENTRYPOINTS.md",
+      "sha256": "81ff1a931cccf983f07ac093d6d16b2138c0c609e30bfe7fe62508a29cc1fea0"
+    },
+    {
+      "path": "example/source/inspect_current.py",
+      "sha256": "3b506171fe26d7e140c6370e8fe6b42b94956079f87bfbdb1d4e0f5f6de0a0cc"
+    },
+    {
+      "path": "example/source/logs/build.log",
+      "sha256": "1c75947523f4b3c767241b0c8daf22d9d5dfd6c52ecc0f96ec8816ed8d3db2c0"
+    },
+    {
+      "path": "example/source/logs/initialize.log",
+      "sha256": "c97d8299b9a61917fff4b5f42ed2a78c7bb5e1544bd9a078a95feddb9b28e5d5"
+    },
+    {
+      "path": "example/source/logs/inspect.log",
+      "sha256": "5e9241aa40c23f568dfceeca37579b95ec3ce00a0fc59218bff39e9825e9fff4"
+    },
+    {
+      "path": "example/source/logs/powerpoint.log",
+      "sha256": "cf1cd328d2f04534134c90177fe0f18bf3557fea3725b473caf74efa1f102874"
+    },
+    {
+      "path": "example/source/logs/reproduction-build.log",
+      "sha256": "9917fa89850a9355bb33567f1a50ac9db64511e241e9a681b00138f16095419d"
+    },
+    {
+      "path": "example/source/native-elements.json",
+      "sha256": "e626728f8f1dc1be4541277cca6d7b74152877c838339a9137485be4370c3eb4"
+    },
+    {
+      "path": "example/source/pdf-fonts.json",
+      "sha256": "53b5670066b2c7d2130404a54ac2253e8fc522c168a6f90bbb333b2664d6eb55"
+    },
+    {
+      "path": "example/source/previous-visual-review.json",
+      "sha256": "de33ee9f4ba81fd10e0971229e96701c17e1328745dce6933808ad2a15c7db74"
+    },
+    {
+      "path": "example/source/render_pdf_previews.py",
+      "sha256": "3052b04c2d2ef5a7635962a49dcfe7e7152f42651494a3dd83ecc9f927a56205"
+    },
+    {
+      "path": "example/source/render_powerpoint.ps1",
+      "sha256": "1d5b67b5d088b432fe518cfe900311d6fd8c672d5428bd62b42259b0fcba8a85"
+    },
+    {
+      "path": "example/source/reproduction.json",
+      "sha256": "82a5bb7652d080c7a6287f80ed9a4c2db175f00d73ab78fb37c4458e8e6b1709"
+    },
+    {
+      "path": "example/source/requirements.txt",
+      "sha256": "07d15b6001e06072ec73a9051d2d31a220f3c9c5f69582d86b901cd7c8ef214d"
+    },
+    {
+      "path": "example/source/resolved-theme.json",
+      "sha256": "d29d6a2e9ae450a974f76514336569cef19540d382f01370ce8620220d5521d0"
+    },
+    {
+      "path": "example/source/runtime-trace.json",
+      "sha256": "60be21fd7009d1487c9600d0534aa1ceff074346dfc4a5dbbfa3b0bef73df468"
+    },
+    {
+      "path": "example/source/style-candidates.json",
+      "sha256": "7052a8813af5fb05d8457844236deb45b8177a4b156b63026d732292f2875c61"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/.task-manifest.json",
+      "sha256": "66d3131f34e5f9653d7d9c436cf55d33c7b24f06303d4f83d9b834f623612f23"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/acceptance-contract.md",
+      "sha256": "f8df90e2ec0418235a5d817de719625deddc8b819d56c5a3bc8e122381b99443"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/brief.md",
+      "sha256": "1d7b8db537d1ea8590e720ad298bfde2a8aef36d5ce21b983f4860f2b3e5253f"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/page-plan.md",
+      "sha256": "1373afaadef20205257076a5cdde943d1b246255e66e7ed81798a5366be71b6d"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/research.md",
+      "sha256": "56d6d0b2d2ffbd415122f20515477b2a5d8c0e8e5fb82a203db65b3ace9bb662"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/task.yaml",
+      "sha256": "f4c7e8d70d7ac2d4a0027ef267d6ed692499dbf180a0e05df6e64c029d38572f"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/theme-lock.yaml",
+      "sha256": "52fbfe73d7dc2fe47aa817fdbff40a65785d0fa0ef4373421a0cf4fe34b29e3a"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/visual-direction.md",
+      "sha256": "895aeb6414653a9845bf2daf26d224be03f6840ff033a518f73f66acf10da65c"
+    },
+    {
+      "path": "example/source/task/cafe-pilot/visual-review.md",
+      "sha256": "6d8a3418ec711faa012e9fa386eb1c1bb0e98836bed1ed6e22f2686326e628c2"
+    },
+    {
+      "path": "example/source/upstream/LICENSE",
+      "sha256": "48e4a486a6002d2c3f40ae087b833b4b6a2be0bc0116e5e04cf0f4ebbdd968f7"
+    },
+    {
+      "path": "example/source/upstream/README.md",
+      "sha256": "71b4a627e4d6bcaf2ce40f8838aec07128d28de33ee7909c1b6ee296a2d2c1fb"
+    },
+    {
+      "path": "example/source/upstream/skill/references/composition-recipes/c1-01.json",
+      "sha256": "11fcf4d829dd271802ba08a230042664c5480ea63d1b5fbfdc8989204b163a35"
+    },
+    {
+      "path": "example/source/upstream/skill/references/composition-recipes/c2-01.json",
+      "sha256": "c18bb05bc6238a88d9755709f81d6b9967c28d6305c8c94196d9574bdf5147e7"
+    },
+    {
+      "path": "example/source/upstream/skill/references/composition-recipes/c3-01.json",
+      "sha256": "c0085d4e61c38bd8946a436f93bc76d5856e2a67b29a84ba4490841ccf7a6da0"
+    },
+    {
+      "path": "example/source/upstream/skill/references/composition-recipes/c4-01.json",
+      "sha256": "6dc055d9c68083ab6e1cdf5785012022f7bbbff2e8da10a03d1d3852e2e418d6"
+    },
+    {
+      "path": "example/source/upstream/skill/references/composition-recipes/composition_index.json",
+      "sha256": "7ec797717a13961213f0d234127c4813d60aaf18c57879f6a7c4e8f2e47b912c"
+    },
+    {
+      "path": "example/source/upstream/skill/references/content-schema.md",
+      "sha256": "a45ce58db7044892c7821f4b09c2bbd37e0ac554567fda864ddd882ec3f2e0ba"
+    },
+    {
+      "path": "example/source/upstream/skill/references/design-direction-coach.md",
+      "sha256": "fabfae0ee65d937861441c512b2855b76025f295394de853d2f4d55c0bfe320f"
+    },
+    {
+      "path": "example/source/upstream/skill/references/design-principles.md",
+      "sha256": "c94b3a5be868242cbc8e0eae9b90319199569282cf0573ac05d80120b40279ea"
+    },
+    {
+      "path": "example/source/upstream/skill/references/domain-paradigms.md",
+      "sha256": "8403065e90df2171cab896f1a6f2f093d787dbfa5faf61b30e10d2459980ec02"
+    },
+    {
+      "path": "example/source/upstream/skill/references/install-and-runtime.md",
+      "sha256": "45ad9fe7e179d16814b6f0cd038f27f67dabd4555613e5b844c30d9d0e312c3f"
+    },
+    {
+      "path": "example/source/upstream/skill/references/public-api.md",
+      "sha256": "583cd33f7257b4c3a9c1af63fc09e5b6a1da347bb27aa0a40175c0611343385a"
+    },
+    {
+      "path": "example/source/upstream/skill/references/qa-and-delivery.md",
+      "sha256": "9d827c7f4fe5d31e53b090cee8f2b62e128f7dcfad8f7a0da00b2eb10cb477d6"
+    },
+    {
+      "path": "example/source/upstream/skill/references/scientific-visual-baseline.md",
+      "sha256": "ecf263bee9bdf150bdfd3c1f44c65924d54b9bf77daa2d3706cc0eb80a72906d"
+    },
+    {
+      "path": "example/source/upstream/skill/references/template-brand.md",
+      "sha256": "e2ecdd01634405ae4b6e09893cfff7bf901baf2eba562422e19c72c2b9c19f25"
+    },
+    {
+      "path": "example/source/upstream/skill/references/visual-rendering-packs/dark-cinematic-tech.json",
+      "sha256": "7983ccf2bbee8f0dbf815d6e865057c35644b8b59a6d7ac3cf0d2aded135b66e"
+    },
+    {
+      "path": "example/source/upstream/skill/references/visual-rendering-packs/editorial-infrastructure-ledger.json",
+      "sha256": "a93b91233eddd84ba296a1d8bf00320bcda6fc5dcfa62a61ab72840a04a2a0f1"
+    },
+    {
+      "path": "example/source/upstream/skill/references/visual-rendering-packs/rendering_packs_index.json",
+      "sha256": "980eacad95ef4700997216f04b761a243b4943a2e4632701ddcaf11a64736948"
+    },
+    {
+      "path": "example/source/upstream/skill/references/visual-rendering-packs/scientific-atlas.json",
+      "sha256": "2e8931f7d252755e76c5a8eb603dd22e3a28512bab2385fbe88c7c0d1c540a67"
+    },
+    {
+      "path": "example/source/upstream/skill/references/workflow.md",
+      "sha256": "eebd4bdf8bdba5075e7b6b2783f2603ab45628490f697fd4b8349cbacadd10c7"
+    },
+    {
+      "path": "example/source/upstream/skill/schemas/acceptance-record.schema.json",
+      "sha256": "9a24f72f6ad22c93f79e558a4589f89ac4aeed39b10e2c0b6778d35af33fcee6"
+    },
+    {
+      "path": "example/source/upstream/skill/schemas/composition-entry.schema.json",
+      "sha256": "bb1b0fd3363cd304d95c68d64e46dcb15948d033d95cea1ec89ba0aacbf050a7"
+    },
+    {
+      "path": "example/source/upstream/skill/schemas/composition-recipe.schema.json",
+      "sha256": "9c8c129d4808d14f725a8df294e494c79f165afcc33f6b1918d2ff283e79fbe0"
+    },
+    {
+      "path": "example/source/upstream/skill/schemas/prototype-record.schema.json",
+      "sha256": "6674a121c0cf60a0f05bb52d38fd0ea56a2419a7c9336e07bf93ff1467d20f2a"
+    },
+    {
+      "path": "example/source/upstream/skill/schemas/rendering-pack.schema.json",
+      "sha256": "c116d3a4f8a8d301d589aaec5e15c07868ba24acf992d63a36170cc4f062c669"
+    },
+    {
+      "path": "example/source/upstream/skill/schemas/runtime-trace.schema.json",
+      "sha256": "1dfb5ce578e5cf69f8631f085c2b87b2e1649e296ffd6f62cceb0ab7ad4c79e1"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/audit_case_outputs.py",
+      "sha256": "08736c34bc9aa31bbe92645e5ebed69d7dc98667d95c5f3a9152a72740160277"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/audit_prototype_provenance.py",
+      "sha256": "444b61b6c25072a3c91d5525db1a17ccb34e3ccff06d1fb0f08dd031ddd54050"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/audit_regression_pairs.py",
+      "sha256": "2707f1702303e8ee450b227fbed8d009acfff1d55090b6411c77ce955dcb820a"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/audit_visual_review_records.py",
+      "sha256": "04b38f79f6887e885a4be6138594a36bc4a813e024cb7f448e3b0cf665c55c1f"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/build_regression_baselines.py",
+      "sha256": "02f43d037c3c37845de6c42f7fa864bb96f40ec91e767419f3af373cf3b7e711"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/check_runtime.py",
+      "sha256": "00308f95417c959f36e67a06385b487e42ccaad8094e3191d0b5238e8f216c5f"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/check_scientific_baseline.py",
+      "sha256": "31219b32bbd9a98616f02328c596852a9d15c611557411673df0621164dbbafa"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/init_presentation_task.py",
+      "sha256": "cf817ea930282f23a8722ae612dcb25e16008be8ed562662baad826eb9b75607"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/inspect_pptx.py",
+      "sha256": "b0c98d47d06708591003bd28eebeeb2c304094bb8f8509591b166b2e5deeaf9b"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/inspect_visual_assets.py",
+      "sha256": "fcc13c0db2da3132baa7a39e953319659ebb55b4a3f6b418708fa4e501091d64"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/refresh_case_prototypes.py",
+      "sha256": "4eef4e163b178249ad17b19dd3258bc126b3ff686c43c761032aa1d49a04e508"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/render_pptx.ps1",
+      "sha256": "4b8b2ba32acd3ed2dd271bcbbaf58c57a838f5824d10f0957f4a464fcaf1db89"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/run_visual_workflow.py",
+      "sha256": "615d03e1dbdde0bb69c689d4f77e3f0eaeb2b983727005d1540cf1ab7ca5c7bd"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/runtime_deps.py",
+      "sha256": "c142dafc86759eba5e2bedd4bc59daf74512f37e8ef9ccf4aa08675293cecc6a"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/validate_acceptance_record.py",
+      "sha256": "e378512845e66e14a8eb2da2405e760cac34cad477ad981198e27f769c2da015"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/validate_runtime_trace.py",
+      "sha256": "c7e2567e9aceaecefd8947437d9e59bf353a6d03d974b8214de801ff73d184ec"
+    },
+    {
+      "path": "example/source/upstream/skill/scripts/validate_visual_pack.py",
+      "sha256": "ae96d466c1f610cfa46d1fa270a9285869c55ae32e97dd30b4a3e3be9e927f6c"
+    },
+    {
+      "path": "example/source/upstream/skill/SKILL.md",
+      "sha256": "8f758a262fc5ea67075cb1291491b99a62223cb6c29acb17fe94294387221d63"
+    },
+    {
+      "path": "example/source/upstream/skill/templates/task-init/acceptance-contract.md",
+      "sha256": "cdd379186e9f4018273026288c596eecf2b8fad2c8f42af946789e2980c49429"
+    },
+    {
+      "path": "example/source/upstream/skill/templates/task-init/brief.md",
+      "sha256": "c2b74e8f71e4cd24b265a438716450cec808fe237c68e193e91b6e64a2e62f2a"
+    },
+    {
+      "path": "example/source/upstream/skill/templates/task-init/page-plan.md",
+      "sha256": "77519ca2b08b93aaacd427f0f55b66e6f50c65d89321eeae306638c881e53018"
+    },
+    {
+      "path": "example/source/upstream/skill/templates/task-init/research.md",
+      "sha256": "56d6d0b2d2ffbd415122f20515477b2a5d8c0e8e5fb82a203db65b3ace9bb662"
+    },
+    {
+      "path": "example/source/upstream/skill/templates/task-init/task.yaml",
+      "sha256": "f4c7e8d70d7ac2d4a0027ef267d6ed692499dbf180a0e05df6e64c029d38572f"
+    },
+    {
+      "path": "example/source/upstream/skill/templates/task-init/theme-lock.yaml",
+      "sha256": "ac5f6467092caeb06c11aa5da3c37faf6ac8ab8162574c3d5ee76c384f441d73"
+    },
+    {
+      "path": "example/source/upstream/skill/templates/task-init/visual-direction.md",
+      "sha256": "c7f19ca120dc8e5e577e2f3e69e590fffce53899df37716096350fbdf703607d"
+    },
+    {
+      "path": "example/source/upstream/skill/templates/task-init/visual-review.md",
+      "sha256": "6d8a3418ec711faa012e9fa386eb1c1bb0e98836bed1ed6e22f2686326e628c2"
+    },
+    {
+      "path": "example/source/visual-review.json",
+      "sha256": "bcc27603746588e94fceb8a8269d2c9abbb6c29065228e90c7f98862ca67ce81"
+    },
+    {
+      "path": "example/SOURCE.json",
+      "sha256": "99e2986534d5b018a14956f3c288bdc7635ff6556be8c0f34abf4f6174319557"
+    },
+    {
+      "path": "README.md",
+      "sha256": "af896ac036592368448e47bcddeeae18d70c938b7e2893dd0dcbd078fbeaa3d8"
+    },
     {
       "path": "references/example-source/build_ppt_design_repository_example.py",
       "sha256": "e2df8badec0710f4e4b0294a529336acc7beff7c90a577e7d3f2586a9c8b53d9"
@@ -22,7 +479,7 @@
     },
     {
       "path": "SKILL.md",
-      "sha256": "25c1bbfd504285c23426d4f461a8df468549f4cd05d3a991694690c464fc052d"
+      "sha256": "4c0ee8bb917b61e892c8b9501ea49f9901c6fd7f08fc0525cbdd3be29f146211"
     },
     {
       "path": "upstream/ACQUISITION.json",
@@ -216,8 +673,5 @@
       "path": "upstream/skill/templates/task-init/visual-review.md",
       "sha256": "6d8a3418ec711faa012e9fa386eb1c1bb0e98836bed1ed6e22f2686326e628c2"
     }
-  ],
-  "case_studies": [
-    "ppt-design-skill"
   ]
 }

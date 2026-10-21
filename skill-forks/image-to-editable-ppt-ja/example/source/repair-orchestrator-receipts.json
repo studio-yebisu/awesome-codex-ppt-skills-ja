@@ -1,0 +1,101 @@
+{
+  "scope": "Actual original dispatch/record/finalize calls; paths made relative for distribution; originals retained privately",
+  "calls": [
+    {
+      "argv": [
+        "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        ".\\source\\upstream\\skills\\image-to-editable-ppt\\cli\\editppt\\cli.py",
+        "run",
+        "dispatch",
+        ".\\run-repair",
+        "--page",
+        "page_001",
+        "--agent-id",
+        "/root",
+        "--prompt-file",
+        ".\\run-repair\\pages\\page_001\\worker-prompt.md"
+      ],
+      "exit_code": 0,
+      "stdout": "page_001 -> dispatched\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        ".\\source\\upstream\\skills\\image-to-editable-ppt\\cli\\editppt\\cli.py",
+        "run",
+        "record",
+        ".\\run-repair",
+        "--page",
+        "page_001",
+        "--agent-id",
+        "/root"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"page_id\": \"page_001\", \"status\": \"recorded\", \"validation_passed\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        ".\\source\\upstream\\skills\\image-to-editable-ppt\\cli\\editppt\\cli.py",
+        "run",
+        "record",
+        ".\\run-repair",
+        "--page",
+        "page_001",
+        "--agent-id",
+        "/root"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"page_id\": \"page_001\", \"status\": \"recorded\", \"validation_passed\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        ".\\source\\upstream\\skills\\image-to-editable-ppt\\cli\\editppt\\cli.py",
+        "run",
+        "dispatch",
+        ".\\run-repair",
+        "--page",
+        "page_002",
+        "--agent-id",
+        "/root/repair_core_examples",
+        "--prompt-file",
+        ".\\run-repair\\pages\\page_002\\worker-prompt.md"
+      ],
+      "exit_code": 0,
+      "stdout": "page_002 -> dispatched\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        ".\\source\\upstream\\skills\\image-to-editable-ppt\\cli\\editppt\\cli.py",
+        "run",
+        "record",
+        ".\\run-repair",
+        "--page",
+        "page_002",
+        "--agent-id",
+        "/root/repair_core_examples"
+      ],
+      "exit_code": 0,
+      "stdout": "{\"page_id\": \"page_002\", \"status\": \"recorded\", \"validation_passed\": true}\n",
+      "stderr": ""
+    },
+    {
+      "argv": [
+        "<slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe",
+        ".\\source\\upstream\\skills\\image-to-editable-ppt\\cli\\editppt\\cli.py",
+        "run",
+        "finalize",
+        ".\\run-repair"
+      ],
+      "exit_code": 0,
+      "stdout": "+ <slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe .\\source\\upstream\\skills\\image-to-editable-ppt\\cli\\editppt\\runtime\\build_pptx_from_manifest.py --deck-manifest .\\run-repair\\deck_manifest.json --out .\\run-repair\\final\\slide_01_edited.pptx\nWrote .\\run-repair\\final\\slide_01_edited.pptx\n+ <slides-workspace>\\.build\\ppt-master-venv\\Scripts\\python.exe .\\source\\upstream\\skills\\image-to-editable-ppt\\cli\\editppt\\runtime\\validate_pptx.py .\\run-repair\\final\\slide_01_edited.pptx --deck-manifest .\\run-repair\\deck_manifest.json --report .\\run-repair\\final\\validation.json\n{\n  \"pptx\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\image-to-editable\\\\run-repair\\\\final\\\\slide_01_edited.pptx\",\n  \"deck_manifest\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\image-to-editable\\\\run-repair\\\\deck_manifest.json\",\n  \"expected_pages\": 2,\n  \"slides\": 2,\n  \"page_manifests_missing\": [],\n  \"page_validation_missing\": [],\n  \"failed_page_validations\": [],\n  \"page_contract_violations\": [],\n  \"notes_expected\": 0,\n  \"notes_found\": 0,\n  \"notes_hash_mismatches\": [],\n  \"missing_parts\": [],\n  \"warnings\": [],\n  \"passed\": true\n}\n{\n  \"schema_version\": 1,\n  \"run_id\": \"run-repair\",\n  \"status\": \"complete\",\n  \"page_count\": 2,\n  \"output\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\image-to-editable\\\\run-repair\\\\final\\\\slide_01_edited.pptx\",\n  \"validation\": \"M:\\\\Codex\\\\Projects\\\\studio-yebisu\\\\workspace\\\\slides\\\\examples\\\\repositories\\\\image-to-editable\\\\run-repair\\\\final\\\\validation.json\",\n  \"completed_at\": \"2026-10-15T14:04:56Z\"\n}\n",
+      "stderr": ""
+    }
+  ]
+}

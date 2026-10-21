@@ -10,4 +10,16 @@ PPTXの文字、背景、丸、帯、花器、棚、区切り線は編集可能�
 
 原作者LearnAIHubC、使用pinはSOURCE.json。原典MITをLICENSE.txtに保持。非公式の日本語作例です。Google Fontsの未改変TTFと原文OFLをfonts/へ同梱。PPTXはフォント未埋込なので別端末ではこれらの書体を手動導入してください。Windows fontsから抽出していません。
 
-原典--no-previewで追加QAを省略。完成PPTXをPowerPointで一度PNG/PDFへ書き出し、主な完成物を初回表示する範囲です。全ページ詳細目視・構造監査・ZIP再実行は行いません。index.htmlはPowerPoint表示のPNGプレビューです。HTMLとPowerPointの文字組みが完全に一致する保証ではありません。
+今回の修正はHTMLとPowerPointの全頁描画・目視、DOM文字とnative要素の照合まで実施。独立再評価とZIP再実行は別記録です。index.htmlはPowerPoint表示のPNGプレビューです。HTMLとPowerPointの文字組みが完全に一致する保証ではありません。
+
+## 今回の修正と確認
+
+元HTMLの表紙字間を-6pxから+10pxへ、2頁本文を下へ48px移して見出し下に33.21875pxの余白を確保しました。3頁の小さな表示は黒へ変更。元SVG抽出は表示幅/高さを保存しないため花が縦へ伸びていたので、実DOMのSVG viewportを保存する局所補正を加えました。source/html_to_editable_pptx.js.diffに元との全差分を保存しています。
+
+元SKILLは追加検査を既定省略しますが、今回はユーザーの明示した修正・検証依頼に基づき、同じsource.htmlを元DOM converterで再変換しました。HTML全5頁とPowerPoint全5頁を作者が目視。source/html-dom-metrics.json、native-object-inventory.json、layout-conversion-audit.jsonと2組の同頁比較PNGを保存。文字36要素、基本図形8、花SVG由来の個別画像6を全頁で確認しています。PPTXは花をnative図形に変換したものではありません。
+
+原典Generate PPT経路（slides.json→5styleプリセット）はこの作例では未実施。radial背景近似・影の近似・CSS filter無視などの原典制約があり、ChromeとPowerPointの字形・改行の完全一致は保証しません。元SKILLに専用の必須検証CLIはありません。今回の検査を元にないgateとして偽装しません。独立Kimi K3/Opus5.5再評価とZIP再実行は未了です。
+
+## 3頁の読みやすさの修復
+
+小さいラベル・脚注・頁番号をクリーム色へ変更し、赤地を少し暗くしてコントラスト4.5:1以上にしました。元HTML→原典DOM converter→native PPTX→実PowerPoint描画を再実行し、HTML/PPTX全5頁を確認しています。source/footer-repair.jsonが現在の記録です。

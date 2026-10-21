@@ -66,7 +66,7 @@
     "Full local TTF embedded in single HTML instead of remote fonts/Lucide CDN; input contains no raster images, icons or new licensed assets.",
     "Original intersection observer additionally clears visible on leave to replay geometry explanation; same-origin minimal player adapter and page counter recorded in source/controller.diff.",
     "Original gen-content.py is a new-presentation-only path and is not executed for this PPT conversion.",
-    "PPT source geometry remains inside a fixed SVG viewBox, scaled by viewport; HTML page sizes/spacing use original clamp/breakpoints."
+    "PPT shape geometry remains inside a fixed SVG viewBox, scaled by viewport; page3 has a declared output-only center alignment adapter for12 labels, with raw bbox preserved in extraction and source/svg-label-alignment.json."
   ],
   "fonts": {
     "families": [
@@ -91,5 +91,21 @@
     0,
     0,
     0
-  ]
+  ],
+  "layout_repair": {
+    "scope": "Output-only page3 SVG label x/text-anchor; original input preserved",
+    "adapter_authoring_model": "claude-opus-5-5",
+    "authoring_run_date": "2026-10-15",
+    "mapping": "source/svg-label-alignment.json",
+    "diff": "source/label-alignment.diff",
+    "verification": "source/label-alignment-qa.json",
+    "input_snapshot_note_ja": "制作元Akxan作例の修正前版を保存。現在のAkxan作例とは版が異なる。",
+    "independent_review": "pending",
+    "runtime_versions": {
+      "python": "3.12.14",
+      "python-pptx": "1.0.2",
+      "lxml": "6.1.1",
+      "Pillow": "12.3.0"
+    }
+  }
 }

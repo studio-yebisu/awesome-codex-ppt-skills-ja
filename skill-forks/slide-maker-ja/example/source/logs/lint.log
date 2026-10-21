@@ -1,0 +1,34 @@
+[gates] delivery='selfread', read from M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\slide-maker\.deck-gates.json — budgets and floors follow the RECORDED mode, not the default.
+[lint] builds: RECORDED as static in .deck-gates.json — NO BUILDS stands down (the user opted out; this is not a missing motion manifest)
+
+  ── deck stats (mode: selfread) — measured, advisory ──
+     #  load  text%  ink%  maxpt  shp  pic  cht  build  notes  sim↑   lum   sat  Δlum
+     1    64    56%    56%   46.0   41    0    0    —      44    0.97  0.02  0.00
+     2    60    51%    51%   66.0   40    0    0    —      41  0.76  0.94  0.05  0.03
+     3   113    54%    54%   26.0  138    0    0    —      46  0.02  0.97  0.02  0.03
+     4    57    35%    71%   34.0   13    0    1    —      56  0.03  0.98  0.01  0.01
+     5    63    57%    57%   29.0   11    0    0    —      60  0.29  0.97  0.01  0.01
+     title spine (the consultants' titles-only test — read it as one argument):
+        1. 並べておくと、探し方が変わる
+        2. 先頭からなら、13まで13回
+        3. 真ん中で分けると、4回で届く
+        4. 15個すべてで試すと、最大4回
+        5. 使える条件も、いっしょに覚える
+     fonts: body-median 16pt · deck max 66pt · type drama 4.1× · size tokens in use 18 (target 4-5 deck-wide) · distinct skeletons 4 · distinct envelopes 3/3 (modal 33%) | builds 0/5 · transitions 0/5 · avg occupancy 58%
+  [stats] SIZE SPRAWL: slide 1 uses 7 distinct font sizes (11, 20, 22, 25, 26, 30, 46) — target ≤3-4 per slide, drawn from the deck's declared type-scale tokens
+  [stats] SIZE SPRAWL: slide 2 uses 7 distinct font sizes (11, 20, 23, 25, 26, 32, 66) — target ≤3-4 per slide, drawn from the deck's declared type-scale tokens
+  [stats] SIZE SPRAWL: slide 3 uses 6 distinct font sizes (11, 16, 21, 23, 24, 26) — target ≤3-4 per slide, drawn from the deck's declared type-scale tokens
+  [stats] CROWDED: slide 4 occupancy 71% — role bands: cover 25-35 · exec/summary 45-60 · technical/dense 55-70; past ~70% the slide reads crowded — subtract or split, don't shrink
+  [stats] SIZE SPRAWL: slide 4 uses 7 distinct font sizes (11, 13, 14, 16, 25, 26, 34) — target ≤3-4 per slide, drawn from the deck's declared type-scale tokens
+  [stats] SIZE SPRAWL: slide 5 uses 5 distinct font sizes (11, 25, 26, 28, 29) — target ≤3-4 per slide, drawn from the deck's declared type-scale tokens
+  [stats] RAGGED LEFT EDGE: slide 4 — '15個すべてで試すと、最大4回' starts at 0.55in and '目的値を1〜15に変えて、全15通りを実行' directly below it at 0.65in, 10px apart. Too small to read as an indent and too large to look aligned; snap them to one x, or indent deliberately (>0.12in) so it reads as a decision
+  [stats] RAGGED LEFT EDGE: slide 2 — '線形探索：見つかるまで、左から順に照合' starts at 0.62in and '1' directly below it at 0.68in, 6px apart. Too small to read as an indent and too large to look aligned; snap them to one x, or indent deliberately (>0.12in) so it reads as a decision
+  [stats] RAGGED LEFT EDGE: slide 4 — '目的値を1〜15に変えて、全15通りを実行' starts at 0.65in and '比較回数（回）' directly below it at 0.70in, 5px apart. Too small to read as an indent and too large to look aligned; snap them to one x, or indent deliberately (>0.12in) so it reads as a decision
+  [stats] NO ICONS ON CATEGORY CONTENT: slides 1, 2, 3 carry parallel label sets (3+ short peers on one baseline across half the canvas — the shape of a category row) and the deck contains no icon-sized picture at all. On category-rich content an icon family is a design must, not a taste call (slide-design self-verify (g)). Build one (scripts/icons.py, one family, recolored to the palette), or record `icon_family: "none — <why THESE slides read better without one>"` in .deck-gates.json — the detector over-counts on tables and timelines, so this is a re-decision, not a verdict
+  [stats] CJK-LATIN SPACING: both '中文 Latin' spaced (10×) and '中文Latin' unspaced (40×) boundaries appear — pick ONE convention deck-wide (recommend the space: 全年 ARR 增长 51%)
+
+M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\slide-maker\deck.pptx: 0 layout finding(s)  ✓ clean (no hard findings)
+  [stats] lines are advisory — which to act on vs accept: references/troubleshooting-faq.md §7
+  [json] wrote M:\Codex\Projects\awesome-codex-ppt-skills-ja\examples\repositories\slide-maker\lint.json
+M:\Codex\Projects\awesome-codex-ppt-skills-ja\.build\actual-upstreams\addsumtech__slides_maker\skills\slide-maker\scripts\lint_deck.py:2625: DeprecationWarning: Image.Image.getdata is deprecated and will be removed in Pillow 14 (2027-10-15). Use get_flattened_data instead.
+  px = list(im.getdata())

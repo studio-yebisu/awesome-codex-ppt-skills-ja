@@ -1,0 +1,150 @@
+{
+  "status": "qa_passed_human_adoption_pending",
+  "page_count": 5,
+  "render_engine": "Microsoft PowerPoint 16.0",
+  "all_pages_visually_reviewed": true,
+  "independent_critic": {
+    "verdict": "consent",
+    "file": "review/critic-round1.json",
+    "full_slide_coverage": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "supplemental_plan_audit": "review/supplemental-plan-audit.json",
+    "supplemental_result": "consistent_with_qualifications"
+  },
+  "blind_read": {
+    "independent_blank_context": true,
+    "file": "review/blind-answers.json",
+    "full_slide_coverage": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "findings_and_resolutions": ".deck-gates.json / blind_read",
+    "accepted_limitation": "Small footer is for selfread; not validated for back-of-room projection"
+  },
+  "original_lint": {
+    "exit_code": 0,
+    "hard_findings": 0,
+    "log": "source/logs/lint.log"
+  },
+  "original_handoff_gate": {
+    "exit_code": 0,
+    "log": "source/logs/gate-check-cwd-resolved.log",
+    "scope": "pass with explicit local-primary-source provenance waiver; not full original chronological workflow",
+    "post_build_supplemental_planning": true,
+    "initial_failed_log": "source/logs/gate-check.log",
+    "coverage": "26 section(s) ran — 18 bound, 8 NOT CHECKED"
+  },
+  "arc_comparison": {
+    "candidates": 3,
+    "exit_code": 0,
+    "log": "source/logs/arc-comparison.log"
+  },
+  "direction_comparison": {
+    "candidates": 5,
+    "actual_powerpoint_renders": "design/render",
+    "exit_code": 0,
+    "log": "source/logs/direction-diversity.log"
+  },
+  "editability": {
+    "replay_exit_code": 0,
+    "input_identical": true,
+    "slide_chart_notes_xml_identical": true,
+    "whole_pptx_byte_identical": false,
+    "slides": [
+      {
+        "page": 1,
+        "native_text_runs": 26,
+        "native_shapes": 42,
+        "native_charts": 0,
+        "pictures": 0
+      },
+      {
+        "page": 2,
+        "native_text_runs": 25,
+        "native_shapes": 41,
+        "native_charts": 0,
+        "pictures": 0
+      },
+      {
+        "page": 3,
+        "native_text_runs": 78,
+        "native_shapes": 139,
+        "native_charts": 0,
+        "pictures": 0
+      },
+      {
+        "page": 4,
+        "native_text_runs": 12,
+        "native_shapes": 13,
+        "native_charts": 1,
+        "pictures": 0
+      },
+      {
+        "page": 5,
+        "native_text_runs": 11,
+        "native_shapes": 12,
+        "native_charts": 0,
+        "pictures": 0
+      }
+    ],
+    "chart_series": [
+      [
+        1.0,
+        2.0,
+        3.0,
+        4.0,
+        5.0,
+        6.0,
+        7.0,
+        8.0,
+        9.0,
+        10.0,
+        11.0,
+        12.0,
+        13.0,
+        14.0,
+        15.0
+      ],
+      [
+        4.0,
+        3.0,
+        4.0,
+        2.0,
+        4.0,
+        3.0,
+        4.0,
+        1.0,
+        4.0,
+        3.0,
+        4.0,
+        2.0,
+        4.0,
+        3.0,
+        4.0
+      ]
+    ],
+    "chart_matches_executed_traces": true,
+    "embedded_workbooks": 1
+  },
+  "artifact_sha256": "3c7e01ff35aa37ba8a8cace1b1a6ba317c17458c9c37e9b9b9a5af74169aa34f",
+  "input_sha256": "e651667858be382e90c3e4f097d6536e743685d2a019b1a06d8a47b9a2ef9593",
+  "font_dependency": [
+    "Yu Gothic",
+    "Consolas"
+  ],
+  "production_adoption": false,
+  "publication": false,
+  "reviewed_at": "2026-10-13T19:30:12.061725+00:00",
+  "packaging_exclude": [
+    "**/__pycache__/**",
+    "**/*.pyc"
+  ]
+}

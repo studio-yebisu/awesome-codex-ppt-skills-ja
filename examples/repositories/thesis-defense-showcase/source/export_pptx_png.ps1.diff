@@ -1,0 +1,11 @@
+--- upstream/export_pptx_png.ps1
++++ runtime/export_pptx_png.ps1
+@@ -47,7 +47,7 @@
+         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($pres) | Out-Null
+     }
+     if ($pp -ne $null) {
+-        try { $pp.Quit() } catch {}
++        # Shared PowerPoint: close this presentation only; keep Application running.
+         [System.Runtime.InteropServices.Marshal]::ReleaseComObject($pp) | Out-Null
+     }
+ }

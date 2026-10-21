@@ -1,3 +1,10 @@
-# Design specification
+# 実装の指定
 
-editorial-ink原典native design-system。紙白F4F1EA、墨111111、朱C2410C。CJK明朝指定の見出しとゴシック本文、実レンダリングに字体代替の可能性を記録。表紙の縦画像、宣言の大文字、比較の対、体験の順序、4週間の時間軸、締めの余白で8頁に密度差。中国語ラベルとlangを日本語化。体験図と工程はネイティブで、表紙挿絵のみAI画像。架空企画と期間仮定を明示。
+紙白・黒・朱のeditorial-ink。Shippori Mincho見出し、BIZ UDPGothic本文、Manrope英数字。公式OFL字体を同梱し、実PDFの使用名をqa/current-pptx-inspection.jsonで確認。
+
+8頁に原典cover-editorial/agenda-clean/three-point-summary/before-after/case-study/process-linear/roadmap/closing-echoを使用。共通dispatch、native部品と原典QAを維持。case-studyのvisual_examples、processのstep_labels、roadmap_noteはこの派生で明示した入力拡張。配置・ラベル・文字サイズの日本語差分はsource/runtime-adapter.diffが正本。
+
+
+## 2・5頁の縦配置
+
+2頁は4条件の第2行を0.4in下げ、5頁は3手順・右側の例を下へ均等に広げる。内容は増やさず、上段のタイトルと本文の余裕、下端の共通フッターの区切りを保つ。native_vertical_spreadは派生入力で、原典の図形APIとQA閾値を変えない。

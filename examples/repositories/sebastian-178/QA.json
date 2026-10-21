@@ -1,54 +1,70 @@
 {
-  "scope": "初回browser表示・全頁PNG・arrow/overview・最小境界確認",
-  "browser": "existing Google Chrome via Playwright",
+  "status": "codex_round4_repair_all_pages_read_independent_recheck_pending",
+  "author": "Codex",
   "page_count": 7,
-  "page_errors": [],
-  "fits": [
+  "artifact_sha256": "7954fdbb2d7b0ba2b0241e0708671abc3e0e719f8f4e3ba828ebdcc2972f1018",
+  "all_pages_visually_reviewed": true,
+  "visual_review": "Current full-size page images inspected for Japanese text, diagrams, hierarchy and accidental overlap. Author review, not independent approval.",
+  "independent_review": "pending new artifact",
+  "human_adoption": "pending",
+  "publication": false,
+  "images": [
     {
-      "title": "動画一本を、教材へ。",
-      "overflow": []
+      "file": "render/slide-01.png",
+      "sha256": "83481d7e5c7a4df968160a426ec8396f38534735afb2f89540a31c1874e19c9d"
     },
     {
-      "title": "教材の入口は「学習後に何ができるか」",
-      "overflow": []
+      "file": "render/slide-02.png",
+      "sha256": "ba4d19b3e8420b924c54a4deed33f1d43d4c9ff4ff5c3a579bb2d0b46c4b885b"
     },
     {
-      "title": "章は話した順序より、判断の順序で組む",
-      "overflow": []
+      "file": "render/slide-03.png",
+      "sha256": "91749c0b0e20d19f2fdcfe5628ee406db6f2678a066f976d8c4db46a24d4dc0c"
     },
     {
-      "title": "各工程の出力を、次の工程の入力にする",
-      "overflow": []
+      "file": "render/slide-04.png",
+      "sha256": "5439ef38f46b18c8f18c96a59a6ca02c027b9b16073178e8c0d9278877d87853"
     },
     {
-      "title": "図解の型は、説明する関係で選ぶ",
-      "overflow": []
+      "file": "render/slide-05.png",
+      "sha256": "feae4b2432d9ac3d76d2d74eab5f93a200ffeb94158dc9149d24027566579d62"
     },
     {
-      "title": "小テストは、章の到達点と同じ行動を問う",
-      "overflow": []
+      "file": "render/slide-06.png",
+      "sha256": "a22911d2b11cd091c848d266d0048af344d5577f8e8d7d19e47b890737ea1337"
     },
     {
-      "title": "再利用の前に、教材部品の根拠と権利を確かめる",
-      "overflow": []
+      "file": "render/slide-07.png",
+      "sha256": "553a54c407a233f5f5e535af7e4acc489d32431dba2a8a5c3cdbdf27ecf5f199"
     }
   ],
-  "arrow_next_title": [
-    "教材の入口は「学習後に何ができるか」"
+  "original_gates": "source/round4-golden-path.json",
+  "notes": [
+    "Original quality/contrast/fit/render all exit0 after Windows path-only adapter",
+    "Original runtime.js byte-identical",
+    "Actual current local subset and package fully regenerated; all type roles use Noto Sans CJK JP",
+    "Process chevrons outside text; 実演 kept together; automatic page number no duplicate"
   ],
-  "overview_toggle": true,
-  "upstream_scripts_executed": false,
-  "full_upstream_audits": false,
-  "pdf_visual_review": "PNGと同じHTMLからChromium出力、別PDF全頁精査は未実施",
-  "pdf_page_count": 7,
-  "visual_review": "Targeted corrected page 5 reviewed; issue-tree Japanese labels horizontal and right/bottom area present",
-  "actual_browser_render": true,
-  "render_environment": "user PC, installed Google Chrome via Playwright",
-  "png_count": 7,
-  "pc_message_contract_implemented": true,
-  "pc_message_contract_tested": "内部arrow/overview確認済。PC外側フロートは親で最終確認",
-  "cloud_browser_blocker": "Chromium socket() failed Operation not permitted。権限設定変更なし、許可済PCブラウザで実描画",
-  "initial_display_fix": "page05 tree-node flex日本語ラベル割れをdisplay:blockで修正。修正版5頁目視確認済",
-  "worker_targeted_visual_review": "修正版slide-05と初版slide-06を確認。大規模QA未実施",
-  "source_html_sha256": "5887f2bd99a0586ca6313b3fc0a0766b9aaaa8b9473729934c7711f67c870ae9"
+  "not_executed": [
+    "independent model re-review"
+  ],
+  "zip_replay": "source/zip-replay.json",
+  "zip_replay_note": "Source checks executed from the first synchronized archive; final packaging adds these receipts. Current source hashes remain checked.",
+  "round3_metadata_correction": "source/catalog-round3-proposal.json",
+  "round4": {
+    "source_proofs": [
+      "source/round4-golden-path.json",
+      "source/runtime-identity.json",
+      "source/assets/css/deck-ja.css",
+      "source/references/content-to-exhibit-router.md",
+      "source/build.py"
+    ],
+    "visual_review": "All46 current page PNGs read by Codex across seven cases. Relevant natural motion frames, W2–W4 and all7 presenter notes screenshots also read. Independent review of this exact artifact remains pending.",
+    "not_demonstrated": [
+      "架空の企画。学習効果・制作時間・収益の実績は含まない。原典のroot LICENSEとSKILLの記載不一致は解消していない。",
+      "原典runtimeを置き換えた初期実装は旧履歴。現在は元runtimeと局所catalog bridgeを使用。",
+      "日本語用CSSは原典CSSの後に追加。新しい原稿では同じ4検査と全頁の実描画をやり直す。"
+    ]
+  },
+  "distribution_reexecution": "source/round4-zip-replay.json"
 }

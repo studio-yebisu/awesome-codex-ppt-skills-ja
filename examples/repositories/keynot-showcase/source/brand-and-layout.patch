@@ -1,6 +1,6 @@
 --- upstream/example inline CSS
 +++ source/CSS with appended local overrides
-@@ -451,3 +451,78 @@
+@@ -451,3 +451,83 @@
        print-color-adjust: exact !important;
      }
    }
@@ -79,3 +79,8 @@
 +.rotate-overlay h2{line-height:1.4;color:var(--white)}
 +@media(prefers-reduced-motion:reduce){.slide{transition:none}.slide.active .reveal,.rotate-icon{animation:none!important}}
 +@media print{.s1-bottom{padding-bottom:0}.s6-bottom{max-width:100%}}
++
++/* Round4 brand and clearance repair */
++.s6-title{font-family:var(--serif);font-weight:400}
++.s6-print{transform:none}
++

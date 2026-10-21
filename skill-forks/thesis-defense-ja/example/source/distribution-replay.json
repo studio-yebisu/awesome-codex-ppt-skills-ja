@@ -1,0 +1,311 @@
+{
+  "scope": "Both archives separately extracted and rebuilt with existing dependencies. Technical reproduction only; independent visual review and user adoption remain separate.",
+  "artifact_sha256": "e451ba4b2ea22fc52404f24e6274d5ab9e82fddf3ffd58211126c8b017023378",
+  "archives": [
+    {
+      "archive": "thesis-defense-example-ja.zip",
+      "tested_archive_sha256": "badb724b2c4f584766a6d2a2e5c18dfefa25544ae81b90b3565dae902cab2ac3",
+      "command_exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "original_overflow_tolerance": 40,
+      "original_quality": {
+        "pptx_sha256": "b1f4989897679551caa384c60046f257779af5e5ef9af539ff1e929ab1b585aa",
+        "commands": [
+          {
+            "command": [
+              "pwsh.EXE",
+              "-NoProfile",
+              "-File",
+              "runtime/scripts/export_pptx_png.ps1",
+              "-Pptx",
+              "deck.pptx",
+              "-OutDir",
+              "reviews/original-export",
+              "-Width",
+              "1600",
+              "-Height",
+              "900"
+            ],
+            "exit_code": 0,
+            "log": "reviews/current-original-export.txt"
+          },
+          {
+            "command": [
+              "pwsh.EXE",
+              "-NoProfile",
+              "-File",
+              "runtime/scripts/inspect_pptx_overflow.ps1",
+              "-Pptx",
+              "deck.pptx",
+              "-Tolerance",
+              "40",
+              "-OutputJson",
+              "reviews/overflow.json"
+            ],
+            "exit_code": 0,
+            "log": "reviews/current-overflow.txt"
+          },
+          {
+            "command": [
+              "python.exe",
+              "runtime/scripts/make_contact_sheet.py",
+              "--input",
+              "render",
+              "--output",
+              "reviews/contact-sheet.png"
+            ],
+            "exit_code": 0,
+            "log": "reviews/current-contact-sheet.txt"
+          },
+          {
+            "command": [
+              "python.exe",
+              "runtime/scripts/scan_pptx_text.py",
+              "--pptx",
+              "deck.pptx",
+              "--bad",
+              "中期检查,项目简介,系统框图,算法设计,成果展示,总结分析,TODO,占位",
+              "--json",
+              "reviews/stale-text-scan.json"
+            ],
+            "exit_code": 0,
+            "log": "reviews/current-stale-text.txt"
+          }
+        ],
+        "original_overflow_tolerance_unchanged": 40,
+        "overflow_count": 0,
+        "visual_review": "Not inferred from these scripts; inspect current contact sheet and actual pages.",
+        "human_or_independent_approval_claimed": false
+      },
+      "native_parts_compared": 50,
+      "native_geometry_text_style_note_theme_equal": true,
+      "excluded_COM_generated_slide_creationId_values": [
+        {
+          "part": "ppt/slides/slide2.xml",
+          "source": "3945492982",
+          "rebuilt": "3091343790"
+        },
+        {
+          "part": "ppt/slides/slide6.xml",
+          "source": "1152057348",
+          "rebuilt": "31328186"
+        },
+        {
+          "part": "ppt/slides/slide1.xml",
+          "source": "128001777",
+          "rebuilt": "3150947503"
+        },
+        {
+          "part": "ppt/slides/slide5.xml",
+          "source": "2101470553",
+          "rebuilt": "3840127938"
+        },
+        {
+          "part": "ppt/slides/slide4.xml",
+          "source": "437853709",
+          "rebuilt": "1913910401"
+        },
+        {
+          "part": "ppt/slides/slide3.xml",
+          "source": "2817996173",
+          "rebuilt": "2358694507"
+        }
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "d1670ebe2f84a84075f65fb234a4dc8e04838af4c960dcfdc03e28349c24b357",
+          "replayed_png_sha256": "d1670ebe2f84a84075f65fb234a4dc8e04838af4c960dcfdc03e28349c24b357"
+        },
+        {
+          "page": 2,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "55cb36a90ff170f44251fe313165ec72432a02e30a61330048159631c6d959d6",
+          "replayed_png_sha256": "55cb36a90ff170f44251fe313165ec72432a02e30a61330048159631c6d959d6"
+        },
+        {
+          "page": 3,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "3888b04ea75248dee3bfd9423845550ed0db17b406b870d11819b7e1f1e11970",
+          "replayed_png_sha256": "3888b04ea75248dee3bfd9423845550ed0db17b406b870d11819b7e1f1e11970"
+        },
+        {
+          "page": 4,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "265a8e5804f77088ae1756fca78a825b248812e0ea77e395fd63cf42a7fe0405",
+          "replayed_png_sha256": "265a8e5804f77088ae1756fca78a825b248812e0ea77e395fd63cf42a7fe0405"
+        },
+        {
+          "page": 5,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "91e04019cf6fd34afad94f47a7b2ee452d91c6906e2fd599b9ddf8f46c2a674a",
+          "replayed_png_sha256": "91e04019cf6fd34afad94f47a7b2ee452d91c6906e2fd599b9ddf8f46c2a674a"
+        },
+        {
+          "page": 6,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "c4909f3241c25df346d5454d82236807d2915855c58b5b75b4dcaf7516238eb7",
+          "replayed_png_sha256": "c4909f3241c25df346d5454d82236807d2915855c58b5b75b4dcaf7516238eb7"
+        }
+      ]
+    },
+    {
+      "archive": "thesis-defense-ja.zip",
+      "tested_archive_sha256": "e3b998ee00dca8329d6a0995c8edd6a59b28066155fdb9ade64b2a8ac0de3823",
+      "command_exit_codes": [
+        0,
+        0,
+        0
+      ],
+      "original_overflow_tolerance": 40,
+      "original_quality": {
+        "pptx_sha256": "43b4226afbeec1915aad901a0c4e2f725cc52eed43b83234d597c15e64a5afb6",
+        "commands": [
+          {
+            "command": [
+              "pwsh.EXE",
+              "-NoProfile",
+              "-File",
+              "runtime/scripts/export_pptx_png.ps1",
+              "-Pptx",
+              "deck.pptx",
+              "-OutDir",
+              "reviews/original-export",
+              "-Width",
+              "1600",
+              "-Height",
+              "900"
+            ],
+            "exit_code": 0,
+            "log": "reviews/current-original-export.txt"
+          },
+          {
+            "command": [
+              "pwsh.EXE",
+              "-NoProfile",
+              "-File",
+              "runtime/scripts/inspect_pptx_overflow.ps1",
+              "-Pptx",
+              "deck.pptx",
+              "-Tolerance",
+              "40",
+              "-OutputJson",
+              "reviews/overflow.json"
+            ],
+            "exit_code": 0,
+            "log": "reviews/current-overflow.txt"
+          },
+          {
+            "command": [
+              "python.exe",
+              "runtime/scripts/make_contact_sheet.py",
+              "--input",
+              "render",
+              "--output",
+              "reviews/contact-sheet.png"
+            ],
+            "exit_code": 0,
+            "log": "reviews/current-contact-sheet.txt"
+          },
+          {
+            "command": [
+              "python.exe",
+              "runtime/scripts/scan_pptx_text.py",
+              "--pptx",
+              "deck.pptx",
+              "--bad",
+              "中期检查,项目简介,系统框图,算法设计,成果展示,总结分析,TODO,占位",
+              "--json",
+              "reviews/stale-text-scan.json"
+            ],
+            "exit_code": 0,
+            "log": "reviews/current-stale-text.txt"
+          }
+        ],
+        "original_overflow_tolerance_unchanged": 40,
+        "overflow_count": 0,
+        "visual_review": "Not inferred from these scripts; inspect current contact sheet and actual pages.",
+        "human_or_independent_approval_claimed": false
+      },
+      "native_parts_compared": 50,
+      "native_geometry_text_style_note_theme_equal": true,
+      "excluded_COM_generated_slide_creationId_values": [
+        {
+          "part": "ppt/slides/slide2.xml",
+          "source": "3945492982",
+          "rebuilt": "2657426271"
+        },
+        {
+          "part": "ppt/slides/slide6.xml",
+          "source": "1152057348",
+          "rebuilt": "776276202"
+        },
+        {
+          "part": "ppt/slides/slide1.xml",
+          "source": "128001777",
+          "rebuilt": "1086959225"
+        },
+        {
+          "part": "ppt/slides/slide5.xml",
+          "source": "2101470553",
+          "rebuilt": "302009699"
+        },
+        {
+          "part": "ppt/slides/slide4.xml",
+          "source": "437853709",
+          "rebuilt": "2478279702"
+        },
+        {
+          "part": "ppt/slides/slide3.xml",
+          "source": "2817996173",
+          "rebuilt": "4246901634"
+        }
+      ],
+      "pages": [
+        {
+          "page": 1,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "d1670ebe2f84a84075f65fb234a4dc8e04838af4c960dcfdc03e28349c24b357",
+          "replayed_png_sha256": "d1670ebe2f84a84075f65fb234a4dc8e04838af4c960dcfdc03e28349c24b357"
+        },
+        {
+          "page": 2,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "55cb36a90ff170f44251fe313165ec72432a02e30a61330048159631c6d959d6",
+          "replayed_png_sha256": "55cb36a90ff170f44251fe313165ec72432a02e30a61330048159631c6d959d6"
+        },
+        {
+          "page": 3,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "3888b04ea75248dee3bfd9423845550ed0db17b406b870d11819b7e1f1e11970",
+          "replayed_png_sha256": "3888b04ea75248dee3bfd9423845550ed0db17b406b870d11819b7e1f1e11970"
+        },
+        {
+          "page": 4,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "265a8e5804f77088ae1756fca78a825b248812e0ea77e395fd63cf42a7fe0405",
+          "replayed_png_sha256": "265a8e5804f77088ae1756fca78a825b248812e0ea77e395fd63cf42a7fe0405"
+        },
+        {
+          "page": 5,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "91e04019cf6fd34afad94f47a7b2ee452d91c6906e2fd599b9ddf8f46c2a674a",
+          "replayed_png_sha256": "91e04019cf6fd34afad94f47a7b2ee452d91c6906e2fd599b9ddf8f46c2a674a"
+        },
+        {
+          "page": 6,
+          "mean_absolute_RGB": 0.0,
+          "packaged_png_sha256": "c4909f3241c25df346d5454d82236807d2915855c58b5b75b4dcaf7516238eb7",
+          "replayed_png_sha256": "c4909f3241c25df346d5454d82236807d2915855c58b5b75b4dcaf7516238eb7"
+        }
+      ]
+    }
+  ],
+  "current_native_and_notes_equal": true,
+  "all_page_RGB_equal": true,
+  "final_repack": "Only publication metadata and this receipt may be added; retained tested archives are compared separately."
+}

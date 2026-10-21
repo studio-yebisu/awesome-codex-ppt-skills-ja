@@ -1,0 +1,67 @@
+{
+  "author": "Codex",
+  "status": "passed",
+  "archive_under_test": "slide-wright-example-ja.zip",
+  "archive_sha256_before_receipt_added": "51b51e9a51754ae1e6d3dbfa64ee29e7bb360dfb82a29e9036ca00f67ca5eaa5",
+  "commands": [
+    {
+      "arguments": [
+        "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Scripts/python.exe",
+        "source/build.py",
+        "--case",
+        "<extracted-case>",
+        "--upstream",
+        "<extracted-case>\\source\\upstream",
+        "--stage",
+        "preview"
+      ],
+      "exit_code": 0,
+      "output_tail": "Two real slides written to <extracted-case>\\night-observatory.html\n"
+    },
+    {
+      "arguments": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "source/render_preview.cjs",
+        "http://127.0.0.1:8847/examples/repositories/slide-wright-showcase/.private/round5-zip-replay/slide-wright-showcase/night-observatory.html",
+        "<extracted-case>"
+      ],
+      "exit_code": 0,
+      "output_tail": "{\"ready\":true,\"version\":\"5.1.0\",\"pages\":2,\"first_index\":0,\"second_index\":1}\n"
+    },
+    {
+      "arguments": [
+        "M:/Codex/Projects/studio-yebisu/workspace/slides/.build/ppt-master-venv/Scripts/python.exe",
+        "source/build.py",
+        "--case",
+        "<extracted-case>",
+        "--upstream",
+        "<extracted-case>\\source\\upstream",
+        "--stage",
+        "append",
+        "--existing-deck-repair"
+      ],
+      "exit_code": 0,
+      "output_tail": "Four slides appended; original two preserved.\n"
+    },
+    {
+      "arguments": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node.exe",
+        "source/verify.cjs",
+        "<extracted-case>",
+        "http://127.0.0.1:8847/examples/repositories/slide-wright-showcase/.private/round5-zip-replay/slide-wright-showcase/night-observatory.html"
+      ],
+      "exit_code": 0,
+      "output_tail": "{\"pages\":6,\"errors\":[],\"navigation\":{\"previous\":4,\"overview\":true}}\n"
+    }
+  ],
+  "results": {
+    "html_sha256": "61ec923c1ad288c1be0ce6bcb2a7373d1269fcffcabb8df0ca011af24b00e89b",
+    "published_html_byte_identical": true,
+    "two_stage_actual_browser_pages": 2,
+    "final_actual_browser_pages": 6,
+    "first_two_sections_preserved": true,
+    "human_design_approval_demonstrated": false
+  },
+  "environment": "Fresh ZIP extraction; existing Python/Node/browser and lock-matched dependencies reused. No fresh npm install or alternate environment is claimed.",
+  "independent_score": false
+}

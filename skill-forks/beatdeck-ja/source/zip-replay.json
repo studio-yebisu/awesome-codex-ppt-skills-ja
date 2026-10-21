@@ -1,0 +1,26 @@
+{
+  "author": "Codex",
+  "status": "passed",
+  "input_archive_sha256": "2f061f5526856bcdd38dfaa948a7f6bb15d680ced75511227c85708b20d9a226",
+  "current_artifact_sha256": "6640851defe127caeba17ac0dc6b91236bae04989381eaea3c552ba2f5f72421",
+  "scope": "Actual example ZIP extracted into a fresh private folder and rebuilt with existing installed runtimes. No alternate environment or service installed.",
+  "shared_dependencies": "Existing matching node_modules reused through a private junction where required; dependencies are not in the ZIP.",
+  "results": {
+    "rebuilt_dist_byte_identical": true,
+    "verify_scope": "Original15-beat validation already performed on the byte-identical public target; not rerun without runtime changes."
+  },
+  "commands": [
+    {
+      "program": "node.exe",
+      "arguments": [
+        "C:/Users/owner/AppData/Local/nodejs/node-v24.18.0-win-x64/node_modules/npm/bin/npm-cli.js",
+        "--prefix",
+        "runtime",
+        "run",
+        "build"
+      ],
+      "exit_code": 0
+    }
+  ],
+  "fork_equivalence": "The fork ZIP includes these same source inputs; its manifest and CRC are checked separately."
+}

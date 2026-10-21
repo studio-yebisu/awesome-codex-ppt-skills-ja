@@ -1,0 +1,294 @@
+{
+  "kind": "sci-diagram-pptx-check",
+  "status": "PASS",
+  "pptx": "pass-01\\editable.pptx",
+  "source": "pass-01\\source.png",
+  "build_source": "pass-01\\build.mjs",
+  "inspect_slide": 1,
+  "decision": {
+    "pass_index": 1,
+    "next_action": "deliver",
+    "hard_failure_count": 0,
+    "warning_count": 0,
+    "warnings_block_delivery": false,
+    "another_authored_pass_allowed": false
+  },
+  "hard_failures": [],
+  "warnings": [],
+  "checks": [
+    {
+      "id": "build_source.portable",
+      "status": "PASS",
+      "message": "Build source is non-empty UTF-8 and contains no machine-local path, high-confidence secret, or unshipped helper import",
+      "evidence": {
+        "path": "pass-01\\build.mjs",
+        "bytes": 14656,
+        "imports": [
+          "node:fs",
+          "node:path",
+          "node:url",
+          "pptxgenjs"
+        ]
+      }
+    },
+    {
+      "id": "package.unique_members",
+      "status": "PASS",
+      "message": "ZIP package member names are unique",
+      "evidence": {
+        "member_count": 39
+      }
+    },
+    {
+      "id": "package.zip_budget",
+      "status": "PASS",
+      "message": "ZIP package is within bounded member, size, XML, and compression budgets",
+      "evidence": {
+        "member_count": 39,
+        "total_uncompressed_bytes": 52317,
+        "largest_member_bytes": 13412,
+        "largest_xml_member_bytes": 13412,
+        "highest_checked_compression_ratio": 0.0,
+        "limits": {
+          "members": 10000,
+          "single_member_bytes": 268435456,
+          "total_uncompressed_bytes": 1073741824,
+          "xml_member_bytes": 33554432,
+          "compression_ratio": 200.0,
+          "ratio_minimum_uncompressed_bytes": 1048576
+        }
+      }
+    },
+    {
+      "id": "package.readable",
+      "status": "PASS",
+      "message": "PPTX content types, internal relationships, and slide order are readable",
+      "evidence": {
+        "slide_count": 1,
+        "slide_size_emu": [
+          12192000,
+          6858000
+        ]
+      }
+    },
+    {
+      "id": "inspection.slide_selection",
+      "status": "PASS",
+      "message": "Slide 1 was selected for deep structural checks",
+      "evidence": {
+        "requested_slide": 1,
+        "selected_part": "ppt/slides/slide1.xml",
+        "slide_count": 1
+      }
+    },
+    {
+      "id": "delivery.single_slide",
+      "status": "PASS",
+      "message": "The delivery contains exactly one editable slide",
+      "evidence": {
+        "slide_count": 1
+      }
+    },
+    {
+      "id": "package.no_unsafe_embeds",
+      "status": "PASS",
+      "message": "No macro, OLE/package object, ActiveX/control marker, or external media was found"
+    },
+    {
+      "id": "slide1.native_objects",
+      "status": "PASS",
+      "message": "Slide 1 contains visible editable native objects with readable on-slide geometry",
+      "evidence": {
+        "native_shapes": 14,
+        "connectors": 0,
+        "candidate_native_shapes": 18,
+        "candidate_connectors": 0,
+        "excluded_objects": {
+          "hidden": 0,
+          "unreadable_geometry": 0,
+          "zero_dimensions": 4,
+          "outside_slide": 0
+        },
+        "text_runs": 10
+      }
+    },
+    {
+      "id": "slide1.not_flattened",
+      "status": "PASS",
+      "message": "No whole-page image or large image mosaic was detected on Slide 1 or its visible inherited layers",
+      "evidence": {
+        "raster_objects": 0,
+        "grouped_raster_objects": 0,
+        "largest_coverage": 0.0,
+        "union_coverage": 0.0,
+        "hidden_raster_objects": 0,
+        "layers": [
+          {
+            "kind": "slide",
+            "part": "ppt/slides/slide1.xml",
+            "shapes_visible": true,
+            "image_background_visible": false,
+            "raster_objects": 0,
+            "grouped_raster_objects": 0,
+            "unresolved_grouped_raster_objects": 0,
+            "hidden_raster_objects": 0
+          },
+          {
+            "kind": "layout",
+            "part": "ppt/slideLayouts/slideLayout1.xml",
+            "shapes_visible": true,
+            "image_background_visible": false,
+            "raster_objects": 0,
+            "grouped_raster_objects": 0,
+            "unresolved_grouped_raster_objects": 0,
+            "hidden_raster_objects": 0
+          },
+          {
+            "kind": "master",
+            "part": "ppt/slideMasters/slideMaster1.xml",
+            "shapes_visible": true,
+            "image_background_visible": false,
+            "raster_objects": 0,
+            "grouped_raster_objects": 0,
+            "unresolved_grouped_raster_objects": 0,
+            "hidden_raster_objects": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "slide1.custom_geometry_inventory",
+      "status": "PASS",
+      "message": "Slide 1 contains no custom geometry",
+      "evidence": {
+        "custom_geometry_count": 0
+      }
+    },
+    {
+      "id": "slide1.custom_geometry_text_rect",
+      "status": "PASS",
+      "message": "Every text-bearing custom geometry has an explicit text rectangle",
+      "evidence": {
+        "text_bearing_custom_geometry": 0
+      }
+    },
+    {
+      "id": "slide1.font_inventory",
+      "status": "PASS",
+      "message": "Slide 1 text has explicit font declarations; no platform font whitelist was applied",
+      "evidence": {
+        "text_run_count": 10,
+        "typefaces": {
+          "latin": [
+            {
+              "typeface": "Yu Gothic",
+              "count": 10
+            }
+          ],
+          "ea": [
+            {
+              "typeface": "Yu Gothic",
+              "count": 10
+            }
+          ],
+          "cs": [
+            {
+              "typeface": "Yu Gothic",
+              "count": 10
+            }
+          ]
+        },
+        "theme_references": [],
+        "empty_typefaces": [],
+        "runs_without_explicit_typeface": 0,
+        "runs_with_partial_script_declarations": 0,
+        "missing_examples": [],
+        "truncated": 0
+      }
+    },
+    {
+      "id": "slide1.text_autofit_exclusive",
+      "status": "PASS",
+      "message": "No text body contains multiple AutoFit children",
+      "evidence": {
+        "text_body_count": 10,
+        "wrap_none_count": 0,
+        "no_autofit_count": 0,
+        "normal_autofit_count": 0,
+        "shape_autofit_count": 0
+      }
+    },
+    {
+      "id": "slide1.text_layout_inventory",
+      "status": "PASS",
+      "message": "No wrap=none, normal AutoFit, or shape AutoFit text layout was found",
+      "evidence": {
+        "text_body_count": 10,
+        "wrap_none_count": 0,
+        "no_autofit_count": 0,
+        "normal_autofit_count": 0,
+        "shape_autofit_count": 0
+      }
+    },
+    {
+      "id": "slide1.office_math",
+      "status": "PASS",
+      "message": "Slide 1 contains no Office Math objects",
+      "evidence": {
+        "math_object_count": 0,
+        "math_paragraph_count": 0,
+        "objects": [],
+        "truncated": 0
+      }
+    },
+    {
+      "id": "slide1.script_notation",
+      "status": "PASS",
+      "message": "No Unicode superscript or subscript characters were found",
+      "evidence": {
+        "unicode_script_run_count": 0,
+        "native_baseline_property_count": 0,
+        "objects": [],
+        "truncated": 0
+      }
+    },
+    {
+      "id": "source.raster_inset_inventory",
+      "status": "PASS",
+      "message": "No exact source bytes are embedded as raster media",
+      "evidence": {
+        "source_sha256": "5d886f134754d7dd86b315f9ee963f27a5a70de0944939544c5ee70d2d2ec690",
+        "matching_media_parts": [],
+        "matching_image_parts": [],
+        "unused_media_parts": [],
+        "source_image_relationships": [],
+        "non_selected_source_relationships": [],
+        "source_media_part_count": 0,
+        "source_usage_count": 0,
+        "source_object_count": 0,
+        "qualifying_object_count": 0,
+        "largest_visible_coverage": 0.0,
+        "union_visible_coverage": 0.0,
+        "policy": {
+          "requires_nonzero_src_rect": true,
+          "requires_visible_positive_dimensions": true,
+          "whole_page_or_mosaic_check_id": "slide1.not_flattened"
+        },
+        "objects": [],
+        "truncated": 0,
+        "violations": []
+      }
+    },
+    {
+      "id": "source.external_companion",
+      "status": "PASS",
+      "message": "The supplied source image is external and no identical media bytes are embedded in the PPTX",
+      "evidence": {
+        "path": "pass-01\\source.png",
+        "bytes": 64993,
+        "sha256": "5d886f134754d7dd86b315f9ee963f27a5a70de0944939544c5ee70d2d2ec690",
+        "qualifying_source_insets": 0
+      }
+    }
+  ]
+}

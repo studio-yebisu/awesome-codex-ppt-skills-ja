@@ -1,5 +1,5 @@
 {
-  "passed": true,
+  "passed": false,
   "results": [
     {
       "page": "slide-01.png",
@@ -8,7 +8,7 @@
     },
     {
       "page": "slide-02.png",
-      "mean_abs_diff": 0.677,
+      "mean_abs_diff": 0.675,
       "threshold": 2.0
     },
     {
@@ -23,9 +23,15 @@
     },
     {
       "page": "slide-05.png",
-      "mean_abs_diff": 0.961,
+      "mean_abs_diff": 9.128,
       "threshold": 2.0
     }
   ],
-  "failures": []
+  "failures": [
+    {
+      "page": "slide-05.png",
+      "code": "MERGE_RENDER_DIFF_EXCEEDED",
+      "mean_abs_diff": 9.128
+    }
+  ]
 }

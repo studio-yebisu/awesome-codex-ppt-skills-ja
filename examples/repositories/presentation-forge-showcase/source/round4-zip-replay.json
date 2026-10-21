@@ -1,0 +1,44 @@
+{
+  "author": "Codex",
+  "archive_under_test": "presentation-forge-example-ja.zip",
+  "archive_sha256_before_receipt_added": "1a95178c79865d5604241a4c15c636a23ec3167e4ab9b04a23500421d588bf03",
+  "commands": [
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "source/rebuild.py"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "Built index.html - 6 slides, 23872 KB\nBundled6 Japanese slides, original engine/theme blocks, local fonts and full license notices.\n"
+    },
+    {
+      "command": [
+        "C:/Users/owner/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe",
+        "source/upstream/scripts/check_deck.py",
+        "index.html",
+        "--slides",
+        "all",
+        "--scale",
+        "1",
+        "--out",
+        "M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\presentation-forge-showcase\\.private\\round4-zip-replay\\presentation-forge-showcase\\.private\\original-check"
+      ],
+      "cwd": "extracted case",
+      "exit_code": 0,
+      "output_tail": "Checked index.html: 6 slides\n  no layout problems found\nContact sheet: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\presentation-forge-showcase\\.private\\round4-zip-replay\\presentation-forge-showcase\\.private\\original-check\\sheet.png\nSlide 1: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\presentation-forge-showcase\\.private\\round4-zip-replay\\presentation-forge-showcase\\.private\\original-check\\slide-01.png\nSlide 2: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\presentation-forge-showcase\\.private\\round4-zip-replay\\presentation-forge-showcase\\.private\\original-check\\slide-02.png\nSlide 3: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\presentation-forge-showcase\\.private\\round4-zip-replay\\presentation-forge-showcase\\.private\\original-check\\slide-03.png\nSlide 4: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\presentation-forge-showcase\\.private\\round4-zip-replay\\presentation-forge-showcase\\.private\\original-check\\slide-04.png\nSlide 5: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\presentation-forge-showcase\\.private\\round4-zip-replay\\presentation-forge-showcase\\.private\\original-check\\slide-05.png\nSlide 6: M:\\Codex\\Projects\\studio-yebisu\\workspace\\slides\\examples\\repositories\\presentation-forge-showcase\\.private\\round4-zip-replay\\presentation-forge-showcase\\.private\\original-check\\slide-06.png\n"
+    }
+  ],
+  "outputs": [
+    {
+      "path": "index.html",
+      "published_sha256": "ee051565b3bf18348c3b6c7f2aceebdfd06d926dae8522d961a612d0a231ddce",
+      "replayed_sha256": "ee051565b3bf18348c3b6c7f2aceebdfd06d926dae8522d961a612d0a231ddce",
+      "equal": true
+    }
+  ],
+  "all_commands_exit_zero": true,
+  "published_artifact_byte_identical": true,
+  "environment_scope": "Replayed from fresh extraction using existing compatible Python/Node/browser runtimes. Beatdeck reuses the locked existing node_modules through a junction; a fresh npm ci is not claimed.",
+  "independent_visual_review": "Not an evaluator score. The public current output was separately read in full."
+}

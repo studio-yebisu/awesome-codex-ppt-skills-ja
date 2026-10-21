@@ -33,4 +33,4 @@ Source: `reference/SCRIPT.md`（今回の架空企画原稿）。Design referenc
 - Scene/Revealで内容を切り替え、NodeBox+Arrowの単一worldを残す。焼く場面のTimelineと手渡す場面のTypewriterは説明用motionで、実証値ではない。
 - 未提示のQR URLを作らず、最終段階は短い言葉だけ。
 - 日本語字体は役割ごとにlocalへ入れ、原典lightのtokensへブランドを重ねる。
-- 最新ユーザー指示によりbuild/初回主要表示/一段移動だけを確認し、原典verifyの全段階比較は追加しない。ユーザーの美術承認や包括QA済みとは称さない。
+原典 `npm run verify -- --source=reference/SCRIPT.md` を実施する。全15段階の前進・後退・URL直接表示を比較し、contact sheetを確認する。実施済みの結果はQA.jsonとrender/verify/report.jsonに記録し、全キーの手動稽古・物理Wi-Fi断・別端末での通し確認は別の未実施項目として残す。

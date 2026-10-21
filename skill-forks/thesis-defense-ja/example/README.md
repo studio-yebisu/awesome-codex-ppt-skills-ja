@@ -12,6 +12,4 @@
 
 原典Apache-2.0のLICENSEとNOTICE、未変更原本を保持。非公式作例で大学との提携や公認を意味しません。共有PowerPointを守るためlocal clone/exportはApplication.Quitを呼ばず、自分で開いたdeckだけCloseします。残る無文書PowerPointはユーザーが終了できます。
 
-使ったGoogle Fontsの未改変実TTF/OFLだけ同梱。PPTXはフォント未埋込、別端末ではfonts/を手動導入。検査は生成成功とPowerPoint初回export・代表完成物の初回表示までです。contact sheet、全ページ詳細目視、繰返しoverflow監査、独立review、ZIP再実行は行いません。
-
-再生成時の既存deck.pptxはbackups/へ保全します。使用した依存version/条件はruntime/DEPENDENCIES.json。元requirementsのPDF抽出依存はこのMarkdown作例では未実行です。
+使ったGoogle Fontsの未改変実TTF/OFLだけ同梱。PPTXはフォント未埋込、別端末ではfonts/を手動導入。原典Quality gateとしてPowerPointで全6頁をPNG/PDFへ描画し、contact sheetと全頁画像、overflowとstale text scanを確認します。2頁の比較は両候補の露出時間にそろえ、3頁の辺ラベルを線から離しました。実施結果はreviews/quality-gate.jsonとQA.json。独立評価は別記録とし、未実施を完了扱いにしません。
